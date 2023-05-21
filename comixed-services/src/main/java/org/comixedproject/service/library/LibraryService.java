@@ -86,6 +86,7 @@ public class LibraryService {
    * @throws LibraryException if an error occurs
    */
   public void prepareForConsolidation(
+      final List<Long> ids,
       final String targetDirectory,
       final String renamingRule,
       final boolean deleteRemovedComicFiles)
@@ -98,8 +99,8 @@ public class LibraryService {
     headers.put(HEADER_DELETE_REMOVED_COMIC_FILE, String.valueOf(deleteRemovedComicFiles));
     headers.put(HEADER_TARGET_DIRECTORY, targetDirectory);
     headers.put(HEADER_RENAMING_RULE, renamingRule);
-    this.comicBookService
-        .findAll()
+    this.comicBookService.findAll().stream()
+        .filter(comicBook -> ids.isEmpty() || ids.contains(comicBook.getId()))
         .forEach(
             comic -> {
               log.trace(

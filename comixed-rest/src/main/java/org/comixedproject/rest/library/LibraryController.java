@@ -177,7 +177,11 @@ public class LibraryController {
   public void consolidateLibrary(@RequestBody() ConsolidateLibraryRequest request)
       throws Exception {
     final boolean deleteRemovedComicFiles = request.getDeletePhysicalFiles();
-    log.info("Consolidating library: delete physic files={}", deleteRemovedComicFiles);
+    final List<Long> selectedIds = request.getIds();
+    log.info(
+        "Consolidating library: count={} delete physic files={}",
+        selectedIds.size(),
+        deleteRemovedComicFiles);
     log.trace("Loading target directory");
     final String targetDirectory =
         this.configurationService.getOptionValue(ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY);
@@ -186,7 +190,7 @@ public class LibraryController {
         this.configurationService.getOptionValue(
             ConfigurationService.CFG_LIBRARY_COMIC_RENAMING_RULE);
     this.libraryService.prepareForConsolidation(
-        targetDirectory, renamingRule, deleteRemovedComicFiles);
+        selectedIds, targetDirectory, renamingRule, deleteRemovedComicFiles);
     log.trace("Launch consolidation batch process");
     this.jobLauncher.run(
         this.consolidateLibraryJob,

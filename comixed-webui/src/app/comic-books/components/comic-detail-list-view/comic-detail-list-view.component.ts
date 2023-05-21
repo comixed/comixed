@@ -67,9 +67,6 @@ export class ComicDetailListViewComponent implements AfterViewInit {
   @Input() extraFieldTitle = '';
   @Input() followClick = true;
   @Input() usePopups = true;
-  showPopup = false;
-  currentComic: ComicDetail;
-  @Output() showContextMenu = new EventEmitter<ComicContextMenuEvent>();
 
   @Input() showAction = true;
   @Input() showSelection = true;
@@ -85,6 +82,12 @@ export class ComicDetailListViewComponent implements AfterViewInit {
   @Input() showStoreDate = true;
   @Input() showLastReadDate = false;
   @Input() showAddedDate = true;
+
+  showPopup = false;
+  @Output() showContextMenu = new EventEmitter<ComicContextMenuEvent>();
+  @Output() consolidateComics = new EventEmitter<number[]>();
+
+  currentComic: ComicDetail;
 
   constructor(
     private logger: LoggerService,
@@ -416,5 +419,9 @@ export class ComicDetailListViewComponent implements AfterViewInit {
     return this.dataSource.data
       .filter(entry => entry.selected)
       .map(entry => entry.item);
+  }
+
+  onConsolidateComics(ids: number[]) {
+    this.consolidateComics.emit(ids);
   }
 }

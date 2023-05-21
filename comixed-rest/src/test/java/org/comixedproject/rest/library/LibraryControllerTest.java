@@ -18,23 +18,12 @@
 
 package org.comixedproject.rest.library;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertSame;
-import static junit.framework.TestCase.assertTrue;
-import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_CONSOLIDATION_JOB_STARTED;
-import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_DELETE_REMOVED_COMIC_FILES;
-import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_RENAMING_RULE;
-import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_TARGET_DIRECTORY;
+import static junit.framework.TestCase.*;
+import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.*;
 import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.JOB_PURGE_LIBRARY_START;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_TARGET_ARCHIVE;
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_IMPRINT;
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_ISSUENO;
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_PUBLISHER;
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_SERIES;
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_VOLUME;
+import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.*;
 import static org.comixedproject.rest.library.LibrarySelectionsController.LIBRARY_SELECTIONS;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_COMIC_RENAMING_RULE;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY;
@@ -49,13 +38,7 @@ import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.net.admin.ClearImageCacheResponse;
 import org.comixedproject.model.net.comicbooks.ConvertComicsRequest;
 import org.comixedproject.model.net.comicbooks.EditMultipleComicsRequest;
-import org.comixedproject.model.net.library.ConsolidateLibraryRequest;
-import org.comixedproject.model.net.library.LoadLibraryRequest;
-import org.comixedproject.model.net.library.LoadLibraryResponse;
-import org.comixedproject.model.net.library.PurgeLibraryRequest;
-import org.comixedproject.model.net.library.RemoteLibraryState;
-import org.comixedproject.model.net.library.RescanComicsRequest;
-import org.comixedproject.model.net.library.UpdateMetadataRequest;
+import org.comixedproject.model.net.library.*;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
@@ -67,11 +50,7 @@ import org.comixedproject.service.user.ComiXedUserException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
@@ -111,6 +90,7 @@ public class LibraryControllerTest {
   @Mock private RemoteLibraryState remoteLibraryState;
   @Mock private HttpSession httpState;
   @Mock private Set<Long> selectedIds;
+  @Mock private List<Long> comicIds;
 
   @Mock
   @Qualifier("updateMetadataJob")
@@ -186,10 +166,12 @@ public class LibraryControllerTest {
         .thenReturn(TEST_RENAMING_RULE);
     Mockito.doThrow(LibraryException.class)
         .when(libraryService)
-        .prepareForConsolidation(Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean());
+        .prepareForConsolidation(
+            Mockito.anyList(), Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean());
 
     try {
-      controller.consolidateLibrary(new ConsolidateLibraryRequest(TEST_DELETE_REMOVED_COMIC_FILES));
+      controller.consolidateLibrary(
+          new ConsolidateLibraryRequest(comicIds, TEST_DELETE_REMOVED_COMIC_FILES));
     } finally {
       Mockito.verify(configurationService, Mockito.times(1))
           .getOptionValue(CFG_LIBRARY_ROOT_DIRECTORY);
@@ -205,7 +187,8 @@ public class LibraryControllerTest {
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
 
-    controller.consolidateLibrary(new ConsolidateLibraryRequest(TEST_DELETE_REMOVED_COMIC_FILES));
+    controller.consolidateLibrary(
+        new ConsolidateLibraryRequest(comicIds, TEST_DELETE_REMOVED_COMIC_FILES));
 
     final JobParameters parameters = jobParametersArgumentCaptor.getValue();
     assertNotNull(parameters);
@@ -218,7 +201,10 @@ public class LibraryControllerTest {
 
     Mockito.verify(libraryService, Mockito.times(1))
         .prepareForConsolidation(
-            TEST_DESTINATION_DIRECTORY, TEST_RENAMING_RULE, TEST_DELETE_REMOVED_COMIC_FILES);
+            comicIds,
+            TEST_DESTINATION_DIRECTORY,
+            TEST_RENAMING_RULE,
+            TEST_DELETE_REMOVED_COMIC_FILES);
     Mockito.verify(jobLauncher, Mockito.times(1))
         .run(consolidateLibraryJob, jobParametersArgumentCaptor.getValue());
   }

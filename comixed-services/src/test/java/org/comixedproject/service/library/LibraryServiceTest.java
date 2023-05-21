@@ -126,7 +126,8 @@ public class LibraryServiceTest {
 
   @Test(expected = LibraryException.class)
   public void testPrepareForConsolidationNoTargetDirectory() throws LibraryException {
-    service.prepareForConsolidation("", TEST_RENAMING_RULE, TEST_DELETE_REMOVED_COMIC_FILES);
+    service.prepareForConsolidation(
+        comicIdList, "", TEST_RENAMING_RULE, TEST_DELETE_REMOVED_COMIC_FILES);
   }
 
   @Test
@@ -142,7 +143,7 @@ public class LibraryServiceTest {
             headersArgumentCaptor.capture());
 
     service.prepareForConsolidation(
-        TEST_TARGET_DIRECTORY, TEST_RENAMING_RULE, TEST_DELETE_REMOVED_COMIC_FILES);
+        comicIdList, TEST_TARGET_DIRECTORY, TEST_RENAMING_RULE, TEST_DELETE_REMOVED_COMIC_FILES);
 
     final Map<String, Object> headers = headersArgumentCaptor.getAllValues().get(0);
     assertEquals(

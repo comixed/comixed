@@ -93,7 +93,7 @@
     color="warn"
     class="cx-toolbar-button cx-margin-right-5"
     [matTooltip]="'library.tooltip.consolidate-library' | translate"
-    (click)="onConsolidateLibrary()"
+    (click)="onConsolidateEntireLibrary()"
   >
     <mat-icon>merge_type</mat-icon>
   </button>
@@ -184,4 +184,5 @@
   [readingLists]="readingLists"
   [lastReadDates]="lastReadDates"
   [showLastReadDate]="unreadOnly && !unreadSwitch"
+  (consolidateComics)="onConsolidateSelectedComics($event)"
 ></cx-comic-detail-list-view>

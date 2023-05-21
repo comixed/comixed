@@ -16,10 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createAction } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 
 export const startLibraryConsolidation = createAction(
-  '[Consolidate Library] Start the library consolidation process'
+  '[Consolidate Library] Start the library consolidation process',
+  props<{ ids: number[] }>()
 );
 
 export const libraryConsolidationStarted = createAction(

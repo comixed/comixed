@@ -293,6 +293,16 @@
       {{ "library.context-menu.undelete-one" | translate }}
     </mat-label>
   </button>
+
+  <button
+    *ngIf="isAdmin"
+    mat-menu-item
+    (click)="onConsolidateComics([currentComic.comicId])"
+  >
+    <mat-label>
+      {{ "library.context-menu.consolidate-one" | translate }}
+    </mat-label>
+  </button>
 </mat-menu>
 
 <mat-menu #currentComicConvertMenu="matMenu">
@@ -338,6 +348,19 @@
     <mat-label>
       {{
         "library.context-menu.edit-multiple-comics"
+          | translate: { count: selectedIds.length }
+      }}
+    </mat-label>
+  </button>
+
+  <button
+    *ngIf="isAdmin"
+    mat-menu-item
+    (click)="onConsolidateComics(selectedIds)"
+  >
+    <mat-label>
+      {{
+        "library.context-menu.consolidate-selected"
           | translate: { count: selectedIds.length }
       }}
     </mat-label>
