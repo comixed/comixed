@@ -191,15 +191,15 @@
       "effect-success": "Marked {count, plural, =1{one comic} other{# comics}} as {read, select, true{read} other{unread}}."
     },
     "tooltip": {
-      "consolidate-library": "Consolidate the library.",
-      "deselect-all": "Deselect all comics.",
-      "purge-library": "Remove deleted comics from library.",
-      "rescan-comics": "Rescan selected comics.",
-      "scrape-comics": "Start scraping comics",
-      "select-all": "Select all comics.",
-      "toggle-read-comics": "{enabled, select, true{Showing only unread comics.} other{Showing all comics.}}",
+      "consolidate-library": "Consolidate the library (shift+ctrl+d).",
+      "deselect-all": "Deselect all comics (shift+ctrl+a).",
+      "purge-library": "Remove deleted comics from library (shift+ctrl+p).",
+      "rescan-comics": "Rescan selected comics (shift+ctrl+r).",
+      "scrape-comics": "Start scraping comics (shift+ctrl+s).",
+      "select-all": "Select all comics (ctrl+a).",
+      "toggle-read-comics": "{enabled, select, true{Showing only unread comics} other{Showing all comics}} (ctrl+e).",
       "toggle-show-covers": "Toggle between cover and list views.",
-      "update-metadata": "Update metadata in selected comics."
+      "update-metadata": "Update metadata in selected comics (shift+ctrl+u)."
     },
     "update-metadata": {
       "confirmation-message": "Are you sure you want to update the metadata on {count, plural, =1{one comic} other{# comics}}?",
