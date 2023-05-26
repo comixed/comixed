@@ -552,23 +552,66 @@ describe('LibraryPageComponent', () => {
           selected: true
         };
       });
-      component.onSelectAll();
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        selectComicBooks({ ids: COMIC_BOOKS.map(comic => comic.id) })
-      );
+    describe('using a button click', () => {
+      beforeEach(() => {
+        component.onSelectAll();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          selectComicBooks({ ids: COMIC_BOOKS.map(comic => comic.id) })
+        );
+      });
+    });
+
+    describe('using a hotkey', () => {
+      const event = new KeyboardEvent('hotkey');
+
+      beforeEach(() => {
+        spyOn(event, 'preventDefault');
+        component.onHotkeySelectAll(event);
+      });
+
+      it('prevents event propagation', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          selectComicBooks({ ids: COMIC_BOOKS.map(comic => comic.id) })
+        );
+      });
     });
   });
 
   describe('deselecting all selected comic books', () => {
-    beforeEach(() => {
-      component.onDeselectAll();
+    describe('using a button', () => {
+      beforeEach(() => {
+        component.onDeselectAll();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(clearSelectedComicBooks());
+      });
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(clearSelectedComicBooks());
+    describe('using a hotkey', () => {
+      const event = new KeyboardEvent('hotkey');
+
+      beforeEach(() => {
+        spyOn(event, 'preventDefault');
+        component.onHotkeyDeselectAll(event);
+      });
+
+      it('prevents event propagation', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(clearSelectedComicBooks());
+      });
     });
   });
 
@@ -578,17 +621,45 @@ describe('LibraryPageComponent', () => {
         (confirmation: Confirmation) => confirmation.confirm()
       );
       component.selectedIds = [COMIC_DETAIL_1.id];
-      component.onUpdateMetadata();
     });
 
-    it('confirms with the user', () => {
-      expect(confirmationService.confirm).toHaveBeenCalled();
+    describe('using a button', () => {
+      beforeEach(() => {
+        component.onUpdateMetadata();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          updateMetadata({ ids: [COMIC_DETAIL_1.id] })
+        );
+      });
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        updateMetadata({ ids: [COMIC_DETAIL_1.id] })
-      );
+    describe('using a button', () => {
+      const event = new KeyboardEvent('hotkey');
+
+      beforeEach(() => {
+        spyOn(event, 'preventDefault');
+        component.onHotkeyUpdateMetadata(event);
+      });
+
+      it('prevents event propagation', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          updateMetadata({ ids: [COMIC_DETAIL_1.id] })
+        );
+      });
     });
   });
 
@@ -598,17 +669,45 @@ describe('LibraryPageComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.onPurgeLibrary();
     });
 
-    it('confirms with the user', () => {
-      expect(confirmationService.confirm).toHaveBeenCalled();
+    describe('using the button', () => {
+      beforeEach(() => {
+        component.onPurgeLibrary();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action to purge the library', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          purgeLibrary({ ids: COMIC_BOOKS.map(comic => comic.id) })
+        );
+      });
     });
 
-    it('fires an action to purge the library', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        purgeLibrary({ ids: COMIC_BOOKS.map(comic => comic.id) })
-      );
+    describe('using a hotkey', () => {
+      const event = new KeyboardEvent('hotkey');
+
+      beforeEach(() => {
+        spyOn(event, 'preventDefault');
+        component.onHotKeyPurgeLibrary(event);
+      });
+
+      it('prevents event propagation', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action to purge the library', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          purgeLibrary({ ids: COMIC_BOOKS.map(comic => comic.id) })
+        );
+      });
     });
   });
 
@@ -618,15 +717,41 @@ describe('LibraryPageComponent', () => {
         (confirmation: Confirmation) => confirmation.confirm()
       );
       component.selectedIds = IDS;
-      component.onScrapeComics();
     });
 
-    it('confirms with the user', () => {
-      expect(confirmationService.confirm).toHaveBeenCalled();
+    describe('using the button', () => {
+      beforeEach(() => {
+        component.onScrapeComics();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('redirects the browsers to the scraping page', () => {
+        expect(router.navigate).toHaveBeenCalledWith(['/library', 'scrape']);
+      });
     });
 
-    it('redirects the browsers to the scraping page', () => {
-      expect(router.navigate).toHaveBeenCalledWith(['/library', 'scrape']);
+    describe('using a hotkey', () => {
+      const event = new KeyboardEvent('hotkey');
+
+      beforeEach(() => {
+        spyOn(event, 'preventDefault');
+        component.onHotKeyScrapeComics(event);
+      });
+
+      it('prevents event propagation', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('redirects the browsers to the scraping page', () => {
+        expect(router.navigate).toHaveBeenCalledWith(['/library', 'scrape']);
+      });
     });
   });
 
@@ -637,17 +762,45 @@ describe('LibraryPageComponent', () => {
       );
       component.comicBooks = COMIC_BOOKS;
       component.selectedIds = IDS;
-      component.onRescanComics();
     });
 
-    it('confirms with the user', () => {
-      expect(confirmationService.confirm).toHaveBeenCalled();
+    describe('using the button', () => {
+      beforeEach(() => {
+        component.onRescanComics();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          rescanComics({ comicBooks: COMIC_BOOKS })
+        );
+      });
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        rescanComics({ comicBooks: COMIC_BOOKS })
-      );
+    describe('using a hotkey', () => {
+      const event = new KeyboardEvent('hotkey');
+
+      beforeEach(() => {
+        spyOn(event, 'preventDefault');
+        component.onHotKeyRescanComics(event);
+      });
+
+      it('prevents event propagation', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          rescanComics({ comicBooks: COMIC_BOOKS })
+        );
+      });
     });
   });
 
@@ -660,18 +813,43 @@ describe('LibraryPageComponent', () => {
     });
 
     describe('consolidating the entire library', () => {
-      beforeEach(() => {
-        component.onConsolidateEntireLibrary();
+      describe('using the button', () => {
+        beforeEach(() => {
+          component.onConsolidateEntireLibrary();
+        });
+
+        it('confirms with the user', () => {
+          expect(confirmationService.confirm).toHaveBeenCalled();
+        });
+
+        it('fires an action', () => {
+          expect(store.dispatch).toHaveBeenCalledWith(
+            startLibraryConsolidation({ ids: [] })
+          );
+        });
       });
 
-      it('confirms with the user', () => {
-        expect(confirmationService.confirm).toHaveBeenCalled();
-      });
+      describe('using a hotkey', () => {
+        const event = new KeyboardEvent('hotkey');
 
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          startLibraryConsolidation({ ids: [] })
-        );
+        beforeEach(() => {
+          spyOn(event, 'preventDefault');
+          component.onHotkeyConsolidateEntireLibrary(event);
+        });
+
+        it('prevents event propagation', () => {
+          expect(event.preventDefault).toHaveBeenCalled();
+        });
+
+        it('confirms with the user', () => {
+          expect(confirmationService.confirm).toHaveBeenCalled();
+        });
+
+        it('fires an action', () => {
+          expect(store.dispatch).toHaveBeenCalledWith(
+            startLibraryConsolidation({ ids: [] })
+          );
+        });
       });
     });
 
@@ -696,22 +874,66 @@ describe('LibraryPageComponent', () => {
     describe('when off', () => {
       beforeEach(() => {
         component.unreadSwitch = false;
-        component.onToggleUnreadSwitch();
       });
 
-      it('turns it on', () => {
-        expect(component.unreadSwitch).toBeTrue();
+      describe('using the button', () => {
+        beforeEach(() => {
+          component.onToggleUnreadSwitch();
+        });
+
+        it('turns it on', () => {
+          expect(component.unreadSwitch).toBeTrue();
+        });
+      });
+
+      describe('using a hotkey', () => {
+        const event = new KeyboardEvent('hotkey');
+
+        beforeEach(() => {
+          spyOn(event, 'preventDefault');
+          component.onHotKeyToggleUnreadSwitch(event);
+        });
+
+        it('prevents event propagation', () => {
+          expect(event.preventDefault).toHaveBeenCalled();
+        });
+
+        it('turns it on', () => {
+          expect(component.unreadSwitch).toBeTrue();
+        });
       });
     });
 
     describe('when on', () => {
       beforeEach(() => {
         component.unreadSwitch = true;
-        component.onToggleUnreadSwitch();
       });
 
-      it('turns it off', () => {
-        expect(component.unreadSwitch).toBeFalse();
+      describe('using the button', () => {
+        beforeEach(() => {
+          component.onToggleUnreadSwitch();
+        });
+
+        it('turns it off', () => {
+          expect(component.unreadSwitch).toBeFalse();
+        });
+      });
+
+      describe('using a hotkey', () => {
+        const event = new KeyboardEvent('hotkey');
+
+        beforeEach(() => {
+          spyOn(event, 'preventDefault');
+          component.onHotKeyToggleUnreadSwitch(event);
+        });
+
+        it('prevents event propagation', () => {
+          expect(event.preventDefault).toHaveBeenCalled();
+        });
+
+        it('turns it off', () => {
+          expect(component.unreadSwitch).toBeFalse();
+        });
       });
     });
   });

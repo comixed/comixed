@@ -19,6 +19,7 @@
 import {
   AfterViewInit,
   Component,
+  HostListener,
   OnDestroy,
   OnInit,
   ViewChild
@@ -170,9 +171,9 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
       .select(selectLibrarySelections)
       .subscribe(selectedIds => (this.selectedIds = selectedIds));
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
-      this.logger.trace('Setting admin flag');
+      this.logger.debug('Setting admin flag');
       this.isAdmin = isAdmin(user);
-      this.logger.trace('Getting page size');
+      this.logger.debug('Getting page size');
       this.pageSize = getPageSize(user);
       this.showCovers =
         getUserPreference(
@@ -230,12 +231,12 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.logger.trace('Setting up pagination');
+    this.logger.debug('Setting up pagination');
     this.dataSource.paginator = this.paginator;
   }
 
   ngOnInit(): void {
-    this.logger.trace('Loading translations');
+    this.logger.debug('Loading translations');
     this.loadTranslations();
   }
 
@@ -247,6 +248,20 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.userSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
     this.readingListsSubscription.unsubscribe();
+  }
+
+  @HostListener('window:keydown.control.a', ['$event'])
+  onHotkeySelectAll(event: KeyboardEvent): void {
+    this.logger.debug('Select all hotkey pressed');
+    event.preventDefault();
+    this.onSelectAll();
+  }
+
+  @HostListener('window:keydown.shift.control.a', ['$event'])
+  onHotkeyDeselectAll(event: KeyboardEvent): void {
+    this.logger.debug('Deselect all hotkey pressed');
+    event.preventDefault();
+    this.onDeselectAll();
   }
 
   onSelectAll(): void {
@@ -263,8 +278,15 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store.dispatch(clearSelectedComicBooks());
   }
 
+  @HostListener('window:keydown.shift.control.u', ['$event'])
+  onHotkeyUpdateMetadata(event: KeyboardEvent): void {
+    this.logger.debug('Update metadata hotkey pressed');
+    event.preventDefault();
+    this.onUpdateMetadata();
+  }
+
   onUpdateMetadata(): void {
-    this.logger.trace('Confirming with the user to update metadata');
+    this.logger.debug('Confirming with the user to update metadata');
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'library.update-metadata.confirmation-title'
@@ -274,7 +296,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
         { count: this.selectedIds.length }
       ),
       confirm: () => {
-        this.logger.trace('Firing action: update metadata');
+        this.logger.debug('Firing action: update metadata');
         this.store.dispatch(
           updateMetadata({
             ids: this.selectedIds
@@ -288,12 +310,26 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.doConsolidateLibrary(ids);
   }
 
+  @HostListener('window:keydown.shift.control.d', ['$event'])
+  onHotkeyConsolidateEntireLibrary(event: KeyboardEvent): void {
+    this.logger.debug('Consolidate library hotkey pressed');
+    event.preventDefault();
+    this.onConsolidateEntireLibrary();
+  }
+
   onConsolidateEntireLibrary(): void {
     this.doConsolidateLibrary([]);
   }
 
+  @HostListener('window:keydown.shift.control.p', ['$event'])
+  onHotKeyPurgeLibrary(event: KeyboardEvent): void {
+    this.logger.debug('Purge library otkey pressed');
+    event.preventDefault();
+    this.onPurgeLibrary();
+  }
+
   onPurgeLibrary(): void {
-    this.logger.trace('Confirming purging the library');
+    this.logger.debug('Confirming purging the library');
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'library.purge-library.confirmation-title'
@@ -302,10 +338,17 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
         'library.purge-library.confirmation-message'
       ),
       confirm: () => {
-        this.logger.trace('Firing action: purge library');
+        this.logger.debug('Firing action: purge library');
         this.store.dispatch(purgeLibrary({ ids: this.selectedIds }));
       }
     });
+  }
+
+  @HostListener('window:keydown.shift.control.s', ['$event'])
+  onHotKeyScrapeComics(event: KeyboardEvent): void {
+    this.logger.debug('Scrape comics hotkey pressed');
+    event.preventDefault();
+    this.onScrapeComics();
   }
 
   onScrapeComics(): void {
@@ -325,8 +368,15 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+  @HostListener('window:keydown.shift.control.r', ['$event'])
+  onHotKeyRescanComics(event: KeyboardEvent): void {
+    this.logger.debug('Rescan comics hotkey pressed');
+    event.preventDefault();
+    this.onRescanComics();
+  }
+
   onRescanComics(): void {
-    this.logger.trace('Confirming with the user to rescan the selected comics');
+    this.logger.debug('Confirming with the user to rescan the selected comics');
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'library.rescan-comics.confirmation-title'
@@ -336,7 +386,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
         { count: this.selectedIds.length }
       ),
       confirm: () => {
-        this.logger.trace('Firing action to rescan comics');
+        this.logger.debug('Firing action to rescan comics');
         this.store.dispatch(
           rescanComics({
             comicBooks: this.comicBooks.filter(comic =>
@@ -346,6 +396,13 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
         );
       }
     });
+  }
+
+  @HostListener('window:keydown.control.e', ['$event'])
+  onHotKeyToggleUnreadSwitch(event: KeyboardEvent): void {
+    this.logger.debug('Toggle unread hotkey pressed');
+    event.preventDefault();
+    this.onToggleUnreadSwitch();
   }
 
   onToggleUnreadSwitch(): void {
@@ -364,7 +421,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
         'library.consolidate.confirmation-message'
       ),
       confirm: () => {
-        this.logger.trace('Firing action: consolidate library');
+        this.logger.debug('Firing action: consolidate library');
         this.store.dispatch(startLibraryConsolidation({ ids }));
       }
     });
@@ -400,7 +457,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private loadTranslations(): void {
-    this.logger.trace('Setting page title');
+    this.logger.debug('Setting page title');
     if (this.unprocessedOnly) {
       this.titleService.setTitle(
         this.translateService.instant(
