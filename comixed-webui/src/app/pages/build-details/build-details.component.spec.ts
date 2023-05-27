@@ -20,8 +20,8 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { BuildDetailsComponent } from './build-details.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
-  RELEASE_DETAILS_FEATURE_KEY,
-  initialState as initialBuildState
+  initialState as initialBuildState,
+  RELEASE_DETAILS_FEATURE_KEY
 } from '@app/reducers/release.reducer';
 import { provideMockStore } from '@ngrx/store/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';

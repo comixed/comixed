@@ -22,9 +22,6 @@
     "load-latest-effect-failure": "Failed to load the latest release's details.",
     "page-title": "Build Details",
     "tab-title": "Build Details",
-    "text": {
-      "copy-to-clipboard": "Click the copy toolbar button to share these details when reporting a bug."
-    },
     "tooltip": {
       "copy-to-clipboard": "Copy build details to the clipboard."
     }

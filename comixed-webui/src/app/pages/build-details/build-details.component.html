@@ -1,20 +1,6 @@
-<mat-toolbar class="cx-accent-dark-background">
-  <button
-    mat-icon-button
-    [matTooltip]="'build-details.tooltip.copy-to-clipboard' | translate"
-    (click)="copyToClipboard()"
-  >
-    <mat-icon>content_copy</mat-icon>
-  </button>
-</mat-toolbar>
+<h2>{{ "build-details.page-title" | translate }}</h2>
 <div class="cx-centered-horiz">
   <mat-card appearance="outlined">
-    <mat-card-title class="cx-align-content-center">
-      {{ "build-details.page-title" | translate }}
-    </mat-card-title>
-    <mat-card-subtitle class="cx-align-content-center">
-      {{ "build-details.text.copy-to-clipboard" | translate }}
-    </mat-card-subtitle>
     <mat-card-content class="cx-padding-50">
       <div>
         {{ "build-details.label.branch" | translate: { name: details.branch } }}
@@ -72,5 +58,14 @@
         }}
       </div>
     </mat-card-content>
+    <mat-card-actions>
+      <button
+        mat-icon-button
+        [matTooltip]="'build-details.tooltip.copy-to-clipboard' | translate"
+        (click)="copyToClipboard()"
+      >
+        <mat-icon>content_copy</mat-icon>
+      </button>
+    </mat-card-actions>
   </mat-card>
 </div>
