@@ -32,7 +32,8 @@ import {
   LIBRARY_COMIC_RENAMING_RULE,
   LIBRARY_DELETE_EMPTY_DIRECTORIES,
   LIBRARY_PAGE_RENAMING_RULE,
-  LIBRARY_ROOT_DIRECTORY
+  LIBRARY_ROOT_DIRECTORY,
+  SKIP_INTERNAL_METADATA_FILES
 } from '@app/admin/admin.constants';
 import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
 import {
@@ -45,7 +46,8 @@ import { MatIconModule } from '@angular/material/icon';
 
 describe('LibraryConfigurationComponent', () => {
   const DELETE_EMPTY_DIRECTORIES = Math.random() > 0.5;
-  const CREATE_EXERNAL_METADATA = Math.random() > 0.5;
+  const CREATE_EXTERNAL_METADATA = Math.random() > 0.5;
+  const SKIP_INTERNAL_METADATA = Math.random() > 0.5;
   const LIBRARY_ROOT = 'The library root';
   const COMIC_RENAMING_RULE = 'The comic renaming rule';
   const PAGE_RENAMING_RULE = 'The page renaming rule';
@@ -68,7 +70,11 @@ describe('LibraryConfigurationComponent', () => {
     },
     {
       name: CREATE_EXTERNAL_METADATA_FILES,
-      value: `${CREATE_EXERNAL_METADATA}`
+      value: `${CREATE_EXTERNAL_METADATA}`
+    },
+    {
+      name: SKIP_INTERNAL_METADATA_FILES,
+      value: `${SKIP_INTERNAL_METADATA}`
     }
   ];
   const initialState = {};
@@ -165,7 +171,11 @@ describe('LibraryConfigurationComponent', () => {
             },
             {
               name: CREATE_EXTERNAL_METADATA_FILES,
-              value: `${CREATE_EXERNAL_METADATA}`
+              value: `${CREATE_EXTERNAL_METADATA}`
+            },
+            {
+              name: SKIP_INTERNAL_METADATA_FILES,
+              value: `${SKIP_INTERNAL_METADATA}`
             },
             { name: LIBRARY_ROOT_DIRECTORY, value: LIBRARY_ROOT },
             { name: LIBRARY_COMIC_RENAMING_RULE, value: COMIC_RENAMING_RULE },

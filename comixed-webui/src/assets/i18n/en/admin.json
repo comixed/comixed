@@ -11,7 +11,8 @@
       "page-renaming-variables": "Page Renaming Variables",
       "root-directory": "Library Root Directory",
       "page-variable-description": "Description Of The Output",
-      "page-variable-name": "Variable Name"
+      "page-variable-name": "Variable Name",
+      "skip-internal-metadata-files": "Do not create or update internal metadata files."
     },
     "load-all": {
       "effect-failure": "Failed to load configuration options."

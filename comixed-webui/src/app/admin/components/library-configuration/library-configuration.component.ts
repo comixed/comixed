@@ -33,7 +33,8 @@ import {
   LIBRARY_COMIC_RENAMING_RULE,
   LIBRARY_DELETE_EMPTY_DIRECTORIES,
   LIBRARY_PAGE_RENAMING_RULE,
-  LIBRARY_ROOT_DIRECTORY
+  LIBRARY_ROOT_DIRECTORY,
+  SKIP_INTERNAL_METADATA_FILES
 } from '@app/admin/admin.constants';
 import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
@@ -94,6 +95,7 @@ export class LibraryConfigurationComponent {
     this.libraryConfigurationForm = this.formBuilder.group({
       deleteEmptyDirectories: ['', []],
       createExternalMetadataFile: ['', []],
+      skipInternalMetadataFile: ['', []],
       rootDirectory: ['', [Validators.required]],
       comicRenamingRule: ['', []],
       pageRenamingRule: ['', []]
@@ -122,6 +124,13 @@ export class LibraryConfigurationComponent {
       getConfigurationOption(
         options,
         CREATE_EXTERNAL_METADATA_FILES,
+        `${false}`
+      ) === `${true}`
+    );
+    this.libraryConfigurationForm.controls.skipInternalMetadataFile.setValue(
+      getConfigurationOption(
+        options,
+        SKIP_INTERNAL_METADATA_FILES,
         `${false}`
       ) === `${true}`
     );
@@ -154,6 +163,10 @@ export class LibraryConfigurationComponent {
       {
         name: CREATE_EXTERNAL_METADATA_FILES,
         value: `${this.libraryConfigurationForm.controls.createExternalMetadataFile.value}`
+      },
+      {
+        name: SKIP_INTERNAL_METADATA_FILES,
+        value: `${this.libraryConfigurationForm.controls.skipInternalMetadataFile.value}`
       },
       {
         name: LIBRARY_ROOT_DIRECTORY,

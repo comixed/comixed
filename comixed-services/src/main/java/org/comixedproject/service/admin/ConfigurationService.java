@@ -42,6 +42,7 @@ public class ConfigurationService {
   public static final String CFG_LIBRARY_PAGE_RENAMING_RULE = "library.comic-page.renaming-rule";
   public static final String CFG_LIBRARY_DELETE_EMPTY_DIRECTORIES =
       "library.directories.delete-empty";
+  public static final String CFG_LIBRARY_NO_COMICINFO_ENTRY = "library.metadata.no-comicinfo-entry";
 
   @Autowired private ConfigurationRepository configurationRepository;
 
@@ -69,15 +70,15 @@ public class ConfigurationService {
     for (int index = 0; index < options.size(); index++) {
       var option = options.get(index);
       log.trace("Loading existing record: name={}", option.getName());
-      final ConfigurationOption existing =
-          this.configurationRepository.findByName(option.getName());
-      if (existing == null)
-        throw new ConfigurationOptionException(
-            "No such configuration option: name=" + option.getName());
+      ConfigurationOption record = this.configurationRepository.findByName(option.getName());
+      if (record == null) {
+        log.info("Creating new configuration option: {}", option.getName());
+        record = new ConfigurationOption(option.getName());
+      }
       log.trace("Updating existing record: value={}", option.getValue());
-      existing.setValue(option.getValue().trim());
+      record.setValue(option.getValue().trim());
       log.trace("Updating existing record");
-      this.configurationRepository.save(existing);
+      this.configurationRepository.save(record);
     }
 
     return this.getAll();
