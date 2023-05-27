@@ -24,9 +24,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.comixedproject.views.View;
 
 /**
@@ -37,6 +35,7 @@ import org.comixedproject.views.View;
 @Entity
 @Table(name = "ConfigurationOptions")
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class ConfigurationOption {
   public static final String CREATE_EXTERNAL_METADATA_FILE =
       "library.metadata.create-external-files";
@@ -50,6 +49,7 @@ public class ConfigurationOption {
   @JsonProperty("name")
   @JsonView(View.ConfigurationList.class)
   @Getter
+  @NonNull
   private String name;
 
   @Column(name = "Value", length = 256, updatable = true)
@@ -65,7 +65,7 @@ public class ConfigurationOption {
   @JsonView(View.ConfigurationList.class)
   @Getter
   @Setter
-  private Date lastModifiedOn;
+  private Date lastModifiedOn = new Date();
 
   @Override
   public boolean equals(final Object o) {

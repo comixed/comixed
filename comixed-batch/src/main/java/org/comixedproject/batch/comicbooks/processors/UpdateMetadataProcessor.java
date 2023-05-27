@@ -42,22 +42,34 @@ public class UpdateMetadataProcessor implements ItemProcessor<ComicBook, ComicBo
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
-    if (comicBook.getComicDetail().getArchiveType() == ArchiveType.CBR) {
-      log.warn("Cannot write CBR files");
-    } else {
+    if (Boolean.parseBoolean(
+        this.configurationService.getOptionValue(
+            ConfigurationOption.CREATE_EXTERNAL_METADATA_FILE, Boolean.FALSE.toString()))) {
+      log.debug("Creating external metadata file for comic: id={}", comicBook.getId());
       try {
-        log.debug("Updating comic book metadata: id={}", comicBook.getId());
-        this.comicBookAdaptor.save(
-            comicBook, comicBook.getComicDetail().getArchiveType(), false, "");
-        if (Boolean.parseBoolean(
-            this.configurationService.getOptionValue(
-                ConfigurationOption.CREATE_EXTERNAL_METADATA_FILE, Boolean.FALSE.toString()))) {
-          log.debug("Creating external metadata file for comic: id={}", comicBook.getId());
-          this.comicBookAdaptor.saveMetadataFile(comicBook);
-        }
+        this.comicBookAdaptor.saveMetadataFile(comicBook);
       } catch (AdaptorException error) {
-        log.error("Failed to update metadata for comic book", error);
+        log.error("Failed to create external metadata file file comic", error);
       }
+    }
+
+    if (Boolean.parseBoolean(
+        this.configurationService.getOptionValue(
+            ConfigurationService.CFG_LIBRARY_NO_COMICINFO_ENTRY, Boolean.FALSE.toString()))) {
+      log.debug("Writing ComicInfo.xml entries disabled: skipping");
+      return comicBook;
+    }
+
+    if (comicBook.getComicDetail().getArchiveType() == ArchiveType.CBR) {
+      log.warn("Cannot write comic metadata entry for CBR files: skipping");
+      return comicBook;
+    }
+
+    try {
+      log.debug("Updating comic book metadata: id={}", comicBook.getId());
+      this.comicBookAdaptor.save(comicBook, comicBook.getComicDetail().getArchiveType(), false, "");
+    } catch (AdaptorException error) {
+      log.error("Failed to update metadata for comic book", error);
     }
     return comicBook;
   }
