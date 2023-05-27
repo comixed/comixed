@@ -21,6 +21,7 @@ import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { MatDialog } from '@angular/material/dialog';
 import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Component({
   selector: 'cx-selected-comics',
@@ -28,24 +29,24 @@ import { ComicDetailsDialogComponent } from '@app/library/components/comic-detai
   styleUrls: ['./selected-comics.component.scss']
 })
 export class SelectedComicsComponent {
-  @Output() selectionChanged = new EventEmitter<ComicBook>();
+  @Output() selectionChanged = new EventEmitter<ComicDetail>();
 
   constructor(private logger: LoggerService, public dialog: MatDialog) {}
 
-  private _comics: ComicBook[] = [];
+  private _comics: ComicDetail[] = [];
 
-  get comics(): ComicBook[] {
+  get comics(): ComicDetail[] {
     return this._comics;
   }
 
-  @Input() set comics(comics: ComicBook[]) {
+  @Input() set comics(comics: ComicDetail[]) {
     this._comics = comics;
     if (comics.length > 0) {
       this.selectionChanged.emit(this._comics[0]);
     }
   }
 
-  onSelectionChanged(comic: ComicBook): void {
+  onSelectionChanged(comic: ComicDetail): void {
     this.logger.debug('Selected comic change:', comic);
     this.selectionChanged.emit(comic);
   }
