@@ -344,7 +344,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  @HostListener('window:keydown.shift.control.s', ['$event'])
+  @HostListener('window:keydown.shift.control.m', ['$event'])
   onHotKeyScrapeComics(event: KeyboardEvent): void {
     this.logger.debug('Scrape comics hotkey pressed');
     event.preventDefault();

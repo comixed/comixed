@@ -195,7 +195,7 @@
       "deselect-all": "Deselect all comics (shift+ctrl+a).",
       "purge-library": "Remove deleted comics from library (shift+ctrl+p).",
       "rescan-comics": "Rescan selected comics (shift+ctrl+r).",
-      "scrape-comics": "Start scraping comics (shift+ctrl+s).",
+      "scrape-comics": "Start scraping comics (shift+ctrl+m).",
       "select-all": "Select all comics (ctrl+a).",
       "toggle-read-comics": "{enabled, select, true{Showing only unread comics} other{Showing all comics}} (ctrl+e).",
       "toggle-show-covers": "Toggle between cover and list views.",

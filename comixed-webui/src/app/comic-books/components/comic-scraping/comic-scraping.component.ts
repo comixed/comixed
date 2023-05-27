@@ -19,6 +19,7 @@
 import {
   Component,
   EventEmitter,
+  HostListener,
   Input,
   OnDestroy,
   OnInit,
@@ -113,7 +114,7 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
       .select(selectScrapeMetadataState)
       .pipe(filter(state => state.found))
       .subscribe(state => {
-        this.logger.trace('Filename scraping data updated');
+        this.logger.debug('Filename scraping data updated');
         this.comicForm.controls.series.setValue(state.series);
         this.comicForm.controls.volume.setValue(state.volume);
         this.comicForm.controls.issueNumber.setValue(state.issueNumber);
@@ -134,7 +135,7 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
     this.metadataSubscription = this.store
       .select(selectMetadataState)
       .subscribe(state => {
-        this.logger.trace('Metadata state changed');
+        this.logger.debug('Metadata state changed');
         this.confirmBeforeScraping = state.confirmBeforeScraping;
         this.autoSelectExactMatch = state.autoSelectExactMatch;
       });
@@ -147,11 +148,11 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
   }
 
   @Input() set comic(comic: ComicBook) {
-    this.logger.trace('Loading comic form:', comic);
+    this.logger.debug('Loading comic form:', comic);
     this._comic = comic;
-    this.logger.trace('Loading form fields');
+    this.logger.debug('Loading form fields');
     if (!!comic.metadata) {
-      this.logger.trace('Preselecting metadata source');
+      this.logger.debug('Preselecting metadata source');
       this.store.dispatch(
         setChosenMetadataSource({
           metadataSource: comic.metadata.metadataSource
@@ -172,15 +173,22 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from scraped metadata updates');
+    this.logger.debug('Unsubscribing from scraped metadata updates');
     this.scrapedMetadataSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from metadata source list');
+    this.logger.debug('Unsubscribing from metadata source list');
     this.metadataSourceListSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.logger.trace('Loading metadata sources');
+    this.logger.debug('Loading metadata sources');
     this.store.dispatch(loadMetadataSources());
+  }
+
+  @HostListener('window:keydown.shift.control.u', ['$event'])
+  onHotkeyUndoChanges(event: KeyboardEvent): void {
+    this.logger.debug('Undoing changes from hotkey');
+    event.preventDefault();
+    this.onUndoChanges();
   }
 
   onUndoChanges(): void {
@@ -188,15 +196,22 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
       title: this.translateService.instant('comic-book.undo-changes.title'),
       message: this.translateService.instant('comic-book.undo-changes.message'),
       confirm: () => {
-        this.logger.trace('Undoing changes');
+        this.logger.debug('Undoing changes');
         this.comic = this._comic;
         this.comicForm.markAsUntouched();
       }
     });
   }
 
+  @HostListener('window:keydown.shift.control.m', ['$event'])
+  onHotKeyFetchScrapingVolumes(event: KeyboardEvent): void {
+    this.logger.debug('Loading scraping volumes from hotkey');
+    event.preventDefault();
+    this.onFetchScrapingVolumes();
+  }
+
   onFetchScrapingVolumes(): void {
-    this.logger.trace('Loading scraping volumes');
+    this.logger.debug('Loading scraping volumes');
     this.scrape.emit({
       series: this.comicForm.controls.series.value,
       volume: this.comicForm.controls.volume.value,
@@ -206,8 +221,15 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
     });
   }
 
+  @HostListener('window:keydown.shift.control.c', ['$event'])
+  onHotKeySkipCacheToggle(event: KeyboardEvent): void {
+    this.logger.debug('Toggling skipping the cache from hotkey');
+    event.preventDefault();
+    this.onSkipCacheToggle();
+  }
+
   onSkipCacheToggle(): void {
-    this.logger.trace('Toggling skipping the cache');
+    this.logger.debug('Toggling skipping the cache');
     this.skipCache = this.skipCache === false;
     this.store.dispatch(
       saveUserPreference({
@@ -218,13 +240,20 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
   }
 
   onMaximumRecordsChanged(maximumRecords: number): void {
-    this.logger.trace('Changed maximum records');
+    this.logger.debug('Changed maximum records');
     this.store.dispatch(
       saveUserPreference({
         name: MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
         value: `${maximumRecords}`
       })
     );
+  }
+
+  @HostListener('window:keydown.shift.control.s', ['$event'])
+  onHotKeySaveChanges(event: KeyboardEvent): void {
+    this.logger.debug('Saving changes to comic from hotkey');
+    event.preventDefault();
+    this.onSaveChanges();
   }
 
   onSaveChanges(): void {
@@ -243,9 +272,16 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
     });
   }
 
+  @HostListener('window:keydown.shift.control.f', ['$event'])
+  onHotKeyScrapeFilename(event: KeyboardEvent): void {
+    this.logger.debug('Scraping filename from hotkey');
+    event.preventDefault();
+    this.onScrapeFilename();
+  }
+
   onScrapeFilename(): void {
     const filename = this.comic.detail.baseFilename;
-    this.logger.trace('Scraping the comic filename:', filename);
+    this.logger.debug('Scraping the comic filename:', filename);
     this.store.dispatch(scrapeMetadataFromFilename({ filename }));
   }
 
@@ -253,13 +289,13 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
     const metadataSource = this.metadataSourceList.find(
       entry => entry.value.id === id
     ).value;
-    this.logger.trace('Metadata source selected:', metadataSource);
+    this.logger.debug('Metadata source selected:', metadataSource);
     this.store.dispatch(setChosenMetadataSource({ metadataSource }));
   }
 
   onScrapeWithReferenceId(): void {
     const referenceId = this.comicForm.controls.referenceId.value;
-    this.logger.trace('Confirming scrape coming using reference id');
+    this.logger.debug('Confirming scrape coming using reference id');
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'scraping.scrape-comic-confirmation-title'
@@ -280,6 +316,13 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
     });
   }
 
+  @HostListener('window:keydown.shift.control.o', ['$event'])
+  onHotkeyToggleConfirmBeforeScrape(event: KeyboardEvent): void {
+    this.logger.debug('Toggling confirm before scrape from hotkey');
+    event.preventDefault();
+    this.onToggleConfirmBeforeScrape();
+  }
+
   onToggleConfirmBeforeScrape(): void {
     this.logger.debug('Firing event: toggling confirm before scrape');
     this.store.dispatch(
@@ -287,6 +330,13 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
         confirmBeforeScraping: !this.confirmBeforeScraping
       })
     );
+  }
+
+  @HostListener('window:keydown.shift.control.x', ['$event'])
+  onHotKeyToggleAutoSelectExactMatch(event: KeyboardEvent): void {
+    this.logger.debug('Toggling auto select exact match from hotkey');
+    event.preventDefault();
+    this.onToggleAutoSelectExactMatch();
   }
 
   onToggleAutoSelectExactMatch(): void {
@@ -299,7 +349,7 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
   }
 
   encodeForm(): ComicBook {
-    this.logger.trace('Encoding comic');
+    this.logger.debug('Encoding comic');
     return {
       ...this.comic,
       detail: {

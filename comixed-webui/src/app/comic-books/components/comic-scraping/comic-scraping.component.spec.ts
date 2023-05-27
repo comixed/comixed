@@ -176,38 +176,107 @@ describe('ComicScrapingComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.onUndoChanges();
     });
 
-    it('confirms with the user', () => {
-      expect(confirmationService.confirm).toHaveBeenCalled();
+    describe('from the button', () => {
+      beforeEach(() => {
+        component.onUndoChanges();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+    });
+
+    describe('from a hotkey', () => {
+      const event = new KeyboardEvent('hotkey');
+
+      beforeEach(() => {
+        spyOn(event, 'preventDefault');
+        component.onHotkeyUndoChanges(event);
+      });
+
+      it('prevents event propagation', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
     });
   });
 
   describe('fetching the scraping volumes', () => {
     beforeEach(() => {
       spyOn(component.scrape, 'emit');
-      component.onFetchScrapingVolumes();
     });
 
-    it('emits an event', () => {
-      expect(component.scrape.emit).toHaveBeenCalledWith({
-        series: COMIC.detail.series,
-        volume: COMIC.detail.volume,
-        issueNumber: COMIC.detail.issueNumber,
-        maximumRecords: MAXIMUM_RECORDS,
-        skipCache: SKIP_CACHE
+    describe('from the button', () => {
+      beforeEach(() => {
+        component.onFetchScrapingVolumes();
+      });
+
+      it('emits an event', () => {
+        expect(component.scrape.emit).toHaveBeenCalledWith({
+          series: COMIC.detail.series,
+          volume: COMIC.detail.volume,
+          issueNumber: COMIC.detail.issueNumber,
+          maximumRecords: MAXIMUM_RECORDS,
+          skipCache: SKIP_CACHE
+        });
+      });
+    });
+
+    describe('from the button', () => {
+      const event = new KeyboardEvent('hotkey');
+
+      beforeEach(() => {
+        spyOn(event, 'preventDefault');
+        component.onHotKeyFetchScrapingVolumes(event);
+      });
+
+      it('prevents event propagation', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('emits an event', () => {
+        expect(component.scrape.emit).toHaveBeenCalledWith({
+          series: COMIC.detail.series,
+          volume: COMIC.detail.volume,
+          issueNumber: COMIC.detail.issueNumber,
+          maximumRecords: MAXIMUM_RECORDS,
+          skipCache: SKIP_CACHE
+        });
       });
     });
   });
 
   describe('toggling skipping the cache', () => {
-    beforeEach(() => {
-      component.onSkipCacheToggle();
+    describe('from the button', () => {
+      beforeEach(() => {
+        component.onSkipCacheToggle();
+      });
+
+      it('flips the skip cache flag', () => {
+        expect(component.skipCache).toEqual(!SKIP_CACHE);
+      });
     });
 
-    it('flips the skip cache flag', () => {
-      expect(component.skipCache).toEqual(!SKIP_CACHE);
+    describe('from the button', () => {
+      const event = new KeyboardEvent('hotkey');
+
+      beforeEach(() => {
+        spyOn(event, 'preventDefault');
+        component.onHotKeySkipCacheToggle(event);
+      });
+
+      it('prevents event propagation', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('flips the skip cache flag', () => {
+        expect(component.skipCache).toEqual(!SKIP_CACHE);
+      });
     });
   });
 
@@ -233,17 +302,45 @@ describe('ComicScrapingComponent', () => {
       );
       component.comic = COMIC;
       storeDispatchSpy.calls.reset();
-      component.onSaveChanges();
     });
 
-    it('confirms with the user', () => {
-      expect(confirmationService.confirm).toHaveBeenCalled();
+    describe('from the button', () => {
+      beforeEach(() => {
+        component.onSaveChanges();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          updateComicBook({ comicBook: component.encodeForm() })
+        );
+      });
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        updateComicBook({ comicBook: component.encodeForm() })
-      );
+    describe('from a hotkey', () => {
+      const event = new KeyboardEvent('hotkey');
+
+      beforeEach(() => {
+        spyOn(event, 'preventDefault');
+        component.onHotKeySaveChanges(event);
+      });
+
+      it('prevents event propagation', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          updateComicBook({ comicBook: component.encodeForm() })
+        );
+      });
     });
   });
 
@@ -283,13 +380,37 @@ describe('ComicScrapingComponent', () => {
   describe('scraping metadata from a filename', () => {
     beforeEach(() => {
       component.comic = COMIC;
-      component.onScrapeFilename();
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        scrapeMetadataFromFilename({ filename: COMIC.detail.baseFilename })
-      );
+    describe('using the button', () => {
+      beforeEach(() => {
+        component.onScrapeFilename();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          scrapeMetadataFromFilename({ filename: COMIC.detail.baseFilename })
+        );
+      });
+    });
+
+    describe('using a hotkey', () => {
+      const event = new KeyboardEvent('hotkey');
+
+      beforeEach(() => {
+        spyOn(event, 'preventDefault');
+        component.onHotKeyScrapeFilename(event);
+      });
+
+      it('prevents event propagation', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          scrapeMetadataFromFilename({ filename: COMIC.detail.baseFilename })
+        );
+      });
     });
   });
 
@@ -369,13 +490,37 @@ describe('ComicScrapingComponent', () => {
 
     beforeEach(() => {
       component.confirmBeforeScraping = !confirm;
-      component.onToggleConfirmBeforeScrape();
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        setConfirmBeforeScraping({ confirmBeforeScraping: confirm })
-      );
+    describe('from the button', () => {
+      beforeEach(() => {
+        component.onToggleConfirmBeforeScrape();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setConfirmBeforeScraping({ confirmBeforeScraping: confirm })
+        );
+      });
+    });
+
+    describe('from the hotkey', () => {
+      const event = new KeyboardEvent('hotkey');
+
+      beforeEach(() => {
+        spyOn(event, 'preventDefault');
+        component.onHotkeyToggleConfirmBeforeScrape(event);
+      });
+
+      it('prevents event propagation', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setConfirmBeforeScraping({ confirmBeforeScraping: confirm })
+        );
+      });
     });
   });
 
@@ -384,13 +529,37 @@ describe('ComicScrapingComponent', () => {
 
     beforeEach(() => {
       component.autoSelectExactMatch = !confirm;
-      component.onToggleAutoSelectExactMatch();
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        setAutoSelectExactMatch({ autoSelectExactMatch: confirm })
-      );
+    describe('from the button', () => {
+      beforeEach(() => {
+        component.onToggleAutoSelectExactMatch();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setAutoSelectExactMatch({ autoSelectExactMatch: confirm })
+        );
+      });
+    });
+
+    describe('from the button', () => {
+      const event = new KeyboardEvent('hotkey');
+
+      beforeEach(() => {
+        spyOn(event, 'preventDefault');
+        component.onHotKeyToggleAutoSelectExactMatch(event);
+      });
+
+      it('prevents event propagation', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setAutoSelectExactMatch({ autoSelectExactMatch: confirm })
+        );
+      });
     });
   });
 });
