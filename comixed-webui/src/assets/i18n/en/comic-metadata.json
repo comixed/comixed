@@ -142,13 +142,13 @@
       "no-matching-volumes": "No matching volumes found."
     },
     "tooltip": {
-      "auto-select-exact-match": "If enabled, a single exact match will be automatically selected.",
+      "auto-select-exact-match": "If enabled, a single exact match will be automatically selected (shift+ctrl+x).",
       "cancel-scraping": "Stop scraping comics.",
-      "confirm-each-scrape": "If enabled, admins will confirm each issue selected.",
+      "confirm-each-scrape": "If enabled, admins will confirm each issue selected (shift+ctrl+o).",
       "reject-scraping-issue": "Reject this issue.",
       "select-scraping-issue": "Select this issue.",
       "show-comic-details": "Show Details",
-      "skip-cache": "Scraping will {enabled, select, true{skip} other{use}} the scraping cache.",
+      "skip-cache": "Scraping will {enabled, select, true{skip} other{use}} the scraping cache (shift+ctrl+c).",
       "use-metadata-source-id": "Scrape using the ComicVine id."
     },
     "volume-list": {

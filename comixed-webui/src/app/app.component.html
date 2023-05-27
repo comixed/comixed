@@ -17,11 +17,7 @@
 ></cx-navigation-bar>
 
 <mat-sidenav-container class="cx-width-100 cx-height-100 cx-navbar-margin">
-  <mat-sidenav
-    #sidenav
-    mode="over"
-    (click)="sidenav.close()"
-  >
+  <mat-sidenav #sidenav mode="over" (click)="sidenav.close()">
     <cx-side-navigation [user]="user"></cx-side-navigation>
   </mat-sidenav>
 
