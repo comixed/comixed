@@ -30,8 +30,14 @@ import { ComicDetailsDialogComponent } from '@app/library/components/comic-detai
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('SelectedComicsComponent', () => {
-  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_2, COMIC_BOOK_3, COMIC_BOOK_4];
-  const COMIC = COMIC_BOOK_3;
+  const COMICS = [
+    COMIC_BOOK_1.detail,
+    COMIC_BOOK_2.detail,
+    COMIC_BOOK_3.detail,
+    COMIC_BOOK_4.detail
+  ];
+  const COMIC_BOOK = COMIC_BOOK_3;
+  const COMIC_DETAIL = COMIC_BOOK.detail;
 
   let component: SelectedComicsComponent;
   let fixture: ComponentFixture<SelectedComicsComponent>;
@@ -81,11 +87,13 @@ describe('SelectedComicsComponent', () => {
 
   describe('when the selection has changed', () => {
     beforeEach(() => {
-      component.onSelectionChanged(COMIC);
+      component.onSelectionChanged(COMIC_DETAIL);
     });
 
     it('emits an event', () => {
-      expect(component.selectionChanged.emit).toHaveBeenCalledWith(COMIC);
+      expect(component.selectionChanged.emit).toHaveBeenCalledWith(
+        COMIC_DETAIL
+      );
     });
   });
 
@@ -95,12 +103,12 @@ describe('SelectedComicsComponent', () => {
     beforeEach(() => {
       event = new MouseEvent('test');
       spyOn(event, 'stopPropagation');
-      component.onShowComicDetails(COMIC, event);
+      component.onShowComicDetails(COMIC_BOOK, event);
     });
 
     it('opens the comic details dialog', () => {
       expect(dialog.open).toHaveBeenCalledWith(ComicDetailsDialogComponent, {
-        data: COMIC
+        data: COMIC_BOOK
       });
     });
 

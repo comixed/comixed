@@ -8,10 +8,7 @@
           }}
         </h3>
         <cx-comic-page
-          [imageUrl]="currentComic | comicCoverUrl"
-          [pageSize]="-1"
-          [imageWidth]="'100%'"
-          [imageHeight]="'auto'"
+          [imageUrl]="currentComic.detail | comicCoverUrl"
         ></cx-comic-page>
       </div>
       <div>

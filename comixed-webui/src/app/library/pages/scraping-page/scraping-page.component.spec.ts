@@ -43,8 +43,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import {
+  COMIC_BOOK_3,
   COMIC_DETAIL_1,
-  COMIC_DETAIL_2,
   COMIC_DETAIL_3,
   COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
@@ -59,10 +59,15 @@ import {
   initialState as initialLibrarySelectionState,
   LIBRARY_SELECTIONS_FEATURE_KEY
 } from '@app/library/reducers/library-selections.reducer';
+import { loadComicBook } from '@app/comic-books/actions/comic-book.actions';
+import {
+  COMIC_BOOK_FEATURE_KEY,
+  initialState as initialComicBookState
+} from '@app/comic-books/reducers/comic-book.reducer';
 
 describe('ScrapingPageComponent', () => {
   const USER = USER_READER;
-  const COMIC = COMIC_DETAIL_2;
+  const COMIC = COMIC_BOOK_3;
   const COMIC_BOOKS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
   const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
@@ -75,7 +80,8 @@ describe('ScrapingPageComponent', () => {
       comicBooks: COMIC_BOOKS
     },
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
-    [METADATA_FEATURE_KEY]: { ...initialScrapingState }
+    [METADATA_FEATURE_KEY]: { ...initialScrapingState },
+    [COMIC_BOOK_FEATURE_KEY]: { ...initialComicBookState }
   };
 
   let component: ScrapingPageComponent;
@@ -134,11 +140,17 @@ describe('ScrapingPageComponent', () => {
   describe('when the comic is changed', () => {
     beforeEach(() => {
       component.currentComic = null;
-      component.onSelectionChanged(COMIC);
+      component.onSelectionChanged(COMIC.detail);
     });
 
-    it('sets the current comic', () => {
-      expect(component.currentComic).toEqual(COMIC);
+    it('clears the current comic', () => {
+      expect(component.currentComic).toBeNull();
+    });
+
+    it('load the comic book', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        loadComicBook({ id: COMIC.detail.comicId })
+      );
     });
   });
 
@@ -146,11 +158,11 @@ describe('ScrapingPageComponent', () => {
     beforeEach(() => {
       component.metadataSource = METADATA_SOURCE;
       component.onScrape({
-        series: COMIC.series,
+        series: COMIC.detail.series,
         maximumRecords: MAXIMUM_RECORDS,
         skipCache: SKIP_CACHE,
-        issueNumber: COMIC.issueNumber,
-        volume: COMIC.volume
+        issueNumber: COMIC.detail.issueNumber,
+        volume: COMIC.detail.volume
       });
     });
 
@@ -158,7 +170,7 @@ describe('ScrapingPageComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         loadVolumeMetadata({
           metadataSource: METADATA_SOURCE,
-          series: COMIC.series,
+          series: COMIC.detail.series,
           maximumRecords: MAXIMUM_RECORDS,
           skipCache: SKIP_CACHE
         })

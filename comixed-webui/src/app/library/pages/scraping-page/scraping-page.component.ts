@@ -42,6 +42,9 @@ import { selectComicBookList } from '@app/comic-books/selectors/comic-book-list.
 import { selectLibrarySelections } from '@app/library/selectors/library-selections.selectors';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_PREFERENCE } from '@app/core';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { loadComicBook } from '@app/comic-books/actions/comic-book.actions';
+import { ComicBook } from '@app/comic-books/models/comic-book';
+import { selectComicBook } from '@app/comic-books/selectors/comic-book.selectors';
 
 @Component({
   selector: 'cx-scraping-page',
@@ -55,7 +58,8 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
   selectedComicsSubscription: Subscription;
   metadataSourceSubscription: Subscription;
   metadataSource: MetadataSource;
-  currentComic: ComicDetail = null;
+  comicBookSubscription: Subscription;
+  currentComic: ComicBook = null;
   currentSeries = '';
   currentVolume = '';
   currentIssueNumber = '';
@@ -117,6 +121,9 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
     this.scrapingVolumeSubscription = this.store
       .select(selectVolumeMetadata)
       .subscribe(volumes => (this.scrapingVolumes = volumes));
+    this.comicBookSubscription = this.store
+      .select(selectComicBook)
+      .subscribe(comicBook => (this.currentComic = comicBook));
   }
 
   private _selectedIds: number[] = [];
@@ -151,11 +158,13 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
     this.selectedComicsSubscription.unsubscribe();
     this.metadataSourceSubscription.unsubscribe();
     this.scrapingVolumeSubscription.unsubscribe();
+    this.comicBookSubscription.unsubscribe();
   }
 
   onSelectionChanged(comicBook: ComicDetail): void {
     this.logger.trace('Selected comic changed:', comicBook);
-    this.currentComic = comicBook;
+    this.currentComic = null;
+    this.store.dispatch(loadComicBook({ id: comicBook.comicId }));
   }
 
   onScrape(event: MetadataEvent): void {
