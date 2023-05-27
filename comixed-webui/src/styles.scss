@@ -16,11 +16,13 @@ body {
 
 // links
 
-a:link, a:visited {
+a:link,
+a:visited {
   text-decoration: none;
 }
 
-a:active, a:hover {
+a:active,
+a:hover {
   text-decoration: underline;
 }
 
@@ -251,7 +253,7 @@ $cx-max-image-width: 600px;
 }
 
 .cx-margin-10 {
-  margin: 10px
+  margin: 10px;
 }
 
 // table column widths
@@ -325,7 +327,7 @@ th {
 
 .cx-action-button-container-horizontal {
   display: flex;
-  flex-direction:  row;
+  flex-direction: row;
 }
 
 .cx-detail-label {
@@ -522,4 +524,8 @@ mat-toolbar.mat-toolbar mat-form-field.mat-mdc-form-field {
 
 .cx-file-input {
   display: none;
+}
+
+.mat-mdc-dialog-surface {
+  padding: 15px !important;
 }
