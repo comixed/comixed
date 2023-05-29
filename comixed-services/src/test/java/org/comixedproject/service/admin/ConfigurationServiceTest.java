@@ -150,4 +150,33 @@ public class ConfigurationServiceTest {
 
     Mockito.verify(configurationRepository, Mockito.times(1)).findByName(TEST_OPTION_NAME);
   }
+
+  @Test
+  public void testIsFeatureEnabledNotFound() {
+    Mockito.when(configurationRepository.findByName(Mockito.anyString())).thenReturn(null);
+
+    assertFalse(service.isFeatureEnabled(TEST_OPTION_NAME));
+
+    Mockito.verify(configurationRepository, Mockito.times(1)).findByName(TEST_OPTION_NAME);
+  }
+
+  @Test
+  public void testIsFeatureEnabledNotEnabled() {
+    Mockito.when(option.getValue()).thenReturn(Boolean.FALSE.toString());
+    Mockito.when(configurationRepository.findByName(Mockito.anyString())).thenReturn(option);
+
+    assertFalse(service.isFeatureEnabled(TEST_OPTION_NAME));
+
+    Mockito.verify(configurationRepository, Mockito.times(1)).findByName(TEST_OPTION_NAME);
+  }
+
+  @Test
+  public void testIsFeatureEnabledEnabled() {
+    Mockito.when(option.getValue()).thenReturn(Boolean.TRUE.toString());
+    Mockito.when(configurationRepository.findByName(Mockito.anyString())).thenReturn(option);
+
+    assertTrue(service.isFeatureEnabled(TEST_OPTION_NAME));
+
+    Mockito.verify(configurationRepository, Mockito.times(1)).findByName(TEST_OPTION_NAME);
+  }
 }

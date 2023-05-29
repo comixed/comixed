@@ -20,10 +20,12 @@ package org.comixedproject.batch.comicbooks.processors;
 
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
+import static org.comixedproject.model.admin.ConfigurationOption.CREATE_EXTERNAL_METADATA_FILE;
+import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_NO_COMICINFO_ENTRY;
+import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS;
 
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.model.admin.ConfigurationOption;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
@@ -75,8 +77,8 @@ public class UpdateMetadataProcessorTest {
 
   @Test
   public void testProcessCreateExternalFileThrowsException() throws Exception {
-    Mockito.when(configurationService.getOptionValue(Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(TEST_TRUE);
+    Mockito.when(configurationService.isFeatureEnabled(CREATE_EXTERNAL_METADATA_FILE))
+        .thenReturn(true);
     Mockito.doThrow(AdaptorException.class)
         .when(comicBookAdaptor)
         .saveMetadataFile(Mockito.any(ComicBook.class));
@@ -87,15 +89,14 @@ public class UpdateMetadataProcessorTest {
     assertSame(comicBook, result);
 
     Mockito.verify(configurationService, Mockito.times(1))
-        .getOptionValue(
-            ConfigurationOption.CREATE_EXTERNAL_METADATA_FILE, Boolean.FALSE.toString());
+        .isFeatureEnabled(CREATE_EXTERNAL_METADATA_FILE);
     Mockito.verify(comicBookAdaptor, Mockito.times(1)).saveMetadataFile(comicBook);
   }
 
   @Test
   public void testProcessCreateExternalFile() throws Exception {
-    Mockito.when(configurationService.getOptionValue(Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(TEST_TRUE);
+    Mockito.when(configurationService.isFeatureEnabled(CREATE_EXTERNAL_METADATA_FILE))
+        .thenReturn(true);
 
     final ComicBook result = processor.process(comicBook);
 
@@ -103,8 +104,7 @@ public class UpdateMetadataProcessorTest {
     assertSame(comicBook, result);
 
     Mockito.verify(configurationService, Mockito.times(1))
-        .getOptionValue(
-            ConfigurationOption.CREATE_EXTERNAL_METADATA_FILE, Boolean.FALSE.toString());
+        .isFeatureEnabled(CREATE_EXTERNAL_METADATA_FILE);
     Mockito.verify(comicBookAdaptor, Mockito.times(1)).saveMetadataFile(comicBook);
   }
 
@@ -127,10 +127,26 @@ public class UpdateMetadataProcessorTest {
 
   @Test
   public void testProcessNoComicInfoFileEnabled() throws Exception {
-    Mockito.when(
-            configurationService.getOptionValue(
-                ConfigurationService.CFG_LIBRARY_NO_COMICINFO_ENTRY, Boolean.FALSE.toString()))
-        .thenReturn(TEST_TRUE);
+    Mockito.when(configurationService.isFeatureEnabled(CFG_LIBRARY_NO_COMICINFO_ENTRY))
+        .thenReturn(true);
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+
+    Mockito.verify(comicBookAdaptor, Mockito.never())
+        .save(
+            Mockito.any(ComicBook.class),
+            Mockito.any(ArchiveType.class),
+            Mockito.anyBoolean(),
+            Mockito.anyString());
+  }
+
+  @Test
+  public void testProcessNoRecreateComicFileAlowed() throws Exception {
+    Mockito.when(configurationService.isFeatureEnabled(CFG_LIBRARY_NO_RECREATE_COMICS))
+        .thenReturn(true);
 
     final ComicBook result = processor.process(comicBook);
 
@@ -147,8 +163,8 @@ public class UpdateMetadataProcessorTest {
 
   @Test
   public void testProcess() throws Exception {
-    Mockito.when(configurationService.getOptionValue(Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(TEST_FALSE);
+    Mockito.when(configurationService.isFeatureEnabled(CREATE_EXTERNAL_METADATA_FILE))
+        .thenReturn(true);
 
     final ComicBook result = processor.process(comicBook);
 
@@ -158,7 +174,6 @@ public class UpdateMetadataProcessorTest {
     Mockito.verify(comicBookAdaptor, Mockito.times(1))
         .save(comicBook, TEST_ARCHIVE_TYPE, false, "");
     Mockito.verify(configurationService, Mockito.times(1))
-        .getOptionValue(
-            ConfigurationOption.CREATE_EXTERNAL_METADATA_FILE, Boolean.FALSE.toString());
+        .isFeatureEnabled(CREATE_EXTERNAL_METADATA_FILE);
   }
 }

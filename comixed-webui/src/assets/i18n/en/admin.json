@@ -7,6 +7,7 @@
       "comic-variable-name": "Variable",
       "create-external-metadata-files": "Create external metadata files for each comic.",
       "delete-empty-directories": "Delete empty directories after consolidation.",
+      "no-recreate-comics": "Do not recreate comic files",
       "page-renaming-rule": "Page Renaming Rule",
       "page-renaming-variables": "Page Renaming Variables",
       "root-directory": "Library Root Directory",

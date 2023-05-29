@@ -39,6 +39,7 @@ public class ConfigurationService {
   public static final String CFG_LIBRARY_MAX_RECORDS = "library.max-records";
   public static final String CFG_LIBRARY_ROOT_DIRECTORY = "library.root-directory";
   public static final String CFG_LIBRARY_COMIC_RENAMING_RULE = "library.comic-book.renaming-rule";
+  public static final String CFG_LIBRARY_NO_RECREATE_COMICS = "library.comic-book.no-recreate";
   public static final String CFG_LIBRARY_PAGE_RENAMING_RULE = "library.comic-page.renaming-rule";
   public static final String CFG_LIBRARY_DELETE_EMPTY_DIRECTORIES =
       "library.directories.delete-empty";
@@ -99,5 +100,15 @@ public class ConfigurationService {
   public String getOptionValue(final String name, final String defaultValue) {
     final String result = this.getOptionValue(name);
     return StringUtils.isNotEmpty(result) ? result : defaultValue;
+  }
+
+  /**
+   * Convenience method for checking if a boolean configuration option is enabled.
+   *
+   * @param name the configuration option name
+   * @return true if it's enabled, false otherwise
+   */
+  public boolean isFeatureEnabled(final String name) {
+    return Boolean.parseBoolean(this.getOptionValue(name, Boolean.FALSE.toString()));
   }
 }

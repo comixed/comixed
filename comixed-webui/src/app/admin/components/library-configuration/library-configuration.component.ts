@@ -32,6 +32,7 @@ import {
   CREATE_EXTERNAL_METADATA_FILES,
   LIBRARY_COMIC_RENAMING_RULE,
   LIBRARY_DELETE_EMPTY_DIRECTORIES,
+  LIBRARY_NO_RECREATE_COMICS,
   LIBRARY_PAGE_RENAMING_RULE,
   LIBRARY_ROOT_DIRECTORY,
   SKIP_INTERNAL_METADATA_FILES
@@ -98,6 +99,7 @@ export class LibraryConfigurationComponent {
       skipInternalMetadataFile: ['', []],
       rootDirectory: ['', [Validators.required]],
       comicRenamingRule: ['', []],
+      noRecreateComics: ['', []],
       pageRenamingRule: ['', []]
     });
   }
@@ -124,6 +126,13 @@ export class LibraryConfigurationComponent {
       getConfigurationOption(
         options,
         CREATE_EXTERNAL_METADATA_FILES,
+        `${false}`
+      ) === `${true}`
+    );
+    this.libraryConfigurationForm.controls.noRecreateComics.setValue(
+      getConfigurationOption(
+        options,
+        LIBRARY_NO_RECREATE_COMICS,
         `${false}`
       ) === `${true}`
     );
@@ -167,6 +176,10 @@ export class LibraryConfigurationComponent {
       {
         name: SKIP_INTERNAL_METADATA_FILES,
         value: `${this.libraryConfigurationForm.controls.skipInternalMetadataFile.value}`
+      },
+      {
+        name: LIBRARY_NO_RECREATE_COMICS,
+        value: `${this.libraryConfigurationForm.controls.noRecreateComics.value}`
       },
       {
         name: LIBRARY_ROOT_DIRECTORY,

@@ -21,6 +21,7 @@ import { API_ROOT_URL } from '../core';
 export const COMICVINE_API_KEY = 'comicvine.api-key';
 export const LIBRARY_ROOT_DIRECTORY = 'library.root-directory';
 export const LIBRARY_COMIC_RENAMING_RULE = 'library.comic-book.renaming-rule';
+export const LIBRARY_NO_RECREATE_COMICS = 'library.comic-book.no-recreate';
 export const LIBRARY_PAGE_RENAMING_RULE = 'library.comic-page.renaming-rule';
 export const LIBRARY_DELETE_EMPTY_DIRECTORIES =
   'library.directories.delete-empty';
