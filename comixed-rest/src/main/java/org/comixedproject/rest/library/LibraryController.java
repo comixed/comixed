@@ -61,7 +61,11 @@ import org.comixedproject.service.library.RemoteLibraryStateService;
 import org.comixedproject.views.View;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
@@ -134,11 +138,16 @@ public class LibraryController {
    * Prepares comics to have their underlying file recreated.
    *
    * @param request the request body
-   * @throws Exception if an error occurs
+   * @throws LibraryException if an error occurs
    */
   @PostMapping(value = "/api/library/convert", consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.library.convert-comics")
-  public void convertComics(@RequestBody() ConvertComicsRequest request) throws Exception {
+  public void convertComics(@RequestBody() ConvertComicsRequest request) throws LibraryException {
+    if (this.configurationService.isFeatureEnabled(
+        ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS)) {
+      throw new LibraryException("Recreating comic files is currently disabled");
+    }
+
     List<Long> idList = request.getIds();
     ArchiveType archiveType = request.getArchiveType();
     boolean renamePages = request.isRenamePages();
@@ -154,13 +163,20 @@ public class LibraryController {
     log.trace("Preparing to recreate comic files");
     this.libraryService.prepareToRecreateComics(idList);
     log.trace("Starting batch process");
-    this.jobLauncher.run(
-        recreateComicFilesJob,
-        new JobParametersBuilder()
-            .addLong(JOB_RECREATE_COMICS_STARTED, System.currentTimeMillis())
-            .addString(JOB_TARGET_ARCHIVE, archiveType.getName())
-            .addString(JOB_DELETE_MARKED_PAGES, String.valueOf(deletePages))
-            .toJobParameters());
+    try {
+      this.jobLauncher.run(
+          recreateComicFilesJob,
+          new JobParametersBuilder()
+              .addLong(JOB_RECREATE_COMICS_STARTED, System.currentTimeMillis())
+              .addString(JOB_TARGET_ARCHIVE, archiveType.getName())
+              .addString(JOB_DELETE_MARKED_PAGES, String.valueOf(deletePages))
+              .toJobParameters());
+    } catch (JobExecutionAlreadyRunningException
+        | JobRestartException
+        | JobInstanceAlreadyCompleteException
+        | JobParametersInvalidException error) {
+      throw new LibraryException("Failed to start comic conversion batch process", error);
+    }
   }
 
   /**

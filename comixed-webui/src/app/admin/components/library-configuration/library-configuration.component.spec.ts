@@ -31,6 +31,7 @@ import {
   CREATE_EXTERNAL_METADATA_FILES,
   LIBRARY_COMIC_RENAMING_RULE,
   LIBRARY_DELETE_EMPTY_DIRECTORIES,
+  LIBRARY_NO_RECREATE_COMICS,
   LIBRARY_PAGE_RENAMING_RULE,
   LIBRARY_ROOT_DIRECTORY,
   SKIP_INTERNAL_METADATA_FILES
@@ -50,11 +51,16 @@ describe('LibraryConfigurationComponent', () => {
   const SKIP_INTERNAL_METADATA = Math.random() > 0.5;
   const LIBRARY_ROOT = 'The library root';
   const COMIC_RENAMING_RULE = 'The comic renaming rule';
+  const NO_RECREATE_COMICS = Math.random() > 0.5;
   const PAGE_RENAMING_RULE = 'The page renaming rule';
   const OPTIONS = [
     {
       name: LIBRARY_COMIC_RENAMING_RULE,
       value: COMIC_RENAMING_RULE
+    },
+    {
+      name: LIBRARY_NO_RECREATE_COMICS,
+      value: `${NO_RECREATE_COMICS}`
     },
     {
       name: LIBRARY_ROOT_DIRECTORY,
@@ -141,6 +147,12 @@ describe('LibraryConfigurationComponent', () => {
       ).toEqual(COMIC_RENAMING_RULE);
     });
 
+    it('sets the comic renaming rule value', () => {
+      expect(
+        component.libraryConfigurationForm.controls.noRecreateComics.value
+      ).toEqual(NO_RECREATE_COMICS);
+    });
+
     it('sets the page renaming rule value', () => {
       expect(
         component.libraryConfigurationForm.controls.pageRenamingRule.value
@@ -176,6 +188,10 @@ describe('LibraryConfigurationComponent', () => {
             {
               name: SKIP_INTERNAL_METADATA_FILES,
               value: `${SKIP_INTERNAL_METADATA}`
+            },
+            {
+              name: LIBRARY_NO_RECREATE_COMICS,
+              value: `${NO_RECREATE_COMICS}`
             },
             { name: LIBRARY_ROOT_DIRECTORY, value: LIBRARY_ROOT },
             { name: LIBRARY_COMIC_RENAMING_RULE, value: COMIC_RENAMING_RULE },

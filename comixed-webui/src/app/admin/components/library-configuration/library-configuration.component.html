@@ -11,7 +11,7 @@
 </mat-toolbar>
 
 <form [formGroup]="libraryConfigurationForm">
-  <mat-form-field class="cx-width-34">
+  <mat-form-field class="cx-width-25">
     <mat-checkbox
       id="delete-empty-directories-checkbox"
       color="primary"
@@ -21,7 +21,7 @@
     </mat-checkbox>
     <input hidden matInput />
   </mat-form-field>
-  <mat-form-field class="cx-width-33">
+  <mat-form-field class="cx-width-25">
     <mat-checkbox
       id="create-external-metadata-file-checkbox"
       color="primary"
@@ -31,13 +31,23 @@
     </mat-checkbox>
     <input hidden matInput />
   </mat-form-field>
-  <mat-form-field class="cx-width-33">
+  <mat-form-field class="cx-width-25">
     <mat-checkbox
       id="skip-internal-metadata-file-checkbox"
       color="primary"
       formControlName="skipInternalMetadataFile"
     >
       {{ "configuration.label.skip-internal-metadata-files" | translate }}
+    </mat-checkbox>
+    <input hidden matInput />
+  </mat-form-field>
+  <mat-form-field class="cx-width-25">
+    <mat-checkbox
+      id="no-recreate-comics-checkbox"
+      color="primary"
+      formControlName="noRecreateComics"
+    >
+      {{ "configuration.label.no-recreate-comics" | translate }}
     </mat-checkbox>
     <input hidden matInput />
   </mat-form-field>

@@ -29,6 +29,8 @@ import { CURRENT_RELEASE } from '@app/app.fixtures';
 import { MatCardModule } from '@angular/material/card';
 import { TitleService } from '@app/core/services/title.service';
 import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('BuildDetailsComponent', () => {
   const initialState = {
@@ -52,6 +54,8 @@ describe('BuildDetailsComponent', () => {
           LoggerModule.forRoot(),
           TranslateModule.forRoot(),
           MatCardModule,
+          MatIconModule,
+          MatTooltipModule,
           ClipboardModule
         ],
         providers: [provideMockStore({ initialState }), TitleService]

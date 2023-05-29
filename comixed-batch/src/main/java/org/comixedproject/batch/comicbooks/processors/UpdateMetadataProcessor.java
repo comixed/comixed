@@ -42,9 +42,8 @@ public class UpdateMetadataProcessor implements ItemProcessor<ComicBook, ComicBo
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
-    if (Boolean.parseBoolean(
-        this.configurationService.getOptionValue(
-            ConfigurationOption.CREATE_EXTERNAL_METADATA_FILE, Boolean.FALSE.toString()))) {
+    if (this.configurationService.isFeatureEnabled(
+        ConfigurationOption.CREATE_EXTERNAL_METADATA_FILE)) {
       log.debug("Creating external metadata file for comic: id={}", comicBook.getId());
       try {
         this.comicBookAdaptor.saveMetadataFile(comicBook);
@@ -53,9 +52,10 @@ public class UpdateMetadataProcessor implements ItemProcessor<ComicBook, ComicBo
       }
     }
 
-    if (Boolean.parseBoolean(
-        this.configurationService.getOptionValue(
-            ConfigurationService.CFG_LIBRARY_NO_COMICINFO_ENTRY, Boolean.FALSE.toString()))) {
+    if (this.configurationService.isFeatureEnabled(
+            ConfigurationService.CFG_LIBRARY_NO_COMICINFO_ENTRY)
+        || this.configurationService.isFeatureEnabled(
+            ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS)) {
       log.debug("Writing ComicInfo.xml entries disabled: skipping");
       return comicBook;
     }
