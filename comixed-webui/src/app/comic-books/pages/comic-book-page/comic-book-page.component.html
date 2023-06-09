@@ -150,14 +150,14 @@
   </button>
 </mat-toolbar>
 
-<div *ngIf="!!comicBook" class="cx-width-100 cx-accent-light-background">
+<div *ngIf="!!comicBook" class="cx-width-100">
   <h1>
     {{ comicBook.detail | comicTitle }}
   </h1>
 </div>
 
-<div *ngIf="!!comicBook" class="cx-detail-card-container">
-  <div id="comic-cover-container" class="x-padding-left-5">
+<div *ngIf="!!comicBook" class="cx-horizontal-container">
+  <div id="comic-cover-container" class="cx-grow-25p cx-padding-left-5">
     <div class="cx-width-100 cx-align-content-center">
       <button
         mat-icon-button
@@ -196,7 +196,7 @@
       </mat-card-content>
     </mat-card>
   </div>
-  <div id="comic-tab-container" class="cx-padding-left-5 cx-grow-1">
+  <div id="comic-tab-container" class="cx-grow-75p cx-padding-left-5">
     <mat-tab-group
       class="cx-width-100"
       animationDuration="0ms"

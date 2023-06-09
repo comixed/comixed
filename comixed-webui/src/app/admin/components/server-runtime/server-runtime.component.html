@@ -23,12 +23,7 @@
 </mat-toolbar>
 
 <div *ngIf="!!health" class="cx-detail-card-container">
-  <div
-    id="server-status-card"
-    fxFlex.gt-md="25%"
-    fxFlex.md="50%"
-    fxFlex.lt-med="100%"
-  >
+  <div id="server-status-card" class="cx-grow-1">
     <mat-card appearance="outlined">
       <mat-card-title>
         {{ "server-health.server-status.title" | translate }}
@@ -42,12 +37,7 @@
       </mat-card-content>
     </mat-card>
   </div>
-  <div
-    id="database-status-card"
-    fxFlex.gt-md="25%"
-    fxFlex.md="50%"
-    fxFlex.lt-med="100%"
-  >
+  <div id="database-status-card" class="cx-grow-1">
     <mat-card appearance="outlined">
       <mat-card-title>
         {{ "server-health.database-status.title" | translate }}
@@ -62,12 +52,7 @@
       </mat-card-content>
     </mat-card>
   </div>
-  <div
-    id="ping-status-card"
-    fxFlex.gt-md="25%"
-    fxFlex.md="50%"
-    fxFlex.lt-med="100%"
-  >
+  <div id="ping-status-card" class="cx-grow-1">
     <mat-card appearance="outlined">
       <mat-card-title>
         {{ "server-health.ping-status.title" | translate }}
@@ -82,12 +67,7 @@
       </mat-card-content>
     </mat-card>
   </div>
-  <div
-    id="disk-status-card"
-    fxFlex.gt-md="25%"
-    fxFlex.md="50%"
-    fxFlex.lt-med="100%"
-  >
+  <div id="disk-status-card" class="cx-grow-1">
     <mat-card appearance="outlined">
       <mat-card-title>
         {{ "server-health.disk-status.title" | translate }}
