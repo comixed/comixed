@@ -1,9 +1,5 @@
-<div
-  fxLayout="row"
-  class="cx-width-100 cx-padding-right-15"
-  fxLayoutAlign="center start"
->
-  <div *ngIf="!!user" fxFlex="75%">
+<div class="cx-horizontal-container cx-width-100 cx-padding-right-15">
+  <div *ngIf="!!user" class="cx-grow-75p">
     <span class="cx-text-nowrap cx-padding-left-15">
       {{
         "app.system-status"
@@ -18,7 +14,7 @@
       }}
     </span>
   </div>
-  <div fxFlex="25%">
+  <div class="cx-grow-25p">
     <span class="cx-text-nowrap cx-padding-right-15">
       Copyright &copy; 2017-2023, The ComiXed Project.
     </span>

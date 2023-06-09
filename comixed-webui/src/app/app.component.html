@@ -16,7 +16,7 @@
   (toggleAccountBar)="accountBar.toggle($event)"
 ></cx-navigation-bar>
 
-<mat-sidenav-container class="cx-width-100 cx-height-100 cx-navbar-margin">
+<mat-sidenav-container class="cx-width-100 cx-height-100">
   <mat-sidenav #sidenav mode="over" (click)="sidenav.close()">
     <cx-side-navigation [user]="user"></cx-side-navigation>
   </mat-sidenav>
@@ -35,8 +35,10 @@
     ></cx-edit-account-bar>
   </mat-sidenav>
 
-  <mat-sidenav-content #sidebar class="cx-width-100 cx-overflow-y-scroll">
-    <router-outlet></router-outlet>
+  <mat-sidenav-content #sidebar>
+    <div class="cx-width-100 cx-overflow-y-scroll cx-footer-margin">
+      <router-outlet></router-outlet>
+    </div>
     <cx-footer
       id="cx-footer"
       class="cx-padding-left-5"

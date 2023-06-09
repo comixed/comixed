@@ -93,8 +93,8 @@ $cx-max-image-width: 600px;
   width: 80% !important;
 }
 
-.cx-width-80 {
-  width: 80% !important;
+.cx-width-90 {
+  width: 90% !important;
 }
 
 .cx-width-100 {
@@ -240,7 +240,7 @@ $cx-max-image-width: 600px;
 }
 
 .cx-footer-margin {
-  margin-bottom: 75px !important;
+  margin-bottom: 35px !important;
 }
 
 .cx-margin-none {
@@ -401,12 +401,24 @@ th {
   flex-direction: column;
 }
 
+.cx-grow-20p {
+  flex-basis: 20%;
+}
+
+.cx-grow-25p {
+  flex-basis: 25%;
+}
+
+.cx-grow-75p {
+  flex-basis: 75%;
+}
+
 .cx-grow-0 {
-  flex: 0 0 auto;
+  flex-grow: 0;
 }
 
 .cx-grow-1 {
-  flex-basis: auto;
+  flex-grow: 1;
 }
 
 // buttons

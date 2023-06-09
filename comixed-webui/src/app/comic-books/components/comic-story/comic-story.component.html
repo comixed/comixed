@@ -18,12 +18,7 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
     <div class="cx-detail-card-container cx-width-100">
-      <div
-        *ngFor="let credit of credits"
-        fxFlex.gt-md="20%"
-        fxFlex.md="25%"
-        fxFlex.lg-md="100%"
-      >
+      <div *ngFor="let credit of credits" class="cx-grow-20p">
         <cx-comic-detail-card
           [comic]="comic.detail"
           [title]="credit.value"
@@ -43,12 +38,7 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
     <div class="cx-detail-card-container cx-width-100">
-      <div
-        *ngFor="let character of characters"
-        fxFlex.gt-md="20%"
-        fxFlex.md="25%"
-        fxFlex.lg-md="100%"
-      >
+      <div *ngFor="let character of characters" class="cx-grow-20p">
         <cx-comic-detail-card
           [comic]="comic.detail"
           [title]="character.value"
@@ -70,12 +60,7 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
     <div class="cx-detail-card-container cx-width-100">
-      <div
-        *ngFor="let team of teams"
-        fxFlex.gt-md="20%"
-        fxFlex.md="25%"
-        fxFlex.lg-md="100%"
-      >
+      <div *ngFor="let team of teams" class="cx-grow-20p">
         <cx-comic-detail-card
           [comic]="comic.detail"
           [title]="team.value"
@@ -94,12 +79,7 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
     <div class="cx-detail-card-container cx-width-100">
-      <div
-        *ngFor="let location of locations"
-        fxFlex.gt-md="20%"
-        fxFlex.md="25%"
-        fxFlex.lg-md="100%"
-      >
+      <div *ngFor="let location of locations" class="cx-grow-20p">
         <cx-comic-detail-card
           [comic]="comic.detail"
           [title]="location.value"
@@ -121,12 +101,7 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
     <div class="cx-detail-card-container cx-width-100">
-      <div
-        *ngFor="let story of stories"
-        fxFlex.gt-md="20%"
-        fxFlex.md="25%"
-        fxFlex.lg-md="100%"
-      >
+      <div *ngFor="let story of stories" class="cx-grow-20p">
         <cx-comic-detail-card
           [comic]="comic.detail"
           [title]="story.value"
