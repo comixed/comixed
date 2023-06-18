@@ -41,7 +41,6 @@ import {
 import { BlockedPageDetailEffects } from '@app/comic-pages/effects/blocked-page-detail.effects';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { TragicallySlickEditInPlaceModule } from '@tragically-slick/edit-in-place';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -126,7 +125,6 @@ import { DeletedPagesEffects } from '@app/comic-pages/effects/deleted-pages.effe
     MatCardModule,
     ReactiveFormsModule,
     MatFormFieldModule,
-    TragicallySlickEditInPlaceModule,
     MatInputModule,
     MatIconModule,
     MatButtonModule,

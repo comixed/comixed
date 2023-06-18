@@ -50,24 +50,15 @@
     <mat-card-content>
       <mat-form-field class="cx-width-100">
         <mat-label>{{ "blocked-hash.label.label" | translate }}</mat-label>
-        <tsm-edit-in-place
-          [displayTemplate]="displayLabel"
-          [editingTemplate]="editLabel"
-          [editing]="editing"
-        >
-          <ng-template #displayLabel>
-            <span class="cx-width-100">{{ blockedPage.label }}</span>
-          </ng-template>
-          <ng-template #editLabel>
-            <input
-              id="label-input"
-              matInput
-              class="cx-width-100"
-              formControlName="label"
-            />
-          </ng-template>
-        </tsm-edit-in-place>
-        <input matInput hidden />
+        <input
+          id="label-input"
+          matInput
+          class="cx-width-100"
+          formControlName="label"
+          [placeholder]="
+            'blocked-hash.placeholder.blocked-hash-label' | translate
+          "
+        />
       </mat-form-field>
       <mat-form-field class="cx-width-100">
         <mat-label>{{ "blocked-hash.label.hash" | translate }}</mat-label>
