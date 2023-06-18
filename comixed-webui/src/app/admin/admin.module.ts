@@ -54,7 +54,6 @@ import {
 } from '@app/admin/reducers/filename-scraping-rule-list.reducer';
 import { FilenameScrapingRuleListEffects } from '@app/admin/effects/filename-scraping-rule-list.effects';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { TragicallySlickEditInPlaceModule } from '@tragically-slick/edit-in-place';
 import { ServerRuntimeComponent } from './components/server-runtime/server-runtime.component';
 import {
   reducer as serverRuntimeReducer,
@@ -131,7 +130,6 @@ import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
     MatExpansionModule,
     MatTooltipModule,
     DragDropModule,
-    TragicallySlickEditInPlaceModule,
     FlexLayoutModule,
     MatDividerModule,
     ComicBooksModule,

@@ -54,7 +54,6 @@
     "@ngx-translate/http-loader": "^7",
     "@swimlane/ngx-charts": "^19.1.0",
     "@tragically-slick/confirmation": "^15",
-    "@tragically-slick/edit-in-place": "^0.1.1-2",
     "@types/file-saver": "^2.0.0",
     "ansi-html": "^0.0.8",
     "ansi-regex": "^4.1.1",

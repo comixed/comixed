@@ -42,7 +42,6 @@ import { Router } from '@angular/router';
 import { saveBlockedPage } from '@app/comic-pages/actions/blocked-page-detail.actions';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { TragicallySlickEditInPlaceModule } from '@tragically-slick/edit-in-place';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -81,8 +80,7 @@ describe('BlockedHashDetailPageComponent', () => {
           MatDialogModule,
           MatCardModule,
           MatFormFieldModule,
-          MatInputModule,
-          TragicallySlickEditInPlaceModule
+          MatInputModule
         ],
         providers: [provideMockStore({ initialState }), ConfirmationService]
       }).compileComponents();

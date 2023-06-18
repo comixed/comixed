@@ -15,11 +15,27 @@
 </h2>
 
 <mat-paginator
-  [pageSizeOptions]="pageOptions"
-  [pageSize]="pageSize"
+  showFirstLastButtons="true"
+  [pageSize]="queryParameterService.pageSize$ | async"
+  [pageSizeOptions]="queryParameterService.pageSizeOptions"
+  (page)="
+    queryParameterService.onPageChange(
+      $event.pageSize,
+      $event.pageIndex,
+      $event.previousPageIndex
+    )
+  "
 ></mat-paginator>
 
-<mat-table [dataSource]="dataSource" matSort>
+<mat-table
+  matSort
+  [dataSource]="dataSource"
+  [matSortActive]="queryParameterService.sortBy$ | async"
+  [matSortDirection]="queryParameterService.sortDirection$ | async"
+  (matSortChange)="
+    queryParameterService.onSortChange($event.active, $event.direction)
+  "
+>
   <ng-container matColumnDef="selected">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       <mat-checkbox
@@ -59,7 +75,9 @@
       {{ "blocked-hash-list.header.comic-count" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <span class="cx-text-nowrap">{{ entry.item.comicCount }}</span>
+      <span class="cx-text-nowrap cx-align-right">
+        {{ entry.item.comicCount }}
+      </span>
     </mat-cell>
   </ng-container>
 
@@ -69,7 +87,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-text-nowrap">
-        {{ entry.item.createdOn | date: "medium" }}
+        {{ entry.item.createdOn | date: "mediumDate" }}
       </span>
     </mat-cell>
   </ng-container>

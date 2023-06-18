@@ -2747,13 +2747,6 @@
   dependencies:
     tslib "^2.3.0"
 
-"@tragically-slick/edit-in-place@^0.1.1-2":
-  version "0.1.1-2"
-  resolved "https://registry.yarnpkg.com/@tragically-slick/edit-in-place/-/edit-in-place-0.1.1-2.tgz#a7edb1c7624b31bf4e72f11d9ba45678160cdd64"
-  integrity sha512-x67D5taBnEUbd9RQhQQ2mFLHBrsL/JW6vLfT6VscU0p0ZM4aAOmgzrvd1MbFN9RqYifERaKEcSx5djMesvaNfA==
-  dependencies:
-    tslib "^2.0.0"
-
 "@tufjs/models@1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@tufjs/models/-/models-1.0.1.tgz#cc8bb0478188b4b6e58d5528668212724aac87ac"

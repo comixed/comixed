@@ -54,6 +54,7 @@ import {
   PAGE_SIZE_OPTIONS,
   PAGE_SIZE_PREFERENCE
 } from '@app/core';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
 
 @Component({
   selector: 'cx-blocked-hash-list',
@@ -85,6 +86,7 @@ export class BlockedHashListPageComponent
   private _blockedHashes: BlockedHash[] = [];
 
   constructor(
+    public queryParameterService: QueryParameterService,
     private logger: LoggerService,
     private store: Store<any>,
     private router: Router,
@@ -137,13 +139,13 @@ export class BlockedHashListPageComponent
   }
 
   ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from hash state updates');
+    this.logger.debug('Unsubscribing from hash state updates');
     this.hashStateSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from blocked page list updates');
+    this.logger.debug('Unsubscribing from blocked page list updates');
     this.pageSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from language changes');
+    this.logger.debug('Unsubscribing from language changes');
     this.langChangeSubscription.unsubscribe();
-    this.logger.trace('Unsubscriing from user updates');
+    this.logger.debug('Unsubscriing from user updates');
     this.userSubscription.unsubscribe();
   }
 
@@ -218,7 +220,7 @@ export class BlockedHashListPageComponent
   }
 
   onMarkSelectedForDeletion(): void {
-    this.logger.trace('Confirming marking selected pages for deletion');
+    this.logger.debug('Confirming marking selected pages for deletion');
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'blocked-hash-list.mark-pages-with-hash.confirm-mark-title'
@@ -227,7 +229,7 @@ export class BlockedHashListPageComponent
         'blocked-hash-list.mark-pages-with-hash.confirm-mark-message'
       ),
       confirm: () => {
-        this.logger.trace(
+        this.logger.debug(
           'Firing action: mark selected blocked pages for deletion'
         );
         this.doSetDeletionFlag(true);
@@ -236,7 +238,7 @@ export class BlockedHashListPageComponent
   }
 
   onClearSelectedForDeletion(): void {
-    this.logger.trace('Confirming clearing selected pages for deletion');
+    this.logger.debug('Confirming clearing selected pages for deletion');
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'blocked-hash-list.mark-pages-with-hash.confirm-clear-title'
@@ -245,7 +247,7 @@ export class BlockedHashListPageComponent
         'blocked-hash-list.mark-pages-with-hash.confirm-clear-message'
       ),
       confirm: () => {
-        this.logger.trace(
+        this.logger.debug(
           'Firing action: clearing selected blocked pages for deletion'
         );
         this.doSetDeletionFlag(false);
@@ -254,7 +256,7 @@ export class BlockedHashListPageComponent
   }
 
   onSelectAll(checked: boolean): void {
-    this.logger.trace('Selecting all:', checked);
+    this.logger.debug('Selecting all:', checked);
     this.dataSource.data.forEach(entry => (entry.selected = checked));
     this.updateSelections();
   }
@@ -278,7 +280,7 @@ export class BlockedHashListPageComponent
   }
 
   private loadTranslations(): void {
-    this.logger.trace('Loading tab title');
+    this.logger.debug('Loading tab title');
     this.titleService.setTitle(
       this.translateService.instant('blocked-hash-list.tab-title')
     );
