@@ -139,7 +139,7 @@ public class ComicDetail {
   })
   @Getter
   @Setter
-  private ComicType comicType;
+  private ComicType comicType = ComicType.ISSUE;
 
   @Column(name = "Publisher", length = 255)
   @JsonProperty("publisher")

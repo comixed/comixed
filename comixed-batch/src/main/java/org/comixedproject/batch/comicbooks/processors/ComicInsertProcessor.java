@@ -19,7 +19,6 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
@@ -65,7 +64,7 @@ public class ComicInsertProcessor implements ItemProcessor<ComicFileDescriptor, 
       }
       log.trace("Returning comicBook");
       return comicBook;
-    } catch (AdaptorException error) {
+    } catch (Exception error) {
       log.error("Error inserting comic record", error);
       return null;
     }
