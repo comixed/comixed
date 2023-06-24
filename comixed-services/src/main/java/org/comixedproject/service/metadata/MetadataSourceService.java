@@ -137,19 +137,17 @@ public class MetadataSourceService {
     for (Iterator<MetadataSourceProperty> iter = source.getProperties().iterator();
         iter.hasNext(); ) {
       final MetadataSourceProperty property = iter.next();
+      final String name = property.getName();
       final Optional<MetadataSourceProperty> incomingProperty =
-          result.getProperties().stream()
-              .filter(entry -> entry.getName().equals(property.getName()))
-              .findFirst();
+          result.getProperties().stream().filter(entry -> entry.getName().equals(name)).findFirst();
+      final String value = property.getValue().trim();
       if (incomingProperty.isPresent()) {
-        log.debug("Updated property: {}={}", property.getName(), property.getValue());
+        log.debug("Updated property: {}={}", name, value);
         final MetadataSourceProperty existingProperty = incomingProperty.get();
-        existingProperty.setValue(property.getValue());
+        existingProperty.setValue(value);
       } else {
-        log.debug("Adding property: {}={}", property.getName(), property.getValue());
-        result
-            .getProperties()
-            .add(new MetadataSourceProperty(result, property.getName(), property.getValue()));
+        log.debug("Adding property: {}={}", name, value);
+        result.getProperties().add(new MetadataSourceProperty(result, name, value));
       }
     }
     return result;
