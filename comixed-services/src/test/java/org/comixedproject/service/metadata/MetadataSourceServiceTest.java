@@ -61,7 +61,7 @@ public class MetadataSourceServiceTest {
             incomingSource, TEST_EXISTING_PROPERTY_NAME, TEST_EXISTING_PROPERTY_VALUE));
     sourceProperties.add(
         new MetadataSourceProperty(
-            incomingSource, TEST_CREATED_PROPERTY_NAME, TEST_CREATED_PROPERTY_VALUE));
+            incomingSource, TEST_CREATED_PROPERTY_NAME, "  " + TEST_CREATED_PROPERTY_VALUE + "  "));
     Mockito.when(incomingSource.getProperties()).thenReturn(sourceProperties);
   }
 
