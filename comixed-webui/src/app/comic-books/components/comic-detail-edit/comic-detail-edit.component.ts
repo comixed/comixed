@@ -39,6 +39,7 @@ import { selectImprints } from '@app/comic-books/selectors/imprint-list.selector
 import { loadImprints } from '@app/comic-books/actions/imprint-list.actions';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { COMIC_TYPE_SELECTION_OPTIONS } from '@app/comic-books/comic-books.constants';
+import { ComicMetadataSource } from '@app/comic-books/models/comic-metadata-source';
 
 @Component({
   selector: 'cx-comic-detail-edit',
@@ -115,14 +116,16 @@ export class ComicDetailEditComponent implements OnInit, OnDestroy {
         series: this.comicBookForm.controls.series.value,
         volume: this.comicBookForm.controls.volume.value,
         issueNumber: this.comicBookForm.controls.issueNumber.value,
-        coverDate: this.comicBookForm.controls.coverDate.value?.getTime(),
-        storeDate: this.comicBookForm.controls.storeDate.value?.getTime(),
         imprint: this.comicBookForm.controls.imprint.value,
         sortName: this.comicBookForm.controls.sortName.value,
         title: this.comicBookForm.controls.title.value,
+        coverDate: this.comicBookForm.controls.coverDate.value?.getTime(),
+        storeDate: this.comicBookForm.controls.storeDate.value?.getTime(),
         notes: this.comicBookForm.controls.notes.value
       } as ComicDetail,
-      fileDetails: {} as FileDetails
+      fileDetails: {} as FileDetails,
+      metadata: {} as ComicMetadataSource,
+      pages: []
     } as ComicBook;
   }
 
