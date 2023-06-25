@@ -51,9 +51,10 @@
       "selected-for-import": "This file will be imported."
     },
     "tooltip": {
-      "deselect-all": "Clear the comic file selections.",
-      "select-all": "Select all comic files for import.",
-      "start-import": "Start importing the selected comic files.",
+      "deselect-all": "Clear the comic file selections (shift+ctrl+a).",
+      "find-files": "Load files under this directory (shift+ctrl+f).",
+      "select-all": "Select all comic files for import (ctrl+a).",
+      "start-import": "Start importing the selected comic files (ctrl+i).",
       "toggle-file-lookup-form": "Toggle the comic file lookup form."
     }
   },
