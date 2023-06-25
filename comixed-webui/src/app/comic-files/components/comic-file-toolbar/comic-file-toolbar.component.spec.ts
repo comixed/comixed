@@ -128,36 +128,104 @@ describe('ComicFileToolbarComponent', () => {
     beforeEach(() => {
       component.loadFilesForm.controls.rootDirectory.setValue(ROOT_DIRECTORY);
       component.loadFilesForm.controls.maximum.setValue(MAXIMUM);
-      fixture.detectChanges();
-      component.onLoadFiles();
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        loadComicFiles({ directory: ROOT_DIRECTORY, maximum: MAXIMUM })
-      );
+    describe('using the button', () => {
+      beforeEach(() => {
+        fixture.detectChanges();
+        component.onLoadFiles();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          loadComicFiles({ directory: ROOT_DIRECTORY, maximum: MAXIMUM })
+        );
+      });
+    });
+
+    describe('using the hot key', () => {
+      const event = new KeyboardEvent('hotkey');
+
+      beforeEach(() => {
+        spyOn(event, 'preventDefault');
+        component.onHotkeyLoadFiles(event);
+      });
+
+      it('prevents propagation', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          loadComicFiles({ directory: ROOT_DIRECTORY, maximum: MAXIMUM })
+        );
+      });
     });
   });
 
   describe('selecting all comic file', () => {
     beforeEach(() => {
       spyOn(component.selectAll, 'emit');
-      component.onSelectAll();
     });
 
-    it('emits an event', () => {
-      expect(component.selectAll.emit).toHaveBeenCalled();
+    describe('from the button', () => {
+      beforeEach(() => {
+        component.onSelectAll();
+      });
+
+      it('emits an event', () => {
+        expect(component.selectAll.emit).toHaveBeenCalled();
+      });
+    });
+
+    describe('from the hotkey', () => {
+      const event = new KeyboardEvent('hotkey');
+
+      beforeEach(() => {
+        spyOn(event, 'preventDefault');
+        component.onHotkeySelectAll(event);
+      });
+
+      it('prevents propagation', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('emits an event', () => {
+        expect(component.selectAll.emit).toHaveBeenCalled();
+      });
     });
   });
 
   describe('deselecting comic files', () => {
     beforeEach(() => {
       component.selectedComicFiles = COMIC_FILES;
-      component.onDeselectAll();
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(clearComicFileSelections());
+    describe('from the button', () => {
+      beforeEach(() => {
+        component.onDeselectAll();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(clearComicFileSelections());
+      });
+    });
+
+    describe('from the hot key', () => {
+      const event = new KeyboardEvent('hotkey');
+
+      beforeEach(() => {
+        spyOn(event, 'preventDefault');
+        component.onHotkeyDeselectAll(event);
+      });
+
+      it('prevents propagation', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(clearComicFileSelections());
+      });
     });
   });
 
@@ -167,19 +235,49 @@ describe('ComicFileToolbarComponent', () => {
         (confirmation: Confirmation) => confirmation.confirm()
       );
       component.selectedComicFiles = COMIC_FILES;
-      component.onStartImport();
     });
 
-    it('confirms with the user', () => {
-      expect(confirmationService.confirm).toHaveBeenCalled();
+    describe('from the button', () => {
+      beforeEach(() => {
+        component.onStartImport();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          sendComicFiles({
+            files: COMIC_FILES
+          })
+        );
+      });
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        sendComicFiles({
-          files: COMIC_FILES
-        })
-      );
+    describe('from the hotkey', () => {
+      const event = new KeyboardEvent('hotkey');
+
+      beforeEach(() => {
+        spyOn(event, 'preventDefault');
+        component.onHotkeyStartImport(event);
+      });
+
+      it('prevents propagation', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          sendComicFiles({
+            files: COMIC_FILES
+          })
+        );
+      });
     });
   });
 

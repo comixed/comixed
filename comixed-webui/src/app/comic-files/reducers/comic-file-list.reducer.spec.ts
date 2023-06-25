@@ -171,10 +171,6 @@ describe('ComicFileList Reducer', () => {
       );
     });
 
-    it('clears the comic files', () => {
-      expect(state.files).toEqual([]);
-    });
-
     it('clears the selections', () => {
       expect(state.selections).toEqual([]);
     });

@@ -77,7 +77,6 @@ export const reducer = createReducer(
   }),
   on(clearComicFileSelections, state => ({
     ...state,
-    files: [],
     selections: []
   }))
 );

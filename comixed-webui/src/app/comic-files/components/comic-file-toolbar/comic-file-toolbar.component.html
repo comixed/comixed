@@ -80,6 +80,7 @@
         mat-icon-button
         color="primary"
         [disabled]="!loadFilesForm.valid"
+        [matTooltip]="'comic-files.tooltip.find-files' | translate"
         (click)="onLoadFiles()"
       >
         <mat-icon>search</mat-icon>

@@ -19,6 +19,7 @@
 import {
   Component,
   EventEmitter,
+  HostListener,
   Input,
   Output,
   ViewChild
@@ -114,26 +115,69 @@ export class ComicFileToolbarComponent {
     );
   }
 
+  @HostListener('window:keydown.shift.control.f', ['$event'])
+  onHotkeyLoadFiles(event: KeyboardEvent): void {
+    this.logger.debug('Loading files from hotkey');
+    event.preventDefault();
+    this.doLoadFiles();
+  }
+
   onLoadFiles(): void {
+    this.logger.debug('Loading files from button');
+    this.doLoadFiles();
+  }
+
+  @HostListener('window:keydown.control.a', ['$event'])
+  onHotkeySelectAll(event: KeyboardEvent): void {
+    this.logger.debug('Select all comic files from hotkey');
+    event.preventDefault();
+    this.doSelectAll();
+  }
+
+  onSelectAll(): void {
+    this.logger.debug('Firing event: select all');
+    this.doSelectAll();
+  }
+
+  @HostListener('window:keydown.shift.control.a', ['$event'])
+  onHotkeyDeselectAll(event: KeyboardEvent): void {
+    this.logger.debug('Deslecting all from hotkey');
+    event.preventDefault();
+    this.doDeselectAll();
+  }
+
+  onDeselectAll(): void {
+    this.logger.debug('Deselecting all comic files');
+    this.doDeselectAll();
+  }
+
+  @HostListener('window:keydown.control.i', ['$event'])
+  onHotkeyStartImport(event: KeyboardEvent): void {
+    this.logger.debug('Starting import from hotkey');
+    event.preventDefault();
+    this.doStartImport();
+  }
+
+  onStartImport(): void {
+    this.logger.debug('Starting import from button');
+    this.doStartImport();
+  }
+
+  onToggleFileLookupForm(): void {
+    this.showLookupForm = !this.showLookupForm;
+  }
+
+  onPageSizeChange(pageSize: number): void {
+    this.logger.debug('Page size changed');
     this.store.dispatch(
-      loadComicFiles({
-        directory: this.loadFilesForm.controls.rootDirectory.value,
-        maximum: this.loadFilesForm.controls.maximum.value
+      saveUserPreference({
+        name: PAGE_SIZE_PREFERENCE,
+        value: `${pageSize}`
       })
     );
   }
 
-  onSelectAll(): void {
-    this.logger.trace('Firing event: select all');
-    this.selectAll.emit();
-  }
-
-  onDeselectAll(): void {
-    this.logger.trace('Deselecting all comic files');
-    this.store.dispatch(clearComicFileSelections());
-  }
-
-  onStartImport(): void {
+  private doStartImport(): void {
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'comic-files.import-comic-files.confirmation-title'
@@ -143,7 +187,7 @@ export class ComicFileToolbarComponent {
         { count: this.selectedComicFiles.length }
       ),
       confirm: () => {
-        this.logger.trace('Starting the import process');
+        this.logger.debug('Starting the import process');
         this.store.dispatch(
           sendComicFiles({
             files: this.selectedComicFiles
@@ -153,17 +197,20 @@ export class ComicFileToolbarComponent {
     });
   }
 
-  onToggleFileLookupForm(): void {
-    this.showLookupForm = !this.showLookupForm;
+  private doDeselectAll(): void {
+    this.store.dispatch(clearComicFileSelections());
   }
 
-  onPageSizeChange(pageSize: number): void {
-    this.logger.trace('Page size changed');
+  private doLoadFiles(): void {
     this.store.dispatch(
-      saveUserPreference({
-        name: PAGE_SIZE_PREFERENCE,
-        value: `${pageSize}`
+      loadComicFiles({
+        directory: this.loadFilesForm.controls.rootDirectory.value,
+        maximum: this.loadFilesForm.controls.maximum.value
       })
     );
+  }
+
+  private doSelectAll(): void {
+    this.selectAll.emit();
   }
 }
