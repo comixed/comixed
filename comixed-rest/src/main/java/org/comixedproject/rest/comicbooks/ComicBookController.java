@@ -54,6 +54,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Log4j2
 public class ComicBookController {
+  private static final String MISSING_COMIC_COVER_FILENAME = "/images/missing-comic.png";
+  public static final String MISSING_COMIC_COVER = "missing-comic-cover";
+  public static final String ATTACHMENT_FILENAME_FORMAT = "attachment; filename=\"%s\"";
+
   @Autowired private ComicBookService comicBookService;
   @Autowired private PageCacheService pageCacheService;
   @Autowired private ComicFileService comicFileService;
@@ -206,7 +210,9 @@ public class ComicBookController {
     final ComicBook comicBook = this.comicBookService.getComic(id);
 
     if (comicBook == null || comicBook.isMissing()) {
-      throw new ComicBookException("comicBook file is missing");
+      return this.getResponseEntityForImage(
+          this.getClass().getResourceAsStream(MISSING_COMIC_COVER_FILENAME).readAllBytes(),
+          MISSING_COMIC_COVER);
     }
 
     if (comicBook.getPageCount() > 0) {
@@ -237,7 +243,7 @@ public class ComicBookController {
             + this.fileTypeAdaptor.getSubtype(inputStream);
     return ResponseEntity.ok()
         .contentLength(content.length)
-        .header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
+        .header("Content-Disposition", String.format(ATTACHMENT_FILENAME_FORMAT, filename))
         .contentType(MediaType.valueOf(type))
         .cacheControl(CacheControl.maxAge(24, TimeUnit.DAYS))
         .body(content);
