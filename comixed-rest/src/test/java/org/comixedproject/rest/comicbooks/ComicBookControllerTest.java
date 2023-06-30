@@ -18,6 +18,8 @@
 
 package org.comixedproject.rest.comicbooks;
 
+import static org.comixedproject.rest.comicbooks.ComicBookController.ATTACHMENT_FILENAME_FORMAT;
+import static org.comixedproject.rest.comicbooks.ComicBookController.MISSING_COMIC_COVER;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
@@ -232,18 +234,21 @@ public class ComicBookControllerTest {
     }
   }
 
-  @Test(expected = ComicBookException.class)
+  @Test
   public void testGetCoverImageForMissingComic()
       throws ComicBookException, IOException, AdaptorException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicBook.isMissing()).thenReturn(true);
 
-    try {
-      controller.getCoverImage(TEST_COMIC_ID);
-    } finally {
-      Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
-      Mockito.verify(comicBook, Mockito.times(1)).isMissing();
-    }
+    final ResponseEntity<byte[]> result = controller.getCoverImage(TEST_COMIC_ID);
+
+    assertNotNull(result);
+    assertEquals(
+        String.format(ATTACHMENT_FILENAME_FORMAT, MISSING_COMIC_COVER),
+        result.getHeaders().get("Content-Disposition").get(0));
+
+    Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
+    Mockito.verify(comicBook, Mockito.times(1)).isMissing();
   }
 
   @Test
