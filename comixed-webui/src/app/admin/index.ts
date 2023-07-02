@@ -44,6 +44,11 @@ import {
   MetricsState,
   reducer as metricsReducer
 } from '@app/admin/reducers/metrics.reducer';
+import {
+  BATCH_PROCESSES_FEATURE_KEY,
+  BatchProcessesState,
+  reducer as batchProcessesReducer
+} from '@app/admin/reducers/batch-processes.reducer';
 
 export * from './admin.functions';
 
@@ -60,6 +65,7 @@ export interface AdminModuleState {
   [FILENAME_SCRAPING_RULES_FEATURE_KEY]: FilenameScrapingRulesState;
   [SERVER_RUNTIME_FEATURE_KEY]: ShutdownState;
   [METRICS_FEATURE_KEY]: MetricsState;
+  [BATCH_PROCESSES_FEATURE_KEY]: BatchProcessesState;
 }
 
 export type ModuleState = AdminModuleState;
@@ -70,5 +76,6 @@ export const reducers: ActionReducerMap<AdminModuleState> = {
   [SAVE_CONFIGURATION_OPTIONS_FEATURE_KEY]: saveConfigurationOptionsReducer,
   [FILENAME_SCRAPING_RULES_FEATURE_KEY]: filenameScrapingRulesReducer,
   [SERVER_RUNTIME_FEATURE_KEY]: serverRuntimeReducer,
-  [METRICS_FEATURE_KEY]: metricsReducer
+  [METRICS_FEATURE_KEY]: metricsReducer,
+  [BATCH_PROCESSES_FEATURE_KEY]: batchProcessesReducer
 };
