@@ -20,11 +20,17 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { AdminGuard } from '@app/user';
 import { ConfigurationPageComponent } from '@app/admin/pages/configuration-page/configuration-page.component';
+import { BatchProcessListPageComponent } from '@app/admin/pages/batch-process-list-page/batch-process-list-page.component';
 
 const routes: Routes = [
   {
     path: 'admin/configuration',
     component: ConfigurationPageComponent,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'admin/processes',
+    component: BatchProcessListPageComponent,
     canActivate: [AdminGuard]
   }
 ];

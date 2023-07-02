@@ -1,0 +1,40 @@
+@import 'styles';
+
+.mat-column-name {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+  resize: none;
+}
+
+.mat-column-job-id {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-status {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-start-time {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+  resize: none;
+}
+
+.mat-column-end-time {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+  resize: none;
+}
+
+.mat-column-exit-code {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-exit-description {
+}

@@ -1,4 +1,25 @@
 {
+  "batch-processes": {
+    "batch-process-list": {
+      "label": {
+        "end-time": "Finished",
+        "exit-code": "Exit Code",
+        "exit-description": "Description",
+        "name": "Name",
+        "job-id": "Job ID",
+        "start-time": "Started",
+        "status": "Status"
+      },
+      "page-title": "Batch Process Status",
+      "tab-title": "Batch Process Status",
+      "text": {
+        "no-records-found": "No batch process records found"
+      }
+    },
+    "load-batch-process-list": {
+      "effect-failure": "Failed to load the list of batch processes."
+    }
+  },
   "configuration": {
     "label": {
       "comic-renaming-rule": "Comic Renaming Rule",

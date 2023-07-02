@@ -34,6 +34,7 @@ export const LOAD_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
 export const SAVE_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
 export const LOAD_FILENAME_SCRAPING_RULES_URL = `${API_ROOT_URL}/admin/scraping/rules`;
 export const SAVE_FILENAME_SCRAPING_RULES_URL = `${API_ROOT_URL}/admin/scraping/rules`;
+export const GET_ALL_BATCH_PROCESSES_URL = `${API_ROOT_URL}/admin/processes`;
 
 // actuator URLS
 export const LOAD_METRIC_LIST_URL = `/actuator/metrics`;

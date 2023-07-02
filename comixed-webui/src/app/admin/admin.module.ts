@@ -77,6 +77,12 @@ import { ServerMetricDetailsComponent } from './components/server-metric-details
 import { MetricMeasurementPipe } from './pipes/metric-measurement.pipe';
 import { MatListModule } from '@angular/material/list';
 import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
+import {
+  BATCH_PROCESSES_FEATURE_KEY,
+  reducer as batchProcessesReducer
+} from '@app/admin/reducers/batch-processes.reducer';
+import { BatchProcessesEffects } from '@app/admin/effects/batch-processes.effects';
+import { BatchProcessListPageComponent } from './pages/batch-process-list-page/batch-process-list-page.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +95,8 @@ import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
     MetadataSourcesViewComponent,
     ServerMetricsComponent,
     ServerMetricDetailsComponent,
-    MetricMeasurementPipe
+    MetricMeasurementPipe,
+    BatchProcessListPageComponent
   ],
   imports: [
     CommonModule,
@@ -110,12 +117,14 @@ import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
     ),
     StoreModule.forFeature(SERVER_RUNTIME_FEATURE_KEY, serverRuntimeReducer),
     StoreModule.forFeature(METRICS_FEATURE_KEY, metricsReducer),
+    StoreModule.forFeature(BATCH_PROCESSES_FEATURE_KEY, batchProcessesReducer),
     EffectsModule.forFeature([
       ConfigurationOptionListEffects,
       SaveConfigurationOptionsEffects,
       FilenameScrapingRuleListEffects,
       ServerRuntimeEffects,
-      MetricsEffects
+      MetricsEffects,
+      BatchProcessesEffects
     ]),
     MatTableModule,
     MatToolbarModule,

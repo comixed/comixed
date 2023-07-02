@@ -1,0 +1,109 @@
+<mat-paginator
+  class="cx-primary-light-background cx-height-100"
+  showFirstLastButtons
+  [pageIndex]="queryParameterService.pageIndex$ | async"
+  [pageSize]="queryParameterService.pageSize$ | async"
+  [pageSizeOptions]="queryParameterService.pageSizeOptions"
+  (page)="
+    queryParameterService.onPageChange(
+      $event.pageSize,
+      $event.pageIndex,
+      $event.previousPageIndex
+    )
+  "
+></mat-paginator>
+
+<h2>{{ "batch-processes.batch-process-list.page-title" | translate }}</h2>
+
+<mat-table
+  [dataSource]="dataSource"
+  matSort
+  [matSortActive]="queryParameterService.sortBy$ | async"
+  [matSortDirection]="queryParameterService.sortDirection$ | async"
+  (matSortChange)="
+    queryParameterService.onSortChange($event.active, $event.direction)
+  "
+>
+  <ng-container matColumnDef="name">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "batch-processes.batch-process-list.label.name" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">{{ entry.name }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="job-id">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "batch-processes.batch-process-list.label.job-id" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">{{ entry.jobId }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="status">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "batch-processes.batch-process-list.label.status" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">{{ entry.status }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="start-time">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "batch-processes.batch-process-list.label.start-time" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.startTime | date: "medium" }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="end-time">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "batch-processes.batch-process-list.label.end-time" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.endTime | date: "medium" }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="exit-code">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "batch-processes.batch-process-list.label.exit-code" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.exitCode }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="exit-description">
+    <mat-header-cell *matHeaderCellDef>
+      {{
+        "batch-processes.batch-process-list.label.exit-description" | translate
+      }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.exitDescription }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  <tr class="mat-row" *matNoDataRow>
+    <td class="mat-cell" colspan="4">
+      {{
+        "batch-processes.batch-process-list.text.no-records-found" | translate
+      }}
+    </td>
+  </tr>
+</mat-table>

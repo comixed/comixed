@@ -22,6 +22,7 @@ import { ServerHealth } from '@app/admin/models/server-health';
 import { ServerStatus } from '@app/admin/models/server-status.enum';
 import { MetricList } from '@app/admin/models/metric-list';
 import { MetricDetail } from '@app/admin/models/metric-detail';
+import { BatchProcess } from '@app/admin/models/batch-process';
 
 export const CONFIGURATION_OPTION_1: ConfigurationOption = {
   name: 'OPTION1',
@@ -125,4 +126,54 @@ export const METRIC_DETAIL: MetricDetail = {
     { statistic: 'MAX', value: Math.random() }
   ],
   availableTags: [{ tag: 'exception', values: ['TAG1', 'TAG2'] }]
+};
+
+export const BATCH_PROCESS_STATUS_1: BatchProcess = {
+  name: 'Proc1',
+  jobId: 12971,
+  status: 'COMPLETED',
+  startTime: new Date().getTime() - 24 * 60 * 60 * 1000,
+  endTime: new Date().getTime() - 6 * 60 * 60 * 100,
+  exitCode: 'COMPLETED',
+  exitDescription: 'Finished'
+};
+
+export const BATCH_PROCESS_STATUS_2: BatchProcess = {
+  name: 'Proc2',
+  jobId: 32096,
+  status: 'COMPLETED',
+  startTime: new Date().getTime() - 2 * 24 * 60 * 60 * 1000,
+  endTime: new Date().getTime() - 2 * 6 * 60 * 60 * 100,
+  exitCode: 'COMPLETED',
+  exitDescription: 'Finished'
+};
+
+export const BATCH_PROCESS_STATUS_3: BatchProcess = {
+  name: 'Proc3',
+  jobId: 92098,
+  status: 'COMPLETED',
+  startTime: new Date().getTime() - 3 * 24 * 60 * 60 * 1000,
+  endTime: new Date().getTime() - 3 * 6 * 60 * 60 * 100,
+  exitCode: 'COMPLETED',
+  exitDescription: 'Finished'
+};
+
+export const BATCH_PROCESS_STATUS_4: BatchProcess = {
+  name: 'Proc4',
+  jobId: 71765,
+  status: 'COMPLETED',
+  startTime: new Date().getTime() - 4 * 24 * 60 * 60 * 1000,
+  endTime: new Date().getTime() - 4 * 6 * 60 * 60 * 100,
+  exitCode: 'COMPLETED',
+  exitDescription: 'Finished'
+};
+
+export const BATCH_PROCESS_STATUS_5: BatchProcess = {
+  name: 'Proc5',
+  jobId: 41706,
+  status: 'COMPLETED',
+  startTime: new Date().getTime() - 5 * 24 * 60 * 60 * 1000,
+  endTime: new Date().getTime() - 5 * 6 * 60 * 60 * 100,
+  exitCode: 'COMPLETED',
+  exitDescription: 'Finished'
 };
