@@ -310,6 +310,17 @@
   <span>{{ "navigation.option.configuration" | translate }}</span>
 </button>
 
+<button
+  *ngIf="isAdmin"
+  mat-button
+  class="menu-button"
+  routerLink="/admin/processes"
+  routerLinkActive="active"
+>
+  <mat-icon>batch_prediction</mat-icon>
+  <span>{{ "navigation.option.batch-processes" | translate }}</span>
+</button>
+
 <mat-divider *ngIf="!!user"></mat-divider>
 
 <h4 class="section-title">
