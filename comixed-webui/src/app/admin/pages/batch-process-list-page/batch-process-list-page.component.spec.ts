@@ -28,6 +28,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BATCH_PROCESS_STATUS_1 } from '@app/admin/admin.fixtures';
 import { TitleService } from '@app/core/services/title.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('BatchProcessListPageComponent', () => {
   const PROCESS = BATCH_PROCESS_STATUS_1;
@@ -47,7 +48,8 @@ describe('BatchProcessListPageComponent', () => {
       imports: [
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
-        TranslateModule.forRoot()
+        TranslateModule.forRoot(),
+        MatTooltipModule
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();

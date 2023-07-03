@@ -91,7 +91,10 @@
       }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <span class="cx-width-100 cx-text-nowrap">
+      <span
+        class="cx-width-100 cx-text-nowrap"
+        [matTooltip]="entry.exitDescription"
+      >
         {{ entry.exitDescription }}
       </span>
     </mat-cell>
