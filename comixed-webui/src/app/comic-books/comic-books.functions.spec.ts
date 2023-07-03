@@ -16,8 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { archiveTypeFromString } from '@app/comic-books/archive-type.functions';
+import {
+  archiveTypeFromString,
+  comicTypeFromString
+} from '@app/comic-books/comic-books.functions';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
+import { ComicType } from '@app/comic-books/models/comic-type';
 
 describe('ComicBook functions', () => {
   describe('converting strings to archive types', () => {
@@ -31,6 +35,21 @@ describe('ComicBook functions', () => {
 
     it('converts CB7', () => {
       expect(archiveTypeFromString('CB7')).toBe(ArchiveType.CB7);
+    });
+  });
+  describe('converting strings to comic types', () => {
+    it('converts issue', () => {
+      expect(comicTypeFromString('ISSUE')).toBe(ComicType.ISSUE);
+    });
+
+    it('converts trade paperback', () => {
+      expect(comicTypeFromString('TRADEPAPERBACK')).toBe(
+        ComicType.TRADEPAPERBACK
+      );
+    });
+
+    it('converts manga', () => {
+      expect(comicTypeFromString('MANGA')).toBe(ComicType.MANGA);
     });
   });
 });

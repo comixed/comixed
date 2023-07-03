@@ -24,6 +24,7 @@ import {
   PAGE_SIZE_DEFAULT,
   PAGE_SIZE_OPTIONS,
   QUERY_PARAM_ARCHIVE_TYPE,
+  QUERY_PARAM_COMIC_TYPE,
   QUERY_PARAM_COVER_MONTH,
   QUERY_PARAM_COVER_YEAR,
   QUERY_PARAM_FILTER_TEXT,
@@ -37,7 +38,11 @@ import {
 import { SortDirection } from '@angular/material/sort';
 import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
-import { archiveTypeFromString } from '@app/comic-books/archive-type.functions';
+import {
+  archiveTypeFromString,
+  comicTypeFromString
+} from '@app/comic-books/comic-books.functions';
+import { ComicType } from '@app/comic-books/models/comic-type';
 
 @Injectable({
   providedIn: 'root'
@@ -55,6 +60,7 @@ export class QueryParameterService {
   });
   archiveType$ = new BehaviorSubject<ArchiveType>(null);
   filterText$ = new BehaviorSubject<string>(null);
+  comicType$ = new BehaviorSubject<ComicType>(null);
   pagesAsGrid$ = new BehaviorSubject<boolean>(false);
 
   constructor(
@@ -98,6 +104,10 @@ export class QueryParameterService {
       const filterText = params[QUERY_PARAM_FILTER_TEXT] || null;
       this.logger.debug('Using parameter for filter text:', filterText);
       this.filterText$.next(filterText);
+
+      const comicType = params[QUERY_PARAM_COMIC_TYPE] || null;
+      this.logger.debug('Using parameter for comic type:', comicType);
+      this.comicType$.next(comicTypeFromString(comicType));
 
       const pagesAsGrid = params[QUERY_PARAM_PAGES_AS_GRID] === `${true}`;
       this.logger.debug('Using parameter for pages as grid:', pagesAsGrid);
@@ -186,6 +196,11 @@ export class QueryParameterService {
     this.updateQueryParam([
       { name: QUERY_PARAM_FILTER_TEXT, value: text?.length > 0 ? text : null }
     ]);
+  }
+
+  onComicTypeChanged(comicType: ComicType): void {
+    this.logger.debug('Setting comic type filter:', comicType);
+    this.updateQueryParam([{ name: QUERY_PARAM_COMIC_TYPE, value: comicType }]);
   }
 
   updateQueryParam(params: { name: string; value: string }[]): void {
