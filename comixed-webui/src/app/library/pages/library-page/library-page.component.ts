@@ -43,6 +43,7 @@ import { ListItem } from '@app/core/models/ui/list-item';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import { ComicType } from '@app/comic-books/models/comic-type';
 
 @Component({
   selector: 'cx-library-page',
@@ -80,6 +81,15 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     { label: 'archive-type.label.cbz', value: ArchiveType.CBZ },
     { label: 'archive-type.label.cbr', value: ArchiveType.CBR },
     { label: 'archive-type.label.cb7', value: ArchiveType.CB7 }
+  ];
+  readonly comicTypeOptions: SelectionOption<ComicType>[] = [
+    { label: 'comic-type.label.all', value: null },
+    { label: 'comic-type.label.issue', value: ComicType.ISSUE },
+    { label: 'comic-type.label.manga', value: ComicType.MANGA },
+    {
+      label: 'comic-type.label.trade-paperback',
+      value: ComicType.TRADEPAPERBACK
+    }
   ];
   private _comicDetails: ComicDetail[] = [];
 

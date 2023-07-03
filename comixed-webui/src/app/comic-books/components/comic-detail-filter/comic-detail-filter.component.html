@@ -54,6 +54,22 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+      <mat-form-field class="cx-width-50">
+        <mat-label>{{ "filtering.label.comic-type" | translate }}</mat-label>
+        <mat-select
+          (selectionChange)="
+            queryParameterService.onComicTypeChanged($event.value)
+          "
+          [value]="queryParameterService.comicType$ | async"
+        >
+          <mat-option
+            *ngFor="let option of comicTypeOptions"
+            [value]="option.value"
+          >
+            {{ option.label | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </mat-card-content>
     <mat-card-actions>
       <button

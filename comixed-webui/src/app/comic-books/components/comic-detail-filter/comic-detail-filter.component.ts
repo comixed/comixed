@@ -24,6 +24,7 @@ import { ListItem } from '@app/core/models/ui/list-item';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
+import { ComicType } from '@app/comic-books/models/comic-type';
 
 @Component({
   selector: 'cx-comic-detail-filter',
@@ -42,6 +43,15 @@ export class ComicDetailFilterComponent {
     { label: 'archive-type.label.cbz', value: ArchiveType.CBZ },
     { label: 'archive-type.label.cbr', value: ArchiveType.CBR },
     { label: 'archive-type.label.cb7', value: ArchiveType.CB7 }
+  ];
+  readonly comicTypeOptions: SelectionOption<ComicType>[] = [
+    { label: 'comic-type.label.all', value: null },
+    { label: 'comic-type.label.issue', value: ComicType.ISSUE },
+    {
+      label: 'comic-type.label.trade-paperback',
+      value: ComicType.TRADEPAPERBACK
+    },
+    { label: 'comic-type.label.manga', value: ComicType.MANGA }
   ];
 
   constructor(

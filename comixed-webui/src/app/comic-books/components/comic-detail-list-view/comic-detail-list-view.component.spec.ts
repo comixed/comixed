@@ -47,7 +47,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { convertComics } from '@app/library/actions/convert-comics.actions';
-import { archiveTypeFromString } from '@app/comic-books/archive-type.functions';
+import { archiveTypeFromString } from '@app/comic-books/comic-books.functions';
 import { READING_LIST_1 } from '@app/lists/lists.fixtures';
 import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import {
@@ -133,6 +133,7 @@ describe('ComicDetailListViewComponent', () => {
               month: null
             }),
             archiveType$: new BehaviorSubject<ArchiveType>(null),
+            comicType$: new BehaviorSubject<ComicType>(null),
             filterText$: new BehaviorSubject<string>(null)
           }
         }
@@ -926,6 +927,23 @@ describe('ComicDetailListViewComponent', () => {
         expect(component.dataSource.data.map(entry => entry.item)).toEqual([
           COMIC_DETAILS[0]
         ]);
+      });
+    });
+
+    describe('filtering by comic type', () => {
+      const COMIC_TYPE = COMIC_DETAILS[0].comicType;
+
+      beforeEach(() => {
+        queryParameterService.comicType$.next(COMIC_TYPE);
+        component.comics = COMIC_DETAILS;
+      });
+
+      it('only includes comics with the comic type', () => {
+        expect(
+          component.dataSource.data.every(
+            entry => entry.item.comicType === COMIC_TYPE
+          )
+        ).toBeTrue();
       });
     });
 

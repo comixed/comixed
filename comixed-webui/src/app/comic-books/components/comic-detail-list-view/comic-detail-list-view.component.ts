@@ -45,7 +45,7 @@ import { ReadingList } from '@app/lists/models/reading-list';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { TranslateService } from '@ngx-translate/core';
 import { convertComics } from '@app/library/actions/convert-comics.actions';
-import { archiveTypeFromString } from '@app/comic-books/archive-type.functions';
+import { archiveTypeFromString } from '@app/comic-books/comic-books.functions';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import { setComicBooksRead } from '@app/last-read/actions/set-comics-read.actions';
@@ -527,6 +527,11 @@ export class ComicDetailListViewComponent implements OnDestroy, AfterViewInit {
         entry =>
           !this.queryParameterService.archiveType$.value ||
           entry.archiveType === this.queryParameterService.archiveType$.value
+      )
+      .filter(
+        entry =>
+          !this.queryParameterService.comicType$.value ||
+          entry.comicType === this.queryParameterService.comicType$.value
       )
       .filter(
         entry =>

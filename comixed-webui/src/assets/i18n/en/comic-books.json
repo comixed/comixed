@@ -171,6 +171,15 @@
       "effect-success": "Marked {count, plural, =1{one page} other{# pages}} as {deleted, select, true{deleted} other{not deleted}}."
     }
   },
+  "comic-type": {
+    "label": {
+      "all": "All",
+      "issue": "Issue",
+      "manga": "Manga",
+      "select": "Comic Type",
+      "trade-paperback": "Trade Paperback"
+    }
+  },
   "imprint": {
     "load-all": {
       "effect-failure": "Failed to load imprints."

@@ -17,6 +17,7 @@
  */
 
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
+import { ComicType } from '@app/comic-books/models/comic-type';
 
 export function archiveTypeFromString(key: string): ArchiveType {
   switch (key) {
@@ -26,6 +27,18 @@ export function archiveTypeFromString(key: string): ArchiveType {
       return ArchiveType.CBR;
     case 'CB7':
       return ArchiveType.CB7;
+  }
+  return null;
+}
+
+export function comicTypeFromString(key: string): ComicType {
+  switch (key) {
+    case 'ISSUE':
+      return ComicType.ISSUE;
+    case 'MANGA':
+      return ComicType.MANGA;
+    case 'TRADEPAPERBACK':
+      return ComicType.TRADEPAPERBACK;
   }
   return null;
 }
