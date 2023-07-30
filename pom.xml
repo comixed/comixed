@@ -14,6 +14,19 @@
   </parent>
   <name>comixed</name>
   <url>http://www.comixedproject.org</url>
+
+  <scm>
+    <connection>scm:git:git@github.com:comixed/comixed.git</connection>
+    <developerConnection>scm:git:git@github.com:comixed/comixed.git</developerConnection>
+    <url>scm:git:git@github.com:comixed/comixed.git</url>
+    <tag>master</tag>
+  </scm>
+
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/comixed/comixed/issues</url>
+  </issueManagement>
+
   <properties>
     <assembly.name>local</assembly.name>
     <maven-git-code-format.version>2.4</maven-git-code-format.version>
@@ -361,6 +374,30 @@
             <id>attach-javadocs</id>
             <goals>
               <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.github.danielflower.mavenplugins</groupId>
+        <artifactId>gitlog-maven-plugin</artifactId>
+        <version>1.14.0</version>
+        <inherited>false</inherited>
+        <configuration>
+          <reportTitle>Changelog for ComiXed v1.6-SNAPSHOT</reportTitle>
+          <outputDirectory>${project.basedir}</outputDirectory>
+          <generateMarkdownChangeLog>true</generateMarkdownChangeLog>
+          <markdownChangeLogFilename>CHANGELOG.md</markdownChangeLogFilename>
+          <generateSimpleHTMLChangeLog>false</generateSimpleHTMLChangeLog>
+          <generatePlainTextChangeLog>false</generatePlainTextChangeLog>
+          <generateJSONChangeLog>false</generateJSONChangeLog>
+          <fullGitMessage>false</fullGitMessage>
+          <fullGitMessageReleaseNotes>true</fullGitMessageReleaseNotes>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate</goal>
             </goals>
           </execution>
         </executions>
