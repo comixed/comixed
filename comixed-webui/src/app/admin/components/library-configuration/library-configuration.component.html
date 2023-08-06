@@ -1,10 +1,9 @@
-<mat-toolbar class="cx-primary-light-background">
+<mat-toolbar>
   <div class="cx-spacer"></div>
   <button
     mat-icon-button
     (click)="onSave()"
     [disabled]="!libraryConfigurationForm.valid"
-    color="primary"
   >
     <mat-icon>save</mat-icon>
   </button>
@@ -14,7 +13,6 @@
   <mat-form-field class="cx-width-25">
     <mat-checkbox
       id="delete-empty-directories-checkbox"
-      color="primary"
       formControlName="deleteEmptyDirectories"
     >
       {{ "configuration.label.delete-empty-directories" | translate }}
@@ -24,7 +22,6 @@
   <mat-form-field class="cx-width-25">
     <mat-checkbox
       id="create-external-metadata-file-checkbox"
-      color="primary"
       formControlName="createExternalMetadataFile"
     >
       {{ "configuration.label.create-external-metadata-files" | translate }}
@@ -34,7 +31,6 @@
   <mat-form-field class="cx-width-25">
     <mat-checkbox
       id="skip-internal-metadata-file-checkbox"
-      color="primary"
       formControlName="skipInternalMetadataFile"
     >
       {{ "configuration.label.skip-internal-metadata-files" | translate }}
@@ -44,7 +40,6 @@
   <mat-form-field class="cx-width-25">
     <mat-checkbox
       id="no-recreate-comics-checkbox"
-      color="primary"
       formControlName="noRecreateComics"
     >
       {{ "configuration.label.no-recreate-comics" | translate }}

@@ -1,11 +1,6 @@
 <form *ngIf="!!blockedPage" [formGroup]="blockedPageForm">
-  <mat-toolbar *ngIf="isAdmin" class="cx-primary-light-background">
-    <button
-      id="go-back-button"
-      mat-icon-button
-      class="cx-primary-light-background"
-      (click)="onGoBack()"
-    >
+  <mat-toolbar *ngIf="isAdmin">
+    <button id="go-back-button" mat-icon-button (click)="onGoBack()">
       <mat-icon>arrow_back</mat-icon>
     </button>
     <div class="cx-spacer"></div>
@@ -13,7 +8,6 @@
       id="edit-button"
       mat-raised-button
       class="cx-toolbar-button"
-      color="primary"
       [disabled]="editing"
       (click)="onEdit()"
     >
@@ -24,7 +18,6 @@
       id="save-button"
       mat-raised-button
       class="cx-toolbar-button"
-      color="accent"
       [disabled]="!editing"
       (click)="onSave()"
     >
@@ -35,7 +28,6 @@
       id="reset-button"
       mat-raised-button
       class="cx-toolbar-button"
-      color="warn"
       [disabled]="!blockedPageForm.dirty"
       (click)="onReset()"
     >

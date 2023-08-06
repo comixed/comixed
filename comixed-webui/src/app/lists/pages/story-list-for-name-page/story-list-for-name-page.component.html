@@ -1,4 +1,4 @@
-<mat-toolbar class="cx-primary-light-background">
+<mat-toolbar>
   <button
     id="go-back-to-list-button"
     mat-icon-button
@@ -7,7 +7,7 @@
     <mat-icon>arrow_back</mat-icon>
   </button>
   <mat-paginator
-    class="cx-primary-light-background cx-height-100"
+    class="cx-height-100"
     showFirstLastButtons="true"
     [pageSize]="queryParameterService.pageSize$ | async"
     [pageSizeOptions]="pageSizeOptions"

@@ -12,11 +12,7 @@
             }
     }}
   </h3>
-  <mat-progress-bar
-    mode="determinate"
-    [value]="progress"
-    color="accent"
-  ></mat-progress-bar>
+  <mat-progress-bar mode="determinate" [value]="progress"></mat-progress-bar>
 </div>
 <div *ngIf="!importing">
   <cx-comic-file-covers

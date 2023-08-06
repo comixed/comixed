@@ -1,4 +1,4 @@
-<mat-toolbar class="cx-primary-light-background">
+<mat-toolbar>
   <input
     type="file"
     class="cx-file-input"
@@ -11,7 +11,6 @@
   <button
     id="set-deleted-button"
     mat-icon-button
-    color="primary"
     [matTooltip]="'blocked-hash-list.tooltip.set-deleted' | translate"
     [disabled]="!hasSelections"
     (click)="markSelected.emit()"
@@ -21,7 +20,6 @@
   <button
     id="clear-deleted-button"
     mat-icon-button
-    color="primary"
     [matTooltip]="'blocked-hash-list.tooltip.clear-deleted' | translate"
     [disabled]="!hasSelections"
     (click)="clearSelected.emit()"
@@ -32,7 +30,6 @@
   <button
     id="delete-entries"
     mat-icon-button
-    color="warn"
     [matTooltip]="'blocked-hash-list.tooltip.delete-entries' | translate"
     [disabled]="!hasSelections"
     (click)="deleteSelected.emit()"
@@ -43,7 +40,6 @@
   <button
     id="upload-button"
     mat-icon-button
-    color="accent"
     [matTooltip]="'blocked-hash-list.tooltip.upload-file' | translate"
     (click)="fileUpload.click()"
   >
@@ -52,7 +48,6 @@
   <button
     id="download-button"
     mat-icon-button
-    color="accent"
     [matTooltip]="'blocked-hash-list.tooltip.download-file' | translate"
     (click)="downloadFile.emit()"
   >

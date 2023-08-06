@@ -1,6 +1,6 @@
-<mat-toolbar class="cx-primary-light-background">
+<mat-toolbar>
   <mat-paginator
-    class="cx-primary-light-background cx-height-100"
+    class="cx-height-100"
     [pageSizeOptions]="[5, 10, 20]"
     showFirstLastButtons
   ></mat-paginator>
@@ -8,7 +8,6 @@
   <button
     id="unblocked-only"
     mat-icon-button
-    color="primary"
     [matTooltip]="'duplicate-pages.tooltip.unblocked-only' | translate"
     (click)="onToggleUnblockedOnly()"
   >
@@ -18,7 +17,6 @@
   <button
     id="block-selections-button"
     mat-icon-button
-    color="warn"
     [disabled]="!anySelected"
     [matTooltip]="'duplicate-pages.tooltip.block-selections' | translate"
     (click)="onBlockSelected()"
@@ -28,7 +26,6 @@
   <button
     id="unblock-selections-button"
     mat-icon-button
-    color="accent"
     [disabled]="!anySelected"
     [matTooltip]="'duplicate-pages.tooltip.unblock-selections' | translate"
     (click)="onUnblockSelected()"
@@ -114,7 +111,6 @@
     <mat-cell *matCellDef="let row">
       <button
         mat-icon-button
-        color="primary"
         [matTooltip]="'duplicate-pages.tooltip.view-page-detail' | translate"
         [routerLink]="['/library', 'pages', 'duplicates', row.item.hash]"
       >
@@ -123,7 +119,6 @@
       <button
         *ngIf="!isBlocked(row)"
         mat-icon-button
-        color="warn"
         [matTooltip]="'duplicate-pages.tooltip.block-page' | translate"
         (click)="onBlockPage(row); $event.stopPropagation()"
       >
@@ -132,7 +127,6 @@
       <button
         *ngIf="isBlocked(row)"
         mat-icon-button
-        color="primary"
         [matTooltip]="'duplicate-pages.tooltip.unblock-page' | translate"
         (click)="onUnblockPage(row); $event.stopPropagation()"
       >

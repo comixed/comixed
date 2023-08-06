@@ -38,7 +38,6 @@
     <mat-header-cell *matHeaderCellDef></mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <mat-icon
-        color="primary"
         (click)="currentComic = entry.item; $event.stopPropagation()"
         [matMenuTriggerFor]="contextMenu"
       >

@@ -1,10 +1,9 @@
-<mat-toolbar class="cx-primary-light-background">
+<mat-toolbar>
   <div class="cx-spacer"></div>
   <button
     id="skip-metadata-cache-button"
     class="cx-toolbar-button"
     mat-icon-button
-    color="primary"
     [matTooltip]="
       'metadata-update.tooltip.skip-cache' | translate: { skip: skipCache }
     "
@@ -17,7 +16,6 @@
     id="start-metadata-batch-process-button"
     class="cx-toolbar-button"
     mat-icon-button
-    color="primary"
     [disabled]="selectedIds.length === 0"
     [matTooltip]="'metadata-process.tooltip.start-process' | translate"
     (click)="onStartBatchProcess()"

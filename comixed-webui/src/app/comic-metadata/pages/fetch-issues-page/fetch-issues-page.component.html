@@ -57,7 +57,6 @@
         <mat-form-field class="cx-width-100">
           <mat-checkbox
             id="skip-cache-checkbox"
-            color="primary"
             formControlName="skipCache"
             (change)="skipCache = $event.checked"
           >
@@ -68,7 +67,6 @@
         <button
           id="cx-fetch-issues-button"
           mat-raised-button
-          color="primary"
           (click)="onFetchIssues()"
           [disabled]="!fetchIssuesForm.valid"
         >

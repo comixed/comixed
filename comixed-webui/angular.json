@@ -33,7 +33,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/theme.scss", "src/styles.scss"],
+            "styles": ["src/styles.scss"],
             "scripts": ["./node_modules/sockjs-client/dist/sockjs.min.js"],
             "vendorChunk": true,
             "extractLicenses": false,
@@ -60,8 +60,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "4mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "10mb",
+                  "maximumError": "15mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -111,10 +111,7 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
-              "src/styles.scss"
-            ],
+            "styles": ["src/styles.scss"],
             "scripts": []
           }
         },
@@ -140,9 +137,7 @@
     }
   },
   "cli": {
-    "schematicCollections": [
-      "@ngrx/schematics"
-    ],
+    "schematicCollections": ["@ngrx/schematics"],
     "analytics": false
   }
 }

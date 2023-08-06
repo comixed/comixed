@@ -3,18 +3,9 @@
     <mat-progress-spinner
       diameter="100"
       mode="indeterminate"
-      color="accent"
     ></mat-progress-spinner>
   </div>
 </div>
-
-<cx-navigation-bar
-  id="cx-navigation-bar"
-  [user]="user"
-  [sidebarOpened]="sidenav.opened"
-  (toggleSidebar)="sidenav.toggle($event)"
-  (toggleAccountBar)="accountBar.toggle($event)"
-></cx-navigation-bar>
 
 <mat-sidenav-container class="cx-width-100 cx-height-100">
   <mat-sidenav #sidenav mode="over" (click)="sidenav.close()">
@@ -23,7 +14,7 @@
 
   <mat-sidenav
     #accountBar
-    class="cx-accent-dark-background cx-width-50 cx-min-width-50 cx-padding-5"
+    class="cx-width-50 cx-min-width-50 cx-padding-5"
     mode="over"
     position="end"
   >
@@ -37,6 +28,14 @@
 
   <mat-sidenav-content #sidebar>
     <div class="cx-width-100 cx-overflow-y-scroll cx-footer-margin">
+      <cx-navigation-bar
+        id="cx-navigation-bar"
+        [user]="user"
+        [sidebarOpened]="sidenav.opened"
+        (toggleSidebar)="sidenav.toggle($event)"
+        (toggleAccountBar)="accountBar.toggle($event)"
+      ></cx-navigation-bar>
+
       <router-outlet></router-outlet>
     </div>
     <cx-footer

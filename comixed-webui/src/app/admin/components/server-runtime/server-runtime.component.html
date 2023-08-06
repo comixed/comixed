@@ -1,9 +1,8 @@
-<mat-toolbar class="cx-primary-light-background">
+<mat-toolbar>
   <div class="cx-spacer"></div>
   <button
     id="refresh-button"
     mat-icon-button
-    color="primary"
     [disabled]="shuttingDown"
     [matTooltip]="'server-runtime.tooltip.refresh' | translate"
     (click)="onRefresh()"
@@ -13,7 +12,6 @@
   <button
     id="shutdown-button"
     mat-icon-button
-    color="warn"
     [disabled]="shuttingDown"
     [matTooltip]="'server-runtime.tooltip.shutdown' | translate"
     (click)="onShutdown()"

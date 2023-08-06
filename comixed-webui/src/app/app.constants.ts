@@ -27,6 +27,7 @@ export const LOAD_LATEST_RELEASE_DETAILS_URL = `${API_ROOT_URL}/app/release/late
 
 export const LANGUAGE_PREFERENCE = 'preference.language';
 export const LOGGER_LEVEL_PREFERENCE = 'preference.logging.level';
+export const DARK_MODE_PREFERENCE = 'preference.dark-mode';
 
 // external pages
 

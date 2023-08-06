@@ -59,10 +59,18 @@ import {
 } from '@app/reducers/release.reducer';
 import { loadLatestReleaseDetails } from '@app/actions/release.actions';
 import { LATEST_RELEASE } from '@app/app.fixtures';
+import {
+  DARK_THEME_FEATURE_KEY,
+  initialState as initialDarkThemeState
+} from '@app/reducers/dark-theme.reducer';
+import { toggleDarkThemeMode } from '@app/actions/dark-theme.actions';
 
 describe('NavigationBarComponent', () => {
   const USER = USER_ADMIN;
-  const initialState = { [RELEASE_DETAILS_FEATURE_KEY]: initialReleaseState };
+  const initialState = {
+    [RELEASE_DETAILS_FEATURE_KEY]: initialReleaseState,
+    [DARK_THEME_FEATURE_KEY]: initialDarkThemeState
+  };
 
   let component: NavigationBarComponent;
   let fixture: ComponentFixture<NavigationBarComponent>;
@@ -377,6 +385,32 @@ describe('NavigationBarComponent', () => {
         LATEST_RELEASE.url,
         LATEST_RELEASE_TARGET
       );
+    });
+  });
+
+  describe('dark mode', () => {
+    describe('turning dark mode on', () => {
+      beforeEach(() => {
+        component.onToggleDarkMode(true);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          toggleDarkThemeMode({ toggle: true })
+        );
+      });
+    });
+
+    describe('turning dark mode off', () => {
+      beforeEach(() => {
+        component.onToggleDarkMode(false);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          toggleDarkThemeMode({ toggle: false })
+        );
+      });
     });
   });
 });

@@ -1,9 +1,8 @@
-<mat-toolbar *ngIf="!!comicBook" class="cx-primary-light-background">
+<mat-toolbar *ngIf="!!comicBook">
   <button
     id="previous-comic-button"
     class="cx-toolbar-button"
     mat-icon-button
-    color="primary"
     [matTooltip]="'comic-book.tooltip.go-to-previous-comic' | translate"
     [disabled]="!comicBook.previousIssueId"
     [routerLink]="['/comics', comicBook.previousIssueId]"
@@ -15,7 +14,6 @@
     class="cx-toolbar-button"
     mat-icon-button
     [disabled]="!comicBook.nextIssueId"
-    color="primary"
     [matTooltip]="'comic-book.tooltip.go-to-next-comic' | translate"
     [routerLink]="['/comics', comicBook.nextIssueId]"
   >
@@ -60,7 +58,6 @@
     id="toggle-page-view-button"
     class="cx-toolbar-button"
     mat-icon-button
-    color="primary"
     [matTooltip]="'comic-book.tooltip.toggle-page-view' | translate"
     (click)="queryParameterService.onTogglePagesAsGrid()"
   >
@@ -76,7 +73,6 @@
     id="save-page-order-button"
     class="cx-toolbar-button"
     mat-icon-button
-    color="warn"
     [matTooltip]="'comic-book.tooltip.save-page-order' | translate"
     (click)="onSavePageOrder()"
   >
@@ -87,7 +83,6 @@
     id="update-comic-info-button"
     class="cx-toolbar-button"
     mat-icon-button
-    color="warn"
     [matTooltip]="'comic-book.tooltip.update-comic-info' | translate"
     [disabled]="!isAdmin || !hasChangedState"
     (click)="onUpdateMetadata()"
@@ -98,7 +93,6 @@
     id="download-comic-button"
     class="cx-toolbar-button"
     mat-icon-button
-    color="primary"
     [matTooltip]="'comic-book.tooltip.download-comic' | translate"
   >
     <mat-icon>arrow_downward</mat-icon>
@@ -109,7 +103,6 @@
     id="mark-as-read-button"
     class="cx-toolbar-button"
     mat-icon-button
-    color="primary"
     [matTooltip]="'comic-book.tooltip.mark-read' | translate"
     (click)="setReadState(true)"
   >
@@ -120,7 +113,6 @@
     id="mark-as-unread-button"
     class="cx-toolbar-button"
     mat-icon-button
-    color="primary"
     [matTooltip]="'comic-book.tooltip.mark-unread' | translate"
     (click)="setReadState(false)"
   >
@@ -131,7 +123,6 @@
     id="delete-button"
     class="cx-toolbar-button"
     mat-icon-button
-    color="warn"
     [matTooltip]="'comic-book.tooltip.delete-comic' | translate"
     (click)="onSetComicDeletedState(true)"
   >
@@ -142,7 +133,6 @@
     id="undelete-button"
     class="cx-toolbar-button"
     mat-icon-button
-    color="warn"
     [matTooltip]="'comic-book.tooltip.undelete-comic' | translate"
     (click)="onSetComicDeletedState(false)"
   >
@@ -161,7 +151,6 @@
     <div class="cx-width-100 cx-align-content-center">
       <button
         mat-icon-button
-        color="primary"
         (click)="pageIndex = pageIndex - 1"
         [disabled]="pageIndex === 0"
         [matTooltip]="'comic-book.tooltip.show-previous-comic-page' | translate"
@@ -174,7 +163,6 @@
       }}
       <button
         mat-icon-button
-        color="primary"
         (click)="pageIndex = pageIndex + 1"
         [disabled]="pageIndex === comicBook.pages.length - 1"
         [matTooltip]="'comic-book.tooltip.show-next-comic-page' | translate"
