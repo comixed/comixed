@@ -1,9 +1,8 @@
-<mat-toolbar class="cx-accent-light-background">
+<mat-toolbar>
   <button
     id="scrape-filename"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
-    color="warn"
     [matTooltip]="'comic-book.tooltip.scrape-filename' | translate"
     (click)="onScrapeFilename()"
   >
@@ -14,7 +13,6 @@
     *ngIf="!multimode"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
-    color="primary"
     [matTooltip]="'comic-book.tooltip.save-changes' | translate"
     [disabled]="!comicForm.valid"
     (click)="onSaveChanges()"
@@ -26,7 +24,6 @@
     *ngIf="!multimode"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
-    color="warn"
     [matTooltip]="'comic-book.tooltip.undo-changes' | translate"
     [disabled]="comicForm.untouched"
     (click)="onUndoChanges()"
@@ -39,7 +36,6 @@
     id="auto-select-exact-match-button"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
-    color="warn"
     [matTooltip]="'scraping.tooltip.auto-select-exact-match' | translate"
     (click)="onToggleAutoSelectExactMatch()"
   >
@@ -51,7 +47,6 @@
     id="confirm-before-scraping-button"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
-    color="warn"
     [matTooltip]="'scraping.tooltip.confirm-each-scrape' | translate"
     (click)="onToggleConfirmBeforeScrape()"
   >
@@ -62,7 +57,6 @@
     id="skip-cache-button"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
-    color="warn"
     [matTooltip]="
       'scraping.tooltip.skip-cache' | translate: { enabled: skipCache }
     "
@@ -75,7 +69,6 @@
     id="scrape-comic"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
-    color="primary"
     [matTooltip]="'comic-book.tooltip.scrape-comic' | translate"
     [disabled]="!readyToScrape"
     (click)="onFetchScrapingVolumes()"
@@ -186,7 +179,6 @@
       id="scrape-with-metadata-source-id-button"
       mat-icon-button
       matSuffix
-      color="primary"
       [disabled]="
         !this.metadataSource ||
         (this.comicForm.controls.referenceId.value || '').length === 0 ||

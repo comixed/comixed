@@ -27,15 +27,22 @@ import {
   ProcessComicsState,
   reducer as importCountReducer
 } from '@app/reducers/process-comics.reducer';
+import {
+  DARK_THEME_FEATURE_KEY,
+  DarkThemeState,
+  reducer as activeThemeReducer
+} from '@app/reducers/dark-theme.reducer';
 
 export interface AppState {
   [RELEASE_DETAILS_FEATURE_KEY]: ReleaseDetailsState;
   [PROCESS_COMICS_FEATURE_KEY]: ProcessComicsState;
+  [DARK_THEME_FEATURE_KEY]: DarkThemeState;
 }
 
 export type State = AppState;
 
 export const APP_REDUCERS: ActionReducerMap<State> = {
   [RELEASE_DETAILS_FEATURE_KEY]: buildDetailsReducer,
-  [PROCESS_COMICS_FEATURE_KEY]: importCountReducer
+  [PROCESS_COMICS_FEATURE_KEY]: importCountReducer,
+  [DARK_THEME_FEATURE_KEY]: activeThemeReducer
 };

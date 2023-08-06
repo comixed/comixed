@@ -1,9 +1,8 @@
-<mat-toolbar class="cx-primary-light-background">
+<mat-toolbar>
   <button
     *ngIf="!!currentSource"
     id="back-to-list-button"
     mat-icon-button
-    color="warn"
     (click)="onReturnToList()"
   >
     <mat-icon>arrow_back</mat-icon>
@@ -13,7 +12,6 @@
     *ngIf="!!currentSource"
     id="add-property-button"
     mat-icon-button
-    color="accent"
     [matTooltip]="'metadata-source.tooltip.add-property' | translate"
     (click)="onAddProperty()"
   >
@@ -23,7 +21,6 @@
     *ngIf="!!currentSource"
     id="reset-source-button"
     mat-icon-button
-    color="warn"
     [disabled]="!sourceDetail?.sourceForm.dirty"
     [matTooltip]="'metadata-source.tooltip.reset-source' | translate"
     (click)="onResetSource()"
@@ -34,7 +31,6 @@
     *ngIf="!!currentSource"
     id="save-source-button"
     mat-icon-button
-    color="primary"
     [disabled]="!sourceDetail?.sourceForm.valid"
     [matTooltip]="'metadata-source.tooltip.save-source' | translate"
     (click)="onSaveSource()"
@@ -45,7 +41,6 @@
     *ngIf="!!currentSource && !!currentSource.id"
     id="delete-source-button"
     mat-icon-button
-    color="warn"
     [matTooltip]="'metadata-source.tooltip.delete-source' | translate"
     (click)="onDeleteSource()"
   >
@@ -55,7 +50,6 @@
     *ngIf="!currentSource"
     id="create-source-button"
     mat-icon-button
-    color="primary"
     [matTooltip]="'metadata-source.tooltip.create-source' | translate"
     (click)="onCreateSource()"
   >

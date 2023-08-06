@@ -80,6 +80,10 @@ import {
   LIBRARY_SELECTIONS_FEATURE_KEY
 } from '@app/library/reducers/library-selections.reducer';
 import { LIBRARY_LOAD_MAX_RECORDS } from '@app/comic-books/comic-books.constants';
+import {
+  DARK_THEME_FEATURE_KEY,
+  initialState as initialDarkThemeState
+} from '@app/reducers/dark-theme.reducer';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -98,7 +102,8 @@ describe('AppComponent', () => {
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [LIBRARY_SELECTIONS_FEATURE_KEY]: initialLibrarySelectionState
+    [LIBRARY_SELECTIONS_FEATURE_KEY]: initialLibrarySelectionState,
+    [DARK_THEME_FEATURE_KEY]: initialDarkThemeState
   };
 
   let component: AppComponent;
@@ -318,6 +323,31 @@ describe('AppComponent', () => {
       it('sets the comics loaded flag', () => {
         expect(component.comicsLoaded).toBeTrue();
       });
+    });
+  });
+
+  describe('toggling dark mode', () => {
+    const DARK_MODE = Math.random() > 0.5;
+
+    beforeEach(() => {
+      store.setState({
+        ...initialState,
+        [DARK_THEME_FEATURE_KEY]: {
+          ...initialDarkThemeState,
+          toggle: !DARK_MODE
+        }
+      });
+      store.setState({
+        ...initialState,
+        [DARK_THEME_FEATURE_KEY]: {
+          ...initialDarkThemeState,
+          toggle: DARK_MODE
+        }
+      });
+    });
+
+    it('updates the component state', () => {
+      expect(component.darkMode).toEqual(DARK_MODE);
     });
   });
 });

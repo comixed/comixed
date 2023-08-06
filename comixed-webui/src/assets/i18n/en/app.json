@@ -144,6 +144,7 @@
     "tooltip": {
       "account": "View account details.",
       "bug-report": "Search or open a bug report.",
+      "dark-mode": "Toggle dark mode on/off.",
       "wiki": "Open the project wiki."
     }
   },

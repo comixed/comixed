@@ -1,8 +1,7 @@
-<mat-toolbar class="cx-primary-light-background">
+<mat-toolbar>
   <button
     id="show-file-lookup-form-button"
     mat-icon-button
-    color="primary"
     [matTooltip]="'comic-files.tooltip.toggle-file-lookup-form' | translate"
     (click)="onToggleFileLookupForm()"
   >
@@ -10,7 +9,7 @@
     <mat-icon *ngIf="!showLookupForm">expand_more</mat-icon>
   </button>
   <mat-paginator
-    class="cx-primary-light-background cx-height-100"
+    class="cx-height-100"
     [pageSizeOptions]="pageSizeOptions"
     [showFirstLastButtons]="true"
     [pageSize]="pageSize"
@@ -21,7 +20,6 @@
     id="select-all-button"
     class="cx-margin-right-5"
     mat-icon-button
-    color="primary"
     [disabled]="selectedComicFiles.length === comicFiles.length"
     [matTooltip]="'comic-files.tooltip.select-all' | translate"
     (click)="onSelectAll()"
@@ -32,7 +30,6 @@
     id="deselect-all-button"
     class="cx-margin-right-5"
     mat-icon-button
-    color="warn"
     [disabled]="selectedComicFiles.length === 0"
     [matTooltip]="'comic-files.tooltip.deselect-all' | translate"
     (click)="onDeselectAll()"
@@ -43,7 +40,6 @@
     id="start-import-button"
     class="cx-margin-right-5"
     mat-icon-button
-    color="primary"
     [disabled]="selectedComicFiles.length === 0"
     [matTooltip]="'comic-files.tooltip.start-import' | translate"
     (click)="onStartImport()"
@@ -78,7 +74,6 @@
         id="find-files-button"
         matSuffix
         mat-icon-button
-        color="primary"
         [disabled]="!loadFilesForm.valid"
         [matTooltip]="'comic-files.tooltip.find-files' | translate"
         (click)="onLoadFiles()"

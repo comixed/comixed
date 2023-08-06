@@ -30,18 +30,16 @@
       <mat-chip-listbox *ngIf="showActions">
         <mat-basic-chip
           *ngIf="detailLink"
-          color="accent"
           [routerLink]="detailLink"
           [matTooltip]="'text.view-details' | translate"
         >
           <mat-icon>info</mat-icon>
         </mat-basic-chip>
-        <mat-basic-chip *ngIf="isRead" color="accent">
+        <mat-basic-chip *ngIf="isRead">
           <mat-icon>bookmark</mat-icon>
         </mat-basic-chip>
         <mat-basic-chip
           *ngIf="comicChanged && isAdmin"
-          color="warn"
           [matTooltip]="'comic-book.text.comic-changed' | translate"
           (click)="onUpdateComicInfo(comic)"
         >
@@ -49,7 +47,6 @@
         </mat-basic-chip>
         <mat-basic-chip
           *ngIf="deleted"
-          color="warn"
           [matTooltip]="'comic-book.text.comic-marked-for-deletion' | translate"
         >
           <mat-icon>deleted</mat-icon>
@@ -62,7 +59,6 @@
       class="comic-detail-card-busy-indicator"
       diameter="100"
       mode="indeterminate"
-      color="accent"
     ></mat-progress-spinner>
   </mat-card-content>
 </mat-card>

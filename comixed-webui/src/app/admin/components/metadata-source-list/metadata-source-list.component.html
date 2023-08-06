@@ -51,7 +51,6 @@
       <button
         [id]="'view-' + entry.id + '-detail'"
         mat-icon-button
-        color="accent"
         (click)="onSelectSource(entry)"
       >
         <mat-icon>info_outline</mat-icon>
@@ -60,7 +59,6 @@
         [id]="'mark-' + entry.id + '-preferred-button'"
         *ngIf="!entry.preferred"
         mat-icon-button
-        color="primary"
         (click)="onMarkPreferred(entry.id)"
         [matTooltip]="'metadata-source-list.tooltip.mark-preferred' | translate"
       >

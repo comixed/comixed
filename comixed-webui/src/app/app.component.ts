@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnInit } from '@angular/core';
+import { ApplicationRef, Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LoggerLevel, LoggerService } from '@angular-ru/cdk/logger';
 import { selectUser } from '@app/user/selectors/user.selectors';
@@ -25,6 +25,7 @@ import { loadCurrentUser } from '@app/user/actions/user.actions';
 import { selectBusyState } from '@app/core/selectors/busy.selectors';
 import { TranslateService } from '@ngx-translate/core';
 import {
+  DARK_MODE_PREFERENCE,
   LANGUAGE_PREFERENCE,
   LOGGER_LEVEL_PREFERENCE
 } from '@app/app.constants';
@@ -47,6 +48,9 @@ import {
   DEFAULT_LIBRARY_LOAD_MAX_RECORDS,
   LIBRARY_LOAD_MAX_RECORDS
 } from '@app/comic-books/comic-books.constants';
+import { toggleDarkThemeMode } from '@app/actions/dark-theme.actions';
+import { selectDarkThemeActive } from '@app/selectors/dark-theme.selectors';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'cx-root',
@@ -61,11 +65,14 @@ export class AppComponent implements OnInit {
   libraryState: LibraryState;
   comicListStateSubscription: Subscription;
   comicsLoaded = false;
+  darkMode = false;
 
   constructor(
     private logger: LoggerService,
     private translateService: TranslateService,
-    private store: Store<any>
+    private store: Store<any>,
+    private overlayContainer: OverlayContainer,
+    private app: ApplicationRef
   ) {
     this.logger.level = LoggerLevel.INFO;
     this.translateService.use('en');
@@ -73,6 +80,18 @@ export class AppComponent implements OnInit {
     this.store.select(selectUser).subscribe(user => {
       this.logger.debug('User updated:', user);
       this.user = user;
+
+      const darkMode =
+        getUserPreference(
+          this.user?.preferences || [],
+          DARK_MODE_PREFERENCE,
+          'false'
+        ) === `${true}`;
+      this.store.dispatch(
+        toggleDarkThemeMode({
+          toggle: darkMode
+        })
+      );
       if (!!this.user && !this.sessionActive) {
         this.logger.trace('Marking the session as active');
         this.sessionActive = true;
@@ -138,6 +157,18 @@ export class AppComponent implements OnInit {
     this.store
       .select(selectBusyState)
       .subscribe(state => (this.busy = state.enabled));
+    this.store.select(selectDarkThemeActive).subscribe(toggle => {
+      this.darkMode = toggle;
+      console.log('this.darkMode:', this.darkMode);
+      const element = window.document.body;
+      if (this.darkMode) {
+        element.classList.add('dark-theme');
+        element.classList.remove('lite-theme');
+      } else {
+        element.classList.add('lite-theme');
+        element.classList.remove('dark-theme');
+      }
+    });
   }
 
   ngOnInit(): void {

@@ -1,3 +1,5 @@
+@import "./theme.scss";
+
 html,
 body {
   height: 100%;
@@ -35,10 +37,6 @@ h4 {
   font-weight: bold !important;
   text-align: center;
 }
-
-// colors
-$cx-selected-comic-background-color: #0033cc;
-$cx-selected-comic-color: #ffffff;
 
 // component sizes
 
@@ -142,6 +140,7 @@ $cx-max-image-width: 600px;
   z-index: 10;
   top: 0;
   left: 0;
+  padding: 5px;
   position: fixed;
 }
 
@@ -380,8 +379,6 @@ th {
 
 .cx-detail-card-selected {
   filter: sepia(100%) !important;
-  background-color: $cx-selected-comic-background-color !important;
-  color: $cx-selected-comic-color;
 }
 
 .cx-detail-card-blurred {
@@ -497,31 +494,6 @@ th {
     color: var(--text-warn-lighter-color);
     font-weight: bold;
   }
-}
-
-.cx-primary-light-background {
-  background: var(--primary-lighter-color) !important;
-  color: var(--text-primary-lighter-color) !important;
-}
-
-.cx-primary-dark-background {
-  background: var(--primary-darker-color) !important;
-  color: var(--text-primary-darker-color) !important;
-}
-
-.cx-accent-light-background {
-  background-color: var(--accent-lighter-color);
-  color: var(--text-accent-lighter-color);
-}
-
-.cx-accent-dark-background {
-  background-color: var(--accent-darker-color);
-  color: var(--text-accent-darker-color);
-}
-
-.cx-warn-dark-background {
-  background-color: var(--warn-darker-color);
-  color: var(--text-warn-darker-color);
 }
 
 // workarounds

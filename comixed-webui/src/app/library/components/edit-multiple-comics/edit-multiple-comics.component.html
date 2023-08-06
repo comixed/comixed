@@ -6,7 +6,7 @@
 </h2>
 
 <mat-dialog-content class="cx-width-100">
-  <div class="cx-warn-dark-background cx-width-100 cx-padding-5">
+  <div class="cx-width-100 cx-padding-5">
     <p>
       {{
         "library.edit-multiple-comics.header"
@@ -94,12 +94,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button
-    class="cx-action-button"
-    mat-flat-button
-    color="warn"
-    mat-dialog-close
-  >
+  <button class="cx-action-button" mat-flat-button mat-dialog-close>
     <mat-icon>cancel</mat-icon>
     <mat-label>
       {{ "button.cancel" | translate }}
@@ -108,7 +103,6 @@
   <button
     class="cx-action-button"
     mat-flat-button
-    color="primary"
     [mat-dialog-close]="encodeDetails()"
   >
     <mat-icon>save</mat-icon>

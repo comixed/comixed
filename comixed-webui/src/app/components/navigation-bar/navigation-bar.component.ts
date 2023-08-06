@@ -25,6 +25,7 @@ import { logoutUser, saveUserPreference } from '@app/user/actions/user.actions';
 import { Store } from '@ngrx/store';
 import { isAdmin, isReader } from '@app/user/user.functions';
 import {
+  DARK_MODE_PREFERENCE,
   ISSUE_PAGE_TARGET,
   ISSUE_PAGE_URL,
   LANGUAGE_PREFERENCE,
@@ -42,6 +43,9 @@ import { LatestRelease } from '@app/models/latest-release';
 import { selectReleaseDetailsState } from '@app/selectors/release.selectors';
 import { filter } from 'rxjs/operators';
 import { loadLatestReleaseDetails } from '@app/actions/release.actions';
+import { selectDarkThemeActive } from '@app/selectors/dark-theme.selectors';
+import { toggleDarkThemeMode } from '@app/actions/dark-theme.actions';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
 
 @Component({
   selector: 'cx-navigation-bar',
@@ -73,13 +77,15 @@ export class NavigationBarComponent {
   readingLists: string[] = [];
   releaseStateSubscription: Subscription;
   latestRelease: LatestRelease;
+  darkMode = false;
 
   constructor(
     private logger: LoggerService,
     private router: Router,
     private store: Store<any>,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private queryParameterService: QueryParameterService
   ) {
     this.translateService.onLangChange.subscribe(language => {
       this.logger.debug('Active language changed:', language.lang);
@@ -97,6 +103,9 @@ export class NavigationBarComponent {
           this.latestRelease = state.latest;
         }
       });
+    this.store
+      .select(selectDarkThemeActive)
+      .subscribe(toggle => (this.darkMode = toggle));
   }
 
   private _sidebarOpened = false;
@@ -225,5 +234,14 @@ export class NavigationBarComponent {
   onToggleAccountBar(): void {
     this.logger.trace('Toggling account bar');
     this.toggleAccountBar.emit(!this.accountBarOpened);
+  }
+
+  onToggleDarkMode(toggle: boolean): void {
+    this.logger.debug('Toggling dark mode:', toggle);
+    this.store.dispatch(toggleDarkThemeMode({ toggle }));
+    this.logger.debug('Saving user preference');
+    this.store.dispatch(
+      saveUserPreference({ name: DARK_MODE_PREFERENCE, value: `${toggle}` })
+    );
   }
 }

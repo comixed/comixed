@@ -1,4 +1,4 @@
-<mat-toolbar class="cx-primary-light-background">
+<mat-toolbar>
   <mat-form-field class="cx-width-25">
     <input
       matInput
@@ -53,7 +53,6 @@
     id="select-all-button"
     *ngIf="showActions"
     mat-icon-button
-    color="primary"
     class="cx-toolbar-button cx-margin-right-5"
     [disabled]="!dataSource.data.length"
     [matTooltip]="'library.tooltip.select-all' | translate"
@@ -65,7 +64,6 @@
     id="deselect-all-button"
     *ngIf="showActions"
     mat-icon-button
-    color="warn"
     class="cx-toolbar-button cx-margin-right-5"
     [disabled]="!selectedIds.length"
     [matTooltip]="'library.tooltip.deselect-all' | translate"
@@ -78,7 +76,6 @@
     id="update-metadata-button"
     *ngIf="isAdmin && showUpdateMetadata"
     mat-icon-button
-    color="warn"
     class="cx-toolbar-button cx-margin-right-5"
     [matTooltip]="'library.tooltip.update-metadata' | translate"
     [disabled]="!selectedIds.length"
@@ -90,7 +87,6 @@
     id="consolidate-library-button"
     *ngIf="isAdmin && showConsolidate"
     mat-icon-button
-    color="warn"
     class="cx-toolbar-button cx-margin-right-5"
     [matTooltip]="'library.tooltip.consolidate-library' | translate"
     (click)="onConsolidateEntireLibrary()"
@@ -101,7 +97,6 @@
     id="purge-button"
     *ngIf="isAdmin && showPurge"
     mat-icon-button
-    color="warn"
     class="cx-toolbar-button cx-margin-right-5"
     [disabled]="!selectedIds.length"
     [matTooltip]="'library.tooltip.purge-library' | translate"
@@ -113,7 +108,6 @@
     id="scrape-all-button"
     *ngIf="isAdmin"
     mat-icon-button
-    color="primary"
     class="cx-toolbar-button cx-margin-right-5"
     [disabled]="!selectedIds.length"
     [matTooltip]="'library.tooltip.scrape-comics' | translate"
@@ -125,7 +119,6 @@
     id="rescan-comics-button"
     *ngIf="isAdmin"
     mat-icon-button
-    color="warn"
     class="cx-toolbar-button cx-margin-right-5"
     [disabled]="!selectedIds.length"
     [matTooltip]="'library.tooltip.rescan-comics' | translate"
@@ -137,7 +130,6 @@
     id="toggle-read-button"
     *ngIf="unreadOnly"
     mat-icon-button
-    color="accent"
     class="cx-toolbar-button cx-margin-right-5"
     [matTooltip]="
       'library.tooltip.toggle-read-comics'
@@ -151,7 +143,7 @@
   <div class="cx-spacer"></div>
 
   <mat-paginator
-    class="cx-primary-light-background cx-height-100"
+    class="cx-height-100"
     [pageIndex]="queryParameterService.pageIndex$ | async"
     [pageSize]="queryParameterService.pageSize$ | async"
     [pageSizeOptions]="queryParameterService.pageSizeOptions"

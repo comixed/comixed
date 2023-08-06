@@ -1,9 +1,8 @@
-<mat-toolbar *ngIf="isAdmin" class="cx-accent-light-background">
+<mat-toolbar *ngIf="isAdmin">
   <button
     id="save-comic-changes"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
-    color="primary"
     [matTooltip]="'comic-book.tooltip.save-changes' | translate"
     [disabled]="!comicBookForm.valid"
     (click)="onSaveChanges()"
@@ -14,7 +13,6 @@
     id="undo-comic-changes"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
-    color="warn"
     [matTooltip]="'comic-book.tooltip.undo-changes' | translate"
     [disabled]="comicBookForm.untouched"
     (click)="onUndoChanges()"

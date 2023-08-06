@@ -1,8 +1,7 @@
-<mat-toolbar class="cx-width-100" color="primary">
+<mat-toolbar class="cx-width-100">
   <button
     id="toggle-sidebar-button"
     mat-flat-button
-    color="primary"
     [matTooltip]="'menu.tooltip.toggle-sidenav' | translate"
     (click)="onToggleSidebar()"
   >
@@ -70,6 +69,17 @@
   </button>
 
   <button
+    id="dark-mode-toggle-button"
+    class="cx-toolbar-button"
+    mat-icon-button
+    [matTooltip]="'navigation.tooltip.dark-mode' | translate"
+    (click)="onToggleDarkMode(!darkMode)"
+  >
+    <mat-icon *ngIf="!darkMode">light_mode</mat-icon>
+    <mat-icon *ngIf="darkMode">dark_mode</mat-icon>
+  </button>
+
+  <button
     id="toolbar-menu-trigger-button"
     mat-icon-button
     [mat-menu-trigger-for]="mainMenu"
@@ -79,10 +89,6 @@
 </mat-toolbar>
 
 <mat-menu #mainMenu="matMenu">
-  <button *ngIf="!!user" mat-menu-item [matMenuTriggerFor]="userMenu">
-    <mat-icon>account_box</mat-icon>
-    <mat-label>{{ "menu.user-menu.root" | translate }}</mat-label>
-  </button>
   <button *ngIf="!user" mat-menu-item (click)="onLogin()">
     <mat-icon>login</mat-icon>
     <mat-label>{{ "button.login" | translate }}</mat-label>
