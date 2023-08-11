@@ -17,9 +17,6 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
@@ -30,7 +27,7 @@ import {
 } from '@app/library/selectors/duplicate-comic.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { loadDuplicateComics } from '@app/library/actions/duplicate-comic.actions';
-import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Component({
   selector: 'cx-duplicate-comics-page',
@@ -38,10 +35,9 @@ import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
   styleUrls: ['./duplicate-comics-page.component.scss']
 })
 export class DuplicateComicsPageComponent implements OnInit, OnDestroy {
-  dataSource = new MatTableDataSource<SelectableListItem<ComicDetail>>([]);
-
   duplicateComicBookStateSubscription: Subscription;
   duplicateComicBookListSubscription: Subscription;
+  comicBooks: ComicDetail[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -58,24 +54,6 @@ export class DuplicateComicsPageComponent implements OnInit, OnDestroy {
     this.duplicateComicBookListSubscription = this.store
       .select(selectDuplicateComicList)
       .subscribe(comicBooks => (this.comicBooks = comicBooks));
-  }
-
-  private _comicBooks: ComicBook[] = [];
-
-  set comicBooks(comicBooks: ComicBook[]) {
-    this._comicBooks = comicBooks;
-    this.dataSource.data = comicBooks.map(comic => {
-      const totalPages = comic.pages.length;
-      const duplicatePages = comic.duplicatePageCount;
-      const extraFieldValue =
-        totalPages === 0 ? 0 : (duplicatePages / totalPages) * 100;
-      return {
-        item: comic.detail,
-        selected: false,
-        extraField: `${extraFieldValue.toFixed(2)}`,
-        sortableExtraField: extraFieldValue
-      };
-    });
   }
 
   ngOnDestroy(): void {

@@ -22,7 +22,7 @@ import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
 
 import java.util.List;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,16 +35,16 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class DuplicateComicControllerTest {
   @InjectMocks private DuplicateComicController controller;
   @Mock private ComicBookService comicBookService;
-  @Mock private List<ComicBook> comicBookList;
+  @Mock private List<ComicDetail> comicDetailList;
 
   @Test
   public void testGetDuplicateComics() {
-    Mockito.when(comicBookService.findDuplicateComics()).thenReturn(comicBookList);
+    Mockito.when(comicBookService.findDuplicateComics()).thenReturn(comicDetailList);
 
-    final List<ComicBook> result = controller.getDuplicateComics();
+    final List<ComicDetail> result = controller.getDuplicateComics();
 
     assertNotNull(result);
-    assertSame(comicBookList, result);
+    assertSame(comicDetailList, result);
 
     Mockito.verify(comicBookService, Mockito.times(1)).findDuplicateComics();
   }

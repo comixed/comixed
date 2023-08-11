@@ -30,7 +30,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
 import org.comixedproject.messaging.PublishingException;
@@ -48,7 +47,6 @@ import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.net.comicbooks.PageOrderEntry;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
-import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.comicbooks.ComicBookRepository;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.state.comicbooks.ComicEvent;
@@ -115,12 +113,7 @@ public class ComicBookServiceTest {
   @Mock private ImprintService imprintService;
   @Mock private List<String> collectionList;
   @Mock private List<String> publisherList;
-  @Mock private ComicDetail readComicDetail;
   @Mock private LastRead lastRead;
-  @Mock private ComiXedUser lastReadUser;
-  @Mock private List<Integer> yearList;
-  @Mock private Set<String> seriesList;
-  @Mock private Set<String> volumeList;
   @Mock private List<RemoteLibrarySegmentState> librarySegmentList;
   @Mock private List<PublisherAndYearSegment> byPublisherAndYearList;
   @Mock private List<Publisher> publisherWithSeriesCountList;
@@ -128,8 +121,6 @@ public class ComicBookServiceTest {
 
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
   @Captor private ArgumentCaptor<PageRequest> pageRequestCaptor;
-  @Captor private ArgumentCaptor<Date> startDateArgumentCaptor;
-  @Captor private ArgumentCaptor<Date> endDateArgumentCaptor;
 
   private List<ComicBook> comicBookList = new ArrayList<>();
   private List<ComicDetail> comicDetailList = new ArrayList<>();
@@ -141,7 +132,6 @@ public class ComicBookServiceTest {
   private GregorianCalendar calendar = new GregorianCalendar();
   private Date now = new Date();
   private List<LastRead> lastReadList = new ArrayList<>();
-  private List<Date> weeksList = new ArrayList<>();
 
   @Before
   public void setUp() throws ComiXedUserException {
@@ -1277,12 +1267,12 @@ public class ComicBookServiceTest {
 
   @Test
   public void testFindDuplicateComics() {
-    Mockito.when(comicBookRepository.getAllWithDuplicatePages()).thenReturn(comicBookList);
+    Mockito.when(comicBookRepository.getAllWithDuplicatePages()).thenReturn(comicDetailList);
 
-    final List<ComicBook> result = service.findDuplicateComics();
+    final List<ComicDetail> result = service.findDuplicateComics();
 
     assertNotNull(result);
-    assertSame(comicBookList, result);
+    assertSame(comicDetailList, result);
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).getAllWithDuplicatePages();
   }

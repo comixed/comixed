@@ -26,6 +26,7 @@ import {
   QUERY_PARAM_ARCHIVE_TYPE,
   QUERY_PARAM_COVER_MONTH,
   QUERY_PARAM_COVER_YEAR,
+  QUERY_PARAM_FILTER_TEXT,
   QUERY_PARAM_PAGE_INDEX,
   QUERY_PARAM_PAGE_SIZE,
   QUERY_PARAM_PAGES_AS_GRID,
@@ -53,6 +54,7 @@ export class QueryParameterService {
     month: null
   });
   archiveType$ = new BehaviorSubject<ArchiveType>(null);
+  filterText$ = new BehaviorSubject<string>(null);
   pagesAsGrid$ = new BehaviorSubject<boolean>(false);
 
   constructor(
@@ -92,6 +94,10 @@ export class QueryParameterService {
       const archiveType = params[QUERY_PARAM_ARCHIVE_TYPE] || null;
       this.logger.debug('Using parameter for archive type:', archiveType);
       this.archiveType$.next(archiveTypeFromString(archiveType));
+
+      const filterText = params[QUERY_PARAM_FILTER_TEXT] || null;
+      this.logger.debug('Using parameter for filter text:', filterText);
+      this.filterText$.next(filterText);
 
       const pagesAsGrid = params[QUERY_PARAM_PAGES_AS_GRID] === `${true}`;
       this.logger.debug('Using parameter for pages as grid:', pagesAsGrid);
@@ -175,7 +181,14 @@ export class QueryParameterService {
     ]);
   }
 
-  private updateQueryParam(params: { name: string; value: string }[]): void {
+  onFilterTextChanged(text: string): void {
+    this.logger.debug('Setting filter text:', text);
+    this.updateQueryParam([
+      { name: QUERY_PARAM_FILTER_TEXT, value: text?.length > 0 ? text : null }
+    ]);
+  }
+
+  updateQueryParam(params: { name: string; value: string }[]): void {
     const queryParams: Params = Object.assign(
       {},
       this.activatedRoute.snapshot.queryParams

@@ -30,6 +30,7 @@ import {
   QUERY_PARAM_ARCHIVE_TYPE,
   QUERY_PARAM_COVER_MONTH,
   QUERY_PARAM_COVER_YEAR,
+  QUERY_PARAM_FILTER_TEXT,
   QUERY_PARAM_PAGE_INDEX,
   QUERY_PARAM_PAGE_SIZE,
   QUERY_PARAM_PAGES_AS_GRID,
@@ -144,7 +145,7 @@ describe('QueryParameterService', () => {
   });
 
   describe('when the cover month changes', () => {
-    const MONTH = Math.round(Math.random() * 12.0);
+    const MONTH = Math.round(Math.random() * 12.0) + 1;
 
     beforeEach(() => {
       service.onCoverMonthChanged(MONTH);
@@ -192,7 +193,7 @@ describe('QueryParameterService', () => {
       });
     });
 
-    describe('when the cover year changes', () => {
+    describe('when the cover year is cleared', () => {
       beforeEach(() => {
         routerNavigateSpy.calls.reset();
         service.onCoverYearChanged(null);
@@ -204,6 +205,38 @@ describe('QueryParameterService', () => {
           queryParams: {
             [QUERY_PARAM_COVER_YEAR]: null
           }
+        });
+      });
+    });
+  });
+
+  describe('settng the filter text', () => {
+    const FILTER_TEXT = 'Farkle';
+
+    describe('when it is set', () => {
+      beforeEach(() => {
+        service.onFilterTextChanged(FILTER_TEXT);
+      });
+
+      it('updates the URL', () => {
+        expect(router.navigate).toHaveBeenCalledWith([], {
+          relativeTo: activatedRoute,
+          queryParams: { [QUERY_PARAM_FILTER_TEXT]: FILTER_TEXT }
+        });
+      });
+    });
+  });
+
+  describe('clearing the filter text', () => {
+    describe('when it is set', () => {
+      beforeEach(() => {
+        service.onFilterTextChanged('');
+      });
+
+      it('updates the URL', () => {
+        expect(router.navigate).toHaveBeenCalledWith([], {
+          relativeTo: activatedRoute,
+          queryParams: { [QUERY_PARAM_FILTER_TEXT]: null }
         });
       });
     });

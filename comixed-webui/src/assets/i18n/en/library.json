@@ -59,7 +59,8 @@
     "label": {
       "all-months": "All Months",
       "all-years": "All Years",
-      "month": "Month",
+      "archive-type": "Archive Type",
+      "month": "Cover Month",
       "month-0": "January",
       "month-1": "February",
       "month-2": "March",
@@ -72,7 +73,7 @@
       "month-9": "October",
       "month-10": "November",
       "month-11": "December",
-      "year": "Year"
+      "year": "Cover Year"
     }
   },
   "library": {
@@ -167,12 +168,12 @@
       "stories": "Stories"
     },
     "page-title": {
-      "all": "All Comics ({shown} of {total})",
-      "changed-only": "Changed Comics ({shown} of {total})",
-      "deleted-only": "Deleted Comics ({shown} of {total})",
-      "unprocessed-only": "Unprocessed Comics ({shown} of {total})",
-      "unread-only": "Unread Comics ({shown} of {total})",
-      "unscraped-only": "Unscraped Comics ({shown} of {total})"
+      "all": "All Comics ({count, plural, =1{One Comic} other{# Comics}})",
+      "changed-only": "Changed Comics ({count, plural, =1{One Comic} other{# Comics}})",
+      "deleted-only": "Deleted Comics ({count, plural, =1{One Comic} other{# Comics}})",
+      "unprocessed-only": "Unprocessed Comics ({count, plural, =1{One Comic} other{# Comics}})",
+      "unread-only": "Unread Comics ({count, plural, =1{One Comic} other{# Comics}})",
+      "unscraped-only": "Unscraped Comics ({count, plural, =1{One Comic} other{# Comics}})"
     },
     "purge-library": {
       "confirmation-message": "Are you sure you want to purge the selected deleted comics? This action cannot be undone.",
@@ -189,17 +190,6 @@
     "set-read": {
       "effect-failure": "Failed to mark comics as {read, select, true{read} other{unread}}.",
       "effect-success": "Marked {count, plural, =1{one comic} other{# comics}} as {read, select, true{read} other{unread}}."
-    },
-    "tooltip": {
-      "consolidate-library": "Consolidate the library (shift+ctrl+d).",
-      "deselect-all": "Deselect all comics (shift+ctrl+a).",
-      "purge-library": "Remove deleted comics from library (shift+ctrl+p).",
-      "rescan-comics": "Rescan selected comics (shift+ctrl+r).",
-      "scrape-comics": "Start scraping comics (shift+ctrl+m).",
-      "select-all": "Select all comics (ctrl+a).",
-      "toggle-read-comics": "{enabled, select, true{Showing only unread comics} other{Showing all comics}} (ctrl+e).",
-      "toggle-show-covers": "Toggle between cover and list views.",
-      "update-metadata": "Update metadata in selected comics (shift+ctrl+u)."
     },
     "update-metadata": {
       "confirmation-message": "Are you sure you want to update the metadata on {count, plural, =1{one comic} other{# comics}}?",

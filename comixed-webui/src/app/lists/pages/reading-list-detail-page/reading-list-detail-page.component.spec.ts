@@ -200,7 +200,6 @@ describe('ReadingListDetailPageComponent', () => {
   );
 
   it('should create', () => {
-    console.log('*** component:', component);
     expect(component).toBeTruthy();
   });
 

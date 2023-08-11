@@ -20,9 +20,11 @@ import { TestBed } from '@angular/core/testing';
 
 import { DuplicateComicService } from './duplicate-comic.service';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_3,
-  COMIC_BOOK_5
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_4,
+  COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import {
   HttpClientTestingModule,
@@ -33,7 +35,13 @@ import { interpolate } from '@app/core';
 import { LOAD_DUPLICATE_COMICS_URL } from '@app/library/library.constants';
 
 describe('DuplicateComicService', () => {
-  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const COMIC_DETAILS = [
+    COMIC_DETAIL_1,
+    COMIC_DETAIL_2,
+    COMIC_DETAIL_3,
+    COMIC_DETAIL_4,
+    COMIC_DETAIL_5
+  ];
 
   let service: DuplicateComicService;
   let httpMock: HttpTestingController;
@@ -54,10 +62,10 @@ describe('DuplicateComicService', () => {
   it('can load the list of duplicate comics', () => {
     service
       .loadDuplicateComics()
-      .subscribe(response => expect(response).toEqual(COMIC_BOOKS));
+      .subscribe(response => expect(response).toEqual(COMIC_DETAILS));
 
     const req = httpMock.expectOne(interpolate(LOAD_DUPLICATE_COMICS_URL));
     expect(req.request.method).toEqual('GET');
-    req.flush(COMIC_BOOKS);
+    req.flush(COMIC_DETAILS);
   });
 });

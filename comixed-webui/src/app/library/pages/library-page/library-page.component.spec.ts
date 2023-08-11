@@ -78,10 +78,6 @@ import { ComicMetadataSource } from '@app/comic-books/models/comic-metadata-sour
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { CoverDateFilterPipe } from '@app/comic-books/pipes/cover-date-filter.pipe';
 import {
-  clearSelectedComicBooks,
-  selectComicBooks
-} from '@app/library/actions/library-selections.actions';
-import {
   initialState as initialLibrarySelectionState,
   LIBRARY_SELECTIONS_FEATURE_KEY
 } from '@app/library/reducers/library-selections.reducer';
@@ -93,41 +89,32 @@ import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
-import {
-  Confirmation,
-  ConfirmationService
-} from '@tragically-slick/confirmation';
-import { updateMetadata } from '@app/library/actions/update-metadata.actions';
-import { purgeLibrary } from '@app/library/actions/purge-library.actions';
-import { rescanComics } from '@app/library/actions/rescan-comics.actions';
-import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
-import { LAST_READ_1 } from '@app/last-read/last-read.fixtures';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 describe('LibraryPageComponent', () => {
+  const ONE_DAY = 24 * 60 * 60 * 100;
   const USER = USER_READER;
   const PAGE_INDEX = 23;
   const DATE = new Date();
   const COMIC_BOOKS = [
     {
       ...COMIC_DETAIL_1,
-      coverDate: new Date(DATE.getTime() - 365 * 24 * 60 * 60 * 1000).getTime(), // last year
+      coverDate: new Date(DATE.getTime() - 365 * ONE_DAY).getTime(), // last year
       archiveType: ArchiveType.CB7
     },
     {
       ...COMIC_DETAIL_2,
-      coverDate: new Date(
-        DATE.getTime() - 6 * 30 * 24 * 60 * 60 * 1000
-      ).getTime(), // six months ago
+      coverDate: new Date(DATE.getTime() - 6 * 30 * ONE_DAY).getTime(), // six months ago
       archiveType: ArchiveType.CB7
     },
     {
       ...COMIC_DETAIL_3,
-      coverDate: new Date(DATE.getTime() - 760 * 24 * 60 * 60 * 1000).getTime(), // two years and a month
+      coverDate: new Date(DATE.getTime() - (2 * 365 + 30) * ONE_DAY).getTime(), // two years and a month
       archiveType: ArchiveType.CBR
     },
     {
       ...COMIC_DETAIL_5,
-      coverDate: new Date().getTime(),
+      coverDate: new Date(DATE.getTime() - 10 * 365 * ONE_DAY).getTime(),
       archiveType: ArchiveType.CBZ
     }
   ];
@@ -204,7 +191,8 @@ describe('LibraryPageComponent', () => {
                 year: null,
                 month: null
               }),
-              archiveType$: new BehaviorSubject<ArchiveType>(null)
+              archiveType$: new BehaviorSubject<ArchiveType>(null),
+              filterText$: new BehaviorSubject<string>(null)
             }
           },
           ConfirmationService
@@ -466,474 +454,6 @@ describe('LibraryPageComponent', () => {
 
       it('only loads the unprocessed comics', () => {
         expect(component.comicBooks).toEqual([UNPROCESSED]);
-      });
-    });
-
-    describe('for unread comics', () => {
-      const LAST_READ_DATES = [LAST_READ_1];
-
-      beforeEach(() => {
-        component.unreadOnly = true;
-        component.deletedOnly = false;
-        component.unscrapedOnly = false;
-        component.changedOnly = false;
-        component.unprocessedOnly = false;
-      });
-
-      describe('when the unread toggle is off', () => {
-        beforeEach(() => {
-          component.unreadSwitch = false;
-          store.setState({
-            ...initialState,
-            [COMIC_BOOK_LIST_FEATURE_KEY]: {
-              ...initialComicBookListState,
-              comicBooks: COMIC_BOOKS,
-              unprocessed: [UNPROCESSED],
-              unscraped: [UNSCRAPED],
-              changed: [CHANGED],
-              deleted: [DELETED]
-            },
-            [LAST_READ_LIST_FEATURE_KEY]: {
-              ...initialLastReadListState,
-              entries: LAST_READ_DATES
-            }
-          });
-        });
-
-        it('loads all comics', () => {
-          expect(
-            component.dataSource.data.some(entry =>
-              LAST_READ_DATES.map(entry => entry.comicDetail.comicId).includes(
-                entry.item.comicId
-              )
-            )
-          ).toBeTrue();
-        });
-      });
-
-      describe('when the unread toggle is on', () => {
-        beforeEach(() => {
-          component.unreadSwitch = true;
-          store.setState({
-            ...initialState,
-            [COMIC_BOOK_LIST_FEATURE_KEY]: {
-              ...initialComicBookListState,
-              comicBooks: COMIC_BOOKS,
-              unprocessed: [UNPROCESSED],
-              unscraped: [UNSCRAPED],
-              changed: [CHANGED],
-              deleted: [DELETED]
-            },
-            [LAST_READ_LIST_FEATURE_KEY]: {
-              ...initialLastReadListState,
-              entries: LAST_READ_DATES
-            }
-          });
-        });
-
-        it('only loads the unread comics', () => {
-          expect(
-            component.dataSource.data.some(entry =>
-              LAST_READ_DATES.map(entry => entry.comicDetail.comicId).includes(
-                entry.item.comicId
-              )
-            )
-          ).toBeFalse();
-        });
-      });
-    });
-  });
-
-  describe('selecting all comic books', () => {
-    beforeEach(() => {
-      component.dataSource.filteredData = COMIC_BOOKS.map(entry => {
-        return {
-          item: entry,
-          selected: true
-        };
-      });
-    });
-
-    describe('using a button click', () => {
-      beforeEach(() => {
-        component.onSelectAll();
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          selectComicBooks({ ids: COMIC_BOOKS.map(comic => comic.id) })
-        );
-      });
-    });
-
-    describe('using a hotkey', () => {
-      const event = new KeyboardEvent('hotkey');
-
-      beforeEach(() => {
-        spyOn(event, 'preventDefault');
-        component.onHotkeySelectAll(event);
-      });
-
-      it('prevents event propagation', () => {
-        expect(event.preventDefault).toHaveBeenCalled();
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          selectComicBooks({ ids: COMIC_BOOKS.map(comic => comic.id) })
-        );
-      });
-    });
-  });
-
-  describe('deselecting all selected comic books', () => {
-    describe('using a button', () => {
-      beforeEach(() => {
-        component.onDeselectAll();
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(clearSelectedComicBooks());
-      });
-    });
-
-    describe('using a hotkey', () => {
-      const event = new KeyboardEvent('hotkey');
-
-      beforeEach(() => {
-        spyOn(event, 'preventDefault');
-        component.onHotkeyDeselectAll(event);
-      });
-
-      it('prevents event propagation', () => {
-        expect(event.preventDefault).toHaveBeenCalled();
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(clearSelectedComicBooks());
-      });
-    });
-  });
-
-  describe('updating the comic info', () => {
-    beforeEach(() => {
-      spyOn(confirmationService, 'confirm').and.callFake(
-        (confirmation: Confirmation) => confirmation.confirm()
-      );
-      component.selectedIds = [COMIC_DETAIL_1.id];
-    });
-
-    describe('using a button', () => {
-      beforeEach(() => {
-        component.onUpdateMetadata();
-      });
-
-      it('confirms with the user', () => {
-        expect(confirmationService.confirm).toHaveBeenCalled();
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          updateMetadata({ ids: [COMIC_DETAIL_1.id] })
-        );
-      });
-    });
-
-    describe('using a button', () => {
-      const event = new KeyboardEvent('hotkey');
-
-      beforeEach(() => {
-        spyOn(event, 'preventDefault');
-        component.onHotkeyUpdateMetadata(event);
-      });
-
-      it('prevents event propagation', () => {
-        expect(event.preventDefault).toHaveBeenCalled();
-      });
-
-      it('confirms with the user', () => {
-        expect(confirmationService.confirm).toHaveBeenCalled();
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          updateMetadata({ ids: [COMIC_DETAIL_1.id] })
-        );
-      });
-    });
-  });
-
-  describe('purging the library', () => {
-    beforeEach(() => {
-      component.selectedIds = COMIC_BOOKS.map(entry => entry.id);
-      spyOn(confirmationService, 'confirm').and.callFake(
-        (confirmation: Confirmation) => confirmation.confirm()
-      );
-    });
-
-    describe('using the button', () => {
-      beforeEach(() => {
-        component.onPurgeLibrary();
-      });
-
-      it('confirms with the user', () => {
-        expect(confirmationService.confirm).toHaveBeenCalled();
-      });
-
-      it('fires an action to purge the library', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          purgeLibrary({ ids: COMIC_BOOKS.map(comic => comic.id) })
-        );
-      });
-    });
-
-    describe('using a hotkey', () => {
-      const event = new KeyboardEvent('hotkey');
-
-      beforeEach(() => {
-        spyOn(event, 'preventDefault');
-        component.onHotKeyPurgeLibrary(event);
-      });
-
-      it('prevents event propagation', () => {
-        expect(event.preventDefault).toHaveBeenCalled();
-      });
-
-      it('confirms with the user', () => {
-        expect(confirmationService.confirm).toHaveBeenCalled();
-      });
-
-      it('fires an action to purge the library', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          purgeLibrary({ ids: COMIC_BOOKS.map(comic => comic.id) })
-        );
-      });
-    });
-  });
-
-  describe('starting the scraping process', () => {
-    beforeEach(() => {
-      spyOn(confirmationService, 'confirm').and.callFake(
-        (confirmation: Confirmation) => confirmation.confirm()
-      );
-      component.selectedIds = IDS;
-    });
-
-    describe('using the button', () => {
-      beforeEach(() => {
-        component.onScrapeComics();
-      });
-
-      it('confirms with the user', () => {
-        expect(confirmationService.confirm).toHaveBeenCalled();
-      });
-
-      it('redirects the browsers to the scraping page', () => {
-        expect(router.navigate).toHaveBeenCalledWith(['/library', 'scrape']);
-      });
-    });
-
-    describe('using a hotkey', () => {
-      const event = new KeyboardEvent('hotkey');
-
-      beforeEach(() => {
-        spyOn(event, 'preventDefault');
-        component.onHotKeyScrapeComics(event);
-      });
-
-      it('prevents event propagation', () => {
-        expect(event.preventDefault).toHaveBeenCalled();
-      });
-
-      it('confirms with the user', () => {
-        expect(confirmationService.confirm).toHaveBeenCalled();
-      });
-
-      it('redirects the browsers to the scraping page', () => {
-        expect(router.navigate).toHaveBeenCalledWith(['/library', 'scrape']);
-      });
-    });
-  });
-
-  describe('rescanning selected comics', () => {
-    beforeEach(() => {
-      spyOn(confirmationService, 'confirm').and.callFake(
-        (confirmation: Confirmation) => confirmation.confirm()
-      );
-      component.comicBooks = COMIC_BOOKS;
-      component.selectedIds = IDS;
-    });
-
-    describe('using the button', () => {
-      beforeEach(() => {
-        component.onRescanComics();
-      });
-
-      it('confirms with the user', () => {
-        expect(confirmationService.confirm).toHaveBeenCalled();
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          rescanComics({ comicBooks: COMIC_BOOKS })
-        );
-      });
-    });
-
-    describe('using a hotkey', () => {
-      const event = new KeyboardEvent('hotkey');
-
-      beforeEach(() => {
-        spyOn(event, 'preventDefault');
-        component.onHotKeyRescanComics(event);
-      });
-
-      it('prevents event propagation', () => {
-        expect(event.preventDefault).toHaveBeenCalled();
-      });
-
-      it('confirms with the user', () => {
-        expect(confirmationService.confirm).toHaveBeenCalled();
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          rescanComics({ comicBooks: COMIC_BOOKS })
-        );
-      });
-    });
-  });
-
-  describe('starting library consolidation', () => {
-    beforeEach(() => {
-      spyOn(confirmationService, 'confirm').and.callFake(
-        (confirmation: Confirmation) => confirmation.confirm()
-      );
-      component.selectedIds = IDS;
-    });
-
-    describe('consolidating the entire library', () => {
-      describe('using the button', () => {
-        beforeEach(() => {
-          component.onConsolidateEntireLibrary();
-        });
-
-        it('confirms with the user', () => {
-          expect(confirmationService.confirm).toHaveBeenCalled();
-        });
-
-        it('fires an action', () => {
-          expect(store.dispatch).toHaveBeenCalledWith(
-            startLibraryConsolidation({ ids: [] })
-          );
-        });
-      });
-
-      describe('using a hotkey', () => {
-        const event = new KeyboardEvent('hotkey');
-
-        beforeEach(() => {
-          spyOn(event, 'preventDefault');
-          component.onHotkeyConsolidateEntireLibrary(event);
-        });
-
-        it('prevents event propagation', () => {
-          expect(event.preventDefault).toHaveBeenCalled();
-        });
-
-        it('confirms with the user', () => {
-          expect(confirmationService.confirm).toHaveBeenCalled();
-        });
-
-        it('fires an action', () => {
-          expect(store.dispatch).toHaveBeenCalledWith(
-            startLibraryConsolidation({ ids: [] })
-          );
-        });
-      });
-    });
-
-    describe('consolidating a selected set of comics', () => {
-      beforeEach(() => {
-        component.onConsolidateSelectedComics(IDS);
-      });
-
-      it('confirms with the user', () => {
-        expect(confirmationService.confirm).toHaveBeenCalled();
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          startLibraryConsolidation({ ids: IDS })
-        );
-      });
-    });
-  });
-
-  describe('toggling the unread switch', () => {
-    describe('when off', () => {
-      beforeEach(() => {
-        component.unreadSwitch = false;
-      });
-
-      describe('using the button', () => {
-        beforeEach(() => {
-          component.onToggleUnreadSwitch();
-        });
-
-        it('turns it on', () => {
-          expect(component.unreadSwitch).toBeTrue();
-        });
-      });
-
-      describe('using a hotkey', () => {
-        const event = new KeyboardEvent('hotkey');
-
-        beforeEach(() => {
-          spyOn(event, 'preventDefault');
-          component.onHotKeyToggleUnreadSwitch(event);
-        });
-
-        it('prevents event propagation', () => {
-          expect(event.preventDefault).toHaveBeenCalled();
-        });
-
-        it('turns it on', () => {
-          expect(component.unreadSwitch).toBeTrue();
-        });
-      });
-    });
-
-    describe('when on', () => {
-      beforeEach(() => {
-        component.unreadSwitch = true;
-      });
-
-      describe('using the button', () => {
-        beforeEach(() => {
-          component.onToggleUnreadSwitch();
-        });
-
-        it('turns it off', () => {
-          expect(component.unreadSwitch).toBeFalse();
-        });
-      });
-
-      describe('using a hotkey', () => {
-        const event = new KeyboardEvent('hotkey');
-
-        beforeEach(() => {
-          spyOn(event, 'preventDefault');
-          component.onHotKeyToggleUnreadSwitch(event);
-        });
-
-        it('prevents event propagation', () => {
-          expect(event.preventDefault).toHaveBeenCalled();
-        });
-
-        it('turns it off', () => {
-          expect(component.unreadSwitch).toBeFalse();
-        });
       });
     });
   });

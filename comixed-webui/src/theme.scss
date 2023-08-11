@@ -2,8 +2,8 @@
 
 @include mat.core();
 
-$cx-light-primary: mat.define-palette(mat.$deep-purple-palette);
-$cx-light-accent: mat.define-palette(mat.$amber-palette, A200, A100, A400);
+$cx-light-primary: mat.define-palette(mat.$blue-palette);
+$cx-light-accent: mat.define-palette(mat.$cyan-palette, A200, A100, A400);
 $cx-light-warn: mat.define-palette(mat.$red-palette);
 $cx-light-theme: mat.define-light-theme(
   (
@@ -15,8 +15,8 @@ $cx-light-theme: mat.define-light-theme(
   )
 );
 
-$cx-dark-primary: mat.define-palette(mat.$purple-palette);
-$cx-dark-accent: mat.define-palette(mat.$green-palette, A200, A100, A400);
+$cx-dark-primary: mat.define-palette(mat.$gray-palette);
+$cx-dark-accent: mat.define-palette(mat.$blue-gray-palette, A200, A100, A400);
 $cx-dark-warn: mat.define-palette(mat.$red-palette);
 $cx-dark-theme: mat.define-dark-theme(
   (

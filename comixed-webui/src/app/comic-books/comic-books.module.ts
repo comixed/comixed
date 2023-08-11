@@ -85,6 +85,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
+import { ComicDetailFilterComponent } from './components/comic-detail-filter/comic-detail-filter.component';
 
 @NgModule({
   declarations: [
@@ -105,7 +106,8 @@ import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
     CoverDateFilterPipe,
     VolumeMetadataTableComponent,
     VolumeMetadataTitlePipe,
-    ComicDetailListViewComponent
+    ComicDetailListViewComponent,
+    ComicDetailFilterComponent
   ],
   imports: [
     CommonModule,

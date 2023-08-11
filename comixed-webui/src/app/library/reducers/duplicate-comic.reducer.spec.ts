@@ -22,9 +22,11 @@ import {
   reducer
 } from './duplicate-comic.reducer';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_3,
-  COMIC_BOOK_5
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_4,
+  COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import {
   duplicateComicsLoaded,
@@ -33,7 +35,13 @@ import {
 } from '@app/library/actions/duplicate-comic.actions';
 
 describe('DuplicateComic Reducer', () => {
-  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const COMIC_DETAILS = [
+    COMIC_DETAIL_1,
+    COMIC_DETAIL_2,
+    COMIC_DETAIL_3,
+    COMIC_DETAIL_4,
+    COMIC_DETAIL_5
+  ];
 
   let state: DuplicateComicState;
 
@@ -71,9 +79,9 @@ describe('DuplicateComic Reducer', () => {
         {
           ...initialState,
           busy: true,
-          comics: COMIC_BOOKS.reverse()
+          comics: COMIC_DETAILS.reverse()
         },
-        duplicateComicsLoaded({ comics: COMIC_BOOKS })
+        duplicateComicsLoaded({ comics: COMIC_DETAILS })
       );
     });
 
@@ -82,7 +90,7 @@ describe('DuplicateComic Reducer', () => {
     });
 
     it('sets the list of comic books', () => {
-      expect(state.comics).toEqual(COMIC_BOOKS);
+      expect(state.comics).toEqual(COMIC_DETAILS);
     });
   });
 

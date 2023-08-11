@@ -21,7 +21,7 @@ package org.comixedproject.rest.library;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,14 +41,14 @@ public class DuplicateComicController {
   @Autowired private ComicBookService comicBookService;
 
   /**
-   * Returns the list of comics containing duplicate pages.
+   * Returns the list of comic details containing duplicate pages.
    *
    * @return the comics
    */
   @GetMapping(value = "/api/library/comics/duplicates", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView({View.ComicListView.class})
   @PreAuthorize("hasRole('ADMIN')")
-  public List<ComicBook> getDuplicateComics() {
+  public List<ComicDetail> getDuplicateComics() {
     log.info("Loading all duplicate comics");
     return this.comicBookService.findDuplicateComics();
   }

@@ -601,6 +601,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    *
    * @return the comic list
    */
-  @Query("SELECT c FROM ComicBook c JOIN FETCH c.comicDetail d WHERE c.duplicatePageCount > 0")
-  List<ComicBook> getAllWithDuplicatePages();
+  @Query(
+      "SELECT d FROM ComicDetail d JOIN FETCH d.comicBook cb WHERE d.comicBook.duplicatePageCount > 0")
+  List<ComicDetail> getAllWithDuplicatePages();
 }

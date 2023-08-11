@@ -25,20 +25,28 @@ import {
   selectDuplicateComicState
 } from './duplicate-comic.selectors';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_3,
-  COMIC_BOOK_5
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_4,
+  COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 
 describe('DuplicateComic Selectors', () => {
-  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const COMIC_DETAILS = [
+    COMIC_DETAIL_1,
+    COMIC_DETAIL_2,
+    COMIC_DETAIL_3,
+    COMIC_DETAIL_4,
+    COMIC_DETAIL_5
+  ];
 
   let state: DuplicateComicState;
 
   beforeEach(() => {
     state = {
       busy: Math.random() > 0.5,
-      comics: COMIC_BOOKS
+      comics: COMIC_DETAILS
     };
   });
 

@@ -17,7 +17,7 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { ComicBook } from '@app/comic-books/models/comic-book';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 export const loadDuplicateComics = createAction(
   '[Duplicate Comic] Load duplicate comics'
@@ -25,7 +25,7 @@ export const loadDuplicateComics = createAction(
 
 export const duplicateComicsLoaded = createAction(
   '[Duplicate Comic] Duplicate comics loaded',
-  props<{ comics: ComicBook[] }>()
+  props<{ comics: ComicDetail[] }>()
 );
 
 export const loadDuplicateComicsFailed = createAction(

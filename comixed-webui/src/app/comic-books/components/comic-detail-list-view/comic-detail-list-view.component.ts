@@ -20,7 +20,9 @@ import {
   AfterViewInit,
   Component,
   EventEmitter,
+  HostListener,
   Input,
+  OnDestroy,
   Output,
   ViewChild
 } from '@angular/core';
@@ -36,7 +38,7 @@ import {
 import { Store } from '@ngrx/store';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LastRead } from '@app/last-read/models/last-read';
 import { ComicContextMenuEvent } from '@app/comic-books/models/event/comic-context-menu-event';
 import { ReadingList } from '@app/lists/models/reading-list';
@@ -52,22 +54,24 @@ import { editMultipleComics } from '@app/library/actions/library.actions';
 import { EditMultipleComicsComponent } from '@app/library/components/edit-multiple-comics/edit-multiple-comics.component';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'cx-comic-detail-list-view',
   templateUrl: './comic-detail-list-view.component.html',
   styleUrls: ['./comic-detail-list-view.component.scss']
 })
-export class ComicDetailListViewComponent implements AfterViewInit {
+export class ComicDetailListViewComponent implements OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   @Input() isAdmin = false;
-  @Input() lastReadDates: LastRead[] = [];
   @Input() readingLists: ReadingList[] = [];
+  @Input() unreadOnly = false;
   @Input() extraFieldTitle = '';
   @Input() followClick = true;
   @Input() usePopups = true;
-
   @Input() showAction = true;
   @Input() showSelection = true;
   @Input() showThumbnail = true;
@@ -83,21 +87,40 @@ export class ComicDetailListViewComponent implements AfterViewInit {
   @Input() showLastReadDate = false;
   @Input() showAddedDate = true;
 
-  showPopup = false;
-  @Output() showContextMenu = new EventEmitter<ComicContextMenuEvent>();
   @Output() consolidateComics = new EventEmitter<number[]>();
+  @Output() showContextMenu = new EventEmitter<ComicContextMenuEvent>();
 
+  showComicDetailPopup = false;
+  showComicFilterPopup = false;
   currentComic: ComicDetail;
+  dataSource = new MatTableDataSource<SelectableListItem<ComicDetail>>();
+  queryParamsSubscription: Subscription;
 
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private dialog: MatDialog,
     public queryParameterService: QueryParameterService
-  ) {}
+  ) {
+    this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
+      () => this.applyFilters()
+    );
+  }
+
+  private _lastReadDates: LastRead[] = [];
+
+  get lastReadDates(): LastRead[] {
+    return this._lastReadDates;
+  }
+
+  @Input() set lastReadDates(lastReadDates: LastRead[]) {
+    this._lastReadDates = lastReadDates;
+    this.applyFilters();
+  }
 
   get displayedColumns(): string[] {
     return [
@@ -126,35 +149,33 @@ export class ComicDetailListViewComponent implements AfterViewInit {
 
   @Input() set selectedIds(selectedIds: number[]) {
     this._selectedIds = selectedIds;
-    this.dataSource.data.forEach(
-      entry => (entry.selected = this.selectedIds.includes(entry.item.id))
-    );
+    this.applyFilters();
   }
 
-  private _dataSource: MatTableDataSource<SelectableListItem<ComicDetail>>;
+  private _comics: ComicDetail[] = [];
 
-  get dataSource(): MatTableDataSource<SelectableListItem<ComicDetail>> {
-    return this._dataSource;
+  get comics(): ComicDetail[] {
+    return this._comics;
   }
 
   @Input()
-  set dataSource(
-    dataSource: MatTableDataSource<SelectableListItem<ComicDetail>>
-  ) {
-    this.logger.trace('Setting data source');
-    this._dataSource = dataSource;
-    this.logger.trace('Setting up filtering');
-    /* istanbul ignore next */
-    this._dataSource.filterPredicate = (data, filter) => {
-      return JSON.stringify(data).toLowerCase().includes(filter.toLowerCase());
-    };
+  set comics(comics: ComicDetail[]) {
+    this._comics = comics;
+    this.applyFilters();
+  }
+
+  ngOnDestroy(): void {
+    this.logger.debug('Unsbuscribing from query param updates');
+    this.queryParamsSubscription.unsubscribe();
   }
 
   ngAfterViewInit(): void {
-    this.logger.trace('Setting up sorting');
-    this._dataSource.sort = this.sort;
-    this.logger.trace('Configuring sort');
-    this._dataSource.sortingDataAccessor = (data, sortHeaderId) => {
+    this.logger.debug('Setting up pagination');
+    this.dataSource.paginator = this.paginator;
+    this.logger.debug('Setting up sorting');
+    this.dataSource.sort = this.sort;
+    this.logger.debug('Configuring sort');
+    this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
       switch (sortHeaderId) {
         case 'selection':
           return `${data.selected}`;
@@ -185,6 +206,11 @@ export class ComicDetailListViewComponent implements AfterViewInit {
           return null;
       }
     };
+    this.logger.debug('Setting up filtering');
+    /* istanbul ignore next */
+    this.dataSource.filterPredicate = (data, filter) => {
+      return JSON.stringify(data).toLowerCase().includes(filter.toLowerCase());
+    };
   }
 
   toggleSelected(comic: SelectableListItem<ComicDetail>): void {
@@ -210,6 +236,20 @@ export class ComicDetailListViewComponent implements AfterViewInit {
       case ComicBookState.DELETED:
         return 'delete';
     }
+  }
+
+  @HostListener('window:keydown.control.a', ['$event'])
+  onHotkeySelectAll(event: KeyboardEvent): void {
+    this.logger.debug('Select all hotkey pressed');
+    event.preventDefault();
+    this.onSelectAll(true);
+  }
+
+  @HostListener('window:keydown.control.shift.a', ['$event'])
+  onHotkeyDeselectAll(event: KeyboardEvent): void {
+    this.logger.debug('Deselect all hotkey pressed');
+    event.preventDefault();
+    this.onSelectAll(false);
   }
 
   onSelectAll(checked: boolean): void {
@@ -242,7 +282,7 @@ export class ComicDetailListViewComponent implements AfterViewInit {
 
   onShowPopup(show: boolean, comic: ComicDetail): void {
     this.logger.debug('Setting show pup:', show, this.usePopups);
-    this.showPopup = show && this.usePopups;
+    this.showComicDetailPopup = show && this.usePopups;
     this.currentComic = comic;
   }
 
@@ -257,7 +297,7 @@ export class ComicDetailListViewComponent implements AfterViewInit {
   }
 
   onContextMenu(mouseEvent: MouseEvent) {
-    this.logger.trace('Stop mouse event propagation');
+    this.logger.debug('Stop mouse event propagation');
     mouseEvent.stopPropagation();
     this.logger.debug('Firing context menu event:', this.currentComic);
     this.showContextMenu.emit({
@@ -373,7 +413,7 @@ export class ComicDetailListViewComponent implements AfterViewInit {
             { count }
           ),
           confirm: () => {
-            this.logger.trace('Editing multiple comics');
+            this.logger.debug('Editing multiple comics');
             this.store.dispatch(
               editMultipleComics({ comicBooks: selections, details: response })
             );
@@ -381,6 +421,15 @@ export class ComicDetailListViewComponent implements AfterViewInit {
         });
       }
     });
+  }
+
+  onConsolidateComics(ids: number[]) {
+    this.consolidateComics.emit(ids);
+  }
+
+  onFilterComics(): void {
+    this.logger.debug('Showing comic detail filters');
+    this.showComicFilterPopup = true;
   }
 
   private doMarkAsDeleted(comicBooks: ComicDetail[], deleted: boolean): void {
@@ -421,7 +470,47 @@ export class ComicDetailListViewComponent implements AfterViewInit {
       .map(entry => entry.item);
   }
 
-  onConsolidateComics(ids: number[]) {
-    this.consolidateComics.emit(ids);
+  private applyFilters(): void {
+    this.logger.debug('Filtering data source');
+    this.dataSource.filter = this.queryParameterService.filterText$.value;
+    this.logger.debug('Setting data source');
+    this.dataSource.data = this.comics
+      .filter(
+        entry =>
+          !this.queryParameterService.coverYear$.value?.year ||
+          new Date(entry.coverDate).getFullYear() ===
+            this.queryParameterService.coverYear$.value.year
+      )
+      .filter(
+        entry =>
+          !this.queryParameterService.coverYear$.value?.month ||
+          new Date(entry.coverDate).getMonth() + 1 ==
+            this.queryParameterService.coverYear$.value.month
+      )
+      .filter(
+        entry =>
+          !this.queryParameterService.archiveType$.value ||
+          entry.archiveType === this.queryParameterService.archiveType$.value
+      )
+      .filter(
+        entry =>
+          !(
+            this.unreadOnly &&
+            this.lastReadDates
+              .map(lastRead => lastRead.comicDetail.comicId)
+              .includes(entry.comicId)
+          )
+      )
+      .map(comic => {
+        this.logger.debug(
+          `Comic id: ${comic.comicId} selected: ${this.selectedIds.includes(
+            comic.comicId
+          )}`
+        );
+        return {
+          item: comic,
+          selected: this.selectedIds.includes(comic.comicId)
+        };
+      });
   }
 }

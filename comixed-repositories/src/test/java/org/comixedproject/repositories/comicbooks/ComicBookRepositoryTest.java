@@ -324,10 +324,10 @@ public class ComicBookRepositoryTest {
 
   @Test
   public void testGetAllWithDuplicatePages() {
-    final List<ComicBook> result = repository.getAllWithDuplicatePages();
+    final List<ComicDetail> result = repository.getAllWithDuplicatePages();
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertTrue(result.stream().allMatch(comic -> comic.getDuplicatePageCount() > 0));
+    assertTrue(result.stream().allMatch(comic -> comic.getComicBook().getDuplicatePageCount() > 0));
   }
 }

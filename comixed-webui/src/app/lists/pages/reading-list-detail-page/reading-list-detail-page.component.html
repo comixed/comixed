@@ -80,7 +80,7 @@
 </div>
 
 <cx-comic-detail-list-view
-  [dataSource]="dataSource"
+  [comics]="readingList?.entries || []"
   [selectedIds]="selectedIds"
   [lastReadDates]="lastReadDates"
   [showAction]="false"

@@ -184,7 +184,9 @@ export const COMIC_DETAIL_5: ComicDetail = {
   notes: '',
   description: 'The description of this comic',
   tags: [],
-  coverDate: new Date().getTime(),
+  coverDate: new Date(
+    new Date().getTime() - 366 * 24 * 60 * 60 * 1000
+  ).getTime(),
   storeDate: new Date().getTime(),
   yearPublished: 2000,
   addedDate: new Date().getTime()

@@ -86,6 +86,7 @@
     }
   },
   "collection-detail": {
+    "page-title": "Collections: {collection, select, characters{Characters} teams{Teams} locations{Locations} stories{Stories} publishers{Publishers} series{Series} other{Unknown}} ({count, plural, =1{One Comic} other{# Comics}})",
     "tab-title": "{collection, select, characters{Character} teams{Team} locations{Location} stories{Stories} publishers{Publisher} series{Series} other{Unknown}}: {name}{volume, select, null{} other{ v{volume}}}",
     "title": {
       "characters": "Character: {name} ({count, plural, =1{One Comic} other{# Comics}})",
@@ -101,7 +102,7 @@
       "comic-count": "# Comics",
       "name": "Collection Name"
     },
-    "page-title": "Collections: {collection, select, characters{Characters} teams{Teams} locations{Locations} stories{Stories} publishers{Publishers} series{Series} other{Unknown}} ({shown} of {total})",
+    "page-title": "Collections: {collection, select, characters{Characters} teams{Teams} locations{Locations} stories{Stories} publishers{Publishers} series{Series} other{Unknown}} ({shown} of {total}})",
     "placeholder": {
       "filter-entries": "Enter text to filer the entries displayed."
     },
