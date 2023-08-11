@@ -159,7 +159,6 @@ export class AppComponent implements OnInit {
       .subscribe(state => (this.busy = state.enabled));
     this.store.select(selectDarkThemeActive).subscribe(toggle => {
       this.darkMode = toggle;
-      console.log('this.darkMode:', this.darkMode);
       const element = window.document.body;
       if (this.darkMode) {
         element.classList.add('dark-theme');

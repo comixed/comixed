@@ -30,8 +30,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   COMIC_DETAIL_1,
   COMIC_DETAIL_2,
-  COMIC_DETAIL_3,
-  COMIC_DETAIL_4,
   COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
@@ -59,17 +57,25 @@ import {
 import { setComicBooksRead } from '@app/last-read/actions/set-comics-read.actions';
 import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
 import { editMultipleComics } from '@app/library/actions/library.actions';
-import { of } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { ComicType } from '@app/comic-books/models/comic-type';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ComicDetailFilterComponent } from '@app/comic-books/components/comic-detail-filter/comic-detail-filter.component';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
+import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
+import { LastRead } from '@app/last-read/models/last-read';
 
 describe('ComicDetailListViewComponent', () => {
   const COMIC_DETAILS = [
-    COMIC_DETAIL_1,
-    COMIC_DETAIL_2,
-    COMIC_DETAIL_3,
-    COMIC_DETAIL_4,
-    COMIC_DETAIL_5
+    {
+      ...COMIC_DETAIL_1,
+      coverDate: new Date().getTime(),
+      archiveType: ArchiveType.CB7
+    },
+    { ...COMIC_DETAIL_2, coverDate: null, archiveType: ArchiveType.CBR }
   ];
   const IDS = COMIC_DETAILS.map(detail => detail.comicId);
   const EDIT_DETAILS: EditMultipleComics = {
@@ -90,11 +96,13 @@ describe('ComicDetailListViewComponent', () => {
   let router: Router;
   let confirmationService: ConfirmationService;
   let dialog: MatDialog;
+  let queryParameterService: jasmine.SpyObj<QueryParameterService>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [
         ComicDetailListViewComponent,
+        ComicDetailFilterComponent,
         ComicCoverUrlPipe,
         ComicTitlePipe
       ],
@@ -109,9 +117,25 @@ describe('ComicDetailListViewComponent', () => {
         MatMenuModule,
         MatFormFieldModule,
         MatCheckboxModule,
-        MatIconModule
+        MatIconModule,
+        MatPaginatorModule,
+        MatTooltipModule
       ],
-      providers: [provideMockStore({ initialState }), ConfirmationService]
+      providers: [
+        provideMockStore({ initialState }),
+        ConfirmationService,
+        {
+          provide: QueryParameterService,
+          useValue: {
+            coverYear$: new BehaviorSubject<CoverDateFilter>({
+              year: null,
+              month: null
+            }),
+            archiveType$: new BehaviorSubject<ArchiveType>(null),
+            filterText$: new BehaviorSubject<string>(null)
+          }
+        }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicDetailListViewComponent);
@@ -125,6 +149,9 @@ describe('ComicDetailListViewComponent', () => {
     spyOn(router, 'navigate');
     confirmationService = TestBed.inject(ConfirmationService);
     dialog = TestBed.inject(MatDialog);
+    queryParameterService = TestBed.inject(
+      QueryParameterService
+    ) as jasmine.SpyObj<QueryParameterService>;
     fixture.detectChanges();
   });
 
@@ -134,10 +161,9 @@ describe('ComicDetailListViewComponent', () => {
 
   describe('receiving selected ids', () => {
     beforeEach(() => {
-      component.dataSource.data = COMIC_DETAILS.map(entry => {
-        return { item: entry, selected: true };
-      });
-      component.selectedIds = [COMIC_DETAILS[0].id];
+      component.comics = COMIC_DETAILS;
+      component.dataSource.data.forEach(entry => (entry.selected = true));
+      component.selectedIds = [COMIC_DETAILS[0].comicId];
     });
 
     it('only marks the comics with the selected id', () => {
@@ -387,13 +413,13 @@ describe('ComicDetailListViewComponent', () => {
   describe('the comic cover overlay', () => {
     describe('showing the cover overlay', () => {
       beforeEach(() => {
-        component.showPopup = false;
+        component.showComicDetailPopup = false;
         component.currentComic = null;
         component.onShowPopup(true, COMIC);
       });
 
       it('sets the show popup flag', () => {
-        expect(component.showPopup).toBeTrue();
+        expect(component.showComicDetailPopup).toBeTrue();
       });
 
       it('sets the current comic', () => {
@@ -406,7 +432,7 @@ describe('ComicDetailListViewComponent', () => {
         });
 
         it('hides the show popup flag', () => {
-          expect(component.showPopup).toBeFalse();
+          expect(component.showComicDetailPopup).toBeFalse();
         });
 
         it('clears the current comic', () => {
@@ -796,6 +822,131 @@ describe('ComicDetailListViewComponent', () => {
 
     it('emits the provided ids', () => {
       expect(component.consolidateComics.emit).toHaveBeenCalledWith(IDS);
+    });
+  });
+
+  describe('selecting comics', () => {
+    const IDS = COMIC_DETAILS.map(entry => entry.id);
+    const event = new KeyboardEvent('hotkey');
+
+    beforeEach(() => {
+      spyOn(event, 'preventDefault');
+      component.comics = COMIC_DETAILS;
+    });
+
+    describe('selecting all comics', () => {
+      beforeEach(() => {
+        component.onHotkeySelectAll(event);
+      });
+
+      it('stops the event from propagating', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          selectComicBooks({ ids: IDS })
+        );
+      });
+    });
+
+    describe('deselecting all comics', () => {
+      beforeEach(() => {
+        component.dataSource.data.forEach(entry => (entry.selected = true));
+        component.onHotkeyDeselectAll(event);
+      });
+
+      it('stops the event from propagating', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          deselectComicBooks({ ids: IDS })
+        );
+      });
+    });
+  });
+
+  describe('showing the filter popup', () => {
+    beforeEach(() => {
+      component.showComicFilterPopup = false;
+      component.onFilterComics();
+    });
+
+    it('sets the show comic filter popup flag', () => {
+      expect(component.showComicFilterPopup).toBeTrue();
+    });
+  });
+
+  describe('filtering comics', () => {
+    describe('filtering by cover year', () => {
+      const COVER_YEAR = new Date(COMIC_DETAILS[0].coverDate).getFullYear();
+      const coverYear = { year: COVER_YEAR, month: null };
+
+      beforeEach(() => {
+        queryParameterService.coverYear$.next(coverYear);
+        component.comics = COMIC_DETAILS;
+      });
+
+      it('only includes comics with the cover year', () => {
+        expect(component.dataSource.data.map(entry => entry.item)).toEqual([
+          COMIC_DETAILS[0]
+        ]);
+      });
+    });
+
+    describe('filtering by cover month', () => {
+      const COVER_MONTH = new Date(COMIC_DETAILS[0].coverDate).getMonth() + 1;
+      const coverYear = { year: null, month: COVER_MONTH };
+
+      beforeEach(() => {
+        queryParameterService.coverYear$.next(coverYear);
+        component.comics = COMIC_DETAILS;
+      });
+
+      it('only includes comics with the cover month', () => {
+        expect(component.dataSource.data.map(entry => entry.item)).toEqual([
+          COMIC_DETAILS[0]
+        ]);
+      });
+    });
+
+    describe('filtering by archive type', () => {
+      const ARCHIVE_TYPE = COMIC_DETAILS[0].archiveType;
+
+      beforeEach(() => {
+        queryParameterService.archiveType$.next(ARCHIVE_TYPE);
+        component.comics = COMIC_DETAILS;
+      });
+
+      it('only includes comics with the archive type', () => {
+        expect(component.dataSource.data.map(entry => entry.item)).toEqual([
+          COMIC_DETAILS[0]
+        ]);
+      });
+    });
+
+    describe('filtering by read state', () => {
+      const LAST_READ: LastRead[] = [
+        {
+          lastRead: new Date().getTime(),
+          id: 1,
+          comicDetail: COMIC_DETAILS[0]
+        }
+      ];
+
+      beforeEach(() => {
+        component.unreadOnly = true;
+        component.lastReadDates = LAST_READ;
+        component.comics = COMIC_DETAILS;
+      });
+
+      it('only includes comics not marked as read', () => {
+        expect(
+          component.dataSource.data.map(entry => entry.item)
+        ).not.toContain(COMIC_DETAILS[0]);
+      });
     });
   });
 });

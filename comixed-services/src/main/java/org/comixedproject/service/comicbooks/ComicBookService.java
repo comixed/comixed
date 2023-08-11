@@ -844,7 +844,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @return the list of comics
    */
-  public List<ComicBook> findDuplicateComics() {
+  public List<ComicDetail> findDuplicateComics() {
     log.debug("Finding all comics with duplicate pages");
     return this.comicBookRepository.getAllWithDuplicatePages();
   }

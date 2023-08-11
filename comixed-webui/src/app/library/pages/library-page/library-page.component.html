@@ -1,180 +1,19 @@
-<mat-toolbar>
-  <mat-form-field class="cx-width-25">
-    <input
-      matInput
-      #filterInput
-      id="volume-search-text-input"
-      [placeholder]="'library.list-page.placeholder.filter-comics' | translate"
-      (keyup)="dataSource.filter = filterInput.value"
-    />
-  </mat-form-field>
-  <mat-form-field *ngIf="showComicFilters">
-    <mat-label>{{ "filtering.label.year" | translate }}</mat-label>
-    <mat-select
-      (selectionChange)="queryParameterService.onCoverYearChanged($event.value)"
-      [value]="(queryParameterService.coverYear$ | async)?.year"
-    >
-      <mat-option *ngFor="let option of coverYears" [value]="option.value">
-        {{ option.label | translate }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field *ngIf="showComicFilters">
-    <mat-label>{{ "filtering.label.month" | translate }}</mat-label>
-    <mat-select
-      (selectionChange)="
-        queryParameterService.onCoverMonthChanged($event.value)
-      "
-      [value]="(queryParameterService.coverYear$ | async)?.month"
-    >
-      <mat-option *ngFor="let option of coverMonths" [value]="option.value">
-        {{ option.label | translate }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field *ngIf="showComicFilters">
-    <mat-label>{{ "archive-type.label.select" | translate }}</mat-label>
-    <mat-select
-      (selectionChange)="
-        queryParameterService.onArchiveTypeChanged($event.value)
-      "
-      [value]="queryParameterService.archiveType$ | async"
-    >
-      <mat-option
-        *ngFor="let option of archiveTypeOptions"
-        [value]="option.value"
-      >
-        {{ option.label | translate }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-divider vertical="true"></mat-divider>
-  <button
-    id="select-all-button"
-    *ngIf="showActions"
-    mat-icon-button
-    class="cx-toolbar-button cx-margin-right-5"
-    [disabled]="!dataSource.data.length"
-    [matTooltip]="'library.tooltip.select-all' | translate"
-    (click)="onSelectAll()"
-  >
-    <mat-icon>check_box</mat-icon>
-  </button>
-  <button
-    id="deselect-all-button"
-    *ngIf="showActions"
-    mat-icon-button
-    class="cx-toolbar-button cx-margin-right-5"
-    [disabled]="!selectedIds.length"
-    [matTooltip]="'library.tooltip.deselect-all' | translate"
-    (click)="onDeselectAll()"
-  >
-    <mat-icon>check_box_outline_blank</mat-icon>
-  </button>
-  <mat-divider *ngIf="isAdmin" vertical="true"></mat-divider>
-  <button
-    id="update-metadata-button"
-    *ngIf="isAdmin && showUpdateMetadata"
-    mat-icon-button
-    class="cx-toolbar-button cx-margin-right-5"
-    [matTooltip]="'library.tooltip.update-metadata' | translate"
-    [disabled]="!selectedIds.length"
-    (click)="onUpdateMetadata()"
-  >
-    <mat-icon>sync_alt</mat-icon>
-  </button>
-  <button
-    id="consolidate-library-button"
-    *ngIf="isAdmin && showConsolidate"
-    mat-icon-button
-    class="cx-toolbar-button cx-margin-right-5"
-    [matTooltip]="'library.tooltip.consolidate-library' | translate"
-    (click)="onConsolidateEntireLibrary()"
-  >
-    <mat-icon>merge_type</mat-icon>
-  </button>
-  <button
-    id="purge-button"
-    *ngIf="isAdmin && showPurge"
-    mat-icon-button
-    class="cx-toolbar-button cx-margin-right-5"
-    [disabled]="!selectedIds.length"
-    [matTooltip]="'library.tooltip.purge-library' | translate"
-    (click)="onPurgeLibrary()"
-  >
-    <mat-icon>delete_sweep</mat-icon>
-  </button>
-  <button
-    id="scrape-all-button"
-    *ngIf="isAdmin"
-    mat-icon-button
-    class="cx-toolbar-button cx-margin-right-5"
-    [disabled]="!selectedIds.length"
-    [matTooltip]="'library.tooltip.scrape-comics' | translate"
-    (click)="onScrapeComics()"
-  >
-    <mat-icon>find_replace</mat-icon>
-  </button>
-  <button
-    id="rescan-comics-button"
-    *ngIf="isAdmin"
-    mat-icon-button
-    class="cx-toolbar-button cx-margin-right-5"
-    [disabled]="!selectedIds.length"
-    [matTooltip]="'library.tooltip.rescan-comics' | translate"
-    (click)="onRescanComics()"
-  >
-    <mat-icon>document_scanner</mat-icon>
-  </button>
-  <button
-    id="toggle-read-button"
-    *ngIf="unreadOnly"
-    mat-icon-button
-    class="cx-toolbar-button cx-margin-right-5"
-    [matTooltip]="
-      'library.tooltip.toggle-read-comics'
-        | translate: { enabled: unreadSwitch }
-    "
-    (click)="onToggleUnreadSwitch()"
-  >
-    <mat-icon *ngIf="!unreadSwitch">visibility</mat-icon>
-    <mat-icon *ngIf="unreadSwitch">visibility_off</mat-icon>
-  </button>
-  <div class="cx-spacer"></div>
-
-  <mat-paginator
-    class="cx-height-100"
-    [pageIndex]="queryParameterService.pageIndex$ | async"
-    [pageSize]="queryParameterService.pageSize$ | async"
-    [pageSizeOptions]="queryParameterService.pageSizeOptions"
-    (page)="
-      queryParameterService.onPageChange(
-        $event.pageSize,
-        $event.pageIndex,
-        $event.previousPageIndex
-      )
-    "
-  ></mat-paginator>
-</mat-toolbar>
-
 <h2>
   {{
     "library.page-title." + pageContent
       | translate
         : {
-            shown: dataSource.filteredData.length,
-            total: dataSource.data.length
+            count: comicBooks.length
           }
   }}
 </h2>
 
 <cx-comic-detail-list-view
-  class="cx-width-100"
-  [dataSource]="dataSource"
   [isAdmin]="isAdmin"
-  [selectedIds]="selectedIds"
-  [readingLists]="readingLists"
+  [comics]="comicBooks"
   [lastReadDates]="lastReadDates"
   [showLastReadDate]="unreadOnly && !unreadSwitch"
-  (consolidateComics)="onConsolidateSelectedComics($event)"
+  [selectedIds]="selectedIds"
+  [readingLists]="readingLists"
+  [unreadOnly]="unreadOnly"
 ></cx-comic-detail-list-view>

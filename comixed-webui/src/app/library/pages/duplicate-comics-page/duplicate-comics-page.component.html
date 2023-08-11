@@ -1,13 +1,13 @@
 <h2>
   {{
     "duplicate-comic-book-list.page-title"
-      | translate: { count: dataSource.data.length }
+      | translate: { count: comicBooks.length }
   }}
 </h2>
 
 <cx-comic-detail-list-view
   class="cx-width-100"
-  [dataSource]="dataSource"
+  [comics]="comicBooks"
   [showSelection]="false"
   [showStoreDate]="false"
   [showAddedDate]="false"

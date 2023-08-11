@@ -32,11 +32,11 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
-  COMIC_BOOK_3,
-  COMIC_BOOK_4,
-  COMIC_BOOK_5
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_4,
+  COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
@@ -44,14 +44,16 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { BehaviorSubject } from 'rxjs';
 
 describe('DuplicateComicsPageComponent', () => {
-  const COMIC_BOOKS = [
-    COMIC_BOOK_1,
-    COMIC_BOOK_2,
-    COMIC_BOOK_3,
-    COMIC_BOOK_4,
-    { ...COMIC_BOOK_5, pages: [] }
+  const COMIC_DETAILS = [
+    COMIC_DETAIL_1,
+    COMIC_DETAIL_2,
+    COMIC_DETAIL_3,
+    COMIC_DETAIL_4,
+    COMIC_DETAIL_5
   ];
   const initialState = {
     [DUPLICATE_COMIC_FEATURE_KEY]: initialDuplicateComicState
@@ -81,7 +83,15 @@ describe('DuplicateComicsPageComponent', () => {
         MatIconModule,
         MatFormFieldModule
       ],
-      providers: [provideMockStore({ initialState })]
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: QueryParameterService,
+          useValue: {
+            filterText$: new BehaviorSubject<string>(null)
+          }
+        }
+      ]
     }).compileComponents();
   });
 
@@ -93,16 +103,5 @@ describe('DuplicateComicsPageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('receiving comics', () => {
-    beforeEach(() => {
-      component.dataSource.data = [];
-      component.comicBooks = COMIC_BOOKS;
-    });
-
-    it('loads the data source', () => {
-      expect(component.dataSource.data).not.toEqual([]);
-    });
   });
 });

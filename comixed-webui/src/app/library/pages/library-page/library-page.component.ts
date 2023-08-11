@@ -16,14 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  AfterViewInit,
-  Component,
-  HostListener,
-  OnDestroy,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
@@ -44,40 +37,19 @@ import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.s
 import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 import { selectLibrarySelections } from '@app/library/selectors/library-selections.selectors';
-import {
-  clearSelectedComicBooks,
-  selectComicBooks
-} from '@app/library/actions/library-selections.actions';
-import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { PAGE_SIZE_DEFAULT } from '@app/core';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
 import { ListItem } from '@app/core/models/ui/list-item';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
-import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
-import { purgeLibrary } from '@app/library/actions/purge-library.actions';
-import { rescanComics } from '@app/library/actions/rescan-comics.actions';
-import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 
 @Component({
   selector: 'cx-library-page',
   templateUrl: './library-page.component.html',
   styleUrls: ['./library-page.component.scss']
 })
-export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-
-  dataSource = new MatTableDataSource<SelectableListItem<ComicDetail>>([]);
-
-  showActions = true;
-  showComicFilters = true;
-
-  queryParamsSubscription: Subscription;
-
+export class LibraryPageComponent implements OnInit, OnDestroy {
   comicBookListStateSubscription: Subscription;
   selectedSubscription: Subscription;
   selectedIds: number[] = [];
@@ -118,12 +90,8 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
-    public queryParameterService: QueryParameterService
+    private activatedRoute: ActivatedRoute
   ) {
-    this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
-      params => this.loadDataSource()
-    );
     this.dataSubscription = this.activatedRoute.data.subscribe(data => {
       this.unreadOnly = !!data.unread && data.unread === true;
       this.unscrapedOnly = !!data.unscraped && data.unscraped === true;
@@ -186,7 +154,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
       .select(selectLastReadEntries)
       .subscribe(lastReadDates => {
         this.lastReadDates = lastReadDates;
-        this.loadDataSource();
       });
     this.readingListsSubscription = this.store
       .select(selectUserReadingLists)
@@ -211,7 +178,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
         .filter(comic => !!comic.coverDate)
         .map(comic => new Date(comic.coverDate).getFullYear())
         .filter((year, index, self) => index === self.indexOf(year))
-        .sort((left, right) => left - right)
+        .sort()
         .map(year => {
           return { value: year, label: `${year}` } as ListItem<number>;
         })
@@ -227,12 +194,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
         } as ListItem<number>;
       })
     );
-    this.loadDataSource();
-  }
-
-  ngAfterViewInit(): void {
-    this.logger.debug('Setting up pagination');
-    this.dataSource.paginator = this.paginator;
   }
 
   ngOnInit(): void {
@@ -241,219 +202,12 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy(): void {
-    this.queryParamsSubscription.unsubscribe();
     this.dataSubscription.unsubscribe();
     this.comicBookListStateSubscription.unsubscribe();
     this.selectedSubscription.unsubscribe();
     this.userSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
     this.readingListsSubscription.unsubscribe();
-  }
-
-  @HostListener('window:keydown.control.a', ['$event'])
-  onHotkeySelectAll(event: KeyboardEvent): void {
-    this.logger.debug('Select all hotkey pressed');
-    event.preventDefault();
-    this.onSelectAll();
-  }
-
-  @HostListener('window:keydown.shift.control.a', ['$event'])
-  onHotkeyDeselectAll(event: KeyboardEvent): void {
-    this.logger.debug('Deselect all hotkey pressed');
-    event.preventDefault();
-    this.onDeselectAll();
-  }
-
-  onSelectAll(): void {
-    this.logger.debug('Selecting all comics');
-    this.store.dispatch(
-      selectComicBooks({
-        ids: this.dataSource.filteredData.map(comic => comic.item.id)
-      })
-    );
-  }
-
-  onDeselectAll(): void {
-    this.logger.debug('Deselecting all comics');
-    this.store.dispatch(clearSelectedComicBooks());
-  }
-
-  @HostListener('window:keydown.shift.control.u', ['$event'])
-  onHotkeyUpdateMetadata(event: KeyboardEvent): void {
-    this.logger.debug('Update metadata hotkey pressed');
-    event.preventDefault();
-    this.onUpdateMetadata();
-  }
-
-  onUpdateMetadata(): void {
-    this.logger.debug('Confirming with the user to update metadata');
-    this.confirmationService.confirm({
-      title: this.translateService.instant(
-        'library.update-metadata.confirmation-title'
-      ),
-      message: this.translateService.instant(
-        'library.update-metadata.confirmation-message',
-        { count: this.selectedIds.length }
-      ),
-      confirm: () => {
-        this.logger.debug('Firing action: update metadata');
-        this.store.dispatch(
-          updateMetadata({
-            ids: this.selectedIds
-          })
-        );
-      }
-    });
-  }
-
-  onConsolidateSelectedComics(ids: number[]): void {
-    this.doConsolidateLibrary(ids);
-  }
-
-  @HostListener('window:keydown.shift.control.d', ['$event'])
-  onHotkeyConsolidateEntireLibrary(event: KeyboardEvent): void {
-    this.logger.debug('Consolidate library hotkey pressed');
-    event.preventDefault();
-    this.onConsolidateEntireLibrary();
-  }
-
-  onConsolidateEntireLibrary(): void {
-    this.doConsolidateLibrary([]);
-  }
-
-  @HostListener('window:keydown.shift.control.p', ['$event'])
-  onHotKeyPurgeLibrary(event: KeyboardEvent): void {
-    this.logger.debug('Purge library otkey pressed');
-    event.preventDefault();
-    this.onPurgeLibrary();
-  }
-
-  onPurgeLibrary(): void {
-    this.logger.debug('Confirming purging the library');
-    this.confirmationService.confirm({
-      title: this.translateService.instant(
-        'library.purge-library.confirmation-title'
-      ),
-      message: this.translateService.instant(
-        'library.purge-library.confirmation-message'
-      ),
-      confirm: () => {
-        this.logger.debug('Firing action: purge library');
-        this.store.dispatch(purgeLibrary({ ids: this.selectedIds }));
-      }
-    });
-  }
-
-  @HostListener('window:keydown.shift.control.m', ['$event'])
-  onHotKeyScrapeComics(event: KeyboardEvent): void {
-    this.logger.debug('Scrape comics hotkey pressed');
-    event.preventDefault();
-    this.onScrapeComics();
-  }
-
-  onScrapeComics(): void {
-    this.confirmationService.confirm({
-      title: this.translateService.instant(
-        'scraping.start-scraping.confirmation-title',
-        { count: this.selectedIds.length }
-      ),
-      message: this.translateService.instant(
-        'scraping.start-scraping.confirmation-message',
-        { count: this.selectedIds.length }
-      ),
-      confirm: () => {
-        this.logger.debug('Start scraping comics');
-        this.router.navigate(['/library', 'scrape']);
-      }
-    });
-  }
-
-  @HostListener('window:keydown.shift.control.r', ['$event'])
-  onHotKeyRescanComics(event: KeyboardEvent): void {
-    this.logger.debug('Rescan comics hotkey pressed');
-    event.preventDefault();
-    this.onRescanComics();
-  }
-
-  onRescanComics(): void {
-    this.logger.debug('Confirming with the user to rescan the selected comics');
-    this.confirmationService.confirm({
-      title: this.translateService.instant(
-        'library.rescan-comics.confirmation-title'
-      ),
-      message: this.translateService.instant(
-        'library.rescan-comics.confirmation-message',
-        { count: this.selectedIds.length }
-      ),
-      confirm: () => {
-        this.logger.debug('Firing action to rescan comics');
-        this.store.dispatch(
-          rescanComics({
-            comicBooks: this.comicBooks.filter(comic =>
-              this.selectedIds.includes(comic.id)
-            )
-          })
-        );
-      }
-    });
-  }
-
-  @HostListener('window:keydown.control.e', ['$event'])
-  onHotKeyToggleUnreadSwitch(event: KeyboardEvent): void {
-    this.logger.debug('Toggle unread hotkey pressed');
-    event.preventDefault();
-    this.onToggleUnreadSwitch();
-  }
-
-  onToggleUnreadSwitch(): void {
-    this.unreadSwitch = this.unreadSwitch === false;
-    this.loadDataSource();
-  }
-
-  private doConsolidateLibrary(ids: number[]): void {
-    this.logger.debug('Confirming with the user to consolidate library:', ids);
-    this.confirmationService.confirm({
-      title: this.translateService.instant(
-        'library.consolidate.confirmation-title',
-        { count: ids.length }
-      ),
-      message: this.translateService.instant(
-        'library.consolidate.confirmation-message'
-      ),
-      confirm: () => {
-        this.logger.debug('Firing action: consolidate library');
-        this.store.dispatch(startLibraryConsolidation({ ids }));
-      }
-    });
-  }
-
-  private loadDataSource(): void {
-    this.dataSource.data = this.comicBooks
-      .filter(
-        comic =>
-          (!this.queryParameterService.coverYear$.getValue() ||
-            ((!this.queryParameterService.coverYear$.getValue().year ||
-              new Date(comic.coverDate).getFullYear() ===
-                this.queryParameterService.coverYear$.getValue().year) &&
-              (!this.queryParameterService.coverYear$.getValue().month ||
-                new Date(comic.coverDate).getMonth() ===
-                  this.queryParameterService.coverYear$.getValue().month))) &&
-          (!this.queryParameterService.archiveType$.getValue() ||
-            comic.archiveType ===
-              this.queryParameterService.archiveType$.getValue())
-      )
-      .filter(
-        comic =>
-          !this.unreadOnly ||
-          (this.unreadOnly &&
-            (!this.unreadSwitch || (this.unreadSwitch && !this.isRead(comic))))
-      )
-      .map(comic => {
-        return {
-          item: comic,
-          selected: this.selectedIds.includes(comic.id)
-        };
-      });
   }
 
   private loadTranslations(): void {
@@ -485,13 +239,5 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.translateService.instant('library.all-comics.tab-title')
       );
     }
-  }
-
-  private isRead(comic: ComicDetail): boolean {
-    return (
-      this.lastReadDates.findIndex(
-        entry => entry.comicDetail.comicId === comic.comicId
-      ) !== -1
-    );
   }
 }

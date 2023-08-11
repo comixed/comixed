@@ -22,9 +22,11 @@ import { Observable, of, throwError } from 'rxjs';
 import { DuplicateComicEffects } from './duplicate-comic.effects';
 import { DuplicateComicService } from '@app/library/services/duplicate-comic.service';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_3,
-  COMIC_BOOK_5
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_4,
+  COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import {
   duplicateComicsLoaded,
@@ -39,7 +41,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('DuplicateComicEffects', () => {
-  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const COMIC_DETAILS = [
+    COMIC_DETAIL_1,
+    COMIC_DETAIL_2,
+    COMIC_DETAIL_3,
+    COMIC_DETAIL_4,
+    COMIC_DETAIL_5
+  ];
 
   let actions$: Observable<any>;
   let effects: DuplicateComicEffects;
@@ -82,9 +90,9 @@ describe('DuplicateComicEffects', () => {
 
   describe('loading duplicate comics', () => {
     it('fires an action on success', () => {
-      const serviceResponse = COMIC_BOOKS;
+      const serviceResponse = COMIC_DETAILS;
       const action = loadDuplicateComics();
-      const outcome = duplicateComicsLoaded({ comics: COMIC_BOOKS });
+      const outcome = duplicateComicsLoaded({ comics: COMIC_DETAILS });
 
       actions$ = hot('-a', { a: action });
       duplicateComicService.loadDuplicateComics.and.returnValue(

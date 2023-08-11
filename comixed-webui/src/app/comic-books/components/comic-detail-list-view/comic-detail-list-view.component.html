@@ -1,5 +1,5 @@
 <div
-  *ngIf="showPopup"
+  *ngIf="showComicDetailPopup"
   class="cx-hover cx-centered cx-width-25 cx-border-primary-1"
 >
   <mat-card appearance="outlined">
@@ -24,6 +24,30 @@
   </mat-card>
 </div>
 
+<div
+  *ngIf="showComicFilterPopup"
+  class="cx-hover cx-centered cx-width-25 cx-border-primary-1"
+>
+  <cx-comic-detail-filter
+    [comicDetails]="comics"
+    (closeFilter)="showComicFilterPopup = false"
+  ></cx-comic-detail-filter>
+</div>
+
+<mat-paginator
+  class="cx-height-100"
+  [pageIndex]="queryParameterService.pageIndex$ | async"
+  [pageSize]="queryParameterService.pageSize$ | async"
+  [pageSizeOptions]="queryParameterService.pageSizeOptions"
+  (page)="
+    queryParameterService.onPageChange(
+      $event.pageSize,
+      $event.pageIndex,
+      $event.previousPageIndex
+    )
+  "
+></mat-paginator>
+
 <mat-table
   *ngIf="!!dataSource"
   [dataSource]="dataSource"
@@ -35,7 +59,14 @@
   "
 >
   <ng-container matColumnDef="action">
-    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-header-cell *matHeaderCellDef>
+      <mat-icon
+        (click)="onFilterComics(); $event.stopPropagation()"
+        [matTooltip]="'comic-detail-list-view.tooltip.filter-list' | translate"
+      >
+        filter_list
+      </mat-icon>
+    </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <mat-icon
         (click)="currentComic = entry.item; $event.stopPropagation()"

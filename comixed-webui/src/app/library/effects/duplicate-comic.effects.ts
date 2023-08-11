@@ -28,8 +28,8 @@ import { DuplicateComicService } from '@app/library/services/duplicate-comic.ser
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { of } from 'rxjs';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Injectable()
 export class DuplicateComicEffects {
@@ -40,7 +40,7 @@ export class DuplicateComicEffects {
       switchMap(() =>
         this.duplicateComicService.loadDuplicateComics().pipe(
           tap(response => this.logger.debug('Response received:', response)),
-          map((response: ComicBook[]) =>
+          map((response: ComicDetail[]) =>
             duplicateComicsLoaded({ comics: response })
           ),
           catchError(error => {

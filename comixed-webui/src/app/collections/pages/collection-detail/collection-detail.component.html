@@ -1,39 +1,20 @@
-<mat-toolbar>
-  <mat-form-field class="cx-width-25">
-    <input
-      matInput
-      #filterInput
-      id="volume-search-text-input"
-      [placeholder]="'library.list-page.placeholder.filter-comics' | translate"
-      (keyup)="dataSource.filter = filterInput.value"
-    />
-  </mat-form-field>
-
-  <div class="cx-spacer"></div>
-
-  <mat-paginator
-    class="cx-height-100"
-    [pageIndex]="queryParameterService.pageIndex$ | async"
-    [pageSize]="queryParameterService.pageSize$ | async"
-    [pageSizeOptions]="queryParameterService.pageSizeOptions"
-    (page)="
-      queryParameterService.onPageChange(
-        $event.pageSize,
-        $event.pageIndex,
-        $event.previousPageIndex
-      )
-    "
-  ></mat-paginator>
-</mat-toolbar>
-
 <h2>
-  {{ queryParameterService.archiveType$ | async }}
+  {{
+    "collection-detail.page-title"
+      | translate
+        : {
+            collection: collectionType,
+            count: comicBooks.length
+          }
+  }}
 </h2>
 
 <cx-comic-detail-list-view
   class="cx-width-100"
-  [dataSource]="dataSource"
   [isAdmin]="isAdmin"
+  [comics]="comicBooks"
   [selectedIds]="selectedIds"
+  [lastReadDates]="lastReadDates"
+  [showLastReadDate]="true"
   [readingLists]="readingLists"
 ></cx-comic-detail-list-view>

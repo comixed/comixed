@@ -30,6 +30,7 @@ export const QUERY_PARAM_PAGE_INDEX = 'page';
 export const QUERY_PARAM_SORT_BY = 'sort-by';
 export const QUERY_PARAM_SORT_DIRECTION = 'sort';
 export const QUERY_PARAM_TAB = 'tab';
+export const QUERY_PARAM_FILTER_TEXT = 'filter-text';
 export const QUERY_PARAM_COVER_YEAR = 'cover-year';
 export const QUERY_PARAM_COVER_MONTH = 'cover-month';
 export const QUERY_PARAM_ARCHIVE_TYPE = 'archive-type';

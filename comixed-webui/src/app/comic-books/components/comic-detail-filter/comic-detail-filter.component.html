@@ -1,0 +1,71 @@
+<form [formGroup]="filterForm">
+  <mat-card>
+    <mat-card-content>
+      <mat-form-field class="cx-width-100">
+        <input
+          matInput
+          #filterInput
+          id="volume-search-text-input"
+          [placeholder]="
+            'library.list-page.placeholder.filter-comics' | translate
+          "
+          (keyup)="queryParameterService.onFilterTextChanged(filterInput.value)"
+        />
+      </mat-form-field>
+      <mat-form-field class="cx-width-50">
+        <mat-label>{{ "filtering.label.year" | translate }}</mat-label>
+        <mat-select
+          (selectionChange)="
+            queryParameterService.onCoverYearChanged($event.value)
+          "
+          [value]="(queryParameterService.coverYear$ | async)?.year"
+        >
+          <mat-option *ngFor="let option of coverYears" [value]="option.value">
+            {{ option.label | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="cx-width-50">
+        <mat-label>{{ "filtering.label.month" | translate }}</mat-label>
+        <mat-select
+          (selectionChange)="
+            queryParameterService.onCoverMonthChanged($event.value)
+          "
+          [value]="(queryParameterService.coverYear$ | async)?.month"
+        >
+          <mat-option *ngFor="let option of coverMonths" [value]="option.value">
+            {{ option.label | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="cx-width-50">
+        <mat-label>{{ "filtering.label.archive-type" | translate }}</mat-label>
+        <mat-select
+          (selectionChange)="
+            queryParameterService.onArchiveTypeChanged($event.value)
+          "
+          [value]="queryParameterService.archiveType$ | async"
+        >
+          <mat-option
+            *ngFor="let option of archiveTypeOptions"
+            [value]="option.value"
+          >
+            {{ option.label | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions>
+      <button
+        id="close-filters-button"
+        mat-flat-button
+        class="cx-action-button"
+        color="warn"
+        (click)="onClose()"
+      >
+        <mat-icon>close</mat-icon>
+        <mat-label>{{ "button.close" | translate }}</mat-label>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

@@ -256,21 +256,6 @@ describe('CollectionDetailComponent', () => {
     });
   });
 
-  describe('updating comics with existing selections', () => {
-    beforeEach(() => {
-      component.dataSource.data = [{ item: COMIC_BOOKS[0], selected: true }];
-      component.comicBooks = COMIC_BOOKS;
-    });
-
-    it('retains previous selections', () => {
-      expect(
-        component.dataSource.data.find(
-          entry => entry.item.id === COMIC_BOOKS[0].id
-        ).selected
-      ).toBeTrue();
-    });
-  });
-
   describe('show collections', () => {
     describe('when the collection type is publisher', () => {
       beforeEach(() => {

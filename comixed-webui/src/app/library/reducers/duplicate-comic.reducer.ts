@@ -18,13 +18,13 @@
 
 import { createReducer, on } from '@ngrx/store';
 import * as DuplicateComicActions from '../actions/duplicate-comic.actions';
-import { ComicBook } from '@app/comic-books/models/comic-book';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 export const DUPLICATE_COMIC_FEATURE_KEY = 'duplicate_comic_state';
 
 export interface DuplicateComicState {
   busy: boolean;
-  comics: ComicBook[];
+  comics: ComicDetail[];
 }
 
 export const initialState: DuplicateComicState = {

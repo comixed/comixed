@@ -147,6 +147,9 @@
       "store-date": "Store Date",
       "thumbnail": "",
       "volume": "Volume"
+    },
+    "tooltip": {
+      "filter-list": "Filter the list of comics."
     }
   },
   "comic-format": {
