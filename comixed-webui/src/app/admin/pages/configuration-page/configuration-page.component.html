@@ -1,3 +1,5 @@
+<h2>{{ "configuration.page-title" | translate }}</h2>
+
 <mat-tab-group
   [selectedIndex]="queryParameterService.currentTab$ | async"
   (selectedTabChange)="queryParameterService.onTabChange($event.index)"

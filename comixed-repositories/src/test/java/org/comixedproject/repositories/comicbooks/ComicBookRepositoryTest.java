@@ -28,6 +28,7 @@ import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import org.comixedproject.model.collections.Publisher;
 import org.comixedproject.model.collections.Series;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -62,6 +63,7 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 public class ComicBookRepositoryTest {
   private static final String TEST_COMIC_SORT_NAME = "My First Comic";
   private static final long TEST_COMIC_ID = 1001L;
+  private static final long TEST_DELETABLE_COMIC_ID = 2000L;
   private static final long TEST_COMIC_ID_WITH_BLOCKED_PAGES = 1001L;
   private static final Long TEST_COMIC_ID_WITH_DELETED_PAGES = 1002L;
   private static final String TEST_IMPRINT = "This is an imprint";
@@ -74,7 +76,6 @@ public class ComicBookRepositoryTest {
   private static final String TEST_ISSUE_WITH_NEXT = "512";
   private static final String TEST_ISSUE_WITH_NO_PREV = "249";
   private static final String TEST_ISSUE_WITH_PREV = "513";
-  private static final Long TEST_COMIC_ID_WITH_DUPLICATES = 1020L;
   private static final Date TEST_COVER_DATE_NO_NEXT = new Date(1490932800000L);
   private static final Date TEST_COVER_DATE_WITH_NEXT = new Date(1485838800000L);
   private static final Date TEST_COVER_DATE_NO_PREV = new Date(1425099600000L);
@@ -86,10 +87,21 @@ public class ComicBookRepositoryTest {
   @Autowired private ComicBookRepository repository;
 
   private ComicBook comicBook;
+  private ComicBook deletableComicBook;
 
   @Before
   public void setUp() throws Exception {
     comicBook = repository.getById(TEST_COMIC_ID);
+    deletableComicBook = repository.getById(TEST_DELETABLE_COMIC_ID);
+  }
+
+  @Test
+  public void testDelete() {
+    repository.delete(deletableComicBook);
+
+    final Optional<ComicBook> result = repository.findById(deletableComicBook.getId());
+
+    assertFalse(result.isPresent());
   }
 
   @Test

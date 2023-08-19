@@ -29,6 +29,10 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BATCH_PROCESS_STATUS_1 } from '@app/admin/admin.fixtures';
 import { TitleService } from '@app/core/services/title.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('BatchProcessListPageComponent', () => {
   const PROCESS = BATCH_PROCESS_STATUS_1;
@@ -46,10 +50,14 @@ describe('BatchProcessListPageComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [BatchProcessListPageComponent],
       imports: [
+        NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
-        MatTooltipModule
+        MatTooltipModule,
+        MatPaginatorModule,
+        MatTableModule,
+        MatSortModule
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();

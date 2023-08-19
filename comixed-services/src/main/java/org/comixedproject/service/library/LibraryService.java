@@ -129,21 +129,19 @@ public class LibraryService {
         });
   }
 
-  /**
-   * Begins the process of purging comics from the library.
-   *
-   * @param ids the ids of comics to be purged
-   */
-  public void prepareForPurging(final List<Long> ids) {
-    ids.forEach(
-        id -> {
-          try {
-            final ComicBook comicBook = this.comicBookService.getComic(id);
-            log.trace("Firing action: purge comicBook id={}", id);
-            this.comicStateHandler.fireEvent(comicBook, ComicEvent.prepareToPurge);
-          } catch (ComicBookException error) {
-            log.error("Failed to prepare comic for purge", error);
-          }
-        });
+  /** Begins the process of purging comics from the library. */
+  public void prepareForPurging() {
+    final int count = (int) this.comicBookService.getComicBookCount();
+    if (count > 0) {
+      this.comicBookService
+          .findComicsMarkedForDeletion(count)
+          .forEach(
+              comicBook -> {
+                log.trace("Firing action: purge comicBook id={}", comicBook.getId());
+                this.comicStateHandler.fireEvent(comicBook, ComicEvent.prepareToPurge);
+              });
+    } else {
+      log.info("No comic books found to purge");
+    }
   }
 }

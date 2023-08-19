@@ -22,12 +22,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.io.File;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -54,6 +49,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.comixedproject.model.archives.ArchiveType;
+import org.comixedproject.model.library.LastRead;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
 import org.springframework.data.annotation.CreatedDate;
@@ -280,6 +276,10 @@ public class ComicDetail {
   @Temporal(TemporalType.TIMESTAMP)
   @Getter
   private Date dateAdded = new Date();
+
+  @OneToMany(mappedBy = "comicDetail", orphanRemoval = true)
+  @Getter
+  private List<LastRead> lastReadList = new ArrayList<>();
 
   /**
    * Returns the id for the parent comic book.

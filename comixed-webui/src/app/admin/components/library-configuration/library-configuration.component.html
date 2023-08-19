@@ -1,9 +1,18 @@
-<mat-toolbar>
+<mat-toolbar color="accent">
   <div class="cx-spacer"></div>
   <button
     mat-icon-button
-    (click)="onSave()"
+    id="purge-library-button"
+    [matTooltip]="'configuration.tooltip.purge-library' | translate"
+    (click)="onPurge()"
+  >
+    <mat-icon>delete_sweep</mat-icon>
+  </button>
+  <button
+    mat-icon-button
+    [matTooltip]="'configuration.tooltip.save' | translate"
     [disabled]="!libraryConfigurationForm.valid"
+    (click)="onSave()"
   >
     <mat-icon>save</mat-icon>
   </button>

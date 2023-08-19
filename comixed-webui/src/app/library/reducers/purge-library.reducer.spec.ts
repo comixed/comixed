@@ -26,10 +26,10 @@ import {
   purgeLibrary,
   purgeLibraryFailed
 } from '@app/library/actions/purge-library.actions';
+import { Confirmation } from '@tragically-slick/confirmation';
+import { compose } from '@ngrx/store';
 
 describe('PurgeLibrary Reducer', () => {
-  const IDS = [203, 204, 205];
-
   let state: PurgeLibraryState;
 
   beforeEach(() => {
@@ -48,7 +48,7 @@ describe('PurgeLibrary Reducer', () => {
 
   describe('starting the purge', () => {
     beforeEach(() => {
-      state = reducer({ ...state, working: false }, purgeLibrary({ ids: IDS }));
+      state = reducer({ ...state, working: false }, purgeLibrary());
     });
 
     it('sets the working flag', () => {

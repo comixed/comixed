@@ -372,14 +372,14 @@ public class LibraryControllerTest {
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
 
-    controller.purgeLibrary(new PurgeLibraryRequest(idList));
+    controller.purgeLibrary(new PurgeLibraryRequest());
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
     assertNotNull(jobParameters);
     assertTrue(jobParameters.getParameters().containsKey(JOB_PURGE_LIBRARY_START));
 
-    Mockito.verify(libraryService, Mockito.times(1)).prepareForPurging(idList);
+    Mockito.verify(libraryService, Mockito.times(1)).prepareForPurging();
     Mockito.verify(jobLauncher, Mockito.times(1)).run(purgeLibraryJob, jobParameters);
   }
 

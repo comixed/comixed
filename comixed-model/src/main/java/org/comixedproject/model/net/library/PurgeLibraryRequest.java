@@ -18,10 +18,6 @@
 
 package org.comixedproject.model.net.library;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
@@ -29,10 +25,5 @@ import lombok.NoArgsConstructor;
  *
  * @author Darry L. Pierce
  */
-@AllArgsConstructor
 @NoArgsConstructor
-public class PurgeLibraryRequest {
-  @JsonProperty("ids")
-  @Getter
-  private List<Long> ids;
-}
+public class PurgeLibraryRequest {}
