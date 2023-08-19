@@ -108,7 +108,7 @@
       "convert-selected-to-cbz": "Convert selected comics To CBZ",
       "delete-one": "Mark as deleted",
       "delete-selected": "Mark as deleted",
-      "edit-multiple-comics": "Edit details for {count, plural, =1{one comic} other{# comics}}",
+      "edit-multiple-comics": "Edit details for {count, plural, =1{one comic} other{# comics}}...",
       "mark-as": "Mark",
       "mark-as-read": "Mark as read",
       "mark-as-unread": "Mark as unread",
@@ -118,9 +118,12 @@
       "set-page-deleted": "Delete This Page",
       "set-page-unblocked": "Don't Block Pages Like This",
       "set-page-undeleted": "Don't Delete This Page",
+      "scrape-comics-selected": "Scrape metadata for {count, plural, =1{one comic} other{# comics}}...",
       "single-comic-menu": "This Comic",
       "undelete-one": "Mark as undeleted",
-      "undelete-selected": "Mark as undeleted"
+      "undelete-selected": "Mark as undeleted",
+      "update-metadata-one": "Update metadata...",
+      "update-metadata-selected": "Update metadata for {count, plural, =1{one comic} other{# comics}}..."
     },
     "convert-comics": {
       "convert-one": {
@@ -186,6 +189,10 @@
       "confirmation-title": "Rescan Selected Comics",
       "effect-failure": "Failed to start rescanning comics.",
       "effect-success": "Rescanning comics started."
+    },
+    "scrape-comics": {
+      "confirmation-message": "Are you sure you want to start scraping metadata for {count, plural, =1{one comic} other{# comics}}?",
+      "confirmation-title": "Scrape Comic Metadata"
     },
     "set-read": {
       "effect-failure": "Failed to mark comics as {read, select, true{read} other{unread}}.",

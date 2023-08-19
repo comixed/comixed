@@ -67,6 +67,7 @@ import { QueryParameterService } from '@app/core/services/query-parameter.servic
 import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { LastRead } from '@app/last-read/models/last-read';
+import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 
 describe('ComicDetailListViewComponent', () => {
   const COMIC_DETAILS = [
@@ -147,6 +148,7 @@ describe('ComicDetailListViewComponent', () => {
     spyOn(store, 'dispatch');
     router = TestBed.inject(Router);
     spyOn(router, 'navigate');
+    spyOn(router, 'navigateByUrl');
     confirmationService = TestBed.inject(ConfirmationService);
     dialog = TestBed.inject(MatDialog);
     queryParameterService = TestBed.inject(
@@ -947,6 +949,40 @@ describe('ComicDetailListViewComponent', () => {
           component.dataSource.data.map(entry => entry.item)
         ).not.toContain(COMIC_DETAILS[0]);
       });
+    });
+  });
+
+  describe('updating metadata', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(confirmation =>
+        confirmation.confirm()
+      );
+      component.onUpdateMetadata(IDS);
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires a message', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(updateMetadata({ ids: IDS }));
+    });
+  });
+
+  describe('scraping comics', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(confirmation =>
+        confirmation.confirm()
+      );
+      component.onScrapeComics(IDS);
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('navigates to the metadata scraping page', () => {
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/library/scrape');
     });
   });
 });
