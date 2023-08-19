@@ -60,6 +60,8 @@ import { getUserPreference } from '@app/user';
 import * as _ from 'lodash';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { selectComicBookList } from '@app/comic-books/selectors/comic-book-list.selectors';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { PAGE_SIZE_OPTIONS } from '@app/core';
 
 @Component({
   selector: 'cx-duplicate-page-list-page',
@@ -101,7 +103,8 @@ export class DuplicatePageListPageComponent
     private translateService: TranslateService,
     private dialog: MatDialog,
     private confirmationService: ConfirmationService,
-    private webSocketService: WebSocketService
+    private webSocketService: WebSocketService,
+    public queryParameterService: QueryParameterService
   ) {
     this.logger.trace('Subscribing to duplicate page list changes');
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
@@ -188,7 +191,7 @@ export class DuplicatePageListPageComponent
         case 'hash':
           return data.item.hash;
         case 'comic-count':
-          return data.item.ids.length;
+          return data.item.comics.length;
         case 'blocked':
           return `${this.isBlocked(data)}`;
       }
@@ -212,7 +215,7 @@ export class DuplicatePageListPageComponent
   onShowComicBooksWithPage(row: SelectableListItem<DuplicatePage>): void {
     this.logger.trace('Displaying dialog of affected comics');
     this.dialog.open(ComicDetailListDialogComponent, {
-      data: this.comics.filter(comic => row.item.ids.includes(comic.comicId))
+      data: this.comics.filter(comic => row.item.comics.includes(comic))
     });
   }
 
@@ -337,6 +340,7 @@ export class DuplicatePageListPageComponent
           selected: existingPage?.selected || false
         };
       });
+    this.updateSelectionState();
   }
 
   private loadTranslations(): void {
@@ -366,4 +370,6 @@ export class DuplicatePageListPageComponent
     );
     this.dataSource.data.forEach(item => (item.selected = false));
   }
+
+  protected readonly PAGE_SIZE_OPTIONS = PAGE_SIZE_OPTIONS;
 }

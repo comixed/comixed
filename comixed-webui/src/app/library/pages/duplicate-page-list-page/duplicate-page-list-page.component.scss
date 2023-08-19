@@ -1,8 +1,8 @@
 @import 'styles';
 
 .mat-column-selection {
-  width: $cx-column-small;
-  max-width: $cx-column-small;
+  width: $cx-column-smallish;
+  max-width: $cx-column-smallish;
   resize: none;
 }
 
@@ -28,7 +28,7 @@
 }
 
 .mat-column-actions {
-  width: $cx-column-small;
-  max-width: $cx-column-small;
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
   resize: none;
 }

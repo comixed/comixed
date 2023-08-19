@@ -30,13 +30,13 @@
       "confirmation-title": "Block Selected Page Hashes"
     },
     "header": {
-      "blocked": "Is Page Blocked?",
-      "comic-count": "Comics Affected",
+      "blocked": "Blocked",
+      "comic-count": "# Comics",
       "hash": "Hash Value",
       "thumbnail": "Thumbnail"
     },
     "list-page": {
-      "page-title": "Duplicate Pages ({selected} of {count} Selected)",
+      "page-title": "{unblockedOnly, select, true{Blocked } other{}}Duplicate Pages ({selected} of {count} Selected)",
       "tab-title": "Duplicate Pages"
     },
     "load-comics": {

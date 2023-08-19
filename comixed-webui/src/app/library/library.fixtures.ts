@@ -18,23 +18,23 @@
 
 import { DuplicatePage } from './models/duplicate-page';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
-  COMIC_BOOK_3
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_3
 } from '../comic-books/comic-books.fixtures';
 import { PAGE_1, PAGE_2, PAGE_3 } from '@app/comic-pages/comic-pages.fixtures';
 
 export const DUPLICATE_PAGE_1: DuplicatePage = {
   hash: PAGE_1.hash,
-  ids: [COMIC_BOOK_1.id]
+  comics: [COMIC_DETAIL_1]
 };
 
 export const DUPLICATE_PAGE_2: DuplicatePage = {
   hash: PAGE_2.hash,
-  ids: [COMIC_BOOK_2.id]
+  comics: [COMIC_DETAIL_2]
 };
 
 export const DUPLICATE_PAGE_3: DuplicatePage = {
   hash: PAGE_3.hash,
-  ids: [COMIC_BOOK_3.id]
+  comics: [COMIC_DETAIL_3]
 };

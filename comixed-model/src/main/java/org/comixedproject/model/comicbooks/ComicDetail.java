@@ -114,12 +114,7 @@ public class ComicDetail {
   @Column(name = "ComicState", nullable = false, updatable = true)
   @Enumerated(EnumType.STRING)
   @JsonProperty("comicState")
-  @JsonView({
-    View.ComicListView.class,
-    View.DuplicatePageDetail.class,
-    View.ReadingListDetail.class,
-    View.DeletedPageList.class
-  })
+  @JsonView({View.ComicListView.class, View.ReadingListDetail.class, View.DeletedPageList.class})
   @Getter
   @Setter
   private ComicState comicState = ComicState.ADDED;
@@ -127,12 +122,7 @@ public class ComicDetail {
   @Column(name = "ComicType", nullable = false, updatable = true)
   @Enumerated(EnumType.STRING)
   @JsonProperty("comicType")
-  @JsonView({
-    View.ComicListView.class,
-    View.DuplicatePageDetail.class,
-    View.ReadingListDetail.class,
-    View.DeletedPageList.class
-  })
+  @JsonView({View.ComicListView.class, View.ReadingListDetail.class, View.DeletedPageList.class})
   @Getter
   @Setter
   private ComicType comicType = ComicType.ISSUE;
@@ -200,7 +190,7 @@ public class ComicDetail {
 
   @Column(name = "Title", length = 128)
   @JsonProperty("title")
-  @JsonView({View.ComicListView.class, View.DuplicatePageList.class})
+  @JsonView({View.ComicListView.class})
   @Getter
   @Setter
   private String title;
@@ -227,11 +217,7 @@ public class ComicDetail {
       orphanRemoval = true,
       fetch = FetchType.LAZY)
   @JsonProperty("tags")
-  @JsonView({
-    View.ComicListView.class,
-    View.DuplicatePageDetail.class,
-    View.ReadingListDetail.class
-  })
+  @JsonView({View.ComicListView.class, View.ReadingListDetail.class})
   @Getter
   private Set<ComicTag> tags = new HashSet<>();
 
@@ -253,12 +239,7 @@ public class ComicDetail {
   @Temporal(TemporalType.DATE)
   @JsonProperty("storeDate")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
-  @JsonView({
-    View.ComicListView.class,
-    View.DuplicatePageDetail.class,
-    View.ReadingListDetail.class,
-    View.DeletedPageList.class
-  })
+  @JsonView({View.ComicListView.class, View.ReadingListDetail.class, View.DeletedPageList.class})
   @Getter
   @Setter
   private Date storeDate;

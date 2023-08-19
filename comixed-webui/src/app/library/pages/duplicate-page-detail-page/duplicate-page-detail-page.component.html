@@ -1,16 +1,8 @@
-<mat-toolbar>
-  <button
-    id="return-to-list-button"
-    mat-icon-button
-    routerLink="/library/pages/duplicates"
-  >
-    <mat-icon>arrow_back</mat-icon>
-  </button>
-  <div class="cx-spacer"></div>
+<div class="cx-fab-container-bottom-right">
   <button
     *ngIf="!!detail && !blockedHashes.includes(detail.hash)"
     id="block-page-button"
-    mat-icon-button
+    mat-fab
     [matTooltip]="'duplicate-pages.tooltip.block-page' | translate"
     (click)="onBlockPage()"
   >
@@ -19,13 +11,13 @@
   <button
     *ngIf="!!detail && blockedHashes.includes(detail.hash)"
     id="unblock-page-button"
-    mat-icon-button
+    mat-fab
     [matTooltip]="'duplicate-pages.tooltip.unblock-page' | translate"
     (click)="onUnblockPage()"
   >
     <mat-icon>remove_circle_outline</mat-icon>
   </button>
-</mat-toolbar>
+</div>
 
 <div class="cx-horizontal-container">
   <div class="cx-grow-0">
@@ -33,7 +25,7 @@
   </div>
   <div class="cx-grow-1 cx-padding-5">
     <h2>
-      {{ "duplicate-page-detail.page-title" | translate: { hash: hash } }}
+      {{ "duplicate-page-detail.page-title" | translate: {hash: hash} }}
     </h2>
     <mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="publisher">
@@ -85,10 +77,8 @@
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row
         *matRowDef="let row; columns: displayedColumns"
-        [routerLink]="['/comics', row.id]"
+        [routerLink]="['/comics', row.comicId]"
       ></mat-row>
     </mat-table>
   </div>
 </div>
-
-<pre>{{ blockedHashes | json }}</pre>

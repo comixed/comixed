@@ -16,7 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
+
 export interface DuplicatePage {
   hash: string;
-  ids: number[];
+  comics: ComicDetail[];
 }
