@@ -56,6 +56,7 @@ import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics'
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { Subscription } from 'rxjs';
+import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 
 @Component({
   selector: 'cx-comic-detail-list-view',
@@ -158,8 +159,7 @@ export class ComicDetailListViewComponent implements OnDestroy, AfterViewInit {
     return this._comics;
   }
 
-  @Input()
-  set comics(comics: ComicDetail[]) {
+  @Input() set comics(comics: ComicDetail[]) {
     this._comics = comics;
     this.applyFilters();
   }
@@ -238,8 +238,9 @@ export class ComicDetailListViewComponent implements OnDestroy, AfterViewInit {
     }
   }
 
-  @HostListener('window:keydown.control.a', ['$event'])
-  onHotkeySelectAll(event: KeyboardEvent): void {
+  @HostListener('window:keydown.control.a', ['$event']) onHotkeySelectAll(
+    event: KeyboardEvent
+  ): void {
     this.logger.debug('Select all hotkey pressed');
     event.preventDefault();
     this.onSelectAll(true);
@@ -341,7 +342,10 @@ export class ComicDetailListViewComponent implements OnDestroy, AfterViewInit {
       ),
       message: this.translateService.instant(
         'library.convert-comics.convert-selected.confirmation-message',
-        { count: selectedComics.length, format: archiveTypeString }
+        {
+          count: selectedComics.length,
+          format: archiveTypeString
+        }
       ),
       confirm: () => {
         this.logger.debug(
@@ -430,6 +434,38 @@ export class ComicDetailListViewComponent implements OnDestroy, AfterViewInit {
   onFilterComics(): void {
     this.logger.debug('Showing comic detail filters');
     this.showComicFilterPopup = true;
+  }
+
+  onUpdateMetadata(ids: number[]): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library.update-metadata.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'library.update-metadata.confirmation-message',
+        { count: ids.length }
+      ),
+      confirm: () => {
+        this.logger.debug('Updating metadata for comics:', ids);
+        this.store.dispatch(updateMetadata({ ids }));
+      }
+    });
+  }
+
+  onScrapeComics(ids: number[]): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library.scrape-comics.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'library.scrape-comics.confirmation-message',
+        { count: ids.length }
+      ),
+      confirm: () => {
+        this.logger.debug('Scraping comics:', ids);
+        this.router.navigateByUrl('/library/scrape');
+      }
+    });
   }
 
   private doMarkAsDeleted(comicBooks: ComicDetail[], deleted: boolean): void {
