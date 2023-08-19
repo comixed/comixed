@@ -36,6 +36,7 @@ import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { selectBlockedPageList } from '@app/comic-pages/selectors/blocked-hash-list.selectors';
 import { loadBlockedHashList } from '@app/comic-pages/actions/blocked-hash-list.actions';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Component({
   selector: 'cx-duplicate-page-detail-page',
@@ -52,7 +53,7 @@ export class DuplicatePageDetailPageComponent
   blockedHashes: string[] = [];
   langChangeSubscription: Subscription;
   hash = '';
-  dataSource = new MatTableDataSource<number>([]);
+  dataSource = new MatTableDataSource<ComicDetail>([]);
 
   readonly displayedColumns = [
     'publisher',
@@ -116,8 +117,8 @@ export class DuplicatePageDetailPageComponent
   set detail(detail: DuplicatePage) {
     this.logger.trace('Setting duplicate page detail');
     this._detail = detail;
-    this.logger.trace('Loading affected comics');
-    this.dataSource.data = this._detail.ids;
+    this.logger.trace('Loading affected comics:', detail);
+    this.dataSource.data = this._detail.comics;
   }
 
   ngOnInit() {

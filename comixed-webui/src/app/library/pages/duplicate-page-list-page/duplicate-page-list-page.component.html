@@ -1,47 +1,43 @@
-<mat-toolbar>
-  <mat-paginator
-    class="cx-height-100"
-    [pageSizeOptions]="[5, 10, 20]"
-    showFirstLastButtons
-  ></mat-paginator>
-  <div class="cx-spacer"></div>
+<div class="cx-fab-container-bottom-right">
   <button
     id="unblocked-only"
-    mat-icon-button
+    mat-fab
     [matTooltip]="'duplicate-pages.tooltip.unblocked-only' | translate"
     (click)="onToggleUnblockedOnly()"
   >
-    <mat-icon *ngIf="unblockedOnly">check_box</mat-icon>
-    <mat-icon *ngIf="!unblockedOnly">check_box_outline_blank</mat-icon>
+    <mat-icon>filter_list</mat-icon>
   </button>
-  <button
-    id="block-selections-button"
-    mat-icon-button
-    [disabled]="!anySelected"
-    [matTooltip]="'duplicate-pages.tooltip.block-selections' | translate"
-    (click)="onBlockSelected()"
-  >
-    <mat-icon>block</mat-icon>
-  </button>
-  <button
-    id="unblock-selections-button"
-    mat-icon-button
-    [disabled]="!anySelected"
-    [matTooltip]="'duplicate-pages.tooltip.unblock-selections' | translate"
-    (click)="onUnblockSelected()"
-  >
-    <mat-icon>remove_circle_outline</mat-icon>
-  </button>
-</mat-toolbar>
+</div>
 
 <h2>
   {{
-    "duplicate-pages.list-page.page-title"
-      | translate: { count: dataSource.data.length, selected: selectedCount }
+  "duplicate-pages.list-page.page-title"
+    | translate: {count: dataSource.data.length, selected: selectedCount, unblockedOnly}
   }}
 </h2>
 
-<mat-table [dataSource]="dataSource" matSort>
+<mat-paginator
+  class="cx-height-100"
+  [pageSize]="queryParameterService.pageSize$ | async"
+  [pageSizeOptions]="queryParameterService.pageSizeOptions"
+  (page)="
+    queryParameterService.onPageChange(
+      $event.pageSize,
+      $event.pageIndex,
+      $event.previousPageIndex
+    )
+  "
+></mat-paginator>
+
+<mat-table
+  [dataSource]="dataSource"
+  matSort
+  [matSortActive]="queryParameterService.sortBy$ | async"
+  [matSortDirection]="queryParameterService.sortDirection$ | async"
+  (matSortChange)="
+    queryParameterService.onSortChange($event.active, $event.direction)
+  "
+>
   <ng-container matColumnDef="selection">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       <mat-checkbox
@@ -91,7 +87,7 @@
       {{ "duplicate-pages.header.comic-count" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let row">
-      <span class="cx-text-nowrap">{{ row.item.ids.length }}</span>
+      <span class="cx-text-nowrap">{{ row.item.comics.length }}</span>
     </mat-cell>
   </ng-container>
 
@@ -107,7 +103,24 @@
   </ng-container>
 
   <ng-container matColumnDef="actions">
-    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-header-cell *matHeaderCellDef>
+      <button
+        *ngIf="selectedCount > 0"
+        mat-icon-button
+        [matTooltip]="'duplicate-pages.tooltip.block-selections' | translate"
+        (click)="onBlockSelected()"
+      >
+        <mat-icon>block</mat-icon>
+      </button>
+      <button
+        *ngIf="selectedCount > 0"
+        mat-icon-button
+        [matTooltip]="'duplicate-pages.tooltip.unblock-selections' | translate"
+        (click)="onUnblockSelected()"
+      >
+        <mat-icon>remove_circle_outline</mat-icon>
+      </button>
+    </mat-header-cell>
     <mat-cell *matCellDef="let row">
       <button
         mat-icon-button

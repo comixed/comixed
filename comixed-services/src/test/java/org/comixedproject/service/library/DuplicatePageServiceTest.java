@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.repositories.comicpages.PageRepository;
@@ -20,11 +21,11 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class DuplicatePageServiceTest {
   private static final String TEST_PAGE_HASH = "1234567890ABCDEF";
-  private static final Long TEST_COMIC_BOOK_ID = 771L;
 
   @InjectMocks private DuplicatePageService service;
   @Mock private PageRepository pageRepository;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comicDetail;
   @Mock private Page page;
 
   private List<Page> pageList = new ArrayList<>();
@@ -32,8 +33,8 @@ public class DuplicatePageServiceTest {
   @Before
   public void setUp() {
     Mockito.when(page.getHash()).thenReturn(TEST_PAGE_HASH);
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(page.getComicBook()).thenReturn(comicBook);
-    Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_BOOK_ID);
   }
 
   @Test
@@ -47,7 +48,7 @@ public class DuplicatePageServiceTest {
     assertNotNull(result);
     assertFalse(result.isEmpty());
     assertEquals(TEST_PAGE_HASH, result.get(0).getHash());
-    assertTrue(result.get(0).getIds().contains(TEST_COMIC_BOOK_ID));
+    assertTrue(result.get(0).getComics().contains(comicDetail));
 
     Mockito.verify(pageRepository, Mockito.times(1)).getDuplicatePages();
   }
@@ -73,7 +74,7 @@ public class DuplicatePageServiceTest {
 
     assertNotNull(result);
     assertEquals(TEST_PAGE_HASH, result.getHash());
-    assertTrue(result.getIds().contains(TEST_COMIC_BOOK_ID));
+    assertTrue(result.getComics().contains(comicDetail));
 
     Mockito.verify(pageRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
   }

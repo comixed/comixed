@@ -82,6 +82,8 @@ import {
   COMIC_DETAIL_4,
   COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { MatSortModule } from '@angular/material/sort';
 
 describe('DuplicatePageListPageComponent', () => {
   const COMICS = [
@@ -113,6 +115,7 @@ describe('DuplicatePageListPageComponent', () => {
   let translateService: TranslateService;
   let dialog: MatDialog;
   let confirmationService: ConfirmationService;
+  let queryParameterService: QueryParameterService;
 
   beforeEach(
     waitForAsync(() => {
@@ -133,7 +136,8 @@ describe('DuplicatePageListPageComponent', () => {
           MatPaginatorModule,
           MatTooltipModule,
           MatTableModule,
-          MatCheckboxModule
+          MatCheckboxModule,
+          MatSortModule
         ],
         providers: [
           provideMockStore({ initialState }),
@@ -147,7 +151,11 @@ describe('DuplicatePageListPageComponent', () => {
               )
             }
           },
-          ConfirmationService
+          ConfirmationService,
+          {
+            provide: QueryParameterService,
+            useValue: {}
+          }
         ]
       }).compileComponents();
 
@@ -165,6 +173,7 @@ describe('DuplicatePageListPageComponent', () => {
       spyOn(dialog, 'open');
       confirmationService = TestBed.inject(ConfirmationService);
       component.pageUpdatesSubscription = null;
+      queryParameterService = TestBed.inject(QueryParameterService);
       fixture.detectChanges();
     })
   );
@@ -293,7 +302,7 @@ describe('DuplicatePageListPageComponent', () => {
     it('sorts by comic count', () => {
       expect(
         component.dataSource.sortingDataAccessor(ENTRY, 'comic-count')
-      ).toEqual(ENTRY.item.ids.length);
+      ).toEqual(ENTRY.item.comics.length);
     });
 
     it('sorts by blocked state', () => {
@@ -316,7 +325,7 @@ describe('DuplicatePageListPageComponent', () => {
 
     it('opens a dialog', () => {
       expect(dialog.open).toHaveBeenCalledWith(ComicDetailListDialogComponent, {
-        data: COMICS.filter(comic => ENTRY.item.ids.includes(comic.comicId))
+        data: COMICS.filter(comic => ENTRY.item.comics.includes(comic))
       });
     });
   });

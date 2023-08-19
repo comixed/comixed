@@ -25,6 +25,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.views.View;
 
 /**
@@ -40,9 +41,9 @@ public class DuplicatePage {
   @Getter
   private String hash;
 
-  @JsonProperty("ids")
+  @JsonProperty("comics")
   @JsonView(View.DuplicatePageList.class)
   @Getter
   @Setter
-  private Set<Long> ids = new HashSet<>();
+  private Set<ComicDetail> comics = new HashSet<>();
 }
