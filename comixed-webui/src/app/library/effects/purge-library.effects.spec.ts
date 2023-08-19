@@ -34,8 +34,6 @@ import {
 import { hot } from 'jasmine-marbles';
 
 describe('PurgeLibraryEffects', () => {
-  const IDS = [203, 204, 205];
-
   let actions$: Observable<any>;
   let effects: PurgeLibraryEffects;
   let libraryService: jasmine.SpyObj<LibraryService>;
@@ -77,13 +75,11 @@ describe('PurgeLibraryEffects', () => {
   describe('starting the library purge', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
-      const action = purgeLibrary({ ids: IDS });
+      const action = purgeLibrary();
       const outcome = libraryPurging();
 
       actions$ = hot('-a', { a: action });
-      libraryService.purgeLibrary
-        .withArgs({ ids: IDS })
-        .and.returnValue(of(serviceResponse));
+      libraryService.purgeLibrary.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.purgeLibrary$).toBeObservable(expected);
@@ -92,13 +88,11 @@ describe('PurgeLibraryEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = purgeLibrary({ ids: IDS });
+      const action = purgeLibrary();
       const outcome = purgeLibraryFailed();
 
       actions$ = hot('-a', { a: action });
-      libraryService.purgeLibrary
-        .withArgs({ ids: IDS })
-        .and.returnValue(throwError(serviceResponse));
+      libraryService.purgeLibrary.and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.purgeLibrary$).toBeObservable(expected);
@@ -106,13 +100,11 @@ describe('PurgeLibraryEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = purgeLibrary({ ids: IDS });
+      const action = purgeLibrary();
       const outcome = purgeLibraryFailed();
 
       actions$ = hot('-a', { a: action });
-      libraryService.purgeLibrary
-        .withArgs({ ids: IDS })
-        .and.throwError('expected');
+      libraryService.purgeLibrary.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.purgeLibrary$).toBeObservable(expected);

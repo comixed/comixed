@@ -47,6 +47,7 @@ public class LibraryServiceTest {
   private static final String TEST_RENAMING_RULE = "The renaming rule";
   private static final String TEST_TARGET_DIRECTORY = "/home/comixed/Documents/comics";
   private static final boolean TEST_DELETE_REMOVED_COMIC_FILES = RandomUtils.nextBoolean();
+  private static final long TEST_COMIC_COUNT = 717L;
 
   @InjectMocks private LibraryService service;
   @Mock private ComicBookService comicBookService;
@@ -190,33 +191,32 @@ public class LibraryServiceTest {
 
   @Test
   public void testPrepareForPurge() throws ComicBookException {
-    for (long index = 0L; index < 25L; index++) comicIdList.add(index + 100L);
+    Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_COMIC_COUNT);
+    Mockito.when(comicBookService.findComicsMarkedForDeletion(Mockito.anyInt()))
+        .thenReturn(comicBookList);
+    comicBookList.add(comicBook);
 
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
-
-    service.prepareForPurging(comicIdList);
+    service.prepareForPurging();
 
     for (int index = 0; index < comicIdList.size(); index++) {
       final Long id = comicIdList.get(index);
       Mockito.verify(comicBookService, Mockito.times(1)).getComic(id);
     }
-    Mockito.verify(comicStateHandler, Mockito.times(comicIdList.size()))
+    Mockito.verify(comicBookService, Mockito.times(1)).getComicBookCount();
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .findComicsMarkedForDeletion((int) TEST_COMIC_COUNT);
+    Mockito.verify(comicStateHandler, Mockito.times(comicBookList.size()))
         .fireEvent(comicBook, ComicEvent.prepareToPurge);
   }
 
   @Test
-  public void testPrepareForPurgeInvalid() throws ComicBookException {
-    for (long index = 0L; index < 25L; index++) comicIdList.add(index + 100L);
+  public void testPrepareForPurgeNoComicsFound() throws ComicBookException {
+    Mockito.when(comicBookService.getComicBookCount()).thenReturn(0L);
 
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicBookException.class);
+    service.prepareForPurging();
 
-    service.prepareForPurging(comicIdList);
-
-    for (int index = 0; index < comicIdList.size(); index++) {
-      final Long id = comicIdList.get(index);
-      Mockito.verify(comicBookService, Mockito.times(1)).getComic(id);
-    }
-    Mockito.verify(comicStateHandler, Mockito.never())
-        .fireEvent(comicBook, ComicEvent.prepareToPurge);
+    Mockito.verify(comicBookService, Mockito.times(1)).getComicBookCount();
+    Mockito.verify(comicBookService, Mockito.never()).findComicsMarkedForDeletion(Mockito.anyInt());
+    Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
   }
 }

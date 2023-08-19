@@ -39,6 +39,7 @@ import {
 } from '@app/admin/admin.constants';
 import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import { purgeLibrary } from '@app/library/actions/purge-library.actions';
 
 @Component({
   selector: 'cx-library-configuration',
@@ -105,7 +106,7 @@ export class LibraryConfigurationComponent {
   }
 
   @Input() set options(options: ConfigurationOption[]) {
-    this.logger.trace('Loading configuration options');
+    this.logger.debug('Loading configuration options');
     this.libraryConfigurationForm.controls.rootDirectory.setValue(
       getConfigurationOption(options, LIBRARY_ROOT_DIRECTORY, '')
     );
@@ -146,7 +147,7 @@ export class LibraryConfigurationComponent {
   }
 
   onSave(): void {
-    this.logger.trace('Save configuration called');
+    this.logger.debug('Save configuration called');
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'save-configuration.confirmation-title'
@@ -155,10 +156,25 @@ export class LibraryConfigurationComponent {
         'save-configuration.confirmation-message'
       ),
       confirm: () => {
-        this.logger.trace('Save configuration confirmed');
+        this.logger.debug('Save configuration confirmed');
         this.store.dispatch(
           saveConfigurationOptions({ options: this.encodeOptions() })
         );
+      }
+    });
+  }
+
+  onPurge(): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'configuration.purge-library.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'configuration.purge-library.confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.debug('Purging library...');
+        this.store.dispatch(purgeLibrary());
       }
     });
   }

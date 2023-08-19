@@ -37,7 +37,7 @@ export class PurgeLibraryEffects {
       ofType(purgeLibrary),
       tap(action => this.logger.trace('Purging library:', action)),
       switchMap(action =>
-        this.libraryService.purgeLibrary({ ids: action.ids }).pipe(
+        this.libraryService.purgeLibrary().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           tap(() =>
             this.alertService.info(

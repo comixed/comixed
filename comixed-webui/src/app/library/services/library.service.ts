@@ -135,11 +135,12 @@ export class LibraryService {
     } as ConvertComicsRequest);
   }
 
-  purgeLibrary(args: { ids: number[] }): Observable<any> {
+  purgeLibrary(): Observable<any> {
     this.logger.trace('Purging library');
-    return this.http.post(interpolate(PURGE_LIBRARY_URL), {
-      ids: args.ids
-    } as PurgeLibraryRequest);
+    return this.http.post(
+      interpolate(PURGE_LIBRARY_URL),
+      {} as PurgeLibraryRequest
+    );
   }
 
   editMultipleComics(args: {

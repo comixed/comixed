@@ -319,7 +319,7 @@ public class LibraryController {
   }
 
   /**
-   * Purges comics from the library.
+   * Purges deleted comics from the library.
    *
    * @param request the request body
    * @throws Exception if an error occurs
@@ -328,9 +328,8 @@ public class LibraryController {
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.library.batch.purge")
   public void purgeLibrary(@RequestBody() final PurgeLibraryRequest request) throws Exception {
-    final List<Long> idList = request.getIds();
-    log.info("Purging {} comic{}", idList.size(), idList.size() == 1 ? "" : "s");
-    this.libraryService.prepareForPurging(idList);
+    log.info("Purging comics marked for deletion");
+    this.libraryService.prepareForPurging();
     log.trace("Launching batch process");
     this.jobLauncher.run(
         this.purgeLibraryJob,

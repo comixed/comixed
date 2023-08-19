@@ -39,6 +39,11 @@
     "load-all": {
       "effect-failure": "Failed to load configuration options."
     },
+    "page-title": "Server Configuration",
+    "purge-library": {
+      "confirmation-message": "Are you sure you want to purge the library? Purging the library does not remove comics that are part of reading lists. Those entries must be removed before the comics can be purged.",
+      "confirmation-title": "Purge Library"
+    },
     "tab": {
       "library": "Library",
       "metadata-sources": "Metadata Sources",
@@ -46,7 +51,7 @@
       "server-metrics": "Server Metrics",
       "server-runtime": "Runtime"
     },
-    "tab-title": "Configuration",
+    "tab-title": "Server Configuration",
     "text": {
       "comic-renaming-rule-cover-date": "The cover date",
       "comic-renaming-rule-issue-number": "The issue number",
@@ -60,6 +65,10 @@
       "comic-variable-caption": "These are the available variables that can be used for renaming comics.",
       "page-renaming-rule-index": "The page index (1-based)",
       "page-variable-caption": "These are the available variables that can be used for renaming pages."
+    },
+    "tooltip": {
+      "purge-library": "Remove comics marked for deletion...",
+      "save": "Save current configuration."
     }
   },
   "filename-scraping-rules": {

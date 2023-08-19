@@ -208,12 +208,12 @@ describe('LibraryService', () => {
 
   it('can purge the library', () => {
     service
-      .purgeLibrary({ ids: IDS })
+      .purgeLibrary()
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(interpolate(PURGE_LIBRARY_URL));
     expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({ ids: IDS } as PurgeLibraryRequest);
+    expect(req.request.body).toEqual({} as PurgeLibraryRequest);
     req.flush(new HttpResponse({ status: 200 }));
   });
 

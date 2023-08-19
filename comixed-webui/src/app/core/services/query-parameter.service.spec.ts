@@ -28,6 +28,7 @@ import { BehaviorSubject } from 'rxjs';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
   QUERY_PARAM_ARCHIVE_TYPE,
+  QUERY_PARAM_COMIC_TYPE,
   QUERY_PARAM_COVER_MONTH,
   QUERY_PARAM_COVER_YEAR,
   QUERY_PARAM_FILTER_TEXT,
@@ -39,6 +40,7 @@ import {
   QUERY_PARAM_TAB
 } from '@app/core';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
+import { ComicType } from '@app/comic-books/models/comic-type';
 
 describe('QueryParameterService', () => {
   const PAGE_SIZE = 25;
@@ -304,6 +306,40 @@ describe('QueryParameterService', () => {
           relativeTo: activatedRoute,
           queryParams: {
             [QUERY_PARAM_ARCHIVE_TYPE]: null
+          }
+        });
+      });
+    });
+  });
+
+  describe('when the comic type changes', () => {
+    describe('when set', () => {
+      const COMIC_TYPE = ComicType.ISSUE;
+
+      beforeEach(() => {
+        service.onComicTypeChanged(COMIC_TYPE);
+      });
+
+      it('updates the URL', () => {
+        expect(router.navigate).toHaveBeenCalledWith([], {
+          relativeTo: activatedRoute,
+          queryParams: {
+            [QUERY_PARAM_COMIC_TYPE]: COMIC_TYPE
+          }
+        });
+      });
+    });
+
+    describe('when cleared', () => {
+      beforeEach(() => {
+        service.onComicTypeChanged(null);
+      });
+
+      it('updates the URL', () => {
+        expect(router.navigate).toHaveBeenCalledWith([], {
+          relativeTo: activatedRoute,
+          queryParams: {
+            [QUERY_PARAM_COMIC_TYPE]: null
           }
         });
       });

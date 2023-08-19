@@ -16,11 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createAction, props } from '@ngrx/store';
+import { createAction } from '@ngrx/store';
 
 export const purgeLibrary = createAction(
-  '[Purge Library] Start purging the library',
-  props<{ ids: number[] }>()
+  '[Purge Library] Start purging the library'
 );
 
 export const libraryPurging = createAction(
