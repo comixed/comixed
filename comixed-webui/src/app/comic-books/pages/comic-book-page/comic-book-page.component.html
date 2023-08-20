@@ -1,144 +1,118 @@
-<mat-toolbar *ngIf="!!comicBook">
-  <button
-    id="previous-comic-button"
-    class="cx-toolbar-button"
-    mat-icon-button
-    [matTooltip]="'comic-book.tooltip.go-to-previous-comic' | translate"
-    [disabled]="!comicBook.previousIssueId"
-    [routerLink]="['/comics', comicBook.previousIssueId]"
-  >
-    <mat-icon>arrow_back</mat-icon>
-  </button>
-  <button
-    id="next-comic-button"
-    class="cx-toolbar-button"
-    mat-icon-button
-    [disabled]="!comicBook.nextIssueId"
-    [matTooltip]="'comic-book.tooltip.go-to-next-comic' | translate"
-    [routerLink]="['/comics', comicBook.nextIssueId]"
-  >
-    <mat-icon>arrow_forward</mat-icon>
-  </button>
-  <div
-    *ngIf="
-      !!comicBook.detail.publisher &&
-      !!comicBook.detail.series &&
-      !!comicBook.detail.volume
-    "
-  >
-    <mat-divider class="cx-height-100" vertical="true"></mat-divider>
-    <a [routerLink]="['/library/all']">
-      <mat-icon>home</mat-icon>
-    </a>
-    &#62;
-    <a
-      [routerLink]="[
-        '/library/collections/publishers',
-        comicBook.detail.publisher
-      ]"
+<div *ngIf="!!comicBook" class="cx-fab-container-bottom-left cx-z-index">
+  <div class="cx-horizontal-container">
+    <button
+      id="previous-comic-button"
+      class="cx-toolbar-button"
+      mat-fab
+      [matTooltip]="'comic-book.tooltip.go-to-previous-comic' | translate"
+      [disabled]="!comicBook.previousIssueId"
+      [routerLink]="['/comics', comicBook.previousIssueId]"
     >
-      {{ comicBook.detail.publisher }}
-    </a>
-    &#62;
-    <a
-      [routerLink]="[
-        '/library/collections/publishers',
-        comicBook.detail.publisher,
-        'series',
-        comicBook.detail.series,
-        'volumes',
-        comicBook.detail.volume
-      ]"
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+
+    <button
+      id="next-comic-button"
+      class="cx-toolbar-button"
+      mat-fab
+      [disabled]="!comicBook.nextIssueId"
+      [matTooltip]="'comic-book.tooltip.go-to-next-comic' | translate"
+      [routerLink]="['/comics', comicBook.nextIssueId]"
     >
-      {{ comicBook.detail.series }}
-    </a>
+      <mat-icon>arrow_forward</mat-icon>
+    </button>
+
+    <button
+      id="toggle-page-view-button"
+      class="cx-toolbar-button"
+      mat-fab
+      [matTooltip]="'comic-book.tooltip.toggle-page-view' | translate"
+      (click)="queryParameterService.onTogglePagesAsGrid()"
+    >
+      <mat-icon *ngIf="queryParameterService.pagesAsGrid$ | async">
+        grid_view
+      </mat-icon>
+      <mat-icon *ngIf="(queryParameterService.pagesAsGrid$ | async) === false">
+        list_view
+      </mat-icon>
+    </button>
+
+    <button
+      *ngIf="isAdmin"
+      id="save-page-order-button"
+      class="cx-toolbar-button"
+      mat-fab
+      [matTooltip]="'comic-book.tooltip.save-page-order' | translate"
+      (click)="onSavePageOrder()"
+    >
+      <mat-icon>save</mat-icon>
+    </button>
+
+    <button
+      id="update-comic-info-button"
+      class="cx-toolbar-button"
+      mat-fab
+      [matTooltip]="'comic-book.tooltip.update-comic-info' | translate"
+      [disabled]="!isAdmin || !hasChangedState"
+      (click)="onUpdateMetadata()"
+    >
+      <mat-icon>sync_alt</mat-icon>
+    </button>
+
+    <button
+      id="download-comic-button"
+      class="cx-toolbar-button"
+      mat-fab
+      [matTooltip]="'comic-book.tooltip.download-comic' | translate"
+    >
+      <mat-icon>arrow_downward</mat-icon>
+    </button>
+
+    <button
+      *ngIf="!isRead"
+      id="mark-as-read-button"
+      class="cx-toolbar-button"
+      mat-fab
+      [matTooltip]="'comic-book.tooltip.mark-read' | translate"
+      (click)="setReadState(true)"
+    >
+      <mat-icon>turned_in_not</mat-icon>
+    </button>
+
+    <button
+      *ngIf="isRead"
+      id="mark-as-unread-button"
+      class="cx-toolbar-button"
+      mat-fab
+      [matTooltip]="'comic-book.tooltip.mark-unread' | translate"
+      (click)="setReadState(false)"
+    >
+      <mat-icon>turned_in</mat-icon>
+    </button>
+
+    <button
+      *ngIf="isAdmin && !isDeleted"
+      id="delete-button"
+      class="cx-toolbar-button"
+      mat-fab
+      [matTooltip]="'comic-book.tooltip.delete-comic' | translate"
+      (click)="onSetComicDeletedState(true)"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+
+    <button
+      *ngIf="isAdmin && isDeleted"
+      id="undelete-button"
+      class="cx-toolbar-button"
+      mat-fab
+      [matTooltip]="'comic-book.tooltip.undelete-comic' | translate"
+      (click)="onSetComicDeletedState(false)"
+    >
+      <mat-icon>restore_from_trash</mat-icon>
+    </button>
   </div>
-  <div class="cx-spacer"></div>
-  <button
-    id="toggle-page-view-button"
-    class="cx-toolbar-button"
-    mat-icon-button
-    [matTooltip]="'comic-book.tooltip.toggle-page-view' | translate"
-    (click)="queryParameterService.onTogglePagesAsGrid()"
-  >
-    <mat-icon *ngIf="queryParameterService.pagesAsGrid$ | async">
-      grid_view
-    </mat-icon>
-    <mat-icon *ngIf="(queryParameterService.pagesAsGrid$ | async) === false">
-      list_view
-    </mat-icon>
-  </button>
-  <button
-    *ngIf="isAdmin"
-    id="save-page-order-button"
-    class="cx-toolbar-button"
-    mat-icon-button
-    [matTooltip]="'comic-book.tooltip.save-page-order' | translate"
-    (click)="onSavePageOrder()"
-  >
-    <mat-icon>save</mat-icon>
-  </button>
-  <mat-divider class="cx-height-100" vertical="true"></mat-divider>
-  <button
-    id="update-comic-info-button"
-    class="cx-toolbar-button"
-    mat-icon-button
-    [matTooltip]="'comic-book.tooltip.update-comic-info' | translate"
-    [disabled]="!isAdmin || !hasChangedState"
-    (click)="onUpdateMetadata()"
-  >
-    <mat-icon>sync_alt</mat-icon>
-  </button>
-  <button
-    id="download-comic-button"
-    class="cx-toolbar-button"
-    mat-icon-button
-    [matTooltip]="'comic-book.tooltip.download-comic' | translate"
-  >
-    <mat-icon>arrow_downward</mat-icon>
-  </button>
-  <mat-divider class="cx-height-100" vertical="true"></mat-divider>
-  <button
-    *ngIf="!isRead"
-    id="mark-as-read-button"
-    class="cx-toolbar-button"
-    mat-icon-button
-    [matTooltip]="'comic-book.tooltip.mark-read' | translate"
-    (click)="setReadState(true)"
-  >
-    <mat-icon>turned_in_not</mat-icon>
-  </button>
-  <button
-    *ngIf="isRead"
-    id="mark-as-unread-button"
-    class="cx-toolbar-button"
-    mat-icon-button
-    [matTooltip]="'comic-book.tooltip.mark-unread' | translate"
-    (click)="setReadState(false)"
-  >
-    <mat-icon>turned_in</mat-icon>
-  </button>
-  <button
-    *ngIf="isAdmin && !isDeleted"
-    id="delete-button"
-    class="cx-toolbar-button"
-    mat-icon-button
-    [matTooltip]="'comic-book.tooltip.delete-comic' | translate"
-    (click)="onSetComicDeletedState(true)"
-  >
-    <mat-icon>delete</mat-icon>
-  </button>
-  <button
-    *ngIf="isAdmin && isDeleted"
-    id="undelete-button"
-    class="cx-toolbar-button"
-    mat-icon-button
-    [matTooltip]="'comic-book.tooltip.undelete-comic' | translate"
-    (click)="onSetComicDeletedState(false)"
-  >
-    <mat-icon>restore_from_trash</mat-icon>
-  </button>
-</mat-toolbar>
+</div>
 
 <div *ngIf="!!comicBook" class="cx-width-100">
   <h1>
