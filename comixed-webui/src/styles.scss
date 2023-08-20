@@ -388,17 +388,25 @@ th {
 
 // flexible containers
 
+.cx-fab-container-upper-right {
+  top: 50px;
+  right: 50px;
+}
+
 .cx-fab-container-bottom-left {
-  position: fixed;
   bottom: 50px;
   left: 50px;
-  cursor: pointer;
 }
 
 .cx-fab-container-bottom-right {
-  position: fixed;
   bottom: 50px;
   right: 50px;
+}
+
+.cx-fab-container-upper-right,
+.cx-fab-container-bottom-left,
+.cx-fab-container-bottom-right {
+  position: fixed;
   cursor: pointer;
 }
 
@@ -526,4 +534,8 @@ mat-toolbar.mat-toolbar mat-form-field.mat-mdc-form-field {
 
 .mat-mdc-dialog-surface {
   padding: 15px !important;
+}
+
+.cx-z-index {
+  z-index: 99;
 }
