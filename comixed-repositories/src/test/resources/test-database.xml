@@ -486,13 +486,13 @@
   <BlockedHashes Id="1000"
                  Label="Created Yesterday"
                  Hash="0123456789ABCDEF0123456789ABCDEF"
-                 Snapshot="some base64 data"
+                 Thumbnail="some base64 data"
                  CreatedOn="[now-1d]"
   />
   <BlockedHashes Id="1001"
                  Label="Created Today"
                  Hash="ABCDEF0123456789ABCDEF0123456789"
-                 Snapshot="some base64 data"
+                 Thumbnail="some base64 data"
                  CreatedOn="[now]"/>
   <Users id="1000"
          Email="comixedreader@localhost"

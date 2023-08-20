@@ -25,9 +25,12 @@ import static org.comixedproject.batch.comicpages.UnmarkPagesWithHashConfigurati
 
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.comicpages.BlockedHash;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.blockedpage.DeleteBlockedPagesRequest;
@@ -46,7 +49,9 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,6 +66,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Log4j2
 public class BlockedHashController {
   @Autowired private BlockedHashService blockedHashService;
+  @Autowired private FileTypeAdaptor fileTypeAdaptor;
 
   @Autowired
   @Qualifier("batchJobLauncher")
@@ -306,5 +312,33 @@ public class BlockedHashController {
     final List<String> hashes = request.getHashes();
     log.info("Deleting {} blocked hash{}", hashes.size(), hashes.size() == 1 ? "" : "es");
     return this.blockedHashService.deleteBlockedPages(hashes);
+  }
+
+  /**
+   * Retrieves the thumbnail image for a blocked page hash.
+   *
+   * @param hash the page has
+   * @return the image
+   * @throws BlockedHashException if the hash is not found
+   */
+  @GetMapping(value = "/api/pages/blocked/{hash}/content")
+  @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.blocked-hash.get-content")
+  public ResponseEntity<byte[]> getThumbnail(@PathVariable("hash") final String hash)
+      throws BlockedHashException {
+    log.info("Loading thumbnail for blocked hash: {}", hash);
+    final byte[] content = this.blockedHashService.getThumbnail(hash);
+    String type =
+        this.fileTypeAdaptor.getType(new ByteArrayInputStream(content))
+            + "/"
+            + this.fileTypeAdaptor.getSubtype(new ByteArrayInputStream(content));
+    log.debug("Page type: {}", type);
+
+    return ResponseEntity.ok()
+        .contentLength(content != null ? content.length : 0)
+        .header("Content-Disposition", String.format("attachment; filename=\"%s.%s\"", hash, type))
+        .contentType(MediaType.valueOf(type))
+        .cacheControl(CacheControl.maxAge(24, TimeUnit.DAYS))
+        .body(content);
   }
 }

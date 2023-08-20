@@ -9,6 +9,12 @@ mat-divider {
   max-width: $cx-column-smallish;
 }
 
+.mat-column-thumbnail {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
 .mat-column-label {
 }
 

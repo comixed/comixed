@@ -25,12 +25,16 @@ import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.comixedproject.adaptors.AdaptorException;
+import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.csv.CsvAdaptor;
+import org.comixedproject.adaptors.encoders.DataEncoder;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicpages.PublishBlockedPageRemovalAction;
 import org.comixedproject.messaging.comicpages.PublishBlockedPageUpdateAction;
 import org.comixedproject.messaging.library.PublishDuplicatePageListUpdateAction;
 import org.comixedproject.model.comicpages.BlockedHash;
+import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.repositories.comicpages.BlockedHashRepository;
 import org.comixedproject.service.library.DuplicatePageService;
@@ -56,6 +60,9 @@ public class BlockedHashService {
   @Autowired private PublishBlockedPageRemovalAction publishBlockedPageRemovalAction;
   @Autowired private PublishDuplicatePageListUpdateAction publishDuplicatePageListUpdateAction;
   @Autowired private DuplicatePageService duplicatePageService;
+  @Autowired private PageService pageService;
+  @Autowired private ComicBookAdaptor comicBookAdaptor;
+  @Autowired private DataEncoder dataEncoder;
 
   /**
    * Returns all blocked pages.
@@ -111,12 +118,11 @@ public class BlockedHashService {
    * @param hash the page hash
    * @param blockedHash the updated details
    * @return the updated record
-   * @throws BlockedHashException if the hash is invalid
    */
   @Transactional
-  public BlockedHash updateBlockedPage(final String hash, final BlockedHash blockedHash)
-      throws BlockedHashException {
-    final BlockedHash updatedPage = this.doBlockPageHash(hash, blockedHash);
+  public BlockedHash updateBlockedPage(final String hash, final BlockedHash blockedHash) {
+    final BlockedHash updatedPage =
+        this.doBlockPageHash(hash, blockedHash, blockedHash.getThumbnail());
     try {
       this.publishBlockedPageUpdateAction.publish(updatedPage);
     } catch (PublishingException error) {
@@ -126,12 +132,13 @@ public class BlockedHashService {
     return updatedPage;
   }
 
-  public BlockedHash doBlockPageHash(final String hash, final BlockedHash source) {
+  public BlockedHash doBlockPageHash(
+      final String hash, final BlockedHash source, final String thumbnail) {
     log.trace("Looking for existing blocked page record");
     BlockedHash pageRecord = this.blockedHashRepository.findByHash(hash);
     if (pageRecord == null) {
       log.trace("Creating new blocked page record");
-      pageRecord = new BlockedHash("", hash, "");
+      pageRecord = new BlockedHash("", hash, thumbnail);
     }
     if (source != null) {
       log.trace("Copying blocked page values");
@@ -149,11 +156,16 @@ public class BlockedHashService {
   @Transactional
   public void blockPages(final List<String> hashes) {
     for (int index = 0; index < hashes.size(); index++) {
-      final String hash = hashes.get(index);
-      final BlockedHash blockedHashRecord = this.doBlockPageHash(hash, null);
       try {
+        final String hash = hashes.get(index);
+        final Page page = this.pageService.getOneForHash(hash);
+        final byte[] pageContent =
+            this.comicBookAdaptor.loadPageContent(page.getComicBook(), page.getPageNumber());
+        final String encodedPageContent = this.dataEncoder.encode(pageContent);
+
+        final BlockedHash blockedHashRecord = this.doBlockPageHash(hash, null, encodedPageContent);
         this.publishBlockedPageUpdateAction.publish(blockedHashRecord);
-      } catch (PublishingException error) {
+      } catch (PublishingException | AdaptorException error) {
         log.error("Failed to publish blocked page update", error);
       }
     }
@@ -210,7 +222,7 @@ public class BlockedHashService {
               if (index == 0) {
                 return new String[] {PAGE_LABEL_HEADER, PAGE_HASH_HEADER, PAGE_SNAPSHOT_HEADER};
               } else {
-                return new String[] {model.getLabel(), model.getHash(), model.getSnapshot()};
+                return new String[] {model.getLabel(), model.getHash(), model.getThumbnail()};
               }
             });
     return new DownloadDocument(
@@ -236,13 +248,13 @@ public class BlockedHashService {
           if (index > 0) {
             final String label = row.get(0);
             final String hash = row.get(1);
-            final String snapshot = row.get(2);
+            final String thumbnail = row.get(2);
 
             log.debug("Checking if blocked page already exists: hash={}", hash);
             var blockedPage = this.blockedHashRepository.findByHash(hash);
             if (blockedPage == null) {
               log.debug("Creating new blocked page record");
-              this.doSaveRecord(label, hash, snapshot);
+              this.doSaveRecord(label, hash, thumbnail);
             }
           }
         });
@@ -250,8 +262,8 @@ public class BlockedHashService {
   }
 
   @Transactional
-  public void doSaveRecord(final String label, final String hash, final String snapshot) {
-    final var blockedPage = new BlockedHash(label, hash, snapshot);
+  public void doSaveRecord(final String label, final String hash, final String thumbnail) {
+    final var blockedPage = new BlockedHash(label, hash, thumbnail);
     this.blockedHashRepository.save(blockedPage);
   }
 
@@ -293,5 +305,20 @@ public class BlockedHashService {
   public boolean isHashBlocked(final String hash) {
     log.trace("Finding if hash is blocked: {}", hash);
     return this.blockedHashRepository.findByHash(hash) != null;
+  }
+
+  /**
+   * Returns the thumbnail for a given page hash.
+   *
+   * @param hash the page hash
+   * @return the thumbnail content
+   */
+  public byte[] getThumbnail(final String hash) throws BlockedHashException {
+    log.debug("Loading blocked hash: {}", hash);
+    final BlockedHash blockedHash = this.blockedHashRepository.findByHash(hash);
+    if (blockedHash == null) {
+      throw new BlockedHashException("no such blocked hash: " + hash);
+    }
+    return this.dataEncoder.decode(blockedHash.getThumbnail());
   }
 }

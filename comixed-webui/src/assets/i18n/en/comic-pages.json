@@ -44,7 +44,8 @@
       "comic-count": "Comics Affected",
       "created-on": "Entry Added",
       "hash": "Page Hash",
-      "label": "Label"
+      "label": "Label",
+      "thumbnail": "Thumbnail"
     },
     "load-effect-failure": "Failed to load blocked pages.",
     "mark-pages-with-hash": {

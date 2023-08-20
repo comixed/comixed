@@ -60,12 +60,12 @@ public class BlockedHash {
   @NonNull
   private String hash;
 
-  @Column(name = "Snapshot", nullable = true, updatable = false)
+  @Column(name = "Thumbnail", nullable = true, updatable = false)
   @Lob
-  @JsonProperty("snapshot")
+  @JsonProperty("thumbnail")
   @Getter
   @NonNull
-  private String snapshot;
+  private String thumbnail;
 
   @Column(name = "CreatedOn", nullable = false, updatable = false)
   @JsonProperty("createdOn")

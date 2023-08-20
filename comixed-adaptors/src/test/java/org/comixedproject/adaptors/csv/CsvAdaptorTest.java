@@ -17,7 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class CsvAdaptorTest {
   private static final String TEST_PAGE_LABEL = "The blocked page label";
   private static final String TEST_PAGE_HASH = "The page hash";
-  private static final String TEST_PAGE_SNAPSHOT = "The blocked page content encoded";
+  private static final String TEST_PAGE_THUMBNAIL = "The blocked page content encoded";
   private static final String LABEL = "LABEL";
   private static final String HASH = "HASH";
   private static final String SNAPSHOT = "SNAPSHOT";
@@ -25,7 +25,7 @@ public class CsvAdaptorTest {
   @InjectMocks private CsvAdaptor adaptor;
 
   private BlockedHash blockedHash =
-      new BlockedHash(TEST_PAGE_LABEL, TEST_PAGE_HASH, TEST_PAGE_SNAPSHOT);
+      new BlockedHash(TEST_PAGE_LABEL, TEST_PAGE_HASH, TEST_PAGE_THUMBNAIL);
   private List<BlockedHash> blockedHashes = new ArrayList<>();
 
   @Test
@@ -39,7 +39,7 @@ public class CsvAdaptorTest {
               if (index == 0) {
                 return new String[] {LABEL, HASH, SNAPSHOT};
               } else {
-                return new String[] {model.getLabel(), model.getHash(), model.getSnapshot()};
+                return new String[] {model.getLabel(), model.getHash(), model.getThumbnail()};
               }
             });
 
@@ -56,7 +56,7 @@ public class CsvAdaptorTest {
           } else {
             assertEquals(TEST_PAGE_LABEL, row.get(0));
             assertEquals(TEST_PAGE_HASH, row.get(1));
-            assertEquals(TEST_PAGE_SNAPSHOT, row.get(2));
+            assertEquals(TEST_PAGE_THUMBNAIL, row.get(2));
           }
         });
   }

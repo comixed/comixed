@@ -1,45 +1,24 @@
-<form *ngIf="!!blockedPage" [formGroup]="blockedPageForm">
-  <mat-toolbar *ngIf="isAdmin">
-    <button id="go-back-button" mat-icon-button (click)="onGoBack()">
-      <mat-icon>arrow_back</mat-icon>
-    </button>
-    <div class="cx-spacer"></div>
-    <button
-      id="edit-button"
-      mat-raised-button
-      class="cx-toolbar-button"
-      [disabled]="editing"
-      (click)="onEdit()"
-    >
-      <mat-icon>edit</mat-icon>
-      <mat-label>{{ "button.edit" | translate }}</mat-label>
-    </button>
-    <button
-      id="save-button"
-      mat-raised-button
-      class="cx-toolbar-button"
-      [disabled]="!editing"
-      (click)="onSave()"
-    >
-      <mat-icon>save</mat-icon>
-      <mat-label>{{ "button.save" | translate }}</mat-label>
-    </button>
-    <button
-      id="reset-button"
-      mat-raised-button
-      class="cx-toolbar-button"
-      [disabled]="!blockedPageForm.dirty"
-      (click)="onReset()"
-    >
-      <mat-icon>save</mat-icon>
-      <mat-label>{{ "button.reset" | translate }}</mat-label>
-    </button>
-  </mat-toolbar>
-  <mat-card appearance="outlined">
-    <mat-card-title>
-      {{ "blocked-hash.page-title" | translate: { hash: hash } }}
-    </mat-card-title>
-    <mat-card-content>
+<div class="cx-fab-container-bottom-left">
+  <button id="go-back-button" mat-fab (click)="onGoBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+</div>
+
+<h2>
+  {{ "blocked-hash.page-title" | translate: { hash: hash } }}
+</h2>
+
+<div class="cx-horizontal-container">
+  <div class="cx-grow-0">
+    <img
+      [src]="blockedPage.hash | blockedHashThumbnailUrl"
+      width="400"
+      alt="blocked page thumbnail"
+    />
+  </div>
+
+  <div class="cx-grow-1">
+    <form *ngIf="!!blockedPage" [formGroup]="blockedPageForm">
       <mat-form-field class="cx-width-100">
         <mat-label>{{ "blocked-hash.label.label" | translate }}</mat-label>
         <input
@@ -62,6 +41,30 @@
           formControlName="hash"
         />
       </mat-form-field>
-    </mat-card-content>
-  </mat-card>
-</form>
+      <div class="cx-action-button-container-horizontal">
+        <button
+          id="save-button"
+          mat-raised-button
+          color="accent"
+          class="cx-action-button"
+          [disabled]="!blockedPageForm.valid || !blockedPageForm.dirty"
+          (click)="onSave()"
+        >
+          <mat-icon>save</mat-icon>
+          <mat-label>{{ "button.save" | translate }}</mat-label>
+        </button>
+        <button
+          id="reset-button"
+          mat-raised-button
+          color="warn"
+          class="cx-action-button"
+          [disabled]="!blockedPageForm.dirty"
+          (click)="onReset()"
+        >
+          <mat-icon>save</mat-icon>
+          <mat-label>{{ "button.reset" | translate }}</mat-label>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

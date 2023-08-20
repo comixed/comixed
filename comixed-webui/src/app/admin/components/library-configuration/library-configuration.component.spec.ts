@@ -45,6 +45,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { purgeLibrary } from '@app/library/actions/purge-library.actions';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('LibraryConfigurationComponent', () => {
   const DELETE_EMPTY_DIRECTORIES = Math.random() > 0.5;
@@ -107,7 +108,8 @@ describe('LibraryConfigurationComponent', () => {
           MatDialogModule,
           MatCheckboxModule,
           MatToolbarModule,
-          MatIconModule
+          MatIconModule,
+          MatTooltipModule
         ],
         providers: [provideMockStore({ initialState }), ConfirmationService]
       }).compileComponents();
