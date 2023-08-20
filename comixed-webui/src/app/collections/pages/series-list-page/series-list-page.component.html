@@ -52,12 +52,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        <a
-          [routerLink]="[
-            '/library/collections/publishers',
-            entry.publisher.name
-          ]"
-        >
+        <a [routerLink]="['/library/collections/publishers', entry.publisher]">
           {{ entry.publisher }}
         </a>
       </span>
