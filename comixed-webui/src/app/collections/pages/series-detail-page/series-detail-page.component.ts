@@ -52,10 +52,9 @@ export class SeriesDetailPageComponent
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   readonly displayedColumns = [
-    'publisher',
     'name',
-    'volume',
     'issue-number',
+    'title',
     'cover-date',
     'store-date',
     'in-library'

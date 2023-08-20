@@ -72,6 +72,11 @@ public class IssueDetailsMetadata {
   @Setter
   private String title;
 
+  @JsonProperty("name")
+  @Getter
+  @Setter
+  private String name;
+
   @JsonProperty("description")
   @Getter
   @Setter

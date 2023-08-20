@@ -96,6 +96,7 @@ public class ComicVineGetAllIssuesAction
         entry.setSeries(response.getResults().getName());
         entry.setIssueNumber(issue.getIssueNumber());
         entry.setVolume(response.getResults().getStartYear());
+        entry.setTitle(issue.getTitle());
         entry.setCoverDate(issue.getCoverDate());
         entry.setStoreDate(issue.getStoreDate());
 

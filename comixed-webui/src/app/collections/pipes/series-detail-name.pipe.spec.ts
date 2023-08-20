@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2022, The ComiXed Project
+ * Copyright (C) 2023, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export interface Issue {
-  id: number;
-  publisher: string;
-  series: string;
-  volume: string;
-  issueNumber: string;
-  title: string;
-  coverDate: number;
-  storeDate: number;
-  found: boolean;
-}
+import { SeriesDetailNamePipe } from './series-detail-name.pipe';
+import { ISSUE_1 } from '@app/collections/collections.fixtures';
+
+describe('SeriesDetailNamePipe', () => {
+  const ISSUE = ISSUE_1;
+  const NAME = `${ISSUE.publisher} : ${ISSUE.series} V${ISSUE.volume}`;
+
+  let pipe: SeriesDetailNamePipe;
+
+  beforeEach(() => {
+    pipe = new SeriesDetailNamePipe();
+  });
+
+  it('create an instance', () => {
+    expect(pipe).toBeTruthy();
+  });
+
+  it('transforms an issue into a name', () => {
+    expect(pipe.transform(ISSUE)).toEqual(NAME);
+  });
+});

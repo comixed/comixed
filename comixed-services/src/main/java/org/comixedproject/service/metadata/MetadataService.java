@@ -379,6 +379,7 @@ public class MetadataService {
                           metadata.getSeries(),
                           metadata.getVolume(),
                           metadata.getIssueNumber());
+                  result.setTitle(metadata.getTitle());
 
                   if (metadata.getCoverDate() != null) {
                     result.setCoverDate(metadata.getCoverDate());

@@ -1,31 +1,31 @@
-<mat-toolbar class="cx-width-100">
-  <mat-form-field class="cx-width-50">
-    <input
-      matInput
-      #filterInput
-      id="volume-search-text-input"
-      [placeholder]="
-        'collections.series-detail.placeholder.filter-issues' | translate
-      "
-      (keyup)="dataSource.filter = filterInput.value"
-    />
-  </mat-form-field>
-  <div class="cx-spacer"></div>
-  <mat-paginator
-    showFirstLastButtons
-    class="cx-height-100"
-    [pageSize]="queryParameterService.pageSize$ | async"
-    [pageIndex]="queryParameterService.pageIndex$ | async"
-    [pageSizeOptions]="pageOptions"
-    (page)="
-      queryParameterService.onPageChange(
-        $event.pageSize,
-        $event.pageIndex,
-        $event.previousPageIndex
-      )
+<div class="cx-fab-container-bottom-right">
+  <button
+    id="cx-publisher-page-button"
+    mat-fab
+    [matTooltip]="'collections.series-detail.tooltip.show-pubisher' | translate"
+    [routerLink]="['/library/collections/publishers', publisher]"
+  >
+    <mat-icon>book_online</mat-icon>
+  </button>
+  <button
+    id="cx-scrape-series-metadata-button"
+    mat-fab
+    [matTooltip]="
+      'collections.series-detail.tooltip.scrape-metadata' | translate
     "
-  ></mat-paginator>
-</mat-toolbar>
+    [routerLink]="[
+      '/metadata/publishers',
+      publisher,
+      'series',
+      name,
+      'volumes',
+      volume,
+      'issues'
+    ]"
+  >
+    <mat-icon>cloud_download</mat-icon>
+  </button>
+</div>
 
 <h2>
   {{
@@ -46,6 +46,21 @@
   }}
 </h3>
 
+<mat-paginator
+  showFirstLastButtons
+  class="cx-height-100"
+  [pageSize]="queryParameterService.pageSize$ | async"
+  [pageIndex]="queryParameterService.pageIndex$ | async"
+  [pageSizeOptions]="pageOptions"
+  (page)="
+    queryParameterService.onPageChange(
+      $event.pageSize,
+      $event.pageIndex,
+      $event.previousPageIndex
+    )
+  "
+></mat-paginator>
+
 <mat-table
   [dataSource]="dataSource"
   matSort
@@ -55,34 +70,14 @@
     queryParameterService.onSortChange($event.active, $event.direction)
   "
 >
-  <ng-container matColumnDef="publisher">
-    <mat-header-cell *matHeaderCellDef>
-      {{ "collections.series.label.publisher" | translate }}
-    </mat-header-cell>
-    <mat-cell *matCellDef="let entry">
-      <span class="cx-width-100 cx-text-nowrap">
-        <a [routerLink]="['/library/collections/publishers', entry.publisher]">
-          {{ entry.publisher }}
-        </a>
-      </span>
-    </mat-cell>
-  </ng-container>
-
   <ng-container matColumnDef="name">
     <mat-header-cell *matHeaderCellDef>
       {{ "collections.series.label.name" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <span class="cx-width-100 cx-text-nowrap">{{ entry.series }}</span>
-    </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="volume">
-    <mat-header-cell *matHeaderCellDef>
-      {{ "collections.series.label.volume" | translate }}
-    </mat-header-cell>
-    <mat-cell *matCellDef="let entry">
-      <span class="cx-width-100 cx-text-nowrap">{{ entry.volume }}</span>
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry | seriesDetailName }}
+      </span>
     </mat-cell>
   </ng-container>
 
@@ -92,6 +87,15 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">{{ entry.issueNumber }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="title">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "collections.series.label.title" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">{{ entry.title }}</span>
     </mat-cell>
   </ng-container>
 
@@ -148,21 +152,4 @@
     *matRowDef="let row; columns: displayedColumns"
     [routerLink]="row.found ? ['/comics', getComicBookIdForRow(row)] : null"
   ></mat-row>
-  <tr class="mat-row" *matNoDataRow>
-    <td class="mat-cell" colspan="4">
-      <a
-        [routerLink]="[
-          '/metadata/publishers',
-          publisher,
-          'series',
-          name,
-          'volumes',
-          volume,
-          'issues'
-        ]"
-      >
-        {{ "collections.series-detail.text.no-detail-found" | translate }}
-      </a>
-    </td>
-  </tr>
 </mat-table>

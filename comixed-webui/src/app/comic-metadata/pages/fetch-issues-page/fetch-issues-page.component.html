@@ -1,16 +1,16 @@
-<div class="cx-width-90 cx-padding-50">
-  <h2>
-    <span *ngIf="scrapingVolumes.length === 0">
-      {{ "metadata.fetch-issues.page-title-with-form" | translate }}
-    </span>
-    <span *ngIf="scrapingVolumes.length > 0">
-      {{
-        "metadata.fetch-issues.page-title-with-volumes"
-          | translate: { count: scrapingVolumes.length }
-      }}
-    </span>
-  </h2>
+<h2>
+  <span *ngIf="scrapingVolumes.length === 0">
+    {{ "metadata.fetch-issues.page-title-with-form" | translate }}
+  </span>
+  <span *ngIf="scrapingVolumes.length > 0">
+    {{
+      "metadata.fetch-issues.page-title-with-volumes"
+        | translate: { count: scrapingVolumes.length }
+    }}
+  </span>
+</h2>
 
+<div class="cx-width-90 cx-padding-50">
   <div class="cx-horizontal-container cx-border-primary-1">
     <div class="cx-grow-1">
       <form [formGroup]="fetchIssuesForm" class="cx-padding-50">
@@ -64,25 +64,38 @@
           </mat-checkbox>
           <input matInput hidden />
         </mat-form-field>
-        <button
-          id="cx-fetch-issues-button"
-          mat-raised-button
-          (click)="onFetchIssues()"
-          [disabled]="!fetchIssuesForm.valid"
-        >
-          <mat-label>
-            {{ "metadata.fetch-issues.button.fetch-issues" | translate }}
-          </mat-label>
-          <mat-icon>cloud_download</mat-icon>
-        </button>
+        <div class="cx-action-button-container-horizontal">
+          <button
+            id="cx-fetch-issues-button"
+            mat-flat-button
+            color="primary"
+            class="cx-action-button"
+            (click)="onFetchIssues()"
+            [disabled]="!fetchIssuesForm.valid"
+          >
+            <mat-label>
+              {{ "metadata.fetch-issues.button.fetch-issues" | translate }}
+            </mat-label>
+            <mat-icon>cloud_download</mat-icon>
+          </button>
+          <button
+            id="cx-scrape-series-button"
+            mat-flat-button
+            color="accent"
+            class="cx-action-button"
+            (click)="onVolumeChosen(selectedVolume)"
+            [disabled]="!selectedVolume"
+          >
+            <mat-label>
+              {{ "metadata.fetch-issues.button.select-volume" | translate }}
+            </mat-label>
+            <mat-icon>cloud_download</mat-icon>
+          </button>
+        </div>
       </form>
     </div>
 
-    <div
-      *ngIf="!!selectedVolume"
-      #volumeCoverContainer
-      class="cx-width-25 cx-height-100"
-    >
+    <div *ngIf="!!selectedVolume" class="cx-grow-0 cx-width-25 cx-height-100">
       <mat-card appearance="outlined" class="cx-width-100 cx-padding-5">
         <mat-card-title
           class="cx-text-nowrap"
@@ -99,24 +112,24 @@
             [src]="selectedVolume.imageUrl"
             width="100%"
             height="auto"
-            [alt]="selectedVolume.item | volumeMetadataTitle"
+            [alt]="selectedVolume | volumeMetadataTitle"
           />
         </mat-card-content>
       </mat-card>
     </div>
   </div>
+</div>
 
-  <div class="cx-grow-1 cx-width-100">
-    <cx-volume-metadata-table
-      [class.cx-width-100]="selectedVolume === null"
-      [class.cx-width-75]="selectedVolume !== null"
-      [volumes]="scrapingVolumes"
-      [publisher]="publisher"
-      [series]="series"
-      [volume]="volume"
-      [pageSize]="pageSize"
-      (volumeSelected)="onVolumeSelected($event)"
-      (volumeChosen)="onVolumeChosen($event)"
-    ></cx-volume-metadata-table>
-  </div>
+<div class="cx-width-100">
+  <cx-volume-metadata-table
+    [class.cx-width-100]="selectedVolume === null"
+    [class.cx-width-75]="selectedVolume !== null"
+    [volumes]="scrapingVolumes"
+    [publisher]="publisher"
+    [series]="series"
+    [volume]="volume"
+    [pageSize]="pageSize"
+    (volumeSelected)="onVolumeSelected($event)"
+    (volumeChosen)="onVolumeChosen($event)"
+  ></cx-volume-metadata-table>
 </div>

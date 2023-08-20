@@ -7,5 +7,6 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
   <include file="/db/migrations/1.6/001_1646_renamed-snapshot-to-thumbnail-to-blocked-hash.xml"/>
+  <include file="/db/migrations/1.6/002_1649_add_title_to_issue_table.xml"/>
 
 </databaseChangeLog>

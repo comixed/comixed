@@ -163,7 +163,8 @@ import { ComicDetailFilterComponent } from './components/comic-detail-filter/com
     PageHashUrlPipe,
     CoverDateFilterPipe,
     VolumeMetadataTableComponent,
-    ComicDetailListViewComponent
+    ComicDetailListViewComponent,
+    VolumeMetadataTitlePipe
   ]
 })
 export class ComicBooksModule {

@@ -51,6 +51,7 @@
         "pagination-items-per-page": "Series per page",
         "publisher": "Publisher",
         "store-date": "Store Date",
+        "title": "Title",
         "total-issues": "# Issues",
         "volume": "Volume"
       },
@@ -73,15 +74,17 @@
     },
     "series-detail": {
       "load-effect-failure": "Failed to load details for series.",
-      "page-title": "Series Detail: {publisher} {name} v{volume}",
+      "page-title": "{publisher} : {name} V{volume}",
       "page-title-percentage": "{percentage}% Complete ({inLibrary} Of {totalIssues, plural, =1{# Comic} other{# Comics}})",
       "placeholder": {
         "filter-issues": "Enter text to filter the issues displayed."
       },
-      "tab-title": "Series Detail: {publisher} {name} v{volume}",
+      "tab-title": "{publisher} : {name} V{volume}",
       "text": {
-        "found-in-library": "This issue {exists, select, true{is} other{is not}} found in the library.",
-        "no-detail-found": "No series detail found. Click here to load series details."
+        "found-in-library": "This issue {exists, select, true{is} other{is not}} found in the library."
+      },
+      "tooltip": {
+        "scrape-metadata": "Scrape the series metadata..."
       }
     }
   },
