@@ -79,6 +79,12 @@ public class Issue {
   @NonNull
   private String issueNumber;
 
+  @JsonProperty("title")
+  @Column(name = "Title", length = 128, nullable = true, unique = false, updatable = false)
+  @Getter
+  @Setter
+  private String title;
+
   @JsonProperty("coverDate")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @Column(name = "CoverDate", nullable = true, unique = false, updatable = false)
@@ -98,23 +104,25 @@ public class Issue {
       value =
           "(SELECT CASE WHEN COUNT(*) > 0 THEN true ELSE false END FROM ComicBooks c WHERE c.Id IN (SELECT d.ComicBookId FROM ComicDetails d WHERE d.Publisher = publisher AND d.Series = series AND d.Volume = volume AND d.IssueNumber = issueNumber))")
   @Getter
+  @Setter
   private boolean found;
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(publisher, series, volume, issueNumber, coverDate, storeDate);
-  }
 
   @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final Issue issue = (Issue) o;
-    return series.equals(issue.publisher)
-        && series.equals(issue.series)
-        && volume.equals(issue.volume)
-        && issueNumber.equals(issue.issueNumber)
+    return Objects.equals(publisher, issue.publisher)
+        && Objects.equals(series, issue.series)
+        && Objects.equals(volume, issue.volume)
+        && Objects.equals(issueNumber, issue.issueNumber)
+        && Objects.equals(title, issue.title)
         && Objects.equals(coverDate, issue.coverDate)
         && Objects.equals(storeDate, issue.storeDate);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(publisher, series, volume, issueNumber, title, coverDate, storeDate);
   }
 }

@@ -22,6 +22,7 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.collections.Issue;
 import org.comixedproject.repositories.collections.IssueRepository;
+import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class IssueService {
   @Autowired private IssueRepository issueRepository;
+  @Autowired private ComicDetailService comicDetailServices;
 
   /**
    * Returns the number of issues for the given series and volume.
@@ -58,7 +60,35 @@ public class IssueService {
    */
   public List<Issue> getAll(final String publisher, final String series, final String volume) {
     log.debug("Getting all  issues: publisher={} series={} volume={}", publisher, series, volume);
-    return this.issueRepository.getAll(publisher, series, volume);
+    final List<Issue> result = this.issueRepository.getAll(publisher, series, volume);
+
+    if (result.isEmpty()) {
+      log.debug("No series metadata found: generating transient series data");
+      this.comicDetailServices
+          .getAllComicBooksForPublisherAndSeriesAndVolume(publisher, series, volume, "", false)
+          .forEach(
+              comicDetail -> {
+                log.debug(
+                    "Creating issue  metadata for: [{}] {} v{} #{}",
+                    comicDetail.getPublisher(),
+                    comicDetail.getSeries(),
+                    comicDetail.getVolume(),
+                    comicDetail.getIssueNumber());
+                final Issue issue =
+                    new Issue(
+                        comicDetail.getPublisher(),
+                        comicDetail.getSeries(),
+                        comicDetail.getVolume(),
+                        comicDetail.getIssueNumber());
+                issue.setTitle(comicDetail.getTitle());
+                issue.setCoverDate(comicDetail.getCoverDate());
+                issue.setStoreDate(comicDetail.getStoreDate());
+                issue.setFound(true);
+                result.add(issue);
+              });
+    }
+
+    return result;
   }
 
   /**

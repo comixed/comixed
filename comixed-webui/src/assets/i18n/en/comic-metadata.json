@@ -2,7 +2,8 @@
   "metadata": {
     "fetch-issues": {
       "button": {
-        "fetch-issues": "Fetch Issues"
+        "fetch-issues": "Fetch Issues",
+        "select-volume": "Select Volume"
       },
       "confirmation-message": "Are you sure you want to fetch all current issues for \"{series} v{volume}\", published by {publisher}?",
       "confirmation-title": "Fetch Issues For Series",

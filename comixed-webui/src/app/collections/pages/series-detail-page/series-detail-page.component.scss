@@ -7,11 +7,14 @@
 }
 
 .mat-column-name {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+  resize: none;
 }
 
 .mat-column-volume {
-  width: $cx-column-small;
-  max-width: $cx-column-small;
+  width: $cx-column-smallish;
+  max-width: $cx-column-smallish;
   resize: none;
 }
 
@@ -19,6 +22,9 @@
   width: $cx-column-medium;
   max-width: $cx-column-medium;
   resize: none;
+}
+
+.mat-column-title {
 }
 
 .mat-column-cover-date {

@@ -52,6 +52,8 @@ import {
   COMIC_DETAIL_4,
   COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
+import { SeriesDetailNamePipe } from '@app/collections/pipes/series-detail-name.pipe';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('SeriesDetailPageComponent', () => {
   const PUBLISHER = 'The Publisher';
@@ -86,7 +88,7 @@ describe('SeriesDetailPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SeriesDetailPageComponent],
+      declarations: [SeriesDetailPageComponent, SeriesDetailNamePipe],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
@@ -96,8 +98,8 @@ describe('SeriesDetailPageComponent', () => {
         MatSortModule,
         MatTableModule,
         MatIconModule,
-        MatToolbarModule,
-        MatInputModule
+        MatInputModule,
+        MatTooltipModule
       ],
       providers: [
         provideMockStore({ initialState }),

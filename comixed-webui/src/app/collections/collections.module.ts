@@ -49,6 +49,7 @@ import {
 import { PublisherEffects } from '@app/collections/effects/publisher.effects';
 import { PublisherDetailPageComponent } from './pages/publisher-detail-page/publisher-detail-page.component';
 import { MatDividerModule } from '@angular/material/divider';
+import { SeriesDetailNamePipe } from './pipes/series-detail-name.pipe';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { MatDividerModule } from '@angular/material/divider';
     SeriesListPageComponent,
     SeriesDetailPageComponent,
     PublisherListPageComponent,
-    PublisherDetailPageComponent
+    PublisherDetailPageComponent,
+    SeriesDetailNamePipe
   ],
   imports: [
     CommonModule,

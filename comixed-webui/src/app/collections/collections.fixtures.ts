@@ -72,6 +72,7 @@ export const ISSUE_1: Issue = {
   series: 'Series 1',
   volume: '2022',
   issueNumber: '1',
+  title: null,
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
   found: true
@@ -83,6 +84,7 @@ export const ISSUE_2: Issue = {
   series: 'Series 1',
   volume: '2022',
   issueNumber: '2',
+  title: 'The second issue',
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
   found: false
@@ -94,6 +96,7 @@ export const ISSUE_3: Issue = {
   series: 'Series 1',
   volume: '2022',
   issueNumber: '3',
+  title: 'The third issue',
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
   found: false
