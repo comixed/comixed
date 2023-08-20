@@ -26,20 +26,27 @@ import static junit.framework.TestCase.assertTrue;
 import static org.comixedproject.service.comicpages.BlockedHashService.PAGE_HASH_HEADER;
 import static org.comixedproject.service.comicpages.BlockedHashService.PAGE_LABEL_HEADER;
 import static org.comixedproject.service.comicpages.BlockedHashService.PAGE_SNAPSHOT_HEADER;
+import static org.junit.Assert.assertArrayEquals;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.math.RandomUtils;
+import org.comixedproject.adaptors.AdaptorException;
+import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.csv.CsvAdaptor;
 import org.comixedproject.adaptors.csv.CsvRowDecoder;
 import org.comixedproject.adaptors.csv.CsvRowEncoder;
+import org.comixedproject.adaptors.encoders.DataEncoder;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicpages.PublishBlockedPageRemovalAction;
 import org.comixedproject.messaging.comicpages.PublishBlockedPageUpdateAction;
 import org.comixedproject.messaging.library.PublishDuplicatePageListUpdateAction;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.BlockedHash;
+import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.repositories.comicpages.BlockedHashRepository;
@@ -58,14 +65,18 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class BlockedHashServiceTest {
   private static final String TEST_PAGE_HASH = "The page hash";
   private static final String TEST_PAGE_LABEL = "The blocked page label";
-  private static final String TEST_PAGE_SNAPSHOT = "The blocked page content encoded";
+  private static final String TEST_PAGE_THUMBNAIL = "The blocked page content encoded";
   private static final byte[] TEST_CSV_ROW = "The CSV file".getBytes();
   private static final List<String> TEST_DECODED_ROW = new ArrayList<>();
-  private static final int TEST_PAGE_COUNT = 23;
+  private static final Integer TEST_PAGE_NUMBER = RandomUtils.nextInt(23);
+  private static final byte[] TEST_PAGE_CONTENT = "This is the page content".getBytes();
+  private static final String TEST_ENCODED_PAGE = "This is the encoded page.";
+  private static final byte[] TEST_DECODED_PAGE = "This is the decoded page".getBytes();
 
   @InjectMocks private BlockedHashService service;
-  @Mock private PageService pageService;
   @Mock private DuplicatePageService duplicatePageService;
+  @Mock private PageService pageService;
+  @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private BlockedHashRepository blockedHashRepository;
   @Mock private CsvAdaptor csvAdaptor;
   @Mock private PublishBlockedPageUpdateAction publishBlockedPageUpdateAction;
@@ -77,6 +88,9 @@ public class BlockedHashServiceTest {
   @Mock private List<BlockedHash> blockedHashList;
   @Mock private InputStream inputStream;
   @Mock private List<DuplicatePage> duplicatePageList;
+  @Mock private Page page;
+  @Mock private ComicBook comicBook;
+  @Mock private DataEncoder dataEncoder;
 
   @Captor private ArgumentCaptor<BlockedHash> blockedPageArgumentCaptor;
   @Captor private ArgumentCaptor<CsvRowEncoder> csvRowHandlerArgumentCaptor;
@@ -85,14 +99,21 @@ public class BlockedHashServiceTest {
   private List<String> blockedPageHashList = new ArrayList<>();
 
   @Before
-  public void setUp() {
+  public void setUp() throws AdaptorException {
     Mockito.when(blockedHash.getLabel()).thenReturn(TEST_PAGE_LABEL);
     Mockito.when(blockedHash.getHash()).thenReturn(TEST_PAGE_HASH);
-    Mockito.when(blockedHash.getSnapshot()).thenReturn(TEST_PAGE_SNAPSHOT);
+    Mockito.when(blockedHash.getThumbnail()).thenReturn(TEST_PAGE_THUMBNAIL);
     TEST_DECODED_ROW.add(TEST_PAGE_LABEL);
     TEST_DECODED_ROW.add(TEST_PAGE_HASH);
-    TEST_DECODED_ROW.add(TEST_PAGE_SNAPSHOT);
+    TEST_DECODED_ROW.add(TEST_PAGE_THUMBNAIL);
     Mockito.when(duplicatePageService.getDuplicatePages()).thenReturn(duplicatePageList);
+    Mockito.when(page.getComicBook()).thenReturn(comicBook);
+    Mockito.when(page.getPageNumber()).thenReturn(TEST_PAGE_NUMBER);
+    Mockito.when(pageService.getOneForHash(Mockito.anyString())).thenReturn(page);
+    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))
+        .thenReturn(TEST_PAGE_CONTENT);
+    Mockito.when(dataEncoder.encode(Mockito.any(byte[].class))).thenReturn(TEST_ENCODED_PAGE);
+    Mockito.when(dataEncoder.decode(Mockito.anyString())).thenReturn(TEST_DECODED_PAGE);
   }
 
   @Test
@@ -335,7 +356,7 @@ public class BlockedHashServiceTest {
         csvRowHandlerArgumentCaptor.getAllValues().get(0).createRow(1, blockedHash);
     assertEquals(TEST_PAGE_LABEL, row[0]);
     assertEquals(TEST_PAGE_HASH, row[1]);
-    assertEquals(TEST_PAGE_SNAPSHOT, row[2]);
+    assertEquals(TEST_PAGE_THUMBNAIL, row[2]);
 
     assertEquals(blockedHashList.size() + 1, csvRowHandlerArgumentCaptor.getAllValues().size());
 
@@ -362,7 +383,7 @@ public class BlockedHashServiceTest {
     assertNotNull(blockedPageArgumentCaptor.getValue());
     assertEquals(TEST_PAGE_LABEL, blockedPageArgumentCaptor.getValue().getLabel());
     assertEquals(TEST_PAGE_HASH, blockedPageArgumentCaptor.getValue().getHash());
-    assertEquals(TEST_PAGE_SNAPSHOT, blockedPageArgumentCaptor.getValue().getSnapshot());
+    assertEquals(TEST_PAGE_THUMBNAIL, blockedPageArgumentCaptor.getValue().getThumbnail());
 
     Mockito.verify(blockedHashRepository, Mockito.times(1)).findAll();
     Mockito.verify(csvAdaptor, Mockito.times(1))
@@ -448,6 +469,29 @@ public class BlockedHashServiceTest {
     final boolean result = service.isHashBlocked(TEST_PAGE_HASH);
 
     assertFalse(result);
+
+    Mockito.verify(blockedHashRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
+  }
+
+  @Test(expected = BlockedHashException.class)
+  public void testGetThumbnailNotFound() throws BlockedHashException {
+    Mockito.when(blockedHashRepository.findByHash(Mockito.anyString())).thenReturn(null);
+
+    try {
+      service.getThumbnail(TEST_PAGE_HASH);
+    } finally {
+      Mockito.verify(blockedHashRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
+    }
+  }
+
+  @Test
+  public void testGetThumbnail() throws BlockedHashException {
+    Mockito.when(blockedHashRepository.findByHash(Mockito.anyString())).thenReturn(blockedHash);
+
+    final byte[] result = service.getThumbnail(TEST_PAGE_HASH);
+
+    assertNotNull(result);
+    assertArrayEquals(TEST_DECODED_PAGE, result);
 
     Mockito.verify(blockedHashRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
   }

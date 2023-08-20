@@ -52,6 +52,23 @@
     </mat-cell>
   </ng-container>
 
+  <ng-container matColumnDef="thumbnail">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "blocked-hash-list.header.thumbnail" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      <div class="cx-text-nowrap cx-table-thumbnail cx-width-100">
+        <img
+          loading="lazy"
+          [src]="row.item.hash | blockedHashThumbnailUrl"
+          alt="thumbnail"
+          width="100%"
+          height="auto"
+        />
+      </div>
+    </mat-cell>
+  </ng-container>
+
   <ng-container matColumnDef="label">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "blocked-hash-list.header.label" | translate }}

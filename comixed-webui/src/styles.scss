@@ -388,6 +388,13 @@ th {
 
 // flexible containers
 
+.cx-fab-container-bottom-left {
+  position: fixed;
+  bottom: 50px;
+  left: 50px;
+  cursor: pointer;
+}
+
 .cx-fab-container-bottom-right {
   position: fixed;
   bottom: 50px;

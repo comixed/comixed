@@ -54,7 +54,6 @@ export class BlockedHashDetailPageComponent implements OnDestroy {
   userSubscription: Subscription;
   isAdmin = false;
   hash = '';
-  editing = false;
 
   blockedPageForm: UntypedFormGroup;
 
@@ -109,18 +108,12 @@ export class BlockedHashDetailPageComponent implements OnDestroy {
     this.blockedPageForm.controls.hash.setValue(blockedPage.hash);
     this.blockedPageForm.updateValueAndValidity();
     this.blockedPageForm.markAsPristine();
-    this.editing = false;
   }
 
   ngOnDestroy(): void {
     this.paramsSubscription.unsubscribe();
     this.blockedPageSubscription.unsubscribe();
     this.userSubscription.unsubscribe();
-  }
-
-  onEdit(): void {
-    this.logger.debug('Enabling edit mode');
-    this.editing = true;
   }
 
   onSave(): void {
@@ -145,7 +138,6 @@ export class BlockedHashDetailPageComponent implements OnDestroy {
       confirm: () => {
         this.logger.debug('Resetting changes');
         this.blockedPage = this._blockedPage;
-        this.editing = false;
       }
     });
   }

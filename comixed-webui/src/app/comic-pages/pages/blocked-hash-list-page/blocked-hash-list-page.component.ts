@@ -76,6 +76,7 @@ export class BlockedHashListPageComponent
   dataSource = new MatTableDataSource<SelectableListItem<BlockedHash>>([]);
   readonly displayedColumns = [
     'selected',
+    'thumbnail',
     'label',
     'hash',
     'comic-count',

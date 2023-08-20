@@ -60,6 +60,7 @@ import {
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
+import { BlockedHashThumbnailUrlPipe } from '@app/comic-pages/pipes/blocked-hash-thumbnail-url.pipe';
 
 describe('BlockedHashListPageComponent', () => {
   const ENTRIES = [BLOCKED_HASH_1, BLOCKED_HASH_3, BLOCKED_HASH_5];
@@ -81,7 +82,8 @@ describe('BlockedHashListPageComponent', () => {
       TestBed.configureTestingModule({
         declarations: [
           BlockedHashListPageComponent,
-          BlockedHashToolbarComponent
+          BlockedHashToolbarComponent,
+          BlockedHashThumbnailUrlPipe
         ],
         imports: [
           NoopAnimationsModule,

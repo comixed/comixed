@@ -75,13 +75,15 @@ import {
   reducer as deletedPageReducer
 } from '@app/comic-pages/reducers/deleted-pages.reducer';
 import { DeletedPagesEffects } from '@app/comic-pages/effects/deleted-pages.effects';
+import { BlockedHashThumbnailUrlPipe } from './pipes/blocked-hash-thumbnail-url.pipe';
 
 @NgModule({
   declarations: [
     BlockedHashListPageComponent,
     BlockedHashDetailPageComponent,
     DeletedPageListPageComponent,
-    BlockedHashToolbarComponent
+    BlockedHashToolbarComponent,
+    BlockedHashThumbnailUrlPipe
   ],
   imports: [
     CommonModule,
