@@ -158,6 +158,9 @@ public class ComicFileController {
         addComicsToLibraryJob,
         new JobParametersBuilder()
             .addLong(AddComicsConfiguration.PARAM_ADD_COMICS_STARTED, System.currentTimeMillis())
+            .addString(
+                AddComicsConfiguration.PARAM_SKIP_METADATA,
+                String.valueOf(request.getSkipMetadata()))
             .toJobParameters());
   }
 

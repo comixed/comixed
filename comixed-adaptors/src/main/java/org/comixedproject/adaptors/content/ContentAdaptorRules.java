@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2019, The ComiXed Project
+ * Copyright (C) 2023, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,32 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.comicfiles;
+package org.comixedproject.adaptors.content;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
-import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * <code>ImportComicFilesRequest</code> represents the payload for a request to import comics into
- * the library.
- *
- * @author Darryl L. Pierce
+ * <code>ContentAdaptorRules</code> contains the rules to be applied when importing content from a
+ * comic file.
  */
 @NoArgsConstructor
-@AllArgsConstructor
-public class ImportComicFilesRequest {
-  @JsonProperty("filenames")
-  @Getter
-  @Setter
-  private List<String> filenames = new ArrayList<>();
+public class ContentAdaptorRules {
+  @Getter @Setter private boolean skipMetadata = false;
 
-  @JsonProperty("skipMetadata")
-  @Getter
-  @Setter
-  private Boolean skipMetadata;
+  @Override
+  public String toString() {
+    return "ContentAdaptorRules{" + "skipMetadata=" + skipMetadata + '}';
+  }
 }

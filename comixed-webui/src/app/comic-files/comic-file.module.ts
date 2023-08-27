@@ -19,9 +19,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImportComicsPageComponent } from './pages/import-comics-page/import-comics-page.component';
-import { ComicFileToolbarComponent } from './components/comic-file-toolbar/comic-file-toolbar.component';
-import { ComicFileCoversComponent } from './components/comic-file-covers/comic-file-covers.component';
-import { ComicFileDetailCardComponent } from './components/comic-file-detail-card/comic-file-detail-card.component';
 import { ComicFileCoverUrlPipe } from './pipes/comic-file-cover-url.pipe';
 import { ComicFileRouting } from './comic-file.routing';
 import { StoreModule } from '@ngrx/store';
@@ -60,14 +57,15 @@ import { ScrapeMetadataEffects } from '@app/comic-files/effects/scrape-metadata.
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
+import { ComicFileLoaderComponent } from './components/comic-file-loader/comic-file-loader.component';
+import { ImportStatusPageComponent } from './pages/import-status-page/import-status-page.component';
 
 @NgModule({
   declarations: [
     ImportComicsPageComponent,
-    ComicFileToolbarComponent,
-    ComicFileCoversComponent,
-    ComicFileDetailCardComponent,
-    ComicFileCoverUrlPipe
+    ComicFileCoverUrlPipe,
+    ComicFileLoaderComponent,
+    ImportStatusPageComponent
   ],
   imports: [
     CommonModule,

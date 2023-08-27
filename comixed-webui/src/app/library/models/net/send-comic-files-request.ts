@@ -18,4 +18,5 @@
 
 export interface SendComicFilesRequest {
   filenames: string[];
+  skipMetadata: boolean;
 }

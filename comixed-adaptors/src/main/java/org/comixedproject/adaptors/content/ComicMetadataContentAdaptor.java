@@ -57,8 +57,16 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor
   }
 
   @Override
-  public void loadContent(final ComicBook comicBook, final String filename, final byte[] content)
+  public void loadContent(
+      final ComicBook comicBook,
+      final String filename,
+      final byte[] content,
+      final ContentAdaptorRules rules)
       throws ContentAdaptorException {
+    if (rules.isSkipMetadata()) {
+      log.info("Skipping metadata import due to rule");
+      return;
+    }
     log.trace("Reading ComicInfo.xml content");
     final ComicInfo comicInfo;
     try {

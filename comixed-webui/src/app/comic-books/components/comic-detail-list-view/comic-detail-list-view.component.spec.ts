@@ -271,6 +271,12 @@ describe('ComicDetailListViewComponent', () => {
       ).toEqual(LAST_READ_DATES[0].lastRead);
     });
 
+    it('can sort by added date', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(ENTRY, 'added-date')
+      ).toEqual(ENTRY.item.addedDate);
+    });
+
     it('returns null on an unknown column', () => {
       expect(
         component.dataSource.sortingDataAccessor(ENTRY, 'storge-date')

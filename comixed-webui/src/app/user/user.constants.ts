@@ -32,6 +32,3 @@ export const SAVE_USER_PREFERENCE_URL = `${API_ROOT_URL}/user/preferences/\${nam
 export const DELETE_USER_PREFERENCE_URL = `${API_ROOT_URL}/user/preferences/\${name}`;
 
 export const USER_SELF_TOPIC = '/secured/user/topic/user/current';
-export const LOAD_SELF_MESSAGE = '/comixed/loadself';
-export const SAVE_PREFERENCE_MESSAGE = '/comixed/user.preference.save';
-export const DELETE_PREFERENCE_MESSAGE = '/comixed/user.preference.delete';

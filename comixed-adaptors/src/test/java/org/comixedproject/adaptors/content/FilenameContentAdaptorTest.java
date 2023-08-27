@@ -41,6 +41,7 @@ public class FilenameContentAdaptorTest extends BaseContentAdaptorTest {
   @Autowired private FilenameContentAdaptor adaptor;
 
   private ComicBook comicBook;
+  private ContentAdaptorRules contentAdaptorRules = new ContentAdaptorRules();
 
   @Before
   public void setUp() {
@@ -50,7 +51,8 @@ public class FilenameContentAdaptorTest extends BaseContentAdaptorTest {
 
   @Test
   public void testLoadComicInfoFile() throws IOException, ContentAdaptorException {
-    adaptor.loadContent(comicBook, COMICINFO_XML, this.loadFile(TEST_COMICINFO_XML_FILE));
+    adaptor.loadContent(
+        comicBook, COMICINFO_XML, this.loadFile(TEST_COMICINFO_XML_FILE), contentAdaptorRules);
 
     assertEquals("Test Publisher", comicBook.getComicDetail().getPublisher());
     assertEquals("Test Series", comicBook.getComicDetail().getSeries());

@@ -18,11 +18,13 @@
 
 package org.comixedproject.rest.comicfiles;
 
+import static org.comixedproject.batch.comicbooks.AddComicsConfiguration.PARAM_SKIP_METADATA;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
+import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.model.comicfiles.ComicFileGroup;
 import org.comixedproject.model.metadata.FilenameMetadata;
@@ -60,6 +62,7 @@ public class ComicFileControllerTest {
   private static final String TEST_SERIES = "The Series";
   private static final String TEST_VOLUME = "The Volume";
   private static final String TEST_ISSUE_NUMBER = "983a";
+  private static final Boolean TEST_SKIP_METADATA = RandomUtils.nextBoolean();
 
   @InjectMocks private ComicFileController controller;
   @Mock private ComicFileService comicFileService;
@@ -135,11 +138,12 @@ public class ComicFileControllerTest {
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
 
-    controller.importComicFiles(new ImportComicFilesRequest(filenameList));
+    controller.importComicFiles(new ImportComicFilesRequest(filenameList, TEST_SKIP_METADATA));
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
     assertNotNull(jobParameters);
+    assertEquals(String.valueOf(TEST_SKIP_METADATA), jobParameters.getString(PARAM_SKIP_METADATA));
 
     Mockito.verify(comicFileService, Mockito.times(1)).importComicFiles(filenameList);
     Mockito.verify(jobLauncher, Mockito.times(1)).run(addComicsToLibraryJob, jobParameters);

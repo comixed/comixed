@@ -388,6 +388,11 @@ th {
 
 // flexible containers
 
+.cx-fab-container-upper-left {
+  top: 50px;
+  left: 50px;
+}
+
 .cx-fab-container-upper-right {
   top: 50px;
   right: 50px;
@@ -408,6 +413,7 @@ th {
 .cx-fab-container-bottom-right {
   position: fixed;
   cursor: pointer;
+  z-index: 99;
 }
 
 .cx-horizontal-container {

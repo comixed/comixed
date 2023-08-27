@@ -42,6 +42,7 @@ import { clearComicFileSelections } from '@app/comic-files/actions/comic-file-li
 
 describe('ImportComicFilesEffects', () => {
   const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];
+  const SKIP_METADATA = Math.random() > 0.5;
 
   let actions$: Observable<any>;
   let effects: ImportComicFilesEffects;
@@ -86,14 +87,15 @@ describe('ImportComicFilesEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
       const action = sendComicFiles({
-        files: FILES
+        files: FILES,
+        skipMetadata: SKIP_METADATA
       });
       const outcome1 = comicFilesSent();
       const outcome2 = clearComicFileSelections();
 
       actions$ = hot('-a', { a: action });
       comicImportService.sendComicFiles
-        .withArgs({ files: FILES })
+        .withArgs({ files: FILES, skipMetadata: SKIP_METADATA })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-(bc)', {
@@ -107,13 +109,14 @@ describe('ImportComicFilesEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = sendComicFiles({
-        files: FILES
+        files: FILES,
+        skipMetadata: SKIP_METADATA
       });
       const outcome = sendComicFilesFailed();
 
       actions$ = hot('-a', { a: action });
       comicImportService.sendComicFiles
-        .withArgs({ files: FILES })
+        .withArgs({ files: FILES, skipMetadata: SKIP_METADATA })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -123,13 +126,14 @@ describe('ImportComicFilesEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = sendComicFiles({
-        files: FILES
+        files: FILES,
+        skipMetadata: SKIP_METADATA
       });
       const outcome = sendComicFilesFailed();
 
       actions$ = hot('-a', { a: action });
       comicImportService.sendComicFiles
-        .withArgs({ files: FILES })
+        .withArgs({ files: FILES, skipMetadata: SKIP_METADATA })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });

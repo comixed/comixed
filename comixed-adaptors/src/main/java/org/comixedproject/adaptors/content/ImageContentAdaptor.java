@@ -40,7 +40,11 @@ public class ImageContentAdaptor extends AbstractContentAdaptor {
   @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
   @Override
-  public void loadContent(final ComicBook comicBook, final String filename, final byte[] content) {
+  public void loadContent(
+      final ComicBook comicBook,
+      final String filename,
+      final byte[] content,
+      final ContentAdaptorRules rules) {
     log.trace("Loading image into comicBook");
     // if the comicBook already has this offset then update the offset's content
     if (comicBook.hasPageWithFilename(filename)) {
