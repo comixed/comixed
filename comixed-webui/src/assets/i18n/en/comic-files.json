@@ -1,6 +1,9 @@
 {
   "comic-files": {
     "busy-title": "There Are Comics Importing Now",
+    "button": {
+      "find-files": "Find Files"
+    },
     "confirm-start-title": "Import Comic Files?",
     "confirm-start-message": "Are you sure you want to import the {count, plural, =1{one comic} other{# comic files}} into the library?",
     "context-menu": {
@@ -20,17 +23,24 @@
       "effect-success": "Submitted {count, plural, =1{one comic file} other{# comic files}} for import."
     },
     "label": {
+      "base-filename": "Filename",
+      "filename": "Location",
+      "filesize": "Size (kb)",
       "maximum-10-files": "10 files",
       "maximum-50-files": "50 files",
       "maximum-100-files": "100 files",
       "maximum-1000-files": "1000 files",
       "maximum-all-files": "All files",
       "maximum-files-to-fetch": "Maximum Files To Fetch",
-      "root-directory": "Root Directory To Search"
+      "thumbnail": "Cover"
     },
     "load-comic-files": {
       "effect-success": "Found {files, plural, =1{one comic file} other{# comic files}} in {directories, plural, =1{one directory} other{# directories}}.",
-      "effect-failure": "Failed to find any comic files."
+      "effect-failure": "Failed to find any comic files.",
+      "form-title": "Load Comic Files",
+      "text": {
+        "no-files-loaded": "No comic files loaded..."
+      }
     },
     "page-title": "Import Comics: {selected, plural, =1{One} other{#}} Of {count, plural, =1{One Comic} other{# Comics}} Selected",
     "placeholder": {
@@ -54,6 +64,8 @@
       "deselect-all": "Clear the comic file selections (shift+ctrl+a).",
       "find-files": "Load files under this directory (shift+ctrl+f).",
       "select-all": "Select all comic files for import (ctrl+a).",
+      "show-finder-form": "Find comic files to import...",
+      "skip-metadata": "Skip processing metadata (currently {skipMetadata, select, true{ON} other{OFF}})",
       "start-import": "Start importing the selected comic files (ctrl+i).",
       "toggle-file-lookup-form": "Toggle the comic file lookup form."
     }

@@ -47,7 +47,11 @@ public class FilenameContentAdaptor extends AbstractContentAdaptor {
   @Getter private List<EntryLoaderEntry> entryNameLoaders = new ArrayList<>();
 
   @Override
-  public void loadContent(final ComicBook comicBook, final String filename, final byte[] content)
+  public void loadContent(
+      final ComicBook comicBook,
+      final String filename,
+      final byte[] content,
+      final ContentAdaptorRules rules)
       throws ContentAdaptorException {
     final String rootFilename = FilenameUtils.getName(filename);
     log.trace("Finding filename name: {}", rootFilename);
@@ -61,7 +65,7 @@ public class FilenameContentAdaptor extends AbstractContentAdaptor {
         definition.bean = this.getBean(definition.name);
       }
       log.trace("Invoking filename content adaptor: {}", definition.name);
-      definition.bean.loadContent(comicBook, filename, content);
+      definition.bean.loadContent(comicBook, filename, content, rules);
       return;
     }
     log.error("No content adaptor found for filename={}", filename);

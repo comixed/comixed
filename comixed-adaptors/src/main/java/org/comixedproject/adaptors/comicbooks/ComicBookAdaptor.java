@@ -37,6 +37,7 @@ import org.comixedproject.adaptors.archive.model.ComicArchiveEntry;
 import org.comixedproject.adaptors.content.ComicMetadataContentAdaptor;
 import org.comixedproject.adaptors.content.ContentAdaptor;
 import org.comixedproject.adaptors.content.ContentAdaptorException;
+import org.comixedproject.adaptors.content.ContentAdaptorRules;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
@@ -81,9 +82,11 @@ public class ComicBookAdaptor {
    * Loads the contents of the specified comicBook.
    *
    * @param comicBook the comic book
+   * @param rules the content adaptor ruleset
    * @throws AdaptorException if an error occurs while loading the comic book file
    */
-  public void load(final ComicBook comicBook) throws AdaptorException {
+  public void load(final ComicBook comicBook, final ContentAdaptorRules rules)
+      throws AdaptorException {
     try {
       log.trace("Getting archive adaptor for comic book file");
       final ArchiveAdaptor archiveAdaptor =
@@ -102,7 +105,7 @@ public class ComicBookAdaptor {
           final ContentAdaptor adaptor = this.fileTypeAdaptor.getContentAdaptorFor(content);
           if (adaptor != null) {
             log.trace("Invoking content adaptor");
-            adaptor.loadContent(comicBook, entry.getFilename(), content);
+            adaptor.loadContent(comicBook, entry.getFilename(), content, rules);
           }
         } else {
           log.debug("Content contains no data");

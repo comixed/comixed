@@ -16,7 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ComicFile } from '@app/comic-files/models/comic-file';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -38,14 +44,41 @@ import { TitleService } from '@app/core/services/title.service';
 import { User } from '@app/user/models/user';
 import { selectProcessComicsState } from '@app/selectors/process-comics.selectors';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { PAGE_SIZE_DEFAULT, PAGE_SIZE_PREFERENCE } from '@app/core';
+import { PAGE_SIZE_DEFAULT } from '@app/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { MatTableDataSource } from '@angular/material/table';
+import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import {
+  clearComicFileSelections,
+  setComicFilesSelectedState
+} from '@app/comic-files/actions/comic-file-list.actions';
+import { Router } from '@angular/router';
+import { saveUserPreference } from '@app/user/actions/user.actions';
+import { SKIP_METADATA_USER_PREFERENCE } from '@app/comic-files/comic-file.constants';
 
 @Component({
   selector: 'cx-import-comics',
   templateUrl: './import-comics-page.component.html',
   styleUrls: ['./import-comics-page.component.scss']
 })
-export class ImportComicsPageComponent implements OnInit, OnDestroy {
+export class ImportComicsPageComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
+
+  readonly displayedColumns = [
+    'selection',
+    'thumbnail',
+    'filename',
+    'base-filename',
+    'size'
+  ];
+  dataSource = new MatTableDataSource<SelectableListItem<ComicFile>>([]);
   langChangeSubscription: Subscription;
   filesSubscription: Subscription;
   files: ComicFile[];
@@ -58,14 +91,10 @@ export class ImportComicsPageComponent implements OnInit, OnDestroy {
   selectedFilesSubscription: Subscription;
   selectedFiles: ComicFile[] = [];
   pageSize = PAGE_SIZE_DEFAULT;
-  importing = false;
-  started = 0;
-  stepName = '';
-  total = 0;
-  processed = 0;
-  progress = 0;
-  private sending = false;
-  private loading = false;
+  showFinderForm = false;
+  allSelected = false;
+  anySelected = false;
+  skipMetadata = false;
 
   constructor(
     private logger: LoggerService,
@@ -73,7 +102,9 @@ export class ImportComicsPageComponent implements OnInit, OnDestroy {
     private store: Store<any>,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private titleService: TitleService
+    private titleService: TitleService,
+    private router: Router,
+    public queryParameterService: QueryParameterService
   ) {
     this.translateSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -84,21 +115,28 @@ export class ImportComicsPageComponent implements OnInit, OnDestroy {
       .subscribe(user => {
         this.user = user;
         this.logger.debug('User updated:', user);
-        this.pageSize = parseInt(
+        this.skipMetadata =
           getUserPreference(
             user.preferences,
-            PAGE_SIZE_PREFERENCE,
-            `${this.pageSize}`
-          ),
-          10
-        );
+            SKIP_METADATA_USER_PREFERENCE,
+            `${false}`
+          ) === `${true}`;
       });
     this.filesSubscription = this.store
       .select(selectComicFiles)
-      .subscribe(files => (this.files = files));
+      .subscribe(files => {
+        this.files = files;
+        this.updateDataSource();
+        this.updateSelectionState();
+        this.showFinderForm = false;
+      });
     this.selectedFilesSubscription = this.store
       .select(selectComicFileSelections)
-      .subscribe(selectedFiles => (this.selectedFiles = selectedFiles));
+      .subscribe(selectedFiles => {
+        this.selectedFiles = selectedFiles;
+        this.updateDataSource();
+        this.updateSelectionState();
+      });
     this.comicFileListStateSubscription = this.store
       .select(selectComicFileListState)
       .subscribe(state =>
@@ -112,13 +150,31 @@ export class ImportComicsPageComponent implements OnInit, OnDestroy {
     this.comicImportStateSubscription = this.store
       .select(selectProcessComicsState)
       .subscribe(state => {
-        this.importing = state.active;
-        this.started = state.started;
-        this.stepName = state.stepName;
-        this.total = state.total;
-        this.processed = state.processed;
-        this.progress = (state.processed / state.total) * 100;
+        if (state.active) {
+          this.logger.debug('Redirecting to import status page');
+          this.router.navigateByUrl('/library/import/status');
+        }
       });
+  }
+
+  ngAfterViewInit(): void {
+    this.logger.debug('Setting pagination');
+    this.dataSource.paginator = this.paginator;
+    this.logger.debug('Setting sorting');
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
+      switch (sortHeaderId) {
+        case 'selected':
+          return `${data.selected}`;
+        case 'base-filename':
+          return data.item.baseFilename;
+        case 'filename':
+          return data.item.filename;
+        case 'size':
+          return data.item.size;
+      }
+      return data.item.id;
+    };
   }
 
   ngOnInit(): void {
@@ -146,11 +202,52 @@ export class ImportComicsPageComponent implements OnInit, OnDestroy {
         this.logger.debug('Starting import');
         this.store.dispatch(
           sendComicFiles({
-            files: this.selectedFiles
+            files: this.selectedFiles,
+            skipMetadata: this.skipMetadata
           })
         );
       }
     });
+  }
+
+  onToggleAllSelected(selected: boolean): void {
+    if (selected) {
+      this.onSelectAll();
+    } else {
+      this.onDeselectAll();
+    }
+  }
+
+  onSelectAll(): void {
+    this.logger.debug('Firing action: select all comic files');
+    this.store.dispatch(
+      setComicFilesSelectedState({
+        files: this.files,
+        selected: true
+      })
+    );
+  }
+
+  onDeselectAll(): void {
+    this.logger.debug('Deselecting all comic files');
+    this.store.dispatch(clearComicFileSelections());
+  }
+
+  onSelectEntry(file: ComicFile, selected: boolean): void {
+    this.logger.debug('Selecting comic file:', file);
+    this.store.dispatch(
+      setComicFilesSelectedState({ selected, files: [file] })
+    );
+  }
+
+  onSkipMetadata(skipMetadata: boolean): void {
+    this.logger.debug('Setting skip metadata:', skipMetadata);
+    this.store.dispatch(
+      saveUserPreference({
+        name: SKIP_METADATA_USER_PREFERENCE,
+        value: `${skipMetadata}`
+      })
+    );
   }
 
   private loadTranslations(): void {
@@ -158,5 +255,19 @@ export class ImportComicsPageComponent implements OnInit, OnDestroy {
     this.titleService.setTitle(
       this.translateService.instant('comic-files.tab-title')
     );
+  }
+
+  private updateSelectionState(): void {
+    this.allSelected = this.dataSource.data.every(entry => entry.selected);
+    this.anySelected = this.dataSource.data.some(entry => entry.selected);
+  }
+
+  private updateDataSource() {
+    this.dataSource.data = this.files.map(file => {
+      return {
+        item: file,
+        selected: this.selectedFiles.map(entry => entry.id).includes(file.id)
+      };
+    });
   }
 }

@@ -41,7 +41,8 @@ export class ImportComicFilesEffects {
       switchMap(action =>
         this.comicImportService
           .sendComicFiles({
-            files: action.files
+            files: action.files,
+            skipMetadata: action.skipMetadata
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),

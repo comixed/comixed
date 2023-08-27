@@ -25,7 +25,6 @@ import {
   COMIC_FILE_1,
   COMIC_FILE_2,
   COMIC_FILE_3,
-  COMIC_FILE_4,
   ROOT_DIRECTORY
 } from '@app/comic-files/comic-file.fixtures';
 import { ComicImportService } from '@app/comic-files/services/comic-import.service';

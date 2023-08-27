@@ -1,0 +1,34 @@
+@import 'styles';
+
+.mat-column-selection {
+  width: $cx-column-smallish;
+  max-width: $cx-column-smallish;
+  resize: none;
+}
+
+.mat-column-thumbnail {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-selected {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+  resize: none;
+}
+
+.mat-column-base-filenaem {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+  resize: none;
+}
+
+.mat-column-filename {
+}
+
+.mat-column-size {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}

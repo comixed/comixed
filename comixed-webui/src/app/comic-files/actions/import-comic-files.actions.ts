@@ -23,6 +23,7 @@ export const sendComicFiles = createAction(
   '[Import ComicBook Files] Begin importing the selected comic files',
   props<{
     files: ComicFile[];
+    skipMetadata: boolean;
   }>()
 );
 

@@ -1,0 +1,53 @@
+<h3>
+  {{ "comic-files.load-comic-files.form-title" | translate }}
+</h3>
+<form [formGroup]="loadFilesForm">
+  <mat-card>
+    <mat-card-content>
+      <mat-form-field class="cx-width-50">
+        <mat-label>
+          {{ "comic-files.label.maximum-files-to-fetch" | translate }}
+        </mat-label>
+        <mat-select
+          id="maximum-files-select"
+          class="cx-width-100"
+          formControlName="maximum"
+        >
+          <mat-option
+            *ngFor="let option of maximumOptions"
+            [value]="option.value"
+          >
+            {{ option.label | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div class="cx-50"></div>
+      <mat-form-field class="cx-width-100">
+        <input
+          id="root-directory-input"
+          matInput
+          formControlName="rootDirectory"
+          [placeholder]="'comic-files.placeholder.root-directory' | translate"
+          required
+        />
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions class="cx-action-button-container-horizontal">
+      <button
+        id="find-files-button"
+        class="cx-action-button"
+        matSuffix
+        mat-flat-button
+        color="primary"
+        [disabled]="!loadFilesForm.valid"
+        [matTooltip]="'comic-files.tooltip.find-files' | translate"
+        (click)="onLoadFiles()"
+      >
+        <mat-label>
+          {{ "comic-files.button.find-files" | translate }}
+        </mat-label>
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

@@ -45,6 +45,7 @@ public class ImageContentAdaptorTest extends BaseContentAdaptorTest {
   @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
   private ComicBook comicBook;
+  private ContentAdaptorRules contentAdaptorRules = new ContentAdaptorRules();
 
   @Before
   public void setUp() {
@@ -57,7 +58,7 @@ public class ImageContentAdaptorTest extends BaseContentAdaptorTest {
   public void testLoadJPGImage() throws IOException {
     byte[] content = loadFile(TEST_JPEG_FILENAME);
 
-    loader.loadContent(comicBook, TEST_JPEG_FILENAME, content);
+    loader.loadContent(comicBook, TEST_JPEG_FILENAME, content, contentAdaptorRules);
 
     assertEquals(1, comicBook.getPageCount());
     assertNotNull(comicBook.getPage(0));
@@ -67,7 +68,7 @@ public class ImageContentAdaptorTest extends BaseContentAdaptorTest {
   public void testLoadWebPImage() throws IOException {
     byte[] content = loadFile(TEST_WEBP_FILENAME);
 
-    loader.loadContent(comicBook, TEST_WEBP_FILENAME, content);
+    loader.loadContent(comicBook, TEST_WEBP_FILENAME, content, contentAdaptorRules);
 
     assertEquals(1, comicBook.getPageCount());
     assertNotNull(comicBook.getPage(0));

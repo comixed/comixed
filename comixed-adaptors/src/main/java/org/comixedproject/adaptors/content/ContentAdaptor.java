@@ -33,8 +33,9 @@ public interface ContentAdaptor {
    * @param comicBook the comicBook
    * @param filename the content's filename
    * @param content the content
+   * @param rules content rules
    * @throws ContentAdaptorException if an error occurs while loading the content
    */
-  void loadContent(ComicBook comicBook, String filename, byte[] content)
+  void loadContent(ComicBook comicBook, String filename, byte[] content, ContentAdaptorRules rules)
       throws ContentAdaptorException;
 }

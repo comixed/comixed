@@ -56,6 +56,7 @@ describe('ComicImportService', () => {
     }
   ];
   const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3];
+  const SKIP_METADATA = Math.random() > 0.5;
   const MAXIMUM = 100;
   const FILENAME = COMIC_DETAIL_2.baseFilename;
   const SERIES = COMIC_DETAIL_2.series;
@@ -100,14 +101,16 @@ describe('ComicImportService', () => {
     const serviceResponse = new HttpResponse({ status: 200 });
     service
       .sendComicFiles({
-        files: FILES
+        files: FILES,
+        skipMetadata: SKIP_METADATA
       })
       .subscribe(response => expect(response).toEqual(serviceResponse));
 
     const req = httpMock.expectOne(interpolate(SEND_COMIC_FILES_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      filenames: FILES.map(file => file.filename)
+      filenames: FILES.map(file => file.filename),
+      skipMetadata: SKIP_METADATA
     } as SendComicFilesRequest);
     req.flush(serviceResponse);
   });

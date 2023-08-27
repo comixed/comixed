@@ -58,6 +58,7 @@ public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
   @Autowired ComicMetadataContentAdaptor adaptor;
 
   private ComicBook comicBook = new ComicBook();
+  private ContentAdaptorRules contentAdaptorRules = new ContentAdaptorRules();
 
   @Before
   public void setup() {
@@ -69,13 +70,19 @@ public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
   @Test(expected = ContentAdaptorException.class)
   public void testLoadComicInfoXmlNotXml() throws IOException, ContentAdaptorException {
     adaptor.loadContent(
-        comicBook, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_NOT_XML));
+        comicBook,
+        TEST_COMICINFO_FILE_COMPLETE,
+        loadFile(TEST_COMICINFO_FILE_NOT_XML),
+        contentAdaptorRules);
   }
 
   @Test
   public void testLoadComicInfoXml() throws IOException, ContentAdaptorException {
     adaptor.loadContent(
-        comicBook, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_COMPLETE));
+        comicBook,
+        TEST_COMICINFO_FILE_COMPLETE,
+        loadFile(TEST_COMICINFO_FILE_COMPLETE),
+        contentAdaptorRules);
 
     assertFalse(comicBook.getComicDetail().getTags().isEmpty());
 
@@ -91,6 +98,26 @@ public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
   }
 
   @Test
+  public void testLoadComicInfoXmlSkipMetadata() throws IOException, ContentAdaptorException {
+    contentAdaptorRules.setSkipMetadata(true);
+
+    adaptor.loadContent(
+        comicBook,
+        TEST_COMICINFO_FILE_COMPLETE,
+        loadFile(TEST_COMICINFO_FILE_COMPLETE),
+        contentAdaptorRules);
+
+    assertTrue(comicBook.getComicDetail().getTags().isEmpty());
+
+    assertNull(comicBook.getComicDetail().getPublisher());
+    assertNull(comicBook.getComicDetail().getSeries());
+    assertNull(comicBook.getComicDetail().getVolume());
+    assertNull(comicBook.getComicDetail().getIssueNumber());
+    assertNull(comicBook.getComicDetail().getTitle());
+    assertNull(comicBook.getComicDetail().getDescription());
+  }
+
+  @Test
   public void testCreateContent() throws ContentAdaptorException, IOException {
     final ComicInfo expected =
         adaptor
@@ -99,7 +126,10 @@ public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
             .readValue(new FileInputStream(TEST_COMICINFO_FILE_COMPLETE), ComicInfo.class);
 
     adaptor.loadContent(
-        comicBook, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_COMPLETE));
+        comicBook,
+        TEST_COMICINFO_FILE_COMPLETE,
+        loadFile(TEST_COMICINFO_FILE_COMPLETE),
+        contentAdaptorRules);
     comicBook.setMetadata(null);
 
     final byte[] result = adaptor.createContent(comicBook);
@@ -116,7 +146,10 @@ public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
   @Test
   public void testCreateContentWithMetadataContent() throws ContentAdaptorException, IOException {
     adaptor.loadContent(
-        comicBook, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_COMPLETE));
+        comicBook,
+        TEST_COMICINFO_FILE_COMPLETE,
+        loadFile(TEST_COMICINFO_FILE_COMPLETE),
+        contentAdaptorRules);
 
     comicBook.setMetadata(
         new ComicMetadataSource(

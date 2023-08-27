@@ -199,6 +199,8 @@ export class ComicDetailListViewComponent implements OnDestroy, AfterViewInit {
           return data.item.storeDate;
         case 'last-read-date':
           return this.lastReadDate(data.item);
+        case 'added-date':
+          return data.item.addedDate;
         case 'extra-field':
           return data.sortableExtraField;
         default:

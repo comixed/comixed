@@ -34,6 +34,7 @@ import {
 
 describe('ImportComicFiles Reducer', () => {
   const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3];
+  const SKIP_METADATA = Math.random() > 0.5;
 
   let state: ImportComicFilesState;
 
@@ -56,7 +57,8 @@ describe('ImportComicFiles Reducer', () => {
       state = reducer(
         { ...state, sending: false },
         sendComicFiles({
-          files: FILES
+          files: FILES,
+          skipMetadata: SKIP_METADATA
         })
       );
     });

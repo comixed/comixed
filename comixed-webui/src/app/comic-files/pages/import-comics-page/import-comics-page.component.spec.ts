@@ -40,15 +40,11 @@ import { sendComicFiles } from '@app/comic-files/actions/import-comic-files.acti
 import { USER_ADMIN, USER_READER } from '@app/user/user.fixtures';
 import { User } from '@app/user/models/user';
 import { MatIconModule } from '@angular/material/icon';
-import { ComicFileToolbarComponent } from '@app/comic-files/components/comic-file-toolbar/comic-file-toolbar.component';
-import { ComicFileCoversComponent } from '@app/comic-files/components/comic-file-covers/comic-file-covers.component';
-import { ComicFileDetailCardComponent } from '@app/comic-files/components/comic-file-detail-card/comic-file-detail-card.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { ComicFileCoverUrlPipe } from '@app/comic-files/pipes/comic-file-cover-url.pipe';
 import { MatCardModule } from '@angular/material/card';
-import { ComicPageComponent } from '@app/comic-books/components/comic-page/comic-page.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -70,8 +66,19 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
-import { PAGE_SIZE_PREFERENCE } from '@app/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { ComicFileLoaderComponent } from '@app/comic-files/components/comic-file-loader/comic-file-loader.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MatSortModule } from '@angular/material/sort';
+import { SKIP_METADATA_USER_PREFERENCE } from '@app/comic-files/comic-file.constants';
+import { Router } from '@angular/router';
+import { ComicFile } from '@app/comic-files/models/comic-file';
+import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
+import {
+  clearComicFileSelections,
+  setComicFilesSelectedState
+} from '@app/comic-files/actions/comic-file-list.actions';
+import { saveUserPreference } from '@app/user/actions/user.actions';
 
 describe('ImportComicsPageComponent', () => {
   const USER = USER_READER;
@@ -92,20 +99,19 @@ describe('ImportComicsPageComponent', () => {
   let titleService: TitleService;
   let translateService: TranslateService;
   let dialog: MatDialog;
+  let router: Router;
 
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [
           ImportComicsPageComponent,
-          ComicFileToolbarComponent,
-          ComicFileCoversComponent,
-          ComicFileDetailCardComponent,
-          ComicFileCoverUrlPipe,
-          ComicPageComponent
+          ComicFileLoaderComponent,
+          ComicFileCoverUrlPipe
         ],
         imports: [
           NoopAnimationsModule,
+          RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
           ReactiveFormsModule,
           FormsModule,
           LoggerModule.forRoot(),
@@ -121,7 +127,8 @@ describe('ImportComicsPageComponent', () => {
           MatTooltipModule,
           MatToolbarModule,
           MatMenuModule,
-          MatPaginatorModule
+          MatPaginatorModule,
+          MatSortModule
         ],
         providers: [
           provideMockStore({ initialState }),
@@ -140,6 +147,8 @@ describe('ImportComicsPageComponent', () => {
       translateService = TestBed.inject(TranslateService);
       dialog = TestBed.inject(MatDialog);
       spyOn(dialog, 'open');
+      router = TestBed.inject(Router);
+      spyOn(router, 'navigateByUrl');
       fixture.detectChanges();
     })
   );
@@ -159,13 +168,16 @@ describe('ImportComicsPageComponent', () => {
   });
 
   describe('loading user preferences', () => {
+    const SKIP_METADATA = true;
+
     beforeEach(() => {
+      component.skipMetadata = false;
       const user = {
         ...USER_ADMIN,
         preferences: [
           {
-            name: PAGE_SIZE_PREFERENCE,
-            value: `${PAGE_SIZE}`
+            name: SKIP_METADATA_USER_PREFERENCE,
+            value: `${SKIP_METADATA}`
           }
         ]
       } as User;
@@ -178,8 +190,8 @@ describe('ImportComicsPageComponent', () => {
       });
     });
 
-    it('sets the ignore metadata flag', () => {
-      expect(component.pageSize).toEqual(PAGE_SIZE);
+    it('sets the skip metadata flag', () => {
+      expect(component.skipMetadata).toEqual(SKIP_METADATA);
     });
   });
 
@@ -204,11 +216,15 @@ describe('ImportComicsPageComponent', () => {
 
     describe('when loading stops', () => {
       beforeEach(() => {
+        component.selectedFiles = FILES;
+        component.allSelected = false;
+        component.anySelected = false;
         store.setState({
           ...initialState,
           [COMIC_FILE_LIST_FEATURE_KEY]: {
             ...initialComicFileListState,
-            loading: false
+            loading: false,
+            files: FILES
           }
         });
       });
@@ -217,6 +233,14 @@ describe('ImportComicsPageComponent', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           setBusyState({ enabled: false })
         );
+      });
+
+      it('updates the any selected flag', () => {
+        expect(component.anySelected).toBeTrue();
+      });
+
+      it('updates the all selected flag', () => {
+        expect(component.allSelected).toBeTrue();
       });
     });
   });
@@ -267,17 +291,159 @@ describe('ImportComicsPageComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirm: Confirmation) => confirm.confirm()
       );
-      component.onStartImport();
     });
 
-    it('confirms with the user', () => {
-      expect(confirmationService.confirm).toHaveBeenCalled();
+    describe('not skipping metadata', () => {
+      beforeEach(() => {
+        component.skipMetadata = false;
+        component.onStartImport();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          sendComicFiles({
+            files: FILES,
+            skipMetadata: false
+          })
+        );
+      });
     });
 
-    it('fires an action', () => {
+    describe('skipping metadata', () => {
+      beforeEach(() => {
+        component.skipMetadata = true;
+        component.onStartImport();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          sendComicFiles({
+            files: FILES,
+            skipMetadata: true
+          })
+        );
+      });
+    });
+  });
+
+  describe('when commics are already importing', () => {
+    beforeEach(() => {
+      store.setState({
+        ...initialState,
+        [PROCESS_COMICS_FEATURE_KEY]: {
+          ...initialProcessComicsState,
+          active: true
+        }
+      });
+    });
+
+    it('redirects the browser to the status page', () => {
+      expect(router.navigateByUrl).toHaveBeenCalledWith(
+        '/library/import/status'
+      );
+    });
+  });
+
+  describe('sorting records', () => {
+    const ITEM = {
+      item: COMIC_FILE_3,
+      selected: Math.random() > 0.5
+    } as SelectableListItem<ComicFile>;
+
+    it('can sort by selected state', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(ITEM, 'selected')
+      ).toEqual(`${ITEM.selected}`);
+    });
+
+    it('can sort by selected filename', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(ITEM, 'filename')
+      ).toEqual(ITEM.item.filename);
+    });
+
+    it('can sort by selected base filename', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(ITEM, 'base-filename')
+      ).toEqual(ITEM.item.baseFilename);
+    });
+
+    it('can sort by selected size', () => {
+      expect(component.dataSource.sortingDataAccessor(ITEM, 'size')).toEqual(
+        ITEM.item.size
+      );
+    });
+
+    it('can sort by default', () => {
+      expect(component.dataSource.sortingDataAccessor(ITEM, 'unknown')).toEqual(
+        ITEM.item.id
+      );
+    });
+  });
+
+  describe('selecting comic files', () => {
+    beforeEach(() => {
+      component.files = FILES;
+      component.selectedFiles = FILES;
+    });
+
+    describe('it can select all', () => {
+      beforeEach(() => {
+        component.onToggleAllSelected(true);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setComicFilesSelectedState({ selected: true, files: FILES })
+        );
+      });
+    });
+
+    describe('it can deselect all', () => {
+      beforeEach(() => {
+        component.onToggleAllSelected(false);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(clearComicFileSelections());
+      });
+    });
+
+    describe('toggling a single file', () => {
+      const SELECTED = Math.random() > 0.5;
+
+      beforeEach(() => {
+        component.onSelectEntry(FILE, SELECTED);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setComicFilesSelectedState({ files: [FILE], selected: SELECTED })
+        );
+      });
+    });
+  });
+
+  describe('toggling the skip metadata flag', () => {
+    const SKIP_METADATA = Math.random() > 0.5;
+
+    beforeEach(() => {
+      component.onSkipMetadata(SKIP_METADATA);
+    });
+
+    it('saves the user preference', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        sendComicFiles({
-          files: FILES
+        saveUserPreference({
+          name: SKIP_METADATA_USER_PREFERENCE,
+          value: `${SKIP_METADATA}`
         })
       );
     });

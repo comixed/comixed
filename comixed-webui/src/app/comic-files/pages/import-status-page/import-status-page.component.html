@@ -1,0 +1,14 @@
+<h2>{{ "comic-files.busy-title" | translate }}</h2>
+<h3>{{ "comic-files.processing-comics." + stepName | translate }}</h3>
+<h3>
+  {{
+    "comic-files.processing-comics.subtitle"
+      | translate
+        : {
+            total: total,
+            processed: processed,
+            percentage: progress | number: "1.0-2"
+          }
+  }}
+</h3>
+<mat-progress-bar mode="determinate" [value]="progress"></mat-progress-bar>
