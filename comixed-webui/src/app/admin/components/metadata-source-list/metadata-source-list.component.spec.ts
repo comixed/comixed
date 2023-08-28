@@ -36,13 +36,26 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { preferMetadataSource } from '@app/comic-metadata/actions/metadata-source-list.actions';
+import {
+  CONFIGURATION_OPTION_LIST_FEATURE_KEY,
+  initialState as initialConfigurationOptionListState
+} from '@app/admin/reducers/configuration-option-list.reducer';
+import { METADATA_IGNORE_EMPTY_VALUES } from '@app/admin/admin.constants';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
 
 describe('MetadataSourceListComponent', () => {
   const SOURCE = METADATA_SOURCE_1;
   const initialState = {
-    [METADATA_SOURCE_LIST_FEATURE_KEY]: initialMetadataSourceListState
+    [METADATA_SOURCE_LIST_FEATURE_KEY]: initialMetadataSourceListState,
+    [CONFIGURATION_OPTION_LIST_FEATURE_KEY]: initialConfigurationOptionListState
   };
-
   let component: MetadataSourceListComponent;
   let fixture: ComponentFixture<MetadataSourceListComponent>;
   let store: MockStore<any>;
@@ -52,12 +65,20 @@ describe('MetadataSourceListComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [MetadataSourceListComponent],
       imports: [
+        NoopAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatTableModule,
         MatIconModule,
         MatButtonModule,
-        MatDialogModule
+        MatDialogModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatTooltipModule,
+        MatInputModule,
+        MatCheckboxModule
       ],
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
@@ -134,6 +155,72 @@ describe('MetadataSourceListComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         preferMetadataSource({ id: SOURCE.id })
       );
+    });
+  });
+
+  describe('ignoring empty values', () => {
+    describe('loading the form from the existing configuration', () => {
+      beforeEach(() => {
+        component.metadataForm.controls.ignoreEmptyValues.setValue(false);
+        store.setState({
+          ...initialState,
+          [CONFIGURATION_OPTION_LIST_FEATURE_KEY]: {
+            ...initialConfigurationOptionListState,
+            options: [
+              {
+                name: METADATA_IGNORE_EMPTY_VALUES,
+                value: `${true}`
+              }
+            ]
+          }
+        });
+      });
+
+      it('loads the form', () => {
+        expect(
+          component.metadataForm.controls.ignoreEmptyValues.value
+        ).toBeTrue();
+      });
+    });
+  });
+
+  describe('saving the configuration', () => {
+    const IGNORE_EMPTY_VALUES = Math.random() > 0.5;
+
+    beforeEach(() => {
+      component.metadataForm.controls.ignoreEmptyValues.setValue(
+        IGNORE_EMPTY_VALUES
+      );
+      component.onSaveConfig();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        saveConfigurationOptions({
+          options: [
+            {
+              name: METADATA_IGNORE_EMPTY_VALUES,
+              value: `${IGNORE_EMPTY_VALUES}`
+            }
+          ]
+        })
+      );
+    });
+  });
+
+  describe('cancelling changes to the configuration', () => {
+    const IGNORE_EMPTY_VALUES = Math.random() > 0.5;
+
+    beforeEach(() => {
+      component.metadataForm.controls.ignoreEmptyValues.setValue(
+        !IGNORE_EMPTY_VALUES
+      );
+      component.showConfigPopup = true;
+      component.onCancelConfig();
+    });
+
+    it('closes the popup', () => {
+      expect(component.showConfigPopup).toBeFalse();
     });
   });
 });

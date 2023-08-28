@@ -44,6 +44,10 @@ public class ConfigurationService {
   public static final String CFG_LIBRARY_DELETE_EMPTY_DIRECTORIES =
       "library.directories.delete-empty";
   public static final String CFG_LIBRARY_NO_COMICINFO_ENTRY = "library.metadata.no-comicinfo-entry";
+  public static final String CFG_METADATA_IGNORE_EMPTY_VALUES =
+      "library.metadata.ignore-empty-values";
+  public static final String CREATE_EXTERNAL_METADATA_FILE =
+      "library.metadata.create-external-files";
 
   @Autowired private ConfigurationRepository configurationRepository;
 

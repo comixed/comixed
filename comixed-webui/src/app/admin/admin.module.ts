@@ -61,7 +61,6 @@ import {
 } from '@app/admin/reducers/server-runtime.reducer';
 import { ServerRuntimeEffects } from '@app/admin/effects/server-runtime.effects';
 import { MetadataSourceListComponent } from './components/metadata-source-list/metadata-source-list.component';
-import { MetadataSourcesViewComponent } from './components/metadata-sources-view/metadata-sources-view.component';
 import { MetadataSourceDetailComponent } from '@app/admin/components/metadata-source-detail/metadata-source-detail.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { ComicBooksModule } from '@app/comic-books/comic-books.module';
@@ -83,6 +82,7 @@ import {
 } from '@app/admin/reducers/batch-processes.reducer';
 import { BatchProcessesEffects } from '@app/admin/effects/batch-processes.effects';
 import { BatchProcessListPageComponent } from './pages/batch-process-list-page/batch-process-list-page.component';
+import { MetadataSourcesViewComponent } from '@app/admin/components/metadata-sources-view/metadata-sources-view.component';
 
 @NgModule({
   declarations: [

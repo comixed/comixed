@@ -35,6 +35,13 @@
     }
   },
   "metadata-source": {
+    "configuration": {
+      "title": "Metadata Sources Settings"
+    },
+    "delete-property": {
+      "confirmation-message": "Are you sure you want to the delete the {name} property?",
+      "confirmation-title": "Delete Property?"
+    },
     "delete-source": {
       "confirm-message": "Are you sure you want to delete the metadata source {name}?",
       "confirm-title": "Delete Metadata Source",
@@ -43,6 +50,7 @@
     },
     "label": {
       "bean-name": "Bean Name",
+      "ignore-empty-values": "Do not overwrite properties using empty values.",
       "property-name": "Property Name",
       "property-value": "Property Value",
       "source-name": "Source Name"

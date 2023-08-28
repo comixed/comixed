@@ -1,3 +1,44 @@
+<div class="cx-fab-container-bottom-left">
+  <button
+    id="add-property-button"
+    mat-fab
+    color="accent"
+    [matTooltip]="'metadata-source.tooltip.add-property' | translate"
+    (click)="addSourceProperty('', '')"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+  <button
+    id="save-source-button"
+    mat-fab
+    color="primary"
+    [disabled]="!sourceForm.valid"
+    [matTooltip]="'metadata-source.tooltip.save-source' | translate"
+    (click)="onSaveSource()"
+  >
+    <mat-icon>save</mat-icon>
+  </button>
+  <button
+    id="reset-source-button"
+    mat-fab
+    color="warn"
+    [disabled]="!sourceForm.dirty"
+    [matTooltip]="'metadata-source.tooltip.reset-source' | translate"
+    (click)="onResetSource()"
+  >
+    <mat-icon>undo</mat-icon>
+  </button>
+  <button
+    id="delete-source-button"
+    mat-fab
+    color="warn"
+    [matTooltip]="'metadata-source.tooltip.delete-source' | translate"
+    (click)="onDeleteSource()"
+  >
+    <mat-icon>delete</mat-icon>
+  </button>
+</div>
+
 <form [formGroup]="sourceForm">
   <mat-form-field class="cx-width-100" required>
     <mat-label>

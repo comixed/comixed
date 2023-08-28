@@ -1,3 +1,66 @@
+<div class="cx-fab-container-bottom-right">
+  <button
+    id="create-source-button"
+    mat-fab
+    color="primary"
+    [matTooltip]="'metadata-source.tooltip.create-source' | translate"
+    (click)="createSource.emit()"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+  <button
+    id="show-config-popup-button"
+    mat-fab
+    color="accent"
+    [matTooltip]="'metadata-source.tooltip.create-source' | translate"
+    (click)="showConfigPopup = true"
+  >
+    <mat-icon>settings</mat-icon>
+  </button>
+</div>
+
+<div
+  *ngIf="showConfigPopup"
+  class="cx-hover cx-centered cx-width-25 cx-border-primary-1"
+>
+  <h3>{{ "metadata-source.configuration.title" | translate }}</h3>
+  <form [formGroup]="metadataForm" class="cx-width-100">
+    <mat-card>
+      <mat-card-content>
+        <mat-form-field class="cx-width-100" appearance="fill">
+          <mat-checkbox
+            id="ignore-empty-values-input"
+            formControlName="ignoreEmptyValues"
+          >
+            {{ "metadata-source.label.ignore-empty-values" | translate }}
+          </mat-checkbox>
+          <input hidden matInput />
+        </mat-form-field>
+      </mat-card-content>
+      <mat-card-actions class="cx-action-button-container-horizontal">
+        <button
+          id="save-metadata-source-configuration-button"
+          mat-flat-button
+          color="primary"
+          (click)="onSaveConfig()"
+        >
+          <mat-label>{{ "button.save" | translate }}</mat-label>
+          <mat-icon>save</mat-icon>
+        </button>
+        <button
+          id="cancel-metadata-source-configuration-button"
+          mat-flat-button
+          color="warn"
+          (click)="onCancelConfig()"
+        >
+          <mat-label>{{ "button.cancel" | translate }}</mat-label>
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </form>
+</div>
+
 <mat-table [dataSource]="dataSource" matSort>
   <ng-container matColumnDef="preferred">
     <mat-header-cell mat-sort-header *matHeaderCellDef>

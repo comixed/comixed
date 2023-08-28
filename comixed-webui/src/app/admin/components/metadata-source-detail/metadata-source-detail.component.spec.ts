@@ -32,6 +32,16 @@ import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
+import {
+  deleteMetadataSource,
+  saveMetadataSource
+} from '@app/comic-metadata/actions/metadata-source.actions';
 
 describe('MetadataSourceDetailComponent', () => {
   const SOURCE = METADATA_SOURCE_1;
@@ -44,6 +54,7 @@ describe('MetadataSourceDetailComponent', () => {
   let component: MetadataSourceDetailComponent;
   let fixture: ComponentFixture<MetadataSourceDetailComponent>;
   let store: MockStore<any>;
+  let confirmationService: ConfirmationService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -57,15 +68,18 @@ describe('MetadataSourceDetailComponent', () => {
         MatFormFieldModule,
         MatInputModule,
         MatButtonModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatDialogModule,
+        MatIconModule
       ],
-      providers: [provideMockStore({ initialState })]
+      providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MetadataSourceDetailComponent);
     component = fixture.componentInstance;
-    let store = TestBed.inject(MockStore);
+    store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
+    confirmationService = TestBed.inject(ConfirmationService);
     fixture.detectChanges();
   });
 
@@ -127,11 +141,80 @@ describe('MetadataSourceDetailComponent', () => {
     beforeEach(() => {
       component.source = SOURCE;
       propertyCount = component.properties.length;
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
       component.onDeleteProperty(SOURCE.properties[0].name);
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
     });
 
     it('removes the property input field', () => {
       expect(component.properties.length).toEqual(propertyCount - 1);
+    });
+  });
+
+  describe('resetting the form', () => {
+    beforeEach(() => {
+      component.source = SOURCE;
+      component.sourceForm.controls.name.setValue(SOURCE.name.substring(1));
+      component.sourceForm.controls.beanName.setValue(
+        SOURCE.beanName.substring(1)
+      );
+      component.sourceForm.markAsDirty();
+      component.onResetSource();
+    });
+
+    it('resets the source name', () => {
+      expect(component.sourceForm.controls.name.value).toEqual(SOURCE.name);
+    });
+
+    it('resets the source bean name', () => {
+      expect(component.sourceForm.controls.beanName.value).toEqual(
+        SOURCE.beanName
+      );
+    });
+  });
+
+  describe('deleting a metadata source', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.source = SOURCE;
+      component.onDeleteSource();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        deleteMetadataSource({ source: SOURCE })
+      );
+    });
+  });
+
+  describe('creating a metadata source', () => {
+    beforeEach(() => {
+      component.source = SOURCE;
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.onSaveSource();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        saveMetadataSource({ source: SOURCE })
+      );
     });
   });
 });

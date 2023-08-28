@@ -242,7 +242,7 @@ describe('ComicDetailListViewComponent', () => {
     it('can sort by store date', () => {
       expect(
         component.dataSource.sortingDataAccessor(ENTRY, 'store-date')
-      ).toEqual(ENTRY.item.addedDate);
+      ).toEqual(ENTRY.item.storeDate);
     });
 
     it('can sort by the extra field', () => {

@@ -40,6 +40,7 @@ import org.comixedproject.model.comicbooks.ComicMetadataSource;
 import org.comixedproject.model.comicbooks.ComicTag;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.metadata.MetadataSource;
+import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.collections.IssueService;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
@@ -50,6 +51,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * <code>MetadataService</code> handles interacting with the selected {@link MetadataAdaptor} and
@@ -68,6 +70,7 @@ public class MetadataService {
   @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private ImprintService imprintService;
   @Autowired private IssueService issueService;
+  @Autowired private ConfigurationService configurationService;
 
   /**
    * Retrieves a list of volumes for the given series, up to the max records specified.
@@ -265,14 +268,27 @@ public class MetadataService {
     }
 
     if (issueDetails != null) {
+      final boolean ignoreEmptyValues =
+          this.configurationService.isFeatureEnabled(
+              ConfigurationService.CFG_METADATA_IGNORE_EMPTY_VALUES);
       // have to use a final reference here due to the lambdas later in this block
       final ComicBook comicBook = result;
       log.debug("Updating comicBook with scraped data");
-      comicBook.getComicDetail().setPublisher(issueDetails.getPublisher());
-      comicBook.getComicDetail().setImprint(issueDetails.getPublisher());
-      comicBook.getComicDetail().setSeries(issueDetails.getSeries());
-      comicBook.getComicDetail().setVolume(issueDetails.getVolume());
-      comicBook.getComicDetail().setIssueNumber(issueDetails.getIssueNumber());
+      if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getPublisher())) {
+        comicBook.getComicDetail().setPublisher(issueDetails.getPublisher());
+      }
+      if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getPublisher())) {
+        comicBook.getComicDetail().setImprint(issueDetails.getPublisher());
+      }
+      if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getSeries())) {
+        comicBook.getComicDetail().setSeries(issueDetails.getSeries());
+      }
+      if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getVolume())) {
+        comicBook.getComicDetail().setVolume(issueDetails.getVolume());
+      }
+      if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getIssueNumber())) {
+        comicBook.getComicDetail().setIssueNumber(issueDetails.getIssueNumber());
+      }
       if (issueDetails.getCoverDate() != null) {
         comicBook
             .getComicDetail()
@@ -287,8 +303,12 @@ public class MetadataService {
       } else {
         comicBook.getComicDetail().setStoreDate(null);
       }
-      comicBook.getComicDetail().setTitle(issueDetails.getTitle());
-      comicBook.getComicDetail().setDescription(issueDetails.getDescription());
+      if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getTitle())) {
+        comicBook.getComicDetail().setTitle(issueDetails.getTitle());
+      }
+      if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getDescription())) {
+        comicBook.getComicDetail().setDescription(issueDetails.getDescription());
+      }
       final ComicDetail detail = comicBook.getComicDetail();
       detail.getTags().clear();
       issueDetails

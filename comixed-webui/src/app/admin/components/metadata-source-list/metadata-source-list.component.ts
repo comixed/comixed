@@ -19,8 +19,10 @@
 import {
   AfterViewInit,
   Component,
+  EventEmitter,
   OnDestroy,
   OnInit,
+  Output,
   ViewChild
 } from '@angular/core';
 import { Subscription } from 'rxjs';
@@ -37,6 +39,16 @@ import { MatSort } from '@angular/material/sort';
 import { loadMetadataSource } from '@app/comic-metadata/actions/metadata-source.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { TranslateService } from '@ngx-translate/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
+import { METADATA_IGNORE_EMPTY_VALUES } from '@app/admin/admin.constants';
+import {
+  selectConfigurationOptionListState,
+  selectConfigurationOptions
+} from '@app/admin/selectors/configuration-option-list.selectors';
+import { setBusyState } from '@app/core/actions/busy.actions';
+import { getConfigurationOption } from '@app/admin';
+import { ConfigurationOption } from '@app/admin/models/configuration-option';
 
 @Component({
   selector: 'cx-metadata-source-list',
@@ -48,6 +60,8 @@ export class MetadataSourceListComponent
 {
   @ViewChild(MatSort) sort: MatSort;
 
+  @Output() createSource = new EventEmitter<void>();
+
   sourcesSubscription: Subscription;
   dataSource = new MatTableDataSource<MetadataSource>([]);
   readonly displayedColumns = [
@@ -57,30 +71,57 @@ export class MetadataSourceListComponent
     'property-count',
     'actions'
   ];
+  metadataForm: FormGroup;
+  configurationStateSubscription: Subscription;
+  configurationOptionListSubscription: Subscription;
+  showConfigPopup = false;
+  configurationOptionList: ConfigurationOption[];
 
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private formBuilder: FormBuilder
   ) {
     this.sourcesSubscription = this.store
       .select(selectMetadataSourceList)
       .subscribe(sources => (this.dataSource.data = sources));
+    this.logger.debug('Creating metadata form');
+    this.metadataForm = this.formBuilder.group({
+      ignoreEmptyValues: ['']
+    });
+    this.configurationStateSubscription = this.store
+      .select(selectConfigurationOptionListState)
+      .subscribe(state => {
+        this.store.dispatch(
+          setBusyState({ enabled: state.loading || state.saving })
+        );
+      });
+    this.configurationOptionListSubscription = this.store
+      .select(selectConfigurationOptions)
+      .subscribe(list => {
+        this.configurationOptionList = list;
+        this.loadMetadataForm();
+      });
   }
 
   ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from source list updates');
+    this.logger.debug('Unsubscribing from source list updates');
     this.sourcesSubscription.unsubscribe();
+    this.logger.debug('Unsubscribing from configuration option state updates');
+    this.configurationStateSubscription.unsubscribe();
+    this.logger.debug('Unsubscribing from configuration option updates');
+    this.configurationOptionListSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.logger.trace('Loading metadata source list');
+    this.logger.debug('Loading metadata source list');
     this.store.dispatch(loadMetadataSources());
   }
 
   ngAfterViewInit(): void {
-    this.logger.trace('Adding table sorting');
+    this.logger.debug('Adding table sorting');
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
       switch (sortHeaderId) {
@@ -95,7 +136,7 @@ export class MetadataSourceListComponent
   }
 
   onSelectSource(source: MetadataSource): void {
-    this.logger.trace('Loading metadata source');
+    this.logger.debug('Loading metadata source');
     this.store.dispatch(loadMetadataSource({ id: source.id }));
   }
 
@@ -108,9 +149,42 @@ export class MetadataSourceListComponent
         'metadata-source-list.mark-preferred.confirmation-message'
       ),
       confirm: () => {
-        this.logger.trace('Marking metadata source as preferred:', id);
+        this.logger.debug('Marking metadata source as preferred:', id);
         this.store.dispatch(preferMetadataSource({ id }));
       }
     });
+  }
+
+  onSaveConfig(): void {
+    this.logger.debug('Saving metadata configuration');
+    const ignoreEmptyValues =
+      this.metadataForm.controls.ignoreEmptyValues.value;
+    this.store.dispatch(
+      saveConfigurationOptions({
+        options: [
+          {
+            name: METADATA_IGNORE_EMPTY_VALUES,
+            value: `${ignoreEmptyValues}`
+          }
+        ]
+      })
+    );
+    this.showConfigPopup = false;
+  }
+
+  onCancelConfig() {
+    this.logger.debug('Canceling configuration changes');
+    this.loadMetadataForm();
+    this.showConfigPopup = false;
+  }
+
+  private loadMetadataForm(): void {
+    this.metadataForm.controls.ignoreEmptyValues.setValue(
+      getConfigurationOption(
+        this.configurationOptionList,
+        METADATA_IGNORE_EMPTY_VALUES,
+        `${false}`
+      ) === `${true}`
+    );
   }
 }
