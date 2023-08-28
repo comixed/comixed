@@ -37,9 +37,6 @@ import org.comixedproject.views.View;
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class ConfigurationOption {
-  public static final String CREATE_EXTERNAL_METADATA_FILE =
-      "library.metadata.create-external-files";
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Getter

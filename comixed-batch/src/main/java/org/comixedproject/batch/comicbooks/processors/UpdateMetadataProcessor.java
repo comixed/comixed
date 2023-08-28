@@ -21,7 +21,6 @@ package org.comixedproject.batch.comicbooks.processors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.model.admin.ConfigurationOption;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.admin.ConfigurationService;
@@ -43,7 +42,7 @@ public class UpdateMetadataProcessor implements ItemProcessor<ComicBook, ComicBo
   @Override
   public ComicBook process(final ComicBook comicBook) {
     if (this.configurationService.isFeatureEnabled(
-        ConfigurationOption.CREATE_EXTERNAL_METADATA_FILE)) {
+        ConfigurationService.CREATE_EXTERNAL_METADATA_FILE)) {
       log.debug("Creating external metadata file for comic: id={}", comicBook.getId());
       try {
         this.comicBookAdaptor.saveMetadataFile(comicBook);

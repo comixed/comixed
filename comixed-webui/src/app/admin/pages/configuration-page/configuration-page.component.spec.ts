@@ -49,7 +49,6 @@ import { LibraryConfigurationComponent } from '@app/admin/components/library-con
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
-import { MetadataSourcesViewComponent } from '@app/admin/components/metadata-sources-view/metadata-sources-view.component';
 import { ServerRuntimeComponent } from '@app/admin/components/server-runtime/server-runtime.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { FilenameScrapingRulesConfigurationComponent } from '@app/admin/components/filename-scraping-rules-configuration/filename-scraping-rules-configuration.component';
@@ -120,7 +119,6 @@ describe('ConfigurationPageComponent', () => {
           LibraryConfigurationComponent,
           ServerRuntimeComponent,
           FilenameScrapingRulesConfigurationComponent,
-          MetadataSourcesViewComponent,
           MetadataSourceListComponent,
           MetadataSourceDetailComponent
         ],

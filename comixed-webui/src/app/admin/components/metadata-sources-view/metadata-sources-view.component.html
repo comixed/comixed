@@ -1,65 +1,10 @@
-<mat-toolbar>
-  <button
-    *ngIf="!!currentSource"
-    id="back-to-list-button"
-    mat-icon-button
-    (click)="onReturnToList()"
-  >
-    <mat-icon>arrow_back</mat-icon>
-  </button>
-  <div class="cx-spacer"></div>
-  <button
-    *ngIf="!!currentSource"
-    id="add-property-button"
-    mat-icon-button
-    [matTooltip]="'metadata-source.tooltip.add-property' | translate"
-    (click)="onAddProperty()"
-  >
-    <mat-icon>add</mat-icon>
-  </button>
-  <button
-    *ngIf="!!currentSource"
-    id="reset-source-button"
-    mat-icon-button
-    [disabled]="!sourceDetail?.sourceForm.dirty"
-    [matTooltip]="'metadata-source.tooltip.reset-source' | translate"
-    (click)="onResetSource()"
-  >
-    <mat-icon>undo</mat-icon>
-  </button>
-  <button
-    *ngIf="!!currentSource"
-    id="save-source-button"
-    mat-icon-button
-    [disabled]="!sourceDetail?.sourceForm.valid"
-    [matTooltip]="'metadata-source.tooltip.save-source' | translate"
-    (click)="onSaveSource()"
-  >
-    <mat-icon>save</mat-icon>
-  </button>
-  <button
-    *ngIf="!!currentSource && !!currentSource.id"
-    id="delete-source-button"
-    mat-icon-button
-    [matTooltip]="'metadata-source.tooltip.delete-source' | translate"
-    (click)="onDeleteSource()"
-  >
-    <mat-icon>delete</mat-icon>
-  </button>
-  <button
-    *ngIf="!currentSource"
-    id="create-source-button"
-    mat-icon-button
-    [matTooltip]="'metadata-source.tooltip.create-source' | translate"
-    (click)="onCreateSource()"
-  >
-    <mat-icon>add</mat-icon>
-  </button>
-</mat-toolbar>
-
-<cx-metadata-source-list *ngIf="!currentSource"></cx-metadata-source-list>
+<cx-metadata-source-list
+  *ngIf="!currentSource"
+  (createSource)="onCreateSource()"
+></cx-metadata-source-list>
 
 <cx-metadata-source-detail
   *ngIf="!!currentSource"
   [source]="currentSource"
+  (configSaved)="currentSource = null"
 ></cx-metadata-source-detail>

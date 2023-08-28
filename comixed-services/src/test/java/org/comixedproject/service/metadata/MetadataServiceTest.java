@@ -39,6 +39,7 @@ import org.comixedproject.model.collections.Issue;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.metadata.MetadataSource;
+import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.collections.IssueService;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
@@ -81,6 +82,7 @@ public class MetadataServiceTest {
 
   @InjectMocks private MetadataService metadataService;
   @Mock private MetadataSourceService metadataSourceService;
+  @Mock private ConfigurationService configurationService;
   @Mock private ApplicationContext applicationContext;
   @Mock private MetadataCacheService metadataCacheService;
   @Mock private IssueService issueService;
