@@ -22,8 +22,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import * as MetadataSourceListActions from '../actions/metadata-source-list.actions';
 import {
   loadMetadataSourcesFailed,
-  metadataSourcesLoaded,
-  preferMetadataSource
+  metadataSourcesLoaded
 } from '../actions/metadata-source-list.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { MetadataSourceService } from '@app/comic-metadata/services/metadata-source.service';
@@ -49,46 +48,6 @@ export class MetadataSourceListEffects {
             this.alertService.error(
               this.translateService.instant(
                 'metadata-sourceload-sources.effect-failure'
-              )
-            );
-            return of(loadMetadataSourcesFailed());
-          })
-        )
-      ),
-      catchError(error => {
-        this.logger.error('General failure:', error);
-        this.alertService.error(
-          this.translateService.instant('app.general-effect-failure')
-        );
-        return of(loadMetadataSourcesFailed());
-      })
-    );
-  });
-
-  markAsPreferred$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(preferMetadataSource),
-      tap(action =>
-        this.logger.trace('Marking metadata source as preferred:', action)
-      ),
-      switchMap(action =>
-        this.metadataSourceService.markAsPreferred({ id: action.id }).pipe(
-          tap(response => this.logger.debug('Response received:', response)),
-          tap(() =>
-            this.alertService.info(
-              this.translateService.instant(
-                'metadata-source-list.mark-preferred.effect-success'
-              )
-            )
-          ),
-          map((response: MetadataSource[]) =>
-            metadataSourcesLoaded({ sources: response })
-          ),
-          catchError(error => {
-            this.logger.error('Service failure:', error);
-            this.alertService.error(
-              this.translateService.instant(
-                'metadata-source-list.mark-preferred.effect-failure'
               )
             );
             return of(loadMetadataSourcesFailed());

@@ -35,6 +35,9 @@
     }
   },
   "metadata-source": {
+    "button": {
+      "add-property": "Add Property"
+    },
     "configuration": {
       "title": "Metadata Sources Settings"
     },
@@ -43,11 +46,12 @@
       "confirmation-title": "Delete Property?"
     },
     "delete-source": {
-      "confirm-message": "Are you sure you want to delete the metadata source {name}?",
-      "confirm-title": "Delete Metadata Source",
+      "confirmation-message": "Are you sure you want to delete the metadata source {name}?",
+      "confirmation-title": "Delete Metadata Source",
       "effect-failure": "Failed to delete metadata source.",
       "effect-success": "Deleted metadata source: {name}"
     },
+    "detail-title": "Metadata Source Details",
     "label": {
       "bean-name": "Bean Name",
       "ignore-empty-values": "Do not overwrite properties using empty values.",
@@ -62,8 +66,8 @@
       "effect-failure": "Failed to load metadata sources."
     },
     "save-source": {
-      "confirm-message": "Are you sure you want to save the metadata source {name}?",
-      "confirm-title": "Save Metadata Source Changes",
+      "confirmation-message": "Are you sure you want to save the metadata source {name}?",
+      "confirmation-title": "Save Metadata Source Changes",
       "effect-failure": "Failed to save metadata source.",
       "effect-success": "Saved metadata source: {name}"
     },
@@ -81,17 +85,12 @@
       "actions": "Actions",
       "bean-name": "Bean Name",
       "name": "Source Name",
+      "no-rows-loaded": "No sources loaded",
       "preferred": "Preferred",
       "property-count": "# of Properties"
     },
-    "mark-preferred": {
-      "confirmation-message": "Are you sure you want to make this your preferred metadata source?",
-      "confirmation-title": "Mark Metadata Source As Preferred",
-      "effect-failure": "Failed to mark metadata source as preferred.",
-      "effect-success": "Metadata source marked as preferred."
-    },
     "tooltip": {
-      "mark-preferred": "Mark this metadata source as preferred."
+      "preferred-source": "This is the preferred metadata source."
     }
   },
   "metadata-process": {

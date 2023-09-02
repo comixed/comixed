@@ -4,7 +4,7 @@
     mat-fab
     color="primary"
     [matTooltip]="'metadata-source.tooltip.create-source' | translate"
-    (click)="createSource.emit()"
+    (click)="onCreateSource()"
   >
     <mat-icon>add</mat-icon>
   </button>
@@ -80,6 +80,15 @@
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
         {{ entry.name }}
+        <span *ngIf="entry.preferred">
+          <mat-icon
+            [matTooltip]="
+              'metadata-source-list.tooltip.preferred-source' | translate
+            "
+          >
+            star
+          </mat-icon>
+        </span>
       </span>
     </mat-cell>
   </ng-container>
@@ -106,30 +115,14 @@
     </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="actions">
-    <mat-header-cell *matHeaderCellDef>
-      {{ "metadata-source-list.label.actions" | translate }}
-    </mat-header-cell>
-    <mat-cell *matCellDef="let entry">
-      <button
-        [id]="'view-' + entry.id + '-detail'"
-        mat-icon-button
-        (click)="onSelectSource(entry)"
-      >
-        <mat-icon>info_outline</mat-icon>
-      </button>
-      <button
-        [id]="'mark-' + entry.id + '-preferred-button'"
-        *ngIf="!entry.preferred"
-        mat-icon-button
-        (click)="onMarkPreferred(entry.id)"
-        [matTooltip]="'metadata-source-list.tooltip.mark-preferred' | translate"
-      >
-        <mat-icon>check_circle</mat-icon>
-      </button>
-    </mat-cell>
-  </ng-container>
-
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  <mat-row
+    *matRowDef="let row; columns: displayedColumns"
+    (click)="onSelectSource(row)"
+  ></mat-row>
+  <tr class="mat-row" *matNoDataRow>
+    <td class="mat-cell" colspan="4">
+      {{ "metadata-source-list.label.no-rows-loaded" | translate }}
+    </td>
+  </tr>
 </mat-table>

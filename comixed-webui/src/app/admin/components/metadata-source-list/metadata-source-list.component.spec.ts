@@ -25,17 +25,12 @@ import {
   METADATA_SOURCE_LIST_FEATURE_KEY
 } from '@app/comic-metadata/reducers/metadata-source-list.reducer';
 import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
-import { loadMetadataSource } from '@app/comic-metadata/actions/metadata-source.actions';
 import { TranslateModule } from '@ngx-translate/core';
-import {
-  Confirmation,
-  ConfirmationService
-} from '@tragically-slick/confirmation';
-import { MatDialogModule } from '@angular/material/dialog';
+import { ConfirmationService } from '@tragically-slick/confirmation';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { preferMetadataSource } from '@app/comic-metadata/actions/metadata-source-list.actions';
 import {
   CONFIGURATION_OPTION_LIST_FEATURE_KEY,
   initialState as initialConfigurationOptionListState
@@ -49,6 +44,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
+import { MetadataSourceDetailComponent } from '@app/admin/components/metadata-source-detail/metadata-source-detail.component';
+import { of } from 'rxjs';
+import { loadMetadataSources } from '@app/comic-metadata/actions/metadata-source-list.actions';
+import { METADATA_SOURCE_TEMPLATE } from '@app/comic-metadata/comic-metadata.constants';
 
 describe('MetadataSourceListComponent', () => {
   const SOURCE = METADATA_SOURCE_1;
@@ -60,10 +59,14 @@ describe('MetadataSourceListComponent', () => {
   let fixture: ComponentFixture<MetadataSourceListComponent>;
   let store: MockStore<any>;
   let confirmationService: ConfirmationService;
+  let dialog: MatDialog;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MetadataSourceListComponent],
+      declarations: [
+        MetadataSourceListComponent,
+        MetadataSourceDetailComponent
+      ],
       imports: [
         NoopAnimationsModule,
         FormsModule,
@@ -78,7 +81,9 @@ describe('MetadataSourceListComponent', () => {
         MatFormFieldModule,
         MatTooltipModule,
         MatInputModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        MatCheckboxModule,
+        MatDialogModule
       ],
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
@@ -88,6 +93,10 @@ describe('MetadataSourceListComponent', () => {
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
     confirmationService = TestBed.inject(ConfirmationService);
+    dialog = TestBed.inject(MatDialog);
+    const dialogRef = jasmine.createSpyObj(['afterClosed']);
+    dialogRef.afterClosed.and.returnValue(of(SOURCE));
+    spyOn(dialog, 'open').and.returnValue(dialogRef);
     fixture.detectChanges();
   });
 
@@ -100,10 +109,30 @@ describe('MetadataSourceListComponent', () => {
       component.onSelectSource(SOURCE);
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        loadMetadataSource({ id: SOURCE.id })
-      );
+    it('opens a dialog', () => {
+      expect(dialog.open).toHaveBeenCalledWith(MetadataSourceDetailComponent, {
+        data: { source: SOURCE }
+      });
+    });
+
+    it('reloads the metadata source list', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(loadMetadataSources());
+    });
+  });
+
+  describe('when a source is created', () => {
+    beforeEach(() => {
+      component.onCreateSource();
+    });
+
+    it('opens a dialog', () => {
+      expect(dialog.open).toHaveBeenCalledWith(MetadataSourceDetailComponent, {
+        data: { source: METADATA_SOURCE_TEMPLATE }
+      });
+    });
+
+    it('reloads the metadata source list', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(loadMetadataSources());
     });
   });
 
@@ -136,25 +165,6 @@ describe('MetadataSourceListComponent', () => {
       expect(
         component.dataSource.sortingDataAccessor(SOURCE, 'bean-name')
       ).toEqual(SOURCE.beanName);
-    });
-  });
-
-  describe('marking a metadata source as preferred', () => {
-    beforeEach(() => {
-      spyOn(confirmationService, 'confirm').and.callFake(
-        (confirmation: Confirmation) => confirmation.confirm()
-      );
-      component.onMarkPreferred(SOURCE.id);
-    });
-
-    it('confirms with the user', () => {
-      expect(confirmationService.confirm).toHaveBeenCalled();
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        preferMetadataSource({ id: SOURCE.id })
-      );
     });
   });
 

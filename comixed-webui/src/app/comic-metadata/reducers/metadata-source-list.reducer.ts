@@ -20,8 +20,7 @@ import { createReducer, on } from '@ngrx/store';
 import {
   loadMetadataSources,
   loadMetadataSourcesFailed,
-  metadataSourcesLoaded,
-  preferMetadataSource
+  metadataSourcesLoaded
 } from '../actions/metadata-source-list.actions';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 
@@ -46,6 +45,5 @@ export const reducer = createReducer(
     busy: false,
     sources: action.sources
   })),
-  on(loadMetadataSourcesFailed, state => ({ ...state, busy: false })),
-  on(preferMetadataSource, state => ({ ...state, busy: true }))
+  on(loadMetadataSourcesFailed, state => ({ ...state, busy: false }))
 );

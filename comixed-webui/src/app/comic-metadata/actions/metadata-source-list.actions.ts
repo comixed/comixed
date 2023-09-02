@@ -31,12 +31,3 @@ export const metadataSourcesLoaded = createAction(
 export const loadMetadataSourcesFailed = createAction(
   '[Metadata Source List] Failed to load metadata sources'
 );
-
-export const preferMetadataSource = createAction(
-  '[Metadata Source List] Mark metadata source as preferred',
-  props<{ id: number }>()
-);
-
-export const preferMetadataSourceFailed = createAction(
-  '[Metadata Source List] Mark metadata source as preferred'
-);

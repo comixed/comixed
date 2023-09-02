@@ -102,6 +102,10 @@ public class MetadataSourceService {
     log.debug(
         "Creating metadata source: name={} bean name={}", source.getName(), source.getBeanName());
     try {
+      if (source.getPreferred()) {
+        log.debug("Marking this source as preferred: clearing existing preferences");
+        this.metadataSourceRepository.clearPreferredSource();
+      }
       return this.metadataSourceRepository.save(this.doCopyMetadataSource(source, null));
     } catch (Exception error) {
       throw new MetadataSourceException("Failed to create metadata source", error);
@@ -120,6 +124,7 @@ public class MetadataSourceService {
       log.debug("Copying metadata source name");
       result.setName(source.getName());
     }
+    result.setPreferred(source.getPreferred());
     log.debug("Filtering out removed properties");
     final Object[] existingProperties = result.getProperties().stream().toArray();
     for (int index = 0; index < existingProperties.length; index++) {
@@ -165,11 +170,16 @@ public class MetadataSourceService {
   public MetadataSource update(final long id, final MetadataSource source)
       throws MetadataSourceException {
     log.debug(
-        "Updating existing metadata source: id={} name={} bean name={}",
+        "Updating existing metadata source: id={} name={} bean name={} preferred={}",
         id,
         source.getName(),
-        source.getBeanName());
+        source.getBeanName(),
+        source.getPreferred());
     try {
+      if (source.getPreferred()) {
+        log.debug("Marking this source as preferred: clearing existing preferences");
+        this.metadataSourceRepository.clearPreferredSource();
+      }
       return this.metadataSourceRepository.save(
           this.doCopyMetadataSource(source, this.doGetById(id)));
     } catch (Exception error) {
@@ -192,26 +202,5 @@ public class MetadataSourceService {
     } catch (Exception error) {
       throw new MetadataSourceException("Failed to delete metadata source", error);
     }
-  }
-
-  /**
-   * Marks a source as preferred. Any existing preferred service is unmarked as preferred.
-   *
-   * @param preferredId the preferred service id
-   * @return the list of all services
-   * @throws MetadataSourceException if the id is invalid
-   */
-  @Transactional
-  public List<MetadataSource> markAsPreferred(final long preferredId)
-      throws MetadataSourceException {
-    log.debug("Loading newly preferred metadata source: id={}", preferredId);
-    final MetadataSource preferred = this.doGetById(preferredId);
-    log.debug("Clearing existing preferred sources");
-    this.metadataSourceRepository.clearPreferredSource();
-    log.debug("Saving newly preferred metadata source");
-    preferred.setPreferred(true);
-    this.metadataSourceRepository.save(preferred);
-    log.debug("Returning all metadata sources");
-    return this.metadataSourceRepository.findAll();
   }
 }

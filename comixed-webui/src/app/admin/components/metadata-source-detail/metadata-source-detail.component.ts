@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import {
   AbstractControl,
@@ -28,12 +28,10 @@ import {
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { MetadataSourceProperty } from '@app/comic-metadata/models/metadata-source-property';
-import {
-  deleteMetadataSource,
-  saveMetadataSource
-} from '@app/comic-metadata/actions/metadata-source.actions';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { TranslateService } from '@ngx-translate/core';
+import { saveMetadataSource } from '@app/comic-metadata/actions/metadata-source.actions';
 
 @Component({
   selector: 'cx-metadata-source-detail',
@@ -43,14 +41,13 @@ import { TranslateService } from '@ngx-translate/core';
 export class MetadataSourceDetailComponent {
   sourceForm: UntypedFormGroup;
 
-  @Output() saveSource = new EventEmitter<void>();
-
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
     private formBuilder: UntypedFormBuilder,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    @Inject(MAT_DIALOG_DATA) public data: { source: MetadataSource }
   ) {
     this.sourceForm = this.formBuilder.group({
       name: [
@@ -65,8 +62,10 @@ export class MetadataSourceDetailComponent {
           Validators.maxLength(255)
         ]
       ],
+      preferredSource: [''],
       properties: this.formBuilder.array([])
     });
+    this.source = this.data.source;
   }
 
   private _source: MetadataSource;
@@ -77,7 +76,17 @@ export class MetadataSourceDetailComponent {
 
   @Input() set source(source: MetadataSource) {
     this._source = source;
-    this.loadSourceForm();
+    this.logger.debug('Loading metadata source form');
+    this.resetProperties();
+    this.sourceForm.controls.properties.reset([]);
+    this.sourceForm.controls.name.setValue(source.name);
+    this.sourceForm.controls.beanName.setValue(source.beanName);
+    this.sourceForm.controls.preferredSource.setValue(source.preferred);
+    this.logger.debug('Loading metadata source properties');
+    source.properties.forEach(property =>
+      this.addSourceProperty(property.name, property.value)
+    );
+    this.sourceForm.markAsPristine();
   }
 
   get properties(): UntypedFormArray {
@@ -117,6 +126,7 @@ export class MetadataSourceDetailComponent {
       ...this.source,
       name: this.sourceForm.controls.name.value,
       beanName: this.sourceForm.controls.beanName.value,
+      preferred: this.sourceForm.controls.preferredSource.value,
       properties: this.properties.controls.map(control => {
         return {
           name: control.value.propertyName,
@@ -126,20 +136,20 @@ export class MetadataSourceDetailComponent {
     };
   }
 
-  onDeleteProperty(name: string): void {
+  onDeleteProperty(propertyName: string): void {
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'metadata-source.delete-property.confirmation-title'
       ),
       message: this.translateService.instant(
         'metadata-source.delete-property.confirmation-message',
-        { name }
+        { name: propertyName }
       ),
       confirm: () => {
-        this.logger.debug('Removing property:', name);
+        this.logger.debug('Removing property:', propertyName);
         this.properties.removeAt(
           this.properties.controls.findIndex(
-            entry => entry.value.propertyName === name
+            entry => entry.value.propertyName === propertyName
           )
         );
         this.sourceForm.markAsDirty();
@@ -147,59 +157,30 @@ export class MetadataSourceDetailComponent {
     });
   }
 
-  onResetSource() {
-    this.logger.debug('Resetting input form');
-    this.loadSourceForm();
-  }
-
-  onSaveSource(): void {
-    this.logger.debug('Confirming save metadata source');
+  onSave(): void {
     const source = this.encodeForm();
     this.confirmationService.confirm({
       title: this.translateService.instant(
-        'metadata-source.save-source.confirm-title'
+        'metadata-source.save-source.confirmation-title'
       ),
       message: this.translateService.instant(
-        'metadata-source.save-source.confirm-message',
-        { name: this.source.name }
+        'metadata-source.save-source.confirmation-message',
+        { name: source.name }
       ),
       confirm: () => {
-        this.logger.debug('Saving metadata source:', this.source);
+        this.logger.debug('Saving metadata source:', source);
         this.store.dispatch(saveMetadataSource({ source }));
-        this.saveSource.emit();
       }
     });
   }
 
-  onDeleteSource(): void {
-    this.logger.debug('Confirming delete metadata source');
-    this.confirmationService.confirm({
-      title: this.translateService.instant(
-        'metadata-source.delete-source.confirm-title'
-      ),
-      message: this.translateService.instant(
-        'metadata-source.delete-source.confirm-message',
-        { name: this.source.name }
-      ),
-      confirm: () => {
-        this.logger.debug('Deleting metadata source');
-        this.store.dispatch(deleteMetadataSource({ source: this.source }));
-        this.saveSource.emit();
-      }
-    });
+  onReset(): void {
+    this.logger.debug('Resetting metadata source changes');
+    this.source = this.data.source;
   }
 
-  private loadSourceForm(): void {
-    this.logger.debug('Loading metadata source form');
-    this.resetProperties();
-    this.sourceForm.controls.properties.reset([]);
-    this.sourceForm.controls.name.setValue(this.source.name);
-    this.sourceForm.controls.beanName.setValue(this.source.beanName);
-    this.logger.debug('Loading metadata source properties');
-    this.source.properties.forEach(property =>
-      this.addSourceProperty(property.name, property.value)
-    );
-    this.sourceForm.markAsPristine();
+  onAddProperty(): void {
+    this.addSourceProperty(`property-${this.properties.length + 1}`, '');
   }
 
   private resetProperties(): void {

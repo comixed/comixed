@@ -126,23 +126,4 @@ public class MetadataSourceController {
     log.info("Deleting metadata source: id={}", id);
     this.metadataSourceService.delete(id);
   }
-
-  /**
-   * Marks a metadata source as preferred.
-   *
-   * @param id the preferred source id
-   * @return the updated metadata source list
-   * @throws MetadataSourceException if the id is invalid
-   */
-  @PostMapping(
-      value = "/api/metadata/sources/{id}/preferred",
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("hasRole('ADMIN')")
-  @Timed(value = "comixed.metadata-source.mark-preferred")
-  @JsonView(View.MetadataSourceList.class)
-  public List<MetadataSource> markAsPreferred(@PathVariable("id") final Long id)
-      throws MetadataSourceException {
-    log.info("Marking metadata source as preferred: id={}", id);
-    return this.metadataSourceService.markAsPreferred(id);
-  }
 }

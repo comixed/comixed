@@ -150,29 +150,4 @@ public class MetadataSourceControllerTest {
 
     Mockito.verify(metadataSourceService, Mockito.times(1)).delete(TEST_SOURCE_ID);
   }
-
-  @Test(expected = MetadataSourceException.class)
-  public void testMarkPreferredServiceException() throws MetadataSourceException {
-    Mockito.when(metadataSourceService.markAsPreferred(Mockito.anyLong()))
-        .thenThrow(MetadataSourceException.class);
-
-    try {
-      controller.markAsPreferred(TEST_SOURCE_ID);
-    } finally {
-      Mockito.verify(metadataSourceService, Mockito.times(1)).markAsPreferred(TEST_SOURCE_ID);
-    }
-  }
-
-  @Test
-  public void testMarkPreferred() throws MetadataSourceException {
-    Mockito.when(metadataSourceService.markAsPreferred(Mockito.anyLong()))
-        .thenReturn(metadataSourceList);
-
-    final List<MetadataSource> result = controller.markAsPreferred(TEST_SOURCE_ID);
-
-    assertNotNull(result);
-    assertSame(metadataSourceList, result);
-
-    Mockito.verify(metadataSourceService, Mockito.times(1)).markAsPreferred(TEST_SOURCE_ID);
-  }
 }
