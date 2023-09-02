@@ -131,9 +131,8 @@ public class MetadataSourceControllerTest {
 
   @Test(expected = MetadataSourceException.class)
   public void testDeleteAndServiceThrowsException() throws MetadataSourceException {
-    Mockito.doThrow(MetadataSourceException.class)
-        .when(metadataSourceService)
-        .delete(Mockito.anyLong());
+    Mockito.when(metadataSourceService.delete(Mockito.anyLong()))
+        .thenThrow(MetadataSourceException.class);
 
     try {
       controller.delete(TEST_SOURCE_ID);
@@ -144,9 +143,12 @@ public class MetadataSourceControllerTest {
 
   @Test
   public void testDelete() throws MetadataSourceException {
-    Mockito.doNothing().when(metadataSourceService).delete(Mockito.anyLong());
+    Mockito.when(metadataSourceService.delete(Mockito.anyLong())).thenReturn(metadataSourceList);
 
-    controller.delete(TEST_SOURCE_ID);
+    final List<MetadataSource> result = controller.delete(TEST_SOURCE_ID);
+
+    assertNotNull(result);
+    assertSame(metadataSourceList, result);
 
     Mockito.verify(metadataSourceService, Mockito.times(1)).delete(TEST_SOURCE_ID);
   }

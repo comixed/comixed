@@ -46,6 +46,7 @@ import { ConfigurationOption } from '@app/admin/models/configuration-option';
 import { MetadataSourceDetailComponent } from '@app/admin/components/metadata-source-detail/metadata-source-detail.component';
 import { MatDialog } from '@angular/material/dialog';
 import { METADATA_SOURCE_TEMPLATE } from '@app/comic-metadata/comic-metadata.constants';
+import { deleteMetadataSource } from '@app/comic-metadata/actions/metadata-source.actions';
 
 @Component({
   selector: 'cx-metadata-source-list',
@@ -59,7 +60,12 @@ export class MetadataSourceListComponent
 
   sourcesSubscription: Subscription;
   dataSource = new MatTableDataSource<MetadataSource>([]);
-  readonly displayedColumns = ['name', 'bean-name', 'property-count'];
+  readonly displayedColumns = [
+    'actions',
+    'name',
+    'bean-name',
+    'property-count'
+  ];
   metadataForm: FormGroup;
   configurationStateSubscription: Subscription;
   configurationOptionListSubscription: Subscription;
@@ -155,6 +161,22 @@ export class MetadataSourceListComponent
   onCreateSource(): void {
     this.logger.debug('Creating new metadata source');
     this.doOpenDialog(METADATA_SOURCE_TEMPLATE);
+  }
+
+  onDeleteSource(source: MetadataSource): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'metadata-source.delete-source.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'metadata-source.delete-source.confirmation-message',
+        { name: source.name }
+      ),
+      confirm: () => {
+        this.logger.debug('Deleting metadata source:', source);
+        this.store.dispatch(deleteMetadataSource({ source }));
+      }
+    });
   }
 
   private doOpenDialog(source: MetadataSource): void {

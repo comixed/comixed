@@ -40,10 +40,12 @@ import {
   saveMetadataSourceFailed
 } from '@app/comic-metadata/actions/metadata-source.actions';
 import { hot } from 'jasmine-marbles';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
+import { metadataSourcesLoaded } from '@app/comic-metadata/actions/metadata-source-list.actions';
 
 describe('MetadataSourceEffects', () => {
   const METADATA_SOURCE = METADATA_SOURCE_1;
+  const METADATA_SOURCE_LIST = [METADATA_SOURCE];
 
   let actions$: Observable<any>;
   let effects: MetadataSourceEffects;
@@ -178,17 +180,18 @@ describe('MetadataSourceEffects', () => {
 
   describe('delete a source', () => {
     it('fires an action on success', () => {
-      const serviceResponse = new HttpResponse({ status: 200 });
+      const serviceResponse = METADATA_SOURCE_LIST;
       const action = deleteMetadataSource({ source: METADATA_SOURCE });
       const outcome1 = metadataSourceDeleted();
       const outcome2 = clearMetadataSource();
+      const outcome3 = metadataSourcesLoaded({ sources: METADATA_SOURCE_LIST });
 
       actions$ = hot('-a', { a: action });
       metadataSourceService.delete
         .withArgs({ source: METADATA_SOURCE })
         .and.returnValue(of(serviceResponse));
 
-      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
+      const expected = hot('-(bcd)', { b: outcome1, c: outcome2, d: outcome3 });
       expect(effects.delete$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });

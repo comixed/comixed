@@ -194,11 +194,14 @@ public class MetadataSourceService {
    * @throws MetadataSourceException if an error occurs
    */
   @Transactional
-  public void delete(final long id) throws MetadataSourceException {
+  public List<MetadataSource> delete(final long id) throws MetadataSourceException {
     final MetadataSource source = this.doGetById(id);
     try {
       log.debug("Deleting metadata source: name={}", source.getName());
       this.metadataSourceRepository.delete(source);
+      this.metadataSourceRepository.flush();
+      log.debug("Loading all metadata sources");
+      return this.loadMetadataSources();
     } catch (Exception error) {
       throw new MetadataSourceException("Failed to delete metadata source", error);
     }

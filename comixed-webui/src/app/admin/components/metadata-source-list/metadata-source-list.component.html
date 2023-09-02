@@ -62,14 +62,19 @@
 </div>
 
 <mat-table [dataSource]="dataSource" matSort>
-  <ng-container matColumnDef="preferred">
-    <mat-header-cell mat-sort-header *matHeaderCellDef>
-      {{ "metadata-source-list.label.preferred" | translate }}
+  <ng-container matColumnDef="actions">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "metadata-source-list.label.actions" | translate }}
     </mat-header-cell>
-    <mat-cell *matCellDef="let entry">
-      <span class="cx-width-100 cx-text-nowrap">
-        <mat-icon *ngIf="entry.preferred">stars</mat-icon>
-      </span>
+    <mat-cell *matCellDef="let entry" (click)="$event.stopPropagation()">
+      <button
+        mat-icon-button
+        color="warn"
+        (click)="onDeleteSource(entry)"
+        [matTooltip]="'metadata-source.tooltip.delete-source' | translate"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
     </mat-cell>
   </ng-container>
 

@@ -26,7 +26,10 @@ import {
 } from '@app/comic-metadata/reducers/metadata-source-list.reducer';
 import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
 import { TranslateModule } from '@ngx-translate/core';
-import { ConfirmationService } from '@tragically-slick/confirmation';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
@@ -48,6 +51,7 @@ import { MetadataSourceDetailComponent } from '@app/admin/components/metadata-so
 import { of } from 'rxjs';
 import { loadMetadataSources } from '@app/comic-metadata/actions/metadata-source-list.actions';
 import { METADATA_SOURCE_TEMPLATE } from '@app/comic-metadata/comic-metadata.constants';
+import { deleteMetadataSource } from '@app/comic-metadata/actions/metadata-source.actions';
 
 describe('MetadataSourceListComponent', () => {
   const SOURCE = METADATA_SOURCE_1;
@@ -231,6 +235,25 @@ describe('MetadataSourceListComponent', () => {
 
     it('closes the popup', () => {
       expect(component.showConfigPopup).toBeFalse();
+    });
+  });
+
+  describe('deleting a source', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.onDeleteSource(SOURCE);
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        deleteMetadataSource({ source: SOURCE })
+      );
     });
   });
 });
