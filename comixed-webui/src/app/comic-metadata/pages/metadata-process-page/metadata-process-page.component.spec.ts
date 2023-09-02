@@ -58,6 +58,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 describe('MetadataProcessPageComponent', () => {
   const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
@@ -97,7 +98,8 @@ describe('MetadataProcessPageComponent', () => {
         MatSortModule,
         MatToolbarModule,
         MatCheckboxModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatPaginatorModule
       ],
       providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();

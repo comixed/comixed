@@ -56,6 +56,7 @@ public class MetadataSourceServiceTest {
   public void setUp() {
     Mockito.when(incomingSource.getName()).thenReturn(TEST_SOURCE_NAME);
     Mockito.when(incomingSource.getBeanName()).thenReturn(TEST_BEAN_NAME);
+    Mockito.when(incomingSource.getPreferred()).thenReturn(false);
     sourceProperties.add(
         new MetadataSourceProperty(
             incomingSource, TEST_EXISTING_PROPERTY_NAME, TEST_EXISTING_PROPERTY_VALUE));
@@ -199,6 +200,20 @@ public class MetadataSourceServiceTest {
         .save(metadataSourceArgumentCaptor.getValue());
   }
 
+  @Test
+  public void testCreateNewPreferredSource() throws MetadataSourceException {
+    Mockito.when(incomingSource.getPreferred()).thenReturn(true);
+    Mockito.when(metadataSourceRepository.save(metadataSourceArgumentCaptor.capture()))
+        .thenReturn(savedSource);
+
+    final MetadataSource result = service.create(incomingSource);
+
+    assertNotNull(result);
+    assertSame(savedSource, result);
+
+    Mockito.verify(metadataSourceRepository, Mockito.times(1)).clearPreferredSource();
+  }
+
   @Test(expected = MetadataSourceException.class)
   public void testUpdateInvalidId() throws MetadataSourceException {
     Mockito.when(metadataSourceRepository.getById(Mockito.anyLong())).thenReturn(null);
@@ -273,6 +288,22 @@ public class MetadataSourceServiceTest {
         .save(metadataSourceArgumentCaptor.getValue());
   }
 
+  @Test
+  public void testUpdatePreferredSource() throws MetadataSourceException {
+    Mockito.when(incomingSource.getPreferred()).thenReturn(true);
+    Mockito.when(metadataSourceRepository.getById(Mockito.anyLong())).thenReturn(savedSource);
+    Mockito.when(metadataSourceRepository.save(metadataSourceArgumentCaptor.capture()))
+        .thenReturn(savedSource);
+
+    final MetadataSource result = service.update(TEST_SOURCE_ID, incomingSource);
+
+    assertNotNull(result);
+    assertSame(savedSource, result);
+
+    Mockito.verify(metadataSourceRepository, Mockito.times(1)).getById(TEST_SOURCE_ID);
+    Mockito.verify(metadataSourceRepository, Mockito.times(1)).clearPreferredSource();
+  }
+
   @Test(expected = MetadataSourceException.class)
   public void testDeleteInvalidId() throws MetadataSourceException {
     Mockito.when(metadataSourceRepository.getById(Mockito.anyLong())).thenReturn(null);
@@ -307,32 +338,5 @@ public class MetadataSourceServiceTest {
 
     Mockito.verify(metadataSourceRepository, Mockito.times(1)).getById(TEST_SOURCE_ID);
     Mockito.verify(metadataSourceRepository, Mockito.times(1)).delete(savedSource);
-  }
-
-  @Test(expected = MetadataSourceException.class)
-  public void testMarkAsPreferredInvalidId() throws MetadataSourceException {
-    Mockito.when(metadataSourceRepository.getById(Mockito.anyLong())).thenReturn(null);
-
-    try {
-      service.markAsPreferred(TEST_SOURCE_ID);
-    } finally {
-      Mockito.verify(metadataSourceRepository, Mockito.times(1)).getById(TEST_SOURCE_ID);
-    }
-  }
-
-  @Test
-  public void testMarkAsPreferred() throws MetadataSourceException {
-    Mockito.when(metadataSourceRepository.getById(Mockito.anyLong())).thenReturn(existingSource);
-    Mockito.when(metadataSourceRepository.findAll()).thenReturn(metadataSourceList);
-
-    final List<MetadataSource> result = service.markAsPreferred(TEST_SOURCE_ID);
-
-    assertNotNull(result);
-    assertSame(metadataSourceList, result);
-
-    Mockito.verify(metadataSourceRepository, Mockito.times(1)).getById(TEST_SOURCE_ID);
-    Mockito.verify(metadataSourceRepository, Mockito.times(1)).clearPreferredSource();
-    Mockito.verify(existingSource, Mockito.times(1)).setPreferred(true);
-    Mockito.verify(metadataSourceRepository, Mockito.times(1)).save(existingSource);
   }
 }

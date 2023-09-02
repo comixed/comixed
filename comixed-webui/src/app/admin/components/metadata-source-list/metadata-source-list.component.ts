@@ -19,24 +19,18 @@
 import {
   AfterViewInit,
   Component,
-  EventEmitter,
   OnDestroy,
   OnInit,
-  Output,
   ViewChild
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import {
-  loadMetadataSources,
-  preferMetadataSource
-} from '@app/comic-metadata/actions/metadata-source-list.actions';
+import { loadMetadataSources } from '@app/comic-metadata/actions/metadata-source-list.actions';
 import { selectMetadataSourceList } from '@app/comic-metadata/selectors/metadata-source-list.selectors';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { loadMetadataSource } from '@app/comic-metadata/actions/metadata-source.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { TranslateService } from '@ngx-translate/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -49,6 +43,9 @@ import {
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { getConfigurationOption } from '@app/admin';
 import { ConfigurationOption } from '@app/admin/models/configuration-option';
+import { MetadataSourceDetailComponent } from '@app/admin/components/metadata-source-detail/metadata-source-detail.component';
+import { MatDialog } from '@angular/material/dialog';
+import { METADATA_SOURCE_TEMPLATE } from '@app/comic-metadata/comic-metadata.constants';
 
 @Component({
   selector: 'cx-metadata-source-list',
@@ -60,17 +57,9 @@ export class MetadataSourceListComponent
 {
   @ViewChild(MatSort) sort: MatSort;
 
-  @Output() createSource = new EventEmitter<void>();
-
   sourcesSubscription: Subscription;
   dataSource = new MatTableDataSource<MetadataSource>([]);
-  readonly displayedColumns = [
-    'preferred',
-    'name',
-    'bean-name',
-    'property-count',
-    'actions'
-  ];
+  readonly displayedColumns = ['name', 'bean-name', 'property-count'];
   metadataForm: FormGroup;
   configurationStateSubscription: Subscription;
   configurationOptionListSubscription: Subscription;
@@ -82,7 +71,8 @@ export class MetadataSourceListComponent
     private store: Store<any>,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private dialog: MatDialog
   ) {
     this.sourcesSubscription = this.store
       .select(selectMetadataSourceList)
@@ -136,23 +126,7 @@ export class MetadataSourceListComponent
   }
 
   onSelectSource(source: MetadataSource): void {
-    this.logger.debug('Loading metadata source');
-    this.store.dispatch(loadMetadataSource({ id: source.id }));
-  }
-
-  onMarkPreferred(id: number): void {
-    this.confirmationService.confirm({
-      title: this.translateService.instant(
-        'metadata-source-list.mark-preferred.confirmation-title'
-      ),
-      message: this.translateService.instant(
-        'metadata-source-list.mark-preferred.confirmation-message'
-      ),
-      confirm: () => {
-        this.logger.debug('Marking metadata source as preferred:', id);
-        this.store.dispatch(preferMetadataSource({ id }));
-      }
-    });
+    this.doOpenDialog(source);
   }
 
   onSaveConfig(): void {
@@ -176,6 +150,21 @@ export class MetadataSourceListComponent
     this.logger.debug('Canceling configuration changes');
     this.loadMetadataForm();
     this.showConfigPopup = false;
+  }
+
+  onCreateSource(): void {
+    this.logger.debug('Creating new metadata source');
+    this.doOpenDialog(METADATA_SOURCE_TEMPLATE);
+  }
+
+  private doOpenDialog(source: MetadataSource): void {
+    this.logger.trace('Loading metadata source');
+    this.dialog
+      .open(MetadataSourceDetailComponent, {
+        data: { source }
+      })
+      .afterClosed()
+      .subscribe(() => this.store.dispatch(loadMetadataSources()));
   }
 
   private loadMetadataForm(): void {

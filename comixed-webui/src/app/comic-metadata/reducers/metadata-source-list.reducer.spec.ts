@@ -25,8 +25,6 @@ import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
 import {
   loadMetadataSources,
   loadMetadataSourcesFailed,
-  preferMetadataSource,
-  preferMetadataSourceFailed,
   metadataSourcesLoaded
 } from '@app/comic-metadata/actions/metadata-source-list.actions';
 
@@ -88,19 +86,6 @@ describe('MetadataSourceList Reducer', () => {
 
     it('clears the busy flag', () => {
       expect(state.busy).toBeFalse();
-    });
-  });
-
-  describe('marking a metadata source as preferred', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, busy: false },
-        preferMetadataSource({ id: ID })
-      );
-    });
-
-    it('sets the busy flag', () => {
-      expect(state.busy).toBeTrue();
     });
   });
 });

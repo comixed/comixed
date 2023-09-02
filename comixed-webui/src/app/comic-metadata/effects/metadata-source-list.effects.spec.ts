@@ -25,8 +25,6 @@ import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
 import {
   loadMetadataSources,
   loadMetadataSourcesFailed,
-  preferMetadataSource,
-  preferMetadataSourceFailed,
   metadataSourcesLoaded
 } from '@app/comic-metadata/actions/metadata-source-list.actions';
 import { hot } from 'jasmine-marbles';
@@ -117,52 +115,6 @@ describe('MetadataSourceListEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.loadMetadataSources$).toBeObservable(expected);
-      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
-    });
-  });
-
-  describe('marking a metadata source as preferred', () => {
-    it('fires an action on success', () => {
-      const serviceResponse = SOURCES;
-      const action = preferMetadataSource({ id: SOURCES[0].id });
-      const outcome = metadataSourcesLoaded({ sources: SOURCES });
-
-      actions$ = hot('-a', { a: action });
-      metadataSourceService.markAsPreferred
-        .withArgs({ id: SOURCES[0].id })
-        .and.returnValue(of(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.markAsPreferred$).toBeObservable(expected);
-      expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
-    });
-
-    it('fires an action on service failure', () => {
-      const serviceResponse = new HttpErrorResponse({});
-      const action = preferMetadataSource({ id: SOURCES[0].id });
-      const outcome = loadMetadataSourcesFailed();
-
-      actions$ = hot('-a', { a: action });
-      metadataSourceService.markAsPreferred
-        .withArgs({ id: SOURCES[0].id })
-        .and.returnValue(throwError(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.markAsPreferred$).toBeObservable(expected);
-      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
-    });
-
-    it('fires an action on general failure', () => {
-      const action = preferMetadataSource({ id: SOURCES[0].id });
-      const outcome = loadMetadataSourcesFailed();
-
-      actions$ = hot('-a', { a: action });
-      metadataSourceService.markAsPreferred
-        .withArgs({ id: SOURCES[0].id })
-        .and.throwError('expecte');
-
-      const expected = hot('-(b|)', { b: outcome });
-      expect(effects.markAsPreferred$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

@@ -32,21 +32,18 @@ import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
-import {
-  deleteMetadataSource,
-  saveMetadataSource
-} from '@app/comic-metadata/actions/metadata-source.actions';
+import { saveMetadataSource } from '@app/comic-metadata/actions/metadata-source.actions';
 
 describe('MetadataSourceDetailComponent', () => {
   const SOURCE = METADATA_SOURCE_1;
-  const PROPERTY_NAME = 'new-property.name';
-  const PROPERTY_VALUE = 'new-property.value';
   const initialState = {
     [METADATA_SOURCE_FEATURE_KEY]: initialMetadataSourceState
   };
@@ -70,9 +67,15 @@ describe('MetadataSourceDetailComponent', () => {
         MatButtonModule,
         MatTooltipModule,
         MatDialogModule,
-        MatIconModule
+        MatIconModule,
+        MatCardModule,
+        MatCheckboxModule
       ],
-      providers: [provideMockStore({ initialState }), ConfirmationService]
+      providers: [
+        provideMockStore({ initialState }),
+        { provide: MAT_DIALOG_DATA, useValue: { source: SOURCE } },
+        ConfirmationService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MetadataSourceDetailComponent);
@@ -127,7 +130,7 @@ describe('MetadataSourceDetailComponent', () => {
     beforeEach(() => {
       component.source = SOURCE;
       propertyCount = component.properties.length;
-      component.addSourceProperty(PROPERTY_NAME, PROPERTY_VALUE);
+      component.onAddProperty();
     });
 
     it('adds a new input field', () => {
@@ -156,55 +159,12 @@ describe('MetadataSourceDetailComponent', () => {
     });
   });
 
-  describe('resetting the form', () => {
-    beforeEach(() => {
-      component.source = SOURCE;
-      component.sourceForm.controls.name.setValue(SOURCE.name.substring(1));
-      component.sourceForm.controls.beanName.setValue(
-        SOURCE.beanName.substring(1)
-      );
-      component.sourceForm.markAsDirty();
-      component.onResetSource();
-    });
-
-    it('resets the source name', () => {
-      expect(component.sourceForm.controls.name.value).toEqual(SOURCE.name);
-    });
-
-    it('resets the source bean name', () => {
-      expect(component.sourceForm.controls.beanName.value).toEqual(
-        SOURCE.beanName
-      );
-    });
-  });
-
-  describe('deleting a metadata source', () => {
+  describe('saving changes to the metadata source', () => {
     beforeEach(() => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.source = SOURCE;
-      component.onDeleteSource();
-    });
-
-    it('confirms with the user', () => {
-      expect(confirmationService.confirm).toHaveBeenCalled();
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        deleteMetadataSource({ source: SOURCE })
-      );
-    });
-  });
-
-  describe('creating a metadata source', () => {
-    beforeEach(() => {
-      component.source = SOURCE;
-      spyOn(confirmationService, 'confirm').and.callFake(
-        (confirmation: Confirmation) => confirmation.confirm()
-      );
-      component.onSaveSource();
+      component.onSave();
     });
 
     it('confirms with the user', () => {
@@ -215,6 +175,43 @@ describe('MetadataSourceDetailComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         saveMetadataSource({ source: SOURCE })
       );
+    });
+  });
+
+  describe('resetting changes to the metadata source', () => {
+    let propertyCount: number;
+
+    beforeEach(() => {
+      propertyCount = component.properties.length;
+      component.sourceForm.controls.name.setValue(SOURCE.name.substring(1));
+      component.sourceForm.controls.beanName.setValue(
+        SOURCE.beanName.substring(1)
+      );
+      component.sourceForm.controls.preferredSource.setValue(!SOURCE.preferred);
+      component.onAddProperty();
+      component.onAddProperty();
+      component.onAddProperty();
+      component.onReset();
+    });
+
+    it('restores the source name', () => {
+      expect(component.sourceForm.controls.name.value).toEqual(SOURCE.name);
+    });
+
+    it('restores the bean name', () => {
+      expect(component.sourceForm.controls.beanName.value).toEqual(
+        SOURCE.beanName
+      );
+    });
+
+    it('restores the preferred state', () => {
+      expect(component.sourceForm.controls.preferredSource.value).toEqual(
+        SOURCE.preferred
+      );
+    });
+
+    it('restores the property list', () => {
+      expect(component.properties.length).toEqual(propertyCount);
     });
   });
 });

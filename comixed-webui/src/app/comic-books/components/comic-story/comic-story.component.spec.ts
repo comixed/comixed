@@ -29,6 +29,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('ComicStoryComponent', () => {
   const COMIC_BOOK = COMIC_BOOK_1;
@@ -49,7 +50,8 @@ describe('ComicStoryComponent', () => {
           MatExpansionModule,
           MatCardModule,
           MatChipsModule,
-          MatTooltipModule
+          MatTooltipModule,
+          MatIconModule
         ],
         providers: [provideMockStore({ initialState })]
       }).compileComponents();

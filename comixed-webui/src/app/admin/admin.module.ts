@@ -82,7 +82,6 @@ import {
 } from '@app/admin/reducers/batch-processes.reducer';
 import { BatchProcessesEffects } from '@app/admin/effects/batch-processes.effects';
 import { BatchProcessListPageComponent } from './pages/batch-process-list-page/batch-process-list-page.component';
-import { MetadataSourcesViewComponent } from '@app/admin/components/metadata-sources-view/metadata-sources-view.component';
 
 @NgModule({
   declarations: [
@@ -92,7 +91,6 @@ import { MetadataSourcesViewComponent } from '@app/admin/components/metadata-sou
     ServerRuntimeComponent,
     MetadataSourceListComponent,
     MetadataSourceDetailComponent,
-    MetadataSourcesViewComponent,
     ServerMetricsComponent,
     ServerMetricDetailsComponent,
     MetricMeasurementPipe,
