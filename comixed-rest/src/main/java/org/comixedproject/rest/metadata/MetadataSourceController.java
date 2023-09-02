@@ -117,13 +117,16 @@ public class MetadataSourceController {
    * Deletes the metadata source with the given record id.
    *
    * @param id the record id
+   * @return the updated metadata source list
    * @throws MetadataSourceException if an error occurs
    */
   @DeleteMapping(value = "/api/metadata/sources/{id}")
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.metadata-source.delete")
-  public void delete(@PathVariable("id") final Long id) throws MetadataSourceException {
+  @JsonView(View.MetadataSourceList.class)
+  public List<MetadataSource> delete(@PathVariable("id") final Long id)
+      throws MetadataSourceException {
     log.info("Deleting metadata source: id={}", id);
-    this.metadataSourceService.delete(id);
+    return this.metadataSourceService.delete(id);
   }
 }

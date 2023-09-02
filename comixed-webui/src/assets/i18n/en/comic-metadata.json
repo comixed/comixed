@@ -82,7 +82,7 @@
   },
   "metadata-source-list": {
     "label": {
-      "actions": "Actions",
+      "actions": "",
       "bean-name": "Bean Name",
       "name": "Source Name",
       "no-rows-loaded": "No sources loaded",

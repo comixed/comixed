@@ -333,8 +333,12 @@ public class MetadataSourceServiceTest {
   @Test
   public void testDelete() throws MetadataSourceException {
     Mockito.when(metadataSourceRepository.getById(Mockito.anyLong())).thenReturn(savedSource);
+    Mockito.when(metadataSourceRepository.loadMetadataSources()).thenReturn(metadataSourceList);
 
-    service.delete(TEST_SOURCE_ID);
+    final List<MetadataSource> result = service.delete(TEST_SOURCE_ID);
+
+    assertNotNull(result);
+    assertSame(metadataSourceList, result);
 
     Mockito.verify(metadataSourceRepository, Mockito.times(1)).getById(TEST_SOURCE_ID);
     Mockito.verify(metadataSourceRepository, Mockito.times(1)).delete(savedSource);

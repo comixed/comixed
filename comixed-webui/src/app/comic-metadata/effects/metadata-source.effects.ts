@@ -37,6 +37,7 @@ import { AlertService } from '@app/core/services/alert.service';
 import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { of } from 'rxjs';
+import { metadataSourcesLoaded } from '@app/comic-metadata/actions/metadata-source-list.actions';
 
 @Injectable()
 export class MetadataSourceEffects {
@@ -127,7 +128,11 @@ export class MetadataSourceEffects {
               )
             )
           ),
-          mergeMap(() => [metadataSourceDeleted(), clearMetadataSource()]),
+          mergeMap((response: MetadataSource[]) => [
+            metadataSourceDeleted(),
+            clearMetadataSource(),
+            metadataSourcesLoaded({ sources: response })
+          ]),
           catchError(error => {
             this.logger.error('Service failure:', error);
             this.alertService.error(
