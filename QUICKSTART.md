@@ -43,7 +43,7 @@ This will launch the application in the current window as a text-only applicatio
 ```
 2018-07-24 08:38:44.509  INFO 75198 --- [           main] o.s.j.e.a.AnnotationMBeanExporter        : Registering beans for JMX exposure on startup
 2018-07-24 08:38:44.520  INFO 75198 --- [           main] o.s.c.support.DefaultLifecycleProcessor  : Starting beans in phase 0
-2018-07-24 08:38:44.640  INFO 75198 --- [           main] s.b.c.e.t.TomcatEmbeddedServletContainer : Tomcat started on port(s): 7171 (http)
+2018-07-24 08:38:44.640  INFO 75198 --- [           main] s.b.c.e.t.TomcatEmbeddedServletContainer : Tomcat started on port(s): 7171 (https) with context path ''
 2018-07-24 08:38:44.644  INFO 75198 --- [           main] org.comixedproject.ComiXedApp            : Started ComiXedApp in 8.979 seconds (JVM running for 9.62)
 ```
 
@@ -53,7 +53,7 @@ This will launch the application in the current window as a text-only applicatio
 
 Now that your server is up and running, you need to connect to it with your browser and log into the server.
 
-Point your browser to ```http://localhost:7171``` and login. This assumes you're running ComiXed on the same computer as your browser: if your server is on another computer then replaced ```localhost``` with that computer's name or IP address.
+Point your browser to ```https://localhost:7171``` and login. This assumes you're running ComiXed on the same computer as your browser: if your server is on another computer then replaced ```localhost``` with that computer's name or IP address.
 
 When run for the first time, ComiXed creates two default accounts for logging into the system:
 
@@ -62,7 +62,7 @@ When run for the first time, ComiXed creates two default accounts for logging in
 
 It is **highly** recommended that you change at least the passwords for these accounts.
 
-To log into the system as the user **comixedadmin@localhost**, open your web browser and go to **http://localhost:7171** and log in.
+To log into the system as the user **comixedadmin@localhost**, open your web browser and go to **https://localhost:7171** and log in.
 
 Once logged in, click on the **Account** link at the top of the page. This will take you to the account page. You can then change your password, and your login name.
 
@@ -155,7 +155,7 @@ To allow your reader to access the library, you will need either the hostname or
 running ComiXed. So, for example, if that computers IP address is **192.168.1.29** then you would tell the
 reader:
 
-    Hostname: http://192.168.1.29:7171/opds
+    Hostname: https://192.168.1.29:7171/opds
     Username: [your login email address]
     Password: [your login password]
 
