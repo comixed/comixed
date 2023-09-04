@@ -55,6 +55,10 @@ export class LibraryConfigurationComponent {
       value: 'configuration.text.comic-renaming-rule-publisher'
     },
     {
+      label: '$IMPRINT',
+      value: 'configuration.text.comic-renaming-rule-imprint'
+    },
+    {
       label: '$SERIES',
       value: 'configuration.text.comic-renaming-rule-series'
     },
