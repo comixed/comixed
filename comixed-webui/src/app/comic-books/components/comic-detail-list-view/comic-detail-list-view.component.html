@@ -36,6 +36,7 @@
 
 <mat-paginator
   class="cx-height-100"
+  showFirstLastButtons="true"
   [pageIndex]="queryParameterService.pageIndex$ | async"
   [pageSize]="queryParameterService.pageSize$ | async"
   [pageSizeOptions]="queryParameterService.pageSizeOptions"

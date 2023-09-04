@@ -16,35 +16,45 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {AfterViewInit, Component, HostListener, Input, OnDestroy, ViewChild} from '@angular/core';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {ComicDetail} from '@app/comic-books/models/comic-detail';
-import {LoggerService} from '@angular-ru/cdk/logger';
-import {QueryParameterService} from '@app/core/services/query-parameter.service';
-import {deselectComicBooks, selectComicBooks} from '@app/library/actions/library-selections.actions';
-import {Store} from '@ngrx/store';
-import {ComicBookState} from '@app/comic-books/models/comic-book-state';
-import {SelectableListItem} from '@app/core/models/ui/selectable-list-item';
-import {ActivatedRoute, Router} from '@angular/router';
-import {LastRead} from '@app/last-read/models/last-read';
-import {ReadingList} from '@app/lists/models/reading-list';
-import {ConfirmationService} from '@tragically-slick/confirmation';
-import {TranslateService} from '@ngx-translate/core';
-import {convertComics} from '@app/library/actions/convert-comics.actions';
-import {archiveTypeFromString} from '@app/comic-books/comic-books.functions';
-import {ArchiveType} from '@app/comic-books/models/archive-type.enum';
-import {addComicsToReadingList} from '@app/lists/actions/reading-list-entries.actions';
-import {setComicBooksRead} from '@app/last-read/actions/set-comics-read.actions';
-import {markComicsDeleted} from '@app/comic-books/actions/mark-comics-deleted.actions';
-import {editMultipleComics} from '@app/library/actions/library.actions';
-import {EditMultipleComicsComponent} from '@app/library/components/edit-multiple-comics/edit-multiple-comics.component';
-import {EditMultipleComics} from '@app/library/models/ui/edit-multiple-comics';
-import {MatDialog} from '@angular/material/dialog';
-import {MatPaginator} from '@angular/material/paginator';
-import {Subscription} from 'rxjs';
-import {updateMetadata} from '@app/library/actions/update-metadata.actions';
-import {startLibraryConsolidation} from '@app/library/actions/consolidate-library.actions';
+import {
+  AfterViewInit,
+  Component,
+  HostListener,
+  Input,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { LoggerService } from '@angular-ru/cdk/logger';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import {
+  deselectComicBooks,
+  selectComicBooks
+} from '@app/library/actions/library-selections.actions';
+import { Store } from '@ngrx/store';
+import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
+import { ActivatedRoute, Router } from '@angular/router';
+import { LastRead } from '@app/last-read/models/last-read';
+import { ReadingList } from '@app/lists/models/reading-list';
+import { ConfirmationService } from '@tragically-slick/confirmation';
+import { TranslateService } from '@ngx-translate/core';
+import { convertComics } from '@app/library/actions/convert-comics.actions';
+import { archiveTypeFromString } from '@app/comic-books/comic-books.functions';
+import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
+import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
+import { setComicBooksRead } from '@app/last-read/actions/set-comics-read.actions';
+import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
+import { editMultipleComics } from '@app/library/actions/library.actions';
+import { EditMultipleComicsComponent } from '@app/library/components/edit-multiple-comics/edit-multiple-comics.component';
+import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { Subscription } from 'rxjs';
+import { updateMetadata } from '@app/library/actions/update-metadata.actions';
+import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
 
 @Component({
   selector: 'cx-comic-detail-list-view',
