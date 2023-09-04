@@ -95,6 +95,8 @@ export class ImportComicsPageComponent
   allSelected = false;
   anySelected = false;
   skipMetadata = false;
+  showCoverPopup = false;
+  comicFile: ComicFile = null;
 
   constructor(
     private logger: LoggerService,
@@ -248,6 +250,18 @@ export class ImportComicsPageComponent
         value: `${skipMetadata}`
       })
     );
+  }
+
+  onShowPopup(showPopup: boolean, comicFile: ComicFile): void {
+    if (showPopup) {
+      this.logger.debug('Showing comic file cover:', comicFile);
+      this.comicFile = comicFile;
+      this.showCoverPopup = true;
+    } else {
+      this.logger.debug('Hiding comic file cover');
+      this.comicFile = null;
+      this.showCoverPopup = false;
+    }
   }
 
   private loadTranslations(): void {

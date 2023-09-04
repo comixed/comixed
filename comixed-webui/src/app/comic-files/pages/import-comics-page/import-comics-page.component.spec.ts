@@ -448,4 +448,38 @@ describe('ImportComicsPageComponent', () => {
       );
     });
   });
+
+  describe('the comic file cover popup', () => {
+    describe('showing the popup', () => {
+      beforeEach(() => {
+        component.comicFile = null;
+        component.showCoverPopup = false;
+        component.onShowPopup(true, FILE);
+      });
+
+      it('stores the comic file reference', () => {
+        expect(component.comicFile).toBe(FILE);
+      });
+
+      it('sets the show popup flag', () => {
+        expect(component.showCoverPopup).toBeTrue();
+      });
+    });
+
+    describe('showing the popup', () => {
+      beforeEach(() => {
+        component.comicFile = FILE;
+        component.showCoverPopup = true;
+        component.onShowPopup(false, null);
+      });
+
+      it('clears the comic file reference', () => {
+        expect(component.comicFile).toBeNull();
+      });
+
+      it('clears the show popup flag', () => {
+        expect(component.showCoverPopup).toBeFalse();
+      });
+    });
+  });
 });

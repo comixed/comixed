@@ -16,51 +16,59 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {ComicDetailListViewComponent} from './comic-detail-list-view.component';
-import {LoggerModule} from '@angular-ru/cdk/logger';
-import {MockStore, provideMockStore} from '@ngrx/store/testing';
-import {RouterTestingModule} from '@angular/router/testing';
-import {MatSortModule} from '@angular/material/sort';
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-import {ComicDetail} from '@app/comic-books/models/comic-detail';
-import {SelectableListItem} from '@app/core/models/ui/selectable-list-item';
-import {TranslateModule} from '@ngx-translate/core';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {COMIC_DETAIL_1, COMIC_DETAIL_2, COMIC_DETAIL_5} from '@app/comic-books/comic-books.fixtures';
-import {ComicCoverUrlPipe} from '@app/comic-books/pipes/comic-cover-url.pipe';
-import {ComicTitlePipe} from '@app/comic-books/pipes/comic-title.pipe';
-import {deselectComicBooks, selectComicBooks} from '@app/library/actions/library-selections.actions';
-import {ComicBookState} from '@app/comic-books/models/comic-book-state';
-import {Router} from '@angular/router';
-import {LAST_READ_1} from '@app/last-read/last-read.fixtures';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatIconModule} from '@angular/material/icon';
-import {convertComics} from '@app/library/actions/convert-comics.actions';
-import {archiveTypeFromString} from '@app/comic-books/comic-books.functions';
-import {READING_LIST_1} from '@app/lists/lists.fixtures';
-import {addComicsToReadingList} from '@app/lists/actions/reading-list-entries.actions';
-import {Confirmation, ConfirmationService} from '@tragically-slick/confirmation';
-import {setComicBooksRead} from '@app/last-read/actions/set-comics-read.actions';
-import {markComicsDeleted} from '@app/comic-books/actions/mark-comics-deleted.actions';
-import {editMultipleComics} from '@app/library/actions/library.actions';
-import {BehaviorSubject, of} from 'rxjs';
-import {EditMultipleComics} from '@app/library/models/ui/edit-multiple-comics';
-import {ComicType} from '@app/comic-books/models/comic-type';
-import {MatPaginatorModule} from '@angular/material/paginator';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComicDetailListViewComponent } from './comic-detail-list-view.component';
+import { LoggerModule } from '@angular-ru/cdk/logger';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
+import { TranslateModule } from '@ngx-translate/core';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
-  ComicDetailFilterComponent
-} from '@app/comic-books/components/comic-detail-filter/comic-detail-filter.component';
-import {QueryParameterService} from '@app/core/services/query-parameter.service';
-import {CoverDateFilter} from '@app/comic-books/models/ui/cover-date-filter';
-import {ArchiveType} from '@app/comic-books/models/archive-type.enum';
-import {LastRead} from '@app/last-read/models/last-read';
-import {updateMetadata} from '@app/library/actions/update-metadata.actions';
-import {startLibraryConsolidation} from '@app/library/actions/consolidate-library.actions';
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_5
+} from '@app/comic-books/comic-books.fixtures';
+import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
+import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
+import {
+  deselectComicBooks,
+  selectComicBooks
+} from '@app/library/actions/library-selections.actions';
+import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { Router } from '@angular/router';
+import { LAST_READ_1 } from '@app/last-read/last-read.fixtures';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
+import { convertComics } from '@app/library/actions/convert-comics.actions';
+import { archiveTypeFromString } from '@app/comic-books/comic-books.functions';
+import { READING_LIST_1 } from '@app/lists/lists.fixtures';
+import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
+import { setComicBooksRead } from '@app/last-read/actions/set-comics-read.actions';
+import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
+import { editMultipleComics } from '@app/library/actions/library.actions';
+import { BehaviorSubject, of } from 'rxjs';
+import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
+import { ComicType } from '@app/comic-books/models/comic-type';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ComicDetailFilterComponent } from '@app/comic-books/components/comic-detail-filter/comic-detail-filter.component';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
+import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
+import { LastRead } from '@app/last-read/models/last-read';
+import { updateMetadata } from '@app/library/actions/update-metadata.actions';
+import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
 
 describe('ComicDetailListViewComponent', () => {
   const COMIC_DETAILS = [
