@@ -47,10 +47,11 @@ public class ComicFileAdaptorTest {
       TEST_ROOT_DIRECTORY + "/" + TEST_COMIC_FILENAME;
   private static final String TEST_RELATIVE_NAME_WITHOUT_RULE = TEST_COMIC_FILENAME;
   private static final String TEST_RENAMING_RULE =
-      "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE $TITLE $PUBMONTH $PUBYEAR $COVERDATE";
+      "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE $TITLE $PUBMONTH $PUBYEAR $COVERDATE $IMPRINT";
   private static final String TEST_RENAMING_RULE_PADDED_ISSUE =
-      "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE(8) $TITLE $PUBMONTH $PUBYEAR $COVERDATE";
+      "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE(8) $TITLE $PUBMONTH $PUBYEAR $COVERDATE $IMPRINT";
   private static final String TEST_PUBLISHER = "The Publisher";
+  private static final String TEST_IMPRINT = "The Imprint";
   private static final String TEST_SERIES = "The Series";
   private static final String TEST_VOLUME = "2020";
   private static final String TEST_ISSUE = "717";
@@ -73,7 +74,7 @@ public class ComicFileAdaptorTest {
   private static final String TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS = "\\/717:";
   private static final String TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED = "__717_";
   private static final String TEST_RENAMING_RULE_WITH_UNSUPPORTED_CHARACTERS =
-      "?*$PUBLISHER/<|?>$SERIES/\\:$VOLUME/$SERIES v$VOLUME #$ISSUE ($COVERDATE)";
+      "?*$PUBLISHER/<|?>$SERIES/\\:$VOLUME/$SERIES v$VOLUME #$ISSUE ($COVERDATE) $IMPRINT";
   private static final String TEST_ORIGINAL_FILENAME = "src/test/resources/available.cbz";
   private static final String TEST_EXISTING_FILENAME = "src/test/resources/example.cbz";
 
@@ -86,6 +87,7 @@ public class ComicFileAdaptorTest {
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicDetail.getFilename()).thenReturn(TEST_FULL_COMIC_FILENAME);
     Mockito.when(comicDetail.getPublisher()).thenReturn(TEST_PUBLISHER);
+    Mockito.when(comicDetail.getImprint()).thenReturn(TEST_IMPRINT);
     Mockito.when(comicDetail.getSeries()).thenReturn(TEST_SERIES);
     Mockito.when(comicDetail.getVolume()).thenReturn(TEST_VOLUME);
     Mockito.when(comicDetail.getIssueNumber()).thenReturn(TEST_ISSUE);
@@ -108,6 +110,7 @@ public class ComicFileAdaptorTest {
     assertEquals(
         formattedName(
             TEST_PUBLISHER,
+            TEST_IMPRINT,
             TEST_SERIES,
             TEST_VOLUME,
             TEST_ISSUE,
@@ -126,6 +129,7 @@ public class ComicFileAdaptorTest {
     assertEquals(
         formattedName(
             TEST_PUBLISHER,
+            TEST_IMPRINT,
             TEST_SERIES,
             TEST_VOLUME,
             TEST_PADDED_ISSUE,
@@ -143,14 +147,15 @@ public class ComicFileAdaptorTest {
 
     assertEquals(
         String.format(
-            "__%s/____%s/__%s/%s v%s #%s (%s)",
+            "__%s/____%s/__%s/%s v%s #%s (%s) %s",
             TEST_PUBLISHER,
             TEST_SERIES,
             TEST_VOLUME,
             TEST_SERIES,
             TEST_VOLUME,
             TEST_ISSUE,
-            TEST_FORMATTED_COVER_DATE),
+            TEST_FORMATTED_COVER_DATE,
+            TEST_IMPRINT),
         result);
   }
 
@@ -165,6 +170,7 @@ public class ComicFileAdaptorTest {
     assertEquals(
         formattedName(
             TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED,
+            TEST_IMPRINT,
             TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED,
             TEST_VOLUME,
             TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED,
@@ -184,6 +190,7 @@ public class ComicFileAdaptorTest {
     assertEquals(
         formattedName(
             UNKNOWN_VALUE,
+            TEST_IMPRINT,
             TEST_SERIES,
             TEST_VOLUME,
             TEST_ISSUE,
@@ -203,7 +210,28 @@ public class ComicFileAdaptorTest {
     assertEquals(
         formattedName(
             TEST_PUBLISHER,
+            TEST_IMPRINT,
             UNKNOWN_VALUE,
+            TEST_VOLUME,
+            TEST_ISSUE,
+            TEST_TITLE,
+            TEST_FORMATTED_COVER_DATE,
+            TEST_PUBLISHED_MONTH,
+            TEST_PUBLISHED_YEAR),
+        result);
+  }
+
+  @Test
+  public void testCreateFileFromRuleNoImprint() {
+    Mockito.when(comicDetail.getImprint()).thenReturn(null);
+
+    final String result = adaptor.createFilenameFromRule(comicBook, TEST_RENAMING_RULE);
+
+    assertEquals(
+        formattedName(
+            TEST_PUBLISHER,
+            UNKNOWN_VALUE,
+            TEST_SERIES,
             TEST_VOLUME,
             TEST_ISSUE,
             TEST_TITLE,
@@ -222,6 +250,7 @@ public class ComicFileAdaptorTest {
     assertEquals(
         formattedName(
             TEST_PUBLISHER,
+            TEST_IMPRINT,
             TEST_SERIES,
             UNKNOWN_VALUE,
             TEST_ISSUE,
@@ -241,6 +270,7 @@ public class ComicFileAdaptorTest {
     assertEquals(
         formattedName(
             TEST_PUBLISHER,
+            TEST_IMPRINT,
             TEST_SERIES,
             TEST_VOLUME,
             TEST_ISSUE,
@@ -253,6 +283,7 @@ public class ComicFileAdaptorTest {
 
   private String formattedName(
       final String publisher,
+      final String imprint,
       final String series,
       final String volume,
       final String issueNumber,
@@ -261,7 +292,7 @@ public class ComicFileAdaptorTest {
       final String publishedMonth,
       final String publishedYear) {
     return String.format(
-        "%s/%s/%s/%s v%s #%s %s %s %s %s",
+        "%s/%s/%s/%s v%s #%s %s %s %s %s %s",
         publisher,
         series,
         volume,
@@ -271,7 +302,8 @@ public class ComicFileAdaptorTest {
         title,
         publishedMonth,
         publishedYear,
-        coverDate);
+        coverDate,
+        imprint);
   }
 
   @Test
@@ -283,6 +315,7 @@ public class ComicFileAdaptorTest {
     assertEquals(
         formattedName(
             TEST_PUBLISHER,
+            TEST_IMPRINT,
             TEST_SERIES,
             TEST_VOLUME,
             UNKNOWN_VALUE,
@@ -302,6 +335,7 @@ public class ComicFileAdaptorTest {
     assertEquals(
         formattedName(
             TEST_PUBLISHER,
+            TEST_IMPRINT,
             TEST_SERIES,
             TEST_VOLUME,
             TEST_ISSUE,

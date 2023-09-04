@@ -47,6 +47,7 @@ public class ComicFileAdaptor {
   static final String UNKNOWN_VALUE = "Unknown";
   public static final String NO_COVER_DATE = "No Cover Date";
   public static final String PLACEHOLDER_PUBLISHER = "$PUBLISHER";
+  public static final String PLACEHOLDER_IMPRINT = "$IMPRINT";
   public static final String PLACEHOLDER_SERIES = "$SERIES";
   public static final String PLACEHOLDER_VOLUME = "$VOLUME";
   public static final String PLACEHOLDER_ISSUE_NUMBER = "$ISSUE";
@@ -123,6 +124,10 @@ public class ComicFileAdaptor {
         StringUtils.hasLength(comicBook.getComicDetail().getPublisher())
             ? scrub(comicBook.getComicDetail().getPublisher())
             : UNKNOWN_VALUE;
+    final String imprint =
+        StringUtils.hasLength(comicBook.getComicDetail().getImprint())
+            ? scrub(comicBook.getComicDetail().getImprint())
+            : UNKNOWN_VALUE;
     final String series =
         StringUtils.hasLength(comicBook.getComicDetail().getSeries())
             ? scrub(comicBook.getComicDetail().getSeries())
@@ -157,6 +162,7 @@ public class ComicFileAdaptor {
 
     String result =
         rule.replace(PLACEHOLDER_PUBLISHER, publisher)
+            .replace(PLACEHOLDER_IMPRINT, imprint)
             .replace(PLACEHOLDER_SERIES, series)
             .replace(PLACEHOLDER_VOLUME, volume)
             .replace(PLACEHOLDER_TITLE, title)
