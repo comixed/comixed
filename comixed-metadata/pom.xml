@@ -13,7 +13,20 @@
   <version>2.0.0-0.dev</version>
   <name>comixed-metadata</name>
   <url>http://www.comixedproject.org</url>
+  <properties>
+    <spring-plugin.version>2.0.0.RELEASE</spring-plugin.version>
+  </properties>
   <dependencies>
+    <dependency>
+      <groupId>org.springframework.plugin</groupId>
+      <artifactId>spring-plugin-core</artifactId>
+      <version>${spring-plugin.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.plugin</groupId>
+      <artifactId>spring-plugin-metadata</artifactId>
+      <version>${spring-plugin.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-model</artifactId>

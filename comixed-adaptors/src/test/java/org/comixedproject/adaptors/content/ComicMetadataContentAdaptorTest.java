@@ -153,10 +153,8 @@ public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
 
     comicBook.setMetadata(
         new ComicMetadataSource(
-            comicBook,
-            new MetadataSource(TEST_METADATA_SOURCE_NAME, "farkleBan"),
-            TEST_METADATA_REFERENCE_ID));
-    comicBook.getMetadata().getMetadataSource().setName(comicBook.getMetadataSourceName());
+            comicBook, new MetadataSource(TEST_METADATA_SOURCE_NAME), TEST_METADATA_REFERENCE_ID));
+    comicBook.getMetadata().getMetadataSource().setAdaptorName(comicBook.getMetadataSourceName());
     comicBook.getMetadata().setReferenceId(comicBook.getMetadataReferenceId());
 
     final byte[] result = adaptor.createContent(comicBook);

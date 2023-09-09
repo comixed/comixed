@@ -175,7 +175,9 @@ SET JAROPTIONS=%JAROPTIONS% --server.ssl.enabled=true
 
 IF "%LIBDIR%" == "" GOTO skip_lib_dir
 SET LOADER_PATH=-Dloader.path=%LIBDIR%
-SET COMIXED_JAR_FILE=-jar %COMIXED_JAR_FILE%
+SET JVMOPTIONS=-cp %COMIXED_JAR_FILE% %JVMOPTIONS
+SET COMIXED_JAR_FILE=-Dloader.main=org.comixedproject.ComiXedApp org.springframework.boot.loader.PropertiesLauncher
+
 :skip_lib_dir
 
 java %JVMOPTIONS% %LOADER_PATH% %COMIXED_JAR_FILE% %JAROPTIONS%

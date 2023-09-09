@@ -34,4 +34,5 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableScheduling
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
+// @EnablePluginRegistries(MetadataAdaptor.class)
 public class ComiXedConfiguration {}

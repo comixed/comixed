@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.metadata.MetadataAdaptorRegistry;
 import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.adaptors.MetadataAdaptor;
 import org.comixedproject.metadata.model.IssueDetailsMetadata;
@@ -46,9 +47,7 @@ import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ImprintService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -61,7 +60,7 @@ import org.springframework.util.StringUtils;
 @Service
 @Log4j2
 public class MetadataService {
-  @Autowired private ApplicationContext applicationContext;
+  @Autowired private MetadataAdaptorRegistry metadataAdaptorRegistry;
   @Autowired private MetadataSourceService metadataSourceService;
   @Autowired private ObjectMapper objectMapper;
   @Autowired private MetadataCacheService metadataCacheService;
@@ -134,11 +133,8 @@ public class MetadataService {
 
   private MetadataAdaptor doLoadScrapingAdaptor(final MetadataSource metadataSource)
       throws MetadataException {
-    try {
-      return this.applicationContext.getBean(metadataSource.getBeanName(), MetadataAdaptor.class);
-    } catch (BeansException error) {
-      throw new MetadataException("Failed to load scraping adaptor", error);
-    }
+    log.debug("Loading metadata adaptor: {}", metadataSource.getAdaptorName());
+    return this.metadataAdaptorRegistry.getAdaptor(metadataSource.getAdaptorName());
   }
 
   private List<VolumeMetadata> doLoadScrapingVolumes(final String source, final String key) {

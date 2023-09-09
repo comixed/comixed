@@ -243,12 +243,12 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor
     comicInfo.setSummary(comicBook.getComicDetail().getDescription());
     final ComicMetadataSource metadata = comicBook.getMetadata();
     if (metadata != null
-        && StringUtils.hasLength(metadata.getMetadataSource().getName())
+        && StringUtils.hasLength(metadata.getMetadataSource().getAdaptorName())
         && StringUtils.hasLength(metadata.getReferenceId())) {
       log.debug("Adding metadata source details");
       comicInfo.setMetadata(
           new ComicInfoMetadataSource(
-              metadata.getMetadataSource().getName(), metadata.getReferenceId()));
+              metadata.getMetadataSource().getAdaptorName(), metadata.getReferenceId()));
     }
     try {
       log.trace("Generating ComicInfo.xml data");

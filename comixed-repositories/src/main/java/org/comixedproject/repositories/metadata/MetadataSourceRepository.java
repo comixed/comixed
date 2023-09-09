@@ -57,8 +57,8 @@ public interface MetadataSourceRepository extends JpaRepository<MetadataSource, 
    * @param name the bean name
    * @return the record
    */
-  @Query("SELECT s FROM MetadataSource s WHERE s.beanName = :name")
-  MetadataSource getByBeanName(@Param("name") String name);
+  @Query("SELECT s FROM MetadataSource s WHERE s.adaptorName = :name")
+  MetadataSource getByAdaptorName(@Param("name") String name);
 
   /**
    * Returns a single record by source name.
@@ -66,7 +66,7 @@ public interface MetadataSourceRepository extends JpaRepository<MetadataSource, 
    * @param name the source name
    * @return the record
    */
-  @Query("SELECT s FROM MetadataSource s WHERE s.name = :name")
+  @Query("SELECT s FROM MetadataSource s WHERE s.adaptorName = :name")
   MetadataSource getByName(@Param("name") String name);
 
   /** Clears any existing metadata source marked as preferred. */

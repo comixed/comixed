@@ -150,7 +150,8 @@ fi
 
 if [[ $LIBDIR ]]; then
   LOADER_PATH="-Dloader.path=${LIBDIR}"
-  COMIXED_JAR_FILE="-jar ${COMIXED_JAR_FILE}"
+  JVMOPTIONS="-cp ${COMIXED_JAR_FILE} ${JVMOPTIONS}"
+  COMIXED_JAR_FILE="-Dloader.main=org.comixedproject.ComiXedApp org.springframework.boot.loader.PropertiesLauncher"
 fi
 
 $JAVA ${JVMOPTIONS} ${LOADER_PATH} ${COMIXED_JAR_FILE} ${JAROPTIONS}
