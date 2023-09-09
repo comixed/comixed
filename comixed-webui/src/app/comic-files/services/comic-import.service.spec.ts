@@ -26,7 +26,7 @@ import {
   HttpTestingController
 } from '@angular/common/http/testing';
 import { LoadComicFilesRequest } from '@app/library/models/net/load-comic-files-request';
-import { SendComicFilesRequest } from '@app/library/models/net/send-comic-files-request';
+import { ImportComicFilesRequest } from '@app/library/models/net/import-comic-files-request';
 import { HttpResponse } from '@angular/common/http';
 import {
   COMIC_FILE_1,
@@ -57,6 +57,7 @@ describe('ComicImportService', () => {
   ];
   const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3];
   const SKIP_METADATA = Math.random() > 0.5;
+  const SKIP_BLOCKING_PAGES = Math.random() > 0.5;
   const MAXIMUM = 100;
   const FILENAME = COMIC_DETAIL_2.baseFilename;
   const SERIES = COMIC_DETAIL_2.series;
@@ -102,7 +103,8 @@ describe('ComicImportService', () => {
     service
       .sendComicFiles({
         files: FILES,
-        skipMetadata: SKIP_METADATA
+        skipMetadata: SKIP_METADATA,
+        skipBlockingPages: SKIP_BLOCKING_PAGES
       })
       .subscribe(response => expect(response).toEqual(serviceResponse));
 
@@ -110,8 +112,9 @@ describe('ComicImportService', () => {
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
       filenames: FILES.map(file => file.filename),
-      skipMetadata: SKIP_METADATA
-    } as SendComicFilesRequest);
+      skipMetadata: SKIP_METADATA,
+      skipBlockingPages: SKIP_BLOCKING_PAGES
+    } as ImportComicFilesRequest);
     req.flush(serviceResponse);
   });
 

@@ -23,7 +23,7 @@ import { ComicFile } from '@app/comic-files/models/comic-file';
 import { HttpClient } from '@angular/common/http';
 import { interpolate } from '@app/core';
 import { LoadComicFilesRequest } from '@app/library/models/net/load-comic-files-request';
-import { SendComicFilesRequest } from '@app/library/models/net/send-comic-files-request';
+import { ImportComicFilesRequest } from '@app/library/models/net/import-comic-files-request';
 import {
   LOAD_COMIC_FILES_URL,
   SCRAPE_FILENAME_URL,
@@ -62,12 +62,14 @@ export class ComicImportService {
   sendComicFiles(args: {
     files: ComicFile[];
     skipMetadata: boolean;
+    skipBlockingPages: boolean;
   }): Observable<any> {
     this.logger.debug('Sending comic files:', args);
     return this.http.post(interpolate(SEND_COMIC_FILES_URL), {
       filenames: args.files.map(file => file.filename),
-      skipMetadata: args.skipMetadata
-    } as SendComicFilesRequest);
+      skipMetadata: args.skipMetadata,
+      skipBlockingPages: args.skipBlockingPages
+    } as ImportComicFilesRequest);
   }
 
   scrapeFilename(args: { filename: string }): Observable<any> {

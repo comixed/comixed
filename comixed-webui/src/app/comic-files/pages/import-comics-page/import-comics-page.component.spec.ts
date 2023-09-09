@@ -70,7 +70,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { ComicFileLoaderComponent } from '@app/comic-files/components/comic-file-loader/comic-file-loader.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatSortModule } from '@angular/material/sort';
-import { SKIP_METADATA_USER_PREFERENCE } from '@app/comic-files/comic-file.constants';
+import {
+  SKIP_BLOCKING_PAGES_USER_PREFERENCE,
+  SKIP_METADATA_USER_PREFERENCE
+} from '@app/comic-files/comic-file.constants';
 import { Router } from '@angular/router';
 import { ComicFile } from '@app/comic-files/models/comic-file';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
@@ -85,6 +88,9 @@ describe('ImportComicsPageComponent', () => {
   const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];
   const FILE = COMIC_FILE_3;
   const PAGE_SIZE = 400;
+  const SKIP_METADATA = Math.random() > 0.5;
+  const SKIP_BLOCKING_PAGES = Math.random() > 0.5;
+
   const initialState = {
     [COMIC_FILE_LIST_FEATURE_KEY]: initialComicFileListState,
     [IMPORT_COMIC_FILES_FEATURE_KEY]: initialImportComicFilesState,
@@ -168,16 +174,19 @@ describe('ImportComicsPageComponent', () => {
   });
 
   describe('loading user preferences', () => {
-    const SKIP_METADATA = true;
-
     beforeEach(() => {
-      component.skipMetadata = false;
+      component.skipMetadata = !SKIP_METADATA;
+      component.skipBlockingPages = !SKIP_BLOCKING_PAGES;
       const user = {
         ...USER_ADMIN,
         preferences: [
           {
             name: SKIP_METADATA_USER_PREFERENCE,
             value: `${SKIP_METADATA}`
+          },
+          {
+            name: SKIP_BLOCKING_PAGES_USER_PREFERENCE,
+            value: `${SKIP_BLOCKING_PAGES}`
           }
         ]
       } as User;
@@ -192,6 +201,10 @@ describe('ImportComicsPageComponent', () => {
 
     it('sets the skip metadata flag', () => {
       expect(component.skipMetadata).toEqual(SKIP_METADATA);
+    });
+
+    it('sets the skip blocking pages flag', () => {
+      expect(component.skipBlockingPages).toEqual(SKIP_BLOCKING_PAGES);
     });
   });
 
@@ -307,7 +320,8 @@ describe('ImportComicsPageComponent', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           sendComicFiles({
             files: FILES,
-            skipMetadata: false
+            skipMetadata: false,
+            skipBlockingPages: false
           })
         );
       });
@@ -327,7 +341,29 @@ describe('ImportComicsPageComponent', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           sendComicFiles({
             files: FILES,
-            skipMetadata: true
+            skipMetadata: true,
+            skipBlockingPages: false
+          })
+        );
+      });
+    });
+
+    describe('skipping blcoking pages', () => {
+      beforeEach(() => {
+        component.skipBlockingPages = true;
+        component.onStartImport();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          sendComicFiles({
+            files: FILES,
+            skipMetadata: false,
+            skipBlockingPages: true
           })
         );
       });
@@ -433,8 +469,6 @@ describe('ImportComicsPageComponent', () => {
   });
 
   describe('toggling the skip metadata flag', () => {
-    const SKIP_METADATA = Math.random() > 0.5;
-
     beforeEach(() => {
       component.onSkipMetadata(SKIP_METADATA);
     });
@@ -444,6 +478,21 @@ describe('ImportComicsPageComponent', () => {
         saveUserPreference({
           name: SKIP_METADATA_USER_PREFERENCE,
           value: `${SKIP_METADATA}`
+        })
+      );
+    });
+  });
+
+  describe('toggling the skip blocking pages flag', () => {
+    beforeEach(() => {
+      component.onSkipBlockingPages(SKIP_BLOCKING_PAGES);
+    });
+
+    it('saves the user preference', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        saveUserPreference({
+          name: SKIP_BLOCKING_PAGES_USER_PREFERENCE,
+          value: `${SKIP_BLOCKING_PAGES}`
         })
       );
     });

@@ -44,4 +44,9 @@ public class ImportComicFilesRequest {
   @Getter
   @Setter
   private Boolean skipMetadata;
+
+  @JsonProperty("skipBlockingPages")
+  @Getter
+  @Setter
+  private Boolean skipBlockingPages;
 }

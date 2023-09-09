@@ -23,3 +23,5 @@ export const SEND_COMIC_FILES_URL = `${API_ROOT_URL}/files/import`;
 export const SCRAPE_FILENAME_URL = `${API_ROOT_URL}/files/metadata`;
 
 export const SKIP_METADATA_USER_PREFERENCE = 'preference.skip-metadata';
+export const SKIP_BLOCKING_PAGES_USER_PREFERENCE =
+  'preference.skip-blocking-pages';

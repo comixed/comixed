@@ -41,7 +41,18 @@
     [matTooltip]="'comic-files.tooltip.skip-metadata' | translate:{skipMetadata}"
     (click)="onSkipMetadata(!skipMetadata)"
   >
-    <mat-icon>cloud_upload</mat-icon>
+    <mat-icon>description</mat-icon>
+  </button>
+  <button
+    id="skip-blocking-pages-button"
+    class="cx-margin-right-5"
+    mat-fab
+    [color]="skipBlockingPages ? 'warn' : 'accent'"
+    [disabled]="showFinderForm"
+    [matTooltip]="'comic-files.tooltip.skip-blocking-pages' | translate:{skipBlockingPages}"
+    (click)="onSkipBlockingPages(!skipBlockingPages)"
+  >
+    <mat-icon>block</mat-icon>
   </button>
   <button
     id="start-import-button"
