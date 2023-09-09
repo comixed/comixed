@@ -20,6 +20,7 @@
       <unpack>false</unpack>
       <includes>
         <include>com.h2database:h2:jar:</include>
+        <include>org.comixedproject:comixed-metadata-comicvine:jar:</include>
       </includes>
     </dependencySet>
   </dependencySets>

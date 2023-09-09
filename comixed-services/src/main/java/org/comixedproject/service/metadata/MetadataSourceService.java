@@ -22,6 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.metadata.MetadataAdaptorProvider;
+import org.comixedproject.metadata.MetadataAdaptorRegistry;
 import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.model.metadata.MetadataSourceProperty;
 import org.comixedproject.repositories.metadata.MetadataSourceRepository;
@@ -39,15 +41,54 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class MetadataSourceService {
   @Autowired private MetadataSourceRepository metadataSourceRepository;
+  @Autowired private MetadataAdaptorRegistry metadataAdaptorRegistry;
 
   /**
    * Retrieves the list of metadata sources.
    *
    * @return the sources
    */
+  @Transactional
   public List<MetadataSource> loadMetadataSources() {
     log.debug("Loading all metadata sources");
-    return this.metadataSourceRepository.loadMetadataSources();
+    final List<MetadataAdaptorProvider> adaptors = this.metadataAdaptorRegistry.getAdaptors();
+    this.doRegisterMissingAdaptors(adaptors);
+    final List<String> adaptorNames = adaptors.stream().map(adaptor -> adaptor.getName()).toList();
+    return this.metadataSourceRepository.loadMetadataSources().stream()
+        .filter(metadataSource -> adaptorNames.contains(metadataSource.getAdaptorName()))
+        .map(
+            metadataSource -> {
+              metadataSource.setAvailable(adaptorNames.contains(metadataSource.getAdaptorName()));
+              return metadataSource;
+            })
+        .toList();
+  }
+
+  private void doRegisterMissingAdaptors(
+      final List<MetadataAdaptorProvider> metadataAdaptorProviderList) {
+    log.trace("Getting existing list of metadata adaptors");
+    final List<String> existingAdaptorProviders =
+        this.metadataSourceRepository.loadMetadataSources().stream()
+            .map(MetadataSource::getAdaptorName)
+            .toList();
+    metadataAdaptorProviderList.stream()
+        .filter(
+            metadataAdaptorProvider ->
+                !existingAdaptorProviders.contains(metadataAdaptorProvider.getName()))
+        .forEach(
+            metadataAdaptorProvider -> {
+              log.trace("Adding missing metadata adaptor: {}", metadataAdaptorProvider);
+              final MetadataSource metadataSource =
+                  new MetadataSource(metadataAdaptorProvider.getName());
+              metadataAdaptorProvider
+                  .getProperties()
+                  .forEach(
+                      property ->
+                          metadataSource
+                              .getProperties()
+                              .add(new MetadataSourceProperty(metadataSource, property, "")));
+              this.metadataSourceRepository.save(metadataSource);
+            });
   }
 
   /**
@@ -69,14 +110,14 @@ public class MetadataSourceService {
   }
 
   /**
-   * Loads a single metadata source by the bean name.
+   * Loads a single metadata source by the adaptor name.
    *
-   * @param name the bean name
+   * @param name the adaptor name
    * @return the source
    */
-  public MetadataSource getByBeanName(final String name) {
+  public MetadataSource getByAdaptorName(final String name) {
     log.debug("Loading metadata source: bean name={}", name);
-    return this.metadataSourceRepository.getByBeanName(name);
+    return this.metadataSourceRepository.getByAdaptorName(name);
   }
 
   /**
@@ -99,8 +140,7 @@ public class MetadataSourceService {
    */
   @Transactional
   public MetadataSource create(final MetadataSource source) throws MetadataSourceException {
-    log.debug(
-        "Creating metadata source: name={} bean name={}", source.getName(), source.getBeanName());
+    log.debug("Creating metadata source: name={} bean name={}", source.getAdaptorName());
     try {
       if (source.getPreferred()) {
         log.debug("Marking this source as preferred: clearing existing preferences");
@@ -117,12 +157,10 @@ public class MetadataSourceService {
     MetadataSource result = destination;
     if (result == null) {
       log.debug("Creating new metadata source object");
-      result = new MetadataSource(source.getBeanName(), source.getName());
+      result = new MetadataSource(source.getAdaptorName());
     } else {
-      log.debug("Copying metadata source bean name");
-      result.setBeanName(source.getBeanName());
       log.debug("Copying metadata source name");
-      result.setName(source.getName());
+      result.setAdaptorName(source.getAdaptorName());
     }
     result.setPreferred(source.getPreferred());
     log.debug("Filtering out removed properties");
@@ -172,8 +210,7 @@ public class MetadataSourceService {
     log.debug(
         "Updating existing metadata source: id={} name={} bean name={} preferred={}",
         id,
-        source.getName(),
-        source.getBeanName(),
+        source.getAdaptorName(),
         source.getPreferred());
     try {
       if (source.getPreferred()) {
@@ -197,11 +234,11 @@ public class MetadataSourceService {
   public List<MetadataSource> delete(final long id) throws MetadataSourceException {
     final MetadataSource source = this.doGetById(id);
     try {
-      log.debug("Deleting metadata source: name={}", source.getName());
+      log.debug("Deleting metadata source: name={}", source.getAdaptorName());
       this.metadataSourceRepository.delete(source);
       this.metadataSourceRepository.flush();
       log.debug("Loading all metadata sources");
-      return this.loadMetadataSources();
+      return loadMetadataSources();
     } catch (Exception error) {
       throw new MetadataSourceException("Failed to delete metadata source", error);
     }

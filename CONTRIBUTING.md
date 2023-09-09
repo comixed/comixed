@@ -153,7 +153,7 @@ The application is composed of several modules:
  * **comixed-adaptors**: the various adaptors for loading archives, images, etc.,
  * **comixed-messaging**: the messaging layer for browser/server communications,  
  * **comixed-services**: the business logic layer,
- * **comixed-metadata**: the library for building comic metadata,
+ * **comixed-metadata**: the library for building comic metadata adaptors,
  * **comixed-state**: state management layer,
  * **comixed-batch**: batch processing layer,
  * **comixed-auth**: the authentication layer,
@@ -175,6 +175,28 @@ This is the final application artifact and what you will now be able to run.
 
 If, however, you saw any errors, you'll need to go back and verify that
 you've properly setup your environment.
+
+
+## Including External Metadata Adaptors
+
+ComiXed supports loading external metadata adaptors at startup. These 
+adaptors are distributed as JAR files and can be placed into the ```lib```
+directory before starting the application.
+
+To do this in development, where we don't have such a directory, the best
+practice is to do the following:
+
+1. Create a directory next to your comixed git repostory named ```extlib```.
+1. In IntelliJ:
+   * right click on **comixed-app**
+   * select **Open Module Settings**
+   * select **comixed-app**
+   * select **Dependencies**
+   * click the + sign
+   * select **1. JARs or Directories...**
+   * navigate to the external JAR file.
+
+When you start your server, it will load any JAR file in the specified directory.
 
 # Running The Application
 

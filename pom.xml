@@ -433,6 +433,7 @@
     <module>comixed-webui</module>
     <module>comixed-dbtool</module>
     <module>comixed-app</module>
+    <module>comixed-metadata-comicvine</module>
     <module>comixed-release</module>
   </modules>
   <distributionManagement>

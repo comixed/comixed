@@ -90,7 +90,7 @@ public class CreateMetadataSourceProcessor
           if (StringUtils.hasLength(web)) {
             log.trace("Loading ComicVine metadata source");
             final MetadataSource source =
-                this.metadataSourceService.getByBeanName(COMIC_VINE_METADATA_ADAPTOR);
+                this.metadataSourceService.getByAdaptorName(COMIC_VINE_METADATA_ADAPTOR);
             if (source != null) {
 
               log.trace("Checking if web address is for ComicVine: {}", web);

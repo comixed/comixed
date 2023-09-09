@@ -45,24 +45,7 @@ public class MetadataSource {
   private Long id;
 
   @Column(
-      name = "bean_name",
-      length = 32,
-      unique = true,
-      insertable = true,
-      updatable = true,
-      nullable = false)
-  @JsonProperty("beanName")
-  @JsonView({
-    View.MetadataSourceList.class,
-    View.ComicDetailsView.class,
-  })
-  @Getter
-  @Setter
-  @NonNull
-  private String beanName;
-
-  @Column(
-      name = "display_name",
+      name = "adaptor_name",
       length = 64,
       unique = true,
       insertable = true,
@@ -73,7 +56,7 @@ public class MetadataSource {
   @Getter
   @Setter
   @NonNull
-  private String name;
+  private String adaptorName;
 
   @Column(name = "preferred_source", insertable = true, updatable = true, nullable = false)
   @JsonProperty("preferred")
@@ -93,9 +76,16 @@ public class MetadataSource {
   @Getter
   private Set<MetadataSourceProperty> properties = new HashSet<>();
 
+  @Transient
+  @JsonProperty("available")
+  @JsonView(View.MetadataSourceList.class)
+  @Getter
+  @Setter
+  private boolean available = false;
+
   @Override
   public int hashCode() {
-    return Objects.hash(name);
+    return Objects.hash(adaptorName);
   }
 
   @Override
@@ -103,6 +93,6 @@ public class MetadataSource {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final MetadataSource that = (MetadataSource) o;
-    return name.equals(that.name);
+    return adaptorName.equals(that.adaptorName);
   }
 }

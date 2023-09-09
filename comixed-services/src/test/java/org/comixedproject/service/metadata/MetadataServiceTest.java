@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.comixedproject.metadata.MetadataAdaptorRegistry;
 import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.adaptors.MetadataAdaptor;
 import org.comixedproject.metadata.model.IssueDetailsMetadata;
@@ -55,7 +56,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.context.ApplicationContext;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MetadataServiceTest {
@@ -77,13 +77,13 @@ public class MetadataServiceTest {
   private static final String TEST_TITLE = "The Title";
   private static final String TEST_DESCRIPTION = "This is the comic's description";
   private static final String TEST_ISSUE_DETAILS_KEY = "IssueDetailsKey";
-  private static final String TEST_METADATA_SOURCE_BEAN_NAME = "farkleScrapingAdaptor";
+  private static final String TEST_METADATA_SOURCE_NAME = "Farkle";
   private static final String TEST_SOURCE_ID = "93782";
 
   @InjectMocks private MetadataService metadataService;
-  @Mock private MetadataSourceService metadataSourceService;
   @Mock private ConfigurationService configurationService;
-  @Mock private ApplicationContext applicationContext;
+  @Mock private MetadataSourceService metadataSourceService;
+  @Mock private MetadataAdaptorRegistry metadataAdaptorRegistry;
   @Mock private MetadataCacheService metadataCacheService;
   @Mock private IssueService issueService;
   @Mock private MetadataAdaptor metadataAdaptor;
@@ -108,7 +108,8 @@ public class MetadataServiceTest {
   private List<IssueDetailsMetadata> issueDetailsMetadataList = new ArrayList<>();
 
   @Before
-  public void setUp() throws MetadataSourceException {
+  public void setUp() throws MetadataSourceException, MetadataException {
+    Mockito.when(configurationService.isFeatureEnabled(Mockito.anyString())).thenReturn(true);
     Mockito.when(loadedComicBook.getComicDetail()).thenReturn(loadedComicDetail);
 
     Mockito.when(metadataAdaptor.getSource()).thenReturn(TEST_CACHE_SOURCE);
@@ -117,6 +118,8 @@ public class MetadataServiceTest {
         .thenReturn(TEST_ISSUE_KEY);
     Mockito.when(metadataAdaptor.getIssueDetailsKey(Mockito.anyString()))
         .thenReturn(TEST_ISSUE_DETAILS_KEY);
+    Mockito.when(metadataAdaptorRegistry.getAdaptor(Mockito.anyString()))
+        .thenReturn(metadataAdaptor);
 
     Mockito.when(issueDetailsMetadata.getPublisher()).thenReturn(TEST_PUBLISHER);
     Mockito.when(issueDetailsMetadata.getSeries()).thenReturn(TEST_SERIES_NAME);
@@ -129,9 +132,7 @@ public class MetadataServiceTest {
     Mockito.when(issueDetailsMetadata.getSourceId()).thenReturn(TEST_SOURCE_ID);
 
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
-    Mockito.when(metadataSource.getBeanName()).thenReturn(TEST_METADATA_SOURCE_BEAN_NAME);
-    Mockito.when(applicationContext.getBean(TEST_METADATA_SOURCE_BEAN_NAME, MetadataAdaptor.class))
-        .thenReturn(metadataAdaptor);
+    Mockito.when(metadataSource.getAdaptorName()).thenReturn(TEST_METADATA_SOURCE_NAME);
   }
 
   @Test(expected = MetadataException.class)
@@ -162,8 +163,6 @@ public class MetadataServiceTest {
     assertTrue(result.isEmpty());
 
     Mockito.verify(metadataSourceService, Mockito.times(1)).getById(TEST_METADATA_SOURCE_ID);
-    Mockito.verify(applicationContext, Mockito.times(1))
-        .getBean(TEST_METADATA_SOURCE_BEAN_NAME, MetadataAdaptor.class);
     Mockito.verify(metadataAdaptor, Mockito.times(1))
         .getVolumes(TEST_SERIES_NAME, TEST_MAX_RECORDS, metadataSource);
     Mockito.verify(metadataCacheService, Mockito.never())
@@ -203,8 +202,6 @@ public class MetadataServiceTest {
     }
 
     Mockito.verify(metadataSourceService, Mockito.times(1)).getById(TEST_METADATA_SOURCE_ID);
-    Mockito.verify(applicationContext, Mockito.times(1))
-        .getBean(TEST_METADATA_SOURCE_BEAN_NAME, MetadataAdaptor.class);
     Mockito.verify(metadataAdaptor, Mockito.times(1))
         .getVolumes(TEST_SERIES_NAME, TEST_MAX_RECORDS, metadataSource);
     Mockito.verify(metadataCacheService, Mockito.never())
@@ -232,8 +229,6 @@ public class MetadataServiceTest {
       metadataService.getVolumes(TEST_METADATA_SOURCE_ID, TEST_SERIES_NAME, TEST_MAX_RECORDS, true);
     } finally {
       Mockito.verify(metadataSourceService, Mockito.times(1)).getById(TEST_METADATA_SOURCE_ID);
-      Mockito.verify(applicationContext, Mockito.times(1))
-          .getBean(TEST_METADATA_SOURCE_BEAN_NAME, MetadataAdaptor.class);
       Mockito.verify(metadataAdaptor, Mockito.times(1))
           .getVolumes(TEST_SERIES_NAME, TEST_MAX_RECORDS, metadataSource);
       Mockito.verify(metadataCacheService, Mockito.never())
@@ -275,8 +270,6 @@ public class MetadataServiceTest {
     }
 
     Mockito.verify(metadataSourceService, Mockito.times(1)).getById(TEST_METADATA_SOURCE_ID);
-    Mockito.verify(applicationContext, Mockito.times(1))
-        .getBean(TEST_METADATA_SOURCE_BEAN_NAME, MetadataAdaptor.class);
     Mockito.verify(metadataAdaptor, Mockito.times(1))
         .getVolumes(TEST_SERIES_NAME, TEST_MAX_RECORDS, metadataSource);
     Mockito.verify(metadataCacheService, Mockito.times(1))
@@ -306,8 +299,6 @@ public class MetadataServiceTest {
     assertTrue(result.isEmpty());
 
     Mockito.verify(metadataSourceService, Mockito.times(1)).getById(TEST_METADATA_SOURCE_ID);
-    Mockito.verify(applicationContext, Mockito.times(1))
-        .getBean(TEST_METADATA_SOURCE_BEAN_NAME, MetadataAdaptor.class);
     Mockito.verify(metadataCacheService, Mockito.times(1))
         .getFromCache(TEST_CACHE_SOURCE, TEST_VOLUME_KEY);
     Mockito.verify(objectMapper, Mockito.times(1))
@@ -341,8 +332,6 @@ public class MetadataServiceTest {
     }
 
     Mockito.verify(metadataSourceService, Mockito.times(1)).getById(TEST_METADATA_SOURCE_ID);
-    Mockito.verify(applicationContext, Mockito.times(1))
-        .getBean(TEST_METADATA_SOURCE_BEAN_NAME, MetadataAdaptor.class);
     Mockito.verify(metadataCacheService, Mockito.times(1))
         .getFromCache(TEST_CACHE_SOURCE, TEST_VOLUME_KEY);
     Mockito.verify(objectMapper, Mockito.times(cachedEntryList.size()))
@@ -383,8 +372,6 @@ public class MetadataServiceTest {
     assertNull(result);
 
     Mockito.verify(metadataSourceService, Mockito.times(1)).getById(TEST_METADATA_SOURCE_ID);
-    Mockito.verify(applicationContext, Mockito.times(1))
-        .getBean(TEST_METADATA_SOURCE_BEAN_NAME, MetadataAdaptor.class);
     Mockito.verify(metadataAdaptor, Mockito.times(1))
         .getIssue(TEST_VOLUME_ID, TEST_ISSUE_NUMBER, metadataSource);
     Mockito.verify(metadataCacheService, Mockito.never())
@@ -417,8 +404,6 @@ public class MetadataServiceTest {
     assertEquals(TEST_ENCODED_VALUE, cacheEntryList.getValue().get(0));
 
     Mockito.verify(metadataSourceService, Mockito.times(1)).getById(TEST_METADATA_SOURCE_ID);
-    Mockito.verify(applicationContext, Mockito.times(1))
-        .getBean(TEST_METADATA_SOURCE_BEAN_NAME, MetadataAdaptor.class);
     Mockito.verify(metadataAdaptor, Mockito.times(1))
         .getIssue(TEST_VOLUME_ID, TEST_ISSUE_NUMBER, metadataSource);
     Mockito.verify(objectMapper, Mockito.times(1)).writeValueAsString(issueMetadata);
@@ -443,8 +428,6 @@ public class MetadataServiceTest {
       metadataService.getIssue(TEST_METADATA_SOURCE_ID, TEST_VOLUME_ID, TEST_ISSUE_NUMBER, true);
     } finally {
       Mockito.verify(metadataSourceService, Mockito.times(1)).getById(TEST_METADATA_SOURCE_ID);
-      Mockito.verify(applicationContext, Mockito.times(1))
-          .getBean(TEST_METADATA_SOURCE_BEAN_NAME, MetadataAdaptor.class);
       Mockito.verify(metadataAdaptor, Mockito.times(1))
           .getIssue(TEST_VOLUME_ID, TEST_ISSUE_NUMBER, metadataSource);
       Mockito.verify(objectMapper, Mockito.times(1)).writeValueAsString(issueMetadata);
@@ -481,8 +464,6 @@ public class MetadataServiceTest {
     assertEquals(TEST_ENCODED_VALUE, cacheEntryList.getValue().get(0));
 
     Mockito.verify(metadataSourceService, Mockito.times(1)).getById(TEST_METADATA_SOURCE_ID);
-    Mockito.verify(applicationContext, Mockito.times(1))
-        .getBean(TEST_METADATA_SOURCE_BEAN_NAME, MetadataAdaptor.class);
     Mockito.verify(metadataCacheService, Mockito.times(1))
         .getFromCache(Mockito.anyString(), Mockito.anyString());
     Mockito.verify(metadataAdaptor, Mockito.times(1))
@@ -519,8 +500,6 @@ public class MetadataServiceTest {
     assertSame(issueMetadata, result);
 
     Mockito.verify(metadataSourceService, Mockito.times(1)).getById(TEST_METADATA_SOURCE_ID);
-    Mockito.verify(applicationContext, Mockito.times(1))
-        .getBean(TEST_METADATA_SOURCE_BEAN_NAME, MetadataAdaptor.class);
     Mockito.verify(metadataCacheService, Mockito.times(1))
         .getFromCache(Mockito.anyString(), Mockito.anyString());
     Mockito.verify(objectMapper, Mockito.times(1))
@@ -548,8 +527,6 @@ public class MetadataServiceTest {
     assertSame(issueMetadata, result);
 
     Mockito.verify(metadataSourceService, Mockito.times(1)).getById(TEST_METADATA_SOURCE_ID);
-    Mockito.verify(applicationContext, Mockito.times(1))
-        .getBean(TEST_METADATA_SOURCE_BEAN_NAME, MetadataAdaptor.class);
     Mockito.verify(metadataCacheService, Mockito.times(1))
         .getFromCache(Mockito.anyString(), Mockito.anyString());
     Mockito.verify(objectMapper, Mockito.times(1))

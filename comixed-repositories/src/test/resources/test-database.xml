@@ -11,12 +11,10 @@
                              Date_format="YYYY-mm-dd"
                              last_modified_on="[now]"/>
     <metadata_sources id="1000"
-                      bean_name="farkleScrapingAdaptor"
-                      display_name="Farkle Metadata Source"
+                      adaptor_name="FarkleScrapingAdaptor"
                       preferred_source="false"/>
     <metadata_sources id="1001"
-                      bean_name="unusedScrapingAdaptor"
-                      display_name="Unused Metadata Source"
+                      adaptor_name="UnusedScrapingAdaptor"
                       preferred_source="true"/>
     <metadata_source_properties id="1000"
                                 metadata_source_id="1000"

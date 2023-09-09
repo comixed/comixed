@@ -69,7 +69,7 @@ public class CreateMetadataSourceProcessorTest {
   public void setUp() throws AdaptorException, IOException {
     Mockito.when(xmlConverter.getObjectMapper()).thenReturn(objectMapper);
     Mockito.when(metadataSourceService.getByName(Mockito.anyString())).thenReturn(metadataSource);
-    Mockito.when(metadataSourceService.getByBeanName(Mockito.anyString()))
+    Mockito.when(metadataSourceService.getByAdaptorName(Mockito.anyString()))
         .thenReturn(metadataSource);
     Mockito.when(comicBookAdaptor.loadFile(Mockito.any(ComicBook.class), Mockito.anyString()))
         .thenReturn(TEST_METADATA_CONTENT);
@@ -199,7 +199,7 @@ public class CreateMetadataSourceProcessorTest {
   @Test
   public void testProcessNoComicVineBean() throws Exception {
     Mockito.when(comicInfo.getWeb()).thenReturn(TEST_WEB_ADDRESS);
-    Mockito.when(metadataSourceService.getByBeanName(Mockito.anyString())).thenReturn(null);
+    Mockito.when(metadataSourceService.getByAdaptorName(Mockito.anyString())).thenReturn(null);
 
     final ComicBook result = processor.process(comicBook);
 
@@ -211,7 +211,7 @@ public class CreateMetadataSourceProcessorTest {
     assertArrayEquals(TEST_METADATA_CONTENT, inputStream.readAllBytes());
 
     Mockito.verify(metadataSourceService, Mockito.times(1))
-        .getByBeanName(COMIC_VINE_METADATA_ADAPTOR);
+        .getByAdaptorName(COMIC_VINE_METADATA_ADAPTOR);
     Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadFile(comicBook, COMIC_INFO_XML);
     Mockito.verify(comicInfo, Mockito.times(1)).getWeb();
     Mockito.verify(comicBook, Mockito.never()).setMetadata(Mockito.any());
@@ -237,7 +237,7 @@ public class CreateMetadataSourceProcessorTest {
     assertEquals(TEST_COMIC_VINE_ID, metadata.getReferenceId());
 
     Mockito.verify(metadataSourceService, Mockito.times(1))
-        .getByBeanName(COMIC_VINE_METADATA_ADAPTOR);
+        .getByAdaptorName(COMIC_VINE_METADATA_ADAPTOR);
     Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadFile(comicBook, COMIC_INFO_XML);
     Mockito.verify(comicInfo, Mockito.times(1)).getWeb();
     Mockito.verify(comicBook, Mockito.times(1)).setMetadata(metadata);

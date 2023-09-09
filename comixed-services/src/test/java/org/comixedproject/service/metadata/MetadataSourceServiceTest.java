@@ -20,9 +20,12 @@ package org.comixedproject.service.metadata;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.comixedproject.metadata.MetadataAdaptorProvider;
+import org.comixedproject.metadata.MetadataAdaptorRegistry;
 import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.model.metadata.MetadataSourceProperty;
 import org.comixedproject.repositories.metadata.MetadataSourceRepository;
@@ -35,27 +38,52 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class MetadataSourceServiceTest {
   private static final long TEST_SOURCE_ID = 723L;
-  private static final String TEST_SOURCE_NAME = "Metadata Source Name";
-  private static final String TEST_BEAN_NAME = "metadataSourceBean";
+  private static final String TEST_ADAPTOR_NAME = "Metadata Adaptor Name";
   private static final String TEST_EXISTING_PROPERTY_NAME = "property-one";
   private static final String TEST_EXISTING_PROPERTY_VALUE = "Property value 1";
   private static final String TEST_CREATED_PROPERTY_NAME = "property-two";
   private static final String TEST_CREATED_PROPERTY_VALUE = "Property value 2";
   private static final String TEST_REMOVED_PROPERTY_NAME = "property-three";
   private static final String TEST_REMOVED_PROPERTY_VALUE = "Property value 3";
+  private static final String TEST_METADATA_ADAPTOR_NAME = "The adaptor's name";
+  private static final String TEST_METADATA_ADAPTOR_PROVIDER_PROPERTY =
+      "The provider property name";
+
   @Captor ArgumentCaptor<MetadataSource> metadataSourceArgumentCaptor;
   @InjectMocks private MetadataSourceService service;
   @Mock private MetadataSourceRepository metadataSourceRepository;
-  @Mock private List<MetadataSource> metadataSourceList;
+  @Mock private MetadataAdaptorRegistry metadataAdaptorRegistry;
   @Mock private MetadataSource existingSource;
   @Mock private MetadataSource incomingSource;
   @Mock private MetadataSource savedSource;
+  @Mock private MetadataAdaptorProvider metadataAdaptorProvider;
+  @Mock private MetadataSource existingMetadataSource;
+  @Mock private MetadataSource savedMetadataSource;
+  @Mock private MetadataSourceProperty metadataSourceProperty;
+
   private Set<MetadataSourceProperty> sourceProperties = new HashSet<>();
+  private List<MetadataAdaptorProvider> metadatAdaptorList = new ArrayList<>();
+  private List<MetadataSource> metadataSourceList = new ArrayList<>();
+  private Set<MetadataSourceProperty> metadataSourcePropertyList = new HashSet<>();
+  private Set<String> metadataAdaptorProviderPropertyList = new HashSet<>();
 
   @Before
   public void setUp() {
-    Mockito.when(incomingSource.getName()).thenReturn(TEST_SOURCE_NAME);
-    Mockito.when(incomingSource.getBeanName()).thenReturn(TEST_BEAN_NAME);
+    metadataAdaptorProviderPropertyList.add(TEST_METADATA_ADAPTOR_PROVIDER_PROPERTY);
+    Mockito.when(metadataAdaptorProvider.getProperties())
+        .thenReturn(metadataAdaptorProviderPropertyList);
+    Mockito.when(metadataAdaptorProvider.getName()).thenReturn(TEST_METADATA_ADAPTOR_NAME);
+    metadatAdaptorList.add(metadataAdaptorProvider);
+    Mockito.when(metadataAdaptorRegistry.getAdaptors()).thenReturn(metadatAdaptorList);
+
+    metadataSourcePropertyList.add(metadataSourceProperty);
+    Mockito.when(existingMetadataSource.getAdaptorName()).thenReturn(TEST_METADATA_ADAPTOR_NAME);
+    metadataSourceList.add(existingMetadataSource);
+
+    Mockito.when(metadataSourceRepository.save(metadataSourceArgumentCaptor.capture()))
+        .thenReturn(savedMetadataSource);
+
+    Mockito.when(incomingSource.getAdaptorName()).thenReturn(TEST_ADAPTOR_NAME);
     Mockito.when(incomingSource.getPreferred()).thenReturn(false);
     sourceProperties.add(
         new MetadataSourceProperty(
@@ -67,15 +95,56 @@ public class MetadataSourceServiceTest {
   }
 
   @Test
+  public void testLoadMetadataSourcesNoneAvailable() {
+    Mockito.when(metadataAdaptorProvider.getName())
+        .thenReturn(TEST_METADATA_ADAPTOR_NAME.substring(1));
+    Mockito.when(metadataSourceRepository.loadMetadataSources()).thenReturn(metadataSourceList);
+
+    final List<MetadataSource> result = service.loadMetadataSources();
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+
+    Mockito.verify(metadataSourceRepository, Mockito.times(2)).loadMetadataSources();
+  }
+
+  @Test
+  public void testLoadMetadataSourcesNewSourceFound() {
+    final List<MetadataSource> emptyMetadataSourceList = new ArrayList<>();
+    Mockito.when(metadataSourceRepository.loadMetadataSources())
+        .thenReturn(emptyMetadataSourceList, metadataSourceList);
+
+    final List<MetadataSource> result = service.loadMetadataSources();
+
+    final MetadataSource metadataSource = metadataSourceArgumentCaptor.getValue();
+    assertNotNull(metadataSource);
+    assertFalse(metadataSource.getProperties().isEmpty());
+    assertTrue(
+        metadataSource
+            .getProperties()
+            .contains(
+                new MetadataSourceProperty(
+                    metadataSource, TEST_METADATA_ADAPTOR_PROVIDER_PROPERTY, "")));
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertSame(existingMetadataSource, result.get(0));
+
+    Mockito.verify(metadataSourceRepository, Mockito.times(2)).loadMetadataSources();
+    Mockito.verify(metadataSourceRepository, Mockito.times(1)).save(metadataSource);
+  }
+
+  @Test
   public void testLoadMetadataSources() {
     Mockito.when(metadataSourceRepository.loadMetadataSources()).thenReturn(metadataSourceList);
 
     final List<MetadataSource> result = service.loadMetadataSources();
 
     assertNotNull(result);
-    assertSame(metadataSourceList, result);
+    assertFalse(result.isEmpty());
+    assertSame(existingMetadataSource, result.get(0));
 
-    Mockito.verify(metadataSourceRepository, Mockito.times(1)).loadMetadataSources();
+    Mockito.verify(metadataSourceRepository, Mockito.times(2)).loadMetadataSources();
   }
 
   @Test(expected = MetadataSourceException.class)
@@ -103,37 +172,37 @@ public class MetadataSourceServiceTest {
 
   @Test
   public void testGetByBeanNameNotFound() {
-    Mockito.when(metadataSourceRepository.getByBeanName(Mockito.anyString())).thenReturn(null);
+    Mockito.when(metadataSourceRepository.getByAdaptorName(Mockito.anyString())).thenReturn(null);
 
-    final MetadataSource result = service.getByBeanName(TEST_BEAN_NAME);
+    final MetadataSource result = service.getByAdaptorName(TEST_ADAPTOR_NAME);
 
     assertNull(result);
 
-    Mockito.verify(metadataSourceRepository, Mockito.times(1)).getByBeanName(TEST_BEAN_NAME);
+    Mockito.verify(metadataSourceRepository, Mockito.times(1)).getByAdaptorName(TEST_ADAPTOR_NAME);
   }
 
   @Test
   public void testGetByBeanName() {
-    Mockito.when(metadataSourceRepository.getByBeanName(Mockito.anyString()))
+    Mockito.when(metadataSourceRepository.getByAdaptorName(Mockito.anyString()))
         .thenReturn(existingSource);
 
-    final MetadataSource result = service.getByBeanName(TEST_BEAN_NAME);
+    final MetadataSource result = service.getByAdaptorName(TEST_ADAPTOR_NAME);
 
     assertNotNull(result);
     assertSame(existingSource, result);
 
-    Mockito.verify(metadataSourceRepository, Mockito.times(1)).getByBeanName(TEST_BEAN_NAME);
+    Mockito.verify(metadataSourceRepository, Mockito.times(1)).getByAdaptorName(TEST_ADAPTOR_NAME);
   }
 
   @Test
   public void testGetByNameNotFound() {
     Mockito.when(metadataSourceRepository.getByName(Mockito.anyString())).thenReturn(null);
 
-    final MetadataSource result = service.getByName(TEST_SOURCE_NAME);
+    final MetadataSource result = service.getByName(TEST_ADAPTOR_NAME);
 
     assertNull(result);
 
-    Mockito.verify(metadataSourceRepository, Mockito.times(1)).getByName(TEST_SOURCE_NAME);
+    Mockito.verify(metadataSourceRepository, Mockito.times(1)).getByName(TEST_ADAPTOR_NAME);
   }
 
   @Test
@@ -141,12 +210,12 @@ public class MetadataSourceServiceTest {
     Mockito.when(metadataSourceRepository.getByName(Mockito.anyString()))
         .thenReturn(existingSource);
 
-    final MetadataSource result = service.getByName(TEST_SOURCE_NAME);
+    final MetadataSource result = service.getByName(TEST_ADAPTOR_NAME);
 
     assertNotNull(result);
     assertSame(existingSource, result);
 
-    Mockito.verify(metadataSourceRepository, Mockito.times(1)).getByName(TEST_SOURCE_NAME);
+    Mockito.verify(metadataSourceRepository, Mockito.times(1)).getByName(TEST_ADAPTOR_NAME);
   }
 
   @Test(expected = MetadataSourceException.class)
@@ -174,8 +243,7 @@ public class MetadataSourceServiceTest {
 
     final MetadataSource record = metadataSourceArgumentCaptor.getValue();
     assertNotNull(record);
-    assertEquals(TEST_SOURCE_NAME, record.getName());
-    assertEquals(TEST_BEAN_NAME, record.getBeanName());
+    assertEquals(TEST_ADAPTOR_NAME, record.getAdaptorName());
     assertFalse(record.getProperties().isEmpty());
     assertTrue(
         record
@@ -265,8 +333,7 @@ public class MetadataSourceServiceTest {
     assertNotNull(record);
     assertSame(savedSource, record);
 
-    Mockito.verify(savedSource, Mockito.times(1)).setName(TEST_SOURCE_NAME);
-    Mockito.verify(savedSource, Mockito.times(1)).setBeanName(TEST_BEAN_NAME);
+    Mockito.verify(savedSource, Mockito.times(1)).setAdaptorName(TEST_ADAPTOR_NAME);
 
     assertFalse(properties.isEmpty());
 
@@ -338,7 +405,8 @@ public class MetadataSourceServiceTest {
     final List<MetadataSource> result = service.delete(TEST_SOURCE_ID);
 
     assertNotNull(result);
-    assertSame(metadataSourceList, result);
+    assertFalse(result.isEmpty());
+    assertTrue(result.contains(existingMetadataSource));
 
     Mockito.verify(metadataSourceRepository, Mockito.times(1)).getById(TEST_SOURCE_ID);
     Mockito.verify(metadataSourceRepository, Mockito.times(1)).delete(savedSource);

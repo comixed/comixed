@@ -52,7 +52,6 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 public class MetadataSourceRepositoryTest {
   private static final long TEST_EXISTING_ID = 1001L;
   private static final String TEST_NEW_NAME = "The New Name";
-  private static final String TEST_NEW_BEAN_NAME = "The New Bean Name";
 
   @Autowired private MetadataSourceRepository repository;
 
@@ -71,8 +70,7 @@ public class MetadataSourceRepositoryTest {
     assertNotNull(source);
 
     final MetadataSourceProperty property = source.getProperties().stream().findFirst().get();
-    source.setName(TEST_NEW_NAME);
-    source.setBeanName(TEST_NEW_BEAN_NAME);
+    source.setAdaptorName(TEST_NEW_NAME);
     source.getProperties().clear();
     source
         .getProperties()
@@ -84,8 +82,7 @@ public class MetadataSourceRepositoryTest {
 
     assertNotNull(record);
 
-    assertEquals(TEST_NEW_NAME, record.getName());
-    assertEquals(TEST_NEW_BEAN_NAME, record.getBeanName());
+    assertEquals(TEST_NEW_NAME, record.getAdaptorName());
   }
 
   @Test

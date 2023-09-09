@@ -71,7 +71,7 @@ public class MetadataSourceController {
   @JsonView(View.MetadataSourceDetail.class)
   public MetadataSource create(@RequestBody() final MetadataSource source)
       throws MetadataSourceException {
-    log.info("Saving new metadata source: {}", source.getName());
+    log.info("Saving new metadata source: {}", source.getAdaptorName());
     return this.metadataSourceService.create(source);
   }
 
