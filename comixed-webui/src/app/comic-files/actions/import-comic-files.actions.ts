@@ -24,6 +24,7 @@ export const sendComicFiles = createAction(
   props<{
     files: ComicFile[];
     skipMetadata: boolean;
+    skipBlockingPages: boolean;
   }>()
 );
 

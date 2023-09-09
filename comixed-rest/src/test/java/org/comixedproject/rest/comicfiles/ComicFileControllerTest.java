@@ -18,6 +18,7 @@
 
 package org.comixedproject.rest.comicfiles;
 
+import static org.comixedproject.batch.comicbooks.AddComicsConfiguration.PARAM_SKIP_BLOCKING_PAGES;
 import static org.comixedproject.batch.comicbooks.AddComicsConfiguration.PARAM_SKIP_METADATA;
 import static org.junit.Assert.*;
 
@@ -63,6 +64,7 @@ public class ComicFileControllerTest {
   private static final String TEST_VOLUME = "The Volume";
   private static final String TEST_ISSUE_NUMBER = "983a";
   private static final Boolean TEST_SKIP_METADATA = RandomUtils.nextBoolean();
+  private static final Boolean TEST_SKIP_BLOCKING_PAGES = RandomUtils.nextBoolean();
 
   @InjectMocks private ComicFileController controller;
   @Mock private ComicFileService comicFileService;
@@ -138,12 +140,16 @@ public class ComicFileControllerTest {
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
 
-    controller.importComicFiles(new ImportComicFilesRequest(filenameList, TEST_SKIP_METADATA));
+    controller.importComicFiles(
+        new ImportComicFilesRequest(filenameList, TEST_SKIP_METADATA, TEST_SKIP_BLOCKING_PAGES));
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
     assertNotNull(jobParameters);
     assertEquals(String.valueOf(TEST_SKIP_METADATA), jobParameters.getString(PARAM_SKIP_METADATA));
+    assertEquals(
+        String.valueOf(TEST_SKIP_BLOCKING_PAGES),
+        jobParameters.getString(PARAM_SKIP_BLOCKING_PAGES));
 
     Mockito.verify(comicFileService, Mockito.times(1)).importComicFiles(filenameList);
     Mockito.verify(jobLauncher, Mockito.times(1)).run(addComicsToLibraryJob, jobParameters);

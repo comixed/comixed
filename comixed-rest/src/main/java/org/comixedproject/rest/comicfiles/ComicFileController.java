@@ -18,6 +18,9 @@
 
 package org.comixedproject.rest.comicfiles;
 
+import static org.comixedproject.batch.comicbooks.AddComicsConfiguration.PARAM_SKIP_BLOCKING_PAGES;
+import static org.comixedproject.batch.comicbooks.AddComicsConfiguration.PARAM_SKIP_METADATA;
+
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import java.io.IOException;
@@ -158,9 +161,8 @@ public class ComicFileController {
         addComicsToLibraryJob,
         new JobParametersBuilder()
             .addLong(AddComicsConfiguration.PARAM_ADD_COMICS_STARTED, System.currentTimeMillis())
-            .addString(
-                AddComicsConfiguration.PARAM_SKIP_METADATA,
-                String.valueOf(request.getSkipMetadata()))
+            .addString(PARAM_SKIP_METADATA, String.valueOf(request.getSkipMetadata()))
+            .addString(PARAM_SKIP_BLOCKING_PAGES, String.valueOf(request.getSkipBlockingPages()))
             .toJobParameters());
   }
 

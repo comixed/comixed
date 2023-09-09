@@ -42,7 +42,8 @@ export class ImportComicFilesEffects {
         this.comicImportService
           .sendComicFiles({
             files: action.files,
-            skipMetadata: action.skipMetadata
+            skipMetadata: action.skipMetadata,
+            skipBlockingPages: action.skipBlockingPages
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),

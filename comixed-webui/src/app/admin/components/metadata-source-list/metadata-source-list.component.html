@@ -23,9 +23,11 @@
   *ngIf="showConfigPopup"
   class="cx-hover cx-centered cx-width-25 cx-border-primary-1"
 >
-  <h3>{{ "metadata-source.configuration.title" | translate }}</h3>
   <form [formGroup]="metadataForm" class="cx-width-100">
     <mat-card>
+      <mat-card-title>
+        <h3>{{ "metadata-source.configuration.title" | translate }}</h3>
+      </mat-card-title>
       <mat-card-content>
         <mat-form-field class="cx-width-100" appearance="fill">
           <mat-checkbox

@@ -18,10 +18,16 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
+import static org.comixedproject.batch.comicbooks.AddComicsConfiguration.PARAM_SKIP_BLOCKING_PAGES;
+
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.PageState;
 import org.comixedproject.service.comicpages.BlockedHashService;
+import org.springframework.batch.core.ExitStatus;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,11 +39,21 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class MarkBlockedPagesProcessor implements ItemProcessor<ComicBook, ComicBook> {
+public class MarkBlockedPagesProcessor
+    implements ItemProcessor<ComicBook, ComicBook>, StepExecutionListener {
   @Autowired private BlockedHashService blockedHashService;
+
+  private JobParameters jobParameters;
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
+    final boolean skipBlockingPages =
+        this.jobParameters.getParameters().containsKey(PARAM_SKIP_BLOCKING_PAGES)
+            && Boolean.valueOf(this.jobParameters.getString(PARAM_SKIP_BLOCKING_PAGES));
+    if (skipBlockingPages) {
+      log.trace("Skip blocking pages enabled");
+      return comicBook;
+    }
     log.debug("Marking blocked pages for comicBook: id={}", comicBook.getId());
     comicBook
         .getPages()
@@ -50,5 +66,15 @@ public class MarkBlockedPagesProcessor implements ItemProcessor<ComicBook, Comic
               page.setPageState(deleted ? PageState.DELETED : PageState.STABLE);
             });
     return comicBook;
+  }
+
+  @Override
+  public void beforeStep(final StepExecution stepExecution) {
+    this.jobParameters = stepExecution.getJobExecution().getJobParameters();
+  }
+
+  @Override
+  public ExitStatus afterStep(final StepExecution stepExecution) {
+    return null;
   }
 }

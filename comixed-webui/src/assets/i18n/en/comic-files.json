@@ -65,6 +65,7 @@
       "find-files": "Load files under this directory (shift+ctrl+f).",
       "select-all": "Select all comic files for import (ctrl+a).",
       "show-finder-form": "Find comic files to import...",
+      "skip-blocking-pages": "Skip marked blocked pages as deleted (currently {skipBlockingPages, select, true{ON} other{OFF}})",
       "skip-metadata": "Skip processing metadata (currently {skipMetadata, select, true{ON} other{OFF}})",
       "start-import": "Start importing the selected comic files (ctrl+i).",
       "toggle-file-lookup-form": "Toggle the comic file lookup form."

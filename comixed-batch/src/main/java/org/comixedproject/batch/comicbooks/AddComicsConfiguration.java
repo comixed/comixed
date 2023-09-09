@@ -50,6 +50,7 @@ import org.springframework.context.annotation.Configuration;
 public class AddComicsConfiguration {
   public static final String PARAM_ADD_COMICS_STARTED = "job.add-comics.started";
   public static final String PARAM_SKIP_METADATA = "job.add-comics.skip-metadata";
+  public static final String PARAM_SKIP_BLOCKING_PAGES = "job.add-comics.skip-blocking-pages";
 
   @Value("${comixed.batch.chunk-size}")
   private int batchChunkSize = 10;

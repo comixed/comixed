@@ -57,7 +57,10 @@ import {
 } from '@app/comic-files/actions/comic-file-list.actions';
 import { Router } from '@angular/router';
 import { saveUserPreference } from '@app/user/actions/user.actions';
-import { SKIP_METADATA_USER_PREFERENCE } from '@app/comic-files/comic-file.constants';
+import {
+  SKIP_BLOCKING_PAGES_USER_PREFERENCE,
+  SKIP_METADATA_USER_PREFERENCE
+} from '@app/comic-files/comic-file.constants';
 
 @Component({
   selector: 'cx-import-comics',
@@ -95,6 +98,7 @@ export class ImportComicsPageComponent
   allSelected = false;
   anySelected = false;
   skipMetadata = false;
+  skipBlockingPages = false;
   showCoverPopup = false;
   comicFile: ComicFile = null;
 
@@ -121,6 +125,12 @@ export class ImportComicsPageComponent
           getUserPreference(
             user.preferences,
             SKIP_METADATA_USER_PREFERENCE,
+            `${false}`
+          ) === `${true}`;
+        this.skipBlockingPages =
+          getUserPreference(
+            user.preferences,
+            SKIP_BLOCKING_PAGES_USER_PREFERENCE,
             `${false}`
           ) === `${true}`;
       });
@@ -205,7 +215,8 @@ export class ImportComicsPageComponent
         this.store.dispatch(
           sendComicFiles({
             files: this.selectedFiles,
-            skipMetadata: this.skipMetadata
+            skipMetadata: this.skipMetadata,
+            skipBlockingPages: this.skipBlockingPages
           })
         );
       }
@@ -262,6 +273,16 @@ export class ImportComicsPageComponent
       this.comicFile = null;
       this.showCoverPopup = false;
     }
+  }
+
+  onSkipBlockingPages(skipBlockingPages: boolean): void {
+    this.logger.debug('Setting skip skipBlockingPages:', skipBlockingPages);
+    this.store.dispatch(
+      saveUserPreference({
+        name: SKIP_BLOCKING_PAGES_USER_PREFERENCE,
+        value: `${skipBlockingPages}`
+      })
+    );
   }
 
   private loadTranslations(): void {

@@ -18,11 +18,12 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.*;
+import static org.comixedproject.batch.comicbooks.AddComicsConfiguration.PARAM_SKIP_BLOCKING_PAGES;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.comicpages.PageState;
@@ -34,6 +35,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParameter;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.StepExecution;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MarkBlockedPagesProcessorTest {
@@ -43,6 +48,10 @@ public class MarkBlockedPagesProcessorTest {
   @Mock private BlockedHashService blockedHashService;
   @Mock private ComicBook comicBook;
   @Mock private Page page;
+  @Mock private Map<String, JobParameter> parameters;
+  @Mock private JobParameters jobParameters;
+  @Mock private JobExecution jobExecution;
+  @Mock private StepExecution stepExecution;
 
   private List<Page> pageList = new ArrayList<>();
 
@@ -51,6 +60,14 @@ public class MarkBlockedPagesProcessorTest {
     Mockito.when(comicBook.getPages()).thenReturn(pageList);
     Mockito.when(page.getHash()).thenReturn(TEST_HASH);
     pageList.add(page);
+
+    Mockito.when(parameters.containsKey(PARAM_SKIP_BLOCKING_PAGES)).thenReturn(true);
+    Mockito.when(jobParameters.getParameters()).thenReturn(parameters);
+    Mockito.when(jobParameters.getString(PARAM_SKIP_BLOCKING_PAGES))
+        .thenReturn(Boolean.FALSE.toString());
+    Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
+    Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
+    processor.beforeStep(stepExecution);
   }
 
   @Test
@@ -67,6 +84,34 @@ public class MarkBlockedPagesProcessorTest {
   }
 
   @Test
+  public void testProcessSkipBlockingPagesNotProvided() {
+    Mockito.when(blockedHashService.isHashBlocked(Mockito.anyString())).thenReturn(true);
+    Mockito.when(parameters.containsKey(PARAM_SKIP_BLOCKING_PAGES)).thenReturn(false);
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+
+    Mockito.verify(blockedHashService, Mockito.times(1)).isHashBlocked(TEST_HASH);
+    Mockito.verify(page, Mockito.times(1)).setPageState(PageState.DELETED);
+  }
+
+  @Test
+  public void testProcessSkipBlockingPages() {
+    Mockito.when(jobParameters.getString(PARAM_SKIP_BLOCKING_PAGES))
+        .thenReturn(Boolean.TRUE.toString());
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+
+    Mockito.verify(blockedHashService, Mockito.never()).isHashBlocked(Mockito.anyString());
+    Mockito.verify(page, Mockito.never()).setPageState(Mockito.any());
+  }
+
+  @Test
   public void testProcessWithoutBlockedPage() {
     Mockito.when(blockedHashService.isHashBlocked(Mockito.anyString())).thenReturn(false);
 
@@ -77,5 +122,10 @@ public class MarkBlockedPagesProcessorTest {
 
     Mockito.verify(blockedHashService, Mockito.times(1)).isHashBlocked(TEST_HASH);
     Mockito.verify(page, Mockito.times(1)).setPageState(PageState.STABLE);
+  }
+
+  @Test
+  public void testAfterStep() {
+    assertNull(processor.afterStep(stepExecution));
   }
 }
