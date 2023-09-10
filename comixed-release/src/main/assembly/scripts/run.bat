@@ -19,7 +19,8 @@ REM along with this program. If not, see <http://www.gnu.org/licenses>
 SETLOCAL
 CD /d %~dp0
 
-FOR %%f IN (comixed-app*.jar) DO SET JARFILE=%%f
+FOR %%f IN (comixed-app*.jar) DO SET COMIXED_JAR_FILE=%%f
+FOR %%f IN (..\lib) DO SET LIBDIR=%%f
 SET LOGFILE="%COMIXEDLOG%"
 
 :process_command_line
@@ -38,6 +39,7 @@ IF "%PARAM%" == "-i" GOTO set_image_cache_dir
 IF "%PARAM%" == "-l" GOTO set_lib_dir
 IF "%PARAM%" == "-L" GOTO set_logging_file
 IF "%PARAM%" == "-P" GOTO set_plugin_dir
+IF "%PARAM%" == "-X" GOTO set_debug_option
 SHIFT
 GOTO process_command_line
 
@@ -83,6 +85,12 @@ SHIFT
 SHIFT
 GOTO process_command_line
 
+:set_debug_option
+SET JVMOPTIONS=%JVMOPTIONS% -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=%ARG%
+SHIFT
+SHIFT
+GOTO process_command_line
+
 :show_help
 ECHO Usage: run.bat [OPTIONS]
 ECHO.
@@ -100,6 +108,7 @@ ECHO  -D            - Turn on ALL debugging (def. off)
 ECHO  -M            - Turn on metadata activity logging (def. false)
 ECHO  -C            - Turn on H2 database console"
 ECHO  -L [LOGFILE]  - Write logs to a logfile
+ECHO  -X [PORT]     - Set the debugger port
 ECHO  -h            - Show help (this text)
 ECHO.
 ECHO ENVIRONMENT VARIABLES:
@@ -108,55 +117,54 @@ GOTO exit_script
 
 :end_process_command_line
 
-SET OPTIONS=
+SET JAROPTIONS=
 
 IF "%DEBUG%" == "" GOTO skip_debug
-SET OPTIONS=%OPTIONS% --logging.level.org.comixedproject=DEBUG
+SET JAROPTIONS=%JAROPTIONS% --logging.level.org.comixedproject=DEBUG
 :skip_debug
 
 IF "%FULLDEBUG%" == "" GOTO skip_full_debug
-SET OPTIONS=%OPTIONS% --logging.level.root=DEBUG
+SET JAROPTIONS=%JAROPTIONS% --logging.level.root=DEBUG
 :skip_full_debug
 
 IF "%METADATADEBUG%" == "" GOTO skip_metadata_debug
-SET OPTIONS=%OPTIONS% --logging.level.org.comixedproject.metadata=DEBUG
+SET JAROPTIONS=%JAROPTIONS% --logging.level.org.comixedproject.metadata=DEBUG
 :skip_metadata_debug
 
 IF "%DBCONSOLE%" == "" GOTO skip_db_console
-SET OPTIONS=%OPTIONS% --spring.h2.console.enabled=true
+SET JAROPTIONS=%JAROPTIONS% --spring.h2.console.enabled=true
 :skip_db_console
 
 IF "%LOGFILE%" == "" GOTO :skip_logfile
-SET OPTIONS=%OPTIONS% --logging.file.name=%LOGFILE%
+SET JAROPTIONS=%JAROPTIONS% --logging.file.name=%LOGFILE%
 :skip_logfile
 
 IF "%JDBCURL%" == "" GOTO skip_jdbc_url
-SET OPTIONS=%OPTIONS% --spring.datasource.url=%JDBCURL%
+SET JAROPTIONS=%JAROPTIONS% --spring.datasource.url=%JDBCURL%
 :skip_jdbc_url
 
 IF "%DBUSER%" == "" GOTO skip_jdbc_user
-SET OPTIONS=%OPTIONS% --spring.datasource.username=%DBUSER%
+SET JAROPTIONS=%JAROPTIONS% --spring.datasource.username=%DBUSER%
 :skip_jdbc_user
 
 IF "%DBPWRD%" == "" GOTO skip_jdbc_pwrd
-SET OPTIONS=%OPTIONS% --spring.datasource.password=%DBPWRD%
+SET JAROPTIONS=%JAROPTIONS% --spring.datasource.password=%DBPWRD%
 :skip_jdbc_pwrd
 
 IF "%IMGCACHEDIR%" == "" GOTO skip_image_cache_dir
-SET OPTIONS=%OPTIONS% --comixed.images.cache.location=%IMGCACHEDIR%
+SET JAROPTIONS=%JAROPTIONS% --comixed.images.cache.location=%IMGCACHEDIR%
 :skip_image_cache_dir
 
 IF "%PLUGINDIR" == "" GOTO skip_plugin_dir
-SET OPTIONS=%OPTIONS% --comixed.plugins.location=%PLUGINDIR%
+SET JAROPTIONS=%JAROPTIONS% --comixed.plugins.location=%PLUGINDIR%
 :skip_plugin_dir
 
-SET JVMOPTIONS=
-
 IF "%LIBDIR%" == "" GOTO skip_lib_dir
-SET JVMOPTIONS=%JVMOPTIONS% -classpath %LIBDIR%
+SET LOADER_PATH=-Dloader.path=%LIBDIR%
+SET COMIXED_JAR_FILE=-jar %COMIXED_JAR_FILE%
 :skip_lib_dir
 
-java %JVMOPTIONS% -jar %JARFILE% %OPTIONS%
+java %JVMOPTIONS% %LOADER_PATH% %COMIXED_JAR_FILE% %JAROPTIONS%
 
 :exit_script
 ENDLOCAL

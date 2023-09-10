@@ -58,13 +58,15 @@ usage() {
   echo " -C            - Turn on H2 database console"
   echo " -v            - Verbose mode (def. false)"
   echo " -L [LOGFILE]  - Write logs to a file"
+  echo " -X [PORT]     - Set the debugger port"
+  echo " -h            - Show help (this text)"
   echo ""
   echo "Environment variables:"
   echo " COMIXEDLOG    - The log filename to use"
   exit 0
 }
 
-while getopts "j:u:p:i:l:P:dDMCvL:" option; do
+while getopts "j:u:p:i:l:P:X:dDMCvL:" option; do
   case ${option} in
   j) JDBCURL="${OPTARG}" ;;
   u) DBUSER="${OPTARG}" ;;
@@ -72,6 +74,7 @@ while getopts "j:u:p:i:l:P:dDMCvL:" option; do
   i) IMGCACHEDIR="${OPTARG}" ;;
   l) LIBDIR="${OPTARG}" ;;
   P) PLUGINDIR="${OPTARG}" ;;
+  X) JVMOPTIONS="${JVMOPTIONS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=${OPTARG}" ;;
   d) DEBUG=true ;;
   D) FULL_DEBUG=true ;;
   M) METADATA_DEBUG=true ;;
@@ -138,8 +141,8 @@ fi
 # build a list of JVM arguments
 
 if [[ $LIBDIR ]]; then
-  JVMOPTIONS="$JVMOPTIONS -classpath"
-  CLASSPATH="${LIBDIR}"
+  LOADER_PATH="-Dloader.path=${LIBDIR}"
+  COMIXED_JAR_FILE="-jar ${COMIXED_JAR_FILE}"
 fi
 
-$JAVA ${JVMOPTIONS} "${CLASSPATH}" -jar "${COMIXED_JAR_FILE}" ${JAROPTIONS}
+$JAVA ${JVMOPTIONS} ${LOADER_PATH} ${COMIXED_JAR_FILE} ${JAROPTIONS}
