@@ -47,7 +47,7 @@ export class MetadataSourceListEffects {
             this.logger.error('Service failure:', error);
             this.alertService.error(
               this.translateService.instant(
-                'metadata-sourceload-sources.effect-failure'
+                'metadata-source.load-sources.effect-failure'
               )
             );
             return of(loadMetadataSourcesFailed());
