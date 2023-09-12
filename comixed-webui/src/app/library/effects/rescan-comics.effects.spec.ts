@@ -39,7 +39,9 @@ import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 describe('RescanComicsEffects', () => {
-  const COMIC_BOOKS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
+  const IDS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5].map(
+    entry => entry.comicId
+  );
 
   let actions$: Observable<any>;
   let effects: RescanComicsEffects;
@@ -81,12 +83,12 @@ describe('RescanComicsEffects', () => {
   describe('rescanning comics', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
-      const action = rescanComics({ comicBooks: COMIC_BOOKS });
+      const action = rescanComics({ ids: IDS });
       const outcome = comicsRescanning();
 
       actions$ = hot('-a', { a: action });
       libraryService.rescanComics
-        .withArgs({ comicBooks: COMIC_BOOKS })
+        .withArgs({ ids: IDS })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -96,12 +98,12 @@ describe('RescanComicsEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = rescanComics({ comicBooks: COMIC_BOOKS });
+      const action = rescanComics({ ids: IDS });
       const outcome = rescanComicsFailed();
 
       actions$ = hot('-a', { a: action });
       libraryService.rescanComics
-        .withArgs({ comicBooks: COMIC_BOOKS })
+        .withArgs({ ids: IDS })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -110,12 +112,12 @@ describe('RescanComicsEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = rescanComics({ comicBooks: COMIC_BOOKS });
+      const action = rescanComics({ ids: IDS });
       const outcome = rescanComicsFailed();
 
       actions$ = hot('-a', { a: action });
       libraryService.rescanComics
-        .withArgs({ comicBooks: COMIC_BOOKS })
+        .withArgs({ ids: IDS })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });

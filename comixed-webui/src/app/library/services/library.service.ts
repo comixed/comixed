@@ -106,10 +106,10 @@ export class LibraryService {
     } as ConsolidateLibraryRequest);
   }
 
-  rescanComics(args: { comicBooks: ComicDetail[] }): Observable<any> {
-    this.logger.trace('Rescan comics:', args);
+  rescanComics(args: { ids: number[] }): Observable<any> {
+    this.logger.trace('Rescan comics:', args.ids);
     return this.http.post(interpolate(RESCAN_COMICS_URL), {
-      ids: args.comicBooks.map(comic => comic.comicId)
+      ids: args.ids
     } as RescanComicsRequest);
   }
 

@@ -33,7 +33,9 @@ import {
 } from '@app/comic-books/comic-books.fixtures';
 
 describe('RescanComics Reducer', () => {
-  const COMICS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
+  const IDS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5].map(
+    entry => entry.id
+  );
 
   let state: RescanComicsState;
 
@@ -53,10 +55,7 @@ describe('RescanComics Reducer', () => {
 
   describe('starting the process', () => {
     beforeEach(() => {
-      state = reducer(
-        { ...state, working: false },
-        rescanComics({ comicBooks: COMICS })
-      );
+      state = reducer({ ...state, working: false }, rescanComics({ ids: IDS }));
     });
 
     it('sets the working flag', () => {

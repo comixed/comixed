@@ -115,6 +115,8 @@
       "mark-as-unread": "Mark as unread",
       "multiple-comics-menu": "Selected Comics",
       "reading-lists": "Add to list...",
+      "rescan-one": "Rescan comic...",
+      "rescan-selected": "Rescan {count, plural, =1{1 comic} other{#comics}}...",
       "set-page-blocked": "Block Pages Like This",
       "set-page-deleted": "Delete This Page",
       "set-page-unblocked": "Don't Block Pages Like This",

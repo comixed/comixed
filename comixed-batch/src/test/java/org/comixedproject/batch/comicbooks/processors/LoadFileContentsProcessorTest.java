@@ -148,22 +148,15 @@ public class LoadFileContentsProcessorTest {
     assertNotNull(result);
     assertSame(comicBook, result);
 
-    final byte[] content = contentArgumentAdaptorArgumentCaptor.getValue();
-    assertNotNull(content);
-
     final ContentAdaptorRules comicBookRules =
         comicBookContentAdaptorRulesArgumentCaptor.getValue();
     assertNotNull(comicBookRules);
     assertTrue(comicBookRules.isSkipMetadata());
 
-    final ContentAdaptorRules contentRules = contentAdaptorRulesArgumentCaptor.getValue();
-    assertNotNull(contentRules);
-    assertTrue(contentRules.isSkipMetadata());
-
     Mockito.verify(comicBookAdaptor, Mockito.times(1)).load(comicBook, comicBookRules);
     Mockito.verify(pageList, Mockito.times(1)).sort(Mockito.any());
-    Mockito.verify(comicMetadataContentAdaptor, Mockito.times(1))
-        .loadContent(comicBook, "", content, contentRules);
+    Mockito.verify(comicMetadataContentAdaptor, Mockito.never())
+        .loadContent(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
   }
 
   @Test

@@ -69,6 +69,7 @@ import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { LastRead } from '@app/last-read/models/last-read';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
+import { rescanComics } from '@app/library/actions/rescan-comics.actions';
 
 describe('ComicDetailListViewComponent', () => {
   const COMIC_DETAILS = [
@@ -1003,6 +1004,23 @@ describe('ComicDetailListViewComponent', () => {
 
     it('navigates to the metadata scraping page', () => {
       expect(router.navigateByUrl).toHaveBeenCalledWith('/library/scrape');
+    });
+  });
+
+  describe('rescanning comics', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(confirmation =>
+        confirmation.confirm()
+      );
+      component.onRescanComics(IDS);
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(rescanComics({ ids: IDS }));
     });
   });
 });

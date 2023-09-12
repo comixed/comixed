@@ -55,6 +55,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { Subscription } from 'rxjs';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
+import { rescanComics } from '@app/library/actions/rescan-comics.actions';
 
 @Component({
   selector: 'cx-comic-detail-list-view',
@@ -462,6 +463,22 @@ export class ComicDetailListViewComponent implements OnDestroy, AfterViewInit {
       confirm: () => {
         this.logger.debug('Scraping comics:', ids);
         this.router.navigateByUrl('/library/scrape');
+      }
+    });
+  }
+
+  onRescanComics(selectedIds: number[]): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library.rescan-comics.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'library.rescan-comics.confirmation-message',
+        { count: selectedIds.length }
+      ),
+      confirm: () => {
+        this.logger.debug('Rescanning comics:', selectedIds);
+        this.store.dispatch(rescanComics({ ids: selectedIds }));
       }
     });
   }
