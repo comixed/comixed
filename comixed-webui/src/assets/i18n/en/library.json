@@ -107,6 +107,7 @@
       "convert-one-to-cbz": "Convert this comic to CBZ",
       "convert-selected-to-cb7": "Convert selected comics To CB7",
       "convert-selected-to-cbz": "Convert selected comics To CBZ",
+      "create-reading-list": "Create new reading list...",
       "delete-one": "Mark as deleted",
       "delete-selected": "Mark as deleted",
       "edit-multiple-comics": "Edit details for {count, plural, =1{one comic} other{# comics}}...",
