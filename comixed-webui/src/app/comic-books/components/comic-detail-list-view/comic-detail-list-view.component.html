@@ -371,6 +371,15 @@
 
 <mat-menu #currentComicReadingListsMenu="matMenu">
   <button
+    *ngIf="readingLists?.length === 0"
+    mat-menu-item
+    routerLink="/lists/reading/new"
+  >
+    <mat-label>
+      {{ "library.context-menu.create-reading-list" | translate }}
+    </mat-label>
+  </button>
+  <button
     mat-menu-item
     *ngFor="let list of readingLists"
     (click)="onAddOneToReadingList(list)"
@@ -480,6 +489,15 @@
 </mat-menu>
 
 <mat-menu #selectedComicsReadingListsMenu="matMenu">
+  <button
+    *ngIf="readingLists?.length === 0"
+    mat-menu-item
+    routerLink="/lists/reading/new"
+  >
+    <mat-label>
+      {{ "library.context-menu.create-reading-list" | translate }}
+    </mat-label>
+  </button>
   <button
     mat-menu-item
     *ngFor="let list of readingLists"
