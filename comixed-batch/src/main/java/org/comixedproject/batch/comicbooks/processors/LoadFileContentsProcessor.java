@@ -61,11 +61,13 @@ public class LoadFileContentsProcessor
       this.comicBookAdaptor.load(comicBook, rules);
       log.trace("Sorting comicBook pages");
       comicBook.getPages().sort((o1, o2) -> o1.getFilename().compareTo(o2.getFilename()));
-      final File metadataFile = new File(this.comicBookAdaptor.getMetadataFilename(comicBook));
-      if (metadataFile.exists()) {
-        log.trace("Loading external metadata file: {}", metadataFile.getAbsolutePath());
-        this.comicMetadataContentAdaptor.loadContent(
-            comicBook, "", FileUtils.readFileToByteArray(metadataFile), rules);
+      if (!rules.isSkipMetadata()) {
+        final File metadataFile = new File(this.comicBookAdaptor.getMetadataFilename(comicBook));
+        if (metadataFile.exists()) {
+          log.trace("Loading external metadata file: {}", metadataFile.getAbsolutePath());
+          this.comicMetadataContentAdaptor.loadContent(
+              comicBook, "", FileUtils.readFileToByteArray(metadataFile), rules);
+        }
       }
       log.trace("Returning updated comicBook");
       return comicBook;

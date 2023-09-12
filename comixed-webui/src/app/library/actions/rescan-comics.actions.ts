@@ -17,11 +17,10 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 export const rescanComics = createAction(
   '[Rescan Comics] Rescan selected comics',
-  props<{ comicBooks: ComicDetail[] }>()
+  props<{ ids: number[] }>()
 );
 
 export const comicsRescanning = createAction(

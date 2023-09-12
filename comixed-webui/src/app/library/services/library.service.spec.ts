@@ -161,13 +161,13 @@ describe('LibraryService', () => {
 
   it('can start rescanning comics', () => {
     service
-      .rescanComics({ comicBooks: COMIC_BOOKS })
+      .rescanComics({ ids: IDS })
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(interpolate(RESCAN_COMICS_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      ids: COMIC_BOOKS.map(comic => comic.comicId)
+      ids: IDS
     } as RescanComicsRequest);
     req.flush(new HttpResponse({ status: 200 }));
   });
