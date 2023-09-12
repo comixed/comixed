@@ -43,7 +43,7 @@ import org.springframework.batch.core.StepExecution;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoadFileContentsProcessorTest {
-  private static final String TEST_METADATA_FILENAME = "src/test/resources/example.meta";
+  private static final String TEST_METADATA_FILENAME = "src/test/resources/example-metadata.xml";
 
   @InjectMocks private LoadFileContentsProcessor processor;
   @Mock private ComicBookAdaptor comicBookAdaptor;

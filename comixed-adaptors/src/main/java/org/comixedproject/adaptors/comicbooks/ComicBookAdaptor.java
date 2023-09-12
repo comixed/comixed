@@ -207,7 +207,7 @@ public class ComicBookAdaptor {
 
   /**
    * Writes the comic's metadata to a separate file. The file's name is based on that of the comic,
-   * but with an extension of ".meta".
+   * but with an extension of ".xml".
    *
    * @param comicBook the comic book
    * @throws AdaptorException if an error occurs while writing the file
@@ -234,7 +234,7 @@ public class ComicBookAdaptor {
 
   public String getMetadataFilename(ComicBook comicBook) {
     return String.format(
-        "%s.meta", FilenameUtils.removeExtension(comicBook.getComicDetail().getFilename()));
+        "%s.xml", FilenameUtils.removeExtension(comicBook.getComicDetail().getFilename()));
   }
 
   /**

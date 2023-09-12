@@ -62,7 +62,7 @@ public class ComicBookAdaptorTest {
   private static final byte[] TEST_COMICINFO_XML_CONTENT = "ComicInfo.xml content".getBytes();
   private static final int TEST_PAGE_INDEX = 0;
   private static final String TEST_REAL_COMIC_FILE = "target/test-classes/example.cbz";
-  private static final String TEST_REAL_COMIC_METADATA_FILE = "target/test-classes/example.meta";
+  private static final String TEST_REAL_COMIC_METADATA_FILE = "target/test-classes/example.xml";
   private static final String TEST_PAGE_RENAMING_RULE = "page renaming rule";
   private static final String TEST_NEW_PAGE_FILENAME = "new page filename";
   private static final String TEST_MISSING_FILE = "farkle.png";

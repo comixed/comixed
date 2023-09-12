@@ -51,8 +51,10 @@ public class MoveComicBookProcessorTest {
   private static final String TEST_NEW_FILENAME_WITH_EXTENSION =
       TEST_NEW_FILENAME_WITH_PATH + "." + TEST_NEW_FILENAME_EXTENSION;
   private static final String TEST_ORIGINAL_FILENAME = "The original filename";
-  private static final String TEST_SOURCE_METADATA_FILE_NAME = "src/test/resources/example.meta";
-  private static final String TEST_TARGET_METADATA_FILE_NAME = "target/test/resources/example.meta";
+  private static final String TEST_SOURCE_METADATA_FILE_NAME =
+      "src/test/resources/example-metadata.xml";
+  private static final String TEST_TARGET_METADATA_FILE_NAME =
+      "target/test/resources/example-metadata.xml";
 
   @InjectMocks private MoveComicProcessor processor;
   @Mock private StepExecution stepExecution;
