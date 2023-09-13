@@ -14,6 +14,13 @@
         <include>org.comixedproject:comixed-dbtool:jar:</include>
       </includes>
     </dependencySet>
+    <dependencySet>
+      <outputDirectory>lib</outputDirectory>
+      <unpack>false</unpack>
+      <includes>
+        <include>com.h2database:h2:jar:</include>
+      </includes>
+    </dependencySet>
   </dependencySets>
   <fileSets>
     <fileSet>
