@@ -30,7 +30,7 @@
   <properties>
     <assembly.name>local</assembly.name>
     <maven-git-code-format.version>2.4</maven-git-code-format.version>
-    <java.version>11</java.version>
+    <java.version>17</java.version>
     <sonar.organization>comixed</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.links.scm>https://github.com/comixed/comixed</sonar.links.scm>
@@ -252,7 +252,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.5</version>
+        <version>0.8.10</version>
         <configuration>
           <excludes>
             <exclude>**/model/**</exclude>

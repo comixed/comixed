@@ -24,7 +24,7 @@ jobs:
       - name: Setup build environment
         uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: 17
       - name: Create the release artifact
         run: mvn package -DskipTests -Pci -Dassembly.name=GA
       - name: Create pre-release
@@ -52,7 +52,7 @@ jobs:
       - name: Setup build environment
         uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: 17
       - name: Create the release artifact
         run: mvn package -DskipTests -D"assembly.name=GA" -Pci
       - name: Create the Windows installer
