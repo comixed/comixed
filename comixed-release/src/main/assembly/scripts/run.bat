@@ -32,6 +32,7 @@ IF "%PARAM%" == "-d" SET DEBUG="ON"
 IF "%PARAM%" == "-D" SET FULLDEBUG="ON"
 IF "%PARAM%" == "-M" SET METADATADEBUG="ON"
 IF "%PARAM%" == "-C" SET DBCONSOLE="ON"
+IF "%PARAM%" == "-S" SET ENABLE_SSL="ON"
 IF "%PARAM%" == "-j" GOTO set_jdbc_url
 IF "%PARAM%" == "-u" GOTO set_jdbc_user
 IF "%PARAM%" == "-p" GOTO set_jdbc_pwrd
@@ -101,6 +102,7 @@ ECHO  -p [PASSWORD] - Set the database password
 ECHO  -i [DIR]      - Set the image caching directory
 ECHO  -l [DIR]      - Set the JAR library directory
 ECHO  -P [DIR]      - Set the plugin directory
+ECHO  -S            - Enable SSL (def. off)
 ECHO.
 ECHO OTHER OPTIONS:
 ECHO  -d            - Enable debugging (def. off)
@@ -158,6 +160,10 @@ SET JAROPTIONS=%JAROPTIONS% --comixed.images.cache.location=%IMGCACHEDIR%
 IF "%PLUGINDIR" == "" GOTO skip_plugin_dir
 SET JAROPTIONS=%JAROPTIONS% --comixed.plugins.location=%PLUGINDIR%
 :skip_plugin_dir
+
+IF "%ENABLE_SSL%" == "" GOTO skip_enable_ssl
+SET JAROPTIONS=%JAROPTIONS% --server.ssl.enabled=true
+:skip_enable_ssl
 
 IF "%LIBDIR%" == "" GOTO skip_lib_dir
 SET LOADER_PATH=-Dloader.path=%LIBDIR%
