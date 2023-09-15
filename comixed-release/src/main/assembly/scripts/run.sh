@@ -50,6 +50,7 @@ usage() {
   echo " -i [DIR]      - Set the image caching directory"
   echo " -l [DIR]      - Set the JAR library directory"
   echo " -P [DIR]      - Set the plugin directory"
+  echo " -S            - Enable SSL (def. off)"
   echo ""
   echo "Other options:"
   echo " -d            - Debug mode (def. false)"
@@ -66,7 +67,7 @@ usage() {
   exit 0
 }
 
-while getopts "j:u:p:i:l:P:X:dDMCvL:" option; do
+while getopts "j:u:p:i:l:P:SX:dDMCvL:" option; do
   case ${option} in
   j) JDBCURL="${OPTARG}" ;;
   u) DBUSER="${OPTARG}" ;;
@@ -74,6 +75,7 @@ while getopts "j:u:p:i:l:P:X:dDMCvL:" option; do
   i) IMGCACHEDIR="${OPTARG}" ;;
   l) LIBDIR="${OPTARG}" ;;
   P) PLUGINDIR="${OPTARG}" ;;
+  S) ENABLE_SSL="ON" ;;
   X) JVMOPTIONS="${JVMOPTIONS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=${OPTARG}" ;;
   d) DEBUG=true ;;
   D) FULL_DEBUG=true ;;
@@ -136,6 +138,10 @@ fi
 
 if [[ $PLUGINDIR ]]; then
   JAROPTIONS="${JAROPTIONS} --comixed.plugins.location=${PLUGINDIR}"
+fi
+
+if [[ $ENABLE_SSL ]]; then
+  JAROPTIONS="${JAROPTIONS} --server.ssl.enabled=true"
 fi
 
 # build a list of JVM arguments
