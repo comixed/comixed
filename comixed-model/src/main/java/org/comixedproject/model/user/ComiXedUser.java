@@ -36,7 +36,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "Users")
+@Table(name = "ComiXedUsers")
 public class ComiXedUser {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,12 +72,12 @@ public class ComiXedUser {
 
   @ManyToMany
   @JoinTable(
-      name = "UsersRoles",
-      joinColumns = @JoinColumn(name = "UserId", referencedColumnName = "Id"),
-      inverseJoinColumns = @JoinColumn(name = "RoleId", referencedColumnName = "Id"))
+      name = "ComiXedUserRoles",
+      joinColumns = @JoinColumn(name = "ComiXedUserId"),
+      inverseJoinColumns = @JoinColumn(name = "ComiXedRoleId"))
   @JsonView(View.UserList.class)
   @Getter
-  private List<Role> roles = new ArrayList<>();
+  private List<ComiXedRole> roles = new ArrayList<>();
 
   @OneToMany(
       mappedBy = "user",
@@ -99,7 +99,7 @@ public class ComiXedUser {
    *
    * @param role the role
    */
-  public void addRole(Role role) {
+  public void addRole(ComiXedRole role) {
     if (!this.roles.contains(role)) {
       this.roles.add(role);
     }

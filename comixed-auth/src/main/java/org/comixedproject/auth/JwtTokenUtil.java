@@ -26,8 +26,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.user.ComiXedRole;
 import org.comixedproject.model.user.ComiXedUser;
-import org.comixedproject.model.user.Role;
 import org.comixedproject.repositories.users.ComiXedUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -81,7 +81,7 @@ public class JwtTokenUtil {
 
     ComiXedUser user = this.userRepository.findByEmail(email);
     if (user != null) {
-      for (Role role : user.getRoles()) {
+      for (ComiXedRole role : user.getRoles()) {
         authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + role.getName()));
       }
     }

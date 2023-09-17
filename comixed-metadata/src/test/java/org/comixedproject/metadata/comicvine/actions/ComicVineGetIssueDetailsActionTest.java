@@ -57,7 +57,7 @@ public class ComicVineGetIssueDetailsActionTest {
   private static final String TEST_LOCATION_NAME = "Location Name";
   private static final String TEST_STORY_NAME = "Story Name";
   private static final String TEST_CREDIT_NAME = "Credit Name";
-  private static final String TEST_CREDIT_ROLE = "Credit Role";
+  private static final String TEST_CREDIT_ROLE = "Credit ComiXedRole";
   private static final String TEST_COMIC_VINE_ISSUE_ID = "71765";
 
   @InjectMocks private ComicVineGetIssueDetailsAction scrapeComicAction;
