@@ -20,8 +20,8 @@ package org.comixedproject.model.comicfiles;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
-import liquibase.util.file.FilenameUtils;
 import lombok.Getter;
+import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.views.View;
 
 /**

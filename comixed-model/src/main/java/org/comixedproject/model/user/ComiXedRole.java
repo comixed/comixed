@@ -31,15 +31,15 @@ import lombok.RequiredArgsConstructor;
 import org.comixedproject.views.View.UserList;
 
 /**
- * A <code>Role</code> defines the set of authorities a user has.
+ * A <code>ComiXedRole</code> defines the set of authorities a user has.
  *
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "Roles")
+@Table(name = "ComiXedRoles")
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class Role {
+public class ComiXedRole {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonIgnore
@@ -61,7 +61,7 @@ public class Role {
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    final Role role = (Role) o;
+    final ComiXedRole role = (ComiXedRole) o;
     return Objects.equals(id, role.id) && Objects.equals(name, role.name);
   }
 
