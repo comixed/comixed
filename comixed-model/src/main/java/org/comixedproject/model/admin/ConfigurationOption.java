@@ -42,14 +42,14 @@ public class ConfigurationOption {
   @Getter
   Long id;
 
-  @Column(name = "Name", length = 64, updatable = false)
+  @Column(name = "OptionName", length = 64, updatable = false)
   @JsonProperty("name")
   @JsonView(View.ConfigurationList.class)
   @Getter
   @NonNull
   private String name;
 
-  @Column(name = "Value", length = 256, updatable = true)
+  @Column(name = "OptionValue", length = 256, updatable = true)
   @JsonProperty("value")
   @JsonView(View.ConfigurationList.class)
   @Getter

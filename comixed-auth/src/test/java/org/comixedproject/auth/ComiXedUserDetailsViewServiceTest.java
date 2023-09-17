@@ -23,8 +23,8 @@ import static junit.framework.TestCase.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.comixedproject.model.user.ComiXedRole;
 import org.comixedproject.model.user.ComiXedUser;
-import org.comixedproject.model.user.Role;
 import org.comixedproject.repositories.users.ComiXedUserRepository;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.junit.Before;
@@ -46,11 +46,11 @@ public class ComiXedUserDetailsViewServiceTest {
   @Mock private ComiXedUserRepository userRepository;
   @Mock private ComiXedUser user;
 
-  private List<Role> roles = new ArrayList<>();
+  private List<ComiXedRole> roles = new ArrayList<>();
 
   @Before
   public void setUp() {
-    roles.add(new Role("ROLE"));
+    roles.add(new ComiXedRole("ROLE"));
   }
 
   @Test(expected = UsernameNotFoundException.class)

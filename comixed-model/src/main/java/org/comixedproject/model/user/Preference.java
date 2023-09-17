@@ -44,12 +44,12 @@ public class Preference {
   @Setter
   private ComiXedUser user;
 
-  @Column(name = "Name", nullable = false, updatable = false, length = 128)
+  @Column(name = "PreferenceName", nullable = false, updatable = false, length = 128)
   @JsonView(UserList.class)
   @Getter
   private String name;
 
-  @Column(name = "Value", updatable = true, nullable = false, length = 256)
+  @Column(name = "PreferenceValue", updatable = true, nullable = false, length = 256)
   @JsonView(UserList.class)
   @Getter
   @Setter

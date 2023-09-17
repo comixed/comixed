@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="003_1683_table_name_changes.xml" author="mcpierce">
+
+        <renameTable oldTableName="Users" newTableName="ComiXedUsers"/>
+
+        <renameTable oldTableName="Roles" newTableName="ComiXedRoles"/>
+
+        <renameTable oldTableName="UsersRoles" newTableName="ComiXedUserRoles"/>
+        <renameColumn tableName="ComiXedUserRoles" oldColumnName="UserId" newColumnName="ComiXedUserId"/>
+        <renameColumn tableName="ComiXedUserRoles" oldColumnName="RoleId" newColumnName="ComiXedRoleId"/>
+
+        <renameColumn tableName="MetadataSourceProperties" oldColumnName="Name" newColumnName="PropertyName"/>
+        <renameColumn tableName="MetadataSourceProperties" oldColumnName="Value" newColumnName="PropertyValue"/>
+
+        <renameColumn tableName="UserPreferences" oldColumnName="Name" newColumnName="PreferenceName"/>
+        <renameColumn tableName="UserPreferences" oldColumnName="Value" newColumnName="PreferenceValue"/>
+
+        <renameColumn tableName="ConfigurationOptions" oldColumnName="Name" newColumnName="OptionName"/>
+        <renameColumn tableName="ConfigurationOptions" oldColumnName="Value" newColumnName="OptionValue"/>
+
+    </changeSet>
+</databaseChangeLog>

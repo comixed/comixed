@@ -23,8 +23,8 @@ import static junit.framework.TestCase.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
+import org.comixedproject.model.user.ComiXedRole;
 import org.comixedproject.model.user.ComiXedUser;
-import org.comixedproject.model.user.Role;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.junit.Before;
@@ -49,7 +49,7 @@ public class ComiXedAuthenticationProviderTest {
   @Mock private Authentication authentication;
   @Mock private ComiXedUser user;
 
-  private List<Role> roles = new ArrayList<>();
+  private List<ComiXedRole> roles = new ArrayList<>();
 
   @Before
   public void setUp() throws ComiXedUserException {
@@ -61,7 +61,7 @@ public class ComiXedAuthenticationProviderTest {
     Mockito.when(user.getRoles()).thenReturn(roles);
     Mockito.when(userService.updateLastLoggedInDate(Mockito.any())).thenReturn(user);
 
-    roles.add(new Role("TEST"));
+    roles.add(new ComiXedRole("TEST"));
   }
 
   @Test

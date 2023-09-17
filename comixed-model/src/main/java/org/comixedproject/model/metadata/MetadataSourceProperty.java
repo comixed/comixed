@@ -46,14 +46,24 @@ public class MetadataSourceProperty {
   @NonNull
   private MetadataSource source;
 
-  @Column(name = "Name", length = 32, insertable = true, updatable = false, nullable = false)
+  @Column(
+      name = "PropertyName",
+      length = 32,
+      insertable = true,
+      updatable = false,
+      nullable = false)
   @JsonProperty("name")
   @JsonView(View.MetadataSourceList.class)
   @Getter
   @NonNull
   private String name;
 
-  @Column(name = "Value", length = 255, insertable = true, updatable = true, nullable = true)
+  @Column(
+      name = "PropertyValue",
+      length = 255,
+      insertable = true,
+      updatable = true,
+      nullable = true)
   @JsonProperty("value")
   @JsonView(View.MetadataSourceList.class)
   @Getter

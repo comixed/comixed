@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
+import org.comixedproject.model.user.ComiXedRole;
 import org.comixedproject.model.user.ComiXedUser;
-import org.comixedproject.model.user.Role;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +73,7 @@ public class ComiXedAuthenticationProvider implements AuthenticationProvider {
 
       List<GrantedAuthority> roles = new ArrayList<>();
 
-      for (Role role : user.getRoles()) {
+      for (ComiXedRole role : user.getRoles()) {
         log.debug("Granting role: {}", role.getName());
         roles.add(new SimpleGrantedAuthority(ROLE_PREFIX + role.getName()));
       }

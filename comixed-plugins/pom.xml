@@ -25,10 +25,6 @@
       <artifactId>comixed-services</artifactId>
       <version>1.7.0-0.dev</version>
     </dependency>
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-    </dependency>
   </dependencies>
   <build>
     <plugins>
