@@ -32,6 +32,7 @@
         <include>QUICKSTART.md</include>
         <include>README.md</include>
         <include>CHANGELOG.md</include>
+        <include>UPGRADING.md</include>
       </includes>
     </fileSet>
     <fileSet>
