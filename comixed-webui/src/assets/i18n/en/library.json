@@ -175,12 +175,12 @@
       "stories": "Stories"
     },
     "page-title": {
-      "all": "All Comics ({count, plural, =1{One Comic} other{# Comics}})",
-      "changed-only": "Changed Comics ({count, plural, =1{One Comic} other{# Comics}})",
-      "deleted-only": "Deleted Comics ({count, plural, =1{One Comic} other{# Comics}})",
-      "unprocessed-only": "Unprocessed Comics ({count, plural, =1{One Comic} other{# Comics}})",
-      "unread-only": "Unread Comics ({count, plural, =1{One Comic} other{# Comics}})",
-      "unscraped-only": "Unscraped Comics ({count, plural, =1{One Comic} other{# Comics}})"
+      "all": "{filtered, select, true{Filtering } other{}}All Comics ({showing} of {count, plural, =1{One Comic} other{# Comics}})",
+      "changed-only": "{filtered, select, true{Filtering } other{}}Changed Comics ({showing} of {count, plural, =1{One Comic} other{# Comics}})",
+      "deleted-only": "{filtered, select, true{Filtering } other{}}Deleted Comics ({showing} of {count, plural, =1{One Comic} other{# Comics}})",
+      "unprocessed-only": "{filtered, select, true{Filtering } other{}}Unprocessed Comics ({showing} of {count, plural, =1{One Comic} other{# Comics}})",
+      "unread-only": "{filtered, select, true{Filtering } other{}}Unread Comics ({showing} of {count, plural, =1{One Comic} other{# Comics}})",
+      "unscraped-only": "{filtered, select, true{Filtering } other{}}Unscraped Comics ({showing} of {count, plural, =1{One Comic} other{# Comics}})"
     },
     "purge-library": {
       "confirmation-message": "Are you sure you want to purge the selected deleted comics? This action cannot be undone.",
