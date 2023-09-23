@@ -57,6 +57,8 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
   userSubscription: Subscription;
   isAdmin = false;
+  filtered = false;
+  showing = 0;
   pageSize = PAGE_SIZE_DEFAULT;
   showUpdateMetadata = false;
   showConsolidate = false;
