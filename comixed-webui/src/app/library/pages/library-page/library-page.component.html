@@ -3,7 +3,9 @@
     "library.page-title." + pageContent
       | translate
         : {
-            count: comicBooks.length
+            count: comicBooks.length,
+            showing: showing,
+            filtered: filtered
           }
   }}
 </h2>
@@ -16,4 +18,6 @@
   [selectedIds]="selectedIds"
   [readingLists]="readingLists"
   [unreadOnly]="unreadOnly"
+  (filtered)="filtered = $event"
+  (showing)="showing = $event"
 ></cx-comic-detail-list-view>

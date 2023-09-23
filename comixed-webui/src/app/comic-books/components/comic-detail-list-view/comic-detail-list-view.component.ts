@@ -19,9 +19,11 @@
 import {
   AfterViewInit,
   Component,
+  EventEmitter,
   HostListener,
   Input,
   OnDestroy,
+  Output,
   ViewChild
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
@@ -65,6 +67,9 @@ import { rescanComics } from '@app/library/actions/rescan-comics.actions';
 export class ComicDetailListViewComponent implements OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  @Output() filtered = new EventEmitter<boolean>();
+  @Output() showing = new EventEmitter<number>();
 
   @Input() isAdmin = false;
   @Input() readingLists: ReadingList[] = [];
@@ -525,6 +530,14 @@ export class ComicDetailListViewComponent implements OnDestroy, AfterViewInit {
     this.logger.debug('Filtering data source');
     this.dataSource.filter = this.queryParameterService.filterText$.value;
     this.logger.debug('Setting data source');
+    const filtered =
+      !!this.queryParameterService.coverYear$?.value?.year ||
+      !!this.queryParameterService.coverYear$?.value?.month ||
+      !!this.queryParameterService.archiveType$?.value ||
+      !!this.queryParameterService.comicType$?.value ||
+      this.queryParameterService.filterText$.value?.length > 0;
+    this.logger.debug('Filtered flag:', filtered);
+    this.filtered.emit(filtered);
     this.dataSource.data = this.comics
       .filter(
         entry =>
@@ -568,5 +581,6 @@ export class ComicDetailListViewComponent implements OnDestroy, AfterViewInit {
           selected: this.selectedIds.includes(comic.comicId)
         };
       });
+    this.showing.emit(this.dataSource.filteredData.length);
   }
 }
