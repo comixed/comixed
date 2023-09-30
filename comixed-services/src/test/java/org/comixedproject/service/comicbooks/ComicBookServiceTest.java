@@ -614,40 +614,6 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetUnprocessedComicsWithoutFileDetailsCount() {
-    Mockito.when(comicBookRepository.findUnprocessedComicsWithoutFileDetailsCount())
-        .thenReturn(TEST_MAXIMUM_COMICS);
-
-    final long result = service.getUnprocessedComicsWithoutFileDetailsCount();
-
-    assertEquals(TEST_MAXIMUM_COMICS, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1))
-        .findUnprocessedComicsWithoutFileDetailsCount();
-  }
-
-  @Test
-  public void testFindUnprocessedComicsWithoutFileDetails() {
-    Mockito.when(
-            comicBookRepository.findUnprocessedComicsWithoutFileDetails(pageableCaptor.capture()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result =
-        service.findUnprocessedComicsWithoutFileDetails(TEST_MAXIMUM_COMICS);
-
-    assertNotNull(result);
-    assertSame(comicBookList, result);
-
-    final Pageable pageable = pageableCaptor.getValue();
-    assertNotNull(pageable);
-    assertEquals(0, pageable.getPageNumber());
-    assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
-
-    Mockito.verify(comicBookRepository, Mockito.times(1))
-        .findUnprocessedComicsWithoutFileDetails(pageable);
-  }
-
-  @Test
   public void testGetProcessedComicsCount() {
     Mockito.when(comicBookRepository.findProcessedComicsCount()).thenReturn(TEST_MAXIMUM_COMICS);
 

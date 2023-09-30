@@ -16,7 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { FileDetails } from '@app/comic-books/models/file-details';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
@@ -30,11 +29,6 @@ import { Imprint } from '@app/comic-books/models/imprint';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 import { ComicType } from '@app/comic-books/models/comic-type';
-
-export const FILE_DETAILS_1: FileDetails = {
-  id: 1,
-  hash: '1234567890ABCDEF1234567890ABCDEF'
-};
 
 export const IMPRINT_1: Imprint = {
   id: 1,
@@ -201,7 +195,6 @@ export const COMIC_BOOK_1: ComicBook = {
   lastModifiedOn: 0,
   nextIssueId: null,
   previousIssueId: null,
-  fileDetails: FILE_DETAILS_1,
   metadata: null
 };
 
@@ -214,7 +207,6 @@ export const COMIC_BOOK_2: ComicBook = {
   lastModifiedOn: 0,
   nextIssueId: null,
   previousIssueId: null,
-  fileDetails: FILE_DETAILS_1,
   metadata: null
 };
 
@@ -227,7 +219,6 @@ export const COMIC_BOOK_3: ComicBook = {
   lastModifiedOn: 0,
   nextIssueId: null,
   previousIssueId: null,
-  fileDetails: FILE_DETAILS_1,
   metadata: null
 };
 
@@ -240,7 +231,6 @@ export const COMIC_BOOK_4: ComicBook = {
   lastModifiedOn: 0,
   nextIssueId: null,
   previousIssueId: null,
-  fileDetails: FILE_DETAILS_1,
   metadata: null
 };
 
@@ -253,6 +243,5 @@ export const COMIC_BOOK_5: ComicBook = {
   lastModifiedOn: 0,
   nextIssueId: null,
   previousIssueId: null,
-  fileDetails: FILE_DETAILS_1,
   metadata: null
 };

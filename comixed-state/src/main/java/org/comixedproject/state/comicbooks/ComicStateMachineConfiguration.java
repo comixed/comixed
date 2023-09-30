@@ -44,7 +44,6 @@ public class ComicStateMachineConfiguration
   @Autowired private FileContentsLoadedAction fileContentsLoadedAction;
   @Autowired private MetadataSourceCreatedAction metadataSourceCreatedAction;
   @Autowired private BlockedPagesMarkedAction blockedPagesMarkedAction;
-  @Autowired private FileDetailsCreatedGuard fileDetailsCreatedGuard;
   @Autowired private ComicContentsProcessedGuard comicContentsProcessedGuard;
   @Autowired private UpdateMetadataAction updateMetadataAction;
   @Autowired private MetadataUpdatedAction metadataUpdatedAction;
@@ -123,13 +122,6 @@ public class ComicStateMachineConfiguration
         .target(ComicState.UNPROCESSED)
         .event(ComicEvent.blockedPagesMarked)
         .action(blockedPagesMarkedAction)
-        // the file details have been created
-        .and()
-        .withExternal()
-        .source(ComicState.UNPROCESSED)
-        .target(ComicState.UNPROCESSED)
-        .event(ComicEvent.fileDetailsLoadedAction)
-        .guard(fileDetailsCreatedGuard)
         // all comic content has been processed
         .and()
         .withExternal()

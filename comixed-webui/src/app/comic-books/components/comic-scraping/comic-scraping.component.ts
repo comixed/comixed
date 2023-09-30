@@ -60,7 +60,6 @@ import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { selectMetadataSourceList } from '@app/comic-metadata/selectors/metadata-source-list.selectors';
 import { loadMetadataSources } from '@app/comic-metadata/actions/metadata-source-list.actions';
 import { selectMetadataState } from '@app/comic-metadata/selectors/metadata.selectors';
-import { FileDetails } from '@app/comic-books/models/file-details';
 
 @Component({
   selector: 'cx-comic-scraping',
@@ -359,8 +358,7 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
         series: this.comicForm.controls.series.value,
         volume: this.comicForm.controls.volume.value,
         issueNumber: this.comicForm.controls.issueNumber.value
-      },
-      fileDetails: {} as FileDetails
+      }
     } as ComicBook;
   }
 }
