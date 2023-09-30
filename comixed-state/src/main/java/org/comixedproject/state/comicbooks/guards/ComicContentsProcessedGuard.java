@@ -38,8 +38,6 @@ public class ComicContentsProcessedGuard extends AbstractComicGuard {
   public boolean evaluate(final StateContext<ComicState, ComicEvent> context) {
     final ComicBook comicBook = this.fetchComic(context);
     log.trace("Ensuring comicBook contents are processed");
-    return comicBook.getFileDetails() != null
-        && comicBook.isFileContentsLoaded()
-        && comicBook.isBlockedPagesMarked();
+    return comicBook.isFileContentsLoaded() && comicBook.isBlockedPagesMarked();
   }
 }

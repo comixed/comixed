@@ -54,7 +54,6 @@ public class PrepareComicBookForProcessingActionTest {
 
     action.execute(context);
 
-    Mockito.verify(comicBook, Mockito.times(1)).setFileDetails(null);
     Mockito.verify(pageList, Mockito.times(1)).clear();
     Mockito.verify(comicBook, Mockito.times(1)).setCreateMetadataSource(true);
     Mockito.verify(comicBook, Mockito.times(1)).setFileContentsLoaded(false);

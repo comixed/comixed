@@ -402,28 +402,6 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   }
 
   /**
-   * Returns the number of unprocessed comics that don't have file details loaded.
-   *
-   * @return the count
-   */
-  public long getUnprocessedComicsWithoutFileDetailsCount() {
-    log.trace("Getting unprocessed comics without file details loaded count");
-    return this.comicBookRepository.findUnprocessedComicsWithoutFileDetailsCount();
-  }
-
-  /**
-   * Retrieves unprocessed comics that don't have file details.
-   *
-   * @param count the number of comics to return
-   * @return the comics
-   */
-  public List<ComicBook> findUnprocessedComicsWithoutFileDetails(final int count) {
-    log.trace("Loading unprocessed comics without file details loaded");
-    return this.comicBookRepository.findUnprocessedComicsWithoutFileDetails(
-        PageRequest.of(0, count));
-  }
-
-  /**
    * Returns the number of unprocessed comics that have had their contents processed.
    *
    * @return the count

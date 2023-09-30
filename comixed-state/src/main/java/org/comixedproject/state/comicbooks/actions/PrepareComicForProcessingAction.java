@@ -37,8 +37,6 @@ public class PrepareComicForProcessingAction extends AbstractComicAction {
   @Override
   public void execute(final StateContext<ComicState, ComicEvent> context) {
     final ComicBook comicBook = this.fetchComic(context);
-    log.trace("Clearing file details");
-    comicBook.setFileDetails(null);
     log.trace("Clearing pages");
     comicBook.getPages().clear();
     log.trace("Turn on creating metadata source flag");

@@ -22,7 +22,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicFileDetails;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.junit.Before;
@@ -41,7 +40,6 @@ public class ComicFileAlreadyRecreatingGuardTest {
   @Mock private StateContext<ComicState, ComicEvent> context;
   @Mock private MessageHeaders messageHeaders;
   @Mock private ComicBook comicBook;
-  @Mock private ComicFileDetails fileDetails;
 
   @Before
   public void setUp() {

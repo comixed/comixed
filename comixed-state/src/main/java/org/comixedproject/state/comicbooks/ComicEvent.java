@@ -34,8 +34,6 @@ public enum ComicEvent {
   fileContentsLoaded,
   // blocked pages have been marked
   blockedPagesMarked,
-  // the file details have been created
-  fileDetailsLoadedAction,
   // the contents have been processed
   contentsProcessed,
   // rescan a comic,
