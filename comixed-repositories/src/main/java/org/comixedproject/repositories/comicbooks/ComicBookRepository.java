@@ -174,32 +174,13 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   int findUnprocessedComicsForMarkedPageBlockingCount();
 
   /**
-   * Returns unprocessed comics without file details.
-   *
-   * @param pageable the page request
-   * @return the list of comics
-   */
-  @Query(
-      "SELECT c FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true AND c.id NOT IN (SELECT d.comicBook.id FROM ComicFileDetails d)")
-  List<ComicBook> findUnprocessedComicsWithoutFileDetails(Pageable pageable);
-
-  /**
-   * Returns the number of comics without match file detail records.
-   *
-   * @return the count
-   */
-  @Query(
-      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true AND c.id NOT IN (SELECT d.comicBook.id FROM ComicFileDetails d)")
-  int findUnprocessedComicsWithoutFileDetailsCount();
-
-  /**
    * Returns unprocessed comics that have been fully processed.
    *
    * @param pageable the page request
    * @return the list of comics
    */
   @Query(
-      "SELECT c FROM ComicBook c LEFT JOIN FETCH c.fileDetails fd WHERE c.comicDetail.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true")
+      "SELECT c FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true")
   List<ComicBook> findProcessedComics(Pageable pageable);
 
   /**

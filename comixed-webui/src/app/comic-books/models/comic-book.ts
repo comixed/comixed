@@ -16,14 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { FileDetails } from '@app/comic-books/models/file-details';
 import { Page } from '@app/comic-books/models/page';
 import { ComicMetadataSource } from '@app/comic-books/models/comic-metadata-source';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 export interface ComicBook {
   id: number;
-  fileDetails: FileDetails;
   detail: ComicDetail;
   metadata: ComicMetadataSource;
   pages?: Page[];

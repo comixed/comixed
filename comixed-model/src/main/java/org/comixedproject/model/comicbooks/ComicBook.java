@@ -69,12 +69,6 @@ public class ComicBook {
   @Setter
   private Long id;
 
-  @OneToOne(cascade = CascadeType.ALL, mappedBy = "comicBook", orphanRemoval = true)
-  @JsonView({View.ComicListView.class, View.DuplicatePageList.class})
-  @Getter
-  @Setter
-  private ComicFileDetails fileDetails;
-
   @OneToOne(mappedBy = "comicBook", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonProperty("detail")
   @JsonView({View.ComicListView.class, View.ComicDetailsView.class, View.ReadingListDetail.class})
@@ -279,15 +273,15 @@ public class ComicBook {
   }
 
   @Override
-  public boolean equals(final Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    final ComicBook comicBook = (ComicBook) o;
-    return fileDetails.equals(comicBook.fileDetails);
+    ComicBook comicBook = (ComicBook) o;
+    return Objects.equals(comicDetail, comicBook.comicDetail);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(fileDetails);
+    return Objects.hash(comicDetail);
   }
 }

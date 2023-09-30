@@ -22,7 +22,6 @@ import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicFileDetails;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.junit.Before;
@@ -41,7 +40,6 @@ public class ComicBookContentsProcessedGuardTest {
   @Mock private StateContext<ComicState, ComicEvent> context;
   @Mock private MessageHeaders messageHeaders;
   @Mock private ComicBook comicBook;
-  @Mock private ComicFileDetails fileDetails;
 
   @Before
   public void setUp() {
@@ -51,17 +49,7 @@ public class ComicBookContentsProcessedGuardTest {
   }
 
   @Test
-  public void testEvaluateNoFileDetailsPresent() {
-    Mockito.when(comicBook.getFileDetails()).thenReturn(null);
-
-    final boolean result = guard.evaluate(context);
-
-    assertFalse(result);
-  }
-
-  @Test
   public void testEvaluateFileContentsNotLoaded() {
-    Mockito.when(comicBook.getFileDetails()).thenReturn(fileDetails);
     Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(false);
 
     final boolean result = guard.evaluate(context);
@@ -71,7 +59,6 @@ public class ComicBookContentsProcessedGuardTest {
 
   @Test
   public void testEvaluateBlockedPagesNotProcessed() {
-    Mockito.when(comicBook.getFileDetails()).thenReturn(fileDetails);
     Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(true);
     Mockito.when(comicBook.isBlockedPagesMarked()).thenReturn(false);
 
@@ -82,7 +69,6 @@ public class ComicBookContentsProcessedGuardTest {
 
   @Test
   public void testEvaluate() {
-    Mockito.when(comicBook.getFileDetails()).thenReturn(fileDetails);
     Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(true);
     Mockito.when(comicBook.isBlockedPagesMarked()).thenReturn(true);
 

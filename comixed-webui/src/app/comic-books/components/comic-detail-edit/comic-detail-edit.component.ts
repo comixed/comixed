@@ -31,7 +31,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngrx/store';
 import { updateComicBook } from '@app/comic-books/actions/comic-book.actions';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
-import { FileDetails } from '@app/comic-books/models/file-details';
 import { Subscription } from 'rxjs';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { Imprint } from '@app/comic-books/models/imprint';
@@ -123,7 +122,6 @@ export class ComicDetailEditComponent implements OnInit, OnDestroy {
         storeDate: this.comicBookForm.controls.storeDate.value?.getTime(),
         notes: this.comicBookForm.controls.notes.value
       } as ComicDetail,
-      fileDetails: {} as FileDetails,
       metadata: {} as ComicMetadataSource,
       pages: []
     } as ComicBook;

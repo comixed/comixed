@@ -57,7 +57,6 @@ public class ProcessComicsConfiguration {
    * @param loadFileContentsStep the load file contents step
    * @param markBlockedPagesStep the mark blocked pages step
    * @param createMetadataSourceStep the create metadata source step
-   * @param loadFileDetailsStep the load file details step
    * @param contentsProcessedStep the mark contents processed step
    * @return the job
    */
@@ -69,7 +68,6 @@ public class ProcessComicsConfiguration {
       @Qualifier("loadFileContentsStep") final Step loadFileContentsStep,
       @Qualifier("markBlockedPagesStep") final Step markBlockedPagesStep,
       @Qualifier("createMetadataSourceStep") final Step createMetadataSourceStep,
-      @Qualifier("loadFileDetailsStep") final Step loadFileDetailsStep,
       @Qualifier("contentsProcessedStep") final Step contentsProcessedStep) {
     return jobBuilderFactory
         .get("processComicsJob")
@@ -78,7 +76,6 @@ public class ProcessComicsConfiguration {
         .start(loadFileContentsStep)
         .next(markBlockedPagesStep)
         .next(createMetadataSourceStep)
-        .next(loadFileDetailsStep)
         .next(contentsProcessedStep)
         .build();
   }
@@ -167,37 +164,6 @@ public class ProcessComicsConfiguration {
       final ProcessedComicChunkListener chunkListener) {
     return stepBuilderFactory
         .get("markBlockedPagesStep")
-        .listener(stepListener)
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize)
-        .reader(reader)
-        .processor(processor)
-        .writer(writer)
-        .listener(chunkListener)
-        .build();
-  }
-
-  /**
-   * Returns the load file details step.
-   *
-   * @param stepBuilderFactory the step factory
-   * @param stepListener the step listener
-   * @param reader the reader
-   * @param processor the processor
-   * @param writer the writer
-   * @param chunkListener the chunk listener
-   * @return the step
-   */
-  @Bean
-  @Qualifier("loadFileDetailsStep")
-  public Step loadFileDetailsStep(
-      final StepBuilderFactory stepBuilderFactory,
-      final LoadFileDetailsStepListener stepListener,
-      final LoadFileDetailsReader reader,
-      final LoadFileDetailsProcessor processor,
-      final LoadFileDetailsWriter writer,
-      final ProcessedComicChunkListener chunkListener) {
-    return stepBuilderFactory
-        .get("loadFileDetailsStep")
         .listener(stepListener)
         .<ComicBook, ComicBook>chunk(this.batchChunkSize)
         .reader(reader)
