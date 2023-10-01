@@ -25,6 +25,7 @@ import java.util.Date;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishProcessComicsStatusAction;
 import org.comixedproject.model.messaging.batch.ProcessComicStatus;
+import org.comixedproject.service.comicfiles.ComicFileService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,8 +40,10 @@ public class AddComicsToLibraryJobListenerTest {
   private static final String TEST_STEP_NAME = "step-name";
   private static final long TEST_TOTAL_COMICS = 27L;
   private static final long TEST_PROCESSED_COMICS = 15L;
+  private static final Long TEST_TOTAL_DESCRIPTORS = 717L;
 
   @InjectMocks private AddComicsToLibraryJobListener listener;
+  @Mock private ComicFileService comicFileService;
   @Mock private JobExecution jobExecution;
   @Mock private ExecutionContext executionContext;
   @Mock private PublishProcessComicsStatusAction publishProcessComicsStatusAction;
@@ -58,6 +61,8 @@ public class AddComicsToLibraryJobListenerTest {
     Mockito.doNothing()
         .when(publishProcessComicsStatusAction)
         .publish(processComicStatusArgumentCaptor.capture());
+
+    Mockito.when(comicFileService.getComicFileDescriptorCount()).thenReturn(TEST_TOTAL_DESCRIPTORS);
   }
 
   @Test
@@ -82,7 +87,8 @@ public class AddComicsToLibraryJobListenerTest {
     assertEquals(TEST_PROCESSED_COMICS, status.getProcessed());
 
     Mockito.verify(executionContext, Mockito.times(1)).putLong(JOB_STARTED, timestamp);
-    Mockito.verify(executionContext, Mockito.times(1)).putLong(TOTAL_COMICS, 0L);
+    Mockito.verify(executionContext, Mockito.times(1))
+        .putLong(TOTAL_COMICS, TEST_TOTAL_DESCRIPTORS);
     Mockito.verify(executionContext, Mockito.times(1)).putLong(PROCESSED_COMICS, 0L);
     Mockito.verify(publishProcessComicsStatusAction, Mockito.times(1)).publish(status);
   }
@@ -113,7 +119,8 @@ public class AddComicsToLibraryJobListenerTest {
     assertEquals(TEST_PROCESSED_COMICS, status.getProcessed());
 
     Mockito.verify(executionContext, Mockito.times(1)).putLong(JOB_STARTED, timestamp);
-    Mockito.verify(executionContext, Mockito.times(1)).putLong(TOTAL_COMICS, 0L);
+    Mockito.verify(executionContext, Mockito.times(1))
+        .putLong(TOTAL_COMICS, TEST_TOTAL_DESCRIPTORS);
     Mockito.verify(executionContext, Mockito.times(1)).putLong(PROCESSED_COMICS, 0L);
     Mockito.verify(publishProcessComicsStatusAction, Mockito.times(1)).publish(status);
   }
