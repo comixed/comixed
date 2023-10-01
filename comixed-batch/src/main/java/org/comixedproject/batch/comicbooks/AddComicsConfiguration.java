@@ -100,7 +100,8 @@ public class AddComicsConfiguration {
       final CreateInsertStepExecutionListener stepExecutionListener,
       final ComicFileDescriptorReader reader,
       final ComicInsertProcessor processor,
-      final ComicInsertWriter writer) {
+      final ComicInsertWriter writer,
+      final ProcessedComicChunkListener chunkListener) {
     return stepBuilderFactory
         .get("createInsertStep")
         .listener(stepExecutionListener)
@@ -108,6 +109,7 @@ public class AddComicsConfiguration {
         .reader(reader)
         .processor(processor)
         .writer(writer)
+        .listener(chunkListener)
         .build();
   }
 
