@@ -2,7 +2,10 @@
   <button
     id="cx-publisher-page-button"
     mat-fab
-    [matTooltip]="'collections.series-detail.tooltip.show-pubisher' | translate"
+    [matTooltip]="
+      'collections.series-detail.tooltip.show-publisher'
+        | translate: { publisher: publisher }
+    "
     [routerLink]="['/library/collections/publishers', publisher]"
   >
     <mat-icon>book_online</mat-icon>
