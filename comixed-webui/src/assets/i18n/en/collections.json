@@ -84,7 +84,8 @@
         "found-in-library": "This issue {exists, select, true{is} other{is not}} found in the library."
       },
       "tooltip": {
-        "scrape-metadata": "Scrape the series metadata..."
+        "scrape-metadata": "Scrape the series metadata...",
+        "show-publisher": "View more from titles from {publisher}..."
       }
     }
   },
