@@ -28,6 +28,8 @@ import {
 import { CURRENT_RELEASE, LATEST_RELEASE } from '@app/app.fixtures';
 
 describe('Release Reducer', () => {
+  const LOADED = Math.random() > 0.5;
+
   let state: ReleaseDetailsState;
 
   beforeEach(() => {
@@ -49,6 +51,10 @@ describe('Release Reducer', () => {
 
     it('clears the latest loading state', () => {
       expect(state.latestLoading).toBeFalse();
+    });
+
+    it('clears the loaded flag', () => {
+      expect(state.loaded).toBeFalse();
     });
 
     it('has no statest build', () => {
@@ -102,7 +108,7 @@ describe('Release Reducer', () => {
   describe('fetching the latest version', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, latestLoading: false },
+        { ...state, latestLoading: false, loaded: true },
         loadLatestReleaseDetails()
       );
     });
@@ -110,18 +116,26 @@ describe('Release Reducer', () => {
     it('sets the latest loading flags', () => {
       expect(state.latestLoading).toBeTrue();
     });
+
+    it('clears the loaded flag', () => {
+      expect(state.loaded).toBeFalse();
+    });
   });
 
   describe('receiving the latest version', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, latestLoading: true, latest: null },
+        { ...state, latestLoading: true, latest: null, loaded: false },
         latestReleaseDetailsLoaded({ details: LATEST_RELEASE })
       );
     });
 
     it('clears the latest loading flags', () => {
       expect(state.latestLoading).toBeFalse();
+    });
+
+    it('sets the loaded flag', () => {
+      expect(state.loaded).toBeTrue();
     });
 
     it('sets the latest release', () => {
@@ -132,13 +146,17 @@ describe('Release Reducer', () => {
   describe('fetching the latest version', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, latestLoading: true },
+        { ...state, latestLoading: true, loaded: false },
         loadLatestReleaseDetailsFailed()
       );
     });
 
     it('clears the loading flags', () => {
       expect(state.latestLoading).toBeFalse();
+    });
+
+    it('sets the loaded flag', () => {
+      expect(state.loaded).toBeTrue();
     });
   });
 });
