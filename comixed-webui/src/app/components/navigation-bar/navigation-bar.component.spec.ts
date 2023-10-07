@@ -363,6 +363,7 @@ describe('NavigationBarComponent', () => {
         [RELEASE_DETAILS_FEATURE_KEY]: {
           ...initialReleaseState,
           latest: LATEST_RELEASE,
+          loaded: true,
           latestLoading: false
         }
       });

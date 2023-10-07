@@ -58,6 +58,7 @@ export class NavigationBarComponent {
 
   isReader = false;
   isAdmin = false;
+  checkingLatestVersion = false;
 
   readonly languages: ListItem<string>[] = [{ label: 'English', value: 'en' }];
   currentLanguage = '';
@@ -95,7 +96,8 @@ export class NavigationBarComponent {
       .select(selectReleaseDetailsState)
       .pipe(filter(state => !!state))
       .subscribe(state => {
-        if (!state.latestLoading && !state.latest) {
+        this.checkingLatestVersion = state.latestLoading;
+        if (!state.latestLoading && !state.loaded) {
           this.logger.trace('Fetching latest release details');
           this.store.dispatch(loadLatestReleaseDetails());
         } else {

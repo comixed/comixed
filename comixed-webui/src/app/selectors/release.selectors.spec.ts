@@ -31,6 +31,7 @@ describe('Release Selectors', () => {
       currentLoading: Math.random() > 0.5,
       current: CURRENT_RELEASE,
       latestLoading: Math.random() > 0.5,
+      loaded: Math.random() > 0.5,
       latest: LATEST_RELEASE
     };
   });
