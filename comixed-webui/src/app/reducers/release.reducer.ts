@@ -34,6 +34,7 @@ export interface ReleaseDetailsState {
   currentLoading: boolean;
   current: CurrentRelease;
   latestLoading: boolean;
+  loaded: boolean;
   latest: LatestRelease;
 }
 
@@ -41,6 +42,7 @@ export const initialState: ReleaseDetailsState = {
   currentLoading: false,
   current: null,
   latestLoading: false,
+  loaded: false,
   latest: null
 };
 
@@ -57,14 +59,20 @@ export const reducer = createReducer(
     ...state,
     currentLoading: false
   })),
-  on(loadLatestReleaseDetails, state => ({ ...state, latestLoading: true })),
+  on(loadLatestReleaseDetails, state => ({
+    ...state,
+    latestLoading: true,
+    loaded: false
+  })),
   on(latestReleaseDetailsLoaded, (state, action) => ({
     ...state,
     latestLoading: false,
-    latest: action.details
+    latest: action.details,
+    loaded: true
   })),
   on(loadLatestReleaseDetailsFailed, state => ({
     ...state,
-    latestLoading: false
+    latestLoading: false,
+    loaded: true
   }))
 );

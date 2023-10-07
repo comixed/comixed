@@ -22,6 +22,7 @@
               released: latestRelease.updated | date: 'mediumDate'
             }
     "
+    [disabled]="checkingLatestVersion"
     (click)="onViewLatestRelease()"
   >
     <mat-icon>new_releases</mat-icon>
