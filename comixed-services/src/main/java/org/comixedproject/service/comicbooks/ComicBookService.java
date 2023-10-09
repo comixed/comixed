@@ -75,6 +75,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    * @return the comic
    * @throws ComicBookException if the comic does not exist
    */
+  @Transactional
   public ComicBook getComic(final long id) throws ComicBookException {
     log.debug("Getting comic: id={}", id);
 
@@ -822,6 +823,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @return the list of comics
    */
+  @Transactional
   public List<ComicDetail> findDuplicateComics() {
     log.debug("Finding all comics with duplicate pages");
     return this.comicBookRepository.getAllWithDuplicatePages();
@@ -867,8 +869,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   @Transactional
   public void prepareForMetadataUpdate(final long comicBookId) throws ComicBookException {
     final ComicBook comicBook = this.doGetComic(comicBookId);
-    comicBook.setBatchMetadataUpdate(true);
-    this.comicBookRepository.save(comicBook);
+    this.comicStateHandler.fireEvent(comicBook, ComicEvent.updateMetadata);
   }
 
   public void prepareForRescan(final long comicBookId) throws ComicBookException {

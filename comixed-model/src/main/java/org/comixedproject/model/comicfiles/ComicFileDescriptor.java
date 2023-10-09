@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "ComicFileDescriptors")
+@Table(name = "comic_file_descriptors")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class ComicFileDescriptor {
@@ -24,12 +24,12 @@ public class ComicFileDescriptor {
   @Getter
   private Long id;
 
-  @Column(name = "Filename", nullable = false, updatable = false, unique = true)
+  @Column(name = "filename", nullable = false, updatable = false, unique = true)
   @Getter
   @NonNull
   private String filename;
 
-  @Column(name = "CreatedOn", nullable = false, updatable = false)
+  @Column(name = "created_on", nullable = false, updatable = false)
   @Getter
   private Date createdOn = new Date();
 

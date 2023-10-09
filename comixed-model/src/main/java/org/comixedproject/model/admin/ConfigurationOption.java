@@ -33,7 +33,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "ConfigurationOptions")
+@Table(name = "configuration_options")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class ConfigurationOption {
@@ -42,21 +42,21 @@ public class ConfigurationOption {
   @Getter
   Long id;
 
-  @Column(name = "OptionName", length = 64, updatable = false)
+  @Column(name = "option_name", length = 64, updatable = false)
   @JsonProperty("name")
   @JsonView(View.ConfigurationList.class)
   @Getter
   @NonNull
   private String name;
 
-  @Column(name = "OptionValue", length = 256, updatable = true)
+  @Column(name = "option_value", length = 256, updatable = true)
   @JsonProperty("value")
   @JsonView(View.ConfigurationList.class)
   @Getter
   @Setter
   private String value;
 
-  @Column(name = "LastModifiedOn", nullable = false, updatable = true)
+  @Column(name = "last_modified_on", nullable = false, updatable = true)
   @JsonProperty("lastModifiedOn")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @JsonView(View.ConfigurationList.class)

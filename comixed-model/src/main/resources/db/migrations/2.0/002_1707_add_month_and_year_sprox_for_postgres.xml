@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="002_1707_add_month_and_year_sprox_for_postgres.xml" author="mcpierce">
+
+        <createProcedure dbms="postgresql">
+            create
+            or replace function month(source date)
+                returns int
+                language plpgsql
+            as $$
+            declare
+            the_month int;
+            begin
+            select date_part('month', source)
+            into the_month;
+
+            return the_month;
+            end;
+            $$;
+
+            create
+            or replace function year(source date)
+                returns int
+                language plpgsql
+            as $$
+            declare
+            the_month int;
+            begin
+            select date_part('year', source)
+            into the_month;
+
+            return the_month;
+            end;
+            $$;
+        </createProcedure>
+
+    </changeSet>
+</databaseChangeLog>

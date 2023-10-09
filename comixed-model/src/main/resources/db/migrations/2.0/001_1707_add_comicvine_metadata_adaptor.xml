@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="001_1707_add_comicvine_metadata_adaptor.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*)
+                                         FROM metadata_sources
+                                         WHERE bean_name = 'comicVineMetadataAdaptor'</sqlCheck>
+        </preConditions>
+        <comment>Check for previously defined ComicVine metadata source record</comment>
+
+        <insert tableName="metadata_sources">
+            <column name="bean_name" value="comicVineMetadataAdaptor"/>
+            <column name="display_name" value="ComicVine Metadata Adaptor"/>
+            <column name="preferred_source" valueBoolean="false"/>
+        </insert>
+
+        <insert tableName="metadata_source_properties">
+            <column name="metadata_source_id"
+                    valueComputed="(SELECT id FROM metadata_sources WHERE bean_name = 'comicVineMetadataAdaptor')"/>
+            <column name="property_name"
+                    value="api-key"/>
+        </insert>
+
+    </changeSet>
+</databaseChangeLog>

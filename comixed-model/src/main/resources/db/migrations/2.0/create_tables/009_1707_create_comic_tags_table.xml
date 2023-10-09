@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="009_1707_create_comic_tags_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="comic_tags"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="comic_tags">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="comic_detail_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="tag_type" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="tag_value" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="comic_tags"
+                                 baseColumnNames="comic_detail_id"
+                                 constraintName="comic_tags_comic_detail_fk"
+                                 referencedTableName="comic_details"
+                                 referencedColumnNames="id"/>
+
+        <createIndex tableName="comic_tags"
+                     indexName="comic_tags_comic_detail_idx">
+            <column name="comic_detail_id"/>
+        </createIndex>
+
+        <createIndex tableName="comic_tags"
+                     indexName="comic_tags_type_and_value_idx">
+            <column name="tag_type"/>
+            <column name="tag_value"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="005_1707_rename_comic_books_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="ComicBooks"/>
+        </preConditions>
+
+        <renameTable oldTableName="ComicBooks" newTableName="comic_books"/>
+
+        <renameColumn tableName="comic_books" oldColumnName="Id" newColumnName="id" columnDataType="bigint"/>
+
+        <renameColumn tableName="comic_books" oldColumnName="LastModifiedOn" newColumnName="last_modified_on"
+                      columnDataType="datetme"/>
+
+        <renameColumn tableName="comic_books" oldColumnName="FileContentsLoaded" newColumnName="file_contents_loaded"
+                      columnDataType="boolean"/>
+
+        <renameColumn tableName="comic_books" oldColumnName="BlockedPagesMarked" newColumnName="blocked_pages_marked"
+                      columnDataType="boolean"/>
+
+        <renameColumn tableName="comic_books" oldColumnName="UpdateMetadata" newColumnName="update_metadata"
+                      columnDataType="booleans"/>
+
+        <renameColumn tableName="comic_books" oldColumnName="Consolidating" newColumnName="consolidating"
+                      columnDataType="boolean"/>
+
+        <renameColumn tableName="comic_books" oldColumnName="Recreating" newColumnName="recreating"
+                      columnDataType="boolean"/>
+
+        <renameColumn tableName="comic_books" oldColumnName="PurgeComic" newColumnName="purge_comic"
+                      columnDataType="boolean"/>
+
+        <renameColumn tableName="comic_books" oldColumnName="CreateMetadataSource"
+                      newColumnName="create_metadata_source" columnDataType="boolean"/>
+
+        <renameColumn tableName="comic_books" oldColumnName="BatchMetadataUpdate" newColumnName="batch_metadata_update"
+                      columnDataType="boolean"/>
+
+        <renameColumn tableName="comic_books" oldColumnName="EditDetails" newColumnName="edit_details"
+                      columnDataType="boolean"/>
+
+        <dropIndex tableName="comic_books" indexName="ComicBookCreateMetadataSourceIdx"/>
+        <createIndex tableName="comic_books" indexName="comic_book_create_metadata_source_idx">
+            <column name="create_metadata_source"/>
+        </createIndex>
+
+        <dropIndex tableName="comic_books" indexName="ComicBookLastModifiedOnIdx"/>
+        <createIndex tableName="comic_books" indexName="comic_book_last_modified_on_idx">
+            <column name="last_modified_on"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="014_1707_create_comic_metadata_sources_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="ComicMetadataSources"/>
+        </preConditions>
+
+        <renameTable oldTableName="ComicMetadataSources" newTableName="comic_metadata_sources"/>
+
+        <renameColumn tableName="comic_metadata_sources" oldColumnName="Id" newColumnName="id" columnDataType="bigint"/>
+
+        <renameColumn tableName="comic_metadata_sources" oldColumnName="ComicBookId" newColumnName="comic_book_id"
+                      columnDataType="bigint"/>
+
+        <renameColumn tableName="comic_metadata_sources" oldColumnName="MetadataSourceId"
+                      newColumnName="metadata_source_id" columnDataType="bigint"/>
+
+        <renameColumn tableName="comic_metadata_sources" oldColumnName="ReferenceId" newColumnName="reference_id"
+                      columnDataType="varchar(32)"/>
+
+        <dropForeignKeyConstraint baseTableName="comic_metadata_sources"
+                                  constraintName="ComicMetadataSourceMetadataSourceFk"/>
+        <dropForeignKeyConstraint baseTableName="comic_metadata_sources"
+                                  constraintName="ComicMetadataSourceComicBookFk"/>
+
+        <addForeignKeyConstraint baseTableName="comic_metadata_sources" baseColumnNames="comic_book_id"
+                                 constraintName="comic_metadata_sources_comic_book_fk"
+                                 referencedTableName="comic_books"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="comic_metadata_sources" baseColumnNames="metadata_source_id"
+                                 constraintName="comic_metadata_sources_metadata_source_fk"
+                                 referencedTableName="metadata_sources"
+                                 referencedColumnNames="id"/>
+
+    </changeSet>
+</databaseChangeLog>

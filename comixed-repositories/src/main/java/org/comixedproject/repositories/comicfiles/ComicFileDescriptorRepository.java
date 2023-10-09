@@ -20,6 +20,8 @@ package org.comixedproject.repositories.comicfiles;
 
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -29,4 +31,13 @@ import org.springframework.stereotype.Repository;
  * @author Darryl L. Pierce
  */
 @Repository
-public interface ComicFileDescriptorRepository extends JpaRepository<ComicFileDescriptor, Long> {}
+public interface ComicFileDescriptorRepository extends JpaRepository<ComicFileDescriptor, Long> {
+  /**
+   * Returns the record with the given filename.
+   *
+   * @param filename the filename
+   * @return the record
+   */
+  @Query("SELECT d FROM ComicFileDescriptor d WHERE d.filename = :filename")
+  ComicFileDescriptor findByFilename(@Param("filename") String filename);
+}

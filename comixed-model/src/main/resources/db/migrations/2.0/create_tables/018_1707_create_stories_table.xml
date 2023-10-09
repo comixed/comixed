@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="018_1707_create_stories_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="stories"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="stories">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="story_name" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="store_state" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="publisher" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="comic_vine_id" type="int">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="created_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="last_modified_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <createIndex tableName="stories" indexName="stories_name_idx">
+            <column name="story_name"/>
+        </createIndex>
+
+        <createIndex tableName="stories" indexName="stories_comic_vine_id_idx">
+            <column name="comic_vine_id"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

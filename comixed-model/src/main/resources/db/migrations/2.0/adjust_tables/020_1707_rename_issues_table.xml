@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="020_1707_rename_issues_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="Issues"/>
+        </preConditions>
+
+        <renameTable oldTableName="Issues" newTableName="issues_temp"/>
+        <renameTable oldTableName="issues_temp" newTableName="issues"/>
+
+        <renameColumn tableName="issues" oldColumnName="Id" newColumnName="id" columnDataType="bigint"/>
+
+        <renameColumn tableName="issues" oldColumnName="Publisher" newColumnName="publisher"
+                      columnDataType="varchar(256)"/>
+
+        <renameColumn tableName="issues" oldColumnName="Series" newColumnName="series" columnDataType="varchar(256)"/>
+
+        <renameColumn tableName="issues" oldColumnName="Volume" newColumnName="volume" columnDataType="varchar(4)"/>
+
+        <renameColumn tableName="issues" oldColumnName="IssueNumber" newColumnName="issue_number"
+                      columnDataType="varchar(16)"/>
+
+        <renameColumn tableName="issues" oldColumnName="Title" newColumnName="title" columnDataType="varchar(128)"/>
+
+        <renameColumn tableName="issues" oldColumnName="CoverDate" newColumnName="cover_date" columnDataType="date"/>
+
+        <renameColumn tableName="issues" oldColumnName="StoreDate" newColumnName="store_date" columnDataType="date"/>
+
+        <dropUniqueConstraint tableName="issues" constraintName="IssueSeriesVolumeIssueNumberCoverDateIdx"/>
+        <addUniqueConstraint tableName="issues"
+                             constraintName="issues_unique_publisher_series_volume_issue_number_cover_date"
+                             columnNames="publisher,series,volume,issue_number,cover_date"/>
+
+        <dropIndex tableName="issues" indexName="IssuesPublisherSeriesVolumeIdx"/>
+        <createIndex tableName="issues" indexName="issue_publisher_series_volume_idx">
+            <column name="publisher"/>
+            <column name="series"/>
+            <column name="volume"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="004_1707_create_comixed_user_preferences_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="comixed_user_preferences"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="comixed_user_preferences">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="comixed_user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="preference_name" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="preference_value" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint tableName="comixed_user_preferences" columnNames="comixed_user_id,preference_name"
+                             constraintName="comixed_user_preferences_unique_preference_name"/>
+
+    </changeSet>
+</databaseChangeLog>

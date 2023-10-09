@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="014_1707_create_comic_metadata_sources_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="comic_metadata_sources"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="comic_metadata_sources">
+
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="comic_book_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="metadata_source_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="reference_id" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="comic_metadata_sources" baseColumnNames="comic_book_id"
+                                 constraintName="comic_metadata_sources_comic_book_fk"
+                                 referencedTableName="comic_books"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="comic_metadata_sources" baseColumnNames="metadata_source_id"
+                                 constraintName="comic_metadata_sources_metadata_source_fk"
+                                 referencedTableName="metadata_sources"
+                                 referencedColumnNames="id"/>
+
+    </changeSet>
+</databaseChangeLog>

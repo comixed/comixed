@@ -92,7 +92,7 @@ public class ComicFileService {
   private void loadFilesUnder(
       final List<ComicFileGroup> entries, final File directory, final int maximum)
       throws IOException {
-    log.trace("Loading files in directory: {}", directory);
+    log.debug("Loading files in directory: {}", directory);
     if (directory.listFiles() != null) {
       for (File file : directory.listFiles()) {
         if (!entries.isEmpty()) {
@@ -122,11 +122,11 @@ public class ComicFileService {
             if (entry.isPresent()) {
               group = entry.get();
             } else {
-              log.trace("Creating new grouping");
+              log.debug("Creating new grouping");
               group = new ComicFileGroup(parentPath);
               entries.add(group);
             }
-            log.trace("Adding comic file");
+            log.debug("Adding comic file");
             group.getFiles().add(new ComicFile(filePath, fileSize));
           }
         }
@@ -138,7 +138,7 @@ public class ComicFileService {
     boolean isComic = this.comicFileAdaptor.isComicFile(file);
 
     final String filePath = file.getCanonicalPath().replace("\\", "/");
-    log.trace("Checking if comicBook file is already in the database");
+    log.debug("Checking if comicBook file is already in the database");
     final ComicBook comicBook = this.comicBookService.findByFilename(filePath);
 
     return isComic && (comicBook == null);
@@ -153,7 +153,7 @@ public class ComicFileService {
   public void importComicFiles(final List<String> filenames) {
     for (int index = 0; index < filenames.size(); index++) {
       final String filename = filenames.get(index);
-      log.trace("Saving file descriptor: {}", filename);
+      log.debug("Saving file descriptor: {}", filename);
       this.comicFileDescriptorRepository.save(new ComicFileDescriptor(filename));
     }
   }
@@ -164,7 +164,7 @@ public class ComicFileService {
    * @return the count
    */
   public long getComicFileDescriptorCount() {
-    log.trace("Getting comic file descriptor count");
+    log.debug("Getting comic file descriptor count");
     return this.comicFileDescriptorRepository.count();
   }
 
@@ -175,7 +175,7 @@ public class ComicFileService {
    * @return the descriptors
    */
   public List<ComicFileDescriptor> findComicFileDescriptors(final int pageSize) {
-    log.trace("Loading all comic file descriptors");
+    log.debug("Loading all comic file descriptors");
     return this.comicFileDescriptorRepository.findAll(PageRequest.of(0, pageSize)).stream()
         .collect(Collectors.toList());
   }
@@ -185,8 +185,14 @@ public class ComicFileService {
    *
    * @param descriptor the descriptor
    */
+  @Transactional
   public void deleteComicFileDescriptor(final ComicFileDescriptor descriptor) {
-    log.trace("Deleting comic file descriptor: {}", descriptor);
+    log.debug("Deleting comic file descriptor: {}", descriptor);
     this.comicFileDescriptorRepository.delete(descriptor);
+  }
+
+  public ComicFileDescriptor getComicFileDescriptorByFilename(final String filename) {
+    log.debug("Loading comic file descriptor for file: {}", filename);
+    return this.comicFileDescriptorRepository.findByFilename(filename);
   }
 }

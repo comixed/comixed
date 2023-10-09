@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="015_1707_create_blocked_hashes_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="blocked_hashes"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="blocked_hashes">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="hash_value" type="varchar(32)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="label" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="thumbnail" type="clob">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <createIndex tableName="blocked_hashes" indexName="blocked_hashes_hash_value_idx">
+            <column name="hash_value"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

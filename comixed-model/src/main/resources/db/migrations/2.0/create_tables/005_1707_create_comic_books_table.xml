@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="005_1707_create_comic_books_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="comic_books"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="comic_books">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="last_modified_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="file_contents_loaded" type="boolean" defaultValue="false"/>
+
+            <column name="blocked_pages_marked" type="boolean" defaultValue="false"/>
+
+            <column name="update_metadata" type="boolean" defaultValue="false"/>
+
+            <column name="consolidating" type="boolean" defaultValue="false"/>
+
+            <column name="recreating" type="boolean" defaultValue="false"/>
+
+            <column name="purge_comic" type="boolean" defaultValue="false"/>
+
+            <column name="create_metadata_source" type="boolean" defaultValue="false"/>
+
+            <column name="batch_metadata_update" type="boolean" defaultValue="false"/>
+
+            <column name="edit_details" type="boolean" defaultValue="false"/>
+        </createTable>
+
+        <createIndex tableName="comic_books" indexName="comic_book_create_metadata_source_idx">
+            <column name="create_metadata_source"/>
+        </createIndex>
+
+        <createIndex tableName="comic_books" indexName="comic_book_last_modified_on_idx">
+            <column name="last_modified_on"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

@@ -34,7 +34,7 @@ import org.springframework.data.annotation.CreatedDate;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "LastReadDates")
+@Table(name = "last_read_dates")
 @NoArgsConstructor
 @RequiredArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
@@ -46,7 +46,7 @@ public class LastRead {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "ComicDetailId", insertable = true, updatable = false, nullable = false)
+  @JoinColumn(name = "comic_detail_id", insertable = true, updatable = false, nullable = false)
   @JsonProperty("comicDetail")
   @JsonView({View.ComicDetailsView.class})
   @Getter
@@ -55,13 +55,13 @@ public class LastRead {
   private ComicDetail comicDetail;
 
   @ManyToOne
-  @JoinColumn(name = "UserId", insertable = true, updatable = false, nullable = false)
+  @JoinColumn(name = "comixed_user_id", insertable = true, updatable = false, nullable = false)
   @Getter
   @Setter
   @NonNull
   private ComiXedUser user;
 
-  @Column(name = "LastReadOn", insertable = true, updatable = false, nullable = false)
+  @Column(name = "last_read_on", insertable = true, updatable = false, nullable = false)
   @JsonProperty("lastRead")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @JsonView({View.ComicDetailsView.class})
@@ -69,7 +69,7 @@ public class LastRead {
   @Setter
   private Date lastReadOn = new Date();
 
-  @Column(name = "CreatedOn", updatable = false, nullable = false)
+  @Column(name = "created_on", updatable = false, nullable = false)
   @CreatedDate
   @Getter
   @JsonView({View.ComicDetailsView.class})

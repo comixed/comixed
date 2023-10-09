@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="021_1707_create_last_read_dates_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="last_read_dates"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="last_read_dates">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="comixed_user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="comic_detail_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="last_read_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="last_read_dates" baseColumnNames="comixed_user_id"
+                                 constraintName="last_read_dates_comixed_user_fk"
+                                 referencedTableName="comixed_users"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="last_read_dates" baseColumnNames="comic_detail_id"
+                                 constraintName="last_read_dates_comic_detail_fk"
+                                 referencedTableName="comic_details"
+                                 referencedColumnNames="id"/>
+
+        <createIndex tableName="last_read_dates" indexName="last_read_dates_comic_detail_idx">
+            <column name="comic_detail_id"/>
+        </createIndex>
+
+        <addUniqueConstraint tableName="last_read_dates" columnNames="comic_detail_id,comixed_user_id"
+                             constraintName="last_read_dates_unique_comic_detail_and_user"/>
+
+    </changeSet>
+</databaseChangeLog>

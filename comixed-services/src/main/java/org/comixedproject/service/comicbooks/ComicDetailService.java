@@ -34,6 +34,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 /**
@@ -57,6 +58,7 @@ public class ComicDetailService {
    * @param maximum the maximum record
    * @return the list of comic details
    */
+  @Transactional
   public List<ComicDetail> loadById(final long lastId, final int maximum) {
     log.debug("Loading comic detail records: last id={} maximum={}", lastId, maximum);
     return this.comicDetailRepository.getWithIdGreaterThan(lastId, PageRequest.of(0, maximum));

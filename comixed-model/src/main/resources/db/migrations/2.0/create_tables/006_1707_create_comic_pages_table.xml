@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="006_1707_create_comic_pages_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="comic_pages"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="comic_pages">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="comic_book_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="filename" type="varchar(768)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="file_hash" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="height" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="width" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="page_number" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="page_state" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="comic_pages" baseColumnNames="comic_book_id"
+                                 constraintName="comic_pages_comic_book_fk"
+                                 referencedTableName="comic_books"
+                                 referencedColumnNames="id"/>
+
+        <createIndex tableName="comic_pages" indexName="page_state_idx">
+            <column name="page_state"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

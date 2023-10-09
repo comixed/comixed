@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="022_1707_create_reading_lists_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="reading_lists"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="reading_lists">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="owner_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="reading_list_name" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="last_modified_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="summary" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="reading_list_state" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="name_key" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="reading_lists" baseColumnNames="owner_id"
+                                 constraintName="reading_lists_owner_fk"
+                                 referencedTableName="comixed_users"
+                                 referencedColumnNames="id"/>
+
+        <addUniqueConstraint tableName="reading_lists" columnNames="owner_id,name_key"
+                             constraintName="reading_lists_unique_owner_name_key"/>
+
+    </changeSet>
+</databaseChangeLog>

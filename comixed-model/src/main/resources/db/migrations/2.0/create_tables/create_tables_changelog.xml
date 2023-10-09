@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <include file="/db/migrations/2.0/create_tables/001_1707_create_comixed_users_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/002_1707_create_comixed_roles_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/003_1707_create_comixed_users_roles_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/004_1707_create_comixed_user_preferences_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/005_1707_create_comic_books_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/006_1707_create_comic_pages_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/007_1707_create_comic_details_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/008_1707_create_comic_file_details_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/009_1707_create_comic_tags_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/010_1707_create_metadata_sources_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/011_1707_create_metadata_source_properties_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/012_1707_create_metadata_cache_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/013_1707_create_metadata_cache_entries_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/014_1707_create_comic_metadata_sources_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/015_1707_create_blocked_hashes_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/016_1707_create_configuration_options_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/017_1707_create_imprints_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/018_1707_create_stories_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/019_1707_create_story_entries_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/020_1707_create_issues_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/021_1707_create_last_read_dates_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/022_1707_create_reading_lists_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/023_1707_create_reading_list_entries_table.xml"/>
+    <include file="/db/migrations/2.0/create_tables/024_1707_create_filename_scraping_rules_table.xml"/>
+
+</databaseChangeLog>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="011_1707_create_metadata_source_properties_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="metadata_source_properties"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="metadata_source_properties">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="metadata_source_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="property_name" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="property_value" type="varchar(256)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="metadata_source_properties" baseColumnNames="metadata_source_id"
+                                 constraintName="metadata_source_properties_metadata_source_fk"
+                                 referencedTableName="metadata_sources"
+                                 referencedColumnNames="id"/>
+
+        <createIndex tableName="metadata_source_properties" indexName="metadata_source_properties_source_idx">
+            <column name="metadata_source_id"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

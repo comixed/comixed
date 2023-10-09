@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="006_1707_rename_comic_pages_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="Pages"/>
+        </preConditions>
+
+        <renameTable oldTableName="Pages" newTableName="comic_pages"/>
+
+        <renameColumn tableName="comic_pages" oldColumnName="Id" newColumnName="id" columnDataType="bigint"/>
+
+        <renameColumn tableName="comic_pages" oldColumnName="ComicBookId" newColumnName="comic_book_id"
+                      columnDataType="bigint"/>
+
+        <renameColumn tableName="comic_pages" oldColumnName="Filename" newColumnName="filename"
+                      columnDataType="varchar(768)"/>
+
+        <renameColumn tableName="comic_pages" oldColumnName="FileHash" newColumnName="file_hash"
+                      columnDataType="varchar(32)"/>
+
+        <renameColumn tableName="comic_pages" oldColumnName="Height" newColumnName="height" columnDataType="int"/>
+
+        <renameColumn tableName="comic_pages" oldColumnName="Width" newColumnName="width" columnDataType="int"/>
+
+        <renameColumn tableName="comic_pages" oldColumnName="PageNumber" newColumnName="page_number"
+                      columnDataType="int"/>
+
+        <renameColumn tableName="comic_pages" oldColumnName="PageState" newColumnName="page_state"
+                      columnDataType="varchar(32)"/>
+
+        <dropForeignKeyConstraint baseTableName="comic_pages" constraintName="PageComicBookFk"/>
+        <addForeignKeyConstraint baseTableName="comic_pages" baseColumnNames="comic_book_id"
+                                 constraintName="comic_pages_comic_book_fk"
+                                 referencedTableName="comic_books"
+                                 referencedColumnNames="id"/>
+
+        <dropIndex tableName="comic_pages" indexName="PageStateIdx"/>
+        <createIndex tableName="comic_pages" indexName="page_state_idx">
+            <column name="page_state"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

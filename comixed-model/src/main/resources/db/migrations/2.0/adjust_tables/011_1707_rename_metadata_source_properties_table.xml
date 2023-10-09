@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="011_1707_rename_metadata_source_properties_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="MetadataSourceProperties"/>
+        </preConditions>
+
+        <renameTable oldTableName="MetadataSourceProperties" newTableName="metadata_source_properties"/>
+
+        <renameColumn tableName="metadata_source_properties" oldColumnName="Id" newColumnName="id"
+                      columnDataType="bigint"/>
+
+        <renameColumn tableName="metadata_source_properties" oldColumnName="MetadataSourceId"
+                      newColumnName="metadata_source_id" columnDataType="bigint"/>
+
+        <renameColumn tableName="metadata_source_properties" oldColumnName="PropertyName" newColumnName="property_name"
+                      columnDataType="varchar(32)"/>
+
+        <renameColumn tableName="metadata_source_properties" oldColumnName="PropertyValue"
+                      newColumnName="property_value" columnDataType="varchar(256)"/>
+
+        <dropForeignKeyConstraint baseTableName="metadata_source_properties"
+                                  constraintName="MetadataSourcePropertyMetadataSourceFk"/>
+        <addForeignKeyConstraint baseTableName="metadata_source_properties" baseColumnNames="metadata_source_id"
+                                 constraintName="metadata_source_properties_metadata_source_fk"
+                                 referencedTableName="metadata_sources"
+                                 referencedColumnNames="id"/>
+
+    </changeSet>
+</databaseChangeLog>

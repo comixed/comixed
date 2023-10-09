@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="012_1707_create_metadata_cache_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="metadata_cache"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="metadata_cache">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="metadata_source" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cache_key" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="metadata_cache" indexName="metadata_cache_source_and_cache_key_idx">
+            <column name="metadata_source"/>
+            <column name="cache_key"/>
+        </createIndex>
+
+        <addUniqueConstraint tableName="metadata_cache" constraintName="metadata_cache_unique_metadata_source_cache_key"
+                             columnNames="metadata_source,cache_key"/>
+
+    </changeSet>
+</databaseChangeLog>

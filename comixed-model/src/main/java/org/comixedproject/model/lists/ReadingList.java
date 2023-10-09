@@ -38,7 +38,7 @@ import org.springframework.data.annotation.LastModifiedDate;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "ReadingLists")
+@Table(name = "reading_lists")
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ReadingList {
@@ -49,7 +49,7 @@ public class ReadingList {
   @Getter
   private Long id;
 
-  @Column(name = "ReadingListState", nullable = false, updatable = true)
+  @Column(name = "reading_list_state", nullable = false, updatable = true)
   @Enumerated(EnumType.STRING)
   @JsonProperty("readingListState")
   @JsonView({View.ComicListView.class, View.ReadingLists.class})
@@ -57,27 +57,27 @@ public class ReadingList {
   @Setter
   private ReadingListState readingListState = ReadingListState.STABLE;
 
-  @Column(name = "NameKey", length = 128)
+  @Column(name = "name_key", length = 128)
   @ColumnTransformer(write = "(UPPER(?))")
   @JsonIgnore
   @Getter
   private String nameKey;
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "OwnerId")
+  @JoinColumn(name = "owner_id")
   @JsonProperty("owner")
   @JsonView({View.ComicListView.class, View.ReadingLists.class})
   @Getter
   @Setter
   private ComiXedUser owner;
 
-  @Column(name = "Name", length = 128)
+  @Column(name = "reading_list_name", length = 128)
   @JsonProperty("name")
   @JsonView({View.ComicListView.class, View.ReadingLists.class})
   @Getter
   private String name;
 
-  @Column(name = "Summary", length = 256, nullable = true)
+  @Column(name = "summary", length = 256, nullable = true)
   @JsonProperty("summary")
   @JsonView({View.ComicListView.class, View.ReadingLists.class})
   @Getter
@@ -86,15 +86,15 @@ public class ReadingList {
 
   @ManyToMany
   @JoinTable(
-      name = "ReadingListEntries",
-      joinColumns = {@JoinColumn(name = "ReadingListId")},
-      inverseJoinColumns = {@JoinColumn(name = "ComicDetailId")})
+      name = "reading_list_entries",
+      joinColumns = {@JoinColumn(name = "reading_list_id")},
+      inverseJoinColumns = {@JoinColumn(name = "comic_detail_id")})
   @JsonProperty("entries")
   @JsonView({View.ReadingLists.class})
   @Getter
   private List<ComicDetail> entries = new ArrayList<>();
 
-  @Column(name = "CreatedOn")
+  @Column(name = "created_on")
   @CreatedDate
   @JsonProperty("createdOn")
   @JsonView({View.ComicListView.class, View.ReadingLists.class})
@@ -103,7 +103,7 @@ public class ReadingList {
   @Setter
   private Date createdOn = new Date();
 
-  @Column(name = "LastModifiedOn")
+  @Column(name = "last_modified_on")
   @LastModifiedDate
   @JsonProperty("lastModifiedOn")
   @JsonView({View.ComicListView.class, View.ReadingListDetail.class})

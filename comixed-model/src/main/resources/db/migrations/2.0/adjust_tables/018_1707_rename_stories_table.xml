@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="018_1707_rename_stories_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="Stories"/>
+        </preConditions>
+
+        <renameTable oldTableName="Stories" newTableName="stories_temp"/>
+        <renameTable oldTableName="stories_temp" newTableName="stories"/>
+
+        <renameColumn tableName="stories" oldColumnName="Id" newColumnName="id" columnDataType="bigint"/>
+
+        <renameColumn tableName="stories" oldColumnName="Name" newColumnName="story_name"
+                      columnDataType="varchar(256)"/>
+
+        <renameColumn tableName="stories" oldColumnName="StoryState" newColumnName="story_state"
+                      columnDataType="varchar(32)"/>
+
+        <renameColumn tableName="stories" oldColumnName="Publisher" newColumnName="publisher"
+                      columnDataType="varcahr(128)"/>
+
+        <renameColumn tableName="stories" oldColumnName="ComicVineId" newColumnName="comic_vine_id"
+                      columnDataType="int"/>
+
+        <renameColumn tableName="stories" oldColumnName="CreatedOn" newColumnName="create_on"
+                      columnDataType="datetime"/>
+
+        <renameColumn tableName="stories" oldColumnName="ModifiedOn" newColumnName="last_modified_on"
+                      columnDataType="datetime"/>
+
+        <dropIndex tableName="stories" indexName="StoryNameIdx"/>
+        <createIndex tableName="stories" indexName="stories_name_idx">
+            <column name="story_name"/>
+        </createIndex>
+
+        <dropIndex tableName="stories" indexName="StoryComicVineIdIdx"/>
+        <createIndex tableName="stories" indexName="stories_comic_vine_id_idx">
+            <column name="comic_vine_id"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

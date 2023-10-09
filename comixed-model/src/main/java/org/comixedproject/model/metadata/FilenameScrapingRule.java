@@ -34,7 +34,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "FilenameScrapingRules")
+@Table(name = "filename_scraping_rules")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class FilenameScrapingRule {
@@ -45,7 +45,7 @@ public class FilenameScrapingRule {
   @Getter
   private Long id;
 
-  @Column(name = "Name", length = 25, nullable = false, unique = true)
+  @Column(name = "rule_name", length = 25, nullable = false, unique = true)
   @JsonProperty("name")
   @JsonView(View.FilenameScrapingRuleList.class)
   @NonNull
@@ -53,7 +53,7 @@ public class FilenameScrapingRule {
   @Setter
   private String name;
 
-  @Column(name = "Rule", length = 256, nullable = false, unique = true)
+  @Column(name = "rule", length = 256, nullable = false, unique = true)
   @JsonProperty("rule")
   @JsonView(View.FilenameScrapingRuleList.class)
   @NonNull
@@ -61,7 +61,7 @@ public class FilenameScrapingRule {
   @Setter
   private String rule;
 
-  @Column(name = "Priority", nullable = false, updatable = true, unique = true)
+  @Column(name = "priority", nullable = false, updatable = true, unique = true)
   @JsonProperty("priority")
   @JsonView(View.FilenameScrapingRuleList.class)
   @NonNull
@@ -69,42 +69,42 @@ public class FilenameScrapingRule {
   @Setter
   private Integer priority;
 
-  @Column(name = "SeriesPosition", nullable = true)
+  @Column(name = "series_position", nullable = true)
   @JsonProperty("seriesPosition")
   @JsonView(View.FilenameScrapingRuleList.class)
   @Getter
   @Setter
   private Integer seriesPosition = 1;
 
-  @Column(name = "VolumePosition", nullable = true)
+  @Column(name = "volume_position", nullable = true)
   @JsonProperty("volumePosition")
   @JsonView(View.FilenameScrapingRuleList.class)
   @Getter
   @Setter
   private Integer volumePosition = 1;
 
-  @Column(name = "IssueNumberPosition", nullable = true)
+  @Column(name = "issue_number_position", nullable = true)
   @JsonProperty("issueNumberPosition")
   @JsonView(View.FilenameScrapingRuleList.class)
   @Getter
   @Setter
   private Integer issueNumberPosition = 1;
 
-  @Column(name = "CoverDatePosition", nullable = true)
+  @Column(name = "cover_date_position", nullable = true)
   @JsonProperty("coverDatePosition")
   @JsonView(View.FilenameScrapingRuleList.class)
   @Getter
   @Setter
   private Integer coverDatePosition = 1;
 
-  @Column(name = "DateFormat", nullable = true, length = 32)
+  @Column(name = "date_format", nullable = true, length = 32)
   @JsonProperty("dateFormat")
   @JsonView(View.FilenameScrapingRuleList.class)
   @Getter
   @Setter
   private String dateFormat = "";
 
-  @Column(name = "LastModifiedOn", nullable = false)
+  @Column(name = "last_modified_on", nullable = false)
   @Temporal(TemporalType.TIMESTAMP)
   @JsonProperty("lastModifiedOn")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)

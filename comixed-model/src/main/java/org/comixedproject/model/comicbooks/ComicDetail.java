@@ -59,7 +59,7 @@ import org.springframework.data.annotation.CreatedDate;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "ComicDetails")
+@Table(name = "comic_details")
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Log4j2
@@ -76,21 +76,21 @@ public class ComicDetail {
   private Long id;
 
   @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "ComicBookId", nullable = false, updatable = false)
+  @JoinColumn(name = "comic_book_id", nullable = false, updatable = false)
   @NonNull
   @Getter
   @Setter
   private ComicBook comicBook;
 
   @Formula(
-      "(SELECT CASE WHEN (ComicBookId IN (SELECT m.ComicBookId FROM ComicMetadataSources m)) THEN false ELSE true END)")
+      "(SELECT CASE WHEN (comic_book_id IN (SELECT m.comic_book_id FROM comic_metadata_sources m)) THEN false ELSE true END)")
   @JsonProperty("unscraped")
   @JsonView({View.ComicListView.class})
   @Getter
   @Setter
   private Boolean unscraped;
 
-  @Column(name = "Filename", nullable = false, unique = true, length = 1024)
+  @Column(name = "filename", nullable = false, unique = true, length = 1024)
   @JsonProperty("filename")
   @JsonView({View.ComicListView.class, View.DeletedPageList.class})
   @Getter
@@ -98,7 +98,7 @@ public class ComicDetail {
   @NonNull
   private String filename;
 
-  @Column(name = "ArchiveType", nullable = false, updatable = true)
+  @Column(name = "archive_type", nullable = false, updatable = true)
   @Enumerated(EnumType.STRING)
   @JsonProperty("archiveType")
   @JsonView({
@@ -112,7 +112,7 @@ public class ComicDetail {
   @NonNull
   private ArchiveType archiveType;
 
-  @Column(name = "ComicState", nullable = false, updatable = true)
+  @Column(name = "comic_state", nullable = false, updatable = true)
   @Enumerated(EnumType.STRING)
   @JsonProperty("comicState")
   @JsonView({View.ComicListView.class, View.ReadingListDetail.class, View.DeletedPageList.class})
@@ -120,7 +120,7 @@ public class ComicDetail {
   @Setter
   private ComicState comicState = ComicState.ADDED;
 
-  @Column(name = "ComicType", nullable = false, updatable = true)
+  @Column(name = "comic_type", nullable = false, updatable = true)
   @Enumerated(EnumType.STRING)
   @JsonProperty("comicType")
   @JsonView({View.ComicListView.class, View.ReadingListDetail.class, View.DeletedPageList.class})
@@ -128,7 +128,7 @@ public class ComicDetail {
   @Setter
   private ComicType comicType = ComicType.ISSUE;
 
-  @Column(name = "Publisher", length = 255)
+  @Column(name = "publisher", length = 255)
   @JsonProperty("publisher")
   @JsonView({
     View.ComicListView.class,
@@ -140,14 +140,14 @@ public class ComicDetail {
   @Setter
   private String publisher;
 
-  @Column(name = "Imprint", length = 255)
+  @Column(name = "imprint", length = 255)
   @JsonProperty("imprint")
   @JsonView({View.ComicListView.class})
   @Getter
   @Setter
   private String imprint;
 
-  @Column(name = "Series", length = 255)
+  @Column(name = "series", length = 255)
   @JsonProperty("series")
   @JsonView({
     View.ComicListView.class,
@@ -159,7 +159,7 @@ public class ComicDetail {
   @Setter
   private String series;
 
-  @Column(name = "Volume", length = 4)
+  @Column(name = "volume", length = 4)
   @JsonProperty("volume")
   @JsonView({
     View.ComicListView.class,
@@ -171,7 +171,7 @@ public class ComicDetail {
   @Setter
   private String volume;
 
-  @Column(name = "IssueNumber", length = 16)
+  @Column(name = "issue_number", length = 16)
   @JsonProperty("issueNumber")
   @JsonView({
     View.ComicListView.class,
@@ -184,25 +184,25 @@ public class ComicDetail {
 
   @JsonProperty("sortableIssueNumber")
   @JsonView({View.ComicListView.class})
-  @Formula("(IssueNumber)")
+  @Formula("(issue_number)")
   @Getter
   private String sortableIssueNumber;
 
-  @Column(name = "SortName", length = 128)
+  @Column(name = "sort_name", length = 128)
   @JsonProperty("sortName")
   @JsonView({View.ComicListView.class})
   @Getter
   @Setter
   private String sortName;
 
-  @Column(name = "Title", length = 128)
+  @Column(name = "title", length = 128)
   @JsonProperty("title")
   @JsonView({View.ComicListView.class})
   @Getter
   @Setter
   private String title;
 
-  @Column(name = "Notes", length = 128, nullable = true, updatable = true)
+  @Column(name = "notes", length = 128, nullable = true, updatable = true)
   @Lob
   @JsonProperty("notes")
   @JsonView({View.ComicListView.class})
@@ -210,7 +210,7 @@ public class ComicDetail {
   @Setter
   private String notes;
 
-  @Column(name = "Description")
+  @Column(name = "description")
   @Lob
   @JsonProperty("description")
   @JsonView({View.ComicDetailsView.class})
@@ -228,7 +228,7 @@ public class ComicDetail {
   @Getter
   private Set<ComicTag> tags = new HashSet<>();
 
-  @Column(name = "CoverDate", nullable = true)
+  @Column(name = "cover_date", nullable = true)
   @Temporal(TemporalType.DATE)
   @JsonProperty("coverDate")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
@@ -242,21 +242,21 @@ public class ComicDetail {
   @Setter
   private Date coverDate;
 
-  @Formula("(SELECT CASE WHEN CoverDate IS NULL THEN 0 ELSE YEAR(CoverDate) END)")
+  @Formula("(SELECT CASE WHEN cover_date IS NULL THEN 0 ELSE YEAR(cover_date) END)")
   @JsonProperty("yearPublished")
   @JsonView({View.ComicListView.class})
   @Getter
   @Setter
   private Integer yearPublished;
 
-  @Formula("(SELECT CASE WHEN CoverDate IS NULL THEN 0 ELSE MONTH(CoverDate) END)")
+  @Formula("(SELECT CASE WHEN cover_date IS NULL THEN 0 ELSE MONTH(cover_date) END)")
   @JsonProperty("monthPublished")
   @JsonView({View.ComicListView.class})
   @Getter
   @Setter
   private Integer monthPublished;
 
-  @Column(name = "StoreDate", nullable = true)
+  @Column(name = "store_date", nullable = true)
   @Temporal(TemporalType.DATE)
   @JsonProperty("storeDate")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
@@ -265,7 +265,7 @@ public class ComicDetail {
   @Setter
   private Date storeDate;
 
-  @Column(name = "AddedDate", updatable = false, nullable = false)
+  @Column(name = "added_date", updatable = false, nullable = false)
   @CreatedDate
   @JsonProperty("addedDate")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)

@@ -36,7 +36,7 @@ import org.comixedproject.views.View.UserList;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "ComiXedRoles")
+@Table(name = "comixed_roles")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class ComiXedRole {
@@ -46,7 +46,7 @@ public class ComiXedRole {
   @Getter
   private Long id;
 
-  @Column(name = "Name", updatable = true, nullable = false, unique = true)
+  @Column(name = "name", updatable = true, nullable = false, unique = true)
   @JsonView(UserList.class)
   @Getter
   @NonNull

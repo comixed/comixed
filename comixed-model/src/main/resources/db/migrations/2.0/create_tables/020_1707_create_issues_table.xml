@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="020_1707_create_issues_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="issues"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="issues">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="publisher" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="series" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="volume" type="varchar(4)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="issue_number" type="varchar(16)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="title" type="varchar(128)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="cover_date" type="date">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="store_date" type="date">
+                <constraints nullable="true"/>
+            </column>
+
+        </createTable>
+
+        <addUniqueConstraint tableName="issues"
+                             constraintName="issues_unique_publisher_series_volume_issue_number_cover_date"
+                             columnNames="publisher,series,volume,issue_number,cover_date"/>
+
+        <createIndex tableName="issues" indexName="issue_publisher_series_volume_idx">
+            <column name="publisher"/>
+            <column name="series"/>
+            <column name="volume"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

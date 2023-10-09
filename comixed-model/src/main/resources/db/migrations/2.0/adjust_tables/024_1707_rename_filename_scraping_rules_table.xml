@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="024_1707_rename_filename_scraping_rules_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="FilenameScrapingRules"/>
+        </preConditions>
+
+        <renameTable oldTableName="FilenameScrapingRules" newTableName="filename_scraping_rules"/>
+
+        <renameColumn tableName="filename_scraping_rules" oldColumnName="Id" newColumnName="id"
+                      columnDataType="bigint"/>
+
+        <renameColumn tableName="filename_scraping_rules" oldColumnName="Name" newColumnName="rule_name"
+                      columnDataType="varchar(32)"/>
+
+        <renameColumn tableName="filename_scraping_rules" oldColumnName="Rule" newColumnName="rule"
+                      columnDataType="varchar(256)"/>
+
+        <renameColumn tableName="filename_scraping_rules" oldColumnName="Priority" newColumnName="priority"
+                      columnDataType="int"/>
+
+        <renameColumn tableName="filename_scraping_rules" oldColumnName="SeriesPosition" newColumnName="series_position"
+                      columnDataType="int"/>
+
+        <renameColumn tableName="filename_scraping_rules" oldColumnName="VolumePosition" newColumnName="volume_position"
+                      columnDataType="int"/>
+
+        <renameColumn tableName="filename_scraping_rules" oldColumnName="IssueNumberPosition"
+                      newColumnName="issue_number_position" columnDataType="int"/>
+
+        <renameColumn tableName="filename_scraping_rules" oldColumnName="CoverDatePosition"
+                      newColumnName="cover_date_position" columnDataType="int"/>
+
+        <renameColumn tableName="filename_scraping_rules" oldColumnName="DateFormat" newColumnName="date_format"
+                      columnDataType="varchar(32)"/>
+
+        <renameColumn tableName="filename_scraping_rules" oldColumnName="LastModifiedOn"
+                      newColumnName="last_modified_on" columnDataType="datetime"/>
+
+    </changeSet>
+</databaseChangeLog>

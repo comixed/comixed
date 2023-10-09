@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="024_1707_create_filename_scraping_rules_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="filename_scraping_rules"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="filename_scraping_rules">
+
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="rule_name" type="varchar(32)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="rule" type="varchar(256)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="priority" type="int">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="series_position" type="int">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="volume_position" type="int">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="issue_number_position" type="int">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="cover_date_position" type="int">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="date_format" type="varchar(32)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="last_modified_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+
+        <insert tableName="filename_scraping_rules">
+            <column name="rule_name" value="Rule 1"/>
+            <column name="rule"
+                    value="^(([\w[\s][,-]]+)?(\sVol\.))([0-9]{4}).*\#([0-9]{1,5}).*\(([a-zA-Z]+, [0-9]{4})\).*$"/>
+            <column name="priority" value="1"/>
+            <column name="series_position" value="2"/>
+            <column name="volume_position" value="4"/>
+            <column name="issue_number_position" value="5"/>
+            <column name="cover_date_position" value="6"/>
+            <column name="date_format" value="MMMMM, yyyy"/>
+            <column name="last_modified_on" value="NOW()"/>
+        </insert>
+
+        <insert tableName="filename_scraping_rules">
+            <column name="rule_name" value="Rule 2"/>
+            <column name="rule" value="^([\w[\s][,-]]+)\s([0-9]{1,5})\s+\(([0-9]{4})\).*$"/>
+            <column name="priority" value="2"/>
+            <column name="series_position" value="1"/>
+            <column name="volume_position" value="3"/>
+            <column name="issue_number_position" value="2"/>
+            <column name="last_modified_on" value="NOW()"/>
+        </insert>
+
+        <insert tableName="filename_scraping_rules">
+            <column name="rule_name" value="Rule 3"/>
+            <column name="rule" value="^([\w[\s][,-]]+)\s+\(([0-9]{4})\).*$"/>
+            <column name="priority" value="3"/>
+            <column name="series_position" value="1"/>
+            <column name="volume_position" value="2"/>
+            <column name="last_modified_on" value="NOW()"/>
+        </insert>
+
+        <insert tableName="filename_scraping_rules">
+            <column name="rule_name" value="Rule 4"/>
+            <column name="rule" value="^([\w[\s][,-]]+)\s([0-9]{1,5})\s+\(of.*\)\s+\(([0-9]{4})\).*$"/>
+            <column name="priority" value="4"/>
+            <column name="series_position" value="1"/>
+            <column name="volume_position" value="3"/>
+            <column name="issue_number_position" value="2"/>
+            <column name="last_modified_on" value="NOW()"/>
+        </insert>
+
+    </changeSet>
+</databaseChangeLog>

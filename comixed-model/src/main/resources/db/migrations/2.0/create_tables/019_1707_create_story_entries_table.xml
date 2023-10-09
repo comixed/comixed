@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="019_1707_create_story_entries_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="story_entries"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="story_entries">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="story_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="story_entry_state" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="reading_order" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="series" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="volume" type="varchar(4)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="issue_number" type="varchar(16)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="comic_book_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="comic_vine_id" type="int">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="story_entries" baseColumnNames="story_id"
+                                 constraintName="story_entries_story_fk"
+                                 referencedTableName="stories"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="story_entries" baseColumnNames="comic_book_id"
+                                 constraintName="story_entries_comic_book_fk"
+                                 referencedTableName="comic_books"
+                                 referencedColumnNames="id"/>
+
+        <addUniqueConstraint tableName="story_entries"
+                             constraintName="story_entries_unique_story_series_volume_issue_number"
+                             columnNames="story_id,series,volume,issue_number"/>
+
+        <addUniqueConstraint tableName="story_entries" constraintName="story_entries_unique_story_reading_order"
+                             columnNames="story_id,reading_order"/>
+
+        <createIndex tableName="story_entries" indexName="story_entries_comic_vine_id_idx">
+            <column name="comic_vine_id"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>
