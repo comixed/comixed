@@ -41,18 +41,11 @@ import org.hibernate.annotations.Formula;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "ComicBooks")
+@Table(name = "comic_books")
 @Log4j2
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ComicBook {
-  @OneToMany(mappedBy = "comicBook", cascade = CascadeType.ALL, orphanRemoval = true)
-  @OrderColumn(name = "PageNumber")
-  @JsonProperty("pages")
-  @JsonView({View.ComicListView.class, View.ReadingListDetail.class})
-  @Getter
-  List<Page> pages = new ArrayList<>();
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
@@ -75,8 +68,15 @@ public class ComicBook {
   @Setter
   private ComicMetadataSource metadata;
 
+  @OneToMany(mappedBy = "comicBook", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OrderColumn(name = "page_number")
+  @JsonProperty("pages")
+  @JsonView({View.ComicListView.class, View.ReadingListDetail.class})
+  @Getter
+  List<Page> pages = new ArrayList<>();
+
   @Formula(
-      "(SELECT COUNT(*) FROM Pages p WHERE p.ComicBookId = Id AND p.FileHash IN (SELECT d.FileHash FROM Pages d GROUP BY d.FileHash HAVING COUNT(*) > 1))")
+      "(SELECT COUNT(*) FROM comic_pages p WHERE p.comic_book_id = id AND p.file_hash IN (SELECT d.file_hash FROM comic_pages d GROUP BY d.file_hash HAVING COUNT(*) > 1))")
   @JsonProperty("duplicatePageCount")
   @JsonView({View.ComicListView.class})
   @Getter
@@ -84,7 +84,7 @@ public class ComicBook {
 
   @Formula(
       value =
-          "(SELECT COUNT(*) FROM Pages p WHERE p.ComicBookId = id AND p.FileHash in (SELECT b.Hash FROM BlockedHashes b))")
+          "(SELECT COUNT(*) FROM comic_pages p WHERE p.comic_book_id = id AND p.file_hash in (SELECT b.hash_value FROM blocked_hashes b))")
   @JsonProperty("blockedPageCount")
   @JsonView({View.ComicListView.class})
   @Getter
@@ -104,61 +104,61 @@ public class ComicBook {
   @Setter
   private Long previousIssueId;
 
-  @Column(name = "CreateMetadataSource", nullable = false, updatable = true)
+  @Column(name = "create_metadata_source", nullable = false, updatable = true)
   @JsonIgnore
   @Getter
   @Setter
   private boolean createMetadataSource = false;
 
-  @Column(name = "FileContentsLoaded", nullable = false, updatable = true)
+  @Column(name = "file_contents_loaded", nullable = false, updatable = true)
   @JsonIgnore
   @Getter
   @Setter
   private boolean fileContentsLoaded = false;
 
-  @Column(name = "BlockedPagesMarked", nullable = false, updatable = true)
+  @Column(name = "blocked_pages_marked", nullable = false, updatable = true)
   @JsonIgnore
   @Getter
   @Setter
   private boolean blockedPagesMarked = false;
 
-  @Column(name = "UpdateMetadata", nullable = false, updatable = true)
+  @Column(name = "update_metadata", nullable = false, updatable = true)
   @JsonIgnore
   @Getter
   @Setter
   private boolean updateMetadata = false;
 
-  @Column(name = "BatchMetadataUpdate", nullable = false, updatable = true)
+  @Column(name = "batch_metadata_update", nullable = false, updatable = true)
   @JsonIgnore
   @Getter
   @Setter
   private boolean batchMetadataUpdate = false;
 
-  @Column(name = "Consolidating", nullable = false, updatable = true)
+  @Column(name = "consolidating", nullable = false, updatable = true)
   @JsonIgnore
   @Getter
   @Setter
   private boolean consolidating = false;
 
-  @Column(name = "Recreating", nullable = false, updatable = true)
+  @Column(name = "recreating", nullable = false, updatable = true)
   @JsonIgnore
   @Getter
   @Setter
   private boolean recreating = false;
 
-  @Column(name = "EditDetails", nullable = false, updatable = true)
+  @Column(name = "edit_details", nullable = false, updatable = true)
   @JsonIgnore
   @Getter
   @Setter
   private boolean editDetails = false;
 
-  @Column(name = "PurgeComic", nullable = false, updatable = true)
+  @Column(name = "purge_comic", nullable = false, updatable = true)
   @JsonIgnore
   @Getter
   @Setter
   private boolean purgeComic;
 
-  @Column(name = "LastModifiedOn", updatable = true, nullable = false)
+  @Column(name = "last_modified_on", updatable = true, nullable = false)
   @JsonProperty("lastModifiedOn")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @JsonView({View.ComicListView.class})

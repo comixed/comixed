@@ -43,7 +43,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "ComicTags")
+@Table(name = "comic_tags")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class ComicTag {
@@ -53,12 +53,12 @@ public class ComicTag {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "ComicDetailId", insertable = true, nullable = false, updatable = false)
+  @JoinColumn(name = "comic_detail_id", insertable = true, nullable = false, updatable = false)
   @Getter
   @NonNull
   private ComicDetail comicDetail;
 
-  @Column(name = "TagType", insertable = true, nullable = false, updatable = false)
+  @Column(name = "tag_type", insertable = true, nullable = false, updatable = false)
   @Enumerated(EnumType.STRING)
   @JsonProperty("type")
   @JsonView({View.ComicListView.class})
@@ -66,7 +66,7 @@ public class ComicTag {
   @NonNull
   private ComicTagType type;
 
-  @Column(name = "TagValue", length = 255, insertable = true, nullable = false, updatable = false)
+  @Column(name = "tag_value", length = 255, insertable = true, nullable = false, updatable = false)
   @JsonView({View.ComicListView.class})
   @JsonProperty("value")
   @Getter

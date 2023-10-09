@@ -27,6 +27,7 @@ import org.comixedproject.model.comicpages.DeletedPage;
 import org.comixedproject.repositories.comicpages.PageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <code>DeletedPageService</code> provides methods for working with instances of {@link
@@ -44,6 +45,7 @@ public class DeletedPageService {
    *
    * @return the deleted page list
    */
+  @Transactional
   public List<DeletedPage> loadAll() {
     log.debug("Loading all deleted pages");
     final Map<String, DeletedPage> result = new HashMap<>();

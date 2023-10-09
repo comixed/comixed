@@ -1304,8 +1304,8 @@ public class ComicBookServiceTest {
     service.prepareForMetadataUpdate(TEST_COMIC_BOOK_ID);
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
-    Mockito.verify(comicBook, Mockito.times(1)).setBatchMetadataUpdate(true);
-    Mockito.verify(comicBookRepository, Mockito.times(1)).save(comicBook);
+    Mockito.verify(comicStateHandler, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.updateMetadata);
   }
 
   @Test(expected = ComicBookException.class)

@@ -25,6 +25,7 @@ import org.comixedproject.model.collections.Series;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <code>SeriesService</code> provides methods for working with instances of {@link Series}.
@@ -63,6 +64,7 @@ public class SeriesService {
    * @param volume the volume
    * @return the detail
    */
+  @Transactional
   public List<Issue> loadSeriesDetail(
       final String publisher, final String name, final String volume) {
     log.debug("Loading series detail: publisher={} name={} volume={}", publisher, name, volume);

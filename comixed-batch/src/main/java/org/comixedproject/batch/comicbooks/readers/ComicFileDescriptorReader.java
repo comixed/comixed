@@ -60,8 +60,6 @@ public class ComicFileDescriptorReader implements ItemReader<ComicFileDescriptor
 
     final ComicFileDescriptor result = this.comicFileDescriptorList.remove(0);
     log.trace("Deleting descriptor record");
-    this.comicFileService.deleteComicFileDescriptor(result);
-    log.trace("Returning next comic to process");
     return result;
   }
 }

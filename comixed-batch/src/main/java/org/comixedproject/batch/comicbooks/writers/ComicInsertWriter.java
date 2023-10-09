@@ -18,8 +18,13 @@
 
 package org.comixedproject.batch.comicbooks.writers;
 
+import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicfiles.ComicFileDescriptor;
+import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.state.comicbooks.ComicEvent;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -30,7 +35,23 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class ComicInsertWriter extends AbstractComicBookWriter {
+  @Autowired private ComicFileService comicFileService;
+
   public ComicInsertWriter() {
     super(ComicEvent.readyForProcessing);
+  }
+
+  @Override
+  public void write(final List<? extends ComicBook> comics) {
+    super.write(comics);
+    comics.forEach(
+        comicBook -> {
+          log.trace("Loading comic file descriptor");
+          final ComicFileDescriptor descriptor =
+              this.comicFileService.getComicFileDescriptorByFilename(
+                  comicBook.getComicDetail().getFilename());
+          log.trace("Deleting descriptor record");
+          this.comicFileService.deleteComicFileDescriptor(descriptor);
+        });
   }
 }

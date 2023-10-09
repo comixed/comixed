@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="009_1707_rename_comic_tags_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="ComicTags"/>
+        </preConditions>
+
+        <renameTable oldTableName="ComicTags" newTableName="comic_tags"/>
+
+        <renameColumn tableName="comic_tags" oldColumnName="ComicDetailid" newColumnName="comic_detail_id"
+                      columnDataType="bigint"/>
+
+        <renameColumn tableName="comic_tags" oldColumnName="TagType" newColumnName="tag_type"
+                      columnDataType="varchar(32)"/>
+
+        <renameColumn tableName="comic_tags" oldColumnName="TagValue" newColumnName="tag_value"
+                      columnDataType="varchar(255)"/>
+
+        <dropForeignKeyConstraint baseTableName="comic_tags" constraintName="ComicTagComicDetailFk"/>
+        <dropIndex tableName="comic_tags" indexName="ComicTagComicDetailIdx"/>
+        <dropIndex tableName="comic_tags" indexName="ComicTagTagTypeAndTagValueIdx"/>
+
+        <addForeignKeyConstraint baseTableName="comic_tags" baseColumnNames="comic_detail_id"
+                                 constraintName="comic_tags_comic_detail_fk"
+                                 referencedTableName="comic_details"
+                                 referencedColumnNames="id"/>
+
+        <createIndex tableName="comic_tags" indexName="comic_tags_comic_detail_idx">
+            <column name="comic_detail_id"/>
+        </createIndex>
+
+        <createIndex tableName="comic_tags" indexName="comic_tags_type_and_value_idx">
+            <column name="tag_type"/>
+            <column name="tag_value"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

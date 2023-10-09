@@ -78,6 +78,7 @@ public class PageService implements InitializingBean, PageStateChangeListener {
    * @param hash the hash
    * @return the page
    */
+  @Transactional
   public Page getOneForHash(final String hash) {
     log.trace("Finding a page with hash: {}", hash);
     final List<Page> results = this.pageRepository.findByHash(hash);

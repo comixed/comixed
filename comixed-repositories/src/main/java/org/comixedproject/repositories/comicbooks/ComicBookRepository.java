@@ -538,7 +538,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the publishers state
    */
   @Query(
-      "SELECT new org.comixedproject.model.net.library.RemoteLibrarySegmentState(CAST(d.comicState AS text), COUNT(d)) FROM ComicDetail d GROUP BY d.comicState")
+      "SELECT new org.comixedproject.model.net.library.RemoteLibrarySegmentState(CAST(d.comicState AS string), COUNT(d)) FROM ComicDetail d GROUP BY d.comicState")
   List<RemoteLibrarySegmentState> getComicBooksState();
 
   /**

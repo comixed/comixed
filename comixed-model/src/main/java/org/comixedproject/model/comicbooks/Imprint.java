@@ -31,7 +31,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "Imprints")
+@Table(name = "imprints")
 public class Imprint {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,13 +40,13 @@ public class Imprint {
   @Getter
   private Long id;
 
-  @Column(name = "Name", length = 128, nullable = false, updatable = false, unique = true)
+  @Column(name = "imprint_name", length = 128, nullable = false, updatable = false, unique = true)
   @JsonProperty("name")
   @JsonView(View.ImprintListView.class)
   @Getter
   private String name;
 
-  @Column(name = "Publisher", length = 128, nullable = false, updatable = false)
+  @Column(name = "publisher", length = 128, nullable = false, updatable = false)
   @JsonProperty("publisher")
   @JsonView(View.ImprintListView.class)
   @Getter

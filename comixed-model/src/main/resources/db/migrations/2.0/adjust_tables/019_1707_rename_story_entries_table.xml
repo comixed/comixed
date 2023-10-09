@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="019_1707_create_story_entries_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="StoryEntries"/>
+        </preConditions>
+
+        <renameTable oldTableName="StoryEntries" newTableName="story_entries"/>
+
+        <renameColumn tableName="story_entries" oldColumnName="Id" newColumnName="id" columnDataType="bigint"/>
+
+        <renameColumn tableName="story_entries" oldColumnName="StoryId" newColumnName="story_id"
+                      columnDataType="bigint"/>
+
+        <renameColumn tableName="story_entries" oldColumnName="StoryEntryState" newColumnName="story_entry_state"
+                      columnDataType="varchar(32)"/>
+
+        <renameColumn tableName="story_entries" oldColumnName="ReadingOrder" newColumnName="reading_order"
+                      columnDataType="int"/>
+
+        <renameColumn tableName="story_entries" oldColumnName="Series" newColumnName="series"
+                      columnDataType="varchar(128)"/>
+
+        <renameColumn tableName="story_entries" oldColumnName="Volume" newColumnName="volume"
+                      columnDataType="varchar(4)"/>
+
+        <renameColumn tableName="story_entries" oldColumnName="IssueNumber" newColumnName="issue_number"
+                      columnDataType="varchar(16)"/>
+
+        <renameColumn tableName="story_entries" oldColumnName="ComicBookId" newColumnName="comic_book_id"
+                      columnDataType="bigint"/>
+
+        <renameColumn tableName="story_entries" oldColumnName="ComicVineId" newColumnName="comic_vine_id"
+                      columnDataType="int"/>
+
+        <dropForeignKeyConstraint baseTableName="story_entries" constraintName="StoryEntryStoryFk"/>
+        <addForeignKeyConstraint baseTableName="story_entries" baseColumnNames="story_id"
+                                 constraintName="story_entries_story_fk"
+                                 referencedTableName="stories"
+                                 referencedColumnNames="id"/>
+
+        <dropForeignKeyConstraint baseTableName="story_entries" constraintName="StoryEntryComicBookFk"/>
+        <addForeignKeyConstraint baseTableName="story_entries" baseColumnNames="comic_book_id"
+                                 constraintName="story_entries_comic_book_fk"
+                                 referencedTableName="comic_books"
+                                 referencedColumnNames="id"/>
+
+        <dropUniqueConstraint tableName="story_entries" constraintName="StoryNoRepeatingEntryUniq"/>
+        <addUniqueConstraint tableName="story_entries"
+                             constraintName="story_entries_unique_story_series_volume_issue_number"
+                             columnNames="story_id,series,volume,issue_number"/>
+
+        <dropUniqueConstraint tableName="story_entries" constraintName="StoryReadingOrderEntryUniq"/>
+        <addUniqueConstraint tableName="story_entries" constraintName="story_entries_unique_story_reading_order"
+                             columnNames="story_id,reading_order"/>
+
+        <dropIndex tableName="story_entries" indexName="StoryEntryComicVineIdIdx"/>
+        <createIndex tableName="story_entries" indexName="story_entries_comic_vine_id_idx">
+            <column name="comic_vine_id"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

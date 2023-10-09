@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="010_1707_create_metadata_source_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="MetadataSources"/>
+        </preConditions>
+
+        <renameTable oldTableName="MetadataSources" newTableName="metadata_sources"/>
+
+        <renameColumn tableName="metadata_sources" oldColumnName="Id" newColumnName="id" columnDataType="bigint"/>
+
+        <renameColumn tableName="metadata_sources" oldColumnName="BeanName" newColumnName="bean_name"
+                      columnDataType="varchar(255)"/>
+
+        <renameColumn tableName="metadata_sources" oldColumnName="Name" newColumnName="display_name"
+                      columnDataType="varchar(64)"/>
+
+        <renameColumn tableName="metadata_sources" oldColumnName="Preferred" newColumnName="preferred_source"
+                      columnDataType="boolean"/>
+
+    </changeSet>
+</databaseChangeLog>

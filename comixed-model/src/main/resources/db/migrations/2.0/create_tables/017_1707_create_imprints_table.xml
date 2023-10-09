@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="017_1707_create_imprints_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="imprints"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="imprints">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="imprint_name" type="varchar(128)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="publisher" type="varchar(128)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+
+        </createTable>
+
+
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="2000AD"/>
+            <column name="publisher"
+                    value="DC Comics"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Adventure"/>
+            <column name="publisher"
+                    value="Malibu"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Aircel Publishing"/>
+            <column name="publisher"
+                    value="Malibu"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="America's Best Comics"/>
+            <column name="publisher"
+                    value="DC Comics"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Wildstorm"/>
+            <column name="publisher"
+                    value="DC Comics"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Antimatter"/>
+            <column name="publisher"
+                    value="Amryl Entertainment"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Apparat"/>
+            <column name="publisher"
+                    value="Avatar Press"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Black Bull"/>
+            <column name="publisher"
+                    value="Wizard"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Blu Manga"/>
+            <column name="publisher"
+                    value="Tokyopop"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Chaos! Comics"/>
+            <column name="publisher"
+                    value="Dynamite Entertainment"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Cliffhanger"/>
+            <column name="publisher"
+                    value="DC Comics"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="CMX"/>
+            <column name="publisher"
+                    value="DC Comics"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Comic Bom Bom"/>
+            <column name="publisher"
+                    value="Kodansha"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="ComicsLit"/>
+            <column name="publisher"
+                    value="Nbm"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Curtis Magazines"/>
+            <column name="publisher"
+                    value="Marvel"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Dark Horse Books"/>
+            <column name="publisher"
+                    value="Dark Horse Comics"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Dark Horse Manga"/>
+            <column name="publisher"
+                    value="Dark Horse Comics"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Desperado Publishing"/>
+            <column name="publisher"
+                    value="Image"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Epic"/>
+            <column name="publisher"
+                    value="Marvel"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Eternity"/>
+            <column name="publisher"
+                    value="Malibu"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Focus"/>
+            <column name="publisher"
+                    value="DC Comics"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Helix"/>
+            <column name="publisher"
+                    value="DC Comics"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Hero Comics"/>
+            <column name="publisher"
+                    value="Heroic Publishing"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Homage comics"/>
+            <column name="publisher"
+                    value="DC Comics"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Hudson Street Press"/>
+            <column name="publisher"
+                    value="Penguin Group"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Icon Comics"/>
+            <column name="publisher"
+                    value="Marvel"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Impact"/>
+            <column name="publisher"
+                    value="DC Comics"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Jets Comics"/>
+            <column name="publisher"
+                    value="Hakusensha"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="KiZoic"/>
+            <column name="publisher"
+                    value="Ape Entertainment"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Marvel Digital Comics Unlimited"/>
+            <column name="publisher"
+                    value="Marvel"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Marvel Knights"/>
+            <column name="publisher"
+                    value="Marvel"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Marvel Music"/>
+            <column name="publisher"
+                    value="Marvel"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Marvel Soleil"/>
+            <column name="publisher"
+                    value="Marvel"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Marvel UK"/>
+            <column name="publisher"
+                    value="Marvel"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Maverick"/>
+            <column name="publisher"
+                    value="Dark Horse Comics"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Max"/>
+            <column name="publisher"
+                    value="Marvel"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Milestone"/>
+            <column name="publisher"
+                    value="DC Comics"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Minx"/>
+            <column name="publisher"
+                    value="DC Comics"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Papercutz"/>
+            <column name="publisher"
+                    value="Nbm"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Paradox Press"/>
+            <column name="publisher"
+                    value="DC Comics"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Piranha Press"/>
+            <column name="publisher"
+                    value="DC Comics"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Razorline"/>
+            <column name="publisher"
+                    value="Marvel"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="ShadowLine"/>
+            <column name="publisher"
+                    value="Image"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Sin Factory Comix"/>
+            <column name="publisher"
+                    value="Radio Comix"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Skybound"/>
+            <column name="publisher"
+                    value="Image"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Slave Labor"/>
+            <column name="publisher"
+                    value="Slg Publishing"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Star Comics"/>
+            <column name="publisher"
+                    value="Marvel"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Tangent Comics"/>
+            <column name="publisher"
+                    value="DC Comics"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Tokuma Comics"/>
+            <column name="publisher"
+                    value="Tokuma Shoten"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Ultraverse"/>
+            <column name="publisher"
+                    value="Malibu"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Vertigo"/>
+            <column name="publisher"
+                    value="DC Comics"/>
+        </insert>
+        <insert tableName="imprints">
+            <column name="imprint_name"
+                    value="Zuda Comics"/>
+            <column name="publisher"
+                    value="DC Comics"/>
+        </insert>
+
+    </changeSet>
+</databaseChangeLog>

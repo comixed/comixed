@@ -35,13 +35,10 @@ import org.comixedproject.messaging.lists.PublishReadingListDeletedAction;
 import org.comixedproject.messaging.lists.PublishReadingListUpdateAction;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
-import org.comixedproject.model.library.SmartListMatcher;
-import org.comixedproject.model.library.SmartReadingList;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.lists.ReadingListState;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.user.ComiXedUser;
-import org.comixedproject.repositories.library.SmartReadingListRepository;
 import org.comixedproject.repositories.lists.ReadingListRepository;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
@@ -74,7 +71,6 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
 
   @Autowired private ReadingListStateHandler readingListStateHandler;
   @Autowired private ReadingListRepository readingListRepository;
-  @Autowired private SmartReadingListRepository smartReadingListRepository;
   @Autowired private UserService userService;
   @Autowired private ComicBookService comicBookService;
   @Autowired private CsvAdaptor csvAdaptor;
@@ -269,60 +265,6 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
     final ReadingList result = this.readingListRepository.getById(id);
     if (result == null) throw new ReadingListException("No such reading list: id=" + id);
     return result;
-  }
-
-  public SmartListMatcher createMatcher(
-      final String type,
-      final boolean not,
-      final String mode,
-      final List<SmartListMatcher> smartListMatchers) {
-    log.debug("Creating Group matcher: type={} not={} mode={}", type, not, mode);
-
-    SmartListMatcher smartListMatcher = new SmartListMatcher();
-    smartListMatcher.setType(type);
-    smartListMatcher.setNot(not);
-    smartListMatcher.setMode(mode);
-    for (SmartListMatcher matcherSmartListMatcher : smartListMatchers) {
-      matcherSmartListMatcher.setNextMatcher(smartListMatcher);
-      smartListMatcher.getSmartListMatchers().add(matcherSmartListMatcher);
-    }
-
-    return smartListMatcher;
-  }
-
-  @Transactional
-  public SmartReadingList createSmartReadingList(
-      final String email,
-      final String name,
-      final String summary,
-      final boolean not,
-      final String mode,
-      final List<SmartListMatcher> smartListMatchers)
-      throws ReadingListException {
-    log.debug("Creating smart reading list: email={} name={}", email, name);
-
-    log.debug("Getting owner");
-    final ComiXedUser owner = this.doLoadUser(email);
-    SmartReadingList smartReadingList =
-        this.smartReadingListRepository.findSmartReadingListForUser(owner, name);
-
-    if (smartReadingList != null) {
-      throw new ReadingListException("Name already used: " + name);
-    }
-    log.debug("Creating reading list object");
-    smartReadingList = new SmartReadingList();
-    smartReadingList.setOwner(owner);
-    smartReadingList.setName(name);
-    smartReadingList.setSummary(summary);
-    smartReadingList.setNot(not);
-    smartReadingList.setMatcherMode(mode);
-    for (SmartListMatcher smartListMatcher : smartListMatchers) {
-      smartListMatcher.setSmartList(smartReadingList);
-      smartReadingList.getSmartListMatchers().add(smartListMatcher);
-    }
-
-    log.debug("Saving smart reading list");
-    return this.smartReadingListRepository.save(smartReadingList);
   }
 
   @Override

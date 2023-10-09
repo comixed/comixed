@@ -36,7 +36,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "ComiXedUsers")
+@Table(name = "comixed_users")
 public class ComiXedUser {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +44,7 @@ public class ComiXedUser {
   @Getter
   private Long id;
 
-  @Column(name = "Email", updatable = true, nullable = false, unique = true)
+  @Column(name = "email", updatable = true, nullable = false, unique = true)
   @JsonView(View.UserList.class)
   @Getter
   @Setter
@@ -52,18 +52,18 @@ public class ComiXedUser {
 
   @Transient @JsonIgnore private String password;
 
-  @Column(name = "PasswordHash", updatable = true, nullable = false)
+  @Column(name = "password_hash", updatable = true, nullable = false)
   @Getter
   @Setter
   private String passwordHash;
 
-  @Column(name = "CreatedOn", nullable = false, updatable = false)
+  @Column(name = "created_on", nullable = false, updatable = false)
   @JsonProperty("first_login_date")
   @JsonView(View.UserList.class)
   @Getter
   private Date firstLoginDate = new Date();
 
-  @Column(name = "LastLoggedOn", nullable = false, updatable = true)
+  @Column(name = "last_logged_on", nullable = false, updatable = true)
   @JsonProperty("last_login_date")
   @JsonView(View.UserList.class)
   @Getter
@@ -72,9 +72,9 @@ public class ComiXedUser {
 
   @ManyToMany
   @JoinTable(
-      name = "ComiXedUserRoles",
-      joinColumns = @JoinColumn(name = "ComiXedUserId"),
-      inverseJoinColumns = @JoinColumn(name = "ComiXedRoleId"))
+      name = "comixed_user_roles",
+      joinColumns = @JoinColumn(name = "comixed_user_id"),
+      inverseJoinColumns = @JoinColumn(name = "comixed_role_id"))
   @JsonView(View.UserList.class)
   @Getter
   private List<ComiXedRole> roles = new ArrayList<>();
@@ -86,7 +86,7 @@ public class ComiXedUser {
       orphanRemoval = true)
   @JsonView(View.UserList.class)
   @Getter
-  private List<Preference> preferences = new ArrayList<>();
+  private List<ComiXedUserPreference> preferences = new ArrayList<>();
 
   @Transient
   @JsonView(View.UserList.class)
@@ -112,13 +112,16 @@ public class ComiXedUser {
    * @param value the preference value
    */
   public void setProperty(String name, String value) {
-    for (Preference preference : this.preferences) {
+    for (ComiXedUserPreference preference : this.preferences) {
       if (preference.getName().equals(name)) {
         preference.setValue(value);
         return;
       }
     }
-    this.preferences.add(new Preference(this, name, value));
+    final ComiXedUserPreference preference = new ComiXedUserPreference(name);
+    preference.setUser(this);
+    preference.setValue(value);
+    this.preferences.add(preference);
   }
 
   /**
@@ -127,7 +130,7 @@ public class ComiXedUser {
    * @param name the preference name
    */
   public void deleteProperty(final String name) {
-    Preference preference = null;
+    ComiXedUserPreference preference = null;
     int index = -1;
     for (int which = 0; which < this.preferences.size(); which++) {
       if (this.preferences.get(which).getName().equals(name)) {

@@ -28,7 +28,7 @@ import lombok.Setter;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "MetadataCacheEntries")
+@Table(name = "metadata_cache_entries")
 public class MetadataCacheEntry {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,17 +36,17 @@ public class MetadataCacheEntry {
   private Long id;
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "MetadataCacheId", updatable = false, nullable = false)
+  @JoinColumn(name = "metadata_cache_id", updatable = false, nullable = false)
   @Getter
   @Setter
   private MetadataCache metadataCache;
 
-  @Column(name = "EntryNumber", updatable = false, nullable = false)
+  @Column(name = "entry_number", updatable = false, nullable = false)
   @Getter
   @Setter
   private Integer entryNumber;
 
-  @Column(name = "EntryValue", updatable = false, nullable = false)
+  @Column(name = "entry_value", updatable = false, nullable = false)
   @Lob
   @Getter
   @Setter

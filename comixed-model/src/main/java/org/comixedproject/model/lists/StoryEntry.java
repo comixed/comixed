@@ -32,7 +32,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "StoryEntries")
+@Table(name = "story_entries")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class StoryEntry {
@@ -44,39 +44,39 @@ public class StoryEntry {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "StoryId", nullable = false, updatable = false)
+  @JoinColumn(name = "story_id", nullable = false, updatable = false)
   @NonNull
   @Getter
   private Story story;
 
-  @Column(name = "StoryEntryState", nullable = false, updatable = true)
+  @Column(name = "story_entry_state", nullable = false, updatable = true)
   @Enumerated(EnumType.STRING)
   @NonNull
   @Getter
   @Setter
   private StoryEntryState storyEntryState = StoryEntryState.DEFINED;
 
-  @Column(name = "ReadingOrder", nullable = false, updatable = false)
+  @Column(name = "reading_order", nullable = false, updatable = false)
   @JsonProperty("readingOrder")
   @JsonView(View.StoryList.class)
   @Getter
   private int readingOrder;
 
-  @Column(name = "Series", length = 128, nullable = false, updatable = true)
+  @Column(name = "series", length = 128, nullable = false, updatable = true)
   @JsonProperty("series")
   @JsonView(View.StoryList.class)
   @Getter
   @Setter
   private String series;
 
-  @Column(name = "Volume", length = 4, nullable = false, updatable = true)
+  @Column(name = "volume", length = 4, nullable = false, updatable = true)
   @JsonProperty("volume")
   @JsonView(View.StoryList.class)
   @Getter
   @Setter
   private String volume;
 
-  @Column(name = "IssueNumber", length = 16, nullable = false, updatable = false)
+  @Column(name = "issue_number", length = 16, nullable = false, updatable = false)
   @JsonProperty("issueNumber")
   @JsonView(View.StoryList.class)
   @Getter
@@ -84,14 +84,14 @@ public class StoryEntry {
   private String issueNumber;
 
   @ManyToOne(cascade = CascadeType.DETACH)
-  @JoinColumn(name = "ComicBookId", nullable = true, updatable = false)
+  @JoinColumn(name = "comic_book_id", nullable = true, updatable = false)
   @JsonView(View.StoryList.class)
   @JsonProperty("comicBook")
   @Getter
   @Setter
   private ComicBook comicBook;
 
-  @Column(name = "ComicVineId", nullable = true, updatable = true, unique = true)
+  @Column(name = "comic_vine_id", nullable = true, updatable = true, unique = true)
   @JsonProperty("comicVineId")
   @JsonView(View.StoryList.class)
   @Getter

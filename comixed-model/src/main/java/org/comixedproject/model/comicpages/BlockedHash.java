@@ -34,7 +34,7 @@ import org.hibernate.annotations.Formula;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "BlockedHashes")
+@Table(name = "blocked_hashes")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class BlockedHash {
@@ -45,7 +45,7 @@ public class BlockedHash {
   @Getter
   private Long id;
 
-  @Column(name = "Label", nullable = true, updatable = true, length = 128)
+  @Column(name = "label", nullable = true, updatable = true, length = 128)
   @JsonProperty("label")
   @JsonView(View.BlockedHashList.class)
   @Getter
@@ -53,21 +53,21 @@ public class BlockedHash {
   @NonNull
   private String label;
 
-  @Column(name = "Hash", nullable = false, unique = true, updatable = false, length = 32)
+  @Column(name = "hash_value", nullable = false, unique = true, updatable = false, length = 32)
   @JsonProperty("hash")
   @JsonView(View.BlockedHashList.class)
   @Getter
   @NonNull
   private String hash;
 
-  @Column(name = "Thumbnail", nullable = true, updatable = false)
+  @Column(name = "thumbnail", nullable = true, updatable = false)
   @Lob
   @JsonProperty("thumbnail")
   @Getter
   @NonNull
   private String thumbnail;
 
-  @Column(name = "CreatedOn", nullable = false, updatable = false)
+  @Column(name = "created_on", nullable = false, updatable = false)
   @JsonProperty("createdOn")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @JsonView(View.BlockedHashList.class)
@@ -75,7 +75,7 @@ public class BlockedHash {
   private Date createdOn = new Date();
 
   @Formula(
-      "(SELECT COUNT(*) FROM ComicBooks c WHERE c.id IN (SELECT p.ComicBookId FROM Pages p WHERE p.FileHash = hash))")
+      "(SELECT COUNT(*) FROM comic_books c WHERE c.id IN (SELECT p.comic_book_id FROM comic_pages p WHERE p.file_hash = hash_value))")
   @JsonProperty("comicCount")
   @JsonView(View.BlockedHashList.class)
   @Getter

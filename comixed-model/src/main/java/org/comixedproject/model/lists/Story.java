@@ -36,7 +36,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "Stories")
+@Table(name = "stories")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class Story {
@@ -47,28 +47,28 @@ public class Story {
   @Getter
   private Long id;
 
-  @Column(name = "Name", length = 256, nullable = false, updatable = false)
+  @Column(name = "story_name", length = 256, nullable = false, updatable = false)
   @JsonProperty("name")
   @JsonView(View.StoryList.class)
   @Getter
   @NonNull
   private String name;
 
-  @Column(name = "ComicVineId", nullable = true, updatable = true, unique = true)
+  @Column(name = "comic_vine_id", nullable = true, updatable = true, unique = true)
   @JsonProperty("comicVineId")
   @JsonView(View.StoryList.class)
   @Getter
   @Setter
   private Integer comicVineId;
 
-  @Column(name = "StoryState", nullable = false, updatable = true)
+  @Column(name = "story_state", nullable = false, updatable = true)
   @Enumerated(EnumType.STRING)
   @JsonIgnore
   @Getter
   @Setter
   private StoryState storyState = StoryState.CREATED;
 
-  @Column(name = "Publisher", length = 128, nullable = false, updatable = false)
+  @Column(name = "publisher", length = 128, nullable = false, updatable = false)
   @JsonProperty("publisher")
   @JsonView(View.StoryList.class)
   @Getter
@@ -77,20 +77,20 @@ public class Story {
   String publisher;
 
   @OneToMany(mappedBy = "story")
-  @OrderColumn(name = "ReadingOrder")
+  @OrderColumn(name = "reading_order")
   @JsonProperty("entries")
   @JsonView(View.StoryList.class)
   @Getter
   private List<StoryEntry> entries = new ArrayList<>();
 
-  @Column(name = "CreatedOn", nullable = false, updatable = false)
+  @Column(name = "created_on", nullable = false, updatable = false)
   @JsonProperty("createdOn")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @JsonView(View.StoryList.class)
   @Getter
   private Date createdOn = new Date();
 
-  @Column(name = "ModifiedOn", nullable = false, updatable = true)
+  @Column(name = "last_modified_on", nullable = false, updatable = true)
   @JsonProperty("modifiedOn")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @JsonView(View.StoryList.class)

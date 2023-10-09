@@ -41,7 +41,7 @@ import org.hibernate.annotations.Formula;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "Issues")
+@Table(name = "issues")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class Issue {
@@ -52,49 +52,49 @@ public class Issue {
   private Long id;
 
   @JsonProperty("publisher")
-  @Column(name = "Publisher", length = 255, nullable = false, unique = false, updatable = false)
+  @Column(name = "publisher", length = 255, nullable = false, unique = false, updatable = false)
   @Getter
   @Setter
   @NonNull
   private String publisher;
 
   @JsonProperty("series")
-  @Column(name = "Series", length = 255, nullable = false, unique = false, updatable = false)
+  @Column(name = "series", length = 255, nullable = false, unique = false, updatable = false)
   @Getter
   @Setter
   @NonNull
   private String series;
 
   @JsonProperty("volume")
-  @Column(name = "Volume", length = 4, nullable = false, unique = false, updatable = false)
+  @Column(name = "volume", length = 4, nullable = false, unique = false, updatable = false)
   @Getter
   @Setter
   @NonNull
   private String volume;
 
   @JsonProperty("issueNumber")
-  @Column(name = "IssueNumber", length = 16, nullable = false, unique = false, updatable = false)
+  @Column(name = "issue_number", length = 16, nullable = false, unique = false, updatable = false)
   @Getter
   @Setter
   @NonNull
   private String issueNumber;
 
   @JsonProperty("title")
-  @Column(name = "Title", length = 128, nullable = true, unique = false, updatable = false)
+  @Column(name = "title", length = 128, nullable = true, unique = false, updatable = false)
   @Getter
   @Setter
   private String title;
 
   @JsonProperty("coverDate")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
-  @Column(name = "CoverDate", nullable = true, unique = false, updatable = false)
+  @Column(name = "cover_date", nullable = true, unique = false, updatable = false)
   @Getter
   @Setter
   private Date coverDate;
 
   @JsonProperty("storeDate")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
-  @Column(name = "StoreDate", nullable = true, unique = false, updatable = false)
+  @Column(name = "store_date", nullable = true, unique = false, updatable = false)
   @Getter
   @Setter
   private Date storeDate;
@@ -102,7 +102,7 @@ public class Issue {
   @JsonProperty("found")
   @Formula(
       value =
-          "(SELECT CASE WHEN COUNT(*) > 0 THEN true ELSE false END FROM ComicBooks c WHERE c.Id IN (SELECT d.ComicBookId FROM ComicDetails d WHERE d.Publisher = publisher AND d.Series = series AND d.Volume = volume AND d.IssueNumber = issueNumber))")
+          "(SELECT CASE WHEN COUNT(*) > 0 THEN true ELSE false END FROM comic_books c WHERE c.id IN (SELECT d.comic_book_id FROM comic_details d WHERE d.publisher = publisher AND d.series = series AND d.volume = volume AND d.issue_number = issue_number))")
   @Getter
   @Setter
   private boolean found;

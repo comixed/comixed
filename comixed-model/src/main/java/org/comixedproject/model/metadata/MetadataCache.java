@@ -32,24 +32,24 @@ import lombok.Setter;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "MetadataCache")
+@Table(name = "metadata_cache")
 public class MetadataCache {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Getter
   private Long id;
 
-  @Column(name = "Source", length = 32, updatable = false, nullable = false)
+  @Column(name = "metadata_source", length = 32, updatable = false, nullable = false)
   @Getter
   @Setter
   private String source;
 
-  @Column(name = "CacheKey", length = 256, updatable = false, nullable = false)
+  @Column(name = "cache_key", length = 256, updatable = false, nullable = false)
   @Getter
   @Setter
   private String cacheKey;
 
-  @Column(name = "CreatedOn", nullable = false, updatable = false)
+  @Column(name = "created_on", nullable = false, updatable = false)
   @Getter
   @Setter
   @Temporal(TemporalType.TIMESTAMP)
@@ -60,7 +60,7 @@ public class MetadataCache {
       fetch = FetchType.EAGER,
       cascade = CascadeType.ALL,
       orphanRemoval = true)
-  @OrderColumn(name = "EntryNumber")
+  @OrderColumn(name = "entry_number")
   @Getter
   private List<MetadataCacheEntry> entries = new ArrayList<>();
 }

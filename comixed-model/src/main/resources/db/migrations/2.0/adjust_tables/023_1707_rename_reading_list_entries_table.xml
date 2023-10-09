@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="023_1707_create_reading_list_entries_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="ReadingListEntries"/>
+        </preConditions>
+
+        <renameTable oldTableName="ReadingListEntries" newTableName="reading_list_entries"/>
+
+        <renameColumn tableName="reading_list_entries" oldColumnName="ReadingListId" newColumnName="reading_list_id"
+                      columnDataType="bigint"/>
+
+        <renameColumn tableName="reading_list_entries" oldColumnName="ComicDetailId" newColumnName="comic_detail_id"
+                      columnDataType="bigint"/>
+
+
+        <dropForeignKeyConstraint baseTableName="reading_list_entries"
+                                  constraintName="ReadingListEntriesReadingListFk"/>
+        <dropForeignKeyConstraint baseTableName="reading_list_entries"
+                                  constraintName="ReadingListEntryComicDetailFk"/>
+        <dropIndex tableName="reading_list_entries" indexName="ReadingListEntryComicDetailIdx"/>
+
+        <addForeignKeyConstraint baseTableName="reading_list_entries" baseColumnNames="reading_list_id"
+                                 constraintName="reading_list_entries_reading_list_fk"
+                                 referencedTableName="reading_lists"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="reading_list_entries" baseColumnNames="comic_detail_id"
+                                 constraintName="reading_list_entries_comic_detail_fk"
+                                 referencedTableName="comic_details"
+                                 referencedColumnNames="id"/>
+
+    </changeSet>
+</databaseChangeLog>

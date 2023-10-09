@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="015_1707_rename_blocked_hashes_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="BlockedHashes"/>
+        </preConditions>
+
+        <renameTable oldTableName="BlockedHashes" newTableName="blocked_hashes"/>
+
+        <renameColumn tableName="blocked_hashes" oldColumnName="Id" newColumnName="id" columnDataType="bigint"/>
+
+        <renameColumn tableName="blocked_hashes" oldColumnName="Hash" newColumnName="hash_value"
+                      columnDataType="varchar(32)"/>
+
+        <renameColumn tableName="blocked_hashes" oldColumnName="Label" newColumnName="label"
+                      columnDataType="varchar(128)"/>
+
+        <renameColumn tableName="blocked_hashes" oldColumnName="Thumbnail" newColumnName="thumbnail"
+                      columnDataType="clob"/>
+
+        <renameColumn tableName="blocked_hashes" oldColumnName="CreatedOn" newColumnName="created_on"
+                      columnDataType="datetime"/>
+
+        <dropIndex tableName="blocked_hashes" indexName="BlockedHashesHashIdx"/>
+        <createIndex tableName="blocked_hashes" indexName="blocked_hashes_hash_value_idx">
+            <column name="hash_value"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

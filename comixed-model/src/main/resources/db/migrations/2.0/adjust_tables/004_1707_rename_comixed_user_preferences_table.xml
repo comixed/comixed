@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="004_1707_rename_comixed_user_preferences_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="UserPreferences"/>
+        </preConditions>
+
+        <renameTable oldTableName="UserPreferences" newTableName="comixed_user_preferences"/>
+
+        <renameColumn tableName="comixed_user_preferences" oldColumnName="Id" newColumnName="id"
+                      columnDataType="bigint"/>
+
+        <renameColumn tableName="comixed_user_preferences" oldColumnName="UserId" newColumnName="comixed_user_id"
+                      columnDataType="bigint"/>
+
+        <renameColumn tableName="comixed_user_preferences" oldColumnName="PreferenceName"
+                      newColumnName="preference_name" columnDataType="varchar(128)"/>
+
+        <renameColumn tableName="comixed_user_preferences" oldColumnName="PreferenceValue"
+                      newColumnName="preference_value" columnDataType="varchar(256)"/>
+
+        <dropUniqueConstraint tableName="comixed_user_preferences"
+                              constraintName="UserPreferencesUniqueUserAndNameIdx"/>
+
+        <addUniqueConstraint columnNames="comixed_user_id,preference_name" tableName="comixed_user_preferences"
+                             constraintName="comixed_user_preferences_unique_preference_name"/>
+
+    </changeSet>
+</databaseChangeLog>

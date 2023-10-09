@@ -33,7 +33,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "MetadataSources")
+@Table(name = "metadata_sources")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class MetadataSource {
@@ -45,7 +45,7 @@ public class MetadataSource {
   private Long id;
 
   @Column(
-      name = "BeanName",
+      name = "bean_name",
       length = 32,
       unique = true,
       insertable = true,
@@ -62,7 +62,7 @@ public class MetadataSource {
   private String beanName;
 
   @Column(
-      name = "Name",
+      name = "display_name",
       length = 64,
       unique = true,
       insertable = true,
@@ -75,7 +75,7 @@ public class MetadataSource {
   @NonNull
   private String name;
 
-  @Column(name = "Preferred", insertable = true, updatable = true, nullable = false)
+  @Column(name = "preferred_source", insertable = true, updatable = true, nullable = false)
   @JsonProperty("preferred")
   @JsonView({View.MetadataSourceList.class, View.ComicDetailsView.class})
   @Getter

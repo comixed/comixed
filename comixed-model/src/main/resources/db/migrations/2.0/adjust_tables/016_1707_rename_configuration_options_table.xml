@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="016_1707_create_configuration_options_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="ConfigurationOptions"/>
+        </preConditions>
+
+        <renameTable oldTableName="ConfigurationOptions" newTableName="configuration_options"/>
+
+        <renameColumn tableName="configuration_options" oldColumnName="Id" newColumnName="id" columnDataType="bigint"/>
+
+        <renameColumn tableName="configuration_options" oldColumnName="OptionName" newColumnName="option_name"
+                      columnDataType="varchar(64)"/>
+
+        <renameColumn tableName="configuration_options" oldColumnName="OptionValue" newColumnName="option_value"
+                      columnDataType="varchar(256)"/>
+
+        <renameColumn tableName="configuration_options" oldColumnName="LastModifiedOn" newColumnName="last_modified_on"
+                      columnDataType="datetime"/>
+
+    </changeSet>
+</databaseChangeLog>

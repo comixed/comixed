@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="021_1707_create_last_read_dates_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="LastReadDates"/>
+        </preConditions>
+
+        <renameTable oldTableName="LastReadDates" newTableName="last_read_dates"/>
+
+        <renameColumn tableName="last_read_dates" oldColumnName="Id" newColumnName="id" columnDataType="bigint"/>
+
+        <renameColumn tableName="last_read_dates" oldColumnName="UserId" newColumnName="comixed_user_id"
+                      columnDataType="bigint"/>
+
+        <renameColumn tableName="last_read_dates" oldColumnName="ComicDetailId" newColumnName="comic_detail_id"
+                      columnDataType="bigint"/>
+
+        <renameColumn tableName="last_read_dates" oldColumnName="LastReadOn" newColumnName="last_read_on"
+                      columnDataType="datetime"/>
+
+        <renameColumn tableName="last_read_dates" oldColumnName="CreatedOn" newColumnName="created_on"
+                      columnDataType="datetime"/>
+
+
+        <dropForeignKeyConstraint baseTableName="last_read_dates" constraintName="LastReadDatesUserFk"/>
+        <dropForeignKeyConstraint baseTableName="last_read_dates" constraintName="LastReadDateComicDetailFk"/>
+        <dropIndex tableName="last_read_dates" indexName="LastReadDateComicDetailIdx"/>
+
+        <addForeignKeyConstraint baseTableName="last_read_dates" baseColumnNames="comixed_user_id"
+                                 constraintName="last_read_dates_comixed_user_fk"
+                                 referencedTableName="comixed_users"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="last_read_dates" baseColumnNames="comic_detail_id"
+                                 constraintName="last_read_dates_comic_detail_fk"
+                                 referencedTableName="comic_details"
+                                 referencedColumnNames="id"/>
+
+        <dropUniqueConstraint tableName="last_read_dates" constraintName="LastReadDateUniqueComicDetailAndUser" />
+
+        <createIndex tableName="last_read_dates" indexName="last_read_dates_comic_detail_idx">
+            <column name="comic_detail_id"/>
+        </createIndex>
+
+        <addUniqueConstraint tableName="last_read_dates" columnNames="comixed_user_id,comic_detail_id"
+                             constraintName="last_read_dates_unique_comic_detail_and_user"/>
+
+    </changeSet>
+</databaseChangeLog>

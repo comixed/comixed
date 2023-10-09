@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="013_1707_rename_metadata_cache_entries_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="MetadataCacheEntries"/>
+        </preConditions>
+
+        <renameTable oldTableName="MetadataCacheEntries" newTableName="metadata_cache_entries"/>
+
+        <renameColumn tableName="metadata_cache_entries" oldColumnName="Id" newColumnName="id" columnDataType="bigint"/>
+
+        <renameColumn tableName="metadata_cache_entries" oldColumnName="MetadataCacheId"
+                      newColumnName="metadata_cache_id" columnDataType="bigint"/>
+
+        <renameColumn tableName="metadata_cache_entries" oldColumnName="EntryNumber" newColumnName="entry_number"
+                      columnDataType="int"/>
+
+        <renameColumn tableName="metadata_cache_entries" oldColumnName="EntryValue" newColumnName="entry_value"
+                      columnDataType="clob"/>
+
+        <dropForeignKeyConstraint baseTableName="metadata_cache_entries"
+                                  constraintName="MetadataCacheEntryMetadataCacheFk"/>
+
+        <addForeignKeyConstraint baseTableName="metadata_cache_entries" baseColumnNames="metadata_cache_id"
+                                 constraintName="metadata_cache_entries_metadata_cache_fk"
+                                 referencedTableName="metadata_cache"
+                                 referencedColumnNames="id"/>
+
+        <dropUniqueConstraint tableName="metadata_cache_entries"
+                              constraintName="MetadataCacheEntriesUniqueMetadataCacheAndEntryNumber"/>
+
+        <addUniqueConstraint tableName="metadata_cache_entries" columnNames="metadata_cache_id,entry_number"
+                             constraintName="metadata_cache_entries_unique_cache_and_entry_number"/>
+
+    </changeSet>
+</databaseChangeLog>

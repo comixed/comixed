@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="022_1707_create_reading_lists_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="ReadingLists"/>
+        </preConditions>
+
+        <renameTable oldTableName="ReadingLists" newTableName="reading_lists"/>
+
+        <renameColumn tableName="reading_lists" oldColumnName="Id" newColumnName="id" columnDataType="bigint"/>
+
+        <renameColumn tableName="reading_lists" oldColumnName="OwnerId" newColumnName="owner_id"
+                      columnDataType="bigint"/>
+
+        <renameColumn tableName="reading_lists" oldColumnName="Name" newColumnName="reading_list_name"
+                      columnDataType="varchar(128)"/>
+
+        <renameColumn tableName="reading_lists" oldColumnName="LastModifiedOn" newColumnName="last_modified_on"
+                      columnDataType="datetime"/>
+
+        <renameColumn tableName="reading_lists" oldColumnName="Summary" newColumnName="summary"
+                      columnDataType="varchar(256)"/>
+
+        <renameColumn tableName="reading_lists" oldColumnName="CreatedOn" newColumnName="created_on"
+                      columnDataType="datetime"/>
+
+        <renameColumn tableName="reading_lists" oldColumnName="ReadingListState" newColumnName="reading_list_state"
+                      columnDataType="varchar(32)"/>
+
+        <renameColumn tableName="reading_lists" oldColumnName="NameKey" newColumnName="name_key"
+                      columnDataType="varchar(128)"/>
+
+        <dropForeignKeyConstraint baseTableName="reading_lists" constraintName="ReadingListsOwnerFk"/>
+        <addForeignKeyConstraint baseTableName="reading_lists" baseColumnNames="owner_id"
+                                 constraintName="reading_lists_owner_fk"
+                                 referencedTableName="comixed_users"
+                                 referencedColumnNames="id"/>
+
+        <dropUniqueConstraint tableName="reading_lists" constraintName="ReadingListOwnerNameKeyIdx"/>
+        <addUniqueConstraint tableName="reading_lists" columnNames="owner_id,name_key"
+                             constraintName="reading_lists_unique_owner_name_key"/>
+
+    </changeSet>
+</databaseChangeLog>

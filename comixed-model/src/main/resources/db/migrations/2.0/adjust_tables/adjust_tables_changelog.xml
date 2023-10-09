@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!-- the migrations are only to support users migrating from  pre-2.0 releases -->
+
+    <include file="/db/migrations/2.0/adjust_tables/001_1707_rename_comixed_users_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/002_1707_rename_comixed_roles_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/003_1707_rename_comixed_users_roles_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/004_1707_rename_comixed_user_preferences_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/005_1707_rename_comic_books_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/006_1707_rename_comic_pages_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/007_1707_rename_comic_details_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/008_1707_rename_comic_file_details_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/009_1707_rename_comic_tags_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/010_1707_rename_metadata_sources_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/011_1707_rename_metadata_source_properties_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/012_1707_rename_metadata_cache_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/013_1707_rename_metadata_cache_entries_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/014_1707_rename_comic_metadata_sources_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/015_1707_rename_blocked_hashes_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/016_1707_rename_configuration_options_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/017_1707_rename_imprints_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/018_1707_rename_stories_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/019_1707_rename_story_entries_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/020_1707_rename_issues_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/021_1707_rename_last_read_dates_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/022_1707_rename_reading_lists_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/023_1707_rename_reading_list_entries_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/024_1707_rename_filename_scraping_rules_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/031_1707_remove_smart_list_matchers_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/030_1707_remove_smart_reading_lists_table.xml"/>
+
+</databaseChangeLog>

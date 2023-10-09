@@ -31,7 +31,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "MetadataSourceProperties")
+@Table(name = "metadata_source_properties")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class MetadataSourceProperty {
@@ -41,13 +41,13 @@ public class MetadataSourceProperty {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "MetadataSourceId", nullable = false, updatable = false)
+  @JoinColumn(name = "metadata_source_id", nullable = false, updatable = false)
   @Getter
   @NonNull
   private MetadataSource source;
 
   @Column(
-      name = "PropertyName",
+      name = "property_name",
       length = 32,
       insertable = true,
       updatable = false,
@@ -59,7 +59,7 @@ public class MetadataSourceProperty {
   private String name;
 
   @Column(
-      name = "PropertyValue",
+      name = "property_value",
       length = 255,
       insertable = true,
       updatable = true,

@@ -69,6 +69,7 @@ public class BlockedHashService {
    *
    * @return all blocked pages
    */
+  @Transactional
   public List<BlockedHash> getAll() {
     log.debug("Loading all blocked page records");
     return this.blockedHashRepository.getAll();
@@ -81,6 +82,7 @@ public class BlockedHashService {
    * @return the blocked page
    * @throws BlockedHashException if no such record exists
    */
+  @Transactional
   public BlockedHash getByHash(final String hash) throws BlockedHashException {
     log.debug("Loading blocked page by hash: {}", hash);
     final BlockedHash result = this.blockedHashRepository.findByHash(hash);
@@ -313,6 +315,7 @@ public class BlockedHashService {
    * @param hash the page hash
    * @return the thumbnail content
    */
+  @Transactional
   public byte[] getThumbnail(final String hash) throws BlockedHashException {
     log.debug("Loading blocked hash: {}", hash);
     final BlockedHash blockedHash = this.blockedHashRepository.findByHash(hash);

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="007_1707_create_comic_details_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="comic_details"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="comic_details">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="comic_book_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="archive_type" type="varchar(4)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="comic_state" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="publisher" type="varchar(255)"/>
+
+            <column name="imprint" type="varchar(255)"/>
+
+            <column name="series" type="varchar(255)"/>
+
+            <column name="volume" type="varchar(4)"/>
+
+            <column name="issue_number" type="varchar(16)"/>
+
+            <column name="cover_date" type="date"/>
+
+            <column name="store_date" type="date"/>
+
+            <column name="added_date" type="date"/>
+
+            <column name="filename" type="varchar(768)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="title" type="varchar(255)"/>
+
+            <column name="notes" type="clob"/>
+
+            <column name="description" type="clob"/>
+
+            <column name="sort_name" type="varchar(128)"/>
+
+            <column name="comic_type" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="comic_details" baseColumnNames="comic_book_id"
+                                 constraintName="comic_details_comic_book_fk"
+                                 referencedTableName="comic_books"
+                                 referencedColumnNames="id"/>
+
+        <createIndex tableName="comic_details"
+                     indexName="comic_details_filename_idx">
+            <column name="filename"/>
+        </createIndex>
+
+        <createIndex tableName="comic_details"
+                     indexName="comic_details_sort_name_idx">
+            <column name="sort_name"/>
+        </createIndex>
+
+        <createIndex tableName="comic_details"
+                     indexName="comic_details_publisher_idx">
+            <column name="publisher"/>
+        </createIndex>
+
+        <createIndex tableName="comic_details"
+                     indexName="comic_details_series_idx">
+            <column name="series"/>
+        </createIndex>
+
+        <createIndex tableName="comic_details"
+                     indexName="comic_details_volume_idx">
+            <column name="volume"/>
+        </createIndex>
+
+        <createIndex tableName="comic_details"
+                     indexName="comic_details_issue_number_idx">
+            <column name="issue_number"/>
+        </createIndex>
+
+        <createIndex tableName="comic_details" indexName="comic_details_comic_state_idx">
+            <column name="comic_state"/>
+        </createIndex>
+
+        <createIndex tableName="comic_details" indexName="comic_details_comic_type_idx">
+            <column name="comic_type"/>
+        </createIndex>
+
+        <createIndex tableName="comic_details"
+                     indexName="comic_details_archive_type_idx">
+            <column name="archive_type"/>
+        </createIndex>
+
+        <createIndex tableName="comic_details"
+                     indexName="comic_details_added_date_idx">
+            <column name="added_date"/>
+        </createIndex>
+
+        <createIndex tableName="comic_details"
+                     indexName="comic_details_cover_date_idx">
+            <column name="cover_date"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

@@ -33,7 +33,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "ComicMetadataSources")
+@Table(name = "comic_metadata_sources")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class ComicMetadataSource {
@@ -43,13 +43,13 @@ public class ComicMetadataSource {
   private Long id;
 
   @OneToOne
-  @JoinColumn(name = "ComicBookId", nullable = false, updatable = false)
+  @JoinColumn(name = "comic_book_id", nullable = false, updatable = false)
   @Getter
   @NonNull
   private ComicBook comicBook;
 
   @ManyToOne
-  @JoinColumn(name = "MetadataSourceId", nullable = false, updatable = false)
+  @JoinColumn(name = "metadata_source_id", nullable = false, updatable = false)
   @JsonProperty("metadataSource")
   @JsonView({View.ComicDetailsView.class})
   @Getter
@@ -57,7 +57,7 @@ public class ComicMetadataSource {
   @NonNull
   private MetadataSource metadataSource;
 
-  @Column(name = "ReferenceId", length = 32, nullable = false, updatable = true)
+  @Column(name = "reference_id", length = 32, nullable = false, updatable = true)
   @JsonProperty("referenceId")
   @JsonView({View.ComicDetailsView.class})
   @Getter

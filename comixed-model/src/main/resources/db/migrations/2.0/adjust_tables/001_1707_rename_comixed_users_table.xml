@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="001_1707_rename_comixed_users_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="ComiXedUsers"/>
+        </preConditions>
+
+        <renameTable oldTableName="ComiXedUsers" newTableName="comixed_users"/>
+
+        <renameColumn tableName="comixed_users" oldColumnName="Id" newColumnName="id" columnDataType="bigint"/>
+
+        <renameColumn tableName="comixed_users" oldColumnName="Email" newColumnName="email"
+                      columnDataType="varchar(256)"/>
+
+        <renameColumn tableName="comixed_users" oldColumnName="PasswordHash" newColumnName="password_hash"
+                      columnDataType="varchar(64)"/>
+
+        <renameColumn tableName="comixed_users" oldColumnName="CreatedOn" newColumnName="created_on"
+                      columnDataType="datetime"/>
+
+        <renameColumn tableName="comixed_users" oldColumnName="LastLoggedOn" newColumnName="last_logged_on"
+                      columnDataType="datetime"/>
+
+    </changeSet>
+</databaseChangeLog>

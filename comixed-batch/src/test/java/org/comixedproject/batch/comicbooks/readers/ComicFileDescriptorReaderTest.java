@@ -53,7 +53,6 @@ public class ComicFileDescriptorReaderTest {
 
     Mockito.verify(comicFileService, Mockito.times(1))
         .findComicFileDescriptors(reader.getBatchChunkSize());
-    Mockito.verify(comicFileService, Mockito.times(1)).deleteComicFileDescriptor(descriptor);
   }
 
   @Test
