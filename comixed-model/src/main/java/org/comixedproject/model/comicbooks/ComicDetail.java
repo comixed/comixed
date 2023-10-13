@@ -47,7 +47,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.views.View;
@@ -80,6 +79,7 @@ public class ComicDetail {
   @JoinColumn(name = "ComicBookId", nullable = false, updatable = false)
   @NonNull
   @Getter
+  @Setter
   private ComicBook comicBook;
 
   @Formula(
@@ -87,6 +87,7 @@ public class ComicDetail {
   @JsonProperty("unscraped")
   @JsonView({View.ComicListView.class})
   @Getter
+  @Setter
   private Boolean unscraped;
 
   @Column(name = "Filename", nullable = false, unique = true, length = 1024)
@@ -181,6 +182,12 @@ public class ComicDetail {
   @Getter
   private String issueNumber;
 
+  @JsonProperty("sortableIssueNumber")
+  @JsonView({View.ComicListView.class})
+  @Formula("(IssueNumber)")
+  @Getter
+  private String sortableIssueNumber;
+
   @Column(name = "SortName", length = 128)
   @JsonProperty("sortName")
   @JsonView({View.ComicListView.class})
@@ -235,6 +242,20 @@ public class ComicDetail {
   @Setter
   private Date coverDate;
 
+  @Formula("(YEAR(CoverDate))")
+  @JsonProperty("yearPublished")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  @Setter
+  private Integer yearPublished;
+
+  @Formula("(MONTH(CoverDate))")
+  @JsonProperty("monthPublished")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  @Setter
+  private Integer monthPublished;
+
   @Column(name = "StoreDate", nullable = true)
   @Temporal(TemporalType.DATE)
   @JsonProperty("storeDate")
@@ -256,11 +277,12 @@ public class ComicDetail {
   })
   @Temporal(TemporalType.TIMESTAMP)
   @Getter
+  @Setter
   private Date dateAdded = new Date();
 
   @OneToMany(mappedBy = "comicDetail", orphanRemoval = true)
   @Getter
-  private List<LastRead> lastReadList = new ArrayList<>();
+  private final List<LastRead> lastReadList = new ArrayList<>();
 
   /**
    * Returns the id for the parent comic book.
@@ -314,35 +336,6 @@ public class ComicDetail {
       }
     }
     this.issueNumber = issueNumber;
-  }
-
-  /**
-   * Returns an issue number that can be used for sorting.
-   *
-   * @return the sortable issue number
-   */
-  @Transient
-  @JsonProperty("sortableIssueNumber")
-  @JsonView({View.ComicListView.class})
-  public String getSortableIssueNumber() {
-    if (NumberUtils.isNumber(this.issueNumber)) {
-      return String.format("%010.3f", Double.valueOf(this.issueNumber));
-    } else {
-      final String result = "0000000000" + (this.issueNumber != null ? this.issueNumber : "");
-      return result.substring(result.length() - 10);
-    }
-  }
-
-  @Transient
-  @JsonProperty(value = "publishedYear")
-  @JsonView({View.ComicListView.class})
-  public int getYearPublished() {
-    if (this.coverDate != null) {
-      GregorianCalendar calendar = new GregorianCalendar();
-      calendar.setTime(this.coverDate);
-      return calendar.get(Calendar.YEAR);
-    }
-    return 0;
   }
 
   @Override

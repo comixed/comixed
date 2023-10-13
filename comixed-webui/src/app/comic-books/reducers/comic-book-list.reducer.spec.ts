@@ -24,9 +24,9 @@ import {
 import {
   comicBookListRemovalReceived,
   comicBookListUpdateReceived,
-  comicBooksReceived,
-  loadComicBooks,
-  loadComicBooksFailed,
+  oldComicBooksReceived,
+  oldLoadComicBooks,
+  oldLoadComicBooksFailed,
   resetComicBookList
 } from '@app/comic-books/actions/comic-book-list.actions';
 import {
@@ -141,7 +141,7 @@ describe('ComicBook List Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, loading: false },
-        loadComicBooks({ maxRecords: MAX_RECORDS, lastId: LAST_ID })
+        oldLoadComicBooks({ maxRecords: MAX_RECORDS, lastId: LAST_ID })
       );
     });
 
@@ -168,7 +168,7 @@ describe('ComicBook List Reducer', () => {
           lastPayload: !LAST_PAGE,
           comicBooks: COMIC_BOOKS
         },
-        comicBooksReceived({
+        oldComicBooksReceived({
           comicBooks: BATCH,
           lastId: LAST_ID,
           lastPayload: LAST_PAGE
@@ -200,7 +200,7 @@ describe('ComicBook List Reducer', () => {
 
   describe('failure to load a batch of comics', () => {
     beforeEach(() => {
-      state = reducer({ ...state, loading: true }, loadComicBooksFailed());
+      state = reducer({ ...state, loading: true }, oldLoadComicBooksFailed());
     });
 
     it('clears the loading flag', () => {

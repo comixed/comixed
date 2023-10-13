@@ -20,6 +20,8 @@ import { API_ROOT_URL } from '../core';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { ComicType } from '@app/comic-books/models/comic-type';
 
+export const LOAD_COMICS_URL = `${API_ROOT_URL}/comics/details/load`;
+
 export const MARK_COMICS_DELETED_URL = `${API_ROOT_URL}/comics/mark/deleted`;
 export const MARK_COMICS_UNDELETED_URL = `${API_ROOT_URL}/comics/mark/undeleted`;
 export const SAVE_PAGE_ORDER_URL = `${API_ROOT_URL}/comics/\${id}/pages/order`;

@@ -58,7 +58,6 @@ import {
   COMIC_BOOK_LIST_FEATURE_KEY,
   initialState as initialComicBookListState
 } from '@app/comic-books/reducers/comic-book-list.reducer';
-import { loadComicBooks } from '@app/comic-books/actions/comic-book-list.actions';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SideNavigationComponent } from '@app/components/side-navigation/side-navigation.component';
 import { FooterComponent } from '@app/components/footer/footer.component';
@@ -79,7 +78,6 @@ import {
   initialState as initialLibrarySelectionState,
   LIBRARY_SELECTIONS_FEATURE_KEY
 } from '@app/library/reducers/library-selections.reducer';
-import { LIBRARY_LOAD_MAX_RECORDS } from '@app/comic-books/comic-books.constants';
 import {
   DARK_THEME_FEATURE_KEY,
   initialState as initialDarkThemeState
@@ -265,63 +263,6 @@ describe('AppComponent', () => {
 
       it('sets the logging level to info', () => {
         expect(logger.level).toEqual(LoggerLevel.ALL);
-      });
-    });
-  });
-
-  describe('loading the comic list', () => {
-    describe('starting', () => {
-      beforeEach(() => {
-        component.comicListStateSubscription = null;
-        component.comicsLoaded = false;
-        store.setState({
-          ...initialState,
-          [USER_FEATURE_KEY]: {
-            ...initialUserState,
-            user: {
-              ...USER,
-              preferences: [
-                {
-                  name: LIBRARY_LOAD_MAX_RECORDS,
-                  value: `${MAX_LIBRARY_RECORDS}`
-                }
-              ]
-            }
-          },
-          [COMIC_BOOK_LIST_FEATURE_KEY]: {
-            ...initialComicBookListState,
-            loading: false,
-            lastPayload: false,
-            lastId: LAST_ID
-          }
-        });
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          loadComicBooks({ maxRecords: MAX_LIBRARY_RECORDS, lastId: LAST_ID })
-        );
-      });
-    });
-
-    describe('finishing', () => {
-      beforeEach(() => {
-        component.comicListStateSubscription = null;
-        component.comicsLoaded = false;
-        store.setState({
-          ...initialState,
-          [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
-          [COMIC_BOOK_LIST_FEATURE_KEY]: {
-            ...initialComicBookListState,
-            loading: false,
-            lastPayload: true,
-            lastId: LAST_ID
-          }
-        });
-      });
-
-      it('sets the comics loaded flag', () => {
-        expect(component.comicsLoaded).toBeTrue();
       });
     });
   });

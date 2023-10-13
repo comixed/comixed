@@ -19,7 +19,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LastRead } from '@app/last-read/models/last-read';
-import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { ComicState } from '@app/comic-books/models/comic-state';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import {
   UntypedFormBuilder,
@@ -158,13 +158,13 @@ export class ComicDetailEditComponent implements OnInit, OnDestroy {
   }
 
   get deleted(): boolean {
-    return this.comicBook.detail.comicState === ComicBookState.DELETED;
+    return this.comicBook.detail.comicState === ComicState.DELETED;
   }
 
   get comicChanged(): boolean {
     return (
       !!this.comicBook &&
-      this.comicBook.detail.comicState === ComicBookState.CHANGED
+      this.comicBook.detail.comicState === ComicState.CHANGED
     );
   }
 

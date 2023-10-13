@@ -22,11 +22,11 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
 import {
   LOAD_COMIC_URL,
-  LOAD_COMICS_URL,
+  OLD_LOAD_COMICS_URL,
   UPDATE_COMIC_URL
 } from '@app/library/library.constants';
 import { interpolate } from '@app/core';
-import { LoadComicsRequest } from '@app/comic-books/models/net/load-comics-request';
+import { OldLoadComicsRequest } from '@app/comic-books/models/net/old-load-comics-request';
 import {
   MARK_COMICS_DELETED_URL,
   MARK_COMICS_UNDELETED_URL,
@@ -56,10 +56,10 @@ export class ComicBookService {
    */
   loadBatch(args: { maxRecords: number; lastId: number }): Observable<any> {
     this.logger.trace('Service: loading a batch of comics:', args);
-    return this.http.post(interpolate(LOAD_COMICS_URL), {
+    return this.http.post(interpolate(OLD_LOAD_COMICS_URL), {
       maxRecords: args.maxRecords,
       lastId: args.lastId
-    } as LoadComicsRequest);
+    } as OldLoadComicsRequest);
   }
 
   /**

@@ -51,6 +51,10 @@ export class QueryParameterService {
   readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   pageSize$ = new BehaviorSubject<number>(PAGE_SIZE_DEFAULT);
   pageIndex$ = new BehaviorSubject<number>(0);
+  pageChanged$ = new BehaviorSubject<{ pageSize: number; pageIndex: number }>({
+    pageSize: 10,
+    pageIndex: 0
+  });
   sortBy$ = new BehaviorSubject<string>(null);
   sortDirection$ = new BehaviorSubject<SortDirection>('');
   currentTab$ = new BehaviorSubject<number>(0);
@@ -77,6 +81,8 @@ export class QueryParameterService {
       const pageIndex = +params[QUERY_PARAM_PAGE_INDEX] || 0;
       this.logger.debug('Using parameter for page index:', pageIndex);
       this.pageIndex$.next(pageIndex);
+
+      this.pageChanged$.next({ pageSize, pageIndex });
 
       const sortBy = params[QUERY_PARAM_SORT_BY];
       this.logger.debug('Using parameter for sort field:', sortBy);

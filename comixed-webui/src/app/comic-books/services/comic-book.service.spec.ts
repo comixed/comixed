@@ -33,13 +33,13 @@ import {
 } from '@app/comic-books/comic-books.fixtures';
 import {
   LOAD_COMIC_URL,
-  LOAD_COMICS_URL,
+  OLD_LOAD_COMICS_URL,
   UPDATE_COMIC_URL
 } from '@app/library/library.constants';
 import { interpolate } from '@app/core';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { LoadComicsResponse } from '@app/comic-books/models/net/load-comics-response';
-import { LoadComicsRequest } from '@app/comic-books/models/net/load-comics-request';
+import { OldLoadComicsResponse } from '@app/comic-books/models/net/old-load-comics-response';
+import { OldLoadComicsRequest } from '@app/comic-books/models/net/old-load-comics-request';
 import {
   MARK_COMICS_DELETED_URL,
   MARK_COMICS_UNDELETED_URL,
@@ -86,20 +86,20 @@ describe('ComicBookService', () => {
           comicBooks: COMIC_BOOKS,
           lastId: LAST_ID,
           lastPayload: LAST_PAGE
-        } as LoadComicsResponse)
+        } as OldLoadComicsResponse)
       );
 
-    const req = httpMock.expectOne(interpolate(LOAD_COMICS_URL));
+    const req = httpMock.expectOne(interpolate(OLD_LOAD_COMICS_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
       maxRecords: MAX_RECORDS,
       lastId: LAST_ID
-    } as LoadComicsRequest);
+    } as OldLoadComicsRequest);
     req.flush({
       comicBooks: COMIC_BOOKS,
       lastId: LAST_ID,
       lastPayload: LAST_PAGE
-    } as LoadComicsResponse);
+    } as OldLoadComicsResponse);
   });
 
   it('can load a single comic', () => {

@@ -67,7 +67,7 @@ import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.
 import { COMIC_BOOK_UPDATE_TOPIC } from '@app/comic-books/comic-books.constants';
 import { Page } from '@app/comic-books/models/page';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { ComicState } from '@app/comic-books/models/comic-state';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 
@@ -200,11 +200,11 @@ export class ComicBookPageComponent
   }
 
   get hasChangedState(): boolean {
-    return this.comicBook.detail.comicState === ComicBookState.CHANGED;
+    return this.comicBook.detail.comicState === ComicState.CHANGED;
   }
 
   get isDeleted(): boolean {
-    return this.comicBook.detail.comicState === ComicBookState.DELETED;
+    return this.comicBook.detail.comicState === ComicState.DELETED;
   }
 
   ngOnInit(): void {

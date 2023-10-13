@@ -23,17 +23,17 @@ export const resetComicBookList = createAction(
   '[Comic Book List] Indicates the loading process is started'
 );
 
-export const loadComicBooks = createAction(
+export const oldLoadComicBooks = createAction(
   '[Comic Book List] Load a batch of comics',
   props<{ maxRecords: number; lastId: number }>()
 );
 
-export const comicBooksReceived = createAction(
+export const oldComicBooksReceived = createAction(
   '[Comic Book List] A batch of comics was received',
   props<{ comicBooks: ComicDetail[]; lastId: number; lastPayload: boolean }>()
 );
 
-export const loadComicBooksFailed = createAction(
+export const oldLoadComicBooksFailed = createAction(
   '[Comic Book List] Failed to load a batch of comics'
 );
 

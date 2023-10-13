@@ -16,7 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export interface LoadComicsRequest {
-  maxRecords: number;
-  lastId: number;
+export enum ComicState {
+  ADDED = 'ADDED',
+  UNPROCESSED = 'UNPROCESSED',
+  STABLE = 'STABLE',
+  CHANGED = 'CHANGED',
+  DELETED = 'DELETED',
+  REMOVED = 'REMOVED'
 }

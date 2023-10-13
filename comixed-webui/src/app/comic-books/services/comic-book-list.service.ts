@@ -31,6 +31,14 @@ import {
   comicBookListRemovalReceived,
   comicBookListUpdateReceived
 } from '@app/comic-books/actions/comic-book-list.actions';
+import { Observable } from 'rxjs';
+import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
+import { ComicType } from '@app/comic-books/models/comic-type';
+import { ComicState } from '@app/comic-books/models/comic-state';
+import { HttpClient } from '@angular/common/http';
+import { interpolate } from '@app/core';
+import { LoadComicDetailsRequest } from '@app/comic-books/models/net/load-comic-details-request';
+import { LOAD_COMICS_URL } from '@app/comic-books/comic-books.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +50,8 @@ export class ComicBookListService {
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
-    private webSocketService: WebSocketService
+    private webSocketService: WebSocketService,
+    private http: HttpClient
   ) {
     this.store.select(selectMessagingState).subscribe(state => {
       if (state.started && !this.updateSubscription) {
@@ -79,5 +88,36 @@ export class ComicBookListService {
         this.removalSubscription = null;
       }
     });
+  }
+
+  loadComicDetails(args: {
+    pageSize: number;
+    pageIndex: number;
+    coverYear: number;
+    coverMonth: number;
+    archiveType: ArchiveType;
+    comicType: ComicType;
+    comicState: ComicState;
+    readState: boolean;
+    unscrapedState: boolean;
+    searchText: string;
+    sortBy: string;
+    sortDirection: string;
+  }): Observable<any> {
+    this.logger.debug('Loading comic details:', args);
+    return this.http.post(interpolate(LOAD_COMICS_URL), {
+      pageSize: args.pageSize,
+      pageIndex: args.pageIndex,
+      coverYear: args.coverYear,
+      coverMonth: args.coverMonth,
+      archiveType: args.archiveType,
+      comicType: args.comicType,
+      comicState: args.comicState,
+      readState: args.readState,
+      unscrapedState: args.unscrapedState,
+      searchText: args.searchText,
+      sortBy: args.sortBy,
+      sortDirection: args.sortDirection
+    } as LoadComicDetailsRequest);
   }
 }

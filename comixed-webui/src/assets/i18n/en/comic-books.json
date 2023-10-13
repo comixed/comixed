@@ -133,6 +133,11 @@
       "title": "Undo Changes"
     }
   },
+  "comic-books": {
+    "load-comics": {
+      "effect-failure": "Failed to load comics to display."
+    }
+  },
   "comic-detail-list-view": {
     "label": {
       "added-date": "Added",
@@ -147,6 +152,9 @@
       "store-date": "Store Date",
       "thumbnail": "",
       "volume": "Volume"
+    },
+    "text": {
+      "no-records-found": "No comics were found..."
     },
     "tooltip": {
       "filter-list": "Filter the list of comics."

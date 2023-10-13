@@ -24,7 +24,7 @@ import {
 import { CollectionType } from '@app/collections/models/comic-collection.enum';
 import { CollectionListProperties } from '@app/collections/models/collection-list-properties';
 import { CollectionListEntry } from '@app/collections/models/collection-list-entry';
-import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { ComicState } from '@app/comic-books/models/comic-state';
 import { MISSING_VOLUME_PLACEHOLDER } from '@app/comic-books/comic-books.constants';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
@@ -46,7 +46,7 @@ export const selectComicBookListDeletedCount = createSelector(
   selectComicBookListState,
   state =>
     state.comicBooks.filter(
-      comicBook => comicBook.comicState === ComicBookState.DELETED
+      comicBook => comicBook.comicState === ComicState.DELETED
     ).length
 );
 
