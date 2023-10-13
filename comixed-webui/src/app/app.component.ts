@@ -34,20 +34,10 @@ import {
   stopMessaging
 } from '@app/messaging/actions/messaging.actions';
 import { Subscription } from 'rxjs';
-import { selectComicBookListState } from '@app/comic-books/selectors/comic-book-list.selectors';
-import {
-  loadComicBooks,
-  resetComicBookList
-} from '@app/comic-books/actions/comic-book-list.actions';
 import { User } from '@app/user/models/user';
-import { loadReadingLists } from '@app/lists/actions/reading-lists.actions';
 import { loadLibraryState } from '@app/library/actions/library.actions';
 import { selectLibraryState } from '@app/library/selectors/library.selectors';
 import { LibraryState } from '@app/library/reducers/library.reducer';
-import {
-  DEFAULT_LIBRARY_LOAD_MAX_RECORDS,
-  LIBRARY_LOAD_MAX_RECORDS
-} from '@app/comic-books/comic-books.constants';
 import { toggleDarkThemeMode } from '@app/actions/dark-theme.actions';
 import { selectDarkThemeActive } from '@app/selectors/dark-theme.selectors';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -63,8 +53,6 @@ export class AppComponent implements OnInit {
   sessionActive = false;
   libraryStateSubscription: Subscription;
   libraryState: LibraryState;
-  comicListStateSubscription: Subscription;
-  comicsLoaded = false;
   darkMode = false;
 
   constructor(
@@ -104,12 +92,6 @@ export class AppComponent implements OnInit {
         this.logger.trace('Loading remote library state');
         this.store.dispatch(loadLibraryState());
       }
-      if (!!this.user && !this.comicListStateSubscription) {
-        this.logger.trace('Subscribing to comic list updates');
-        this.subscribeToComicListUpdates();
-        this.logger.trace('Loading reading lists');
-        this.store.dispatch(loadReadingLists());
-      }
       if (!this.user && this.sessionActive) {
         this.logger.trace('Stopping the messaging subsystem');
         this.store.dispatch(stopMessaging());
@@ -120,11 +102,6 @@ export class AppComponent implements OnInit {
         this.logger.trace('Unsubscribing from library state changes');
         this.libraryStateSubscription.unsubscribe();
         this.libraryStateSubscription = null;
-      }
-      if (!this.user && this.comicListStateSubscription) {
-        this.logger.trace('Unsubscribing from comics list state changes');
-        this.comicListStateSubscription.unsubscribe();
-        this.comicListStateSubscription = null;
       }
       if (!!this.user) {
         const preferredLevel = parseInt(
@@ -179,35 +156,5 @@ export class AppComponent implements OnInit {
     this.libraryStateSubscription = this.store
       .select(selectLibraryState)
       .subscribe(state => (this.libraryState = state));
-  }
-
-  private subscribeToComicListUpdates(): void {
-    this.logger.trace('Resetting the comic list state');
-    this.store.dispatch(resetComicBookList());
-    this.comicListStateSubscription = this.store
-      .select(selectComicBookListState)
-      .subscribe(state => {
-        this.logger.debug('Comic list state update:', state);
-        if (!state.loading && state.lastPayload && !this.comicsLoaded) {
-          this.logger.trace('Finished loading comics');
-          this.comicsLoaded = true;
-        }
-        if (!state.loading && !this.comicsLoaded) {
-          this.logger.trace('Loading a batch of comics');
-          this.store.dispatch(
-            loadComicBooks({
-              maxRecords: parseInt(
-                getUserPreference(
-                  this.user.preferences,
-                  LIBRARY_LOAD_MAX_RECORDS,
-                  `${DEFAULT_LIBRARY_LOAD_MAX_RECORDS}`
-                ),
-                10
-              ),
-              lastId: state.lastId
-            })
-          );
-        }
-      });
   }
 }

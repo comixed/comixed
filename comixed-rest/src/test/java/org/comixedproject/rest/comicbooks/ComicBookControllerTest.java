@@ -25,6 +25,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
@@ -32,10 +33,13 @@ import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.ComicState;
+import org.comixedproject.model.comicbooks.ComicType;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.net.comicbooks.*;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.junit.Before;
@@ -59,9 +63,24 @@ public class ComicBookControllerTest {
   private static final String TEST_PAGE_CONTENT_SUBTYPE = "image";
   private static final String TEST_PAGE_FILENAME = "cover.jpg";
   private static final String TEST_PAGE_HASH = "1234567890ABCDEF1234567890ABCDEF";
+  private static final int TEST_PAGE_SIZE = 10;
+  private static final int TEST_PAGE_INDEX = RandomUtils.nextInt(100);
+  private static final Integer TEST_COVER_YEAR = RandomUtils.nextInt(50) + 1970;
+  private static final Integer TEST_COVER_MONTH = RandomUtils.nextInt(12);
+  private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CB7;
+  private static final ComicType TEST_COMIC_TYPE = ComicType.ISSUE;
+  private static final ComicState TEST_COMIC_STATE = ComicState.REMOVED;
+  private static final Boolean TEST_READ_STATE = RandomUtils.nextBoolean();
+  private static final Boolean TEST_UNSCRAPED_STATE = RandomUtils.nextBoolean();
+  private static final String TEST_SEARCH_TEXT = "The search text";
+  private static final String TEST_SORT_FIELD = "added-date";
+  private static final String TEST_SORT_DIRECTION = "asc";
+  private static final long TEST_TOTAL_COMIC_COUNT = RandomUtils.nextLong() * 30000L;
+  private static final long TEST_COMIC_BOOK_COUNT = TEST_TOTAL_COMIC_COUNT * 2L;
 
   @InjectMocks private ComicBookController controller;
   @Mock private ComicBookService comicBookService;
+  @Mock private ComicDetailService comicDetailService;
   @Mock private PageCacheService pageCacheService;
   @Mock private ComicBook comicBook;
   @Mock private ComicDetail comicDetail;
@@ -71,6 +90,7 @@ public class ComicBookControllerTest {
   @Mock private Page page;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private List<PageOrderEntry> pageOrderEntrylist;
+  @Mock private List<ComicDetail> comicDetailList;
 
   @Captor private ArgumentCaptor<InputStream> inputStreamCaptor;
 
@@ -373,5 +393,57 @@ public class ComicBookControllerTest {
 
     Mockito.verify(comicBookService, Mockito.times(1))
         .savePageOrder(TEST_COMIC_ID, pageOrderEntrylist);
+  }
+
+  @Test
+  public void testLoadComicDetailList() {
+    Mockito.when(
+            comicDetailService.loadComicDetailList(
+                TEST_PAGE_SIZE,
+                TEST_PAGE_INDEX,
+                TEST_COVER_YEAR,
+                TEST_COVER_MONTH,
+                TEST_ARCHIVE_TYPE,
+                TEST_COMIC_TYPE,
+                TEST_COMIC_STATE,
+                TEST_READ_STATE,
+                TEST_UNSCRAPED_STATE,
+                TEST_SEARCH_TEXT,
+                TEST_SORT_FIELD,
+                TEST_SORT_DIRECTION))
+        .thenReturn(comicDetailList);
+    Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_COMIC_BOOK_COUNT);
+    Mockito.when(
+            comicDetailService.getFilterCount(
+                TEST_COVER_YEAR,
+                TEST_COVER_MONTH,
+                TEST_ARCHIVE_TYPE,
+                TEST_COMIC_TYPE,
+                TEST_COMIC_STATE,
+                TEST_READ_STATE,
+                TEST_UNSCRAPED_STATE,
+                TEST_SEARCH_TEXT))
+        .thenReturn(TEST_TOTAL_COMIC_COUNT);
+
+    final LoadComicDetailsResponse result =
+        controller.loadComicDetailList(
+            new LoadComicDetailsRequest(
+                TEST_PAGE_SIZE,
+                TEST_PAGE_INDEX,
+                TEST_COVER_YEAR,
+                TEST_COVER_MONTH,
+                TEST_ARCHIVE_TYPE,
+                TEST_COMIC_TYPE,
+                TEST_COMIC_STATE,
+                TEST_READ_STATE,
+                TEST_UNSCRAPED_STATE,
+                TEST_SEARCH_TEXT,
+                TEST_SORT_FIELD,
+                TEST_SORT_DIRECTION));
+
+    assertNotNull(result);
+    assertSame(comicDetailList, result.getComicDetails());
+    assertEquals(TEST_COMIC_BOOK_COUNT, result.getTotalCount());
+    assertEquals(TEST_TOTAL_COMIC_COUNT, result.getFilteredCount());
   }
 }

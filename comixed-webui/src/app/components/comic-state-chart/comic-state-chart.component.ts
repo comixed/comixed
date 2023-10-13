@@ -26,7 +26,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { ComicStateData } from '@app/models/ui/comic-state-data';
-import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { ComicState } from '@app/comic-books/models/comic-state';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -91,10 +91,7 @@ export class ComicStateChartComponent implements OnDestroy, AfterViewInit {
     this.comicStateData = [
       {
         name: this.translateService.instant('home.label.comic-state-added'),
-        value: this.getCountForState(
-          this.libraryState.states,
-          ComicBookState.ADDED
-        )
+        value: this.getCountForState(this.libraryState.states, ComicState.ADDED)
       },
       {
         name: this.translateService.instant(
@@ -102,28 +99,28 @@ export class ComicStateChartComponent implements OnDestroy, AfterViewInit {
         ),
         value: this.getCountForState(
           this.libraryState.states,
-          ComicBookState.UNPROCESSED
+          ComicState.UNPROCESSED
         )
       },
       {
         name: this.translateService.instant('home.label.comic-state-stable'),
         value: this.getCountForState(
           this.libraryState.states,
-          ComicBookState.STABLE
+          ComicState.STABLE
         )
       },
       {
         name: this.translateService.instant('home.label.comic-state-changed'),
         value: this.getCountForState(
           this.libraryState.states,
-          ComicBookState.CHANGED
+          ComicState.CHANGED
         )
       },
       {
         name: this.translateService.instant('home.label.comic-state-deleted'),
         value: this.getCountForState(
           this.libraryState.states,
-          ComicBookState.DELETED
+          ComicState.DELETED
         )
       }
     ];
@@ -147,7 +144,7 @@ export class ComicStateChartComponent implements OnDestroy, AfterViewInit {
 
   private getCountForState(
     states: RemoteLibrarySegmentState[],
-    state: ComicBookState
+    state: ComicState
   ): number {
     const entry = states.find(record => record.name === state);
     return !!entry ? entry.count : 0;

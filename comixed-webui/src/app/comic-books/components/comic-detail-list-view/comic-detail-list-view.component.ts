@@ -17,16 +17,13 @@
  */
 
 import {
-  AfterViewInit,
   Component,
   EventEmitter,
   HostListener,
   Input,
   OnDestroy,
-  Output,
-  ViewChild
+  Output
 } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -36,7 +33,7 @@ import {
   selectComicBooks
 } from '@app/library/actions/library-selections.actions';
 import { Store } from '@ngrx/store';
-import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { ComicState } from '@app/comic-books/models/comic-state';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LastRead } from '@app/last-read/models/last-read';
@@ -53,7 +50,6 @@ import { editMultipleComics } from '@app/library/actions/library.actions';
 import { EditMultipleComicsComponent } from '@app/library/components/edit-multiple-comics/edit-multiple-comics.component';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
 import { Subscription } from 'rxjs';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
@@ -64,10 +60,7 @@ import { rescanComics } from '@app/library/actions/rescan-comics.actions';
   templateUrl: './comic-detail-list-view.component.html',
   styleUrls: ['./comic-detail-list-view.component.scss']
 })
-export class ComicDetailListViewComponent implements OnDestroy, AfterViewInit {
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-
+export class ComicDetailListViewComponent implements OnDestroy {
   @Output() filtered = new EventEmitter<boolean>();
   @Output() showing = new EventEmitter<number>();
 
@@ -91,6 +84,7 @@ export class ComicDetailListViewComponent implements OnDestroy, AfterViewInit {
   @Input() showStoreDate = true;
   @Input() showLastReadDate = false;
   @Input() showAddedDate = true;
+  @Input() totalComics = 0;
 
   showComicDetailPopup = false;
   showComicFilterPopup = false;
@@ -170,52 +164,6 @@ export class ComicDetailListViewComponent implements OnDestroy, AfterViewInit {
     this.queryParamsSubscription.unsubscribe();
   }
 
-  ngAfterViewInit(): void {
-    this.logger.debug('Setting up pagination');
-    this.dataSource.paginator = this.paginator;
-    this.logger.debug('Setting up sorting');
-    this.dataSource.sort = this.sort;
-    this.logger.debug('Configuring sort');
-    this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
-      switch (sortHeaderId) {
-        case 'selection':
-          return `${data.selected}`;
-        case 'archive-type':
-          return data.item.archiveType.toString();
-        case 'comic-type':
-          return data.item.comicType.toString();
-        case 'comic-state':
-          return data.item.comicState.toString();
-        case 'publisher':
-          return data.item.publisher;
-        case 'series':
-          return data.item.series;
-        case 'volume':
-          return data.item.volume;
-        case 'issue-number':
-          return data.item.sortableIssueNumber;
-        case 'cover-date':
-          return data.item.coverDate;
-        case 'store-date':
-          return data.item.storeDate;
-        case 'last-read-date':
-          return this.lastReadDate(data.item);
-        case 'added-date':
-          return data.item.addedDate;
-        case 'extra-field':
-          return data.sortableExtraField;
-        default:
-          this.logger.error(`Invalid sort column: ${sortHeaderId}`);
-          return null;
-      }
-    };
-    this.logger.debug('Setting up filtering');
-    /* istanbul ignore next */
-    this.dataSource.filterPredicate = (data, filter) => {
-      return JSON.stringify(data).toLowerCase().includes(filter.toLowerCase());
-    };
-  }
-
   toggleSelected(comic: SelectableListItem<ComicDetail>): void {
     if (!comic.selected) {
       this.logger.debug('Selecting comic:', comic.item);
@@ -226,17 +174,17 @@ export class ComicDetailListViewComponent implements OnDestroy, AfterViewInit {
     }
   }
 
-  getIconForState(comicState: ComicBookState): string {
+  getIconForState(comicState: ComicState): string {
     switch (comicState) {
-      case ComicBookState.ADDED:
+      case ComicState.ADDED:
         return 'add';
-      case ComicBookState.UNPROCESSED:
+      case ComicState.UNPROCESSED:
         return 'bolt';
-      case ComicBookState.STABLE:
+      case ComicState.STABLE:
         return 'check_circle';
-      case ComicBookState.CHANGED:
+      case ComicState.CHANGED:
         return 'change_circle';
-      case ComicBookState.DELETED:
+      case ComicState.DELETED:
         return 'delete';
     }
   }
@@ -379,7 +327,7 @@ export class ComicDetailListViewComponent implements OnDestroy, AfterViewInit {
   }
 
   isDeleted(comicDetail: ComicDetail): boolean {
-    return comicDetail?.comicState === ComicBookState.DELETED;
+    return comicDetail?.comicState === ComicState.DELETED;
   }
 
   onMarkOneAsDeleted(deleted: boolean): void {
@@ -527,8 +475,6 @@ export class ComicDetailListViewComponent implements OnDestroy, AfterViewInit {
   }
 
   private applyFilters(): void {
-    this.logger.debug('Filtering data source');
-    this.dataSource.filter = this.queryParameterService.filterText$.value;
     this.logger.debug('Setting data source');
     const filtered =
       !!this.queryParameterService.coverYear$?.value?.year ||
@@ -538,49 +484,17 @@ export class ComicDetailListViewComponent implements OnDestroy, AfterViewInit {
       this.queryParameterService.filterText$.value?.length > 0;
     this.logger.debug('Filtered flag:', filtered);
     this.filtered.emit(filtered);
-    this.dataSource.data = this.comics
-      .filter(
-        entry =>
-          !this.queryParameterService.coverYear$.value?.year ||
-          new Date(entry.coverDate).getFullYear() ===
-            this.queryParameterService.coverYear$.value.year
-      )
-      .filter(
-        entry =>
-          !this.queryParameterService.coverYear$.value?.month ||
-          new Date(entry.coverDate).getMonth() + 1 ==
-            this.queryParameterService.coverYear$.value.month
-      )
-      .filter(
-        entry =>
-          !this.queryParameterService.archiveType$.value ||
-          entry.archiveType === this.queryParameterService.archiveType$.value
-      )
-      .filter(
-        entry =>
-          !this.queryParameterService.comicType$.value ||
-          entry.comicType === this.queryParameterService.comicType$.value
-      )
-      .filter(
-        entry =>
-          !(
-            this.unreadOnly &&
-            this.lastReadDates
-              .map(lastRead => lastRead.comicDetail.comicId)
-              .includes(entry.comicId)
-          )
-      )
-      .map(comic => {
-        this.logger.debug(
-          `Comic id: ${comic.comicId} selected: ${this.selectedIds.includes(
-            comic.comicId
-          )}`
-        );
-        return {
-          item: comic,
-          selected: this.selectedIds.includes(comic.comicId)
-        };
-      });
+    this.dataSource.data = this.comics.map(comic => {
+      this.logger.debug(
+        `Comic id: ${comic.comicId} selected: ${this.selectedIds.includes(
+          comic.comicId
+        )}`
+      );
+      return {
+        item: comic,
+        selected: this.selectedIds.includes(comic.comicId)
+      };
+    });
     this.showing.emit(this.dataSource.filteredData.length);
   }
 }

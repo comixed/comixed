@@ -55,7 +55,6 @@ import {
   COMIC_DETAIL_1,
   COMIC_DETAIL_2,
   COMIC_DETAIL_3,
-  COMIC_DETAIL_4,
   COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import { ArchiveTypePipe } from '@app/library/pipes/archive-type.pipe';
@@ -73,9 +72,6 @@ import {
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSortModule } from '@angular/material/sort';
 import { USER_READER } from '@app/user/user.fixtures';
-import { ComicBookState } from '@app/comic-books/models/comic-book-state';
-import { ComicMetadataSource } from '@app/comic-books/models/comic-metadata-source';
-import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { CoverDateFilterPipe } from '@app/comic-books/pipes/cover-date-filter.pipe';
 import {
   initialState as initialLibrarySelectionState,
@@ -90,6 +86,13 @@ import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import {
+  COMIC_DETAILS_LIST_FEATURE_KEY,
+  initialState as initialComicDetailListState
+} from '@app/comic-books/reducers/comic-details-list.reducer';
+import { ComicType } from '@app/comic-books/models/comic-type';
+import { loadComicDetails } from '@app/comic-books/actions/comics-details-list.actions';
+import { ComicState } from '@app/comic-books/models/comic-state';
 
 describe('LibraryPageComponent', () => {
   const ONE_DAY = 24 * 60 * 60 * 100;
@@ -124,6 +127,7 @@ describe('LibraryPageComponent', () => {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [LIBRARY_SELECTIONS_FEATURE_KEY]: initialLibrarySelectionState,
     [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
+    [COMIC_DETAILS_LIST_FEATURE_KEY]: initialComicDetailListState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadListState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState
   };
@@ -187,12 +191,17 @@ describe('LibraryPageComponent', () => {
           {
             provide: QueryParameterService,
             useValue: {
+              pageSize$: new BehaviorSubject<number>(10),
+              pageIndex$: new BehaviorSubject<number>(0),
               coverYear$: new BehaviorSubject<CoverDateFilter>({
                 year: null,
                 month: null
               }),
               archiveType$: new BehaviorSubject<ArchiveType>(null),
-              filterText$: new BehaviorSubject<string>(null)
+              filterText$: new BehaviorSubject<string>(null),
+              comicType$: new BehaviorSubject<ComicType>(null),
+              sortBy$: new BehaviorSubject<ComicType>(null),
+              sortDirection$: new BehaviorSubject<ComicType>(null)
             }
           },
           ConfirmationService
@@ -328,132 +337,115 @@ describe('LibraryPageComponent', () => {
     });
   });
 
-  describe('loading all pages', () => {
-    const UNREAD = {
-      ...COMIC_DETAIL_1,
-      lastRead: null,
-      detail: { ...COMIC_DETAIL_1, state: ComicBookState.STABLE },
-      metadataSource: {
-        metadataSource: { id: 54321 } as MetadataSource
-      } as ComicMetadataSource
-    };
-    const DELETED = {
-      ...COMIC_DETAIL_2,
-      lastRead: new Date().getTime(),
-      detail: { ...COMIC_DETAIL_2, state: ComicBookState.DELETED },
-      metadataSource: {
-        metadataSource: { id: 12345 } as MetadataSource
-      } as ComicMetadataSource
-    };
-    const UNSCRAPED = {
-      ...COMIC_DETAIL_3,
-      lastRead: null,
-      detail: {
-        ...COMIC_DETAIL_3,
-        comicState: ComicBookState.STABLE,
-        publisher: '',
-        series: ''
-      }
-    };
-    const UNPROCESSED = {
-      ...COMIC_DETAIL_4,
-      detail: { ...COMIC_DETAIL_4, state: ComicBookState.UNPROCESSED }
-    };
-    const CHANGED = {
-      ...COMIC_DETAIL_4,
-      detail: { ...COMIC_DETAIL_4, state: ComicBookState.CHANGED }
-    };
-
-    describe('for deleted comics', () => {
+  describe('loading the comic details to display', () => {
+    describe('for unprocessed comics', () => {
       beforeEach(() => {
-        component.unreadOnly = false;
-        component.deletedOnly = true;
-        store.setState({
-          ...initialState,
-          [COMIC_BOOK_LIST_FEATURE_KEY]: {
-            ...initialComicBookListState,
-            unprocessed: [UNPROCESSED],
-            unscraped: [UNSCRAPED],
-            changed: [CHANGED],
-            deleted: [DELETED]
-          }
+        component.unprocessedOnly = true;
+        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+          foo: 'bar'
         });
       });
 
-      it('only loads the unread comics', () => {
-        expect(component.comicBooks).toEqual([DELETED]);
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          loadComicDetails({
+            pageSize: 10,
+            pageIndex: 0,
+            coverYear: null,
+            coverMonth: null,
+            archiveType: null,
+            comicType: null,
+            comicState: ComicState.UNPROCESSED,
+            readState: false,
+            unscrapedState: false,
+            searchText: null,
+            sortBy: null,
+            sortDirection: null
+          })
+        );
       });
     });
 
-    describe('for unscraped comics', () => {
+    describe('for deleted comics', () => {
       beforeEach(() => {
-        component.unreadOnly = false;
-        component.deletedOnly = false;
-        component.unscrapedOnly = true;
-        component.changedOnly = false;
-        component.unprocessedOnly = false;
-        store.setState({
-          ...initialState,
-          [COMIC_BOOK_LIST_FEATURE_KEY]: {
-            ...initialComicBookListState,
-            unprocessed: [UNPROCESSED],
-            unscraped: [UNSCRAPED],
-            changed: [CHANGED],
-            deleted: [DELETED]
-          }
+        component.deletedOnly = true;
+        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+          foo: 'bar'
         });
       });
 
-      it('only loads the unscraped comics', () => {
-        expect(component.comicBooks).toEqual([UNSCRAPED]);
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          loadComicDetails({
+            pageSize: 10,
+            pageIndex: 0,
+            coverYear: null,
+            coverMonth: null,
+            archiveType: null,
+            comicType: null,
+            comicState: ComicState.DELETED,
+            readState: false,
+            unscrapedState: false,
+            searchText: null,
+            sortBy: null,
+            sortDirection: null
+          })
+        );
       });
     });
 
     describe('for changed comics', () => {
       beforeEach(() => {
-        component.unreadOnly = false;
-        component.deletedOnly = false;
-        component.unscrapedOnly = false;
         component.changedOnly = true;
-        component.unprocessedOnly = false;
-        store.setState({
-          ...initialState,
-          [COMIC_BOOK_LIST_FEATURE_KEY]: {
-            ...initialComicBookListState,
-            unprocessed: [UNPROCESSED],
-            unscraped: [UNSCRAPED],
-            changed: [CHANGED],
-            deleted: [DELETED]
-          }
+        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+          foo: 'bar'
         });
       });
 
-      it('only loads the changed comics', () => {
-        expect(component.comicBooks).toEqual([CHANGED]);
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          loadComicDetails({
+            pageSize: 10,
+            pageIndex: 0,
+            coverYear: null,
+            coverMonth: null,
+            archiveType: null,
+            comicType: null,
+            comicState: ComicState.CHANGED,
+            readState: false,
+            unscrapedState: false,
+            searchText: null,
+            sortBy: null,
+            sortDirection: null
+          })
+        );
       });
     });
 
-    describe('for unprocessed comics', () => {
+    describe('for all comics', () => {
       beforeEach(() => {
-        component.unreadOnly = false;
-        component.deletedOnly = false;
-        component.unscrapedOnly = false;
-        component.changedOnly = false;
-        component.unprocessedOnly = true;
-        store.setState({
-          ...initialState,
-          [COMIC_BOOK_LIST_FEATURE_KEY]: {
-            ...initialComicBookListState,
-            unprocessed: [UNPROCESSED],
-            unscraped: [UNSCRAPED],
-            changed: [CHANGED],
-            deleted: [DELETED]
-          }
+        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+          foo: 'bar'
         });
       });
 
-      it('only loads the unprocessed comics', () => {
-        expect(component.comicBooks).toEqual([UNPROCESSED]);
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          loadComicDetails({
+            pageSize: 10,
+            pageIndex: 0,
+            coverYear: null,
+            coverMonth: null,
+            archiveType: null,
+            comicType: null,
+            comicState: null,
+            readState: false,
+            unscrapedState: false,
+            searchText: null,
+            sortBy: null,
+            sortDirection: null
+          })
+        );
       });
     });
   });

@@ -17,32 +17,20 @@
  */
 
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
-import { ComicState } from '@app/comic-books/models/comic-state';
-import { ComicTag } from '@app/comic-books/models/comic-tag';
 import { ComicType } from '@app/comic-books/models/comic-type';
+import { ComicState } from '@app/comic-books/models/comic-state';
 
-export interface ComicDetail {
-  id: number;
-  comicId: number;
-  filename: string;
-  baseFilename: string;
+export interface LoadComicDetailsRequest {
+  pageSize: number;
+  pageIndex: number;
+  coverYear: number;
+  coverMonth: number;
   archiveType: ArchiveType;
-  comicState: ComicState;
   comicType: ComicType;
-  unscraped: boolean;
-  publisher: string;
-  imprint: string;
-  series: string;
-  volume: string;
-  issueNumber: string;
-  sortableIssueNumber: string;
-  sortName: string;
-  title: string;
-  notes: string;
-  description: string;
-  tags: ComicTag[];
-  coverDate: number;
-  publishedYear: number;
-  storeDate: number;
-  addedDate: number;
+  comicState: ComicState;
+  readState: boolean;
+  unscrapedState: boolean;
+  searchText: string;
+  sortBy: string;
+  sortDirection: string;
 }

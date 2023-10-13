@@ -86,6 +86,11 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
 import { ComicDetailFilterComponent } from './components/comic-detail-filter/comic-detail-filter.component';
+import { ComicDetailsListEffects } from '@app/comic-books/effects/comic-details-list-effects.service';
+import {
+  COMIC_DETAILS_LIST_FEATURE_KEY,
+  reducer as comicDetailsListReducer
+} from '@app/comic-books/reducers/comic-details-list.reducer';
 
 @NgModule({
   declarations: [
@@ -119,11 +124,16 @@ import { ComicDetailFilterComponent } from './components/comic-detail-filter/com
       MARK_COMICS_DELETED_FEATURE_KEY,
       markComicsDeletedReducer
     ),
+    StoreModule.forFeature(
+      COMIC_DETAILS_LIST_FEATURE_KEY,
+      comicDetailsListReducer
+    ),
     EffectsModule.forFeature([
       ComicBookListEffects,
       ComicBookEffects,
       ImprintListEffects,
-      MarkComicsDeletedEffects
+      MarkComicsDeletedEffects,
+      ComicDetailsListEffects
     ]),
     TranslateModule.forRoot(),
     MatCardModule,

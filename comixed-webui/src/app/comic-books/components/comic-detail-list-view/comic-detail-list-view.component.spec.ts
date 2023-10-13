@@ -38,7 +38,7 @@ import {
   deselectComicBooks,
   selectComicBooks
 } from '@app/library/actions/library-selections.actions';
-import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { ComicState } from '@app/comic-books/models/comic-state';
 import { Router } from '@angular/router';
 import { LAST_READ_1 } from '@app/last-read/last-read.fixtures';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -66,7 +66,6 @@ import { ComicDetailFilterComponent } from '@app/comic-books/components/comic-de
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
-import { LastRead } from '@app/last-read/models/last-read';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
 import { rescanComics } from '@app/library/actions/rescan-comics.actions';
@@ -180,112 +179,6 @@ describe('ComicDetailListViewComponent', () => {
     });
   });
 
-  describe('sorting', () => {
-    const ENTRY: SelectableListItem<ComicDetail> = {
-      item: COMIC_DETAIL_5,
-      selected: Math.random() > 0.5,
-      sortableExtraField: Math.random()
-    };
-
-    it('can sort by selection', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ENTRY, 'selection')
-      ).toEqual(`${ENTRY.selected}`);
-    });
-
-    it('can sort by archive type', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ENTRY, 'archive-type')
-      ).toEqual(ENTRY.item.archiveType);
-    });
-
-    it('can sort by comic type', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ENTRY, 'comic-type')
-      ).toEqual(ENTRY.item.comicType);
-    });
-
-    it('can sort by comic state', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ENTRY, 'comic-state')
-      ).toEqual(ENTRY.item.comicState);
-    });
-
-    it('can sort by publisher', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ENTRY, 'publisher')
-      ).toEqual(ENTRY.item.publisher);
-    });
-
-    it('can sort by series', () => {
-      expect(component.dataSource.sortingDataAccessor(ENTRY, 'series')).toEqual(
-        ENTRY.item.series
-      );
-    });
-
-    it('can sort by volume', () => {
-      expect(component.dataSource.sortingDataAccessor(ENTRY, 'volume')).toEqual(
-        ENTRY.item.volume
-      );
-    });
-
-    it('can sort by issue number', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ENTRY, 'issue-number')
-      ).toEqual(ENTRY.item.sortableIssueNumber);
-    });
-
-    it('can sort by cover date', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ENTRY, 'cover-date')
-      ).toEqual(ENTRY.item.coverDate);
-    });
-
-    it('can sort by store date', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ENTRY, 'store-date')
-      ).toEqual(ENTRY.item.storeDate);
-    });
-
-    it('can sort by the extra field', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ENTRY, 'extra-field')
-      ).toEqual(ENTRY.sortableExtraField);
-    });
-
-    it('can sort by last read for unread comic', () => {
-      component.lastReadDates = [];
-      expect(
-        component.dataSource.sortingDataAccessor(
-          { ...ENTRY, item: LAST_READ_DATES[0].comicDetail },
-          'last-read-date'
-        )
-      ).toBeUndefined();
-    });
-
-    it('can sort by last read for read comic', () => {
-      component.lastReadDates = LAST_READ_DATES;
-      expect(
-        component.dataSource.sortingDataAccessor(
-          { ...ENTRY, item: LAST_READ_DATES[0].comicDetail },
-          'last-read-date'
-        )
-      ).toEqual(LAST_READ_DATES[0].lastRead);
-    });
-
-    it('can sort by added date', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ENTRY, 'added-date')
-      ).toEqual(ENTRY.item.addedDate);
-    });
-
-    it('returns null on an unknown column', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ENTRY, 'storge-date')
-      ).toBeNull();
-    });
-  });
-
   describe('toggling the selected state', () => {
     const ENTRY: SelectableListItem<ComicDetail> = {
       item: COMIC_DETAIL_5,
@@ -319,10 +212,8 @@ describe('ComicDetailListViewComponent', () => {
 
   describe('getting icons for comic states', () => {
     it('always returns a value', () => {
-      for (const state in ComicBookState) {
-        expect(
-          component.getIconForState(state as ComicBookState)
-        ).not.toBeNull();
+      for (const state in ComicState) {
+        expect(component.getIconForState(state as ComicState)).not.toBeNull();
       }
     });
   });
@@ -749,13 +640,13 @@ describe('ComicDetailListViewComponent', () => {
   describe('checking if a comic is deleted', () => {
     it('returns true when the state is deleted', () => {
       expect(
-        component.isDeleted({ ...COMIC, comicState: ComicBookState.DELETED })
+        component.isDeleted({ ...COMIC, comicState: ComicState.DELETED })
       ).toBeTrue();
     });
 
     it('returns false when the state is not deleted', () => {
       expect(
-        component.isDeleted({ ...COMIC, comicState: ComicBookState.CHANGED })
+        component.isDeleted({ ...COMIC, comicState: ComicState.CHANGED })
       ).toBeFalse();
     });
   });
@@ -882,94 +773,6 @@ describe('ComicDetailListViewComponent', () => {
 
     it('sets the show comic filter popup flag', () => {
       expect(component.showComicFilterPopup).toBeTrue();
-    });
-  });
-
-  describe('filtering comics', () => {
-    describe('filtering by cover year', () => {
-      const COVER_YEAR = new Date(COMIC_DETAILS[0].coverDate).getFullYear();
-      const coverYear = { year: COVER_YEAR, month: null };
-
-      beforeEach(() => {
-        queryParameterService.coverYear$.next(coverYear);
-        component.comics = COMIC_DETAILS;
-      });
-
-      it('only includes comics with the cover year', () => {
-        expect(component.dataSource.data.map(entry => entry.item)).toEqual([
-          COMIC_DETAILS[0]
-        ]);
-      });
-    });
-
-    describe('filtering by cover month', () => {
-      const COVER_MONTH = new Date(COMIC_DETAILS[0].coverDate).getMonth() + 1;
-      const coverYear = { year: null, month: COVER_MONTH };
-
-      beforeEach(() => {
-        queryParameterService.coverYear$.next(coverYear);
-        component.comics = COMIC_DETAILS;
-      });
-
-      it('only includes comics with the cover month', () => {
-        expect(component.dataSource.data.map(entry => entry.item)).toEqual([
-          COMIC_DETAILS[0]
-        ]);
-      });
-    });
-
-    describe('filtering by archive type', () => {
-      const ARCHIVE_TYPE = COMIC_DETAILS[0].archiveType;
-
-      beforeEach(() => {
-        queryParameterService.archiveType$.next(ARCHIVE_TYPE);
-        component.comics = COMIC_DETAILS;
-      });
-
-      it('only includes comics with the archive type', () => {
-        expect(component.dataSource.data.map(entry => entry.item)).toEqual([
-          COMIC_DETAILS[0]
-        ]);
-      });
-    });
-
-    describe('filtering by comic type', () => {
-      const COMIC_TYPE = COMIC_DETAILS[0].comicType;
-
-      beforeEach(() => {
-        queryParameterService.comicType$.next(COMIC_TYPE);
-        component.comics = COMIC_DETAILS;
-      });
-
-      it('only includes comics with the comic type', () => {
-        expect(
-          component.dataSource.data.every(
-            entry => entry.item.comicType === COMIC_TYPE
-          )
-        ).toBeTrue();
-      });
-    });
-
-    describe('filtering by read state', () => {
-      const LAST_READ: LastRead[] = [
-        {
-          lastRead: new Date().getTime(),
-          id: 1,
-          comicDetail: COMIC_DETAILS[0]
-        }
-      ];
-
-      beforeEach(() => {
-        component.unreadOnly = true;
-        component.lastReadDates = LAST_READ;
-        component.comics = COMIC_DETAILS;
-      });
-
-      it('only includes comics not marked as read', () => {
-        expect(
-          component.dataSource.data.map(entry => entry.item)
-        ).not.toContain(COMIC_DETAILS[0]);
-      });
     });
   });
 

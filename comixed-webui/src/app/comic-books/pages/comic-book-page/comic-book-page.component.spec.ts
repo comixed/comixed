@@ -87,7 +87,7 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
-import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { ComicState } from '@app/comic-books/models/comic-state';
 import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
 
 describe('ComicBookPageComponent', () => {
@@ -481,12 +481,12 @@ describe('ComicBookPageComponent', () => {
     });
 
     it('returns true when the state is DELETED', () => {
-      component.comicBook.detail.comicState = ComicBookState.DELETED;
+      component.comicBook.detail.comicState = ComicState.DELETED;
       expect(component.isDeleted).toBeTrue();
     });
 
     it('returns true when the state is not DELETED', () => {
-      component.comicBook.detail.comicState = ComicBookState.CHANGED;
+      component.comicBook.detail.comicState = ComicState.CHANGED;
       expect(component.isDeleted).toBeFalse();
     });
   });
@@ -496,7 +496,7 @@ describe('ComicBookPageComponent', () => {
       beforeEach(() => {
         component.comicBook = {
           ...COMIC_BOOK,
-          detail: { ...COMIC_BOOK.detail, comicState: ComicBookState.CHANGED }
+          detail: { ...COMIC_BOOK.detail, comicState: ComicState.CHANGED }
         };
       });
 
@@ -509,7 +509,7 @@ describe('ComicBookPageComponent', () => {
       beforeEach(() => {
         component.comicBook = {
           ...COMIC_BOOK,
-          detail: { ...COMIC_BOOK.detail, comicState: ComicBookState.STABLE }
+          detail: { ...COMIC_BOOK.detail, comicState: ComicState.STABLE }
         };
       });
 

@@ -27,7 +27,7 @@ import { ReadingList } from '@app/lists/models/reading-list';
 import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
 import { LastRead } from '@app/last-read/models/last-read';
 import { selectLibraryState } from '@app/library/selectors/library.selectors';
-import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { ComicState } from '@app/comic-books/models/comic-state';
 import { LibraryState } from '@app/library/reducers/library.reducer';
 
 @Component({
@@ -61,12 +61,12 @@ export class SideNavigationComponent implements OnDestroy {
         this.libraryState = state;
         this.totalComicBooks$.next(state.totalComics);
         this.unprocessedComicBooks$.next(
-          this.getCountForState(state, ComicBookState.UNPROCESSED)
+          this.getCountForState(state, ComicState.UNPROCESSED)
         );
         this.unreadComicBooks$.next(this.getUnreadComicCount());
         this.unscrapedComicBooks$.next(state.unscrapedComics);
         this.changedComicBooks$.next(
-          this.getCountForState(state, ComicBookState.CHANGED)
+          this.getCountForState(state, ComicState.CHANGED)
         );
         this.deletedComicBooks$.next(state.deletedComics);
       });
@@ -121,7 +121,7 @@ export class SideNavigationComponent implements OnDestroy {
 
   private getCountForState(
     libraryState: LibraryState,
-    state: ComicBookState
+    state: ComicState
   ): number {
     /* istanbul ignore next */
     const found = libraryState.states.find(entry => entry.name === state);

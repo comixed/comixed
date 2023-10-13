@@ -20,12 +20,12 @@ import { createReducer, on } from '@ngrx/store';
 import {
   comicBookListRemovalReceived,
   comicBookListUpdateReceived,
-  comicBooksReceived,
-  loadComicBooks,
-  loadComicBooksFailed,
+  oldComicBooksReceived,
+  oldLoadComicBooks,
+  oldLoadComicBooksFailed,
   resetComicBookList
 } from '../actions/comic-book-list.actions';
-import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { ComicState } from '@app/comic-books/models/comic-state';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 export const COMIC_BOOK_LIST_FEATURE_KEY = 'comic_book_list_state';
@@ -66,8 +66,8 @@ export const reducer = createReducer(
     changed: [],
     deleted: []
   })),
-  on(loadComicBooks, state => ({ ...state, loading: true })),
-  on(comicBooksReceived, (state, action) => {
+  on(oldLoadComicBooks, state => ({ ...state, loading: true })),
+  on(oldComicBooksReceived, (state, action) => {
     let comicBooks = state.comicBooks.filter(comicBook =>
       action.comicBooks.every(entry => entry.comicId !== comicBook.comicId)
     );
@@ -79,7 +79,7 @@ export const reducer = createReducer(
       comicBooks
     );
   }),
-  on(loadComicBooksFailed, state => ({ ...state, loading: false })),
+  on(oldLoadComicBooksFailed, state => ({ ...state, loading: false })),
   on(comicBookListUpdateReceived, (state, action) => {
     const comicDetails = state.comicBooks.filter(
       comicBook => comicBook.id !== action.comicDetail.id
@@ -103,14 +103,14 @@ function comicListUpdate(
     ...state,
     comicBooks: comicDetails,
     unprocessed: comicDetails.filter(
-      comic => comic.comicState === ComicBookState.UNPROCESSED
+      comic => comic.comicState === ComicState.UNPROCESSED
     ),
     unscraped: comicDetails.filter(comic => comic.unscraped),
     changed: comicDetails.filter(
-      comic => comic.comicState == ComicBookState.CHANGED
+      comic => comic.comicState == ComicState.CHANGED
     ),
     deleted: comicDetails.filter(
-      comic => comic.comicState === ComicBookState.DELETED
+      comic => comic.comicState === ComicState.DELETED
     ),
     loading: false
   };

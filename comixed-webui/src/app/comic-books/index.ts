@@ -39,6 +39,11 @@ import {
   ImprintListState,
   reducer as imprintListReducer
 } from './reducers/imprint-list.reducer';
+import {
+  COMIC_DETAILS_LIST_FEATURE_KEY,
+  ComicDetailsListState,
+  reducer as comicDetailsListReducer
+} from '@app/comic-books/reducers/comic-details-list.reducer';
 
 interface RouterStateUrl {
   url: string;
@@ -52,6 +57,7 @@ export interface ComicModuleState {
   [COMIC_BOOK_FEATURE_KEY]: ComicBookState;
   [IMPRINT_LIST_FEATURE_KEY]: ImprintListState;
   [MARK_COMICS_DELETED_FEATURE_KEY]: MarkComicsDeletedState;
+  [COMIC_DETAILS_LIST_FEATURE_KEY]: ComicDetailsListState;
 }
 
 export type ModuleState = ComicModuleState;
@@ -61,5 +67,6 @@ export const reducers: ActionReducerMap<ComicModuleState> = {
   [COMIC_BOOK_LIST_FEATURE_KEY]: comicListReducer,
   [COMIC_BOOK_FEATURE_KEY]: comicReducer,
   [IMPRINT_LIST_FEATURE_KEY]: imprintListReducer,
-  [MARK_COMICS_DELETED_FEATURE_KEY]: markComicsDeletedReducer
+  [MARK_COMICS_DELETED_FEATURE_KEY]: markComicsDeletedReducer,
+  [COMIC_DETAILS_LIST_FEATURE_KEY]: comicDetailsListReducer
 };

@@ -21,7 +21,12 @@ import { TestBed } from '@angular/core/testing';
 import { ComicBookListService } from './comic-book-list.service';
 import {
   COMIC_BOOK_1,
-  COMIC_BOOK_2
+  COMIC_BOOK_2,
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_4,
+  COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import {
   initialState as initialMessagingState,
@@ -39,8 +44,40 @@ import {
   comicBookListRemovalReceived,
   comicBookListUpdateReceived
 } from '@app/comic-books/actions/comic-book-list.actions';
+import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
+import { ComicType } from '@app/comic-books/models/comic-type';
+import { ComicState } from '@app/comic-books/models/comic-state';
+import {
+  HttpClientTestingModule,
+  HttpTestingController
+} from '@angular/common/http/testing';
+import { interpolate } from '@app/core';
+import { LoadComicDetailsRequest } from '@app/comic-books/models/net/load-comic-details-request';
+import { LOAD_COMICS_URL } from '@app/comic-books/comic-books.constants';
+import { LoadComicDetailsResponse } from '@app/comic-books/models/net/load-comic-details-response';
 
 describe('ComicBookListService', () => {
+  const PAGE_SIZE = 25;
+  const PAGE_INDEX = Math.abs(Math.random() * 1000);
+  const COVER_YEAR = Math.random() * 100 + 1900;
+  const COVER_MONTH = Math.random() * 12;
+  const ARCHIVE_TYPE = ArchiveType.CB7;
+  const COMIC_TYPE = ComicType.ISSUE;
+  const COMIC_STATE = ComicState.UNPROCESSED;
+  const READ_STATE = Math.random() > 0.5;
+  const SCRAPED_STATE = Math.random() > 0.5;
+  const SEARCH_TEXT = 'This is some text';
+  const SORT_BY = 'addedDate';
+  const SORT_DIRECTION = 'ASC';
+  const COMIC_DETAILS = [
+    COMIC_DETAIL_1,
+    COMIC_DETAIL_2,
+    COMIC_DETAIL_3,
+    COMIC_DETAIL_4,
+    COMIC_DETAIL_5
+  ];
+  const TOTAL_COUNT = COMIC_DETAILS.length * 2;
+  const FILTERED_COUNT = Math.floor(TOTAL_COUNT * 0.75);
   const initialState = {
     [MESSAGING_FEATURE_KEY]: { ...initialMessagingState }
   };
@@ -56,10 +93,11 @@ describe('ComicBookListService', () => {
     'Subscription.unsubscribe()'
   );
   let store: MockStore<any>;
+  let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [LoggerModule.forRoot()],
+      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
       providers: [
         provideMockStore({ initialState }),
         {
@@ -81,6 +119,7 @@ describe('ComicBookListService', () => {
     ) as jasmine.SpyObj<WebSocketService>;
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   it('should be created', () => {
@@ -168,5 +207,47 @@ describe('ComicBookListService', () => {
     it('clears the removal subscription', () => {
       expect(service.removalSubscription).toBeNull();
     });
+  });
+
+  it('can load the a page worth of comic details', () => {
+    const serviceResponse = {
+      comicDetails: COMIC_DETAILS,
+      totalCount: TOTAL_COUNT,
+      filteredCount: FILTERED_COUNT
+    } as LoadComicDetailsResponse;
+    service
+      .loadComicDetails({
+        pageSize: PAGE_SIZE,
+        pageIndex: PAGE_INDEX,
+        coverYear: COVER_YEAR,
+        coverMonth: COVER_MONTH,
+        archiveType: ARCHIVE_TYPE,
+        comicType: COMIC_TYPE,
+        comicState: COMIC_STATE,
+        readState: READ_STATE,
+        unscrapedState: SCRAPED_STATE,
+        searchText: SEARCH_TEXT,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      })
+      .subscribe(response => expect(response).toEqual(serviceResponse));
+
+    const req = httpMock.expectOne(interpolate(LOAD_COMICS_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      pageSize: PAGE_SIZE,
+      pageIndex: PAGE_INDEX,
+      coverYear: COVER_YEAR,
+      coverMonth: COVER_MONTH,
+      archiveType: ARCHIVE_TYPE,
+      comicType: COMIC_TYPE,
+      comicState: COMIC_STATE,
+      readState: READ_STATE,
+      unscrapedState: SCRAPED_STATE,
+      searchText: SEARCH_TEXT,
+      sortBy: SORT_BY,
+      sortDirection: SORT_DIRECTION
+    } as LoadComicDetailsRequest);
+    req.flush(serviceResponse);
   });
 });

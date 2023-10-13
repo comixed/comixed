@@ -18,7 +18,7 @@
 
 import { LIBRARY_FEATURE_KEY, LibraryState } from '../reducers/library.reducer';
 import { selectLibraryState } from './library.selectors';
-import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { ComicState } from '@app/comic-books/models/comic-state';
 
 describe('Library Selectors', () => {
   let state: LibraryState;
@@ -36,7 +36,7 @@ describe('Library Selectors', () => {
       locations: [{ name: 'Location1', count: 1 }],
       stories: [{ name: 'Story1', count: 1 }],
       byPublisherAndYear: [],
-      states: [{ name: ComicBookState.CHANGED.toString(), count: 1 }]
+      states: [{ name: ComicState.CHANGED.toString(), count: 1 }]
     };
   });
 
