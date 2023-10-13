@@ -4,6 +4,7 @@
   <id>${assembly.name}</id>
   <formats>
     <format>zip</format>
+    <format>tar.gz</format>
   </formats>
   <dependencySets>
     <dependencySet>
