@@ -30,5 +30,6 @@ ENV PATH="$JAVA_HOME/bin:${PATH}"
 EXPOSE 7171
 VOLUME /comic_data
 VOLUME /library
+VOLUME /imports
 
 CMD ["bash", "/app/comixed-release-2.0.0-0.dev/bin/run.sh", "-L", "/library/comixed.log"]
