@@ -40,6 +40,7 @@ IF "%PARAM%" == "-i" GOTO set_image_cache_dir
 IF "%PARAM%" == "-l" GOTO set_lib_dir
 IF "%PARAM%" == "-L" GOTO set_logging_file
 IF "%PARAM%" == "-P" GOTO set_plugin_dir
+IF "%PARAM%" == "-H" GOTO set_heap_size
 IF "%PARAM%" == "-X" GOTO set_debug_option
 SHIFT
 GOTO process_command_line
@@ -86,6 +87,12 @@ SHIFT
 SHIFT
 GOTO process_command_line
 
+:set_heap_size
+SET JVMOPTIONS=%JVMOPTIONS% -Xmx%ARG%m
+SHIFT
+SHIFT
+GOTO process_command_line
+
 :set_debug_option
 SET JVMOPTIONS=%JVMOPTIONS% -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=%ARG%
 SHIFT
@@ -102,6 +109,7 @@ ECHO  -p [PASSWORD] - Set the database password
 ECHO  -i [DIR]      - Set the image caching directory
 ECHO  -l [DIR]      - Set the JAR library directory
 ECHO  -P [DIR]      - Set the plugin directory
+ECHO  -H [SIZE]     - Set the runtime heap size (in mb)
 ECHO  -S            - Enable SSL (def. off)
 ECHO.
 ECHO OTHER OPTIONS:
