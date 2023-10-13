@@ -22,6 +22,8 @@ CD /d %~dp0
 SET DATABASE=~/.comixed/comixed
 SET DBUSER=sa
 
+FOR %%f IN (..\lib\h2*jar) DO SET H2_JAR=%%f
+
 :process_command_line
 IF "%~1" == "" GOTO end_process_command_line
 SET PARAM=%~1
@@ -77,7 +79,7 @@ IF "%DBPWRD%" == "" GOTO skip_set_password
 SET OPTIONS=%OPTIONS% -password %DBPWRD%
 :skip_set_password
 
-java -cp %LIBDIR%/h2*jar org.h2.tools.Script -url jdbc:h2:file:%DATABASE% %OPTIONS% -script comixed-backup-1.6.0-1.zip -options compression zip
+java -cp %H2_JAR% org.h2.tools.Script -url jdbc:h2:file:%DATABASE% %OPTIONS% -script comixed-backup-1.6.0-1.zip -options compression zip
 
 :exit_script
 ENDLOCAL
