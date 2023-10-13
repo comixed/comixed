@@ -50,6 +50,7 @@ usage() {
   echo " -i [DIR]      - Set the image caching directory"
   echo " -l [DIR]      - Set the JAR library directory"
   echo " -P [DIR]      - Set the plugin directory"
+  echo " -H [SIZE]     - Set the runtime heap size (in mb)"
   echo " -S            - Enable SSL (def. off)"
   echo ""
   echo "Other options:"
@@ -67,7 +68,7 @@ usage() {
   exit 0
 }
 
-while getopts "j:u:p:i:l:P:SX:dDMCvL:" option; do
+while getopts "j:u:p:i:l:P:H:SX:dDMCvL:" option; do
   case ${option} in
   j) JDBCURL="${OPTARG}" ;;
   u) DBUSER="${OPTARG}" ;;
@@ -75,6 +76,7 @@ while getopts "j:u:p:i:l:P:SX:dDMCvL:" option; do
   i) IMGCACHEDIR="${OPTARG}" ;;
   l) LIBDIR="${OPTARG}" ;;
   P) PLUGINDIR="${OPTARG}" ;;
+  H) JVMOPTIONS="${JVMOPTIONS} -Xmx${OPTARG}m"
   S) ENABLE_SSL="ON" ;;
   X) JVMOPTIONS="${JVMOPTIONS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=${OPTARG}" ;;
   d) DEBUG=true ;;

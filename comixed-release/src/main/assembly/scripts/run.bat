@@ -40,6 +40,7 @@ IF "%PARAM%" == "-i" GOTO set_image_cache_dir
 IF "%PARAM%" == "-l" GOTO set_lib_dir
 IF "%PARAM%" == "-L" GOTO set_logging_file
 IF "%PARAM%" == "-P" GOTO set_plugin_dir
+IF "%PARAM%" == "-H" GOTO set_heap_size
 IF "%PARAM%" == "-X" GOTO set_debug_option
 SHIFT
 GOTO process_command_line
@@ -82,6 +83,12 @@ GOTO process_command_line
 
 :set_plugin_dir
 SET PLUGINDIR=%ARG%
+SHIFT
+SHIFT
+GOTO process_command_line
+
+:set_heap_size
+SET JVMOPTIONS=%JVMOPTIONS% -Xmx%ARG%m
 SHIFT
 SHIFT
 GOTO process_command_line
