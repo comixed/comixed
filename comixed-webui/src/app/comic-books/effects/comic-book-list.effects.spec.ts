@@ -28,14 +28,14 @@ import {
   COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import {
-  comicBooksReceived,
-  loadComicBooks,
-  loadComicBooksFailed
+  oldComicBooksReceived,
+  oldLoadComicBooks,
+  oldLoadComicBooksFailed
 } from '@app/comic-books/actions/comic-book-list.actions';
 import { hot } from 'jasmine-marbles';
 import { ComicBookService } from '@app/comic-books/services/comic-book.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { LoadComicsResponse } from '@app/comic-books/models/net/load-comics-response';
+import { OldLoadComicsResponse } from '@app/comic-books/models/net/old-load-comics-response';
 
 describe('ComicBookListEffects', () => {
   const COMIC_BOOKS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
@@ -86,12 +86,12 @@ describe('ComicBookListEffects', () => {
         comicBooks: COMIC_BOOKS,
         lastId: LAST_ID,
         lastPayload: LAST_PAGE
-      } as LoadComicsResponse;
-      const action = loadComicBooks({
+      } as OldLoadComicsResponse;
+      const action = oldLoadComicBooks({
         maxRecords: MAX_RECORDS,
         lastId: LAST_ID
       });
-      const outcome = comicBooksReceived({
+      const outcome = oldComicBooksReceived({
         comicBooks: COMIC_BOOKS,
         lastId: LAST_ID,
         lastPayload: LAST_PAGE
@@ -108,11 +108,11 @@ describe('ComicBookListEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = loadComicBooks({
+      const action = oldLoadComicBooks({
         maxRecords: MAX_RECORDS,
         lastId: LAST_ID
       });
-      const outcome = loadComicBooksFailed();
+      const outcome = oldLoadComicBooksFailed();
 
       actions$ = hot('-a', { a: action });
       comicService.loadBatch
@@ -127,11 +127,11 @@ describe('ComicBookListEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = loadComicBooks({
+      const action = oldLoadComicBooks({
         maxRecords: MAX_RECORDS,
         lastId: LAST_ID
       });
-      const outcome = loadComicBooksFailed();
+      const outcome = oldLoadComicBooksFailed();
 
       actions$ = hot('-a', { a: action });
       comicService.loadBatch

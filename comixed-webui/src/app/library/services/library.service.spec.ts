@@ -119,7 +119,7 @@ describe('LibraryService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('can retrieve the remove library state', () => {
+  it('can retrieve the remote library state', () => {
     service
       .loadLibraryState()
       .subscribe(response => expect(response).toEqual(LIBRARY_STATE));

@@ -21,12 +21,19 @@ package org.comixedproject.service.comicbooks;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicTagType;
+import org.comixedproject.model.comicbooks.ComicType;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * <code>ComicDetailService</code> provides methods for working with instances of {@link
@@ -38,6 +45,9 @@ import org.springframework.stereotype.Service;
 @Log4j2
 public class ComicDetailService {
   @Autowired private ComicDetailRepository comicDetailRepository;
+
+  @Autowired
+  private ObjectFactory<ComicDetailExampleBuilder> comicDetailExampleBuilderObjectFactory;
 
   /**
    * Loads a set of comic details with ids greater than the last id.
@@ -346,5 +356,123 @@ public class ComicDetailService {
       log.debug("Loading all comics for tag type: tag type={}", tagType);
       return this.comicDetailRepository.getAllComicsForTagType(tagType, tagValue);
     }
+  }
+
+  public List<ComicDetail> loadComicDetailList(
+      final int pageSize,
+      final int pageIndex,
+      final Integer coverYear,
+      final Integer coverMonth,
+      final ArchiveType archiveType,
+      final ComicType comicType,
+      final ComicState comicState,
+      final Boolean readState,
+      final Boolean unscrapedState,
+      final String searchText,
+      final String sortBy,
+      final String sortDirection) {
+    log.debug(
+        "Loading comic details: size={} index={} cover date={}/{} archive type={} comic type={} comic state={} read state={} unscraped state={} sort={} [{}] search text={}",
+        pageSize,
+        pageIndex,
+        coverMonth,
+        coverYear,
+        archiveType,
+        comicType,
+        comicState,
+        readState,
+        unscrapedState,
+        searchText,
+        sortBy,
+        sortDirection);
+    final ComicDetailExampleBuilder builder =
+        this.comicDetailExampleBuilderObjectFactory.getObject();
+
+    builder.setCoverYear(coverYear);
+    builder.setCoverMonth(coverMonth);
+    builder.setArchiveType(archiveType);
+    builder.setComicType(comicType);
+    builder.setComicState(comicState);
+    builder.setUnscrapedState(unscrapedState);
+    builder.setSearchText(searchText);
+
+    final Example<ComicDetail> comicDetailExample = builder.build();
+
+    Sort sort = Sort.unsorted();
+
+    if (StringUtils.hasLength(sortBy) && StringUtils.hasLength(sortDirection)) {
+      String fieldName;
+      switch (sortBy) {
+        case "archive-type":
+          fieldName = "archiveType";
+          break;
+        case "comic-state":
+          fieldName = "comicState";
+          break;
+        case "comic-type":
+          fieldName = "comicType";
+          break;
+        case "publisher":
+        case "series":
+        case "volume":
+          fieldName = sortBy;
+          break;
+        case "issue-number":
+          fieldName = "sortableIssueNumber";
+          break;
+        case "added-date":
+          fieldName = "addedDate";
+          break;
+        case "cover-date":
+          fieldName = "coverDate";
+          break;
+        default:
+          fieldName = "id";
+      }
+
+      Sort.Direction direction = Sort.Direction.DESC;
+      if (sortDirection.equals("asc")) {
+        direction = Sort.Direction.ASC;
+      }
+      sort = Sort.by(direction, fieldName);
+    }
+
+    return this.comicDetailRepository
+        .findAll(comicDetailExample, PageRequest.of(pageIndex, pageSize, sort))
+        .toList();
+  }
+
+  public long getFilterCount(
+      final Integer coverYear,
+      final Integer coverMonth,
+      final ArchiveType archiveType,
+      final ComicType comicType,
+      final ComicState comicState,
+      final Boolean readState,
+      final Boolean unscrapedState,
+      final String searchText) {
+    log.debug(
+        "Loading filtered comic detail count: cover date={}/{} archive type={} comic type={} comic state={} read state={} unscraped state={} search text={}",
+        coverMonth,
+        coverYear,
+        archiveType,
+        comicType,
+        comicState,
+        readState,
+        unscrapedState,
+        searchText);
+    final ComicDetailExampleBuilder builder =
+        this.comicDetailExampleBuilderObjectFactory.getObject();
+    builder.setCoverYear(coverYear);
+    builder.setCoverMonth(coverMonth);
+    builder.setArchiveType(archiveType);
+    builder.setComicType(comicType);
+    builder.setComicState(comicState);
+    builder.setUnscrapedState(unscrapedState);
+    builder.setSearchText(searchText);
+
+    final Example<ComicDetail> comicDetailExample = builder.build();
+
+    return this.comicDetailRepository.count(comicDetailExample);
   }
 }

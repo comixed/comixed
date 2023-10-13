@@ -30,11 +30,10 @@ import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
-import org.comixedproject.model.net.comicbooks.MarkComicsDeletedRequest;
-import org.comixedproject.model.net.comicbooks.MarkComicsUndeletedRequest;
-import org.comixedproject.model.net.comicbooks.SavePageOrderRequest;
+import org.comixedproject.model.net.comicbooks.*;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.views.View.ComicDetailsView;
@@ -54,11 +53,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Log4j2
 public class ComicBookController {
-  private static final String MISSING_COMIC_COVER_FILENAME = "/images/missing-comic.png";
   public static final String MISSING_COMIC_COVER = "missing-comic-cover";
   public static final String ATTACHMENT_FILENAME_FORMAT = "attachment; filename=\"%s\"";
-
+  private static final String MISSING_COMIC_COVER_FILENAME = "/images/missing-comic.png";
   @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicDetailService comicDetailService;
   @Autowired private PageCacheService pageCacheService;
   @Autowired private ComicFileService comicFileService;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
@@ -264,5 +263,47 @@ public class ComicBookController {
       throws ComicBookException {
     log.info("Updating page order: comic id={}", id);
     this.comicBookService.savePageOrder(id, request.getEntries());
+  }
+
+  /**
+   * Loads one display page's worth of comic details.
+   *
+   * @param request the request body
+   * @return the response body
+   */
+  @PostMapping(
+      value = "/api/comics/details/load",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.comic-book.load")
+  @PreAuthorize("hasRole('READER')")
+  @JsonView(ComicDetailsView.class)
+  public LoadComicDetailsResponse loadComicDetailList(
+      @RequestBody() final LoadComicDetailsRequest request) {
+    log.info("Loading comics: {}", request);
+    return new LoadComicDetailsResponse(
+        this.comicDetailService.loadComicDetailList(
+            request.getPageSize(),
+            request.getPageIndex(),
+            request.getCoverYear(),
+            request.getCoverMonth(),
+            request.getArchiveType(),
+            request.getComicType(),
+            request.getComicState(),
+            request.getReadState(),
+            request.getUnscrapedState(),
+            request.getSearchText(),
+            request.getSortBy(),
+            request.getSortDirection()),
+        this.comicBookService.getComicBookCount(),
+        this.comicDetailService.getFilterCount(
+            request.getCoverYear(),
+            request.getCoverMonth(),
+            request.getArchiveType(),
+            request.getComicType(),
+            request.getComicState(),
+            request.getReadState(),
+            request.getUnscrapedState(),
+            request.getSearchText()));
   }
 }

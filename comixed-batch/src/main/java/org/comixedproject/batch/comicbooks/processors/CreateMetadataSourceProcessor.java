@@ -49,11 +49,11 @@ public class CreateMetadataSourceProcessor
     implements ItemProcessor<ComicBook, ComicBook>, InitializingBean {
   public static final String COMIC_INFO_XML = "ComicInfo.xml";
   public static final String COMIC_VINE_METADATA_ADAPTOR = "comicVineMetadataAdaptor";
+  private final Pattern pattern =
+      Pattern.compile("^http.*comicvine\\.gamespot\\.com.*4000-([\\d]{3,6})\\/");
   @Autowired MappingJackson2XmlHttpMessageConverter xmlConverter;
   @Autowired private MetadataSourceService metadataSourceService;
   @Autowired private ComicBookAdaptor comicBookAdaptor;
-  private Pattern pattern =
-      Pattern.compile("^http.*comicvine\\.gamespot\\.com.*4000-([\\d]{3,6})\\/");
 
   @Override
   public void afterPropertiesSet() {

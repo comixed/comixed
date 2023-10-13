@@ -23,17 +23,17 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { initialState as initialLibraryState } from '@app/library/reducers/library.reducer';
-import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { ComicState } from '@app/comic-books/models/comic-state';
 
 describe('ComicStateChartComponent', () => {
   const LIBRARY_STATE = {
     ...initialLibraryState,
     states: [
-      { name: ComicBookState.ADDED, count: 0 },
-      { name: ComicBookState.UNPROCESSED, count: 0 },
-      { name: ComicBookState.STABLE, count: 0 },
-      { name: ComicBookState.CHANGED, count: 0 },
-      { name: ComicBookState.DELETED, count: 0 }
+      { name: ComicState.ADDED, count: 0 },
+      { name: ComicState.UNPROCESSED, count: 0 },
+      { name: ComicState.STABLE, count: 0 },
+      { name: ComicState.CHANGED, count: 0 },
+      { name: ComicState.DELETED, count: 0 }
     ]
   };
 

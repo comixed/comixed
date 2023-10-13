@@ -585,4 +585,14 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   @Query(
       "SELECT d FROM ComicDetail d JOIN FETCH d.comicBook cb WHERE d.comicBook.duplicatePageCount > 0")
   List<ComicDetail> getAllWithDuplicatePages();
+
+  /**
+   * Returns the number of records that do not have an related {@link
+   * org.comixedproject.model.comicbooks.ComicMetadataSource} record.
+   *
+   * @return the record count
+   */
+  @Query(
+      "SELECT COUNT(c) FROM ComicBook c WHERE c.id NOT IN (SELECT s.comicBook.id FROM ComicMetadataSource s)")
+  long getUnscrapedComicCount();
 }

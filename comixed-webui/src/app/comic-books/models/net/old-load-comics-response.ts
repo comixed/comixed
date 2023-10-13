@@ -16,11 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export enum ComicBookState {
-  ADDED = 'ADDED',
-  UNPROCESSED = 'UNPROCESSED',
-  STABLE = 'STABLE',
-  CHANGED = 'CHANGED',
-  DELETED = 'DELETED',
-  REMOVED = 'REMOVED'
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
+
+export interface OldLoadComicsResponse {
+  comicBooks: ComicDetail[];
+  lastId: number;
+  lastPayload: boolean;
 }

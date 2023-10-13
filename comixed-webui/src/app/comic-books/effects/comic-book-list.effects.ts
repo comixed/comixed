@@ -21,12 +21,12 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicBookService } from '@app/comic-books/services/comic-book.service';
 import {
-  comicBooksReceived,
-  loadComicBooks,
-  loadComicBooksFailed
+  oldComicBooksReceived,
+  oldLoadComicBooks,
+  oldLoadComicBooksFailed
 } from '@app/comic-books/actions/comic-book-list.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { LoadComicsResponse } from '@app/comic-books/models/net/load-comics-response';
+import { OldLoadComicsResponse } from '@app/comic-books/models/net/old-load-comics-response';
 import { of } from 'rxjs';
 import { ComicBookListService } from '@app/comic-books/services/comic-book-list.service';
 
@@ -34,15 +34,15 @@ import { ComicBookListService } from '@app/comic-books/services/comic-book-list.
 export class ComicBookListEffects {
   loadBatch$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadComicBooks),
+      ofType(oldLoadComicBooks),
       tap(action => this.logger.debug('Effect: load comic batch:', action)),
       switchMap(action =>
         this.comicService
           .loadBatch({ maxRecords: action.maxRecords, lastId: action.lastId })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map((response: LoadComicsResponse) =>
-              comicBooksReceived({
+            map((response: OldLoadComicsResponse) =>
+              oldComicBooksReceived({
                 comicBooks: response.comicBooks,
                 lastId: response.lastId,
                 lastPayload: response.lastPayload
@@ -50,13 +50,13 @@ export class ComicBookListEffects {
             ),
             catchError(error => {
               this.logger.error('Service failure:', error);
-              return of(loadComicBooksFailed());
+              return of(oldLoadComicBooksFailed());
             })
           )
       ),
       catchError(error => {
         this.logger.error('General failure:', error);
-        return of(loadComicBooksFailed());
+        return of(oldLoadComicBooksFailed());
       })
     );
   });

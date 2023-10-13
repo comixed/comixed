@@ -21,7 +21,7 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicContextMenuEvent } from '@app/comic-books/models/event/comic-context-menu-event';
 import { ComicSelectEvent } from '@app/comic-books/models/event/comic-select-event';
 import { UpdateComicInfoEvent } from '@app/comic-books/models/event/update-comic-info-event';
-import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { ComicState } from '@app/comic-books/models/comic-state';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Component({
@@ -52,7 +52,7 @@ export class ComicDetailCardComponent {
   constructor(private logger: LoggerService) {}
 
   get deleted(): boolean {
-    return this.comic.comicState === ComicBookState.DELETED;
+    return this.comic.comicState === ComicState.DELETED;
   }
 
   onCoverClicked(): void {

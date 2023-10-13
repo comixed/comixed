@@ -28,7 +28,7 @@ import {
   IMPRINT_3
 } from '@app/comic-books/comic-books.fixtures';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { ComicState } from '@app/comic-books/models/comic-state';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
@@ -112,7 +112,7 @@ describe('ComicDetailEditComponent', () => {
       beforeEach(() => {
         component.comicBook = {
           ...COMIC,
-          detail: { ...COMIC.detail, comicState: ComicBookState.ADDED }
+          detail: { ...COMIC.detail, comicState: ComicState.ADDED }
         };
       });
 
@@ -129,7 +129,7 @@ describe('ComicDetailEditComponent', () => {
       beforeEach(() => {
         component.comicBook = {
           ...COMIC,
-          detail: { ...COMIC.detail, comicState: ComicBookState.CHANGED }
+          detail: { ...COMIC.detail, comicState: ComicState.CHANGED }
         };
       });
 
@@ -146,7 +146,7 @@ describe('ComicDetailEditComponent', () => {
       beforeEach(() => {
         component.comicBook = {
           ...COMIC,
-          detail: { ...COMIC.detail, comicState: ComicBookState.STABLE }
+          detail: { ...COMIC.detail, comicState: ComicState.STABLE }
         };
       });
 
@@ -163,7 +163,7 @@ describe('ComicDetailEditComponent', () => {
       beforeEach(() => {
         component.comicBook = {
           ...COMIC,
-          detail: { ...COMIC.detail, comicState: ComicBookState.DELETED }
+          detail: { ...COMIC.detail, comicState: ComicState.DELETED }
         };
       });
 

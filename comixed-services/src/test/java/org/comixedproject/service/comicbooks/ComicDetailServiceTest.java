@@ -24,12 +24,13 @@ import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
 import static junit.framework.TestCase.assertTrue;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import org.apache.commons.lang.math.RandomUtils;
+import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicTagType;
+import org.comixedproject.model.comicbooks.ComicType;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,6 +41,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -55,7 +59,20 @@ public class ComicDetailServiceTest {
   private static final int TEST_WEEK = 17;
   private static final String TEST_SEARCH_TERM = "Random text...";
   private static final String TEST_TAG_VALUE = "tag value";
+  private static final int TEST_PAGE_SIZE = 10;
+  private static final int TEST_PAGE_INDEX = RandomUtils.nextInt(100);
+  private static final Integer TEST_COVER_YEAR = RandomUtils.nextInt(50) + 1970;
+  private static final Integer TEST_COVER_MONTH = RandomUtils.nextInt(12);
+  private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CB7;
+  private static final ComicType TEST_COMIC_TYPE = ComicType.ISSUE;
+  private static final ComicState TEST_COMIC_STATE = ComicState.REMOVED;
+  private static final Boolean TEST_READ_STATE = RandomUtils.nextBoolean();
+  private static final Boolean TEST_UNSCRAPED_STATE = RandomUtils.nextBoolean();
+  private static final String TEST_SEARCH_TEXT = "The search text";
+  private static final long TEST_TOTAL_COMIC_COUNT = RandomUtils.nextLong() * 30000L;
 
+  private final Set<Date> weeksList = new HashSet<>();
+  private final List<String> sortFieldNames = new ArrayList<>();
   @InjectMocks private ComicDetailService service;
   @Mock private ComicDetailRepository comicDetailRepository;
   @Mock private List<ComicDetail> comicDetailList;
@@ -64,16 +81,33 @@ public class ComicDetailServiceTest {
   @Mock private Set<String> volumeList;
   @Mock private Set<String> tagList;
   @Mock private Set<Integer> yearsList;
-
+  @Mock private ObjectFactory<ComicDetailExampleBuilder> exampleBuilderObjectFactory;
+  @Mock private ComicDetailExampleBuilder exampleBuilder;
+  @Mock private Example<ComicDetail> comicDetailExample;
+  @Mock private Page<ComicDetail> comicDetailListPage;
   @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
   @Captor private ArgumentCaptor<Date> startDateArgumentCaptor;
   @Captor private ArgumentCaptor<Date> endDateArgumentCaptor;
-
-  private Set<Date> weeksList = new HashSet<>();
+  @Captor private ArgumentCaptor<Example<ComicDetail>> exampleArgumentCaptor;
+  @Captor private ArgumentCaptor<Pageable> sortArgumentCaptor;
 
   @Before
   public void setUp() {
     weeksList.add(new Date());
+    Mockito.when(exampleBuilderObjectFactory.getObject()).thenReturn(exampleBuilder);
+    Mockito.when(exampleBuilder.build()).thenReturn(comicDetailExample);
+    Mockito.when(comicDetailListPage.toList()).thenReturn(comicDetailList);
+
+    sortFieldNames.add("archive-type");
+    sortFieldNames.add("comic-state");
+    sortFieldNames.add("comic-type");
+    sortFieldNames.add("publisher");
+    sortFieldNames.add("series");
+    sortFieldNames.add("volume");
+    sortFieldNames.add("issue-number");
+    sortFieldNames.add("added-date");
+    sortFieldNames.add("cover-date");
+    sortFieldNames.add("id");
   }
 
   @Test
@@ -459,5 +493,111 @@ public class ComicDetailServiceTest {
 
     Mockito.verify(comicDetailRepository, Mockito.times(1))
         .getAllComicsForTagType(TEST_TAG, TEST_TAG_VALUE);
+  }
+
+  @Test
+  public void testLoadComicDetailsSortDescending() {
+    sortFieldNames.forEach(
+        sortField -> {
+          Mockito.when(
+                  comicDetailRepository.findAll(
+                      exampleArgumentCaptor.capture(), sortArgumentCaptor.capture()))
+              .thenReturn(comicDetailListPage);
+
+          final List<ComicDetail> result =
+              service.loadComicDetailList(
+                  TEST_PAGE_SIZE,
+                  TEST_PAGE_INDEX,
+                  TEST_COVER_YEAR,
+                  TEST_COVER_MONTH,
+                  TEST_ARCHIVE_TYPE,
+                  TEST_COMIC_TYPE,
+                  TEST_COMIC_STATE,
+                  TEST_READ_STATE,
+                  TEST_UNSCRAPED_STATE,
+                  TEST_SEARCH_TEXT,
+                  sortField,
+                  "desc");
+
+          assertNotNull(result);
+          assertSame(comicDetailList, result);
+
+          final Example<ComicDetail> example = exampleArgumentCaptor.getValue();
+          final Pageable sort = sortArgumentCaptor.getValue();
+
+          assertTrue(sort.getSort().stream().toList().get(0).isDescending());
+          assertEquals(TEST_PAGE_SIZE, sort.getPageSize());
+          assertEquals(TEST_PAGE_INDEX, sort.getPageNumber());
+
+          Mockito.verify(comicDetailRepository, Mockito.times(1)).findAll(example, sort);
+          Mockito.reset(comicDetailRepository);
+        });
+
+    Mockito.verify(exampleBuilder, Mockito.times(sortFieldNames.size())).build();
+  }
+
+  @Test
+  public void testLoadComicDetailsAscendingSorts() {
+    sortFieldNames.forEach(
+        sortField -> {
+          Mockito.when(
+                  comicDetailRepository.findAll(
+                      exampleArgumentCaptor.capture(), sortArgumentCaptor.capture()))
+              .thenReturn(comicDetailListPage);
+
+          final List<ComicDetail> result =
+              service.loadComicDetailList(
+                  TEST_PAGE_SIZE,
+                  TEST_PAGE_INDEX,
+                  TEST_COVER_YEAR,
+                  TEST_COVER_MONTH,
+                  TEST_ARCHIVE_TYPE,
+                  TEST_COMIC_TYPE,
+                  TEST_COMIC_STATE,
+                  TEST_READ_STATE,
+                  TEST_UNSCRAPED_STATE,
+                  TEST_SEARCH_TEXT,
+                  sortField,
+                  "asc");
+
+          assertNotNull(result);
+          assertSame(comicDetailList, result);
+
+          final Example<ComicDetail> example = exampleArgumentCaptor.getValue();
+          final Pageable sort = sortArgumentCaptor.getValue();
+
+          assertTrue(sort.getSort().stream().toList().get(0).isAscending());
+          assertEquals(TEST_PAGE_SIZE, sort.getPageSize());
+          assertEquals(TEST_PAGE_INDEX, sort.getPageNumber());
+
+          Mockito.verify(comicDetailRepository, Mockito.times(1)).findAll(example, sort);
+          Mockito.reset(comicDetailRepository);
+        });
+
+    Mockito.verify(exampleBuilder, Mockito.times(sortFieldNames.size())).build();
+  }
+
+  @Test
+  public void testGetFilterCount() {
+    Mockito.when(comicDetailRepository.count(exampleArgumentCaptor.capture()))
+        .thenReturn(TEST_TOTAL_COMIC_COUNT);
+
+    final long result =
+        service.getFilterCount(
+            TEST_COVER_YEAR,
+            TEST_COVER_MONTH,
+            TEST_ARCHIVE_TYPE,
+            TEST_COMIC_TYPE,
+            TEST_COMIC_STATE,
+            TEST_READ_STATE,
+            TEST_UNSCRAPED_STATE,
+            TEST_SEARCH_TEXT);
+
+    assertEquals(TEST_TOTAL_COMIC_COUNT, result);
+
+    final Example<ComicDetail> example = exampleArgumentCaptor.getValue();
+
+    Mockito.verify(exampleBuilder, Mockito.times(1)).build();
+    Mockito.verify(comicDetailRepository, Mockito.times(1)).count(comicDetailExample);
   }
 }

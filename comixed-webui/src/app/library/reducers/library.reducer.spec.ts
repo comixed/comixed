@@ -31,7 +31,7 @@ import {
   multipleComicsEdited
 } from '@app/library/actions/library.actions';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
-import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { ComicState } from '@app/comic-books/models/comic-state';
 import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
 
 describe('Library Reducer', () => {
@@ -48,7 +48,7 @@ describe('Library Reducer', () => {
   const TEAMS = [{ name: 'Team1', count: 1 }];
   const LOCATIONS = [{ name: 'Location1', count: 1 }];
   const STORIES = [{ name: 'Story1', count: 1 }];
-  const STATES = [{ name: ComicBookState.CHANGED.toString(), count: 1 }];
+  const STATES = [{ name: ComicState.CHANGED.toString(), count: 1 }];
 
   let state: LibraryState;
 

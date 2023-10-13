@@ -30,7 +30,6 @@ import {
   isAdmin
 } from '@app/user/user.functions';
 import { ActivatedRoute, Router } from '@angular/router';
-import { selectComicBookListState } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
 import { LastRead } from '@app/last-read/models/last-read';
 import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
@@ -44,6 +43,15 @@ import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { ComicType } from '@app/comic-books/models/comic-type';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { loadComicDetails } from '@app/comic-books/actions/comics-details-list.actions';
+import { ComicState } from '@app/comic-books/models/comic-state';
+import {
+  selectLoadComicDetailsList,
+  selectLoadComicDetailsListState,
+  selectLoadComicDetailsTotalComics
+} from '@app/comic-books/selectors/load-comic-details-list.selectors';
+import { ComicDetailsListState } from '@app/comic-books/reducers/comic-details-list.reducer';
 
 @Component({
   selector: 'cx-library-page',
@@ -51,7 +59,11 @@ import { ComicType } from '@app/comic-books/models/comic-type';
   styleUrls: ['./library-page.component.scss']
 })
 export class LibraryPageComponent implements OnInit, OnDestroy {
-  comicBookListStateSubscription: Subscription;
+  comicDetailListStateSubscription: Subscription;
+  comicDetailListState: ComicDetailsListState;
+  comicsDetailListSubscription: Subscription;
+  loadComicsTotalSubscription: Subscription;
+  totalComics = 0;
   selectedSubscription: Subscription;
   selectedIds: number[] = [];
   langChangeSubscription: Subscription;
@@ -73,6 +85,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   lastReadDatesSubscription: Subscription;
   lastReadDates: LastRead[] = [];
   readingListsSubscription: Subscription;
+  pageChangedSubscription: Subscription;
   readingLists: ReadingList[] = [];
   pageContent = 'comics';
   showCovers = true;
@@ -102,7 +115,8 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private queryParameterService: QueryParameterService
   ) {
     this.dataSubscription = this.activatedRoute.data.subscribe(data => {
       this.unreadOnly = !!data.unread && data.unread === true;
@@ -131,22 +145,18 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         this.pageContent = 'unprocessed-only';
       }
     });
-    this.comicBookListStateSubscription = this.store
-      .select(selectComicBookListState)
+    this.comicDetailListStateSubscription = this.store
+      .select(selectLoadComicDetailsListState)
       .subscribe(state => {
         this.store.dispatch(setBusyState({ enabled: state.loading }));
-        if (this.unscrapedOnly) {
-          this.comicBooks = state.unscraped;
-        } else if (this.changedOnly) {
-          this.comicBooks = state.changed;
-        } else if (this.deletedOnly) {
-          this.comicBooks = state.deleted;
-        } else if (this.unprocessedOnly) {
-          this.comicBooks = state.unprocessed;
-        } else {
-          this.comicBooks = state.comicBooks;
-        }
+        this.comicDetailListState = state;
       });
+    this.comicsDetailListSubscription = this.store
+      .select(selectLoadComicDetailsList)
+      .subscribe(comics => (this.comicBooks = comics));
+    this.loadComicsTotalSubscription = this.store
+      .select(selectLoadComicDetailsTotalComics)
+      .subscribe(total => (this.totalComics = total));
     this.selectedSubscription = this.store
       .select(selectLibrarySelections)
       .subscribe(selectedIds => (this.selectedIds = selectedIds));
@@ -172,6 +182,26 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       .subscribe(lists => (this.readingLists = lists));
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
+    );
+    this.pageChangedSubscription = this.activatedRoute.queryParams.subscribe(
+      () => {
+        this.store.dispatch(
+          loadComicDetails({
+            pageSize: this.queryParameterService.pageSize$.value,
+            pageIndex: this.queryParameterService.pageIndex$.value,
+            coverYear: this.queryParameterService.coverYear$?.value?.year,
+            coverMonth: this.queryParameterService.coverYear$?.value?.month,
+            archiveType: this.queryParameterService.archiveType$.value,
+            comicType: this.queryParameterService.comicType$.value,
+            comicState: this.targetComicState,
+            readState: this.unreadOnly,
+            unscrapedState: this.unscrapedOnly,
+            searchText: this.queryParameterService.filterText$.value,
+            sortBy: this.queryParameterService.sortBy$.value,
+            sortDirection: this.queryParameterService.sortDirection$.value
+          })
+        );
+      }
     );
   }
 
@@ -208,6 +238,19 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     );
   }
 
+  private get targetComicState(): ComicState {
+    if (this.unprocessedOnly) {
+      return ComicState.UNPROCESSED;
+    }
+    if (this.deletedOnly) {
+      return ComicState.DELETED;
+    }
+    if (this.changedOnly) {
+      return ComicState.CHANGED;
+    }
+    return null;
+  }
+
   ngOnInit(): void {
     this.logger.debug('Loading translations');
     this.loadTranslations();
@@ -215,11 +258,14 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.dataSubscription.unsubscribe();
-    this.comicBookListStateSubscription.unsubscribe();
+    this.comicDetailListStateSubscription.unsubscribe();
+    this.comicsDetailListSubscription.unsubscribe();
+    this.loadComicsTotalSubscription.unsubscribe();
     this.selectedSubscription.unsubscribe();
     this.userSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
     this.readingListsSubscription.unsubscribe();
+    this.pageChangedSubscription.unsubscribe();
   }
 
   private loadTranslations(): void {

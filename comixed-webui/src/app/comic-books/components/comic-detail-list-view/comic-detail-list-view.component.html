@@ -37,6 +37,7 @@
 <mat-paginator
   class="cx-height-100"
   showFirstLastButtons="true"
+  [length]="totalComics"
   [pageIndex]="queryParameterService.pageIndex$ | async"
   [pageSize]="queryParameterService.pageSize$ | async"
   [pageSizeOptions]="queryParameterService.pageSizeOptions"
@@ -262,6 +263,11 @@
     [class.cx-selected-row]="selectedIds.includes(row.id)"
     (click)="onRowSelected(row)"
   ></mat-row>
+  <tr class="mat-row" *matNoDataRow>
+    <td class="mat-cell" colspan="4">
+      {{ "comic-detail-list-view.text.no-records-found" | translate }}
+    </td>
+  </tr>
 </mat-table>
 
 <!-- context menu items -->

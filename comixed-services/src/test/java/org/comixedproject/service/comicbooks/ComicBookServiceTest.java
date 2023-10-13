@@ -122,16 +122,16 @@ public class ComicBookServiceTest {
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
   @Captor private ArgumentCaptor<PageRequest> pageRequestCaptor;
 
-  private List<ComicBook> comicBookList = new ArrayList<>();
-  private List<ComicDetail> comicDetailList = new ArrayList<>();
-  private List<ComicBook> comicsBySeries = new ArrayList<>();
-  private ComicBook previousComicBook = new ComicBook();
-  private ComicBook currentComicBook = new ComicBook();
-  private ComicBook nextComicBook = new ComicBook();
-  private List<Long> idList = new ArrayList<>();
-  private GregorianCalendar calendar = new GregorianCalendar();
-  private Date now = new Date();
-  private List<LastRead> lastReadList = new ArrayList<>();
+  private final List<ComicBook> comicBookList = new ArrayList<>();
+  private final List<ComicDetail> comicDetailList = new ArrayList<>();
+  private final List<ComicBook> comicsBySeries = new ArrayList<>();
+  private final ComicBook previousComicBook = new ComicBook();
+  private final ComicBook currentComicBook = new ComicBook();
+  private final ComicBook nextComicBook = new ComicBook();
+  private final List<Long> idList = new ArrayList<>();
+  private final GregorianCalendar calendar = new GregorianCalendar();
+  private final Date now = new Date();
+  private final List<LastRead> lastReadList = new ArrayList<>();
 
   @Before
   public void setUp() throws ComiXedUserException {
@@ -1241,5 +1241,16 @@ public class ComicBookServiceTest {
     assertSame(comicDetailList, result);
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).getAllWithDuplicatePages();
+  }
+
+  @Test
+  public void testGetUnscrapedComicCount() {
+    Mockito.when(comicBookRepository.getUnscrapedComicCount()).thenReturn(TEST_COMIC_COUNT);
+
+    final long result = service.getUnscrapedComicCount();
+
+    assertEquals(TEST_COMIC_COUNT, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getUnscrapedComicCount();
   }
 }

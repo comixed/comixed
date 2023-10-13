@@ -29,7 +29,7 @@
 
   <properties>
     <assembly.name>local</assembly.name>
-    <maven-git-code-format.version>2.4</maven-git-code-format.version>
+    <maven-git-code-format.version>2.7</maven-git-code-format.version>
     <java.version>17</java.version>
     <sonar.organization>comixed</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>

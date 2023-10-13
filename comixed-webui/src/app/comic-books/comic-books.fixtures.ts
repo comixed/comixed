@@ -17,7 +17,7 @@
  */
 
 import { ComicBook } from '@app/comic-books/models/comic-book';
-import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { ComicState } from '@app/comic-books/models/comic-state';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import {
   PAGE_1,
@@ -54,7 +54,7 @@ export const COMIC_DETAIL_1: ComicDetail = {
   filename: '/Users/comixedreader/Documents/library/comicfile1.cbz',
   baseFilename: 'comicfile1.cbz',
   archiveType: ArchiveType.CBZ,
-  comicState: ComicBookState.STABLE,
+  comicState: ComicState.STABLE,
   comicType: ComicType.ISSUE,
   unscraped: false,
   publisher: 'First Publisher',
@@ -76,14 +76,14 @@ export const COMIC_DETAIL_1: ComicDetail = {
   ],
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
-  yearPublished: 2019,
+  publishedYear: 2019,
   addedDate: new Date().getTime()
 };
 
 export const COMIC_DETAIL_2: ComicDetail = {
   id: 102,
   comicId: 2,
-  comicState: ComicBookState.STABLE,
+  comicState: ComicState.STABLE,
   comicType: ComicType.ISSUE,
   archiveType: ArchiveType.CBR,
   filename: '/Users/comixedreader/Documents/library/comicfile2.cbz',
@@ -102,7 +102,7 @@ export const COMIC_DETAIL_2: ComicDetail = {
   tags: [],
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
-  yearPublished: 2018,
+  publishedYear: 2018,
   addedDate: new Date().getTime()
 };
 
@@ -112,7 +112,7 @@ export const COMIC_DETAIL_3: ComicDetail = {
   archiveType: ArchiveType.CB7,
   filename: '/Users/comixedreader/Documents/library/comicfile3.cbz',
   baseFilename: 'comicfile3.cbz',
-  comicState: ComicBookState.STABLE,
+  comicState: ComicState.STABLE,
   comicType: ComicType.ISSUE,
   unscraped: false,
   publisher: 'Second Publisher',
@@ -128,7 +128,7 @@ export const COMIC_DETAIL_3: ComicDetail = {
   tags: [],
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
-  yearPublished: 1953,
+  publishedYear: 1953,
   addedDate: new Date().getTime()
 };
 
@@ -138,7 +138,7 @@ export const COMIC_DETAIL_4: ComicDetail = {
   filename: '/Users/comixedreader/Documents/library/comicfile4.cbz',
   baseFilename: 'comicfile4.cbz',
   archiveType: ArchiveType.CBZ,
-  comicState: ComicBookState.STABLE,
+  comicState: ComicState.STABLE,
   comicType: ComicType.ISSUE,
   unscraped: false,
   publisher: 'Third Publisher',
@@ -154,7 +154,7 @@ export const COMIC_DETAIL_4: ComicDetail = {
   tags: [],
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
-  yearPublished: 1972,
+  publishedYear: 1972,
   addedDate: new Date().getTime()
 };
 
@@ -164,7 +164,7 @@ export const COMIC_DETAIL_5: ComicDetail = {
   archiveType: ArchiveType.CBZ,
   filename: '/Users/comixedreader/Documents/library/comicfile5.cbz',
   baseFilename: 'comicfile1.cbz',
-  comicState: ComicBookState.STABLE,
+  comicState: ComicState.STABLE,
   comicType: ComicType.ISSUE,
   unscraped: false,
   publisher: 'Second Publisher',
@@ -182,7 +182,7 @@ export const COMIC_DETAIL_5: ComicDetail = {
     new Date().getTime() - 366 * 24 * 60 * 60 * 1000
   ).getTime(),
   storeDate: new Date().getTime(),
-  yearPublished: 2000,
+  publishedYear: 2000,
   addedDate: new Date().getTime()
 };
 

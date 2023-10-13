@@ -826,4 +826,14 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     log.debug("Finding all comics with duplicate pages");
     return this.comicBookRepository.getAllWithDuplicatePages();
   }
+
+  /**
+   * Returns the number of unscraped comics.
+   *
+   * @return the count
+   */
+  public long getUnscrapedComicCount() {
+    log.debug("Getting the count of unprocessed comics");
+    return this.comicBookRepository.getUnscrapedComicCount();
+  }
 }

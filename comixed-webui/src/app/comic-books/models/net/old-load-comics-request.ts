@@ -16,10 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
-
-export interface LoadComicsResponse {
-  comicBooks: ComicDetail[];
+export interface OldLoadComicsRequest {
+  maxRecords: number;
   lastId: number;
-  lastPayload: boolean;
 }
