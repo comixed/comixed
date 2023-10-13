@@ -33,9 +33,9 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           draft: false
           prerelease: true
-          title: Changes For 1.7.0-0.dev
+          title: Changes For 2.0.0-0.dev
           files: |
-            comixed-release-1.7.0-0.dev-GA.zip
+            comixed-release-2.0.0-0.dev-GA.zip
 
   build-windows-installer:
     name: Build Windows installer
@@ -64,6 +64,6 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          file: "ComiXed 1.7.0-0.dev Installer.exe"
+          file: "ComiXed 2.0.0-0.dev Installer.exe"
           prerelease: true
           overwrite: true

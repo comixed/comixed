@@ -77,7 +77,7 @@ IF "%DBPWRD%" == "" GOTO skip_set_password
 SET OPTIONS=%OPTIONS% -password %DBPWRD%
 :skip_set_password
 
-java -cp %LIBDIR%/h2*jar org.h2.tools.Script -url jdbc:h2:file:%DATABASE% %OPTIONS% -script comixed-backup-1.7.0-0.dev.zip -options compression zip
+java -cp %LIBDIR%/h2*jar org.h2.tools.Script -url jdbc:h2:file:%DATABASE% %OPTIONS% -script comixed-backup-2.0.0-0.dev.zip -options compression zip
 
 :exit_script
 ENDLOCAL

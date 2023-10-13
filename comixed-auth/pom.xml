@@ -6,11 +6,11 @@
   <parent>
     <groupId>org.comixedproject</groupId>
     <artifactId>comixed</artifactId>
-    <version>1.7.0-0.dev</version>
+    <version>2.0.0-0.dev</version>
   </parent>
   <groupId>org.comixedproject</groupId>
   <artifactId>comixed-auth</artifactId>
-  <version>1.7.0-0.dev</version>
+  <version>2.0.0-0.dev</version>
   <name>comixed-auth</name>
   <url>http://maven.apache.org</url>
   <dependencies>
@@ -30,12 +30,12 @@
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-model</artifactId>
-      <version>1.7.0-0.dev</version>
+      <version>2.0.0-0.dev</version>
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-services</artifactId>
-      <version>1.7.0-0.dev</version>
+      <version>2.0.0-0.dev</version>
     </dependency>
   </dependencies>
 </project>

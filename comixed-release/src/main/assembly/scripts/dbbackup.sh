@@ -65,6 +65,6 @@ OPTIONS=""
 if [[ ! -z "${DBUSER}" ]]; then OPTIONS="${OPTIONS} -user ${DBUSER}"; fi
 if [[ ! -z "${DBPWRD}" ]]; then OPTIONS="${OPTIONS} -password ${DBPWRD}"; fi
 
-java -cp $LIBDIR/h2*jar org.h2.tools.Script -url jdbc:h2:file:${DATABASE} ${OPTIONS} -script comixed-backup-1.7.0-0.dev.zip -options compression zip
+java -cp $LIBDIR/h2*jar org.h2.tools.Script -url jdbc:h2:file:${DATABASE} ${OPTIONS} -script comixed-backup-2.0.0-0.dev.zip -options compression zip
 
 exit 0
