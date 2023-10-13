@@ -1,4 +1,29 @@
-<div class="cx-horizontal-container cx-width-100">
+<h2>{{ "scraping-page.page-title" | translate }}</h2>
+
+<div
+  *ngIf="(scrapingVolumes?.length || 0) === 0"
+  class="cx-width-100 cx-align-content-center"
+>
+  <p>{{ "scraping-page.inactive.page-content" | translate }}</p>
+
+  <button
+    id="cx-show-all-comics-button"
+    class="cx-action-button"
+    mat-raised-button
+    color="primary"
+    routerLink="/library/all"
+  >
+    <mat-icon>library_books</mat-icon>
+    <mat-label>
+      {{ "scraping-page.button.show-all-comics" | translate }}
+    </mat-label>
+  </button>
+</div>
+
+<div
+  *ngIf="scrapingVolumes?.length > 0"
+  class="cx-horizontal-container cx-width-100"
+>
   <div class="cx-max-width-25">
     <div class="cx-vertical-container cx-width-100">
       <div *ngIf="!!currentComic" class="cx-grow-1 cx-width-100">
@@ -8,7 +33,7 @@
           }}
         </h3>
         <cx-comic-page
-          [imageUrl]="currentComic.detail | comicCoverUrl"
+          [imageUrl]="currentComic?.detail | comicCoverUrl"
         ></cx-comic-page>
       </div>
       <div>
@@ -21,7 +46,7 @@
   </div>
   <div class="cx-grow-1">
     <cx-comic-scraping
-      *ngIf="!!currentComic && scrapingVolumes.length === 0"
+      *ngIf="!!currentComic"
       [comic]="currentComic"
       [metadataSource]="metadataSource"
       [skipCache]="skipCache"
