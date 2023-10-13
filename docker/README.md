@@ -22,13 +22,20 @@ database files under a directory named **database**.
 
 To create the Docker image using the above directories, we'll use the following command line:
 
-``` $ docker create --name comixed -it -p 7171:7171/tcp -v /Users/reader/comixed/library:/library -v /Users/reader/comixed/database:/root/.comixed comixed/comixed:latest```
+``` $ docker create --name comixed \
+                    -it -p 7171:7171/tcp \
+                    -v /Users/reader/comixed/library:/library \
+                    -v /Users/reader/comixed/imports:/imports \
+                    -v /Users/reader/comixed/database:/root/.comixed \
+                    comixed/comixed:latest
+```
 
 This command line:
 1. creates a runnable container named "comixed" in Docker,
-2. redirects port 7171 from the host to the container,
-3. uses /Users/reader/comixed/library when it looks for comics, and
-4. uses /Users/reader/comixed/database for storing the database.
+1. redirects port 7171 from the host to the container,
+1. uses /Users/reader/comixed/library when it looks for comics, 
+1. uses /Users/reader/comixed/imports when it looks for new comics to import, and
+1. uses /Users/reader/comixed/database for storing the database.
 
 ## Using A Different Database
 
@@ -88,17 +95,18 @@ To start the container running, use:
 
 # Importing Comics With Docker
 
-To import new comics using your Docker image, you need to create a directory below your library. Since, in our example
-above, we put our comics in /Users/reader/comixed/library, we'll create a new directory below that called
-**/Users/reader/comixed/library/importing**.
+To import new comics using your Docker image, you need to create a directory below your library. In our example above 
+we used **/Users/reader/comixed/imports** as the location for the **/imports** volume. So we need to copy our new comic
+files into that directory.
 
-We then copy the new comics into this directory.
-
-Then, from the **Image Comics** page, you enter as the import directory **/library/importing** and click the search
+Next, from the **Import Comics** page, you enter as the import directory **/imports** and click the search
 button. This will return all of the comics you just copied into that directory, and allow you to import them into your
 library.
 
+After selecting the comics to be imported, clicking the import button begins the process.
+
+
 # Logging
 
-The container, by default, generates the log file (named **comixed.log**) in the root directory of the managed library
+The container, by default, generates the log file (named **comixed.log**) in the root directory of the library
 directory.
