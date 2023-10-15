@@ -1,5 +1,5 @@
 !define NAME "ComiXed"
-!define VERSION "1.6.1-2"
+!define VERSION "1.6.1-3"
 !define SLUG "${NAME} ${VERSION}"
 
 Name "${NAME}"
@@ -13,7 +13,7 @@ Section ""
 
 SetOutPath $INSTDIR\bin
 File ..\assembly\scripts\run.bat
-File ..\..\..\..\comixed-app\target\comixed-app-1.6.1-2.jar
+File ..\..\..\..\comixed-app\target\comixed-app-1.6.1-3.jar
 File ..\..\..\..\LICENSE
 File ..\..\..\..\README.md
 

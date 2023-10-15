@@ -6,7 +6,7 @@
   <groupId>org.comixedproject</groupId>
   <artifactId>comixed</artifactId>
   <packaging>pom</packaging>
-  <version>1.6.1-2</version>
+  <version>1.6.1-3</version>
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -389,7 +389,7 @@
         <version>1.14.0</version>
         <inherited>false</inherited>
         <configuration>
-          <reportTitle>Changelog for ComiXed v1.6.1-2</reportTitle>
+          <reportTitle>Changelog for ComiXed v1.6.1-3</reportTitle>
           <outputDirectory>${project.basedir}</outputDirectory>
           <generateMarkdownChangeLog>true</generateMarkdownChangeLog>
           <markdownChangeLogFilename>CHANGELOG.md</markdownChangeLogFilename>

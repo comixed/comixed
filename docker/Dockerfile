@@ -19,7 +19,7 @@ MAINTAINER The ComiXed Project "comixed-dev@freelists.org"
 
 RUN mkdir /app /ul
 WORKDIR /ul
-RUN wget -q -O comixed-release.zip https://github.com/comixed/comixed/releases/download/v1.6.1-2/comixed-release-1.6.1-2-GA.zip
+RUN wget -q -O comixed-release.zip https://github.com/comixed/comixed/releases/download/v1.6.1-3/comixed-release-1.6.1-3-GA.zip
 RUN (cd /app; unzip /ul/*.zip)
 RUN rm *.zip
 WORKDIR /app
@@ -32,4 +32,4 @@ VOLUME /comic_data
 VOLUME /library
 VOLUME /imports
 
-CMD ["bash", "/app/comixed-release-1.6.1-2/bin/run.sh", "-L", "/library/comixed.log"]
+CMD ["bash", "/app/comixed-release-1.6.1-3/bin/run.sh", "-L", "/library/comixed.log"]
