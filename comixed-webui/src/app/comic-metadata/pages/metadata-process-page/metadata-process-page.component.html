@@ -15,6 +15,6 @@
 <cx-comic-detail-list-view
   *ngIf="!processState || !processState.active"
   class="cx-width-100"
-  [dataSource]="dataSource"
+  [comics]="comicDetails"
   [selectedIds]="selectedIds"
 ></cx-comic-detail-list-view>

@@ -32,8 +32,6 @@ import { getUserPreference } from '@app/user';
 import { filter } from 'rxjs/operators';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_PREFERENCE } from '@app/core';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
-import { MatTableDataSource } from '@angular/material/table';
-import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 
 @Component({
   selector: 'cx-metadata-process-page',
@@ -41,7 +39,7 @@ import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
   styleUrls: ['./metadata-process-page.component.scss']
 })
 export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
-  dataSource = new MatTableDataSource<SelectableListItem<ComicDetail>>([]);
+  comicDetails: ComicDetail[] = [];
 
   langChangeSubscription: Subscription;
   selectIdSubscription: Subscription;
@@ -69,14 +67,12 @@ export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
       .select(selectLibrarySelections)
       .subscribe(ids => {
         this.selectedIds = ids;
-        this.comicBooks = this.comicBooks;
       });
     this.logger.trace('Subscribing to the comic book list');
     this.comicBooksSubscription = this.store
       .select(selectComicBookList)
-      .subscribe(comicBooks => {
-        this.comicBooks = comicBooks;
-        this.comicBooks = this.comicBooks;
+      .subscribe(comicDetails => {
+        this.comicDetails = comicDetails;
       });
     this.logger.trace('Subscribing to process updates');
     this.processStateSubscription = this.store
@@ -101,23 +97,6 @@ export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
             SHOW_COMIC_COVERS_PREFERENCE,
             `$true`
           ) === `${true}`;
-      });
-  }
-
-  get comicBooks(): ComicDetail[] {
-    return this._comics;
-  }
-
-  set comicBooks(comicBooks: ComicDetail[]) {
-    this._comics = comicBooks;
-    const oldData = this.dataSource.data;
-    this.dataSource.data = comicBooks
-      .filter(comic => this.selectedIds.includes(comic.id))
-      .map(comic => {
-        return {
-          item: comic,
-          selected: oldData.find(entry => entry.item.id === comic.id)?.selected
-        };
       });
   }
 
