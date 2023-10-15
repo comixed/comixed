@@ -76,7 +76,7 @@ while getopts "j:u:p:i:l:P:H:SX:dDMCvL:" option; do
   i) IMGCACHEDIR="${OPTARG}" ;;
   l) LIBDIR="${OPTARG}" ;;
   P) PLUGINDIR="${OPTARG}" ;;
-  H) JVMOPTIONS="${JVMOPTIONS} -Xmx${OPTARG}m"
+  H) JVMOPTIONS="${JVMOPTIONS} -Xmx${OPTARG}m" ;;
   S) ENABLE_SSL="ON" ;;
   X) JVMOPTIONS="${JVMOPTIONS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=${OPTARG}" ;;
   d) DEBUG=true ;;
