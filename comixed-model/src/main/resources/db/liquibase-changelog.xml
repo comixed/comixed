@@ -20,6 +20,5 @@
   <include file="/db/migrations/1.4/changelog-1.4.xml"/>
   <include file="/db/migrations/1.5/changelog-1.5.xml"/>
   <include file="/db/migrations/1.6/changelog-1.6.xml"/>
-  <include file="/db/migrations/1.7/changelog-1.7.xml"/>
 
 </databaseChangeLog>

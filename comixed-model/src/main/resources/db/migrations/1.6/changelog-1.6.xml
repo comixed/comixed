@@ -9,5 +9,6 @@
   <include file="/db/migrations/1.6/001_1646_renamed-snapshot-to-thumbnail-to-blocked-hash.xml"/>
   <include file="/db/migrations/1.6/002_1649_add_title_to_issue_table.xml"/>
   <include file="/db/migrations/1.6/003_1683_table_name_changes.xml"/>
+  <include file="/db/migrations/1.6/004_1691_dropped_comic_file_details.xml"/>
 
 </databaseChangeLog>
