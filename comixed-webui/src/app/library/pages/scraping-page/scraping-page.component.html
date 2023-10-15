@@ -1,7 +1,7 @@
 <h2>{{ "scraping-page.page-title" | translate }}</h2>
 
 <div
-  *ngIf="(scrapingVolumes?.length || 0) === 0"
+  *ngIf="(selectedIds?.length || 0) === 0"
   class="cx-width-100 cx-align-content-center"
 >
   <p>{{ "scraping-page.inactive.page-content" | translate }}</p>
@@ -21,7 +21,7 @@
 </div>
 
 <div
-  *ngIf="scrapingVolumes?.length > 0"
+  *ngIf="selectedIds?.length > 0"
   class="cx-horizontal-container cx-width-100"
 >
   <div class="cx-max-width-25">
@@ -46,7 +46,7 @@
   </div>
   <div class="cx-grow-1">
     <cx-comic-scraping
-      *ngIf="!!currentComic"
+      *ngIf="!!currentComic && scrapingVolumes.length === 0"
       [comic]="currentComic"
       [metadataSource]="metadataSource"
       [skipCache]="skipCache"
