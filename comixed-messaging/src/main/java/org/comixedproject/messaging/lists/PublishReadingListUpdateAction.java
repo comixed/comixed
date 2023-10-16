@@ -22,7 +22,6 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.AbstractPublishAction;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.lists.ReadingList;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.views.View;
 import org.springframework.stereotype.Component;
 
@@ -34,18 +33,20 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class PublishReadingListUpdateAction extends AbstractPublishAction<ReadingList> {
+  /** Topic which receives reading list updates. */
+  public static final String READING_LIST_UPDATE_TOPIC = "/topic/reading-list.%d.update";
+  /** Topic which receives reading list updates. */
+  public static final String READING_LISTS_UPDATE_TOPIC = "/topic/reading-lists.update";
+
   @Override
   public void publish(final ReadingList readingList) throws PublishingException {
     log.trace("Publishing reading lists update");
     this.doPublish(
-        readingList.getOwner(),
-        Constants.READING_LISTS_UPDATE_TOPIC,
-        readingList,
-        View.ReadingLists.class);
+        readingList.getOwner(), READING_LISTS_UPDATE_TOPIC, readingList, View.ReadingLists.class);
     log.trace("Publishing reading list detail update");
     this.doPublish(
         readingList.getOwner(),
-        String.format(Constants.READING_LIST_UPDATE_TOPIC, readingList.getId()),
+        String.format(READING_LIST_UPDATE_TOPIC, readingList.getId()),
         readingList,
         View.ReadingListDetail.class);
   }

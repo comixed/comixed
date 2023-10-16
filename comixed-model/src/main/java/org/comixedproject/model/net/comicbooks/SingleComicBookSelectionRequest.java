@@ -16,30 +16,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.library;
+package org.comixedproject.model.net.comicbooks;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * <code>SelectComicBooksRequest</code> contains a list of comics to be selected.
- *
- * <p>If the <code>adding</code> is set to <code>true</code> then the comic ids are added to the
- * list of selected. Otherwise, any matching comics are removed from the list of selected comics.
+ * <code>SingleComicBookSelectionRequest</code> contains a comic book id and the desired selected
+ * state.
  *
  * @author Darryl L. Pierce
  */
 @AllArgsConstructor
 @NoArgsConstructor
-public class SelectComicBooksRequest {
-  @JsonProperty("ids")
+public class SingleComicBookSelectionRequest {
+  @JsonProperty("comicBookId")
   @Getter
-  private Set<Long> ids;
+  private Long comicBookId;
 
-  @JsonProperty("adding")
+  @JsonProperty("selected")
   @Getter
-  private Boolean adding;
+  private Boolean selected;
 }

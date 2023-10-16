@@ -24,7 +24,7 @@ import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.JOB_
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_TARGET_ARCHIVE;
 import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.*;
-import static org.comixedproject.rest.library.LibrarySelectionsController.LIBRARY_SELECTIONS;
+import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_COMIC_RENAMING_RULE;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY;
 

@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.comicpages.BlockedHash;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.views.View;
 import org.junit.Before;
 import org.junit.Test;
@@ -74,6 +73,8 @@ public class PublishBlockedHashUpdateActionTest {
     Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.BlockedHashList.class);
     Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(blockedHash);
     Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(Constants.BLOCKED_HASH_LIST_UPDATE_TOPIC, TEST_BLOCKED_PAGE_AS_JSON);
+        .convertAndSend(
+            PublishBlockedPageUpdateAction.BLOCKED_HASH_LIST_UPDATE_TOPIC,
+            TEST_BLOCKED_PAGE_AS_JSON);
   }
 }

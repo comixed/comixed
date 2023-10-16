@@ -18,8 +18,6 @@
 
 package org.comixedproject.messaging.metadata;
 
-import static org.comixedproject.model.messaging.Constants.METADATA_UPDATE_PROCESS_UPDATE_TOPIC;
-
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.AbstractPublishAction;
 import org.comixedproject.messaging.PublishingException;
@@ -37,6 +35,10 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class PublishMetadataUpdateProcessStateUpdateAction
     extends AbstractPublishAction<MetadataUpdateProcessUpdate> {
+  /** Topic which receives metadata update process updates. */
+  public static final String METADATA_UPDATE_PROCESS_UPDATE_TOPIC =
+      "/topic/metadata.update-process.update";
+
   @Override
   public void publish(final MetadataUpdateProcessUpdate payload) throws PublishingException {
     log.debug("Publishing scrape comic book step update");

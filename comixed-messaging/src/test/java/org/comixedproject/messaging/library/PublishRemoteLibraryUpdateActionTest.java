@@ -22,7 +22,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.model.net.library.RemoteLibraryState;
 import org.comixedproject.views.View;
 import org.junit.Before;
@@ -74,6 +73,8 @@ public class PublishRemoteLibraryUpdateActionTest {
     Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.RemoteLibraryState.class);
     Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(libraryState);
     Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(Constants.REMOTE_LIBRARY_UPDATE_TOPIC, TEST_LIBRARY_STATE_AS_JSON);
+        .convertAndSend(
+            PublishRemoteLibraryUpdateAction.REMOTE_LIBRARY_UPDATE_TOPIC,
+            TEST_LIBRARY_STATE_AS_JSON);
   }
 }

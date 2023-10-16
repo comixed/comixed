@@ -12,13 +12,14 @@
 
 <cx-comic-detail-list-view
   [isAdmin]="isAdmin"
-  [comics]="comicBooks"
+  [comics]="comicDetails"
   [totalComics]="comicDetailListState?.filteredCount"
   [lastReadDates]="lastReadDates"
   [showLastReadDate]="unreadOnly && !unreadSwitch"
   [selectedIds]="selectedIds"
   [readingLists]="readingLists"
   [unreadOnly]="unreadOnly"
+  (selectAll)="onSetAllComicsSelectedState($event)"
   (filtered)="filtered = $event"
   (showing)="showing = $event"
 ></cx-comic-detail-list-view>

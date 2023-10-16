@@ -28,10 +28,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import {
-  deselectComicBooks,
-  selectComicBooks
-} from '@app/library/actions/library-selections.actions';
 import { Store } from '@ngrx/store';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
@@ -54,6 +50,7 @@ import { Subscription } from 'rxjs';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
 import { rescanComics } from '@app/library/actions/rescan-comics.actions';
+import { setSingleComicBookSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 
 @Component({
   selector: 'cx-comic-detail-list-view',
@@ -61,6 +58,7 @@ import { rescanComics } from '@app/library/actions/rescan-comics.actions';
   styleUrls: ['./comic-detail-list-view.component.scss']
 })
 export class ComicDetailListViewComponent implements OnDestroy {
+  @Output() selectAll = new EventEmitter<boolean>();
   @Output() filtered = new EventEmitter<boolean>();
   @Output() showing = new EventEmitter<number>();
 
@@ -164,16 +162,6 @@ export class ComicDetailListViewComponent implements OnDestroy {
     this.queryParamsSubscription.unsubscribe();
   }
 
-  toggleSelected(comic: SelectableListItem<ComicDetail>): void {
-    if (!comic.selected) {
-      this.logger.debug('Selecting comic:', comic.item);
-      this.store.dispatch(selectComicBooks({ ids: [comic.item.id] }));
-    } else {
-      this.logger.debug('Deselecting comic:', comic.item);
-      this.store.dispatch(deselectComicBooks({ ids: [comic.item.id] }));
-    }
-  }
-
   getIconForState(comicState: ComicState): string {
     switch (comicState) {
       case ComicState.ADDED:
@@ -194,36 +182,28 @@ export class ComicDetailListViewComponent implements OnDestroy {
   ): void {
     this.logger.debug('Select all hotkey pressed');
     event.preventDefault();
-    this.onSelectAll(true);
+    this.selectAll.emit(true);
   }
 
   @HostListener('window:keydown.control.shift.a', ['$event'])
   onHotkeyDeselectAll(event: KeyboardEvent): void {
     this.logger.debug('Deselect all hotkey pressed');
     event.preventDefault();
-    this.onSelectAll(false);
+    this.selectAll.emit(false);
   }
 
-  onSelectAll(checked: boolean): void {
-    /* istanbul ignore next */
-    const ids = this.dataSource.filteredData.map(entry => entry.item.id);
-    if (checked) {
-      this.logger.debug('Selecting all comics');
-      this.store.dispatch(selectComicBooks({ ids }));
-    } else {
-      this.logger.debug('Deselecting all comics');
-      this.store.dispatch(deselectComicBooks({ ids }));
-    }
-  }
-
-  onSelectOne(entry: SelectableListItem<ComicDetail>, checked: boolean): void {
-    if (checked) {
-      this.logger.debug('Selecting comic:', entry.item);
-      this.store.dispatch(selectComicBooks({ ids: [entry.item.id] }));
-    } else {
-      this.logger.debug('Deselecting comic:', entry.item);
-      this.store.dispatch(deselectComicBooks({ ids: [entry.item.id] }));
-    }
+  onSetSelectedState(
+    entry: SelectableListItem<ComicDetail>,
+    selected: boolean
+  ): void {
+    this.logger.debug(
+      'Setting selected state for comic:',
+      entry.item,
+      selected
+    );
+    this.store.dispatch(
+      setSingleComicBookSelectionState({ id: entry.item.comicId, selected })
+    );
   }
 
   onRowSelected(row: SelectableListItem<ComicDetail>): void {

@@ -73,10 +73,6 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatSortModule } from '@angular/material/sort';
 import { USER_READER } from '@app/user/user.fixtures';
 import { CoverDateFilterPipe } from '@app/comic-books/pipes/cover-date-filter.pipe';
-import {
-  initialState as initialLibrarySelectionState,
-  LIBRARY_SELECTIONS_FEATURE_KEY
-} from '@app/library/reducers/library-selections.reducer';
 import { MatInputModule } from '@angular/material/input';
 import { ComicDetailListViewComponent } from '@app/comic-books/components/comic-detail-list-view/comic-detail-list-view.component';
 import { MatTableModule } from '@angular/material/table';
@@ -93,13 +89,18 @@ import {
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { loadComicDetails } from '@app/comic-books/actions/comics-details-list.actions';
 import { ComicState } from '@app/comic-books/models/comic-state';
+import {
+  COMIC_BOOK_SELECTION_FEATURE_KEY,
+  initialState as initialComicBooksSelectionState
+} from '@app/comic-books/reducers/comic-book-selection.reducer';
+import { setMultipleComicBookSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 
 describe('LibraryPageComponent', () => {
   const ONE_DAY = 24 * 60 * 60 * 100;
   const USER = USER_READER;
   const PAGE_INDEX = 23;
   const DATE = new Date();
-  const COMIC_BOOKS = [
+  const COMIC_DETAILS = [
     {
       ...COMIC_DETAIL_1,
       coverDate: new Date(DATE.getTime() - 365 * ONE_DAY).getTime(), // last year
@@ -121,11 +122,11 @@ describe('LibraryPageComponent', () => {
       archiveType: ArchiveType.CBZ
     }
   ];
-  const IDS = COMIC_BOOKS.map(comicBook => comicBook.id);
+  const IDS = COMIC_DETAILS.map(entry => entry.id);
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [LIBRARY_SELECTIONS_FEATURE_KEY]: initialLibrarySelectionState,
+    [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBooksSelectionState,
     [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
     [COMIC_DETAILS_LIST_FEATURE_KEY]: initialComicDetailListState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadListState,
@@ -447,6 +448,46 @@ describe('LibraryPageComponent', () => {
           })
         );
       });
+    });
+  });
+
+  describe('receiving pages to display', () => {
+    beforeEach(() => {
+      component.coverYears = [];
+      component.coverMonths = [];
+      component.comicDetails = COMIC_DETAILS;
+    });
+
+    it('extracts the cover years', () => {
+      expect(component.coverYears).not.toEqual([]);
+    });
+
+    it('extracts the cover months', () => {
+      expect(component.coverMonths).not.toEqual([]);
+    });
+  });
+
+  describe('selecting all displayable comics', () => {
+    const SELECTED = Math.random() > 0.5;
+
+    beforeEach(() => {
+      component.onSetAllComicsSelectedState(SELECTED);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        setMultipleComicBookSelectionState({
+          coverYear: null,
+          coverMonth: null,
+          archiveType: null,
+          comicType: null,
+          comicState: null,
+          readState: false,
+          unscrapedState: false,
+          searchText: null,
+          selected: SELECTED
+        })
+      );
     });
   });
 });

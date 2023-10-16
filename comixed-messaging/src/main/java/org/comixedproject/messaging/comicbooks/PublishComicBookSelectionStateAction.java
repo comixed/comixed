@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project.
+ * Copyright (C) 2023, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,32 +16,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.messaging.library;
+package org.comixedproject.messaging.comicbooks;
 
-import java.util.List;
+import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.AbstractPublishAction;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.views.View;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>PublishDuplicatePageListUpdateAction</code> publishes updates to the list of duplicate
- * pages.
+ * <code>PublishComicBookSelectionStateAction</code> publishes the current set of selected ids for a
+ * user.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class PublishDuplicatePageListUpdateAction
-    extends AbstractPublishAction<List<DuplicatePage>> {
-  /** Topic which receives notices when the duplicate page list is updated. */
-  public static final String DUPLICATE_PAGE_LIST_TOPIC = "/topic/duplicate-page-list.update";
+public class PublishComicBookSelectionStateAction extends AbstractPublishAction<Set<Long>> {
+  static final String COMIC_BOOK_SELECTION_UPDATE_TOPIC = "/topic/user/comic-book-selection.update";
 
   @Override
-  public void publish(final List<DuplicatePage> pages) throws PublishingException {
-    log.trace("Publishing duplicate page list");
-    this.doPublish(DUPLICATE_PAGE_LIST_TOPIC, pages, View.DuplicatePageList.class);
+  public void publish(final Set<Long> ids) throws PublishingException {
+    log.debug(
+        "Publishing update of {} selected comic book id{}", ids.size(), ids.size() == 1 ? "" : "s");
+    this.doPublish(COMIC_BOOK_SELECTION_UPDATE_TOPIC, ids, View.GenericObjectView.class);
   }
 }

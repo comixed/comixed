@@ -35,7 +35,6 @@ import { LastRead } from '@app/last-read/models/last-read';
 import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
-import { selectLibrarySelections } from '@app/library/selectors/library-selections.selectors';
 import { PAGE_SIZE_DEFAULT } from '@app/core';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { ListItem } from '@app/core/models/ui/list-item';
@@ -52,6 +51,8 @@ import {
   selectLoadComicDetailsTotalComics
 } from '@app/comic-books/selectors/load-comic-details-list.selectors';
 import { ComicDetailsListState } from '@app/comic-books/reducers/comic-details-list.reducer';
+import { setMultipleComicBookSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
 
 @Component({
   selector: 'cx-library-page',
@@ -153,12 +154,12 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       });
     this.comicsDetailListSubscription = this.store
       .select(selectLoadComicDetailsList)
-      .subscribe(comics => (this.comicBooks = comics));
+      .subscribe(comics => (this.comicDetails = comics));
     this.loadComicsTotalSubscription = this.store
       .select(selectLoadComicDetailsTotalComics)
       .subscribe(total => (this.totalComics = total));
     this.selectedSubscription = this.store
-      .select(selectLibrarySelections)
+      .select(selectComicBookSelectionIds)
       .subscribe(selectedIds => (this.selectedIds = selectedIds));
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
       this.logger.debug('Setting admin flag');
@@ -205,11 +206,11 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  get comicBooks(): ComicDetail[] {
+  get comicDetails(): ComicDetail[] {
     return this._comicDetails;
   }
 
-  set comicBooks(comics: ComicDetail[]) {
+  set comicDetails(comics: ComicDetail[]) {
     this.logger.debug('Setting comics:', comics);
     this._comicDetails = comics;
     this.logger.debug('Loading cover year options');
@@ -266,6 +267,23 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.langChangeSubscription.unsubscribe();
     this.readingListsSubscription.unsubscribe();
     this.pageChangedSubscription.unsubscribe();
+  }
+
+  onSetAllComicsSelectedState(selected: boolean) {
+    this.logger.debug('Setting all comic books selected state:', selected);
+    this.store.dispatch(
+      setMultipleComicBookSelectionState({
+        coverYear: this.queryParameterService.coverYear$?.value?.year,
+        coverMonth: this.queryParameterService.coverYear$?.value?.month,
+        archiveType: this.queryParameterService.archiveType$.value,
+        comicType: this.queryParameterService.comicType$.value,
+        comicState: this.targetComicState,
+        readState: this.unreadOnly,
+        unscrapedState: this.unscrapedOnly,
+        searchText: this.queryParameterService.filterText$.value,
+        selected
+      })
+    );
   }
 
   private loadTranslations(): void {

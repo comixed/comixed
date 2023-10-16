@@ -22,7 +22,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.model.net.metadata.MetadataUpdateProcessUpdate;
 import org.comixedproject.views.View;
 import org.junit.Before;
@@ -73,6 +72,8 @@ public class PublishMetadataUpdateProcessUpdateActionTest {
         .writerWithView(View.MetadataUpdateProcessState.class);
     Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(update);
     Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(Constants.METADATA_UPDATE_PROCESS_UPDATE_TOPIC, TEST_UPDATE_AS_JSON);
+        .convertAndSend(
+            PublishMetadataUpdateProcessStateUpdateAction.METADATA_UPDATE_PROCESS_UPDATE_TOPIC,
+            TEST_UPDATE_AS_JSON);
   }
 }
