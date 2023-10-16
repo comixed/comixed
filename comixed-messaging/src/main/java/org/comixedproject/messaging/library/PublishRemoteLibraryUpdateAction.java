@@ -18,8 +18,6 @@
 
 package org.comixedproject.messaging.library;
 
-import static org.comixedproject.model.messaging.Constants.REMOTE_LIBRARY_UPDATE_TOPIC;
-
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.AbstractPublishAction;
 import org.comixedproject.messaging.PublishingException;
@@ -36,6 +34,9 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class PublishRemoteLibraryUpdateAction
     extends AbstractPublishAction<org.comixedproject.model.net.library.RemoteLibraryState> {
+  /** Topic which receives remote library state updates. */
+  public static final String REMOTE_LIBRARY_UPDATE_TOPIC = "/topic/remote-library.update";
+
   @Override
   public void publish(
       final org.comixedproject.model.net.library.RemoteLibraryState remoteLibraryState)

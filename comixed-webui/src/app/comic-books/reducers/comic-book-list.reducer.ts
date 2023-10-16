@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   comicBookListRemovalReceived,
   comicBookListUpdateReceived,
@@ -115,3 +115,8 @@ function comicListUpdate(
     loading: false
   };
 }
+
+export const comicBookListFeature = createFeature({
+  name: COMIC_BOOK_LIST_FEATURE_KEY,
+  reducer
+});

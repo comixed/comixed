@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.lists.ReadingList;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.views.View;
 import org.junit.Before;
@@ -67,11 +66,14 @@ public class PublishReadingListUpdateActionTest {
     Mockito.verify(objectWriter, Mockito.times(2)).writeValueAsString(readingList);
     Mockito.verify(messagingTemplate, Mockito.times(1))
         .convertAndSendToUser(
-            TEST_OWNER_EMAIL, Constants.READING_LISTS_UPDATE_TOPIC, TEST_READING_LIST_AS_JSON);
+            TEST_OWNER_EMAIL,
+            PublishReadingListUpdateAction.READING_LISTS_UPDATE_TOPIC,
+            TEST_READING_LIST_AS_JSON);
     Mockito.verify(messagingTemplate, Mockito.times(1))
         .convertAndSendToUser(
             TEST_OWNER_EMAIL,
-            String.format(Constants.READING_LIST_UPDATE_TOPIC, TEST_READING_LIST_ID),
+            String.format(
+                PublishReadingListUpdateAction.READING_LIST_UPDATE_TOPIC, TEST_READING_LIST_ID),
             TEST_READING_LIST_AS_JSON);
   }
 

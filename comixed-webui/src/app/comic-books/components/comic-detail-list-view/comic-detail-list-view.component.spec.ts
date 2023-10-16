@@ -29,15 +29,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   COMIC_DETAIL_1,
-  COMIC_DETAIL_2,
-  COMIC_DETAIL_5
+  COMIC_DETAIL_2
 } from '@app/comic-books/comic-books.fixtures';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
-import {
-  deselectComicBooks,
-  selectComicBooks
-} from '@app/library/actions/library-selections.actions';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { Router } from '@angular/router';
 import { LAST_READ_1 } from '@app/last-read/last-read.fixtures';
@@ -69,6 +64,7 @@ import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
 import { rescanComics } from '@app/library/actions/rescan-comics.actions';
+import { setSingleComicBookSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 
 describe('ComicDetailListViewComponent', () => {
   const COMIC_DETAILS = [
@@ -143,6 +139,7 @@ describe('ComicDetailListViewComponent', () => {
 
     fixture = TestBed.createComponent(ComicDetailListViewComponent);
     component = fixture.componentInstance;
+    spyOn(component.selectAll, 'emit');
     component.dataSource = new MatTableDataSource<
       SelectableListItem<ComicDetail>
     >([]);
@@ -179,37 +176,6 @@ describe('ComicDetailListViewComponent', () => {
     });
   });
 
-  describe('toggling the selected state', () => {
-    const ENTRY: SelectableListItem<ComicDetail> = {
-      item: COMIC_DETAIL_5,
-      selected: false
-    };
-
-    describe('toggling it on', () => {
-      beforeEach(() => {
-        component.toggleSelected({ ...ENTRY, selected: false });
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          selectComicBooks({ ids: [ENTRY.item.id] })
-        );
-      });
-    });
-
-    describe('toggling it off', () => {
-      beforeEach(() => {
-        component.toggleSelected({ ...ENTRY, selected: true });
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          deselectComicBooks({ ids: [ENTRY.item.id] })
-        );
-      });
-    });
-  });
-
   describe('getting icons for comic states', () => {
     it('always returns a value', () => {
       for (const state in ComicState) {
@@ -224,57 +190,32 @@ describe('ComicDetailListViewComponent', () => {
       selected: Math.random() > 0.5
     };
 
-    describe('selecting all comics', () => {
-      beforeEach(() => {
-        component.dataSource.data = COMIC_DETAILS.map(entry => {
-          return { item: entry, selected: false };
-        });
-        component.onSelectAll(true);
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          selectComicBooks({
-            ids: component.dataSource.data.map(entry => entry.item.id)
-          })
-        );
-      });
-    });
-
-    describe('deselecting all comics', () => {
-      beforeEach(() => {
-        component.onSelectAll(false);
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          deselectComicBooks({
-            ids: component.dataSource.data.map(entry => entry.item.id)
-          })
-        );
-      });
-    });
-
     describe('selecting one comic', () => {
       beforeEach(() => {
-        component.onSelectOne(ENTRY, true);
+        component.onSetSelectedState(ENTRY, true);
       });
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          selectComicBooks({ ids: [ENTRY.item.id] })
+          setSingleComicBookSelectionState({
+            id: ENTRY.item.comicId,
+            selected: true
+          })
         );
       });
     });
 
     describe('deselecting one comic', () => {
       beforeEach(() => {
-        component.onSelectOne(ENTRY, false);
+        component.onSetSelectedState(ENTRY, false);
       });
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          deselectComicBooks({ ids: [ENTRY.item.id] })
+          setSingleComicBookSelectionState({
+            id: ENTRY.item.comicId,
+            selected: false
+          })
         );
       });
     });
@@ -740,10 +681,8 @@ describe('ComicDetailListViewComponent', () => {
         expect(event.preventDefault).toHaveBeenCalled();
       });
 
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          selectComicBooks({ ids: IDS })
-        );
+      it('emits an event', () => {
+        expect(component.selectAll.emit).toHaveBeenCalledWith(true);
       });
     });
 
@@ -757,10 +696,8 @@ describe('ComicDetailListViewComponent', () => {
         expect(event.preventDefault).toHaveBeenCalled();
       });
 
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          deselectComicBooks({ ids: IDS })
-        );
+      it('emits an event', () => {
+        expect(component.selectAll.emit).toHaveBeenCalledWith(false);
       });
     });
   });

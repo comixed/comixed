@@ -21,7 +21,6 @@ package org.comixedproject.messaging.user;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.AbstractPublishAction;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.views.View;
 import org.springframework.stereotype.Component;
@@ -34,9 +33,12 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class PublishCurrentUserAction extends AbstractPublishAction<ComiXedUser> {
+  /** Topic which receives updates on the current user." */
+  public static final String CURRENT_USER_UPDATE_TOPIC = "/topic/user/current";
+
   @Override
   public void publish(final ComiXedUser user) throws PublishingException {
     log.trace("Publishing current user update");
-    this.doPublish(Constants.CURRENT_USER_UPDATE_TOPIC, user, View.UserDetailsView.class);
+    this.doPublish(CURRENT_USER_UPDATE_TOPIC, user, View.UserDetailsView.class);
   }
 }

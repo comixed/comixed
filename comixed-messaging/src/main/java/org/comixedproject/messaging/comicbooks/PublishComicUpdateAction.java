@@ -22,7 +22,6 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.AbstractPublishAction;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.views.View;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +34,8 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class PublishComicUpdateAction extends AbstractPublishAction<ComicBook> {
   public static final String COMIC_LIST_UPDATE_TOPIC = "/topic/comic-list.update";
+  /** Topic which receives individual comic updates in real time. */
+  public static final String COMIC_BOOK_UPDATE_TOPIC = "/topic/comic-book.%d.update";
 
   @Override
   public void publish(final ComicBook comicBook) throws PublishingException {
@@ -42,7 +43,7 @@ public class PublishComicUpdateAction extends AbstractPublishAction<ComicBook> {
     this.doPublish(COMIC_LIST_UPDATE_TOPIC, comicBook, View.ComicDetailsView.class);
     log.trace("Publishing comicBook book update");
     this.doPublish(
-        String.format(Constants.COMIC_BOOK_UPDATE_TOPIC, comicBook.getId()),
+        String.format(COMIC_BOOK_UPDATE_TOPIC, comicBook.getId()),
         comicBook,
         View.ComicDetailsView.class);
   }

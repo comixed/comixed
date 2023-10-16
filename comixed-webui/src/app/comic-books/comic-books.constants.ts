@@ -22,6 +22,11 @@ import { ComicType } from '@app/comic-books/models/comic-type';
 
 export const LOAD_COMICS_URL = `${API_ROOT_URL}/comics/details/load`;
 
+export const LOAD_COMIC_BOOK_SELECTIONS_URL = `${API_ROOT_URL}/comics/selections`;
+export const SET_SINGLE_COMIC_SELECTION_URL = `${API_ROOT_URL}/comics/selections/single`;
+export const SET_MULTIPLE_COMIC_SELECTION_URL = `${API_ROOT_URL}/comics/selections/multiple`;
+export const CLEAR_COMIC_BOOK_SELECTION_STATE_URL = `${API_ROOT_URL}/comics/selections/clear`;
+
 export const MARK_COMICS_DELETED_URL = `${API_ROOT_URL}/comics/mark/deleted`;
 export const MARK_COMICS_UNDELETED_URL = `${API_ROOT_URL}/comics/mark/undeleted`;
 export const SAVE_PAGE_ORDER_URL = `${API_ROOT_URL}/comics/\${id}/pages/order`;
@@ -32,6 +37,8 @@ export const MARK_PAGES_DELETED_URL = `${API_ROOT_URL}/pages/deleted`;
 export const MARK_PAGES_UNDELETED_URL = `${API_ROOT_URL}/pages/undeleted`;
 
 export const COMIC_BOOK_UPDATE_TOPIC = `/topic/comic-book.\${id}.update`;
+export const COMIC_BOOK_SELECTION_UPDATE_TOPIC =
+  '/topic/user/comic-book-selection.update';
 
 export const MISSING_VOLUME_PLACEHOLDER = '----';
 

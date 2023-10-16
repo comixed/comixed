@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   comicsMarkedDeleted,
   markComicsDeleted,
@@ -38,3 +38,8 @@ export const reducer = createReducer(
   on(comicsMarkedDeleted, state => ({ ...state, updating: false })),
   on(markComicsDeletedFailed, state => ({ ...state, updating: false }))
 );
+
+export const markComicsDeletedFeature = createFeature({
+  name: MARK_COMICS_DELETED_FEATURE_KEY,
+  reducer
+});

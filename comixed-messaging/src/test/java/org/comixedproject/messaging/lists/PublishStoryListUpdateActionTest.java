@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.lists.Story;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.views.View;
 import org.junit.Before;
 import org.junit.Test;
@@ -74,9 +73,10 @@ public class PublishStoryListUpdateActionTest {
     Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.StoryList.class);
     Mockito.verify(objectWriter, Mockito.times(2)).writeValueAsString(story);
     Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(Constants.STORY_LIST_UPDATE_TOPIC, TEST_STORY_AS_JSON);
+        .convertAndSend(PublishStoryListUpdateAction.STORY_LIST_UPDATE_TOPIC, TEST_STORY_AS_JSON);
     Mockito.verify(messagingTemplate, Mockito.times(1))
         .convertAndSend(
-            String.format(Constants.STORY_UPDATE_TOPIC, TEST_STORY_ID), TEST_STORY_AS_JSON);
+            String.format(PublishStoryListUpdateAction.STORY_UPDATE_TOPIC, TEST_STORY_ID),
+            TEST_STORY_AS_JSON);
   }
 }
