@@ -198,6 +198,20 @@
       "effect-failure": "Failed to load scan types."
     }
   },
+  "selection": {
+    "clear-selection-state": {
+      "effect-failure": "Failed to clear selected comic books..."
+    },
+    "load-selections": {
+      "effect-failure": "Failed to load current comic book selections..."
+    },
+    "set-multiple-state": {
+      "effect-failure": "Failed to select comic books..."
+    },
+    "set-single-state": {
+      "effect-failure": "Failed to select comic book..."
+    }
+  },
   "sorting": {
     "label": {
       "by-added-date": "Date Added",

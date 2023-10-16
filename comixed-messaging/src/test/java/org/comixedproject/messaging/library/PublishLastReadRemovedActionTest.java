@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.library.LastRead;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.views.View;
 import org.junit.Before;
@@ -78,6 +77,8 @@ public class PublishLastReadRemovedActionTest {
     Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(lastRead);
     Mockito.verify(messagingTemplate, Mockito.times(1))
         .convertAndSendToUser(
-            TEST_EMAIL, Constants.LAST_READ_REMOVED_TOPIC, TEST_LAST_READ_AS_JSON);
+            TEST_EMAIL,
+            PublishLastReadRemovedAction.LAST_READ_REMOVED_TOPIC,
+            TEST_LAST_READ_AS_JSON);
   }
 }

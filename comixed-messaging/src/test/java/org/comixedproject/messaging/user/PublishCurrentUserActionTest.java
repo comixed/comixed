@@ -22,7 +22,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.views.View;
 import org.junit.Before;
@@ -72,6 +71,6 @@ public class PublishCurrentUserActionTest {
     Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.UserDetailsView.class);
     Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(user);
     Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(Constants.CURRENT_USER_UPDATE_TOPIC, TEST_USER_AS_JSON);
+        .convertAndSend(PublishCurrentUserAction.CURRENT_USER_UPDATE_TOPIC, TEST_USER_AS_JSON);
   }
 }

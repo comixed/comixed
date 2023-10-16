@@ -22,7 +22,6 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.AbstractPublishAction;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.comicpages.BlockedHash;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.views.View;
 import org.springframework.stereotype.Component;
 
@@ -35,9 +34,11 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class PublishBlockedPageRemovalAction extends AbstractPublishAction<BlockedHash> {
+  /** Topic which receives blocked page removals in real time. */
+  public static final String BLOCKED_HASH_LIST_REMOVAL_TOPIC = "/topic/blocked-hash-list.removal";
+
   @Override
   public void publish(final BlockedHash blockedHash) throws PublishingException {
-    this.doPublish(
-        Constants.BLOCKED_HASH_LIST_REMOVAL_TOPIC, blockedHash, View.BlockedHashList.class);
+    this.doPublish(BLOCKED_HASH_LIST_REMOVAL_TOPIC, blockedHash, View.BlockedHashList.class);
   }
 }

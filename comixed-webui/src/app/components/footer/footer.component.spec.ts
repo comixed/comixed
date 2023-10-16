@@ -29,14 +29,14 @@ import {
   LIBRARY_FEATURE_KEY
 } from '@app/library/reducers/library.reducer';
 import {
-  initialState as initialLibrarySelectionsState,
-  LIBRARY_SELECTIONS_FEATURE_KEY
-} from '@app/library/reducers/library-selections.reducer';
+  COMIC_BOOK_SELECTION_FEATURE_KEY,
+  initialState as initialComicBookSelectionState
+} from '@app/comic-books/reducers/comic-book-selection.reducer';
 
 describe('FooterComponent', () => {
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [LIBRARY_SELECTIONS_FEATURE_KEY]: initialLibrarySelectionsState,
+    [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState
   };
   let component: FooterComponent;

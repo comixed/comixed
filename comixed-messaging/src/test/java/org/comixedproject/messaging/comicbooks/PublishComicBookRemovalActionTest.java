@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.views.View;
 import org.junit.Before;
 import org.junit.Test;
@@ -77,6 +76,7 @@ public class PublishComicBookRemovalActionTest {
         .convertAndSend(PublishComicRemovalAction.COMIC_LIST_REMOVAL_TOPIC, TEST_COMIC_AS_JSON);
     Mockito.verify(messagingTemplate, Mockito.times(1))
         .convertAndSend(
-            String.format(Constants.COMIC_BOOK_REMOVAL_TOPIC, TEST_COMIC_ID), TEST_COMIC_AS_JSON);
+            String.format(PublishComicRemovalAction.COMIC_BOOK_REMOVAL_TOPIC, TEST_COMIC_ID),
+            TEST_COMIC_AS_JSON);
   }
 }

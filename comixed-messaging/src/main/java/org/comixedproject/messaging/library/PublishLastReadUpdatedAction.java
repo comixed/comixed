@@ -22,7 +22,6 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.AbstractPublishAction;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.library.LastRead;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.views.View;
 import org.springframework.stereotype.Component;
 
@@ -34,10 +33,12 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class PublishLastReadUpdatedAction extends AbstractPublishAction<LastRead> {
+  /** Topic which receives notices when last read entries are updated. */
+  public static final String LAST_READ_UPDATED_TOPIC = "/topic/last-read-list.update";
+
   @Override
   public void publish(final LastRead lastRead) throws PublishingException {
     log.trace("Publishing last read update");
-    this.doPublish(
-        lastRead.getUser(), Constants.LAST_READ_UPDATED_TOPIC, lastRead, View.LastReadList.class);
+    this.doPublish(lastRead.getUser(), LAST_READ_UPDATED_TOPIC, lastRead, View.LastReadList.class);
   }
 }

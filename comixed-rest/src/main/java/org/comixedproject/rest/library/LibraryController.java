@@ -27,7 +27,7 @@ import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguratio
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_RECREATE_COMICS_STARTED;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_TARGET_ARCHIVE;
 import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.*;
-import static org.comixedproject.rest.library.LibrarySelectionsController.LIBRARY_SELECTIONS;
+import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;

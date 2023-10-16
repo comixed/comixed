@@ -46,7 +46,7 @@ describe('ComicDetailsList Reducer', () => {
   const COMIC_TYPE = ComicType.ISSUE;
   const COMIC_STATE = ComicState.UNPROCESSED;
   const READ_STATE = Math.random() > 0.5;
-  const SCRAPED_STATE = Math.random() > 0.5;
+  const UNSCRAPED_STATE = Math.random() > 0.5;
   const SEARCH_TEXT = 'This is some text';
   const SORT_BY = 'addedDate';
   const SORT_DIRECTION = 'ASC';
@@ -101,7 +101,7 @@ describe('ComicDetailsList Reducer', () => {
           comicType: COMIC_TYPE,
           comicState: COMIC_STATE,
           readState: READ_STATE,
-          unscrapedState: SCRAPED_STATE,
+          unscrapedState: UNSCRAPED_STATE,
           searchText: SEARCH_TEXT,
           sortBy: SORT_BY,
           sortDirection: SORT_DIRECTION

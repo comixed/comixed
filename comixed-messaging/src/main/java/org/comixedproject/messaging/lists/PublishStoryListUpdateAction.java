@@ -22,7 +22,6 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.AbstractPublishAction;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.lists.Story;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.views.View;
 import org.springframework.stereotype.Component;
 
@@ -34,12 +33,16 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class PublishStoryListUpdateAction extends AbstractPublishAction<Story> {
+  /** Topic which receives story list updates. */
+  public static final String STORY_LIST_UPDATE_TOPIC = "/topic/story-list.update";
+  /** Topic which receives story updates. */
+  public static final String STORY_UPDATE_TOPIC = "/topic/story-list.%d.update";
+
   @Override
   public void publish(final Story story) throws PublishingException {
     log.trace("Publishing story list update");
-    this.doPublish(Constants.STORY_LIST_UPDATE_TOPIC, story, View.StoryList.class);
+    this.doPublish(STORY_LIST_UPDATE_TOPIC, story, View.StoryList.class);
     log.trace("Publishing story update");
-    this.doPublish(
-        String.format(Constants.STORY_UPDATE_TOPIC, story.getId()), story, View.StoryDetail.class);
+    this.doPublish(String.format(STORY_UPDATE_TOPIC, story.getId()), story, View.StoryDetail.class);
   }
 }

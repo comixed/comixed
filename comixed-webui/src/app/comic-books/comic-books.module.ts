@@ -47,14 +47,8 @@ import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { IssueMetadataTitlePipe } from '@app/comic-books/pipes/issue-metadata-title.pipe';
-import {
-  COMIC_BOOK_LIST_FEATURE_KEY,
-  reducer as comicListReducer
-} from '@app/comic-books/reducers/comic-book-list.reducer';
-import {
-  COMIC_BOOK_FEATURE_KEY,
-  reducer as comicReducer
-} from '@app/comic-books/reducers/comic-book.reducer';
+import { comicBookListFeature } from '@app/comic-books/reducers/comic-book-list.reducer';
+import { comicBookFeature } from '@app/comic-books/reducers/comic-book.reducer';
 import { ComicBookListEffects } from '@app/comic-books/effects/comic-book-list.effects';
 import { ComicBookEffects } from '@app/comic-books/effects/comic-book.effects';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -66,15 +60,9 @@ import { CoreModule } from '@app/core/core.module';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { PageHashUrlPipe } from './pipes/page-hash-url.pipe';
 import { MarkComicsDeletedEffects } from '@app/comic-books/effects/mark-comics-deleted.effects';
-import {
-  MARK_COMICS_DELETED_FEATURE_KEY,
-  reducer as markComicsDeletedReducer
-} from '@app/comic-books/reducers/mark-comics-deleted.reducer';
+import { markComicsDeletedFeature } from '@app/comic-books/reducers/mark-comics-deleted.reducer';
 import { MatDividerModule } from '@angular/material/divider';
-import {
-  IMPRINT_LIST_FEATURE_KEY,
-  reducer as imprintListReducer
-} from '@app/comic-books/reducers/imprint-list.reducer';
+import { imprintListFeature } from '@app/comic-books/reducers/imprint-list.reducer';
 import { ImprintListEffects } from '@app/comic-books/effects/imprint-list.effects';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CoverDateFilterPipe } from './pipes/cover-date-filter.pipe';
@@ -87,10 +75,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
 import { ComicDetailFilterComponent } from './components/comic-detail-filter/comic-detail-filter.component';
 import { ComicDetailsListEffects } from '@app/comic-books/effects/comic-details-list-effects.service';
-import {
-  COMIC_DETAILS_LIST_FEATURE_KEY,
-  reducer as comicDetailsListReducer
-} from '@app/comic-books/reducers/comic-details-list.reducer';
+import { comicDetailsListFeature } from '@app/comic-books/reducers/comic-details-list.reducer';
+import { comicBookSelectionFeature } from '@app/comic-books/reducers/comic-book-selection.reducer';
+import { ComicBookSelectionEffects } from '@app/comic-books/effects/comic-book-selection.effects';
 
 @NgModule({
   declarations: [
@@ -117,23 +104,19 @@ import {
   imports: [
     CommonModule,
     ComicBooksRouting,
-    StoreModule.forFeature(COMIC_BOOK_LIST_FEATURE_KEY, comicListReducer),
-    StoreModule.forFeature(COMIC_BOOK_FEATURE_KEY, comicReducer),
-    StoreModule.forFeature(IMPRINT_LIST_FEATURE_KEY, imprintListReducer),
-    StoreModule.forFeature(
-      MARK_COMICS_DELETED_FEATURE_KEY,
-      markComicsDeletedReducer
-    ),
-    StoreModule.forFeature(
-      COMIC_DETAILS_LIST_FEATURE_KEY,
-      comicDetailsListReducer
-    ),
+    StoreModule.forFeature(comicBookListFeature),
+    StoreModule.forFeature(comicBookFeature),
+    StoreModule.forFeature(imprintListFeature),
+    StoreModule.forFeature(markComicsDeletedFeature),
+    StoreModule.forFeature(comicDetailsListFeature),
+    StoreModule.forFeature(comicBookSelectionFeature),
     EffectsModule.forFeature([
       ComicBookListEffects,
       ComicBookEffects,
       ImprintListEffects,
       MarkComicsDeletedEffects,
-      ComicDetailsListEffects
+      ComicDetailsListEffects,
+      ComicBookSelectionEffects
     ]),
     TranslateModule.forRoot(),
     MatCardModule,

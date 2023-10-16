@@ -21,8 +21,8 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { User } from '@app/user/models/user';
 import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
-import { selectLibrarySelectionsState } from '@app/library/selectors/library-selections.selectors';
 import { selectLibraryState } from '@app/library/selectors/library.selectors';
+import { selectComicBookSelectionState } from '@app/comic-books/selectors/comic-book-selection.selectors';
 
 @Component({
   selector: 'cx-footer',
@@ -48,7 +48,7 @@ export class FooterComponent {
       .select(selectLastReadEntries)
       .subscribe(entries => (this.readCount = entries.length));
     this.store
-      .select(selectLibrarySelectionsState)
+      .select(selectComicBookSelectionState)
       .subscribe(state => (this.selectedCount = state.ids.length));
   }
 }

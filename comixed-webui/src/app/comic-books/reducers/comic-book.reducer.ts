@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   comicBookLoaded,
   comicBookUpdated,
@@ -84,3 +84,8 @@ export const reducer = createReducer(
   on(pageOrderSaved, state => ({ ...state, saving: false })),
   on(savePageOrderFailed, state => ({ ...state, saving: false }))
 );
+
+export const comicBookFeature = createFeature({
+  name: COMIC_BOOK_FEATURE_KEY,
+  reducer
+});

@@ -22,7 +22,6 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.AbstractPublishAction;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.lists.ReadingList;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.views.View;
 import org.springframework.stereotype.Component;
 
@@ -34,12 +33,14 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class PublishReadingListDeletedAction extends AbstractPublishAction<ReadingList> {
+  public static final String READING_LIST_REMOVED_TOPIC = "/topic/reading-list.removed";
+
   @Override
   public void publish(final ReadingList readingList) throws PublishingException {
     log.trace("Publishing reading list removed");
     this.doPublish(
         readingList.getOwner(),
-        Constants.READING_LIST_REMOVED_TOPIC,
+        READING_LIST_REMOVED_TOPIC,
         readingList,
         View.ReadingListDetail.class);
   }
