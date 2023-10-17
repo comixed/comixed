@@ -51,37 +51,34 @@ import {
 import { loadVolumeMetadata } from '@app/comic-metadata/actions/metadata.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
-import {
-  COMIC_BOOK_LIST_FEATURE_KEY,
-  initialState as initialComicBookListState
-} from '@app/comic-books/reducers/comic-book-list.reducer';
-import {
-  initialState as initialLibrarySelectionState,
-  LIBRARY_SELECTIONS_FEATURE_KEY
-} from '@app/library/reducers/library-selections.reducer';
 import { loadComicBook } from '@app/comic-books/actions/comic-book.actions';
 import {
   COMIC_BOOK_FEATURE_KEY,
   initialState as initialComicBookState
 } from '@app/comic-books/reducers/comic-book.reducer';
+import {
+  COMIC_BOOK_SELECTION_FEATURE_KEY,
+  initialState as initialComicBookSelectionState
+} from '@app/comic-books/reducers/comic-book-selection.reducer';
+import {
+  COMIC_DETAILS_LIST_FEATURE_KEY,
+  initialState as initialComicDetailListState
+} from '@app/comic-books/reducers/comic-details-list.reducer';
 
 describe('ScrapingPageComponent', () => {
   const USER = USER_READER;
   const COMIC = COMIC_BOOK_3;
-  const COMIC_BOOKS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
+  const COMIC_DETAILS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
   const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const initialState = {
     [LIBRARY_FEATURE_KEY]: { ...initialLibraryState },
-    [LIBRARY_SELECTIONS_FEATURE_KEY]: { ...initialLibrarySelectionState },
-    [COMIC_BOOK_LIST_FEATURE_KEY]: {
-      ...initialComicBookListState,
-      comicBooks: COMIC_BOOKS
-    },
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [METADATA_FEATURE_KEY]: { ...initialScrapingState },
-    [COMIC_BOOK_FEATURE_KEY]: { ...initialComicBookState }
+    [COMIC_BOOK_FEATURE_KEY]: { ...initialComicBookState },
+    [COMIC_DETAILS_LIST_FEATURE_KEY]: initialComicDetailListState,
+    [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState
   };
 
   let component: ScrapingPageComponent;
@@ -125,6 +122,24 @@ describe('ScrapingPageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('receiving the list of selected comic details', () => {
+    beforeEach(() => {
+      store.setState({
+        ...initialState,
+        [COMIC_DETAILS_LIST_FEATURE_KEY]: {
+          ...initialComicDetailListState,
+          comicDetails: COMIC_DETAILS
+        }
+      });
+    });
+
+    it('loads the comic book for the first comic detail', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        loadComicBook({ id: COMIC_DETAILS[0].comicId })
+      );
+    });
   });
 
   describe('when the language used is changed', () => {

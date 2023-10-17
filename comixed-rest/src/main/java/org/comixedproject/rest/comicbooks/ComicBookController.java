@@ -23,6 +23,7 @@ import io.micrometer.core.annotation.Timed;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.AdaptorException;
@@ -305,5 +306,26 @@ public class ComicBookController {
             request.getReadState(),
             request.getUnscrapedState(),
             request.getSearchText()));
+  }
+
+  /**
+   * Loads comics based on a set of ids received.
+   *
+   * @param request the request body
+   * @return the response body
+   */
+  @PostMapping(
+      value = "/api/comics/details/load/ids",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.comic-book.load-by-ids")
+  @PreAuthorize("hasRole('READER')")
+  @JsonView(ComicDetailsView.class)
+  public LoadComicDetailsResponse loadComicDetailListById(
+      @RequestBody() final LoadComicDetailsByIdRequest request) {
+    final Set<Long> ids = request.getComicBookIds();
+    log.info("Loading comics by ids: {}", ids);
+    return new LoadComicDetailsResponse(
+        this.comicDetailService.loadComicDetailListById(ids), ids.size(), ids.size());
   }
 }

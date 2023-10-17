@@ -48,8 +48,8 @@ import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
-import { deselectComicBooks } from '@app/library/actions/library-selections.actions';
 import { PAGE_SIZE_OPTIONS } from '@app/core';
+import { setSingleComicBookSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 
 export const MATCHABILITY = 'matchability';
 export const EXACT_MATCH = 2;
@@ -236,7 +236,12 @@ export class ComicScrapingVolumeSelectionComponent
     this.logger.debug('User confirmed scraping the comic:', this.multimode);
     if (this.multimode) {
       this.logger.debug('Removing comic from scraping queue:', this.comicBook);
-      this.store.dispatch(deselectComicBooks({ ids: [this.comicBook.id] }));
+      this.store.dispatch(
+        setSingleComicBookSelectionState({
+          id: this.comicBook.id,
+          selected: false
+        })
+      );
     }
     this.store.dispatch(
       scrapeComic({
