@@ -29,7 +29,8 @@
       <div *ngIf="!!currentComic" class="cx-grow-1 cx-width-100">
         <h3 class="cx-text-nowrap">
           {{
-            "scraping.current-comic.title" | translate: { count: comics.length }
+            "scraping.current-comic.title"
+              | translate: { count: comicDetails.length }
           }}
         </h3>
         <cx-comic-page
@@ -38,7 +39,7 @@
       </div>
       <div>
         <cx-selected-comics
-          [comics]="comics"
+          [comics]="comicDetails"
           (selectionChanged)="onSelectionChanged($event)"
         ></cx-selected-comics>
       </div>

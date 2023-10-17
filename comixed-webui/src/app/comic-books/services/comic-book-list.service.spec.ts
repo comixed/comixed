@@ -53,8 +53,12 @@ import {
 } from '@angular/common/http/testing';
 import { interpolate } from '@app/core';
 import { LoadComicDetailsRequest } from '@app/comic-books/models/net/load-comic-details-request';
-import { LOAD_COMICS_URL } from '@app/comic-books/comic-books.constants';
+import {
+  LOAD_COMIC_DETAILS_BY_ID_URL,
+  LOAD_COMIC_DETAILS_URL
+} from '@app/comic-books/comic-books.constants';
 import { LoadComicDetailsResponse } from '@app/comic-books/models/net/load-comic-details-response';
+import { LoadComicDetailsByIdRequest } from '@app/comic-books/models/net/load-comic-details-by-id-request';
 
 describe('ComicBookListService', () => {
   const PAGE_SIZE = 25;
@@ -76,6 +80,7 @@ describe('ComicBookListService', () => {
     COMIC_DETAIL_4,
     COMIC_DETAIL_5
   ];
+  const IDS = COMIC_DETAILS.map(entry => entry.comicId);
   const TOTAL_COUNT = COMIC_DETAILS.length * 2;
   const FILTERED_COUNT = Math.floor(TOTAL_COUNT * 0.75);
   const initialState = {
@@ -209,7 +214,7 @@ describe('ComicBookListService', () => {
     });
   });
 
-  it('can load the a page worth of comic details', () => {
+  it('can load a page worth of comic details', () => {
     const serviceResponse = {
       comicDetails: COMIC_DETAILS,
       totalCount: TOTAL_COUNT,
@@ -232,7 +237,7 @@ describe('ComicBookListService', () => {
       })
       .subscribe(response => expect(response).toEqual(serviceResponse));
 
-    const req = httpMock.expectOne(interpolate(LOAD_COMICS_URL));
+    const req = httpMock.expectOne(interpolate(LOAD_COMIC_DETAILS_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
       pageSize: PAGE_SIZE,
@@ -248,6 +253,24 @@ describe('ComicBookListService', () => {
       sortBy: SORT_BY,
       sortDirection: SORT_DIRECTION
     } as LoadComicDetailsRequest);
+    req.flush(serviceResponse);
+  });
+
+  it('can load comic details by id', () => {
+    const serviceResponse = {
+      comicDetails: COMIC_DETAILS,
+      totalCount: TOTAL_COUNT,
+      filteredCount: FILTERED_COUNT
+    } as LoadComicDetailsResponse;
+    service
+      .loadComicDetailsById({ ids: IDS })
+      .subscribe(response => expect(response).toEqual(serviceResponse));
+
+    const req = httpMock.expectOne(interpolate(LOAD_COMIC_DETAILS_BY_ID_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      comicBookIds: IDS
+    } as LoadComicDetailsByIdRequest);
     req.flush(serviceResponse);
   });
 });

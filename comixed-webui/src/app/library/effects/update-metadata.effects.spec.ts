@@ -33,7 +33,7 @@ import {
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { LibraryService } from '@app/library/services/library.service';
-import { clearSelectedComicBooks } from '@app/library/actions/library-selections.actions';
+import { clearComicBookSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 
 describe('UpdateMetadataEffects', () => {
   const IDS = [4, 17, 6];
@@ -81,7 +81,7 @@ describe('UpdateMetadataEffects', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
       const action = updateMetadata({ ids: IDS });
       const outcome1 = metadataUpdating();
-      const outcome2 = clearSelectedComicBooks();
+      const outcome2 = clearComicBookSelectionState();
 
       actions$ = hot('-a', { a: action });
       libraryService.updateMetadata

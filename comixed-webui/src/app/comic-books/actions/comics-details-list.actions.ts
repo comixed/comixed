@@ -40,6 +40,11 @@ export const loadComicDetails = createAction(
   }>()
 );
 
+export const loadComicDetailsById = createAction(
+  '[Comic Details List] Load comic details by their ids',
+  props<{ comicBookIds: number[] }>()
+);
+
 export const comicDetailsLoaded = createAction(
   '[Comic Details List] A page worth of comic details were loaded',
   props<{

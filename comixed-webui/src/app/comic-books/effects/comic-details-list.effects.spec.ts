@@ -38,6 +38,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {
   comicDetailsLoaded,
   loadComicDetails,
+  loadComicDetailsById,
   loadComicDetailsFailed
 } from '@app/comic-books/actions/comics-details-list.actions';
 import { hot } from 'jasmine-marbles';
@@ -65,6 +66,7 @@ describe('ComicDetailsListEffects', () => {
     COMIC_DETAIL_4,
     COMIC_DETAIL_5
   ];
+  const IDS = COMIC_DETAILS.map(entry => entry.comicId);
   const TOTAL_COUNT = COMIC_DETAILS.length * 2;
   const FILTERED_COUNT = Math.floor(TOTAL_COUNT * 0.75);
 
@@ -83,6 +85,9 @@ describe('ComicDetailsListEffects', () => {
           useValue: {
             loadComicDetails: jasmine.createSpy(
               'ComicBookListService.loadComicDetails()'
+            ),
+            loadComicDetailsById: jasmine.createSpy(
+              'ComicBookListService.loadComicDetailsById()'
             )
           }
         }
@@ -233,6 +238,59 @@ describe('ComicDetailsListEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.loadComicDetails$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('loading comic details by id', () => {
+    it('fires an action on success', () => {
+      const serverResponse = {
+        comicDetails: COMIC_DETAILS,
+        totalCount: TOTAL_COUNT,
+        filteredCount: FILTERED_COUNT
+      } as LoadComicDetailsResponse;
+      const action = loadComicDetailsById({ comicBookIds: IDS });
+      const outcome = comicDetailsLoaded({
+        comicDetails: COMIC_DETAILS,
+        totalCount: TOTAL_COUNT,
+        filteredCount: FILTERED_COUNT
+      });
+
+      actions$ = hot('-a', { a: action });
+      comicBookListService.loadComicDetailsById
+        .withArgs({ ids: IDS })
+        .and.returnValue(of(serverResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.loadComicDetailsById$).toBeObservable(expected);
+    });
+
+    it('fires an action on service failure', () => {
+      const serverResponse = new HttpErrorResponse({});
+      const action = loadComicDetailsById({ comicBookIds: IDS });
+      const outcome = loadComicDetailsFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicBookListService.loadComicDetailsById
+        .withArgs({ ids: IDS })
+        .and.returnValue(throwError(serverResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.loadComicDetailsById$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = loadComicDetailsById({ comicBookIds: IDS });
+      const outcome = loadComicDetailsFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicBookListService.loadComicDetailsById
+        .withArgs({ ids: IDS })
+        .and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.loadComicDetailsById$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

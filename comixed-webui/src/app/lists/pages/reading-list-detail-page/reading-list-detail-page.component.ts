@@ -58,9 +58,9 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
-import { selectLibrarySelections } from '@app/library/selectors/library-selections.selectors';
 import { LastRead } from '@app/last-read/models/last-read';
 import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
+import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
 
 @Component({
   selector: 'cx-user-reading-list-page',
@@ -137,7 +137,7 @@ export class ReadingListDetailPageComponent implements OnDestroy {
         }
       });
     this.selectionSubscription = this.store
-      .select(selectLibrarySelections)
+      .select(selectComicBookSelectionIds)
       .subscribe(selections => {
         this.selectedIds = selections;
       });

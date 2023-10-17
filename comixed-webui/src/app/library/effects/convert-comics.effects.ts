@@ -29,7 +29,7 @@ import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { clearSelectedComicBooks } from '@app/library/actions/library-selections.actions';
+import { clearComicBookSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 
 @Injectable()
 export class ConvertComicsEffects {
@@ -58,7 +58,10 @@ export class ConvertComicsEffects {
                 )
               )
             ),
-            mergeMap(() => [comicsConverting(), clearSelectedComicBooks()]),
+            mergeMap(() => [
+              comicsConverting(),
+              clearComicBookSelectionState()
+            ]),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(

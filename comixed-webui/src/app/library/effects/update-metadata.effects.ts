@@ -29,7 +29,7 @@ import {
 import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { LibraryService } from '@app/library/services/library.service';
-import { clearSelectedComicBooks } from '@app/library/actions/library-selections.actions';
+import { clearComicBookSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 
 @Injectable()
 export class UpdateMetadataEffects {
@@ -47,7 +47,7 @@ export class UpdateMetadataEffects {
               )
             )
           ),
-          mergeMap(() => [metadataUpdating(), clearSelectedComicBooks()]),
+          mergeMap(() => [metadataUpdating(), clearComicBookSelectionState()]),
           catchError(error => {
             this.logger.error('Service failure:', error);
             this.alertService.error(

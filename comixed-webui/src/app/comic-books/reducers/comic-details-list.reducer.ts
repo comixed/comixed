@@ -20,6 +20,7 @@ import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   comicDetailsLoaded,
   loadComicDetails,
+  loadComicDetailsById,
   loadComicDetailsFailed
 } from '../actions/comics-details-list.actions';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
@@ -43,6 +44,7 @@ export const initialState: ComicDetailsListState = {
 export const reducer = createReducer(
   initialState,
   on(loadComicDetails, state => ({ ...state, loading: true })),
+  on(loadComicDetailsById, state => ({ ...state, loading: true })),
   on(comicDetailsLoaded, (state, action) => ({
     ...state,
     loading: false,

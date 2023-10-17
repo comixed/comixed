@@ -38,11 +38,11 @@ import {
   deselectComicBooks,
   selectComicBooks
 } from '@app/library/actions/library-selections.actions';
-import { selectLibrarySelections } from '@app/library/selectors/library-selections.selectors';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 import { LastRead } from '@app/last-read/models/last-read';
+import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
 
 @Component({
   selector: 'cx-collection-detail',
@@ -143,7 +143,7 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
         ) === `${true}`;
     });
     this.selectedSubscription = this.store
-      .select(selectLibrarySelections)
+      .select(selectComicBookSelectionIds)
       .subscribe(selectedIds => (this.selectedIds = selectedIds));
     this.readingListsSubscription = this.store
       .select(selectUserReadingLists)

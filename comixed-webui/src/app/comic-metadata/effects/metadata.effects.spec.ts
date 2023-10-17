@@ -54,9 +54,9 @@ import {
   SCRAPING_VOLUME_3
 } from '@app/comic-metadata/comic-metadata.fixtures';
 import {
-  clearSelectedComicBooks,
-  deselectComicBooks
-} from '@app/library/actions/library-selections.actions';
+  clearComicBookSelectionState,
+  setSingleComicBookSelectionState
+} from '@app/comic-books/actions/comic-book-selection.actions';
 
 describe('MetadataEffects', () => {
   const SERIES = 'The Series';
@@ -241,7 +241,10 @@ describe('MetadataEffects', () => {
       });
       const outcome1 = comicScraped();
       const outcome2 = comicBookLoaded({ comicBook: COMIC });
-      const outcome3 = deselectComicBooks({ ids: [COMIC.id] });
+      const outcome3 = setSingleComicBookSelectionState({
+        id: COMIC.id,
+        selected: false
+      });
 
       actions$ = hot('-a', { a: action });
       scrapingService.scrapeComic.and.returnValue(of(serviceResponse));
@@ -295,7 +298,7 @@ describe('MetadataEffects', () => {
         skipCache: SKIP_CACHE
       });
       const outcome1 = metadataUpdateProcessStarted();
-      const outcome2 = clearSelectedComicBooks();
+      const outcome2 = clearComicBookSelectionState();
 
       actions$ = hot('-a', { a: action });
       scrapingService.startMetadataUpdateProcess

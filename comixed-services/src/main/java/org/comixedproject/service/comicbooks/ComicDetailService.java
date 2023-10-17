@@ -475,4 +475,9 @@ public class ComicDetailService {
 
     return this.comicDetailRepository.count(comicDetailExample);
   }
+
+  public List<ComicDetail> loadComicDetailListById(final Set<Long> ids) {
+    log.debug("Loading comic details by id: {}", ids);
+    return this.comicDetailRepository.findAllById(ids);
+  }
 }
