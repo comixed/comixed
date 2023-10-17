@@ -24,6 +24,7 @@ import {
 import {
   comicDetailsLoaded,
   loadComicDetails,
+  loadComicDetailsById,
   loadComicDetailsFailed
 } from '@app/comic-books/actions/comics-details-list.actions';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
@@ -57,6 +58,7 @@ describe('ComicDetailsList Reducer', () => {
     COMIC_DETAIL_4,
     COMIC_DETAIL_5
   ];
+  const IDS = COMIC_DETAILS.map(entry => entry.comicId);
   const TOTAL_COUNT = COMIC_DETAILS.length * 2;
   const FILTERED_COUNT = Math.floor(TOTAL_COUNT * 0.75);
 
@@ -88,7 +90,7 @@ describe('ComicDetailsList Reducer', () => {
     });
   });
 
-  describe('loading comic books', () => {
+  describe('loading comic details', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, loading: false },
@@ -114,7 +116,20 @@ describe('ComicDetailsList Reducer', () => {
     });
   });
 
-  describe('receiving comic books', () => {
+  describe('loading comic details by id', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, loading: false },
+        loadComicDetailsById({ comicBookIds: IDS })
+      );
+    });
+
+    it('sets the loading flag', () => {
+      expect(state.loading).toBeTrue();
+    });
+  });
+
+  describe('receiving comic details', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, loading: true, comicDetails: [] },
@@ -143,7 +158,7 @@ describe('ComicDetailsList Reducer', () => {
     });
   });
 
-  describe('failure to load comic books', () => {
+  describe('failure to load comic details', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, loading: true, comicDetails: COMIC_DETAILS },

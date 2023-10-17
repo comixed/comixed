@@ -21,10 +21,6 @@ import { MetadataProcessPageComponent } from './metadata-process-page.component'
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import {
-  initialState as initialLibrarySelectionsState,
-  LIBRARY_SELECTIONS_FEATURE_KEY
-} from '@app/library/reducers/library-selections.reducer';
 import { TitleService } from '@app/core/services/title.service';
 import { MetadataProcessStatusComponent } from '@app/comic-metadata/components/metadata-process-status/metadata-process-status.component';
 import {
@@ -59,14 +55,22 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import {
+  COMIC_BOOK_SELECTION_FEATURE_KEY,
+  initialState as initialComicBookSelectionState
+} from '@app/comic-books/reducers/comic-book-selection.reducer';
+import {
+  COMIC_DETAILS_LIST_FEATURE_KEY,
+  initialState as initialLoadComicDetailsState
+} from '@app/comic-books/reducers/comic-details-list.reducer';
 
 describe('MetadataProcessPageComponent', () => {
   const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
   const IDS = COMIC_BOOKS.map(comic => comic.id);
   const initialState = {
-    [LIBRARY_SELECTIONS_FEATURE_KEY]: initialLibrarySelectionsState,
-    [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
-    [USER_FEATURE_KEY]: initialUserState
+    [COMIC_DETAILS_LIST_FEATURE_KEY]: initialLoadComicDetailsState,
+    [USER_FEATURE_KEY]: initialUserState,
+    [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState
   };
 
   let component: MetadataProcessPageComponent;
@@ -125,7 +129,10 @@ describe('MetadataProcessPageComponent', () => {
           ...initialComicBookListState,
           comicBooks: COMIC_BOOKS
         },
-        [LIBRARY_SELECTIONS_FEATURE_KEY]: { ...initialState, ids: IDS }
+        [COMIC_BOOK_SELECTION_FEATURE_KEY]: {
+          ...initialComicBookSelectionState,
+          ids: IDS
+        }
       });
     });
 

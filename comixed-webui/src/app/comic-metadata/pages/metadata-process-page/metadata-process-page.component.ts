@@ -20,18 +20,20 @@ import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { selectLibrarySelections } from '@app/library/selectors/library-selections.selectors';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
 import { selectMetadataUpdateProcessState } from '@app/comic-metadata/selectors/metadata-update-process.selectors';
 import { MetadataUpdateProcessState } from '@app/comic-metadata/reducers/metadata-update-process.reducer';
-import { selectComicBookList } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
 import { filter } from 'rxjs/operators';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_PREFERENCE } from '@app/core';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import { selectLoadComicDetailsList } from '@app/comic-books/selectors/load-comic-details-list.selectors';
+import { loadComicBookSelections } from '@app/comic-books/actions/comic-book-selection.actions';
+import { loadComicDetailsById } from '@app/comic-books/actions/comics-details-list.actions';
 
 @Component({
   selector: 'cx-metadata-process-page',
@@ -64,13 +66,16 @@ export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
     );
     this.logger.trace('Subscribing to selection updates');
     this.selectIdSubscription = this.store
-      .select(selectLibrarySelections)
+      .select(selectComicBookSelectionIds)
       .subscribe(ids => {
         this.selectedIds = ids;
+        this.store.dispatch(
+          loadComicDetailsById({ comicBookIds: this.selectedIds })
+        );
       });
     this.logger.trace('Subscribing to the comic book list');
     this.comicBooksSubscription = this.store
-      .select(selectComicBookList)
+      .select(selectLoadComicDetailsList)
       .subscribe(comicDetails => {
         this.comicDetails = comicDetails;
       });
@@ -101,6 +106,8 @@ export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.logger.trace('Loading the selected comic book id list');
+    this.store.dispatch(loadComicBookSelections());
     this.loadTranslations();
   }
 

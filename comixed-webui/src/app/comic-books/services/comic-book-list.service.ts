@@ -38,7 +38,11 @@ import { ComicState } from '@app/comic-books/models/comic-state';
 import { HttpClient } from '@angular/common/http';
 import { interpolate } from '@app/core';
 import { LoadComicDetailsRequest } from '@app/comic-books/models/net/load-comic-details-request';
-import { LOAD_COMICS_URL } from '@app/comic-books/comic-books.constants';
+import {
+  LOAD_COMIC_DETAILS_BY_ID_URL,
+  LOAD_COMIC_DETAILS_URL
+} from '@app/comic-books/comic-books.constants';
+import { LoadComicDetailsByIdRequest } from '@app/comic-books/models/net/load-comic-details-by-id-request';
 
 @Injectable({
   providedIn: 'root'
@@ -105,7 +109,7 @@ export class ComicBookListService {
     sortDirection: string;
   }): Observable<any> {
     this.logger.debug('Loading comic details:', args);
-    return this.http.post(interpolate(LOAD_COMICS_URL), {
+    return this.http.post(interpolate(LOAD_COMIC_DETAILS_URL), {
       pageSize: args.pageSize,
       pageIndex: args.pageIndex,
       coverYear: args.coverYear,
@@ -119,5 +123,12 @@ export class ComicBookListService {
       sortBy: args.sortBy,
       sortDirection: args.sortDirection
     } as LoadComicDetailsRequest);
+  }
+
+  loadComicDetailsById(args: { ids: number[] }): Observable<any> {
+    this.logger.debug('Loading comic details by id:', args);
+    return this.http.post(interpolate(LOAD_COMIC_DETAILS_BY_ID_URL), {
+      comicBookIds: args.ids
+    } as LoadComicDetailsByIdRequest);
   }
 }

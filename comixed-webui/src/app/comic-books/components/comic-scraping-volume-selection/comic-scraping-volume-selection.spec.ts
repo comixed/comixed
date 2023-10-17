@@ -59,7 +59,7 @@ import {
   SCRAPING_ISSUE_1,
   SCRAPING_VOLUME_3
 } from '@app/comic-metadata/comic-metadata.fixtures';
-import { deselectComicBooks } from '@app/library/actions/library-selections.actions';
+import { setSingleComicBookSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 
 describe('ComicScrapingVolumeSelectionComponent', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
@@ -301,7 +301,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
 
         it('fires an action to deselect the comic', () => {
           expect(store.dispatch).toHaveBeenCalledWith(
-            deselectComicBooks({ ids: [COMIC.id] })
+            setSingleComicBookSelectionState({ id: COMIC.id, selected: false })
           );
         });
       });
@@ -320,7 +320,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
 
         it('fires an action to deselect the comic', () => {
           expect(store.dispatch).toHaveBeenCalledWith(
-            deselectComicBooks({ ids: [COMIC.id] })
+            setSingleComicBookSelectionState({ id: COMIC.id, selected: false })
           );
         });
       });

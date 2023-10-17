@@ -22,6 +22,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
   comicDetailsLoaded,
   loadComicDetails,
+  loadComicDetailsById,
   loadComicDetailsFailed
 } from '../actions/comics-details-list.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -51,6 +52,44 @@ export class ComicDetailsListEffects {
             searchText: action.searchText,
             sortBy: action.sortBy,
             sortDirection: action.sortDirection
+          })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map((response: LoadComicDetailsResponse) =>
+              comicDetailsLoaded({
+                comicDetails: response.comicDetails,
+                totalCount: response.totalCount,
+                filteredCount: response.filteredCount
+              })
+            ),
+            catchError(error => {
+              this.logger.debug('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'comic-books.load-comics.effect-failure'
+                )
+              );
+              return of(loadComicDetailsFailed());
+            })
+          )
+      ),
+      catchError(error => {
+        this.logger.debug('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(loadComicDetailsFailed());
+      })
+    );
+  });
+
+  loadComicDetailsById$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(loadComicDetailsById),
+      switchMap(action =>
+        this.comicBookListService
+          .loadComicDetailsById({
+            ids: action.comicBookIds
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),

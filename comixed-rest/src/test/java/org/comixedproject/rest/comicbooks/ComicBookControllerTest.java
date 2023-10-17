@@ -24,7 +24,9 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
@@ -77,7 +79,7 @@ public class ComicBookControllerTest {
   private static final String TEST_SORT_DIRECTION = "asc";
   private static final long TEST_TOTAL_COMIC_COUNT = RandomUtils.nextLong() * 30000L;
   private static final long TEST_COMIC_BOOK_COUNT = TEST_TOTAL_COMIC_COUNT * 2L;
-
+  private final Set<Long> comicBookIdSet = new HashSet<>();
   @InjectMocks private ComicBookController controller;
   @Mock private ComicBookService comicBookService;
   @Mock private ComicDetailService comicDetailService;
@@ -91,12 +93,12 @@ public class ComicBookControllerTest {
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private List<PageOrderEntry> pageOrderEntrylist;
   @Mock private List<ComicDetail> comicDetailList;
-
   @Captor private ArgumentCaptor<InputStream> inputStreamCaptor;
 
   @Before
   public void setUp() {
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    comicBookIdSet.add(TEST_COMIC_ID);
   }
 
   @Test
@@ -445,5 +447,21 @@ public class ComicBookControllerTest {
     assertSame(comicDetailList, result.getComicDetails());
     assertEquals(TEST_COMIC_BOOK_COUNT, result.getTotalCount());
     assertEquals(TEST_TOTAL_COMIC_COUNT, result.getFilteredCount());
+  }
+
+  @Test
+  public void testLoadComicDetailsById() {
+    Mockito.when(comicDetailService.loadComicDetailListById(Mockito.anySet()))
+        .thenReturn(comicDetailList);
+
+    final LoadComicDetailsResponse result =
+        controller.loadComicDetailListById(new LoadComicDetailsByIdRequest(comicBookIdSet));
+
+    assertNotNull(result);
+    assertSame(comicDetailList, result.getComicDetails());
+    assertEquals(comicBookIdSet.size(), result.getTotalCount());
+    assertEquals(comicBookIdSet.size(), result.getFilteredCount());
+
+    Mockito.verify(comicDetailService, Mockito.times(1)).loadComicDetailListById(comicBookIdSet);
   }
 }

@@ -85,6 +85,8 @@ public class ComicDetailServiceTest {
   @Mock private ComicDetailExampleBuilder exampleBuilder;
   @Mock private Example<ComicDetail> comicDetailExample;
   @Mock private Page<ComicDetail> comicDetailListPage;
+  @Mock private Set<Long> comicBookIdSet;
+
   @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
   @Captor private ArgumentCaptor<Date> startDateArgumentCaptor;
   @Captor private ArgumentCaptor<Date> endDateArgumentCaptor;
@@ -599,5 +601,17 @@ public class ComicDetailServiceTest {
 
     Mockito.verify(exampleBuilder, Mockito.times(1)).build();
     Mockito.verify(comicDetailRepository, Mockito.times(1)).count(comicDetailExample);
+  }
+
+  @Test
+  public void testLoadComicDetailsById() {
+    Mockito.when(comicDetailRepository.findAllById(Mockito.anySet())).thenReturn(comicDetailList);
+
+    final List<ComicDetail> result = service.loadComicDetailListById(comicBookIdSet);
+
+    assertNotNull(result);
+    assertSame(comicDetailList, result);
+
+    Mockito.verify(comicDetailRepository, Mockito.times(1)).findAllById(comicBookIdSet);
   }
 }

@@ -37,7 +37,7 @@ import {
 } from '@app/comic-books/actions/mark-comics-deleted.actions';
 import { hot } from 'jasmine-marbles';
 import { MarkComicsDeletedEffects } from '@app/comic-books/effects/mark-comics-deleted.effects';
-import { clearSelectedComicBooks } from '@app/library/actions/library-selections.actions';
+import { clearComicBookSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 
 describe('MarkComicsDeletedEffects', () => {
   const COMICS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
@@ -91,7 +91,7 @@ describe('MarkComicsDeletedEffects', () => {
         deleted: DELETED
       });
       const outcome1 = comicsMarkedDeleted();
-      const outcome2 = clearSelectedComicBooks();
+      const outcome2 = clearComicBookSelectionState();
 
       actions$ = hot('-a', { a: action });
       comicService.markComicsDeleted.and.returnValue(of(serviceResponse));

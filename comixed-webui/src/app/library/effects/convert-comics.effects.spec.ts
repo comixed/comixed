@@ -38,7 +38,7 @@ import {
   convertComicsFailed
 } from '@app/library/actions/convert-comics.actions';
 import { hot } from 'jasmine-marbles';
-import { clearSelectedComicBooks } from '@app/library/actions/library-selections.actions';
+import { clearComicBookSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 
 describe('ConvertComicsEffects', () => {
   const COMIC_BOOKS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
@@ -94,7 +94,7 @@ describe('ConvertComicsEffects', () => {
         renamePages: RENAME_PAGES
       });
       const outcome1 = comicsConverting();
-      const outcome2 = clearSelectedComicBooks();
+      const outcome2 = clearComicBookSelectionState();
 
       actions$ = hot('-a', { a: action });
       libraryService.convertComics

@@ -46,9 +46,9 @@ import { IssueMetadata } from '@app/comic-metadata/models/issue-metadata';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { comicBookLoaded } from '@app/comic-books/actions/comic-book.actions';
 import {
-  clearSelectedComicBooks,
-  deselectComicBooks
-} from '@app/library/actions/library-selections.actions';
+  clearComicBookSelectionState,
+  setSingleComicBookSelectionState
+} from '@app/comic-books/actions/comic-book-selection.actions';
 
 @Injectable()
 export class MetadataEffects {
@@ -154,7 +154,10 @@ export class MetadataEffects {
             mergeMap((response: ComicBook) => [
               comicScraped(),
               comicBookLoaded({ comicBook: response }),
-              deselectComicBooks({ ids: [response.id] })
+              setSingleComicBookSelectionState({
+                id: response.id,
+                selected: false
+              })
             ]),
             catchError(error => {
               this.logger.error('Service failure:', error);
@@ -200,7 +203,7 @@ export class MetadataEffects {
             ),
             mergeMap(() => [
               metadataUpdateProcessStarted(),
-              clearSelectedComicBooks()
+              clearComicBookSelectionState()
             ]),
             catchError(error => {
               this.logger.error('Service failure:', error);

@@ -93,6 +93,10 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
+import {
+  COMIC_BOOK_SELECTION_FEATURE_KEY,
+  initialState as initialComicBookSelectionState
+} from '@app/comic-books/reducers/comic-book-selection.reducer';
 
 describe('ReadingListDetailPageComponent', () => {
   const READING_LIST = {
@@ -105,6 +109,7 @@ describe('ReadingListDetailPageComponent', () => {
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
     [DOWNLOAD_READING_LIST_FEATURE_KEY]: initialDownloadReadingListState,
     [LIBRARY_SELECTIONS_FEATURE_KEY]: initialLibrarySelectionsState,
+    [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadListState
   };
 
