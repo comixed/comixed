@@ -45,7 +45,7 @@ import { ComicBook } from '@app/comic-books/models/comic-book';
 import { selectComicBook } from '@app/comic-books/selectors/comic-book.selectors';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { selectLoadComicDetailsList } from '@app/comic-books/selectors/load-comic-details-list.selectors';
-import { loadComicDetailsById } from '@app/comic-books/actions/comics-details-list.actions';
+import { loadComicDetailsById } from '@app/comic-books/actions/comic-details-list.actions';
 
 @Component({
   selector: 'cx-scraping-page',
@@ -110,7 +110,6 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
       .select(selectLoadComicDetailsList)
       .subscribe(comicDetails => {
         this.comicDetails = comicDetails;
-        console.log('*** comicDetails:', comicDetails);
         if (this.comicDetails.length > 0) {
           this.store.dispatch(
             loadComicBook({ id: this.comicDetails[0].comicId })

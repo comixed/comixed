@@ -41,7 +41,7 @@ export const loadComicDetails = createAction(
 );
 
 export const loadComicDetailsById = createAction(
-  '[Comic Details List] Load comic details by their ids',
+  '[Comic Detail List] Load comic details by their ids',
   props<{ comicBookIds: number[] }>()
 );
 
@@ -56,4 +56,14 @@ export const comicDetailsLoaded = createAction(
 
 export const loadComicDetailsFailed = createAction(
   '[Comic Details List]  Loading a page worth of comic details failed'
+);
+
+export const comicDetailUpdated = createAction(
+  '[Comic Details List] Received an updated comic detail',
+  props<{ comicDetail: ComicDetail }>()
+);
+
+export const comicDetailRemoved = createAction(
+  '[Comic Details List] Received an removed comic detail',
+  props<{ comicDetail: ComicDetail }>()
 );

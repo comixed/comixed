@@ -38,7 +38,7 @@ public class PublishComicBookUpdateActionTest {
   private static final String TEST_COMIC_AS_JSON = "Object as JSON";
   private static final long TEST_COMIC_ID = 273L;
 
-  @InjectMocks private PublishComicUpdateAction action;
+  @InjectMocks private PublishComicBookUpdateAction action;
   @Mock private SimpMessagingTemplate messagingTemplate;
   @Mock private ObjectMapper objectMapper;
   @Mock private ObjectWriter objectWriter;
@@ -73,10 +73,10 @@ public class PublishComicBookUpdateActionTest {
     Mockito.verify(objectMapper, Mockito.times(2)).writerWithView(View.ComicDetailsView.class);
     Mockito.verify(objectWriter, Mockito.times(2)).writeValueAsString(comicBook);
     Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(PublishComicUpdateAction.COMIC_LIST_UPDATE_TOPIC, TEST_COMIC_AS_JSON);
+        .convertAndSend(PublishComicBookUpdateAction.COMIC_LIST_UPDATE_TOPIC, TEST_COMIC_AS_JSON);
     Mockito.verify(messagingTemplate, Mockito.times(1))
         .convertAndSend(
-            String.format(PublishComicUpdateAction.COMIC_BOOK_UPDATE_TOPIC, TEST_COMIC_ID),
+            String.format(PublishComicBookUpdateAction.COMIC_BOOK_UPDATE_TOPIC, TEST_COMIC_ID),
             TEST_COMIC_AS_JSON);
   }
 }

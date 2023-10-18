@@ -24,7 +24,7 @@ import {
   loadComicDetails,
   loadComicDetailsById,
   loadComicDetailsFailed
-} from '../actions/comics-details-list.actions';
+} from '../actions/comic-details-list.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicBookListService } from '@app/comic-books/services/comic-book-list.service';
 import { AlertService } from '@app/core/services/alert.service';

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project.
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,24 +26,26 @@ import org.comixedproject.views.View;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>PublishComicUpdateAction</code> publishes messages when a comic is updated.
+ * <code>PublishComicBookRemovalAction</code> publishes a message when a comic is removed from the
+ * library.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class PublishComicUpdateAction extends AbstractPublishAction<ComicBook> {
-  public static final String COMIC_LIST_UPDATE_TOPIC = "/topic/comic-list.update";
-  /** Topic which receives individual comic updates in real time. */
-  public static final String COMIC_BOOK_UPDATE_TOPIC = "/topic/comic-book.%d.update";
+public class PublishComicBookRemovalAction extends AbstractPublishAction<ComicBook> {
+  /** Topic which receives comic list removals in real time. */
+  public static final String COMIC_LIST_REMOVAL_TOPIC = "/topic/comic-book-list.removal";
+  /** Topic which receives individual comic removals in real time. */
+  public static final String COMIC_BOOK_REMOVAL_TOPIC = "/topic/comic-book.%d.removal";
 
   @Override
   public void publish(final ComicBook comicBook) throws PublishingException {
-    log.trace("Publishing comicBook list update");
-    this.doPublish(COMIC_LIST_UPDATE_TOPIC, comicBook, View.ComicDetailsView.class);
-    log.trace("Publishing comicBook book update");
+    log.trace("Publishing comicBook list removal");
+    this.doPublish(COMIC_LIST_REMOVAL_TOPIC, comicBook, View.ComicDetailsView.class);
+    log.trace("Publishing comicBook book removal");
     this.doPublish(
-        String.format(COMIC_BOOK_UPDATE_TOPIC, comicBook.getId()),
+        String.format(COMIC_BOOK_REMOVAL_TOPIC, comicBook.getId()),
         comicBook,
         View.ComicDetailsView.class);
   }

@@ -18,12 +18,15 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
+  comicDetailRemoved,
   comicDetailsLoaded,
+  comicDetailUpdated,
   loadComicDetails,
   loadComicDetailsById,
   loadComicDetailsFailed
-} from '../actions/comics-details-list.actions';
+} from '../actions/comic-details-list.actions';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { deepClone } from '@angular-ru/cdk/object';
 
 export const COMIC_DETAILS_LIST_FEATURE_KEY = 'comic_details_list_state';
 
@@ -55,7 +58,23 @@ export const reducer = createReducer(
   on(loadComicDetailsFailed, state => ({
     ...state,
     loading: false
-  }))
+  })),
+  on(comicDetailUpdated, (state, action) => {
+    const comicDetails = deepClone(state.comicDetails);
+    const index = comicDetails
+      .map(entry => entry.id)
+      .indexOf(action.comicDetail.id);
+    if (index !== -1) {
+      comicDetails[index] = { ...action.comicDetail };
+    }
+    return { ...state, comicDetails };
+  }),
+  on(comicDetailRemoved, (state, action) => {
+    const comicDetails = state.comicDetails.filter(
+      entry => entry.id !== action.comicDetail.id
+    );
+    return { ...state, comicDetails };
+  })
 );
 
 export const comicDetailsListFeature = createFeature({
