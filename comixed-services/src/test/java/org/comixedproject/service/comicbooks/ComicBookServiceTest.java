@@ -95,7 +95,17 @@ public class ComicBookServiceTest {
   private static final String TEST_STORY_NAME = "The Story Name";
   private static final long TEST_COMIC_COUNT = 239L;
   private static final String TEST_SEARCH_TERMS = "The search terms";
-
+  private static final int TEST_BATCH_CHUNK_SIZE = 25;
+  private final List<ComicBook> comicBookList = new ArrayList<>();
+  private final List<ComicDetail> comicDetailList = new ArrayList<>();
+  private final List<ComicBook> comicsBySeries = new ArrayList<>();
+  private final ComicBook previousComicBook = new ComicBook();
+  private final ComicBook currentComicBook = new ComicBook();
+  private final ComicBook nextComicBook = new ComicBook();
+  private final List<Long> idList = new ArrayList<>();
+  private final GregorianCalendar calendar = new GregorianCalendar();
+  private final Date now = new Date();
+  private final List<LastRead> lastReadList = new ArrayList<>();
   @InjectMocks private ComicBookService service;
   @Mock private ComicStateHandler comicStateHandler;
   @Mock private ComicBookRepository comicBookRepository;
@@ -118,20 +128,8 @@ public class ComicBookServiceTest {
   @Mock private List<PublisherAndYearSegment> byPublisherAndYearList;
   @Mock private List<Publisher> publisherWithSeriesCountList;
   @Mock private List<Series> publisherDetail;
-
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
   @Captor private ArgumentCaptor<PageRequest> pageRequestCaptor;
-
-  private final List<ComicBook> comicBookList = new ArrayList<>();
-  private final List<ComicDetail> comicDetailList = new ArrayList<>();
-  private final List<ComicBook> comicsBySeries = new ArrayList<>();
-  private final ComicBook previousComicBook = new ComicBook();
-  private final ComicBook currentComicBook = new ComicBook();
-  private final ComicBook nextComicBook = new ComicBook();
-  private final List<Long> idList = new ArrayList<>();
-  private final GregorianCalendar calendar = new GregorianCalendar();
-  private final Date now = new Date();
-  private final List<LastRead> lastReadList = new ArrayList<>();
 
   @Before
   public void setUp() throws ComiXedUserException {
@@ -1252,5 +1250,19 @@ public class ComicBookServiceTest {
     assertEquals(TEST_COMIC_COUNT, result);
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).getUnscrapedComicCount();
+  }
+
+  @Test
+  public void testGetComicBooksWithoutDetails() {
+    Mockito.when(comicBookRepository.getComicBooksWithoutDetails(Mockito.anyInt()))
+        .thenReturn(comicBookList);
+
+    final List<ComicBook> result = service.getComicBooksWithoutDetails(TEST_BATCH_CHUNK_SIZE);
+
+    assertNotNull(result);
+    assertSame(comicBookList, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1))
+        .getComicBooksWithoutDetails(TEST_BATCH_CHUNK_SIZE);
   }
 }

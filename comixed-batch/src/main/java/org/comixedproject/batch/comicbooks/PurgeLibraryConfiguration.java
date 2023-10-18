@@ -20,8 +20,11 @@ package org.comixedproject.batch.comicbooks;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.comicbooks.processors.PurgeMarkedComicsProcessor;
+import org.comixedproject.batch.comicbooks.processors.RemoveComicBooksWithoutDetailsProcessor;
 import org.comixedproject.batch.comicbooks.readers.PurgeMarkedComicsReader;
+import org.comixedproject.batch.comicbooks.readers.RemoveComicBooksWithoutDetailsReader;
 import org.comixedproject.batch.comicbooks.writers.PurgeMarkedComicBooksWriter;
+import org.comixedproject.batch.writers.NoopWriter;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -58,11 +61,38 @@ public class PurgeLibraryConfiguration {
   @Qualifier("purgeLibraryJob")
   public Job purgeLibraryJob(
       final JobBuilderFactory jobBuilderFactory,
-      @Qualifier("purgeMarkedComicsStep") final Step purgeMarkedComicsStep) {
+      @Qualifier("purgeMarkedComicsStep") final Step purgeMarkedComicsStep,
+      @Qualifier("removeComicBooksWithoutDetailsStep") final Step removeMalformedComicBooksStep) {
     return jobBuilderFactory
         .get("purgeLibraryJob")
         .incrementer(new RunIdIncrementer())
-        .start(purgeMarkedComicsStep)
+        .start(removeMalformedComicBooksStep)
+        .next(purgeMarkedComicsStep)
+        .build();
+  }
+
+  /**
+   * Returns the remove malformed comics step.
+   *
+   * @param stepBuilderFactory the step factory
+   * @param reader the reader
+   * @param processor the processor
+   * @param writer the writer
+   * @return the step
+   */
+  @Bean
+  @Qualifier("removeComicBooksWithoutDetailsStep")
+  public Step removeComicBooksWithoutDetailsStep(
+      final StepBuilderFactory stepBuilderFactory,
+      final RemoveComicBooksWithoutDetailsReader reader,
+      final RemoveComicBooksWithoutDetailsProcessor processor,
+      final NoopWriter<ComicBook> writer) {
+    return stepBuilderFactory
+        .get("removeComicBooksWithoutDetailsStep")
+        .<ComicBook, ComicBook>chunk(this.batchChunkSize)
+        .reader(reader)
+        .processor(processor)
+        .writer(writer)
         .build();
   }
 

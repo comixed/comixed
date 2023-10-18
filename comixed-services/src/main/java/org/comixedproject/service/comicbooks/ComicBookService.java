@@ -836,4 +836,15 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     log.debug("Getting the count of unprocessed comics");
     return this.comicBookRepository.getUnscrapedComicCount();
   }
+
+  /**
+   * Returns a set of records without an associated {@link ComicDetail} record.
+   *
+   * @param batchChunkSize the batch chunk size
+   * @return the records
+   */
+  public List<ComicBook> getComicBooksWithoutDetails(final int batchChunkSize) {
+    log.debug("Loading ComicBook records without a ComicDetail: chunk size={}", batchChunkSize);
+    return this.comicBookRepository.getComicBooksWithoutDetails(batchChunkSize);
+  }
 }
