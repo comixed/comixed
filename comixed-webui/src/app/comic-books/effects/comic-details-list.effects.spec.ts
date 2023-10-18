@@ -40,7 +40,7 @@ import {
   loadComicDetails,
   loadComicDetailsById,
   loadComicDetailsFailed
-} from '@app/comic-books/actions/comics-details-list.actions';
+} from '@app/comic-books/actions/comic-details-list.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AlertService } from '@app/core/services/alert.service';

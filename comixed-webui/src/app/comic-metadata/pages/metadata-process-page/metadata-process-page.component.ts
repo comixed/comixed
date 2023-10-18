@@ -33,7 +33,7 @@ import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { selectLoadComicDetailsList } from '@app/comic-books/selectors/load-comic-details-list.selectors';
 import { loadComicBookSelections } from '@app/comic-books/actions/comic-book-selection.actions';
-import { loadComicDetailsById } from '@app/comic-books/actions/comics-details-list.actions';
+import { loadComicDetailsById } from '@app/comic-books/actions/comic-details-list.actions';
 
 @Component({
   selector: 'cx-metadata-process-page',

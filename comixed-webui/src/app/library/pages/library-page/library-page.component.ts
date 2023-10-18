@@ -43,7 +43,7 @@ import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import { loadComicDetails } from '@app/comic-books/actions/comics-details-list.actions';
+import { loadComicDetails } from '@app/comic-books/actions/comic-details-list.actions';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import {
   selectLoadComicDetailsList,
