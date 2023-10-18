@@ -30,8 +30,8 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.messaging.comicbooks.PublishComicRemovalAction;
-import org.comixedproject.messaging.comicbooks.PublishComicUpdateAction;
+import org.comixedproject.messaging.comicbooks.PublishComicBookRemovalAction;
+import org.comixedproject.messaging.comicbooks.PublishComicBookUpdateAction;
 import org.comixedproject.model.collections.Publisher;
 import org.comixedproject.model.collections.Series;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -64,8 +64,8 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private ComicBookRepository comicBookRepository;
   @Autowired private ComicBookMetadataAdaptor comicBookMetadataAdaptor;
-  @Autowired private PublishComicUpdateAction publishComicUpdateAction;
-  @Autowired private PublishComicRemovalAction publishComicRemovalAction;
+  @Autowired private PublishComicBookUpdateAction publishComicBookUpdateAction;
+  @Autowired private PublishComicBookRemovalAction publishComicBookRemovalAction;
   @Autowired private ImprintService imprintService;
 
   /**
@@ -283,7 +283,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     if (state.getId() == ComicState.REMOVED) {
       log.trace("Publishing comic removal");
       try {
-        this.publishComicRemovalAction.publish(comic);
+        this.publishComicBookRemovalAction.publish(comic);
       } catch (PublishingException error) {
         log.error("Failed to publish comic removal", error);
       }
@@ -293,7 +293,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
       final ComicBook updated = this.comicBookRepository.save(comic);
       log.trace("Publishing comic  update");
       try {
-        this.publishComicUpdateAction.publish(updated);
+        this.publishComicBookUpdateAction.publish(updated);
       } catch (PublishingException error) {
         log.error("Failed to publish comic update", error);
       }

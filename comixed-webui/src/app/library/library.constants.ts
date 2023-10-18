@@ -73,7 +73,7 @@ export const DUPLICATE_PAGES_UNBLOCKED_PAGES_ONLY =
   'preference.duplicate-pages.unblocked-only';
 
 // messaging
-export const COMIC_LIST_UPDATE_TOPIC = '/topic/comic-list.update';
-export const COMIC_LIST_REMOVAL_TOPIC = '/topic/comic-list.removal';
+export const COMIC_LIST_UPDATE_TOPIC = '/topic/comic-book-list.update';
+export const COMIC_LIST_REMOVAL_TOPIC = '/topic/comic-book-list.removal';
 export const DUPLICATE_PAGE_LIST_TOPIC = '/topic/duplicate-page-list.update';
 export const REMOTE_LIBRARY_STATE_TOPIC = '/topic/remote-library.update';

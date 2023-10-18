@@ -27,10 +27,6 @@ import {
   COMIC_LIST_UPDATE_TOPIC
 } from '@app/library/library.constants';
 import { ComicBook } from '@app/comic-books/models/comic-book';
-import {
-  comicBookListRemovalReceived,
-  comicBookListUpdateReceived
-} from '@app/comic-books/actions/comic-book-list.actions';
 import { Observable } from 'rxjs';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
@@ -43,6 +39,10 @@ import {
   LOAD_COMIC_DETAILS_URL
 } from '@app/comic-books/comic-books.constants';
 import { LoadComicDetailsByIdRequest } from '@app/comic-books/models/net/load-comic-details-by-id-request';
+import {
+  comicDetailRemoved,
+  comicDetailUpdated
+} from '@app/comic-books/actions/comic-details-list.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -62,10 +62,10 @@ export class ComicBookListService {
         this.logger.trace('Subscribing to comic list updates');
         this.updateSubscription = this.webSocketService.subscribe<ComicBook>(
           COMIC_LIST_UPDATE_TOPIC,
-          comicBook => {
-            this.logger.debug('Received comic list update:', comicBook);
+          comic => {
+            this.logger.debug('Received comic list update:', comic);
             this.store.dispatch(
-              comicBookListUpdateReceived({ comicDetail: comicBook.detail })
+              comicDetailUpdated({ comicDetail: comic.detail })
             );
           }
         );
@@ -75,7 +75,7 @@ export class ComicBookListService {
           comicBook => {
             this.logger.debug('Received comic removal update:', comicBook);
             this.store.dispatch(
-              comicBookListRemovalReceived({ comicDetail: comicBook.detail })
+              comicDetailRemoved({ comicDetail: comicBook.detail })
             );
           }
         );

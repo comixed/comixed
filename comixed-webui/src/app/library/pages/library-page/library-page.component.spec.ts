@@ -87,7 +87,7 @@ import {
   initialState as initialComicDetailListState
 } from '@app/comic-books/reducers/comic-details-list.reducer';
 import { ComicType } from '@app/comic-books/models/comic-type';
-import { loadComicDetails } from '@app/comic-books/actions/comics-details-list.actions';
+import { loadComicDetails } from '@app/comic-books/actions/comic-details-list.actions';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,

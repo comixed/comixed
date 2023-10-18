@@ -40,10 +40,7 @@ import {
   COMIC_LIST_REMOVAL_TOPIC,
   COMIC_LIST_UPDATE_TOPIC
 } from '@app/library/library.constants';
-import {
-  comicBookListRemovalReceived,
-  comicBookListUpdateReceived
-} from '@app/comic-books/actions/comic-book-list.actions';
+import { comicBookListRemovalReceived } from '@app/comic-books/actions/comic-book-list.actions';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
@@ -59,6 +56,10 @@ import {
 } from '@app/comic-books/comic-books.constants';
 import { LoadComicDetailsResponse } from '@app/comic-books/models/net/load-comic-details-response';
 import { LoadComicDetailsByIdRequest } from '@app/comic-books/models/net/load-comic-details-by-id-request';
+import {
+  comicDetailRemoved,
+  comicDetailUpdated
+} from '@app/comic-books/actions/comic-details-list.actions';
 
 describe('ComicBookListService', () => {
   const PAGE_SIZE = 25;
@@ -176,13 +177,13 @@ describe('ComicBookListService', () => {
 
     it('processes comic updates', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        comicBookListUpdateReceived({ comicDetail: COMIC_ADDED.detail })
+        comicDetailUpdated({ comicDetail: COMIC_ADDED.detail })
       );
     });
 
     it('processes comic removals', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        comicBookListRemovalReceived({ comicDetail: COMIC_REMOVED.detail })
+        comicDetailRemoved({ comicDetail: COMIC_REMOVED.detail })
       );
     });
   });

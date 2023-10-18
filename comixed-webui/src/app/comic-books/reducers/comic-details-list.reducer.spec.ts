@@ -22,11 +22,13 @@ import {
   reducer
 } from './comic-details-list.reducer';
 import {
+  comicDetailRemoved,
   comicDetailsLoaded,
+  comicDetailUpdated,
   loadComicDetails,
   loadComicDetailsById,
   loadComicDetailsFailed
-} from '@app/comic-books/actions/comics-details-list.actions';
+} from '@app/comic-books/actions/comic-details-list.actions';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
@@ -172,6 +174,84 @@ describe('ComicDetailsList Reducer', () => {
 
     it('leads the comic details intact', () => {
       expect(state.comicDetails).toEqual(COMIC_DETAILS);
+    });
+  });
+
+  describe('receiving an updated comic detail', () => {
+    const ORIGINAL = COMIC_DETAILS[3];
+    const UPDATE = {
+      ...ORIGINAL,
+      comicState: ComicState.CHANGED
+    };
+
+    describe('when it is one of the comics shown', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, comicDetails: COMIC_DETAILS },
+          comicDetailUpdated({ comicDetail: UPDATE })
+        );
+      });
+
+      it('removes the original comic', () => {
+        expect(state.comicDetails).not.toContain(ORIGINAL);
+      });
+
+      it('adds the updated comic', () => {
+        expect(state.comicDetails).toContain(UPDATE);
+      });
+    });
+
+    describe('when it is not one of the comics shown', () => {
+      beforeEach(() => {
+        state = reducer(
+          {
+            ...state,
+            comicDetails: COMIC_DETAILS.filter(entry => entry.id !== UPDATE.id)
+          },
+          comicDetailUpdated({ comicDetail: UPDATE })
+        );
+      });
+
+      it('does not add the update', () => {
+        expect(state.comicDetails).not.toContain(UPDATE);
+      });
+    });
+  });
+
+  describe('receiving a removed comic detail', () => {
+    const ORIGINAL = COMIC_DETAILS[3];
+
+    describe('when it is one of the comics shown', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, comicDetails: COMIC_DETAILS },
+          comicDetailRemoved({ comicDetail: ORIGINAL })
+        );
+      });
+
+      it('removes the original comic', () => {
+        expect(state.comicDetails).not.toContain(ORIGINAL);
+      });
+    });
+
+    describe('when it is not one of the comics shown', () => {
+      const DISPLAYED_LIST = COMIC_DETAILS.filter(
+        entry => entry.id !== ORIGINAL.id
+      );
+
+      beforeEach(() => {
+        state = reducer(
+          {
+            ...state,
+            comicDetails: DISPLAYED_LIST
+          },
+          comicDetailRemoved({ comicDetail: ORIGINAL })
+        );
+      });
+
+      it('does not change the detail list', () => {
+        expect(state.comicDetails).toEqual(DISPLAYED_LIST);
+      });
     });
   });
 });
