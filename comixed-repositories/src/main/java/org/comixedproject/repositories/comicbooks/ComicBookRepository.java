@@ -595,4 +595,13 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   @Query(
       "SELECT COUNT(c) FROM ComicBook c WHERE c.id NOT IN (SELECT s.comicBook.id FROM ComicMetadataSource s)")
   long getUnscrapedComicCount();
+
+  /**
+   * Returns a set of comic books without an associated comic detail record.
+   *
+   * @param batchChunkSize the batch chunk size
+   * @return the list of comic books
+   */
+  @Query("SELECT c FROM ComicBook c WHERE c.id NOT IN (SELECT d.comicBook.id FROM ComicDetail d)")
+  List<ComicBook> getComicBooksWithoutDetails(int batchChunkSize);
 }
