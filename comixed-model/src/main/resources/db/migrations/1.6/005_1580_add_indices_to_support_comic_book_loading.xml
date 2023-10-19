@@ -5,7 +5,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
     <changeSet id="005_1580_add_indices_to_support_comic_book_loading.xml" author="mcpierce">
 
-        <preConditions onFail="HALT">
+        <preConditions onFail="MARK_RAN">
             <indexExists tableName="ComicDetails" indexName="ComicDetailsArchiveTypeIdx"/>
             <indexExists tableName="ComicDetails" indexName="ComicDetailsIssueNumberIdx"/>
             <indexExists tableName="ComicDetails" indexName="ComicDetailsCoverDateIdx"/>

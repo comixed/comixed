@@ -18,18 +18,20 @@
 
 package org.comixedproject.rest.comicbooks;
 
-import static junit.framework.TestCase.*;
-import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertSame;
 
+import java.security.Principal;
 import java.util.Set;
-import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicType;
 import org.comixedproject.model.net.comicbooks.MultipleComicBooksSelectionRequest;
 import org.comixedproject.model.net.comicbooks.SingleComicBookSelectionRequest;
-import org.comixedproject.service.comicbooks.ComicBookSelectionService;
+import org.comixedproject.service.comicbooks.ComicSelectionException;
+import org.comixedproject.service.comicbooks.ComicSelectionService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -39,6 +41,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComicBookSelectionControllerTest {
+  private static final String TEST_EMAIL = "comixedreader@localhost";
   private static final Long TEST_COMIC_BOOK_ID = 17L;
   private static final Integer TEST_COVER_YEAR = RandomUtils.nextInt(50) + 1970;
   private static final Integer TEST_COVER_MONTH = RandomUtils.nextInt(12);
@@ -51,164 +54,116 @@ public class ComicBookSelectionControllerTest {
   private static final Boolean TEST_SELECT = RandomUtils.nextBoolean();
 
   @InjectMocks private ComicBookSelectionController controller;
-  @Mock private HttpSession httpSession;
-  @Mock private ComicBookSelectionService comicBookSelectionService;
-  @Mock private Set<Long> selectedComicIds;
-  @Mock private Set<Long> existingSelections;
+  @Mock private ComicSelectionService comicSelectionService;
+  @Mock private Principal principal;
+  @Mock private Set<Long> selectionIdList;
+
+  @Before
+  public void setUp() {
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
+  }
+
+  @Test(expected = ComicSelectionException.class)
+  public void testLoadComicSelectionsWithException() throws ComicSelectionException {
+    Mockito.when(comicSelectionService.getAllForEmail(Mockito.anyString()))
+        .thenThrow(ComicSelectionException.class);
+
+    try {
+      controller.getAllForEmail(principal);
+    } finally {
+      Mockito.verify(comicSelectionService, Mockito.times(1)).getAllForEmail(TEST_EMAIL);
+    }
+  }
 
   @Test
-  public void testLoadComicBookSelectionsNoneExisting() {
-    Mockito.when(httpSession.getAttribute(Mockito.anyString())).thenReturn(null);
+  public void testLoadComicSelections() throws ComicSelectionException {
+    Mockito.when(comicSelectionService.getAllForEmail(Mockito.anyString()))
+        .thenReturn(selectionIdList);
 
-    final Set<Long> result = controller.loadComicBookSelections(httpSession);
+    final Set<Long> result = controller.getAllForEmail(principal);
 
     assertNotNull(result);
-    assertTrue(result.isEmpty());
+    assertSame(selectionIdList, result);
 
-    Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
+    Mockito.verify(comicSelectionService, Mockito.times(1)).getAllForEmail(TEST_EMAIL);
+  }
+
+  @Test(expected = ComicSelectionException.class)
+  public void testSelectSingleComicAddingWithException() throws ComicSelectionException {
+    Mockito.doThrow(ComicSelectionException.class)
+        .when(comicSelectionService)
+        .addComicSelectionForUser(TEST_EMAIL, TEST_COMIC_BOOK_ID);
+
+    try {
+      controller.selectSingleComicBook(
+          principal, new SingleComicBookSelectionRequest(TEST_COMIC_BOOK_ID, true));
+    } finally {
+      Mockito.verify(comicSelectionService, Mockito.times(1))
+          .addComicSelectionForUser(TEST_EMAIL, TEST_COMIC_BOOK_ID);
+    }
   }
 
   @Test
-  public void testLoadComicBookSelections() {
-    Mockito.when(httpSession.getAttribute(Mockito.anyString())).thenReturn(selectedComicIds);
-
-    final Set<Long> result = controller.loadComicBookSelections(httpSession);
-
-    assertNotNull(result);
-    assertSame(selectedComicIds, result);
-
-    Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
-  }
-
-  @Test
-  public void testSingleComicBookSelection() {
-    Mockito.when(httpSession.getAttribute(Mockito.anyString())).thenReturn(null);
-    Mockito.when(
-            comicBookSelectionService.selectSingleComicBook(
-                Mockito.nullable(Set.class), Mockito.anyLong(), Mockito.anyBoolean()))
-        .thenReturn(selectedComicIds);
-
+  public void testSelectSingleComicWithAdded() throws ComicSelectionException {
     controller.selectSingleComicBook(
-        httpSession, new SingleComicBookSelectionRequest(TEST_COMIC_BOOK_ID, TEST_SELECT));
+        principal, new SingleComicBookSelectionRequest(TEST_COMIC_BOOK_ID, true));
 
-    Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
-    Mockito.verify(comicBookSelectionService, Mockito.times(1))
-        .selectSingleComicBook(null, TEST_COMIC_BOOK_ID, TEST_SELECT);
+    Mockito.verify(comicSelectionService, Mockito.times(1))
+        .addComicSelectionForUser(TEST_EMAIL, TEST_COMIC_BOOK_ID);
+  }
+
+  @Test(expected = ComicSelectionException.class)
+  public void testSelectSingleComicRemovingWithException() throws ComicSelectionException {
+    Mockito.doThrow(ComicSelectionException.class)
+        .when(comicSelectionService)
+        .removeComicSelectionFromUser(TEST_EMAIL, TEST_COMIC_BOOK_ID);
+
+    try {
+      controller.selectSingleComicBook(
+          principal, new SingleComicBookSelectionRequest(TEST_COMIC_BOOK_ID, false));
+    } finally {
+      Mockito.verify(comicSelectionService, Mockito.times(1))
+          .removeComicSelectionFromUser(TEST_EMAIL, TEST_COMIC_BOOK_ID);
+    }
   }
 
   @Test
-  public void testSingleComicBookSelectionExistingSelections() {
-    Mockito.when(httpSession.getAttribute(Mockito.anyString())).thenReturn(existingSelections);
-    Mockito.when(
-            comicBookSelectionService.selectSingleComicBook(
-                Mockito.anySet(), Mockito.anyLong(), Mockito.anyBoolean()))
-        .thenReturn(selectedComicIds);
-
+  public void testSelectSingleComicWithRemoving() throws ComicSelectionException {
     controller.selectSingleComicBook(
-        httpSession, new SingleComicBookSelectionRequest(TEST_COMIC_BOOK_ID, TEST_SELECT));
+        principal, new SingleComicBookSelectionRequest(TEST_COMIC_BOOK_ID, false));
 
-    Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
-    Mockito.verify(comicBookSelectionService, Mockito.times(1))
-        .selectSingleComicBook(existingSelections, TEST_COMIC_BOOK_ID, TEST_SELECT);
+    Mockito.verify(comicSelectionService, Mockito.times(1))
+        .removeComicSelectionFromUser(TEST_EMAIL, TEST_COMIC_BOOK_ID);
   }
 
   @Test
-  public void testMultipleComicBookSelection() {
-    Mockito.when(httpSession.getAttribute(Mockito.anyString())).thenReturn(null);
-    Mockito.when(
-            comicBookSelectionService.selectMultipleComicBooks(
-                Mockito.nullable(Set.class),
-                Mockito.anyInt(),
-                Mockito.anyInt(),
-                Mockito.any(ArchiveType.class),
-                Mockito.any(ComicType.class),
-                Mockito.any(ComicState.class),
-                Mockito.anyBoolean(),
-                Mockito.anyBoolean(),
-                Mockito.anyString(),
-                Mockito.anyBoolean()))
-        .thenReturn(selectedComicIds);
-
+  public void testSelectMultipleComicWithAdded() throws ComicSelectionException {
     controller.selectMultipleComicBooks(
-        httpSession,
+        principal,
         new MultipleComicBooksSelectionRequest(
-            TEST_COVER_YEAR,
-            TEST_COVER_MONTH,
-            TEST_ARCHIVE_TYPE,
-            TEST_COMIC_TYPE,
-            TEST_COMIC_STATE,
-            TEST_READ_STATE,
-            TEST_UNSCRAPED_STATE,
-            TEST_SEARCH_TEXT,
-            TEST_SELECT));
+            null, null, null, null, null, false, false, null, true));
 
-    Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
-    Mockito.verify(comicBookSelectionService, Mockito.times(1))
+    Mockito.verify(comicSelectionService, Mockito.times(1))
         .selectMultipleComicBooks(
-            null,
-            TEST_COVER_YEAR,
-            TEST_COVER_MONTH,
-            TEST_ARCHIVE_TYPE,
-            TEST_COMIC_TYPE,
-            TEST_COMIC_STATE,
-            TEST_READ_STATE,
-            TEST_UNSCRAPED_STATE,
-            TEST_SEARCH_TEXT,
-            TEST_SELECT);
+            TEST_EMAIL, null, null, null, null, null, false, false, null, true);
   }
 
   @Test
-  public void testMultipleComicBookSelectionExistingSelections() {
-    Mockito.when(httpSession.getAttribute(Mockito.anyString())).thenReturn(existingSelections);
-    Mockito.when(
-            comicBookSelectionService.selectMultipleComicBooks(
-                Mockito.nullable(Set.class),
-                Mockito.anyInt(),
-                Mockito.anyInt(),
-                Mockito.any(ArchiveType.class),
-                Mockito.any(ComicType.class),
-                Mockito.any(ComicState.class),
-                Mockito.anyBoolean(),
-                Mockito.anyBoolean(),
-                Mockito.anyString(),
-                Mockito.anyBoolean()))
-        .thenReturn(selectedComicIds);
-
+  public void testSelectMultipleComicWithRemoving() throws ComicSelectionException {
     controller.selectMultipleComicBooks(
-        httpSession,
+        principal,
         new MultipleComicBooksSelectionRequest(
-            TEST_COVER_YEAR,
-            TEST_COVER_MONTH,
-            TEST_ARCHIVE_TYPE,
-            TEST_COMIC_TYPE,
-            TEST_COMIC_STATE,
-            TEST_READ_STATE,
-            TEST_UNSCRAPED_STATE,
-            TEST_SEARCH_TEXT,
-            TEST_SELECT));
+            null, null, null, null, null, false, false, null, false));
 
-    Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
-    Mockito.verify(comicBookSelectionService, Mockito.times(1))
+    Mockito.verify(comicSelectionService, Mockito.times(1))
         .selectMultipleComicBooks(
-            existingSelections,
-            TEST_COVER_YEAR,
-            TEST_COVER_MONTH,
-            TEST_ARCHIVE_TYPE,
-            TEST_COMIC_TYPE,
-            TEST_COMIC_STATE,
-            TEST_READ_STATE,
-            TEST_UNSCRAPED_STATE,
-            TEST_SEARCH_TEXT,
-            TEST_SELECT);
+            TEST_EMAIL, null, null, null, null, null, false, false, null, false);
   }
 
   @Test
-  public void testClearSelectedComics() {
-    Mockito.when(comicBookSelectionService.clearSelectedComicBooks()).thenReturn(selectedComicIds);
+  public void testClearSelections() {
+    controller.clearSelections(principal);
 
-    controller.clearSelections(httpSession);
-
-    Mockito.verify(httpSession, Mockito.times(1))
-        .setAttribute(LIBRARY_SELECTIONS, selectedComicIds);
+    Mockito.verify(comicSelectionService, Mockito.times(1)).clearSelectedComicBooks(TEST_EMAIL);
   }
 }
