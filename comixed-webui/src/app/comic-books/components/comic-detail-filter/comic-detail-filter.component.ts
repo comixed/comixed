@@ -32,12 +32,13 @@ import { ComicType } from '@app/comic-books/models/comic-type';
   styleUrls: ['./comic-detail-filter.component.scss']
 })
 export class ComicDetailFilterComponent {
+  @Input() comicDetails: ComicDetail[] = [];
+
   @Output() closeFilter = new EventEmitter<void>();
 
   filterForm: FormGroup;
-
-  coverYears: ListItem<number>[] = [];
-  coverMonths: ListItem<number>[] = [];
+  displayableCoverYears: ListItem<number>[] = [];
+  displayableCoverMonths: ListItem<number>[] = [];
   readonly archiveTypeOptions: SelectionOption<ArchiveType>[] = [
     { label: 'archive-type.label.all', value: null },
     { label: 'archive-type.label.cbz', value: ArchiveType.CBZ },
@@ -66,50 +67,36 @@ export class ComicDetailFilterComponent {
       archiveType: [''],
       comicType: ['']
     });
-    this.loadForm();
   }
 
-  private _comicDetails: ComicDetail[] = [];
-
-  get comicDetails(): ComicDetail[] {
-    return this._comicDetails;
+  @Input() set coverYears(coverYears: number[]) {
+    this.displayableCoverYears = [
+      {
+        label: 'filtering.label.all-years',
+        value: null
+      } as ListItem<number>
+    ].concat(
+      coverYears.map(year => {
+        return { value: year, label: `${year}` } as ListItem<number>;
+      })
+    );
   }
 
-  @Input()
-  set comicDetails(comicDetails: ComicDetail[]) {
-    this._comicDetails = comicDetails;
-    this.loadForm();
+  @Input() set coverMonths(coverMonths: number[]) {
+    this.displayableCoverMonths = [
+      { label: 'filtering.label.all-months', value: null }
+    ].concat(
+      coverMonths.map(month => {
+        return {
+          value: month,
+          label: `filtering.label.month-${month - 1}`
+        } as ListItem<number>;
+      })
+    );
   }
 
   onClose(): void {
     this.logger.debug('Canceling filter updates');
     this.closeFilter.emit();
-  }
-
-  private loadForm(): void {
-    this.logger.debug('Loading cover year options');
-    this.coverYears = [
-      { label: 'filtering.label.all-years', value: null } as ListItem<number>
-    ].concat(
-      this.comicDetails
-        .filter(comic => !!comic.coverDate)
-        .map(comic => new Date(comic.coverDate).getFullYear())
-        .filter((year, index, self) => index === self.indexOf(year))
-        .sort((left, right) => left - right)
-        .map(year => {
-          return { value: year, label: `${year}` } as ListItem<number>;
-        })
-    );
-    this.logger.debug('Loading cover month options');
-    this.coverMonths = [
-      { label: 'filtering.label.all-months', value: null }
-    ].concat(
-      Array.from(Array(12).keys()).map(month => {
-        return {
-          value: month + 1,
-          label: `filtering.label.month-${month}`
-        } as ListItem<number>;
-      })
-    );
   }
 }

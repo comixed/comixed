@@ -61,6 +61,8 @@ describe('ComicDetailsList Reducer', () => {
     COMIC_DETAIL_5
   ];
   const IDS = COMIC_DETAILS.map(entry => entry.comicId);
+  const COVER_YEARS = [1965, 1971, 1996, 1998, 2006];
+  const COVER_MONTHS = [1, 3, 4, 7, 9];
   const TOTAL_COUNT = COMIC_DETAILS.length * 2;
   const FILTERED_COUNT = Math.floor(TOTAL_COUNT * 0.75);
 
@@ -81,6 +83,14 @@ describe('ComicDetailsList Reducer', () => {
 
     it('has no comic details', () => {
       expect(state.comicDetails).toEqual([]);
+    });
+
+    it('has no cover years', () => {
+      expect(state.coverYears).toEqual([]);
+    });
+
+    it('has no cover months', () => {
+      expect(state.coverMonths).toEqual([]);
     });
 
     it('has no total count', () => {
@@ -134,9 +144,17 @@ describe('ComicDetailsList Reducer', () => {
   describe('receiving comic details', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, loading: true, comicDetails: [] },
+        {
+          ...state,
+          loading: true,
+          comicDetails: [],
+          coverYears: [],
+          coverMonths: []
+        },
         comicDetailsLoaded({
           comicDetails: COMIC_DETAILS,
+          coverYears: COVER_YEARS,
+          coverMonths: COVER_MONTHS,
           totalCount: TOTAL_COUNT,
           filteredCount: FILTERED_COUNT
         })
@@ -149,6 +167,14 @@ describe('ComicDetailsList Reducer', () => {
 
     it('sets the list of comic details', () => {
       expect(state.comicDetails).toEqual(COMIC_DETAILS);
+    });
+
+    it('sets the list of cover years', () => {
+      expect(state.coverYears).toEqual(COVER_YEARS);
+    });
+
+    it('sets the list of cover months', () => {
+      expect(state.coverMonths).toEqual(COVER_MONTHS);
     });
 
     it('sets the total count', () => {

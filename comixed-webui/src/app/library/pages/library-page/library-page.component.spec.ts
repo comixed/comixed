@@ -451,22 +451,6 @@ describe('LibraryPageComponent', () => {
     });
   });
 
-  describe('receiving pages to display', () => {
-    beforeEach(() => {
-      component.coverYears = [];
-      component.coverMonths = [];
-      component.comicDetails = COMIC_DETAILS;
-    });
-
-    it('extracts the cover years', () => {
-      expect(component.coverYears).not.toEqual([]);
-    });
-
-    it('extracts the cover months', () => {
-      expect(component.coverMonths).not.toEqual([]);
-    });
-  });
-
   describe('selecting all displayable comics', () => {
     const SELECTED = Math.random() > 0.5;
 

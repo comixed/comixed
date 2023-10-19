@@ -358,6 +358,23 @@ public class ComicDetailService {
     }
   }
 
+  /**
+   * Returns the page of comics for the given index and filters.
+   *
+   * @param pageSize the page size
+   * @param pageIndex the page index
+   * @param coverYear the cover year filter
+   * @param coverMonth the cover month filter
+   * @param archiveType the archive type filter
+   * @param comicType the comic type filter
+   * @param comicState the comic state filter
+   * @param readState the read state filter
+   * @param unscrapedState the unscraped state filter
+   * @param searchText the search text filter
+   * @param sortBy the sort field
+   * @param sortDirection the sort direction
+   * @return the comic details
+   */
   public List<ComicDetail> loadComicDetailList(
       final int pageSize,
       final int pageIndex,
@@ -438,10 +455,23 @@ public class ComicDetailService {
     }
 
     return this.comicDetailRepository
-        .findAll(comicDetailExample, PageRequest.of(pageIndex, pageSize, sort))
-        .toList();
+        .findAll(comicDetailExample, PageRequest.of(pageIndex, pageSize, sort)).stream()
+        .collect(Collectors.toList());
   }
 
+  /**
+   * Returns the total number of comics found when the given filters are applied.
+   *
+   * @param coverYear the cover year filter
+   * @param coverMonth the cover month filter
+   * @param archiveType the archive type filter
+   * @param comicType the comic type filter
+   * @param comicState the comic state filter
+   * @param readState the read state filter
+   * @param unscrapedState the unscraped state filter
+   * @param searchText the search text filter
+   * @return the comic count
+   */
   public long getFilterCount(
       final Integer coverYear,
       final Integer coverMonth,
@@ -476,8 +506,144 @@ public class ComicDetailService {
     return this.comicDetailRepository.count(comicDetailExample);
   }
 
+  /**
+   * Loads a set of records by their id.
+   *
+   * @param ids the record ids
+   * @return the records
+   */
   public List<ComicDetail> loadComicDetailListById(final Set<Long> ids) {
     log.debug("Loading comic details by id: {}", ids);
     return this.comicDetailRepository.findAllById(ids);
+  }
+
+  /**
+   * Returns the list of cover years for the given filter criteria.
+   *
+   * @param coverYear the cover year filter
+   * @param coverMonth the cover month filter
+   * @param archiveType the archive type filter
+   * @param comicType the comic type filter
+   * @param comicState the comic state filter
+   * @param readState the read state filter
+   * @param unscrapedState the unscraped state filter
+   * @param searchText the search text filter
+   * @return the cover years
+   */
+  public List<Integer> getCoverYears(
+      final Integer coverYear,
+      final Integer coverMonth,
+      final ArchiveType archiveType,
+      final ComicType comicType,
+      final ComicState comicState,
+      final Boolean readState,
+      final Boolean unscrapedState,
+      final String searchText) {
+    log.debug(
+        "Loading cover years: cover date={}/{} archive type={} comic type={} comic state={} read state={} unscraped state={} search text={}",
+        coverMonth,
+        coverYear,
+        archiveType,
+        comicType,
+        comicState,
+        readState,
+        unscrapedState,
+        searchText);
+    final ComicDetailExampleBuilder builder =
+        this.comicDetailExampleBuilderObjectFactory.getObject();
+    builder.setCoverYear(coverYear);
+    builder.setCoverMonth(coverMonth);
+    builder.setArchiveType(archiveType);
+    builder.setComicType(comicType);
+    builder.setComicState(comicState);
+    builder.setUnscrapedState(unscrapedState);
+    builder.setSearchText(searchText);
+
+    final Example<ComicDetail> comicDetailExample = builder.build();
+
+    return this.comicDetailRepository.findAll(comicDetailExample).stream()
+        .map(ComicDetail::getYearPublished)
+        .distinct()
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * Returns the list of cover years for the given set of record ids.
+   *
+   * @param ids the record ids
+   * @return the years
+   */
+  public List<Integer> getCoverYears(final Set<Long> ids) {
+    log.debug("Loading cover years for ids: {}", ids);
+    return this.comicDetailRepository.findAllById(ids).stream()
+        .map(ComicDetail::getYearPublished)
+        .distinct()
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * Returns the list of cover years for the given filter criteria.
+   *
+   * @param coverYear the cover year filter
+   * @param coverMonth the cover month filter
+   * @param archiveType the archive type filter
+   * @param comicType the comic type filter
+   * @param comicState the comic state filter
+   * @param readState the read state filter
+   * @param unscrapedState the unscraped state filter
+   * @param searchText the search text filter
+   * @return the cover years
+   */
+  public List<Integer> getCoverMonths(
+      final Integer coverYear,
+      final Integer coverMonth,
+      final ArchiveType archiveType,
+      final ComicType comicType,
+      final ComicState comicState,
+      final Boolean readState,
+      final Boolean unscrapedState,
+      final String searchText) {
+    log.debug(
+        "Loading cover months: cover date={}/{} archive type={} comic type={} comic state={} read state={} unscraped state={} search text={}",
+        coverMonth,
+        coverYear,
+        archiveType,
+        comicType,
+        comicState,
+        readState,
+        unscrapedState,
+        searchText);
+    final ComicDetailExampleBuilder builder =
+        this.comicDetailExampleBuilderObjectFactory.getObject();
+    builder.setCoverYear(coverYear);
+    builder.setCoverMonth(coverMonth);
+    builder.setArchiveType(archiveType);
+    builder.setComicType(comicType);
+    builder.setComicState(comicState);
+    builder.setUnscrapedState(unscrapedState);
+    builder.setSearchText(searchText);
+
+    final Example<ComicDetail> comicDetailExample = builder.build();
+
+    return this.comicDetailRepository.findAll(comicDetailExample).stream()
+        .map(ComicDetail::getMonthPublished)
+        .distinct()
+        .sorted()
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * Returns the list of cover months for the given set of record ids.
+   *
+   * @param ids the record ids
+   * @return the months
+   */
+  public List<Integer> getCoverMonths(final Set<Long> ids) {
+    log.debug("Loading cover months for ids: {}", ids);
+    return this.comicDetailRepository.findAllById(ids).stream()
+        .map(ComicDetail::getMonthPublished)
+        .distinct()
+        .sorted()
+        .collect(Collectors.toList());
   }
 }

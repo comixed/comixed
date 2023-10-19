@@ -296,6 +296,24 @@ public class ComicBookController {
             request.getSearchText(),
             request.getSortBy(),
             request.getSortDirection()),
+        this.comicDetailService.getCoverYears(
+            request.getCoverYear(),
+            request.getCoverMonth(),
+            request.getArchiveType(),
+            request.getComicType(),
+            request.getComicState(),
+            request.getReadState(),
+            request.getUnscrapedState(),
+            request.getSearchText()),
+        this.comicDetailService.getCoverMonths(
+            request.getCoverYear(),
+            request.getCoverMonth(),
+            request.getArchiveType(),
+            request.getComicType(),
+            request.getComicState(),
+            request.getReadState(),
+            request.getUnscrapedState(),
+            request.getSearchText()),
         this.comicBookService.getComicBookCount(),
         this.comicDetailService.getFilterCount(
             request.getCoverYear(),
@@ -326,6 +344,10 @@ public class ComicBookController {
     final Set<Long> ids = request.getComicBookIds();
     log.info("Loading comics by ids: {}", ids);
     return new LoadComicDetailsResponse(
-        this.comicDetailService.loadComicDetailListById(ids), ids.size(), ids.size());
+        this.comicDetailService.loadComicDetailListById(ids),
+        this.comicDetailService.getCoverYears(ids),
+        this.comicDetailService.getCoverMonths(ids),
+        ids.size(),
+        ids.size());
   }
 }
