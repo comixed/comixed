@@ -75,6 +75,7 @@ public class ComicDetailServiceTest {
 
   private final Set<Date> weeksList = new HashSet<>();
   private final List<String> sortFieldNames = new ArrayList<>();
+  private final List<ComicDetail> comicDetailList = new ArrayList<>();
   @InjectMocks private ComicDetailService service;
   @Mock private ComicDetailRepository comicDetailRepository;
   @Mock private Set<String> publisherList;
@@ -89,14 +90,12 @@ public class ComicDetailServiceTest {
   @Mock private Stream<ComicDetail> comicDetailListStream;
   @Mock private Set<Long> comicBookIdSet;
   @Mock private ComicDetail comicDetail;
-
+  @Mock private Example<ComicDetail> example;
   @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
   @Captor private ArgumentCaptor<Date> startDateArgumentCaptor;
   @Captor private ArgumentCaptor<Date> endDateArgumentCaptor;
   @Captor private ArgumentCaptor<Example<ComicDetail>> exampleArgumentCaptor;
   @Captor private ArgumentCaptor<Pageable> sortArgumentCaptor;
-
-  private final List<ComicDetail> comicDetailList = new ArrayList<>();
 
   @Before
   public void setUp() {
@@ -724,5 +723,18 @@ public class ComicDetailServiceTest {
     assertSame(comicDetailList, result);
 
     Mockito.verify(comicDetailRepository, Mockito.times(1)).findAllById(comicBookIdSet);
+  }
+
+  @Test
+  public void testFindAllByExample() {
+    Mockito.when(comicDetailRepository.findAll(Mockito.any(Example.class)))
+        .thenReturn(comicDetailList);
+
+    final List<ComicDetail> result = service.findAllByExample(example);
+
+    assertNotNull(result);
+    assertSame(comicDetailList, result);
+
+    Mockito.verify(comicDetailRepository, Mockito.times(1)).findAll(example);
   }
 }

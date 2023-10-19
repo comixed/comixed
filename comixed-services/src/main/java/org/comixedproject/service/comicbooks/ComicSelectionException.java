@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2022, The ComiXed Project
+ * Copyright (C) 2023, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,27 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.comicbooks;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+package org.comixedproject.service.comicbooks;
 
 /**
- * <code>SingleComicBookSelectionRequest</code> contains a comic book id and the desired selected
- * state.
+ * <code>ComicSelectionException</code> is thrown when an error occurs while updating a user's comic
+ * selection set.
  *
  * @author Darryl L. Pierce
  */
-@NoArgsConstructor
-@AllArgsConstructor
-public class SingleComicBookSelectionRequest {
-  @JsonProperty("comicBookId")
-  @Getter
-  private Long comicBookId;
-
-  @JsonProperty("selected")
-  @Getter
-  private Boolean selected;
+public class ComicSelectionException extends Exception {
+  public ComicSelectionException(final String message, final Exception cause) {
+    super(message, cause);
+  }
 }

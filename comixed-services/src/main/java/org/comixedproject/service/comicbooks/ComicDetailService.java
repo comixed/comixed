@@ -645,4 +645,15 @@ public class ComicDetailService {
         .sorted()
         .collect(Collectors.toList());
   }
+
+  /**
+   * Returns all records that match the provided example.
+   *
+   * @param example the example
+   * @return the records
+   */
+  public List<ComicDetail> findAllByExample(final Example<ComicDetail> example) {
+    log.debug("Finding all comic details by example: {}", example);
+    return this.comicDetailRepository.findAll(example);
+  }
 }
