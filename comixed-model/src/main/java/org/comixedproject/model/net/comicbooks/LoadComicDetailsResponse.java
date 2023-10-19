@@ -39,6 +39,16 @@ public class LoadComicDetailsResponse {
   @Getter
   private List<ComicDetail> comicDetails;
 
+  @JsonProperty("coverYears")
+  @JsonView(View.ComicDetailsView.class)
+  @Getter
+  private List<Integer> coverYears;
+
+  @JsonProperty("coverMonths")
+  @JsonView(View.ComicDetailsView.class)
+  @Getter
+  private List<Integer> coverMonths;
+
   @JsonProperty("totalCount")
   @JsonView(View.ComicDetailsView.class)
   @Getter

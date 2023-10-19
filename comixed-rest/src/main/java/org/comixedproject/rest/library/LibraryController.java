@@ -33,7 +33,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.comicbooks.ProcessComicsConfiguration;
@@ -269,7 +268,7 @@ public class LibraryController {
             ? 0
             : comicBooks.stream()
                 .sorted((left, right) -> left.getId().compareTo(right.getId()))
-                .collect(Collectors.toList())
+                .toList()
                 .get(comicBooks.size() - 1)
                 .getId(),
         lastPayload);

@@ -58,6 +58,8 @@ export class ComicDetailsListEffects {
             map((response: LoadComicDetailsResponse) =>
               comicDetailsLoaded({
                 comicDetails: response.comicDetails,
+                coverYears: response.coverYears,
+                coverMonths: response.coverMonths,
                 totalCount: response.totalCount,
                 filteredCount: response.filteredCount
               })
@@ -96,6 +98,8 @@ export class ComicDetailsListEffects {
             map((response: LoadComicDetailsResponse) =>
               comicDetailsLoaded({
                 comicDetails: response.comicDetails,
+                coverYears: response.coverYears,
+                coverMonths: response.coverMonths,
                 totalCount: response.totalCount,
                 filteredCount: response.filteredCount
               })

@@ -93,6 +93,9 @@ public class ComicBookControllerTest {
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private List<PageOrderEntry> pageOrderEntrylist;
   @Mock private List<ComicDetail> comicDetailList;
+  @Mock private List<Integer> coverYearList;
+  @Mock private List<Integer> coverMonthList;
+
   @Captor private ArgumentCaptor<InputStream> inputStreamCaptor;
 
   @Before
@@ -414,6 +417,43 @@ public class ComicBookControllerTest {
                 TEST_SORT_FIELD,
                 TEST_SORT_DIRECTION))
         .thenReturn(comicDetailList);
+    Mockito.when(
+            comicDetailService.getCoverYears(
+                TEST_COVER_YEAR,
+                TEST_COVER_MONTH,
+                TEST_ARCHIVE_TYPE,
+                TEST_COMIC_TYPE,
+                TEST_COMIC_STATE,
+                TEST_READ_STATE,
+                TEST_UNSCRAPED_STATE,
+                TEST_SEARCH_TEXT))
+        .thenReturn(coverYearList);
+    Mockito.when(
+            comicDetailService.getCoverMonths(
+                TEST_COVER_YEAR,
+                TEST_COVER_MONTH,
+                TEST_ARCHIVE_TYPE,
+                TEST_COMIC_TYPE,
+                TEST_COMIC_STATE,
+                TEST_READ_STATE,
+                TEST_UNSCRAPED_STATE,
+                TEST_SEARCH_TEXT))
+        .thenReturn(coverMonthList);
+    Mockito.when(
+            comicDetailService.loadComicDetailList(
+                TEST_PAGE_SIZE,
+                TEST_PAGE_INDEX,
+                TEST_COVER_YEAR,
+                TEST_COVER_MONTH,
+                TEST_ARCHIVE_TYPE,
+                TEST_COMIC_TYPE,
+                TEST_COMIC_STATE,
+                TEST_READ_STATE,
+                TEST_UNSCRAPED_STATE,
+                TEST_SEARCH_TEXT,
+                TEST_SORT_FIELD,
+                TEST_SORT_DIRECTION))
+        .thenReturn(comicDetailList);
     Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_COMIC_BOOK_COUNT);
     Mockito.when(
             comicDetailService.getFilterCount(
@@ -445,6 +485,8 @@ public class ComicBookControllerTest {
 
     assertNotNull(result);
     assertSame(comicDetailList, result.getComicDetails());
+    assertSame(coverYearList, result.getCoverYears());
+    assertSame(coverMonthList, result.getCoverMonths());
     assertEquals(TEST_COMIC_BOOK_COUNT, result.getTotalCount());
     assertEquals(TEST_TOTAL_COMIC_COUNT, result.getFilteredCount());
   }
@@ -453,12 +495,16 @@ public class ComicBookControllerTest {
   public void testLoadComicDetailsById() {
     Mockito.when(comicDetailService.loadComicDetailListById(Mockito.anySet()))
         .thenReturn(comicDetailList);
+    Mockito.when(comicDetailService.getCoverYears(Mockito.anySet())).thenReturn(coverYearList);
+    Mockito.when(comicDetailService.getCoverMonths(Mockito.anySet())).thenReturn(coverMonthList);
 
     final LoadComicDetailsResponse result =
         controller.loadComicDetailListById(new LoadComicDetailsByIdRequest(comicBookIdSet));
 
     assertNotNull(result);
     assertSame(comicDetailList, result.getComicDetails());
+    assertSame(coverYearList, result.getCoverYears());
+    assertSame(coverMonthList, result.getCoverMonths());
     assertEquals(comicBookIdSet.size(), result.getTotalCount());
     assertEquals(comicBookIdSet.size(), result.getFilteredCount());
 

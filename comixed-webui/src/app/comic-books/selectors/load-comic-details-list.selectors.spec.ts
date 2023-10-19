@@ -21,6 +21,8 @@ import {
   ComicDetailsListState
 } from '../reducers/comic-details-list.reducer';
 import {
+  selectLoadComicDetailsCoverMonths,
+  selectLoadComicDetailsCoverYears,
   selectLoadComicDetailsFilteredComics,
   selectLoadComicDetailsList,
   selectLoadComicDetailsListState,
@@ -42,6 +44,8 @@ describe('LoadComicDetailsList Selectors', () => {
     COMIC_DETAIL_4,
     COMIC_DETAIL_5
   ];
+  const COVER_YEARS = [1965, 1971, 1996, 1998, 2006];
+  const COVER_MONTHS = [1, 3, 4, 7, 9];
   const TOTAL_COUNT = COMIC_DETAILS.length * 2;
   const FILTERED_COUNT = Math.floor(TOTAL_COUNT * 0.75);
 
@@ -51,6 +55,8 @@ describe('LoadComicDetailsList Selectors', () => {
     state = {
       loading: Math.random() > 0.5,
       comicDetails: COMIC_DETAILS,
+      coverYears: COVER_YEARS,
+      coverMonths: COVER_MONTHS,
       totalCount: TOTAL_COUNT,
       filteredCount: FILTERED_COUNT
     };
@@ -70,6 +76,22 @@ describe('LoadComicDetailsList Selectors', () => {
         [COMIC_DETAILS_LIST_FEATURE_KEY]: state
       })
     ).toEqual(state.comicDetails);
+  });
+
+  it('should select the list of cover years', () => {
+    expect(
+      selectLoadComicDetailsCoverYears({
+        [COMIC_DETAILS_LIST_FEATURE_KEY]: state
+      })
+    ).toEqual(state.coverYears);
+  });
+
+  it('should select the list of cover months', () => {
+    expect(
+      selectLoadComicDetailsCoverMonths({
+        [COMIC_DETAILS_LIST_FEATURE_KEY]: state
+      })
+    ).toEqual(state.coverMonths);
   });
 
   it('should select the total count of comic details', () => {

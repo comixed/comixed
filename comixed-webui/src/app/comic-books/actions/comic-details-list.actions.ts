@@ -51,6 +51,8 @@ export const comicDetailsLoaded = createAction(
     comicDetails: ComicDetail[];
     totalCount: number;
     filteredCount: number;
+    coverYears: number[];
+    coverMonths: number[];
   }>()
 );
 

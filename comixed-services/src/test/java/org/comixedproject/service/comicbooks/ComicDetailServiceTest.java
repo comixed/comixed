@@ -75,7 +75,6 @@ public class ComicDetailServiceTest {
   private final List<String> sortFieldNames = new ArrayList<>();
   @InjectMocks private ComicDetailService service;
   @Mock private ComicDetailRepository comicDetailRepository;
-  @Mock private List<ComicDetail> comicDetailList;
   @Mock private Set<String> publisherList;
   @Mock private Set<String> seriesList;
   @Mock private Set<String> volumeList;
@@ -86,12 +85,15 @@ public class ComicDetailServiceTest {
   @Mock private Example<ComicDetail> comicDetailExample;
   @Mock private Page<ComicDetail> comicDetailListPage;
   @Mock private Set<Long> comicBookIdSet;
+  @Mock private ComicDetail comicDetail;
 
   @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
   @Captor private ArgumentCaptor<Date> startDateArgumentCaptor;
   @Captor private ArgumentCaptor<Date> endDateArgumentCaptor;
   @Captor private ArgumentCaptor<Example<ComicDetail>> exampleArgumentCaptor;
   @Captor private ArgumentCaptor<Pageable> sortArgumentCaptor;
+
+  private final List<ComicDetail> comicDetailList = new ArrayList<>();
 
   @Before
   public void setUp() {
@@ -110,6 +112,9 @@ public class ComicDetailServiceTest {
     sortFieldNames.add("added-date");
     sortFieldNames.add("cover-date");
     sortFieldNames.add("id");
+
+    Mockito.when(comicDetail.getYearPublished()).thenReturn(TEST_COVER_YEAR);
+    Mockito.when(comicDetail.getMonthPublished()).thenReturn(TEST_COVER_MONTH);
   }
 
   @Test
@@ -577,6 +582,108 @@ public class ComicDetailServiceTest {
         });
 
     Mockito.verify(exampleBuilder, Mockito.times(sortFieldNames.size())).build();
+  }
+
+  @Test
+  public void testCoverCoverYearsForFilters() {
+    comicDetailList.add(comicDetail);
+
+    sortFieldNames.forEach(
+        sortField -> {
+          Mockito.when(comicDetailRepository.findAll(exampleArgumentCaptor.capture()))
+              .thenReturn(comicDetailList);
+
+          final List<Integer> result =
+              service.getCoverYears(
+                  TEST_COVER_YEAR,
+                  TEST_COVER_MONTH,
+                  TEST_ARCHIVE_TYPE,
+                  TEST_COMIC_TYPE,
+                  TEST_COMIC_STATE,
+                  TEST_READ_STATE,
+                  TEST_UNSCRAPED_STATE,
+                  TEST_SEARCH_TEXT);
+
+          assertNotNull(result);
+          assertTrue(result.contains(TEST_COVER_YEAR));
+
+          final Example<ComicDetail> example = exampleArgumentCaptor.getValue();
+
+          Mockito.verify(comicDetailRepository, Mockito.times(1)).findAll(example);
+          Mockito.reset(comicDetailRepository);
+        });
+
+    Mockito.verify(exampleBuilder, Mockito.times(sortFieldNames.size())).build();
+  }
+
+  @Test
+  public void testCoverCoverYearsForIds() {
+    comicDetailList.add(comicDetail);
+
+    sortFieldNames.forEach(
+        sortField -> {
+          Mockito.when(comicDetailRepository.findAllById(Mockito.anySet()))
+              .thenReturn(comicDetailList);
+
+          final List<Integer> result = service.getCoverYears(comicBookIdSet);
+
+          assertNotNull(result);
+          assertTrue(result.contains(TEST_COVER_YEAR));
+
+          Mockito.verify(comicDetailRepository, Mockito.times(1)).findAllById(comicBookIdSet);
+          Mockito.reset(comicDetailRepository);
+        });
+  }
+
+  @Test
+  public void testCoverCoverMonthForFilters() {
+    comicDetailList.add(comicDetail);
+
+    sortFieldNames.forEach(
+        sortField -> {
+          Mockito.when(comicDetailRepository.findAll(exampleArgumentCaptor.capture()))
+              .thenReturn(comicDetailList);
+
+          final List<Integer> result =
+              service.getCoverMonths(
+                  TEST_COVER_YEAR,
+                  TEST_COVER_MONTH,
+                  TEST_ARCHIVE_TYPE,
+                  TEST_COMIC_TYPE,
+                  TEST_COMIC_STATE,
+                  TEST_READ_STATE,
+                  TEST_UNSCRAPED_STATE,
+                  TEST_SEARCH_TEXT);
+
+          assertNotNull(result);
+          assertTrue(result.contains(TEST_COVER_MONTH));
+
+          final Example<ComicDetail> example = exampleArgumentCaptor.getValue();
+
+          Mockito.verify(comicDetailRepository, Mockito.times(1)).findAll(example);
+          Mockito.reset(comicDetailRepository);
+        });
+
+    Mockito.verify(exampleBuilder, Mockito.times(sortFieldNames.size())).build();
+  }
+
+  @Test
+  public void testCoverCoverMonthForIds() {
+    comicDetailList.add(comicDetail);
+
+    sortFieldNames.forEach(
+        sortField -> {
+          Mockito.when(comicDetailRepository.findAllById(Mockito.anySet()))
+              .thenReturn(comicDetailList);
+
+          final List<Integer> result = service.getCoverMonths(comicBookIdSet);
+
+          assertNotNull(result);
+          assertTrue(result.contains(TEST_COVER_MONTH));
+
+          Mockito.verify(comicDetailRepository, Mockito.times(1)).findAllById(comicBookIdSet);
+          Mockito.reset(comicDetailRepository);
+        });
   }
 
   @Test
