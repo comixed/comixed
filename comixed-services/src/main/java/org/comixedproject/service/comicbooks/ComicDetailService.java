@@ -628,7 +628,6 @@ public class ComicDetailService {
     return this.comicDetailRepository.findAll(comicDetailExample).stream()
         .map(ComicDetail::getMonthPublished)
         .distinct()
-        .sorted()
         .collect(Collectors.toList());
   }
 
