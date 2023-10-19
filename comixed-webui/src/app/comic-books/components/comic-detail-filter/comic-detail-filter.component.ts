@@ -76,9 +76,12 @@ export class ComicDetailFilterComponent {
         value: null
       } as ListItem<number>
     ].concat(
-      coverYears.map(year => {
-        return { value: year, label: `${year}` } as ListItem<number>;
-      })
+      coverYears
+        .filter(year => !!year)
+        .sort((l, r) => l - r)
+        .map(year => {
+          return { value: year, label: `${year}` } as ListItem<number>;
+        })
     );
   }
 
@@ -86,12 +89,15 @@ export class ComicDetailFilterComponent {
     this.displayableCoverMonths = [
       { label: 'filtering.label.all-months', value: null }
     ].concat(
-      coverMonths.map(month => {
-        return {
-          value: month,
-          label: `filtering.label.month-${month - 1}`
-        } as ListItem<number>;
-      })
+      coverMonths
+        .filter(month => !!month)
+        .sort((l, r) => l - r)
+        .map(month => {
+          return {
+            value: month,
+            label: `filtering.label.month-${month}`
+          } as ListItem<number>;
+        })
     );
   }
 
