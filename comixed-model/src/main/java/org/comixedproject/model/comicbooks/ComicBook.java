@@ -24,23 +24,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderColumn;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+import java.util.*;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -61,6 +46,13 @@ import org.hibernate.annotations.Formula;
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ComicBook {
+  @OneToMany(mappedBy = "comicBook", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OrderColumn(name = "PageNumber")
+  @JsonProperty("pages")
+  @JsonView({View.ComicListView.class, View.ReadingListDetail.class})
+  @Getter
+  List<Page> pages = new ArrayList<>();
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
@@ -82,13 +74,6 @@ public class ComicBook {
   @Getter
   @Setter
   private ComicMetadataSource metadata;
-
-  @OneToMany(mappedBy = "comicBook", cascade = CascadeType.ALL, orphanRemoval = true)
-  @OrderColumn(name = "PageNumber")
-  @JsonProperty("pages")
-  @JsonView({View.ComicListView.class, View.ReadingListDetail.class})
-  @Getter
-  List<Page> pages = new ArrayList<>();
 
   @Formula(
       "(SELECT COUNT(*) FROM Pages p WHERE p.ComicBookId = Id AND p.FileHash IN (SELECT d.FileHash FROM Pages d GROUP BY d.FileHash HAVING COUNT(*) > 1))")
@@ -118,6 +103,14 @@ public class ComicBook {
   @Getter
   @Setter
   private Long previousIssueId;
+
+  @OneToMany(
+      mappedBy = "comicBook",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.LAZY)
+  @Getter
+  private Set<ComicSelection> selections;
 
   @Column(name = "CreateMetadataSource", nullable = false, updatable = true)
   @JsonIgnore
