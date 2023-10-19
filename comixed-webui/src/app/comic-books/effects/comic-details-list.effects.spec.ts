@@ -67,6 +67,8 @@ describe('ComicDetailsListEffects', () => {
     COMIC_DETAIL_5
   ];
   const IDS = COMIC_DETAILS.map(entry => entry.comicId);
+  const COVER_YEARS = [1965, 1971, 1996, 1998, 2006];
+  const COVER_MONTHS = [1, 3, 4, 7, 9];
   const TOTAL_COUNT = COMIC_DETAILS.length * 2;
   const FILTERED_COUNT = Math.floor(TOTAL_COUNT * 0.75);
 
@@ -115,6 +117,8 @@ describe('ComicDetailsListEffects', () => {
     it('fires an action on success', () => {
       const serverResponse = {
         comicDetails: COMIC_DETAILS,
+        coverYears: COVER_YEARS,
+        coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
         filteredCount: FILTERED_COUNT
       } as LoadComicDetailsResponse;
@@ -134,6 +138,8 @@ describe('ComicDetailsListEffects', () => {
       });
       const outcome = comicDetailsLoaded({
         comicDetails: COMIC_DETAILS,
+        coverYears: COVER_YEARS,
+        coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
         filteredCount: FILTERED_COUNT
       });
@@ -246,12 +252,16 @@ describe('ComicDetailsListEffects', () => {
     it('fires an action on success', () => {
       const serverResponse = {
         comicDetails: COMIC_DETAILS,
+        coverYears: COVER_YEARS,
+        coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
         filteredCount: FILTERED_COUNT
       } as LoadComicDetailsResponse;
       const action = loadComicDetailsById({ comicBookIds: IDS });
       const outcome = comicDetailsLoaded({
         comicDetails: COMIC_DETAILS,
+        coverYears: COVER_YEARS,
+        coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
         filteredCount: FILTERED_COUNT
       });

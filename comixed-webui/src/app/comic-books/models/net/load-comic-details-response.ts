@@ -20,6 +20,8 @@ import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 export interface LoadComicDetailsResponse {
   comicDetails: ComicDetail[];
+  coverYears: number[];
+  coverMonths: number[];
   totalCount: number;
   filteredCount: number;
 }

@@ -83,6 +83,8 @@ export class ComicDetailListViewComponent implements OnDestroy {
   @Input() showLastReadDate = false;
   @Input() showAddedDate = true;
   @Input() totalComics = 0;
+  @Input() coverYears: number[] = [];
+  @Input() coverMonths: number[] = [];
 
   showComicDetailPopup = false;
   showComicFilterPopup = false;

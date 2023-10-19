@@ -30,6 +30,16 @@ export const selectLoadComicDetailsList = createSelector(
   state => state.comicDetails
 );
 
+export const selectLoadComicDetailsCoverYears = createSelector(
+  selectLoadComicDetailsListState,
+  state => state.coverYears
+);
+
+export const selectLoadComicDetailsCoverMonths = createSelector(
+  selectLoadComicDetailsListState,
+  state => state.coverMonths
+);
+
 export const selectLoadComicDetailsTotalComics = createSelector(
   selectLoadComicDetailsListState,
   state => state.totalCount

@@ -31,7 +31,11 @@ import { filter } from 'rxjs/operators';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_PREFERENCE } from '@app/core';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
-import { selectLoadComicDetailsList } from '@app/comic-books/selectors/load-comic-details-list.selectors';
+import {
+  selectLoadComicDetailsCoverMonths,
+  selectLoadComicDetailsCoverYears,
+  selectLoadComicDetailsList
+} from '@app/comic-books/selectors/load-comic-details-list.selectors';
 import { loadComicBookSelections } from '@app/comic-books/actions/comic-book-selection.actions';
 import { loadComicDetailsById } from '@app/comic-books/actions/comic-details-list.actions';
 
@@ -45,14 +49,17 @@ export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
 
   langChangeSubscription: Subscription;
   selectIdSubscription: Subscription;
-  comicBooksSubscription: Subscription;
+  comicDetailListSubscription: Subscription;
+  comicDetailCoverYearSubscription: Subscription;
+  coverYears: number[] = [];
+  comicDetailCoverMonthsSubscription: Subscription;
+  coverMonths: number[] = [];
   processStateSubscription: Subscription;
   processState: MetadataUpdateProcessState;
   selectedIds: number[] = [];
   userSubscription: Subscription;
   pageSize = PAGE_SIZE_DEFAULT;
   showCovers = false;
-  private _comics: ComicDetail[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -73,11 +80,23 @@ export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
           loadComicDetailsById({ comicBookIds: this.selectedIds })
         );
       });
-    this.logger.trace('Subscribing to the comic book list');
-    this.comicBooksSubscription = this.store
+    this.logger.trace('Subscribing to the comic detail list');
+    this.comicDetailListSubscription = this.store
       .select(selectLoadComicDetailsList)
       .subscribe(comicDetails => {
         this.comicDetails = comicDetails;
+      });
+    this.logger.trace('Subscribing to the comic cover year list');
+    this.comicDetailCoverYearSubscription = this.store
+      .select(selectLoadComicDetailsCoverYears)
+      .subscribe(coverYears => {
+        this.coverYears = coverYears;
+      });
+    this.logger.trace('Subscribing to the comic cover month list');
+    this.comicDetailCoverMonthsSubscription = this.store
+      .select(selectLoadComicDetailsCoverMonths)
+      .subscribe(coverMonths => {
+        this.coverMonths = coverMonths;
       });
     this.logger.trace('Subscribing to process updates');
     this.processStateSubscription = this.store
@@ -119,7 +138,11 @@ export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
     this.logger.trace('Unsubscribing from process state updates');
     this.processStateSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from comic book list updates');
-    this.comicBooksSubscription.unsubscribe();
+    this.comicDetailListSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from comic cover year list updates');
+    this.comicDetailCoverYearSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from comic cover month list updates');
+    this.comicDetailCoverMonthsSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from user updates');
     this.userSubscription.unsubscribe();
   }

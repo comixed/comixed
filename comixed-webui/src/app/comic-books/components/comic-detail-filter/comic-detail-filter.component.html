@@ -20,7 +20,10 @@
           "
           [value]="(queryParameterService.coverYear$ | async)?.year"
         >
-          <mat-option *ngFor="let option of coverYears" [value]="option.value">
+          <mat-option
+            *ngFor="let option of displayableCoverYears"
+            [value]="option.value"
+          >
             {{ option.label | translate }}
           </mat-option>
         </mat-select>
@@ -33,7 +36,10 @@
           "
           [value]="(queryParameterService.coverYear$ | async)?.month"
         >
-          <mat-option *ngFor="let option of coverMonths" [value]="option.value">
+          <mat-option
+            *ngFor="let option of displayableCoverMonths"
+            [value]="option.value"
+          >
             {{ option.label | translate }}
           </mat-option>
         </mat-select>

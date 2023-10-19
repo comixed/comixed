@@ -33,6 +33,8 @@ export const COMIC_DETAILS_LIST_FEATURE_KEY = 'comic_details_list_state';
 export interface ComicDetailsListState {
   loading: boolean;
   comicDetails: ComicDetail[];
+  coverYears: number[];
+  coverMonths: number[];
   totalCount: number;
   filteredCount: number;
 }
@@ -40,6 +42,8 @@ export interface ComicDetailsListState {
 export const initialState: ComicDetailsListState = {
   loading: false,
   comicDetails: [],
+  coverYears: [],
+  coverMonths: [],
   totalCount: 0,
   filteredCount: 0
 };
@@ -52,6 +56,8 @@ export const reducer = createReducer(
     ...state,
     loading: false,
     comicDetails: action.comicDetails,
+    coverYears: action.coverYears,
+    coverMonths: action.coverMonths,
     totalCount: action.totalCount,
     filteredCount: action.filteredCount
   })),

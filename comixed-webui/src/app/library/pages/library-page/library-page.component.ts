@@ -37,7 +37,6 @@ import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 import { PAGE_SIZE_DEFAULT } from '@app/core';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
-import { ListItem } from '@app/core/models/ui/list-item';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ConfirmationService } from '@tragically-slick/confirmation';
@@ -46,6 +45,8 @@ import { QueryParameterService } from '@app/core/services/query-parameter.servic
 import { loadComicDetails } from '@app/comic-books/actions/comic-details-list.actions';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import {
+  selectLoadComicDetailsCoverMonths,
+  selectLoadComicDetailsCoverYears,
   selectLoadComicDetailsList,
   selectLoadComicDetailsListState,
   selectLoadComicDetailsTotalComics
@@ -63,6 +64,11 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   comicDetailListStateSubscription: Subscription;
   comicDetailListState: ComicDetailsListState;
   comicsDetailListSubscription: Subscription;
+  comicDetails: ComicDetail[] = [];
+  comicsDetailCoverYearsSubscription: Subscription;
+  coverYears: number[] = [];
+  comicsDetailCoverMonthsSubscription: Subscription;
+  coverMonths: number[] = [];
   loadComicsTotalSubscription: Subscription;
   totalComics = 0;
   selectedSubscription: Subscription;
@@ -90,8 +96,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   readingLists: ReadingList[] = [];
   pageContent = 'comics';
   showCovers = true;
-  coverYears: ListItem<number>[] = [];
-  coverMonths: ListItem<number>[] = [];
   readonly archiveTypeOptions: SelectionOption<ArchiveType>[] = [
     { label: 'archive-type.label.all', value: null },
     { label: 'archive-type.label.cbz', value: ArchiveType.CBZ },
@@ -107,7 +111,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       value: ComicType.TRADEPAPERBACK
     }
   ];
-  private _comicDetails: ComicDetail[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -155,6 +158,12 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.comicsDetailListSubscription = this.store
       .select(selectLoadComicDetailsList)
       .subscribe(comics => (this.comicDetails = comics));
+    this.comicsDetailCoverYearsSubscription = this.store
+      .select(selectLoadComicDetailsCoverYears)
+      .subscribe(coverYears => (this.coverYears = coverYears));
+    this.comicsDetailCoverMonthsSubscription = this.store
+      .select(selectLoadComicDetailsCoverMonths)
+      .subscribe(coverMonths => (this.coverMonths = coverMonths));
     this.loadComicsTotalSubscription = this.store
       .select(selectLoadComicDetailsTotalComics)
       .subscribe(total => (this.totalComics = total));
@@ -203,39 +212,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
           })
         );
       }
-    );
-  }
-
-  get comicDetails(): ComicDetail[] {
-    return this._comicDetails;
-  }
-
-  set comicDetails(comics: ComicDetail[]) {
-    this.logger.debug('Setting comics:', comics);
-    this._comicDetails = comics;
-    this.logger.debug('Loading cover year options');
-    this.coverYears = [
-      { label: 'filtering.label.all-years', value: null } as ListItem<number>
-    ].concat(
-      comics
-        .filter(comic => !!comic.coverDate)
-        .map(comic => new Date(comic.coverDate).getFullYear())
-        .filter((year, index, self) => index === self.indexOf(year))
-        .sort()
-        .map(year => {
-          return { value: year, label: `${year}` } as ListItem<number>;
-        })
-    );
-    this.logger.debug('Loading cover month options');
-    this.coverMonths = [
-      { label: 'filtering.label.all-months', value: null }
-    ].concat(
-      Array.from(Array(12).keys()).map(month => {
-        return {
-          value: month,
-          label: `filtering.label.month-${month}`
-        } as ListItem<number>;
-      })
     );
   }
 
