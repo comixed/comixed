@@ -242,14 +242,14 @@ public class ComicDetail {
   @Setter
   private Date coverDate;
 
-  @Formula("(YEAR(CoverDate))")
+  @Formula("(SELECT CASE WHEN CoverDate IS NULL THEN 0 ELSE YEAR(CoverDate) END)")
   @JsonProperty("yearPublished")
   @JsonView({View.ComicListView.class})
   @Getter
   @Setter
   private Integer yearPublished;
 
-  @Formula("(MONTH(CoverDate))")
+  @Formula("(SELECT CASE WHEN CoverDate IS NULL THEN 0 ELSE MONTH(CoverDate) END)")
   @JsonProperty("monthPublished")
   @JsonView({View.ComicListView.class})
   @Getter
