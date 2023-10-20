@@ -299,6 +299,18 @@ th {
   position: absolute !important;
 }
 
+.cx-position-relative {
+  position: relative !important;
+}
+
+.cx-bottom-5 {
+  bottom: 5px !important;
+}
+
+.cx-right-5 {
+  right: 5px !important;
+}
+
 .cx-centered {
   top: 50%;
   left: 50%;
@@ -542,6 +554,6 @@ mat-toolbar.mat-toolbar mat-form-field.mat-mdc-form-field {
   padding: 15px !important;
 }
 
-.cx-z-index {
+.cx-z-index-99 {
   z-index: 99;
 }

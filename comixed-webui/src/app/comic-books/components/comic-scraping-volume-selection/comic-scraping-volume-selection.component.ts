@@ -92,8 +92,7 @@ export class ComicScrapingVolumeSelectionComponent
     'publisher',
     'name',
     'start-year',
-    'issue-count',
-    'action'
+    'issue-count'
   ];
   confirmBeforeScraping = true;
   autoSelectExactMatch = false;
