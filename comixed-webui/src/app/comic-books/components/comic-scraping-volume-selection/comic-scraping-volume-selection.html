@@ -28,7 +28,7 @@
 </mat-toolbar>
 
 <div class="cx-width-100 cx-detail-card-container">
-  <div [class.cx-width-100]="!issue" [class.cx-width-75]="!!issue">
+  <div class="cx-width-75">
     <mat-table
       aria-label="ComicBook files available for import"
       class="cx-width-100 cx-padding-2"
@@ -40,7 +40,7 @@
     >
       <ng-container matColumnDef="matchability">
         <mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{ "scraping.label.matchability" | translate }}
+          <mat-icon>thumbs_up_down</mat-icon>
         </mat-header-cell>
         <mat-cell *matCellDef="let element">
           <span
@@ -97,20 +97,6 @@
         </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="action">
-        <mat-header-cell *matHeaderCellDef></mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          <button
-            id="accept-button"
-            mat-icon-button
-            [matTooltip]="'scraping.tooltip.select-scraping-issue' | translate"
-            (click)="onDecision(true, element)"
-          >
-            <mat-icon>check_box</mat-icon>
-          </button>
-        </mat-cell>
-      </ng-container>
-
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row
         *matRowDef="let row; columns: displayedColumns"
@@ -124,9 +110,28 @@
       </tr>
     </mat-table>
   </div>
-  <div *ngIf="!!issue" class="cx-width-25">
-    <div id="cx-issue-metadata-detail-content" class="cx-padding-2">
+  <div class="cx-width-25">
+    <div
+      *ngIf="!!issue"
+      id="cx-issue-metadata-detail-content"
+      class="cx-padding-2 cx-width-100"
+    >
       <cx-issue-metadata-detail [issue]="issue"></cx-issue-metadata-detail>
+      <div class="cx-bottom-5 cx-right-5 cx-z-index-99 cx-position-relative">
+        <button
+          id="accept-button"
+          mat-fab
+          [matTooltip]="'scraping.tooltip.select-scraping-issue' | translate"
+          (click)="onDecision(true, element)"
+        >
+          <mat-icon>check_box</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div *ngIf="!issue" class="cx-padding-2 cx-width-100">
+      <h4>
+        {{ "comic-scraping-volume-selection.text.no-issue-found" | translate }}
+      </h4>
     </div>
   </div>
 </div>

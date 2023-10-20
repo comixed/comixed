@@ -179,6 +179,11 @@
       "effect-success": "Marked {count, plural, =1{one page} other{# pages}} as {deleted, select, true{deleted} other{not deleted}}."
     }
   },
+  "comic-scraping-volume-selection": {
+    "text": {
+      "no-issue-found": "No matching issue found..."
+    }
+  },
   "comic-type": {
     "label": {
       "all": "All",
