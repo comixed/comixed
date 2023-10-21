@@ -61,7 +61,7 @@ public class ComicDetailExampleBuilder {
     detail.setCoverDate(null);
     detail.setMonthPublished(null);
     detail.setYearPublished(null);
-    detail.setDateAdded(null);
+    detail.setAddedDate(null);
     detail.setComicType(null);
     detail.setUnscraped(null);
 
