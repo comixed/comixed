@@ -105,6 +105,9 @@ export class ComicBookListService {
     readState: boolean;
     unscrapedState: boolean;
     searchText: string;
+    publisher: string;
+    series: string;
+    volume: string;
     sortBy: string;
     sortDirection: string;
   }): Observable<any> {
@@ -120,6 +123,9 @@ export class ComicBookListService {
       readState: args.readState,
       unscrapedState: args.unscrapedState,
       searchText: args.searchText,
+      publisher: args.publisher,
+      series: args.series,
+      volume: args.volume,
       sortBy: args.sortBy,
       sortDirection: args.sortDirection
     } as LoadComicDetailsRequest);

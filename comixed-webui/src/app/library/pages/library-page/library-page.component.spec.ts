@@ -360,6 +360,9 @@ describe('LibraryPageComponent', () => {
             readState: false,
             unscrapedState: false,
             searchText: null,
+            publisher: null,
+            series: null,
+            volume: null,
             sortBy: null,
             sortDirection: null
           })
@@ -388,6 +391,9 @@ describe('LibraryPageComponent', () => {
             readState: false,
             unscrapedState: false,
             searchText: null,
+            publisher: null,
+            series: null,
+            volume: null,
             sortBy: null,
             sortDirection: null
           })
@@ -416,6 +422,9 @@ describe('LibraryPageComponent', () => {
             readState: false,
             unscrapedState: false,
             searchText: null,
+            publisher: null,
+            series: null,
+            volume: null,
             sortBy: null,
             sortDirection: null
           })
@@ -443,6 +452,9 @@ describe('LibraryPageComponent', () => {
             readState: false,
             unscrapedState: false,
             searchText: null,
+            publisher: null,
+            series: null,
+            volume: null,
             sortBy: null,
             sortDirection: null
           })

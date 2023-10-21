@@ -49,6 +49,9 @@ public class ComicDetailExampleBuilder {
   @Setter private boolean unreadState = false;
   @Setter private boolean unscrapedState = false;
   @Setter private String searchText;
+  @Setter private String publisher;
+  @Setter private String series;
+  @Setter private String volume;
 
   public Example<ComicDetail> build() {
     log.trace("Building ComicDetail example");
@@ -115,6 +118,24 @@ public class ComicDetailExampleBuilder {
       log.debug("Enabling unscraped filter");
       detail.setUnscraped(true);
       matcher = matcher.withMatcher("unscraped", ExampleMatcher.GenericPropertyMatchers.exact());
+    }
+
+    if (StringUtils.hasLength(publisher)) {
+      log.debug("Enabling publisher filter");
+      detail.setPublisher(publisher);
+      matcher = matcher.withMatcher("publisher", ExampleMatcher.GenericPropertyMatchers.exact());
+    }
+
+    if (StringUtils.hasLength(series)) {
+      log.debug("Enabling series filter");
+      detail.setSeries(series);
+      matcher = matcher.withMatcher("series", ExampleMatcher.GenericPropertyMatchers.exact());
+    }
+
+    if (StringUtils.hasLength(volume)) {
+      log.debug("Enabling volume filter");
+      detail.setVolume(volume);
+      matcher = matcher.withMatcher("volume", ExampleMatcher.GenericPropertyMatchers.exact());
     }
 
     return Example.of(detail, matcher);

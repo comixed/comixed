@@ -40,7 +40,6 @@ import {
   COMIC_LIST_REMOVAL_TOPIC,
   COMIC_LIST_UPDATE_TOPIC
 } from '@app/library/library.constants';
-import { comicBookListRemovalReceived } from '@app/comic-books/actions/comic-book-list.actions';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
@@ -81,6 +80,9 @@ describe('ComicBookListService', () => {
     COMIC_DETAIL_4,
     COMIC_DETAIL_5
   ];
+  const PUBLISHER = COMIC_DETAILS[0].publisher;
+  const SERIES = COMIC_DETAILS[0].series;
+  const VOLUME = COMIC_DETAILS[0].volume;
   const IDS = COMIC_DETAILS.map(entry => entry.comicId);
   const TOTAL_COUNT = COMIC_DETAILS.length * 2;
   const FILTERED_COUNT = Math.floor(TOTAL_COUNT * 0.75);
@@ -233,6 +235,9 @@ describe('ComicBookListService', () => {
         readState: READ_STATE,
         unscrapedState: SCRAPED_STATE,
         searchText: SEARCH_TEXT,
+        publisher: PUBLISHER,
+        series: SERIES,
+        volume: VOLUME,
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       })
@@ -251,6 +256,9 @@ describe('ComicBookListService', () => {
       readState: READ_STATE,
       unscrapedState: SCRAPED_STATE,
       searchText: SEARCH_TEXT,
+      publisher: PUBLISHER,
+      series: SERIES,
+      volume: VOLUME,
       sortBy: SORT_BY,
       sortDirection: SORT_DIRECTION
     } as LoadComicDetailsRequest);
