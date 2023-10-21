@@ -75,6 +75,9 @@ public class ComicBookControllerTest {
   private static final Boolean TEST_READ_STATE = RandomUtils.nextBoolean();
   private static final Boolean TEST_UNSCRAPED_STATE = RandomUtils.nextBoolean();
   private static final String TEST_SEARCH_TEXT = "The search text";
+  private static final String TEST_PUBLISHER = "THe Publisher Name";
+  private static final String TEST_SERIES = "The Series Name";
+  private static final String TEST_VOLUME = "2023";
   private static final String TEST_SORT_FIELD = "added-date";
   private static final String TEST_SORT_DIRECTION = "asc";
   private static final long TEST_TOTAL_COMIC_COUNT = RandomUtils.nextLong() * 30000L;
@@ -414,6 +417,9 @@ public class ComicBookControllerTest {
                 TEST_READ_STATE,
                 TEST_UNSCRAPED_STATE,
                 TEST_SEARCH_TEXT,
+                TEST_PUBLISHER,
+                TEST_SERIES,
+                TEST_VOLUME,
                 TEST_SORT_FIELD,
                 TEST_SORT_DIRECTION))
         .thenReturn(comicDetailList);
@@ -426,7 +432,10 @@ public class ComicBookControllerTest {
                 TEST_COMIC_STATE,
                 TEST_READ_STATE,
                 TEST_UNSCRAPED_STATE,
-                TEST_SEARCH_TEXT))
+                TEST_SEARCH_TEXT,
+                TEST_PUBLISHER,
+                TEST_SERIES,
+                TEST_VOLUME))
         .thenReturn(coverYearList);
     Mockito.when(
             comicDetailService.getCoverMonths(
@@ -437,7 +446,10 @@ public class ComicBookControllerTest {
                 TEST_COMIC_STATE,
                 TEST_READ_STATE,
                 TEST_UNSCRAPED_STATE,
-                TEST_SEARCH_TEXT))
+                TEST_SEARCH_TEXT,
+                TEST_PUBLISHER,
+                TEST_SERIES,
+                TEST_VOLUME))
         .thenReturn(coverMonthList);
     Mockito.when(
             comicDetailService.loadComicDetailList(
@@ -451,6 +463,9 @@ public class ComicBookControllerTest {
                 TEST_READ_STATE,
                 TEST_UNSCRAPED_STATE,
                 TEST_SEARCH_TEXT,
+                TEST_PUBLISHER,
+                TEST_SERIES,
+                TEST_VOLUME,
                 TEST_SORT_FIELD,
                 TEST_SORT_DIRECTION))
         .thenReturn(comicDetailList);
@@ -464,7 +479,10 @@ public class ComicBookControllerTest {
                 TEST_COMIC_STATE,
                 TEST_READ_STATE,
                 TEST_UNSCRAPED_STATE,
-                TEST_SEARCH_TEXT))
+                TEST_SEARCH_TEXT,
+                TEST_PUBLISHER,
+                TEST_SERIES,
+                TEST_VOLUME))
         .thenReturn(TEST_TOTAL_COMIC_COUNT);
 
     final LoadComicDetailsResponse result =
@@ -480,6 +498,9 @@ public class ComicBookControllerTest {
                 TEST_READ_STATE,
                 TEST_UNSCRAPED_STATE,
                 TEST_SEARCH_TEXT,
+                TEST_PUBLISHER,
+                TEST_SERIES,
+                TEST_VOLUME,
                 TEST_SORT_FIELD,
                 TEST_SORT_DIRECTION));
 

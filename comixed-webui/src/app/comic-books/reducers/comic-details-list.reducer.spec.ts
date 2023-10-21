@@ -60,6 +60,9 @@ describe('ComicDetailsList Reducer', () => {
     COMIC_DETAIL_4,
     COMIC_DETAIL_5
   ];
+  const PUBLISHER = COMIC_DETAILS[0].publisher;
+  const SERIES = COMIC_DETAILS[0].series;
+  const VOLUME = COMIC_DETAILS[0].volume;
   const IDS = COMIC_DETAILS.map(entry => entry.comicId);
   const COVER_YEARS = [1965, 1971, 1996, 1998, 2006];
   const COVER_MONTHS = [1, 3, 4, 7, 9];
@@ -117,6 +120,9 @@ describe('ComicDetailsList Reducer', () => {
           readState: READ_STATE,
           unscrapedState: UNSCRAPED_STATE,
           searchText: SEARCH_TEXT,
+          publisher: PUBLISHER,
+          series: SERIES,
+          volume: VOLUME,
           sortBy: SORT_BY,
           sortDirection: SORT_DIRECTION
         })

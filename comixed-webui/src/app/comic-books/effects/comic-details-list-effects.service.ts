@@ -50,6 +50,9 @@ export class ComicDetailsListEffects {
             readState: action.readState,
             unscrapedState: action.unscrapedState,
             searchText: action.searchText,
+            publisher: action.publisher,
+            series: action.series,
+            volume: action.volume,
             sortBy: action.sortBy,
             sortDirection: action.sortDirection
           })

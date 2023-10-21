@@ -31,6 +31,9 @@ export interface LoadComicDetailsRequest {
   readState: boolean;
   unscrapedState: boolean;
   searchText: string;
+  publisher: string;
+  series: string;
+  volume: string;
   sortBy: string;
   sortDirection: string;
 }

@@ -371,13 +371,16 @@ public class ComicDetailService {
    * @param readState the read state filter
    * @param unscrapedState the unscraped state filter
    * @param searchText the search text filter
+   * @param publisher the publisher filter
+   * @param series the series filter
+   * @param volume the volume filter
    * @param sortBy the sort field
    * @param sortDirection the sort direction
    * @return the comic details
    */
   public List<ComicDetail> loadComicDetailList(
-      final int pageSize,
-      final int pageIndex,
+      final Integer pageSize,
+      final Integer pageIndex,
       final Integer coverYear,
       final Integer coverMonth,
       final ArchiveType archiveType,
@@ -386,22 +389,12 @@ public class ComicDetailService {
       final Boolean readState,
       final Boolean unscrapedState,
       final String searchText,
+      final String publisher,
+      final String series,
+      final String volume,
       final String sortBy,
       final String sortDirection) {
-    log.debug(
-        "Loading comic details: size={} index={} cover date={}/{} archive type={} comic type={} comic state={} read state={} unscraped state={} sort={} [{}] search text={}",
-        pageSize,
-        pageIndex,
-        coverMonth,
-        coverYear,
-        archiveType,
-        comicType,
-        comicState,
-        readState,
-        unscrapedState,
-        searchText,
-        sortBy,
-        sortDirection);
+    log.debug("Loading comic details");
     final ComicDetailExampleBuilder builder =
         this.comicDetailExampleBuilderObjectFactory.getObject();
 
@@ -412,6 +405,9 @@ public class ComicDetailService {
     builder.setComicState(comicState);
     builder.setUnscrapedState(unscrapedState);
     builder.setSearchText(searchText);
+    builder.setPublisher(publisher);
+    builder.setSeries(series);
+    builder.setVolume(volume);
 
     final Example<ComicDetail> comicDetailExample = builder.build();
 
@@ -454,9 +450,14 @@ public class ComicDetailService {
       sort = Sort.by(direction, fieldName);
     }
 
-    return this.comicDetailRepository
-        .findAll(comicDetailExample, PageRequest.of(pageIndex, pageSize, sort)).stream()
-        .collect(Collectors.toList());
+    if (pageSize != null && pageIndex != null) {
+      return this.comicDetailRepository
+          .findAll(comicDetailExample, PageRequest.of(pageIndex, pageSize, sort)).stream()
+          .collect(Collectors.toList());
+    } else {
+      return this.comicDetailRepository.findAll(comicDetailExample).stream()
+          .collect(Collectors.toList());
+    }
   }
 
   /**
@@ -470,6 +471,9 @@ public class ComicDetailService {
    * @param readState the read state filter
    * @param unscrapedState the unscraped state filter
    * @param searchText the search text filter
+   * @param publisher the publisher filter
+   * @param series the series filter
+   * @param volume the volume filter
    * @return the comic count
    */
   public long getFilterCount(
@@ -480,17 +484,11 @@ public class ComicDetailService {
       final ComicState comicState,
       final Boolean readState,
       final Boolean unscrapedState,
-      final String searchText) {
-    log.debug(
-        "Loading filtered comic detail count: cover date={}/{} archive type={} comic type={} comic state={} read state={} unscraped state={} search text={}",
-        coverMonth,
-        coverYear,
-        archiveType,
-        comicType,
-        comicState,
-        readState,
-        unscrapedState,
-        searchText);
+      final String searchText,
+      final String publisher,
+      final String series,
+      final String volume) {
+    log.debug("Loading filtered comic detail count");
     final ComicDetailExampleBuilder builder =
         this.comicDetailExampleBuilderObjectFactory.getObject();
     builder.setCoverYear(coverYear);
@@ -500,6 +498,9 @@ public class ComicDetailService {
     builder.setComicState(comicState);
     builder.setUnscrapedState(unscrapedState);
     builder.setSearchText(searchText);
+    builder.setPublisher(publisher);
+    builder.setSeries(series);
+    builder.setVolume(volume);
 
     final Example<ComicDetail> comicDetailExample = builder.build();
 
@@ -528,6 +529,9 @@ public class ComicDetailService {
    * @param readState the read state filter
    * @param unscrapedState the unscraped state filter
    * @param searchText the search text filter
+   * @param publisher the publisher filter
+   * @param series the series filter
+   * @param volume the volume filter
    * @return the cover years
    */
   public List<Integer> getCoverYears(
@@ -538,17 +542,11 @@ public class ComicDetailService {
       final ComicState comicState,
       final Boolean readState,
       final Boolean unscrapedState,
-      final String searchText) {
-    log.debug(
-        "Loading cover years: cover date={}/{} archive type={} comic type={} comic state={} read state={} unscraped state={} search text={}",
-        coverMonth,
-        coverYear,
-        archiveType,
-        comicType,
-        comicState,
-        readState,
-        unscrapedState,
-        searchText);
+      final String searchText,
+      final String publisher,
+      final String series,
+      final String volume) {
+    log.debug("Loading cover years");
     final ComicDetailExampleBuilder builder =
         this.comicDetailExampleBuilderObjectFactory.getObject();
     builder.setCoverYear(coverYear);
@@ -558,6 +556,9 @@ public class ComicDetailService {
     builder.setComicState(comicState);
     builder.setUnscrapedState(unscrapedState);
     builder.setSearchText(searchText);
+    builder.setPublisher(publisher);
+    builder.setSeries(series);
+    builder.setVolume(volume);
 
     final Example<ComicDetail> comicDetailExample = builder.build();
 
@@ -592,6 +593,9 @@ public class ComicDetailService {
    * @param readState the read state filter
    * @param unscrapedState the unscraped state filter
    * @param searchText the search text filter
+   * @param publisher the publisher filter
+   * @param series the series filter
+   * @param volume the volume filter
    * @return the cover years
    */
   public List<Integer> getCoverMonths(
@@ -602,17 +606,11 @@ public class ComicDetailService {
       final ComicState comicState,
       final Boolean readState,
       final Boolean unscrapedState,
-      final String searchText) {
-    log.debug(
-        "Loading cover months: cover date={}/{} archive type={} comic type={} comic state={} read state={} unscraped state={} search text={}",
-        coverMonth,
-        coverYear,
-        archiveType,
-        comicType,
-        comicState,
-        readState,
-        unscrapedState,
-        searchText);
+      final String searchText,
+      final String publisher,
+      final String series,
+      final String volume) {
+    log.debug("Loading cover months");
     final ComicDetailExampleBuilder builder =
         this.comicDetailExampleBuilderObjectFactory.getObject();
     builder.setCoverYear(coverYear);
@@ -622,6 +620,9 @@ public class ComicDetailService {
     builder.setComicState(comicState);
     builder.setUnscrapedState(unscrapedState);
     builder.setSearchText(searchText);
+    builder.setPublisher(publisher);
+    builder.setSeries(series);
+    builder.setVolume(volume);
 
     final Example<ComicDetail> comicDetailExample = builder.build();
 

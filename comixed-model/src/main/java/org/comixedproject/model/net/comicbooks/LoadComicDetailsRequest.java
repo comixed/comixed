@@ -37,11 +37,11 @@ import org.comixedproject.model.comicbooks.ComicType;
 public class LoadComicDetailsRequest {
   @JsonProperty("pageSize")
   @Getter
-  private int pageSize;
+  private Integer pageSize;
 
   @JsonProperty("pageIndex")
   @Getter
-  private int pageIndex;
+  private Integer pageIndex;
 
   @JsonProperty("coverYear")
   @Getter
@@ -75,6 +75,18 @@ public class LoadComicDetailsRequest {
   @Getter
   private String searchText;
 
+  @JsonProperty("publisher")
+  @Getter
+  private String publisher;
+
+  @JsonProperty("series")
+  @Getter
+  private String series;
+
+  @JsonProperty("volume")
+  @Getter
+  private String volume;
+
   @JsonProperty("sortBy")
   @Getter
   private String sortBy;
@@ -106,6 +118,15 @@ public class LoadComicDetailsRequest {
         + unscrapedState
         + ", searchText='"
         + searchText
+        + '\''
+        + ", publisher='"
+        + publisher
+        + '\''
+        + ", series='"
+        + series
+        + '\''
+        + ", volume='"
+        + volume
         + '\''
         + ", sortBy='"
         + sortBy

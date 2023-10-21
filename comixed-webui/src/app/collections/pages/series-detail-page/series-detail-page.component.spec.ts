@@ -28,10 +28,7 @@ import {
   initialState as initialSeriesState,
   SERIES_FEATURE_KEY
 } from '@app/collections/reducers/series.reducer';
-import {
-  COMIC_BOOK_LIST_FEATURE_KEY,
-  initialState as initialComicBookListState
-} from '@app/comic-books/reducers/comic-book-list.reducer';
+import { initialState as initialComicBookListState } from '@app/comic-books/reducers/comic-book-list.reducer';
 import {
   initialState as initialUserState,
   USER_FEATURE_KEY
@@ -40,7 +37,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatInputModule } from '@angular/material/input';
 import { TitleService } from '@app/core/services/title.service';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -54,12 +50,16 @@ import {
 } from '@app/comic-books/comic-books.fixtures';
 import { SeriesDetailNamePipe } from '@app/collections/pipes/series-detail-name.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import {
+  COMIC_DETAILS_LIST_FEATURE_KEY,
+  initialState as initialComicDetailsListState
+} from '@app/comic-books/reducers/comic-details-list.reducer';
 
 describe('SeriesDetailPageComponent', () => {
   const PUBLISHER = 'The Publisher';
   const SERIES = 'The Series';
   const VOLUME = '2022';
-  const COMIC_BOOKS = [
+  const COMIC_DETAILS = [
     COMIC_DETAIL_1,
     COMIC_DETAIL_2,
     COMIC_DETAIL_3,
@@ -76,7 +76,7 @@ describe('SeriesDetailPageComponent', () => {
   };
   const initialState = {
     [SERIES_FEATURE_KEY]: initialSeriesState,
-    [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
+    [COMIC_DETAILS_LIST_FEATURE_KEY]: initialComicDetailsListState,
     [USER_FEATURE_KEY]: initialUserState
   };
 
@@ -190,7 +190,7 @@ describe('SeriesDetailPageComponent', () => {
 
   describe('getting the id for an issue', () => {
     beforeEach(() => {
-      component.comicBooks = COMIC_BOOKS;
+      component.comicBooks = COMIC_DETAILS;
     });
 
     it('returns a value when the issue is found', () => {
@@ -215,9 +215,10 @@ describe('SeriesDetailPageComponent', () => {
       store.setState({
         ...initialState,
         [SERIES_FEATURE_KEY]: { ...initialSeriesState, detail: [ISSUE] },
-        [COMIC_BOOK_LIST_FEATURE_KEY]: {
+        [COMIC_DETAILS_LIST_FEATURE_KEY]: {
           ...initialComicBookListState,
-          comicBooks: COMIC_BOOKS
+          comicBooks: COMIC_DETAILS,
+          filteredCount: COMIC_DETAILS.length
         }
       });
     });
