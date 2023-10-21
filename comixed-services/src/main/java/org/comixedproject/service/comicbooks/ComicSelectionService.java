@@ -19,6 +19,7 @@
 package org.comixedproject.service.comicbooks;
 
 import java.util.Set;
+import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishComicBookSelectionStateAction;
@@ -66,19 +67,11 @@ public class ComicSelectionService {
   @Transactional
   public void addComicSelectionForUser(final String email, final Long comicBookId)
       throws ComicSelectionException {
-    try {
-      final ComiXedUser user = this.userService.findByEmail(email);
-      final ComicBook comicBook = this.comicBookService.getComic(comicBookId);
-      final ComicSelection selection =
-          this.comicSelectionRepository.getForUserAndComic(user, comicBook);
-      if (selection == null) {
-        log.debug("Creating new comic selection: user={} comic book id={}", email, comicBookId);
-        this.comicSelectionRepository.save(new ComicSelection(user, comicBook));
-        this.comicSelectionRepository.flush();
-        this.doPublishSelectionUpdateForUser(user);
-      }
-    } catch (ComiXedUserException | ComicBookException error) {
-      throw new ComicSelectionException("Failed to add comic selection", error);
+    final ComiXedUser user = this.doLoadUser(email);
+    final ComicBook comicBook = this.doLoadComicBook(comicBookId);
+    if (!this.comicSelectionRepository.existsForUserAndComicBook(user, comicBook)) {
+      this.doCreateSelectionRecord(user, comicBook);
+      this.doPublishSelectionUpdateForUser(user);
     }
   }
 
@@ -92,20 +85,20 @@ public class ComicSelectionService {
   @Transactional
   public void removeComicSelectionFromUser(final String email, final Long comicBookId)
       throws ComicSelectionException {
-    try {
-      final ComiXedUser user = this.userService.findByEmail(email);
-      final ComicBook comicBook = this.comicBookService.getComic(comicBookId);
-      final ComicSelection selection =
-          this.comicSelectionRepository.getForUserAndComic(user, comicBook);
-      if (selection != null) {
-        log.debug("Removing comic selection: user={} comic book id={}", email, comicBookId);
-        this.comicSelectionRepository.delete(selection);
-        this.comicSelectionRepository.flush();
-        this.doPublishSelectionUpdateForUser(user);
-      }
-    } catch (ComiXedUserException | ComicBookException error) {
-      throw new ComicSelectionException("failed to add comic selection", error);
+    final ComiXedUser user = this.doLoadUser(email);
+    final ComicBook comicBook = this.doLoadComicBook(comicBookId);
+    if (this.comicSelectionRepository.existsForUserAndComicBook(user, comicBook)) {
+      this.doRemoveComicSelectionRecord(user, comicBook);
+      this.doPublishSelectionUpdateForUser(user);
     }
+  }
+
+  private void doRemoveComicSelectionRecord(final ComiXedUser user, final ComicBook comicBook) {
+    log.debug(
+        "Removing comic selection: user={} comic book id={}", user.getEmail(), comicBook.getId());
+    this.comicSelectionRepository.deleteById(
+        this.comicSelectionRepository.getIdForUserAndComic(user, comicBook));
+    this.comicSelectionRepository.flush();
   }
 
   /**
@@ -133,7 +126,10 @@ public class ComicSelectionService {
       final Boolean unreadState,
       final Boolean unscrapedState,
       final String searchText,
-      final boolean adding) {
+      final boolean adding)
+      throws ComicSelectionException {
+    final ComiXedUser user = this.doLoadUser(email);
+
     final ComicDetailExampleBuilder builder = this.exampleBuilderObjectFactory.getObject();
     builder.setCoverYear(coverYear);
     builder.setCoverMonth(coverMonth);
@@ -146,43 +142,64 @@ public class ComicSelectionService {
 
     final Example<ComicDetail> example = builder.build();
     this.comicDetailService.findAllByExample(example).stream()
-        .map(ComicDetail::getComicId)
         .forEach(
-            comicBookId -> {
-              try {
-                if (adding) {
-                  this.addComicSelectionForUser(email, comicBookId);
-                } else {
-                  this.removeComicSelectionFromUser(email, comicBookId);
+            comicDetail -> {
+              @NonNull final ComicBook comicBook = comicDetail.getComicBook();
+              if (adding) {
+                if (!this.comicSelectionRepository.existsForUserAndComicBook(user, comicBook)) {
+                  this.doCreateSelectionRecord(user, comicBook);
                 }
-              } catch (ComicSelectionException error) {
-                log.error("failed to add comic selection", error);
+              } else {
+                if (this.comicSelectionRepository.existsForUserAndComicBook(user, comicBook)) {
+                  this.doRemoveComicSelectionRecord(user, comicBook);
+                }
               }
             });
+    this.doPublishSelectionUpdateForUser(user);
   }
 
-  /** Returns a cleared out collection of ids. It also publishes an update to the client. */
-  public void clearSelectedComicBooks(final String email) {
-    try {
-      log.debug("Loading user: {}", email);
-      final ComiXedUser user = this.userService.findByEmail(email);
-      log.debug("Publishing cleared out selection update");
-      this.comicSelectionRepository.deleteAllForUser(user);
-      this.comicSelectionRepository.flush();
-      this.doPublishSelectionUpdateForUser(user);
-    } catch (ComiXedUserException error) {
-      log.error("failed to published selected comic book update", error);
-    }
+  /**
+   * Returns a cleared out collection of ids. It also publishes an update to the client.
+   *
+   * @throws ComicSelectionException if an error occurs
+   */
+  public void clearSelectedComicBooks(final String email) throws ComicSelectionException {
+    log.debug("Loading user: {}", email);
+    final ComiXedUser user = this.doLoadUser(email);
+    log.debug("Publishing cleared out selection update");
+    this.comicSelectionRepository.deleteAllById(this.getAllForEmail(email));
+    this.comicSelectionRepository.flush();
+    this.doPublishSelectionUpdateForUser(user);
   }
 
   public Set<Long> getAllForEmail(final String email) throws ComicSelectionException {
-    final ComiXedUser user;
+    final ComiXedUser user = this.doLoadUser(email);
+    return this.comicSelectionRepository.getAllForUser(user);
+  }
+
+  private ComiXedUser doLoadUser(final String email) throws ComicSelectionException {
     try {
-      user = this.userService.findByEmail(email);
-      return this.comicSelectionRepository.getAllForUser(user);
+      return this.userService.findByEmail(email);
     } catch (ComiXedUserException error) {
-      throw new ComicSelectionException("failed to load selections for user", error);
+      throw new ComicSelectionException("failed to load user", error);
     }
+  }
+
+  private ComicBook doLoadComicBook(final long comicBookId) throws ComicSelectionException {
+    try {
+      return this.comicBookService.getComic(comicBookId);
+    } catch (ComicBookException error) {
+      throw new ComicSelectionException("failed to load comic book", error);
+    }
+  }
+
+  private void doCreateSelectionRecord(final ComiXedUser user, final ComicBook comicBook) {
+    log.debug(
+        "Creating new comic selection: user={} comic book id={}",
+        user.getEmail(),
+        comicBook.getId());
+    this.comicSelectionRepository.save(new ComicSelection(user, comicBook));
+    this.comicSelectionRepository.flush();
   }
 
   private void doPublishSelectionUpdateForUser(final ComiXedUser user) {

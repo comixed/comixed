@@ -23,13 +23,13 @@ import { Observable } from 'rxjs';
 import { Subscription } from 'webstomp-client';
 import { interpolate } from '@app/core';
 import {
+  ADD_SINGLE_COMIC_SELECTION_URL,
   CLEAR_COMIC_BOOK_SELECTION_STATE_URL,
   COMIC_BOOK_SELECTION_UPDATE_TOPIC,
   LOAD_COMIC_BOOK_SELECTIONS_URL,
-  SET_MULTIPLE_COMIC_SELECTION_URL,
-  SET_SINGLE_COMIC_SELECTION_URL
+  REMOVE_SINGLE_COMIC_SELECTION_URL,
+  SET_MULTIPLE_COMIC_SELECTION_URL
 } from '@app/comic-books/comic-books.constants';
-import { SingleComicBookSelectionRequest } from '@app/comic-books/model/net/single-comic-book-selection-request';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
@@ -84,12 +84,24 @@ export class ComicBookSelectionService {
     return this.http.get(interpolate(LOAD_COMIC_BOOK_SELECTIONS_URL));
   }
 
-  setSingleState(args: { id: number; selected: boolean }): Observable<any> {
+  addSingleSelection(args: { comicBookId: number }): Observable<any> {
     this.logger.debug('Setting single comic book selection state:', args);
-    return this.http.post(interpolate(SET_SINGLE_COMIC_SELECTION_URL), {
-      comicBookId: args.id,
-      selected: args.selected
-    } as SingleComicBookSelectionRequest);
+    return this.http.post(
+      interpolate(ADD_SINGLE_COMIC_SELECTION_URL, {
+        comicBookId: args.comicBookId
+      }),
+      {}
+    );
+  }
+
+  removeSingleSelection(args: { comicBookId: number }): Observable<any> {
+    this.logger.debug('Setting single comic book selection state:', args);
+    return this.http.delete(
+      interpolate(REMOVE_SINGLE_COMIC_SELECTION_URL, {
+        comicBookId: args.comicBookId
+      }),
+      {}
+    );
   }
 
   setMultipleState(args: {

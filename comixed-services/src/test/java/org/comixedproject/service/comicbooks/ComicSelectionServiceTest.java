@@ -45,7 +45,8 @@ import org.springframework.data.domain.Example;
 public class ComicSelectionServiceTest {
   private static final String TEST_EMAIL = "comixedreader@localhost";
   private static final Long TEST_COMIC_BOOK_ID = 717L;
-
+  private final Set<Long> selectedIdSet = new HashSet<>();
+  private final List<ComicDetail> comicDetailList = new ArrayList<>();
   @InjectMocks private ComicSelectionService service;
   @Mock private ComicDetailService comicDetailService;
   @Mock private ComicBookService comicBookService;
@@ -57,15 +58,10 @@ public class ComicSelectionServiceTest {
   @Mock private PublishComicBookSelectionStateAction publishComicBookSelectionStateAction;
   @Mock private ComiXedUser user;
   @Mock private ComicBook comicBook;
-  @Mock private ComicSelection comicSelection;
   @Mock private ComicSelection newComicSelection;
   @Mock private ComicDetail comicDetail;
 
   @Captor private ArgumentCaptor<ComicSelection> saveSelectionArgumentCaptor;
-  @Captor private ArgumentCaptor<ComicSelection> deleteSelectionArgumentCaptor;
-
-  private Set<Long> selectedIdSet = new HashSet<>();
-  private List<ComicDetail> comicDetailList = new ArrayList<>();
 
   @Before
   public void setUp() throws ComiXedUserException, ComicBookException {
@@ -73,19 +69,22 @@ public class ComicSelectionServiceTest {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicSelectionRepository.save(saveSelectionArgumentCaptor.capture()))
         .thenReturn(newComicSelection);
-    Mockito.doNothing()
-        .when(comicSelectionRepository)
-        .delete(deleteSelectionArgumentCaptor.capture());
     Mockito.when(comicSelectionRepository.getAllForUser(Mockito.any(ComiXedUser.class)))
         .thenReturn(selectedIdSet);
 
     Mockito.when(exampleBuilder.build()).thenReturn(example);
     Mockito.when(exampleBuilderObjectFactory.getObject()).thenReturn(exampleBuilder);
 
-    Mockito.when(comicDetail.getComicId()).thenReturn(TEST_COMIC_BOOK_ID);
+    Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_BOOK_ID);
+    Mockito.when(comicDetail.getComicBook()).thenReturn(comicBook);
     comicDetailList.add(comicDetail);
     Mockito.when(comicDetailService.findAllByExample(Mockito.any(Example.class)))
         .thenReturn(comicDetailList);
+
+    Mockito.when(
+            comicSelectionRepository.getIdForUserAndComic(
+                Mockito.any(ComiXedUser.class), Mockito.any(ComicBook.class)))
+        .thenReturn(TEST_COMIC_BOOK_ID);
   }
 
   @Test(expected = ComicSelectionException.class)
@@ -117,13 +116,12 @@ public class ComicSelectionServiceTest {
   public void testAddComicSelectionAlreadySelected()
       throws ComicSelectionException, PublishingException {
     Mockito.when(
-            comicSelectionRepository.getForUserAndComic(
+            comicSelectionRepository.existsForUserAndComicBook(
                 Mockito.any(ComiXedUser.class), Mockito.any(ComicBook.class)))
-        .thenReturn(comicSelection);
+        .thenReturn(true);
 
     service.addComicSelectionForUser(TEST_EMAIL, TEST_COMIC_BOOK_ID);
 
-    Mockito.verify(comicSelectionRepository, Mockito.times(1)).getForUserAndComic(user, comicBook);
     Mockito.verify(comicSelectionRepository, Mockito.never())
         .save(Mockito.any(ComicSelection.class));
     Mockito.verify(publishComicBookSelectionStateAction, Mockito.never()).publish(Mockito.anySet());
@@ -132,9 +130,9 @@ public class ComicSelectionServiceTest {
   @Test
   public void testAddComicSelection() throws ComicSelectionException, PublishingException {
     Mockito.when(
-            comicSelectionRepository.getForUserAndComic(
+            comicSelectionRepository.existsForUserAndComicBook(
                 Mockito.any(ComiXedUser.class), Mockito.any(ComicBook.class)))
-        .thenReturn(null);
+        .thenReturn(false);
 
     service.addComicSelectionForUser(TEST_EMAIL, TEST_COMIC_BOOK_ID);
 
@@ -143,7 +141,8 @@ public class ComicSelectionServiceTest {
     assertSame(user, selection.getUser());
     assertSame(comicBook, selection.getComicBook());
 
-    Mockito.verify(comicSelectionRepository, Mockito.times(1)).getForUserAndComic(user, comicBook);
+    Mockito.verify(comicSelectionRepository, Mockito.times(1))
+        .existsForUserAndComicBook(user, comicBook);
     Mockito.verify(comicSelectionRepository, Mockito.times(1)).save(selection);
     Mockito.verify(publishComicBookSelectionStateAction, Mockito.times(1)).publish(selectedIdSet);
   }
@@ -162,7 +161,8 @@ public class ComicSelectionServiceTest {
     assertSame(user, selection.getUser());
     assertSame(comicBook, selection.getComicBook());
 
-    Mockito.verify(comicSelectionRepository, Mockito.times(1)).getForUserAndComic(user, comicBook);
+    Mockito.verify(comicSelectionRepository, Mockito.times(1))
+        .existsForUserAndComicBook(user, comicBook);
     Mockito.verify(comicSelectionRepository, Mockito.times(1)).save(selection);
     Mockito.verify(publishComicBookSelectionStateAction, Mockito.times(1)).publish(selectedIdSet);
   }
@@ -196,13 +196,14 @@ public class ComicSelectionServiceTest {
   public void testRemoveComicSelectionNotSelected()
       throws ComicSelectionException, PublishingException {
     Mockito.when(
-            comicSelectionRepository.getForUserAndComic(
+            comicSelectionRepository.existsForUserAndComicBook(
                 Mockito.any(ComiXedUser.class), Mockito.any(ComicBook.class)))
-        .thenReturn(null);
+        .thenReturn(false);
 
     service.removeComicSelectionFromUser(TEST_EMAIL, TEST_COMIC_BOOK_ID);
 
-    Mockito.verify(comicSelectionRepository, Mockito.times(1)).getForUserAndComic(user, comicBook);
+    Mockito.verify(comicSelectionRepository, Mockito.times(1))
+        .existsForUserAndComicBook(user, comicBook);
     Mockito.verify(comicSelectionRepository, Mockito.never())
         .delete(Mockito.any(ComicSelection.class));
     Mockito.verify(publishComicBookSelectionStateAction, Mockito.never()).publish(Mockito.anySet());
@@ -211,14 +212,17 @@ public class ComicSelectionServiceTest {
   @Test
   public void testRemoveComicSelection() throws ComicSelectionException, PublishingException {
     Mockito.when(
-            comicSelectionRepository.getForUserAndComic(
+            comicSelectionRepository.existsForUserAndComicBook(
                 Mockito.any(ComiXedUser.class), Mockito.any(ComicBook.class)))
-        .thenReturn(comicSelection);
+        .thenReturn(true);
 
     service.removeComicSelectionFromUser(TEST_EMAIL, TEST_COMIC_BOOK_ID);
 
-    Mockito.verify(comicSelectionRepository, Mockito.times(1)).getForUserAndComic(user, comicBook);
-    Mockito.verify(comicSelectionRepository, Mockito.times(1)).delete(comicSelection);
+    Mockito.verify(comicSelectionRepository, Mockito.times(1))
+        .existsForUserAndComicBook(user, comicBook);
+    Mockito.verify(comicSelectionRepository, Mockito.times(1))
+        .getIdForUserAndComic(user, comicBook);
+    Mockito.verify(comicSelectionRepository, Mockito.times(1)).deleteById(TEST_COMIC_BOOK_ID);
     Mockito.verify(publishComicBookSelectionStateAction, Mockito.times(1)).publish(selectedIdSet);
   }
 
@@ -226,29 +230,28 @@ public class ComicSelectionServiceTest {
   public void testRemoveComicSelectionPublishingException()
       throws ComicSelectionException, PublishingException {
     Mockito.when(
-            comicSelectionRepository.getForUserAndComic(
+            comicSelectionRepository.existsForUserAndComicBook(
                 Mockito.any(ComiXedUser.class), Mockito.any(ComicBook.class)))
-        .thenReturn(comicSelection);
+        .thenReturn(true);
     Mockito.doThrow(PublishingException.class)
         .when(publishComicBookSelectionStateAction)
         .publish(Mockito.anySet());
 
     service.removeComicSelectionFromUser(TEST_EMAIL, TEST_COMIC_BOOK_ID);
 
-    final ComicSelection selection = deleteSelectionArgumentCaptor.getValue();
-    assertNotNull(selection);
-
-    Mockito.verify(comicSelectionRepository, Mockito.times(1)).getForUserAndComic(user, comicBook);
-    Mockito.verify(comicSelectionRepository, Mockito.times(1)).delete(selection);
+    Mockito.verify(comicSelectionRepository, Mockito.times(1))
+        .existsForUserAndComicBook(user, comicBook);
+    Mockito.verify(comicSelectionRepository, Mockito.times(1))
+        .getIdForUserAndComic(user, comicBook);
     Mockito.verify(publishComicBookSelectionStateAction, Mockito.times(1)).publish(selectedIdSet);
   }
 
   @Test
-  public void testAddingMultipleComics() throws PublishingException {
+  public void testAddingMultipleComics() throws PublishingException, ComicSelectionException {
     Mockito.when(
-            comicSelectionRepository.getForUserAndComic(
+            comicSelectionRepository.existsForUserAndComicBook(
                 Mockito.any(ComiXedUser.class), Mockito.any(ComicBook.class)))
-        .thenReturn(null);
+        .thenReturn(false);
 
     service.selectMultipleComicBooks(
         TEST_EMAIL, null, null, null, null, null, false, false, null, true);
@@ -257,38 +260,34 @@ public class ComicSelectionServiceTest {
     assertNotNull(selection);
 
     Mockito.verify(comicSelectionRepository, Mockito.times(comicDetailList.size()))
-        .getForUserAndComic(user, comicBook);
+        .existsForUserAndComicBook(user, comicBook);
     Mockito.verify(comicSelectionRepository, Mockito.times(comicDetailList.size())).save(selection);
     Mockito.verify(publishComicBookSelectionStateAction, Mockito.times(comicDetailList.size()))
         .publish(selectedIdSet);
   }
 
   @Test
-  public void testRemovingMultipleComics() throws PublishingException {
+  public void testRemovingMultipleComics() throws PublishingException, ComicSelectionException {
     Mockito.when(
-            comicSelectionRepository.getForUserAndComic(
+            comicSelectionRepository.existsForUserAndComicBook(
                 Mockito.any(ComiXedUser.class), Mockito.any(ComicBook.class)))
-        .thenReturn(comicSelection);
+        .thenReturn(true);
 
     service.selectMultipleComicBooks(
         TEST_EMAIL, null, null, null, null, null, false, false, null, false);
 
-    final ComicSelection selection = deleteSelectionArgumentCaptor.getValue();
-    assertNotNull(selection);
-
     Mockito.verify(comicSelectionRepository, Mockito.times(comicDetailList.size()))
-        .getForUserAndComic(user, comicBook);
+        .getIdForUserAndComic(user, comicBook);
     Mockito.verify(comicSelectionRepository, Mockito.times(comicDetailList.size()))
-        .delete(selection);
-    Mockito.verify(publishComicBookSelectionStateAction, Mockito.times(comicDetailList.size()))
-        .publish(selectedIdSet);
+        .deleteById(TEST_COMIC_BOOK_ID);
+    Mockito.verify(publishComicBookSelectionStateAction, Mockito.times(1)).publish(selectedIdSet);
   }
 
   @Test
-  public void tesClearSelectedComicBooks() throws PublishingException {
+  public void tesClearSelectedComicBooks() throws PublishingException, ComicSelectionException {
     service.clearSelectedComicBooks(TEST_EMAIL);
 
-    Mockito.verify(comicSelectionRepository, Mockito.times(1)).deleteAllForUser(user);
+    Mockito.verify(comicSelectionRepository, Mockito.times(1)).deleteAllById(selectedIdSet);
     Mockito.verify(publishComicBookSelectionStateAction, Mockito.times(1)).publish(selectedIdSet);
   }
 
