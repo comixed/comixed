@@ -19,7 +19,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
-
 import { ComicBookSelectionEffects } from './comic-book-selection.effects';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
@@ -27,6 +26,7 @@ import { ComicState } from '@app/comic-books/models/comic-state';
 import { ComicBookSelectionService } from '@app/comic-books/services/comic-book-selection.service';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import {
+  addSingleComicBookSelection,
   clearComicBookSelectionState,
   clearComicBookSelectionStateFailed,
   comicBookSelectionsLoaded,
@@ -34,11 +34,11 @@ import {
   loadComicBookSelections,
   loadComicBookSelectionsFailed,
   multipleComicBookSelectionStateSet,
+  removeSingleComicBookSelection,
   setMultipleComicBookSelectionState,
   setMultipleComicBookSelectionStateFailed,
-  setSingleComicBookSelectionState,
-  setSingleComicBookSelectionStateFailed,
-  singleComicBookSelectionStateSet
+  singleComicBookSelectionFailed,
+  singleComicBookSelectionUpdated
 } from '@app/comic-books/actions/comic-book-selection.actions';
 import { hot } from 'jasmine-marbles';
 import { LoggerModule } from '@angular-ru/cdk/logger';
@@ -55,7 +55,7 @@ describe('ComicBookSelectionEffects', () => {
   const READ_STATE = Math.random() > 0.5;
   const UNSCRAPED_STATE = Math.random() > 0.5;
   const SEARCH_TEXT = 'This is some text';
-  const ID = 65;
+  const COMIC_BOOK_ID = 65;
   const SELECTED = Math.random() > 0.5;
 
   let actions$: Observable<any>;
@@ -74,8 +74,11 @@ describe('ComicBookSelectionEffects', () => {
             loadSelections: jasmine.createSpy(
               'ComicBookSelectionService.loadSelections()'
             ),
-            setSingleState: jasmine.createSpy(
-              'ComicBookSelectionService.setSingleState()'
+            addSingleSelection: jasmine.createSpy(
+              'ComicBookSelectionService.addSingleSelection()'
+            ),
+            removeSingleSelection: jasmine.createSpy(
+              'ComicBookSelectionService.removeSingleSelection()'
             ),
             setMultipleState: jasmine.createSpy(
               'ComicBookSelectionService.setMultipleState()'
@@ -105,11 +108,11 @@ describe('ComicBookSelectionEffects', () => {
     expect(effects).toBeTruthy();
   });
 
-  describe('loading the current comic book selectsion', () => {
+  describe('loading the current comic book selections', () => {
     it('fires an action on success', () => {
-      const serviceResponse = [ID];
+      const serviceResponse = [COMIC_BOOK_ID];
       const action = loadComicBookSelections();
-      const outcome = comicBookSelectionsLoaded({ ids: [ID] });
+      const outcome = comicBookSelectionsLoaded({ ids: [COMIC_BOOK_ID] });
 
       actions$ = hot('-a', {
         a: action
@@ -154,65 +157,116 @@ describe('ComicBookSelectionEffects', () => {
     });
   });
 
-  describe('selecting a single comic book', () => {
+  describe('adding a single comic book selection', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({});
-      const action = setSingleComicBookSelectionState({
-        id: ID,
-        selected: SELECTED
+      const action = addSingleComicBookSelection({
+        comicBookId: COMIC_BOOK_ID
       });
-      const outcome = singleComicBookSelectionStateSet();
+      const outcome = singleComicBookSelectionUpdated();
 
       actions$ = hot('-a', { a: action });
-      comicBookSelectionService.setSingleState
+      comicBookSelectionService.addSingleSelection
         .withArgs({
-          id: ID,
-          selected: SELECTED
+          comicBookId: COMIC_BOOK_ID
         })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.setSingleState$).toBeObservable(expected);
+      expect(effects.addSingleSelection$).toBeObservable(expected);
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = setSingleComicBookSelectionState({
-        id: ID,
-        selected: SELECTED
+      const action = addSingleComicBookSelection({
+        comicBookId: COMIC_BOOK_ID
       });
-      const outcome = setSingleComicBookSelectionStateFailed();
+      const outcome = singleComicBookSelectionFailed();
 
       actions$ = hot('-a', { a: action });
-      comicBookSelectionService.setSingleState
+      comicBookSelectionService.addSingleSelection
         .withArgs({
-          id: ID,
-          selected: SELECTED
+          comicBookId: COMIC_BOOK_ID
         })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.setSingleState$).toBeObservable(expected);
+      expect(effects.addSingleSelection$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = setSingleComicBookSelectionState({
-        id: ID,
-        selected: SELECTED
+      const action = addSingleComicBookSelection({
+        comicBookId: COMIC_BOOK_ID
       });
-      const outcome = setSingleComicBookSelectionStateFailed();
+      const outcome = singleComicBookSelectionFailed();
 
       actions$ = hot('-a', { a: action });
-      comicBookSelectionService.setSingleState
+      comicBookSelectionService.addSingleSelection
         .withArgs({
-          id: ID,
-          selected: SELECTED
+          comicBookId: COMIC_BOOK_ID
         })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.setSingleState$).toBeObservable(expected);
+      expect(effects.addSingleSelection$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('removing a single comic book selection', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = new HttpResponse({});
+      const action = removeSingleComicBookSelection({
+        comicBookId: COMIC_BOOK_ID
+      });
+      const outcome = singleComicBookSelectionUpdated();
+
+      actions$ = hot('-a', { a: action });
+      comicBookSelectionService.removeSingleSelection
+        .withArgs({
+          comicBookId: COMIC_BOOK_ID
+        })
+        .and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.removeSingleSelection$).toBeObservable(expected);
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = removeSingleComicBookSelection({
+        comicBookId: COMIC_BOOK_ID
+      });
+      const outcome = singleComicBookSelectionFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicBookSelectionService.removeSingleSelection
+        .withArgs({
+          comicBookId: COMIC_BOOK_ID
+        })
+        .and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.removeSingleSelection$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = removeSingleComicBookSelection({
+        comicBookId: COMIC_BOOK_ID
+      });
+      const outcome = singleComicBookSelectionFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicBookSelectionService.removeSingleSelection
+        .withArgs({
+          comicBookId: COMIC_BOOK_ID
+        })
+        .and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.removeSingleSelection$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

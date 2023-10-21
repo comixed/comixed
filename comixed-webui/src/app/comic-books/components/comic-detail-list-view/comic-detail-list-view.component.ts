@@ -50,7 +50,10 @@ import { Subscription } from 'rxjs';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
 import { rescanComics } from '@app/library/actions/rescan-comics.actions';
-import { setSingleComicBookSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import {
+  addSingleComicBookSelection,
+  removeSingleComicBookSelection
+} from '@app/comic-books/actions/comic-book-selection.actions';
 
 @Component({
   selector: 'cx-comic-detail-list-view',
@@ -198,14 +201,17 @@ export class ComicDetailListViewComponent implements OnDestroy {
     entry: SelectableListItem<ComicDetail>,
     selected: boolean
   ): void {
-    this.logger.debug(
-      'Setting selected state for comic:',
-      entry.item,
-      selected
-    );
-    this.store.dispatch(
-      setSingleComicBookSelectionState({ id: entry.item.comicId, selected })
-    );
+    if (selected) {
+      this.logger.debug('Adding comic book selection:', entry.item);
+      this.store.dispatch(
+        addSingleComicBookSelection({ comicBookId: entry.item.comicId })
+      );
+    } else {
+      this.logger.debug('Removing comic book selection:', entry.item);
+      this.store.dispatch(
+        removeSingleComicBookSelection({ comicBookId: entry.item.comicId })
+      );
+    }
   }
 
   onRowSelected(row: SelectableListItem<ComicDetail>): void {

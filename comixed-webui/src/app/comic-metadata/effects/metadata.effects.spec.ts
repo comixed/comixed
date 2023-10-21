@@ -55,7 +55,7 @@ import {
 } from '@app/comic-metadata/comic-metadata.fixtures';
 import {
   clearComicBookSelectionState,
-  setSingleComicBookSelectionState
+  removeSingleComicBookSelection
 } from '@app/comic-books/actions/comic-book-selection.actions';
 
 describe('MetadataEffects', () => {
@@ -241,9 +241,8 @@ describe('MetadataEffects', () => {
       });
       const outcome1 = comicScraped();
       const outcome2 = comicBookLoaded({ comicBook: COMIC });
-      const outcome3 = setSingleComicBookSelectionState({
-        id: COMIC.id,
-        selected: false
+      const outcome3 = removeSingleComicBookSelection({
+        comicBookId: COMIC.id
       });
 
       actions$ = hot('-a', { a: action });

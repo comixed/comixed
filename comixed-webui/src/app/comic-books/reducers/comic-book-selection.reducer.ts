@@ -18,6 +18,7 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
+  addSingleComicBookSelection,
   clearComicBookSelectionState,
   clearComicBookSelectionStateFailed,
   comicBookSelectionsLoaded,
@@ -26,11 +27,11 @@ import {
   loadComicBookSelections,
   loadComicBookSelectionsFailed,
   multipleComicBookSelectionStateSet,
+  removeSingleComicBookSelection,
   setMultipleComicBookSelectionState,
   setMultipleComicBookSelectionStateFailed,
-  setSingleComicBookSelectionState,
-  setSingleComicBookSelectionStateFailed,
-  singleComicBookSelectionStateSet
+  singleComicBookSelectionFailed,
+  singleComicBookSelectionUpdated
 } from '../actions/comic-book-selection.actions';
 
 export const COMIC_BOOK_SELECTION_FEATURE_KEY = 'comic_book_selection';
@@ -70,15 +71,19 @@ export const reducer = createReducer(
     ...state,
     busy: false
   })),
-  on(setSingleComicBookSelectionState, state => ({
+  on(addSingleComicBookSelection, state => ({
     ...state,
     busy: true
   })),
-  on(singleComicBookSelectionStateSet, state => ({
+  on(removeSingleComicBookSelection, state => ({
+    ...state,
+    busy: true
+  })),
+  on(singleComicBookSelectionUpdated, state => ({
     ...state,
     busy: false
   })),
-  on(setSingleComicBookSelectionStateFailed, state => ({
+  on(singleComicBookSelectionFailed, state => ({
     ...state,
     busy: false
   })),

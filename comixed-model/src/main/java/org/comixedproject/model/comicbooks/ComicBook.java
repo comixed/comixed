@@ -104,14 +104,6 @@ public class ComicBook {
   @Setter
   private Long previousIssueId;
 
-  @OneToMany(
-      mappedBy = "comicBook",
-      cascade = CascadeType.ALL,
-      orphanRemoval = true,
-      fetch = FetchType.LAZY)
-  @Getter
-  private Set<ComicSelection> selections;
-
   @Column(name = "CreateMetadataSource", nullable = false, updatable = true)
   @JsonIgnore
   @Getter

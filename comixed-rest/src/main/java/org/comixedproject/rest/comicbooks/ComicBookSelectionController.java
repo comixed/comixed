@@ -18,12 +18,15 @@
 
 package org.comixedproject.rest.comicbooks;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.annotation.Timed;
-import java.security.Principal;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.net.comicbooks.MultipleComicBooksSelectionRequest;
-import org.comixedproject.model.net.comicbooks.SingleComicBookSelectionRequest;
 import org.comixedproject.service.comicbooks.ComicSelectionException;
 import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,55 +46,70 @@ public class ComicBookSelectionController {
   public static final String LIBRARY_SELECTIONS = "library.selection";
 
   @Autowired private ComicSelectionService comicSelectionService;
+  @Autowired private ObjectMapper objectMapper;
 
   /**
    * Loads the user's comic book selections.
    *
-   * @param principal the session
+   * @param session the session
    * @return the comic book ids
    */
   @GetMapping(value = "/api/comics/selections", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.load")
-  public Set<Long> getAllForEmail(final Principal principal) throws ComicSelectionException {
-    final String email = principal.getName();
-    log.info("Loading comic book selections: email={}", email);
-    return this.comicSelectionService.getAllForEmail(email);
+  public List getAllSelections(final HttpSession session) throws ComicSelectionException {
+    log.info("Loading comic book selections");
+    return this.doGetSelections(session);
   }
 
   /**
-   * Called when the selection state for a single comic book is changed.
+   * Adds a single comic book selection to a user.
    *
-   * @param principal the user principal
-   * @param request the request body
+   * @param session the session
+   * @param comicBookId the comic book id
    * @throws ComicSelectionException if an error occurs
    */
-  @PostMapping(
-      value = "/api/comics/selections/single",
+  @PutMapping(
+      value = "/api/comics/selections/{comicBookId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.add-single")
-  public void selectSingleComicBook(
-      final Principal principal, @RequestBody() final SingleComicBookSelectionRequest request)
+  public void addSingleSelection(
+      final HttpSession session, @PathVariable("comicBookId") final Long comicBookId)
       throws ComicSelectionException {
-    final String email = principal.getName();
-    final Long comicBookId = request.getComicBookId();
-    final boolean adding = request.getSelected();
-    if (adding) {
-      log.info("Adding comic selection: email={} comic book id={}", email, comicBookId);
-      this.comicSelectionService.addComicSelectionForUser(email, comicBookId);
-    } else {
-      log.info("Removing comic selection: email={} comic book id={}", email, comicBookId);
-      this.comicSelectionService.removeComicSelectionFromUser(email, comicBookId);
-    }
+    final List selections = this.doGetSelections(session);
+    log.info("Adding comic selection: comic book id={}", comicBookId);
+    this.comicSelectionService.addComicSelectionForUser(selections, comicBookId);
+    log.debug("Updating comic selections");
+    this.doSetSelections(session, selections);
   }
 
   /**
-   * Called when the selection state for multiple comics is changed.
+   * Removes a single comic book selection from a user.
    *
-   * @param principal the user principal
+   * @param session the session
+   * @param comicBookId the comic book id
+   * @throws ComicSelectionException if an error occurs
+   */
+  @DeleteMapping(value = "/api/comics/selections/{comicBookId}")
+  @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.comic-book.selections.delete-single")
+  public void deleteSingleSelection(
+      final HttpSession session, @PathVariable("comicBookId") final Long comicBookId)
+      throws ComicSelectionException {
+    log.info("Removing comic selection:comic book id={}", comicBookId);
+    final List selections = this.doGetSelections(session);
+    this.comicSelectionService.removeComicSelectionFromUser(selections, comicBookId);
+    this.doSetSelections(session, selections);
+  }
+
+  /**
+   * Adds selections using filters.
+   *
+   * @param session the session
    * @param request the request body
+   * @throws ComicSelectionException if an error occurs
    */
   @PostMapping(
       value = "/api/comics/selections/multiple",
@@ -100,12 +118,12 @@ public class ComicBookSelectionController {
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.add-multiple")
   public void selectMultipleComicBooks(
-      final Principal principal, @RequestBody() final MultipleComicBooksSelectionRequest request) {
-    final String email = principal.getName();
-    final boolean adding = request.getSelected();
+      final HttpSession session, @RequestBody() final MultipleComicBooksSelectionRequest request)
+      throws ComicSelectionException {
     log.info("Updating multiple comic books selection: {}", request);
+    final List selections = this.doGetSelections(session);
     this.comicSelectionService.selectMultipleComicBooks(
-        email,
+        selections,
         request.getCoverYear(),
         request.getCoverMonth(),
         request.getArchiveType(),
@@ -114,20 +132,54 @@ public class ComicBookSelectionController {
         request.getReadState(),
         request.getUnscrapedState(),
         request.getSearchText(),
-        adding);
+        request.getSelected());
+    this.doSetSelections(session, selections);
   }
 
   /**
    * Clears the selections for the current user.
    *
-   * @param principal the user principal
+   * @param session the session
+   * @throws ComicSelectionException if an error occurs
    */
   @DeleteMapping(value = "/api/library/selections")
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.clear")
-  public void clearSelections(final Principal principal) {
-    final String email = principal.getName();
-    log.info("Clearing comic selections for user: {}", email);
-    this.comicSelectionService.clearSelectedComicBooks(email);
+  public void clearSelections(final HttpSession session) throws ComicSelectionException {
+    final List<Long> selections = this.doGetSelections(session);
+    log.info("Clearing comic selections");
+    this.comicSelectionService.clearSelectedComicBooks(selections);
+    this.doSetSelections(session, selections);
+  }
+
+  private List doGetSelections(final HttpSession session) throws ComicSelectionException {
+    Object storeSelections = session.getAttribute(LIBRARY_SELECTIONS);
+    if (storeSelections == null) {
+      log.debug("Creating new selection set");
+      final List selections = new ArrayList();
+      this.doSetSelections(session, selections);
+      return selections;
+    } else {
+      try {
+        final List result = this.objectMapper.readValue(storeSelections.toString(), List.class);
+        // Jackson unmarshalls the elements as Integer, so we need to adjust them
+        return (List)
+            result.stream()
+                .map(entry -> ((Integer) entry).longValue())
+                .collect(Collectors.toList());
+      } catch (JsonProcessingException error) {
+        throw new ComicSelectionException("failed to load selections from session", error);
+      }
+    }
+  }
+
+  private void doSetSelections(final HttpSession session, final List<Long> selections)
+      throws ComicSelectionException {
+    log.debug("Storing selection set");
+    try {
+      session.setAttribute(LIBRARY_SELECTIONS, this.objectMapper.writeValueAsString(selections));
+    } catch (JsonProcessingException error) {
+      throw new ComicSelectionException("failed to save selections to session", error);
+    }
   }
 }
