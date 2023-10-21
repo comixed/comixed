@@ -42,6 +42,9 @@ public class ComicDetailExampleBuilderTest {
       ComicType.values()[RandomUtils.nextInt(ComicType.values().length)];
   private static final ComicState TEST_COMIC_STATE =
       ComicState.values()[RandomUtils.nextInt(ComicState.values().length)];
+  private static final String TEST_PUBLISHER = "Publisher Name";
+  private static final String TEST_SERIES = "Series Name";
+  private static final String TEST_VOLUME = "2022";
 
   @InjectMocks private ComicDetailExampleBuilder builder;
 
@@ -102,6 +105,33 @@ public class ComicDetailExampleBuilderTest {
   @Test
   public void testBuildWithUnScrapedState() {
     builder.setUnscrapedState(true);
+
+    final Example<ComicDetail> result = builder.build();
+
+    assertNotNull(result);
+  }
+
+  @Test
+  public void testBuildWithPublisher() {
+    builder.setPublisher(TEST_PUBLISHER);
+
+    final Example<ComicDetail> result = builder.build();
+
+    assertNotNull(result);
+  }
+
+  @Test
+  public void testBuildWithSeries() {
+    builder.setSeries(TEST_SERIES);
+
+    final Example<ComicDetail> result = builder.build();
+
+    assertNotNull(result);
+  }
+
+  @Test
+  public void testBuildWithVolume() {
+    builder.setVolume(TEST_VOLUME);
 
     final Example<ComicDetail> result = builder.build();
 

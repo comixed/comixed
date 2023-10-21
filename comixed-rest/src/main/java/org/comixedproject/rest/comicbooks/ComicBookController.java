@@ -294,6 +294,9 @@ public class ComicBookController {
             request.getReadState(),
             request.getUnscrapedState(),
             request.getSearchText(),
+            request.getPublisher(),
+            request.getSeries(),
+            request.getVolume(),
             request.getSortBy(),
             request.getSortDirection()),
         this.comicDetailService.getCoverYears(
@@ -304,7 +307,10 @@ public class ComicBookController {
             request.getComicState(),
             request.getReadState(),
             request.getUnscrapedState(),
-            request.getSearchText()),
+            request.getSearchText(),
+            request.getPublisher(),
+            request.getSeries(),
+            request.getVolume()),
         this.comicDetailService.getCoverMonths(
             request.getCoverYear(),
             request.getCoverMonth(),
@@ -313,7 +319,10 @@ public class ComicBookController {
             request.getComicState(),
             request.getReadState(),
             request.getUnscrapedState(),
-            request.getSearchText()),
+            request.getSearchText(),
+            request.getPublisher(),
+            request.getSeries(),
+            request.getVolume()),
         this.comicBookService.getComicBookCount(),
         this.comicDetailService.getFilterCount(
             request.getCoverYear(),
@@ -323,7 +332,10 @@ public class ComicBookController {
             request.getComicState(),
             request.getReadState(),
             request.getUnscrapedState(),
-            request.getSearchText()));
+            request.getSearchText(),
+            request.getPublisher(),
+            request.getSeries(),
+            request.getVolume()));
   }
 
   /**

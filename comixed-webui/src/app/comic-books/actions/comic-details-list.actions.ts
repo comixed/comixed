@@ -27,6 +27,8 @@ export const loadComicDetails = createAction(
   props<{
     pageSize: number;
     pageIndex: number;
+    sortBy: string;
+    sortDirection: string;
     coverYear: number;
     coverMonth: number;
     archiveType: ArchiveType;
@@ -35,8 +37,9 @@ export const loadComicDetails = createAction(
     readState: boolean;
     unscrapedState: boolean;
     searchText: string;
-    sortBy: string;
-    sortDirection: string;
+    publisher: string;
+    series: string;
+    volume: string;
   }>()
 );
 

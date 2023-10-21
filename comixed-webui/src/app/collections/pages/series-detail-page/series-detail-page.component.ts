@@ -31,7 +31,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { selectSeriesDetail } from '@app/collections/selectors/series.selectors';
 import { Issue } from '@app/collections/models/issue';
 import { loadSeriesDetail } from '@app/collections/actions/series.actions';
-import { selectComicBookList } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -39,6 +38,11 @@ import { TitleService } from '@app/core/services/title.service';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { PAGE_SIZE_OPTIONS } from '@app/core';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import {
+  selectLoadComicDetailsFilteredComics,
+  selectLoadComicDetailsList
+} from '@app/comic-books/selectors/load-comic-details-list.selectors';
+import { loadComicDetails } from '@app/comic-books/actions/comic-details-list.actions';
 
 @Component({
   selector: 'cx-series-detail-page',
@@ -62,6 +66,9 @@ export class SeriesDetailPageComponent
   paramSubscription: Subscription;
   seriesDetailSubscription: Subscription;
   comicBookListSubscription: Subscription;
+  totalComicsSubscription: Subscription;
+  totalComics = 0;
+  pageChangedSubscription: Subscription;
   userSubscription: Subscription;
   langChangeSubscription: Subscription;
 
@@ -114,11 +121,41 @@ export class SeriesDetailPageComponent
       });
     this.logger.trace('Subscribing to comic book list updates');
     this.comicBookListSubscription = this.store
-      .select(selectComicBookList)
+      .select(selectLoadComicDetailsList)
       .subscribe(comicBooks => {
         this.comicBooks = comicBooks;
         this.calculatePercentageComplete();
       });
+    this.logger.trace('Subscribing to total comics count updates');
+    this.totalComicsSubscription = this.store
+      .select(selectLoadComicDetailsFilteredComics)
+      .subscribe(filteredCount => {
+        this.totalComics = filteredCount;
+        this.calculatePercentageComplete();
+      });
+    this.pageChangedSubscription = this.activatedRoute.queryParams.subscribe(
+      () => {
+        this.store.dispatch(
+          loadComicDetails({
+            pageIndex: null,
+            pageSize: null,
+            coverMonth: null,
+            coverYear: null,
+            archiveType: null,
+            comicType: null,
+            comicState: null,
+            readState: false,
+            unscrapedState: false,
+            searchText: null,
+            publisher: this.publisher,
+            series: this.name,
+            volume: this.volume,
+            sortBy: null,
+            sortDirection: null
+          })
+        );
+      }
+    );
   }
 
   ngAfterViewInit(): void {
@@ -150,6 +187,10 @@ export class SeriesDetailPageComponent
     this.seriesDetailSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from comic book list updates');
     this.comicBookListSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from total comics updates');
+    this.totalComicsSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from page query updates');
+    this.pageChangedSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -178,14 +219,15 @@ export class SeriesDetailPageComponent
   }
 
   private calculatePercentageComplete(): void {
-    this.inLibrary = this.dataSource.data.filter(entry =>
-      this.getComicBookIdForRow(entry)
-    ).length;
+    this.inLibrary = this.totalComics;
     this.totalIssues = this.dataSource.data.length;
     if (this.totalIssues > 0 && this.inLibrary > 0) {
       this.percentageComplete = (this.inLibrary / this.totalIssues) * 100;
     } else {
       this.percentageComplete = 0;
     }
+    this.logger.debug(
+      `Calculating percentage completed: ${this.inLibrary} / ${this.totalComics} * 100 = ${this.percentageComplete}`
+    );
   }
 }

@@ -207,6 +207,9 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
             readState: this.unreadOnly,
             unscrapedState: this.unscrapedOnly,
             searchText: this.queryParameterService.filterText$.value,
+            publisher: null,
+            series: null,
+            volume: null,
             sortBy: this.queryParameterService.sortBy$.value,
             sortDirection: this.queryParameterService.sortDirection$.value
           })

@@ -526,6 +526,9 @@ public class ComicDetailServiceTest {
                   TEST_READ_STATE,
                   TEST_UNSCRAPED_STATE,
                   TEST_SEARCH_TEXT,
+                  TEST_PUBLISHER,
+                  TEST_SERIES,
+                  TEST_VOLUME,
                   sortField,
                   "desc");
 
@@ -567,6 +570,9 @@ public class ComicDetailServiceTest {
                   TEST_READ_STATE,
                   TEST_UNSCRAPED_STATE,
                   TEST_SEARCH_TEXT,
+                  TEST_PUBLISHER,
+                  TEST_SERIES,
+                  TEST_VOLUME,
                   sortField,
                   "asc");
 
@@ -605,7 +611,10 @@ public class ComicDetailServiceTest {
                   TEST_COMIC_STATE,
                   TEST_READ_STATE,
                   TEST_UNSCRAPED_STATE,
-                  TEST_SEARCH_TEXT);
+                  TEST_SEARCH_TEXT,
+                  TEST_PUBLISHER,
+                  TEST_SERIES,
+                  TEST_VOLUME);
 
           assertNotNull(result);
           assertTrue(result.contains(TEST_COVER_YEAR));
@@ -656,7 +665,10 @@ public class ComicDetailServiceTest {
                   TEST_COMIC_STATE,
                   TEST_READ_STATE,
                   TEST_UNSCRAPED_STATE,
-                  TEST_SEARCH_TEXT);
+                  TEST_SEARCH_TEXT,
+                  TEST_PUBLISHER,
+                  TEST_SERIES,
+                  TEST_VOLUME);
 
           assertNotNull(result);
           assertTrue(result.contains(TEST_COVER_MONTH));
@@ -703,7 +715,10 @@ public class ComicDetailServiceTest {
             TEST_COMIC_STATE,
             TEST_READ_STATE,
             TEST_UNSCRAPED_STATE,
-            TEST_SEARCH_TEXT);
+            TEST_SEARCH_TEXT,
+            TEST_PUBLISHER,
+            TEST_SERIES,
+            TEST_VOLUME);
 
     assertEquals(TEST_TOTAL_COMIC_COUNT, result);
 
