@@ -23,7 +23,6 @@ import java.security.Principal;
 import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.net.comicbooks.MultipleComicBooksSelectionRequest;
-import org.comixedproject.model.net.comicbooks.SingleComicBookSelectionRequest;
 import org.comixedproject.service.comicbooks.ComicSelectionException;
 import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,35 +59,46 @@ public class ComicBookSelectionController {
   }
 
   /**
-   * Called when the selection state for a single comic book is changed.
+   * Adds a single comic book selection to a user.
    *
    * @param principal the user principal
-   * @param request the request body
+   * @param comicBookId the comic book id
    * @throws ComicSelectionException if an error occurs
    */
-  @PostMapping(
-      value = "/api/comics/selections/single",
+  @PutMapping(
+      value = "/api/comics/selections/{comicBookId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.add-single")
-  public void selectSingleComicBook(
-      final Principal principal, @RequestBody() final SingleComicBookSelectionRequest request)
+  public void addSingleSelection(
+      final Principal principal, @PathVariable("comicBookId") final Long comicBookId)
       throws ComicSelectionException {
     final String email = principal.getName();
-    final Long comicBookId = request.getComicBookId();
-    final boolean adding = request.getSelected();
-    if (adding) {
-      log.info("Adding comic selection: email={} comic book id={}", email, comicBookId);
-      this.comicSelectionService.addComicSelectionForUser(email, comicBookId);
-    } else {
-      log.info("Removing comic selection: email={} comic book id={}", email, comicBookId);
-      this.comicSelectionService.removeComicSelectionFromUser(email, comicBookId);
-    }
+    log.info("Adding comic selection: email={} comic book id={}", email, comicBookId);
+    this.comicSelectionService.addComicSelectionForUser(email, comicBookId);
   }
 
   /**
-   * Called when the selection state for multiple comics is changed.
+   * Removes a single comic book selection from a user.
+   *
+   * @param principal the user principal
+   * @param comicBookId the comic book id
+   * @throws ComicSelectionException if an error occurs
+   */
+  @DeleteMapping(value = "/api/comics/selections/{comicBookId}")
+  @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.comic-book.selections.delete-single")
+  public void deleteSingleSelection(
+      final Principal principal, @PathVariable("comicBookId") final Long comicBookId)
+      throws ComicSelectionException {
+    final String email = principal.getName();
+    log.info("Removing comic selection: email={} comic book id={}", email, comicBookId);
+    this.comicSelectionService.removeComicSelectionFromUser(email, comicBookId);
+  }
+
+  /**
+   * Adds selections using filters.
    *
    * @param principal the user principal
    * @param request the request body
@@ -100,7 +110,8 @@ public class ComicBookSelectionController {
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.add-multiple")
   public void selectMultipleComicBooks(
-      final Principal principal, @RequestBody() final MultipleComicBooksSelectionRequest request) {
+      final Principal principal, @RequestBody() final MultipleComicBooksSelectionRequest request)
+      throws ComicSelectionException {
     final String email = principal.getName();
     final boolean adding = request.getSelected();
     log.info("Updating multiple comic books selection: {}", request);
@@ -125,7 +136,7 @@ public class ComicBookSelectionController {
   @DeleteMapping(value = "/api/library/selections")
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.clear")
-  public void clearSelections(final Principal principal) {
+  public void clearSelections(final Principal principal) throws ComicSelectionException {
     final String email = principal.getName();
     log.info("Clearing comic selections for user: {}", email);
     this.comicSelectionService.clearSelectedComicBooks(email);

@@ -22,6 +22,7 @@ import {
   reducer
 } from './comic-book-selection.reducer';
 import {
+  addSingleComicBookSelection,
   clearComicBookSelectionState,
   clearComicBookSelectionStateFailed,
   comicBookSelectionsLoaded,
@@ -30,11 +31,11 @@ import {
   loadComicBookSelections,
   loadComicBookSelectionsFailed,
   multipleComicBookSelectionStateSet,
+  removeSingleComicBookSelection,
   setMultipleComicBookSelectionState,
   setMultipleComicBookSelectionStateFailed,
-  setSingleComicBookSelectionState,
-  setSingleComicBookSelectionStateFailed,
-  singleComicBookSelectionStateSet
+  singleComicBookSelectionFailed,
+  singleComicBookSelectionUpdated
 } from '@app/comic-books/actions/comic-book-selection.actions';
 import {
   COMIC_BOOK_1,
@@ -178,13 +179,12 @@ describe('ComicBookSelection Reducer', () => {
     });
   });
 
-  describe('set the selection state for a single comic book', () => {
+  describe('adding a single comic book selection', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: false },
-        setSingleComicBookSelectionState({
-          id: IDS[0],
-          selected: SELECTED
+        addSingleComicBookSelection({
+          comicBookId: IDS[0]
         })
       );
     });
@@ -195,7 +195,7 @@ describe('ComicBookSelection Reducer', () => {
 
     describe('success', () => {
       beforeEach(() => {
-        state = reducer({ ...state }, singleComicBookSelectionStateSet());
+        state = reducer({ ...state }, singleComicBookSelectionUpdated());
       });
 
       it('clears the busy flag', () => {
@@ -205,7 +205,42 @@ describe('ComicBookSelection Reducer', () => {
 
     describe('failure', () => {
       beforeEach(() => {
-        state = reducer({ ...state }, setSingleComicBookSelectionStateFailed());
+        state = reducer({ ...state }, singleComicBookSelectionFailed());
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+    });
+  });
+
+  describe('removing a single comic book selection', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: false },
+        removeSingleComicBookSelection({
+          comicBookId: IDS[0]
+        })
+      );
+    });
+
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer({ ...state }, singleComicBookSelectionUpdated());
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer({ ...state }, singleComicBookSelectionFailed());
       });
 
       it('clears the busy flag', () => {

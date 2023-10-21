@@ -45,21 +45,34 @@ public interface ComicSelectionRepository extends JpaRepository<ComicSelection, 
   Set<Long> getAllForUser(@Param("user") ComiXedUser user);
 
   /**
-   * Retrieves the recod for the given user and comic detail.
+   * Deletes the recod for the given user and comic detail.
    *
    * @param user the user
    * @param comicBook the comic book
-   * @return the record if it exists
    */
-  @Query("SELECT s FROM ComicSelection s WHERE s.user = :user AND s.comicBook = :comicBook")
-  ComicSelection getForUserAndComic(
+  @Query(
+      "SELECT CASE WHEN COUNT(s) > 0 THEN TRUE ELSE FALSE END FROM ComicSelection s WHERE s.user = :user AND s.comicBook = :comicBook")
+  boolean existsForUserAndComicBook(
       @Param("user") ComiXedUser user, @Param("comicBook") ComicBook comicBook);
 
   /**
-   * Deletes are selections for the given user.
+   * Deletes the recod for the given user and comic detail.
    *
    * @param user the user
+   * @param comicBook the comic book
    */
-  @Query("DELETE FROM ComicSelection s WHERE s.user = :user")
-  void deleteAllForUser(@Param("user") ComiXedUser user);
+  @Query("DELETE FROM ComicSelection s WHERE s.user = :user AND s.comicBook = :comicBook")
+  void deleteForUserAndComicBook(
+      @Param("user") ComiXedUser user, @Param("comicBook") ComicBook comicBook);
+
+  /**
+   * Returns the record id for the given user's comic book selection.
+   *
+   * @param user the user
+   * @param comicBook the comic book
+   * @return the id
+   */
+  @Query("SELECT s.id FROM ComicSelection s WHERE s.user = :user AND s.comicBook = :comicBook")
+  Long getIdForUserAndComic(
+      @Param("user") ComiXedUser user, @Param("comicBook") ComicBook comicBook);
 }

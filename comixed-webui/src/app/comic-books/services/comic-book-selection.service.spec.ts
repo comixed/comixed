@@ -27,13 +27,13 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { HttpResponse } from '@angular/common/http';
 import { interpolate } from '@app/core';
 import {
+  ADD_SINGLE_COMIC_SELECTION_URL,
   CLEAR_COMIC_BOOK_SELECTION_STATE_URL,
   COMIC_BOOK_SELECTION_UPDATE_TOPIC,
   LOAD_COMIC_BOOK_SELECTIONS_URL,
-  SET_MULTIPLE_COMIC_SELECTION_URL,
-  SET_SINGLE_COMIC_SELECTION_URL
+  REMOVE_SINGLE_COMIC_SELECTION_URL,
+  SET_MULTIPLE_COMIC_SELECTION_URL
 } from '@app/comic-books/comic-books.constants';
-import { SingleComicBookSelectionRequest } from '@app/comic-books/model/net/single-comic-book-selection-request';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
@@ -108,19 +108,32 @@ describe('ComicBookSelectionService', () => {
     req.flush(serverResponse);
   });
 
-  it('can set the selection state for a comic book', () => {
+  it('can add a single comic book selection', () => {
     const serverResponse = new HttpResponse({});
 
     service
-      .setSingleState({ id: ID, selected: SELECTED })
+      .addSingleSelection({ comicBookId: ID })
       .subscribe(response => expect(response).toEqual(serverResponse));
 
-    const req = httpMock.expectOne(interpolate(SET_SINGLE_COMIC_SELECTION_URL));
+    const req = httpMock.expectOne(
+      interpolate(ADD_SINGLE_COMIC_SELECTION_URL, { comicBookId: ID })
+    );
     expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({
-      comicBookId: ID,
-      selected: SELECTED
-    } as SingleComicBookSelectionRequest);
+    expect(req.request.body).toEqual({});
+    req.flush(serverResponse);
+  });
+
+  it('can remove a single comic book selection', () => {
+    const serverResponse = new HttpResponse({});
+
+    service
+      .removeSingleSelection({ comicBookId: ID })
+      .subscribe(response => expect(response).toEqual(serverResponse));
+
+    const req = httpMock.expectOne(
+      interpolate(REMOVE_SINGLE_COMIC_SELECTION_URL, { comicBookId: ID })
+    );
+    expect(req.request.method).toEqual('DELETE');
     req.flush(serverResponse);
   });
 
