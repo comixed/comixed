@@ -64,7 +64,10 @@ import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
 import { rescanComics } from '@app/library/actions/rescan-comics.actions';
-import { setSingleComicBookSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import {
+  addSingleComicBookSelection,
+  removeSingleComicBookSelection
+} from '@app/comic-books/actions/comic-book-selection.actions';
 
 describe('ComicDetailListViewComponent', () => {
   const COMIC_DETAILS = [
@@ -197,9 +200,8 @@ describe('ComicDetailListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setSingleComicBookSelectionState({
-            id: ENTRY.item.comicId,
-            selected: true
+          addSingleComicBookSelection({
+            comicBookId: ENTRY.item.comicId
           })
         );
       });
@@ -212,9 +214,8 @@ describe('ComicDetailListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setSingleComicBookSelectionState({
-            id: ENTRY.item.comicId,
-            selected: false
+          removeSingleComicBookSelection({
+            comicBookId: ENTRY.item.comicId
           })
         );
       });

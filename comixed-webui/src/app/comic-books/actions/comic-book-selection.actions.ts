@@ -55,17 +55,22 @@ export const clearComicBookSelectionStateFailed = createAction(
   '[Comic Book Selection] Failed to clear the comic book selection state'
 );
 
-export const setSingleComicBookSelectionState = createAction(
-  '[Comic Book Selection] Set the selected state for a single comic book',
-  props<{ id: number; selected: boolean }>()
+export const addSingleComicBookSelection = createAction(
+  '[Comic Book Selection] Adds a single comic book selection',
+  props<{ comicBookId: number }>()
 );
 
-export const singleComicBookSelectionStateSet = createAction(
+export const removeSingleComicBookSelection = createAction(
+  '[Comic Book Selection] Removes a single comic book selection',
+  props<{ comicBookId: number }>()
+);
+
+export const singleComicBookSelectionUpdated = createAction(
   '[Comic Book Selection] The selected state for a single comic book was set'
 );
 
-export const setSingleComicBookSelectionStateFailed = createAction(
-  '[Comic Book Selection] Failed to et the selected state for a single comic book'
+export const singleComicBookSelectionFailed = createAction(
+  '[Comic Book Selection] Failed to set the selected state for a single comic book'
 );
 
 export const setMultipleComicBookSelectionState = createAction(

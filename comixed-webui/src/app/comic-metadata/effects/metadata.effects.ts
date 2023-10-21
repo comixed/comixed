@@ -47,7 +47,7 @@ import { ComicBook } from '@app/comic-books/models/comic-book';
 import { comicBookLoaded } from '@app/comic-books/actions/comic-book.actions';
 import {
   clearComicBookSelectionState,
-  setSingleComicBookSelectionState
+  removeSingleComicBookSelection
 } from '@app/comic-books/actions/comic-book-selection.actions';
 
 @Injectable()
@@ -154,9 +154,8 @@ export class MetadataEffects {
             mergeMap((response: ComicBook) => [
               comicScraped(),
               comicBookLoaded({ comicBook: response }),
-              setSingleComicBookSelectionState({
-                id: response.id,
-                selected: false
+              removeSingleComicBookSelection({
+                comicBookId: response.id
               })
             ]),
             catchError(error => {
