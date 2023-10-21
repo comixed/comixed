@@ -91,7 +91,7 @@ public class MultipleComicBooksSelectionRequest {
         + unscrapedState
         + ", searchText='"
         + searchText
-        + '\''
+        + "'"
         + ", selected="
         + selected
         + '}';

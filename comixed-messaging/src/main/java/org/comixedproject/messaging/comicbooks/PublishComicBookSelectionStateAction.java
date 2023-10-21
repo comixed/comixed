@@ -18,7 +18,7 @@
 
 package org.comixedproject.messaging.comicbooks;
 
-import java.util.Set;
+import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.AbstractPublishAction;
 import org.comixedproject.messaging.PublishingException;
@@ -33,11 +33,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class PublishComicBookSelectionStateAction extends AbstractPublishAction<Set<Long>> {
+public class PublishComicBookSelectionStateAction extends AbstractPublishAction<List> {
   static final String COMIC_BOOK_SELECTION_UPDATE_TOPIC = "/topic/user/comic-book-selection.update";
 
   @Override
-  public void publish(final Set<Long> ids) throws PublishingException {
+  public void publish(final List ids) throws PublishingException {
     log.debug(
         "Publishing update of {} selected comic book id{}", ids.size(), ids.size() == 1 ? "" : "s");
     this.doPublish(COMIC_BOOK_SELECTION_UPDATE_TOPIC, ids, View.GenericObjectView.class);

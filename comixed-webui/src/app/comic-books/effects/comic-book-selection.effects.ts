@@ -20,6 +20,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
+  addSingleComicBookSelection,
   clearComicBookSelectionState,
   clearComicBookSelectionStateFailed,
   comicBookSelectionsLoaded,
@@ -27,11 +28,11 @@ import {
   loadComicBookSelections,
   loadComicBookSelectionsFailed,
   multipleComicBookSelectionStateSet,
+  removeSingleComicBookSelection,
   setMultipleComicBookSelectionState,
   setMultipleComicBookSelectionStateFailed,
-  setSingleComicBookSelectionState,
-  setSingleComicBookSelectionStateFailed,
-  singleComicBookSelectionStateSet
+  singleComicBookSelectionFailed,
+  singleComicBookSelectionUpdated
 } from '../actions/comic-book-selection.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicBookSelectionService } from '@app/comic-books/services/comic-book-selection.service';
@@ -72,21 +73,18 @@ export class ComicBookSelectionEffects {
     );
   });
 
-  setSingleState$ = createEffect(() => {
+  addSingleSelection$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(setSingleComicBookSelectionState),
-      tap(action =>
-        this.logger.debug('Selecting a single comic book:', action)
-      ),
+      ofType(addSingleComicBookSelection),
+      tap(action => this.logger.debug('Adding a single comic book:', action)),
       switchMap(action =>
         this.comicBookSelectionService
-          .setSingleState({
-            id: action.id,
-            selected: action.selected
+          .addSingleSelection({
+            comicBookId: action.comicBookId
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map(() => singleComicBookSelectionStateSet()),
+            map(() => singleComicBookSelectionUpdated()),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(
@@ -94,7 +92,7 @@ export class ComicBookSelectionEffects {
                   'selection.set-single-state.effect-failure'
                 )
               );
-              return of(setSingleComicBookSelectionStateFailed());
+              return of(singleComicBookSelectionFailed());
             })
           )
       ),
@@ -103,7 +101,40 @@ export class ComicBookSelectionEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(setSingleComicBookSelectionStateFailed());
+        return of(singleComicBookSelectionFailed());
+      })
+    );
+  });
+
+  removeSingleSelection$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(removeSingleComicBookSelection),
+      tap(action => this.logger.debug('Removing a single comic book:', action)),
+      switchMap(action =>
+        this.comicBookSelectionService
+          .removeSingleSelection({
+            comicBookId: action.comicBookId
+          })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map(() => singleComicBookSelectionUpdated()),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'selection.set-single-state.effect-failure'
+                )
+              );
+              return of(singleComicBookSelectionFailed());
+            })
+          )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(singleComicBookSelectionFailed());
       })
     );
   });
