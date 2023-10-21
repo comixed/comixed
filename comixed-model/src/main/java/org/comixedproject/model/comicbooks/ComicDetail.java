@@ -278,7 +278,7 @@ public class ComicDetail {
   @Temporal(TemporalType.TIMESTAMP)
   @Getter
   @Setter
-  private Date dateAdded = new Date();
+  private Date addedDate = new Date();
 
   @OneToMany(mappedBy = "comicDetail", orphanRemoval = true)
   @Getter
