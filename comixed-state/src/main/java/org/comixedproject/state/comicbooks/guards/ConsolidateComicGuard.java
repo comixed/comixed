@@ -23,8 +23,8 @@ import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_TARGE
 
 import java.io.File;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang.StringUtils;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
+import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.comicbooks.ComicEvent;
@@ -41,6 +41,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class ConsolidateComicGuard extends AbstractComicGuard {
   @Autowired private ComicFileAdaptor comicFileAdaptor;
+  @Autowired private FileAdaptor fileAdaptor;
 
   @Override
   public boolean evaluate(final StateContext<ComicState, ComicEvent> context) {
@@ -52,11 +53,9 @@ public class ConsolidateComicGuard extends AbstractComicGuard {
     log.trace("Fetching renaming rule");
     final String renamingRule = context.getMessageHeaders().get(HEADER_RENAMING_RULE, String.class);
     log.trace("Generating target name");
-    final String targetName = this.comicFileAdaptor.createFilenameFromRule(comicBook, renamingRule);
+    final String targetName =
+        this.comicFileAdaptor.createFilenameFromRule(comicBook, renamingRule, targetDirectory);
     log.trace("Ensuring the comicBook filename would be different");
-    final String absoluteSource = comicBook.getComicDetail().getFile().getAbsolutePath();
-    final String absoluteTarget =
-        new File(String.format("%s/%s", targetDirectory, targetName)).getAbsolutePath();
-    return !StringUtils.equals(absoluteSource, absoluteTarget);
+    return !this.fileAdaptor.sameFile(comicBook.getComicDetail().getFile(), new File(targetName));
   }
 }
