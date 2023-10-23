@@ -22,7 +22,6 @@ import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PAR
 import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_TARGET_DIRECTORY;
 
 import java.io.File;
-import java.io.IOException;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
@@ -50,7 +49,7 @@ public class MoveComicProcessor
   @Autowired private ComicFileAdaptor comicFileAdaptor;
   @Autowired private ComicBookAdaptor comicBookAdaptor;
 
-  private JobParameters jobParameters;
+  JobParameters jobParameters;
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
@@ -65,25 +64,40 @@ public class MoveComicProcessor
       log.trace("Getting comicBook extension");
       final String comicExtension = comicBook.getComicDetail().getArchiveType().getExtension();
       log.trace("Generating new comicBook filename");
-      String targetFilename = this.comicFileAdaptor.createFilenameFromRule(comicBook, renamingRule);
-      final File metadataFile = new File(this.comicBookAdaptor.getMetadataFilename(comicBook));
+      String rebuiltFilename =
+          this.comicFileAdaptor.createFilenameFromRule(
+              comicBook, renamingRule, targetDirectory.getAbsolutePath());
+      final File metadataSourceFile =
+          new File(this.comicBookAdaptor.getMetadataFilename(comicBook));
       log.trace("Finding available filename");
-      targetFilename = String.format("%s/%s", targetDirectory, targetFilename);
-      targetFilename =
+      File comicDetailFile = comicBook.getComicDetail().getFile();
+      rebuiltFilename =
           this.comicFileAdaptor.findAvailableFilename(
-              comicBook.getComicDetail().getFilename(), targetFilename, 0, comicExtension);
-      File targetFile = new File(targetFilename);
-      log.trace("Moving comicBook file");
-      this.fileAdaptor.moveFile(comicBook.getComicDetail().getFile(), targetFile);
-      log.trace("Updating comicBook filename: {}", targetFile.getAbsoluteFile());
-      comicBook.getComicDetail().setFilename(targetFile.getAbsolutePath());
-
-      if (metadataFile.exists()) {
-        targetFile = new File(this.comicBookAdaptor.getMetadataFilename(comicBook));
-        log.trace("Moving comic metadata file: {} => {}");
-        this.fileAdaptor.moveFile(metadataFile, targetFile);
+              comicBook.getComicDetail().getFilename(), rebuiltFilename, 0, comicExtension);
+      File rebuiltFile = new File(rebuiltFilename);
+      if (!this.fileAdaptor.sameFile(rebuiltFile, comicDetailFile)) {
+        log.debug(
+            "Moving comicBook file: {} => {}",
+            comicDetailFile.getAbsolutePath(),
+            rebuiltFile.getAbsolutePath());
+        this.fileAdaptor.moveFile(comicDetailFile, rebuiltFile);
+        log.trace("Updating comicBook filename: {}", rebuiltFile.getAbsoluteFile());
+        comicBook.getComicDetail().setFilename(rebuiltFile.getAbsolutePath());
+      } else {
+        log.debug("Not moving file: already at destination");
       }
-    } catch (IOException error) {
+
+      if (metadataSourceFile.exists()) {
+        File metadataTargetFile = new File(this.comicBookAdaptor.getMetadataFilename(comicBook));
+        if (!this.fileAdaptor.sameFile(metadataSourceFile, metadataTargetFile)) {
+          log.trace(
+              "Moving comic metadata file: {} => {}",
+              metadataSourceFile.getAbsolutePath(),
+              metadataTargetFile.getAbsolutePath());
+          this.fileAdaptor.moveFile(metadataSourceFile, metadataTargetFile);
+        }
+      }
+    } catch (Exception error) {
       log.error("Failed to move comics", error);
     }
 

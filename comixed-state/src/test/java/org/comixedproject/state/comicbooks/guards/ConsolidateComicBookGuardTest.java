@@ -24,6 +24,7 @@ import static org.junit.Assert.assertFalse;
 
 import java.io.File;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
+import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
@@ -31,26 +32,28 @@ import org.comixedproject.state.comicbooks.ComicEvent;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.statemachine.StateContext;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ConsolidateComicBookGuardTest {
-  private static final String TEST_TARGET_DIRECTORY = "/Users/comixed/Documents/old";
+  private static final String TEST_TARGET_DIRECTORY = "target/generated-sources";
   private static final String TEST_RENAMING_RULE = "The renaming rule";
-  private static final String TEST_OLD_FILENAME = "The old filename";
+  private static final String TEST_OLD_FILENAME = "fThe old filename";
   private static final String TEST_NEW_FILENAME = "The new filename";
 
   @InjectMocks private ConsolidateComicGuard guard;
+  @Mock private ComicFileAdaptor comicFileAdaptor;
+  @Mock private FileAdaptor fileAdaptor;
   @Mock private StateContext<ComicState, ComicEvent> context;
   @Mock private MessageHeaders messageHeaders;
   @Mock private ComicBook comicBook;
   @Mock private ComicDetail comicDetail;
-  @Mock private ComicFileAdaptor comicFileAdaptor;
+
+  @Captor ArgumentCaptor<File> sourceFileArgumentCaptor;
+  @Captor ArgumentCaptor<File> targetFileArchiveCaptor;
 
   @Before
   public void setUp() {
@@ -60,38 +63,42 @@ public class ConsolidateComicBookGuardTest {
         .thenReturn(TEST_TARGET_DIRECTORY);
     Mockito.when(messageHeaders.get(HEADER_RENAMING_RULE, String.class))
         .thenReturn(TEST_RENAMING_RULE);
-    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicDetail.getFile())
         .thenReturn(new File(TEST_TARGET_DIRECTORY, TEST_OLD_FILENAME));
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(
+            comicFileAdaptor.createFilenameFromRule(
+                Mockito.any(ComicBook.class), Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(TEST_NEW_FILENAME);
   }
 
   @Test
   public void testEvaluate() {
     Mockito.when(
-            comicFileAdaptor.createFilenameFromRule(
-                Mockito.any(ComicBook.class), Mockito.anyString()))
-        .thenReturn(TEST_NEW_FILENAME);
+            fileAdaptor.sameFile(
+                sourceFileArgumentCaptor.capture(), targetFileArchiveCaptor.capture()))
+        .thenReturn(false);
 
     final boolean result = guard.evaluate(context);
 
     assertTrue(result);
 
     Mockito.verify(comicFileAdaptor, Mockito.times(1))
-        .createFilenameFromRule(comicBook, TEST_RENAMING_RULE);
+        .createFilenameFromRule(comicBook, TEST_RENAMING_RULE, TEST_TARGET_DIRECTORY);
   }
 
   @Test
   public void testEvaluateNotChanged() {
     Mockito.when(
-            comicFileAdaptor.createFilenameFromRule(
-                Mockito.any(ComicBook.class), Mockito.anyString()))
-        .thenReturn(TEST_OLD_FILENAME);
+            fileAdaptor.sameFile(
+                sourceFileArgumentCaptor.capture(), targetFileArchiveCaptor.capture()))
+        .thenReturn(true);
 
     final boolean result = guard.evaluate(context);
 
     assertFalse(result);
 
     Mockito.verify(comicFileAdaptor, Mockito.times(1))
-        .createFilenameFromRule(comicBook, TEST_RENAMING_RULE);
+        .createFilenameFromRule(comicBook, TEST_RENAMING_RULE, TEST_TARGET_DIRECTORY);
   }
 }

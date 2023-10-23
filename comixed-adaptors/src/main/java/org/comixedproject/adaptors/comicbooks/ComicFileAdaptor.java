@@ -106,14 +106,18 @@ public class ComicFileAdaptor {
    *
    * @param comicBook the comicBook
    * @param renamingRule the renaming rule
+   * @param targetDirectory the target directory
    * @return the generated filename
    */
-  public String createFilenameFromRule(final ComicBook comicBook, final String renamingRule) {
+  public String createFilenameFromRule(
+      final ComicBook comicBook, final String renamingRule, final String targetDirectory) {
     if (StringUtils.isEmpty(renamingRule)) {
       log.trace(
           "No renaming rules: using original filename: {}",
           FilenameUtils.getBaseName(comicBook.getComicDetail().getFilename()));
-      return FilenameUtils.getBaseName(comicBook.getComicDetail().getFilename());
+      return String.format(
+          "%s/%s",
+          targetDirectory, FilenameUtils.getBaseName(comicBook.getComicDetail().getFilename()));
     }
 
     log.trace("Scrubbing renaming rule: {}", renamingRule);
@@ -175,6 +179,7 @@ public class ComicFileAdaptor {
             .replace(PLACEHOLDER_PUBLISHED_YEAR, publishedYear)
             .replace(PLACEHOLDER_PUBLISHED_MONTH, publishedMonth);
 
+    result = String.format("%s/%s", targetDirectory, result);
     log.trace("Relative comicBook filename: {}", result);
     return result;
   }

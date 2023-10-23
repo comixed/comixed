@@ -22,6 +22,10 @@ import java.io.File;
 import java.io.IOException;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOCase;
+import org.apache.commons.lang.SystemUtils;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 /**
@@ -87,5 +91,21 @@ public class FileAdaptor {
   public void moveFile(final File source, final File destination) throws IOException {
     log.trace("Moving file: {} => {}", source.getAbsoluteFile(), destination.getAbsoluteFile());
     FileUtils.moveFile(source, destination);
+  }
+
+  /**
+   * Checks if two File objects point to the same file.
+   *
+   * @param sourceFile the first file
+   * @param targetFile the second file
+   * @return true if they point to the same file
+   */
+  public boolean sameFile(@NonNull File sourceFile, @NonNull File targetFile) {
+    log.trace("Checking if files match: {} & {}", sourceFile, targetFile);
+    return FilenameUtils.equals(
+        sourceFile.getAbsolutePath(),
+        targetFile.getAbsolutePath(),
+        false,
+        SystemUtils.IS_OS_WINDOWS ? IOCase.INSENSITIVE : IOCase.SENSITIVE);
   }
 }

@@ -24,6 +24,7 @@ import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PAR
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.adaptors.file.FileAdaptor;
@@ -41,184 +42,161 @@ import org.springframework.batch.core.StepExecution;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MoveComicBookProcessorTest {
-  private static final String TEST_TARGET_DIRECTORY =
-      new File("src/test/resources").getAbsolutePath();
-  private static final String TEST_RENAMING_RULE = "The renaming rule";
-  private static final String TEST_NEW_FILENAME = "comicBook";
-  private static final String TEST_NEW_FILENAME_WITH_PATH =
-      TEST_TARGET_DIRECTORY + "/" + "comicBook";
-  private static final String TEST_NEW_FILENAME_EXTENSION = "cbz";
-  private static final String TEST_NEW_FILENAME_WITH_EXTENSION =
-      TEST_NEW_FILENAME_WITH_PATH + "." + TEST_NEW_FILENAME_EXTENSION;
-  private static final String TEST_ORIGINAL_FILENAME = "The original filename";
-  private static final String TEST_SOURCE_METADATA_FILE_NAME =
-      "src/test/resources/example-metadata.xml";
-  private static final String TEST_TARGET_METADATA_FILE_NAME =
-      "target/test/resources/example-metadata.xml";
+  private static final String TEST_TARGET_DIRECTORY = "the target directory";
+  private static final String TEST_RENAMING_RULE = "the renaming rule";
+  private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CBZ;
+  private static final String TEST_REBUILT_FILENAME =
+      new File("target/test-classes/rebuilt-example.cbz").getAbsolutePath();
+  private static final String TEST_REBUILT_FILENAME_FROM_RULE =
+      new File(TEST_REBUILT_FILENAME).getName();
+  private static final String TEST_SOURCE_FILENAME =
+      new File("target/test-classes/example.cbz").getAbsolutePath();
+  private static final String TEST_SOURCE_METADATA_FILENAME =
+      new File("target/test-classes/example-metadata.xml").getAbsolutePath();
+  private static final String TEST_SOURCE_METADATA_FILENAME_NOT_EXISTS =
+      new File("target/test-classes/example-metadata-farkle.xml").getAbsolutePath();
+  private static final String TEST_TARGET_METADATA_FILENAME =
+      new File("target/test-classes/example-metadata.xml-out").getAbsolutePath();
 
   @InjectMocks private MoveComicProcessor processor;
-  @Mock private StepExecution stepExecution;
-  @Mock private JobExecution jobExecution;
   @Mock private JobParameters jobParameters;
-  @Mock private ComicFileAdaptor comicFileAdaptor;
+  @Mock private JobExecution jobExecution;
+  @Mock private StepExecution stepExecution;
   @Mock private FileAdaptor fileAdaptor;
+  @Mock private ComicFileAdaptor comicFileAdaptor;
   @Mock private ComicBookAdaptor comicBookAdaptor;
-  @Mock private ComicBook comicBook;
   @Mock private ComicDetail comicDetail;
-  @Mock private File comicFile;
+  @Mock private ComicBook comicBook;
+  @Mock private File comicDetailFile;
 
-  @Captor private ArgumentCaptor<File> createDirectoryArgumentCaptor;
-  @Captor private ArgumentCaptor<File> sourceFileArgumentCaptor;
-  @Captor private ArgumentCaptor<File> targetFileArgumentCaptor;
-
-  private final ArchiveType archiveType = ArchiveType.CBZ;
+  @Captor private ArgumentCaptor<File> moveFileSourceArgumentCaptor;
+  @Captor private ArgumentCaptor<File> moveFileTargetArgumentCaptor;
 
   @Before
-  public void setUp() {
-    Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
-    Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
-    processor.beforeStep(stepExecution);
+  public void setUp() throws IOException {
+    Mockito.when(jobParameters.getString(PARAM_TARGET_DIRECTORY)).thenReturn(TEST_TARGET_DIRECTORY);
+    Mockito.when(jobParameters.getString(PARAM_RENAMING_RULE)).thenReturn(TEST_RENAMING_RULE);
+    Mockito.when(comicDetail.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
+    Mockito.when(comicDetail.getFile()).thenReturn(comicDetailFile);
+    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_SOURCE_FILENAME);
+    Mockito.when(
+            comicFileAdaptor.findAvailableFilename(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyString()))
+        .thenReturn(TEST_REBUILT_FILENAME);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
-    Mockito.when(comicDetail.getArchiveType()).thenReturn(archiveType);
-    Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.any(ComicBook.class)))
-        .thenReturn(TEST_SOURCE_METADATA_FILE_NAME);
-  }
-
-  @Test
-  public void testProcess() throws Exception {
-    Mockito.when(jobParameters.getString(PARAM_TARGET_DIRECTORY)).thenReturn(TEST_TARGET_DIRECTORY);
-    Mockito.when(jobParameters.getString(PARAM_RENAMING_RULE)).thenReturn(TEST_RENAMING_RULE);
-    Mockito.doNothing().when(fileAdaptor).createDirectory(createDirectoryArgumentCaptor.capture());
-    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_ORIGINAL_FILENAME);
     Mockito.when(
             comicFileAdaptor.createFilenameFromRule(
-                Mockito.any(ComicBook.class), Mockito.anyString()))
-        .thenReturn(TEST_NEW_FILENAME);
-
+                Mockito.any(ComicBook.class), Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(TEST_REBUILT_FILENAME_FROM_RULE);
     Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.any(ComicBook.class)))
-        .thenReturn(TEST_SOURCE_METADATA_FILE_NAME.substring(1));
-    Mockito.when(
-            comicFileAdaptor.findAvailableFilename(
-                Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyString()))
-        .thenReturn(TEST_NEW_FILENAME_WITH_EXTENSION);
-    Mockito.when(comicDetail.getFile()).thenReturn(comicFile);
+        .thenReturn(TEST_SOURCE_METADATA_FILENAME_NOT_EXISTS);
+    Mockito.when(fileAdaptor.sameFile(Mockito.any(File.class), Mockito.any(File.class)))
+        .thenReturn(false, false);
+
     Mockito.doNothing()
         .when(fileAdaptor)
-        .moveFile(sourceFileArgumentCaptor.capture(), targetFileArgumentCaptor.capture());
-
-    final ComicBook result = processor.process(comicBook);
-
-    assertNotNull(result);
-    assertSame(comicBook, result);
-
-    assertEquals(
-        new File(TEST_TARGET_DIRECTORY).getAbsolutePath(),
-        createDirectoryArgumentCaptor.getValue().getAbsolutePath());
-    assertSame(comicFile, sourceFileArgumentCaptor.getValue());
-    assertEquals(
-        new File(TEST_NEW_FILENAME_WITH_EXTENSION).getAbsolutePath(),
-        targetFileArgumentCaptor.getValue().getAbsolutePath());
-
-    Mockito.verify(fileAdaptor, Mockito.times(1))
-        .createDirectory(createDirectoryArgumentCaptor.getValue());
-    Mockito.verify(comicFileAdaptor, Mockito.times(1))
-        .createFilenameFromRule(comicBook, TEST_RENAMING_RULE);
-    Mockito.verify(comicFileAdaptor, Mockito.times(1))
-        .findAvailableFilename(
-            TEST_ORIGINAL_FILENAME, TEST_NEW_FILENAME_WITH_PATH, 0, TEST_NEW_FILENAME_EXTENSION);
-    Mockito.verify(fileAdaptor, Mockito.times(1))
-        .moveFile(sourceFileArgumentCaptor.getValue(), targetFileArgumentCaptor.getValue());
+        .moveFile(moveFileSourceArgumentCaptor.capture(), moveFileTargetArgumentCaptor.capture());
   }
 
   @Test
-  public void testProcessWithExternalMetadataFile() throws Exception {
-    Mockito.when(jobParameters.getString(PARAM_TARGET_DIRECTORY)).thenReturn(TEST_TARGET_DIRECTORY);
-    Mockito.when(jobParameters.getString(PARAM_RENAMING_RULE)).thenReturn(TEST_RENAMING_RULE);
-    Mockito.doNothing().when(fileAdaptor).createDirectory(createDirectoryArgumentCaptor.capture());
-    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_ORIGINAL_FILENAME);
-    Mockito.when(
-            comicFileAdaptor.createFilenameFromRule(
-                Mockito.any(ComicBook.class), Mockito.anyString()))
-        .thenReturn(TEST_NEW_FILENAME);
-    Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.any(ComicBook.class)))
-        .thenReturn(TEST_SOURCE_METADATA_FILE_NAME, TEST_TARGET_METADATA_FILE_NAME);
-    Mockito.when(
-            comicFileAdaptor.findAvailableFilename(
-                Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyString()))
-        .thenReturn(TEST_NEW_FILENAME_WITH_EXTENSION);
-    Mockito.when(comicDetail.getFile()).thenReturn(comicFile);
-    Mockito.doNothing()
-        .when(fileAdaptor)
-        .moveFile(sourceFileArgumentCaptor.capture(), targetFileArgumentCaptor.capture());
+  public void testProcess() throws IOException {
+    processor.process(comicBook);
 
-    final ComicBook result = processor.process(comicBook);
+    List<File> moveFileSources = moveFileSourceArgumentCaptor.getAllValues();
+    List<File> moveFileTargets = moveFileTargetArgumentCaptor.getAllValues();
 
-    assertNotNull(result);
-    assertSame(comicBook, result);
+    File comicDetailSourceFile = moveFileSources.get(0);
+    assertNotNull(comicDetailSourceFile);
+    assertSame(comicDetailFile, comicDetailSourceFile);
 
-    assertEquals(
-        new File(TEST_TARGET_DIRECTORY).getAbsolutePath(),
-        createDirectoryArgumentCaptor.getValue().getAbsolutePath());
-    assertEquals(comicFile, sourceFileArgumentCaptor.getAllValues().get(0));
-    assertEquals(
-        new File(TEST_SOURCE_METADATA_FILE_NAME).getAbsolutePath(),
-        sourceFileArgumentCaptor.getAllValues().get(1).getAbsolutePath());
-    assertEquals(
-        new File(TEST_NEW_FILENAME_WITH_EXTENSION).getAbsolutePath(),
-        targetFileArgumentCaptor.getAllValues().get(0).getAbsolutePath());
-    assertEquals(
-        new File(TEST_TARGET_METADATA_FILE_NAME).getAbsolutePath(),
-        targetFileArgumentCaptor.getAllValues().get(1).getAbsolutePath());
+    File rebuiltComicBookFile = moveFileTargets.get(0);
+    assertNotNull(rebuiltComicBookFile);
+    assertEquals(TEST_REBUILT_FILENAME, rebuiltComicBookFile.getAbsolutePath());
 
-    Mockito.verify(fileAdaptor, Mockito.times(1))
-        .createDirectory(createDirectoryArgumentCaptor.getValue());
-    Mockito.verify(comicFileAdaptor, Mockito.times(1))
-        .createFilenameFromRule(comicBook, TEST_RENAMING_RULE);
-    Mockito.verify(comicFileAdaptor, Mockito.times(1))
-        .findAvailableFilename(
-            TEST_ORIGINAL_FILENAME, TEST_NEW_FILENAME_WITH_PATH, 0, TEST_NEW_FILENAME_EXTENSION);
-    Mockito.verify(fileAdaptor, Mockito.times(2))
-        .moveFile(sourceFileArgumentCaptor.capture(), targetFileArgumentCaptor.capture());
+    Mockito.verify(fileAdaptor, Mockito.times(1)).moveFile(comicDetailFile, rebuiltComicBookFile);
   }
 
   @Test
-  public void testProcessMoveFileException() throws Exception {
-    Mockito.when(jobParameters.getString(PARAM_TARGET_DIRECTORY)).thenReturn(TEST_TARGET_DIRECTORY);
-    Mockito.when(jobParameters.getString(PARAM_RENAMING_RULE)).thenReturn(TEST_RENAMING_RULE);
-    Mockito.doNothing().when(fileAdaptor).createDirectory(createDirectoryArgumentCaptor.capture());
-    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_ORIGINAL_FILENAME);
-    Mockito.when(
-            comicFileAdaptor.createFilenameFromRule(
-                Mockito.any(ComicBook.class), Mockito.anyString()))
-        .thenReturn(TEST_NEW_FILENAME);
-    Mockito.when(
-            comicFileAdaptor.findAvailableFilename(
-                Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyString()))
-        .thenReturn(TEST_NEW_FILENAME_WITH_EXTENSION);
-    Mockito.when(comicDetail.getFile()).thenReturn(comicFile);
+  public void testProcessSourceAndComicFileAreTheSame() throws IOException {
+    Mockito.when(fileAdaptor.sameFile(Mockito.any(File.class), Mockito.any(File.class)))
+        .thenReturn(true);
+
+    processor.process(comicBook);
+
+    List<File> moveFileSources = moveFileSourceArgumentCaptor.getAllValues();
+
+    Mockito.verify(fileAdaptor, Mockito.never())
+        .moveFile(Mockito.any(File.class), Mockito.any(File.class));
+  }
+
+  @Test
+  public void testProcessMovingFileThrowsException() throws IOException {
     Mockito.doThrow(IOException.class)
         .when(fileAdaptor)
-        .moveFile(sourceFileArgumentCaptor.capture(), targetFileArgumentCaptor.capture());
+        .moveFile(moveFileSourceArgumentCaptor.capture(), moveFileTargetArgumentCaptor.capture());
 
-    final ComicBook result = processor.process(comicBook);
+    processor.process(comicBook);
 
-    assertNotNull(result);
-    assertSame(comicBook, result);
+    List<File> moveFileSources = moveFileSourceArgumentCaptor.getAllValues();
+    List<File> moveFileTargets = moveFileTargetArgumentCaptor.getAllValues();
 
-    assertEquals(
-        new File(TEST_TARGET_DIRECTORY).getAbsolutePath(),
-        createDirectoryArgumentCaptor.getValue().getAbsolutePath());
-    assertSame(comicFile, sourceFileArgumentCaptor.getValue());
-    assertEquals(
-        new File(TEST_NEW_FILENAME_WITH_EXTENSION).getAbsolutePath(),
-        targetFileArgumentCaptor.getValue().getAbsolutePath());
+    assertEquals(moveFileTargets.size(), 1);
+    assertEquals(moveFileTargets.size(), 1);
 
-    Mockito.verify(fileAdaptor, Mockito.times(1))
-        .createDirectory(createDirectoryArgumentCaptor.getValue());
-    Mockito.verify(comicFileAdaptor, Mockito.times(1))
-        .createFilenameFromRule(comicBook, TEST_RENAMING_RULE);
-    Mockito.verify(fileAdaptor, Mockito.times(1))
-        .moveFile(sourceFileArgumentCaptor.getValue(), targetFileArgumentCaptor.getValue());
+    File metadataFileTarget = moveFileTargets.get(0);
+    assertEquals(TEST_REBUILT_FILENAME, metadataFileTarget.getAbsolutePath());
+
+    File metadataFileSource = moveFileSources.get(0);
+    assertNull(metadataFileSource.getAbsolutePath());
+
+    Mockito.verify(fileAdaptor, Mockito.times(1)).moveFile(metadataFileSource, metadataFileTarget);
+    Mockito.verify(comicDetail, Mockito.never()).setFilename(Mockito.anyString());
+  }
+
+  @Test
+  public void testProcessMetadataFileExists() throws IOException {
+    Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.any(ComicBook.class)))
+        .thenReturn(TEST_SOURCE_METADATA_FILENAME, TEST_TARGET_METADATA_FILENAME);
+    Mockito.when(fileAdaptor.sameFile(Mockito.any(File.class), Mockito.any(File.class)))
+        .thenReturn(true, false);
+
+    processor.process(comicBook);
+
+    List<File> moveFileSources = moveFileSourceArgumentCaptor.getAllValues();
+    List<File> moveFileTargets = moveFileTargetArgumentCaptor.getAllValues();
+
+    assertEquals(moveFileTargets.size(), 1);
+    assertEquals(moveFileTargets.size(), 1);
+
+    File metadataFileSource = moveFileSources.get(0);
+    assertEquals(TEST_SOURCE_METADATA_FILENAME, metadataFileSource.getAbsolutePath());
+
+    File metadataFileTarget = moveFileTargets.get(0);
+    assertEquals(TEST_TARGET_METADATA_FILENAME, metadataFileTarget.getAbsolutePath());
+
+    Mockito.verify(fileAdaptor, Mockito.times(1)).moveFile(metadataFileSource, metadataFileTarget);
+  }
+
+  @Test
+  public void testProcessMetadataFileExistsAndIsAlreadyInPlace() throws IOException {
+    Mockito.when(fileAdaptor.sameFile(Mockito.any(File.class), Mockito.any(File.class)))
+        .thenReturn(true, true);
+
+    processor.process(comicBook);
+
+    Mockito.verify(fileAdaptor, Mockito.never())
+        .moveFile(Mockito.any(File.class), Mockito.any(File.class));
+  }
+
+  @Test
+  public void testBeforeStep() {
+    Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
+    Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
+
+    processor.beforeStep(stepExecution);
+
+    assertNotNull(processor.jobParameters);
+    assertSame(jobParameters, processor.jobParameters);
   }
 
   @Test
