@@ -73,10 +73,14 @@ public class MoveComicProcessor
           this.comicFileAdaptor.findAvailableFilename(
               comicBook.getComicDetail().getFilename(), targetFilename, 0, comicExtension);
       File targetFile = new File(targetFilename);
-      log.trace("Moving comicBook file");
-      this.fileAdaptor.moveFile(comicBook.getComicDetail().getFile(), targetFile);
-      log.trace("Updating comicBook filename: {}", targetFile.getAbsoluteFile());
-      comicBook.getComicDetail().setFilename(targetFile.getAbsolutePath());
+      if (!comicBook.getComicDetail().getFilename().equals(targetFile.getCanonicalPath())) {
+        log.trace("Moving comicBook file");
+        this.fileAdaptor.moveFile(comicBook.getComicDetail().getFile(), targetFile);
+        log.trace("Updating comicBook filename: {}", targetFile.getAbsoluteFile());
+        comicBook.getComicDetail().setFilename(targetFile.getAbsolutePath());
+      } else {
+        log.debug("Not moving file: already at destination");
+      }
 
       if (metadataFile.exists()) {
         targetFile = new File(this.comicBookAdaptor.getMetadataFilename(comicBook));

@@ -85,6 +85,42 @@ public class MoveComicBookProcessorTest {
   }
 
   @Test
+  public void testProcessFileAlreadyAtDestination() throws Exception {
+    Mockito.when(jobParameters.getString(PARAM_TARGET_DIRECTORY)).thenReturn(TEST_TARGET_DIRECTORY);
+    Mockito.when(jobParameters.getString(PARAM_RENAMING_RULE)).thenReturn(TEST_RENAMING_RULE);
+    Mockito.doNothing().when(fileAdaptor).createDirectory(createDirectoryArgumentCaptor.capture());
+    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_NEW_FILENAME_WITH_EXTENSION);
+    Mockito.when(
+            comicFileAdaptor.createFilenameFromRule(
+                Mockito.any(ComicBook.class), Mockito.anyString()))
+        .thenReturn(TEST_NEW_FILENAME);
+
+    Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.any(ComicBook.class)))
+        .thenReturn(TEST_SOURCE_METADATA_FILE_NAME.substring(1));
+    Mockito.when(
+            comicFileAdaptor.findAvailableFilename(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyString()))
+        .thenReturn(TEST_NEW_FILENAME_WITH_EXTENSION);
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+
+    Mockito.verify(fileAdaptor, Mockito.times(1))
+        .createDirectory(createDirectoryArgumentCaptor.getValue());
+    Mockito.verify(comicFileAdaptor, Mockito.times(1))
+        .createFilenameFromRule(comicBook, TEST_RENAMING_RULE);
+    Mockito.verify(comicFileAdaptor, Mockito.times(1))
+        .findAvailableFilename(
+            TEST_NEW_FILENAME_WITH_EXTENSION,
+            TEST_NEW_FILENAME_WITH_PATH,
+            0,
+            TEST_NEW_FILENAME_EXTENSION);
+    Mockito.verify(fileAdaptor, Mockito.never()).moveFile(Mockito.any(), Mockito.any());
+  }
+
+  @Test
   public void testProcess() throws Exception {
     Mockito.when(jobParameters.getString(PARAM_TARGET_DIRECTORY)).thenReturn(TEST_TARGET_DIRECTORY);
     Mockito.when(jobParameters.getString(PARAM_RENAMING_RULE)).thenReturn(TEST_RENAMING_RULE);
