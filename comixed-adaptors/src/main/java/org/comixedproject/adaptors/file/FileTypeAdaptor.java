@@ -68,10 +68,12 @@ public class FileTypeAdaptor {
   public ArchiveAdaptor getArchiveAdaptorFor(final String filename) throws AdaptorException {
     log.trace("Determining archive type for stream");
     final String subtype;
-    try {
-      subtype = this.getSubtype(new BufferedInputStream(new FileInputStream(filename)));
+    try (InputStream input = new BufferedInputStream(new FileInputStream(filename))) {
+      subtype = this.getSubtype(input);
     } catch (FileNotFoundException error) {
       throw new AdaptorException("Failed to determine subtype", error);
+    } catch (IOException error) {
+      throw new AdaptorException("Failed to determine archive type", error);
     }
     return this.getArchiveAdaptor(
         this.archiveAdaptors.stream()
