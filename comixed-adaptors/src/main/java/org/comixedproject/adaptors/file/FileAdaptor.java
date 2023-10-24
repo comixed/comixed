@@ -43,7 +43,11 @@ public class FileAdaptor {
    */
   public void deleteFile(final File file) {
     log.trace("Deleting file: {}", file);
-    FileUtils.deleteQuietly(file);
+    try {
+      FileUtils.forceDelete(file);
+    } catch (IOException error) {
+      log.error("Failed to delete file", error);
+    }
   }
 
   /**

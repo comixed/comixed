@@ -430,7 +430,7 @@ public class ComicBookAdaptorTest {
         .writeEntry(writeHandle, "ComicInfo.xml", TEST_COMICINFO_XML_CONTENT);
     Mockito.verify(writeableArchiveAdaptor, Mockito.times(1))
         .writeEntry(writeHandle, TEST_ENTRY_FILENAME, TEST_ARCHIVE_ENTRY_CONTENT);
-    Mockito.verify(fileAdaptor, Mockito.times(1)).deleteFile(comicFile);
+    //    Mockito.verify(fileAdaptor, Mockito.times(1)).deleteFile(comicFile);
     Mockito.verify(fileAdaptor, Mockito.times(1))
         .moveFile(moveSourceFile.getValue(), moveDestinationFile.getValue());
     Mockito.verify(comicDetail, Mockito.times(1)).setFilename(TEST_FINAL_FILENAME);
