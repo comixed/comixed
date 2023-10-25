@@ -30,9 +30,11 @@ import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.
 import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.annotation.Timed;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
@@ -90,6 +92,7 @@ public class LibraryController {
   @Autowired private ComicBookService comicBookService;
   @Autowired private ComicDetailService comicDetailService;
   @Autowired private ConfigurationService configurationService;
+  @Autowired private ObjectMapper objectMapper;
 
   @Autowired
   @Qualifier("batchJobLauncher")
@@ -128,10 +131,15 @@ public class LibraryController {
   @GetMapping(value = "/api/library/state", produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.library.get-state")
   @JsonView(View.RemoteLibraryState.class)
-  public RemoteLibraryState getLibraryState(final HttpSession httpSession) {
+  public RemoteLibraryState getLibraryState(final HttpSession httpSession)
+      throws JsonProcessingException {
     log.info("Loading the current library state");
-    return this.remoteLibraryStateService.getLibraryState(
-        (Set<Long>) httpSession.getAttribute(LIBRARY_SELECTIONS));
+    final Object sessionSelections = httpSession.getAttribute(LIBRARY_SELECTIONS);
+    List selections = new ArrayList();
+    if (sessionSelections != null) {
+      selections = this.objectMapper.readValue(sessionSelections.toString(), List.class);
+    }
+    return this.remoteLibraryStateService.getLibraryState(selections);
   }
 
   /**

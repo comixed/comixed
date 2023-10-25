@@ -18,7 +18,7 @@
 
 package org.comixedproject.service.library;
 
-import java.util.Set;
+import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.library.PublishRemoteLibraryUpdateAction;
@@ -70,7 +70,7 @@ public class RemoteLibraryStateService implements InitializingBean, ComicStateCh
    * @param selectedIds the selected ids
    * @return the state
    */
-  public RemoteLibraryState getLibraryState(final Set<Long> selectedIds) {
+  public RemoteLibraryState getLibraryState(final List selectedIds) {
     log.debug("Retrieving the library state");
     final RemoteLibraryState result =
         new RemoteLibraryState(
