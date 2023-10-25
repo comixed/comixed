@@ -21,7 +21,6 @@ package org.comixedproject.service.library;
 import static junit.framework.TestCase.*;
 
 import java.util.List;
-import java.util.Set;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.library.PublishRemoteLibraryUpdateAction;
@@ -56,7 +55,7 @@ public class RemoteLibraryStateServiceTest {
   @Mock private List<RemoteLibrarySegmentState> storiesState;
   @Mock private List<RemoteLibrarySegmentState> comicsState;
   @Mock private List<PublisherAndYearSegment> byPublisherAndYear;
-  @Mock private Set<Long> selectedIds;
+  @Mock private List selectedIds;
   @Mock private PublishRemoteLibraryUpdateAction publishRemoteLibraryUpdateAction;
   @Mock private State<ComicState, ComicEvent> state;
   @Mock private Message<ComicEvent> message;

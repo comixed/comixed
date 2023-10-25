@@ -28,10 +28,11 @@ import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LI
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_COMIC_RENAMING_RULE;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import javax.servlet.http.HttpSession;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicDetail;
@@ -74,6 +75,7 @@ public class LibraryControllerTest {
   private static final String TEST_VOLUME = "1234";
   private static final String TEST_ISSUE_NUMBER = "17b";
   private static final String TEST_IMPRINT = "The Imprint";
+  private static final String TEST_ENCODED_IDS = "The encoded selected ids";
 
   @InjectMocks private LibraryController controller;
   @Mock private LibraryService libraryService;
@@ -81,6 +83,7 @@ public class LibraryControllerTest {
   @Mock private ComicBookService comicBookService;
   @Mock private ComicDetailService comicDetailService;
   @Mock private ConfigurationService configurationService;
+  @Mock private ObjectMapper objectMapper;
   @Mock private List<Long> idList;
   @Mock private ComicDetail comicDetail;
   @Mock private ComicDetail lastComicDetail;
@@ -89,7 +92,7 @@ public class LibraryControllerTest {
   @Mock private EditMultipleComicsRequest editMultipleComicsRequest;
   @Mock private RemoteLibraryState remoteLibraryState;
   @Mock private HttpSession httpState;
-  @Mock private Set<Long> selectedIds;
+  @Mock private List selectedIds;
   @Mock private List<Long> comicIds;
 
   @Mock
@@ -117,6 +120,7 @@ public class LibraryControllerTest {
   private Job updateComicBooksJob;
 
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
+  @Captor private ArgumentCaptor<List> selectedIdsArgumentCaptor;
 
   @Before
   public void testSetUp() {
@@ -124,9 +128,32 @@ public class LibraryControllerTest {
   }
 
   @Test
-  public void testGetLibraryState() {
-    Mockito.when(httpState.getAttribute(Mockito.anyString())).thenReturn(selectedIds);
-    Mockito.when(remoteLibraryStateService.getLibraryState(Mockito.anySet()))
+  public void testGetLibraryState() throws JsonProcessingException {
+    Mockito.when(httpState.getAttribute(LIBRARY_SELECTIONS)).thenReturn(null);
+    Mockito.when(remoteLibraryStateService.getLibraryState(selectedIdsArgumentCaptor.capture()))
+        .thenReturn(remoteLibraryState);
+
+    final RemoteLibraryState result = controller.getLibraryState(httpState);
+
+    assertNotNull(result);
+    assertSame(remoteLibraryState, result);
+
+    final List selectedIdList = selectedIdsArgumentCaptor.getValue();
+    assertNotNull(selectedIdList);
+    assertTrue(selectedIdList.isEmpty());
+
+    Mockito.verify(httpState, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
+    Mockito.verify(objectMapper, Mockito.never())
+        .readValue(Mockito.anyString(), Mockito.any(Class.class));
+    Mockito.verify(remoteLibraryStateService, Mockito.times(1)).getLibraryState(selectedIdList);
+  }
+
+  @Test
+  public void testGetLibraryStateWithSavedSelections() throws JsonProcessingException {
+    Mockito.when(httpState.getAttribute(Mockito.anyString())).thenReturn(TEST_ENCODED_IDS);
+    Mockito.when(objectMapper.readValue(Mockito.anyString(), Mockito.any(Class.class)))
+        .thenReturn(selectedIds);
+    Mockito.when(remoteLibraryStateService.getLibraryState(Mockito.anyList()))
         .thenReturn(remoteLibraryState);
 
     final RemoteLibraryState result = controller.getLibraryState(httpState);
@@ -135,6 +162,7 @@ public class LibraryControllerTest {
     assertSame(remoteLibraryState, result);
 
     Mockito.verify(httpState, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
+    Mockito.verify(objectMapper, Mockito.times(1)).readValue(TEST_ENCODED_IDS, List.class);
     Mockito.verify(remoteLibraryStateService, Mockito.times(1)).getLibraryState(selectedIds);
   }
 
