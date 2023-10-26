@@ -28,7 +28,7 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { ChartData } from '@app/models/ui/chart-data';
 import { ChartDataResultSet } from '@app/models/ui/chart-data-result-set';
 import { BehaviorSubject } from 'rxjs';
-import { collectionTypeFromString } from '@app/collections/models/comic-collection.enum';
+import { tagTypeFromString } from '@app/collections/models/comic-collection.enum';
 import { Router } from '@angular/router';
 import { LibraryState } from '@app/library/reducers/library.reducer';
 import { RemoteLibrarySegmentState } from '@app/library/models/net/remote-library-segment-state';
@@ -87,7 +87,7 @@ export class CollectionsChartComponent implements AfterViewInit {
     this.router.navigate([
       'library',
       'collections',
-      collectionTypeFromString(collection),
+      tagTypeFromString(collection),
       name || '[UNKNOWN]'
     ]);
   }

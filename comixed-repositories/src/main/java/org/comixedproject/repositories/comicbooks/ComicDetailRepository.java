@@ -21,6 +21,7 @@ package org.comixedproject.repositories.comicbooks;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import org.comixedproject.model.collections.CollectionEntry;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.springframework.data.domain.Pageable;
@@ -307,4 +308,67 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
       "SELECT d FROM ComicDetail d WHERE d IN (SELECT t.comicDetail FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue)")
   List<ComicDetail> getAllComicsForTagType(
       @Param("tagType") ComicTagType tagType, @Param("tagValue") String tagValue);
+
+  /**
+   * Loads comics with the given tag type and value
+   *
+   * @param tagType the tag type
+   * @param tagValue the tag value
+   * @param pageable the page request
+   * @return the matching comics
+   */
+  @Query(
+      "SELECT d FROM ComicDetail d WHERE d IN (SELECT t.comicDetail FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue)")
+  List<ComicDetail> loadForTagTypeAndValue(
+      @Param("tagType") ComicTagType tagType,
+      @Param("tagValue") String tagValue,
+      Pageable pageable);
+
+  /**
+   * Returns the cover years for comics with a given tag type and value.
+   *
+   * @param tagType the tag type
+   * @param tagValue the value
+   * @return the years
+   */
+  @Query(
+      "SELECT DISTINCT(d.yearPublished) FROM ComicDetail d WHERE d.yearPublished IS NOT NULL AND d IN (SELECT t.comicDetail FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue)")
+  List<Integer> getCoverYears(ComicTagType tagType, String tagValue);
+
+  /**
+   * Returns the cover months for comics with a given tag type and value.
+   *
+   * @param tagType the tag type
+   * @param tagValue the value
+   * @return the montsh
+   */
+  @Query(
+      "SELECT DISTINCT(d.monthPublished) FROM ComicDetail d WHERE d.yearPublished IS NOT NULL AND d IN (SELECT t.comicDetail FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue)")
+  List<Integer> getCoverMonths(ComicTagType tagType, String tagValue);
+
+  /**
+   * Returns the total number of comics with a given tag type and value.
+   *
+   * @param tagType the tag type
+   * @param tagValue the value
+   * @return the comic count
+   */
+  @Query(
+      "SELECT COUNT(d) FROM ComicDetail d WHERE d.yearPublished IS NOT NULL AND d IN (SELECT t.comicDetail FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue)")
+  long getFilterCount(ComicTagType tagType, String tagValue);
+
+  /**
+   * Returns a display page of {@link CollectionEntry} objects.
+   *
+   * @param tagType the tag type
+   * @param pageable the page request
+   * @return the entries
+   */
+  @Query(
+      "SELECT new org.comixedproject.model.collections.CollectionEntry(t.value, COUNT(t)) FROM ComicTag t WHERE t.type = :tagType GROUP BY t.value")
+  List<CollectionEntry> loadCollectionEntries(
+      @Param("tagType") ComicTagType tagType, Pageable pageable);
+
+  @Query("SELECT COUNT(DISTINCT t.value) FROM ComicTag t WHERE t.type = :tagType")
+  long getFilterCount(@Param("tagType") ComicTagType tag);
 }

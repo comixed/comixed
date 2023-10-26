@@ -22,6 +22,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.archives.ArchiveType;
+import org.comixedproject.model.collections.CollectionEntry;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicTagType;
@@ -411,48 +412,12 @@ public class ComicDetailService {
 
     final Example<ComicDetail> comicDetailExample = builder.build();
 
-    Sort sort = Sort.unsorted();
-
-    if (StringUtils.hasLength(sortBy) && StringUtils.hasLength(sortDirection)) {
-      String fieldName;
-      switch (sortBy) {
-        case "archive-type":
-          fieldName = "archiveType";
-          break;
-        case "comic-state":
-          fieldName = "comicState";
-          break;
-        case "comic-type":
-          fieldName = "comicType";
-          break;
-        case "publisher":
-        case "series":
-        case "volume":
-          fieldName = sortBy;
-          break;
-        case "issue-number":
-          fieldName = "sortableIssueNumber";
-          break;
-        case "added-date":
-          fieldName = "addedDate";
-          break;
-        case "cover-date":
-          fieldName = "coverDate";
-          break;
-        default:
-          fieldName = "id";
-      }
-
-      Sort.Direction direction = Sort.Direction.DESC;
-      if (sortDirection.equals("asc")) {
-        direction = Sort.Direction.ASC;
-      }
-      sort = Sort.by(direction, fieldName);
-    }
-
     if (pageSize != null && pageIndex != null) {
       return this.comicDetailRepository
-          .findAll(comicDetailExample, PageRequest.of(pageIndex, pageSize, sort)).stream()
+          .findAll(
+              comicDetailExample,
+              PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)))
+          .stream()
           .collect(Collectors.toList());
     } else {
       return this.comicDetailRepository.findAll(comicDetailExample).stream()
@@ -505,6 +470,18 @@ public class ComicDetailService {
     final Example<ComicDetail> comicDetailExample = builder.build();
 
     return this.comicDetailRepository.count(comicDetailExample);
+  }
+
+  /**
+   * Returns the total number of comics with a given tag type and value.
+   *
+   * @param tagType the tag type
+   * @param tagValue the tag value
+   * @return the total comic count
+   */
+  public long getFilterCount(final ComicTagType tagType, final String tagValue) {
+    log.debug("Loading filtered comic count for tag: type={} value={}", tagType, tagValue);
+    return this.comicDetailRepository.getFilterCount(tagType, tagValue);
   }
 
   /**
@@ -583,6 +560,18 @@ public class ComicDetailService {
   }
 
   /**
+   * Returns all cover years for comics with the given tag type and value.
+   *
+   * @param tagType the tage type
+   * @param tagValue the tag value
+   * @return the years
+   */
+  public List<Integer> getCoverYears(final ComicTagType tagType, final String tagValue) {
+    log.debug("Getting cover years for tag: type={} value={}", tagType, tagValue);
+    return this.comicDetailRepository.getCoverYears(tagType, tagValue);
+  }
+
+  /**
    * Returns the list of cover years for the given filter criteria.
    *
    * @param coverYear the cover year filter
@@ -648,6 +637,18 @@ public class ComicDetailService {
   }
 
   /**
+   * Returns the list of cover months for comics with the given tag type and value.
+   *
+   * @param tagType the tag type
+   * @param tagValue the tag value
+   * @return the months
+   */
+  public List<Integer> getCoverMonths(final ComicTagType tagType, final String tagValue) {
+    log.debug("Loading cover months for tag: type={} value={}", tagType, tagValue);
+    return this.comicDetailRepository.getCoverMonths(tagType, tagValue);
+  }
+
+  /**
    * Returns all records that match the provided example.
    *
    * @param example the example
@@ -656,5 +657,104 @@ public class ComicDetailService {
   public List<ComicDetail> findAllByExample(final Example<ComicDetail> example) {
     log.debug("Finding all comic details by example: {}", example);
     return this.comicDetailRepository.findAll(example);
+  }
+
+  /**
+   * Loads a page of comics with a given tag type and value.
+   *
+   * @param pageSize the number of records to return
+   * @param pageIndex the page number
+   * @param tagType the tag type
+   * @param tagValue the tag value
+   * @param sortBy the sort field
+   * @param sortDirection the sort direction
+   * @return the comics
+   */
+  public List<ComicDetail> loadComicDetailListForTagType(
+      final int pageSize,
+      final int pageIndex,
+      final ComicTagType tagType,
+      final String tagValue,
+      final String sortBy,
+      final String sortDirection) {
+    log.debug("Loading comics for collection: type={} value={}", tagType, tagValue);
+    return this.comicDetailRepository.loadForTagTypeAndValue(
+        tagType,
+        tagValue,
+        PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
+  }
+
+  /**
+   * Loads a page of tag values for a given tag type.
+   *
+   * @param tagType the tag type
+   * @param pageSize the number of records to return
+   * @param pageIndex the page number
+   * @param sortBy the sort field
+   * @param sortDirection the sort direction
+   * @return the collection entries
+   */
+  public List<CollectionEntry> loadCollectionEntries(
+      final ComicTagType tagType,
+      final int pageSize,
+      final int pageIndex,
+      final String sortBy,
+      final String sortDirection) {
+    log.debug("Loading collection entries: type={} page={} size={}", tagType, pageIndex, pageSize);
+    return this.comicDetailRepository.loadCollectionEntries(
+        tagType, PageRequest.of(pageIndex, pageSize));
+  }
+
+  /**
+   * Returns the number of comic books with a given tag type.
+   *
+   * @param tagType the tag type
+   * @return the number of comics
+   */
+  public long loadCollectionTotalEntries(final ComicTagType tagType) {
+    log.debug("Getting the number of comics with tag type: {}", tagType);
+    return this.comicDetailRepository.getFilterCount(tagType);
+  }
+
+  private Sort doCreateSort(final String sortBy, final String sortDirection) {
+
+    if (!StringUtils.hasLength(sortBy) || !StringUtils.hasLength(sortDirection)) {
+      return Sort.unsorted();
+    }
+
+    String fieldName;
+    switch (sortBy) {
+      case "archive-type":
+        fieldName = "archiveType";
+        break;
+      case "comic-state":
+        fieldName = "comicState";
+        break;
+      case "comic-type":
+        fieldName = "comicType";
+        break;
+      case "publisher":
+      case "series":
+      case "volume":
+        fieldName = sortBy;
+        break;
+      case "issue-number":
+        fieldName = "sortableIssueNumber";
+        break;
+      case "added-date":
+        fieldName = "addedDate";
+        break;
+      case "cover-date":
+        fieldName = "coverDate";
+        break;
+      default:
+        fieldName = "id";
+    }
+
+    Sort.Direction direction = Sort.Direction.DESC;
+    if (sortDirection.equals("asc")) {
+      direction = Sort.Direction.ASC;
+    }
+    return Sort.by(direction, fieldName);
   }
 }

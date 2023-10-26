@@ -22,10 +22,9 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import {
-  CollectionType,
-  collectionTypeFromString
+  TagType,
+  tagTypeFromString
 } from '@app/collections/models/comic-collection.enum';
-import { selectComicBookList } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 import { selectUser } from '@app/user/selectors/user.selectors';
@@ -33,16 +32,21 @@ import { getUserPreference, isAdmin } from '@app/user/user.functions';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
-import { MISSING_VOLUME_PLACEHOLDER } from '@app/comic-books/comic-books.constants';
 import {
   deselectComicBooks,
   selectComicBooks
 } from '@app/library/actions/library-selections.actions';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
-import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 import { LastRead } from '@app/last-read/models/last-read';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import {
+  selectLoadComicDetailsCoverMonths,
+  selectLoadComicDetailsCoverYears,
+  selectLoadComicDetailsFilteredComics,
+  selectLoadComicDetailsList
+} from '@app/comic-books/selectors/load-comic-details-list.selectors';
+import { loadComicDetailsForCollection } from '@app/comic-books/actions/comic-details-list.actions';
 
 @Component({
   selector: 'cx-collection-detail',
@@ -51,14 +55,19 @@ import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-bo
 })
 export class CollectionDetailComponent implements OnInit, OnDestroy {
   comicBooks: ComicDetail[] = [];
+  totalComics = 0;
+  coverYears: number[] = [];
+  coverMonths: number[] = [];
 
   paramsSubscription: Subscription;
-  comicSubscription: Subscription;
+  queryParamsSubscription: Subscription;
+  comicDetailListSubscription: Subscription;
+  totalComicsSubscription: Subscription;
+  coverYearSubscription: Subscription;
+  coverMonthsSubscription: Subscription;
   routableTypeName: string;
-  collectionType: CollectionType;
-  collectionName: string;
-  volume: string;
-  volumeDisplayed: string;
+  tagType: TagType;
+  tagValue: string;
   selectedSubscription: Subscription;
   selectedIds: number[] = [];
   lastReadDates: LastRead[] = [];
@@ -78,58 +87,31 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
     private titleService: TitleService,
     public queryParameterService: QueryParameterService
   ) {
+    this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
+      () => this.doLoadComicDetails()
+    );
     this.paramsSubscription = this.activatedRoute.params.subscribe(params => {
       this.routableTypeName = params.collectionType;
-      this.collectionName = params.collectionName;
-      this.volume = params.volume;
-      this.volumeDisplayed = this.volume;
-      if (this.volume === MISSING_VOLUME_PLACEHOLDER) {
-        this.logger.trace('No actual volume used');
-        this.volume = '';
-      }
-      this.collectionType = collectionTypeFromString(this.routableTypeName);
-      if (!this.collectionType) {
+      this.tagValue = params.collectionName;
+      this.tagType = tagTypeFromString(this.routableTypeName);
+      if (!this.tagType) {
         this.logger.error('Invalid collection type:', params.collectionType);
         this.router.navigateByUrl('/library');
       } else {
         this.loadTranslations();
-        this.comicSubscription = this.store
-          .select(selectComicBookList)
-          .subscribe(entries => {
-            this.comicBooks = entries.filter(comicBook => {
-              switch (this.collectionType) {
-                case CollectionType.PUBLISHERS:
-                  return (
-                    (comicBook.publisher || '[UNKNOWN]') === this.collectionName
-                  );
-                case CollectionType.SERIES:
-                  return (
-                    (comicBook.series || '[UNKNOWN]') === this.collectionName &&
-                    (comicBook.volume || '') === this.volume
-                  );
-                case CollectionType.CHARACTERS:
-                  return comicBook.tags
-                    .filter(tag => tag.type === ComicTagType.CHARACTER)
-                    .map(tag => tag.value)
-                    .includes(this.collectionName);
-                case CollectionType.TEAMS:
-                  return comicBook.tags
-                    .filter(tag => tag.type === ComicTagType.TEAM)
-                    .map(tag => tag.value)
-                    .includes(this.collectionName);
-                case CollectionType.LOCATIONS:
-                  return comicBook.tags
-                    .filter(tag => tag.type === ComicTagType.LOCATION)
-                    .map(tag => tag.value)
-                    .includes(this.collectionName);
-                case CollectionType.STORIES:
-                  return comicBook.tags
-                    .filter(tag => tag.type === ComicTagType.STORY)
-                    .map(tag => tag.value)
-                    .includes(this.collectionName);
-              }
-            });
-          });
+        this.doLoadComicDetails();
+        this.comicDetailListSubscription = this.store
+          .select(selectLoadComicDetailsList)
+          .subscribe(entries => (this.comicBooks = entries));
+        this.totalComicsSubscription = this.store
+          .select(selectLoadComicDetailsFilteredComics)
+          .subscribe(totalComics => (this.totalComics = totalComics));
+        this.coverYearSubscription = this.store
+          .select(selectLoadComicDetailsCoverYears)
+          .subscribe(coverYears => (this.coverYears = coverYears));
+        this.coverMonthsSubscription = this.store
+          .select(selectLoadComicDetailsCoverMonths)
+          .subscribe(coverMonths => (this.coverMonths = coverMonths));
       }
     });
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
@@ -158,10 +140,18 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.logger.trace('Unsubscribing from query parameter events');
+    this.queryParamsSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from parameter events');
     this.paramsSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from comic updates');
-    this.comicSubscription?.unsubscribe();
+    this.comicDetailListSubscription?.unsubscribe();
+    this.logger.trace('Unsubscribing from total comics updates');
+    this.totalComicsSubscription?.unsubscribe();
+    this.logger.trace('Unsubscribing from cover year updates');
+    this.coverYearSubscription?.unsubscribe();
+    this.logger.trace('Unsubscribing from cover month updates');
+    this.coverMonthsSubscription?.unsubscribe();
     this.logger.trace('Unsubscribing from user updates');
     this.userSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from reading list updates');
@@ -187,9 +177,21 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
   private loadTranslations(): void {
     this.titleService.setTitle(
       this.translateService.instant('collection-detail.tab-title', {
-        collection: this.collectionType,
-        name: this.collectionName,
-        volume: this.volumeDisplayed
+        tagType: this.tagType,
+        tagValue: this.tagValue
+      })
+    );
+  }
+
+  private doLoadComicDetails(): void {
+    this.store.dispatch(
+      loadComicDetailsForCollection({
+        pageSize: this.queryParameterService.pageSize$.value,
+        pageIndex: this.queryParameterService.pageIndex$.value,
+        tagType: this.tagType,
+        tagValue: this.tagValue,
+        sortBy: this.queryParameterService.sortBy$.value,
+        sortDirection: this.queryParameterService.sortDirection$.value
       })
     );
   }

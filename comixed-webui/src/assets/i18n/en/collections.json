@@ -90,8 +90,8 @@
     }
   },
   "collection-detail": {
-    "page-title": "Collections: {collection, select, characters{Characters} teams{Teams} locations{Locations} stories{Stories} publishers{Publishers} series{Series} other{Unknown}} ({count, plural, =1{One Comic} other{# Comics}})",
-    "tab-title": "{collection, select, characters{Character} teams{Team} locations{Location} stories{Stories} publishers{Publisher} series{Series} other{Unknown}}: {name}{volume, select, null{} other{ v{volume}}}",
+    "page-title": "{tagType, select, characters{Character} teams{Teams} locations{Location} stories{Story} other{Unknown}}: {tagValue} ({count, plural, =1{One Comic} other{# Comics}})",
+    "tab-title": "{tagType, select, characters{Character} teams{Team} locations{Location} stories{Story} other{Unknown}}: {tagValue}",
     "title": {
       "characters": "Character: {name} ({count, plural, =1{One Comic} other{# Comics}})",
       "locations": "Location: {name} ({count, plural, =1{One Comic} other{# Comics}})",
@@ -114,5 +114,8 @@
     "text": {
       "undefined": "[UNDEFINED]"
     }
+  },
+  "load-collection-list": {
+    "effect-failure": "Failed to load collection entries..."
   }
 }

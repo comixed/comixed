@@ -28,7 +28,7 @@ import {
   loadComicBookSelectionsFailed,
   multipleComicBookSelectionStateSet,
   removeSingleComicBookSelection,
-  setMultipleComicBookSelectionState,
+  setMultipleComicBookByFilterSelectionState,
   setMultipleComicBookSelectionStateFailed,
   singleComicBookSelectionFailed,
   singleComicBookSelectionUpdated
@@ -87,7 +87,7 @@ export const reducer = createReducer(
     ...state,
     busy: false
   })),
-  on(setMultipleComicBookSelectionState, state => ({
+  on(setMultipleComicBookByFilterSelectionState, state => ({
     ...state,
     busy: true
   })),

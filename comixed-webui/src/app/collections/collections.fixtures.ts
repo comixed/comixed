@@ -19,6 +19,7 @@
 import { Series } from '@app/collections/models/series';
 import { Issue } from '@app/collections/models/issue';
 import { Publisher } from '@app/collections/models/publisher';
+import { CollectionEntry } from '@app/collections/models/collection-entry';
 
 export const PUBLISHER_1: Publisher = { name: 'Publisher 1', issueCount: 717 };
 
@@ -100,4 +101,29 @@ export const ISSUE_3: Issue = {
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
   found: false
+};
+
+export const COLLECTION_ENTRY_1: CollectionEntry = {
+  tagValue: 'tag 1',
+  comicCount: Math.floor(Math.random() * 1000)
+};
+
+export const COLLECTION_ENTRY_2: CollectionEntry = {
+  tagValue: 'tag 2',
+  comicCount: Math.floor(Math.random() * 1000)
+};
+
+export const COLLECTION_ENTRY_3: CollectionEntry = {
+  tagValue: 'tag 3',
+  comicCount: Math.floor(Math.random() * 1000)
+};
+
+export const COLLECTION_ENTRY_4: CollectionEntry = {
+  tagValue: 'tag 4',
+  comicCount: Math.floor(Math.random() * 1000)
+};
+
+export const COLLECTION_ENTRY_5: CollectionEntry = {
+  tagValue: 'tag 5',
+  comicCount: Math.floor(Math.random() * 1000)
 };

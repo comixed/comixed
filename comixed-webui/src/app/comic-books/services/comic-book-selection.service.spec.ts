@@ -37,7 +37,7 @@ import {
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
-import { MultipleComicBookSelectionRequest } from '@app/comic-books/model/net/multiple-comic-book-selection-request';
+import { MultipleComicBookSelectionRequest } from '@app/comic-books/models/net/multiple-comic-book-selection-request';
 import { Subscription } from 'webstomp-client';
 import {
   initialState as initialMessagingState,

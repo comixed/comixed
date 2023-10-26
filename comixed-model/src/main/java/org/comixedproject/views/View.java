@@ -117,4 +117,7 @@ public interface View {
 
   /** Used when show the list of deleted pages. */
   public interface DeletedPageList {}
+
+  /** Used when downloading a page of collection entries. */
+  public interface CollectionEntryList {}
 }

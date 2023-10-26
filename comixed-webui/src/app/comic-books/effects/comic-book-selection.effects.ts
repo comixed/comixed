@@ -29,7 +29,7 @@ import {
   loadComicBookSelectionsFailed,
   multipleComicBookSelectionStateSet,
   removeSingleComicBookSelection,
-  setMultipleComicBookSelectionState,
+  setMultipleComicBookByFilterSelectionState,
   setMultipleComicBookSelectionStateFailed,
   singleComicBookSelectionFailed,
   singleComicBookSelectionUpdated
@@ -141,7 +141,7 @@ export class ComicBookSelectionEffects {
 
   setMultipleState$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(setMultipleComicBookSelectionState),
+      ofType(setMultipleComicBookByFilterSelectionState),
       tap(action =>
         this.logger.debug('Selecting multiple comic books:', action)
       ),

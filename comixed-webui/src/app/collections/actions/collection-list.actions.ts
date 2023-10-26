@@ -16,7 +16,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export interface CollectionEntry {
-  tagValue: string;
-  comicCount: number;
-}
+import { createAction, props } from '@ngrx/store';
+import { TagType } from '@app/collections/models/comic-collection.enum';
+import { CollectionEntry } from '@app/collections/models/collection-entry';
+
+export const loadCollectionList = createAction(
+  '[Collection List] Load the list of values for the collection',
+  props<{
+    tagType: TagType;
+    pageSize: number;
+    pageIndex: number;
+    sortBy: string;
+    sortDirection: string;
+  }>()
+);
+
+export const loadCollectionListSuccess = createAction(
+  '[Collection List] the list of tag values was loaded',
+  props<{ entries: CollectionEntry[]; totalEntries: number }>()
+);
+
+export const loadCollectionListFailure = createAction(
+  '[Collection List] Failed to load the list of tag values'
+);

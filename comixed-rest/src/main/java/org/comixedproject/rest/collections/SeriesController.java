@@ -18,6 +18,7 @@
 
 package org.comixedproject.rest.collections;
 
+import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.collections.Issue;
@@ -51,6 +52,7 @@ public class SeriesController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.series.load-list")
   public LoadSeriesListResponse loadSeriesList() {
     log.info("Loading series");
     return new LoadSeriesListResponse(this.seriesService.getSeriesList());
@@ -67,6 +69,7 @@ public class SeriesController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.series.load-detail")
   public List<Issue> loadSeriesDetail(@RequestBody() final LoadSeriesDetailRequest request) {
     final String publisher = request.getPublisher();
     final String name = request.getName();

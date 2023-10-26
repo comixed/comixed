@@ -93,7 +93,7 @@ import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialComicBooksSelectionState
 } from '@app/comic-books/reducers/comic-book-selection.reducer';
-import { setMultipleComicBookSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import { setMultipleComicBookByFilterSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 
 describe('LibraryPageComponent', () => {
   const ONE_DAY = 24 * 60 * 60 * 100;
@@ -472,7 +472,7 @@ describe('LibraryPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        setMultipleComicBookSelectionState({
+        setMultipleComicBookByFilterSelectionState({
           coverYear: null,
           coverMonth: null,
           archiveType: null,

@@ -3,7 +3,8 @@
     "collection-detail.page-title"
       | translate
         : {
-            collection: collectionType,
+            tagType: tagType,
+            tagValue: tagValue,
             count: comicBooks.length
           }
   }}
@@ -13,6 +14,9 @@
   class="cx-width-100"
   [isAdmin]="isAdmin"
   [comics]="comicBooks"
+  [totalComics]="totalComics"
+  [coverYears]="coverYears"
+  [coverMonths]="coverMonths"
   [selectedIds]="selectedIds"
   [lastReadDates]="lastReadDates"
   [showLastReadDate]="true"

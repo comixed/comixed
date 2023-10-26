@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   loadPublisherDetail,
   loadPublisherDetailFailed,
@@ -60,3 +60,8 @@ export const reducer = createReducer(
   })),
   on(loadPublisherDetailFailed, state => ({ ...state, busy: false }))
 );
+
+export const publisherFeature = createFeature({
+  name: PUBLISHER_FEATURE_KEY,
+  reducer
+});
