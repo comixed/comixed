@@ -27,7 +27,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.csv.CsvAdaptor;
 import org.comixedproject.messaging.PublishingException;
@@ -252,7 +251,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
     final List<ComicDetail> removedEntries =
         readingList.getEntries().stream()
             .filter(comicDetail -> comicBookIds.contains(comicDetail.getComicId()))
-            .collect(Collectors.toList());
+            .toList();
     readingList.getEntries().removeAll(removedEntries);
     this.readingListRepository.save(readingList);
     this.readingListRepository.flush();

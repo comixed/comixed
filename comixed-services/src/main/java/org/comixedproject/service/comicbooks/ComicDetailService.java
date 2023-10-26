@@ -418,10 +418,9 @@ public class ComicDetailService {
               comicDetailExample,
               PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)))
           .stream()
-          .collect(Collectors.toList());
+          .toList();
     } else {
-      return this.comicDetailRepository.findAll(comicDetailExample).stream()
-          .collect(Collectors.toList());
+      return this.comicDetailRepository.findAll(comicDetailExample).stream().toList();
     }
   }
 
@@ -538,7 +537,7 @@ public class ComicDetailService {
     return this.comicDetailRepository.findAll(comicDetailExample).stream()
         .map(ComicDetail::getYearPublished)
         .distinct()
-        .collect(Collectors.toList());
+        .toList();
   }
 
   /**
@@ -552,7 +551,7 @@ public class ComicDetailService {
     return this.comicDetailRepository.findAllById(ids).stream()
         .map(ComicDetail::getYearPublished)
         .distinct()
-        .collect(Collectors.toList());
+        .toList();
   }
 
   /**
@@ -612,7 +611,7 @@ public class ComicDetailService {
     return this.comicDetailRepository.findAll(comicDetailExample).stream()
         .map(ComicDetail::getMonthPublished)
         .distinct()
-        .collect(Collectors.toList());
+        .toList();
   }
 
   /**
@@ -627,7 +626,7 @@ public class ComicDetailService {
         .map(ComicDetail::getMonthPublished)
         .distinct()
         .sorted()
-        .collect(Collectors.toList());
+        .toList();
   }
 
   /**
@@ -718,31 +717,14 @@ public class ComicDetailService {
 
     String fieldName;
     switch (sortBy) {
-      case "archive-type":
-        fieldName = "archiveType";
-        break;
-      case "comic-state":
-        fieldName = "comicState";
-        break;
-      case "comic-type":
-        fieldName = "comicType";
-        break;
-      case "publisher":
-      case "series":
-      case "volume":
-        fieldName = sortBy;
-        break;
-      case "issue-number":
-        fieldName = "sortableIssueNumber";
-        break;
-      case "added-date":
-        fieldName = "addedDate";
-        break;
-      case "cover-date":
-        fieldName = "coverDate";
-        break;
-      default:
-        fieldName = "id";
+      case "archive-type" -> fieldName = "archiveType";
+      case "comic-state" -> fieldName = "comicState";
+      case "comic-type" -> fieldName = "comicType";
+      case "publisher", "series", "volume" -> fieldName = sortBy;
+      case "issue-number" -> fieldName = "sortableIssueNumber";
+      case "added-date" -> fieldName = "addedDate";
+      case "cover-date" -> fieldName = "coverDate";
+      default -> fieldName = "id";
     }
 
     Sort.Direction direction = Sort.Direction.DESC;

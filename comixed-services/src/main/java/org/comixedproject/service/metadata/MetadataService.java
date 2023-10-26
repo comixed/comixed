@@ -26,7 +26,6 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.adaptors.MetadataAdaptor;
@@ -409,7 +408,7 @@ public class MetadataService {
                   }
                   return result;
                 })
-            .collect(Collectors.toList()));
+            .toList());
   }
 
   Date adjustForTimezone(final Date date) {

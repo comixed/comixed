@@ -60,7 +60,8 @@ public class ComiXedWebSocketChannelInterceptor implements ChannelInterceptor {
       if (StompCommand.CONNECT.equals(accessor.getCommand())) {
         final Optional<String> optionalToken =
             Optional.ofNullable(accessor.getNativeHeader(HEADER_STRING))
-                .orElse(Collections.emptyList()).stream()
+                .orElse(Collections.emptyList())
+                .stream()
                 .flatMap(Stream::ofNullable)
                 .findFirst();
         optionalToken.ifPresent(

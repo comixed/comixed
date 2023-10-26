@@ -24,7 +24,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.metadata.MetadataProcessConfiguration;
@@ -321,13 +320,11 @@ public class ComicBookScrapingController {
     final List<ComicBook> comicBooks =
         this.comicBookService.loadByComicDetailId(comicDetailIds).stream()
             .filter(comicBook -> !comicBook.getId().equals(comicBookId))
-            .collect(Collectors.toList());
+            .toList();
     session.setAttribute(
         MULTI_BOOK_SCRAPING_SELECTIONS,
         this.comicBookSelectionService.encodeSelections(
-            comicBooks.stream()
-                .map(comicBook -> comicBook.getComicDetail().getId())
-                .collect(Collectors.toList())));
+            comicBooks.stream().map(comicBook -> comicBook.getComicDetail().getId()).toList()));
 
     return new StartMultiBookScrapingResponse(comicBooks);
   }

@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
@@ -169,77 +168,77 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor
             detail.getTags().stream()
                 .filter(tag -> tag.getType() == ComicTagType.CHARACTER)
                 .map(ComicTag::getValue)
-                .collect(Collectors.toList())));
+                .toList()));
     comicInfo.setTeams(
         String.join(
             ",",
             detail.getTags().stream()
                 .filter(tag -> tag.getType() == ComicTagType.TEAM)
                 .map(ComicTag::getValue)
-                .collect(Collectors.toList())));
+                .toList()));
     comicInfo.setLocations(
         String.join(
             ",",
             detail.getTags().stream()
                 .filter(tag -> tag.getType() == ComicTagType.LOCATION)
                 .map(ComicTag::getValue)
-                .collect(Collectors.toList())));
+                .toList()));
     comicInfo.setAlternateSeries(
         String.join(
             ",",
             detail.getTags().stream()
                 .filter(tag -> tag.getType() == ComicTagType.STORY)
                 .map(ComicTag::getValue)
-                .collect(Collectors.toList())));
+                .toList()));
     comicInfo.setWriter(
         String.join(
             ",",
             detail.getTags().stream()
                 .filter(tag -> tag.getType() == ComicTagType.WRITER)
                 .map(ComicTag::getValue)
-                .collect(Collectors.toList())));
+                .toList()));
     comicInfo.setEditor(
         String.join(
             ",",
             detail.getTags().stream()
                 .filter(tag -> tag.getType() == ComicTagType.EDITOR)
                 .map(ComicTag::getValue)
-                .collect(Collectors.toList())));
+                .toList()));
     comicInfo.setPenciller(
         String.join(
             ",",
             detail.getTags().stream()
                 .filter(tag -> tag.getType() == ComicTagType.PENCILLER)
                 .map(ComicTag::getValue)
-                .collect(Collectors.toList())));
+                .toList()));
     comicInfo.setInker(
         String.join(
             ",",
             detail.getTags().stream()
                 .filter(tag -> tag.getType() == ComicTagType.INKER)
                 .map(ComicTag::getValue)
-                .collect(Collectors.toList())));
+                .toList()));
     comicInfo.setColorist(
         String.join(
             ",",
             detail.getTags().stream()
                 .filter(tag -> tag.getType() == ComicTagType.COLORIST)
                 .map(ComicTag::getValue)
-                .collect(Collectors.toList())));
+                .toList()));
     comicInfo.setLetterer(
         String.join(
             ",",
             detail.getTags().stream()
                 .filter(tag -> tag.getType() == ComicTagType.LETERRER)
                 .map(ComicTag::getValue)
-                .collect(Collectors.toList())));
+                .toList()));
     comicInfo.setCoverArtist(
         String.join(
             ",",
             detail.getTags().stream()
                 .filter(tag -> tag.getType() == ComicTagType.COVER)
                 .map(ComicTag::getValue)
-                .collect(Collectors.toList())));
+                .toList()));
     comicInfo.setNotes(comicBook.getComicDetail().getNotes());
     comicInfo.setSummary(comicBook.getComicDetail().getDescription());
     final ComicMetadataSource metadata = comicBook.getMetadata();

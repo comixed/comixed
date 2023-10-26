@@ -35,6 +35,7 @@ import org.springframework.stereotype.Component;
 public class PublishReadingListUpdateAction extends AbstractPublishAction<ReadingList> {
   /** Topic which receives reading list updates. */
   public static final String READING_LIST_UPDATE_TOPIC = "/topic/reading-list.%d.update";
+
   /** Topic which receives reading list updates. */
   public static final String READING_LISTS_UPDATE_TOPIC = "/topic/reading-lists.update";
 

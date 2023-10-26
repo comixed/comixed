@@ -184,7 +184,7 @@ public class ComicFileServiceTest {
     Mockito.when(comicFileDescriptorRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(comicFilePage);
     Mockito.when(comicFilePage.stream()).thenReturn(comicFileStream);
-    Mockito.when(comicFileStream.collect(Mockito.any())).thenReturn(comicFileDescriptorList);
+    Mockito.when(comicFileStream.toList()).thenReturn(comicFileDescriptorList);
 
     final List<ComicFileDescriptor> result = service.findComicFileDescriptors(TEST_PAGE_SIZE);
 
