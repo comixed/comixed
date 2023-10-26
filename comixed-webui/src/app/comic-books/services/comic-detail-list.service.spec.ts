@@ -18,7 +18,7 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { ComicBookListService } from './comic-book-list.service';
+import { ComicDetailListService } from './comic-detail-list.service';
 import {
   COMIC_BOOK_1,
   COMIC_BOOK_2,
@@ -51,6 +51,7 @@ import { interpolate } from '@app/core';
 import { LoadComicDetailsRequest } from '@app/comic-books/models/net/load-comic-details-request';
 import {
   LOAD_COMIC_DETAILS_BY_ID_URL,
+  LOAD_COMIC_DETAILS_FOR_COLLECTION_URL,
   LOAD_COMIC_DETAILS_URL
 } from '@app/comic-books/comic-books.constants';
 import { LoadComicDetailsResponse } from '@app/comic-books/models/net/load-comic-details-response';
@@ -59,8 +60,10 @@ import {
   comicDetailRemoved,
   comicDetailUpdated
 } from '@app/comic-books/actions/comic-details-list.actions';
+import { TagType } from '@app/collections/models/comic-collection.enum';
+import { LoadComicDetailsForCollectionRequest } from '@app/comic-books/models/net/load-comic-details-for-collection-request';
 
-describe('ComicBookListService', () => {
+describe('ComicDetailListService', () => {
   const PAGE_SIZE = 25;
   const PAGE_INDEX = Math.abs(Math.random() * 1000);
   const COVER_YEAR = Math.random() * 100 + 1900;
@@ -73,6 +76,8 @@ describe('ComicBookListService', () => {
   const SEARCH_TEXT = 'This is some text';
   const SORT_BY = 'addedDate';
   const SORT_DIRECTION = 'ASC';
+  const COLLECTION_TYPE = TagType.TEAMS;
+  const COLLECTION_NAME = 'The Avengers';
   const COMIC_DETAILS = [
     COMIC_DETAIL_1,
     COMIC_DETAIL_2,
@@ -90,7 +95,7 @@ describe('ComicBookListService', () => {
     [MESSAGING_FEATURE_KEY]: { ...initialMessagingState }
   };
 
-  let service: ComicBookListService;
+  let service: ComicDetailListService;
   let webSocketService: jasmine.SpyObj<WebSocketService>;
   const updateSubscription = jasmine.createSpyObj(['unsubscribe']);
   updateSubscription.unsubscribe = jasmine.createSpy(
@@ -121,7 +126,7 @@ describe('ComicBookListService', () => {
       ]
     });
 
-    service = TestBed.inject(ComicBookListService);
+    service = TestBed.inject(ComicDetailListService);
     webSocketService = TestBed.inject(
       WebSocketService
     ) as jasmine.SpyObj<WebSocketService>;
@@ -280,6 +285,38 @@ describe('ComicBookListService', () => {
     expect(req.request.body).toEqual({
       comicBookIds: IDS
     } as LoadComicDetailsByIdRequest);
+    req.flush(serviceResponse);
+  });
+
+  it('can load comic details for a collection', () => {
+    const serviceResponse = {
+      comicDetails: COMIC_DETAILS,
+      totalCount: TOTAL_COUNT,
+      filteredCount: FILTERED_COUNT
+    } as LoadComicDetailsResponse;
+    service
+      .loadComicDetailsForCollection({
+        pageSize: PAGE_SIZE,
+        pageIndex: PAGE_INDEX,
+        tagType: COLLECTION_TYPE,
+        tagValue: COLLECTION_NAME,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      })
+      .subscribe(response => expect(response).toEqual(serviceResponse));
+
+    const req = httpMock.expectOne(
+      interpolate(LOAD_COMIC_DETAILS_FOR_COLLECTION_URL)
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      pageSize: PAGE_SIZE,
+      pageIndex: PAGE_INDEX,
+      tagType: COLLECTION_TYPE,
+      tagValue: COLLECTION_NAME,
+      sortBy: SORT_BY,
+      sortDirection: SORT_DIRECTION
+    } as LoadComicDetailsForCollectionRequest);
     req.flush(serviceResponse);
   });
 });

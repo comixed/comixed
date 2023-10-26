@@ -21,6 +21,7 @@ import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { TagType } from '@app/collections/models/comic-collection.enum';
 
 export const loadComicDetails = createAction(
   '[Comic Details List] Load a page worth of comic details',
@@ -46,6 +47,18 @@ export const loadComicDetails = createAction(
 export const loadComicDetailsById = createAction(
   '[Comic Detail List] Load comic details by their ids',
   props<{ comicBookIds: number[] }>()
+);
+
+export const loadComicDetailsForCollection = createAction(
+  '[Comic Detail List] Load comic details for a given collection type',
+  props<{
+    pageSize: number;
+    pageIndex: number;
+    tagType: TagType;
+    tagValue: string;
+    sortBy: string;
+    sortDirection: string;
+  }>()
 );
 
 export const comicDetailsLoaded = createAction(

@@ -16,53 +16,40 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  AfterViewInit,
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
-  CollectionType,
-  collectionTypeFromString
+  TagType,
+  tagTypeFromString
 } from '@app/collections/models/comic-collection.enum';
-import { selectComicBookListCollection } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { MatTableDataSource } from '@angular/material/table';
-import { CollectionListEntry } from '@app/collections/models/collection-list-entry';
-import { MatSort, SortDirection } from '@angular/material/sort';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import { MatPaginator } from '@angular/material/paginator';
-import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@app/core';
+import {
+  selectCollectionListEntries,
+  selectCollectionListTotalEntries
+} from '@app/collections/selectors/collection-list.selectors';
+import { CollectionEntry } from '@app/collections/models/collection-entry';
+import { loadCollectionList } from '@app/collections/actions/collection-list.actions';
 
 @Component({
   selector: 'cx-collection-list',
   templateUrl: './collection-list.component.html',
   styleUrls: ['./collection-list.component.scss']
 })
-export class CollectionListComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-
-  typeSubscription: Subscription;
+export class CollectionListComponent implements OnInit, OnDestroy {
   paramSubscription: Subscription;
-  collectionType: CollectionType;
+  queryParamSubscription: Subscription;
+  collectionType: TagType;
   routableTypeName: string;
-  collectionSubscription: Subscription;
-  dataSource = new MatTableDataSource<CollectionListEntry>([]);
-  readonly pageOptions = PAGE_SIZE_OPTIONS;
-  pageIndex = 0;
-  pageSize = PAGE_SIZE_DEFAULT;
-  sortBy = 'name';
-  sortDirection: SortDirection = 'asc';
+  collectionEntrySubscription: Subscription;
+  totalEntriesSubscription: Subscription;
+  totalEntries = 0;
+  dataSource = new MatTableDataSource<CollectionEntry>([]);
 
   readonly displayedColumns = ['name', 'comic-count'];
   langChangeSubscription: Subscription;
@@ -78,36 +65,48 @@ export class CollectionListComponent
   ) {
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.routableTypeName = params.collectionType;
-      this.collectionType = collectionTypeFromString(this.routableTypeName);
-      this.loadTranslations();
+      this.collectionType = tagTypeFromString(this.routableTypeName);
       if (!this.collectionType) {
         this.logger.error('Invalid collection type:', params.collectionType);
         this.router.navigateByUrl('/library');
       } else {
-        this.collectionSubscription = this.store
-          .select(selectComicBookListCollection, {
-            collectionType: this.collectionType
-          })
-          .subscribe(
-            entries => (this.entries = entries.filter(entry => !!entry.name))
-          );
+        this.loadTranslations();
       }
     });
+    this.queryParamSubscription = this.activatedRoute.queryParams.subscribe(
+      () => {
+        this.store.dispatch(
+          loadCollectionList({
+            tagType: this.collectionType,
+            pageSize: this.queryParameterService.pageSize$.value,
+            pageIndex: this.queryParameterService.pageIndex$.value,
+            sortBy: this.queryParameterService.sortBy$.value,
+            sortDirection: this.queryParameterService.sortDirection$.value
+          })
+        );
+      }
+    );
+    this.collectionEntrySubscription = this.store
+      .select(selectCollectionListEntries)
+      .subscribe(entries => (this.entries = entries));
+    this.totalEntriesSubscription = this.store
+      .select(selectCollectionListTotalEntries)
+      .subscribe(totalEntries => (this.totalEntries = totalEntries));
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
   }
 
-  set entries(entries: CollectionListEntry[]) {
+  set entries(entries: CollectionEntry[]) {
     this.logger.debug('Setting collection entries:', entries);
     this.dataSource.data = entries;
   }
 
   ngOnDestroy(): void {
     this.paramSubscription.unsubscribe();
-    if (!!this.collectionSubscription) {
-      this.collectionSubscription.unsubscribe();
-    }
+    this.queryParamSubscription.unsubscribe();
+    this.collectionEntrySubscription.unsubscribe();
+    this.totalEntriesSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
   }
 
@@ -115,40 +114,14 @@ export class CollectionListComponent
     this.loadTranslations();
   }
 
-  onShowCollection(entry: CollectionListEntry): void {
+  onShowCollection(entry: CollectionEntry): void {
     this.logger.debug('Collection entry selected:', entry);
-    if (this.collectionType === CollectionType.SERIES) {
-      const seriesName = entry.name.substring(0, entry.name.length - 6);
-      const volume = entry.name.substring(entry.name.length - 4);
-      this.router.navigate([
-        '/library',
-        'collections',
-        'series',
-        seriesName,
-        'volumes',
-        volume
-      ]);
-    } else {
-      this.router.navigate([
-        '/library',
-        'collections',
-        this.routableTypeName,
-        entry.name
-      ]);
-    }
-  }
-
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
-      switch (sortHeaderId) {
-        case 'name':
-          return data.name;
-        case 'comic-count':
-          return data.comicCount;
-      }
-    };
+    this.router.navigate([
+      '/library',
+      'collections',
+      this.routableTypeName,
+      entry.tagValue
+    ]);
   }
 
   private loadTranslations(): void {

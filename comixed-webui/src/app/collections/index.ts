@@ -28,6 +28,11 @@ import {
   PublisherState,
   reducer as publisherReducer
 } from '@app/collections/reducers/publisher.reducer';
+import {
+  COLLECTION_LIST_FEATURE_KEY,
+  CollectionListState,
+  reducer as collectionListReducer
+} from '@app/collections/reducers/collection-list.reducer';
 
 interface RouterStateUrl {
   url: string;
@@ -39,6 +44,7 @@ export interface CollectionsModuleState {
   router: RouterReducerState<RouterStateUrl>;
   [PUBLISHER_FEATURE_KEY]: PublisherState;
   [SERIES_FEATURE_KEY]: SeriesState;
+  [COLLECTION_LIST_FEATURE_KEY]: CollectionListState;
 }
 
 export type ModuleState = CollectionsModuleState;
@@ -46,5 +52,6 @@ export type ModuleState = CollectionsModuleState;
 export const reducers: ActionReducerMap<CollectionsModuleState> = {
   router: routerReducer,
   [PUBLISHER_FEATURE_KEY]: publisherReducer,
-  [SERIES_FEATURE_KEY]: seriesReducer
+  [SERIES_FEATURE_KEY]: seriesReducer,
+  [COLLECTION_LIST_FEATURE_KEY]: collectionListReducer
 };

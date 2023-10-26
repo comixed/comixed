@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.archives.ArchiveType;
+import org.comixedproject.model.collections.CollectionEntry;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicTagType;
@@ -56,7 +57,7 @@ public class ComicDetailServiceTest {
   private static final String TEST_PUBLISHER = "THe Publisher Name";
   private static final String TEST_SERIES = "The Series Name";
   private static final String TEST_VOLUME = "2023";
-  private static final ComicTagType TEST_TAG = ComicTagType.CHARACTER;
+  private static final ComicTagType TEST_TAG_TYPE = ComicTagType.CHARACTER;
   private static final int TEST_YEAR = 2023;
   private static final int TEST_WEEK = 17;
   private static final String TEST_SEARCH_TERM = "Random text...";
@@ -72,10 +73,10 @@ public class ComicDetailServiceTest {
   private static final Boolean TEST_UNSCRAPED_STATE = RandomUtils.nextBoolean();
   private static final String TEST_SEARCH_TEXT = "The search text";
   private static final long TEST_TOTAL_COMIC_COUNT = RandomUtils.nextLong() * 30000L;
+  private static final long TEST_FILTER_COUNT = RandomUtils.nextLong() * 30000L;
+  private static final String TEST_COLLECTION_SORT_BY = "comic-count";
+  private static final String TEST_SORT_DIRECTION = "asc";
 
-  private final Set<Date> weeksList = new HashSet<>();
-  private final List<String> sortFieldNames = new ArrayList<>();
-  private final List<ComicDetail> comicDetailList = new ArrayList<>();
   @InjectMocks private ComicDetailService service;
   @Mock private ComicDetailRepository comicDetailRepository;
   @Mock private Set<String> publisherList;
@@ -91,11 +92,19 @@ public class ComicDetailServiceTest {
   @Mock private Set<Long> comicBookIdSet;
   @Mock private ComicDetail comicDetail;
   @Mock private Example<ComicDetail> example;
+  @Mock private List<Integer> coverYearList;
+  @Mock private List<Integer> coverMonthList;
+  @Mock private List<CollectionEntry> collectionEntryList;
+
   @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
   @Captor private ArgumentCaptor<Date> startDateArgumentCaptor;
   @Captor private ArgumentCaptor<Date> endDateArgumentCaptor;
   @Captor private ArgumentCaptor<Example<ComicDetail>> exampleArgumentCaptor;
   @Captor private ArgumentCaptor<Pageable> sortArgumentCaptor;
+
+  private final Set<Date> weeksList = new HashSet<>();
+  private final List<String> sortFieldNames = new ArrayList<>();
+  private final List<ComicDetail> comicDetailList = new ArrayList<>();
 
   @Before
   public void setUp() {
@@ -340,13 +349,13 @@ public class ComicDetailServiceTest {
                 Mockito.any(ComicTagType.class), Mockito.anyString()))
         .thenReturn(tagList);
 
-    final Set<String> result = service.getAllValuesForTag(TEST_TAG, TEST_EMAIL, true);
+    final Set<String> result = service.getAllValuesForTag(TEST_TAG_TYPE, TEST_EMAIL, true);
 
     assertNotNull(result);
     assertSame(tagList, result);
 
     Mockito.verify(comicDetailRepository, Mockito.times(1))
-        .getAllUnreadValuesForTagType(TEST_TAG, TEST_EMAIL);
+        .getAllUnreadValuesForTagType(TEST_TAG_TYPE, TEST_EMAIL);
   }
 
   @Test
@@ -354,12 +363,12 @@ public class ComicDetailServiceTest {
     Mockito.when(comicDetailRepository.getAllValuesForTagType(Mockito.any(ComicTagType.class)))
         .thenReturn(tagList);
 
-    final Set<String> result = service.getAllValuesForTag(TEST_TAG, TEST_EMAIL, false);
+    final Set<String> result = service.getAllValuesForTag(TEST_TAG_TYPE, TEST_EMAIL, false);
 
     assertNotNull(result);
     assertSame(tagList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).getAllValuesForTagType(TEST_TAG);
+    Mockito.verify(comicDetailRepository, Mockito.times(1)).getAllValuesForTagType(TEST_TAG_TYPE);
   }
 
   @Test
@@ -479,13 +488,13 @@ public class ComicDetailServiceTest {
         .thenReturn(comicDetailList);
 
     final List<ComicDetail> result =
-        service.getAllComicsForTag(TEST_TAG, TEST_TAG_VALUE, TEST_EMAIL, true);
+        service.getAllComicsForTag(TEST_TAG_TYPE, TEST_TAG_VALUE, TEST_EMAIL, true);
 
     assertNotNull(result);
     assertSame(comicDetailList, result);
 
     Mockito.verify(comicDetailRepository, Mockito.times(1))
-        .getAllUnreadComicsForTagType(TEST_TAG, TEST_TAG_VALUE, TEST_EMAIL);
+        .getAllUnreadComicsForTagType(TEST_TAG_TYPE, TEST_TAG_VALUE, TEST_EMAIL);
   }
 
   @Test
@@ -496,13 +505,13 @@ public class ComicDetailServiceTest {
         .thenReturn(comicDetailList);
 
     final List<ComicDetail> result =
-        service.getAllComicsForTag(TEST_TAG, TEST_TAG_VALUE, TEST_EMAIL, false);
+        service.getAllComicsForTag(TEST_TAG_TYPE, TEST_TAG_VALUE, TEST_EMAIL, false);
 
     assertNotNull(result);
     assertSame(comicDetailList, result);
 
     Mockito.verify(comicDetailRepository, Mockito.times(1))
-        .getAllComicsForTagType(TEST_TAG, TEST_TAG_VALUE);
+        .getAllComicsForTagType(TEST_TAG_TYPE, TEST_TAG_VALUE);
   }
 
   @Test
@@ -648,6 +657,22 @@ public class ComicDetailServiceTest {
   }
 
   @Test
+  public void testGetCoverYearsForTagType() {
+    Mockito.when(
+            comicDetailRepository.getCoverYears(
+                Mockito.any(ComicTagType.class), Mockito.anyString()))
+        .thenReturn(coverYearList);
+
+    final List<Integer> result = service.getCoverYears(TEST_TAG_TYPE, TEST_TAG_VALUE);
+
+    assertNotNull(result);
+    assertSame(coverYearList, result);
+
+    Mockito.verify(comicDetailRepository, Mockito.times(1))
+        .getCoverYears(TEST_TAG_TYPE, TEST_TAG_VALUE);
+  }
+
+  @Test
   public void testCoverCoverMonthForFilters() {
     comicDetailList.add(comicDetail);
 
@@ -683,7 +708,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testCoverCoverMonthForIds() {
+  public void testGetCoverMonthForIds() {
     comicDetailList.add(comicDetail);
 
     sortFieldNames.forEach(
@@ -702,9 +727,25 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetFilterCount() {
+  public void testGetCoverMonthsForTagType() {
+    Mockito.when(
+            comicDetailRepository.getCoverMonths(
+                Mockito.any(ComicTagType.class), Mockito.anyString()))
+        .thenReturn(coverMonthList);
+
+    final List<Integer> result = service.getCoverMonths(TEST_TAG_TYPE, TEST_TAG_VALUE);
+
+    assertNotNull(result);
+    assertSame(coverMonthList, result);
+
+    Mockito.verify(comicDetailRepository, Mockito.times(1))
+        .getCoverMonths(TEST_TAG_TYPE, TEST_TAG_VALUE);
+  }
+
+  @Test
+  public void testGetFilterCountForFilter() {
     Mockito.when(comicDetailRepository.count(exampleArgumentCaptor.capture()))
-        .thenReturn(TEST_TOTAL_COMIC_COUNT);
+        .thenReturn(TEST_FILTER_COUNT);
 
     final long result =
         service.getFilterCount(
@@ -720,12 +761,40 @@ public class ComicDetailServiceTest {
             TEST_SERIES,
             TEST_VOLUME);
 
-    assertEquals(TEST_TOTAL_COMIC_COUNT, result);
+    assertEquals(TEST_FILTER_COUNT, result);
 
     final Example<ComicDetail> example = exampleArgumentCaptor.getValue();
 
     Mockito.verify(exampleBuilder, Mockito.times(1)).build();
     Mockito.verify(comicDetailRepository, Mockito.times(1)).count(comicDetailExample);
+  }
+
+  @Test
+  public void testGetFilterCountForTagType() {
+    Mockito.when(
+            comicDetailRepository.getFilterCount(
+                Mockito.any(ComicTagType.class), Mockito.anyString()))
+        .thenReturn(TEST_FILTER_COUNT);
+
+    final long result = service.getFilterCount(TEST_TAG_TYPE, TEST_TAG_VALUE);
+
+    assertEquals(TEST_FILTER_COUNT, result);
+
+    Mockito.verify(comicDetailRepository, Mockito.times(1))
+        .getFilterCount(TEST_TAG_TYPE, TEST_TAG_VALUE);
+  }
+
+  @Test
+  public void testFindAllByExample() {
+    Mockito.when(comicDetailRepository.findAll(Mockito.any(Example.class)))
+        .thenReturn(comicDetailList);
+
+    final List<ComicDetail> result = service.findAllByExample(example);
+
+    assertNotNull(result);
+    assertSame(comicDetailList, result);
+
+    Mockito.verify(comicDetailRepository, Mockito.times(1)).findAll(example);
   }
 
   @Test
@@ -741,15 +810,67 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testFindAllByExample() {
-    Mockito.when(comicDetailRepository.findAll(Mockito.any(Example.class)))
-        .thenReturn(comicDetailList);
+  public void testLoadComicDetailsForTagTypeAscending() {
+    sortFieldNames.forEach(
+        sortField -> {
+          Mockito.when(
+                  comicDetailRepository.loadForTagTypeAndValue(
+                      Mockito.any(ComicTagType.class),
+                      Mockito.anyString(),
+                      pageableArgumentCaptor.capture()))
+              .thenReturn(comicDetailList);
 
-    final List<ComicDetail> result = service.findAllByExample(example);
+          final List<ComicDetail> result =
+              service.loadComicDetailListForTagType(
+                  TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_TAG_TYPE, TEST_TAG_VALUE, sortField, "asc");
+
+          assertNotNull(result);
+          assertSame(comicDetailList, result);
+
+          final Pageable pageable = pageableArgumentCaptor.getValue();
+          assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
+          assertEquals(TEST_PAGE_INDEX, pageable.getPageNumber());
+
+          Mockito.verify(comicDetailRepository, Mockito.times(1))
+              .loadForTagTypeAndValue(TEST_TAG_TYPE, TEST_TAG_VALUE, pageable);
+        });
+  }
+
+  @Test
+  public void testLoadCollectionEntries() {
+    Mockito.when(
+            comicDetailRepository.loadCollectionEntries(
+                Mockito.any(ComicTagType.class), pageableArgumentCaptor.capture()))
+        .thenReturn(collectionEntryList);
+
+    final List<CollectionEntry> result =
+        service.loadCollectionEntries(
+            TEST_TAG_TYPE,
+            TEST_PAGE_SIZE,
+            TEST_PAGE_INDEX,
+            TEST_COLLECTION_SORT_BY,
+            TEST_SORT_DIRECTION);
 
     assertNotNull(result);
-    assertSame(comicDetailList, result);
+    assertSame(collectionEntryList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).findAll(example);
+    final Pageable pageable = pageableArgumentCaptor.getValue();
+    assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
+    assertEquals(TEST_PAGE_INDEX, pageable.getPageNumber());
+
+    Mockito.verify(comicDetailRepository, Mockito.times(1))
+        .loadCollectionEntries(TEST_TAG_TYPE, pageable);
+  }
+
+  @Test
+  public void testLoadCollectionTotalEntries() {
+    Mockito.when(comicDetailRepository.getFilterCount(Mockito.any(ComicTagType.class)))
+        .thenReturn(TEST_TOTAL_COMIC_COUNT);
+
+    final long result = service.loadCollectionTotalEntries(TEST_TAG_TYPE);
+
+    assertEquals(TEST_TOTAL_COMIC_COUNT, result);
+
+    Mockito.verify(comicDetailRepository, Mockito.times(1)).getFilterCount(TEST_TAG_TYPE);
   }
 }

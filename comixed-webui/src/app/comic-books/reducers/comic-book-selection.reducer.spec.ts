@@ -32,7 +32,7 @@ import {
   loadComicBookSelectionsFailed,
   multipleComicBookSelectionStateSet,
   removeSingleComicBookSelection,
-  setMultipleComicBookSelectionState,
+  setMultipleComicBookByFilterSelectionState,
   setMultipleComicBookSelectionStateFailed,
   singleComicBookSelectionFailed,
   singleComicBookSelectionUpdated
@@ -253,7 +253,7 @@ describe('ComicBookSelection Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: false },
-        setMultipleComicBookSelectionState({
+        setMultipleComicBookByFilterSelectionState({
           coverYear: COVER_YEAR,
           coverMonth: COVER_MONTH,
           archiveType: ARCHIVE_TYPE,

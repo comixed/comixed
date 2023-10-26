@@ -74,7 +74,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
 import { ComicDetailFilterComponent } from './components/comic-detail-filter/comic-detail-filter.component';
-import { ComicDetailsListEffects } from '@app/comic-books/effects/comic-details-list-effects.service';
+import { ComicDetailsListEffects } from '@app/comic-books/effects/comic-details-list-effects';
 import { comicDetailsListFeature } from '@app/comic-books/reducers/comic-details-list.reducer';
 import { comicBookSelectionFeature } from '@app/comic-books/reducers/comic-book-selection.reducer';
 import { ComicBookSelectionEffects } from '@app/comic-books/effects/comic-book-selection.effects';

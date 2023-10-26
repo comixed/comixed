@@ -20,6 +20,7 @@ import { createAction, props } from '@ngrx/store';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
+import { TagType } from '@app/collections/models/comic-collection.enum';
 
 export const loadComicBookSelections = createAction(
   '[Comic Book Selection] Loads the initial set of comic book selections'
@@ -73,8 +74,8 @@ export const singleComicBookSelectionFailed = createAction(
   '[Comic Book Selection] Failed to set the selected state for a single comic book'
 );
 
-export const setMultipleComicBookSelectionState = createAction(
-  '[Comic Book Selection] Set the selected state for multiple comic books',
+export const setMultipleComicBookByFilterSelectionState = createAction(
+  '[Comic Book Selection] Set the selected state for multiple comic books using a filter',
   props<{
     coverYear: number;
     coverMonth: number;
@@ -85,6 +86,14 @@ export const setMultipleComicBookSelectionState = createAction(
     unscrapedState: boolean;
     searchText: string;
     selected: boolean;
+  }>()
+);
+
+export const setMultipleComicBookForCollectionSelectionState = createAction(
+  '[Comic Book Selection] Set the selected state for multiple comic books for a collection',
+  props<{
+    tagType: TagType;
+    tagValue: string;
   }>()
 );
 

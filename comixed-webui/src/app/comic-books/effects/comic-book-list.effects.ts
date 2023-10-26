@@ -28,7 +28,7 @@ import {
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { OldLoadComicsResponse } from '@app/comic-books/models/net/old-load-comics-response';
 import { of } from 'rxjs';
-import { ComicBookListService } from '@app/comic-books/services/comic-book-list.service';
+import { ComicDetailListService } from '@app/comic-books/services/comic-detail-list.service';
 
 @Injectable()
 export class ComicBookListEffects {
@@ -65,7 +65,7 @@ export class ComicBookListEffects {
     private logger: LoggerService,
     private actions$: Actions,
     private comicService: ComicBookService,
-    private comicListService: ComicBookListService
+    private comicListService: ComicDetailListService
   ) {
     // done to ensure the service was injected
     this.logger.assert(this.comicListService);

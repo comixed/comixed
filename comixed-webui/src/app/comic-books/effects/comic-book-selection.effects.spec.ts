@@ -35,7 +35,7 @@ import {
   loadComicBookSelectionsFailed,
   multipleComicBookSelectionStateSet,
   removeSingleComicBookSelection,
-  setMultipleComicBookSelectionState,
+  setMultipleComicBookByFilterSelectionState,
   setMultipleComicBookSelectionStateFailed,
   singleComicBookSelectionFailed,
   singleComicBookSelectionUpdated
@@ -274,7 +274,7 @@ describe('ComicBookSelectionEffects', () => {
   describe('selecting multiple comic books', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({});
-      const action = setMultipleComicBookSelectionState({
+      const action = setMultipleComicBookByFilterSelectionState({
         coverYear: COVER_YEAR,
         coverMonth: COVER_MONTH,
         archiveType: ARCHIVE_TYPE,
@@ -308,7 +308,7 @@ describe('ComicBookSelectionEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = setMultipleComicBookSelectionState({
+      const action = setMultipleComicBookByFilterSelectionState({
         coverYear: COVER_YEAR,
         coverMonth: COVER_MONTH,
         archiveType: ARCHIVE_TYPE,
@@ -342,7 +342,7 @@ describe('ComicBookSelectionEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = setMultipleComicBookSelectionState({
+      const action = setMultipleComicBookByFilterSelectionState({
         coverYear: COVER_YEAR,
         coverMonth: COVER_MONTH,
         archiveType: ARCHIVE_TYPE,

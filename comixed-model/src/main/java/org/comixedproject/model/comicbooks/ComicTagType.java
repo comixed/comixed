@@ -30,17 +30,17 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 public enum ComicTagType {
-  CHARACTER("character", "CHARACTER"),
-  TEAM("team", "TEAM"),
-  LOCATION("location", "LOCATION"),
-  STORY("story", "STORIE"),
-  WRITER("writer", "WRITER"),
-  EDITOR("editor", "EDITOR"),
-  PENCILLER("penciller", "PENCILLER"),
-  INKER("inker", "INKER"),
-  COLORIST("colorist", "COLORIST"),
-  LETERRER("leterrer", "LETERRER"),
-  COVER("cover", "COVER");
+  CHARACTER("characters", "CHARACTER"),
+  TEAM("teams", "TEAM"),
+  LOCATION("locations", "LOCATION"),
+  STORY("stories", "STORIE"),
+  WRITER("writers", "WRITER"),
+  EDITOR("editors", "EDITOR"),
+  PENCILLER("pencillers", "PENCILLER"),
+  INKER("inkers", "INKER"),
+  COLORIST("colorists", "COLORIST"),
+  LETERRER("leterrers", "LETERRER"),
+  COVER("covers", "COVER");
 
   @Getter private String value;
   @Getter private String opdsValue;

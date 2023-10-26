@@ -49,7 +49,7 @@ public class PublisherController {
    */
   @GetMapping(value = "/api/collections/publishers")
   @PreAuthorize("hasRole('READER')")
-  @Timed(value = "comixed.collections.publishers.get-all")
+  @Timed(value = "comixed.publishers.load-list")
   public List<Publisher> getAllPublishers() {
     log.info("Getting all publishers");
     return this.comicBookService.getAllPublishersWithSeries();
@@ -63,7 +63,7 @@ public class PublisherController {
    */
   @PostMapping(value = "/api/collections/publishers/{name}")
   @PreAuthorize("hasRole('READER')")
-  @Timed(value = "comixed.collections.publishers.get-one")
+  @Timed(value = "comixed.publishers.load-detail")
   public List<Series> getPublisherDetail(@PathVariable("name") final String name) {
     log.info("Getting publisher detail: name={}", name);
     return this.comicBookService.getPublisherDetail(name);
