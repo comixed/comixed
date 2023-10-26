@@ -23,10 +23,11 @@ import {
   comicDetailsLoaded,
   loadComicDetails,
   loadComicDetailsById,
-  loadComicDetailsFailed
+  loadComicDetailsFailed,
+  loadComicDetailsForCollection
 } from '../actions/comic-details-list.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { ComicBookListService } from '@app/comic-books/services/comic-book-list.service';
+import { ComicDetailListService } from '@app/comic-books/services/comic-detail-list.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
@@ -59,32 +60,12 @@ export class ComicDetailsListEffects {
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
             map((response: LoadComicDetailsResponse) =>
-              comicDetailsLoaded({
-                comicDetails: response.comicDetails,
-                coverYears: response.coverYears,
-                coverMonths: response.coverMonths,
-                totalCount: response.totalCount,
-                filteredCount: response.filteredCount
-              })
+              this.doComicetailsLoaded(response)
             ),
-            catchError(error => {
-              this.logger.debug('Service failure:', error);
-              this.alertService.error(
-                this.translateService.instant(
-                  'comic-books.load-comics.effect-failure'
-                )
-              );
-              return of(loadComicDetailsFailed());
-            })
+            catchError(error => this.doServiceFailure(error))
           )
       ),
-      catchError(error => {
-        this.logger.debug('General failure:', error);
-        this.alertService.error(
-          this.translateService.instant('app.general-effect-failure')
-        );
-        return of(loadComicDetailsFailed());
-      })
+      catchError(error => this.doGeneralFailure(error))
     );
   });
 
@@ -99,40 +80,71 @@ export class ComicDetailsListEffects {
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
             map((response: LoadComicDetailsResponse) =>
-              comicDetailsLoaded({
-                comicDetails: response.comicDetails,
-                coverYears: response.coverYears,
-                coverMonths: response.coverMonths,
-                totalCount: response.totalCount,
-                filteredCount: response.filteredCount
-              })
+              this.doComicetailsLoaded(response)
             ),
-            catchError(error => {
-              this.logger.debug('Service failure:', error);
-              this.alertService.error(
-                this.translateService.instant(
-                  'comic-books.load-comics.effect-failure'
-                )
-              );
-              return of(loadComicDetailsFailed());
-            })
+            catchError(error => this.doServiceFailure(error))
           )
       ),
-      catchError(error => {
-        this.logger.debug('General failure:', error);
-        this.alertService.error(
-          this.translateService.instant('app.general-effect-failure')
-        );
-        return of(loadComicDetailsFailed());
-      })
+      catchError(error => this.doGeneralFailure(error))
+    );
+  });
+
+  loadComicDetailsForCollection$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(loadComicDetailsForCollection),
+      switchMap(action =>
+        this.comicBookListService
+          .loadComicDetailsForCollection({
+            pageSize: action.pageSize,
+            pageIndex: action.pageIndex,
+            tagType: action.tagType,
+            tagValue: action.tagValue,
+            sortBy: action.sortBy,
+            sortDirection: action.sortDirection
+          })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map((response: LoadComicDetailsResponse) =>
+              this.doComicetailsLoaded(response)
+            ),
+            catchError(error => this.doServiceFailure(error))
+          )
+      ),
+      catchError(error => this.doGeneralFailure(error))
     );
   });
 
   constructor(
     private actions$: Actions,
     private logger: LoggerService,
-    private comicBookListService: ComicBookListService,
+    private comicBookListService: ComicDetailListService,
     private alertService: AlertService,
     private translateService: TranslateService
   ) {}
+
+  private doComicetailsLoaded(response: LoadComicDetailsResponse) {
+    return comicDetailsLoaded({
+      comicDetails: response.comicDetails,
+      coverYears: response.coverYears,
+      coverMonths: response.coverMonths,
+      totalCount: response.totalCount,
+      filteredCount: response.filteredCount
+    });
+  }
+
+  private doServiceFailure(error: any) {
+    this.logger.debug('Service failure:', error);
+    this.alertService.error(
+      this.translateService.instant('comic-books.load-comics.effect-failure')
+    );
+    return of(loadComicDetailsFailed());
+  }
+
+  private doGeneralFailure(error: any) {
+    this.logger.debug('General failure:', error);
+    this.alertService.error(
+      this.translateService.instant('app.general-effect-failure')
+    );
+    return of(loadComicDetailsFailed());
+  }
 }

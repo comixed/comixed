@@ -1,29 +1,18 @@
-<mat-toolbar class="cx-width-100">
-  <mat-form-field class="cx-width-50">
-    <input
-      matInput
-      #filterInput
-      id="volume-search-text-input"
-      [placeholder]="'collection-list.placeholder.filter-entries' | translate"
-      (keyup)="dataSource.filter = filterInput.value"
-    />
-  </mat-form-field>
-  <div class="cx-spacer"></div>
-  <mat-paginator
-    showFirstLastButtons="true"
-    class="cx-height-100"
-    [pageSize]="pageSize"
-    [pageIndex]="pageIndex"
-    [pageSizeOptions]="pageOptions"
-    (page)="
-      queryParameterService.onPageChange(
-        $event.pageSize,
-        $event.pageIndex,
-        $event.previousPageIndex
-      )
-    "
-  ></mat-paginator>
-</mat-toolbar>
+<mat-paginator
+  showFirstLastButtons="true"
+  class="cx-height-100"
+  [length]="totalEntries"
+  [pageIndex]="queryParameterService.pageIndex$ | async"
+  [pageSize]="queryParameterService.pageSize$ | async"
+  [pageSizeOptions]="queryParameterService.pageSizeOptions"
+  (page)="
+    queryParameterService.onPageChange(
+      $event.pageSize,
+      $event.pageIndex,
+      $event.previousPageIndex
+    )
+  "
+></mat-paginator>
 
 <h2>
   {{
@@ -52,7 +41,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.name || "collection-list.text.undefined" | translate }}
+        {{ entry.tagValue || "collection-list.text.undefined" | translate }}
       </span>
     </mat-cell>
   </ng-container>

@@ -29,10 +29,7 @@ import { ComicBooksModule } from '@app/comic-books/comic-books.module';
 import { SeriesListPageComponent } from './pages/series-list-page/series-list-page.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { StoreModule } from '@ngrx/store';
-import {
-  reducer as seriesReducer,
-  SERIES_FEATURE_KEY
-} from '@app/collections/reducers/series.reducer';
+import { seriesFeature } from '@app/collections/reducers/series.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { SeriesEffects } from '@app/collections/effects/series.effects';
 import { MatButtonModule } from '@angular/material/button';
@@ -42,14 +39,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatInputModule } from '@angular/material/input';
 import { SeriesDetailPageComponent } from './pages/series-detail-page/series-detail-page.component';
 import { PublisherListPageComponent } from './pages/publisher-list-page/publisher-list-page.component';
-import {
-  PUBLISHER_FEATURE_KEY,
-  reducer as publisherReducer
-} from '@app/collections/reducers/publisher.reducer';
+import { publisherFeature } from '@app/collections/reducers/publisher.reducer';
 import { PublisherEffects } from '@app/collections/effects/publisher.effects';
 import { PublisherDetailPageComponent } from './pages/publisher-detail-page/publisher-detail-page.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { SeriesDetailNamePipe } from './pipes/series-detail-name.pipe';
+import { collectionListFeature } from '@app/collections/reducers/collection-list.reducer';
+import { CollectionListEffects } from '@app/collections/effects/collection-list.effects';
 
 @NgModule({
   declarations: [
@@ -65,9 +61,14 @@ import { SeriesDetailNamePipe } from './pipes/series-detail-name.pipe';
     CommonModule,
     CollectionsRouting,
     TranslateModule.forRoot(),
-    StoreModule.forFeature(PUBLISHER_FEATURE_KEY, publisherReducer),
-    StoreModule.forFeature(SERIES_FEATURE_KEY, seriesReducer),
-    EffectsModule.forFeature([PublisherEffects, SeriesEffects]),
+    StoreModule.forFeature(publisherFeature),
+    StoreModule.forFeature(seriesFeature),
+    StoreModule.forFeature(collectionListFeature),
+    EffectsModule.forFeature([
+      PublisherEffects,
+      SeriesEffects,
+      CollectionListEffects
+    ]),
     MatTableModule,
     MatSortModule,
     LibraryModule,

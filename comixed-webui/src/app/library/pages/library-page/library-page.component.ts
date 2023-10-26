@@ -52,7 +52,7 @@ import {
   selectLoadComicDetailsTotalComics
 } from '@app/comic-books/selectors/load-comic-details-list.selectors';
 import { ComicDetailsListState } from '@app/comic-books/reducers/comic-details-list.reducer';
-import { setMultipleComicBookSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import { setMultipleComicBookByFilterSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
 
 @Component({
@@ -251,7 +251,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   onSetAllComicsSelectedState(selected: boolean) {
     this.logger.debug('Setting all comic books selected state:', selected);
     this.store.dispatch(
-      setMultipleComicBookSelectionState({
+      setMultipleComicBookByFilterSelectionState({
         coverYear: this.queryParameterService.coverYear$?.value?.year,
         coverMonth: this.queryParameterService.coverYear$?.value?.month,
         archiveType: this.queryParameterService.archiveType$.value,

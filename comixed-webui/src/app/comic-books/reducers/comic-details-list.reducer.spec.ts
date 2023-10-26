@@ -27,7 +27,8 @@ import {
   comicDetailUpdated,
   loadComicDetails,
   loadComicDetailsById,
-  loadComicDetailsFailed
+  loadComicDetailsFailed,
+  loadComicDetailsForCollection
 } from '@app/comic-books/actions/comic-details-list.actions';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
@@ -39,6 +40,7 @@ import {
   COMIC_DETAIL_4,
   COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
+import { TagType } from '@app/collections/models/comic-collection.enum';
 
 describe('ComicDetailsList Reducer', () => {
   const PAGE_SIZE = 25;
@@ -53,6 +55,8 @@ describe('ComicDetailsList Reducer', () => {
   const SEARCH_TEXT = 'This is some text';
   const SORT_BY = 'addedDate';
   const SORT_DIRECTION = 'ASC';
+  const TAG_TYPE = TagType.TEAMS;
+  const TAG_VALUE = 'The Avengers';
   const COMIC_DETAILS = [
     COMIC_DETAIL_1,
     COMIC_DETAIL_2,
@@ -139,6 +143,26 @@ describe('ComicDetailsList Reducer', () => {
       state = reducer(
         { ...state, loading: false },
         loadComicDetailsById({ comicBookIds: IDS })
+      );
+    });
+
+    it('sets the loading flag', () => {
+      expect(state.loading).toBeTrue();
+    });
+  });
+
+  describe('loading comic details for a collection', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, loading: false },
+        loadComicDetailsForCollection({
+          pageSize: PAGE_SIZE,
+          pageIndex: PAGE_INDEX,
+          tagType: TAG_TYPE,
+          tagValue: TAG_VALUE,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
       );
     });
 

@@ -33,10 +33,7 @@ import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
-import org.comixedproject.model.comicbooks.ComicState;
-import org.comixedproject.model.comicbooks.ComicType;
+import org.comixedproject.model.comicbooks.*;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.net.comicbooks.*;
 import org.comixedproject.service.comicbooks.ComicBookException;
@@ -81,8 +78,12 @@ public class ComicBookControllerTest {
   private static final String TEST_SORT_FIELD = "added-date";
   private static final String TEST_SORT_DIRECTION = "asc";
   private static final long TEST_TOTAL_COMIC_COUNT = RandomUtils.nextLong() * 30000L;
+  private static final long TEST_FILTER_COUNT = RandomUtils.nextLong() * 30000L;
+
   private static final long TEST_COMIC_BOOK_COUNT = TEST_TOTAL_COMIC_COUNT * 2L;
-  private final Set<Long> comicBookIdSet = new HashSet<>();
+  private static final ComicTagType TEST_TAG_TYPE =
+      ComicTagType.values()[RandomUtils.nextInt(ComicTagType.values().length)];
+  private static final String TEST_TAG_VALUE = "The tag value";
   @InjectMocks private ComicBookController controller;
   @Mock private ComicBookService comicBookService;
   @Mock private ComicDetailService comicDetailService;
@@ -101,10 +102,13 @@ public class ComicBookControllerTest {
 
   @Captor private ArgumentCaptor<InputStream> inputStreamCaptor;
 
+  private final Set<Long> comicBookIdSet = new HashSet<>();
+
   @Before
   public void setUp() {
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     comicBookIdSet.add(TEST_COMIC_ID);
+    Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_COMIC_BOOK_COUNT);
   }
 
   @Test
@@ -469,7 +473,6 @@ public class ComicBookControllerTest {
                 TEST_SORT_FIELD,
                 TEST_SORT_DIRECTION))
         .thenReturn(comicDetailList);
-    Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_COMIC_BOOK_COUNT);
     Mockito.when(
             comicDetailService.getFilterCount(
                 TEST_COVER_YEAR,
@@ -530,5 +533,59 @@ public class ComicBookControllerTest {
     assertEquals(comicBookIdSet.size(), result.getFilteredCount());
 
     Mockito.verify(comicDetailService, Mockito.times(1)).loadComicDetailListById(comicBookIdSet);
+  }
+
+  @Test
+  public void testLoadComicDetailsForTag() {
+    Mockito.when(
+            comicDetailService.loadComicDetailListForTagType(
+                Mockito.anyInt(),
+                Mockito.anyInt(),
+                Mockito.any(ComicTagType.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString()))
+        .thenReturn(comicDetailList);
+    Mockito.when(
+            comicDetailService.getCoverYears(Mockito.any(ComicTagType.class), Mockito.anyString()))
+        .thenReturn(coverYearList);
+    Mockito.when(
+            comicDetailService.getCoverMonths(Mockito.any(ComicTagType.class), Mockito.anyString()))
+        .thenReturn(coverMonthList);
+    Mockito.when(
+            comicDetailService.getFilterCount(Mockito.any(ComicTagType.class), Mockito.anyString()))
+        .thenReturn(TEST_FILTER_COUNT);
+
+    final LoadComicDetailsResponse result =
+        controller.loadComicDetailListForTag(
+            new LoadComicDetailsForTagRequest(
+                TEST_PAGE_SIZE,
+                TEST_PAGE_INDEX,
+                TEST_TAG_TYPE.getValue(),
+                TEST_TAG_VALUE,
+                TEST_SORT_FIELD,
+                TEST_SORT_DIRECTION));
+
+    assertNotNull(result);
+    assertSame(comicDetailList, result.getComicDetails());
+    assertSame(coverYearList, result.getCoverYears());
+    assertSame(coverMonthList, result.getCoverMonths());
+    assertEquals(TEST_COMIC_BOOK_COUNT, result.getTotalCount());
+    assertEquals(TEST_FILTER_COUNT, result.getFilteredCount());
+
+    Mockito.verify(comicDetailService, Mockito.times(1))
+        .loadComicDetailListForTagType(
+            TEST_PAGE_SIZE,
+            TEST_PAGE_INDEX,
+            TEST_TAG_TYPE,
+            TEST_TAG_VALUE,
+            TEST_SORT_FIELD,
+            TEST_SORT_DIRECTION);
+    Mockito.verify(comicDetailService, Mockito.times(1))
+        .getCoverYears(TEST_TAG_TYPE, TEST_TAG_VALUE);
+    Mockito.verify(comicDetailService, Mockito.times(1))
+        .getCoverMonths(TEST_TAG_TYPE, TEST_TAG_VALUE);
+    Mockito.verify(comicDetailService, Mockito.times(1))
+        .getFilterCount(TEST_TAG_TYPE, TEST_TAG_VALUE);
   }
 }

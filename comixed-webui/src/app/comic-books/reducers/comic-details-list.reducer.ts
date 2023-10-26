@@ -23,7 +23,8 @@ import {
   comicDetailUpdated,
   loadComicDetails,
   loadComicDetailsById,
-  loadComicDetailsFailed
+  loadComicDetailsFailed,
+  loadComicDetailsForCollection
 } from '../actions/comic-details-list.actions';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { deepClone } from '@angular-ru/cdk/object';
@@ -52,6 +53,7 @@ export const reducer = createReducer(
   initialState,
   on(loadComicDetails, state => ({ ...state, loading: true })),
   on(loadComicDetailsById, state => ({ ...state, loading: true })),
+  on(loadComicDetailsForCollection, state => ({ ...state, loading: true })),
   on(comicDetailsLoaded, (state, action) => ({
     ...state,
     loading: false,

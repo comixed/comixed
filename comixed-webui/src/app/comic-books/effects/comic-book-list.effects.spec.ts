@@ -20,7 +20,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { ComicBookListEffects } from './comic-book-list.effects';
-import { ComicBookListService } from '@app/comic-books/services/comic-book-list.service';
+import { ComicDetailListService } from '@app/comic-books/services/comic-detail-list.service';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
   COMIC_DETAIL_1,
@@ -46,7 +46,7 @@ describe('ComicBookListEffects', () => {
   let actions$: Observable<any> = null;
   let effects: ComicBookListEffects;
   let comicService: jasmine.SpyObj<ComicBookService>;
-  let comicListService: jasmine.SpyObj<ComicBookListService>;
+  let comicListService: jasmine.SpyObj<ComicDetailListService>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -61,7 +61,7 @@ describe('ComicBookListEffects', () => {
           }
         },
         {
-          provide: ComicBookListService,
+          provide: ComicDetailListService,
           useValue: {}
         }
       ]
@@ -72,8 +72,8 @@ describe('ComicBookListEffects', () => {
       ComicBookService
     ) as jasmine.SpyObj<ComicBookService>;
     comicListService = TestBed.inject(
-      ComicBookListService
-    ) as jasmine.SpyObj<ComicBookListService>;
+      ComicDetailListService
+    ) as jasmine.SpyObj<ComicDetailListService>;
   });
 
   it('should be created', () => {

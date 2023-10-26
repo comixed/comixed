@@ -26,7 +26,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
-import { CollectionType } from '@app/collections/models/comic-collection.enum';
+import { TagType } from '@app/collections/models/comic-collection.enum';
 import { initialState as initialLibraryState } from '@app/library/reducers/library.reducer';
 
 describe('CollectionsChartComponent', () => {
@@ -111,7 +111,7 @@ describe('CollectionsChartComponent', () => {
   });
 
   describe('when a collection is selected', () => {
-    const COLLECTION_TYPE = CollectionType.PUBLISHERS;
+    const COLLECTION_TYPE = TagType.PUBLISHERS;
     const COLLECTION_NAME = 'the collection';
 
     beforeEach(() => {
@@ -132,7 +132,7 @@ describe('CollectionsChartComponent', () => {
   });
 
   describe('when an unknown collection is selected', () => {
-    const COLLECTION_TYPE = CollectionType.PUBLISHERS;
+    const COLLECTION_TYPE = TagType.PUBLISHERS;
     const COLLECTION_NAME = null;
 
     beforeEach(() => {

@@ -16,7 +16,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export interface CollectionEntry {
-  tagValue: string;
-  comicCount: number;
+package org.comixedproject.model.net.collections;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.comixedproject.model.collections.CollectionEntry;
+import org.comixedproject.views.View;
+
+/**
+ * <code>LoadCollectionListResponse</code> represents the response body when loading collection
+ * entries.
+ *
+ * @author Darryl L. Pierce
+ */
+@AllArgsConstructor
+@JsonView(View.CollectionEntryList.class)
+public class LoadCollectionListResponse {
+  @JsonProperty("entries")
+  @Getter
+  private List<CollectionEntry> entries;
+
+  @JsonProperty("totalEntries")
+  @Getter
+  private long totalEntries;
 }

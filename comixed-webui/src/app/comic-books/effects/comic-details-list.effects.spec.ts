@@ -20,7 +20,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 
-import { ComicDetailsListEffects } from './comic-details-list-effects.service';
+import { ComicDetailsListEffects } from './comic-details-list-effects';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
@@ -31,7 +31,7 @@ import {
   COMIC_DETAIL_4,
   COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
-import { ComicBookListService } from '@app/comic-books/services/comic-book-list.service';
+import { ComicDetailListService } from '@app/comic-books/services/comic-detail-list.service';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -39,12 +39,14 @@ import {
   comicDetailsLoaded,
   loadComicDetails,
   loadComicDetailsById,
-  loadComicDetailsFailed
+  loadComicDetailsFailed,
+  loadComicDetailsForCollection
 } from '@app/comic-books/actions/comic-details-list.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AlertService } from '@app/core/services/alert.service';
 import { LoadComicDetailsResponse } from '@app/comic-books/models/net/load-comic-details-response';
+import { TagType } from '@app/collections/models/comic-collection.enum';
 
 describe('ComicDetailsListEffects', () => {
   const PAGE_SIZE = 25;
@@ -59,6 +61,8 @@ describe('ComicDetailsListEffects', () => {
   const SEARCH_TEXT = 'This is some text';
   const SORT_BY = 'addedDate';
   const SORT_DIRECTION = 'ASC';
+  const TAG_TYPE = TagType.TEAMS;
+  const TAG_VALUE = 'The Avengers';
   const COMIC_DETAILS = [
     COMIC_DETAIL_1,
     COMIC_DETAIL_2,
@@ -77,7 +81,7 @@ describe('ComicDetailsListEffects', () => {
 
   let actions$: Observable<any>;
   let effects: ComicDetailsListEffects;
-  let comicBookListService: jasmine.SpyObj<ComicBookListService>;
+  let comicDetailListService: jasmine.SpyObj<ComicDetailListService>;
   let alertService: AlertService;
 
   beforeEach(() => {
@@ -86,13 +90,16 @@ describe('ComicDetailsListEffects', () => {
         ComicDetailsListEffects,
         provideMockActions(() => actions$),
         {
-          provide: ComicBookListService,
+          provide: ComicDetailListService,
           useValue: {
             loadComicDetails: jasmine.createSpy(
-              'ComicBookListService.loadComicDetails()'
+              'ComicDetailListService.loadComicDetails()'
             ),
             loadComicDetailsById: jasmine.createSpy(
-              'ComicBookListService.loadComicDetailsById()'
+              'ComicDetailListService.loadComicDetailsById()'
+            ),
+            loadComicDetailsForCollection: jasmine.createSpy(
+              'ComicDetailListService.loadComicDetailsForCollection()'
             )
           }
         }
@@ -105,9 +112,9 @@ describe('ComicDetailsListEffects', () => {
     });
 
     effects = TestBed.inject(ComicDetailsListEffects);
-    comicBookListService = TestBed.inject(
-      ComicBookListService
-    ) as jasmine.SpyObj<ComicBookListService>;
+    comicDetailListService = TestBed.inject(
+      ComicDetailListService
+    ) as jasmine.SpyObj<ComicDetailListService>;
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'error');
   });
@@ -151,7 +158,7 @@ describe('ComicDetailsListEffects', () => {
       });
 
       actions$ = hot('-a', { a: action });
-      comicBookListService.loadComicDetails
+      comicDetailListService.loadComicDetails
         .withArgs({
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
@@ -197,7 +204,7 @@ describe('ComicDetailsListEffects', () => {
       const outcome = loadComicDetailsFailed();
 
       actions$ = hot('-a', { a: action });
-      comicBookListService.loadComicDetails
+      comicDetailListService.loadComicDetails
         .withArgs({
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
@@ -243,7 +250,7 @@ describe('ComicDetailsListEffects', () => {
       const outcome = loadComicDetailsFailed();
 
       actions$ = hot('-a', { a: action });
-      comicBookListService.loadComicDetails
+      comicDetailListService.loadComicDetails
         .withArgs({
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
@@ -288,7 +295,7 @@ describe('ComicDetailsListEffects', () => {
       });
 
       actions$ = hot('-a', { a: action });
-      comicBookListService.loadComicDetailsById
+      comicDetailListService.loadComicDetailsById
         .withArgs({ ids: IDS })
         .and.returnValue(of(serverResponse));
 
@@ -302,7 +309,7 @@ describe('ComicDetailsListEffects', () => {
       const outcome = loadComicDetailsFailed();
 
       actions$ = hot('-a', { a: action });
-      comicBookListService.loadComicDetailsById
+      comicDetailListService.loadComicDetailsById
         .withArgs({ ids: IDS })
         .and.returnValue(throwError(serverResponse));
 
@@ -316,12 +323,111 @@ describe('ComicDetailsListEffects', () => {
       const outcome = loadComicDetailsFailed();
 
       actions$ = hot('-a', { a: action });
-      comicBookListService.loadComicDetailsById
+      comicDetailListService.loadComicDetailsById
         .withArgs({ ids: IDS })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.loadComicDetailsById$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('loading comic details for collection', () => {
+    it('fires an action on success', () => {
+      const serverResponse = {
+        comicDetails: COMIC_DETAILS,
+        coverYears: COVER_YEARS,
+        coverMonths: COVER_MONTHS,
+        totalCount: TOTAL_COUNT,
+        filteredCount: FILTERED_COUNT
+      } as LoadComicDetailsResponse;
+      const action = loadComicDetailsForCollection({
+        pageSize: PAGE_SIZE,
+        pageIndex: PAGE_INDEX,
+        tagType: TAG_TYPE,
+        tagValue: TAG_VALUE,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      });
+      const outcome = comicDetailsLoaded({
+        comicDetails: COMIC_DETAILS,
+        coverYears: COVER_YEARS,
+        coverMonths: COVER_MONTHS,
+        totalCount: TOTAL_COUNT,
+        filteredCount: FILTERED_COUNT
+      });
+
+      actions$ = hot('-a', { a: action });
+      comicDetailListService.loadComicDetailsForCollection
+        .withArgs({
+          pageSize: PAGE_SIZE,
+          pageIndex: PAGE_INDEX,
+          tagType: TAG_TYPE,
+          tagValue: TAG_VALUE,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
+        .and.returnValue(of(serverResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.loadComicDetailsForCollection$).toBeObservable(expected);
+    });
+
+    it('fires an action on service failure', () => {
+      const serverResponse = new HttpErrorResponse({});
+      const action = loadComicDetailsForCollection({
+        pageSize: PAGE_SIZE,
+        pageIndex: PAGE_INDEX,
+        tagType: TAG_TYPE,
+        tagValue: TAG_VALUE,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      });
+      const outcome = loadComicDetailsFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicDetailListService.loadComicDetailsForCollection
+        .withArgs({
+          pageSize: PAGE_SIZE,
+          pageIndex: PAGE_INDEX,
+          tagType: TAG_TYPE,
+          tagValue: TAG_VALUE,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
+        .and.returnValue(throwError(serverResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.loadComicDetailsForCollection$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = loadComicDetailsForCollection({
+        pageSize: PAGE_SIZE,
+        pageIndex: PAGE_INDEX,
+        tagType: TAG_TYPE,
+        tagValue: TAG_VALUE,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      });
+      const outcome = loadComicDetailsFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicDetailListService.loadComicDetailsForCollection
+        .withArgs({
+          pageSize: PAGE_SIZE,
+          pageIndex: PAGE_INDEX,
+          tagType: TAG_TYPE,
+          tagValue: TAG_VALUE,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
+        .and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.loadComicDetailsForCollection$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

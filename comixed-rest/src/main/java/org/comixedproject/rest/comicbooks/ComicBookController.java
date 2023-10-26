@@ -30,6 +30,7 @@ import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.net.comicbooks.*;
 import org.comixedproject.service.comicbooks.ComicBookException;
@@ -361,5 +362,43 @@ public class ComicBookController {
         this.comicDetailService.getCoverMonths(ids),
         ids.size(),
         ids.size());
+  }
+
+  /**
+   * Loads comics based on a tag type and value
+   *
+   * @param request the request body
+   * @return the response body
+   */
+  @PostMapping(
+      value = "/api/comics/details/load/tag",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.comic-book.load-for-collection")
+  @PreAuthorize("hasRole('READER')")
+  @JsonView(ComicDetailsView.class)
+  public LoadComicDetailsResponse loadComicDetailListForTag(
+      @RequestBody() final LoadComicDetailsForTagRequest request) {
+    final int pageSize = request.getPageSize();
+    final int pageIndex = request.getPageIndex();
+    final ComicTagType tagType = ComicTagType.forValue(request.getTagType());
+    final String tagValue = request.getTagValue();
+    final String sortBy = request.getSortBy();
+    final String sortDirection = request.getSortDirection();
+    log.info(
+        "Loading comics by for collection: type={} value={} size={} index={} sort by ={} [{}]",
+        tagType,
+        tagValue,
+        pageSize,
+        pageIndex,
+        sortBy,
+        sortDirection);
+    return new LoadComicDetailsResponse(
+        this.comicDetailService.loadComicDetailListForTagType(
+            pageSize, pageIndex, tagType, tagValue, sortBy, sortDirection),
+        this.comicDetailService.getCoverYears(tagType, tagValue),
+        this.comicDetailService.getCoverMonths(tagType, tagValue),
+        this.comicBookService.getComicBookCount(),
+        this.comicDetailService.getFilterCount(tagType, tagValue));
   }
 }

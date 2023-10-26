@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export enum CollectionType {
+export enum TagType {
   CHARACTERS = 'characters',
   LOCATIONS = 'locations',
   PUBLISHERS = 'publishers',
@@ -25,20 +25,20 @@ export enum CollectionType {
   TEAMS = 'teams'
 }
 
-export function collectionTypeFromString(key: string): CollectionType {
+export function tagTypeFromString(key: string): TagType {
   switch (key) {
     case 'characters':
-      return CollectionType.CHARACTERS;
+      return TagType.CHARACTERS;
     case 'locations':
-      return CollectionType.LOCATIONS;
+      return TagType.LOCATIONS;
     case 'publishers':
-      return CollectionType.PUBLISHERS;
+      return TagType.PUBLISHERS;
     case 'series':
-      return CollectionType.SERIES;
+      return TagType.SERIES;
     case 'stories':
-      return CollectionType.STORIES;
+      return TagType.STORIES;
     case 'teams':
-      return CollectionType.TEAMS;
+      return TagType.TEAMS;
   }
   return null;
 }

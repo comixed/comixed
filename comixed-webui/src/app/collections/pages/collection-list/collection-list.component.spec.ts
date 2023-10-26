@@ -23,17 +23,12 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { CollectionType } from '@app/collections/models/comic-collection.enum';
-import {
-  COMIC_BOOK_LIST_FEATURE_KEY,
-  initialState as initialComicBookListState
-} from '@app/comic-books/reducers/comic-book-list.reducer';
+import { TagType } from '@app/collections/models/comic-collection.enum';
 import {
   COMIC_DETAIL_1,
   COMIC_DETAIL_3,
   COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
-import { CollectionListEntry } from '@app/collections/models/collection-list-entry';
 import { MatTableModule } from '@angular/material/table';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
@@ -44,12 +39,23 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { CollectionEntry } from '@app/collections/models/collection-entry';
+import {
+  COMIC_DETAILS_LIST_FEATURE_KEY,
+  initialState as initialComicDetailListState
+} from '@app/comic-books/reducers/comic-details-list.reducer';
+import {
+  COLLECTION_LIST_FEATURE_KEY,
+  initialState as initialCollectionListState
+} from '@app/collections/reducers/collection-list.reducer';
+import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 
 describe('CollectionListComponent', () => {
   const COMICS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
   const initialState = {
-    [COMIC_BOOK_LIST_FEATURE_KEY]: {
-      ...initialComicBookListState,
+    [COLLECTION_LIST_FEATURE_KEY]: initialCollectionListState,
+    [COMIC_DETAILS_LIST_FEATURE_KEY]: {
+      ...initialComicDetailListState,
       comicBooks: COMICS
     }
   };
@@ -81,16 +87,30 @@ describe('CollectionListComponent', () => {
         ],
         providers: [
           provideMockStore({ initialState }),
+          TitleService,
           {
             provide: ActivatedRoute,
             useValue: {
-              params: new BehaviorSubject<{}>({})
+              params: new BehaviorSubject<{}>({}),
+              queryParams: new BehaviorSubject<{}>({})
             }
           },
-          TitleService,
           {
             provide: QueryParameterService,
             useValue: {}
+          },
+          {
+            provide: QueryParameterService,
+            useValue: {
+              coverYear$: new BehaviorSubject<CoverDateFilter>({
+                year: null,
+                month: null
+              }),
+              pageSize$: new BehaviorSubject<number>(10),
+              pageIndex$: new BehaviorSubject<number>(3),
+              sortBy$: new BehaviorSubject<string>(null),
+              sortDirection$: new BehaviorSubject<string>(null)
+            }
           }
         ]
       }).compileComponents();
@@ -146,7 +166,7 @@ describe('CollectionListComponent', () => {
     });
 
     it('sets the collection type', () => {
-      expect(component.collectionType).toEqual(CollectionType.STORIES);
+      expect(component.collectionType).toEqual(TagType.STORIES);
     });
 
     it('sets the routable type name', () => {
@@ -154,71 +174,29 @@ describe('CollectionListComponent', () => {
     });
 
     it('subscribes to comic list updates', () => {
-      expect(component.collectionSubscription).not.toBeNull();
+      expect(component.collectionEntrySubscription).not.toBeNull();
     });
   });
 
   describe('when a collection is selected', () => {
     const COLLECTION_NAME = 'The Collection';
 
-    describe('when it is  series', () => {
-      const VOLUME = '2022';
-
-      beforeEach(() => {
-        component.collectionType = CollectionType.SERIES;
-        component.routableTypeName = 'series';
-        component.onShowCollection({
-          name: `${COLLECTION_NAME} v${VOLUME}`,
-          comicCount: 23
-        } as CollectionListEntry);
-      });
-
-      it('redirects the browser', () => {
-        expect(router.navigate).toHaveBeenCalledWith([
-          '/library',
-          'collections',
-          'series',
-          COLLECTION_NAME,
-          'volumes',
-          VOLUME
-        ]);
-      });
+    beforeEach(() => {
+      component.collectionType = TagType.PUBLISHERS;
+      component.routableTypeName = 'publishers';
+      component.onShowCollection({
+        tagValue: COLLECTION_NAME,
+        comicCount: 23
+      } as CollectionEntry);
     });
 
-    describe('when it is not a series', () => {
-      beforeEach(() => {
-        component.collectionType = CollectionType.PUBLISHERS;
-        component.routableTypeName = 'publishers';
-        component.onShowCollection({
-          name: COLLECTION_NAME,
-          comicCount: 23
-        } as CollectionListEntry);
-      });
-
-      it('redirects the browser', () => {
-        expect(router.navigate).toHaveBeenCalledWith([
-          '/library',
-          'collections',
-          'publishers',
-          COLLECTION_NAME
-        ]);
-      });
-    });
-  });
-
-  describe('sorting entries', () => {
-    const ENTRY = { name: 'The entry', comicCount: 23 } as CollectionListEntry;
-
-    it('can sort by collection name', () => {
-      expect(component.dataSource.sortingDataAccessor(ENTRY, 'name')).toEqual(
-        ENTRY.name
-      );
-    });
-
-    it('can sort by comic count', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ENTRY, 'comic-count')
-      ).toEqual(ENTRY.comicCount);
+    it('redirects the browser', () => {
+      expect(router.navigate).toHaveBeenCalledWith([
+        '/library',
+        'collections',
+        'publishers',
+        COLLECTION_NAME
+      ]);
     });
   });
 });

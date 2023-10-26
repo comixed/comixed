@@ -36,6 +36,7 @@ import { interpolate } from '@app/core';
 import { LoadComicDetailsRequest } from '@app/comic-books/models/net/load-comic-details-request';
 import {
   LOAD_COMIC_DETAILS_BY_ID_URL,
+  LOAD_COMIC_DETAILS_FOR_COLLECTION_URL,
   LOAD_COMIC_DETAILS_URL
 } from '@app/comic-books/comic-books.constants';
 import { LoadComicDetailsByIdRequest } from '@app/comic-books/models/net/load-comic-details-by-id-request';
@@ -43,11 +44,13 @@ import {
   comicDetailRemoved,
   comicDetailUpdated
 } from '@app/comic-books/actions/comic-details-list.actions';
+import { TagType } from '@app/collections/models/comic-collection.enum';
+import { LoadComicDetailsForCollectionRequest } from '@app/comic-books/models/net/load-comic-details-for-collection-request';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ComicBookListService {
+export class ComicDetailListService {
   updateSubscription: Subscription;
   removalSubscription: Subscription;
 
@@ -136,5 +139,24 @@ export class ComicBookListService {
     return this.http.post(interpolate(LOAD_COMIC_DETAILS_BY_ID_URL), {
       comicBookIds: args.ids
     } as LoadComicDetailsByIdRequest);
+  }
+
+  loadComicDetailsForCollection(args: {
+    pageSize: number;
+    pageIndex: number;
+    tagType: TagType;
+    tagValue: string;
+    sortBy: string;
+    sortDirection: string;
+  }): Observable<any> {
+    this.logger.debug('Loading comic details for collection:', args);
+    return this.http.post(interpolate(LOAD_COMIC_DETAILS_FOR_COLLECTION_URL), {
+      pageSize: args.pageSize,
+      pageIndex: args.pageIndex,
+      tagType: args.tagType,
+      tagValue: args.tagValue,
+      sortBy: args.sortBy,
+      sortDirection: args.sortDirection
+    } as LoadComicDetailsForCollectionRequest);
   }
 }
