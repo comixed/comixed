@@ -130,8 +130,10 @@ public class BlockedHashControllerTest {
 
   @Test
   public void testBlockPage()
-      throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
-          JobParametersInvalidException, JobRestartException {
+      throws JobInstanceAlreadyCompleteException,
+          JobExecutionAlreadyRunningException,
+          JobParametersInvalidException,
+          JobRestartException {
     final List<String> pageHashList = new ArrayList<>();
     pageHashList.add(TEST_PAGE_HASH);
 
@@ -152,8 +154,10 @@ public class BlockedHashControllerTest {
 
   @Test
   public void testMarkPagesWithHash()
-      throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
-          JobParametersInvalidException, JobRestartException {
+      throws JobInstanceAlreadyCompleteException,
+          JobExecutionAlreadyRunningException,
+          JobParametersInvalidException,
+          JobRestartException {
     final List<String> pageHashList = new ArrayList<>();
     pageHashList.add(TEST_PAGE_HASH);
 
@@ -173,8 +177,10 @@ public class BlockedHashControllerTest {
 
   @Test
   public void testUnblockPage()
-      throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
-          JobParametersInvalidException, JobRestartException {
+      throws JobInstanceAlreadyCompleteException,
+          JobExecutionAlreadyRunningException,
+          JobParametersInvalidException,
+          JobRestartException {
     final List<String> pageHashList = new ArrayList<>();
     pageHashList.add(TEST_PAGE_HASH);
 
@@ -195,8 +201,10 @@ public class BlockedHashControllerTest {
 
   @Test
   public void testUnmarkPagesWithHash()
-      throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
-          JobParametersInvalidException, JobRestartException {
+      throws JobInstanceAlreadyCompleteException,
+          JobExecutionAlreadyRunningException,
+          JobParametersInvalidException,
+          JobRestartException {
     final List<String> pageHashList = new ArrayList<>();
     pageHashList.add(TEST_PAGE_HASH);
 

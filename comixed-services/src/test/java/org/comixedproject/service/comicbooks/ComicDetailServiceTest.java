@@ -25,7 +25,6 @@ import static junit.framework.TestCase.assertSame;
 import static junit.framework.TestCase.assertTrue;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.archives.ArchiveType;
@@ -110,7 +109,7 @@ public class ComicDetailServiceTest {
     weeksList.add(new Date());
     Mockito.when(exampleBuilderObjectFactory.getObject()).thenReturn(exampleBuilder);
     Mockito.when(exampleBuilder.build()).thenReturn(comicDetailExample);
-    Mockito.when(comicDetailListStream.collect(Mockito.any())).thenReturn(comicDetailList);
+    Mockito.when(comicDetailListStream.toList()).thenReturn(comicDetailList);
     Mockito.when(comicDetailListPage.stream()).thenReturn(comicDetailListStream);
 
     sortFieldNames.add("archive-type");
@@ -545,7 +544,7 @@ public class ComicDetailServiceTest {
           final Example<ComicDetail> example = exampleArgumentCaptor.getValue();
           final Pageable sort = sortArgumentCaptor.getValue();
 
-          assertTrue(sort.getSort().stream().collect(Collectors.toList()).get(0).isDescending());
+          assertTrue(sort.getSort().stream().toList().get(0).isDescending());
           assertEquals(TEST_PAGE_SIZE, sort.getPageSize());
           assertEquals(TEST_PAGE_INDEX, sort.getPageNumber());
 
@@ -588,7 +587,7 @@ public class ComicDetailServiceTest {
           final Example<ComicDetail> example = exampleArgumentCaptor.getValue();
           final Pageable sort = sortArgumentCaptor.getValue();
 
-          assertTrue(sort.getSort().stream().collect(Collectors.toList()).get(0).isAscending());
+          assertTrue(sort.getSort().stream().toList().get(0).isAscending());
           assertEquals(TEST_PAGE_SIZE, sort.getPageSize());
           assertEquals(TEST_PAGE_INDEX, sort.getPageNumber());
 

@@ -29,7 +29,8 @@
 
   <properties>
     <assembly.name>local</assembly.name>
-    <maven-git-code-format.version>2.7</maven-git-code-format.version>
+    <maven-git-code-format.version>5.1</maven-git-code-format.version>
+    <git-code-format-maven-plugin.version>4.2</git-code-format-maven-plugin.version>
     <java.version>17</java.version>
     <sonar.organization>comixed</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -66,21 +67,27 @@
             <groupId>com.cosium.code</groupId>
             <artifactId>git-code-format-maven-plugin</artifactId>
             <version>${maven-git-code-format.version}</version>
-            <executions>
-              <execution>
-                <id>install-formatter-hook</id>
-                <goals>
-                  <goal>install-hooks</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <googleJavaFormatOptions>
-                <aosp>false</aosp>
-                <skipSortingImports>false</skipSortingImports>
-                <skipRemovingUnusedImports>false</skipRemovingUnusedImports>
-              </googleJavaFormatOptions>
-            </configuration>
+              <executions>
+                  <execution>
+                      <id>install-formatter-hook</id>
+                      <goals>
+                          <goal>install-hooks</goal>
+                      </goals>
+                  </execution>
+                  <execution>
+                      <id>validate-code-format</id>
+                      <goals>
+                          <goal>validate-code-format</goal>
+                      </goals>
+                  </execution>
+              </executions>
+              <dependencies>
+                  <dependency>
+                      <groupId>com.cosium.code</groupId>
+                      <artifactId>google-java-format</artifactId>
+                      <version>4.2</version>
+                  </dependency>
+              </dependencies>
           </plugin>
         </plugins>
       </build>
@@ -99,28 +106,27 @@
             <groupId>com.cosium.code</groupId>
             <artifactId>git-code-format-maven-plugin</artifactId>
             <version>${maven-git-code-format.version}</version>
-            <executions>
-              <execution>
-                <id>install-formatter-hook</id>
-                <goals>
-                  <goal>install-hooks</goal>
-                </goals>
-              </execution>
-              <execution>
-                <id>validate-code-format</id>
-                <goals>
-                  <goal>validate-code-format</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <googleJavaFormatOptions>
-                <aosp>false</aosp>
-                <fixImportsOnly>false</fixImportsOnly>
-                <skipSortingImports>false</skipSortingImports>
-                <skipRemovingUnusedImports>false</skipRemovingUnusedImports>
-              </googleJavaFormatOptions>
-            </configuration>
+              <executions>
+                  <execution>
+                      <id>install-formatter-hook</id>
+                      <goals>
+                          <goal>install-hooks</goal>
+                      </goals>
+                  </execution>
+                  <execution>
+                      <id>validate-code-format</id>
+                      <goals>
+                          <goal>validate-code-format</goal>
+                      </goals>
+                  </execution>
+              </executions>
+              <dependencies>
+                  <dependency>
+                      <groupId>com.cosium.code</groupId>
+                      <artifactId>google-java-format</artifactId>
+                      <version>${git-code-format-maven-plugin.version}</version>
+                  </dependency>
+              </dependencies>
           </plugin>
         </plugins>
       </build>

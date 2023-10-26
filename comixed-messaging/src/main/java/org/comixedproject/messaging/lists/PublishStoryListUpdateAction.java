@@ -35,6 +35,7 @@ import org.springframework.stereotype.Component;
 public class PublishStoryListUpdateAction extends AbstractPublishAction<Story> {
   /** Topic which receives story list updates. */
   public static final String STORY_LIST_UPDATE_TOPIC = "/topic/story-list.update";
+
   /** Topic which receives story updates. */
   public static final String STORY_UPDATE_TOPIC = "/topic/story-list.%d.update";
 

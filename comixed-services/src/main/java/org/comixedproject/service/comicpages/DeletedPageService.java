@@ -21,7 +21,6 @@ package org.comixedproject.service.comicpages;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicpages.DeletedPage;
 import org.comixedproject.repositories.comicpages.PageRepository;
@@ -68,6 +67,6 @@ public class DeletedPageService {
                   .getComics()
                   .add(deletedPageAndComic.getComicBook().getComicDetail());
             });
-    return result.values().stream().collect(Collectors.toList());
+    return result.values().stream().toList();
   }
 }

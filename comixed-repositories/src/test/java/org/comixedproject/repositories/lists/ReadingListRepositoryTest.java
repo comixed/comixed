@@ -84,12 +84,8 @@ public class ReadingListRepositoryTest {
     for (ReadingList list : result) {
       assertEquals(reader.getId(), list.getOwner().getId());
       switch (list.getId().intValue()) {
-        case 1000:
-          assertEquals("First Reading List", list.getName());
-          break;
-        case 1001:
-          assertEquals("Second Reading List", list.getName());
-          break;
+        case 1000 -> assertEquals("First Reading List", list.getName());
+        case 1001 -> assertEquals("Second Reading List", list.getName());
       }
     }
   }

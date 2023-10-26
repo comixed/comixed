@@ -150,8 +150,10 @@ public class ComicFileController {
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.comic-file.batch.import-files")
   public void importComicFiles(@RequestBody() ImportComicFilesRequest request)
-      throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
-          JobParametersInvalidException, JobRestartException {
+      throws JobInstanceAlreadyCompleteException,
+          JobExecutionAlreadyRunningException,
+          JobParametersInvalidException,
+          JobRestartException {
     final List<String> filenames = request.getFilenames();
 
     log.info("Importing comic files");

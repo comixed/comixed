@@ -35,6 +35,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class ImprintService {
   @Autowired private ImprintRepository imprintRepository;
+
   /**
    * Updates the given comicBook's publisher and imprint if necessary.
    *

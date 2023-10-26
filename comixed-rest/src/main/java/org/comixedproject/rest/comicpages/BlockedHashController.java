@@ -144,8 +144,10 @@ public class BlockedHashController {
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.blocked-hash.add")
   public void blockPageHashes(@RequestBody() final SetBlockedPageRequest request)
-      throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
-          JobParametersInvalidException, JobRestartException {
+      throws JobInstanceAlreadyCompleteException,
+          JobExecutionAlreadyRunningException,
+          JobParametersInvalidException,
+          JobRestartException {
     final List<String> hashes = request.getHashes();
     log.info("Block {} hash{}", hashes.size(), hashes.size() == 1 ? "" : "es");
     this.blockedHashService.blockPages(hashes);
@@ -165,8 +167,10 @@ public class BlockedHashController {
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.blocked-hash.mark-pages")
   public void markPagesWithHash(@RequestBody() final MarkPageWithHashRequest request)
-      throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
-          JobParametersInvalidException, JobRestartException {
+      throws JobInstanceAlreadyCompleteException,
+          JobExecutionAlreadyRunningException,
+          JobParametersInvalidException,
+          JobRestartException {
     final List<String> hashes = request.getHashes();
     log.info("Marking pages with hash for deletion");
     launchMarkPagesWithHashProcess(hashes);
@@ -182,8 +186,10 @@ public class BlockedHashController {
    * @throws JobParametersInvalidException if an error occurs
    */
   private void launchMarkPagesWithHashProcess(final List<String> hashes)
-      throws JobExecutionAlreadyRunningException, JobRestartException,
-          JobInstanceAlreadyCompleteException, JobParametersInvalidException {
+      throws JobExecutionAlreadyRunningException,
+          JobRestartException,
+          JobInstanceAlreadyCompleteException,
+          JobParametersInvalidException {
     for (int index = 0; index < hashes.size(); index++) {
       final String hash = hashes.get(index);
       log.trace("Marking pages with hash: {}", hash);
@@ -212,8 +218,10 @@ public class BlockedHashController {
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.blocked-hash.unblock-pages")
   public void unblockPageHashes(@RequestBody() final SetBlockedPageRequest request)
-      throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
-          JobParametersInvalidException, JobRestartException {
+      throws JobInstanceAlreadyCompleteException,
+          JobExecutionAlreadyRunningException,
+          JobParametersInvalidException,
+          JobRestartException {
     final List<String> hashes = request.getHashes();
     log.info("Unblock {} hash{}", hashes.size(), hashes.size() == 1 ? "" : "es");
     this.blockedHashService.unblockPages(hashes);
@@ -233,8 +241,10 @@ public class BlockedHashController {
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.blocked-hash.unmark")
   public void unmarkPagesWithHash(@RequestBody() final UnmarkPageWithHashRequest request)
-      throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
-          JobParametersInvalidException, JobRestartException {
+      throws JobInstanceAlreadyCompleteException,
+          JobExecutionAlreadyRunningException,
+          JobParametersInvalidException,
+          JobRestartException {
     final List<String> hashes = request.getHashes();
     log.info("Unmarking pages with hash for deletion");
     this.launchUnmarkPagesWithHashProcess(hashes);
@@ -250,8 +260,10 @@ public class BlockedHashController {
    * @throws JobRestartException if a job error occurs
    */
   private void launchUnmarkPagesWithHashProcess(final List<String> hashes)
-      throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
-          JobParametersInvalidException, JobRestartException {
+      throws JobInstanceAlreadyCompleteException,
+          JobExecutionAlreadyRunningException,
+          JobParametersInvalidException,
+          JobRestartException {
     for (int index = 0; index < hashes.size(); index++) {
       final String hash = hashes.get(index);
       log.trace("Unmarking pages with hash: {}", hash);

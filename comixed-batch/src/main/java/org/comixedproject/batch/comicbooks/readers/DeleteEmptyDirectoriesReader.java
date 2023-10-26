@@ -25,7 +25,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.springframework.batch.item.ItemReader;
@@ -87,10 +86,7 @@ public class DeleteEmptyDirectoriesReader implements ItemReader<File> {
     if (rootDirectory.isFile()) {
       return;
     }
-    Arrays.stream(rootDirectory.listFiles())
-        .sorted()
-        .collect(Collectors.toList())
-        .stream()
+    Arrays.stream(rootDirectory.listFiles()).sorted().toList().stream()
         .filter(File::isDirectory)
         .forEach(directory -> this.loadDirectories(directory, true));
     if (addToList) {

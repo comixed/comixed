@@ -295,7 +295,8 @@ public class OPDSNavigationService {
       final String publisher, final String series, final String email, final boolean unread) {
     OPDSNavigationFeed result =
         new OPDSNavigationFeed(String.format("Series: %s", series), String.valueOf(SERIES_ID));
-    this.comicDetailService.getAllVolumesForPublisherAndSeries(publisher, series, email, unread)
+    this.comicDetailService
+        .getAllVolumesForPublisherAndSeries(publisher, series, email, unread)
         .stream()
         .forEach(
             volume -> {
@@ -423,7 +424,8 @@ public class OPDSNavigationService {
         collectionType,
         new OPDSNavigationFeed("Characters", String.valueOf(collectionType.getOpdsIdValue())),
         collectionType.getOpdsIdKey(),
-        this.comicDetailService.getAllValuesForTag(collectionType.getComicTagType(), email, unread)
+        this.comicDetailService
+            .getAllValuesForTag(collectionType.getComicTagType(), email, unread)
             .stream()
             .map(
                 value ->

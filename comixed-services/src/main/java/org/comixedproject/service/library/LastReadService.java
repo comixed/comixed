@@ -165,7 +165,7 @@ public class LastReadService implements InitializingBean, ComicStateChangeListen
                   }
                 })
             .filter(Objects::nonNull)
-            .collect(Collectors.toList()));
+            .toList());
   }
 
   /**
@@ -181,7 +181,7 @@ public class LastReadService implements InitializingBean, ComicStateChangeListen
     this.lastReadRepository.deleteAll(
         this.lastReadRepository.loadEntriesForUser(user).stream()
             .filter(lastRead -> ids.contains(lastRead.getComicDetail().getComicId()))
-            .collect(Collectors.toList()));
+            .toList());
   }
 
   private ComicBook doFindComicBook(final Long comicBookId) throws LastReadException {
