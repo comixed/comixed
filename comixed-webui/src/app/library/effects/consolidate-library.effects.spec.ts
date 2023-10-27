@@ -41,7 +41,6 @@ import { LIBRARY_CONSOLIDATION_CONFIG_URL } from '@app/library/library.constants
 
 describe('ConsolidateLibraryEffects', () => {
   const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
-  const IDS = COMIC_BOOKS.map(comic => comic.id);
 
   let actions$: Observable<any>;
   let effects: ConsolidateLibraryEffects;
@@ -85,13 +84,13 @@ describe('ConsolidateLibraryEffects', () => {
   describe('starting library consolidation', () => {
     it('fires an action on success', () => {
       const serviceResponse = COMIC_BOOKS;
-      const action = startLibraryConsolidation({ ids: IDS });
+      const action = startLibraryConsolidation();
       const outcome = libraryConsolidationStarted();
 
       actions$ = hot('-a', { a: action });
-      libraryService.startLibraryConsolidation
-        .withArgs({ ids: IDS })
-        .and.returnValue(of(serviceResponse));
+      libraryService.startLibraryConsolidation.and.returnValue(
+        of(serviceResponse)
+      );
 
       const expected = hot('-b', { b: outcome });
       expect(effects.consolidateLibrary$).toBeObservable(expected);
@@ -100,13 +99,13 @@ describe('ConsolidateLibraryEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = startLibraryConsolidation({ ids: IDS });
+      const action = startLibraryConsolidation();
       const outcome = startLibraryConsolidationFailed();
 
       actions$ = hot('-a', { a: action });
-      libraryService.startLibraryConsolidation
-        .withArgs({ ids: IDS })
-        .and.returnValue(throwError(serviceResponse));
+      libraryService.startLibraryConsolidation.and.returnValue(
+        throwError(serviceResponse)
+      );
 
       const expected = hot('-b', { b: outcome });
       expect(effects.consolidateLibrary$).toBeObservable(expected);
@@ -117,13 +116,11 @@ describe('ConsolidateLibraryEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = startLibraryConsolidation({ ids: IDS });
+      const action = startLibraryConsolidation();
       const outcome = startLibraryConsolidationFailed();
 
       actions$ = hot('-a', { a: action });
-      libraryService.startLibraryConsolidation
-        .withArgs({ ids: IDS })
-        .and.throwError('expected');
+      libraryService.startLibraryConsolidation.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.consolidateLibrary$).toBeObservable(expected);

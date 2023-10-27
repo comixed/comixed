@@ -146,7 +146,7 @@ describe('LibraryService', () => {
 
   it('can start library consolidation', () => {
     service
-      .startLibraryConsolidation({ ids: IDS })
+      .startLibraryConsolidation()
       .subscribe(response => expect(response).toEqual(COMIC_BOOKS));
 
     const req = httpMock.expectOne(
@@ -154,7 +154,6 @@ describe('LibraryService', () => {
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      ids: IDS,
       deletePhysicalFiles: false
     } as ConsolidateLibraryRequest);
   });

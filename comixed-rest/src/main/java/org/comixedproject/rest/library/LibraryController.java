@@ -30,10 +30,7 @@ import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.
 import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.annotation.Timed;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpSession;
@@ -54,9 +51,7 @@ import org.comixedproject.model.net.library.RemoteLibraryState;
 import org.comixedproject.model.net.library.RescanComicsRequest;
 import org.comixedproject.model.net.library.UpdateMetadataRequest;
 import org.comixedproject.service.admin.ConfigurationService;
-import org.comixedproject.service.comicbooks.ComicBookException;
-import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicDetailService;
+import org.comixedproject.service.comicbooks.*;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
 import org.comixedproject.service.library.RemoteLibraryStateService;
@@ -92,7 +87,7 @@ public class LibraryController {
   @Autowired private ComicBookService comicBookService;
   @Autowired private ComicDetailService comicDetailService;
   @Autowired private ConfigurationService configurationService;
-  @Autowired private ObjectMapper objectMapper;
+  @Autowired private ComicBookSelectionService comicBookSelectionService;
 
   @Autowired
   @Qualifier("batchJobLauncher")
@@ -132,13 +127,11 @@ public class LibraryController {
   @Timed(value = "comixed.library.get-state")
   @JsonView(View.RemoteLibraryState.class)
   public RemoteLibraryState getLibraryState(final HttpSession httpSession)
-      throws JsonProcessingException {
+      throws ComicSelectionException {
     log.info("Loading the current library state");
-    final Object sessionSelections = httpSession.getAttribute(LIBRARY_SELECTIONS);
-    List selections = new ArrayList();
-    if (sessionSelections != null) {
-      selections = this.objectMapper.readValue(sessionSelections.toString(), List.class);
-    }
+    final List selections =
+        this.comicBookSelectionService.decodeSelections(
+            httpSession.getAttribute(LIBRARY_SELECTIONS));
     return this.remoteLibraryStateService.getLibraryState(selections);
   }
 
@@ -190,6 +183,7 @@ public class LibraryController {
   /**
    * Initiates the library consolidation process.
    *
+   * @param session the session
    * @param request the request body
    * @throws Exception if an error occurs
    */
@@ -198,10 +192,12 @@ public class LibraryController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.library.consolidate")
-  public void consolidateLibrary(@RequestBody() ConsolidateLibraryRequest request)
+  public void consolidateLibrary(
+      final HttpSession session, @RequestBody() ConsolidateLibraryRequest request)
       throws Exception {
     final boolean deleteRemovedComicFiles = request.getDeletePhysicalFiles();
-    final List<Long> selectedIds = request.getIds();
+    final List<Long> selectedIds =
+        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     log.info(
         "Consolidating library: count={} delete physic files={}",
         selectedIds.size(),
@@ -224,6 +220,11 @@ public class LibraryController {
             .addString(PARAM_TARGET_DIRECTORY, targetDirectory)
             .addString(PARAM_RENAMING_RULE, renamingRule)
             .toJobParameters());
+    log.debug("Clearing comic book selections");
+    this.comicBookSelectionService.clearSelectedComicBooks(selectedIds);
+    log.debug("Deleting selections from session");
+    session.setAttribute(
+        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selectedIds));
   }
 
   /**

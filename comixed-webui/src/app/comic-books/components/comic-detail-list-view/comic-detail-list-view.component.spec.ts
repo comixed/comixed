@@ -650,7 +650,7 @@ describe('ComicDetailListViewComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.onConsolidateComics(IDS);
+      component.onConsolidateSelectedComicBooks();
     });
 
     it('confirms with the user', () => {
@@ -658,9 +658,7 @@ describe('ComicDetailListViewComponent', () => {
     });
 
     it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        startLibraryConsolidation({ ids: IDS })
-      );
+      expect(store.dispatch).toHaveBeenCalledWith(startLibraryConsolidation());
     });
   });
 

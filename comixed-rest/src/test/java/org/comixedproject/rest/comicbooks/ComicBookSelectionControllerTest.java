@@ -21,14 +21,11 @@ package org.comixedproject.rest.comicbooks;
 import static junit.framework.TestCase.*;
 import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.comixedproject.model.net.comicbooks.MultipleComicBooksSelectionRequest;
+import org.comixedproject.service.comicbooks.ComicBookSelectionService;
 import org.comixedproject.service.comicbooks.ComicSelectionException;
-import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,115 +38,92 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class ComicBookSelectionControllerTest {
   private static final String TEST_ENCODED_SELECTIONS = "This is the encoded selection set";
   private static final String TEST_REENCODED_SELECTIONS = "This is the selection set re-encoded";
-  private static final String TEST_EMAIL = "comixedreader@localhost";
   private static final Long TEST_COMIC_BOOK_ID = 17L;
 
   @InjectMocks private ComicBookSelectionController controller;
-  @Mock private ComicSelectionService comicSelectionService;
-  @Mock private ObjectMapper objectMapper;
-  @Mock private HttpSession session;
+  @Mock private ComicBookSelectionService comicBookSelectionService;
+  @Mock private HttpSession httpSession;
   @Mock private List selectionIdList;
 
-  private List selections = new ArrayList();
-
   @Before
-  public void setUp() throws JsonProcessingException {
-    Mockito.when(session.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
-    Mockito.when(objectMapper.readValue(Mockito.anyString(), Mockito.any(Class.class)))
-        .thenReturn(selections);
-    Mockito.when(objectMapper.writeValueAsString(Mockito.any()))
+  public void setUp() throws ComicSelectionException {
+    Mockito.when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
+    Mockito.when(comicBookSelectionService.decodeSelections(TEST_ENCODED_SELECTIONS))
+        .thenReturn(selectionIdList);
+    Mockito.when(comicBookSelectionService.encodeSelections(Mockito.anyList()))
         .thenReturn(TEST_REENCODED_SELECTIONS);
   }
 
   @Test
-  public void testGetAllSelectionsNoneFound() throws ComicSelectionException {
-    Mockito.when(session.getAttribute(LIBRARY_SELECTIONS)).thenReturn(null);
-
-    final List result = controller.getAllSelections(session);
-
-    assertNotNull(result);
-    assertTrue(selections.isEmpty());
-
-    Mockito.verify(session, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
-    Mockito.verify(session, Mockito.times(1))
-        .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
-  }
-
-  @Test
   public void testGetAllSelections() throws ComicSelectionException {
-    final List result = controller.getAllSelections(session);
+    final List result = controller.getAllSelections(httpSession);
 
     assertNotNull(result);
-    assertEquals(selections, result);
+    assertEquals(selectionIdList, result);
 
-    Mockito.verify(session, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
+    Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
   }
 
   @Test
-  public void testAddSingleSelection() throws ComicSelectionException, JsonProcessingException {
-    controller.addSingleSelection(session, TEST_COMIC_BOOK_ID);
+  public void testAddSingleSelection() throws ComicSelectionException {
+    controller.addSingleSelection(httpSession, TEST_COMIC_BOOK_ID);
 
-    Mockito.verify(comicSelectionService, Mockito.times(1))
-        .addComicSelectionForUser(selections, TEST_COMIC_BOOK_ID);
-    Mockito.verify(session, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
-    Mockito.verify(objectMapper, Mockito.times(1)).writeValueAsString(selections);
-    Mockito.verify(session, Mockito.times(1))
+    Mockito.verify(comicBookSelectionService, Mockito.times(1))
+        .addComicSelectionForUser(selectionIdList, TEST_COMIC_BOOK_ID);
+    Mockito.verify(comicBookSelectionService, Mockito.times(1)).encodeSelections(selectionIdList);
+    Mockito.verify(httpSession, Mockito.times(1))
         .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
   }
 
   @Test
-  public void testRemoveSingleSelection() throws ComicSelectionException, JsonProcessingException {
-    controller.deleteSingleSelection(session, TEST_COMIC_BOOK_ID);
+  public void testRemoveSingleSelection() throws ComicSelectionException {
+    controller.deleteSingleSelection(httpSession, TEST_COMIC_BOOK_ID);
 
-    Mockito.verify(comicSelectionService, Mockito.times(1))
-        .removeComicSelectionFromUser(selections, TEST_COMIC_BOOK_ID);
-    Mockito.verify(session, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
-    Mockito.verify(objectMapper, Mockito.times(1)).writeValueAsString(selections);
-    Mockito.verify(session, Mockito.times(1))
+    Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
+    Mockito.verify(comicBookSelectionService, Mockito.times(1))
+        .removeComicSelectionFromUser(selectionIdList, TEST_COMIC_BOOK_ID);
+    Mockito.verify(comicBookSelectionService, Mockito.times(1)).encodeSelections(selectionIdList);
+    Mockito.verify(httpSession, Mockito.times(1))
         .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
   }
 
   @Test
-  public void testSelectMultipleComicWithAdded()
-      throws ComicSelectionException, JsonProcessingException {
+  public void testSelectMultipleComicWithAdded() throws ComicSelectionException {
     controller.selectMultipleComicBooks(
-        session,
+        httpSession,
         new MultipleComicBooksSelectionRequest(
             null, null, null, null, null, false, false, null, true));
 
-    Mockito.verify(comicSelectionService, Mockito.times(1))
+    Mockito.verify(comicBookSelectionService, Mockito.times(1))
         .selectMultipleComicBooks(
-            selections, null, null, null, null, null, false, false, null, true);
-    Mockito.verify(session, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
-    Mockito.verify(objectMapper, Mockito.times(1)).writeValueAsString(selections);
-    Mockito.verify(session, Mockito.times(1))
+            selectionIdList, null, null, null, null, null, false, false, null, true);
+    Mockito.verify(comicBookSelectionService, Mockito.times(1)).encodeSelections(selectionIdList);
+    Mockito.verify(httpSession, Mockito.times(1))
         .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
   }
 
   @Test
-  public void testSelectMultipleComicWithRemoving()
-      throws ComicSelectionException, JsonProcessingException {
+  public void testSelectMultipleComicWithRemoving() throws ComicSelectionException {
     controller.selectMultipleComicBooks(
-        session,
+        httpSession,
         new MultipleComicBooksSelectionRequest(
             null, null, null, null, null, false, false, null, false));
 
-    Mockito.verify(comicSelectionService, Mockito.times(1))
+    Mockito.verify(comicBookSelectionService, Mockito.times(1))
         .selectMultipleComicBooks(
-            selections, null, null, null, null, null, false, false, null, false);
-    Mockito.verify(session, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
-    Mockito.verify(objectMapper, Mockito.times(1)).writeValueAsString(selections);
-    Mockito.verify(session, Mockito.times(1))
+            selectionIdList, null, null, null, null, null, false, false, null, false);
+    Mockito.verify(comicBookSelectionService, Mockito.times(1)).encodeSelections(selectionIdList);
+    Mockito.verify(httpSession, Mockito.times(1))
         .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
   }
 
   @Test
-  public void testClearSelections() throws ComicSelectionException, JsonProcessingException {
-    controller.clearSelections(session);
+  public void testClearSelections() throws ComicSelectionException {
+    controller.clearSelections(httpSession);
 
-    Mockito.verify(session, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
-    Mockito.verify(objectMapper, Mockito.times(1)).writeValueAsString(selections);
-    Mockito.verify(session, Mockito.times(1))
+    Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
+    Mockito.verify(comicBookSelectionService, Mockito.times(1)).encodeSelections(selectionIdList);
+    Mockito.verify(httpSession, Mockito.times(1))
         .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
   }
 }

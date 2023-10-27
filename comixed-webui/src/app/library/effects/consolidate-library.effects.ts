@@ -41,7 +41,7 @@ export class ConsolidateLibraryEffects {
         this.logger.trace('Effect: start library consolidation:', action)
       ),
       switchMap(action =>
-        this.libraryService.startLibraryConsolidation({ ids: action.ids }).pipe(
+        this.libraryService.startLibraryConsolidation().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map(() =>
             this.alertService.info(
