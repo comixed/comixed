@@ -18,6 +18,9 @@
 
 package org.comixedproject.service.comicbooks;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
@@ -34,17 +37,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * <code>ComicSelectionService</code> provides business functions for managing a user's selection of
- * comics.
+ * <code>ComicBookSelectionService</code> provides business functions for managing a user's
+ * selection of comics.
  *
  * @author Darryl L. Pierce
  */
 @Service
 @Log4j2
-public class ComicSelectionService {
+public class ComicBookSelectionService {
   @Autowired private ComicDetailService comicDetailService;
   @Autowired private ObjectFactory<ComicDetailExampleBuilder> exampleBuilderObjectFactory;
   @Autowired private PublishComicBookSelectionStateAction publishComicBookSelectionStateAction;
+  @Autowired private ObjectMapper objectMapper;
 
   /**
    * Updates the list of selected comics based on the incoming request. If the request is adding,
@@ -142,6 +146,47 @@ public class ComicSelectionService {
     selections.clear();
     log.debug("Publishing cleared out selection update");
     this.doPublishSelectionUpdateForUser(selections);
+  }
+
+  /**
+   * Decodes a previously stored selection set.
+   *
+   * @param storeSelections the encoded selections
+   * @return the decoded selections
+   * @throws ComicSelectionException if an error occurs
+   */
+  public List decodeSelections(final Object storeSelections) throws ComicSelectionException {
+    if (storeSelections == null) {
+      log.debug("Creating new selection set");
+      return new ArrayList();
+    } else {
+      try {
+        final List result = this.objectMapper.readValue(storeSelections.toString(), List.class);
+        // Jackson unmarshalls the elements as Integer, so we need to adjust them
+        return (List)
+            result.stream()
+                .map(entry -> ((Integer) entry).longValue())
+                .collect(Collectors.toList());
+      } catch (JsonProcessingException error) {
+        throw new ComicSelectionException("failed to load selections from session", error);
+      }
+    }
+  }
+
+  /**
+   * Returns an encoded copy of the selection list.
+   *
+   * @param selections the selections
+   * @return the encoded selections
+   * @throws ComicSelectionException if an error occurs
+   */
+  public String encodeSelections(final List<Long> selections) throws ComicSelectionException {
+    log.debug("Storing selection set");
+    try {
+      return this.objectMapper.writeValueAsString(selections);
+    } catch (JsonProcessingException error) {
+      throw new ComicSelectionException("failed to save selections to session", error);
+    }
   }
 
   private void doPublishSelectionUpdateForUser(final List selections) {

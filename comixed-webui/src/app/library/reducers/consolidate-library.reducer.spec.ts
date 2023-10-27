@@ -50,7 +50,7 @@ describe('ConsolidateLibrary Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, sending: false },
-        startLibraryConsolidation({ ids: IDS })
+        startLibraryConsolidation()
       );
     });
 

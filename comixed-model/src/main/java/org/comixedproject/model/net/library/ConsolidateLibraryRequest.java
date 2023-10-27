@@ -19,7 +19,6 @@
 package org.comixedproject.model.net.library;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,10 +32,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ConsolidateLibraryRequest {
-  @JsonProperty("ids")
-  @Getter
-  private List<Long> ids;
-
   @JsonProperty("deletePhysicalFiles")
   @Getter
   private Boolean deletePhysicalFiles;
