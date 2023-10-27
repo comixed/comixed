@@ -346,16 +346,6 @@
   <button
     *ngIf="isAdmin"
     mat-menu-item
-    (click)="onConsolidateComics([currentComic.comicId])"
-  >
-    <mat-label>
-      {{ "library.context-menu.consolidate-one" | translate }}
-    </mat-label>
-  </button>
-
-  <button
-    *ngIf="isAdmin"
-    mat-menu-item
     (click)="onRescanComics([currentComic.comicId])"
   >
     <mat-label>
@@ -442,13 +432,10 @@
   <button
     *ngIf="isAdmin"
     mat-menu-item
-    (click)="onConsolidateComics(selectedIds)"
+    (click)="onConsolidateSelectedComicBooks()"
   >
     <mat-label>
-      {{
-        "library.context-menu.consolidate-selected"
-          | translate: { count: selectedIds.length }
-      }}
+      {{ "library.context-menu.consolidate-selected" | translate }}
     </mat-label>
   </button>
 

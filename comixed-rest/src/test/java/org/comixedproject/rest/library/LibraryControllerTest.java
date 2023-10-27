@@ -29,7 +29,6 @@ import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -41,9 +40,7 @@ import org.comixedproject.model.net.comicbooks.ConvertComicsRequest;
 import org.comixedproject.model.net.comicbooks.EditMultipleComicsRequest;
 import org.comixedproject.model.net.library.*;
 import org.comixedproject.service.admin.ConfigurationService;
-import org.comixedproject.service.comicbooks.ComicBookException;
-import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicDetailService;
+import org.comixedproject.service.comicbooks.*;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
 import org.comixedproject.service.library.RemoteLibraryStateService;
@@ -76,14 +73,15 @@ public class LibraryControllerTest {
   private static final String TEST_ISSUE_NUMBER = "17b";
   private static final String TEST_IMPRINT = "The Imprint";
   private static final String TEST_ENCODED_IDS = "The encoded selected ids";
+  private static final String TEST_REENCODED_IDS = "The re-encoded selected ids";
 
   @InjectMocks private LibraryController controller;
   @Mock private LibraryService libraryService;
   @Mock private RemoteLibraryStateService remoteLibraryStateService;
   @Mock private ComicBookService comicBookService;
   @Mock private ComicDetailService comicDetailService;
+  @Mock private ComicBookSelectionService comicBookSelectionService;
   @Mock private ConfigurationService configurationService;
-  @Mock private ObjectMapper objectMapper;
   @Mock private List<Long> idList;
   @Mock private ComicDetail comicDetail;
   @Mock private ComicDetail lastComicDetail;
@@ -94,6 +92,7 @@ public class LibraryControllerTest {
   @Mock private HttpSession httpState;
   @Mock private List selectedIds;
   @Mock private List<Long> comicIds;
+  @Mock private HttpSession httpSession;
 
   @Mock
   @Qualifier("updateMetadataJob")
@@ -123,12 +122,17 @@ public class LibraryControllerTest {
   @Captor private ArgumentCaptor<List> selectedIdsArgumentCaptor;
 
   @Before
-  public void testSetUp() {
+  public void testSetUp() throws JsonProcessingException, ComicSelectionException {
     Mockito.when(lastComicDetail.getId()).thenReturn(TEST_LAST_COMIC_ID);
+    Mockito.when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_IDS);
+    Mockito.when(comicBookSelectionService.decodeSelections(TEST_ENCODED_IDS))
+        .thenReturn(selectedIds);
+    Mockito.when(comicBookSelectionService.encodeSelections(Mockito.anyList()))
+        .thenReturn(TEST_REENCODED_IDS);
   }
 
   @Test
-  public void testGetLibraryState() throws JsonProcessingException {
+  public void testGetLibraryState() throws ComicSelectionException {
     Mockito.when(httpState.getAttribute(LIBRARY_SELECTIONS)).thenReturn(null);
     Mockito.when(remoteLibraryStateService.getLibraryState(selectedIdsArgumentCaptor.capture()))
         .thenReturn(remoteLibraryState);
@@ -143,27 +147,8 @@ public class LibraryControllerTest {
     assertTrue(selectedIdList.isEmpty());
 
     Mockito.verify(httpState, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
-    Mockito.verify(objectMapper, Mockito.never())
-        .readValue(Mockito.anyString(), Mockito.any(Class.class));
+    Mockito.verify(comicBookSelectionService, Mockito.never()).decodeSelections(TEST_ENCODED_IDS);
     Mockito.verify(remoteLibraryStateService, Mockito.times(1)).getLibraryState(selectedIdList);
-  }
-
-  @Test
-  public void testGetLibraryStateWithSavedSelections() throws JsonProcessingException {
-    Mockito.when(httpState.getAttribute(Mockito.anyString())).thenReturn(TEST_ENCODED_IDS);
-    Mockito.when(objectMapper.readValue(Mockito.anyString(), Mockito.any(Class.class)))
-        .thenReturn(selectedIds);
-    Mockito.when(remoteLibraryStateService.getLibraryState(Mockito.anyList()))
-        .thenReturn(remoteLibraryState);
-
-    final RemoteLibraryState result = controller.getLibraryState(httpState);
-
-    assertNotNull(result);
-    assertSame(remoteLibraryState, result);
-
-    Mockito.verify(httpState, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
-    Mockito.verify(objectMapper, Mockito.times(1)).readValue(TEST_ENCODED_IDS, List.class);
-    Mockito.verify(remoteLibraryStateService, Mockito.times(1)).getLibraryState(selectedIds);
   }
 
   @Test(expected = LibraryException.class)
@@ -220,7 +205,7 @@ public class LibraryControllerTest {
 
     try {
       controller.consolidateLibrary(
-          new ConsolidateLibraryRequest(comicIds, TEST_DELETE_REMOVED_COMIC_FILES));
+          httpSession, new ConsolidateLibraryRequest(TEST_DELETE_REMOVED_COMIC_FILES));
     } finally {
       Mockito.verify(configurationService, Mockito.times(1))
           .getOptionValue(CFG_LIBRARY_ROOT_DIRECTORY);
@@ -237,7 +222,7 @@ public class LibraryControllerTest {
         .thenReturn(jobExecution);
 
     controller.consolidateLibrary(
-        new ConsolidateLibraryRequest(comicIds, TEST_DELETE_REMOVED_COMIC_FILES));
+        httpSession, new ConsolidateLibraryRequest(TEST_DELETE_REMOVED_COMIC_FILES));
 
     final JobParameters parameters = jobParametersArgumentCaptor.getValue();
     assertNotNull(parameters);
@@ -250,12 +235,18 @@ public class LibraryControllerTest {
 
     Mockito.verify(libraryService, Mockito.times(1))
         .prepareForConsolidation(
-            comicIds,
+            selectedIds,
             TEST_DESTINATION_DIRECTORY,
             TEST_RENAMING_RULE,
             TEST_DELETE_REMOVED_COMIC_FILES);
     Mockito.verify(jobLauncher, Mockito.times(1))
         .run(consolidateLibraryJob, jobParametersArgumentCaptor.getValue());
+    Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
+    Mockito.verify(comicBookSelectionService, Mockito.times(1)).decodeSelections(TEST_ENCODED_IDS);
+    Mockito.verify(comicBookSelectionService, Mockito.times(1))
+        .clearSelectedComicBooks(selectedIds);
+    Mockito.verify(httpSession, Mockito.times(1))
+        .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_IDS);
   }
 
   @Test

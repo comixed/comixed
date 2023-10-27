@@ -20,6 +20,8 @@ package org.comixedproject.service.comicbooks;
 
 import static junit.framework.TestCase.*;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.messaging.PublishingException;
@@ -34,12 +36,15 @@ import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.data.domain.Example;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ComicSelectionServiceTest {
+public class ComicBookSelectionServiceTest {
   private static final Long TEST_COMIC_BOOK_ID = 717L;
+  private static final Object TEST_ENCODED_SELECTIONS = "The encoded selections";
   private final List selectedIds = new ArrayList();
   private final List<ComicDetail> comicDetailList = new ArrayList<>();
-  @InjectMocks private ComicSelectionService service;
+
+  @InjectMocks private ComicBookSelectionService service;
   @Mock private ComicDetailService comicDetailService;
+  @Mock private ObjectMapper objectMapper;
   @Mock private Example<ComicDetail> example;
   @Mock private ComicDetailExampleBuilder exampleBuilder;
   @Mock private ObjectFactory<ComicDetailExampleBuilder> exampleBuilderObjectFactory;
@@ -159,5 +164,70 @@ public class ComicSelectionServiceTest {
     assertTrue(selectedIds.isEmpty());
 
     Mockito.verify(publishComicBookSelectionStateAction, Mockito.times(1)).publish(selectedIds);
+  }
+
+  @Test
+  public void testDecodeSelectionsWithNull() throws ComicSelectionException {
+    final List result = service.decodeSelections(null);
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test(expected = ComicSelectionException.class)
+  public void testDecodeSelectionsWithJsonException()
+      throws ComicSelectionException, JsonProcessingException {
+    Mockito.when(objectMapper.readValue(Mockito.anyString(), Mockito.any(Class.class)))
+        .thenThrow(JsonProcessingException.class);
+
+    try {
+      service.decodeSelections(TEST_ENCODED_SELECTIONS);
+    } finally {
+      Mockito.verify(objectMapper, Mockito.times(1))
+          .readValue(TEST_ENCODED_SELECTIONS.toString(), List.class);
+    }
+  }
+
+  @Test
+  public void testDecodeSelections() throws ComicSelectionException, JsonProcessingException {
+    selectedIds.add(TEST_COMIC_BOOK_ID.intValue());
+
+    Mockito.when(objectMapper.readValue(Mockito.anyString(), Mockito.any(Class.class)))
+        .thenReturn(selectedIds);
+
+    final List result = service.decodeSelections(TEST_ENCODED_SELECTIONS);
+
+    assertNotNull(result);
+    assertEquals(selectedIds.size(), result.size());
+    assertEquals(TEST_COMIC_BOOK_ID, result.get(0));
+
+    Mockito.verify(objectMapper, Mockito.times(1))
+        .readValue(TEST_ENCODED_SELECTIONS.toString(), List.class);
+  }
+
+  @Test
+  public void testEncodeSelections() throws JsonProcessingException, ComicSelectionException {
+    Mockito.when(objectMapper.writeValueAsString(Mockito.any()))
+        .thenReturn(TEST_ENCODED_SELECTIONS.toString());
+
+    final String result = service.encodeSelections(selectedIds);
+
+    assertNotNull(result);
+    assertEquals(TEST_ENCODED_SELECTIONS.toString(), result);
+
+    Mockito.verify(objectMapper, Mockito.times(1)).writeValueAsString(selectedIds);
+  }
+
+  @Test(expected = ComicSelectionException.class)
+  public void testEncodeSelectionsWithJsonProcessException()
+      throws JsonProcessingException, ComicSelectionException {
+    Mockito.when(objectMapper.writeValueAsString(Mockito.anyList()))
+        .thenThrow(JsonProcessingException.class);
+
+    try {
+      service.encodeSelections(selectedIds);
+    } finally {
+      Mockito.verify(objectMapper, Mockito.times(1)).writeValueAsString(selectedIds);
+    }
   }
 }

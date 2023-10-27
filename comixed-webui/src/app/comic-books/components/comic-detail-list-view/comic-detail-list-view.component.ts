@@ -355,7 +355,7 @@ export class ComicDetailListViewComponent implements OnDestroy {
     });
   }
 
-  onConsolidateComics(ids: number[]) {
+  onConsolidateSelectedComicBooks() {
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'library.consolidate.confirmation-title',
@@ -366,7 +366,7 @@ export class ComicDetailListViewComponent implements OnDestroy {
       ),
       confirm: () => {
         this.logger.debug('Consolidating the library');
-        this.store.dispatch(startLibraryConsolidation({ ids }));
+        this.store.dispatch(startLibraryConsolidation());
       }
     });
   }
