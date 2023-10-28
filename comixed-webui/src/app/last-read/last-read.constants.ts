@@ -20,7 +20,8 @@ import { API_ROOT_URL } from '../core';
 import { SECURED_PREFIX } from '@app/messaging/messaging.constants';
 
 export const LOAD_LAST_READ_ENTRIES_URL = `${API_ROOT_URL}/library/read?lastId=\${lastId}`;
-export const SET_COMIC_READ_STATUS_URL = `${API_ROOT_URL}/library/read`;
+export const SET_COMIC_BOOK_READ_STATE_URL = `${API_ROOT_URL}/library/read/\${comicBookId}`;
+export const SET_SELECTED_COMIC_BOOKS_READ_STATE_URL = `${API_ROOT_URL}/library/read/selected`;
 
 export const LAST_READ_UPDATED_TOPIC = `${SECURED_PREFIX}/topic/last-read-list.update`;
 export const LAST_READ_REMOVED_TOPIC = `${SECURED_PREFIX}/topic/last-read-list.remove`;

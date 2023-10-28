@@ -21,9 +21,8 @@ package org.comixedproject.service.library;
 import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC;
 import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_USER;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.library.PublishLastReadRemovedAction;
@@ -155,45 +154,94 @@ public class LastReadService implements InitializingBean, ComicStateChangeListen
   }
 
   /**
-   * Sets the read state for a set of comics for a given user.
+   * Marks comic books as read by the user.
    *
    * @param email the user's email
    * @param ids the set of comic ids
-   * @param state the read state
+   * @throws LastReadException if the user or any comic book was not found
+   */
+  public void markComicBooksAsRead(final String email, final List<Long> ids)
+      throws LastReadException {
+    final ComiXedUser user = this.doFindUser(email);
+    final Set<Long> existingIds =
+        this.lastReadRepository.loadEntriesForUser(user).stream()
+            .map(lastRead -> lastRead.getComicDetail().getComicId())
+            .collect(Collectors.toSet());
+    this.lastReadRepository.saveAll(
+        ids.stream()
+            .filter(comicBookId -> existingIds.contains(comicBookId) == false)
+            .map(
+                comicBookId -> {
+                  final ComicBook comicBook;
+                  try {
+                    comicBook = this.doFindComicBook(comicBookId);
+                    return new LastRead(comicBook.getComicDetail(), user);
+                  } catch (LastReadException error) {
+                    log.error("Failed to load comic book", error);
+                    return null;
+                  }
+                })
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList()));
+  }
+
+  /**
+   * Marks comic books as unread by the user.
+   *
+   * @param email the user's email
+   * @param ids the set of comic ids
    * @throws LastReadException if the user was not found
    */
-  public void setLastReadState(final String email, final List<Long> ids, final boolean state)
+  public void markComicBooksAsUnread(final String email, final List<Long> ids)
       throws LastReadException {
-    for (int index = 0; index < ids.size(); index++) {
-      final Long id = ids.get(index);
-      this.doSetLastReadState(email, id, state);
+    final ComiXedUser user = this.doFindUser(email);
+    this.lastReadRepository.deleteAll(
+        this.lastReadRepository.loadEntriesForUser(user).stream()
+            .filter(lastRead -> ids.contains(lastRead.getComicDetail().getComicId()))
+            .collect(Collectors.toList()));
+  }
+
+  private ComicBook doFindComicBook(final Long comicBookId) throws LastReadException {
+    try {
+      return this.comicBookService.getComic(comicBookId);
+    } catch (ComicBookException error) {
+      throw new LastReadException("Failed to load comic book", error);
     }
   }
 
   /**
-   * Sets the read state for a single comic for a given user.
+   * Marks a comic book as read by a user.
    *
    * @param email the user's email
    * @param id the comic id
-   * @param state the read state
    * @throws LastReadException if the user was not found
    */
-  public void setLastReadState(final String email, final Long id, final boolean state)
-      throws LastReadException {
-    this.doSetLastReadState(email, id, state);
+  public void markComicBookAsRead(final String email, final Long id) throws LastReadException {
+    this.doSetLastReadState(email, id, true);
   }
 
-  public void doSetLastReadState(final String email, final Long id, final boolean state)
+  /**
+   * Marks a comic as unread by a user.
+   *
+   * @param email the user's email
+   * @param id the comic id
+   * @throws LastReadException if the user was not found
+   */
+  public void markComicBookAsUnread(final String email, final Long id) throws LastReadException {
+    this.doSetLastReadState(email, id, false);
+  }
+
+  public void doSetLastReadState(final String email, final Long id, final boolean markAsRead)
       throws LastReadException {
     try {
-      log.debug("Loading the user: {}", email);
+      log.trace("Loading the user: {}", email);
       final ComiXedUser user = this.doFindUser(email);
       log.trace("Loading comicBook: id={}", id);
       final ComicBook comicBook = this.comicBookService.getComic(id);
       log.trace("Creating additional headers");
       Map<String, Object> headers = new HashMap<>();
       headers.put(HEADER_USER, user);
-      if (state) {
+      if (markAsRead) {
         log.trace("Firing event: mark comicBook as read");
         this.comicStateHandler.fireEvent(comicBook, ComicEvent.markAsRead, headers);
       } else {
@@ -201,7 +249,7 @@ public class LastReadService implements InitializingBean, ComicStateChangeListen
         this.comicStateHandler.fireEvent(comicBook, ComicEvent.markAsUnread, headers);
       }
     } catch (ComicBookException error) {
-      log.error("Failed to process comic last read state", error);
+      throw new LastReadException("Failed to update comic book read state", error);
     }
   }
 }

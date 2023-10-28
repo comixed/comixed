@@ -35,7 +35,8 @@ import {
   LAST_READ_REMOVED_TOPIC,
   LAST_READ_UPDATED_TOPIC,
   LOAD_LAST_READ_ENTRIES_URL,
-  SET_COMIC_READ_STATUS_URL
+  SET_COMIC_BOOK_READ_STATE_URL,
+  SET_SELECTED_COMIC_BOOKS_READ_STATE_URL
 } from '@app/last-read/last-read.constants';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { COMIC_DETAIL_4 } from '@app/comic-books/comic-books.fixtures';
@@ -54,7 +55,6 @@ import {
   initialState as initialLastReadListState,
   LAST_READ_LIST_FEATURE_KEY
 } from '@app/last-read/reducers/last-read-list.reducer';
-import { SetComicsReadRequest } from '@app/last-read/models/net/set-comics-read-request';
 import { HttpResponse } from '@angular/common/http';
 
 describe('LastReadService', () => {
@@ -117,19 +117,60 @@ describe('LastReadService', () => {
     } as LoadLastReadEntriesResponse);
   });
 
-  it('can set comics read', () => {
-    const read = Math.random() > 0.5;
-    service
-      .setRead({ comics: [COMIC], read })
-      .subscribe(response => expect(response.status).toEqual(200));
+  describe('marking a single comic book', () => {
+    it('marks them as read', () => {
+      service
+        .setSingleReadState({ comicBookId: COMIC.comicId, read: true })
+        .subscribe(response => expect(response.status).toEqual(200));
 
-    const req = httpMock.expectOne(interpolate(SET_COMIC_READ_STATUS_URL));
-    expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({
-      ids: [COMIC.comicId],
-      read
-    } as SetComicsReadRequest);
-    req.flush(new HttpResponse({ status: 200 }));
+      const req = httpMock.expectOne(
+        interpolate(SET_COMIC_BOOK_READ_STATE_URL, {
+          comicBookId: COMIC.comicId
+        })
+      );
+      expect(req.request.method).toEqual('PUT');
+      req.flush(new HttpResponse({ status: 200 }));
+    });
+
+    it('marks them as unread', () => {
+      service
+        .setSingleReadState({ comicBookId: COMIC.comicId, read: false })
+        .subscribe(response => expect(response.status).toEqual(200));
+
+      const req = httpMock.expectOne(
+        interpolate(SET_COMIC_BOOK_READ_STATE_URL, {
+          comicBookId: COMIC.comicId
+        })
+      );
+      expect(req.request.method).toEqual('DELETE');
+      req.flush(new HttpResponse({ status: 200 }));
+    });
+  });
+
+  describe('marking selected comic books', () => {
+    it('marks them as read', () => {
+      service
+        .setSelectedReadState({ read: true })
+        .subscribe(response => expect(response.status).toEqual(200));
+
+      const req = httpMock.expectOne(
+        interpolate(SET_SELECTED_COMIC_BOOKS_READ_STATE_URL)
+      );
+      expect(req.request.method).toEqual('PUT');
+      req.flush(new HttpResponse({ status: 200 }));
+    });
+
+    it('marks them as unread', () => {
+      service
+        .setSelectedReadState({ read: false })
+        .subscribe(response => expect(response.status).toEqual(200));
+
+      const req = httpMock.expectOne(
+        interpolate(SET_SELECTED_COMIC_BOOKS_READ_STATE_URL)
+      );
+      expect(req.request.method).toEqual('DELETE');
+      req.flush(new HttpResponse({ status: 200 }));
+    });
   });
 
   describe('when messaging starts', () => {

@@ -25,7 +25,8 @@ import {
   LAST_READ_REMOVED_TOPIC,
   LAST_READ_UPDATED_TOPIC,
   LOAD_LAST_READ_ENTRIES_URL,
-  SET_COMIC_READ_STATUS_URL
+  SET_COMIC_BOOK_READ_STATE_URL,
+  SET_SELECTED_COMIC_BOOKS_READ_STATE_URL
 } from '@app/last-read/last-read.constants';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'webstomp-client';
@@ -38,8 +39,6 @@ import {
 } from '@app/last-read/actions/last-read-list.actions';
 import { WebSocketService } from '@app/messaging';
 import { LastRead } from '@app/last-read/models/last-read';
-import { SetComicsReadRequest } from '@app/last-read/models/net/set-comics-read-request';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Injectable({
   providedIn: 'root'
@@ -122,11 +121,43 @@ export class LastReadService {
     );
   }
 
-  setRead(args: { comics: ComicDetail[]; read: boolean }): Observable<any> {
-    this.logger.debug('Service: set comics read:', args);
-    return this.http.post(interpolate(SET_COMIC_READ_STATUS_URL), {
-      ids: args.comics.map(comic => comic.comicId),
-      read: args.read
-    } as SetComicsReadRequest);
+  setSingleReadState(args: {
+    comicBookId: number;
+    read: boolean;
+  }): Observable<any> {
+    if (args.read) {
+      this.logger.debug('Service: marking comic book as read:', args);
+      return this.http.put(
+        interpolate(SET_COMIC_BOOK_READ_STATE_URL, {
+          comicBookId: args.comicBookId
+        }),
+        {}
+      );
+    } else {
+      this.logger.debug('Service: markin comic book as unread:', args);
+      return this.http.delete(
+        interpolate(SET_COMIC_BOOK_READ_STATE_URL, {
+          comicBookId: args.comicBookId
+        })
+      );
+    }
+  }
+
+  setSelectedReadState(args: { read: boolean }): Observable<any> {
+    if (args.read) {
+      this.logger.debug('Service: marking selected comic books as read:', args);
+      return this.http.put(
+        interpolate(SET_SELECTED_COMIC_BOOKS_READ_STATE_URL),
+        {}
+      );
+    } else {
+      this.logger.debug(
+        'Service: marking selected comic books as unread:',
+        args
+      );
+      return this.http.delete(
+        interpolate(SET_SELECTED_COMIC_BOOKS_READ_STATE_URL)
+      );
+    }
   }
 }

@@ -16,11 +16,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector } from '@ngrx/store';
-import {
-  SET_COMICS_READ_FEATURE_KEY,
-  SetComicsReadState
-} from '../reducers/set-comics-read-state.reducer';
+import { createAction, props } from '@ngrx/store';
 
-export const selectMarkComicReadState =
-  createFeatureSelector<SetComicsReadState>(SET_COMICS_READ_FEATURE_KEY);
+export const markSingleComicBookRead = createAction(
+  '[Comic Book Read State] Update the read state for a single comic book',
+  props<{
+    comicBookId: number;
+    read: boolean;
+  }>()
+);
+
+export const markSelectedComicBooksRead = createAction(
+  '[Comic Book Read State] Update the read state for selected comic books',
+  props<{ read: boolean }>()
+);
+
+export const markSelectedComicBooksReadSuccess = createAction(
+  '[Comic Book Read State] The read state for comic books were updated'
+);
+
+export const markSelectedComicBooksReadFailed = createAction(
+  '[Comic Book Read State] Failed to update the read state for comic books'
+);

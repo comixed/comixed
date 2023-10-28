@@ -147,7 +147,7 @@ public class OPDSComicBookControllerTest {
             TEST_COMIC_FILENAME,
             MediaType.parseMediaType(TEST_ARCHIVE_TYPE.getMimeType()));
     Mockito.verify(lastReadService, Mockito.times(1))
-        .setLastReadState(TEST_EMAIL, TEST_COMIC_ID, true);
+        .markComicBookAsRead(TEST_EMAIL, TEST_COMIC_ID);
   }
 
   @Test(expected = OPDSException.class)
