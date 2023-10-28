@@ -847,4 +847,9 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     log.debug("Loading ComicBook records without a ComicDetail: chunk size={}", batchChunkSize);
     return this.comicBookRepository.getComicBooksWithoutDetails(batchChunkSize);
   }
+
+  @Transactional
+  public void prepareForConsolidation(final List<Long> ids) {
+    this.comicBookRepository.markForConsolidationById(ids);
+  }
 }

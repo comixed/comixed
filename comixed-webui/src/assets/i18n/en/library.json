@@ -100,7 +100,7 @@
       "effect-success": "Library consolidation started."
     },
     "context-menu": {
-      "consolidate-selected": "Consolidate selections...",
+      "consolidate-selected": "Consolidate {count, plural, =1{# comic} other{# comics}}...",
       "convert": "Recreate Archive",
       "convert-one-to-cb7": "Convert this comic to CB7",
       "convert-one-to-cbz": "Convert this comic to CBZ",

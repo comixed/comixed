@@ -21,9 +21,7 @@ package org.comixedproject.service.library;
 import static org.comixedproject.state.comicbooks.ComicStateHandler.*;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
 import org.comixedproject.adaptors.file.FileAdaptor;
@@ -81,34 +79,15 @@ public class LibraryService {
    * Updates all comics in preparation for library consolidation.
    *
    * @param targetDirectory the target directory
-   * @param renamingRule the renaming rule
-   * @param deleteRemovedComicFiles the delete removed comic files flag
    * @throws LibraryException if an error occurs
    */
-  public void prepareForConsolidation(
-      final List<Long> ids,
-      final String targetDirectory,
-      final String renamingRule,
-      final boolean deleteRemovedComicFiles)
+  public void prepareForConsolidation(final List<Long> ids, final String targetDirectory)
       throws LibraryException {
     if (StringUtils.isEmpty(targetDirectory)) {
       throw new LibraryException("Target directory is not configured");
     }
-    log.trace("Preparing message headers");
-    Map<String, Object> headers = new HashMap<>();
-    headers.put(HEADER_DELETE_REMOVED_COMIC_FILE, String.valueOf(deleteRemovedComicFiles));
-    headers.put(HEADER_TARGET_DIRECTORY, targetDirectory);
-    headers.put(HEADER_RENAMING_RULE, renamingRule);
-    this.comicBookService.findAll().stream()
-        .filter(comicBook -> ids.isEmpty() || ids.contains(comicBook.getId()))
-        .forEach(
-            comic -> {
-              log.trace(
-                  "Preparing comics for consolidation: [{}] {}",
-                  comic.getId(),
-                  comic.getComicDetail().getFilename());
-              this.comicStateHandler.fireEvent(comic, ComicEvent.consolidateComic, headers);
-            });
+    log.trace("Marking comics to be consolidated");
+    this.comicBookService.prepareForConsolidation(ids);
   }
 
   /**
