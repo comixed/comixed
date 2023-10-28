@@ -24,7 +24,6 @@ import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_USER;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.library.PublishLastReadRemovedAction;
 import org.comixedproject.messaging.library.PublishLastReadUpdatedAction;
@@ -69,16 +68,15 @@ public class LastReadServiceTest {
   @Mock private ComicBook comicBook;
   @Mock private ComicDetail comicDetail;
   @Mock private LastRead savedLastReadEntry;
-  @Mock private LastRead lastReadEntry;
   @Mock private State<ComicState, ComicEvent> state;
   @Mock private Message<ComicEvent> message;
   @Mock private MessageHeaders messageHeaders;
 
   @Captor private ArgumentCaptor<PageRequest> pageRequestArgumentCaptor;
   @Captor private ArgumentCaptor<LastRead> lastReadArgumentCaptor;
-  @Captor private ArgumentCaptor<Map<String, Object>> eventHeaders;
 
   private List<Long> comicIdList = new ArrayList<>();
+  private List<LastRead> lastReadList = new ArrayList<>();
 
   @Before
   public void setUp() throws ComiXedUserException {
@@ -90,10 +88,6 @@ public class LastReadServiceTest {
         .thenReturn(savedLastReadEntry);
     Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
     comicIdList.add(TEST_COMIC_ID);
-    Mockito.doNothing()
-        .when(comicStateHandler)
-        .fireEvent(
-            Mockito.any(ComicBook.class), Mockito.any(ComicEvent.class), eventHeaders.capture());
   }
 
   @Test
@@ -205,24 +199,90 @@ public class LastReadServiceTest {
   }
 
   @Test(expected = LastReadException.class)
-  public void testLastReadStateNoSuchUser() throws ComiXedUserException, LastReadException {
+  public void testMarkComicBookAsReadNoSuchUser() throws LastReadException, ComiXedUserException {
     Mockito.when(userService.findByEmail(Mockito.anyString()))
         .thenThrow(ComiXedUserException.class);
 
     try {
-      service.setLastReadState(TEST_EMAIL, comicIdList, true);
+      service.markComicBookAsRead(TEST_EMAIL, TEST_COMIC_ID);
+    } finally {
+      Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    }
+  }
+
+  @Test(expected = LastReadException.class)
+  public void testMarkComicBookAsReadNoSuchComicBook()
+      throws LastReadException, ComiXedUserException, ComicBookException {
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicBookException.class);
+
+    try {
+      service.markComicBookAsRead(TEST_EMAIL, TEST_COMIC_ID);
+    } finally {
+      Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
+    }
+  }
+
+  @Test
+  public void testMarkComicBookAsRead()
+      throws ComiXedUserException, ComicBookException, LastReadException {
+    service.markComicBookAsRead(TEST_EMAIL, TEST_COMIC_ID);
+
+    Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
+  }
+
+  @Test(expected = LastReadException.class)
+  public void testMarkComicBookAsUnreadNoSuchUser() throws LastReadException, ComiXedUserException {
+    Mockito.when(userService.findByEmail(Mockito.anyString()))
+        .thenThrow(ComiXedUserException.class);
+
+    try {
+      service.markComicBookAsUnread(TEST_EMAIL, TEST_COMIC_ID);
+    } finally {
+      Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    }
+  }
+
+  @Test(expected = LastReadException.class)
+  public void testMarkComicBookAsUnreadNoSuchComicBook()
+      throws LastReadException, ComiXedUserException, ComicBookException {
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicBookException.class);
+
+    try {
+      service.markComicBookAsUnread(TEST_EMAIL, TEST_COMIC_ID);
+    } finally {
+      Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
+    }
+  }
+
+  @Test(expected = LastReadException.class)
+  public void testMarkComicBooksAsReadNoSuchUser() throws ComiXedUserException, LastReadException {
+    Mockito.when(userService.findByEmail(Mockito.anyString()))
+        .thenThrow(ComiXedUserException.class);
+
+    try {
+      service.markComicBooksAsRead(TEST_EMAIL, comicIdList);
     } finally {
       Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
     }
   }
 
   @Test
-  public void testSetLastReadStateNoSuchComic()
+  public void testMarkComicBookAsUnread()
+      throws ComiXedUserException, ComicBookException, LastReadException {
+    service.markComicBookAsUnread(TEST_EMAIL, TEST_COMIC_ID);
+
+    Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
+  }
+
+  @Test
+  public void testMarkComicBooksAsReadNoSuchComic()
       throws ComiXedUserException, LastReadException, ComicBookException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicBookException.class);
 
     try {
-      service.setLastReadState(TEST_EMAIL, comicIdList, true);
+      service.markComicBooksAsRead(TEST_EMAIL, comicIdList);
     } finally {
       Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
       Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
@@ -230,70 +290,38 @@ public class LastReadServiceTest {
   }
 
   @Test
-  public void testSetLastReadStateSetMultipleIdsRead()
+  public void testMarkComicBooksAsRead()
       throws ComiXedUserException, LastReadException, ComicBookException {
+    Mockito.when(lastReadRepository.loadEntriesForUser(Mockito.any(ComiXedUser.class)))
+        .thenReturn(lastReadList);
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
 
-    service.setLastReadState(TEST_EMAIL, comicIdList, true);
-
-    final Map<String, Object> headers = eventHeaders.getValue();
-    assertNotNull(headers);
-    assertSame(user, headers.get(HEADER_USER));
+    service.markComicBooksAsRead(TEST_EMAIL, comicIdList);
 
     Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
-    Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.markAsRead, headers);
   }
 
   @Test
-  public void testSetLastReadStateMultipleIdsSetUnread()
-      throws ComiXedUserException, LastReadException, ComicBookException {
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
+  public void testMarkComicBooksAsUnread() throws ComiXedUserException, LastReadException {
+    Mockito.when(lastReadRepository.loadEntriesForUser(Mockito.any(ComiXedUser.class)))
+        .thenReturn(lastReadList);
 
-    service.setLastReadState(TEST_EMAIL, comicIdList, false);
-
-    final Map<String, Object> headers = eventHeaders.getValue();
-    assertNotNull(headers);
-    assertSame(user, headers.get(HEADER_USER));
+    service.markComicBooksAsUnread(TEST_EMAIL, comicIdList);
 
     Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
-    Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.markAsUnread, headers);
+    Mockito.verify(lastReadRepository, Mockito.times(1)).loadEntriesForUser(user);
   }
 
-  @Test
-  public void testSetLastReadStateRead()
+  @Test(expected = LastReadException.class)
+  public void testMarkComicBooksAsUnreadNoSuchUser()
       throws ComiXedUserException, LastReadException, ComicBookException {
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
+    Mockito.when(userService.findByEmail(Mockito.anyString()))
+        .thenThrow(ComiXedUserException.class);
 
-    service.setLastReadState(TEST_EMAIL, TEST_COMIC_ID, true);
-
-    final Map<String, Object> headers = eventHeaders.getValue();
-    assertNotNull(headers);
-    assertSame(user, headers.get(HEADER_USER));
-
-    Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
-    Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.markAsRead, headers);
-  }
-
-  @Test
-  public void testSetLastReadStateUnread()
-      throws ComiXedUserException, LastReadException, ComicBookException {
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
-
-    service.setLastReadState(TEST_EMAIL, TEST_COMIC_ID, false);
-
-    final Map<String, Object> headers = eventHeaders.getValue();
-    assertNotNull(headers);
-    assertSame(user, headers.get(HEADER_USER));
-
-    Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
-    Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.markAsUnread, headers);
+    try {
+      service.markComicBooksAsUnread(TEST_EMAIL, comicIdList);
+    } finally {
+      Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    }
   }
 }

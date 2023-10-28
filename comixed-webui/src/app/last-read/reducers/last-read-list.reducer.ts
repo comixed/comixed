@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   lastReadDateRemoved,
   lastReadDatesLoaded,
@@ -69,3 +69,8 @@ export const reducer = createReducer(
   }),
   on(loadLastReadDatesFailed, state => ({ ...state, loading: false }))
 );
+
+export const lastReadListFeature = createFeature({
+  name: LAST_READ_LIST_FEATURE_KEY,
+  reducer
+});

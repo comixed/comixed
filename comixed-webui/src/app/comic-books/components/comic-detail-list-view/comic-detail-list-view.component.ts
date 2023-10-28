@@ -40,7 +40,10 @@ import { convertComics } from '@app/library/actions/convert-comics.actions';
 import { archiveTypeFromString } from '@app/comic-books/comic-books.functions';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
-import { setComicBooksRead } from '@app/last-read/actions/set-comics-read.actions';
+import {
+  markSelectedComicBooksRead,
+  markSingleComicBookRead
+} from '@app/last-read/actions/comic-books-read.actions';
 import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
 import { editMultipleComics } from '@app/library/actions/library.actions';
 import { EditMultipleComicsComponent } from '@app/library/components/edit-multiple-comics/edit-multiple-comics.component';
@@ -303,11 +306,13 @@ export class ComicDetailListViewComponent implements OnDestroy {
   }
 
   onMarkOneAsRead(read: boolean): void {
-    this.doMarkAsRead([this.currentComic], read);
+    this.store.dispatch(
+      markSingleComicBookRead({ comicBookId: this.currentComic.comicId, read })
+    );
   }
 
   onMarkSelectedAsRead(read: boolean): void {
-    this.doMarkAsRead(this.getSelectedComics(), read);
+    this.store.dispatch(markSelectedComicBooksRead({ read }));
   }
 
   onMarkSelectedAsDeleted(deleted: boolean): void {
@@ -435,11 +440,6 @@ export class ComicDetailListViewComponent implements OnDestroy {
   ): void {
     this.logger.debug('Adding comics to reading list:', comicBooks, list);
     this.store.dispatch(addComicsToReadingList({ comicBooks, list }));
-  }
-
-  private doMarkAsRead(comicBooks: ComicDetail[], read: boolean): void {
-    this.logger.debug('Setting comics read:', comicBooks, read);
-    this.store.dispatch(setComicBooksRead({ comicBooks, read }));
   }
 
   private doConvertComics(

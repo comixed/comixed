@@ -20,15 +20,16 @@ import {
   initialState,
   reducer,
   SetComicsReadState
-} from './set-comics-read-state.reducer';
+} from './comic-books-read.reducer';
 import { COMIC_DETAIL_4 } from '@app/comic-books/comic-books.fixtures';
 import {
-  comicBooksReadSet,
-  setComicBooksRead,
-  setComicBooksReadFailed
-} from '@app/last-read/actions/set-comics-read.actions';
+  markSelectedComicBooksReadSuccess,
+  markSelectedComicBooksReadFailed,
+  markSelectedComicBooksRead,
+  markSingleComicBookRead
+} from '@app/last-read/actions/comic-books-read.actions';
 
-describe('SetComicRead Reducer', () => {
+describe('ComicBooksRead Reducer', () => {
   const COMIC = COMIC_DETAIL_4;
   const READ = Math.random() > 0.5;
 
@@ -48,11 +49,24 @@ describe('SetComicRead Reducer', () => {
     });
   });
 
-  describe('updating the read status of comics', () => {
+  describe('setting the read status of a single comic book', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, updating: false },
-        setComicBooksRead({ comicBooks: [COMIC], read: READ })
+        markSingleComicBookRead({ comicBookId: COMIC.comicId, read: READ })
+      );
+    });
+
+    it('sets the updating flag', () => {
+      expect(state.updating).toBeTrue();
+    });
+  });
+
+  describe('setting the read status of selected comic books', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, updating: false },
+        markSelectedComicBooksRead({ read: READ })
       );
     });
 
@@ -63,7 +77,10 @@ describe('SetComicRead Reducer', () => {
 
   describe('success updating the status', () => {
     beforeEach(() => {
-      state = reducer({ ...state, updating: true }, comicBooksReadSet());
+      state = reducer(
+        { ...state, updating: true },
+        markSelectedComicBooksReadSuccess()
+      );
     });
 
     it('clears the updating flag', () => {
@@ -73,7 +90,10 @@ describe('SetComicRead Reducer', () => {
 
   describe('failure updating the status', () => {
     beforeEach(() => {
-      state = reducer({ ...state, updating: true }, setComicBooksReadFailed());
+      state = reducer(
+        { ...state, updating: true },
+        markSelectedComicBooksReadFailed()
+      );
     });
 
     it('clears the updating flag', () => {
