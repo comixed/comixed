@@ -435,7 +435,10 @@
     (click)="onConsolidateSelectedComicBooks()"
   >
     <mat-label>
-      {{ "library.context-menu.consolidate-selected" | translate }}
+      {{
+        "library.context-menu.consolidate-selected"
+          | translate: { count: selectedIds?.length }
+      }}
     </mat-label>
   </button>
 

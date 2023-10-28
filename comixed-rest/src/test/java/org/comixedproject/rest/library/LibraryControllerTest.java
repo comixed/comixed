@@ -200,8 +200,7 @@ public class LibraryControllerTest {
         .thenReturn(TEST_RENAMING_RULE);
     Mockito.doThrow(LibraryException.class)
         .when(libraryService)
-        .prepareForConsolidation(
-            Mockito.anyList(), Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean());
+        .prepareForConsolidation(Mockito.anyList(), Mockito.anyString());
 
     try {
       controller.consolidateLibrary(
@@ -234,11 +233,7 @@ public class LibraryControllerTest {
     assertEquals(TEST_RENAMING_RULE, parameters.getString(PARAM_RENAMING_RULE));
 
     Mockito.verify(libraryService, Mockito.times(1))
-        .prepareForConsolidation(
-            selectedIds,
-            TEST_DESTINATION_DIRECTORY,
-            TEST_RENAMING_RULE,
-            TEST_DELETE_REMOVED_COMIC_FILES);
+        .prepareForConsolidation(selectedIds, TEST_DESTINATION_DIRECTORY);
     Mockito.verify(jobLauncher, Mockito.times(1))
         .run(consolidateLibraryJob, jobParametersArgumentCaptor.getValue());
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
