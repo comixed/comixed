@@ -30,6 +30,7 @@ import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -604,4 +605,9 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    */
   @Query("SELECT c FROM ComicBook c WHERE c.id NOT IN (SELECT d.comicBook.id FROM ComicDetail d)")
   List<ComicBook> getComicBooksWithoutDetails(int batchChunkSize);
+
+  @Modifying
+  @Query(
+      "UPDATE ComicBook c SET c.consolidating = true WHERE c.id IN (:ids) AND c.consolidating IS FALSE")
+  void markForConsolidationById(@Param("ids") List<Long> ids);
 }

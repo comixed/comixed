@@ -79,9 +79,11 @@ public class ComicBookServiceTest {
   private static final String TEST_VOLUME = "Volume Name";
   private static final String TEST_ISSUE_NUMBER = "237";
   private static final int TEST_MAXIMUM_COMICS = 100;
+  private static final String TEST_BEFORE_PREVIOUS_ISSUE_NUMBER = "5";
   private static final String TEST_PREVIOUS_ISSUE_NUMBER = "5";
   private static final String TEST_CURRENT_ISSUE_NUMBER = "7";
   private static final String TEST_NEXT_ISSUE_NUMBER = "10";
+  private static final String TEST_AFTER_NEXT_ISSUE_NUMBER = "11";
   private static final String TEST_SORTABLE_NAME = "Sortable Name";
   private static final String TEST_IMPRINT = "Incredible Imprints";
   private static final String TEST_TITLE = "The Issue Title";
@@ -99,9 +101,11 @@ public class ComicBookServiceTest {
   private final List<ComicBook> comicBookList = new ArrayList<>();
   private final List<ComicDetail> comicDetailList = new ArrayList<>();
   private final List<ComicBook> comicsBySeries = new ArrayList<>();
+  private final ComicBook beforePreviousComicBook = new ComicBook();
   private final ComicBook previousComicBook = new ComicBook();
   private final ComicBook currentComicBook = new ComicBook();
   private final ComicBook nextComicBook = new ComicBook();
+  private final ComicBook afterNextComicBook = new ComicBook();
   private final List<Long> idList = new ArrayList<>();
   private final GregorianCalendar calendar = new GregorianCalendar();
   private final Date now = new Date();
@@ -141,7 +145,14 @@ public class ComicBookServiceTest {
     previousComicBook.getComicDetail().setIssueNumber(TEST_PREVIOUS_ISSUE_NUMBER);
     previousComicBook
         .getComicDetail()
-        .setCoverDate(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000));
+        .setCoverDate(new Date(System.currentTimeMillis() - 24L * 60L * 60L * 1000L));
+
+    beforePreviousComicBook.setComicDetail(
+        new ComicDetail(previousComicBook, TEST_COMIC_FILENAME, ArchiveType.CBZ));
+    beforePreviousComicBook.getComicDetail().setIssueNumber(TEST_BEFORE_PREVIOUS_ISSUE_NUMBER);
+    beforePreviousComicBook
+        .getComicDetail()
+        .setCoverDate(new Date(System.currentTimeMillis() - 3L * 24L * 60L * 60L * 1000L));
 
     currentComicBook.setComicDetail(
         new ComicDetail(currentComicBook, TEST_COMIC_FILENAME, ArchiveType.CBZ));
@@ -156,7 +167,14 @@ public class ComicBookServiceTest {
     nextComicBook.getComicDetail().setIssueNumber(TEST_NEXT_ISSUE_NUMBER);
     nextComicBook
         .getComicDetail()
-        .setCoverDate(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
+        .setCoverDate(new Date(System.currentTimeMillis() + 24L * 60L * 60L * 1000L));
+
+    afterNextComicBook.setComicDetail(
+        new ComicDetail(nextComicBook, TEST_COMIC_FILENAME, ArchiveType.CBZ));
+    afterNextComicBook.getComicDetail().setIssueNumber(TEST_AFTER_NEXT_ISSUE_NUMBER);
+    afterNextComicBook
+        .getComicDetail()
+        .setCoverDate(new Date(System.currentTimeMillis() + 30L * 24L * 60L * 60L * 1000L));
 
     comicsBySeries.add(nextComicBook);
     comicsBySeries.add(previousComicBook);
@@ -242,8 +260,10 @@ public class ComicBookServiceTest {
   public void testGetComic() throws ComicBookException, ComiXedUserException {
     List<ComicBook> previousComicBooks = new ArrayList<>();
     previousComicBooks.add(previousComicBook);
+    previousComicBooks.add(beforePreviousComicBook);
     List<ComicBook> nextComicBooks = new ArrayList<>();
     nextComicBooks.add(nextComicBook);
+    nextComicBooks.add(afterNextComicBook);
 
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(currentComicBook);
 

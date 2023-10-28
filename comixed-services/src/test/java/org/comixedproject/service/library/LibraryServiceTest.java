@@ -18,23 +18,19 @@
 
 package org.comixedproject.service.library;
 
-import static junit.framework.TestCase.assertEquals;
 import static org.comixedproject.state.comicbooks.ComicStateHandler.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -52,20 +48,12 @@ public class LibraryServiceTest {
   @InjectMocks private LibraryService service;
   @Mock private ComicBookService comicBookService;
   @Mock private ComicBook comicBook;
-  @Mock private ComicDetail comicDetail;
   @Mock private FileAdaptor fileAdaptor;
   @Mock private PageCacheService pageCacheService;
   @Mock private ComicStateHandler comicStateHandler;
 
-  @Captor private ArgumentCaptor<Map<String, Object>> headersArgumentCaptor;
-
   private List<ComicBook> comicBookList = new ArrayList<>();
   private List<Long> comicIdList = new ArrayList<>();
-
-  @Before
-  public void setUp() {
-    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
-  }
 
   @Test
   public void testClearImageCache() throws LibraryException, IOException {
@@ -127,34 +115,16 @@ public class LibraryServiceTest {
 
   @Test(expected = LibraryException.class)
   public void testPrepareForConsolidationNoTargetDirectory() throws LibraryException {
-    service.prepareForConsolidation(
-        comicIdList, "", TEST_RENAMING_RULE, TEST_DELETE_REMOVED_COMIC_FILES);
+    service.prepareForConsolidation(comicIdList, "");
   }
 
   @Test
   public void testPrepareForConsolidation() throws LibraryException {
     for (int index = 0; index < 25; index++) comicBookList.add(comicBook);
 
-    Mockito.when(comicBookService.findAll()).thenReturn(comicBookList);
-    Mockito.doNothing()
-        .when(comicStateHandler)
-        .fireEvent(
-            Mockito.any(ComicBook.class),
-            Mockito.any(ComicEvent.class),
-            headersArgumentCaptor.capture());
+    service.prepareForConsolidation(comicIdList, TEST_TARGET_DIRECTORY);
 
-    service.prepareForConsolidation(
-        comicIdList, TEST_TARGET_DIRECTORY, TEST_RENAMING_RULE, TEST_DELETE_REMOVED_COMIC_FILES);
-
-    final Map<String, Object> headers = headersArgumentCaptor.getAllValues().get(0);
-    assertEquals(
-        String.valueOf(TEST_DELETE_REMOVED_COMIC_FILES),
-        headers.get(HEADER_DELETE_REMOVED_COMIC_FILE));
-    assertEquals(TEST_TARGET_DIRECTORY, headers.get(HEADER_TARGET_DIRECTORY));
-    assertEquals(TEST_RENAMING_RULE, headers.get(HEADER_RENAMING_RULE));
-
-    Mockito.verify(comicStateHandler, Mockito.times(comicBookList.size()))
-        .fireEvent(comicBook, ComicEvent.consolidateComic, headers);
+    Mockito.verify(comicBookService, Mockito.times(1)).prepareForConsolidation(comicIdList);
   }
 
   @Test
