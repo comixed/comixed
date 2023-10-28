@@ -47,8 +47,6 @@ public class ComicStateMachineConfiguration
   @Autowired private ComicContentsProcessedGuard comicContentsProcessedGuard;
   @Autowired private UpdateMetadataAction updateMetadataAction;
   @Autowired private MetadataUpdatedAction metadataUpdatedAction;
-  @Autowired private ConsolidateComicAction consolidateComicAction;
-  @Autowired private ConsolidateComicGuard consolidateComicGuard;
   @Autowired private ComicConsolidatedAction comicConsolidatedAction;
   @Autowired private ComicFileAlreadyRecreatingGuard comicFileAlreadyRecreatingGuard;
   @Autowired private UpdateComicBookDetailsAction updateComicBookDetailsAction;
@@ -135,27 +133,6 @@ public class ComicStateMachineConfiguration
         .source(ComicState.CHANGED)
         .target(ComicState.STABLE)
         .event(ComicEvent.contentsProcessed)
-        // the comic is going to be consolidated
-        .and()
-        .withExternal()
-        .source(ComicState.STABLE)
-        .target(ComicState.STABLE)
-        .event(ComicEvent.consolidateComic)
-        .guard(consolidateComicGuard)
-        .action(consolidateComicAction)
-        .and()
-        .withExternal()
-        .source(ComicState.CHANGED)
-        .target(ComicState.CHANGED)
-        .event(ComicEvent.consolidateComic)
-        .guard(consolidateComicGuard)
-        .action(consolidateComicAction)
-        .and()
-        .withExternal()
-        .source(ComicState.DELETED)
-        .target(ComicState.DELETED)
-        .event(ComicEvent.consolidateComic)
-        .action(consolidateComicAction)
         // the comic was consolidated
         .and()
         .withExternal()
