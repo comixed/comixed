@@ -31,4 +31,4 @@ jobs:
           file: ./docker/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: comixed/comixed:latest,comixed/comixed:1.6.1-3
+          tags: comixed/comixed:latest,comixed/comixed:1.6.2-1
