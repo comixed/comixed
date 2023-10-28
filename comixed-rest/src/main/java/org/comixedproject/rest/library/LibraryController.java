@@ -209,8 +209,7 @@ public class LibraryController {
     final String renamingRule =
         this.configurationService.getOptionValue(
             ConfigurationService.CFG_LIBRARY_COMIC_RENAMING_RULE);
-    this.libraryService.prepareForConsolidation(
-        selectedIds, targetDirectory, renamingRule, deleteRemovedComicFiles);
+    this.libraryService.prepareForConsolidation(selectedIds, targetDirectory);
     log.trace("Launch consolidation batch process");
     this.jobLauncher.run(
         this.consolidateLibraryJob,

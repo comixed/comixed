@@ -18,7 +18,6 @@
 
 package org.comixedproject.service.library;
 
-import static junit.framework.TestCase.assertEquals;
 import static org.comixedproject.state.comicbooks.ComicStateHandler.*;
 
 import java.io.IOException;
@@ -127,8 +126,7 @@ public class LibraryServiceTest {
 
   @Test(expected = LibraryException.class)
   public void testPrepareForConsolidationNoTargetDirectory() throws LibraryException {
-    service.prepareForConsolidation(
-        comicIdList, "", TEST_RENAMING_RULE, TEST_DELETE_REMOVED_COMIC_FILES);
+    service.prepareForConsolidation(comicIdList, "");
   }
 
   @Test
@@ -136,25 +134,10 @@ public class LibraryServiceTest {
     for (int index = 0; index < 25; index++) comicBookList.add(comicBook);
 
     Mockito.when(comicBookService.findAll()).thenReturn(comicBookList);
-    Mockito.doNothing()
-        .when(comicStateHandler)
-        .fireEvent(
-            Mockito.any(ComicBook.class),
-            Mockito.any(ComicEvent.class),
-            headersArgumentCaptor.capture());
 
-    service.prepareForConsolidation(
-        comicIdList, TEST_TARGET_DIRECTORY, TEST_RENAMING_RULE, TEST_DELETE_REMOVED_COMIC_FILES);
+    service.prepareForConsolidation(comicIdList, TEST_TARGET_DIRECTORY);
 
-    final Map<String, Object> headers = headersArgumentCaptor.getAllValues().get(0);
-    assertEquals(
-        String.valueOf(TEST_DELETE_REMOVED_COMIC_FILES),
-        headers.get(HEADER_DELETE_REMOVED_COMIC_FILE));
-    assertEquals(TEST_TARGET_DIRECTORY, headers.get(HEADER_TARGET_DIRECTORY));
-    assertEquals(TEST_RENAMING_RULE, headers.get(HEADER_RENAMING_RULE));
-
-    Mockito.verify(comicStateHandler, Mockito.times(comicBookList.size()))
-        .fireEvent(comicBook, ComicEvent.consolidateComic, headers);
+    Mockito.verify(comicBookService, Mockito.times(1)).prepareForConsolidation(comicIdList);
   }
 
   @Test
