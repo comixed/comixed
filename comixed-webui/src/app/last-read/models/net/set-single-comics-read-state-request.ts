@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2023, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,28 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.library;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-/**
- * <code>SetComicsReadRequest</code> represents the request body when marking multiple comics as
- * read.
- *
- * @author Darryl L. Pierce
- */
-@NoArgsConstructor
-@AllArgsConstructor
-public class SetComicsReadRequest {
-  @JsonProperty("ids")
-  @Getter
-  private List<Long> ids;
-
-  @JsonProperty("read")
-  @Getter()
-  private boolean read;
+export interface SetSingleComicsReadStateRequest {
+  comicBookId: number;
+  read: boolean;
 }

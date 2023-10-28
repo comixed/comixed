@@ -61,7 +61,7 @@ import { LastRead } from '@app/last-read/models/last-read';
 import { TitleService } from '@app/core/services/title.service';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
-import { setComicBooksRead } from '@app/last-read/actions/set-comics-read.actions';
+import { markSingleComicBookRead } from '@app/last-read/actions/comic-books-read.actions';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
 import { COMIC_BOOK_UPDATE_TOPIC } from '@app/comic-books/comic-books.constants';
@@ -254,7 +254,7 @@ export class ComicBookPageComponent
   setReadState(read: boolean): void {
     this.logger.debug('Marking comic read status:', read);
     this.store.dispatch(
-      setComicBooksRead({ comicBooks: [this.comicBook.detail], read })
+      markSingleComicBookRead({ comicBookId: this.comicBook.id, read })
     );
   }
 

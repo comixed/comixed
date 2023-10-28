@@ -23,17 +23,26 @@ import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.user.ComiXedUser;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 /**
- * <code>LastReadRepository</code> defines a type of {@link CrudRepository} for retrieving {@link
- * LastRead} instances.
+ * <code>LastReadRepository</code> defines a repository for working with persistent last read
+ * information
  *
  * @author Darryl L. Pierce (mcpierce@gmail.com)
  */
-public interface LastReadRepository extends CrudRepository<LastRead, Long> {
+public interface LastReadRepository extends JpaRepository<LastRead, Long> {
+  /**
+   * Loads all last read entries for a user.
+   *
+   * @param user the user
+   * @return the entries
+   */
+  @Query("SELECT e FROM LastRead e WHERE e.user = :user ORDER BY e.id")
+  List<LastRead> loadEntriesForUser(@Param("user") ComiXedUser user);
+
   /**
    * Loads a batch of last read entries.
    *

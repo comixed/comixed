@@ -16,14 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  comicBooksReadSet,
-  setComicBooksRead,
-  setComicBooksReadFailed
-} from '../actions/set-comics-read.actions';
+  markSelectedComicBooksRead,
+  markSelectedComicBooksReadFailed,
+  markSelectedComicBooksReadSuccess,
+  markSingleComicBookRead
+} from '../actions/comic-books-read.actions';
 
-export const SET_COMICS_READ_FEATURE_KEY = 'set_comics_read_state';
+export const COMIC_BOOKS_READ_FEATURE_KEY = 'comic_books_read_state';
 
 export interface SetComicsReadState {
   updating: boolean;
@@ -36,7 +37,16 @@ export const initialState: SetComicsReadState = {
 export const reducer = createReducer(
   initialState,
 
-  on(setComicBooksRead, state => ({ ...state, updating: true })),
-  on(comicBooksReadSet, state => ({ ...state, updating: false })),
-  on(setComicBooksReadFailed, state => ({ ...state, updating: false }))
+  on(markSingleComicBookRead, state => ({ ...state, updating: true })),
+  on(markSelectedComicBooksRead, state => ({ ...state, updating: true })),
+  on(markSelectedComicBooksReadSuccess, state => ({
+    ...state,
+    updating: false
+  })),
+  on(markSelectedComicBooksReadFailed, state => ({ ...state, updating: false }))
 );
+
+export const comicBooksReadFeature = createFeature({
+  name: COMIC_BOOKS_READ_FEATURE_KEY,
+  reducer
+});

@@ -4,8 +4,12 @@
       "effect-failure": "Failed to load last read entries."
     }
   },
-  "update-read-status": {
-    "effect-failure": "Failed to mark comic as {status, select, true{read} other{unread}}.",
-    "effect-success": "Comic successfully marked as {status, select, true{read} other{unread}}."
+  "selected-comic-books-read-state": {
+    "effect-failure": "Failed to mark selected comic books as {status, select, true{read} other{unread}}...",
+    "effect-success": "Selected comic books marked as {status, select, true{read} other{unread}}."
+  },
+  "single-comic-book-read-state": {
+    "effect-failure": "Failed to mark comic book as {status, select, true{read} other{unread}}...",
+    "effect-success": "Comic book marked as {status, select, true{read} other{unread}}."
   }
 }
