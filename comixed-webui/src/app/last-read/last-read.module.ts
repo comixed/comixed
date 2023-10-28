@@ -21,17 +21,11 @@ import { CommonModule } from '@angular/common';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { StoreModule } from '@ngrx/store';
-import {
-  LAST_READ_LIST_FEATURE_KEY,
-  reducer as lastReadDatesReducer
-} from '@app/last-read/reducers/last-read-list.reducer';
+import { lastReadListFeature } from '@app/last-read/reducers/last-read-list.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { LastReadListEffects } from './effects/last-read-list.effects';
-import {
-  reducer as updateReadStatusReducer,
-  SET_COMICS_READ_FEATURE_KEY
-} from '@app/last-read/reducers/set-comics-read-state.reducer';
-import { SetComicsReadEffects } from '@app/last-read/effects/set-comics-read.effects';
+import { comicBooksReadFeature } from '@app/last-read/reducers/comic-books-read.reducer';
+import { ComicBooksReadEffects } from '@app/last-read/effects/comic-books-read.effects';
 
 @NgModule({
   declarations: [],
@@ -39,12 +33,9 @@ import { SetComicsReadEffects } from '@app/last-read/effects/set-comics-read.eff
     CommonModule,
     LoggerModule.forRoot(),
     TranslateModule.forRoot(),
-    StoreModule.forFeature(LAST_READ_LIST_FEATURE_KEY, lastReadDatesReducer),
-    StoreModule.forFeature(
-      SET_COMICS_READ_FEATURE_KEY,
-      updateReadStatusReducer
-    ),
-    EffectsModule.forFeature([LastReadListEffects, SetComicsReadEffects])
+    StoreModule.forFeature(lastReadListFeature),
+    StoreModule.forFeature(comicBooksReadFeature),
+    EffectsModule.forFeature([LastReadListEffects, ComicBooksReadEffects])
   ],
   exports: [CommonModule]
 })

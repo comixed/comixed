@@ -61,7 +61,7 @@ import {
   LAST_READ_LIST_FEATURE_KEY
 } from '@app/last-read/reducers/last-read-list.reducer';
 import { TitleService } from '@app/core/services/title.service';
-import { setComicBooksRead } from '@app/last-read/actions/set-comics-read.actions';
+import { markSingleComicBookRead } from '@app/last-read/actions/comic-books-read.actions';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { LAST_READ_1 } from '@app/last-read/last-read.fixtures';
 import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
@@ -280,7 +280,7 @@ describe('ComicBookPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setComicBooksRead({ comicBooks: [COMIC_BOOK.detail], read: true })
+          markSingleComicBookRead({ comicBookId: COMIC_BOOK.id, read: true })
         );
       });
     });
@@ -292,7 +292,7 @@ describe('ComicBookPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setComicBooksRead({ comicBooks: [COMIC_BOOK.detail], read: false })
+          markSingleComicBookRead({ comicBookId: COMIC_BOOK.id, read: false })
         );
       });
     });

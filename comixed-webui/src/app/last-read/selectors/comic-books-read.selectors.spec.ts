@@ -16,7 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export interface SetComicsReadRequest {
-  ids: number[];
-  read: boolean;
-}
+import {
+  COMIC_BOOKS_READ_FEATURE_KEY,
+  SetComicsReadState
+} from '../reducers/comic-books-read.reducer';
+import { selectComicBooksReadState } from './comic-books-read.selectors';
+
+describe('ComicBooksRead Selectors', () => {
+  let state: SetComicsReadState;
+
+  beforeEach(() => {
+    state = { updating: Math.random() > 0.5 };
+  });
+
+  it('should select the feature state', () => {
+    expect(
+      selectComicBooksReadState({
+        [COMIC_BOOKS_READ_FEATURE_KEY]: state
+      })
+    ).toEqual(state);
+  });
+});

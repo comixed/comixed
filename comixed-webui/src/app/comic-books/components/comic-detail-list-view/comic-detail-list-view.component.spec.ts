@@ -49,7 +49,10 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
-import { setComicBooksRead } from '@app/last-read/actions/set-comics-read.actions';
+import {
+  markSelectedComicBooksRead,
+  markSingleComicBookRead
+} from '@app/last-read/actions/comic-books-read.actions';
 import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
 import { editMultipleComics } from '@app/library/actions/library.actions';
 import { BehaviorSubject, of } from 'rxjs';
@@ -489,7 +492,7 @@ describe('ComicDetailListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setComicBooksRead({ comicBooks: [COMIC], read: true })
+          markSingleComicBookRead({ comicBookId: COMIC.comicId, read: true })
         );
       });
     });
@@ -501,7 +504,7 @@ describe('ComicDetailListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setComicBooksRead({ comicBooks: [COMIC], read: false })
+          markSingleComicBookRead({ comicBookId: COMIC.comicId, read: false })
         );
       });
     });
@@ -513,7 +516,7 @@ describe('ComicDetailListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setComicBooksRead({ comicBooks: COMIC_DETAILS, read: true })
+          markSelectedComicBooksRead({ read: true })
         );
       });
     });
@@ -525,7 +528,7 @@ describe('ComicDetailListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setComicBooksRead({ comicBooks: COMIC_DETAILS, read: false })
+          markSelectedComicBooksRead({ read: false })
         );
       });
     });

@@ -80,7 +80,7 @@ public class OPDSComicBookController {
       log.info("Downloading comicBook: id={} filename={}", id, filename);
       ComicBook comicBook = this.comicBookService.getComic(id);
       log.trace("Marking comic as read by user");
-      this.lastReadService.setLastReadState(principal.getName(), id, true);
+      this.lastReadService.markComicBookAsRead(principal.getName(), id);
       log.trace("Returning encoded file: {}", comicBook.getComicDetail().getFilename());
       return this.webResponseEncoder.encode(
           (int) comicBook.getComicDetail().getFile().length(),
