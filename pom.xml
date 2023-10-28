@@ -341,7 +341,7 @@
           <filesets>
             <fileset>
               <directory>${project.basedir}</directory>
-              <includes>comixed-release-*.zip</includes>
+              <includes>comixed-release-*</includes>
             </fileset>
           </filesets>
         </configuration>
