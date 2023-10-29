@@ -123,7 +123,7 @@ public class LibraryControllerTest {
   @Captor private ArgumentCaptor<List> selectedIdsArgumentCaptor;
 
   @Before
-  public void testSetUp() throws JsonProcessingException, ComicSelectionException {
+  public void testSetUp() throws JsonProcessingException, ComicBookSelectionException {
     Mockito.when(lastComicDetail.getId()).thenReturn(TEST_LAST_COMIC_ID);
     Mockito.when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_IDS);
     Mockito.when(comicBookSelectionService.decodeSelections(TEST_ENCODED_IDS))
@@ -133,7 +133,7 @@ public class LibraryControllerTest {
   }
 
   @Test
-  public void testGetLibraryState() throws ComicSelectionException {
+  public void testGetLibraryState() throws ComicBookSelectionException {
     Mockito.when(httpState.getAttribute(LIBRARY_SELECTIONS)).thenReturn(null);
     Mockito.when(remoteLibraryStateService.getLibraryState(selectedIdsArgumentCaptor.capture()))
         .thenReturn(remoteLibraryState);

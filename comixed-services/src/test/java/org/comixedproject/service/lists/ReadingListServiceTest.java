@@ -377,7 +377,6 @@ public class ReadingListServiceTest {
 
     Mockito.when(readingListRepository.getById(Mockito.anyLong()))
         .thenReturn(readingList, loadedReadingList);
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicBookException.class);
 
     final ReadingList result =
         service.removeComicsFromList(TEST_OWNER_EMAIL, TEST_READING_LIST_ID, idList);
@@ -386,9 +385,6 @@ public class ReadingListServiceTest {
     assertSame(loadedReadingList, result);
 
     Mockito.verify(readingListRepository, Mockito.times(2)).getById(TEST_READING_LIST_ID);
-    Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
-    Mockito.verify(readingListStateHandler, Mockito.never())
-        .fireEvent(Mockito.any(), Mockito.any(), Mockito.any());
   }
 
   @Test
@@ -397,13 +393,6 @@ public class ReadingListServiceTest {
 
     Mockito.when(readingListRepository.getById(Mockito.anyLong()))
         .thenReturn(readingList, loadedReadingList);
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
-    Mockito.doNothing()
-        .when(readingListStateHandler)
-        .fireEvent(
-            Mockito.any(ReadingList.class),
-            Mockito.any(ReadingListEvent.class),
-            headersArgumentCaptor.capture());
 
     ReadingList result =
         service.removeComicsFromList(TEST_OWNER_EMAIL, TEST_READING_LIST_ID, idList);
@@ -411,13 +400,7 @@ public class ReadingListServiceTest {
     assertNotNull(result);
     assertSame(loadedReadingList, result);
 
-    final Map<String, Object> headers = headersArgumentCaptor.getValue();
-    assertSame(comicBook, headers.get(HEADER_COMIC));
-
     Mockito.verify(readingListRepository, Mockito.times(2)).getById(TEST_READING_LIST_ID);
-    Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
-    Mockito.verify(readingListStateHandler, Mockito.times(1))
-        .fireEvent(readingList, ReadingListEvent.comicRemoved, headers);
   }
 
   @Test

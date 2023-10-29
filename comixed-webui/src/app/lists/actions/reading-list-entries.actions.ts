@@ -18,30 +18,33 @@
 
 import { createAction, props } from '@ngrx/store';
 import { ReadingList } from '@app/lists/models/reading-list';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
-export const addComicsToReadingList = createAction(
-  '[Reading List Entries] Add comics to a reading list',
-  props<{ list: ReadingList; comicBooks: ComicDetail[] }>()
+export const addSelectedComicBooksToReadingList = createAction(
+  '[Reading List Entries] Add all selected comic books to a reading list',
+  props<{
+    list: ReadingList;
+  }>()
 );
 
-export const comicsAddedToReadingList = createAction(
-  '[Reading List Entries] Comics added to a reading list'
+export const addComicBooksToReadingListSuccess = createAction(
+  '[Reading List Entries] Comic books were added to a reading list'
 );
 
-export const addComicsToReadingListFailed = createAction(
-  '[Reading List Entries] Failed to add comics to a reading list'
+export const addComicBooksToReadingListFailure = createAction(
+  '[Reading List Entries] Failed to add comic books to a reading list'
 );
 
-export const removeComicsFromReadingList = createAction(
+export const removeSelectedComicBooksFromReadingList = createAction(
   '[Reading List Entries] Remove comics from a reading list',
-  props<{ list: ReadingList; comicBooks: ComicDetail[] }>()
+  props<{
+    list: ReadingList;
+  }>()
 );
 
-export const comicsRemovedFromReadingList = createAction(
-  '[Reading List Entries] Comics removed from a reading list'
+export const removeComicBooksFromReadingListSuccess = createAction(
+  '[Reading List Entries] Comic books were removed from a reading list'
 );
 
-export const removeComicsFromReadingListFailed = createAction(
+export const removeComicBooksFromReadingListFailure = createAction(
   '[Reading List Entries] Failed to remove comics from a reading list'
 );

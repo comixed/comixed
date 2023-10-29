@@ -18,21 +18,24 @@
 
 package org.comixedproject.rest.lists;
 
+import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
+
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import javax.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.net.DownloadDocument;
-import org.comixedproject.model.net.lists.AddComicsToReadingListRequest;
 import org.comixedproject.model.net.lists.DeleteReadingListsRequest;
-import org.comixedproject.model.net.lists.RemoveComicsFromReadingListRequest;
 import org.comixedproject.model.net.lists.SaveReadingListRequest;
 import org.comixedproject.model.net.lists.UpdateReadingListRequest;
 import org.comixedproject.repositories.lists.ReadingListRepository;
+import org.comixedproject.service.comicbooks.ComicBookSelectionException;
+import org.comixedproject.service.comicbooks.ComicBookSelectionService;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.comixedproject.views.View;
@@ -53,6 +56,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ReadingListController {
   @Autowired ReadingListRepository readingListRepository;
   @Autowired ReadingListService readingListService;
+  @Autowired private ComicBookSelectionService comicBookSelectionService;
 
   /**
    * Retrieves all reading lists for the current user.
@@ -154,69 +158,88 @@ public class ReadingListController {
   }
 
   /**
-   * Adds comics to a reading list.
+   * Adds the selected comics to a reading list.
    *
+   * @param session the session
    * @param principal the reading list owner
    * @param id the reading list id
-   * @param request the request body
    * @return the updated reading list
    * @throws ReadingListException if an error occurs
    */
-  @PostMapping(
-      value = "/api/lists/reading/{id}/comics/add",
+  @PutMapping(
+      value = "/api/lists/reading/{id}/comics/add/selected",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ReadingListDetail.class)
   @PreAuthorize("hasRole('READER')")
-  @Timed(value = "comixed.reading-list.add-comics")
-  public ReadingList addComicsToList(
-      Principal principal,
-      @PathVariable("id") Long id,
-      @RequestBody() AddComicsToReadingListRequest request)
+  @Timed(value = "comixed.reading-list.add-selected-comic-books")
+  public ReadingList addSelectedComicBooksToReadingList(
+      final HttpSession session, final Principal principal, @PathVariable("id") final Long id)
       throws ReadingListException {
     String email = principal.getName();
-    List<Long> comicIds = request.getIds();
+    try {
+      List<Long> selectedComicBookIds =
+          this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
-    log.info(
-        "Adding {} comic{} to the reading list for {}: id={}",
-        comicIds.size(),
-        comicIds.size() == 1 ? "" : "s",
-        email,
-        id);
-    return this.readingListService.addComicsToList(email, id, comicIds);
+      log.info(
+          "Adding {} comic{} to the reading list for {}: id={}",
+          selectedComicBookIds.size(),
+          selectedComicBookIds.size() == 1 ? "" : "s",
+          email,
+          id);
+      final ReadingList readingList =
+          this.readingListService.addComicsToList(email, id, selectedComicBookIds);
+
+      this.comicBookSelectionService.clearSelectedComicBooks(selectedComicBookIds);
+      session.setAttribute(
+          LIBRARY_SELECTIONS,
+          this.comicBookSelectionService.encodeSelections(selectedComicBookIds));
+
+      return readingList;
+    } catch (ComicBookSelectionException error) {
+      throw new ReadingListException("Failed to add selected comic books to reading list", error);
+    }
   }
 
   /**
-   * Removes comics from a reading list.
+   * Removes the selected comic books from a reading list.
    *
+   * @param session the session
    * @param principal the reading list owner
    * @param id the reading list id
-   * @param request the request body
    * @return the updated reading list
    * @throws ReadingListException if an error occurs
    */
-  @PostMapping(
-      value = "/api/lists/reading/{id}/comics/remove",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @DeleteMapping(value = "/api/lists/reading/{id}/comics/remove/selected")
   @JsonView(View.ReadingListDetail.class)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.reading-list.remove-comics")
-  public ReadingList removeComicsFromList(
-      Principal principal,
-      @PathVariable("id") long id,
-      @RequestBody() RemoveComicsFromReadingListRequest request)
+  public ReadingList removeSelectedComicBooksFromReadingList(
+      final HttpSession session, final Principal principal, @PathVariable("id") final long id)
       throws ReadingListException {
     String email = principal.getName();
-    List<Long> comicIds = request.getIds();
+    try {
+      List<Long> selectedComicBookIds =
+          this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
-    log.info(
-        "Removing {} comic{} from the reading list for {}: id={}",
-        comicIds.size(),
-        comicIds.size() == 1 ? "" : "s",
-        email,
-        id);
-    return this.readingListService.removeComicsFromList(email, id, comicIds);
+      log.info(
+          "Removing {} comic{} from the reading list for {}: id={}",
+          selectedComicBookIds.size(),
+          selectedComicBookIds.size() == 1 ? "" : "s",
+          email,
+          id);
+      final ReadingList readingList =
+          this.readingListService.removeComicsFromList(email, id, selectedComicBookIds);
+
+      this.comicBookSelectionService.clearSelectedComicBooks(selectedComicBookIds);
+      session.setAttribute(
+          LIBRARY_SELECTIONS,
+          this.comicBookSelectionService.encodeSelections(selectedComicBookIds));
+
+      return readingList;
+    } catch (ReadingListException | ComicBookSelectionException error) {
+      throw new ReadingListException("Failed to remove selected comics from reading list", error);
+    }
   }
 
   /**

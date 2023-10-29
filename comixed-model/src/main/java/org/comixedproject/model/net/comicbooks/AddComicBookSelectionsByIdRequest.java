@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project.
+ * Copyright (C) 2023, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,25 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.lists;
+package org.comixedproject.model.net.comicbooks;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * <code>AddComicsToReadingListRequest</code> represents the request body when adding comics to a
- * reading list.
+ * <code>AddComicBookSelectionsByIdRequest</code> represents the payload when setting the selected
+ * state for comic books by id.
  *
  * @author Darryl L. Pierce
  */
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddComicsToReadingListRequest {
-  @JsonProperty("ids")
+public class AddComicBookSelectionsByIdRequest {
+  @JsonProperty("comicBookIds")
   @Getter
-  private List<Long> ids = new ArrayList<>();
+  private List<Long> comicBookIds;
+
+  @JsonProperty("selected")
+  @Getter
+  private boolean selected;
 }

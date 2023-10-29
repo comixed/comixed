@@ -19,13 +19,13 @@
 package org.comixedproject.service.comicbooks;
 
 /**
- * <code>ComicSelectionException</code> is thrown when an error occurs while updating a user's comic
- * selection set.
+ * <code>ComicBookSelectionException</code> is thrown when an error occurs while updating a user's
+ * comic selection set.
  *
  * @author Darryl L. Pierce
  */
-public class ComicSelectionException extends Exception {
-  public ComicSelectionException(final String message, final Exception cause) {
+public class ComicBookSelectionException extends Exception {
+  public ComicBookSelectionException(final String message, final Exception cause) {
     super(message, cause);
   }
 }

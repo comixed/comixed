@@ -94,6 +94,7 @@ import {
   QUERY_PARAM_SORT_BY,
   QUERY_PARAM_SORT_DIRECTION
 } from '@app/core';
+import { setMultipleComicBooksByTagTypeAndValueSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 
 describe('CollectionDetailComponent', () => {
   const PAGE_SIZE = 10;
@@ -397,6 +398,28 @@ describe('CollectionDetailComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         deselectComicBooks({ ids: IDS })
+      );
+    });
+  });
+
+  describe('selecting all comic books', () => {
+    const SELECT = Math.random() > 0.5;
+    const TAG_TYPE = TagType.LOCATIONS;
+    const TAG_VALUE = 'Wakanda';
+
+    beforeEach(() => {
+      component.tagType = TAG_TYPE;
+      component.tagValue = TAG_VALUE;
+      component.onSelectAll(SELECT);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        setMultipleComicBooksByTagTypeAndValueSelectionState({
+          selected: SELECT,
+          tagType: TAG_TYPE,
+          tagValue: TAG_VALUE
+        })
       );
     });
   });

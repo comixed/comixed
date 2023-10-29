@@ -28,8 +28,8 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.net.library.GetLastReadDatesResponse;
+import org.comixedproject.service.comicbooks.ComicBookSelectionException;
 import org.comixedproject.service.comicbooks.ComicBookSelectionService;
-import org.comixedproject.service.comicbooks.ComicSelectionException;
 import org.comixedproject.service.library.LastReadException;
 import org.comixedproject.service.library.LastReadService;
 import org.junit.Before;
@@ -58,7 +58,7 @@ public class LastReadControllerTest {
   @Mock private List<Long> selectedIds;
 
   @Before
-  public void setUp() throws ComicSelectionException {
+  public void setUp() throws ComicBookSelectionException {
     Mockito.when(session.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTION_IDS);
     Mockito.when(comicBookSelectionService.decodeSelections(TEST_ENCODED_SELECTION_IDS))
         .thenReturn(selectedIds);
@@ -178,9 +178,9 @@ public class LastReadControllerTest {
 
   @Test(expected = LastReadException.class)
   public void testMarkSelectedComicBooksReadDecodingException()
-      throws LastReadException, ComicSelectionException {
+      throws LastReadException, ComicBookSelectionException {
     Mockito.when(comicBookSelectionService.decodeSelections(TEST_ENCODED_SELECTION_IDS))
-        .thenThrow(ComicSelectionException.class);
+        .thenThrow(ComicBookSelectionException.class);
 
     try {
       controller.markSelectedComicBooksRead(session, principal);
@@ -192,9 +192,9 @@ public class LastReadControllerTest {
 
   @Test(expected = LastReadException.class)
   public void testMarkSelectedComicBooksReadEncodingException()
-      throws LastReadException, ComicSelectionException {
+      throws LastReadException, ComicBookSelectionException {
     Mockito.when(comicBookSelectionService.encodeSelections(selectedIds))
-        .thenThrow(ComicSelectionException.class);
+        .thenThrow(ComicBookSelectionException.class);
 
     try {
       controller.markSelectedComicBooksRead(session, principal);
@@ -213,9 +213,9 @@ public class LastReadControllerTest {
 
   @Test(expected = LastReadException.class)
   public void testMarkSelectedComicBooksUnreadDecodingException()
-      throws LastReadException, ComicSelectionException {
+      throws LastReadException, ComicBookSelectionException {
     Mockito.when(comicBookSelectionService.decodeSelections(TEST_ENCODED_SELECTION_IDS))
-        .thenThrow(ComicSelectionException.class);
+        .thenThrow(ComicBookSelectionException.class);
 
     try {
       controller.markSelectedComicBooksUnread(session, principal);
@@ -227,9 +227,9 @@ public class LastReadControllerTest {
 
   @Test(expected = LastReadException.class)
   public void testMarkSelectedComicBooksUnreadEncodingException()
-      throws LastReadException, ComicSelectionException {
+      throws LastReadException, ComicBookSelectionException {
     Mockito.when(comicBookSelectionService.encodeSelections(selectedIds))
-        .thenThrow(ComicSelectionException.class);
+        .thenThrow(ComicBookSelectionException.class);
 
     try {
       controller.markSelectedComicBooksUnread(session, principal);

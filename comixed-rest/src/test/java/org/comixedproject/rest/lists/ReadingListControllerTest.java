@@ -19,6 +19,7 @@
 package org.comixedproject.rest.lists;
 
 import static junit.framework.TestCase.assertEquals;
+import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
@@ -28,15 +29,16 @@ import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.servlet.http.HttpSession;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.net.DownloadDocument;
-import org.comixedproject.model.net.lists.AddComicsToReadingListRequest;
 import org.comixedproject.model.net.lists.DeleteReadingListsRequest;
-import org.comixedproject.model.net.lists.RemoveComicsFromReadingListRequest;
 import org.comixedproject.model.net.lists.SaveReadingListRequest;
 import org.comixedproject.model.net.lists.UpdateReadingListRequest;
 import org.comixedproject.service.comicbooks.ComicBookException;
+import org.comixedproject.service.comicbooks.ComicBookSelectionException;
+import org.comixedproject.service.comicbooks.ComicBookSelectionService;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.junit.Before;
@@ -56,24 +58,33 @@ public class ReadingListControllerTest {
   private static final String TEST_READING_LIST_SUMMARY = "Test Reading List Description";
   private static final String TEST_USER_EMAIL = "reader@localhost.com";
   private static final long TEST_READING_LIST_ID = 78;
+  private static final Object TEST_ENCODED_SELECTIONS = "The encoded selected ids";
+  private static final String TEST_REENCODED_SELECTIONS = "The re-encoded selected ids";
 
   @InjectMocks private ReadingListController controller;
   @Mock private ReadingListService readingListService;
+  @Mock private ComicBookSelectionService comicBookSelectionService;
   @Mock private ReadingList readingList;
   @Mock private Principal principal;
   @Mock private List<ReadingList> readingLists;
-  @Mock private List<Long> comicIdList;
   @Mock private DownloadDocument downloadDocument;
   @Mock private MultipartFile multipartFile;
   @Mock private InputStream inputStream;
   @Mock private List<Long> readingListIdList;
+  @Mock private HttpSession session;
+  @Mock private List selectedIdList;
 
   @Before
-  public void setUp() throws IOException {
+  public void setUp() throws IOException, ComicBookSelectionException {
     Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
     Mockito.when(multipartFile.getInputStream()).thenReturn(inputStream);
     Mockito.when(multipartFile.getOriginalFilename())
         .thenReturn(String.format("%s.csv", TEST_READING_LIST_NAME));
+    Mockito.when(session.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
+    Mockito.when(comicBookSelectionService.decodeSelections(Mockito.any()))
+        .thenReturn(selectedIdList);
+    Mockito.when(comicBookSelectionService.encodeSelections(Mockito.anyList()))
+        .thenReturn(TEST_REENCODED_SELECTIONS);
   }
 
   @Test
@@ -154,37 +165,62 @@ public class ReadingListControllerTest {
   }
 
   @Test(expected = ReadingListException.class)
-  public void testAddComicsToReadingListServiceException() throws ReadingListException {
+  public void testAddSelectedComicBooksToReadingListSelectionServiceExceptionOnDecode()
+      throws ReadingListException, ComicBookSelectionException {
+    Mockito.when(comicBookSelectionService.decodeSelections(Mockito.any()))
+        .thenThrow(ComicBookSelectionException.class);
+
+    try {
+      controller.addSelectedComicBooksToReadingList(session, principal, TEST_READING_LIST_ID);
+    } finally {
+      Mockito.verify(comicBookSelectionService, Mockito.times(1))
+          .decodeSelections(TEST_ENCODED_SELECTIONS);
+    }
+  }
+
+  @Test(expected = ReadingListException.class)
+  public void testAddSelectedComicBooksToReadingListServiceException() throws ReadingListException {
     Mockito.when(
             readingListService.addComicsToList(
                 Mockito.anyString(), Mockito.anyLong(), Mockito.anyList()))
         .thenThrow(ReadingListException.class);
 
     try {
-      controller.addComicsToList(
-          principal, TEST_READING_LIST_ID, new AddComicsToReadingListRequest(comicIdList));
+      controller.addSelectedComicBooksToReadingList(session, principal, TEST_READING_LIST_ID);
     } finally {
       Mockito.verify(readingListService, Mockito.times(1))
-          .addComicsToList(TEST_USER_EMAIL, TEST_READING_LIST_ID, comicIdList);
+          .addComicsToList(TEST_USER_EMAIL, TEST_READING_LIST_ID, selectedIdList);
     }
   }
 
   @Test
-  public void testAddComicsToList() throws ReadingListException {
+  public void testAddSelectedComicBooksToList() throws ReadingListException {
     Mockito.when(
             readingListService.addComicsToList(
                 Mockito.anyString(), Mockito.anyLong(), Mockito.anyList()))
         .thenReturn(readingList);
 
     final ReadingList result =
-        controller.addComicsToList(
-            principal, TEST_READING_LIST_ID, new AddComicsToReadingListRequest(comicIdList));
+        controller.addSelectedComicBooksToReadingList(session, principal, TEST_READING_LIST_ID);
 
     assertNotNull(result);
     assertEquals(readingList, result);
 
     Mockito.verify(readingListService, Mockito.times(1))
-        .addComicsToList(TEST_USER_EMAIL, TEST_READING_LIST_ID, comicIdList);
+        .addComicsToList(TEST_USER_EMAIL, TEST_READING_LIST_ID, selectedIdList);
+  }
+
+  @Test(expected = ReadingListException.class)
+  public void testAddSelectedComicBooksToReadingListSelectionServiceExceptionOnEncode()
+      throws ReadingListException, ComicBookSelectionException {
+    Mockito.when(comicBookSelectionService.encodeSelections(Mockito.anyList()))
+        .thenThrow(ComicBookSelectionException.class);
+
+    try {
+      controller.addSelectedComicBooksToReadingList(session, principal, TEST_READING_LIST_ID);
+    } finally {
+      Mockito.verify(comicBookSelectionService, Mockito.times(1)).encodeSelections(selectedIdList);
+    }
   }
 
   @Test(expected = ReadingListException.class)
@@ -195,11 +231,10 @@ public class ReadingListControllerTest {
         .thenThrow(ReadingListException.class);
 
     try {
-      controller.removeComicsFromList(
-          principal, TEST_READING_LIST_ID, new RemoveComicsFromReadingListRequest(comicIdList));
+      controller.removeSelectedComicBooksFromReadingList(session, principal, TEST_READING_LIST_ID);
     } finally {
       Mockito.verify(readingListService, Mockito.times(1))
-          .removeComicsFromList(TEST_USER_EMAIL, TEST_READING_LIST_ID, comicIdList);
+          .removeComicsFromList(TEST_USER_EMAIL, TEST_READING_LIST_ID, selectedIdList);
     }
   }
 
@@ -211,14 +246,14 @@ public class ReadingListControllerTest {
         .thenReturn(readingList);
 
     final ReadingList result =
-        controller.removeComicsFromList(
-            principal, TEST_READING_LIST_ID, new RemoveComicsFromReadingListRequest(comicIdList));
+        controller.removeSelectedComicBooksFromReadingList(
+            session, principal, TEST_READING_LIST_ID);
 
     assertNotNull(result);
     assertEquals(readingList, result);
 
     Mockito.verify(readingListService, Mockito.times(1))
-        .removeComicsFromList(TEST_USER_EMAIL, TEST_READING_LIST_ID, comicIdList);
+        .removeComicsFromList(TEST_USER_EMAIL, TEST_READING_LIST_ID, selectedIdList);
   }
 
   @Test(expected = ReadingListException.class)

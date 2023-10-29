@@ -28,12 +28,12 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { AlertService } from '@app/core/services/alert.service';
 import {
-  addComicsToReadingList,
-  addComicsToReadingListFailed,
-  comicsAddedToReadingList,
-  comicsRemovedFromReadingList,
-  removeComicsFromReadingList,
-  removeComicsFromReadingListFailed
+  addComicBooksToReadingListFailure,
+  addComicBooksToReadingListSuccess,
+  addSelectedComicBooksToReadingList,
+  removeComicBooksFromReadingListFailure,
+  removeComicBooksFromReadingListSuccess,
+  removeSelectedComicBooksFromReadingList
 } from '@app/lists/actions/reading-list-entries.actions';
 import { readingListLoaded } from '@app/lists/actions/reading-list-detail.actions';
 import { hot } from 'jasmine-marbles';
@@ -42,7 +42,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('ReadingListEntriesEffects', () => {
   const READING_LIST = READING_LIST_3;
-  const COMIC = COMIC_DETAIL_1;
+  const COMIC_DETAIL = COMIC_DETAIL_1;
 
   let actions$: Observable<any>;
   let effects: ReadingListEntriesEffects;
@@ -62,8 +62,12 @@ describe('ReadingListEntriesEffects', () => {
         {
           provide: ReadingListService,
           useValue: {
-            addComics: jasmine.createSpy('ReadingListService.addComics()'),
-            removeComics: jasmine.createSpy('ReadingListService.removeComics()')
+            addSelectedComicBooks: jasmine.createSpy(
+              'ReadingListService.addSelectedComicBooks()'
+            ),
+            removeSelectedComicBooks: jasmine.createSpy(
+              'ReadingListService.removeSelectedComicBooks()'
+            )
           }
         },
         AlertService
@@ -83,123 +87,126 @@ describe('ReadingListEntriesEffects', () => {
     expect(effects).toBeTruthy();
   });
 
-  describe('adding comics to a reading list', () => {
+  describe('adding selected comic books to a reading list', () => {
     it('fires an action on success', () => {
       const serviceResponse = READING_LIST;
-      const action = addComicsToReadingList({
-        list: READING_LIST,
-        comicBooks: [COMIC]
+      const action = addSelectedComicBooksToReadingList({
+        list: READING_LIST
       });
-      const outcome1 = comicsAddedToReadingList();
+      const outcome1 = addComicBooksToReadingListSuccess();
       const outcome2 = readingListLoaded({ list: READING_LIST });
 
       actions$ = hot('-a', { a: action });
-      readingListService.addComics
-        .withArgs({ list: READING_LIST, comics: [COMIC] })
+      readingListService.addSelectedComicBooks
+        .withArgs({ list: READING_LIST })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
-      expect(effects.addComicsToReadingList$).toBeObservable(expected);
+      expect(effects.adSelectedComicBooksToReadingList$).toBeObservable(
+        expected
+      );
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = addComicsToReadingList({
-        list: READING_LIST,
-        comicBooks: [COMIC]
+      const action = addSelectedComicBooksToReadingList({
+        list: READING_LIST
       });
-      const outcome = addComicsToReadingListFailed();
+      const outcome = addComicBooksToReadingListFailure();
 
       actions$ = hot('-a', { a: action });
-      readingListService.addComics
-        .withArgs({ list: READING_LIST, comics: [COMIC] })
+      readingListService.addSelectedComicBooks
+        .withArgs({ list: READING_LIST })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.addComicsToReadingList$).toBeObservable(expected);
+      expect(effects.adSelectedComicBooksToReadingList$).toBeObservable(
+        expected
+      );
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = addComicsToReadingList({
-        list: READING_LIST,
-        comicBooks: [COMIC]
+      const action = addSelectedComicBooksToReadingList({
+        list: READING_LIST
       });
-      const outcome = addComicsToReadingListFailed();
+      const outcome = addComicBooksToReadingListFailure();
 
       actions$ = hot('-a', { a: action });
-      readingListService.addComics
-        .withArgs({ list: READING_LIST, comics: [COMIC] })
+      readingListService.addSelectedComicBooks
+        .withArgs({ list: READING_LIST })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.addComicsToReadingList$).toBeObservable(expected);
+      expect(effects.adSelectedComicBooksToReadingList$).toBeObservable(
+        expected
+      );
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
 
-  describe('removing comics to a reading list', () => {
+  describe('removing selected comic books from a reading list', () => {
     it('fires an action on success', () => {
       const serviceResponse = READING_LIST;
-      const action = removeComicsFromReadingList({
-        list: READING_LIST,
-        comicBooks: [COMIC]
+      const action = removeSelectedComicBooksFromReadingList({
+        list: READING_LIST
       });
-      const outcome1 = comicsRemovedFromReadingList();
+      const outcome1 = removeComicBooksFromReadingListSuccess();
       const outcome2 = readingListLoaded({ list: READING_LIST });
 
       actions$ = hot('-a', { a: action });
-      readingListService.removeComics
+      readingListService.removeSelectedComicBooks
         .withArgs({
-          list: READING_LIST,
-          comics: [COMIC]
+          list: READING_LIST
         })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
-      expect(effects.removeComicsFromReadingList$).toBeObservable(expected);
+      expect(effects.removeSelectedComicBooksFromReadingList$).toBeObservable(
+        expected
+      );
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = removeComicsFromReadingList({
-        list: READING_LIST,
-        comicBooks: [COMIC]
+      const action = removeSelectedComicBooksFromReadingList({
+        list: READING_LIST
       });
-      const outcome = removeComicsFromReadingListFailed();
+      const outcome = removeComicBooksFromReadingListFailure();
 
       actions$ = hot('-a', { a: action });
-      readingListService.removeComics
+      readingListService.removeSelectedComicBooks
         .withArgs({
-          list: READING_LIST,
-          comics: [COMIC]
+          list: READING_LIST
         })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.removeComicsFromReadingList$).toBeObservable(expected);
+      expect(effects.removeSelectedComicBooksFromReadingList$).toBeObservable(
+        expected
+      );
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = removeComicsFromReadingList({
-        list: READING_LIST,
-        comicBooks: [COMIC]
+      const action = removeSelectedComicBooksFromReadingList({
+        list: READING_LIST
       });
-      const outcome = removeComicsFromReadingListFailed();
+      const outcome = removeComicBooksFromReadingListFailure();
 
       actions$ = hot('-a', { a: action });
-      readingListService.removeComics
+      readingListService.removeSelectedComicBooks
         .withArgs({
-          list: READING_LIST,
-          comics: [COMIC]
+          list: READING_LIST
         })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.removeComicsFromReadingList$).toBeObservable(expected);
+      expect(effects.removeSelectedComicBooksFromReadingList$).toBeObservable(
+        expected
+      );
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

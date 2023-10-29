@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   deleteReadingLists,
   deleteReadingListsFailed,
@@ -66,3 +66,8 @@ export const reducer = createReducer(
     return { ...state, entries };
   })
 );
+
+export const readingListsFeature = createFeature({
+  name: READING_LISTS_FEATURE_KEY,
+  reducer
+});

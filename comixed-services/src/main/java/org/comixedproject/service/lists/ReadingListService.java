@@ -27,12 +27,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.csv.CsvAdaptor;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.lists.PublishReadingListDeletedAction;
 import org.comixedproject.messaging.lists.PublishReadingListUpdateAction;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.library.SmartListMatcher;
 import org.comixedproject.model.library.SmartReadingList;
 import org.comixedproject.model.lists.ReadingList;
@@ -235,13 +237,13 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
    *
    * @param email the owner's email
    * @param id the reading list record id
-   * @param comicIds the comic ids
+   * @param comicBookIds the comic ids
    * @return the updated reading list
    * @throws ReadingListException if the reading list id is invalid or the list is not owned by the
    *     given user
    */
   @Transactional
-  public ReadingList removeComicsFromList(String email, long id, List<Long> comicIds)
+  public ReadingList removeComicsFromList(String email, long id, List<Long> comicBookIds)
       throws ReadingListException {
     log.trace("Loading reading list: id={}", id);
     final ReadingList readingList = this.doLoadReadingList(id);
@@ -251,20 +253,13 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
           "User is not owner: " + email + " != " + readingList.getOwner().getEmail());
     }
 
-    comicIds.forEach(
-        comicId -> {
-          try {
-            log.trace("Loading comicBook: id={}", comicId);
-            final ComicBook comicBook = this.comicBookService.getComic(comicId);
-            log.trace("Removing comicBook from reading list");
-            Map<String, Object> headers = new HashMap<>();
-            headers.put(HEADER_COMIC, comicBook);
-            this.readingListStateHandler.fireEvent(
-                readingList, ReadingListEvent.comicRemoved, headers);
-          } catch (ComicBookException error) {
-            log.error("Failed to remove comic from reading list", error);
-          }
-        });
+    final List<ComicDetail> removedEntries =
+        readingList.getEntries().stream()
+            .filter(comicDetail -> comicBookIds.contains(comicDetail.getComicId()))
+            .collect(Collectors.toList());
+    readingList.getEntries().removeAll(removedEntries);
+    this.readingListRepository.save(readingList);
+    this.readingListRepository.flush();
 
     log.trace("Returning reading list");
     return this.doLoadReadingList(id);

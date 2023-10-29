@@ -47,7 +47,7 @@ import {
 } from '@app/library/actions/convert-comic-books.actions';
 import { archiveTypeFromString } from '@app/comic-books/comic-books.functions';
 import { READING_LIST_1 } from '@app/lists/lists.fixtures';
-import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
+import { addSelectedComicBooksToReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import {
   Confirmation,
   ConfirmationService
@@ -467,8 +467,7 @@ describe('ComicDetailListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          addComicsToReadingList({
-            comicBooks: [COMIC_DETAIL],
+          addSelectedComicBooksToReadingList({
             list: READING_LIST
           })
         );
@@ -482,8 +481,7 @@ describe('ComicDetailListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          addComicsToReadingList({
-            comicBooks: COMIC_DETAILS,
+          addSelectedComicBooksToReadingList({
             list: READING_LIST
           })
         );

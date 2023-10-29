@@ -123,7 +123,7 @@ public class LibraryController {
   @Timed(value = "comixed.library.get-state")
   @JsonView(View.RemoteLibraryState.class)
   public RemoteLibraryState getLibraryState(final HttpSession httpSession)
-      throws ComicSelectionException {
+      throws ComicBookSelectionException {
     log.info("Loading the current library state");
     final List selections =
         this.comicBookSelectionService.decodeSelections(
@@ -214,7 +214,7 @@ public class LibraryController {
       log.trace("Saving comic book selections");
       session.setAttribute(
           LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(idList));
-    } catch (ComicSelectionException error) {
+    } catch (ComicBookSelectionException error) {
       throw new LibraryException("Failed to start converting selected comic books", error);
     }
   }

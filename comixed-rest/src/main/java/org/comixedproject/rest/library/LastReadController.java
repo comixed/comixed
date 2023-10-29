@@ -28,8 +28,8 @@ import javax.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.net.library.GetLastReadDatesResponse;
+import org.comixedproject.service.comicbooks.ComicBookSelectionException;
 import org.comixedproject.service.comicbooks.ComicBookSelectionService;
-import org.comixedproject.service.comicbooks.ComicSelectionException;
 import org.comixedproject.service.library.LastReadException;
 import org.comixedproject.service.library.LastReadService;
 import org.comixedproject.views.View;
@@ -161,7 +161,7 @@ public class LastReadController {
       this.comicBookSelectionService.clearSelectedComicBooks(ids);
       session.setAttribute(
           LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(ids));
-    } catch (ComicSelectionException error) {
+    } catch (ComicBookSelectionException error) {
       throw new LastReadException("Failed to update last read state for selected comics", error);
     }
   }

@@ -20,10 +20,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListsRouting } from './lists.routing';
 import { StoreModule } from '@ngrx/store';
-import {
-  READING_LISTS_FEATURE_KEY,
-  reducer as readingListListReducer
-} from '@app/lists/reducers/reading-lists.reducer';
+import { readingListsFeature } from '@app/lists/reducers/reading-lists.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ReadingListsEffects } from '@app/lists/effects/reading-lists.effects';
 import { ReadingListsPageComponent } from './pages/reading-lists-page/reading-lists-page.component';
@@ -40,32 +37,17 @@ import { MatCardModule } from '@angular/material/card';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import {
-  READING_LIST_DETAIL_FEATURE_KEY,
-  reducer as readingListDetailReducer
-} from '@app/lists/reducers/reading-list-detail.reducer';
+import { readingListDetailsFeature } from '@app/lists/reducers/reading-list-detail.reducer';
 import { ReadingListDetailEffects } from '@app/lists/effects/reading-list-detail.effects';
-import {
-  READING_LIST_ENTRIES_FEATURE_KEY,
-  reducer as readingListEntriesReducer
-} from '@app/lists/reducers/reading-list-entries.reducer';
+import { readingListEntriesFeature } from '@app/lists/reducers/reading-list-entries.reducer';
 import { ReadingListEntriesEffects } from '@app/lists/effects/reading-list-entries.effects';
 import { LibraryModule } from '@app/library/library.module';
-import {
-  DOWNLOAD_READING_LIST_FEATURE_KEY,
-  reducer as downloadReadingListReducer
-} from '@app/lists/reducers/download-reading-list.reducer';
+import { downloadReadingListFeature } from '@app/lists/reducers/download-reading-list.reducer';
 import { DownloadReadingListEffects } from '@app/lists/effects/download-reading-list.effects';
-import {
-  reducer as uploadReadingListReducer,
-  UPLOAD_READING_LIST_FEATURE_KEY
-} from '@app/lists/reducers/upload-reading-list.reducer';
+import { uploadReadingListFeature } from '@app/lists/reducers/upload-reading-list.reducer';
 import { UploadReadingListEffects } from '@app/lists/effects/upload-reading-list.effects';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import {
-  reducer as storyListReducer,
-  STORY_LIST_FEATURE_KEY
-} from '@app/lists/reducers/story-list.reducer';
+import { storyListFeature } from '@app/lists/reducers/story-list.reducer';
 import { StoryListEffects } from '@app/lists/effects/story-list.effects';
 import { StoryNameListPageComponent } from './pages/story-name-list-page/story-name-list-page.component';
 import { StoryListForNamePageComponent } from './pages/story-list-for-name-page/story-list-for-name-page.component';
@@ -82,24 +64,12 @@ import { ComicBooksModule } from '@app/comic-books/comic-books.module';
     CommonModule,
     ListsRouting,
     TranslateModule.forRoot(),
-    StoreModule.forFeature(READING_LISTS_FEATURE_KEY, readingListListReducer),
-    StoreModule.forFeature(
-      READING_LIST_DETAIL_FEATURE_KEY,
-      readingListDetailReducer
-    ),
-    StoreModule.forFeature(
-      READING_LIST_ENTRIES_FEATURE_KEY,
-      readingListEntriesReducer
-    ),
-    StoreModule.forFeature(
-      DOWNLOAD_READING_LIST_FEATURE_KEY,
-      downloadReadingListReducer
-    ),
-    StoreModule.forFeature(
-      UPLOAD_READING_LIST_FEATURE_KEY,
-      uploadReadingListReducer
-    ),
-    StoreModule.forFeature(STORY_LIST_FEATURE_KEY, storyListReducer),
+    StoreModule.forFeature(readingListsFeature),
+    StoreModule.forFeature(readingListDetailsFeature),
+    StoreModule.forFeature(readingListEntriesFeature),
+    StoreModule.forFeature(downloadReadingListFeature),
+    StoreModule.forFeature(uploadReadingListFeature),
+    StoreModule.forFeature(storyListFeature),
     EffectsModule.forFeature([
       ReadingListsEffects,
       ReadingListDetailEffects,

@@ -19,12 +19,12 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
-  addComicsToReadingList,
-  addComicsToReadingListFailed,
-  comicsAddedToReadingList,
-  comicsRemovedFromReadingList,
-  removeComicsFromReadingList,
-  removeComicsFromReadingListFailed
+  addComicBooksToReadingListFailure,
+  addComicBooksToReadingListSuccess,
+  addSelectedComicBooksToReadingList,
+  removeComicBooksFromReadingListFailure,
+  removeComicBooksFromReadingListSuccess,
+  removeSelectedComicBooksFromReadingList
 } from '../actions/reading-list-entries.actions';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -37,15 +37,18 @@ import { of } from 'rxjs';
 
 @Injectable()
 export class ReadingListEntriesEffects {
-  addComicsToReadingList$ = createEffect(() => {
+  adSelectedComicBooksToReadingList$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(addComicsToReadingList),
+      ofType(addSelectedComicBooksToReadingList),
       tap(action =>
-        this.logger.trace('Adding comics to reading list:', action)
+        this.logger.trace(
+          'Adding selected comic books to reading list:',
+          action
+        )
       ),
       switchMap(action =>
         this.readingListService
-          .addComics({ list: action.list, comics: action.comicBooks })
+          .addSelectedComicBooks({ list: action.list })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
             tap((response: ReadingList) =>
@@ -57,39 +60,27 @@ export class ReadingListEntriesEffects {
               )
             ),
             mergeMap((response: ReadingList) => [
-              comicsAddedToReadingList(),
+              addComicBooksToReadingListSuccess(),
               readingListLoaded({ list: response })
             ]),
-            catchError(error => {
-              this.logger.error('Service failure:', error);
-              this.alertService.error(
-                this.translateService.instant(
-                  'reading-list-entries.add-comics.effect-failure'
-                )
-              );
-              return of(addComicsToReadingListFailed());
-            })
+            catchError(error => this.doAddingServiceFailure(error))
           )
       ),
-      catchError(error => {
-        this.logger.error('General failure:', error);
-        this.alertService.error(
-          this.translateService.instant('app.general-effect-failure')
-        );
-        return of(addComicsToReadingListFailed());
-      })
+      catchError(error => this.doAddingGeneralFailure(error))
     );
   });
 
-  removeComicsFromReadingList$ = createEffect(() => {
+  removeSelectedComicBooksFromReadingList$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(removeComicsFromReadingList),
+      ofType(removeSelectedComicBooksFromReadingList),
       tap(action =>
         this.logger.trace('Removing comics from reading list:', action)
       ),
       switchMap(action =>
         this.readingListService
-          .removeComics({ list: action.list, comics: action.comicBooks })
+          .removeSelectedComicBooks({
+            list: action.list
+          })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
             tap((response: ReadingList) =>
@@ -101,7 +92,7 @@ export class ReadingListEntriesEffects {
               )
             ),
             mergeMap((response: ReadingList) => [
-              comicsRemovedFromReadingList(),
+              removeComicBooksFromReadingListSuccess(),
               readingListLoaded({ list: response })
             ]),
             catchError(error => {
@@ -111,7 +102,7 @@ export class ReadingListEntriesEffects {
                   'reading-list-entries.remove-comics.effect-failure'
                 )
               );
-              return of(removeComicsFromReadingListFailed());
+              return of(removeComicBooksFromReadingListFailure());
             })
           )
       ),
@@ -120,7 +111,7 @@ export class ReadingListEntriesEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(removeComicsFromReadingListFailed());
+        return of(removeComicBooksFromReadingListFailure());
       })
     );
   });
@@ -132,4 +123,22 @@ export class ReadingListEntriesEffects {
     private alertService: AlertService,
     private translateService: TranslateService
   ) {}
+
+  private doAddingServiceFailure(error: any) {
+    this.logger.error('Service failure:', error);
+    this.alertService.error(
+      this.translateService.instant(
+        'reading-list-entries.add-comics.effect-failure'
+      )
+    );
+    return of(addComicBooksToReadingListFailure());
+  }
+
+  private doAddingGeneralFailure(error: any) {
+    this.logger.error('General failure:', error);
+    this.alertService.error(
+      this.translateService.instant('app.general-effect-failure')
+    );
+    return of(addComicBooksToReadingListFailure());
+  }
 }

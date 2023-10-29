@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   readingListUploaded,
   uploadReadingList,
@@ -20,3 +20,8 @@ export const reducer = createReducer(
   on(readingListUploaded, state => ({ ...state, uploading: false })),
   on(uploadReadingListFailed, state => ({ ...state, uploading: false }))
 );
+
+export const uploadReadingListFeature = createFeature({
+  name: UPLOAD_READING_LIST_FEATURE_KEY,
+  reducer
+});

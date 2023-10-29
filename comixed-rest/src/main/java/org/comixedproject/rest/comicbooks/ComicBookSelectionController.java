@@ -22,9 +22,12 @@ import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.comicbooks.ComicTagType;
+import org.comixedproject.model.net.comicbooks.AddComicBookSelectionsByIdRequest;
 import org.comixedproject.model.net.comicbooks.MultipleComicBooksSelectionRequest;
+import org.comixedproject.opds.OPDSUtils;
+import org.comixedproject.service.comicbooks.ComicBookSelectionException;
 import org.comixedproject.service.comicbooks.ComicBookSelectionService;
-import org.comixedproject.service.comicbooks.ComicSelectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,17 +45,19 @@ public class ComicBookSelectionController {
   public static final String LIBRARY_SELECTIONS = "library.selections";
 
   @Autowired private ComicBookSelectionService comicBookSelectionService;
+  @Autowired private OPDSUtils opdsUtils;
 
   /**
    * Loads the user's comic book selections.
    *
    * @param session the session
    * @return the comic book ids
+   * @throws ComicBookSelectionException if an error occurs
    */
   @GetMapping(value = "/api/comics/selections", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.load")
-  public List getAllSelections(final HttpSession session) throws ComicSelectionException {
+  public List getAllSelections(final HttpSession session) throws ComicBookSelectionException {
     log.info("Loading comic book selections");
     return this.comicBookSelectionService.decodeSelections(
         session.getAttribute(LIBRARY_SELECTIONS));
@@ -63,7 +68,7 @@ public class ComicBookSelectionController {
    *
    * @param session the session
    * @param comicBookId the comic book id
-   * @throws ComicSelectionException if an error occurs
+   * @throws ComicBookSelectionException if an error occurs
    */
   @PutMapping(
       value = "/api/comics/selections/{comicBookId}",
@@ -73,7 +78,7 @@ public class ComicBookSelectionController {
   @Timed(value = "comixed.comic-book.selections.add-single")
   public void addSingleSelection(
       final HttpSession session, @PathVariable("comicBookId") final Long comicBookId)
-      throws ComicSelectionException {
+      throws ComicBookSelectionException {
     final List selections =
         this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     log.info("Adding comic selection: comic book id={}", comicBookId);
@@ -88,14 +93,14 @@ public class ComicBookSelectionController {
    *
    * @param session the session
    * @param comicBookId the comic book id
-   * @throws ComicSelectionException if an error occurs
+   * @throws ComicBookSelectionException if an error occurs
    */
   @DeleteMapping(value = "/api/comics/selections/{comicBookId}")
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.delete-single")
   public void deleteSingleSelection(
       final HttpSession session, @PathVariable("comicBookId") final Long comicBookId)
-      throws ComicSelectionException {
+      throws ComicBookSelectionException {
     log.info("Removing comic selection:comic book id={}", comicBookId);
     final List selections =
         this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
@@ -109,21 +114,21 @@ public class ComicBookSelectionController {
    *
    * @param session the session
    * @param request the request body
-   * @throws ComicSelectionException if an error occurs
+   * @throws ComicBookSelectionException if an error occurs
    */
   @PostMapping(
       value = "/api/comics/selections/multiple",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
-  @Timed(value = "comixed.comic-book.selections.add-multiple")
-  public void selectMultipleComicBooks(
+  @Timed(value = "comixed.comic-book.selections.add-by-filter")
+  public void selectComicBooksByFilter(
       final HttpSession session, @RequestBody() final MultipleComicBooksSelectionRequest request)
-      throws ComicSelectionException {
+      throws ComicBookSelectionException {
     log.info("Updating multiple comic books selection: {}", request);
     final List selections =
         this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
-    this.comicBookSelectionService.selectMultipleComicBooks(
+    this.comicBookSelectionService.selectByFilter(
         selections,
         request.getCoverYear(),
         request.getCoverMonth(),
@@ -139,15 +144,105 @@ public class ComicBookSelectionController {
   }
 
   /**
+   * Adds selections by tag type and value
+   *
+   * @param session the session
+   * @param tagTypeString the tag type string
+   * @param tagValue the tag value
+   * @throws ComicBookSelectionException if an error occurs
+   */
+  @PutMapping(value = "/api/comics/selections/tag/{tagType}/{tagValue}")
+  @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.comic-book.selections.add-by-tag-type-and-value")
+  public void addComicBooksByTagTypeAndValue(
+      final HttpSession session,
+      @PathVariable("tagType") final String tagTypeString,
+      @PathVariable("tagValue") final String tagValue)
+      throws ComicBookSelectionException {
+    final ComicTagType tagType = ComicTagType.forValue(tagTypeString);
+    final String decodedTagValue = this.opdsUtils.urlDecodeString(tagValue);
+    log.info(
+        "Adding multiple comic books by tag type and value: type={} value={}",
+        tagType,
+        decodedTagValue);
+    final List selections =
+        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+    this.comicBookSelectionService.addByTagTypeAndValue(selections, tagType, tagValue);
+    this.comicBookSelectionService.publisherSelections(selections);
+    session.setAttribute(
+        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
+  }
+
+  /**
+   * Removes selections using filters.
+   *
+   * @param session the session
+   * @param tagTypeString the tag type string
+   * @param tagValue the tag value
+   * @throws ComicBookSelectionException if an error occurs
+   */
+  @DeleteMapping(value = "/api/comics/selections/tag/{tagType}/{tagValue}")
+  @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.comic-book.selections.remove-by-tag-type-and-value")
+  public void removeComicBooksByTagTypeAndValue(
+      final HttpSession session,
+      @PathVariable("tagType") final String tagTypeString,
+      @PathVariable("tagValue") final String tagValue)
+      throws ComicBookSelectionException {
+    final ComicTagType tagType = ComicTagType.forValue(tagTypeString);
+    final String decodedTagValue = this.opdsUtils.urlDecodeString(tagValue);
+
+    log.info(
+        "Removing multiple comic books by tag type and value: type={} value={}",
+        tagType,
+        decodedTagValue);
+    final List selections =
+        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+    this.comicBookSelectionService.removeByTagTypeAndValue(selections, tagType, tagValue);
+    this.comicBookSelectionService.publisherSelections(selections);
+    session.setAttribute(
+        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
+  }
+
+  /**
+   * Removes selections using filters.
+   *
+   * @param session the session
+   * @param request the request body
+   * @throws ComicBookSelectionException if an error occurs
+   */
+  @PostMapping(value = "/api/comics/selections/ids")
+  @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.comic-book.selections.add-or-remove-by-id")
+  public void addComicBookSelectionsById(
+      final HttpSession session, @RequestBody() final AddComicBookSelectionsByIdRequest request)
+      throws ComicBookSelectionException {
+    final List selections =
+        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+
+    if (request.isSelected()) {
+      log.info("Adding ids from comic book selections");
+      selections.addAll(request.getComicBookIds());
+    } else {
+      log.info("Removing ids from comic book selections");
+      selections.removeAll(request.getComicBookIds());
+    }
+
+    this.comicBookSelectionService.publisherSelections(selections);
+    session.setAttribute(
+        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
+  }
+
+  /**
    * Clears the selections for the current user.
    *
    * @param session the session
-   * @throws ComicSelectionException if an error occurs
+   * @throws ComicBookSelectionException if an error occurs
    */
   @DeleteMapping(value = "/api/library/selections")
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.clear")
-  public void clearSelections(final HttpSession session) throws ComicSelectionException {
+  public void clearSelections(final HttpSession session) throws ComicBookSelectionException {
     final List<Long> selections =
         this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     log.info("Clearing comic selections");
