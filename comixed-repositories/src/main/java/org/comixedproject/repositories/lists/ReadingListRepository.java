@@ -22,13 +22,13 @@ import java.util.List;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.user.ComiXedUser;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ReadingListRepository extends CrudRepository<ReadingList, Long> {
+public interface ReadingListRepository extends JpaRepository<ReadingList, Long> {
   /**
    * Retrieves all records for the given user.
    *

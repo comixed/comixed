@@ -29,6 +29,7 @@ import org.comixedproject.messaging.comicbooks.PublishComicBookSelectionStateAct
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
+import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.comicbooks.ComicType;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +98,7 @@ public class ComicBookSelectionService {
    * @param adding adding or removing flag
    */
   @Transactional
-  public void selectMultipleComicBooks(
+  public void selectByFilter(
       final List selections,
       final Integer coverYear,
       final Integer coverMonth,
@@ -153,9 +154,9 @@ public class ComicBookSelectionService {
    *
    * @param storeSelections the encoded selections
    * @return the decoded selections
-   * @throws ComicSelectionException if an error occurs
+   * @throws ComicBookSelectionException if an error occurs
    */
-  public List decodeSelections(final Object storeSelections) throws ComicSelectionException {
+  public List decodeSelections(final Object storeSelections) throws ComicBookSelectionException {
     if (storeSelections == null) {
       log.debug("Creating new selection set");
       return new ArrayList();
@@ -168,7 +169,7 @@ public class ComicBookSelectionService {
                 .map(entry -> ((Integer) entry).longValue())
                 .collect(Collectors.toList());
       } catch (JsonProcessingException error) {
-        throw new ComicSelectionException("failed to load selections from session", error);
+        throw new ComicBookSelectionException("failed to load selections from session", error);
       }
     }
   }
@@ -178,14 +179,22 @@ public class ComicBookSelectionService {
    *
    * @param selections the selections
    * @return the encoded selections
-   * @throws ComicSelectionException if an error occurs
+   * @throws ComicBookSelectionException if an error occurs
    */
-  public String encodeSelections(final List<Long> selections) throws ComicSelectionException {
+  public String encodeSelections(final List<Long> selections) throws ComicBookSelectionException {
     log.debug("Storing selection set");
     try {
       return this.objectMapper.writeValueAsString(selections);
     } catch (JsonProcessingException error) {
-      throw new ComicSelectionException("failed to save selections to session", error);
+      throw new ComicBookSelectionException("failed to save selections to session", error);
+    }
+  }
+
+  public void publisherSelections(final List<Long> selections) throws ComicBookSelectionException {
+    try {
+      this.publishComicBookSelectionStateAction.publish(selections);
+    } catch (PublishingException error) {
+      throw new ComicBookSelectionException("Failed to publish selection updates", error);
     }
   }
 
@@ -196,5 +205,22 @@ public class ComicBookSelectionService {
     } catch (PublishingException error) {
       log.error("failed to publish selection update", error);
     }
+  }
+
+  public void addByTagTypeAndValue(
+      final List selections, final ComicTagType tagType, final String tagValue) {
+    selections.addAll(
+        this.comicDetailService.getAllComicsForTag(tagType, tagValue, null, false).stream()
+            .map(ComicDetail::getComicId)
+            .filter(id -> !selections.contains(id))
+            .collect(Collectors.toList()));
+  }
+
+  public void removeByTagTypeAndValue(
+      final List selections, final ComicTagType tagType, final String tagValue) {
+    selections.removeAll(
+        this.comicDetailService.getAllComicsForTag(tagType, tagValue, null, false).stream()
+            .map(ComicDetail::getComicId)
+            .collect(Collectors.toList()));
   }
 }

@@ -40,7 +40,7 @@ import {
   convertSelectedComicBooks,
   convertSingleComicBook
 } from '@app/library/actions/convert-comic-books.actions';
-import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
+import { addSelectedComicBooksToReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import {
   markSelectedComicBooksRead,
   markSingleComicBookRead
@@ -302,7 +302,8 @@ export class ComicDetailListViewComponent implements OnDestroy {
   }
 
   onAddOneToReadingList(list: ReadingList): void {
-    this.doAddToReadingList([this.selectedComicDetail], list);
+    this.logger.debug('Adding selected comic books to reading list:', list);
+    this.store.dispatch(addSelectedComicBooksToReadingList({ list }));
   }
 
   onAddSelectedToReadingList(list: ReadingList): void {
@@ -451,7 +452,7 @@ export class ComicDetailListViewComponent implements OnDestroy {
     list: ReadingList
   ): void {
     this.logger.debug('Adding comics to reading list:', comicBooks, list);
-    this.store.dispatch(addComicsToReadingList({ comicBooks, list }));
+    this.store.dispatch(addSelectedComicBooksToReadingList({ list }));
   }
 
   private getSelectedComics(): ComicDetail[] {

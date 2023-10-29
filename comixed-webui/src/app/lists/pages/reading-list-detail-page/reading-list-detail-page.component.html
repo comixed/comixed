@@ -1,16 +1,15 @@
-<mat-toolbar>
+<div class="cx-fab-container-bottom-right">
   <button
     id="return-to-list-button"
-    mat-icon-button
+    mat-fab
     [matTooltip]="'reading-list.tooltip.return-to-list' | translate"
     routerLink="/lists/reading/all"
   >
     <mat-icon>arrow_back</mat-icon>
   </button>
-  <div class="cx-spacer"></div>
   <button
     id="remove-selected-entries"
-    mat-icon-button
+    mat-fab
     [disabled]="!selectedIds.length"
     [matTooltip]="'reading-list.tooltip.remove-comics' | translate"
     (click)="onRemoveEntries()"
@@ -19,7 +18,7 @@
   </button>
   <button
     id="reset-changes-button"
-    mat-icon-button
+    mat-fab
     [disabled]="!readingListForm.valid || !readingListForm.dirty"
     [matTooltip]="'reading-list.tooltip.reset-reading-list' | translate"
     (click)="onReset()"
@@ -28,7 +27,7 @@
   </button>
   <button
     id="download-button"
-    mat-icon-button
+    mat-fab
     [disabled]="!readingList?.id"
     [matTooltip]="'reading-list.tooltip.download-file' | translate"
     (click)="onDownload()"
@@ -37,7 +36,7 @@
   </button>
   <button
     id="save-changes-button"
-    mat-icon-button
+    mat-fab
     [disabled]="!readingListForm.valid || !readingListForm.dirty"
     [matTooltip]="'reading-list.tooltip.save-reading-list' | translate"
     (click)="onSave()"
@@ -46,13 +45,13 @@
   </button>
   <button
     id="delete-reading-list-button"
-    mat-icon-button
+    mat-fab
     [matTooltip]="'reading-list.tooltip.delete-reading-list' | translate"
     (click)="onDeleteReadingList()"
   >
     <mat-icon>delete</mat-icon>
   </button>
-</mat-toolbar>
+</div>
 
 <h2>
   {{ readingList?.name || "reading-list.text.no-name" | translate }}
@@ -88,4 +87,5 @@
   [showComicState]="false"
   [showAddedDate]="false"
   [showLastReadDate]="true"
+  (selectAll)="this.onSelectAll($event)"
 ></cx-comic-detail-list-view>

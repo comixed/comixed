@@ -41,7 +41,7 @@ import {
 } from '@angular/forms';
 import { filter } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
-import { removeComicsFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
+import { removeSelectedComicBooksFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import {
   READING_LIST_REMOVAL_TOPIC,
@@ -61,6 +61,7 @@ import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { LastRead } from '@app/last-read/models/last-read';
 import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import { setMultipleComicBookByIdSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 
 @Component({
   selector: 'cx-user-reading-list-page',
@@ -277,11 +278,8 @@ export class ReadingListDetailPageComponent implements OnDestroy {
       confirm: () => {
         this.logger.trace('Firing action: remove comics from reading list');
         this.store.dispatch(
-          removeComicsFromReadingList({
-            list: this.readingList,
-            comicBooks: this.dataSource.data
-              .filter(entry => entry.selected)
-              .map(entry => entry.item)
+          removeSelectedComicBooksFromReadingList({
+            list: this.readingList
           })
         );
       }
@@ -307,6 +305,16 @@ export class ReadingListDetailPageComponent implements OnDestroy {
         this.store.dispatch(deleteReadingLists({ lists: [this.readingList] }));
       }
     });
+  }
+
+  onSelectAll(selected: boolean): void {
+    this.logger.debug('Selecting all comics in reading list');
+    this.store.dispatch(
+      setMultipleComicBookByIdSelectionState({
+        selected,
+        comicBookIds: this.readingList.entries.map(entry => entry.comicId)
+      })
+    );
   }
 
   private encodeForm(): ReadingList {

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   downloadReadingList,
   downloadReadingListFailed,
@@ -40,3 +40,8 @@ export const reducer = createReducer(
   on(readingListDownloaded, state => ({ ...state, downloading: false })),
   on(downloadReadingListFailed, state => ({ ...state, downloading: false }))
 );
+
+export const downloadReadingListFeature = createFeature({
+  name: DOWNLOAD_READING_LIST_FEATURE_KEY,
+  reducer
+});

@@ -24,17 +24,17 @@ import {
 import { READING_LIST_3 } from '@app/lists/lists.fixtures';
 import { COMIC_DETAIL_1 } from '@app/comic-books/comic-books.fixtures';
 import {
-  addComicsToReadingList,
-  addComicsToReadingListFailed,
-  comicsAddedToReadingList,
-  comicsRemovedFromReadingList,
-  removeComicsFromReadingList,
-  removeComicsFromReadingListFailed
+  addComicBooksToReadingListFailure,
+  addComicBooksToReadingListSuccess,
+  addSelectedComicBooksToReadingList,
+  removeComicBooksFromReadingListFailure,
+  removeComicBooksFromReadingListSuccess,
+  removeSelectedComicBooksFromReadingList
 } from '@app/lists/actions/reading-list-entries.actions';
 
 describe('ReadingListEntries Reducer', () => {
   const READING_LIST = READING_LIST_3;
-  const COMIC = COMIC_DETAIL_1;
+  const COMIC_DETAIL = COMIC_DETAIL_1;
 
   let state: ReadingListEntriesState;
 
@@ -52,78 +52,83 @@ describe('ReadingListEntries Reducer', () => {
     });
   });
 
-  describe('adding reading list entries', () => {
+  describe('adding selected comic books to a reading list', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, working: false },
-        addComicsToReadingList({ list: READING_LIST, comicBooks: [COMIC] })
+        addSelectedComicBooksToReadingList({ list: READING_LIST })
       );
     });
 
     it('sets the working flag', () => {
       expect(state.working).toBeTrue();
     });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, working: true },
+          addComicBooksToReadingListSuccess()
+        );
+      });
+
+      it('clears the working flag', () => {
+        expect(state.working).toBeFalse();
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, working: true },
+          addComicBooksToReadingListFailure()
+        );
+      });
+
+      it('clears the working flag', () => {
+        expect(state.working).toBeFalse();
+      });
+    });
   });
 
-  describe('success adding', () => {
-    beforeEach(() => {
-      state = reducer({ ...state, working: true }, comicsAddedToReadingList());
-    });
-
-    it('clears the working flag', () => {
-      expect(state.working).toBeFalse();
-    });
-  });
-
-  describe('failure adding', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, working: true },
-        addComicsToReadingListFailed()
-      );
-    });
-
-    it('clears the working flag', () => {
-      expect(state.working).toBeFalse();
-    });
-  });
-
-  describe('removing reading list entries', () => {
+  describe('removing selected comic books from a reading list', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, working: false },
-        removeComicsFromReadingList({ list: READING_LIST, comicBooks: [COMIC] })
+        removeSelectedComicBooksFromReadingList({
+          list: READING_LIST
+        })
       );
     });
 
     it('sets the working flag', () => {
       expect(state.working).toBeTrue();
     });
-  });
 
-  describe('success removing', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, working: true },
-        comicsRemovedFromReadingList()
-      );
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, working: true },
+          removeComicBooksFromReadingListSuccess()
+        );
+      });
+
+      it('clears the working flag', () => {
+        expect(state.working).toBeFalse();
+      });
     });
 
-    it('clears the working flag', () => {
-      expect(state.working).toBeFalse();
-    });
-  });
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, working: true },
+          removeComicBooksFromReadingListFailure()
+        );
+      });
 
-  describe('failure removing', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, working: true },
-        removeComicsFromReadingListFailed()
-      );
-    });
-
-    it('clears the working flag', () => {
-      expect(state.working).toBeFalse();
+      it('clears the working flag', () => {
+        expect(state.working).toBeFalse();
+      });
     });
   });
 });

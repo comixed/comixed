@@ -32,7 +32,9 @@ import {
   COMIC_BOOK_SELECTION_UPDATE_TOPIC,
   LOAD_COMIC_BOOK_SELECTIONS_URL,
   REMOVE_SINGLE_COMIC_SELECTION_URL,
-  SET_MULTIPLE_COMIC_SELECTION_URL
+  SET_SELECTED_COMIC_BOOKS_BY_FILTER_URL,
+  SET_SELECTED_COMIC_BOOKS_BY_ID_URL,
+  SET_SELECTED_COMIC_BOOKS_BY_TAG_TYPE_AND_VALUE_URL
 } from '@app/comic-books/comic-books.constants';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
@@ -49,6 +51,8 @@ import {
   comicBookSelectionUpdate,
   loadComicBookSelections
 } from '@app/comic-books/actions/comic-book-selection.actions';
+import { TagType } from '@app/collections/models/comic-collection.enum';
+import { SetSelectedByIdRequest } from '@app/comic-books/models/net/set-selected-by-id-request';
 
 describe('ComicBookSelectionService', () => {
   const COVER_YEAR = Math.random() * 100 + 1900;
@@ -60,7 +64,10 @@ describe('ComicBookSelectionService', () => {
   const UNSCRAPED_STATE = Math.random() > 0.5;
   const SEARCH_TEXT = 'This is some text';
   const ID = 65;
+  const TAG_TYPE = TagType.TEAMS;
+  const TAG_VALUE = 'Some team';
   const SELECTED = Math.random() > 0.5;
+  const COMIC_BOOK_IDS = [3.2, 96, 9, 21, 98];
   const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
 
   let service: ComicBookSelectionService;
@@ -137,11 +144,11 @@ describe('ComicBookSelectionService', () => {
     req.flush(serverResponse);
   });
 
-  it('can set the selection state for multiple comics', () => {
+  it('can set the selection state by filter', () => {
     const serverResponse = new HttpResponse({});
 
     service
-      .setMultipleState({
+      .setSelectedByFilter({
         coverYear: COVER_YEAR,
         coverMonth: COVER_MONTH,
         archiveType: ARCHIVE_TYPE,
@@ -155,7 +162,7 @@ describe('ComicBookSelectionService', () => {
       .subscribe(response => expect(response).toEqual(serverResponse));
 
     const req = httpMock.expectOne(
-      interpolate(SET_MULTIPLE_COMIC_SELECTION_URL)
+      interpolate(SET_SELECTED_COMIC_BOOKS_BY_FILTER_URL)
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
@@ -169,6 +176,71 @@ describe('ComicBookSelectionService', () => {
       searchText: SEARCH_TEXT,
       selected: SELECTED
     } as MultipleComicBookSelectionRequest);
+    req.flush(serverResponse);
+  });
+
+  describe('selecting comic books by tag type and value', () => {
+    it('can select', () => {
+      const serverResponse = new HttpResponse({});
+
+      service
+        .setSelectedByTagTypeAndValue({
+          tagType: TAG_TYPE,
+          tagValue: TAG_VALUE,
+          selected: true
+        })
+        .subscribe(response => expect(response).toEqual(serverResponse));
+
+      const req = httpMock.expectOne(
+        interpolate(SET_SELECTED_COMIC_BOOKS_BY_TAG_TYPE_AND_VALUE_URL, {
+          tagType: TAG_TYPE,
+          tagValue: TAG_VALUE
+        })
+      );
+      expect(req.request.method).toEqual('PUT');
+      req.flush(serverResponse);
+    });
+
+    it('can deselect', () => {
+      const serverResponse = new HttpResponse({});
+
+      service
+        .setSelectedByTagTypeAndValue({
+          tagType: TAG_TYPE,
+          tagValue: TAG_VALUE,
+          selected: false
+        })
+        .subscribe(response => expect(response).toEqual(serverResponse));
+
+      const req = httpMock.expectOne(
+        interpolate(SET_SELECTED_COMIC_BOOKS_BY_TAG_TYPE_AND_VALUE_URL, {
+          tagType: TAG_TYPE,
+          tagValue: TAG_VALUE
+        })
+      );
+      expect(req.request.method).toEqual('DELETE');
+      req.flush(serverResponse);
+    });
+  });
+
+  it('can select comic books by id', () => {
+    const serverResponse = new HttpResponse({});
+
+    service
+      .setSelectedById({
+        comicBookIds: COMIC_BOOK_IDS,
+        selected: SELECTED
+      })
+      .subscribe(response => expect(response).toEqual(serverResponse));
+
+    const req = httpMock.expectOne(
+      interpolate(SET_SELECTED_COMIC_BOOKS_BY_ID_URL)
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      comicBookIds: COMIC_BOOK_IDS,
+      selected: SELECTED
+    } as SetSelectedByIdRequest);
     req.flush(serverResponse);
   });
 

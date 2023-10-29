@@ -89,18 +89,28 @@ export const setMultipleComicBookByFilterSelectionState = createAction(
   }>()
 );
 
-export const setMultipleComicBookForCollectionSelectionState = createAction(
-  '[Comic Book Selection] Set the selected state for multiple comic books for a collection',
+export const setMultipleComicBooksByTagTypeAndValueSelectionState =
+  createAction(
+    '[Comic Book Selection] Set the selected state for multiple comic books by tag type and value',
+    props<{
+      tagType: TagType;
+      tagValue: string;
+      selected: boolean;
+    }>()
+  );
+
+export const setMultipleComicBookByIdSelectionState = createAction(
+  '[Comic Book Selection] Set the selected state for multiple comic books by id',
   props<{
-    tagType: TagType;
-    tagValue: string;
+    comicBookIds: number[];
+    selected: boolean;
   }>()
 );
 
-export const multipleComicBookSelectionStateSet = createAction(
+export const setMultipleComicBookSelectionStateSuccess = createAction(
   '[Comic Book Selection] The selected state for multiple comic books was set'
 );
 
-export const setMultipleComicBookSelectionStateFailed = createAction(
+export const setMultipleComicBookSelectionStateFailure = createAction(
   '[Comic Book Selection] Failed to set the selected state for multiple comic books'
 );

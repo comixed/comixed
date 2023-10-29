@@ -29,22 +29,20 @@ import {
 } from '@app/lists/lists.fixtures';
 import { interpolate } from '@app/core';
 import {
-  ADD_COMICS_TO_READING_LIST_URL,
+  ADD_SELECTED_COMIC_BOOKS_TO_READING_LIST_URL,
   DELETE_READING_LISTS_URL,
   DOWNLOAD_READING_LIST_URL,
   LOAD_READING_LIST_URL,
   LOAD_READING_LISTS_URL,
   READING_LIST_REMOVAL_TOPIC,
   READING_LISTS_UPDATES_TOPIC,
-  REMOVE_COMICS_FROM_READING_LIST_URL,
+  REMOVE_SELECTED_COMIC_BOOKS_FROM_READING_LIST_URL,
   SAVE_READING_LIST,
   UPDATE_READING_LIST,
   UPLOAD_READING_LIST_URL
 } from '@app/lists/lists.constants';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { COMIC_DETAIL_1 } from '@app/comic-books/comic-books.fixtures';
-import { AddComicsToReadingListRequest } from '@app/lists/models/net/add-comics-to-reading-list-request';
-import { RemoveComicsFromReadingListRequest } from '@app/lists/models/net/remove-comics-from-reading-list-request';
 import { DownloadDocument } from '@app/core/models/download-document';
 import { HttpResponse } from '@angular/common/http';
 import { DeleteReadingListsRequest } from '@app/lists/models/net/delete-reading-lists-request';
@@ -63,7 +61,7 @@ import { WebSocketService } from '@app/messaging';
 describe('ReadingListService', () => {
   const READING_LISTS = [READING_LIST_1, READING_LIST_3, READING_LIST_5];
   const READING_LIST = READING_LISTS[0];
-  const COMIC = COMIC_DETAIL_1;
+  const COMIC_DETAIL = COMIC_DETAIL_1;
   const DOWNLOAD_DOCUMENT = {
     filename: 'filename',
     content: 'content',
@@ -163,39 +161,36 @@ describe('ReadingListService', () => {
     req.flush(READING_LIST);
   });
 
-  it('can add comics to a reading list', () => {
+  it('can add selected comic books to a reading list', () => {
     service
-      .addComics({
-        list: READING_LIST,
-        comics: [COMIC]
+      .addSelectedComicBooks({
+        list: READING_LIST
       })
       .subscribe(response => expect(response).toEqual(READING_LIST));
 
     const req = httpMock.expectOne(
-      interpolate(ADD_COMICS_TO_READING_LIST_URL, { id: READING_LIST.id })
+      interpolate(ADD_SELECTED_COMIC_BOOKS_TO_READING_LIST_URL, {
+        id: READING_LIST.id
+      })
     );
-    expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({
-      ids: [COMIC.comicId]
-    } as AddComicsToReadingListRequest);
+    expect(req.request.method).toEqual('PUT');
+    expect(req.request.body).toEqual({});
     req.flush(READING_LIST);
   });
 
-  it('can remove comics from a reading list', () => {
+  it('can remove selected comic books from a reading list', () => {
     service
-      .removeComics({
-        list: READING_LIST,
-        comics: [COMIC]
+      .removeSelectedComicBooks({
+        list: READING_LIST
       })
       .subscribe(response => expect(response).toEqual(READING_LIST));
 
     const req = httpMock.expectOne(
-      interpolate(REMOVE_COMICS_FROM_READING_LIST_URL, { id: READING_LIST.id })
+      interpolate(REMOVE_SELECTED_COMIC_BOOKS_FROM_READING_LIST_URL, {
+        id: READING_LIST.id
+      })
     );
-    expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({
-      ids: [COMIC.comicId]
-    } as RemoveComicsFromReadingListRequest);
+    expect(req.request.method).toEqual('DELETE');
     req.flush(READING_LIST);
   });
 
