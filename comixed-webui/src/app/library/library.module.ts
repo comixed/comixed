@@ -32,10 +32,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import {
-  LIBRARY_FEATURE_KEY,
-  reducer as libraryReducer
-} from '@app/library/reducers/library.reducer';
+import { libraryFeature } from '@app/library/reducers/library.reducer';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -53,58 +50,31 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ScrapingPageComponent } from '@app/library/pages/scraping-page/scraping-page.component';
 import { ComicBooksModule } from '@app/comic-books/comic-books.module';
 import { ArchiveTypePipe } from './pipes/archive-type.pipe';
-import {
-  DUPLICATE_PAGE_LIST_FEATURE_KEY,
-  reducer as comicsWithDuplicatePagesReducer
-} from '@app/library/reducers/duplicate-page-list.reducer';
+import { duplicatePageListFeature } from '@app/library/reducers/duplicate-page-list.reducer';
 import { DuplicatePageListEffects } from '@app/library/effects/duplicate-page-list.effects';
 import { DuplicatePageListPageComponent } from './pages/duplicate-page-list-page/duplicate-page-list-page.component';
 import { ComicDetailListDialogComponent } from './components/comic-detail-list-dialog/comic-detail-list-dialog.component';
 import { DuplicatePageDetailPageComponent } from './pages/duplicate-page-detail-page/duplicate-page-detail-page.component';
-import {
-  DUPLICATE_PAGE_DETAIL_FEATURE_KEY,
-  reducer as duplicatePageDetailReducer
-} from '@app/library/reducers/duplicate-page-detail.reducer';
+import { duplicatePageDetailFeature } from '@app/library/reducers/duplicate-page-detail.reducer';
 import { DuplicatePageDetailEffects } from '@app/library/effects/duplicate-page-detail.effects';
 import { MatDividerModule } from '@angular/material/divider';
-import {
-  reducer as rescanComicsReducer,
-  RESCAN_COMICS_FEATURE_KEY
-} from '@app/library/reducers/rescan-comics.reducer';
+import { rescanComicBooksFeature } from '@app/library/reducers/rescan-comics.reducer';
 import { RescanComicsEffects } from '@app/library/effects/rescan-comics.effects';
-import {
-  reducer as updateMetadataReducer,
-  UPDATE_METADATA_FEATURE_KEY
-} from '@app/library/reducers/update-metadata.reducer';
+import { updateMetadataFeature } from '@app/library/reducers/update-metadata.reducer';
 import { UpdateMetadataEffects } from '@app/library/effects/update-metadata.effects';
-import {
-  CONSOLIDATE_LIBRARY_FEATURE_KEY,
-  reducer as consolidateLibraryReducer
-} from '@app/library/reducers/consolidate-library.reducer';
+import { consolidateLibraryFeature } from '@app/library/reducers/consolidate-library.reducer';
 import { ConsolidateLibraryEffects } from '@app/library/effects/consolidate-library.effects';
-import {
-  CONVERT_COMICS_FEATURE_KEY,
-  reducer as convertComicsReducer
-} from '@app/library/reducers/convert-comics.reducer';
-import { ConvertComicsEffects } from '@app/library/effects/convert-comics.effects';
-import {
-  PURGE_LIBRARY_FEATURE_KEY,
-  reducer as purgeLibraryReducer
-} from '@app/library/reducers/purge-library.reducer';
+import { convertComicBooksFeature } from '@app/library/reducers/convert-comic-books.reducer';
+import { ConvertComicBooksEffects } from '@app/library/effects/convert-comic-books.effects';
+import { purgeLibraryFeature } from '@app/library/reducers/purge-library.reducer';
 import { PurgeLibraryEffects } from '@app/library/effects/purge-library.effects';
 import { EditMultipleComicsComponent } from './components/edit-multiple-comics/edit-multiple-comics.component';
 import { LibraryEffects } from '@app/library/effects/library.effects';
 import { ComicBookListComponent } from './components/comic-book-list/comic-book-list.component';
-import {
-  LIBRARY_SELECTIONS_FEATURE_KEY,
-  reducer as librarySelectionsReducer
-} from '@app/library/reducers/library-selections.reducer';
+import { librarySelectionsFeature } from '@app/library/reducers/library-selections.reducer';
 import { LibrarySelectionsEffects } from '@app/library/effects/library-selections.effects';
 import { DuplicateComicsPageComponent } from './pages/duplicate-comics-page/duplicate-comics-page.component';
-import {
-  DUPLICATE_COMIC_FEATURE_KEY,
-  reducer as duplicateComicReducer
-} from '@app/library/reducers/duplicate-comic.reducer';
+import { duplicateComicFeature } from '@app/library/reducers/duplicate-comic.reducer';
 import { DuplicateComicEffects } from '@app/library/effects/duplicate-comic.effects';
 import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
 
@@ -130,29 +100,16 @@ import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
     LibraryRouting,
     ReactiveFormsModule,
     TranslateModule.forRoot(),
-    StoreModule.forFeature(LIBRARY_FEATURE_KEY, libraryReducer),
-    StoreModule.forFeature(
-      LIBRARY_SELECTIONS_FEATURE_KEY,
-      librarySelectionsReducer
-    ),
-    StoreModule.forFeature(DUPLICATE_COMIC_FEATURE_KEY, duplicateComicReducer),
-    StoreModule.forFeature(
-      DUPLICATE_PAGE_LIST_FEATURE_KEY,
-      comicsWithDuplicatePagesReducer
-    ),
-    StoreModule.forFeature(
-      DUPLICATE_PAGE_DETAIL_FEATURE_KEY,
-      duplicatePageDetailReducer
-    ),
-    StoreModule.forFeature(LIBRARY_FEATURE_KEY, libraryReducer),
-    StoreModule.forFeature(RESCAN_COMICS_FEATURE_KEY, rescanComicsReducer),
-    StoreModule.forFeature(UPDATE_METADATA_FEATURE_KEY, updateMetadataReducer),
-    StoreModule.forFeature(
-      CONSOLIDATE_LIBRARY_FEATURE_KEY,
-      consolidateLibraryReducer
-    ),
-    StoreModule.forFeature(CONVERT_COMICS_FEATURE_KEY, convertComicsReducer),
-    StoreModule.forFeature(PURGE_LIBRARY_FEATURE_KEY, purgeLibraryReducer),
+    StoreModule.forFeature(libraryFeature),
+    StoreModule.forFeature(librarySelectionsFeature),
+    StoreModule.forFeature(duplicateComicFeature),
+    StoreModule.forFeature(duplicatePageListFeature),
+    StoreModule.forFeature(duplicatePageDetailFeature),
+    StoreModule.forFeature(rescanComicBooksFeature),
+    StoreModule.forFeature(updateMetadataFeature),
+    StoreModule.forFeature(consolidateLibraryFeature),
+    StoreModule.forFeature(convertComicBooksFeature),
+    StoreModule.forFeature(purgeLibraryFeature),
     EffectsModule.forFeature([
       LibraryEffects,
       LibrarySelectionsEffects,
@@ -162,7 +119,7 @@ import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
       RescanComicsEffects,
       UpdateMetadataEffects,
       ConsolidateLibraryEffects,
-      ConvertComicsEffects,
+      ConvertComicBooksEffects,
       PurgeLibraryEffects
     ]),
     MatInputModule,

@@ -4,21 +4,23 @@
 >
   <mat-card appearance="outlined">
     <mat-card-title class="cx-text-nowrap">
-      {{ currentComic | comicTitle }}
+      {{ selectedComicDetail | comicTitle }}
     </mat-card-title>
     <mat-card-subtitle
-      *ngIf="!!currentComic.title && currentComic.title.length > 0"
+      *ngIf="
+        !!selectedComicDetail.title && selectedComicDetail.title.length > 0
+      "
       class="cx-text-nowrap"
     >
-      {{ currentComic.title }}
+      {{ selectedComicDetail.title }}
     </mat-card-subtitle>
     <mat-card-content class="cx-padding-5">
       <img
         loading="lazy"
-        [src]="currentComic | comicCoverUrl"
+        [src]="selectedComicDetail | comicCoverUrl"
         width="100%"
         height="auto"
-        [alt]="currentComic | comicTitle"
+        [alt]="selectedComicDetail | comicTitle"
       />
     </mat-card-content>
   </mat-card>
@@ -73,7 +75,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <mat-icon
-        (click)="currentComic = entry.item; $event.stopPropagation()"
+        (click)="selectedComicDetail = entry.item; $event.stopPropagation()"
         [matMenuTriggerFor]="contextMenu"
       >
         more_vert
@@ -301,14 +303,14 @@
     <mat-label>{{ "library.context-menu.convert" | translate }}</mat-label>
   </button>
   <button
-    *ngIf="!isRead(currentComic)"
+    *ngIf="!isRead(selectedComicDetail)"
     mat-menu-item
     (click)="onMarkOneAsRead(true)"
   >
     <mat-label>{{ "library.context-menu.mark-as-read" | translate }}</mat-label>
   </button>
   <button
-    *ngIf="isRead(currentComic)"
+    *ngIf="isRead(selectedComicDetail)"
     mat-menu-item
     (click)="onMarkOneAsRead(false)"
   >
@@ -317,14 +319,14 @@
     </mat-label>
   </button>
   <button
-    *ngIf="!isDeleted(currentComic)"
+    *ngIf="!isDeleted(selectedComicDetail)"
     mat-menu-item
     (click)="onMarkOneAsDeleted(true)"
   >
     <mat-label>{{ "library.context-menu.delete-one" | translate }}</mat-label>
   </button>
   <button
-    *ngIf="isDeleted(currentComic)"
+    *ngIf="isDeleted(selectedComicDetail)"
     mat-menu-item
     (click)="onMarkOneAsDeleted(false)"
   >
@@ -336,7 +338,7 @@
   <button
     *ngIf="isAdmin"
     mat-menu-item
-    (click)="onUpdateMetadata([currentComic.comicId])"
+    (click)="onUpdateMetadata([selectedComicDetail.comicId])"
   >
     <mat-label>
       {{ "library.context-menu.update-metadata-one" | translate }}
@@ -346,7 +348,7 @@
   <button
     *ngIf="isAdmin"
     mat-menu-item
-    (click)="onRescanComics([currentComic.comicId])"
+    (click)="onRescanComics([selectedComicDetail.comicId])"
   >
     <mat-label>
       {{ "library.context-menu.rescan-one" | translate }}
@@ -355,12 +357,12 @@
 </mat-menu>
 
 <mat-menu #currentComicConvertMenu="matMenu">
-  <button mat-menu-item (click)="onConvertOne('CBZ')">
+  <button mat-menu-item (click)="onConvertSingleComicBook('CBZ')">
     <mat-label>
       {{ "library.context-menu.convert-one-to-cbz" | translate }}
     </mat-label>
   </button>
-  <button mat-menu-item (click)="onConvertOne('CB7')">
+  <button mat-menu-item (click)="onConvertSingleComicBook('CB7')">
     <mat-label>
       {{ "library.context-menu.convert-one-to-cb7" | translate }}
     </mat-label>

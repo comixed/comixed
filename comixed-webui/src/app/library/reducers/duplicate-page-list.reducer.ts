@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   duplicatePagesLoaded,
   loadDuplicatePages,
@@ -56,3 +56,8 @@ export const reducer = createReducer(
     loading: false
   }))
 );
+
+export const duplicatePageListFeature = createFeature({
+  name: DUPLICATE_PAGE_LIST_FEATURE_KEY,
+  reducer
+});

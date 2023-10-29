@@ -55,9 +55,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Log4j2
 public class ComicBookController {
+  private static final String MISSING_COMIC_COVER_FILENAME = "/images/missing-comic.png";
+
   public static final String MISSING_COMIC_COVER = "missing-comic-cover";
   public static final String ATTACHMENT_FILENAME_FORMAT = "attachment; filename=\"%s\"";
-  private static final String MISSING_COMIC_COVER_FILENAME = "/images/missing-comic.png";
+
   @Autowired private ComicBookService comicBookService;
   @Autowired private ComicDetailService comicDetailService;
   @Autowired private PageCacheService pageCacheService;

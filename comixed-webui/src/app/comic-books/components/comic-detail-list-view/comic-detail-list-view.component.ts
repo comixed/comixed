@@ -36,9 +36,10 @@ import { LastRead } from '@app/last-read/models/last-read';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { TranslateService } from '@ngx-translate/core';
-import { convertComics } from '@app/library/actions/convert-comics.actions';
-import { archiveTypeFromString } from '@app/comic-books/comic-books.functions';
-import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
+import {
+  convertSelectedComicBooks,
+  convertSingleComicBook
+} from '@app/library/actions/convert-comic-books.actions';
 import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import {
   markSelectedComicBooksRead,
@@ -57,6 +58,7 @@ import {
   addSingleComicBookSelection,
   removeSingleComicBookSelection
 } from '@app/comic-books/actions/comic-book-selection.actions';
+import { archiveTypeFromString } from '@app/comic-books/comic-books.functions';
 
 @Component({
   selector: 'cx-comic-detail-list-view',
@@ -94,7 +96,7 @@ export class ComicDetailListViewComponent implements OnDestroy {
 
   showComicDetailPopup = false;
   showComicFilterPopup = false;
-  currentComic: ComicDetail;
+  selectedComicDetail: ComicDetail;
   dataSource = new MatTableDataSource<SelectableListItem<ComicDetail>>();
   queryParamsSubscription: Subscription;
 
@@ -226,37 +228,41 @@ export class ComicDetailListViewComponent implements OnDestroy {
   onShowPopup(show: boolean, comic: ComicDetail): void {
     this.logger.debug('Setting show pup:', show, this.usePopups);
     this.showComicDetailPopup = show && this.usePopups;
-    this.currentComic = comic;
+    this.selectedComicDetail = comic;
   }
 
   isRead(comic: ComicDetail): boolean {
     return !!this.lastReadDate(comic);
   }
 
-  lastReadDate(comic: ComicDetail): number {
+  lastReadDate(comicDetail: ComicDetail): number {
     return this.lastReadDates.find(
-      entry => !!comic && entry.comicDetail.id === comic.id
+      entry => !!comicDetail && entry.comicDetail.id === comicDetail.id
     )?.lastRead;
   }
 
-  onConvertOne(archiveTypeString: string): void {
+  onConvertSingleComicBook(archiveTypeString: string): void {
     this.confirmationService.confirm({
       title: this.translateService.instant(
-        'library.convert-comics.convert-one.confirmation-title'
+        'library.convert-single-comic-book.confirmation-title'
       ),
       message: this.translateService.instant(
-        'library.convert-comics.convert-one.confirmation-message',
+        'library.convert-single-comic-book.confirmation-message',
         { format: archiveTypeString }
       ),
       confirm: () => {
         this.logger.debug(
           'Converting comic:',
-          this.currentComic,
+          this.selectedComicDetail,
           archiveTypeString
         );
-        this.doConvertComics(
-          [this.currentComic],
-          archiveTypeFromString(archiveTypeString)
+        this.store.dispatch(
+          convertSingleComicBook({
+            comicDetail: this.selectedComicDetail,
+            archiveType: archiveTypeFromString(archiveTypeString),
+            deletePages: true,
+            renamePages: true
+          })
         );
       }
     });
@@ -269,10 +275,10 @@ export class ComicDetailListViewComponent implements OnDestroy {
 
     this.confirmationService.confirm({
       title: this.translateService.instant(
-        'library.convert-comics.convert-selected.confirmation-title'
+        'library.convert-selected-comic-books.confirmation-title'
       ),
       message: this.translateService.instant(
-        'library.convert-comics.convert-selected.confirmation-message',
+        'library.convert-selected-comic-books.confirmation-message',
         {
           count: selectedComics.length,
           format: archiveTypeString
@@ -284,16 +290,19 @@ export class ComicDetailListViewComponent implements OnDestroy {
           selectedComics,
           archiveTypeString
         );
-        this.doConvertComics(
-          selectedComics,
-          archiveTypeFromString(archiveTypeString)
+        this.store.dispatch(
+          convertSelectedComicBooks({
+            archiveType: archiveTypeFromString(archiveTypeString),
+            deletePages: true,
+            renamePages: true
+          })
         );
       }
     });
   }
 
   onAddOneToReadingList(list: ReadingList): void {
-    this.doAddToReadingList([this.currentComic], list);
+    this.doAddToReadingList([this.selectedComicDetail], list);
   }
 
   onAddSelectedToReadingList(list: ReadingList): void {
@@ -307,7 +316,10 @@ export class ComicDetailListViewComponent implements OnDestroy {
 
   onMarkOneAsRead(read: boolean): void {
     this.store.dispatch(
-      markSingleComicBookRead({ comicBookId: this.currentComic.comicId, read })
+      markSingleComicBookRead({
+        comicBookId: this.selectedComicDetail.comicId,
+        read
+      })
     );
   }
 
@@ -324,7 +336,7 @@ export class ComicDetailListViewComponent implements OnDestroy {
   }
 
   onMarkOneAsDeleted(deleted: boolean): void {
-    this.doMarkAsDeleted([this.currentComic], deleted);
+    this.doMarkAsDeleted([this.selectedComicDetail], deleted);
   }
 
   onEditMultipleComics(): void {
@@ -440,20 +452,6 @@ export class ComicDetailListViewComponent implements OnDestroy {
   ): void {
     this.logger.debug('Adding comics to reading list:', comicBooks, list);
     this.store.dispatch(addComicsToReadingList({ comicBooks, list }));
-  }
-
-  private doConvertComics(
-    comicBooks: ComicDetail[],
-    archiveType: ArchiveType
-  ): void {
-    this.store.dispatch(
-      convertComics({
-        comicBooks,
-        archiveType,
-        deletePages: true,
-        renamePages: true
-      })
-    );
   }
 
   private getSelectedComics(): ComicDetail[] {

@@ -16,27 +16,34 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  comicsConverting,
-  convertComics,
-  convertComicsFailed
-} from '../actions/convert-comics.actions';
+  convertComicBooksFailure,
+  convertComicBooksSuccess,
+  convertSelectedComicBooks,
+  convertSingleComicBook
+} from '../actions/convert-comic-books.actions';
 
-export const CONVERT_COMICS_FEATURE_KEY = 'convert_comics_state';
+export const CONVERT_COMIC_BOOKS_FEATURE_KEY = 'convert_comic_books_state';
 
-export interface ConvertComicsState {
+export interface ConvertComicBooksState {
   converting: boolean;
 }
 
-export const initialState: ConvertComicsState = {
+export const initialState: ConvertComicBooksState = {
   converting: false
 };
 
 export const reducer = createReducer(
   initialState,
 
-  on(convertComics, state => ({ ...state, converting: true })),
-  on(comicsConverting, state => ({ ...state, converting: false })),
-  on(convertComicsFailed, state => ({ ...state, converting: false }))
+  on(convertSingleComicBook, state => ({ ...state, converting: true })),
+  on(convertSelectedComicBooks, state => ({ ...state, converting: true })),
+  on(convertComicBooksSuccess, state => ({ ...state, converting: false })),
+  on(convertComicBooksFailure, state => ({ ...state, converting: false }))
 );
+
+export const convertComicBooksFeature = createFeature({
+  name: CONVERT_COMIC_BOOKS_FEATURE_KEY,
+  reducer
+});

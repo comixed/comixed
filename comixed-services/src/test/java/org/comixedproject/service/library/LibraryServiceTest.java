@@ -18,12 +18,9 @@
 
 package org.comixedproject.service.library;
 
-import static org.comixedproject.state.comicbooks.ComicStateHandler.*;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.comicbooks.ComicBookException;
@@ -31,6 +28,7 @@ import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -40,10 +38,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class LibraryServiceTest {
   private static final String TEST_IMAGE_CACHE_DIRECTORY =
       "/home/ComiXedReader/.comixed/image-cache";
-  private static final String TEST_RENAMING_RULE = "The renaming rule";
   private static final String TEST_TARGET_DIRECTORY = "/home/comixed/Documents/comics";
-  private static final boolean TEST_DELETE_REMOVED_COMIC_FILES = RandomUtils.nextBoolean();
   private static final long TEST_COMIC_COUNT = 717L;
+  private static final long TEST_COMIC_BOOK_ID = 129L;
 
   @InjectMocks private LibraryService service;
   @Mock private ComicBookService comicBookService;
@@ -54,6 +51,11 @@ public class LibraryServiceTest {
 
   private List<ComicBook> comicBookList = new ArrayList<>();
   private List<Long> comicIdList = new ArrayList<>();
+
+  @Before
+  public void setUp() throws ComicBookException {
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
+  }
 
   @Test
   public void testClearImageCache() throws LibraryException, IOException {
@@ -127,36 +129,31 @@ public class LibraryServiceTest {
     Mockito.verify(comicBookService, Mockito.times(1)).prepareForConsolidation(comicIdList);
   }
 
-  @Test
-  public void testPrepareToRecreateComics() throws ComicBookException {
-    for (long index = 0L; index < 25L; index++) comicIdList.add(index + 100L);
+  @Test(expected = LibraryException.class)
+  public void testPrepareToRecreateComicBookInvalidComicBook()
+      throws ComicBookException, LibraryException {
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicBookException.class);
 
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
-
-    service.prepareToRecreateComics(comicIdList);
-
-    for (int index = 0; index < comicIdList.size(); index++) {
-      final Long id = comicIdList.get(index);
-      Mockito.verify(comicBookService, Mockito.times(1)).getComic(id);
+    try {
+      service.prepareToRecreateComicBook(TEST_COMIC_BOOK_ID);
+    } finally {
+      Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_BOOK_ID);
     }
-    Mockito.verify(comicStateHandler, Mockito.times(comicIdList.size()))
-        .fireEvent(comicBook, ComicEvent.recreateComicFile);
   }
 
   @Test
-  public void testPrepareToRecreateComicsInvalid() throws ComicBookException {
-    for (long index = 0L; index < 25L; index++) comicIdList.add(index + 100L);
+  public void testPrepareToRecreateComicBook() throws ComicBookException, LibraryException {
+    service.prepareToRecreateComicBook(TEST_COMIC_BOOK_ID);
 
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicBookException.class);
+    Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_BOOK_ID);
+    Mockito.verify(comicBook, Mockito.times(1)).setRecreating(true);
+  }
 
-    service.prepareToRecreateComics(comicIdList);
+  @Test
+  public void testPrepareToRecreateComicBooks() throws ComicBookException {
+    service.prepareToRecreateComicBooks(comicIdList);
 
-    for (int index = 0; index < comicIdList.size(); index++) {
-      final Long id = comicIdList.get(index);
-      Mockito.verify(comicBookService, Mockito.times(1)).getComic(id);
-    }
-    Mockito.verify(comicStateHandler, Mockito.never())
-        .fireEvent(comicBook, ComicEvent.recreateComicFile);
+    Mockito.verify(comicBookService, Mockito.times(1)).prepareForRecreation(comicIdList);
   }
 
   @Test

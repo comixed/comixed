@@ -18,8 +18,6 @@
 
 package org.comixedproject.service.library;
 
-import static org.comixedproject.state.comicbooks.ComicStateHandler.*;
-
 import java.io.IOException;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
@@ -33,6 +31,7 @@ import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Log4j2
@@ -90,22 +89,26 @@ public class LibraryService {
     this.comicBookService.prepareForConsolidation(ids);
   }
 
+  @Transactional
+  public void prepareToRecreateComicBook(final long id) throws LibraryException {
+    try {
+      log.debug("Setting recreating flag on comic book: id={}", id);
+      final ComicBook comicBook = this.comicBookService.getComic(id);
+      comicBook.setRecreating(true);
+      this.comicBookService.save(comicBook);
+    } catch (ComicBookException error) {
+      throw new LibraryException("Failed to prepare comic book for recreation", error);
+    }
+  }
+
   /**
    * Prepares comics to have their files recreated.
    *
    * @param ids the comic ids
    */
-  public void prepareToRecreateComics(final List<Long> ids) {
-    ids.forEach(
-        id -> {
-          try {
-            final ComicBook comicBook = this.comicBookService.getComic(id);
-            log.trace("Firing action to recreate comicBook: id={}", id);
-            this.comicStateHandler.fireEvent(comicBook, ComicEvent.recreateComicFile);
-          } catch (ComicBookException error) {
-            log.error("Failed to update comic", error);
-          }
-        });
+  public void prepareToRecreateComicBooks(final List<Long> ids) {
+    log.debug("Preparing to recreate comic book files");
+    this.comicBookService.prepareForRecreation(ids);
   }
 
   /** Begins the process of purging comics from the library. */

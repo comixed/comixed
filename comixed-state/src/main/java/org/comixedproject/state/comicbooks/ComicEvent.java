@@ -48,8 +48,6 @@ public enum ComicEvent {
   deleteComic,
   // the comic is being unmarked for removal
   undeleteComic,
-  // recreate the comic file
-  recreateComicFile,
   // the comic file was recreated
   comicFileRecreated,
   // the comic has been marked as read by a user

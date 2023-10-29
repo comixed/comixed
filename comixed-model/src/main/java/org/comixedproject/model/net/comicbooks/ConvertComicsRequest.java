@@ -19,7 +19,6 @@
 package org.comixedproject.model.net.comicbooks;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,11 +33,6 @@ import org.comixedproject.model.archives.ArchiveType;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ConvertComicsRequest {
-  @Getter
-  @Setter
-  @JsonProperty("ids")
-  private List<Long> ids;
-
   @Getter
   @Setter
   @JsonProperty("archiveType")
