@@ -31,7 +31,8 @@ import {
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/core';
 import {
-  CONVERT_COMICS_URL,
+  CONVERT_SELECTED_COMIC_BOOKS_URL,
+  CONVERT_SINGLE_COMIC_BOOK_URL,
   EDIT_MULTIPLE_COMICS_URL,
   LOAD_LIBRARY_STATE_URL,
   PURGE_LIBRARY_URL,
@@ -47,7 +48,7 @@ import { ConsolidateLibraryRequest } from '@app/library/models/net/consolidate-l
 import { RescanComicsRequest } from '@app/library/models/net/rescan-comics-request';
 import { UpdateMetadataRequest } from '@app/library/models/net/update-metadata-request';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
-import { ConvertComicsRequest } from '@app/library/models/net/convert-comics-request';
+import { ConvertComicBooksRequest } from '@app/library/models/net/convert-comic-books-request';
 import { PurgeLibraryRequest } from '@app/library/models/net/purge-library-request';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { EditMultipleComicsRequest } from '@app/library/models/net/edit-multiple-comics-request';
@@ -63,19 +64,19 @@ import { libraryStateLoaded } from '@app/library/actions/library.actions';
 import { ComicType } from '@app/comic-books/models/comic-type';
 
 describe('LibraryService', () => {
-  const COMIC_BOOK = COMIC_DETAIL_1;
-  const COMIC_BOOKS = [
+  const COMIC_DETAIL = COMIC_DETAIL_1;
+  const COMIC_DETAILS = [
     COMIC_DETAIL_1,
     COMIC_DETAIL_2,
     COMIC_DETAIL_3,
     COMIC_DETAIL_4
   ];
-  const IDS = COMIC_BOOKS.map(comic => comic.id);
+  const IDS = COMIC_DETAILS.map(comic => comic.id);
   const READ = Math.random() > 0.5;
   const ARCHIVE_TYPE = ArchiveType.CBZ;
   const RENAME_PAGES = Math.random() > 0.5;
   const DELETE_PAGES = Math.random() > 0.5;
-  const COMIC_DETAILS: EditMultipleComics = {
+  const EDIT_MULTIPLE_COMICS: EditMultipleComics = {
     publisher: 'The Publisher',
     series: 'The Series',
     volume: '2022',
@@ -132,13 +133,13 @@ describe('LibraryService', () => {
   it('can set the read state for comics', () => {
     const serviceResponse = new HttpResponse({ status: 200 });
     service
-      .setRead({ comicBooks: COMIC_BOOKS, read: READ })
+      .setRead({ comicBooks: COMIC_DETAILS, read: READ })
       .subscribe(response => expect(response).toEqual(serviceResponse));
 
     const req = httpMock.expectOne(interpolate(SET_READ_STATE_URL));
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual({
-      ids: COMIC_BOOKS.map(comic => comic.comicId),
+      ids: COMIC_DETAILS.map(comic => comic.comicId),
       read: READ
     } as SetComicReadRequest);
     req.flush(serviceResponse);
@@ -147,7 +148,7 @@ describe('LibraryService', () => {
   it('can start library consolidation', () => {
     service
       .startLibraryConsolidation()
-      .subscribe(response => expect(response).toEqual(COMIC_BOOKS));
+      .subscribe(response => expect(response).toEqual(COMIC_DETAILS));
 
     const req = httpMock.expectOne(
       interpolate(START_LIBRARY_CONSOLIDATION_URL)
@@ -184,24 +185,48 @@ describe('LibraryService', () => {
     req.flush(new HttpResponse({ status: 200 }));
   });
 
-  it('can convert comics', () => {
+  it('can convert a single comic book', () => {
     service
-      .convertComics({
-        comicBooks: COMIC_BOOKS,
+      .convertSingleComicBook({
+        comicDetail: COMIC_DETAIL,
         archiveType: ARCHIVE_TYPE,
         renamePages: RENAME_PAGES,
         deletePages: DELETE_PAGES
       })
       .subscribe(response => expect(response.status).toEqual(200));
 
-    const req = httpMock.expectOne(interpolate(CONVERT_COMICS_URL));
-    expect(req.request.method).toEqual('POST');
+    const req = httpMock.expectOne(
+      interpolate(CONVERT_SINGLE_COMIC_BOOK_URL, {
+        comicBookId: COMIC_DETAIL.comicId
+      })
+    );
+    expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual({
-      ids: COMIC_BOOKS.map(comic => comic.comicId),
       archiveType: ARCHIVE_TYPE,
       deletePages: DELETE_PAGES,
       renamePages: RENAME_PAGES
-    } as ConvertComicsRequest);
+    } as ConvertComicBooksRequest);
+    req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('can convert the selected comic books', () => {
+    service
+      .convertSelectedComicBooks({
+        archiveType: ARCHIVE_TYPE,
+        renamePages: RENAME_PAGES,
+        deletePages: DELETE_PAGES
+      })
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(
+      interpolate(CONVERT_SELECTED_COMIC_BOOKS_URL)
+    );
+    expect(req.request.method).toEqual('PUT');
+    expect(req.request.body).toEqual({
+      archiveType: ARCHIVE_TYPE,
+      deletePages: DELETE_PAGES,
+      renamePages: RENAME_PAGES
+    } as ConvertComicBooksRequest);
     req.flush(new HttpResponse({ status: 200 }));
   });
 
@@ -219,21 +244,21 @@ describe('LibraryService', () => {
   it('can edit multiple comics', () => {
     service
       .editMultipleComics({
-        comicBooks: COMIC_BOOKS,
-        details: COMIC_DETAILS
+        comicBooks: COMIC_DETAILS,
+        details: EDIT_MULTIPLE_COMICS
       })
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(interpolate(EDIT_MULTIPLE_COMICS_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      ids: COMIC_BOOKS.map(comic => comic.comicId),
-      publisher: COMIC_DETAILS.publisher,
-      series: COMIC_DETAILS.series,
-      volume: COMIC_DETAILS.volume,
-      issueNumber: COMIC_DETAILS.issueNumber,
-      imprint: COMIC_DETAILS.imprint,
-      comicType: COMIC_DETAILS.comicType
+      ids: COMIC_DETAILS.map(comic => comic.comicId),
+      publisher: EDIT_MULTIPLE_COMICS.publisher,
+      series: EDIT_MULTIPLE_COMICS.series,
+      volume: EDIT_MULTIPLE_COMICS.volume,
+      issueNumber: EDIT_MULTIPLE_COMICS.issueNumber,
+      imprint: EDIT_MULTIPLE_COMICS.imprint,
+      comicType: EDIT_MULTIPLE_COMICS.comicType
     } as EditMultipleComicsRequest);
     req.flush(new HttpResponse({ status: 200 }));
   });

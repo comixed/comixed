@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   editMultipleComics,
   editMultipleComicsFailed,
@@ -84,3 +84,8 @@ export const reducer = createReducer(
   })),
   on(loadLibraryStateFailed, state => ({ ...state, busy: false }))
 );
+
+export const libraryFeature = createFeature({
+  name: LIBRARY_FEATURE_KEY,
+  reducer
+});

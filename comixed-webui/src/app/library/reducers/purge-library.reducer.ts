@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   libraryPurging,
   purgeLibrary,
@@ -40,3 +40,8 @@ export const reducer = createReducer(
   on(libraryPurging, state => ({ ...state, working: false })),
   on(purgeLibraryFailed, state => ({ ...state, working: false }))
 );
+
+export const purgeLibraryFeature = createFeature({
+  name: PURGE_LIBRARY_FEATURE_KEY,
+  reducer
+});

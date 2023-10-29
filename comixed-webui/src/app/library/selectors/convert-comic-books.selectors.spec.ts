@@ -16,11 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector } from '@ngrx/store';
 import {
-  CONVERT_COMICS_FEATURE_KEY,
-  ConvertComicsState
-} from '../reducers/convert-comics.reducer';
+  CONVERT_COMIC_BOOKS_FEATURE_KEY,
+  ConvertComicBooksState
+} from '../reducers/convert-comic-books.reducer';
+import { selectConvertComicBooksState } from './convert-comic-books.selectors';
 
-export const selectConvertComicsState =
-  createFeatureSelector<ConvertComicsState>(CONVERT_COMICS_FEATURE_KEY);
+describe('ConvertComics Selectors', () => {
+  let state: ConvertComicBooksState;
+
+  beforeEach(() => {
+    state = { converting: Math.random() > 0.5 };
+  });
+
+  it('should select the feature state', () => {
+    expect(
+      selectConvertComicBooksState({
+        [CONVERT_COMIC_BOOKS_FEATURE_KEY]: state
+      })
+    ).toEqual(state);
+  });
+});

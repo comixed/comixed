@@ -17,10 +17,10 @@
  */
 
 import {
-  ConvertComicsState,
+  ConvertComicBooksState,
   initialState,
   reducer
-} from './convert-comics.reducer';
+} from './convert-comic-books.reducer';
 import {
   COMIC_DETAIL_1,
   COMIC_DETAIL_3,
@@ -28,18 +28,20 @@ import {
 } from '@app/comic-books/comic-books.fixtures';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import {
-  comicsConverting,
-  convertComics,
-  convertComicsFailed
-} from '@app/library/actions/convert-comics.actions';
+  convertComicBooksFailure,
+  convertComicBooksSuccess,
+  convertSelectedComicBooks,
+  convertSingleComicBook
+} from '@app/library/actions/convert-comic-books.actions';
 
-describe('ConvertComics Reducer', () => {
-  const COMICS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
+describe('ConvertComicBooks Reducer', () => {
+  const COMIC_DETAILS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
+  const COMIC_DETAIL = COMIC_DETAILS[0];
   const ARCHIVE_TYPE = ArchiveType.CBZ;
   const RENAME_PAGES = Math.random() > 0.5;
   const DELETE_PAGES = Math.random() > 0.5;
 
-  let state: ConvertComicsState;
+  let state: ConvertComicBooksState;
 
   beforeEach(() => {
     state = { ...initialState };
@@ -55,12 +57,29 @@ describe('ConvertComics Reducer', () => {
     });
   });
 
-  describe('converting comics', () => {
+  describe('converting a single comic book', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, converting: false },
-        convertComics({
-          comicBooks: COMICS,
+        convertSingleComicBook({
+          comicDetail: COMIC_DETAIL,
+          archiveType: ARCHIVE_TYPE,
+          deletePages: DELETE_PAGES,
+          renamePages: RENAME_PAGES
+        })
+      );
+    });
+
+    it('sets the converting state', () => {
+      expect(state.converting).toBeTrue();
+    });
+  });
+
+  describe('converting selected comic books', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, converting: false },
+        convertSelectedComicBooks({
           archiveType: ARCHIVE_TYPE,
           deletePages: DELETE_PAGES,
           renamePages: RENAME_PAGES
@@ -75,7 +94,10 @@ describe('ConvertComics Reducer', () => {
 
   describe('success', () => {
     beforeEach(() => {
-      state = reducer({ ...state, converting: true }, comicsConverting());
+      state = reducer(
+        { ...state, converting: true },
+        convertComicBooksSuccess()
+      );
     });
 
     it('clears the converting state', () => {
@@ -85,7 +107,10 @@ describe('ConvertComics Reducer', () => {
 
   describe('failure', () => {
     beforeEach(() => {
-      state = reducer({ ...state, converting: true }, convertComicsFailed());
+      state = reducer(
+        { ...state, converting: true },
+        convertComicBooksFailure()
+      );
     });
 
     it('clears the converting state', () => {

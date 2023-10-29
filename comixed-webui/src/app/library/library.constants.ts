@@ -50,7 +50,8 @@ export const LOAD_COMICS_WITH_DUPLICATE_PAGES_URL = `${API_ROOT_URL}/library/pag
 export const LOAD_DUPLICATE_PAGE_DETAIL_URL = `${API_ROOT_URL}/library/pages/duplicates/\${hash}`;
 
 export const START_LIBRARY_CONSOLIDATION_URL = `${API_ROOT_URL}/library/consolidate`;
-export const CONVERT_COMICS_URL = `${API_ROOT_URL}/library/convert`;
+export const CONVERT_SINGLE_COMIC_BOOK_URL = `${API_ROOT_URL}/library/conversion/\${comicBookId}`;
+export const CONVERT_SELECTED_COMIC_BOOKS_URL = `${API_ROOT_URL}/library/conversion/selected`;
 export const RESCAN_COMICS_URL = `${API_ROOT_URL}/library/rescan`;
 export const UPDATE_METADATA_URL = `${API_ROOT_URL}/library/metadata`;
 export const PURGE_LIBRARY_URL = `${API_ROOT_URL}/library/purge`;
