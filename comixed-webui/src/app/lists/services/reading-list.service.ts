@@ -22,21 +22,19 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { interpolate } from '@app/core';
 import {
-  ADD_COMICS_TO_READING_LIST_URL,
+  ADD_SELECTED_COMIC_BOOKS_TO_READING_LIST_URL,
   DELETE_READING_LISTS_URL,
   DOWNLOAD_READING_LIST_URL,
   LOAD_READING_LIST_URL,
   LOAD_READING_LISTS_URL,
   READING_LIST_REMOVAL_TOPIC,
   READING_LISTS_UPDATES_TOPIC,
-  REMOVE_COMICS_FROM_READING_LIST_URL,
+  REMOVE_SELECTED_COMIC_BOOKS_FROM_READING_LIST_URL,
   SAVE_READING_LIST,
   UPDATE_READING_LIST,
   UPLOAD_READING_LIST_URL
 } from '@app/lists/lists.constants';
 import { ReadingList } from '@app/lists/models/reading-list';
-import { AddComicsToReadingListRequest } from '@app/lists/models/net/add-comics-to-reading-list-request';
-import { RemoveComicsFromReadingListRequest } from '@app/lists/models/net/remove-comics-from-reading-list-request';
 import { DeleteReadingListsRequest } from '@app/lists/models/net/delete-reading-lists-request';
 import { Store } from '@ngrx/store';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
@@ -46,7 +44,6 @@ import {
   readingListRemoved,
   readingListUpdate
 } from '@app/lists/actions/reading-lists.actions';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Injectable({
   providedIn: 'root'
@@ -121,29 +118,23 @@ export class ReadingListService {
     }
   }
 
-  addComics(args: {
-    list: ReadingList;
-    comics: ComicDetail[];
-  }): Observable<any> {
+  addSelectedComicBooks(args: { list: ReadingList }): Observable<any> {
     this.logger.trace('Adding comics to reading list:', args);
-    return this.http.post(
-      interpolate(ADD_COMICS_TO_READING_LIST_URL, { id: args.list.id }),
-      {
-        ids: args.comics.map(comic => comic.comicId)
-      } as AddComicsToReadingListRequest
+    return this.http.put(
+      interpolate(ADD_SELECTED_COMIC_BOOKS_TO_READING_LIST_URL, {
+        id: args.list.id
+      }),
+      {}
     );
   }
 
-  removeComics(args: {
-    list: ReadingList;
-    comics: ComicDetail[];
-  }): Observable<any> {
+  removeSelectedComicBooks(args: { list: ReadingList }): Observable<any> {
     this.logger.trace('Removing comics from reading list:', args);
-    return this.http.post(
-      interpolate(REMOVE_COMICS_FROM_READING_LIST_URL, { id: args.list.id }),
-      {
-        ids: args.comics.map(comic => comic.comicId)
-      } as RemoveComicsFromReadingListRequest
+    return this.http.delete(
+      interpolate(REMOVE_SELECTED_COMIC_BOOKS_FROM_READING_LIST_URL, {
+        id: args.list.id
+      }),
+      {}
     );
   }
 

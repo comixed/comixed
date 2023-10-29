@@ -49,7 +49,7 @@ import {
   COMIC_DETAIL_3,
   COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
-import { removeComicsFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
+import { removeSelectedComicBooksFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import {
   initialState as initialMessagingState,
   MESSAGING_FEATURE_KEY
@@ -97,6 +97,7 @@ import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
 } from '@app/comic-books/reducers/comic-book-selection.reducer';
+import { setMultipleComicBookByIdSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 
 describe('ReadingListDetailPageComponent', () => {
   const READING_LIST = {
@@ -401,11 +402,8 @@ describe('ReadingListDetailPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        removeComicsFromReadingList({
-          list: READING_LIST,
-          comicBooks: component.dataSource.data
-            .filter(entry => entry.selected)
-            .map(entry => entry.item)
+        removeSelectedComicBooksFromReadingList({
+          list: READING_LIST
         })
       );
     });
@@ -536,6 +534,24 @@ describe('ReadingListDetailPageComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         deleteReadingLists({ lists: [READING_LIST] })
+      );
+    });
+  });
+
+  describe('selecting all comic books', () => {
+    const SELECT = Math.random() > 0.5;
+
+    beforeEach(() => {
+      component.readingList = READING_LIST;
+      component.onSelectAll(SELECT);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        setMultipleComicBookByIdSelectionState({
+          selected: SELECT,
+          comicBookIds: READING_LIST.entries.map(entry => entry.comicId)
+        })
       );
     });
   });

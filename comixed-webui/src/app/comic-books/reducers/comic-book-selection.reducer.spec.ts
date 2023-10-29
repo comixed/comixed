@@ -30,10 +30,12 @@ import {
   comicBookSelectionUpdate,
   loadComicBookSelections,
   loadComicBookSelectionsFailed,
-  multipleComicBookSelectionStateSet,
   removeSingleComicBookSelection,
   setMultipleComicBookByFilterSelectionState,
-  setMultipleComicBookSelectionStateFailed,
+  setMultipleComicBookByIdSelectionState,
+  setMultipleComicBooksByTagTypeAndValueSelectionState,
+  setMultipleComicBookSelectionStateFailure,
+  setMultipleComicBookSelectionStateSuccess,
   singleComicBookSelectionFailed,
   singleComicBookSelectionUpdated
 } from '@app/comic-books/actions/comic-book-selection.actions';
@@ -47,6 +49,7 @@ import {
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
+import { TagType } from '@app/collections/models/comic-collection.enum';
 
 describe('ComicBookSelection Reducer', () => {
   const COVER_YEAR = Math.random() * 100 + 1900;
@@ -64,6 +67,8 @@ describe('ComicBookSelection Reducer', () => {
     COMIC_BOOK_4,
     COMIC_BOOK_5
   ];
+  const TAG_TYPE = TagType.TEAMS;
+  const TAG_VALUE = 'Some team';
   const IDS = COMIC_BOOKS.map(comicBook => comicBook.id);
   const SELECTED = Math.random() > 0.5;
 
@@ -270,31 +275,64 @@ describe('ComicBookSelection Reducer', () => {
     it('sets the busy flag', () => {
       expect(state.busy).toBeTrue();
     });
+  });
 
-    describe('success', () => {
-      beforeEach(() => {
-        state = reducer(
-          { ...state, busy: true },
-          multipleComicBookSelectionStateSet()
-        );
-      });
-
-      it('clears the busy flag', () => {
-        expect(state.busy).toBeFalse();
-      });
+  describe('set the selection state for comic books by tag type and value', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: false },
+        setMultipleComicBooksByTagTypeAndValueSelectionState({
+          tagType: TAG_TYPE,
+          tagValue: TAG_VALUE,
+          selected: SELECTED
+        })
+      );
     });
 
-    describe('failure', () => {
-      beforeEach(() => {
-        state = reducer(
-          { ...state, busy: true },
-          setMultipleComicBookSelectionStateFailed()
-        );
-      });
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
+    });
+  });
 
-      it('clears the busy flag', () => {
-        expect(state.busy).toBeFalse();
-      });
+  describe('set the selection state for comic books by id', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: false },
+        setMultipleComicBookByIdSelectionState({
+          selected: SELECTED,
+          comicBookIds: IDS
+        })
+      );
+    });
+
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
+    });
+  });
+
+  describe('success', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: true },
+        setMultipleComicBookSelectionStateSuccess()
+      );
+    });
+
+    it('clears the busy flag', () => {
+      expect(state.busy).toBeFalse();
+    });
+  });
+
+  describe('failure', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: true },
+        setMultipleComicBookSelectionStateFailure()
+      );
+    });
+
+    it('clears the busy flag', () => {
+      expect(state.busy).toBeFalse();
     });
   });
 });

@@ -28,7 +28,9 @@ import {
   COMIC_BOOK_SELECTION_UPDATE_TOPIC,
   LOAD_COMIC_BOOK_SELECTIONS_URL,
   REMOVE_SINGLE_COMIC_SELECTION_URL,
-  SET_MULTIPLE_COMIC_SELECTION_URL
+  SET_SELECTED_COMIC_BOOKS_BY_FILTER_URL,
+  SET_SELECTED_COMIC_BOOKS_BY_ID_URL,
+  SET_SELECTED_COMIC_BOOKS_BY_TAG_TYPE_AND_VALUE_URL
 } from '@app/comic-books/comic-books.constants';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
@@ -41,6 +43,8 @@ import {
   comicBookSelectionUpdate,
   loadComicBookSelections
 } from '@app/comic-books/actions/comic-book-selection.actions';
+import { TagType } from '@app/collections/models/comic-collection.enum';
+import { SetSelectedByIdRequest } from '@app/comic-books/models/net/set-selected-by-id-request';
 
 @Injectable({
   providedIn: 'root'
@@ -104,7 +108,7 @@ export class ComicBookSelectionService {
     );
   }
 
-  setMultipleState(args: {
+  setSelectedByFilter(args: {
     coverYear: number;
     coverMonth: number;
     archiveType: ArchiveType;
@@ -116,7 +120,7 @@ export class ComicBookSelectionService {
     selected: boolean;
   }): Observable<any> {
     this.logger.debug('Setting multiple comic book selection state:', args);
-    return this.http.post(interpolate(SET_MULTIPLE_COMIC_SELECTION_URL), {
+    return this.http.post(interpolate(SET_SELECTED_COMIC_BOOKS_BY_FILTER_URL), {
       coverYear: args.coverYear,
       coverMonth: args.coverMonth,
       archiveType: args.archiveType,
@@ -127,6 +131,42 @@ export class ComicBookSelectionService {
       searchText: args.searchText,
       selected: args.selected
     } as MultipleComicBookSelectionRequest);
+  }
+
+  setSelectedByTagTypeAndValue(args: {
+    tagType: TagType;
+    tagValue: string;
+    selected: boolean;
+  }): Observable<any> {
+    if (args.selected) {
+      this.logger.debug('Selecting comic books by tag type and value:', args);
+      return this.http.put(
+        interpolate(SET_SELECTED_COMIC_BOOKS_BY_TAG_TYPE_AND_VALUE_URL, {
+          tagType: args.tagType,
+          tagValue: args.tagValue
+        }),
+        {}
+      );
+    } else {
+      this.logger.debug('Selecting comic books by tag type and value:', args);
+      return this.http.delete(
+        interpolate(SET_SELECTED_COMIC_BOOKS_BY_TAG_TYPE_AND_VALUE_URL, {
+          tagType: args.tagType,
+          tagValue: args.tagValue
+        })
+      );
+    }
+  }
+
+  setSelectedById(args: {
+    comicBookIds: number[];
+    selected: boolean;
+  }): Observable<any> {
+    this.logger.debug('Selected comic books by id:', args);
+    return this.http.post(interpolate(SET_SELECTED_COMIC_BOOKS_BY_ID_URL), {
+      comicBookIds: args.comicBookIds,
+      selected: args.selected
+    } as SetSelectedByIdRequest);
   }
 
   clearSelections(): Observable<any> {

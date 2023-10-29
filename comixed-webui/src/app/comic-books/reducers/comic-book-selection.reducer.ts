@@ -26,10 +26,12 @@ import {
   comicBookSelectionUpdate,
   loadComicBookSelections,
   loadComicBookSelectionsFailed,
-  multipleComicBookSelectionStateSet,
+  setMultipleComicBookSelectionStateSuccess,
   removeSingleComicBookSelection,
   setMultipleComicBookByFilterSelectionState,
-  setMultipleComicBookSelectionStateFailed,
+  setMultipleComicBookByIdSelectionState,
+  setMultipleComicBooksByTagTypeAndValueSelectionState,
+  setMultipleComicBookSelectionStateFailure,
   singleComicBookSelectionFailed,
   singleComicBookSelectionUpdated
 } from '../actions/comic-book-selection.actions';
@@ -91,13 +93,21 @@ export const reducer = createReducer(
     ...state,
     busy: true
   })),
-  on(multipleComicBookSelectionStateSet, state => ({
+  on(setMultipleComicBookSelectionStateSuccess, state => ({
     ...state,
     busy: false
   })),
-  on(setMultipleComicBookSelectionStateFailed, state => ({
+  on(setMultipleComicBookSelectionStateFailure, state => ({
     ...state,
     busy: false
+  })),
+  on(setMultipleComicBooksByTagTypeAndValueSelectionState, state => ({
+    ...state,
+    busy: true
+  })),
+  on(setMultipleComicBookByIdSelectionState, state => ({
+    ...state,
+    busy: true
   }))
 );
 

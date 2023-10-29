@@ -16,14 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  addComicsToReadingList,
-  addComicsToReadingListFailed,
-  comicsAddedToReadingList,
-  comicsRemovedFromReadingList,
-  removeComicsFromReadingList,
-  removeComicsFromReadingListFailed
+  addComicBooksToReadingListFailure,
+  addComicBooksToReadingListSuccess,
+  addSelectedComicBooksToReadingList,
+  removeComicBooksFromReadingListFailure,
+  removeComicBooksFromReadingListSuccess,
+  removeSelectedComicBooksFromReadingList
 } from '../actions/reading-list-entries.actions';
 
 export const READING_LIST_ENTRIES_FEATURE_KEY = 'reading_list_entries_state';
@@ -39,10 +39,33 @@ export const initialState: ReadingListEntriesState = {
 export const reducer = createReducer(
   initialState,
 
-  on(addComicsToReadingList, state => ({ ...state, working: true })),
-  on(comicsAddedToReadingList, state => ({ ...state, working: false })),
-  on(addComicsToReadingListFailed, state => ({ ...state, working: false })),
-  on(removeComicsFromReadingList, state => ({ ...state, working: true })),
-  on(comicsRemovedFromReadingList, state => ({ ...state, working: false })),
-  on(removeComicsFromReadingListFailed, state => ({ ...state, working: false }))
+  on(addSelectedComicBooksToReadingList, state => ({
+    ...state,
+    working: true
+  })),
+  on(addComicBooksToReadingListSuccess, state => ({
+    ...state,
+    working: false
+  })),
+  on(addComicBooksToReadingListFailure, state => ({
+    ...state,
+    working: false
+  })),
+  on(removeSelectedComicBooksFromReadingList, state => ({
+    ...state,
+    working: true
+  })),
+  on(removeComicBooksFromReadingListSuccess, state => ({
+    ...state,
+    working: false
+  })),
+  on(removeComicBooksFromReadingListFailure, state => ({
+    ...state,
+    working: false
+  }))
 );
+
+export const readingListEntriesFeature = createFeature({
+  name: READING_LIST_ENTRIES_FEATURE_KEY,
+  reducer
+});

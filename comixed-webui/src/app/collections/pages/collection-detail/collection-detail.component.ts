@@ -47,6 +47,7 @@ import {
   selectLoadComicDetailsList
 } from '@app/comic-books/selectors/load-comic-details-list.selectors';
 import { loadComicDetailsForCollection } from '@app/comic-books/actions/comic-details-list.actions';
+import { setMultipleComicBooksByTagTypeAndValueSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 
 @Component({
   selector: 'cx-collection-detail',
@@ -172,6 +173,19 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
       this.logger.trace('Deselecting all comics');
       this.store.dispatch(deselectComicBooks({ ids: this.selectedIds }));
     }
+  }
+
+  onSelectAll(selected: boolean): void {
+    this.logger.debug(
+      `Marking comic books as ${selected ? 'selected' : 'deselected'}`
+    );
+    this.store.dispatch(
+      setMultipleComicBooksByTagTypeAndValueSelectionState({
+        tagType: this.tagType,
+        tagValue: this.tagValue,
+        selected
+      })
+    );
   }
 
   private loadTranslations(): void {

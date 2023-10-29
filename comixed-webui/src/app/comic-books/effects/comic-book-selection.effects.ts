@@ -27,10 +27,12 @@ import {
   comicBookSelectionStateCleared,
   loadComicBookSelections,
   loadComicBookSelectionsFailed,
-  multipleComicBookSelectionStateSet,
   removeSingleComicBookSelection,
   setMultipleComicBookByFilterSelectionState,
-  setMultipleComicBookSelectionStateFailed,
+  setMultipleComicBookByIdSelectionState,
+  setMultipleComicBooksByTagTypeAndValueSelectionState,
+  setMultipleComicBookSelectionStateFailure,
+  setMultipleComicBookSelectionStateSuccess,
   singleComicBookSelectionFailed,
   singleComicBookSelectionUpdated
 } from '../actions/comic-book-selection.actions';
@@ -139,15 +141,15 @@ export class ComicBookSelectionEffects {
     );
   });
 
-  setMultipleState$ = createEffect(() => {
+  setSelectedByFilter$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(setMultipleComicBookByFilterSelectionState),
       tap(action =>
-        this.logger.debug('Selecting multiple comic books:', action)
+        this.logger.debug('Selecting multiple comic books by filter:', action)
       ),
       switchMap(action =>
         this.comicBookSelectionService
-          .setMultipleState({
+          .setSelectedByFilter({
             coverYear: action.coverYear,
             coverMonth: action.coverMonth,
             archiveType: action.archiveType,
@@ -160,25 +162,59 @@ export class ComicBookSelectionEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map(() => multipleComicBookSelectionStateSet()),
-            catchError(error => {
-              this.logger.error('Service failure:', error);
-              this.alertService.error(
-                this.translateService.instant(
-                  'selection.set-multiple-state.effect-failure'
-                )
-              );
-              return of(setMultipleComicBookSelectionStateFailed());
-            })
+            map(() => setMultipleComicBookSelectionStateSuccess()),
+            catchError(error => this.doMultipleSelectedServiceFailure(error))
           )
       ),
-      catchError(error => {
-        this.logger.error('General failure:', error);
-        this.alertService.error(
-          this.translateService.instant('app.general-effect-failure')
-        );
-        return of(setMultipleComicBookSelectionStateFailed());
-      })
+      catchError(error => this.doMultipleSelectedGeneralFailure(error))
+    );
+  });
+
+  setSelectedByTagTypeAndValue$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(setMultipleComicBooksByTagTypeAndValueSelectionState),
+      tap(action =>
+        this.logger.debug(
+          'Selecting multiple comic books by tag type and value:',
+          action
+        )
+      ),
+      switchMap(action =>
+        this.comicBookSelectionService
+          .setSelectedByTagTypeAndValue({
+            tagType: action.tagType,
+            tagValue: action.tagValue,
+            selected: action.selected
+          })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map(() => setMultipleComicBookSelectionStateSuccess()),
+            catchError(error => this.doMultipleSelectedServiceFailure(error))
+          )
+      ),
+      catchError(error => this.doMultipleSelectedGeneralFailure(error))
+    );
+  });
+
+  setSelectedById$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(setMultipleComicBookByIdSelectionState),
+      tap(action =>
+        this.logger.debug('Selecting multiple comic books by id:', action)
+      ),
+      switchMap(action =>
+        this.comicBookSelectionService
+          .setSelectedById({
+            comicBookIds: action.comicBookIds,
+            selected: action.selected
+          })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map(() => setMultipleComicBookSelectionStateSuccess()),
+            catchError(error => this.doMultipleSelectedServiceFailure(error))
+          )
+      ),
+      catchError(error => this.doMultipleSelectedGeneralFailure(error))
     );
   });
 
@@ -218,4 +254,22 @@ export class ComicBookSelectionEffects {
     private alertService: AlertService,
     private translateService: TranslateService
   ) {}
+
+  private doMultipleSelectedServiceFailure(error: any) {
+    this.logger.error('Service failure:', error);
+    this.alertService.error(
+      this.translateService.instant(
+        'selection.set-multiple-state.effect-failure'
+      )
+    );
+    return of(setMultipleComicBookSelectionStateFailure());
+  }
+
+  private doMultipleSelectedGeneralFailure(error: any) {
+    this.logger.error('General failure:', error);
+    this.alertService.error(
+      this.translateService.instant('app.general-effect-failure')
+    );
+    return of(setMultipleComicBookSelectionStateFailure());
+  }
 }
