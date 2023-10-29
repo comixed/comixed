@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import * as DuplicateComicActions from '../actions/duplicate-comic.actions';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
@@ -49,3 +49,8 @@ export const reducer = createReducer(
     busy: false
   }))
 );
+
+export const duplicateComicFeature = createFeature({
+  name: DUPLICATE_COMIC_FEATURE_KEY,
+  reducer
+});

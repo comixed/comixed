@@ -41,7 +41,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
-import { convertComics } from '@app/library/actions/convert-comics.actions';
+import {
+  convertSelectedComicBooks,
+  convertSingleComicBook
+} from '@app/library/actions/convert-comic-books.actions';
 import { archiveTypeFromString } from '@app/comic-books/comic-books.functions';
 import { READING_LIST_1 } from '@app/lists/lists.fixtures';
 import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
@@ -91,7 +94,7 @@ describe('ComicDetailListViewComponent', () => {
     comicType: ComicType.TRADEPAPERBACK
   };
   const LAST_READ_DATES = [LAST_READ_1];
-  const COMIC = COMIC_DETAILS[0];
+  const COMIC_DETAIL = COMIC_DETAILS[0];
   const initialState = {};
 
   let component: ComicDetailListViewComponent;
@@ -261,8 +264,8 @@ describe('ComicDetailListViewComponent', () => {
     describe('showing the cover overlay', () => {
       beforeEach(() => {
         component.showComicDetailPopup = false;
-        component.currentComic = null;
-        component.onShowPopup(true, COMIC);
+        component.selectedComicDetail = null;
+        component.onShowPopup(true, COMIC_DETAIL);
       });
 
       it('sets the show popup flag', () => {
@@ -270,7 +273,7 @@ describe('ComicDetailListViewComponent', () => {
       });
 
       it('sets the current comic', () => {
-        expect(component.currentComic).toBe(COMIC);
+        expect(component.selectedComicDetail).toBe(COMIC_DETAIL);
       });
 
       describe('hiding the cover overlay', () => {
@@ -283,7 +286,7 @@ describe('ComicDetailListViewComponent', () => {
         });
 
         it('clears the current comic', () => {
-          expect(component.currentComic).toBeNull();
+          expect(component.selectedComicDetail).toBeNull();
         });
       });
     });
@@ -401,7 +404,7 @@ describe('ComicDetailListViewComponent', () => {
     const READING_LIST = READING_LIST_1;
 
     beforeEach(() => {
-      component.currentComic = COMIC;
+      component.selectedComicDetail = COMIC_DETAIL;
       component.dataSource.data = COMIC_DETAILS.map(comic => {
         return {
           item: comic,
@@ -415,7 +418,7 @@ describe('ComicDetailListViewComponent', () => {
         spyOn(confirmationService, 'confirm').and.callFake(
           (confirmation: Confirmation) => confirmation.confirm()
         );
-        component.onConvertOne(ARCHIVE_TYPE);
+        component.onConvertSingleComicBook(ARCHIVE_TYPE);
       });
 
       it('confirms with the user', () => {
@@ -424,8 +427,8 @@ describe('ComicDetailListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          convertComics({
-            comicBooks: [COMIC],
+          convertSingleComicBook({
+            comicDetail: COMIC_DETAIL,
             archiveType: archiveTypeFromString(ARCHIVE_TYPE),
             renamePages: true,
             deletePages: true
@@ -448,8 +451,7 @@ describe('ComicDetailListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          convertComics({
-            comicBooks: COMIC_DETAILS,
+          convertSelectedComicBooks({
             archiveType: archiveTypeFromString(ARCHIVE_TYPE),
             renamePages: true,
             deletePages: true
@@ -465,7 +467,10 @@ describe('ComicDetailListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          addComicsToReadingList({ comicBooks: [COMIC], list: READING_LIST })
+          addComicsToReadingList({
+            comicBooks: [COMIC_DETAIL],
+            list: READING_LIST
+          })
         );
       });
     });
@@ -492,7 +497,10 @@ describe('ComicDetailListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markSingleComicBookRead({ comicBookId: COMIC.comicId, read: true })
+          markSingleComicBookRead({
+            comicBookId: COMIC_DETAIL.comicId,
+            read: true
+          })
         );
       });
     });
@@ -504,7 +512,10 @@ describe('ComicDetailListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markSingleComicBookRead({ comicBookId: COMIC.comicId, read: false })
+          markSingleComicBookRead({
+            comicBookId: COMIC_DETAIL.comicId,
+            read: false
+          })
         );
       });
     });
@@ -540,7 +551,7 @@ describe('ComicDetailListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markComicsDeleted({ comicBooks: [COMIC], deleted: true })
+          markComicsDeleted({ comicBooks: [COMIC_DETAIL], deleted: true })
         );
       });
     });
@@ -552,7 +563,7 @@ describe('ComicDetailListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markComicsDeleted({ comicBooks: [COMIC], deleted: false })
+          markComicsDeleted({ comicBooks: [COMIC_DETAIL], deleted: false })
         );
       });
     });
@@ -585,13 +596,13 @@ describe('ComicDetailListViewComponent', () => {
   describe('checking if a comic is deleted', () => {
     it('returns true when the state is deleted', () => {
       expect(
-        component.isDeleted({ ...COMIC, comicState: ComicState.DELETED })
+        component.isDeleted({ ...COMIC_DETAIL, comicState: ComicState.DELETED })
       ).toBeTrue();
     });
 
     it('returns false when the state is not deleted', () => {
       expect(
-        component.isDeleted({ ...COMIC, comicState: ComicState.CHANGED })
+        component.isDeleted({ ...COMIC_DETAIL, comicState: ComicState.CHANGED })
       ).toBeFalse();
     });
   });

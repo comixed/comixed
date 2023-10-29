@@ -104,8 +104,8 @@
       "convert": "Recreate Archive",
       "convert-one-to-cb7": "Convert this comic to CB7",
       "convert-one-to-cbz": "Convert this comic to CBZ",
-      "convert-selected-to-cb7": "Convert selected comics To CB7",
-      "convert-selected-to-cbz": "Convert selected comics To CBZ",
+      "convert-selected-to-cb7": "Convert selections To CB7",
+      "convert-selected-to-cbz": "Convert selections To CBZ",
       "create-reading-list": "Create new reading list...",
       "delete-one": "Mark as deleted",
       "delete-selected": "Mark as deleted",
@@ -128,17 +128,17 @@
       "update-metadata-one": "Update metadata...",
       "update-metadata-selected": "Update metadata for {count, plural, =1{one comic} other{# comics}}..."
     },
-    "convert-comics": {
-      "convert-one": {
-        "confirmation-message": "Are you sure you want to convert this comic to {format}?",
-        "confirmation-title": "Convert Comic Format"
-      },
-      "convert-selected": {
-        "confirmation-message": "Are you sure you want to convert {count, plural, =1{one comic} other{# comics}} to {format}?",
-        "confirmation-title": "Convert Comics Format"
-      },
-      "effect-failure": "Failed to start the conversion process.",
-      "effect-success": "Starting converting {count, plural, =1{one comic} other{# comics}} to {archiveType}."
+    "convert-selected-comic-books": {
+      "confirmation-message": "Are you sure you want to convert {count, plural, =1{one comic} other{# comics}} to {format}?",
+      "confirmation-title": "Convert Comics Format",
+      "effect-failure": "Failed to start converting selected comic books.",
+      "effect-success": "Started converting selected comic books to {archiveType}."
+    },
+    "convert-single-comic-book": {
+      "confirmation-message": "Are you sure you want to convert this comic to {format}?",
+      "confirmation-title": "Convert Comic Format",
+      "effect-failure": "Failed to start converting the comic book.",
+      "effect-success": "Started converting the comic book to {archiveType}."
     },
     "edit-multiple-comics": {
       "confirm-message": "Are you sure you want to edit the details for {count, plural, =1{one comic} other{# comics}}?",

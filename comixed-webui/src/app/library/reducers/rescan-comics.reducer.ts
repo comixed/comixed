@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   comicsRescanning,
   rescanComics,
@@ -40,3 +40,8 @@ export const reducer = createReducer(
   on(comicsRescanning, state => ({ ...state, working: false })),
   on(rescanComicsFailed, state => ({ ...state, working: false }))
 );
+
+export const rescanComicBooksFeature = createFeature({
+  name: RESCAN_COMICS_FEATURE_KEY,
+  reducer
+});

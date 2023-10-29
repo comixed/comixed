@@ -67,11 +67,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <code>LibraryController</code> provides REST APIs for working with groups of {@link ComicBook}
@@ -139,31 +135,93 @@ public class LibraryController {
    * Prepares comics to have their underlying file recreated.
    *
    * @param request the request body
+   * @param comicBookId the comic book id
    * @throws LibraryException if an error occurs
    */
-  @PostMapping(value = "/api/library/convert", consumes = MediaType.APPLICATION_JSON_VALUE)
-  @Timed(value = "comixed.library.convert-comics")
-  public void convertComics(@RequestBody() ConvertComicsRequest request) throws LibraryException {
+  @PutMapping(
+      value = "/api/library/conversion/{comicBookId}",
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.library.convert-single-comic-book")
+  @PreAuthorize("hasRole('ADMIN')")
+  public void convertSingleComicBooks(
+      @RequestBody() final ConvertComicsRequest request,
+      @PathVariable("comicBookId") final long comicBookId)
+      throws LibraryException {
     if (this.configurationService.isFeatureEnabled(
         ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS)) {
       throw new LibraryException("Recreating comic files is currently disabled");
     }
 
-    List<Long> idList = request.getIds();
-    ArchiveType archiveType = request.getArchiveType();
-    boolean renamePages = request.isRenamePages();
-    boolean deletePages = request.isDeletePages();
+    final ArchiveType archiveType = request.getArchiveType();
+    final boolean renamePages = request.isRenamePages();
+    final boolean deletePages = request.isDeletePages();
 
     log.info(
-        "Converting comic{}: target={} delete pages={} rename pages={}",
-        idList.size() == 1 ? "" : "s",
+        "Converting single comic book: target={} delete pages={} rename pages={}",
+        comicBookId,
         archiveType,
         renamePages,
         deletePages);
 
-    log.trace("Preparing to recreate comic files");
-    this.libraryService.prepareToRecreateComics(idList);
-    log.trace("Starting batch process");
+    log.trace("Preparing to recreate comic book file");
+    this.libraryService.prepareToRecreateComicBook(comicBookId);
+
+    this.doStartConversionBatchProcess(archiveType, deletePages);
+  }
+
+  /**
+   * Prepares comics to have their underlying file recreated.
+   *
+   * @param session the session
+   * @param request the request body
+   * @throws LibraryException if an error occurs
+   */
+  @PutMapping(
+      value = "/api/library/conversion/selected",
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.library.convert-selected-comic-books")
+  @PreAuthorize("hasRole('ADMIN')")
+  public void convertSelectedComicBooks(
+      final HttpSession session, @RequestBody() final ConvertComicsRequest request)
+      throws LibraryException {
+    if (this.configurationService.isFeatureEnabled(
+        ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS)) {
+      throw new LibraryException("Recreating comic files is currently disabled");
+    }
+
+    log.trace("Loading comic book selections");
+    try {
+      final List<Long> idList =
+          this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+      final ArchiveType archiveType = request.getArchiveType();
+      final boolean renamePages = request.isRenamePages();
+      final boolean deletePages = request.isDeletePages();
+
+      log.info(
+          "Converting comic{}: target={} delete pages={} rename pages={}",
+          idList.size() == 1 ? "" : "s",
+          archiveType,
+          renamePages,
+          deletePages);
+
+      log.trace("Preparing to recreate comic files");
+      this.libraryService.prepareToRecreateComicBooks(idList);
+
+      this.doStartConversionBatchProcess(archiveType, deletePages);
+
+      log.trace("Clearing comic book selections");
+      this.comicBookSelectionService.clearSelectedComicBooks(idList);
+      log.trace("Saving comic book selections");
+      session.setAttribute(
+          LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(idList));
+    } catch (ComicSelectionException error) {
+      throw new LibraryException("Failed to start converting selected comic books", error);
+    }
+  }
+
+  private void doStartConversionBatchProcess(
+      final ArchiveType archiveType, final boolean deletePages) throws LibraryException {
+    log.trace("Starting comic book conversion batch process");
     try {
       this.jobLauncher.run(
           recreateComicFilesJob,

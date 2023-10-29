@@ -48,10 +48,8 @@ public class ComicStateMachineConfiguration
   @Autowired private UpdateMetadataAction updateMetadataAction;
   @Autowired private MetadataUpdatedAction metadataUpdatedAction;
   @Autowired private ComicConsolidatedAction comicConsolidatedAction;
-  @Autowired private ComicFileAlreadyRecreatingGuard comicFileAlreadyRecreatingGuard;
   @Autowired private UpdateComicBookDetailsAction updateComicBookDetailsAction;
   @Autowired private ComicBookDetailsUpdatedAction comicBookDetailsUpdatedAction;
-  @Autowired private RecreateComicFileAction recreateComicFileAction;
   @Autowired private ComicFileRecreatedAction comicFileRecreatedAction;
   @Autowired private PrepareToPurgeComicAction prepareToPurgeComicAction;
 
@@ -216,20 +214,6 @@ public class ComicStateMachineConfiguration
         .target(ComicState.STABLE)
         .event(ComicEvent.metadataUpdated)
         .action(metadataUpdatedAction)
-        // the comic archive is going to be recreated
-        .and()
-        .withExternal()
-        .source(ComicState.CHANGED)
-        .target(ComicState.CHANGED)
-        .event(ComicEvent.recreateComicFile)
-        .action(recreateComicFileAction)
-        .and()
-        .withExternal()
-        .source(ComicState.STABLE)
-        .target(ComicState.STABLE)
-        .event(ComicEvent.recreateComicFile)
-        .guard(comicFileAlreadyRecreatingGuard)
-        .action(recreateComicFileAction)
         // the comic archive was recreated
         .and()
         .withExternal()

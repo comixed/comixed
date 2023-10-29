@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   libraryConsolidationStarted,
   startLibraryConsolidation,
@@ -40,3 +40,8 @@ export const reducer = createReducer(
   on(libraryConsolidationStarted, state => ({ ...state, sending: false })),
   on(startLibraryConsolidationFailed, state => ({ ...state, sending: false }))
 );
+
+export const consolidateLibraryFeature = createFeature({
+  name: CONSOLIDATE_LIBRARY_FEATURE_KEY,
+  reducer
+});

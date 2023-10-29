@@ -67,6 +67,7 @@ public class LibraryControllerTest {
   private static final Boolean TEST_DELETE_MARKED_PAGES = RANDOM.nextBoolean();
   private static final Integer TEST_MAX_RECORDS = 1000;
   private static final long TEST_LAST_COMIC_ID = 717L;
+  private static final long TEST_COMIC_BOOK_ID = 718L;
   private static final String TEST_PUBLISHER = "The Publisher";
   private static final String TEST_SERIES = "The Series";
   private static final String TEST_VOLUME = "1234";
@@ -152,24 +153,45 @@ public class LibraryControllerTest {
   }
 
   @Test(expected = LibraryException.class)
-  public void testConvertComicsNoRecreateAllowed() throws Exception {
+  public void testConvertSingleComicBookNoRecreateAllowed() throws Exception {
     Mockito.when(
             configurationService.isFeatureEnabled(
                 ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS))
         .thenReturn(true);
 
     try {
-      controller.convertComics(
-          new ConvertComicsRequest(
-              idList, TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_MARKED_PAGES));
+      controller.convertSingleComicBooks(
+          new ConvertComicsRequest(TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_MARKED_PAGES),
+          TEST_COMIC_BOOK_ID);
     } finally {
-      Mockito.verify(libraryService, Mockito.never()).prepareToRecreateComics(Mockito.anyList());
+      Mockito.verify(libraryService, Mockito.never()).prepareToRecreateComicBook(Mockito.anyLong());
+      Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(), Mockito.any());
+    }
+  }
+
+  @Test(expected = LibraryException.class)
+  public void testConvertSingleComicBookLibraryException() throws Exception {
+    Mockito.when(
+            configurationService.isFeatureEnabled(
+                ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS))
+        .thenReturn(false);
+    Mockito.doThrow(LibraryException.class)
+        .when(libraryService)
+        .prepareToRecreateComicBook(Mockito.anyLong());
+
+    try {
+      controller.convertSingleComicBooks(
+          new ConvertComicsRequest(TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_MARKED_PAGES),
+          TEST_COMIC_BOOK_ID);
+    } finally {
+      Mockito.verify(libraryService, Mockito.times(1))
+          .prepareToRecreateComicBook(TEST_COMIC_BOOK_ID);
       Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(), Mockito.any());
     }
   }
 
   @Test
-  public void testConvertComics() throws Exception {
+  public void testConvertSingleComicBook() throws Exception {
     Mockito.when(
             configurationService.isFeatureEnabled(
                 ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS))
@@ -177,9 +199,9 @@ public class LibraryControllerTest {
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
 
-    controller.convertComics(
-        new ConvertComicsRequest(
-            idList, TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_MARKED_PAGES));
+    controller.convertSingleComicBooks(
+        new ConvertComicsRequest(TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_MARKED_PAGES),
+        TEST_COMIC_BOOK_ID);
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
@@ -188,7 +210,49 @@ public class LibraryControllerTest {
     assertEquals(
         String.valueOf(TEST_DELETE_MARKED_PAGES), jobParameters.getString(JOB_DELETE_MARKED_PAGES));
 
-    Mockito.verify(libraryService, Mockito.times(1)).prepareToRecreateComics(idList);
+    Mockito.verify(libraryService, Mockito.times(1)).prepareToRecreateComicBook(TEST_COMIC_BOOK_ID);
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(recreateComicFilesJob, jobParameters);
+  }
+
+  @Test(expected = LibraryException.class)
+  public void testConvertSelectedComicBooksNoRecreateAllowed() throws Exception {
+    Mockito.when(
+            configurationService.isFeatureEnabled(
+                ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS))
+        .thenReturn(true);
+
+    try {
+      controller.convertSelectedComicBooks(
+          httpSession,
+          new ConvertComicsRequest(TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_MARKED_PAGES));
+    } finally {
+      Mockito.verify(libraryService, Mockito.never())
+          .prepareToRecreateComicBooks(Mockito.anyList());
+      Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(), Mockito.any());
+    }
+  }
+
+  @Test
+  public void testConvertSelectedComicBooks() throws Exception {
+    Mockito.when(
+            configurationService.isFeatureEnabled(
+                ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS))
+        .thenReturn(false);
+    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+        .thenReturn(jobExecution);
+
+    controller.convertSelectedComicBooks(
+        httpSession,
+        new ConvertComicsRequest(TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_MARKED_PAGES));
+
+    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
+
+    assertNotNull(jobParameters);
+    assertEquals(TEST_ARCHIVE_TYPE.getName(), jobParameters.getString(JOB_TARGET_ARCHIVE));
+    assertEquals(
+        String.valueOf(TEST_DELETE_MARKED_PAGES), jobParameters.getString(JOB_DELETE_MARKED_PAGES));
+
+    Mockito.verify(libraryService, Mockito.times(1)).prepareToRecreateComicBooks(selectedIds);
     Mockito.verify(jobLauncher, Mockito.times(1)).run(recreateComicFilesJob, jobParameters);
   }
 
