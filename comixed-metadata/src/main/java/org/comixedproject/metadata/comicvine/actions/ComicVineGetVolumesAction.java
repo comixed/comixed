@@ -101,7 +101,7 @@ public class ComicVineGetVolumesAction
           .subList(0, totalRecords)
           .forEach(
               volume -> {
-                log.debug("Processing volume record: {} name={}", volume.getId(), volume.getName());
+                log.trace("Processing volume record: {} name={}", volume.getId(), volume.getName());
                 final VolumeMetadata entry = new VolumeMetadata();
                 entry.setId(volume.getId());
                 entry.setName(volume.getName());
