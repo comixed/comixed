@@ -86,7 +86,7 @@ public class ComicBookController {
   @Timed(value = "comixed.comic-book.get-one")
   @JsonView(ComicDetailsView.class)
   public ComicBook getComic(@PathVariable("id") long id) throws ComicBookException {
-    log.info("Getting comic: id={}", id);
+    log.debug("Getting comic: id={}", id);
     return this.comicBookService.getComic(id);
   }
 
@@ -101,7 +101,7 @@ public class ComicBookController {
   @Timed(value = "comixed.comic-book.mark-one.deleted")
   @JsonView({ComicDetailsView.class})
   public ComicBook deleteComicBook(@PathVariable("id") long id) throws ComicBookException {
-    log.info("Marking comic book as deleted: id={}", id);
+    log.debug("Marking comic book as deleted: id={}", id);
     return this.comicBookService.deleteComicBook(id);
   }
 
@@ -196,7 +196,7 @@ public class ComicBookController {
   @Timed(value = "comixed.comic-book.download")
   public ResponseEntity<InputStreamResource> downloadComic(@PathVariable("id") long id)
       throws ComicBookException {
-    log.info("Preparing to download comicBook: id={}", id);
+    log.debug("Preparing to download comicBook: id={}", id);
 
     final ComicBook comicBook = this.comicBookService.getComic(id);
     if (comicBook == null) {
@@ -236,7 +236,7 @@ public class ComicBookController {
   @JsonView(ComicDetailsView.class)
   public ComicBook updateComic(@PathVariable("id") long id, @RequestBody() ComicBook comicBook)
       throws ComicBookException {
-    log.info("Updating comicBook: id={}", id, comicBook);
+    log.debug("Updating comicBook: id={}", id, comicBook);
 
     return this.comicBookService.updateComic(id, comicBook);
   }
@@ -252,7 +252,7 @@ public class ComicBookController {
   @Timed(value = "comixed.comic-book.pages.get-cover")
   public ResponseEntity<byte[]> getCoverImage(@PathVariable("id") final long id)
       throws ComicBookException {
-    log.info("Getting cover for comicBook: id={}", id);
+    log.debug("Getting cover for comicBook: id={}", id);
     final ComicBook comicBook = this.comicBookService.getComic(id);
 
     if (comicBook == null || comicBook.isMissing()) {
@@ -326,7 +326,7 @@ public class ComicBookController {
   public void savePageOrder(
       @PathVariable("id") final long id, @RequestBody() final SavePageOrderRequest request)
       throws ComicBookException {
-    log.info("Updating page order: comic id={}", id);
+    log.debug("Updating page order: comic id={}", id);
     this.comicBookService.savePageOrder(id, request.getEntries());
   }
 
@@ -347,7 +347,7 @@ public class ComicBookController {
       final Principal principal, @RequestBody() final LoadComicDetailsRequest request)
       throws LastReadException {
     final String email = principal.getName();
-    log.info("Loading comics: {}", request);
+    log.debug("Loading comics: {}", request);
     final List<ComicDetail> comicDetails =
         this.comicDetailService.loadComicDetailList(
             request.getPageSize(),
@@ -431,7 +431,7 @@ public class ComicBookController {
       throws LastReadException {
     final String email = principal.getName();
     final Set<Long> ids = request.getComicBookIds();
-    log.info("Loading comics by ids: {}", ids);
+    log.debug("Loading comics by ids: {}", ids);
     final List<ComicDetail> comicDetails = this.comicDetailService.loadComicDetailListById(ids);
     final List<Integer> coverYears = this.comicDetailService.getCoverYears(ids);
     final List<Integer> coverMonths = this.comicDetailService.getCoverMonths(ids);
@@ -467,7 +467,7 @@ public class ComicBookController {
     final String tagValue = request.getTagValue();
     final String sortBy = request.getSortBy();
     final String sortDirection = request.getSortDirection();
-    log.info(
+    log.debug(
         "Loading comics by for collection: type={} value={} size={} index={} sort by ={} [{}]",
         tagType,
         tagValue,

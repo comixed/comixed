@@ -113,7 +113,7 @@ public class ComicFileController {
     // space...
     filename = filename.trim();
 
-    log.info("Getting cover image for archive: filename={}", filename);
+    log.debug("Getting cover image for archive: filename={}", filename);
 
     byte[] result = null;
 

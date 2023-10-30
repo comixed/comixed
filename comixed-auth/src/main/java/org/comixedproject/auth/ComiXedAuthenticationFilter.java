@@ -65,7 +65,7 @@ public class ComiXedAuthenticationFilter extends OncePerRequestFilter {
       try {
         username = this.jwtTokenUtil.getEmailFromToken(authToken);
       } catch (Exception error) {
-        log.error("Unable to extract username from auth token", error);
+        log.trace("Unable to extract username from auth token", error);
       }
     } else if (StringUtils.startsWith(header, BASIC_PREFIX)) {
       String base64Credentials = header.substring(BASIC_PREFIX.length()).trim();
@@ -78,7 +78,7 @@ public class ComiXedAuthenticationFilter extends OncePerRequestFilter {
         password = this.genericUtilitiesAdaptor.createHash(userDetails[1].getBytes());
       }
     } else {
-      this.logger.warn("couldn't find bearer string, will ignore the header");
+      log.trace("couldn't find bearer string, will ignore the header");
     }
     if (!StringUtils.isEmpty(username)
         && (SecurityContextHolder.getContext().getAuthentication() == null)) {
@@ -91,7 +91,7 @@ public class ComiXedAuthenticationFilter extends OncePerRequestFilter {
             new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        this.logger.debug("authenticated user " + username + ", setting security context");
+        log.trace("authenticated user " + username + ", setting security context");
         SecurityContextHolder.getContext().setAuthentication(authentication);
       }
     }
