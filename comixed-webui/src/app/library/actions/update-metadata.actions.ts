@@ -18,15 +18,21 @@
 
 import { createAction, props } from '@ngrx/store';
 
-export const updateMetadata = createAction(
-  '[Update Metadata] Start updating metadata in comics',
-  props<{ ids: number[] }>()
+export const updateSingleComicBookMetadata = createAction(
+  '[Update Metadata] Update the metadata for a single comic book',
+  props<{
+    comicBookId: number;
+  }>()
 );
 
-export const metadataUpdating = createAction(
-  '[Update Metadata] Updating metadata in comics was started'
+export const updateSelectedComicBooksMetadata = createAction(
+  '[Update Metadata] Update the metadata in the selected comic books'
 );
 
-export const updateMetadataFailed = createAction(
-  '[Update Metadata] Failed to start updating metadata in comics'
+export const updateSelectedComicBooksMetadataSuccess = createAction(
+  '[Update Metadata] Updating metadata in comic books was started'
+);
+
+export const updateSelectedComicBooksMetadataFailure = createAction(
+  '[Update Metadata] Failed to start updating metadata in comic books'
 );

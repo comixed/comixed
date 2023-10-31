@@ -31,12 +31,12 @@ import {
   RESCAN_COMICS_URL,
   SET_READ_STATE_URL,
   START_LIBRARY_CONSOLIDATION_URL,
-  UPDATE_METADATA_URL
+  UPDATE_SELECTED_COMIC_BOOKS_METADATA_URL,
+  UPDATE_SINGLE_COMIC_BOOK_METADATA_URL
 } from '@app/library/library.constants';
 import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-request';
 import { ConsolidateLibraryRequest } from '@app/library/models/net/consolidate-library-request';
 import { RescanComicsRequest } from '@app/library/models/net/rescan-comics-request';
-import { UpdateMetadataRequest } from '@app/library/models/net/update-metadata-request';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ConvertComicBooksRequest } from '@app/library/models/net/convert-comic-books-request';
 import { PurgeLibraryRequest } from '@app/library/models/net/purge-library-request';
@@ -113,11 +113,24 @@ export class LibraryService {
     } as RescanComicsRequest);
   }
 
-  updateMetadata(args: { ids: number[] }): Observable<any> {
-    this.logger.trace('Update metadata:', args);
-    return this.http.post(interpolate(UPDATE_METADATA_URL), {
-      ids: args.ids
-    } as UpdateMetadataRequest);
+  updateSingleComicBookMetadata(args: {
+    comicBookId: number;
+  }): Observable<any> {
+    this.logger.trace('Update metadata for single comic book:', args);
+    return this.http.put(
+      interpolate(UPDATE_SINGLE_COMIC_BOOK_METADATA_URL, {
+        comicBookId: args.comicBookId
+      }),
+      {}
+    );
+  }
+
+  updateSelectedComicBooksMetadata(): Observable<any> {
+    this.logger.trace('Update metadata for selected comic books');
+    return this.http.put(
+      interpolate(UPDATE_SELECTED_COMIC_BOOKS_METADATA_URL),
+      {}
+    );
   }
 
   convertSingleComicBook(args: {

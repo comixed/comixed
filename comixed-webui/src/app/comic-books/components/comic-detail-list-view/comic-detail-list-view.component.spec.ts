@@ -72,7 +72,10 @@ import { ComicDetailFilterComponent } from '@app/comic-books/components/comic-de
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
-import { updateMetadata } from '@app/library/actions/update-metadata.actions';
+import {
+  updateSelectedComicBooksMetadata,
+  updateSingleComicBookMetadata
+} from '@app/library/actions/update-metadata.actions';
 import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
 import { rescanComics } from '@app/library/actions/rescan-comics.actions';
 import {
@@ -729,12 +732,12 @@ describe('ComicDetailListViewComponent', () => {
     });
   });
 
-  describe('updating metadata', () => {
+  describe('updating metadata for a single comic book', () => {
     beforeEach(() => {
       spyOn(confirmationService, 'confirm').and.callFake(confirmation =>
         confirmation.confirm()
       );
-      component.onUpdateMetadata(IDS);
+      component.onUpdateSingleComicBookMetadata(COMIC_DETAIL);
     });
 
     it('confirms with the user', () => {
@@ -742,7 +745,28 @@ describe('ComicDetailListViewComponent', () => {
     });
 
     it('fires a message', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(updateMetadata({ ids: IDS }));
+      expect(store.dispatch).toHaveBeenCalledWith(
+        updateSingleComicBookMetadata({ comicBookId: COMIC_DETAIL.comicId })
+      );
+    });
+  });
+
+  describe('updating metadata for selected comic books', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(confirmation =>
+        confirmation.confirm()
+      );
+      component.onUpdateSelectedComicBooksMetadata();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires a message', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        updateSelectedComicBooksMetadata()
+      );
     });
   });
 

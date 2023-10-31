@@ -49,7 +49,6 @@ import org.comixedproject.model.net.library.LoadLibraryResponse;
 import org.comixedproject.model.net.library.PurgeLibraryRequest;
 import org.comixedproject.model.net.library.RemoteLibraryState;
 import org.comixedproject.model.net.library.RescanComicsRequest;
-import org.comixedproject.model.net.library.UpdateMetadataRequest;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.*;
 import org.comixedproject.service.library.LibraryException;
@@ -363,18 +362,47 @@ public class LibraryController {
   }
 
   /**
-   * Starts the metadata update process for a set of comics.
+   * Starts the metadata update process for a single comic book.
    *
-   * @param request the request body
+   * @param comicBookId the comic book id
    * @throws Exception if an error occurs
    */
-  @PostMapping(value = "/api/library/metadata", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(value = "/api/library/metadata/update/{comicBookId}")
   @PreAuthorize("hasRole('ADMIN')")
-  @Timed(value = "comixed.library.batch.metadata-update")
-  public void updateMetadata(@RequestBody() final UpdateMetadataRequest request) throws Exception {
-    final List<Long> ids = request.getIds();
-    log.info("Updating the metadata for {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
-    this.libraryService.updateMetadata(ids);
+  @Timed(value = "comixed.library.batch.metadata-update-selected-comic-books")
+  public void updateSingleComicBookMetadata(@PathVariable("comicBookId") final long comicBookId)
+      throws Exception {
+    log.info("Updating the metadata a single comic book: id={}", comicBookId);
+    this.comicBookService.prepareForMetadataUpdate(comicBookId);
+    log.trace("Launching batch process");
+    this.jobLauncher.run(
+        this.updateMetadataJob,
+        new JobParametersBuilder()
+            .addLong(
+                UpdateMetadataConfiguration.JOB_UPDATE_METADATA_STARTED, System.currentTimeMillis())
+            .toJobParameters());
+  }
+
+  /**
+   * Starts the metadata update process for the selected comic books.
+   *
+   * @param session the session
+   * @throws Exception if an error occurs
+   */
+  @PutMapping(value = "/api/library/metadata/update/selected")
+  @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.library.batch.metadata-update-selected-comic-books")
+  public void updateSelectedComicBooksMetadata(final HttpSession session) throws Exception {
+    final List<Long> selectedComicBookIds =
+        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+    log.info(
+        "Updating the metadata for {} comic{}",
+        selectedComicBookIds.size(),
+        selectedComicBookIds.size() == 1 ? "" : "s");
+    this.libraryService.updateMetadata(selectedComicBookIds);
+    this.comicBookSelectionService.clearSelectedComicBooks(selectedComicBookIds);
+    session.setAttribute(
+        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selectedComicBookIds));
     log.trace("Launching batch process");
     this.jobLauncher.run(
         this.updateMetadataJob,

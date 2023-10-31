@@ -62,7 +62,7 @@ import { TitleService } from '@app/core/services/title.service';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import { markSingleComicBookRead } from '@app/last-read/actions/comic-books-read.actions';
-import { updateMetadata } from '@app/library/actions/update-metadata.actions';
+import { updateSingleComicBookMetadata } from '@app/library/actions/update-metadata.actions';
 import {
   deleteSingleComicBook,
   undeleteSingleComicBook
@@ -272,7 +272,9 @@ export class ComicBookPageComponent
       ),
       confirm: () => {
         this.logger.debug('Updating comic file:', this.comicBook);
-        this.store.dispatch(updateMetadata({ ids: [this.comicBook.id] }));
+        this.store.dispatch(
+          updateSingleComicBookMetadata({ comicBookId: this.comicBook.id })
+        );
       }
     });
   }

@@ -22,23 +22,52 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  metadataUpdating,
-  updateMetadata,
-  updateMetadataFailed
+  updateSelectedComicBooksMetadata,
+  updateSelectedComicBooksMetadataFailure,
+  updateSelectedComicBooksMetadataSuccess,
+  updateSingleComicBookMetadata
 } from '@app/library/actions/update-metadata.actions';
-import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { LibraryService } from '@app/library/services/library.service';
-import { clearComicBookSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 
 @Injectable()
 export class UpdateMetadataEffects {
-  updateMetadata$ = createEffect(() => {
+  updateSingleComicBookMetadata$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(updateMetadata),
+      ofType(updateSingleComicBookMetadata),
+      tap(action =>
+        this.logger.debug(
+          'Effect: updating metadata for a single comic book:',
+          action
+        )
+      ),
+      switchMap(action =>
+        this.libraryService
+          .updateSingleComicBookMetadata({ comicBookId: action.comicBookId })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            tap(() =>
+              this.alertService.info(
+                this.translateService.instant(
+                  'library.update-metadata.effect-success'
+                )
+              )
+            ),
+            map(() => updateSelectedComicBooksMetadataSuccess()),
+            catchError(error => this.doServiceFailure(error))
+          )
+      ),
+      catchError(error => this.doGeneralFailure(error))
+    );
+  });
+
+  updateSelectedComicBooksMetadata$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(updateSelectedComicBooksMetadata),
       tap(action => this.logger.debug('Effect: updating comic info:', action)),
       switchMap(action =>
-        this.libraryService.updateMetadata({ ids: action.ids }).pipe(
+        this.libraryService.updateSelectedComicBooksMetadata().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           tap(() =>
             this.alertService.info(
@@ -47,25 +76,11 @@ export class UpdateMetadataEffects {
               )
             )
           ),
-          mergeMap(() => [metadataUpdating(), clearComicBookSelectionState()]),
-          catchError(error => {
-            this.logger.error('Service failure:', error);
-            this.alertService.error(
-              this.translateService.instant(
-                'library.update-metadata.effect-failure'
-              )
-            );
-            return of(updateMetadataFailed());
-          })
+          map(() => updateSelectedComicBooksMetadataSuccess()),
+          catchError(error => this.doServiceFailure(error))
         )
       ),
-      catchError(error => {
-        this.logger.error('General failure:', error);
-        this.alertService.error(
-          this.translateService.instant('app.general-effect-failure')
-        );
-        return of(updateMetadataFailed());
-      })
+      catchError(error => this.doGeneralFailure(error))
     );
   });
 
@@ -76,4 +91,22 @@ export class UpdateMetadataEffects {
     private alertService: AlertService,
     private translateService: TranslateService
   ) {}
+
+  private doServiceFailure(error: any) {
+    this.logger.error('Service failure:', error);
+    this.alertService.error(
+      this.translateService.instant('library.update-metadata.effect-failure')
+    );
+    return of(updateSelectedComicBooksMetadataFailure());
+  }
+
+  private doGeneralFailure(error: any) {
+    {
+      this.logger.error('General failure:', error);
+      this.alertService.error(
+        this.translateService.instant('app.general-effect-failure')
+      );
+      return of(updateSelectedComicBooksMetadataFailure());
+    }
+  }
 }
