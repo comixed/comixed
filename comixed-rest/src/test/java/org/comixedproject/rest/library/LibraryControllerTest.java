@@ -416,17 +416,32 @@ public class LibraryControllerTest {
   }
 
   @Test
-  public void testRescanComics() throws Exception {
+  public void testRescanSingleComicBook() throws Exception {
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
 
-    controller.rescanComics(new RescanComicsRequest(idList));
+    controller.rescanSingleComicBook(TEST_COMIC_BOOK_ID);
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
     assertNotNull(jobParameters);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).rescanComics(idList);
+    Mockito.verify(comicBookService, Mockito.times(1)).prepareForRescan(TEST_COMIC_BOOK_ID);
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(processComicsJob, jobParameters);
+  }
+
+  @Test
+  public void testRescanComics() throws Exception {
+    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+        .thenReturn(jobExecution);
+
+    controller.rescanSelectedComicBooks(httpSession);
+
+    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
+
+    assertNotNull(jobParameters);
+
+    Mockito.verify(comicBookService, Mockito.times(1)).prepareForRescan(selectedIds);
     Mockito.verify(jobLauncher, Mockito.times(1)).run(processComicsJob, jobParameters);
   }
 

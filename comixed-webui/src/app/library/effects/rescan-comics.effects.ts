@@ -19,9 +19,10 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
-  comicsRescanning,
-  rescanComics,
-  rescanComicsFailed
+  rescanComicBooksFailure,
+  rescanComicBooksSuccess,
+  rescanSelectedComicBooks,
+  rescanSingleComicBook
 } from '../actions/rescan-comics.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { LibraryService } from '@app/library/services/library.service';
@@ -32,12 +33,36 @@ import { of } from 'rxjs';
 
 @Injectable()
 export class RescanComicsEffects {
-  rescanComics$ = createEffect(() => {
+  rescanSingleComicBook$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(rescanComics),
-      tap(action => this.logger.trace('Rescan comics:', action)),
+      ofType(rescanSingleComicBook),
+      tap(action => this.logger.trace('Rescan a single comic book:', action)),
       switchMap(action =>
-        this.libraryService.rescanComics({ ids: action.ids }).pipe(
+        this.libraryService
+          .rescanSingleComicBook({ comicBookId: action.comicBookId })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            tap(() =>
+              this.alertService.info(
+                this.translateService.instant(
+                  'library.rescan-comics.effect-success'
+                )
+              )
+            ),
+            map(() => rescanComicBooksSuccess()),
+            catchError(error => this.doServiceFailure(error))
+          )
+      ),
+      catchError(error => this.doGeneralFailure(error))
+    );
+  });
+
+  rescanSelectedComicBooks$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(rescanSelectedComicBooks),
+      tap(action => this.logger.trace('Rescan selected comic books:', action)),
+      switchMap(action =>
+        this.libraryService.rescanSelectedComicBooks().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           tap(() =>
             this.alertService.info(
@@ -46,25 +71,11 @@ export class RescanComicsEffects {
               )
             )
           ),
-          map(() => comicsRescanning()),
-          catchError(error => {
-            this.logger.error('Service failure:', error);
-            this.alertService.error(
-              this.translateService.instant(
-                'library.rescan-comics.effect-failure'
-              )
-            );
-            return of(rescanComicsFailed());
-          })
+          map(() => rescanComicBooksSuccess()),
+          catchError(error => this.doServiceFailure(error))
         )
       ),
-      catchError(error => {
-        this.logger.error('General failure:', error);
-        this.alertService.error(
-          this.translateService.instant('app.general-effect-failure')
-        );
-        return of(rescanComicsFailed());
-      })
+      catchError(error => this.doGeneralFailure(error))
     );
   });
 
@@ -75,4 +86,20 @@ export class RescanComicsEffects {
     private alertService: AlertService,
     private translateService: TranslateService
   ) {}
+
+  private doServiceFailure(error: any) {
+    this.logger.error('Service failure:', error);
+    this.alertService.error(
+      this.translateService.instant('library.rescan-comics.effect-failure')
+    );
+    return of(rescanComicBooksFailure());
+  }
+
+  private doGeneralFailure(error: any) {
+    this.logger.error('General failure:', error);
+    this.alertService.error(
+      this.translateService.instant('app.general-effect-failure')
+    );
+    return of(rescanComicBooksFailure());
+  }
 }
