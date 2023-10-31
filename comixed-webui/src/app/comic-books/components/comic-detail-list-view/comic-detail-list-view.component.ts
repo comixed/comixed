@@ -56,7 +56,10 @@ import { EditMultipleComicsComponent } from '@app/library/components/edit-multip
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
-import { updateMetadata } from '@app/library/actions/update-metadata.actions';
+import {
+  updateSelectedComicBooksMetadata,
+  updateSingleComicBookMetadata
+} from '@app/library/actions/update-metadata.actions';
 import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
 import { rescanComics } from '@app/library/actions/rescan-comics.actions';
 import {
@@ -413,18 +416,39 @@ export class ComicDetailListViewComponent implements OnDestroy {
     this.showComicFilterPopup = true;
   }
 
-  onUpdateMetadata(ids: number[]): void {
+  onUpdateSingleComicBookMetadata(comicDetail: ComicDetail): void {
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'library.update-metadata.confirmation-title'
       ),
       message: this.translateService.instant(
         'library.update-metadata.confirmation-message',
-        { count: ids.length }
+        { count: 1 }
       ),
       confirm: () => {
-        this.logger.debug('Updating metadata for comics:', ids);
-        this.store.dispatch(updateMetadata({ ids }));
+        this.logger.debug(
+          'Updating metadata for a single comic book:',
+          comicDetail
+        );
+        this.store.dispatch(
+          updateSingleComicBookMetadata({ comicBookId: comicDetail.comicId })
+        );
+      }
+    });
+  }
+
+  onUpdateSelectedComicBooksMetadata(): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library.update-metadata.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'library.update-metadata.confirmation-message',
+        { count: this.selectedIds.length }
+      ),
+      confirm: () => {
+        this.logger.debug('Updating metadata for selected comic books');
+        this.store.dispatch(updateSelectedComicBooksMetadata());
       }
     });
   }

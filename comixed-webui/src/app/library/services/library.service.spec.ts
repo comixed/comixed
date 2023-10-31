@@ -40,13 +40,13 @@ import {
   RESCAN_COMICS_URL,
   SET_READ_STATE_URL,
   START_LIBRARY_CONSOLIDATION_URL,
-  UPDATE_METADATA_URL
+  UPDATE_SELECTED_COMIC_BOOKS_METADATA_URL,
+  UPDATE_SINGLE_COMIC_BOOK_METADATA_URL
 } from '@app/library/library.constants';
 import { HttpResponse } from '@angular/common/http';
 import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-request';
 import { ConsolidateLibraryRequest } from '@app/library/models/net/consolidate-library-request';
 import { RescanComicsRequest } from '@app/library/models/net/rescan-comics-request';
-import { UpdateMetadataRequest } from '@app/library/models/net/update-metadata-request';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ConvertComicBooksRequest } from '@app/library/models/net/convert-comic-books-request';
 import { PurgeLibraryRequest } from '@app/library/models/net/purge-library-request';
@@ -172,16 +172,31 @@ describe('LibraryService', () => {
     req.flush(new HttpResponse({ status: 200 }));
   });
 
-  it('can start updating metadata', () => {
+  it('can start updating metadata for a single comic book', () => {
     service
-      .updateMetadata({ ids: IDS })
+      .updateSingleComicBookMetadata({ comicBookId: COMIC_DETAIL.comicId })
       .subscribe(response => expect(response.status).toEqual(200));
 
-    const req = httpMock.expectOne(interpolate(UPDATE_METADATA_URL));
-    expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({
-      ids: IDS
-    } as UpdateMetadataRequest);
+    const req = httpMock.expectOne(
+      interpolate(UPDATE_SINGLE_COMIC_BOOK_METADATA_URL, {
+        comicBookId: COMIC_DETAIL.comicId
+      })
+    );
+    expect(req.request.method).toEqual('PUT');
+    expect(req.request.body).toEqual({});
+    req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('can start updating metadata for selected comic books', () => {
+    service
+      .updateSelectedComicBooksMetadata()
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(
+      interpolate(UPDATE_SELECTED_COMIC_BOOKS_METADATA_URL)
+    );
+    expect(req.request.method).toEqual('PUT');
+    expect(req.request.body).toEqual({});
     req.flush(new HttpResponse({ status: 200 }));
   });
 

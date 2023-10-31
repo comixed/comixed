@@ -1285,4 +1285,26 @@ public class ComicBookServiceTest {
     Mockito.verify(comicBookRepository, Mockito.times(1))
         .getComicBooksWithoutDetails(TEST_BATCH_CHUNK_SIZE);
   }
+
+  @Test(expected = ComicBookException.class)
+  public void testPrepareForMetadataUpdateInvalidComicBookId() throws ComicBookException {
+    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+
+    try {
+      service.prepareForMetadataUpdate(TEST_COMIC_BOOK_ID);
+    } finally {
+      Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
+    }
+  }
+
+  @Test
+  public void testPrepareForMetadataUpdate() throws ComicBookException {
+    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+
+    service.prepareForMetadataUpdate(TEST_COMIC_BOOK_ID);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
+    Mockito.verify(comicBook, Mockito.times(1)).setBatchMetadataUpdate(true);
+    Mockito.verify(comicBookRepository, Mockito.times(1)).save(comicBook);
+  }
 }

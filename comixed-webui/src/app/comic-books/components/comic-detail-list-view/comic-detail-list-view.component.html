@@ -338,7 +338,7 @@
   <button
     *ngIf="isAdmin"
     mat-menu-item
-    (click)="onUpdateMetadata([selectedComicDetail.comicId])"
+    (click)="onUpdateSingleComicBookMetadata(selectedComicDetail)"
   >
     <mat-label>
       {{ "library.context-menu.update-metadata-one" | translate }}
@@ -422,7 +422,11 @@
     </mat-label>
   </button>
 
-  <button *ngIf="isAdmin" mat-menu-item (click)="onUpdateMetadata(selectedIds)">
+  <button
+    *ngIf="isAdmin"
+    mat-menu-item
+    (click)="onUpdateSelectedComicBooksMetadata()"
+  >
     <mat-label>
       {{
         "library.context-menu.update-metadata-selected"
