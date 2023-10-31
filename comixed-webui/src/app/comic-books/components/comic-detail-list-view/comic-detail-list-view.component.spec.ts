@@ -77,7 +77,10 @@ import {
   updateSingleComicBookMetadata
 } from '@app/library/actions/update-metadata.actions';
 import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
-import { rescanComics } from '@app/library/actions/rescan-comics.actions';
+import {
+  rescanSelectedComicBooks,
+  rescanSingleComicBook
+} from '@app/library/actions/rescan-comics.actions';
 import {
   addSingleComicBookSelection,
   removeSingleComicBookSelection
@@ -792,15 +795,36 @@ describe('ComicDetailListViewComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(confirmation =>
         confirmation.confirm()
       );
-      component.onRescanComics(IDS);
     });
 
-    it('confirms with the user', () => {
-      expect(confirmationService.confirm).toHaveBeenCalled();
+    describe('rescanning a single comic book', () => {
+      beforeEach(() => {
+        component.onRescanSingleComicBook(COMIC_DETAIL);
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          rescanSingleComicBook({ comicBookId: COMIC_DETAIL.comicId })
+        );
+      });
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(rescanComics({ ids: IDS }));
+    describe('rescanning selected comic books', () => {
+      beforeEach(() => {
+        component.onRescanSelectedComicBooks();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(rescanSelectedComicBooks());
+      });
     });
   });
 });

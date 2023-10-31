@@ -25,23 +25,18 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AlertService } from '@app/core/services/alert.service';
+import { COMIC_DETAIL_1 } from '@app/comic-books/comic-books.fixtures';
 import {
-  COMIC_DETAIL_1,
-  COMIC_DETAIL_3,
-  COMIC_DETAIL_5
-} from '@app/comic-books/comic-books.fixtures';
-import {
-  comicsRescanning,
-  rescanComics,
-  rescanComicsFailed
+  rescanComicBooksFailure,
+  rescanComicBooksSuccess,
+  rescanSelectedComicBooks,
+  rescanSingleComicBook
 } from '@app/library/actions/rescan-comics.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 describe('RescanComicsEffects', () => {
-  const IDS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5].map(
-    entry => entry.comicId
-  );
+  const COMIC_DETAIL = COMIC_DETAIL_1;
 
   let actions$: Observable<any>;
   let effects: RescanComicsEffects;
@@ -61,7 +56,12 @@ describe('RescanComicsEffects', () => {
         {
           provide: LibraryService,
           useValue: {
-            rescanComics: jasmine.createSpy('LibraryService.rescanComics()')
+            rescanSingleComicBook: jasmine.createSpy(
+              'LibraryService.rescanSingleComicBook()'
+            ),
+            rescanSelectedComicBooks: jasmine.createSpy(
+              'LibraryService.rescanSelectedComicBooks()'
+            )
           }
         }
       ]
@@ -80,48 +80,100 @@ describe('RescanComicsEffects', () => {
     expect(effects).toBeTruthy();
   });
 
-  describe('rescanning comics', () => {
+  describe('rescanning a single comic book', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
-      const action = rescanComics({ ids: IDS });
-      const outcome = comicsRescanning();
+      const action = rescanSingleComicBook({
+        comicBookId: COMIC_DETAIL.comicId
+      });
+      const outcome = rescanComicBooksSuccess();
 
       actions$ = hot('-a', { a: action });
-      libraryService.rescanComics
-        .withArgs({ ids: IDS })
+      libraryService.rescanSingleComicBook
+        .withArgs({ comicBookId: COMIC_DETAIL.comicId })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.rescanComics$).toBeObservable(expected);
+      expect(effects.rescanSingleComicBook$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = rescanComics({ ids: IDS });
-      const outcome = rescanComicsFailed();
+      const action = rescanSingleComicBook({
+        comicBookId: COMIC_DETAIL.comicId
+      });
+      const outcome = rescanComicBooksFailure();
 
       actions$ = hot('-a', { a: action });
-      libraryService.rescanComics
-        .withArgs({ ids: IDS })
+      libraryService.rescanSingleComicBook
+        .withArgs({ comicBookId: COMIC_DETAIL.comicId })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.rescanComics$).toBeObservable(expected);
+      expect(effects.rescanSingleComicBook$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = rescanComics({ ids: IDS });
-      const outcome = rescanComicsFailed();
+      const action = rescanSingleComicBook({
+        comicBookId: COMIC_DETAIL.comicId
+      });
+      const outcome = rescanComicBooksFailure();
 
       actions$ = hot('-a', { a: action });
-      libraryService.rescanComics
-        .withArgs({ ids: IDS })
+      libraryService.rescanSingleComicBook
+        .withArgs({ comicBookId: COMIC_DETAIL.comicId })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.rescanComics$).toBeObservable(expected);
+      expect(effects.rescanSingleComicBook$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('rescanning selected comic books', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = new HttpResponse({ status: 200 });
+      const action = rescanSelectedComicBooks();
+      const outcome = rescanComicBooksSuccess();
+
+      actions$ = hot('-a', { a: action });
+      libraryService.rescanSelectedComicBooks
+        .withArgs()
+        .and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.rescanSelectedComicBooks$).toBeObservable(expected);
+      expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = rescanSelectedComicBooks();
+      const outcome = rescanComicBooksFailure();
+
+      actions$ = hot('-a', { a: action });
+      libraryService.rescanSelectedComicBooks
+        .withArgs()
+        .and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.rescanSelectedComicBooks$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = rescanSelectedComicBooks();
+      const outcome = rescanComicBooksFailure();
+
+      actions$ = hot('-a', { a: action });
+      libraryService.rescanSelectedComicBooks
+        .withArgs()
+        .and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.rescanSelectedComicBooks$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

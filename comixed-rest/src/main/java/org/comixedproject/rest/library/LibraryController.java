@@ -48,7 +48,6 @@ import org.comixedproject.model.net.library.LoadLibraryRequest;
 import org.comixedproject.model.net.library.LoadLibraryResponse;
 import org.comixedproject.model.net.library.PurgeLibraryRequest;
 import org.comixedproject.model.net.library.RemoteLibraryState;
-import org.comixedproject.model.net.library.RescanComicsRequest;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.*;
 import org.comixedproject.service.library.LibraryException;
@@ -341,19 +340,46 @@ public class LibraryController {
   }
 
   /**
-   * Initiates the rescan process for a set of comics.
+   * Initiates the rescan process for a single comic book.
    *
-   * @param request the request body
+   * @param comicBookId the comic book id
    * @throws Exception if an error occurs
    */
-  @PostMapping(value = "/api/library/rescan", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PutMapping(
+      value = "/api/library/rescan/{comicBookId}",
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @Timed(value = "comixed.library.batch.rescan")
-  public void rescanComics(@RequestBody() final RescanComicsRequest request) throws Exception {
-    final List<Long> ids = request.getIds();
-    log.info("Initiating library rescan for {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
-    this.comicBookService.rescanComics(ids);
+  @Timed(value = "comixed.library.batch.rescan-single")
+  public void rescanSingleComicBook(@PathVariable("comicBookId") final long comicBookId)
+      throws Exception {
+    log.info("Rescanning single comic book: id={}", comicBookId);
+    this.comicBookService.prepareForRescan(comicBookId);
     log.trace("Initiating a rescan batch process");
+    this.jobLauncher.run(
+        processComicsJob,
+        new JobParametersBuilder()
+            .addLong(ProcessComicsConfiguration.JOB_RESCAN_COMICS_START, System.currentTimeMillis())
+            .toJobParameters());
+  }
+
+  /**
+   * Initiates the rescan process for the selected comic books.
+   *
+   * @param session the session
+   * @throws Exception if an error occurs
+   */
+  @PutMapping(value = "/api/library/rescan/selected", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.library.batch.rescan-selected")
+  public void rescanSelectedComicBooks(final HttpSession session) throws Exception {
+    final List selectedIdList =
+        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+    log.info("Rescanning selected comic books");
+    this.comicBookService.prepareForRescan(selectedIdList);
+    this.comicBookSelectionService.clearSelectedComicBooks(selectedIdList);
+    session.setAttribute(
+        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selectedIdList));
+    log.trace("Launching rescan batch process");
     this.jobLauncher.run(
         processComicsJob,
         new JobParametersBuilder()
@@ -374,7 +400,7 @@ public class LibraryController {
       throws Exception {
     log.info("Updating the metadata a single comic book: id={}", comicBookId);
     this.comicBookService.prepareForMetadataUpdate(comicBookId);
-    log.trace("Launching batch process");
+    log.trace("Launching rescan batch process");
     this.jobLauncher.run(
         this.updateMetadataJob,
         new JobParametersBuilder()

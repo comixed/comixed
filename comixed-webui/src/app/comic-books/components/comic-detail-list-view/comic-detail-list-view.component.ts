@@ -61,7 +61,10 @@ import {
   updateSingleComicBookMetadata
 } from '@app/library/actions/update-metadata.actions';
 import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
-import { rescanComics } from '@app/library/actions/rescan-comics.actions';
+import {
+  rescanSelectedComicBooks,
+  rescanSingleComicBook
+} from '@app/library/actions/rescan-comics.actions';
 import {
   addSingleComicBookSelection,
   removeSingleComicBookSelection
@@ -469,18 +472,36 @@ export class ComicDetailListViewComponent implements OnDestroy {
     });
   }
 
-  onRescanComics(selectedIds: number[]): void {
+  onRescanSingleComicBook(comicDetail: ComicDetail): void {
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'library.rescan-comics.confirmation-title'
       ),
       message: this.translateService.instant(
         'library.rescan-comics.confirmation-message',
-        { count: selectedIds.length }
+        { count: 1 }
       ),
       confirm: () => {
-        this.logger.debug('Rescanning comics:', selectedIds);
-        this.store.dispatch(rescanComics({ ids: selectedIds }));
+        this.logger.debug('Rescanning a single comic book:', comicDetail);
+        this.store.dispatch(
+          rescanSingleComicBook({ comicBookId: comicDetail.comicId })
+        );
+      }
+    });
+  }
+
+  onRescanSelectedComicBooks(): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library.rescan-comics.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'library.rescan-comics.confirmation-message',
+        { count: this.selectedIds.length }
+      ),
+      confirm: () => {
+        this.logger.debug('Rescanning selected comic books');
+        this.store.dispatch(rescanSelectedComicBooks());
       }
     });
   }

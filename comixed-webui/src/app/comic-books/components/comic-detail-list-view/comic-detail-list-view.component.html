@@ -348,7 +348,7 @@
   <button
     *ngIf="isAdmin"
     mat-menu-item
-    (click)="onRescanComics([selectedComicDetail.comicId])"
+    (click)="onRescanSingleComicBook(selectedComicDetail)"
   >
     <mat-label>
       {{ "library.context-menu.rescan-one" | translate }}
@@ -448,7 +448,7 @@
     </mat-label>
   </button>
 
-  <button *ngIf="isAdmin" mat-menu-item (click)="onRescanComics(selectedIds)">
+  <button *ngIf="isAdmin" mat-menu-item (click)="onRescanSelectedComicBooks()">
     <mat-label>
       {{
         "library.context-menu.rescan-selected"
