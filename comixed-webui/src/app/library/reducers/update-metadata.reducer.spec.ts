@@ -22,18 +22,15 @@ import {
   UpdateMetadataState
 } from './update-metadata.reducer';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_3,
-  COMIC_BOOK_5
-} from '@app/comic-books/comic-books.fixtures';
-import {
-  metadataUpdating,
-  updateMetadata,
-  updateMetadataFailed
+  updateSelectedComicBooksMetadata,
+  updateSelectedComicBooksMetadataFailure,
+  updateSelectedComicBooksMetadataSuccess,
+  updateSingleComicBookMetadata
 } from '@app/library/actions/update-metadata.actions';
+import { COMIC_DETAIL_1 } from '@app/comic-books/comic-books.fixtures';
 
 describe('UpdateMetadata Reducer', () => {
-  const IDS = [4, 17, 6];
+  const COMIC_DETAIL = COMIC_DETAIL_1;
 
   let state: UpdateMetadataState;
 
@@ -51,11 +48,24 @@ describe('UpdateMetadata Reducer', () => {
     });
   });
 
-  describe('updating a comic', () => {
+  describe('updating a single comic book', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, updating: false },
-        updateMetadata({ ids: IDS })
+        updateSingleComicBookMetadata({ comicBookId: COMIC_DETAIL.comicId })
+      );
+    });
+
+    it('sets the updating flag', () => {
+      expect(state.updating).toBeTrue();
+    });
+  });
+
+  describe('updating selected comic books', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, updating: false },
+        updateSelectedComicBooksMetadata()
       );
     });
 
@@ -66,7 +76,10 @@ describe('UpdateMetadata Reducer', () => {
 
   describe('success updating a comic', () => {
     beforeEach(() => {
-      state = reducer({ ...state, updating: true }, metadataUpdating());
+      state = reducer(
+        { ...state, updating: true },
+        updateSelectedComicBooksMetadataSuccess()
+      );
     });
 
     it('clears the updating flag', () => {
@@ -76,7 +89,10 @@ describe('UpdateMetadata Reducer', () => {
 
   describe('failure updating a comic', () => {
     beforeEach(() => {
-      state = reducer({ ...state, updating: true }, updateMetadataFailed());
+      state = reducer(
+        { ...state, updating: true },
+        updateSelectedComicBooksMetadataFailure()
+      );
     });
 
     it('clears the updating flag', () => {

@@ -53,7 +53,8 @@ export const START_LIBRARY_CONSOLIDATION_URL = `${API_ROOT_URL}/library/consolid
 export const CONVERT_SINGLE_COMIC_BOOK_URL = `${API_ROOT_URL}/library/conversion/\${comicBookId}`;
 export const CONVERT_SELECTED_COMIC_BOOKS_URL = `${API_ROOT_URL}/library/conversion/selected`;
 export const RESCAN_COMICS_URL = `${API_ROOT_URL}/library/rescan`;
-export const UPDATE_METADATA_URL = `${API_ROOT_URL}/library/metadata`;
+export const UPDATE_SINGLE_COMIC_BOOK_METADATA_URL = `${API_ROOT_URL}/library/metadata/update/\${comicBookId}`;
+export const UPDATE_SELECTED_COMIC_BOOKS_METADATA_URL = `${API_ROOT_URL}/library/metadata/update/selected`;
 export const PURGE_LIBRARY_URL = `${API_ROOT_URL}/library/purge`;
 export const EDIT_MULTIPLE_COMICS_URL = `${API_ROOT_URL}/library/comics/edit`;
 

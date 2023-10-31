@@ -431,17 +431,32 @@ public class LibraryControllerTest {
   }
 
   @Test
-  public void testUpdateMetadata() throws Exception {
+  public void testUpdateSingleComicBookMetadata() throws Exception {
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
 
-    controller.updateMetadata(new UpdateMetadataRequest(idList));
+    controller.updateSingleComicBookMetadata(TEST_COMIC_BOOK_ID);
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
     assertNotNull(jobParameters);
 
-    Mockito.verify(libraryService, Mockito.times(1)).updateMetadata(idList);
+    Mockito.verify(comicBookService, Mockito.times(1)).prepareForMetadataUpdate(TEST_COMIC_BOOK_ID);
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(updateMetadataJob, jobParameters);
+  }
+
+  @Test
+  public void testUpdateSelectedComicBooksMetadata() throws Exception {
+    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+        .thenReturn(jobExecution);
+
+    controller.updateSelectedComicBooksMetadata(httpSession);
+
+    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
+
+    assertNotNull(jobParameters);
+
+    Mockito.verify(libraryService, Mockito.times(1)).updateMetadata(selectedIds);
     Mockito.verify(jobLauncher, Mockito.times(1)).run(updateMetadataJob, jobParameters);
   }
 

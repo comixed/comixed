@@ -857,4 +857,17 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   public void prepareForRecreation(final List<Long> ids) {
     this.comicBookRepository.markForRecreationById(ids);
   }
+
+  /**
+   * Marks a comic book for updating metadat.
+   *
+   * @param comicBookId the comic book id
+   * @throws ComicBookException if the id is invalid
+   */
+  @Transactional
+  public void prepareForMetadataUpdate(final long comicBookId) throws ComicBookException {
+    final ComicBook comicBook = this.doGetComic(comicBookId);
+    comicBook.setBatchMetadataUpdate(true);
+    this.comicBookRepository.save(comicBook);
+  }
 }
