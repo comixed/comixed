@@ -20,7 +20,7 @@ import { selectMarkComicsDeletedState } from './mark-comics-deleted.selectors';
 import {
   MARK_COMICS_DELETED_FEATURE_KEY,
   MarkComicsDeletedState
-} from '@app/comic-books/reducers/mark-comics-deleted.reducer';
+} from '@app/comic-books/reducers/delete-comic-books.reducer';
 
 describe('MarkComicsDeleted Selectors', () => {
   let state: MarkComicsDeletedState;

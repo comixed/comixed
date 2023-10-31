@@ -148,7 +148,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    * @throws ComicBookException if the comic id is invalid
    */
   @Transactional
-  public ComicBook deleteComic(final long id) throws ComicBookException {
+  public ComicBook deleteComicBook(final long id) throws ComicBookException {
     log.debug("Marking comic for deletion: id={}", id);
     final var comic = this.doGetComic(id);
     this.comicStateHandler.fireEvent(comic, ComicEvent.deleteComic);
@@ -234,7 +234,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    * @throws ComicBookException if the comic id is invalid
    */
   @Transactional
-  public ComicBook undeleteComic(final long id) throws ComicBookException {
+  public ComicBook undeleteComicBook(final long id) throws ComicBookException {
     log.debug("Restoring comic: id={}", id);
     final var comic = this.doGetComic(id);
     this.comicStateHandler.fireEvent(comic, ComicEvent.undeleteComic);
@@ -247,7 +247,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    * @param comicBook the comicBook
    */
   @Transactional
-  public void deleteComic(final ComicBook comicBook) {
+  public void deleteComicBook(final ComicBook comicBook) {
     log.debug("Deleting comicBook: id={}", comicBook.getId());
     this.comicBookRepository.delete(comicBook);
   }
@@ -504,7 +504,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @param ids the comic ids
    */
-  public void deleteComics(final List<Long> ids) {
+  public void deleteComicBooksById(final List<Long> ids) {
     ids.forEach(
         id -> {
           final ComicBook comicBook;
@@ -525,7 +525,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @param ids the comic ids
    */
-  public void undeleteComics(final List<Long> ids) {
+  public void undeleteComicBooksById(final List<Long> ids) {
     ids.forEach(
         id -> {
           final ComicBook comicBook = this.comicBookRepository.getById(id.longValue());

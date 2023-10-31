@@ -96,7 +96,7 @@
       class="cx-toolbar-button"
       mat-fab
       [matTooltip]="'comic-book.tooltip.delete-comic' | translate"
-      (click)="onSetComicDeletedState(true)"
+      (click)="onDeleteComicBook(true)"
     >
       <mat-icon>delete</mat-icon>
     </button>
@@ -107,7 +107,7 @@
       class="cx-toolbar-button"
       mat-fab
       [matTooltip]="'comic-book.tooltip.undelete-comic' | translate"
-      (click)="onSetComicDeletedState(false)"
+      (click)="onDeleteComicBook(false)"
     >
       <mat-icon>restore_from_trash</mat-icon>
     </button>

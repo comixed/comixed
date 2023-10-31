@@ -59,8 +59,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { CoreModule } from '@app/core/core.module';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { PageHashUrlPipe } from './pipes/page-hash-url.pipe';
-import { MarkComicsDeletedEffects } from '@app/comic-books/effects/mark-comics-deleted.effects';
-import { markComicsDeletedFeature } from '@app/comic-books/reducers/mark-comics-deleted.reducer';
+import { DeleteComicBooksEffects } from '@app/comic-books/effects/delete-comic-books.effects';
+import { markComicsDeletedFeature } from '@app/comic-books/reducers/delete-comic-books.reducer';
 import { MatDividerModule } from '@angular/material/divider';
 import { imprintListFeature } from '@app/comic-books/reducers/imprint-list.reducer';
 import { ImprintListEffects } from '@app/comic-books/effects/imprint-list.effects';
@@ -114,7 +114,7 @@ import { ComicBookSelectionEffects } from '@app/comic-books/effects/comic-book-s
       ComicBookListEffects,
       ComicBookEffects,
       ImprintListEffects,
-      MarkComicsDeletedEffects,
+      DeleteComicBooksEffects,
       ComicDetailsListEffects,
       ComicBookSelectionEffects
     ]),

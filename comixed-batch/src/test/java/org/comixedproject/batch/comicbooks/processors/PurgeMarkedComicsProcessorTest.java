@@ -43,13 +43,13 @@ public class PurgeMarkedComicsProcessorTest {
 
   @Test
   public void testProcess() throws Exception {
-    Mockito.doNothing().when(comicBookService).deleteComic(Mockito.any(ComicBook.class));
+    Mockito.doNothing().when(comicBookService).deleteComicBook(Mockito.any(ComicBook.class));
 
     final ComicBook result = processor.process(comicBook);
 
     assertNotNull(result);
     assertSame(comicBook, result);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).deleteComic(comicBook);
+    Mockito.verify(comicBookService, Mockito.times(1)).deleteComicBook(comicBook);
   }
 }

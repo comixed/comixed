@@ -52,7 +52,7 @@ public class DeleteComicProcessor
   @Override
   public ComicBook process(final ComicBook comicBook) {
     log.debug("Removing comicBook from database: id={}", comicBook.getId());
-    this.comicBookService.deleteComic(comicBook);
+    this.comicBookService.deleteComicBook(comicBook);
     if (Boolean.parseBoolean(
         this.executionContext.getString(PARAM_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))) {
       log.trace("Deleting physical file: {}", comicBook.getComicDetail().getFilename());

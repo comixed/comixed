@@ -18,6 +18,8 @@
 
 package org.comixedproject.rest.comicbooks;
 
+import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
+
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import java.io.ByteArrayInputStream;
@@ -25,6 +27,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import javax.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
@@ -33,9 +36,7 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.net.comicbooks.*;
-import org.comixedproject.service.comicbooks.ComicBookException;
-import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicDetailService;
+import org.comixedproject.service.comicbooks.*;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.views.View.ComicDetailsView;
@@ -62,6 +63,7 @@ public class ComicBookController {
 
   @Autowired private ComicBookService comicBookService;
   @Autowired private ComicDetailService comicDetailService;
+  @Autowired private ComicBookSelectionService comicBookSelectionService;
   @Autowired private PageCacheService pageCacheService;
   @Autowired private ComicFileService comicFileService;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
@@ -92,9 +94,24 @@ public class ComicBookController {
   @DeleteMapping(value = "/api/comics/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.comic-book.mark-one.deleted")
   @JsonView({ComicDetailsView.class})
-  public ComicBook deleteComic(@PathVariable("id") long id) throws ComicBookException {
-    log.info("Marking comic for deletion: id={}", id);
-    return this.comicBookService.deleteComic(id);
+  public ComicBook deleteComicBook(@PathVariable("id") long id) throws ComicBookException {
+    log.info("Marking comic book as deleted: id={}", id);
+    return this.comicBookService.deleteComicBook(id);
+  }
+
+  /**
+   * Marks a comic for deletion.
+   *
+   * @param id the comic id
+   * @return the updated comic
+   * @throws ComicBookException if the id is invalid
+   */
+  @PutMapping(value = "/api/comics/{id}/undelete", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.comic-book.mark-one.undeleted")
+  @JsonView({ComicDetailsView.class})
+  public ComicBook undeleteComicBook(@PathVariable("id") long id) throws ComicBookException {
+    log.info("Marking comic book as undeleted: id={}", id);
+    return this.comicBookService.undeleteComicBook(id);
   }
 
   /**
@@ -113,31 +130,53 @@ public class ComicBookController {
   }
 
   /**
-   * Sets the deleted flag for one or more comics.
+   * Deletes the selected comic books.
    *
-   * @param request the request body
+   * @param session the session
+   * @throws ComicBookException if an error occurs
    */
-  @PostMapping(value = "/api/comics/mark/deleted", consumes = MediaType.APPLICATION_JSON_VALUE)
-  @Timed(value = "comixed.comics.mark-many.deleted")
-  public void markComicsDeleted(@RequestBody() final MarkComicsDeletedRequest request) {
-    final List<Long> ids = request.getIds();
-    log.debug("Deleting multiple comics: ids={}", ids.toArray());
-    this.comicBookService.deleteComics(ids);
+  @DeleteMapping(value = "/api/comics/mark/deleted/selected")
+  @Timed(value = "comixed.comics.mark-many.delete-selected")
+  public void deleteSelectedComicBooks(final HttpSession session) throws ComicBookException {
+
+    try {
+      final List<Long> ids =
+          this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+      log.debug("Deleting multiple comics: ids={}", ids.toArray());
+      this.comicBookService.deleteComicBooksById(ids);
+
+      this.comicBookSelectionService.clearSelectedComicBooks(ids);
+      session.setAttribute(
+          LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(ids));
+    } catch (ComicBookSelectionException error) {
+      throw new ComicBookException("Failed to delete selected comic books", error);
+    }
   }
 
   /**
-   * Clears the deleted flag for one or more comics.
+   * Undeletes the selected comic books
    *
-   * @param request the request body
-   * @throws Exception if an error occurs
+   * @param session the http session
+   * @throws ComicBookException if an error occurs
    */
-  @PostMapping(value = "/api/comics/mark/undeleted", consumes = MediaType.APPLICATION_JSON_VALUE)
-  @Timed(value = "comixed.comics.mark-many.undeleted")
-  public void markComicsUndeleted(@RequestBody() final MarkComicsUndeletedRequest request)
-      throws Exception {
-    final List<Long> ids = request.getIds();
-    log.debug("Undeleting multiple comic: {}", ids.toArray());
-    this.comicBookService.undeleteComics(ids);
+  @PutMapping(
+      value = "/api/comics/mark/deleted/selected",
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.comics.mark-many.undelete-selected")
+  public void undeleteSelectedComicBooks(final HttpSession session) throws ComicBookException {
+    try {
+      final List<Long> ids =
+          this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+
+      log.debug("Undeleting multiple comic: {}", ids.toArray());
+      this.comicBookService.undeleteComicBooksById(ids);
+
+      this.comicBookSelectionService.clearSelectedComicBooks(ids);
+      session.setAttribute(
+          LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(ids));
+    } catch (ComicBookSelectionException error) {
+      throw new ComicBookException("Failed to delete selected comic books", error);
+    }
   }
 
   /**

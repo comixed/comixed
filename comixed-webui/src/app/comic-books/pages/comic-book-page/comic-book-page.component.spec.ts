@@ -64,7 +64,10 @@ import { TitleService } from '@app/core/services/title.service';
 import { markSingleComicBookRead } from '@app/last-read/actions/comic-books-read.actions';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { LAST_READ_1 } from '@app/last-read/last-read.fixtures';
-import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
+import {
+  deleteSingleComicBook,
+  undeleteSingleComicBook
+} from '@app/comic-books/actions/delete-comic-books.actions';
 import {
   initialState as initialMessagingState,
   MESSAGING_FEATURE_KEY
@@ -369,24 +372,43 @@ describe('ComicBookPageComponent', () => {
   });
 
   describe('setting the deleted state', () => {
-    const DELETED = Math.random() > 0.5;
-
     beforeEach(() => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
       component.comicBook = COMIC_BOOK;
-      component.onSetComicDeletedState(DELETED);
     });
 
-    it('confirms with the user', () => {
-      expect(confirmationService.confirm).toHaveBeenCalled();
+    describe('deleting the comic book', () => {
+      beforeEach(() => {
+        component.onDeleteComicBook(true);
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          deleteSingleComicBook({ comicBookId: COMIC_BOOK.id })
+        );
+      });
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        markComicsDeleted({ comicBooks: [COMIC_BOOK.detail], deleted: DELETED })
-      );
+    describe('undeleting the comic book', () => {
+      beforeEach(() => {
+        component.onDeleteComicBook(false);
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          undeleteSingleComicBook({ comicBookId: COMIC_BOOK.id })
+        );
+      });
     });
   });
 
