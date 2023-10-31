@@ -28,7 +28,8 @@ import {
   LOAD_LIBRARY_STATE_URL,
   PURGE_LIBRARY_URL,
   REMOTE_LIBRARY_STATE_TOPIC,
-  RESCAN_COMICS_URL,
+  RESCAN_SELECTED_COMIC_BOOKS_URL,
+  RESCAN_SINGLE_COMIC_BOOK_URL,
   SET_READ_STATE_URL,
   START_LIBRARY_CONSOLIDATION_URL,
   UPDATE_SELECTED_COMIC_BOOKS_METADATA_URL,
@@ -36,7 +37,6 @@ import {
 } from '@app/library/library.constants';
 import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-request';
 import { ConsolidateLibraryRequest } from '@app/library/models/net/consolidate-library-request';
-import { RescanComicsRequest } from '@app/library/models/net/rescan-comics-request';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ConvertComicBooksRequest } from '@app/library/models/net/convert-comic-books-request';
 import { PurgeLibraryRequest } from '@app/library/models/net/purge-library-request';
@@ -106,11 +106,19 @@ export class LibraryService {
     } as ConsolidateLibraryRequest);
   }
 
-  rescanComics(args: { ids: number[] }): Observable<any> {
-    this.logger.trace('Rescan comics:', args.ids);
-    return this.http.post(interpolate(RESCAN_COMICS_URL), {
-      ids: args.ids
-    } as RescanComicsRequest);
+  rescanSingleComicBook(args: { comicBookId: number }): Observable<any> {
+    this.logger.trace('Rescan a single comic book:', args);
+    return this.http.put(
+      interpolate(RESCAN_SINGLE_COMIC_BOOK_URL, {
+        comicBookId: args.comicBookId
+      }),
+      {}
+    );
+  }
+
+  rescanSelectedComicBooks(): Observable<any> {
+    this.logger.trace('Rescan comics');
+    return this.http.put(interpolate(RESCAN_SELECTED_COMIC_BOOKS_URL), {});
   }
 
   updateSingleComicBookMetadata(args: {

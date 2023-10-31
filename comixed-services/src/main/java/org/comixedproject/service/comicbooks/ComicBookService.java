@@ -423,11 +423,11 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   }
 
   /**
-   * Marks a set of comics for rescanning.
+   * Prepares a set of comic books for rescanning.
    *
    * @param ids the comic ids
    */
-  public void rescanComics(final List<Long> ids) {
+  public void prepareForRescan(final List<Long> ids) {
     ids.forEach(
         id -> {
           try {
@@ -869,5 +869,10 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     final ComicBook comicBook = this.doGetComic(comicBookId);
     comicBook.setBatchMetadataUpdate(true);
     this.comicBookRepository.save(comicBook);
+  }
+
+  public void prepareForRescan(final long comicBookId) throws ComicBookException {
+    final ComicBook comicBook = this.doGetComic(comicBookId);
+    this.comicStateHandler.fireEvent(comicBook, ComicEvent.rescanComic);
   }
 }

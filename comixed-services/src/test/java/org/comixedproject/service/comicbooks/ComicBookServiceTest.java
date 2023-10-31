@@ -661,12 +661,12 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testRescanComics() {
+  public void testPrepareForRescanById() {
     for (long index = 0L; index < 25L; index++) idList.add(index + 100);
 
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
 
-    service.rescanComics(idList);
+    service.prepareForRescan(idList);
 
     idList.forEach(
         id -> Mockito.verify(comicBookRepository, Mockito.times(1)).getById(id.longValue()));
@@ -675,12 +675,12 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testRescanComicsNoSuchComic() {
+  public void testPrepareForRescanByIdNoSuchComic() {
     idList.add(TEST_COMIC_BOOK_ID);
 
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
 
-    service.rescanComics(idList);
+    service.prepareForRescan(idList);
 
     idList.forEach(
         id -> Mockito.verify(comicBookRepository, Mockito.times(1)).getById(id.longValue()));
@@ -1306,5 +1306,27 @@ public class ComicBookServiceTest {
     Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
     Mockito.verify(comicBook, Mockito.times(1)).setBatchMetadataUpdate(true);
     Mockito.verify(comicBookRepository, Mockito.times(1)).save(comicBook);
+  }
+
+  @Test(expected = ComicBookException.class)
+  public void testPrepareForRescanSingleComicInvalidComicBookId() throws ComicBookException {
+    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+
+    try {
+      service.prepareForRescan(TEST_COMIC_BOOK_ID);
+    } finally {
+      Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
+    }
+  }
+
+  @Test
+  public void testPrepareForRescanSingleComic() throws ComicBookException {
+    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+
+    service.prepareForRescan(TEST_COMIC_BOOK_ID);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
+    Mockito.verify(comicStateHandler, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.rescanComic);
   }
 }

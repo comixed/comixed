@@ -22,20 +22,15 @@ import {
   RescanComicsState
 } from './rescan-comics.reducer';
 import {
-  comicsRescanning,
-  rescanComics,
-  rescanComicsFailed
+  rescanComicBooksFailure,
+  rescanComicBooksSuccess,
+  rescanSelectedComicBooks,
+  rescanSingleComicBook
 } from '@app/library/actions/rescan-comics.actions';
-import {
-  COMIC_DETAIL_1,
-  COMIC_DETAIL_3,
-  COMIC_DETAIL_5
-} from '@app/comic-books/comic-books.fixtures';
+import { COMIC_DETAIL_4 } from '@app/comic-books/comic-books.fixtures';
 
 describe('RescanComics Reducer', () => {
-  const IDS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5].map(
-    entry => entry.id
-  );
+  const COMIC_DETAIL = COMIC_DETAIL_4;
 
   let state: RescanComicsState;
 
@@ -53,9 +48,22 @@ describe('RescanComics Reducer', () => {
     });
   });
 
-  describe('starting the process', () => {
+  describe('rescanning a single comic book', () => {
     beforeEach(() => {
-      state = reducer({ ...state, working: false }, rescanComics({ ids: IDS }));
+      state = reducer(
+        { ...state, working: false },
+        rescanSingleComicBook({ comicBookId: COMIC_DETAIL.comicId })
+      );
+    });
+
+    it('sets the working flag', () => {
+      expect(state.working).toBeTrue();
+    });
+  });
+
+  describe('rescanning selected comic books', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, working: false }, rescanSelectedComicBooks());
     });
 
     it('sets the working flag', () => {
@@ -65,7 +73,7 @@ describe('RescanComics Reducer', () => {
 
   describe('success', () => {
     beforeEach(() => {
-      state = reducer({ ...state, working: true }, comicsRescanning());
+      state = reducer({ ...state, working: true }, rescanComicBooksSuccess());
     });
 
     it('clears the working flag', () => {
@@ -75,7 +83,7 @@ describe('RescanComics Reducer', () => {
 
   describe('failure', () => {
     beforeEach(() => {
-      state = reducer({ ...state, working: true }, rescanComicsFailed());
+      state = reducer({ ...state, working: true }, rescanComicBooksFailure());
     });
 
     it('clears the working flag', () => {

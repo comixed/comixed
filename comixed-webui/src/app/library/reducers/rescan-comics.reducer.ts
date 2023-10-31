@@ -18,9 +18,10 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  comicsRescanning,
-  rescanComics,
-  rescanComicsFailed
+  rescanComicBooksFailure,
+  rescanComicBooksSuccess,
+  rescanSelectedComicBooks,
+  rescanSingleComicBook
 } from '../actions/rescan-comics.actions';
 
 export const RESCAN_COMICS_FEATURE_KEY = 'rescan_comics_state';
@@ -36,9 +37,10 @@ export const initialState: RescanComicsState = {
 export const reducer = createReducer(
   initialState,
 
-  on(rescanComics, state => ({ ...state, working: true })),
-  on(comicsRescanning, state => ({ ...state, working: false })),
-  on(rescanComicsFailed, state => ({ ...state, working: false }))
+  on(rescanSingleComicBook, state => ({ ...state, working: true })),
+  on(rescanSelectedComicBooks, state => ({ ...state, working: true })),
+  on(rescanComicBooksSuccess, state => ({ ...state, working: false })),
+  on(rescanComicBooksFailure, state => ({ ...state, working: false }))
 );
 
 export const rescanComicBooksFeature = createFeature({

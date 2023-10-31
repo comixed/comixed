@@ -37,7 +37,8 @@ import {
   LOAD_LIBRARY_STATE_URL,
   PURGE_LIBRARY_URL,
   REMOTE_LIBRARY_STATE_TOPIC,
-  RESCAN_COMICS_URL,
+  RESCAN_SELECTED_COMIC_BOOKS_URL,
+  RESCAN_SINGLE_COMIC_BOOK_URL,
   SET_READ_STATE_URL,
   START_LIBRARY_CONSOLIDATION_URL,
   UPDATE_SELECTED_COMIC_BOOKS_METADATA_URL,
@@ -46,7 +47,6 @@ import {
 import { HttpResponse } from '@angular/common/http';
 import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-request';
 import { ConsolidateLibraryRequest } from '@app/library/models/net/consolidate-library-request';
-import { RescanComicsRequest } from '@app/library/models/net/rescan-comics-request';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ConvertComicBooksRequest } from '@app/library/models/net/convert-comic-books-request';
 import { PurgeLibraryRequest } from '@app/library/models/net/purge-library-request';
@@ -71,7 +71,6 @@ describe('LibraryService', () => {
     COMIC_DETAIL_3,
     COMIC_DETAIL_4
   ];
-  const IDS = COMIC_DETAILS.map(comic => comic.id);
   const READ = Math.random() > 0.5;
   const ARCHIVE_TYPE = ArchiveType.CBZ;
   const RENAME_PAGES = Math.random() > 0.5;
@@ -159,16 +158,31 @@ describe('LibraryService', () => {
     } as ConsolidateLibraryRequest);
   });
 
-  it('can start rescanning comics', () => {
+  it('can start rescanning a single comic book', () => {
     service
-      .rescanComics({ ids: IDS })
+      .rescanSingleComicBook({ comicBookId: COMIC_DETAIL.comicId })
       .subscribe(response => expect(response.status).toEqual(200));
 
-    const req = httpMock.expectOne(interpolate(RESCAN_COMICS_URL));
-    expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({
-      ids: IDS
-    } as RescanComicsRequest);
+    const req = httpMock.expectOne(
+      interpolate(RESCAN_SINGLE_COMIC_BOOK_URL, {
+        comicBookId: COMIC_DETAIL.comicId
+      })
+    );
+    expect(req.request.method).toEqual('PUT');
+    expect(req.request.body).toEqual({});
+    req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('can start rescanning comics', () => {
+    service
+      .rescanSelectedComicBooks()
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(
+      interpolate(RESCAN_SELECTED_COMIC_BOOKS_URL)
+    );
+    expect(req.request.method).toEqual('PUT');
+    expect(req.request.body).toEqual({});
     req.flush(new HttpResponse({ status: 200 }));
   });
 

@@ -18,15 +18,21 @@
 
 import { createAction, props } from '@ngrx/store';
 
-export const rescanComics = createAction(
-  '[Rescan Comics] Rescan selected comics',
-  props<{ ids: number[] }>()
+export const rescanSingleComicBook = createAction(
+  '[Rescan Comic Books] Rescan a single comic book',
+  props<{
+    comicBookId: number;
+  }>()
 );
 
-export const comicsRescanning = createAction(
-  '[Rescan Comics] Rescanning comics has started'
+export const rescanSelectedComicBooks = createAction(
+  '[Rescan Comic Books] Rescan selected comic books'
 );
 
-export const rescanComicsFailed = createAction(
-  '[Rescan Comics] Failed to start rescanning comics'
+export const rescanComicBooksSuccess = createAction(
+  '[Rescan Comic Books] Rescanning comic books has started'
+);
+
+export const rescanComicBooksFailure = createAction(
+  '[Rescan Comic Books] Failed to start rescanning comic books'
 );
