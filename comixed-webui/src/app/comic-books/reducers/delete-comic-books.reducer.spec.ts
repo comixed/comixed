@@ -20,16 +20,19 @@ import {
   initialState,
   MarkComicsDeletedState,
   reducer
-} from './mark-comics-deleted.reducer';
+} from './delete-comic-books.reducer';
 import {
-  comicsMarkedDeleted,
-  markComicsDeleted,
-  markComicsDeletedFailed
-} from '@app/comic-books/actions/mark-comics-deleted.actions';
+  deleteComicBooksFailure,
+  deleteComicBooksSuccess,
+  deleteSelectedComicBooks,
+  deleteSingleComicBook,
+  undeleteSelectedComicBooks,
+  undeleteSingleComicBook
+} from '@app/comic-books/actions/delete-comic-books.actions';
 import { COMIC_DETAIL_1 } from '@app/comic-books/comic-books.fixtures';
 
-describe('MarkComicsDeleted Reducer', () => {
-  const COMIC = COMIC_DETAIL_1;
+describe('DeleteComicBooks Reducer', () => {
+  const COMIC_DETAIL = COMIC_DETAIL_1;
   const DELETED = Math.random() > 0.5;
 
   let state: MarkComicsDeletedState;
@@ -48,11 +51,50 @@ describe('MarkComicsDeleted Reducer', () => {
     });
   });
 
-  describe('setting the deleted state', () => {
+  describe('deleting a single comic book', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, updating: false },
-        markComicsDeleted({ comicBooks: [COMIC], deleted: DELETED })
+        deleteSingleComicBook({ comicBookId: COMIC_DETAIL.comicId })
+      );
+    });
+
+    it('sets the updating flag', () => {
+      expect(state.updating).toBeTrue();
+    });
+  });
+
+  describe('undeleting a single comic book', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, updating: false },
+        undeleteSingleComicBook({ comicBookId: COMIC_DETAIL.comicId })
+      );
+    });
+
+    it('sets the updating flag', () => {
+      expect(state.updating).toBeTrue();
+    });
+  });
+
+  describe('deleting the selected comic books', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, updating: false },
+        deleteSelectedComicBooks()
+      );
+    });
+
+    it('sets the updating flag', () => {
+      expect(state.updating).toBeTrue();
+    });
+  });
+
+  describe('undeleting the selected comic books', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, updating: false },
+        undeleteSelectedComicBooks()
       );
     });
 
@@ -63,7 +105,7 @@ describe('MarkComicsDeleted Reducer', () => {
 
   describe('success setting the state', () => {
     beforeEach(() => {
-      state = reducer({ ...state, updating: true }, comicsMarkedDeleted());
+      state = reducer({ ...state, updating: true }, deleteComicBooksSuccess());
     });
 
     it('clears the updating flag', () => {
@@ -73,7 +115,7 @@ describe('MarkComicsDeleted Reducer', () => {
 
   describe('failure setting the state', () => {
     beforeEach(() => {
-      state = reducer({ ...state, updating: true }, markComicsDeletedFailed());
+      state = reducer({ ...state, updating: true }, deleteComicBooksFailure());
     });
 
     it('clears the updating flag', () => {

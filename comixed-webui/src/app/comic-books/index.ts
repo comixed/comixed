@@ -33,7 +33,7 @@ import {
   MARK_COMICS_DELETED_FEATURE_KEY,
   MarkComicsDeletedState,
   reducer as markComicsDeletedReducer
-} from './reducers/mark-comics-deleted.reducer';
+} from './reducers/delete-comic-books.reducer';
 import {
   IMPRINT_LIST_FEATURE_KEY,
   ImprintListState,

@@ -63,7 +63,10 @@ import { MessagingSubscription, WebSocketService } from '@app/messaging';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import { markSingleComicBookRead } from '@app/last-read/actions/comic-books-read.actions';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
-import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
+import {
+  deleteSingleComicBook,
+  undeleteSingleComicBook
+} from '@app/comic-books/actions/delete-comic-books.actions';
 import { COMIC_BOOK_UPDATE_TOPIC } from '@app/comic-books/comic-books.constants';
 import { Page } from '@app/comic-books/models/page';
 import { ConfirmationService } from '@tragically-slick/confirmation';
@@ -274,7 +277,7 @@ export class ComicBookPageComponent
     });
   }
 
-  onSetComicDeletedState(deleted: boolean): void {
+  onDeleteComicBook(deleted: boolean): void {
     this.logger.trace('Confirming setting comic deleted state');
     this.confirmationService.confirm({
       title: this.translateService.instant(
@@ -287,9 +290,15 @@ export class ComicBookPageComponent
       ),
       confirm: () => {
         this.logger.trace('Marking comic for deletion');
-        this.store.dispatch(
-          markComicsDeleted({ comicBooks: [this.comicBook.detail], deleted })
-        );
+        if (deleted) {
+          this.store.dispatch(
+            deleteSingleComicBook({ comicBookId: this.comicBook.id })
+          );
+        } else {
+          this.store.dispatch(
+            undeleteSingleComicBook({ comicBookId: this.comicBook.id })
+          );
+        }
       }
     });
   }

@@ -56,7 +56,12 @@ import {
   markSelectedComicBooksRead,
   markSingleComicBookRead
 } from '@app/last-read/actions/comic-books-read.actions';
-import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
+import {
+  deleteSelectedComicBooks,
+  deleteSingleComicBook,
+  undeleteSelectedComicBooks,
+  undeleteSingleComicBook
+} from '@app/comic-books/actions/delete-comic-books.actions';
 import { editMultipleComics } from '@app/library/actions/library.actions';
 import { BehaviorSubject, of } from 'rxjs';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
@@ -542,26 +547,28 @@ describe('ComicDetailListViewComponent', () => {
       });
     });
 
-    describe('marking one comic as deleted', () => {
+    describe('marking a single comic book as deleted', () => {
       beforeEach(() => {
+        component.selectedComicDetail = COMIC_DETAIL;
         component.onMarkOneAsDeleted(true);
       });
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markComicsDeleted({ comicBooks: [COMIC_DETAIL], deleted: true })
+          deleteSingleComicBook({ comicBookId: COMIC_DETAIL.comicId })
         );
       });
     });
 
-    describe('marking one comic as undeleted', () => {
+    describe('marking a single comic book as undeleted', () => {
       beforeEach(() => {
+        component.selectedComicDetail = COMIC_DETAIL;
         component.onMarkOneAsDeleted(false);
       });
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markComicsDeleted({ comicBooks: [COMIC_DETAIL], deleted: false })
+          undeleteSingleComicBook({ comicBookId: COMIC_DETAIL.comicId })
         );
       });
     });
@@ -572,9 +579,7 @@ describe('ComicDetailListViewComponent', () => {
       });
 
       it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          markComicsDeleted({ comicBooks: COMIC_DETAILS, deleted: true })
-        );
+        expect(store.dispatch).toHaveBeenCalledWith(deleteSelectedComicBooks());
       });
     });
 
@@ -585,7 +590,7 @@ describe('ComicDetailListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markComicsDeleted({ comicBooks: COMIC_DETAILS, deleted: false })
+          undeleteSelectedComicBooks()
         );
       });
     });

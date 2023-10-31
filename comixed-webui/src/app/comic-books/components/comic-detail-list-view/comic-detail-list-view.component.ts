@@ -45,7 +45,12 @@ import {
   markSelectedComicBooksRead,
   markSingleComicBookRead
 } from '@app/last-read/actions/comic-books-read.actions';
-import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
+import {
+  deleteSelectedComicBooks,
+  deleteSingleComicBook,
+  undeleteSelectedComicBooks,
+  undeleteSingleComicBook
+} from '@app/comic-books/actions/delete-comic-books.actions';
 import { editMultipleComics } from '@app/library/actions/library.actions';
 import { EditMultipleComicsComponent } from '@app/library/components/edit-multiple-comics/edit-multiple-comics.component';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
@@ -329,7 +334,11 @@ export class ComicDetailListViewComponent implements OnDestroy {
   }
 
   onMarkSelectedAsDeleted(deleted: boolean): void {
-    this.doMarkAsDeleted(this.getSelectedComics(), deleted);
+    if (deleted) {
+      this.store.dispatch(deleteSelectedComicBooks());
+    } else {
+      this.store.dispatch(undeleteSelectedComicBooks());
+    }
   }
 
   isDeleted(comicDetail: ComicDetail): boolean {
@@ -337,7 +346,17 @@ export class ComicDetailListViewComponent implements OnDestroy {
   }
 
   onMarkOneAsDeleted(deleted: boolean): void {
-    this.doMarkAsDeleted([this.selectedComicDetail], deleted);
+    if (deleted) {
+      this.store.dispatch(
+        deleteSingleComicBook({ comicBookId: this.selectedComicDetail.comicId })
+      );
+    } else {
+      this.store.dispatch(
+        undeleteSingleComicBook({
+          comicBookId: this.selectedComicDetail.comicId
+        })
+      );
+    }
   }
 
   onEditMultipleComics(): void {
@@ -442,23 +461,12 @@ export class ComicDetailListViewComponent implements OnDestroy {
     });
   }
 
-  private doMarkAsDeleted(comicBooks: ComicDetail[], deleted: boolean): void {
-    this.logger.debug('Marking comics as deleted:', comicBooks, deleted);
-    this.store.dispatch(markComicsDeleted({ comicBooks, deleted }));
-  }
-
   private doAddToReadingList(
     comicBooks: ComicDetail[],
     list: ReadingList
   ): void {
     this.logger.debug('Adding comics to reading list:', comicBooks, list);
     this.store.dispatch(addSelectedComicBooksToReadingList({ list }));
-  }
-
-  private getSelectedComics(): ComicDetail[] {
-    return this.dataSource.data
-      .filter(entry => entry.selected)
-      .map(entry => entry.item);
   }
 
   private applyFilters(): void {
