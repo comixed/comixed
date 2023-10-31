@@ -41,6 +41,6 @@ public class RemoveComicBooksWithoutDetailsProcessorTest {
 
     assertNull(result);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).deleteComic(comicBook);
+    Mockito.verify(comicBookService, Mockito.times(1)).deleteComicBook(comicBook);
   }
 }

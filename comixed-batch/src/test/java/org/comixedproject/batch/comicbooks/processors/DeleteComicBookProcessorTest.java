@@ -74,7 +74,7 @@ public class DeleteComicBookProcessorTest {
     assertNotNull(result);
     assertSame(comicBook, result);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).deleteComic(comicBook);
+    Mockito.verify(comicBookService, Mockito.times(1)).deleteComicBook(comicBook);
     Mockito.verify(fileAdaptor, Mockito.times(1)).deleteFile(file);
     Mockito.verify(comicBookAdaptor, Mockito.times(1)).deleteMetadataFile(comicBook);
   }
@@ -90,7 +90,7 @@ public class DeleteComicBookProcessorTest {
     assertNotNull(result);
     assertSame(comicBook, result);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).deleteComic(comicBook);
+    Mockito.verify(comicBookService, Mockito.times(1)).deleteComicBook(comicBook);
     Mockito.verify(fileAdaptor, Mockito.times(1)).deleteFile(file);
     Mockito.verify(comicBookAdaptor, Mockito.times(1)).deleteMetadataFile(comicBook);
   }
@@ -106,7 +106,7 @@ public class DeleteComicBookProcessorTest {
     assertNotNull(result);
     assertSame(comicBook, result);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).deleteComic(comicBook);
+    Mockito.verify(comicBookService, Mockito.times(1)).deleteComicBook(comicBook);
     Mockito.verify(fileAdaptor, Mockito.never()).deleteFile(Mockito.any());
   }
 

@@ -17,17 +17,29 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
-export const markComicsDeleted = createAction(
-  '[Mark Comics Deleted] Set the deleted state for comics',
-  props<{ comicBooks: ComicDetail[]; deleted: boolean }>()
+export const deleteSingleComicBook = createAction(
+  '[Delete Comic Books] Mark a single comic book as deleted',
+  props<{ comicBookId: number }>()
 );
 
-export const comicsMarkedDeleted = createAction(
-  '[Mark Comics Deleted] Deleted state set'
+export const undeleteSingleComicBook = createAction(
+  '[Delete Comic Books] Mark a single comic book as undeleted',
+  props<{ comicBookId: number }>()
 );
 
-export const markComicsDeletedFailed = createAction(
-  '[Mark Comics Deleted] Set deleted state failed'
+export const deleteSelectedComicBooks = createAction(
+  '[Delete Comic Books] Mark the selected comic books as deleted'
+);
+
+export const undeleteSelectedComicBooks = createAction(
+  '[Delete Comic Books] Mark the selected comic books as undeleted'
+);
+
+export const deleteComicBooksSuccess = createAction(
+  '[Delete Comic Books] Deleted state set'
+);
+
+export const deleteComicBooksFailure = createAction(
+  '[Delete Comic Books] Set deleted state failed'
 );

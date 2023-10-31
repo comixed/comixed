@@ -38,7 +38,7 @@ public class PurgeMarkedComicsProcessor implements ItemProcessor<ComicBook, Comi
   @Override
   public ComicBook process(final ComicBook comicBook) throws Exception {
     log.debug("Purging comicBook: id={}", comicBook.getId());
-    this.comicBookService.deleteComic(comicBook);
+    this.comicBookService.deleteComicBook(comicBook);
     return comicBook;
   }
 }

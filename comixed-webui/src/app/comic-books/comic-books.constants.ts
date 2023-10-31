@@ -32,8 +32,10 @@ export const SET_SELECTED_COMIC_BOOKS_BY_TAG_TYPE_AND_VALUE_URL = `${API_ROOT_UR
 export const SET_SELECTED_COMIC_BOOKS_BY_ID_URL = `${API_ROOT_URL}/comics/selections/ids`;
 export const CLEAR_COMIC_BOOK_SELECTION_STATE_URL = `${API_ROOT_URL}/comics/selections/clear`;
 
-export const MARK_COMICS_DELETED_URL = `${API_ROOT_URL}/comics/mark/deleted`;
-export const MARK_COMICS_UNDELETED_URL = `${API_ROOT_URL}/comics/mark/undeleted`;
+export const DELETE_SINGLE_COMIC_BOOK_URL = `${API_ROOT_URL}/comics/\${comicBookId}`;
+export const UNDELETE_SINGLE_COMIC_BOOK_URL = `${API_ROOT_URL}/comics/\${comicBookId}/undelete`;
+export const DELETE_SELECTED_COMIC_BOOKS_URL = `${API_ROOT_URL}/comics/mark/deleted/selected`;
+export const UNDELETE_SELECTED_COMIC_BOOKS_URL = `${API_ROOT_URL}/comics/mark/deleted/selected`;
 export const SAVE_PAGE_ORDER_URL = `${API_ROOT_URL}/comics/\${id}/pages/order`;
 
 export const GET_IMPRINTS_URL = `${API_ROOT_URL}/comics/imprints`;

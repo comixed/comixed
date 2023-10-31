@@ -28,18 +28,18 @@ import {
 import { interpolate } from '@app/core';
 import { OldLoadComicsRequest } from '@app/comic-books/models/net/old-load-comics-request';
 import {
-  MARK_COMICS_DELETED_URL,
-  MARK_COMICS_UNDELETED_URL,
+  DELETE_SELECTED_COMIC_BOOKS_URL,
+  DELETE_SINGLE_COMIC_BOOK_URL,
   MARK_PAGES_DELETED_URL,
   MARK_PAGES_UNDELETED_URL,
-  SAVE_PAGE_ORDER_URL
+  SAVE_PAGE_ORDER_URL,
+  UNDELETE_SELECTED_COMIC_BOOKS_URL,
+  UNDELETE_SINGLE_COMIC_BOOK_URL
 } from '@app/comic-books/comic-books.constants';
-import { MarkComicsDeletedRequest } from '@app/comic-books/models/net/mark-comics-deleted-request';
 import { Page } from '@app/comic-books/models/page';
 import { MarkPagesDeletedRequest } from '@app/comic-books/models/net/mark-pages-deleted-request';
 import { PageOrderEntry } from '@app/comic-books/models/net/page-order-entry';
 import { SavePageOrderRequest } from '@app/comic-books/models/net/save-page-order-request';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 
 @Injectable({
@@ -86,33 +86,48 @@ export class ComicBookService {
   }
 
   /**
-   * Updates the deleted state for a set of comic.
+   * Marks a single comic book as deleted.
    *
-   * @param args.comics the comics
-   * @param args.deleted the deleted state
+   * @param args.comicBookId the comic book's id
    */
-  markComicsDeleted(args: {
-    comicBooks: ComicDetail[];
-    deleted: boolean;
-  }): Observable<any> {
-    const ids = args.comicBooks.map(comic => comic.comicId);
-    if (args.deleted) {
-      this.logger.trace(
-        'Service: marking comics for deletion:',
-        args.comicBooks
-      );
-      return this.http.post(interpolate(MARK_COMICS_DELETED_URL), {
-        ids
-      } as MarkComicsDeletedRequest);
-    } else {
-      this.logger.trace(
-        'Service: unmarking comics for deletion:',
-        args.comicBooks
-      );
-      return this.http.post(interpolate(MARK_COMICS_UNDELETED_URL), {
-        ids
-      } as MarkComicsDeletedRequest);
-    }
+  deleteSingleComicBook(args: { comicBookId: number }): Observable<any> {
+    this.logger.debug('Marking selected comic books as deleted');
+    return this.http.delete(
+      interpolate(DELETE_SINGLE_COMIC_BOOK_URL, {
+        comicBookId: args.comicBookId
+      })
+    );
+  }
+
+  /**
+   * Marks all selected comic books as undeleted.
+   *
+   * @param args.comicBookId the comic book's id
+   */
+  undeleteSingleComicBook(args: { comicBookId: number }): Observable<any> {
+    this.logger.debug('Marking selected comic books as deleted');
+    return this.http.put(
+      interpolate(UNDELETE_SINGLE_COMIC_BOOK_URL, {
+        comicBookId: args.comicBookId
+      }),
+      {}
+    );
+  }
+
+  /**
+   * Marks all selected comic books as deleted
+   */
+  deleteSelectedComicBooks(): Observable<any> {
+    this.logger.debug('Marking selected comic books as deleted');
+    return this.http.delete(interpolate(DELETE_SELECTED_COMIC_BOOKS_URL));
+  }
+
+  /**
+   * Marks all selected comic books as undeleted.
+   */
+  undeleteSelectedComicBooks(): Observable<any> {
+    this.logger.debug('Marking selected comic books as undeleted');
+    return this.http.put(interpolate(UNDELETE_SELECTED_COMIC_BOOKS_URL), {});
   }
 
   updatePageDeletion(args: {

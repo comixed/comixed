@@ -41,21 +41,21 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { OldLoadComicsResponse } from '@app/comic-books/models/net/old-load-comics-response';
 import { OldLoadComicsRequest } from '@app/comic-books/models/net/old-load-comics-request';
 import {
-  MARK_COMICS_DELETED_URL,
-  MARK_COMICS_UNDELETED_URL,
+  DELETE_SELECTED_COMIC_BOOKS_URL,
+  DELETE_SINGLE_COMIC_BOOK_URL,
   MARK_PAGES_DELETED_URL,
   MARK_PAGES_UNDELETED_URL,
-  SAVE_PAGE_ORDER_URL
+  SAVE_PAGE_ORDER_URL,
+  UNDELETE_SELECTED_COMIC_BOOKS_URL,
+  UNDELETE_SINGLE_COMIC_BOOK_URL
 } from '@app/comic-books/comic-books.constants';
-import { MarkComicsDeletedRequest } from '@app/comic-books/models/net/mark-comics-deleted-request';
 import { HttpResponse } from '@angular/common/http';
-import { MarkComicsUndeletedRequest } from '@app/comic-books/models/net/mark-comics-undeleted-request';
 import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
 import { MarkPagesDeletedRequest } from '@app/comic-books/models/net/mark-pages-deleted-request';
 import { SavePageOrderRequest } from '@app/comic-books/models/net/save-page-order-request';
 
 describe('ComicBookService', () => {
-  const COMIC_BOOK = COMIC_DETAIL_2;
+  const COMIC_DETAIL = COMIC_DETAIL_2;
   const COMIC_BOOKS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
   const MAX_RECORDS = 1000;
   const LAST_ID = Math.floor(Math.abs(Math.random() * 1000));
@@ -104,14 +104,14 @@ describe('ComicBookService', () => {
 
   it('can load a single comic', () => {
     service
-      .loadOne({ id: COMIC_BOOK.comicId })
-      .subscribe(response => expect(response).toEqual(COMIC_BOOK));
+      .loadOne({ id: COMIC_DETAIL.comicId })
+      .subscribe(response => expect(response).toEqual(COMIC_DETAIL));
 
     const req = httpMock.expectOne(
-      interpolate(LOAD_COMIC_URL, { id: COMIC_BOOK.comicId })
+      interpolate(LOAD_COMIC_URL, { id: COMIC_DETAIL.comicId })
     );
     expect(req.request.method).toEqual('GET');
-    req.flush(COMIC_BOOK);
+    req.flush(COMIC_DETAIL);
   });
 
   it('can update a single comic', () => {
@@ -127,35 +127,57 @@ describe('ComicBookService', () => {
     req.flush(COMIC_BOOK_2);
   });
 
-  it('can mark comics for deletion', () => {
+  it('can delete a single comic book', () => {
     service
-      .markComicsDeleted({
-        comicBooks: COMIC_BOOKS,
-        deleted: true
-      })
+      .deleteSingleComicBook({ comicBookId: COMIC_DETAIL.comicId })
       .subscribe(response => expect(response.status).toEqual(200));
 
-    const req = httpMock.expectOne(interpolate(MARK_COMICS_DELETED_URL));
-    expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({
-      ids: COMIC_BOOKS.map(comic => comic.comicId)
-    } as MarkComicsDeletedRequest);
+    const req = httpMock.expectOne(
+      interpolate(DELETE_SINGLE_COMIC_BOOK_URL, {
+        comicBookId: COMIC_DETAIL.comicId
+      })
+    );
+    expect(req.request.method).toEqual('DELETE');
     req.flush(new HttpResponse({ status: 200 }));
   });
 
-  it('can unmark comics for deletion', () => {
+  it('can undelete a single comic book', () => {
     service
-      .markComicsDeleted({
-        comicBooks: COMIC_BOOKS,
-        deleted: false
-      })
+      .undeleteSingleComicBook({ comicBookId: COMIC_DETAIL.comicId })
       .subscribe(response => expect(response.status).toEqual(200));
 
-    const req = httpMock.expectOne(interpolate(MARK_COMICS_UNDELETED_URL));
-    expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({
-      ids: COMIC_BOOKS.map(comic => comic.comicId)
-    } as MarkComicsUndeletedRequest);
+    const req = httpMock.expectOne(
+      interpolate(UNDELETE_SINGLE_COMIC_BOOK_URL, {
+        comicBookId: COMIC_DETAIL.comicId
+      })
+    );
+    expect(req.request.method).toEqual('PUT');
+    expect(req.request.body).toEqual({});
+    req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('can delete the selected comic books', () => {
+    service
+      .deleteSelectedComicBooks()
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(
+      interpolate(DELETE_SELECTED_COMIC_BOOKS_URL)
+    );
+    expect(req.request.method).toEqual('DELETE');
+    req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('can undelete the selected comic books', () => {
+    service
+      .undeleteSelectedComicBooks()
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(
+      interpolate(UNDELETE_SELECTED_COMIC_BOOKS_URL)
+    );
+    expect(req.request.method).toEqual('PUT');
+    expect(req.request.body).toEqual({});
     req.flush(new HttpResponse({ status: 200 }));
   });
 

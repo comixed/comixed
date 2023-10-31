@@ -20,7 +20,7 @@ import { createFeatureSelector } from '@ngrx/store';
 import {
   MARK_COMICS_DELETED_FEATURE_KEY,
   MarkComicsDeletedState
-} from '../reducers/mark-comics-deleted.reducer';
+} from '../reducers/delete-comic-books.reducer';
 
 export const selectMarkComicsDeletedState =
   createFeatureSelector<MarkComicsDeletedState>(

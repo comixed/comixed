@@ -43,7 +43,7 @@ public class RemoveComicBooksWithoutDetailsProcessor
   @Transactional
   public ComicBook process(final ComicBook comicBook) {
     log.debug("Deleting comic book: id={}", comicBook.getId());
-    this.comicBookService.deleteComic(comicBook);
+    this.comicBookService.deleteComicBook(comicBook);
     return null;
   }
 }
