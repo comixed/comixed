@@ -27,7 +27,6 @@ import {
   loadVolumeMetadata,
   loadVolumeMetadataFailed,
   metadataCacheCleared,
-  metadataUpdateProcessStarted,
   resetMetadataState,
   scrapeComic,
   scrapeComicFailed,
@@ -35,7 +34,8 @@ import {
   setChosenMetadataSource,
   setConfirmBeforeScraping,
   startMetadataUpdateProcess,
-  startMetadataUpdateProcessFailed,
+  startMetadataUpdateProcessFailure,
+  startMetadataUpdateProcessSuccess,
   volumeMetadataLoaded
 } from '@app/comic-metadata/actions/metadata.actions';
 import { COMIC_BOOK_4 } from '@app/comic-books/comic-books.fixtures';
@@ -362,35 +362,38 @@ describe('Scraping Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: false },
-        startMetadataUpdateProcess({ ids: IDS, skipCache: SKIP_CACHE })
+        startMetadataUpdateProcess({ skipCache: SKIP_CACHE })
       );
     });
 
     it('sets the busy flag', () => {
       expect(state.busy).toBeTrue();
     });
-  });
 
-  describe('success starting the batch process', () => {
-    beforeEach(() => {
-      state = reducer({ ...state, busy: true }, metadataUpdateProcessStarted());
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: true },
+          startMetadataUpdateProcessSuccess()
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
     });
 
-    it('clears the busy flag', () => {
-      expect(state.busy).toBeFalse();
-    });
-  });
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: true },
+          startMetadataUpdateProcessFailure()
+        );
+      });
 
-  describe('failure starting the batch process', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, busy: true },
-        startMetadataUpdateProcessFailed()
-      );
-    });
-
-    it('clears the busy flag', () => {
-      expect(state.busy).toBeFalse();
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
     });
   });
 });

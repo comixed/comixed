@@ -18,9 +18,12 @@
 
 package org.comixedproject.rest.metadata;
 
+import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
+
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import java.util.List;
+import javax.servlet.http.HttpSession;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.metadata.MetadataProcessConfiguration;
@@ -33,6 +36,7 @@ import org.comixedproject.model.net.metadata.LoadIssueMetadataRequest;
 import org.comixedproject.model.net.metadata.LoadVolumeMetadataRequest;
 import org.comixedproject.model.net.metadata.ScrapeComicRequest;
 import org.comixedproject.model.net.metadata.StartMetadataUpdateProcessRequest;
+import org.comixedproject.service.comicbooks.ComicBookSelectionService;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.metadata.MetadataCacheService;
 import org.comixedproject.service.metadata.MetadataService;
@@ -61,6 +65,7 @@ public class MetadataController {
   @Autowired private MetadataService metadataService;
   @Autowired private MetadataCacheService metadataCacheService;
   @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicBookSelectionService comicBookSelectionService;
 
   @Autowired
   @Qualifier("batchJobLauncher")
@@ -160,22 +165,26 @@ public class MetadataController {
   /**
    * Initiates a metadata update batch process of the provided comic book IDs.
    *
+   * @param session the session
    * @param request the request body
    * @throws Exception if an id is invalid
    */
-  @PostMapping(value = "/api/metadata/batch", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/api/metadata/batch/start", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.metadata.batch-update")
   public void startBatchMetadataUpdate(
-      @RequestBody() final StartMetadataUpdateProcessRequest request) throws Exception {
+      final HttpSession session, @RequestBody() final StartMetadataUpdateProcessRequest request)
+      throws Exception {
     log.info("Starting batch metadata update process");
-    @NonNull final List<Long> ids = request.getIds();
+    @NonNull
+    final List<Long> selectedComicBookIdList =
+        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     @NonNull final Boolean skipCache = request.getSkipCache();
     log.trace(
         "Marking {} comic book{} for batch metadadata update",
-        ids.size(),
-        ids.size() == 1 ? "" : "s");
-    this.comicBookService.markComicBooksForBatchMetadataUpdate(ids);
+        selectedComicBookIdList.size(),
+        selectedComicBookIdList.size() == 1 ? "" : "s");
+    this.comicBookService.markComicBooksForBatchMetadataUpdate(selectedComicBookIdList);
     log.trace("Launching add comics process");
     this.jobLauncher.run(
         updateComicBookMetadata,
@@ -185,6 +194,10 @@ public class MetadataController {
                 System.currentTimeMillis())
             .addString(MetadataProcessConfiguration.PARAM_SKIP_CACHE, String.valueOf(skipCache))
             .toJobParameters());
+    this.comicBookSelectionService.clearSelectedComicBooks(selectedComicBookIdList);
+    session.setAttribute(
+        LIBRARY_SELECTIONS,
+        this.comicBookSelectionService.encodeSelections(selectedComicBookIdList));
   }
 
   /** Initiates clearing the metadata cache. */

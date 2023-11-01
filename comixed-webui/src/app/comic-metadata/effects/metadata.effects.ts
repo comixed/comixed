@@ -28,11 +28,11 @@ import {
   loadVolumeMetadata,
   loadVolumeMetadataFailed,
   metadataCacheCleared,
-  metadataUpdateProcessStarted,
   scrapeComic,
   scrapeComicFailed,
   startMetadataUpdateProcess,
-  startMetadataUpdateProcessFailed,
+  startMetadataUpdateProcessFailure,
+  startMetadataUpdateProcessSuccess,
   volumeMetadataLoaded
 } from '@app/comic-metadata/actions/metadata.actions';
 import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
@@ -188,7 +188,6 @@ export class MetadataEffects {
       switchMap(action =>
         this.metadataService
           .startMetadataUpdateProcess({
-            ids: action.ids,
             skipCache: action.skipCache
           })
           .pipe(
@@ -201,7 +200,7 @@ export class MetadataEffects {
               )
             ),
             mergeMap(() => [
-              metadataUpdateProcessStarted(),
+              startMetadataUpdateProcessSuccess(),
               clearComicBookSelectionState()
             ]),
             catchError(error => {
@@ -211,7 +210,7 @@ export class MetadataEffects {
                   'metadata-process.start-process.effect-failure'
                 )
               );
-              return of(startMetadataUpdateProcessFailed());
+              return of(startMetadataUpdateProcessFailure());
             })
           )
       ),
@@ -220,7 +219,7 @@ export class MetadataEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(startMetadataUpdateProcessFailed());
+        return of(startMetadataUpdateProcessFailure());
       })
     );
   });
