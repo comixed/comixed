@@ -74,10 +74,9 @@ export class MetadataProcessToolbarComponent implements OnDestroy {
         { count: this.selectedIds.length }
       ),
       confirm: () => {
-        this.logger.trace('Beginning metadata batch processing');
+        this.logger.trace('Starting the metadata batch processing');
         this.store.dispatch(
           startMetadataUpdateProcess({
-            ids: this.selectedIds,
             skipCache: this.skipCache
           })
         );

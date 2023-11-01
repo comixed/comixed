@@ -45,7 +45,6 @@ describe('MetadataProcessToolbarComponent', () => {
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialUserState, user: { ...USER } }
   };
-  const IDS = [3, 20, 96, 9, 21, 98, 4, 17, 6];
 
   let component: MetadataProcessToolbarComponent;
   let fixture: ComponentFixture<MetadataProcessToolbarComponent>;
@@ -131,7 +130,6 @@ describe('MetadataProcessToolbarComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.selectedIds = IDS;
       component.skipCache = SKIP_CACHE;
       component.onStartBatchProcess();
     });
@@ -142,7 +140,7 @@ describe('MetadataProcessToolbarComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        startMetadataUpdateProcess({ ids: IDS, skipCache: SKIP_CACHE })
+        startMetadataUpdateProcess({ skipCache: SKIP_CACHE })
       );
     });
   });

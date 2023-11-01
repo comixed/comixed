@@ -27,7 +27,7 @@ import {
   loadVolumeMetadata,
   loadVolumeMetadataFailed,
   metadataCacheCleared,
-  metadataUpdateProcessStarted,
+  startMetadataUpdateProcessSuccess,
   resetMetadataState,
   scrapeComic,
   scrapeComicFailed,
@@ -35,7 +35,7 @@ import {
   setChosenMetadataSource,
   setConfirmBeforeScraping,
   startMetadataUpdateProcess,
-  startMetadataUpdateProcessFailed,
+  startMetadataUpdateProcessFailure,
   volumeMetadataLoaded
 } from '@app/comic-metadata/actions/metadata.actions';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
@@ -116,8 +116,8 @@ export const reducer = createReducer(
   on(metadataCacheCleared, state => ({ ...state, clearingCache: false })),
   on(clearMetadataCacheFailed, state => ({ ...state, clearingCache: false })),
   on(startMetadataUpdateProcess, state => ({ ...state, busy: true })),
-  on(metadataUpdateProcessStarted, state => ({ ...state, busy: false })),
-  on(startMetadataUpdateProcessFailed, state => ({
+  on(startMetadataUpdateProcessSuccess, state => ({ ...state, busy: false })),
+  on(startMetadataUpdateProcessFailure, state => ({
     ...state,
     busy: false
   }))

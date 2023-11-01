@@ -18,10 +18,12 @@
 
 package org.comixedproject.rest.metadata;
 
+import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
 import java.util.List;
+import javax.servlet.http.HttpSession;
 import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.model.IssueMetadata;
 import org.comixedproject.metadata.model.VolumeMetadata;
@@ -32,9 +34,12 @@ import org.comixedproject.model.net.metadata.LoadVolumeMetadataRequest;
 import org.comixedproject.model.net.metadata.ScrapeComicRequest;
 import org.comixedproject.model.net.metadata.StartMetadataUpdateProcessRequest;
 import org.comixedproject.service.comicbooks.ComicBookException;
+import org.comixedproject.service.comicbooks.ComicBookSelectionException;
+import org.comixedproject.service.comicbooks.ComicBookSelectionService;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.metadata.MetadataCacheService;
 import org.comixedproject.service.metadata.MetadataService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -60,10 +65,13 @@ public class MetadataControllerTest {
   private static final long TEST_COMIC_ID = 213L;
   private static final String TEST_ISSUE_ID = "48132";
   private static final boolean TEST_SKIP_CACHE = true;
+  private static final String TEST_ENCODED_SELECTIONS = "The encoded selection id list";
+  private static final String TEST_REENCODED_SELECTIONS = "The re-encoded selection id list";
 
   @InjectMocks private MetadataController controller;
   @Mock private MetadataService metadataService;
   @Mock private MetadataCacheService metadataCacheService;
+  @Mock private ComicBookSelectionService comicBookSelectionService;
   @Mock private ComicBookService comicBookService;
   @Mock private List<VolumeMetadata> comicVolumeList;
   @Mock private IssueMetadata comicIssue;
@@ -72,8 +80,18 @@ public class MetadataControllerTest {
   @Mock private JobLauncher jobLauncher;
   @Mock private Job updateComicBookMetadata;
   @Mock private JobExecution jobExecution;
+  @Mock private HttpSession session;
 
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
+
+  @Before
+  public void setUp() throws ComicBookSelectionException {
+    Mockito.when(session.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
+    Mockito.when(comicBookSelectionService.decodeSelections(TEST_ENCODED_SELECTIONS))
+        .thenReturn(idList);
+    Mockito.when(comicBookSelectionService.encodeSelections(idList))
+        .thenReturn(TEST_REENCODED_SELECTIONS);
+  }
 
   @Test(expected = MetadataException.class)
   public void testLoadScrapingVolumesAdaptorRaisesException() throws MetadataException {
@@ -215,8 +233,10 @@ public class MetadataControllerTest {
         .markComicBooksForBatchMetadataUpdate(Mockito.anyList());
     try {
       controller.startBatchMetadataUpdate(
-          new StartMetadataUpdateProcessRequest(idList, TEST_SKIP_CACHE));
+          session, new StartMetadataUpdateProcessRequest(TEST_SKIP_CACHE));
     } finally {
+      Mockito.verify(comicBookSelectionService, Mockito.times(1))
+          .decodeSelections(TEST_ENCODED_SELECTIONS);
       Mockito.verify(comicBookService, Mockito.times(1))
           .markComicBooksForBatchMetadataUpdate(idList);
     }
@@ -228,14 +248,19 @@ public class MetadataControllerTest {
         .thenReturn(jobExecution);
 
     controller.startBatchMetadataUpdate(
-        new StartMetadataUpdateProcessRequest(idList, TEST_SKIP_CACHE));
+        session, new StartMetadataUpdateProcessRequest(TEST_SKIP_CACHE));
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
     assertNotNull(jobParameters);
 
+    Mockito.verify(comicBookSelectionService, Mockito.times(1))
+        .decodeSelections(TEST_ENCODED_SELECTIONS);
     Mockito.verify(comicBookService, Mockito.times(1)).markComicBooksForBatchMetadataUpdate(idList);
     Mockito.verify(jobLauncher, Mockito.times(1)).run(updateComicBookMetadata, jobParameters);
+    Mockito.verify(comicBookSelectionService, Mockito.times(1)).encodeSelections(idList);
+    Mockito.verify(session, Mockito.times(1))
+        .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
   }
 
   @Test

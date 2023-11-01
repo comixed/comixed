@@ -19,7 +19,6 @@
 package org.comixedproject.model.net.metadata;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,11 +33,6 @@ import lombok.NonNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StartMetadataUpdateProcessRequest {
-  @JsonProperty("ids")
-  @NonNull
-  @Getter
-  private List<Long> ids;
-
   @JsonProperty("skipCache")
   @NonNull
   @Getter

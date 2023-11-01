@@ -70,7 +70,6 @@ describe('MetadataService', () => {
   const COMIC = COMIC_BOOK_4;
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const SCRAPING_VOLUME = SCRAPING_VOLUME_1;
-  const IDS = [7, 17, 65, 1, 29, 71];
   const PROCESS_STATE = {
     active: Math.random() > 0.5,
     totalComics: 7171,
@@ -192,7 +191,7 @@ describe('MetadataService', () => {
 
   it('can start the batch metadata update process', () => {
     service
-      .startMetadataUpdateProcess({ ids: IDS, skipCache: SKIP_CACHE })
+      .startMetadataUpdateProcess({ skipCache: SKIP_CACHE })
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
@@ -200,7 +199,6 @@ describe('MetadataService', () => {
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      ids: IDS,
       skipCache: SKIP_CACHE
     } as StartMetadataUpdateProcessRequest);
     req.flush(new HttpResponse({ status: 200 }));
