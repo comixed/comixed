@@ -32,11 +32,11 @@ import {
   loadVolumeMetadata,
   loadVolumeMetadataFailed,
   metadataCacheCleared,
-  metadataUpdateProcessStarted,
   scrapeComic,
   scrapeComicFailed,
   startMetadataUpdateProcess,
-  startMetadataUpdateProcessFailed,
+  startMetadataUpdateProcessFailure,
+  startMetadataUpdateProcessSuccess,
   volumeMetadataLoaded
 } from '@app/comic-metadata/actions/metadata.actions';
 import { hot } from 'jasmine-marbles';
@@ -68,7 +68,6 @@ describe('MetadataEffects', () => {
   const ISSUE_NUMBER = '27';
   const COMIC = COMIC_BOOK_4;
   const METADATA_SOURCE = METADATA_SOURCE_1;
-  const IDS = [3, 20, 96, 9, 21, 98, 4, 17, 6];
 
   let actions$: Observable<any>;
   let effects: MetadataEffects;
@@ -293,15 +292,14 @@ describe('MetadataEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
       const action = startMetadataUpdateProcess({
-        ids: IDS,
         skipCache: SKIP_CACHE
       });
-      const outcome1 = metadataUpdateProcessStarted();
+      const outcome1 = startMetadataUpdateProcessSuccess();
       const outcome2 = clearComicBookSelectionState();
 
       actions$ = hot('-a', { a: action });
       scrapingService.startMetadataUpdateProcess
-        .withArgs({ ids: IDS, skipCache: SKIP_CACHE })
+        .withArgs({ skipCache: SKIP_CACHE })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
@@ -312,14 +310,13 @@ describe('MetadataEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = startMetadataUpdateProcess({
-        ids: IDS,
         skipCache: SKIP_CACHE
       });
-      const outcome = startMetadataUpdateProcessFailed();
+      const outcome = startMetadataUpdateProcessFailure();
 
       actions$ = hot('-a', { a: action });
       scrapingService.startMetadataUpdateProcess
-        .withArgs({ ids: IDS, skipCache: SKIP_CACHE })
+        .withArgs({ skipCache: SKIP_CACHE })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -329,14 +326,13 @@ describe('MetadataEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = startMetadataUpdateProcess({
-        ids: IDS,
         skipCache: SKIP_CACHE
       });
-      const outcome = startMetadataUpdateProcessFailed();
+      const outcome = startMetadataUpdateProcessFailure();
 
       actions$ = hot('-a', { a: action });
       scrapingService.startMetadataUpdateProcess
-        .withArgs({ ids: IDS, skipCache: SKIP_CACHE })
+        .withArgs({ skipCache: SKIP_CACHE })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });

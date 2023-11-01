@@ -173,13 +173,9 @@ export class MetadataService {
     );
   }
 
-  startMetadataUpdateProcess(args: {
-    ids: number[];
-    skipCache: boolean;
-  }): Observable<any> {
+  startMetadataUpdateProcess(args: { skipCache: boolean }): Observable<any> {
     this.logger.debug('Starting metadata update process');
     return this.http.post(interpolate(START_METADATA_UPDATE_PROCESS_URL), {
-      ids: args.ids,
       skipCache: args.skipCache
     } as StartMetadataUpdateProcessRequest);
   }

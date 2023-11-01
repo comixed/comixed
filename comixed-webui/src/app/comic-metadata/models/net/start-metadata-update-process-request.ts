@@ -17,6 +17,5 @@
  */
 
 export interface StartMetadataUpdateProcessRequest {
-  ids: number[];
   skipCache: boolean;
 }

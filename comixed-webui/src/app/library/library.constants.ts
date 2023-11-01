@@ -40,7 +40,7 @@ export const LOAD_SCRAPING_ISSUE_URL = `${API_ROOT_URL}/metadata/sources/\${sour
 export const SCRAPE_COMIC_URL = `${API_ROOT_URL}/metadata/sources/\${sourceId}/comics/\${comicId}`;
 
 export const CLEAR_METADATA_CACHE_URL = `${API_ROOT_URL}/metadata/cache`;
-export const START_METADATA_UPDATE_PROCESS_URL = `${API_ROOT_URL}/metadata/batch`;
+export const START_METADATA_UPDATE_PROCESS_URL = `${API_ROOT_URL}/metadata/batch/start`;
 
 export const SET_READ_STATE_URL = `${API_ROOT_URL}/library/read`;
 
