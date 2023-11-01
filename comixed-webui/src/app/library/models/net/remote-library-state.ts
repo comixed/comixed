@@ -23,7 +23,6 @@ export interface RemoteLibraryState {
   totalComics: number;
   unscrapedComics: number;
   deletedComics: number;
-  selectedIds: number[];
   publishers: RemoteLibrarySegmentState[];
   series: RemoteLibrarySegmentState[];
   characters: RemoteLibrarySegmentState[];

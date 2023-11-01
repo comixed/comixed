@@ -32,10 +32,6 @@ import { getUserPreference, isAdmin } from '@app/user/user.functions';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
-import {
-  deselectComicBooks,
-  selectComicBooks
-} from '@app/library/actions/library-selections.actions';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { LastRead } from '@app/last-read/models/last-read';
@@ -159,20 +155,6 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
     this.readingListsSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from language change events');
     this.langChangeSubscription.unsubscribe();
-  }
-
-  onSelectAllComics(selected: boolean): void {
-    if (selected) {
-      this.logger.trace('Selecting all comics');
-      this.store.dispatch(
-        selectComicBooks({
-          ids: this.comicBooks.map(comicBook => comicBook.comicId)
-        })
-      );
-    } else {
-      this.logger.trace('Deselecting all comics');
-      this.store.dispatch(deselectComicBooks({ ids: this.selectedIds }));
-    }
   }
 
   onSelectAll(selected: boolean): void {

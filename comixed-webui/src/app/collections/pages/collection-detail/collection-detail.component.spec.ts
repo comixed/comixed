@@ -64,14 +64,6 @@ import { MatSortModule } from '@angular/material/sort';
 import { ArchiveTypePipe } from '@app/library/pipes/archive-type.pipe';
 import { USER_READER } from '@app/user/user.fixtures';
 import { CoverDateFilterPipe } from '@app/comic-books/pipes/cover-date-filter.pipe';
-import {
-  deselectComicBooks,
-  selectComicBooks
-} from '@app/library/actions/library-selections.actions';
-import {
-  initialState as initialLibrarySelectionState,
-  LIBRARY_SELECTIONS_FEATURE_KEY
-} from '@app/library/reducers/library-selections.reducer';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
@@ -108,11 +100,9 @@ describe('CollectionDetailComponent', () => {
     COMIC_DETAIL_4,
     COMIC_DETAIL_5
   ];
-  const IDS = COMIC_DETAILS.map(comic => comic.comicId);
   const USER = USER_READER;
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [LIBRARY_SELECTIONS_FEATURE_KEY]: initialLibrarySelectionState,
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
     [COMIC_DETAILS_LIST_FEATURE_KEY]: {
       ...initialComicDetailListState,
@@ -373,32 +363,6 @@ describe('CollectionDetailComponent', () => {
           })
         );
       });
-    });
-  });
-
-  describe('selecting all comics', () => {
-    beforeEach(() => {
-      component.comicBooks = COMIC_DETAILS;
-      component.onSelectAllComics(true);
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        selectComicBooks({ ids: IDS })
-      );
-    });
-  });
-
-  describe('deselecting comics', () => {
-    beforeEach(() => {
-      component.selectedIds = IDS;
-      component.onSelectAllComics(false);
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        deselectComicBooks({ ids: IDS })
-      );
     });
   });
 
