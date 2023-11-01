@@ -28,7 +28,6 @@ import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LI
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_COMIC_RENAMING_RULE;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -120,10 +119,9 @@ public class LibraryControllerTest {
   private Job updateComicBooksJob;
 
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
-  @Captor private ArgumentCaptor<List> selectedIdsArgumentCaptor;
 
   @Before
-  public void testSetUp() throws JsonProcessingException, ComicBookSelectionException {
+  public void testSetUp() throws ComicBookSelectionException {
     Mockito.when(lastComicDetail.getId()).thenReturn(TEST_LAST_COMIC_ID);
     Mockito.when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_IDS);
     Mockito.when(comicBookSelectionService.decodeSelections(TEST_ENCODED_IDS))
@@ -134,22 +132,14 @@ public class LibraryControllerTest {
 
   @Test
   public void testGetLibraryState() throws ComicBookSelectionException {
-    Mockito.when(httpState.getAttribute(LIBRARY_SELECTIONS)).thenReturn(null);
-    Mockito.when(remoteLibraryStateService.getLibraryState(selectedIdsArgumentCaptor.capture()))
-        .thenReturn(remoteLibraryState);
+    Mockito.when(remoteLibraryStateService.getLibraryState()).thenReturn(remoteLibraryState);
 
-    final RemoteLibraryState result = controller.getLibraryState(httpState);
+    final RemoteLibraryState result = controller.getLibraryState();
 
     assertNotNull(result);
     assertSame(remoteLibraryState, result);
 
-    final List selectedIdList = selectedIdsArgumentCaptor.getValue();
-    assertNotNull(selectedIdList);
-    assertTrue(selectedIdList.isEmpty());
-
-    Mockito.verify(httpState, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
-    Mockito.verify(comicBookSelectionService, Mockito.never()).decodeSelections(TEST_ENCODED_IDS);
-    Mockito.verify(remoteLibraryStateService, Mockito.times(1)).getLibraryState(selectedIdList);
+    Mockito.verify(remoteLibraryStateService, Mockito.times(1)).getLibraryState();
   }
 
   @Test(expected = LibraryException.class)

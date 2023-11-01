@@ -18,7 +18,6 @@
 
 package org.comixedproject.service.library;
 
-import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.library.PublishRemoteLibraryUpdateAction;
@@ -58,7 +57,7 @@ public class RemoteLibraryStateService implements InitializingBean, ComicStateCh
       final State<ComicState, ComicEvent> state, final Message<ComicEvent> message) {
     log.debug("Publishing library state update");
     try {
-      this.publishRemoteLibraryUpdateAction.publish(this.getLibraryState(null));
+      this.publishRemoteLibraryUpdateAction.publish(this.getLibraryState());
     } catch (PublishingException error) {
       log.error("Failed to publish library state update", error);
     }
@@ -67,17 +66,15 @@ public class RemoteLibraryStateService implements InitializingBean, ComicStateCh
   /**
    * Returns the current state of the library.
    *
-   * @param selectedIds the selected ids
    * @return the state
    */
-  public RemoteLibraryState getLibraryState(final List selectedIds) {
+  public RemoteLibraryState getLibraryState() {
     log.debug("Retrieving the library state");
     final RemoteLibraryState result =
         new RemoteLibraryState(
             this.comicBookService.getComicBookCount(),
             this.comicBookService.getUnscrapedComicCount(),
-            this.comicBookService.getDeletedComicCount(),
-            selectedIds);
+            this.comicBookService.getDeletedComicCount());
     result.setPublishers(this.comicBookService.getPublishersState());
     result.setSeries(this.comicBookService.getSeriesState());
     result.setCharacters(this.comicBookService.getCharactersState());

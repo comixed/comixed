@@ -75,10 +75,6 @@ import {
   LIBRARY_FEATURE_KEY
 } from '@app/library/reducers/library.reducer';
 import {
-  initialState as initialLibrarySelectionState,
-  LIBRARY_SELECTIONS_FEATURE_KEY
-} from '@app/library/reducers/library-selections.reducer';
-import {
   DARK_THEME_FEATURE_KEY,
   initialState as initialDarkThemeState
 } from '@app/reducers/dark-theme.reducer';
@@ -104,7 +100,6 @@ describe('AppComponent', () => {
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [LIBRARY_SELECTIONS_FEATURE_KEY]: initialLibrarySelectionState,
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
     [DARK_THEME_FEATURE_KEY]: initialDarkThemeState
   };

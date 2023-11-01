@@ -41,13 +41,12 @@ import {
 } from '@app/library/actions/library.actions';
 import { hot } from 'jasmine-marbles';
 import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
-import { comicBookSelectionsUpdated } from '@app/library/actions/library-selections.actions';
 import { ComicType } from '@app/comic-books/models/comic-type';
 
 describe('LibraryEffects', () => {
   const COMIC_BOOKS = [COMIC_DETAIL_1, COMIC_DETAIL_3];
   const IDS = COMIC_BOOKS.map(comicBook => comicBook.comicId);
-  const LIBRARY_STATE = { selectedIds: IDS } as RemoteLibraryState;
+  const LIBRARY_STATE = {} as RemoteLibraryState;
   const COMIC_DETAILS: EditMultipleComics = {
     publisher: 'The Publisher',
     series: 'The Series',
@@ -103,13 +102,12 @@ describe('LibraryEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = LIBRARY_STATE;
       const action = loadLibraryState();
-      const outcome1 = libraryStateLoaded({ state: LIBRARY_STATE });
-      const outcome2 = comicBookSelectionsUpdated({ ids: IDS });
+      const outcome = libraryStateLoaded({ state: LIBRARY_STATE });
 
       actions$ = hot('-a', { a: action });
       libraryService.loadLibraryState.and.returnValue(of(serviceResponse));
 
-      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
+      const expected = hot('-b', { b: outcome });
       expect(effects.loadLibraryState$).toBeObservable(expected);
     });
 

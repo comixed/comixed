@@ -48,11 +48,6 @@ public class RemoteLibraryState {
   @Getter
   private final long deletedComics;
 
-  @JsonProperty("selectedIds")
-  @JsonView(View.RemoteLibraryState.class)
-  @Getter
-  private final List selectedIds;
-
   @JsonProperty("publishers")
   @JsonView(View.RemoteLibraryState.class)
   @Getter
