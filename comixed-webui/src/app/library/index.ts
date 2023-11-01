@@ -60,11 +60,6 @@ import {
   reducer as purgeLibraryReducer
 } from './reducers/purge-library.reducer';
 import {
-  LIBRARY_SELECTIONS_FEATURE_KEY,
-  LibrarySelectionsState,
-  reducer as librarySelectionsReducer
-} from '@app/library/reducers/library-selections.reducer';
-import {
   DUPLICATE_COMIC_FEATURE_KEY,
   DuplicateComicState,
   reducer as duplicateComicReducer
@@ -79,7 +74,6 @@ interface RouterStateUrl {
 export interface LibraryModuleState {
   router: RouterReducerState<RouterStateUrl>;
   [LIBRARY_FEATURE_KEY]: LibraryState;
-  [LIBRARY_SELECTIONS_FEATURE_KEY]: LibrarySelectionsState;
   [DUPLICATE_COMIC_FEATURE_KEY]: DuplicateComicState;
   [DUPLICATE_PAGE_LIST_FEATURE_KEY]: DuplicatePageListState;
   [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: DuplicatePageDetailState;
@@ -95,7 +89,6 @@ export type ModuleState = LibraryModuleState;
 export const reducers: ActionReducerMap<LibraryModuleState> = {
   router: routerReducer,
   [LIBRARY_FEATURE_KEY]: libraryReducer,
-  [LIBRARY_SELECTIONS_FEATURE_KEY]: librarySelectionsReducer,
   [DUPLICATE_COMIC_FEATURE_KEY]: duplicateComicReducer,
   [DUPLICATE_PAGE_LIST_FEATURE_KEY]: comicsWithDuplicatePagesReducer,
   [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: duplicatePageDetailReducer,

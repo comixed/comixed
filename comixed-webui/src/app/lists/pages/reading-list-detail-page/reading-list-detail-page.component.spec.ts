@@ -73,10 +73,6 @@ import {
   ConfirmationService
 } from '@tragically-slick/confirmation';
 import { ComicDetailListViewComponent } from '@app/comic-books/components/comic-detail-list-view/comic-detail-list-view.component';
-import {
-  initialState as initialLibrarySelectionsState,
-  LIBRARY_SELECTIONS_FEATURE_KEY
-} from '@app/library/reducers/library-selections.reducer';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
@@ -109,7 +105,6 @@ describe('ReadingListDetailPageComponent', () => {
     [READING_LIST_DETAIL_FEATURE_KEY]: initialReadingListDetailsState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
     [DOWNLOAD_READING_LIST_FEATURE_KEY]: initialDownloadReadingListState,
-    [LIBRARY_SELECTIONS_FEATURE_KEY]: initialLibrarySelectionsState,
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadListState
   };

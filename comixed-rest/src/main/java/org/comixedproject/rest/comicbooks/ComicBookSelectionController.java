@@ -239,11 +239,11 @@ public class ComicBookSelectionController {
    * @param session the session
    * @throws ComicBookSelectionException if an error occurs
    */
-  @DeleteMapping(value = "/api/library/selections")
+  @DeleteMapping(value = "/api/comics/selections/clear")
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.clear")
   public void clearSelections(final HttpSession session) throws ComicBookSelectionException {
-    final List<Long> selections =
+    final List selections =
         this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     log.info("Clearing comic selections");
     this.comicBookSelectionService.clearSelectedComicBooks(selections);

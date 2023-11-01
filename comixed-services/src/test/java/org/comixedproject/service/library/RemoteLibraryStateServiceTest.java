@@ -123,12 +123,11 @@ public class RemoteLibraryStateServiceTest {
 
   @Test
   public void testGetLibraryState() {
-    final RemoteLibraryState result = service.getLibraryState(selectedIds);
+    final RemoteLibraryState result = service.getLibraryState();
 
     assertNotNull(result);
     assertEquals(TEST_COMIC_COUNT, result.getTotalComics());
     assertEquals(TEST_DELETED_COMIC_COUNT, result.getDeletedComics());
-    assertSame(selectedIds, result.getSelectedIds());
     assertSame(publisherState, result.getPublishers());
     assertSame(seriesState, result.getSeries());
     assertSame(charactersState, result.getCharacters());

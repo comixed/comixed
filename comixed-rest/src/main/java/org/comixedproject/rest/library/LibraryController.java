@@ -114,19 +114,14 @@ public class LibraryController {
   /**
    * Retrieves the current state of the library.
    *
-   * @param httpSession the session
    * @return the library state
    */
   @GetMapping(value = "/api/library/state", produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.library.get-state")
   @JsonView(View.RemoteLibraryState.class)
-  public RemoteLibraryState getLibraryState(final HttpSession httpSession)
-      throws ComicBookSelectionException {
+  public RemoteLibraryState getLibraryState() {
     log.info("Loading the current library state");
-    final List selections =
-        this.comicBookSelectionService.decodeSelections(
-            httpSession.getAttribute(LIBRARY_SELECTIONS));
-    return this.remoteLibraryStateService.getLibraryState(selections);
+    return this.remoteLibraryStateService.getLibraryState();
   }
 
   /**
