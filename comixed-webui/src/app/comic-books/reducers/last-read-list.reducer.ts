@@ -32,12 +32,14 @@ export const LAST_READ_LIST_FEATURE_KEY = 'last_read_list_state';
 
 export interface LastReadListState {
   busy: boolean;
+  readCount: number;
   unreadCount: number;
   entries: LastRead[];
 }
 
 export const initialState: LastReadListState = {
   busy: false,
+  readCount: 0,
   unreadCount: 0,
   entries: []
 };
@@ -49,6 +51,7 @@ export const reducer = createReducer(
   on(loadUnreadComicBookCountSuccess, (state, action) => ({
     ...state,
     busy: false,
+    readCount: action.readCount,
     unreadCount: action.unreadCount
   })),
   on(loadUnreadComicBookCountFailure, state => ({ ...state, busy: false })),

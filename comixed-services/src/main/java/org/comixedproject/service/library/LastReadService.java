@@ -151,7 +151,7 @@ public class LastReadService implements InitializingBean, ComicStateChangeListen
             .collect(Collectors.toSet());
     this.lastReadRepository.saveAll(
         ids.stream()
-            .filter(comicBookId -> existingIds.contains(comicBookId) == false)
+            .filter(comicBookId -> !existingIds.contains(comicBookId))
             .map(
                 comicBookId -> {
                   final ComicBook comicBook;
@@ -233,6 +233,11 @@ public class LastReadService implements InitializingBean, ComicStateChangeListen
     } catch (ComicBookException error) {
       throw new LastReadException("Failed to update comic book read state", error);
     }
+  }
+
+  public long getReadCountForUser(final String email) throws LastReadException {
+    log.debug("Getting the read comic book count for user: {}", email);
+    return this.lastReadRepository.loadCountForUser(this.doFindUser(email));
   }
 
   public long getUnreadCountForUser(final String email) throws LastReadException {

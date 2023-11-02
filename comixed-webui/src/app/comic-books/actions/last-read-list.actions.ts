@@ -26,19 +26,13 @@ export const loadUnreadComicBookCount = createAction(
 export const loadUnreadComicBookCountSuccess = createAction(
   '[Last Read List] The last read count was loaded',
   props<{
+    readCount: number;
     unreadCount: number;
   }>()
 );
 
 export const loadUnreadComicBookCountFailure = createAction(
   '[Last Read List] Failed to load the last read count'
-);
-
-export const updateUnreadComicBookCount = createAction(
-  '[Last Read List] Updates the unread comic book count',
-  props<{
-    count: number;
-  }>()
 );
 
 export const setLastReadList = createAction(

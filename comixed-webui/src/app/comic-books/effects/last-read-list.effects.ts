@@ -29,6 +29,7 @@ import {
 } from '@app/comic-books/actions/last-read-list.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { LoadUnreadComicBookCountResponse } from '@app/comic-books/models/net/load-unread-comic-book-count-response';
 
 @Injectable()
 export class LastReadListEffects {
@@ -39,9 +40,10 @@ export class LastReadListEffects {
       switchMap(action =>
         this.lastReadService.loadUnreadComicBookCount().pipe(
           tap(response => this.logger.debug('Response received:', response)),
-          map((response: number) =>
+          map((response: LoadUnreadComicBookCountResponse) =>
             loadUnreadComicBookCountSuccess({
-              unreadCount: response
+              readCount: response.readCount,
+              unreadCount: response.unreadCount
             })
           ),
           catchError(error => {

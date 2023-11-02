@@ -59,7 +59,7 @@ import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { LastRead } from '@app/comic-books/models/last-read';
-import { selectLastReadEntries } from '@app/comic-books/selectors/last-read-list.selectors';
+import { selectComicBookLastReadEntries } from '@app/comic-books/selectors/last-read-list.selectors';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { setMultipleComicBookByIdSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 
@@ -143,7 +143,7 @@ export class ReadingListDetailPageComponent implements OnDestroy {
         this.selectedIds = selections;
       });
     this.lastReadDataSubscription = this.store
-      .select(selectLastReadEntries)
+      .select(selectComicBookLastReadEntries)
       .subscribe(lastReadDates => (this.lastReadDates = lastReadDates));
     this.messagingSubscription = this.store
       .select(selectMessagingState)

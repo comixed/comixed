@@ -21,9 +21,10 @@ import {
   LastReadListState
 } from '../reducers/last-read-list.reducer';
 import {
-  selectLastReadEntries,
-  selectLastReadListState,
-  selectLastUnreadCount
+  selectComicBookLastReadEntries,
+  selectComicBookReadCount,
+  selectComicBookUnreadCount,
+  selectLastReadListState
 } from './last-read-list.selectors';
 import {
   LAST_READ_1,
@@ -33,13 +34,16 @@ import {
 
 describe('LastReadDates Selectors', () => {
   const ENTRIES = [LAST_READ_1, LAST_READ_3, LAST_READ_5];
+  const READ_COUNT = Math.floor(Math.random() * 30000);
+  const UNREAD_COUNT = Math.floor(Math.random() * 30000);
 
   let state: LastReadListState;
 
   beforeEach(() => {
     state = {
       busy: Math.random() > 0.5,
-      unreadCount: Math.floor(Math.random() * 30000),
+      readCount: READ_COUNT,
+      unreadCount: UNREAD_COUNT,
       entries: ENTRIES
     };
   });
@@ -54,15 +58,23 @@ describe('LastReadDates Selectors', () => {
 
   it('should select the last read entries', () => {
     expect(
-      selectLastReadEntries({
+      selectComicBookLastReadEntries({
         [LAST_READ_LIST_FEATURE_KEY]: state
       })
     ).toEqual(state.entries);
   });
 
+  it('should select the read count', () => {
+    expect(
+      selectComicBookReadCount({
+        [LAST_READ_LIST_FEATURE_KEY]: state
+      })
+    ).toEqual(state.readCount);
+  });
+
   it('should select the unread count', () => {
     expect(
-      selectLastUnreadCount({
+      selectComicBookUnreadCount({
         [LAST_READ_LIST_FEATURE_KEY]: state
       })
     ).toEqual(state.unreadCount);

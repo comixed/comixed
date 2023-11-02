@@ -24,6 +24,7 @@ import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LI
 import java.security.Principal;
 import java.util.List;
 import javax.servlet.http.HttpSession;
+import org.comixedproject.model.net.comicbooks.LoadUnreadComicBookCountResponse;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;
 import org.comixedproject.service.comicbooks.ComicBookSelectionService;
 import org.comixedproject.service.library.LastReadException;
@@ -42,6 +43,7 @@ public class LastReadControllerTest {
   private static final long TEST_COMIC_BOOK_ID = 65L;
   private static final Object TEST_ENCODED_SELECTION_IDS = "The encoded selected ids";
   private static final String TEST_REENCODED_SELECTION_IDS = "The re-encoded selected ids";
+  private static final long TEST_READ_COUNT = 717L;
   private static final long TEST_UNREAD_COUNT = 129L;
 
   @InjectMocks private LastReadController controller;
@@ -62,7 +64,19 @@ public class LastReadControllerTest {
   }
 
   @Test(expected = LastReadException.class)
-  public void testGetUnreadCountLastReadException() throws LastReadException {
+  public void testGetUnreadCountLastReadExceptionForRead() throws LastReadException {
+    Mockito.when(lastReadService.getReadCountForUser(Mockito.anyString()))
+        .thenThrow(LastReadException.class);
+
+    try {
+      controller.getUnreadComicBookCount(principal);
+    } finally {
+      Mockito.verify(lastReadService, Mockito.times(1)).getReadCountForUser(TEST_EMAIL);
+    }
+  }
+
+  @Test(expected = LastReadException.class)
+  public void testGetUnreadCountLastReadExceptionForUnread() throws LastReadException {
     Mockito.when(lastReadService.getUnreadCountForUser(Mockito.anyString()))
         .thenThrow(LastReadException.class);
 
@@ -75,12 +89,15 @@ public class LastReadControllerTest {
 
   @Test
   public void testGetUnreadCount() throws LastReadException {
+    Mockito.when(lastReadService.getReadCountForUser(Mockito.anyString()))
+        .thenReturn(TEST_READ_COUNT);
     Mockito.when(lastReadService.getUnreadCountForUser(Mockito.anyString()))
         .thenReturn(TEST_UNREAD_COUNT);
 
-    final long response = controller.getUnreadComicBookCount(principal);
+    final LoadUnreadComicBookCountResponse response = controller.getUnreadComicBookCount(principal);
 
-    assertEquals(TEST_UNREAD_COUNT, response);
+    assertEquals(TEST_READ_COUNT, response.getReadCount());
+    assertEquals(TEST_UNREAD_COUNT, response.getUnreadCount());
 
     Mockito.verify(lastReadService, Mockito.times(1)).getUnreadCountForUser(TEST_EMAIL);
   }
