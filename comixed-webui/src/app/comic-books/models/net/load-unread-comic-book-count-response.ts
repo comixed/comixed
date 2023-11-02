@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2023, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,27 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-import {
-  LAST_READ_LIST_FEATURE_KEY,
-  LastReadListState
-} from '../reducers/last-read-list.reducer';
-
-export const selectLastReadListState = createFeatureSelector<LastReadListState>(
-  LAST_READ_LIST_FEATURE_KEY
-);
-
-export const selectComicBookLastReadEntries = createSelector(
-  selectLastReadListState,
-  state => state.entries
-);
-
-export const selectComicBookReadCount = createSelector(
-  selectLastReadListState,
-  state => state.readCount
-);
-
-export const selectComicBookUnreadCount = createSelector(
-  selectLastReadListState,
-  state => state.unreadCount
-);
+export interface LoadUnreadComicBookCountResponse {
+  readCount: number;
+  unreadCount: number;
+}

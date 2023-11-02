@@ -20,7 +20,7 @@ import { Component, Input } from '@angular/core';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { User } from '@app/user/models/user';
-import { selectLastReadEntries } from '@app/comic-books/selectors/last-read-list.selectors';
+import { selectComicBookReadCount } from '@app/comic-books/selectors/last-read-list.selectors';
 import { selectLibraryState } from '@app/library/selectors/library.selectors';
 import { selectComicBookSelectionState } from '@app/comic-books/selectors/comic-book-selection.selectors';
 
@@ -45,8 +45,8 @@ export class FooterComponent {
       this.deletedCount = state.deletedComics;
     });
     this.store
-      .select(selectLastReadEntries)
-      .subscribe(entries => (this.readCount = entries.length));
+      .select(selectComicBookReadCount)
+      .subscribe(readCount => (this.readCount = readCount));
     this.store
       .select(selectComicBookSelectionState)
       .subscribe(state => (this.selectedCount = state.ids.length));

@@ -39,6 +39,7 @@ import {
 
 describe('LastReadList Reducer', () => {
   const UNREAD_COUNT = 416;
+  const READ_COUNT = 320;
   const ENTRIES = [LAST_READ_1, LAST_READ_3, LAST_READ_5];
 
   let state: LastReadListState;
@@ -56,6 +57,10 @@ describe('LastReadList Reducer', () => {
       expect(state.busy).toBeFalse();
     });
 
+    it('has an read count of 0', () => {
+      expect(state.readCount).toEqual(0);
+    });
+
     it('has an unread count of 0', () => {
       expect(state.unreadCount).toEqual(0);
     });
@@ -68,6 +73,10 @@ describe('LastReadList Reducer', () => {
   describe('resetting the feature state', () => {
     beforeEach(() => {
       state = reducer({ ...state, entries: ENTRIES }, resetLastReadList());
+    });
+
+    it('resets the read count', () => {
+      expect(state.readCount).toEqual(0);
     });
 
     it('resets the unread count', () => {
@@ -91,13 +100,20 @@ describe('LastReadList Reducer', () => {
     describe('success', () => {
       beforeEach(() => {
         state = reducer(
-          { ...state, busy: true },
-          loadUnreadComicBookCountSuccess({ unreadCount: UNREAD_COUNT })
+          { ...state, busy: true, readCount: 0, unreadCount: 0 },
+          loadUnreadComicBookCountSuccess({
+            readCount: READ_COUNT,
+            unreadCount: UNREAD_COUNT
+          })
         );
       });
 
       it('clears the busy flag', () => {
         expect(state.busy).toBeFalse();
+      });
+
+      it('sets the read count', () => {
+        expect(state.readCount).toEqual(READ_COUNT);
       });
 
       it('sets the unread count', () => {

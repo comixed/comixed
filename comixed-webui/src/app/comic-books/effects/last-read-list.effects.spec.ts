@@ -32,8 +32,10 @@ import {
 } from '@app/comic-books/actions/last-read-list.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
+import { LoadUnreadComicBookCountResponse } from '@app/comic-books/models/net/load-unread-comic-book-count-response';
 
 describe('LastReadListEffects', () => {
+  const READ_COUNT = 129;
   const UNREAD_COUNT = 717;
 
   let actions$: Observable<any>;
@@ -77,9 +79,13 @@ describe('LastReadListEffects', () => {
 
   describe('loading the unread comic book count', () => {
     it('fires an action on success', () => {
-      const serviceResponse = UNREAD_COUNT;
+      const serviceResponse = {
+        readCount: READ_COUNT,
+        unreadCount: UNREAD_COUNT
+      } as LoadUnreadComicBookCountResponse;
       const action = loadUnreadComicBookCount();
       const outcome = loadUnreadComicBookCountSuccess({
+        readCount: READ_COUNT,
         unreadCount: UNREAD_COUNT
       });
 
