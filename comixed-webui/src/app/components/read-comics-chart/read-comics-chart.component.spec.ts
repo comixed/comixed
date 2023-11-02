@@ -18,7 +18,10 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReadComicsChartComponent } from './read-comics-chart.component';
-import { LAST_READ_1, LAST_READ_3 } from '@app/last-read/last-read.fixtures';
+import {
+  LAST_READ_1,
+  LAST_READ_3
+} from '@app/comic-books/comic-books.fixtures';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxChartsModule } from '@swimlane/ngx-charts';

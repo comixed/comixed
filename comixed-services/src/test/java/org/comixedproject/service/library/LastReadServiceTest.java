@@ -52,8 +52,8 @@ import org.springframework.statemachine.state.State;
 @RunWith(MockitoJUnitRunner.class)
 public class LastReadServiceTest {
   private static final String TEST_EMAIL = "reader@domain.org";
-  private static final long TEST_THRESHOLD = 717L;
-  private static final int TEST_MAXIMUM = 101;
+  private static final long TEST_READ_COUNT = 101L;
+  private static final long TEST_COMIC_BOOK_COUNT = 100L * TEST_READ_COUNT;
   private static final long TEST_COMIC_ID = 27L;
 
   @InjectMocks private LastReadService service;
@@ -95,41 +95,6 @@ public class LastReadServiceTest {
     service.afterPropertiesSet();
 
     Mockito.verify(comicStateHandler, Mockito.times(1)).addListener(service);
-  }
-
-  @Test(expected = LastReadException.class)
-  public void testGetLastReadEntriesUserException() throws ComiXedUserException, LastReadException {
-    Mockito.when(userService.findByEmail(Mockito.anyString()))
-        .thenThrow(ComiXedUserException.class);
-
-    try {
-      service.getLastReadEntries(TEST_EMAIL, TEST_THRESHOLD, TEST_MAXIMUM);
-    } finally {
-      Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
-    }
-  }
-
-  @Test
-  public void testGetLastReadEntries() throws ComiXedUserException, LastReadException {
-    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
-    Mockito.when(
-            lastReadRepository.loadEntriesForUser(
-                Mockito.any(ComiXedUser.class),
-                Mockito.anyLong(),
-                pageRequestArgumentCaptor.capture()))
-        .thenReturn(lastReadEntries);
-
-    final List<LastRead> result =
-        service.getLastReadEntries(TEST_EMAIL, TEST_THRESHOLD, TEST_MAXIMUM);
-
-    assertNotNull(result);
-    assertSame(lastReadEntries, result);
-    assertEquals(0, pageRequestArgumentCaptor.getValue().getPageNumber());
-    assertEquals(TEST_MAXIMUM, pageRequestArgumentCaptor.getValue().getPageSize());
-
-    Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
-    Mockito.verify(lastReadRepository, Mockito.times(1))
-        .loadEntriesForUser(user, TEST_THRESHOLD, pageRequestArgumentCaptor.getValue());
   }
 
   @Test
@@ -323,5 +288,32 @@ public class LastReadServiceTest {
     } finally {
       Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
     }
+  }
+
+  @Test(expected = LastReadException.class)
+  public void testLoadUnreadCountForUserInvalidUser()
+      throws ComiXedUserException, LastReadException {
+    Mockito.when(userService.findByEmail(Mockito.anyString()))
+        .thenThrow(ComiXedUserException.class);
+
+    try {
+      service.getUnreadCountForUser(TEST_EMAIL);
+    } finally {
+      Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    }
+  }
+
+  @Test
+  public void testLoadUnreadCountForUser() throws ComiXedUserException, LastReadException {
+    Mockito.when(lastReadRepository.loadCountForUser(Mockito.any(ComiXedUser.class)))
+        .thenReturn(TEST_READ_COUNT);
+    Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_COMIC_BOOK_COUNT);
+
+    final long result = service.getUnreadCountForUser(TEST_EMAIL);
+
+    assertEquals(TEST_COMIC_BOOK_COUNT - TEST_READ_COUNT, result);
+
+    Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    Mockito.verify(lastReadRepository, Mockito.times(1)).loadCountForUser(user);
   }
 }

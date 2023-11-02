@@ -18,16 +18,12 @@
 
 package org.comixedproject.rest.library;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.*;
 import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
-import static org.comixedproject.rest.library.LastReadController.MAXIMUM;
 
 import java.security.Principal;
 import java.util.List;
 import javax.servlet.http.HttpSession;
-import org.comixedproject.model.library.LastRead;
-import org.comixedproject.model.net.library.GetLastReadDatesResponse;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;
 import org.comixedproject.service.comicbooks.ComicBookSelectionService;
 import org.comixedproject.service.library.LastReadException;
@@ -43,18 +39,16 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class LastReadControllerTest {
   private static final String TEST_EMAIL = "reader@domain.org";
-  private static final long TEST_LAST_ID = 17L;
   private static final long TEST_COMIC_BOOK_ID = 65L;
   private static final Object TEST_ENCODED_SELECTION_IDS = "The encoded selected ids";
   private static final String TEST_REENCODED_SELECTION_IDS = "The re-encoded selected ids";
+  private static final long TEST_UNREAD_COUNT = 129L;
 
   @InjectMocks private LastReadController controller;
   @Mock private LastReadService lastReadService;
   @Mock private ComicBookSelectionService comicBookSelectionService;
   @Mock private HttpSession session;
   @Mock private Principal principal;
-  @Mock private List<LastRead> lastReadEntries;
-  @Mock private List<LastRead> reducedLastReadEntries;
   @Mock private List<Long> selectedIds;
 
   @Before
@@ -68,57 +62,27 @@ public class LastReadControllerTest {
   }
 
   @Test(expected = LastReadException.class)
-  public void testGetLastReadEntriesForUserServiceException() throws LastReadException {
-    Mockito.when(
-            lastReadService.getLastReadEntries(
-                Mockito.anyString(), Mockito.anyLong(), Mockito.anyInt()))
+  public void testGetUnreadCountLastReadException() throws LastReadException {
+    Mockito.when(lastReadService.getUnreadCountForUser(Mockito.anyString()))
         .thenThrow(LastReadException.class);
 
     try {
-      controller.getLastReadEntries(principal, TEST_LAST_ID);
+      controller.getUnreadComicBookCount(principal);
     } finally {
-      Mockito.verify(lastReadService, Mockito.times(1))
-          .getLastReadEntries(TEST_EMAIL, TEST_LAST_ID, MAXIMUM + 1);
+      Mockito.verify(lastReadService, Mockito.times(1)).getUnreadCountForUser(TEST_EMAIL);
     }
   }
 
   @Test
-  public void testGetLastReadEntriesTooManyEntries() throws LastReadException {
-    Mockito.when(
-            lastReadService.getLastReadEntries(
-                Mockito.anyString(), Mockito.anyLong(), Mockito.anyInt()))
-        .thenReturn(lastReadEntries);
-    Mockito.when(lastReadEntries.size()).thenReturn(MAXIMUM + 1);
-    Mockito.when(lastReadEntries.subList(Mockito.anyInt(), Mockito.anyInt()))
-        .thenReturn(reducedLastReadEntries);
+  public void testGetUnreadCount() throws LastReadException {
+    Mockito.when(lastReadService.getUnreadCountForUser(Mockito.anyString()))
+        .thenReturn(TEST_UNREAD_COUNT);
 
-    final GetLastReadDatesResponse response =
-        controller.getLastReadEntries(principal, TEST_LAST_ID);
+    final long response = controller.getUnreadComicBookCount(principal);
 
-    assertNotNull(response);
-    assertSame(reducedLastReadEntries, response.getEntries());
+    assertEquals(TEST_UNREAD_COUNT, response);
 
-    Mockito.verify(lastReadService, Mockito.times(1))
-        .getLastReadEntries(TEST_EMAIL, TEST_LAST_ID, MAXIMUM + 1);
-    Mockito.verify(lastReadEntries, Mockito.times(1)).subList(0, MAXIMUM);
-  }
-
-  @Test
-  public void testGetLastReadEntries() throws LastReadException {
-    Mockito.when(
-            lastReadService.getLastReadEntries(
-                Mockito.anyString(), Mockito.anyLong(), Mockito.anyInt()))
-        .thenReturn(lastReadEntries);
-    Mockito.when(lastReadEntries.size()).thenReturn(MAXIMUM);
-
-    final GetLastReadDatesResponse response =
-        controller.getLastReadEntries(principal, TEST_LAST_ID);
-
-    assertNotNull(response);
-    assertSame(lastReadEntries, response.getEntries());
-
-    Mockito.verify(lastReadService, Mockito.times(1))
-        .getLastReadEntries(TEST_EMAIL, TEST_LAST_ID, MAXIMUM + 1);
+    Mockito.verify(lastReadService, Mockito.times(1)).getUnreadCountForUser(TEST_EMAIL);
   }
 
   @Test(expected = LastReadException.class)

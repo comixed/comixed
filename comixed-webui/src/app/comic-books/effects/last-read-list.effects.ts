@@ -19,33 +19,29 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { LastReadService } from '@app/last-read/services/last-read.service';
+import { LastReadService } from '@app/comic-books/services/last-read.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  lastReadDatesLoaded,
-  loadLastReadDates,
-  loadLastReadDatesFailed
-} from '@app/last-read/actions/last-read-list.actions';
+  loadUnreadComicBookCount,
+  loadUnreadComicBookCountFailure,
+  loadUnreadComicBookCountSuccess
+} from '@app/comic-books/actions/last-read-list.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { LoadLastReadEntriesResponse } from '@app/last-read/models/net/load-last-read-entries-response';
 import { of } from 'rxjs';
 
 @Injectable()
 export class LastReadListEffects {
-  loadEntries$ = createEffect(() => {
+  loadUnreadComicBookCount$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadLastReadDates),
-      tap(action =>
-        this.logger.debug('Effect: load last read entries:', action)
-      ),
+      ofType(loadUnreadComicBookCount),
+      tap(action => this.logger.debug('Effect: load unread count:', action)),
       switchMap(action =>
-        this.lastReadService.loadEntries({ lastId: action.lastId }).pipe(
+        this.lastReadService.loadUnreadComicBookCount().pipe(
           tap(response => this.logger.debug('Response received:', response)),
-          map((response: LoadLastReadEntriesResponse) =>
-            lastReadDatesLoaded({
-              entries: response.entries,
-              lastPayload: response.lastPayload
+          map((response: number) =>
+            loadUnreadComicBookCountSuccess({
+              unreadCount: response
             })
           ),
           catchError(error => {
@@ -55,7 +51,7 @@ export class LastReadListEffects {
                 'last-read-list.load-entries.effect-failure'
               )
             );
-            return of(loadLastReadDatesFailed());
+            return of(loadUnreadComicBookCountFailure());
           })
         )
       ),
@@ -64,7 +60,7 @@ export class LastReadListEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(loadLastReadDatesFailed());
+        return of(loadUnreadComicBookCountFailure());
       })
     );
   });

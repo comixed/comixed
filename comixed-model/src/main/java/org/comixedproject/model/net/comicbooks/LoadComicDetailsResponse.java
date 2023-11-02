@@ -24,6 +24,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.library.LastRead;
 import org.comixedproject.views.View;
 
 /**
@@ -58,4 +59,9 @@ public class LoadComicDetailsResponse {
   @JsonView(View.ComicDetailsView.class)
   @Getter
   private long filteredCount;
+
+  @JsonProperty("lastReadEntries")
+  @JsonView(View.ComicDetailsView.class)
+  @Getter
+  private List<LastRead> lastReadEntries;
 }

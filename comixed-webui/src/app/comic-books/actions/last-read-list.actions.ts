@@ -17,20 +17,37 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { LastRead } from '@app/last-read/models/last-read';
+import { LastRead } from '@app/comic-books/models/last-read';
 
-export const resetLastReadDates = createAction(
-  '[Last Read List] Resets the feature state'
+export const loadUnreadComicBookCount = createAction(
+  '[Last Read List] Load the last read count'
 );
 
-export const loadLastReadDates = createAction(
-  '[Last Read List] Load a block of last read dates',
-  props<{ lastId: number }>()
+export const loadUnreadComicBookCountSuccess = createAction(
+  '[Last Read List] The last read count was loaded',
+  props<{
+    unreadCount: number;
+  }>()
 );
 
-export const lastReadDatesLoaded = createAction(
-  '[Last Read List] Received a block of last read dates',
-  props<{ entries: LastRead[]; lastPayload: boolean }>()
+export const loadUnreadComicBookCountFailure = createAction(
+  '[Last Read List] Failed to load the last read count'
+);
+
+export const updateUnreadComicBookCount = createAction(
+  '[Last Read List] Updates the unread comic book count',
+  props<{
+    count: number;
+  }>()
+);
+
+export const setLastReadList = createAction(
+  '[Last Read List] Sets the current list of last read dates',
+  props<{ entries: LastRead[] }>()
+);
+
+export const resetLastReadList = createAction(
+  '[Last Read List] Resets the last read list'
 );
 
 export const lastReadDateUpdated = createAction(
@@ -41,8 +58,4 @@ export const lastReadDateUpdated = createAction(
 export const lastReadDateRemoved = createAction(
   '[Last Read List] Received a last read date removal',
   props<{ entry: LastRead }>()
-);
-
-export const loadLastReadDatesFailed = createAction(
-  '[Last Read List] Loading a block of last read dates failed'
 );

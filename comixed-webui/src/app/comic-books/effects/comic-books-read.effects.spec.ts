@@ -21,7 +21,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 
 import { ComicBooksReadEffects } from './comic-books-read.effects';
-import { LastReadService } from '@app/last-read/services/last-read.service';
+import { LastReadService } from '@app/comic-books/services/last-read.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { COMIC_DETAIL_4 } from '@app/comic-books/comic-books.fixtures';
 import { LoggerModule } from '@angular-ru/cdk/logger';
@@ -32,10 +32,10 @@ import {
   markSelectedComicBooksReadFailed,
   markSelectedComicBooksReadSuccess,
   markSingleComicBookRead
-} from '@app/last-read/actions/comic-books-read.actions';
+} from '@app/comic-books/actions/comic-books-read.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
-import { LAST_READ_2 } from '@app/last-read/last-read.fixtures';
+import { LAST_READ_2 } from '@app/comic-books/comic-books.fixtures';
 
 describe('ComicBooksReadEffects', () => {
   const COMIC = COMIC_DETAIL_4;

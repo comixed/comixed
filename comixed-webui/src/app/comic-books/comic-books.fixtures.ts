@@ -29,6 +29,7 @@ import { Imprint } from '@app/comic-books/models/imprint';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 import { ComicType } from '@app/comic-books/models/comic-type';
+import { LastRead } from '@app/comic-books/models/last-read';
 
 export const IMPRINT_1: Imprint = {
   id: 1,
@@ -244,4 +245,34 @@ export const COMIC_BOOK_5: ComicBook = {
   nextIssueId: null,
   previousIssueId: null,
   metadata: null
+};
+
+export const LAST_READ_1: LastRead = {
+  id: 5,
+  comicDetail: COMIC_DETAIL_1,
+  lastRead: new Date().getTime()
+};
+
+export const LAST_READ_2: LastRead = {
+  id: 5,
+  comicDetail: COMIC_DETAIL_2,
+  lastRead: new Date().getTime()
+};
+
+export const LAST_READ_3: LastRead = {
+  id: 5,
+  comicDetail: COMIC_DETAIL_3,
+  lastRead: new Date().getTime()
+};
+
+export const LAST_READ_4: LastRead = {
+  id: 5,
+  comicDetail: COMIC_DETAIL_4,
+  lastRead: new Date().getTime()
+};
+
+export const LAST_READ_5: LastRead = {
+  id: 5,
+  comicDetail: COMIC_DETAIL_5,
+  lastRead: new Date().getTime()
 };

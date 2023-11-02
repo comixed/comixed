@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -33,12 +34,15 @@ import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.net.comicbooks.*;
 import org.comixedproject.service.comicbooks.*;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.service.comicpages.PageCacheService;
+import org.comixedproject.service.library.LastReadException;
+import org.comixedproject.service.library.LastReadService;
 import org.comixedproject.views.View.ComicDetailsView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -68,6 +72,7 @@ public class ComicBookController {
   @Autowired private ComicFileService comicFileService;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
   @Autowired private ComicBookAdaptor comicBookAdaptor;
+  @Autowired private LastReadService lastReadService;
 
   /**
    * Retrieves a single comic for a user. The comic is populated with user-specific meta-data.
@@ -322,9 +327,11 @@ public class ComicBookController {
   @PreAuthorize("hasRole('READER')")
   @JsonView(ComicDetailsView.class)
   public LoadComicDetailsResponse loadComicDetailList(
-      @RequestBody() final LoadComicDetailsRequest request) {
+      final Principal principal, @RequestBody() final LoadComicDetailsRequest request)
+      throws LastReadException {
+    final String email = principal.getName();
     log.info("Loading comics: {}", request);
-    return new LoadComicDetailsResponse(
+    final List<ComicDetail> comicDetails =
         this.comicDetailService.loadComicDetailList(
             request.getPageSize(),
             request.getPageIndex(),
@@ -340,7 +347,8 @@ public class ComicBookController {
             request.getSeries(),
             request.getVolume(),
             request.getSortBy(),
-            request.getSortDirection()),
+            request.getSortDirection());
+    final List<Integer> coverYears =
         this.comicDetailService.getCoverYears(
             request.getCoverYear(),
             request.getCoverMonth(),
@@ -352,7 +360,8 @@ public class ComicBookController {
             request.getSearchText(),
             request.getPublisher(),
             request.getSeries(),
-            request.getVolume()),
+            request.getVolume());
+    final List<Integer> coverMonths =
         this.comicDetailService.getCoverMonths(
             request.getCoverYear(),
             request.getCoverMonth(),
@@ -364,8 +373,8 @@ public class ComicBookController {
             request.getSearchText(),
             request.getPublisher(),
             request.getSeries(),
-            request.getVolume()),
-        this.comicBookService.getComicBookCount(),
+            request.getVolume());
+    final long filterCount =
         this.comicDetailService.getFilterCount(
             request.getCoverYear(),
             request.getCoverMonth(),
@@ -377,7 +386,14 @@ public class ComicBookController {
             request.getSearchText(),
             request.getPublisher(),
             request.getSeries(),
-            request.getVolume()));
+            request.getVolume());
+    return new LoadComicDetailsResponse(
+        comicDetails,
+        coverYears,
+        coverMonths,
+        this.comicBookService.getComicBookCount(),
+        filterCount,
+        this.lastReadService.loadForComicDetails(email, comicDetails));
   }
 
   /**
@@ -394,15 +410,21 @@ public class ComicBookController {
   @PreAuthorize("hasRole('READER')")
   @JsonView(ComicDetailsView.class)
   public LoadComicDetailsResponse loadComicDetailListById(
-      @RequestBody() final LoadComicDetailsByIdRequest request) {
+      final Principal principal, @RequestBody() final LoadComicDetailsByIdRequest request)
+      throws LastReadException {
+    final String email = principal.getName();
     final Set<Long> ids = request.getComicBookIds();
     log.info("Loading comics by ids: {}", ids);
+    final List<ComicDetail> comicDetails = this.comicDetailService.loadComicDetailListById(ids);
+    final List<Integer> coverYears = this.comicDetailService.getCoverYears(ids);
+    final List<Integer> coverMonths = this.comicDetailService.getCoverMonths(ids);
     return new LoadComicDetailsResponse(
-        this.comicDetailService.loadComicDetailListById(ids),
-        this.comicDetailService.getCoverYears(ids),
-        this.comicDetailService.getCoverMonths(ids),
+        comicDetails,
+        coverYears,
+        coverMonths,
         ids.size(),
-        ids.size());
+        ids.size(),
+        this.lastReadService.loadForComicDetails(email, comicDetails));
   }
 
   /**
@@ -419,7 +441,9 @@ public class ComicBookController {
   @PreAuthorize("hasRole('READER')")
   @JsonView(ComicDetailsView.class)
   public LoadComicDetailsResponse loadComicDetailListForTag(
-      @RequestBody() final LoadComicDetailsForTagRequest request) {
+      final Principal principal, @RequestBody() final LoadComicDetailsForTagRequest request)
+      throws LastReadException {
+    final String email = principal.getName();
     final int pageSize = request.getPageSize();
     final int pageIndex = request.getPageIndex();
     final ComicTagType tagType = ComicTagType.forValue(request.getTagType());
@@ -434,12 +458,15 @@ public class ComicBookController {
         pageIndex,
         sortBy,
         sortDirection);
-    return new LoadComicDetailsResponse(
+    final List<ComicDetail> comicDetails =
         this.comicDetailService.loadComicDetailListForTagType(
-            pageSize, pageIndex, tagType, tagValue, sortBy, sortDirection),
+            pageSize, pageIndex, tagType, tagValue, sortBy, sortDirection);
+    return new LoadComicDetailsResponse(
+        comicDetails,
         this.comicDetailService.getCoverYears(tagType, tagValue),
         this.comicDetailService.getCoverMonths(tagType, tagValue),
         this.comicBookService.getComicBookCount(),
-        this.comicDetailService.getFilterCount(tagType, tagValue));
+        this.comicDetailService.getFilterCount(tagType, tagValue),
+        this.lastReadService.loadForComicDetails(email, comicDetails));
   }
 }

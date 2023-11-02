@@ -25,6 +25,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,10 +38,13 @@ import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.*;
 import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.net.comicbooks.*;
 import org.comixedproject.service.comicbooks.*;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.service.comicpages.PageCacheService;
+import org.comixedproject.service.library.LastReadException;
+import org.comixedproject.service.library.LastReadService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -86,6 +90,7 @@ public class ComicBookControllerTest {
   private static final String TEST_TAG_VALUE = "The tag value";
   private static final Object TEST_ENCODED_SELECTIONS = "The encoded selection ids";
   private static final String TEST_REENCODED_SELECTIONS = "The re-encoded selection ids";
+  private static final String TEST_EMAIL = "comixedreader@localhost";
 
   @InjectMocks private ComicBookController controller;
   @Mock private ComicBookService comicBookService;
@@ -96,6 +101,7 @@ public class ComicBookControllerTest {
   @Mock private ComicDetail comicDetail;
   @Mock private List<Long> selectedIdList;
   @Mock private ComicFileService comicFileService;
+  @Mock private LastReadService lastReadService;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
   @Mock private Page page;
   @Mock private ComicBookAdaptor comicBookAdaptor;
@@ -104,6 +110,8 @@ public class ComicBookControllerTest {
   @Mock private List<Integer> coverYearList;
   @Mock private List<Integer> coverMonthList;
   @Mock private HttpSession httpSession;
+  @Mock private Principal principal;
+  @Mock private List<LastRead> lastReadEntryList;
 
   @Captor private ArgumentCaptor<InputStream> inputStreamCaptor;
 
@@ -119,6 +127,7 @@ public class ComicBookControllerTest {
         .thenReturn(selectedIdList);
     Mockito.when(comicBookSelectionService.encodeSelections(selectedIdList))
         .thenReturn(TEST_REENCODED_SELECTIONS);
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
   }
 
   @Test
@@ -447,7 +456,7 @@ public class ComicBookControllerTest {
   }
 
   @Test
-  public void testLoadComicDetailList() {
+  public void testLoadComicDetailList() throws LastReadException {
     Mockito.when(
             comicDetailService.loadComicDetailList(
                 TEST_PAGE_SIZE,
@@ -526,9 +535,12 @@ public class ComicBookControllerTest {
                 TEST_SERIES,
                 TEST_VOLUME))
         .thenReturn(TEST_TOTAL_COMIC_COUNT);
+    Mockito.when(lastReadService.loadForComicDetails(Mockito.anyString(), Mockito.anyList()))
+        .thenReturn(lastReadEntryList);
 
     final LoadComicDetailsResponse result =
         controller.loadComicDetailList(
+            principal,
             new LoadComicDetailsRequest(
                 TEST_PAGE_SIZE,
                 TEST_PAGE_INDEX,
@@ -552,17 +564,21 @@ public class ComicBookControllerTest {
     assertSame(coverMonthList, result.getCoverMonths());
     assertEquals(TEST_COMIC_BOOK_COUNT, result.getTotalCount());
     assertEquals(TEST_TOTAL_COMIC_COUNT, result.getFilteredCount());
+    assertSame(lastReadEntryList, result.getLastReadEntries());
   }
 
   @Test
-  public void testLoadComicDetailsById() {
+  public void testLoadComicDetailsById() throws LastReadException {
     Mockito.when(comicDetailService.loadComicDetailListById(Mockito.anySet()))
         .thenReturn(comicDetailList);
     Mockito.when(comicDetailService.getCoverYears(Mockito.anySet())).thenReturn(coverYearList);
     Mockito.when(comicDetailService.getCoverMonths(Mockito.anySet())).thenReturn(coverMonthList);
+    Mockito.when(lastReadService.loadForComicDetails(Mockito.anyString(), Mockito.anyList()))
+        .thenReturn(lastReadEntryList);
 
     final LoadComicDetailsResponse result =
-        controller.loadComicDetailListById(new LoadComicDetailsByIdRequest(comicBookIdSet));
+        controller.loadComicDetailListById(
+            principal, new LoadComicDetailsByIdRequest(comicBookIdSet));
 
     assertNotNull(result);
     assertSame(comicDetailList, result.getComicDetails());
@@ -570,12 +586,13 @@ public class ComicBookControllerTest {
     assertSame(coverMonthList, result.getCoverMonths());
     assertEquals(comicBookIdSet.size(), result.getTotalCount());
     assertEquals(comicBookIdSet.size(), result.getFilteredCount());
+    assertSame(lastReadEntryList, result.getLastReadEntries());
 
     Mockito.verify(comicDetailService, Mockito.times(1)).loadComicDetailListById(comicBookIdSet);
   }
 
   @Test
-  public void testLoadComicDetailsForTag() {
+  public void testLoadComicDetailsForTag() throws LastReadException {
     Mockito.when(
             comicDetailService.loadComicDetailListForTagType(
                 Mockito.anyInt(),
@@ -594,9 +611,12 @@ public class ComicBookControllerTest {
     Mockito.when(
             comicDetailService.getFilterCount(Mockito.any(ComicTagType.class), Mockito.anyString()))
         .thenReturn(TEST_FILTER_COUNT);
+    Mockito.when(lastReadService.loadForComicDetails(Mockito.anyString(), Mockito.anyList()))
+        .thenReturn(lastReadEntryList);
 
     final LoadComicDetailsResponse result =
         controller.loadComicDetailListForTag(
+            principal,
             new LoadComicDetailsForTagRequest(
                 TEST_PAGE_SIZE,
                 TEST_PAGE_INDEX,
@@ -611,6 +631,7 @@ public class ComicBookControllerTest {
     assertSame(coverMonthList, result.getCoverMonths());
     assertEquals(TEST_COMIC_BOOK_COUNT, result.getTotalCount());
     assertEquals(TEST_FILTER_COUNT, result.getFilteredCount());
+    assertSame(lastReadEntryList, result.getLastReadEntries());
 
     Mockito.verify(comicDetailService, Mockito.times(1))
         .loadComicDetailListForTagType(

@@ -64,7 +64,7 @@ import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import {
   initialState as initialLastReadListState,
   LAST_READ_LIST_FEATURE_KEY
-} from '@app/last-read/reducers/last-read-list.reducer';
+} from '@app/comic-books/reducers/last-read-list.reducer';
 import {
   READING_LISTS_FEATURE_KEY,
   reducer as initialReadingListsState

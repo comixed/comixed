@@ -25,21 +25,21 @@ import {
   LAST_READ_1,
   LAST_READ_2,
   LAST_READ_3,
-  LAST_READ_4,
   LAST_READ_5
-} from '@app/last-read/last-read.fixtures';
+} from '@app/comic-books/comic-books.fixtures';
 import {
   lastReadDateRemoved,
-  lastReadDatesLoaded,
   lastReadDateUpdated,
-  loadLastReadDates,
-  loadLastReadDatesFailed,
-  resetLastReadDates
-} from '@app/last-read/actions/last-read-list.actions';
+  loadUnreadComicBookCount,
+  loadUnreadComicBookCountFailure,
+  loadUnreadComicBookCountSuccess,
+  resetLastReadList,
+  setLastReadList
+} from '@app/comic-books/actions/last-read-list.actions';
 
 describe('LastReadList Reducer', () => {
+  const UNREAD_COUNT = 416;
   const ENTRIES = [LAST_READ_1, LAST_READ_3, LAST_READ_5];
-  const LAST_ID = 17;
 
   let state: LastReadListState;
 
@@ -52,74 +52,87 @@ describe('LastReadList Reducer', () => {
       state = reducer({ ...state }, {} as any);
     });
 
-    it('clears the loading flag', () => {
-      expect(state.loading).toBeFalse();
+    it('clears the busy flag', () => {
+      expect(state.busy).toBeFalse();
+    });
+
+    it('has an unread count of 0', () => {
+      expect(state.unreadCount).toEqual(0);
     });
 
     it('has no entries', () => {
       expect(state.entries).toEqual([]);
     });
-
-    it('clears the last payload flag', () => {
-      expect(state.lastPayload).toBeFalse();
-    });
   });
 
   describe('resetting the feature state', () => {
     beforeEach(() => {
-      state = reducer(
-        { ...state, entries: ENTRIES, lastPayload: true },
-        resetLastReadDates()
-      );
+      state = reducer({ ...state, entries: ENTRIES }, resetLastReadList());
+    });
+
+    it('resets the unread count', () => {
+      expect(state.unreadCount).toEqual(0);
     });
 
     it('clears the last read entries', () => {
       expect(state.entries).toEqual([]);
     });
+  });
 
-    it('clears the last payload flag', () => {
-      expect(state.lastPayload).toBeFalse();
+  describe('loading the unread comic book count', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, busy: false }, loadUnreadComicBookCount());
+    });
+
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: true },
+          loadUnreadComicBookCountSuccess({ unreadCount: UNREAD_COUNT })
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+
+      it('sets the unread count', () => {
+        expect(state.unreadCount).toEqual(UNREAD_COUNT);
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: true },
+          loadUnreadComicBookCountFailure()
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
     });
   });
 
-  describe('loading a block of last read dates', () => {
+  describe('setting the last read list', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, loading: false },
-        loadLastReadDates({ lastId: LAST_ID })
+        { ...state, entries: [] },
+        setLastReadList({ entries: ENTRIES })
       );
     });
 
-    it('sets the loading flag', () => {
-      expect(state.loading).toBeTrue();
+    it('replaces the entries', () => {
+      expect(state.entries).toEqual(ENTRIES);
     });
   });
 
-  describe('receiving a block of last read dates', () => {
-    const BLOCK = [LAST_READ_2, LAST_READ_4];
-
-    beforeEach(() => {
-      state = reducer(
-        {
-          ...state,
-          loading: true,
-          entries: ENTRIES,
-          lastPayload: false
-        },
-        lastReadDatesLoaded({ entries: BLOCK, lastPayload: true })
-      );
-    });
-
-    it('maintains the previous last read dates', () => {
-      ENTRIES.forEach(entry => expect(state.entries).toContain(entry));
-    });
-
-    it('adds the new entries', () => {
-      BLOCK.forEach(entry => expect(state.entries).toContain(entry));
-    });
-  });
-
-  describe('receiving a new last read date', () => {
+  describe('receiving a new last read update', () => {
     const ENTRY = LAST_READ_2;
 
     beforeEach(() => {
@@ -170,16 +183,6 @@ describe('LastReadList Reducer', () => {
 
     it('removes the entry', () => {
       expect(state.entries).not.toContain(REMOVED);
-    });
-  });
-
-  describe('failure to load a block of last read dates', () => {
-    beforeEach(() => {
-      state = reducer({ ...state, loading: true }, loadLastReadDatesFailed());
-    });
-
-    it('clears the loading flag', () => {
-      expect(state.loading).toBeFalse();
     });
   });
 });

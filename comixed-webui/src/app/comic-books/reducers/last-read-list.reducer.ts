@@ -19,42 +19,47 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   lastReadDateRemoved,
-  lastReadDatesLoaded,
   lastReadDateUpdated,
-  loadLastReadDates,
-  loadLastReadDatesFailed,
-  resetLastReadDates
+  loadUnreadComicBookCount,
+  loadUnreadComicBookCountFailure,
+  loadUnreadComicBookCountSuccess,
+  resetLastReadList,
+  setLastReadList
 } from '../actions/last-read-list.actions';
-import { LastRead } from '@app/last-read/models/last-read';
+import { LastRead } from '@app/comic-books/models/last-read';
 
 export const LAST_READ_LIST_FEATURE_KEY = 'last_read_list_state';
 
 export interface LastReadListState {
-  loading: boolean;
+  busy: boolean;
+  unreadCount: number;
   entries: LastRead[];
-  lastPayload: boolean;
 }
 
 export const initialState: LastReadListState = {
-  loading: false,
-  entries: [],
-  lastPayload: false
+  busy: false,
+  unreadCount: 0,
+  entries: []
 };
 
 export const reducer = createReducer(
   initialState,
 
-  on(resetLastReadDates, state => ({
+  on(loadUnreadComicBookCount, state => ({ ...state, busy: true })),
+  on(loadUnreadComicBookCountSuccess, (state, action) => ({
     ...state,
-    entries: [],
-    lastPayload: false
+    busy: false,
+    unreadCount: action.unreadCount
   })),
-  on(loadLastReadDates, state => ({ ...state, loading: true })),
-  on(lastReadDatesLoaded, (state, action) => {
-    const entries = state.entries.concat(action.entries);
-    const lastPayload = action.lastPayload;
-    return { ...state, loading: false, entries, lastPayload };
-  }),
+  on(loadUnreadComicBookCountFailure, state => ({ ...state, busy: false })),
+  on(resetLastReadList, state => ({
+    ...state,
+    entries: []
+  })),
+  on(setLastReadList, (state, action) => ({
+    ...state,
+    entries: action.entries
+  })),
   on(lastReadDateUpdated, (state, action) => {
     const entries = state.entries
       .filter(entry => entry.comicDetail.id !== action.entry.comicDetail.id)
@@ -66,8 +71,7 @@ export const reducer = createReducer(
       entry => entry.comicDetail.id !== action.entry.comicDetail.id
     );
     return { ...state, entries };
-  }),
-  on(loadLastReadDatesFailed, state => ({ ...state, loading: false }))
+  })
 );
 
 export const lastReadListFeature = createFeature({
