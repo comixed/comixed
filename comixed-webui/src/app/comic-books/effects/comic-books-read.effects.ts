@@ -20,17 +20,17 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { TranslateService } from '@ngx-translate/core';
-import { LastReadService } from '@app/last-read/services/last-read.service';
+import { LastReadService } from '@app/comic-books/services/last-read.service';
 import {
   markSelectedComicBooksRead,
   markSelectedComicBooksReadFailed,
   markSelectedComicBooksReadSuccess,
   markSingleComicBookRead
-} from '@app/last-read/actions/comic-books-read.actions';
+} from '@app/comic-books/actions/comic-books-read.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { AlertService } from '@app/core/services/alert.service';
 import { of } from 'rxjs';
-import { LastRead } from '@app/last-read/models/last-read';
+import { LastRead } from '@app/comic-books/models/last-read';
 
 @Injectable()
 export class ComicBooksReadEffects {

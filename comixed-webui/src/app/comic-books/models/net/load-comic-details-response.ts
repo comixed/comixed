@@ -17,6 +17,7 @@
  */
 
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { LastRead } from '@app/comic-books/models/last-read';
 
 export interface LoadComicDetailsResponse {
   comicDetails: ComicDetail[];
@@ -24,4 +25,5 @@ export interface LoadComicDetailsResponse {
   coverMonths: number[];
   totalCount: number;
   filteredCount: number;
+  lastReadEntries: LastRead[];
 }

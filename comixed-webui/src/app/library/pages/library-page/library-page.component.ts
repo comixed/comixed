@@ -29,17 +29,16 @@ import {
   getUserPreference,
   isAdmin
 } from '@app/user/user.functions';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
-import { LastRead } from '@app/last-read/models/last-read';
-import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
+import { LastRead } from '@app/comic-books/models/last-read';
+import { selectLastReadEntries } from '@app/comic-books/selectors/last-read-list.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 import { PAGE_SIZE_DEFAULT } from '@app/core';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
-import { ConfirmationService } from '@tragically-slick/confirmation';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { loadComicDetails } from '@app/comic-books/actions/comic-details-list.actions';
@@ -84,7 +83,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   showPurge = false;
   dataSubscription: Subscription;
   unreadOnly = false;
-  unreadSwitch = false;
   unscrapedOnly = false;
   changedOnly = false;
   deletedOnly = false;
@@ -116,9 +114,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     private logger: LoggerService,
     private store: Store<any>,
     private titleService: TitleService,
-    private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private router: Router,
     private activatedRoute: ActivatedRoute,
     private queryParameterService: QueryParameterService
   ) {

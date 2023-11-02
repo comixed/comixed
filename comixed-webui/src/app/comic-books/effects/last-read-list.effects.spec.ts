@@ -19,31 +19,22 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
-
 import { LastReadListEffects } from './last-read-list.effects';
-import {
-  LAST_READ_1,
-  LAST_READ_3,
-  LAST_READ_5
-} from '@app/last-read/last-read.fixtures';
-import { LastReadService } from '@app/last-read/services/last-read.service';
+import { LastReadService } from '@app/comic-books/services/last-read.service';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AlertService } from '@app/core/services/alert.service';
-import { LoadLastReadEntriesResponse } from '@app/last-read/models/net/load-last-read-entries-response';
 import {
-  lastReadDatesLoaded,
-  loadLastReadDates,
-  loadLastReadDatesFailed
-} from '@app/last-read/actions/last-read-list.actions';
+  loadUnreadComicBookCount,
+  loadUnreadComicBookCountFailure,
+  loadUnreadComicBookCountSuccess
+} from '@app/comic-books/actions/last-read-list.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
 
 describe('LastReadListEffects', () => {
-  const ENTRIES = [LAST_READ_1, LAST_READ_3, LAST_READ_5];
-  const LAST_ID = 17;
-  const LAST_PAYLOAD = Math.random() > 0.5;
+  const UNREAD_COUNT = 717;
 
   let actions$: Observable<any>;
   let effects: LastReadListEffects;
@@ -63,7 +54,9 @@ describe('LastReadListEffects', () => {
         {
           provide: LastReadService,
           useValue: {
-            loadEntries: jasmine.createSpy('LastReadService.loadEntries()')
+            loadUnreadComicBookCount: jasmine.createSpy(
+              'LastReadService.loadUnreadComicBookCount()'
+            )
           }
         },
         AlertService
@@ -82,47 +75,49 @@ describe('LastReadListEffects', () => {
     expect(effects).toBeTruthy();
   });
 
-  describe('loading a block of last read dates', () => {
+  describe('loading the unread comic book count', () => {
     it('fires an action on success', () => {
-      const serviceResponse = {
-        entries: ENTRIES,
-        lastPayload: LAST_PAYLOAD
-      } as LoadLastReadEntriesResponse;
-      const action = loadLastReadDates({ lastId: LAST_ID });
-      const outcome = lastReadDatesLoaded({
-        entries: ENTRIES,
-        lastPayload: LAST_PAYLOAD
+      const serviceResponse = UNREAD_COUNT;
+      const action = loadUnreadComicBookCount();
+      const outcome = loadUnreadComicBookCountSuccess({
+        unreadCount: UNREAD_COUNT
       });
 
       actions$ = hot('-a', { a: action });
-      lastReadService.loadEntries.and.returnValue(of(serviceResponse));
+      lastReadService.loadUnreadComicBookCount
+        .withArgs()
+        .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.loadEntries$).toBeObservable(expected);
+      expect(effects.loadUnreadComicBookCount$).toBeObservable(expected);
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = loadLastReadDates({ lastId: LAST_ID });
-      const outcome = loadLastReadDatesFailed();
+      const action = loadUnreadComicBookCount();
+      const outcome = loadUnreadComicBookCountFailure();
 
       actions$ = hot('-a', { a: action });
-      lastReadService.loadEntries.and.returnValue(throwError(serviceResponse));
+      lastReadService.loadUnreadComicBookCount
+        .withArgs()
+        .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.loadEntries$).toBeObservable(expected);
+      expect(effects.loadUnreadComicBookCount$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = loadLastReadDates({ lastId: LAST_ID });
-      const outcome = loadLastReadDatesFailed();
+      const action = loadUnreadComicBookCount();
+      const outcome = loadUnreadComicBookCountFailure();
 
       actions$ = hot('-a', { a: action });
-      lastReadService.loadEntries.and.throwError('expected');
+      lastReadService.loadUnreadComicBookCount
+        .withArgs()
+        .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.loadEntries$).toBeObservable(expected);
+      expect(effects.loadUnreadComicBookCount$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

@@ -32,7 +32,7 @@ import {
 import {
   initialState as initialLastReadState,
   LAST_READ_LIST_FEATURE_KEY
-} from '@app/last-read/reducers/last-read-list.reducer';
+} from '@app/comic-books/reducers/last-read-list.reducer';
 import {
   initialState as initialLibraryState,
   LIBRARY_FEATURE_KEY

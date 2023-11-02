@@ -35,7 +35,7 @@ import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { Router } from '@angular/router';
-import { LAST_READ_1 } from '@app/last-read/last-read.fixtures';
+import { LAST_READ_1 } from '@app/comic-books/comic-books.fixtures';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -55,7 +55,7 @@ import {
 import {
   markSelectedComicBooksRead,
   markSingleComicBookRead
-} from '@app/last-read/actions/comic-books-read.actions';
+} from '@app/comic-books/actions/comic-books-read.actions';
 import {
   deleteSelectedComicBooks,
   deleteSingleComicBook,

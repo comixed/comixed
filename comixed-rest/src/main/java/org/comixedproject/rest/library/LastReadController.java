@@ -26,8 +26,6 @@ import java.security.Principal;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.library.LastRead;
-import org.comixedproject.model.net.library.GetLastReadDatesResponse;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;
 import org.comixedproject.service.comicbooks.ComicBookSelectionService;
 import org.comixedproject.service.library.LastReadException;
@@ -47,34 +45,23 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Log4j2
 public class LastReadController {
-  static final int MAXIMUM = 100;
-
   @Autowired private LastReadService lastReadService;
   @Autowired private ComicBookSelectionService comicBookSelectionService;
 
   /**
-   * Retrieves a batch of last read entries for a given user.
+   * Loads the unread comic book count for a user.
    *
    * @param principal the user principal
-   * @param lastId the last record id returned
-   * @return the response body
+   * @return the unread comic book count
    * @throws LastReadException if an error occurs
    */
-  @GetMapping(value = "/api/library/read", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/api/library/unread", produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.last-read.get-all")
   @JsonView(View.LastReadList.class)
-  public GetLastReadDatesResponse getLastReadEntries(
-      final Principal principal, @RequestParam("lastId") final long lastId)
-      throws LastReadException {
+  public long getUnreadComicBookCount(final Principal principal) throws LastReadException {
     final String email = principal.getName();
-    log.info("Loading last read entries for user: email={} threshold={}", email, lastId);
-    List<LastRead> entries = this.lastReadService.getLastReadEntries(email, lastId, MAXIMUM + 1);
-    final boolean lastPayload = entries.size() <= MAXIMUM;
-    if (!lastPayload) {
-      log.trace("Reduce entry list to {} records", MAXIMUM);
-      entries = entries.subList(0, MAXIMUM);
-    }
-    return new GetLastReadDatesResponse(entries, lastPayload);
+    log.info("Loading unread comic book count for user: email={}", email);
+    return this.lastReadService.getUnreadCountForUser(email);
   }
 
   /**

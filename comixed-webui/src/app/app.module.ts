@@ -63,7 +63,6 @@ import { SideNavigationComponent } from './components/side-navigation/side-navig
 import { MatListModule } from '@angular/material/list';
 import { ComicPagesModule } from '@app/comic-pages/comic-pages.module';
 import { CollectionsModule } from '@app/collections/collections.module';
-import { LastReadModule } from '@app/last-read/last-read.module';
 import { ComicBooksModule } from '@app/comic-books/comic-books.module';
 import { ComicFileModule } from '@app/comic-files/comic-file.module';
 import { GravatarModule } from 'ngx-gravatar';
@@ -100,7 +99,6 @@ import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
     ComicFileModule,
     LibraryModule,
     ComicPagesModule,
-    LastReadModule,
     CollectionsModule,
     ListsModule,
     ComicMetadataModule,

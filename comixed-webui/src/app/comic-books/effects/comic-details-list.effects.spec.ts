@@ -20,7 +20,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 
-import { ComicDetailsListEffects } from './comic-details-list-effects';
+import { ComicDetailsListEffects } from './comic-details-list.effects';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
@@ -29,7 +29,12 @@ import {
   COMIC_DETAIL_2,
   COMIC_DETAIL_3,
   COMIC_DETAIL_4,
-  COMIC_DETAIL_5
+  COMIC_DETAIL_5,
+  LAST_READ_1,
+  LAST_READ_2,
+  LAST_READ_3,
+  LAST_READ_4,
+  LAST_READ_5
 } from '@app/comic-books/comic-books.fixtures';
 import { ComicDetailListService } from '@app/comic-books/services/comic-detail-list.service';
 import { LoggerModule } from '@angular-ru/cdk/logger';
@@ -47,6 +52,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AlertService } from '@app/core/services/alert.service';
 import { LoadComicDetailsResponse } from '@app/comic-books/models/net/load-comic-details-response';
 import { TagType } from '@app/collections/models/comic-collection.enum';
+import { setLastReadList } from '@app/comic-books/actions/last-read-list.actions';
 
 describe('ComicDetailsListEffects', () => {
   const PAGE_SIZE = 25;
@@ -69,6 +75,13 @@ describe('ComicDetailsListEffects', () => {
     COMIC_DETAIL_3,
     COMIC_DETAIL_4,
     COMIC_DETAIL_5
+  ];
+  const LAST_READ_ENTRIES = [
+    LAST_READ_1,
+    LAST_READ_2,
+    LAST_READ_3,
+    LAST_READ_4,
+    LAST_READ_5
   ];
   const PUBLISHER = COMIC_DETAILS[0].publisher;
   const SERIES = COMIC_DETAILS[0].series;
@@ -130,7 +143,8 @@ describe('ComicDetailsListEffects', () => {
         coverYears: COVER_YEARS,
         coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
-        filteredCount: FILTERED_COUNT
+        filteredCount: FILTERED_COUNT,
+        lastReadEntries: LAST_READ_ENTRIES
       } as LoadComicDetailsResponse;
       const action = loadComicDetails({
         pageSize: PAGE_SIZE,
@@ -149,13 +163,14 @@ describe('ComicDetailsListEffects', () => {
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
-      const outcome = comicDetailsLoaded({
+      const outcome1 = comicDetailsLoaded({
         comicDetails: COMIC_DETAILS,
         coverYears: COVER_YEARS,
         coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
         filteredCount: FILTERED_COUNT
       });
+      const outcome2 = setLastReadList({ entries: LAST_READ_ENTRIES });
 
       actions$ = hot('-a', { a: action });
       comicDetailListService.loadComicDetails
@@ -178,7 +193,7 @@ describe('ComicDetailsListEffects', () => {
         })
         .and.returnValue(of(serverResponse));
 
-      const expected = hot('-b', { b: outcome });
+      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
       expect(effects.loadComicDetails$).toBeObservable(expected);
     });
 
@@ -283,23 +298,25 @@ describe('ComicDetailsListEffects', () => {
         coverYears: COVER_YEARS,
         coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
-        filteredCount: FILTERED_COUNT
+        filteredCount: FILTERED_COUNT,
+        lastReadEntries: LAST_READ_ENTRIES
       } as LoadComicDetailsResponse;
       const action = loadComicDetailsById({ comicBookIds: IDS });
-      const outcome = comicDetailsLoaded({
+      const outcome1 = comicDetailsLoaded({
         comicDetails: COMIC_DETAILS,
         coverYears: COVER_YEARS,
         coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
         filteredCount: FILTERED_COUNT
       });
+      const outcome2 = setLastReadList({ entries: LAST_READ_ENTRIES });
 
       actions$ = hot('-a', { a: action });
       comicDetailListService.loadComicDetailsById
         .withArgs({ ids: IDS })
         .and.returnValue(of(serverResponse));
 
-      const expected = hot('-b', { b: outcome });
+      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
       expect(effects.loadComicDetailsById$).toBeObservable(expected);
     });
 
@@ -340,7 +357,8 @@ describe('ComicDetailsListEffects', () => {
         coverYears: COVER_YEARS,
         coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
-        filteredCount: FILTERED_COUNT
+        filteredCount: FILTERED_COUNT,
+        lastReadEntries: LAST_READ_ENTRIES
       } as LoadComicDetailsResponse;
       const action = loadComicDetailsForCollection({
         pageSize: PAGE_SIZE,
@@ -350,13 +368,14 @@ describe('ComicDetailsListEffects', () => {
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
-      const outcome = comicDetailsLoaded({
+      const outcome1 = comicDetailsLoaded({
         comicDetails: COMIC_DETAILS,
         coverYears: COVER_YEARS,
         coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
         filteredCount: FILTERED_COUNT
       });
+      const outcome2 = setLastReadList({ entries: LAST_READ_ENTRIES });
 
       actions$ = hot('-a', { a: action });
       comicDetailListService.loadComicDetailsForCollection
@@ -370,7 +389,7 @@ describe('ComicDetailsListEffects', () => {
         })
         .and.returnValue(of(serverResponse));
 
-      const expected = hot('-b', { b: outcome });
+      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
       expect(effects.loadComicDetailsForCollection$).toBeObservable(expected);
     });
 

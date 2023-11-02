@@ -66,4 +66,24 @@ public interface LastReadRepository extends JpaRepository<LastRead, Long> {
       "SELECT e FROM LastRead e JOIN FETCH e.comicDetail WHERE e.comicDetail = :comicDetail AND e.user = :user")
   LastRead loadEntryForComicAndUser(
       @Param("comicDetail") ComicDetail comicDetail, @Param("user") ComiXedUser user);
+
+  /**
+   * Returns the entry count for the user.
+   *
+   * @param user the user
+   * @return the count
+   */
+  @Query("SELECT COUNT(e) FROM LastRead e WHERE e.user = :user")
+  long loadCountForUser(@Param("user") ComiXedUser user);
+
+  /**
+   * Returns the entries, if any, for the given comic book ids.
+   *
+   * @param user the user
+   * @param comicDetails the comic book ids
+   * @return the last read entries
+   */
+  @Query("SELECT e FROM LastRead e WHERE e.user = :user AND e.comicDetail IN (:comicDetails)")
+  List<LastRead> loadByComicBookIds(
+      @Param("user") final ComiXedUser user, @Param("comicDetails") List<ComicDetail> comicDetails);
 }

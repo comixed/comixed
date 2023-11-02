@@ -20,12 +20,12 @@ import { TestBed } from '@angular/core/testing';
 
 import { LastReadService } from './last-read.service';
 import {
+  COMIC_DETAIL_4,
   LAST_READ_1,
   LAST_READ_3,
   LAST_READ_4,
   LAST_READ_5
-} from '@app/last-read/last-read.fixtures';
-import { LoadLastReadEntriesResponse } from '@app/last-read/models/net/load-last-read-entries-response';
+} from '@app/comic-books/comic-books.fixtures';
 import {
   HttpClientTestingModule,
   HttpTestingController
@@ -34,12 +34,11 @@ import { interpolate } from '@app/core';
 import {
   LAST_READ_REMOVED_TOPIC,
   LAST_READ_UPDATED_TOPIC,
-  LOAD_LAST_READ_ENTRIES_URL,
+  LOAD_UNREAD_COMIC_BOOK_COUNT_URL,
   SET_COMIC_BOOK_READ_STATE_URL,
   SET_SELECTED_COMIC_BOOKS_READ_STATE_URL
-} from '@app/last-read/last-read.constants';
+} from '@app/comic-books/comic-books.constants';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { COMIC_DETAIL_4 } from '@app/comic-books/comic-books.fixtures';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { WebSocketService } from '@app/messaging';
 import {
@@ -49,12 +48,12 @@ import {
 import {
   lastReadDateRemoved,
   lastReadDateUpdated,
-  loadLastReadDates
-} from '@app/last-read/actions/last-read-list.actions';
+  loadUnreadComicBookCount
+} from '@app/comic-books/actions/last-read-list.actions';
 import {
   initialState as initialLastReadListState,
   LAST_READ_LIST_FEATURE_KEY
-} from '@app/last-read/reducers/last-read-list.reducer';
+} from '@app/comic-books/reducers/last-read-list.reducer';
 import { HttpResponse } from '@angular/common/http';
 
 describe('LastReadService', () => {
@@ -99,22 +98,18 @@ describe('LastReadService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('can load a batch of entries', () => {
-    service.loadEntries({ lastId: LAST_ID }).subscribe(response =>
-      expect(response).toEqual({
-        entries: ENTRIES,
-        lastPayload: LAST_PAYLOAD
-      } as LoadLastReadEntriesResponse)
-    );
+  it('loads the unread comic book count', () => {
+    const serverResponse = Math.floor(Math.random() * 30000);
+
+    service
+      .loadUnreadComicBookCount()
+      .subscribe(response => expect(response).toEqual(serverResponse));
 
     const req = httpMock.expectOne(
-      interpolate(LOAD_LAST_READ_ENTRIES_URL, { lastId: LAST_ID })
+      interpolate(LOAD_UNREAD_COMIC_BOOK_COUNT_URL)
     );
     expect(req.request.method).toEqual('GET');
-    req.flush({
-      entries: ENTRIES,
-      lastPayload: LAST_PAYLOAD
-    } as LoadLastReadEntriesResponse);
+    req.flush(serverResponse);
   });
 
   describe('marking a single comic book', () => {
@@ -174,141 +169,85 @@ describe('LastReadService', () => {
   });
 
   describe('when messaging starts', () => {
-    describe('when entries are already loaded', () => {
-      beforeEach(() => {
-        service.loaded = false;
-        service.updateSubscription = {} as any;
-        service.removeSubscription = {} as any;
-        store.setState({
-          ...initialState,
-          [MESSAGING_FEATURE_KEY]: {
-            ...initialMessagingState,
-            started: true
-          }
-        });
-      });
+    const ENTRY = LAST_READ_4;
 
-      it('does not resubscribe', () => {
-        expect(webSocketService.subscribe).not.toHaveBeenCalled();
+    beforeEach(() => {
+      service.updateSubscription = null;
+      service.removeSubscription = null;
+      webSocketService.subscribe
+        .withArgs(LAST_READ_UPDATED_TOPIC, jasmine.anything())
+        .and.callFake((topic, callback) => {
+          callback(ENTRY);
+          return {
+            unsubscribe: jasmine.createSpy('Subscription.unsubscribe()')
+          } as any;
+        });
+      webSocketService.subscribe
+        .withArgs(LAST_READ_REMOVED_TOPIC, jasmine.anything())
+        .and.callFake((topic, callback) => {
+          callback(ENTRY);
+          return {
+            unsubscribe: jasmine.createSpy('Subscription.unsubscribe()')
+          } as any;
+        });
+      store.setState({
+        ...initialState,
+        [MESSAGING_FEATURE_KEY]: {
+          ...initialMessagingState,
+          started: true
+        },
+        [LAST_READ_LIST_FEATURE_KEY]: {
+          ...initialLastReadListState,
+          loading: false
+        }
       });
     });
 
-    describe('when no entries are loaded', () => {
-      const ENTRY = LAST_READ_4;
+    it('requests the unread comic book count', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(loadUnreadComicBookCount());
+    });
 
+    it('subscribes to updates', () => {
+      expect(service.updateSubscription).not.toBeNull();
+    });
+
+    it('processes updates', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        lastReadDateUpdated({ entry: ENTRY })
+      );
+    });
+
+    it('subscribes to removals', () => {
+      expect(service.removeSubscription).not.toBeNull();
+    });
+
+    it('processes removals', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        lastReadDateRemoved({ entry: ENTRY })
+      );
+    });
+
+    describe('when messaging stops', () => {
       beforeEach(() => {
-        service.loaded = false;
-        service.updateSubscription = null;
-        service.removeSubscription = null;
-        webSocketService.subscribe
-          .withArgs(LAST_READ_UPDATED_TOPIC, jasmine.anything())
-          .and.callFake((topic, callback) => {
-            callback(ENTRY);
-            return {
-              unsubscribe: jasmine.createSpy('Subscription.unsubscribe()')
-            } as any;
-          });
-        webSocketService.subscribe
-          .withArgs(LAST_READ_REMOVED_TOPIC, jasmine.anything())
-          .and.callFake((topic, callback) => {
-            callback(ENTRY);
-            return {
-              unsubscribe: jasmine.createSpy('Subscription.unsubscribe()')
-            } as any;
-          });
         store.setState({
           ...initialState,
           [MESSAGING_FEATURE_KEY]: {
             ...initialMessagingState,
-            started: true
+            started: false
           },
           [LAST_READ_LIST_FEATURE_KEY]: {
             ...initialLastReadListState,
-            loading: false,
-            lastPayload: true
+            loading: false
           }
         });
       });
 
-      it('fires an action to load the first batch of last read dates', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          loadLastReadDates({ lastId: 0 })
-        );
+      it('unsubscribes from updates', () => {
+        expect(service.updateSubscription).toBeNull();
       });
 
-      it('subscribes to updates', () => {
-        expect(service.updateSubscription).not.toBeNull();
-      });
-
-      it('processes updates', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          lastReadDateUpdated({ entry: ENTRY })
-        );
-      });
-
-      it('subscribes to removals', () => {
-        expect(service.removeSubscription).not.toBeNull();
-      });
-
-      it('processes removals', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          lastReadDateRemoved({ entry: ENTRY })
-        );
-      });
-
-      describe('when a payload is received', () => {
-        beforeEach(() => {
-          store.setState({
-            ...initialState,
-            [LAST_READ_LIST_FEATURE_KEY]: {
-              ...initialLastReadListState,
-              lastPayload: false,
-              loading: false,
-              entries: [
-                { id: LAST_ID } as any,
-                { id: LAST_ID - 1 } as any,
-                { id: LAST_ID - 2 } as any,
-                { id: LAST_ID - 3 } as any
-              ]
-            }
-          });
-        });
-
-        it('fires an action to load the next batch', () => {
-          expect(store.dispatch).toHaveBeenCalledWith(
-            loadLastReadDates({ lastId: LAST_ID })
-          );
-        });
-      });
-
-      describe('when the last payload is received', () => {
-        beforeEach(() => {
-          store.setState({
-            ...initialState,
-            [LAST_READ_LIST_FEATURE_KEY]: {
-              ...initialLastReadListState,
-              lastPayload: true
-            }
-          });
-        });
-
-        it('sets the loaded flag', () => {
-          expect(service.loaded).toBeTrue();
-        });
-      });
-    });
-
-    describe('when entries are already loaded', () => {
-      beforeEach(() => {
-        service.loaded = true;
-        store.setState({
-          ...initialState,
-          [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: true }
-        });
-      });
-
-      it('does not start loading entries', () => {
-        expect(store.dispatch).not.toHaveBeenCalled();
+      it('unsubscribes from removals', () => {
+        expect(service.removeSubscription).toBeNull();
       });
     });
   });

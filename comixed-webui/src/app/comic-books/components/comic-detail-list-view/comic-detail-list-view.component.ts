@@ -32,7 +32,7 @@ import { Store } from '@ngrx/store';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LastRead } from '@app/last-read/models/last-read';
+import { LastRead } from '@app/comic-books/models/last-read';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { TranslateService } from '@ngx-translate/core';
@@ -44,7 +44,7 @@ import { addSelectedComicBooksToReadingList } from '@app/lists/actions/reading-l
 import {
   markSelectedComicBooksRead,
   markSingleComicBookRead
-} from '@app/last-read/actions/comic-books-read.actions';
+} from '@app/comic-books/actions/comic-books-read.actions';
 import {
   deleteSelectedComicBooks,
   deleteSingleComicBook,

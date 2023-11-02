@@ -34,7 +34,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
-import { LastRead } from '@app/last-read/models/last-read';
+import { LastRead } from '@app/comic-books/models/last-read';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import {
   selectLoadComicDetailsCoverMonths,
