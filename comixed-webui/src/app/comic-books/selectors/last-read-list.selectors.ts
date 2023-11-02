@@ -16,46 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
   LAST_READ_LIST_FEATURE_KEY,
   LastReadListState
 } from '../reducers/last-read-list.reducer';
-import {
-  selectLastReadEntries,
-  selectLastReadListState
-} from './last-read-list.selectors';
-import {
-  LAST_READ_1,
-  LAST_READ_3,
-  LAST_READ_5
-} from '@app/last-read/last-read.fixtures';
 
-describe('LastReadDates Selectors', () => {
-  const ENTRIES = [LAST_READ_1, LAST_READ_3, LAST_READ_5];
+export const selectLastReadListState = createFeatureSelector<LastReadListState>(
+  LAST_READ_LIST_FEATURE_KEY
+);
 
-  let state: LastReadListState;
+export const selectLastReadEntries = createSelector(
+  selectLastReadListState,
+  state => state.entries
+);
 
-  beforeEach(() => {
-    state = {
-      loading: Math.random() > 0.5,
-      entries: ENTRIES,
-      lastPayload: Math.random() > 0.5
-    };
-  });
-
-  it('should select the feature state', () => {
-    expect(
-      selectLastReadListState({
-        [LAST_READ_LIST_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
-  });
-
-  it('should select the last read entries', () => {
-    expect(
-      selectLastReadEntries({
-        [LAST_READ_LIST_FEATURE_KEY]: state
-      })
-    ).toEqual(state.entries);
-  });
-});
+export const selectLastUnreadCount = createSelector(
+  selectLastReadListState,
+  state => state.unreadCount
+);

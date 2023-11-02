@@ -27,7 +27,7 @@ import {
   markSelectedComicBooksReadFailed,
   markSelectedComicBooksRead,
   markSingleComicBookRead
-} from '@app/last-read/actions/comic-books-read.actions';
+} from '@app/comic-books/actions/comic-books-read.actions';
 
 describe('ComicBooksRead Reducer', () => {
   const COMIC = COMIC_DETAIL_4;

@@ -19,6 +19,7 @@
 import { API_ROOT_URL } from '../core';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { ComicType } from '@app/comic-books/models/comic-type';
+import { SECURED_PREFIX } from '@app/messaging/messaging.constants';
 
 export const LOAD_COMIC_DETAILS_URL = `${API_ROOT_URL}/comics/details/load`;
 export const LOAD_COMIC_DETAILS_BY_ID_URL = `${API_ROOT_URL}/comics/details/load/ids`;
@@ -42,6 +43,13 @@ export const GET_IMPRINTS_URL = `${API_ROOT_URL}/comics/imprints`;
 export const PAGE_URL_FROM_HASH = `${API_ROOT_URL}/pages/hashes/\${hash}/content`;
 export const MARK_PAGES_DELETED_URL = `${API_ROOT_URL}/pages/deleted`;
 export const MARK_PAGES_UNDELETED_URL = `${API_ROOT_URL}/pages/undeleted`;
+
+export const LOAD_UNREAD_COMIC_BOOK_COUNT_URL = `${API_ROOT_URL}/library/unread`;
+export const SET_COMIC_BOOK_READ_STATE_URL = `${API_ROOT_URL}/library/read/\${comicBookId}`;
+export const SET_SELECTED_COMIC_BOOKS_READ_STATE_URL = `${API_ROOT_URL}/library/read/selected`;
+
+export const LAST_READ_UPDATED_TOPIC = `${SECURED_PREFIX}/topic/last-read-list.update`;
+export const LAST_READ_REMOVED_TOPIC = `${SECURED_PREFIX}/topic/last-read-list.remove`;
 
 export const COMIC_BOOK_UPDATE_TOPIC = `/topic/comic-book.\${id}.update`;
 export const COMIC_BOOK_SELECTION_UPDATE_TOPIC =

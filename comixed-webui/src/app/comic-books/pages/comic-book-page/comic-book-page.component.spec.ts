@@ -33,7 +33,8 @@ import {
 import { Router } from '@angular/router';
 import {
   COMIC_BOOK_1,
-  COMIC_BOOK_2
+  COMIC_BOOK_2,
+  LAST_READ_1
 } from '@app/comic-books/comic-books.fixtures';
 import { ComicDetailEditComponent } from '@app/comic-books/components/comic-detail-edit/comic-detail-edit.component';
 import { ComicStoryComponent } from '@app/comic-books/components/comic-story/comic-story.component';
@@ -59,11 +60,10 @@ import {
 import {
   initialState as initialLastReadState,
   LAST_READ_LIST_FEATURE_KEY
-} from '@app/last-read/reducers/last-read-list.reducer';
+} from '@app/comic-books/reducers/last-read-list.reducer';
 import { TitleService } from '@app/core/services/title.service';
-import { markSingleComicBookRead } from '@app/last-read/actions/comic-books-read.actions';
+import { markSingleComicBookRead } from '@app/comic-books/actions/comic-books-read.actions';
 import { updateSingleComicBookMetadata } from '@app/library/actions/update-metadata.actions';
-import { LAST_READ_1 } from '@app/last-read/last-read.fixtures';
 import {
   deleteSingleComicBook,
   undeleteSingleComicBook

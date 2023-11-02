@@ -49,6 +49,16 @@ import {
   ComicBookSelectionState,
   reducer as comicBookSelectionReducer
 } from '@app/comic-books/reducers/comic-book-selection.reducer';
+import {
+  LAST_READ_LIST_FEATURE_KEY,
+  LastReadListState,
+  reducer as lastReadDatesReducer
+} from '@app/comic-books/reducers/last-read-list.reducer';
+import {
+  COMIC_BOOKS_READ_FEATURE_KEY,
+  reducer as updateReadStatusReducer,
+  SetComicsReadState
+} from '@app/comic-books/reducers/comic-books-read.reducer';
 
 interface RouterStateUrl {
   url: string;
@@ -64,6 +74,8 @@ export interface ComicModuleState {
   [MARK_COMICS_DELETED_FEATURE_KEY]: MarkComicsDeletedState;
   [COMIC_DETAILS_LIST_FEATURE_KEY]: ComicDetailsListState;
   [COMIC_BOOK_SELECTION_FEATURE_KEY]: ComicBookSelectionState;
+  [LAST_READ_LIST_FEATURE_KEY]: LastReadListState;
+  [COMIC_BOOKS_READ_FEATURE_KEY]: SetComicsReadState;
 }
 
 export type ModuleState = ComicModuleState;
@@ -75,5 +87,7 @@ export const reducers: ActionReducerMap<ComicModuleState> = {
   [IMPRINT_LIST_FEATURE_KEY]: imprintListReducer,
   [MARK_COMICS_DELETED_FEATURE_KEY]: markComicsDeletedReducer,
   [COMIC_DETAILS_LIST_FEATURE_KEY]: comicDetailsListReducer,
-  [COMIC_BOOK_SELECTION_FEATURE_KEY]: comicBookSelectionReducer
+  [COMIC_BOOK_SELECTION_FEATURE_KEY]: comicBookSelectionReducer,
+  [LAST_READ_LIST_FEATURE_KEY]: lastReadDatesReducer,
+  [COMIC_BOOKS_READ_FEATURE_KEY]: updateReadStatusReducer
 };

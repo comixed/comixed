@@ -44,7 +44,7 @@ import { ComicsByYearChartComponent } from '@app/components/comics-by-year-chart
 import {
   initialState as initialLastReadState,
   LAST_READ_LIST_FEATURE_KEY
-} from '@app/last-read/reducers/last-read-list.reducer';
+} from '@app/comic-books/reducers/last-read-list.reducer';
 import { ReadComicsChartComponent } from '@app/components/read-comics-chart/read-comics-chart.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 

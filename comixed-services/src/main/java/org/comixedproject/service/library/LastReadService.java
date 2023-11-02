@@ -28,6 +28,7 @@ import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.library.PublishLastReadRemovedAction;
 import org.comixedproject.messaging.library.PublishLastReadUpdatedAction;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.user.ComiXedUser;
@@ -41,7 +42,6 @@ import org.comixedproject.state.comicbooks.ComicStateChangeListener;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.Message;
 import org.springframework.statemachine.state.State;
 import org.springframework.stereotype.Service;
@@ -125,24 +125,6 @@ public class LastReadService implements InitializingBean, ComicStateChangeListen
     } catch (PublishingException error) {
       log.error("Failed to publish last read removed", error);
     }
-  }
-
-  /**
-   * Gets a batch of last read dates for the given user. The records returned will come after the
-   * specified threshold id, and will contain no more than the maximum specified entries.
-   *
-   * @param email the user's email address
-   * @param threshold the id threshold
-   * @param maximum the maximum records to return
-   * @return the entries
-   * @throws LastReadException if an error occurs
-   */
-  public List<LastRead> getLastReadEntries(
-      final String email, final long threshold, final int maximum) throws LastReadException {
-    log.debug("Loading user: {}", email);
-    ComiXedUser user = this.doFindUser(email);
-    log.debug("Loading {} last read entries for {} with id > {}", maximum, email, threshold);
-    return this.lastReadRepository.loadEntriesForUser(user, threshold, PageRequest.of(0, maximum));
   }
 
   private ComiXedUser doFindUser(final String email) throws LastReadException {
@@ -251,5 +233,16 @@ public class LastReadService implements InitializingBean, ComicStateChangeListen
     } catch (ComicBookException error) {
       throw new LastReadException("Failed to update comic book read state", error);
     }
+  }
+
+  public long getUnreadCountForUser(final String email) throws LastReadException {
+    log.debug("Getting the unread comic book count for user: {}", email);
+    return this.comicBookService.getComicBookCount()
+        - this.lastReadRepository.loadCountForUser(this.doFindUser(email));
+  }
+
+  public List<LastRead> loadForComicDetails(
+      final String email, final List<ComicDetail> comicDetails) throws LastReadException {
+    return this.lastReadRepository.loadByComicBookIds(this.doFindUser(email), comicDetails);
   }
 }

@@ -23,7 +23,7 @@ import {
   Input,
   ViewChild
 } from '@angular/core';
-import { LastRead } from '@app/last-read/models/last-read';
+import { LastRead } from '@app/comic-books/models/last-read';
 import { BehaviorSubject } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { LibraryState } from '@app/library/reducers/library.reducer';

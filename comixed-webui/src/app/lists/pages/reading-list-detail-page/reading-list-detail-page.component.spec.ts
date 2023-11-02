@@ -84,7 +84,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
   initialState as initialLastReadListState,
   LAST_READ_LIST_FEATURE_KEY
-} from '@app/last-read/reducers/last-read-list.reducer';
+} from '@app/comic-books/reducers/last-read-list.reducer';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';

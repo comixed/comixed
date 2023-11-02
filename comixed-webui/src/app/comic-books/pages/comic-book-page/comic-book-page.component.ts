@@ -56,12 +56,12 @@ import {
   selectComicBook,
   selectComicBookBusy
 } from '@app/comic-books/selectors/comic-book.selectors';
-import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
-import { LastRead } from '@app/last-read/models/last-read';
+import { selectLastReadEntries } from '@app/comic-books/selectors/last-read-list.selectors';
+import { LastRead } from '@app/comic-books/models/last-read';
 import { TitleService } from '@app/core/services/title.service';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
-import { markSingleComicBookRead } from '@app/last-read/actions/comic-books-read.actions';
+import { markSingleComicBookRead } from '@app/comic-books/actions/comic-books-read.actions';
 import { updateSingleComicBookMetadata } from '@app/library/actions/update-metadata.actions';
 import {
   deleteSingleComicBook,

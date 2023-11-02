@@ -21,24 +21,23 @@ import { Observable } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
 import { interpolate } from '@app/core';
-import {
-  LAST_READ_REMOVED_TOPIC,
-  LAST_READ_UPDATED_TOPIC,
-  LOAD_LAST_READ_ENTRIES_URL,
-  SET_COMIC_BOOK_READ_STATE_URL,
-  SET_SELECTED_COMIC_BOOKS_READ_STATE_URL
-} from '@app/last-read/last-read.constants';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'webstomp-client';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
-import { selectLastReadListState } from '@app/last-read/selectors/last-read-list.selectors';
 import {
   lastReadDateRemoved,
   lastReadDateUpdated,
-  loadLastReadDates
-} from '@app/last-read/actions/last-read-list.actions';
+  loadUnreadComicBookCount
+} from '@app/comic-books/actions/last-read-list.actions';
 import { WebSocketService } from '@app/messaging';
-import { LastRead } from '@app/last-read/models/last-read';
+import { LastRead } from '@app/comic-books/models/last-read';
+import {
+  LAST_READ_REMOVED_TOPIC,
+  LAST_READ_UPDATED_TOPIC,
+  LOAD_UNREAD_COMIC_BOOK_COUNT_URL,
+  SET_COMIC_BOOK_READ_STATE_URL,
+  SET_SELECTED_COMIC_BOOKS_READ_STATE_URL
+} from '@app/comic-books/comic-books.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -56,48 +55,29 @@ export class LastReadService {
   ) {
     this.store.select(selectMessagingState).subscribe(state => {
       if (state.started) {
-        if (!this.loaded) {
-          this.store.dispatch(loadLastReadDates({ lastId: 0 }));
-          this.store
-            .select(selectLastReadListState)
-            .subscribe(lastReadState => {
-              if (!lastReadState.loading && !lastReadState.lastPayload) {
-                const lastId =
-                  lastReadState.entries.length > 0
-                    ? lastReadState.entries
-                        .map(entry => entry.id)
-                        .reduce((prev, current) =>
-                          prev > current ? prev : current
-                        )
-                    : 0;
-                this.store.dispatch(loadLastReadDates({ lastId }));
-              }
-              if (!lastReadState.loading && lastReadState.lastPayload) {
-                this.loaded = true;
-                if (!this.updateSubscription) {
-                  this.updateSubscription =
-                    this.webSocketService.subscribe<LastRead>(
-                      LAST_READ_UPDATED_TOPIC,
-                      entry => {
-                        this.logger.debug('Last read entry updated:', entry);
-                        this.store.dispatch(lastReadDateUpdated({ entry }));
-                      }
-                    );
-                }
-                if (!this.removeSubscription) {
-                  this.removeSubscription =
-                    this.webSocketService.subscribe<LastRead>(
-                      LAST_READ_REMOVED_TOPIC,
-                      entry => {
-                        this.logger.debug('Last read entry removed:', entry);
-                        this.store.dispatch(lastReadDateRemoved({ entry }));
-                      }
-                    );
-                }
-              }
-            });
+        if (!this.updateSubscription) {
+          this.updateSubscription = this.webSocketService.subscribe<LastRead>(
+            LAST_READ_UPDATED_TOPIC,
+            entry => {
+              this.logger.debug('Last read entry updated:', entry);
+              this.store.dispatch(lastReadDateUpdated({ entry }));
+              this.store.dispatch(loadUnreadComicBookCount());
+            }
+          );
+          this.store.dispatch(loadUnreadComicBookCount());
+        }
+        if (!this.removeSubscription) {
+          this.removeSubscription = this.webSocketService.subscribe<LastRead>(
+            LAST_READ_REMOVED_TOPIC,
+            entry => {
+              this.logger.debug('Last read entry removed:', entry);
+              this.store.dispatch(lastReadDateRemoved({ entry }));
+              this.store.dispatch(loadUnreadComicBookCount());
+            }
+          );
         }
       }
+
       if (!state.started) {
         if (!!this.updateSubscription) {
           this.logger.trace('Unsubscribing from last read updates');
@@ -114,11 +94,9 @@ export class LastReadService {
     });
   }
 
-  loadEntries(args: { lastId: number }): Observable<any> {
-    this.logger.debug('Service: loading last read entries:', args);
-    return this.http.get(
-      interpolate(LOAD_LAST_READ_ENTRIES_URL, { lastId: args.lastId })
-    );
+  loadUnreadComicBookCount(): Observable<any> {
+    this.logger.debug('Loading unread comic book count');
+    return this.http.get(interpolate(LOAD_UNREAD_COMIC_BOOK_COUNT_URL));
   }
 
   setSingleReadState(args: {

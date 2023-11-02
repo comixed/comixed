@@ -18,7 +18,7 @@
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ComicBook } from '@app/comic-books/models/comic-book';
-import { LastRead } from '@app/last-read/models/last-read';
+import { LastRead } from '@app/comic-books/models/last-read';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import {
