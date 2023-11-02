@@ -23,7 +23,10 @@ import { Observable, of, throwError } from 'rxjs';
 import { ComicBooksReadEffects } from './comic-books-read.effects';
 import { LastReadService } from '@app/comic-books/services/last-read.service';
 import { AlertService } from '@app/core/services/alert.service';
-import { COMIC_DETAIL_4 } from '@app/comic-books/comic-books.fixtures';
+import {
+  COMIC_DETAIL_4,
+  LAST_READ_2
+} from '@app/comic-books/comic-books.fixtures';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -35,7 +38,7 @@ import {
 } from '@app/comic-books/actions/comic-books-read.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
-import { LAST_READ_2 } from '@app/comic-books/comic-books.fixtures';
+import { loadUnreadComicBookCount } from '@app/comic-books/actions/last-read-list.actions';
 
 describe('ComicBooksReadEffects', () => {
   const COMIC = COMIC_DETAIL_4;
@@ -92,14 +95,15 @@ describe('ComicBooksReadEffects', () => {
         comicBookId: COMIC.comicId,
         read: READ
       });
-      const outcome = markSelectedComicBooksReadSuccess();
+      const outcome1 = markSelectedComicBooksReadSuccess();
+      const outcome2 = loadUnreadComicBookCount();
 
       actions$ = hot('-a', { a: action });
       lastReadService.setSingleReadState
         .withArgs({ comicBookId: COMIC.comicId, read: READ })
         .and.returnValue(of(serviceResponse));
 
-      const expected = hot('-b', { b: outcome });
+      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
       expect(effects.setSingleComicBookReadState$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
@@ -146,14 +150,15 @@ describe('ComicBooksReadEffects', () => {
       const action = markSelectedComicBooksRead({
         read: READ
       });
-      const outcome = markSelectedComicBooksReadSuccess();
+      const outcome1 = markSelectedComicBooksReadSuccess();
+      const outcome2 = loadUnreadComicBookCount();
 
       actions$ = hot('-a', { a: action });
       lastReadService.setSelectedReadState
         .withArgs({ read: READ })
         .and.returnValue(of(serviceResponse));
 
-      const expected = hot('-b', { b: outcome });
+      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
       expect(effects.setSelectedComicBooksReadState$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });

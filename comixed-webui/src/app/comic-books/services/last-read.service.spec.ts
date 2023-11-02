@@ -21,10 +21,7 @@ import { TestBed } from '@angular/core/testing';
 import { LastReadService } from './last-read.service';
 import {
   COMIC_DETAIL_4,
-  LAST_READ_1,
-  LAST_READ_3,
-  LAST_READ_4,
-  LAST_READ_5
+  LAST_READ_4
 } from '@app/comic-books/comic-books.fixtures';
 import {
   HttpClientTestingModule,
@@ -55,12 +52,12 @@ import {
   LAST_READ_LIST_FEATURE_KEY
 } from '@app/comic-books/reducers/last-read-list.reducer';
 import { HttpResponse } from '@angular/common/http';
+import { LoadUnreadComicBookCountResponse } from '@app/comic-books/models/net/load-unread-comic-book-count-response';
 
 describe('LastReadService', () => {
-  const ENTRIES = [LAST_READ_1, LAST_READ_3, LAST_READ_5];
-  const LAST_PAYLOAD = Math.random() > 0.5;
-  const LAST_ID = 23;
   const COMIC = COMIC_DETAIL_4;
+  const READ_COUNT = Math.floor(Math.random() * 30000);
+  const UNREAD_COUNT = Math.floor(Math.random() * 30000);
   const initialState = {
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadListState
@@ -99,7 +96,10 @@ describe('LastReadService', () => {
   });
 
   it('loads the unread comic book count', () => {
-    const serverResponse = Math.floor(Math.random() * 30000);
+    const serverResponse = {
+      readCount: READ_COUNT,
+      unreadCount: UNREAD_COUNT
+    } as LoadUnreadComicBookCountResponse;
 
     service
       .loadUnreadComicBookCount()

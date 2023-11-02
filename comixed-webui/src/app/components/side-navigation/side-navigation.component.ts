@@ -24,7 +24,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
-import { selectLastUnreadCount } from '@app/comic-books/selectors/last-read-list.selectors';
+import { selectComicBookUnreadCount } from '@app/comic-books/selectors/last-read-list.selectors';
 import { selectLibraryState } from '@app/library/selectors/library.selectors';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { LibraryState } from '@app/library/reducers/library.reducer';
@@ -68,7 +68,7 @@ export class SideNavigationComponent implements OnDestroy {
         this.deletedComicBooks$.next(state.deletedComics);
       });
     this.lastReadUnreadCountSubscription = this.store
-      .select(selectLastUnreadCount)
+      .select(selectComicBookUnreadCount)
       .subscribe(count => this.unreadComicBooks$.next(count));
     this.readingListsSubscription = this.store
       .select(selectUserReadingLists)

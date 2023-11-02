@@ -291,6 +291,31 @@ public class LastReadServiceTest {
   }
 
   @Test(expected = LastReadException.class)
+  public void testLoadReadCountForUserInvalidUser() throws ComiXedUserException, LastReadException {
+    Mockito.when(userService.findByEmail(Mockito.anyString()))
+        .thenThrow(ComiXedUserException.class);
+
+    try {
+      service.getReadCountForUser(TEST_EMAIL);
+    } finally {
+      Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    }
+  }
+
+  @Test
+  public void testLoadReadCountForUser() throws ComiXedUserException, LastReadException {
+    Mockito.when(lastReadRepository.loadCountForUser(Mockito.any(ComiXedUser.class)))
+        .thenReturn(TEST_READ_COUNT);
+
+    final long result = service.getReadCountForUser(TEST_EMAIL);
+
+    assertEquals(TEST_READ_COUNT, result);
+
+    Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    Mockito.verify(lastReadRepository, Mockito.times(1)).loadCountForUser(user);
+  }
+
+  @Test(expected = LastReadException.class)
   public void testLoadUnreadCountForUserInvalidUser()
       throws ComiXedUserException, LastReadException {
     Mockito.when(userService.findByEmail(Mockito.anyString()))

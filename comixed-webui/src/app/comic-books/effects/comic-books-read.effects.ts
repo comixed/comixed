@@ -27,10 +27,10 @@ import {
   markSelectedComicBooksReadSuccess,
   markSingleComicBookRead
 } from '@app/comic-books/actions/comic-books-read.actions';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { AlertService } from '@app/core/services/alert.service';
 import { of } from 'rxjs';
-import { LastRead } from '@app/comic-books/models/last-read';
+import { loadUnreadComicBookCount } from '@app/comic-books/actions/last-read-list.actions';
 
 @Injectable()
 export class ComicBooksReadEffects {
@@ -59,7 +59,7 @@ export class ComicBooksReadEffects {
                 )
               )
             ),
-            map((response: LastRead) => markSelectedComicBooksReadSuccess()),
+            mergeMap(() => this.doSuccess()),
             catchError(error =>
               this.doServiceFailure(
                 error,
@@ -90,7 +90,7 @@ export class ComicBooksReadEffects {
               )
             )
           ),
-          map((response: LastRead) => markSelectedComicBooksReadSuccess()),
+          mergeMap(() => this.doSuccess()),
           catchError(error =>
             this.doServiceFailure(
               error,
@@ -126,5 +126,9 @@ export class ComicBooksReadEffects {
       this.translateService.instant('app.general-effect-failure')
     );
     return of(markSelectedComicBooksReadFailed());
+  }
+
+  private doSuccess() {
+    return [markSelectedComicBooksReadSuccess(), loadUnreadComicBookCount()];
   }
 }

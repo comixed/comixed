@@ -32,7 +32,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
 import { LastRead } from '@app/comic-books/models/last-read';
-import { selectLastReadEntries } from '@app/comic-books/selectors/last-read-list.selectors';
+import { selectComicBookLastReadEntries } from '@app/comic-books/selectors/last-read-list.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 import { PAGE_SIZE_DEFAULT } from '@app/core';
@@ -179,7 +179,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         ) === `${true}`;
     });
     this.lastReadDatesSubscription = this.store
-      .select(selectLastReadEntries)
+      .select(selectComicBookLastReadEntries)
       .subscribe(lastReadDates => {
         this.lastReadDates = lastReadDates;
       });

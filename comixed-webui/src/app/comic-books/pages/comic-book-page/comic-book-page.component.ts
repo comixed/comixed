@@ -56,7 +56,7 @@ import {
   selectComicBook,
   selectComicBookBusy
 } from '@app/comic-books/selectors/comic-book.selectors';
-import { selectLastReadEntries } from '@app/comic-books/selectors/last-read-list.selectors';
+import { selectComicBookLastReadEntries } from '@app/comic-books/selectors/last-read-list.selectors';
 import { LastRead } from '@app/comic-books/models/last-read';
 import { TitleService } from '@app/core/services/title.service';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
@@ -180,7 +180,7 @@ export class ComicBookPageComponent
       .select(selectVolumeMetadata)
       .subscribe(volumes => (this.volumes = volumes));
     this.lastReadSubscription = this.store
-      .select(selectLastReadEntries)
+      .select(selectComicBookLastReadEntries)
       .subscribe(entries => {
         this.isRead = entries
           .map(entry => entry.comicDetail.comicId)
