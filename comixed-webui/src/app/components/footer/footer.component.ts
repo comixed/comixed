@@ -32,7 +32,7 @@ import { selectComicBookSelectionState } from '@app/comic-books/selectors/comic-
 export class FooterComponent {
   @Input() user: User;
 
-  importCount = 0;
+  unscrapedCount = 0;
   comicCount = 0;
   readCount = 0;
   selectedCount = 0;
@@ -41,7 +41,7 @@ export class FooterComponent {
   constructor(private logger: LoggerModule, private store: Store<any>) {
     this.store.select(selectLibraryState).subscribe(state => {
       this.comicCount = state.totalComics;
-      this.importCount = state.unscrapedComics;
+      this.unscrapedCount = state.unscrapedComics;
       this.deletedCount = state.deletedComics;
     });
     this.store
