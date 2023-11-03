@@ -18,13 +18,13 @@
 
 package org.comixedproject.batch.comicpages.writers;
 
-import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.state.comicpages.PageEvent;
 import org.comixedproject.state.comicpages.PageStateHandler;
+import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -44,7 +44,7 @@ public abstract class AbstractPageWriter implements ItemWriter<Page> {
   @NonNull private PageEvent pageEvent;
 
   @Override
-  public void write(final List<? extends Page> pages) throws Exception {
+  public void write(final Chunk<? extends Page> pages) throws Exception {
     pages.forEach(
         page -> {
           log.trace("Publishing page event: {}", this.pageEvent);

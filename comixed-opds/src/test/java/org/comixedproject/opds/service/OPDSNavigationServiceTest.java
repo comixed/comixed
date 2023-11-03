@@ -98,9 +98,9 @@ public class OPDSNavigationServiceTest {
     assertNotNull(result.getAuthor());
     assertNotNull(result.getTitle());
     assertNotNull(result.getId());
-    assertEquals("/opds/library/", result.getEntries().get(0).getLinks().get(0).getReference());
+    assertEquals("/opds/library", result.getEntries().get(0).getLinks().get(0).getReference());
     assertEquals(
-        "/opds/library/?unread=true", result.getEntries().get(1).getLinks().get(0).getReference());
+        "/opds/library?unread=true", result.getEntries().get(1).getLinks().get(0).getReference());
   }
 
   @Test
@@ -110,25 +110,25 @@ public class OPDSNavigationServiceTest {
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
     assertEquals(
-        "/opds/dates/released/?unread=" + String.valueOf(TEST_UNREAD),
+        "/opds/dates/released?unread=" + String.valueOf(TEST_UNREAD),
         result.getEntries().get(0).getLinks().get(0).getReference());
     assertEquals(
-        "/opds/collections/publishers/?unread=" + String.valueOf(TEST_UNREAD),
+        "/opds/collections/publishers?unread=" + String.valueOf(TEST_UNREAD),
         result.getEntries().get(1).getLinks().get(0).getReference());
     assertEquals(
-        "/opds/collections/series/?unread=" + String.valueOf(TEST_UNREAD),
+        "/opds/collections/series?unread=" + String.valueOf(TEST_UNREAD),
         result.getEntries().get(2).getLinks().get(0).getReference());
     assertEquals(
-        "/opds/collections/characters/?unread=" + String.valueOf(TEST_UNREAD),
+        "/opds/collections/characters?unread=" + String.valueOf(TEST_UNREAD),
         result.getEntries().get(3).getLinks().get(0).getReference());
     assertEquals(
-        "/opds/collections/teams/?unread=" + String.valueOf(TEST_UNREAD),
+        "/opds/collections/teams?unread=" + String.valueOf(TEST_UNREAD),
         result.getEntries().get(4).getLinks().get(0).getReference());
     assertEquals(
-        "/opds/collections/locations/?unread=" + String.valueOf(TEST_UNREAD),
+        "/opds/collections/locations?unread=" + String.valueOf(TEST_UNREAD),
         result.getEntries().get(5).getLinks().get(0).getReference());
     assertEquals(
-        "/opds/collections/stories/?unread=" + String.valueOf(TEST_UNREAD),
+        "/opds/collections/stories?unread=" + String.valueOf(TEST_UNREAD),
         result.getEntries().get(6).getLinks().get(0).getReference());
   }
 
@@ -307,7 +307,7 @@ public class OPDSNavigationServiceTest {
     TestCase.assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
     assertEquals(
-        String.format("/opds/lists/%d/", TEST_READING_LIST_ID),
+        String.format("/opds/lists/%d", TEST_READING_LIST_ID),
         result.getEntries().get(0).getLinks().get(0).getReference());
 
     Mockito.verify(readingListService, Mockito.times(1)).loadReadingListsForUser(TEST_EMAIL);

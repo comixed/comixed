@@ -65,7 +65,7 @@ public class OPDSLibraryController {
   @Timed(value = "comixed.opds.library.get-feed")
   @ResponseBody
   public OPDSNavigationFeed getLibraryFeed(
-      @RequestParam(name = "unread", defaultValue = "false") final boolean unread) {
+      @RequestParam(name = "unread", defaultValue = "false") final Boolean unread) {
     log.info("Loading OPDS library feed: unread={}", unread);
     return this.opdsNavigationService.getLibraryFeed(unread);
   }

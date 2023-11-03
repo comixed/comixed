@@ -60,16 +60,12 @@ public class ComiXedSecurityConfiguration {
     http.cors(Customizer.withDefaults())
         .csrf(AbstractHttpConfigurer::disable)
         .authenticationProvider(this.authenticationProvider)
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-        .and()
-        .exceptionHandling()
-        .authenticationEntryPoint(this.unauthorizedHandler)
-        .and()
-        .antMatcher("/api/**")
-        .authorizeRequests()
-        .anyRequest()
-        .permitAll();
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+        .exceptionHandling(
+            exception -> exception.authenticationEntryPoint(this.unauthorizedHandler))
+        .securityMatcher("/api/**")
+        .authorizeHttpRequests(authz -> authz.anyRequest().permitAll());
     http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
@@ -84,12 +80,9 @@ public class ComiXedSecurityConfiguration {
    */
   @Bean
   public SecurityFilterChain opdsSecurityFilterChain(final HttpSecurity http) throws Exception {
-    http.antMatcher("/opds/**")
-        .authorizeRequests()
-        .anyRequest()
-        .hasRole("READER")
-        .and()
-        .httpBasic();
+    http.securityMatcher("/opds/**")
+        .authorizeHttpRequests(authz -> authz.anyRequest().hasRole("READER"))
+        .httpBasic(Customizer.withDefaults());
     http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
@@ -97,18 +90,14 @@ public class ComiXedSecurityConfiguration {
 
   @Bean
   public SecurityFilterChain runtimeSecurityFilterChain(final HttpSecurity http) throws Exception {
-    http.antMatcher("/actuator/**")
+    http.securityMatcher("/actuator/**")
         .cors(Customizer.withDefaults())
         .csrf(AbstractHttpConfigurer::disable)
-        .authorizeRequests()
-        .anyRequest()
-        .hasRole("ADMIN")
-        .and()
-        .exceptionHandling()
-        .authenticationEntryPoint(this.unauthorizedHandler)
-        .and()
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+        .exceptionHandling(
+            exception -> exception.authenticationEntryPoint(this.unauthorizedHandler))
+        .authorizeHttpRequests(authz -> authz.anyRequest().hasRole("ADMIN"));
     http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();

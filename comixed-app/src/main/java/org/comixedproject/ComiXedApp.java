@@ -18,7 +18,7 @@
 
 package org.comixedproject;
 
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.CommandLineRunner;

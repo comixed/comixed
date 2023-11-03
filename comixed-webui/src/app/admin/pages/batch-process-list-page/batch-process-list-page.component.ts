@@ -59,9 +59,9 @@ export class BatchProcessListPageComponent
   readonly displayedColumns = [
     'name',
     'job-id',
-    'status',
     'start-time',
     'end-time',
+    'status',
     'exit-code',
     'exit-description'
   ];

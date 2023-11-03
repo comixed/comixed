@@ -20,10 +20,10 @@ package org.comixedproject.batch;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.launch.support.SimpleJobLauncher;
+import org.springframework.batch.core.launch.support.TaskExecutorJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.core.step.job.DefaultJobParametersExtractor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -74,17 +74,17 @@ public class BatchConfiguration {
       final JobRepository jobRepository,
       @Qualifier("jobTaskExecutor") final TaskExecutor taskExecutor)
       throws Exception {
-    final SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
-    jobLauncher.setJobRepository(jobRepository);
-    jobLauncher.setTaskExecutor(taskExecutor);
-    jobLauncher.afterPropertiesSet();
-    return jobLauncher;
+    final TaskExecutorJobLauncher taskExecutorJobLauncher = new TaskExecutorJobLauncher();
+    taskExecutorJobLauncher.setJobRepository(jobRepository);
+    taskExecutorJobLauncher.setTaskExecutor(taskExecutor);
+    taskExecutorJobLauncher.afterPropertiesSet();
+    return taskExecutorJobLauncher;
   }
 
   /**
    * Returns the step that launches the processing batch job.
    *
-   * @param stepBuilderFactory the step factory
+   * @param jobRepository the step factory
    * @param processComicsJob the job
    * @param jobLauncher the job launcher
    * @return the step the step
@@ -92,11 +92,10 @@ public class BatchConfiguration {
   @Bean
   @Qualifier("processComicsJobStep")
   public Step processComicsJobStep(
-      final StepBuilderFactory stepBuilderFactory,
+      final JobRepository jobRepository,
       final @Qualifier("processComicsJob") Job processComicsJob,
       final @Qualifier("batchJobLauncher") JobLauncher jobLauncher) {
-    return stepBuilderFactory
-        .get("processComicsJobStep")
+    return new StepBuilder("processComicsJobStep", jobRepository)
         .job(processComicsJob)
         .parametersExtractor(new DefaultJobParametersExtractor())
         .launcher(jobLauncher)

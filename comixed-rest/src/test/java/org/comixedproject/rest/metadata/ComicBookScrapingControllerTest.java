@@ -24,9 +24,9 @@ import static org.comixedproject.rest.metadata.ComicBookScrapingController.MULTI
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
+import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.http.HttpSession;
 import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.model.IssueMetadata;
 import org.comixedproject.metadata.model.VolumeMetadata;

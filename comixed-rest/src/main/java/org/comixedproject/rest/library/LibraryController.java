@@ -31,9 +31,9 @@ import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LI
 
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.comicbooks.ProcessComicsConfiguration;
 import org.comixedproject.batch.comicbooks.UpdateMetadataConfiguration;

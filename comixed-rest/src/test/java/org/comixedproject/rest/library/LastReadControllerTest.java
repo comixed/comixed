@@ -21,9 +21,9 @@ package org.comixedproject.rest.library;
 import static junit.framework.TestCase.*;
 import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
 
+import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.List;
-import javax.servlet.http.HttpSession;
 import org.comixedproject.model.net.comicbooks.LoadUnreadComicBookCountResponse;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;
 import org.comixedproject.service.comicbooks.ComicBookSelectionService;

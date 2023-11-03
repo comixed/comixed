@@ -21,9 +21,9 @@ package org.comixedproject.rest.library;
 import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
 
 import io.micrometer.core.annotation.Timed;
+import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.List;
-import javax.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.net.comicbooks.LoadUnreadComicBookCountResponse;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;

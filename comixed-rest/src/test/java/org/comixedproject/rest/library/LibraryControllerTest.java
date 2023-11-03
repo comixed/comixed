@@ -28,10 +28,10 @@ import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LI
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_COMIC_RENAMING_RULE;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY;
 
+import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import javax.servlet.http.HttpSession;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.net.admin.ClearImageCacheResponse;

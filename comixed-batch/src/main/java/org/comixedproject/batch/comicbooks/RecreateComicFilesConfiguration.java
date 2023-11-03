@@ -25,13 +25,15 @@ import org.comixedproject.batch.comicbooks.writers.RecreateComicFileWriter;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
 
 /**
  * <code>RecreateComicFilesConfiguration</code> defines the process for recreating comic files.
@@ -51,11 +53,10 @@ public class RecreateComicFilesConfiguration {
   @Bean
   @Qualifier("recreateComicFilesJob")
   public Job recreateComicFilesJob(
-      final JobBuilderFactory jobBuilderFactory,
+      final JobRepository jobRepository,
       @Qualifier("recreateComicFileStep") final Step recreateComicFileStep,
       @Qualifier("processComicsJobStep") final Step processComicsJobStep) {
-    return jobBuilderFactory
-        .get("recreateComicFilesJob")
+    return new JobBuilder("recreateComicFilesJob", jobRepository)
         .incrementer(new RunIdIncrementer())
         .start(recreateComicFileStep)
         .next(processComicsJobStep)
@@ -65,13 +66,13 @@ public class RecreateComicFilesConfiguration {
   @Bean
   @Qualifier("recreateComicFileStep")
   public Step recreateComicFileStep(
-      final StepBuilderFactory stepBuilderFactory,
+      final JobRepository jobRepository,
+      final PlatformTransactionManager platformTransactionManager,
       final RecreateComicFileReader reader,
       final RecreateComicFileProcessor processor,
       final RecreateComicFileWriter writer) {
-    return stepBuilderFactory
-        .get("recreateComicFileStep")
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize)
+    return new StepBuilder("recreateComicFileStep", jobRepository)
+        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

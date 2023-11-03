@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.batch.item.Chunk;
 
 @RunWith(MockitoJUnitRunner.class)
 public class NoopWriterTest {
@@ -30,6 +31,6 @@ public class NoopWriterTest {
 
   @Test
   public void testWriter() throws Exception {
-    writer.write(Collections.emptyList());
+    writer.write(Chunk.of(Collections.emptyList()));
   }
 }

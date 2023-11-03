@@ -18,8 +18,8 @@
 
 package org.comixedproject.service.admin;
 
+import jakarta.transaction.Transactional;
 import java.util.List;
-import javax.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
 import org.comixedproject.model.admin.ConfigurationOption;

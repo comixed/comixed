@@ -1,8 +1,8 @@
 package org.comixedproject.model.comicfiles;
 
+import jakarta.persistence.*;
 import java.util.Date;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;

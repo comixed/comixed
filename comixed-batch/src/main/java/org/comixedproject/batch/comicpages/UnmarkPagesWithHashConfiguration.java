@@ -25,13 +25,15 @@ import org.comixedproject.batch.processors.NoopProcessor;
 import org.comixedproject.model.comicpages.Page;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
 
 /**
  * <code>UnmarkPagesWithHashConfiguration</code> defines a process that unmarks all pages with a
@@ -53,17 +55,16 @@ public class UnmarkPagesWithHashConfiguration {
   /**
    * Returns the job bean to delete pages with a hash.
    *
-   * @param jobBuilderFactory the job builder factory
+   * @param jobRepository the job repository
    * @param unmarkPageWithHashStep the unmark page step
    * @return the job
    */
   @Bean
   @Qualifier("unmarkPagesWithHashJob")
   public Job unmarkPagesWithHashJob(
-      final JobBuilderFactory jobBuilderFactory,
+      final JobRepository jobRepository,
       @Qualifier("unmarkPageWithHashStep") final Step unmarkPageWithHashStep) {
-    return jobBuilderFactory
-        .get("unmarkPagesWithHashJob")
+    return new JobBuilder("unmarkPagesWithHashJob", jobRepository)
         .incrementer(new RunIdIncrementer())
         .start(unmarkPageWithHashStep)
         .build();
@@ -72,7 +73,8 @@ public class UnmarkPagesWithHashConfiguration {
   /**
    * The mark page step.
    *
-   * @param stepBuilderFactory the step factory
+   * @param jobRepository the job repository
+   * @param platformTransactionManager the transaction manager
    * @param reader the reader
    * @param processor the processor
    * @param writer the writer
@@ -81,13 +83,13 @@ public class UnmarkPagesWithHashConfiguration {
   @Bean
   @Qualifier("unmarkPageWithHashStep")
   public Step unmarkPageWithHashStep(
-      final StepBuilderFactory stepBuilderFactory,
+      final JobRepository jobRepository,
+      final PlatformTransactionManager platformTransactionManager,
       final UnmarkPageWithHashReader reader,
       final NoopProcessor<Page> processor,
       final UnmarkPageWithHashWriter writer) {
-    return stepBuilderFactory
-        .get("unmarkPageWithHashStep")
-        .<Page, Page>chunk(this.batchChunkSize)
+    return new StepBuilder("unmarkPageWithHashStep", jobRepository)
+        .<Page, Page>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

@@ -19,7 +19,6 @@
 package org.comixedproject.batch.comicbooks.writers;
 
 import java.util.ArrayList;
-import java.util.List;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
@@ -33,6 +32,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.batch.item.Chunk;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComicBookInsertWriterTest {
@@ -44,7 +44,7 @@ public class ComicBookInsertWriterTest {
   @Mock private ComicBook comicBook;
   @Mock private ComicFileDescriptor comicFileDescriptor;
 
-  private List<ComicBook> comicBookList = new ArrayList<>();
+  private Chunk<ComicBook> comicBookList = new Chunk<>(new ArrayList<>());
 
   @Before
   public void setUp() {

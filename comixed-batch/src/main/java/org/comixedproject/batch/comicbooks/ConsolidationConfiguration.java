@@ -32,13 +32,15 @@ import org.comixedproject.batch.writers.NoopWriter;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
 
 /**
  * <code>ConsolidationConfiguration</code> defines the consolidation batch process.
@@ -60,7 +62,7 @@ public class ConsolidationConfiguration {
   /**
    * Returns a consolidate library job bean.
    *
-   * @param jobBuilderFactory the job builder factory
+   * @param jobRepository the job repository
    * @param deleteComicStep the delete comics step
    * @param moveComicStep the move comics step
    * @param deleteEmptyDirectoriesStep the delete empty directories step
@@ -69,12 +71,11 @@ public class ConsolidationConfiguration {
   @Bean
   @Qualifier("consolidateLibraryJob")
   public Job consolidateLibraryJob(
-      final JobBuilderFactory jobBuilderFactory,
+      final JobRepository jobRepository,
       @Qualifier("deleteComicStep") final Step deleteComicStep,
       @Qualifier("moveComicStep") final Step moveComicStep,
       @Qualifier("deleteEmptyDirectoriesStep") final Step deleteEmptyDirectoriesStep) {
-    return jobBuilderFactory
-        .get("consolidateLibraryJob")
+    return new JobBuilder("consolidateLibraryJob", jobRepository)
         .incrementer(new RunIdIncrementer())
         .start(deleteComicStep)
         .next(moveComicStep)
@@ -85,7 +86,8 @@ public class ConsolidationConfiguration {
   /**
    * Returns a delete comic step bean.
    *
-   * @param stepBuilderFactory the step builder factory
+   * @param jobRepository the job repository
+   * @param platformTransactionManager the transaction manager
    * @param reader the reader
    * @param processor the processor
    * @param writer the writer
@@ -94,13 +96,13 @@ public class ConsolidationConfiguration {
   @Bean
   @Qualifier("deleteComicStep")
   public Step deleteComicStep(
-      final StepBuilderFactory stepBuilderFactory,
+      final JobRepository jobRepository,
+      final PlatformTransactionManager platformTransactionManager,
       final DeleteComicReader reader,
       final DeleteComicProcessor processor,
       final PurgeMarkedComicBooksWriter writer) {
-    return stepBuilderFactory
-        .get("deleteComicStep")
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize)
+    return new StepBuilder("deleteComicStep", jobRepository)
+        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
@@ -110,7 +112,8 @@ public class ConsolidationConfiguration {
   /**
    * Returns the move comic step bean.
    *
-   * @param stepBuilderFactory the step builder factory
+   * @param jobRepository the job repository
+   * @param platformTransactionManager the transaction manager
    * @param reader the reader
    * @param processor the processor
    * @param writer the writer
@@ -119,13 +122,13 @@ public class ConsolidationConfiguration {
   @Bean
   @Qualifier("moveComicStep")
   public Step moveComicStep(
-      final StepBuilderFactory stepBuilderFactory,
+      final JobRepository jobRepository,
+      final PlatformTransactionManager platformTransactionManager,
       final MoveComicReader reader,
       final MoveComicProcessor processor,
       final MoveComicBookWriter writer) {
-    return stepBuilderFactory
-        .get("moveComicStep")
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize)
+    return new StepBuilder("moveComicStep", jobRepository)
+        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
@@ -135,7 +138,8 @@ public class ConsolidationConfiguration {
   /**
    * Deletes any empty directory under the library root.
    *
-   * @param stepBuilderFactory the step builder factory
+   * @param jobRepository the job repository
+   * @param platformTransactionManager the transaction manager
    * @param reader the reader
    * @param processor the processor
    * @param writer the writer
@@ -144,13 +148,13 @@ public class ConsolidationConfiguration {
   @Bean
   @Qualifier("deleteEmptyDirectoriesStep")
   public Step deleteEmptyDirectoriesStep(
-      final StepBuilderFactory stepBuilderFactory,
+      final JobRepository jobRepository,
+      final PlatformTransactionManager platformTransactionManager,
       final DeleteEmptyDirectoriesReader reader,
       final DeleteEmptyDirectoriesProcessor processor,
       final NoopWriter<Void> writer) {
-    return stepBuilderFactory
-        .get("deleteEmptyDirectoriesStep")
-        .<File, Void>chunk(this.batchChunkSize)
+    return new StepBuilder("deleteEmptyDirectoriesStep", jobRepository)
+        .<File, Void>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

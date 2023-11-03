@@ -23,13 +23,13 @@ import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LI
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.servlet.http.HttpSession;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.net.DownloadDocument;

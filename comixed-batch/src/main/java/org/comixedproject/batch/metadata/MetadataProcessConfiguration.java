@@ -27,12 +27,14 @@ import org.comixedproject.batch.metadata.writers.ScrapeComicBookWriter;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
 
 /**
  * <code>MetadataProcessConfiguration</code> provides a batch configuration for scraping comics.
@@ -54,18 +56,17 @@ public class MetadataProcessConfiguration {
   /**
    * Returns the job bean to perform the batch comic scraping process.
    *
-   * @param jobBuilderFactory the job builder factory
+   * @param jobRepository the job repository
    * @param scrapeComicBook the scrape comic stet
    * @return the job
    */
   @Bean
   @Qualifier("updateComicBookMetadata")
   public Job updateComicBookMetadata(
-      final JobBuilderFactory jobBuilderFactory,
+      final JobRepository jobRepository,
       final UpdateComicBookMetadataJobListener jobListener,
       @Qualifier("scrapeComicBook") final Step scrapeComicBook) {
-    return jobBuilderFactory
-        .get("updateComicBookMetadata")
+    return new JobBuilder("updateComicBookMetadata", jobRepository)
         .listener(jobListener)
         .start(scrapeComicBook)
         .build();
@@ -74,7 +75,8 @@ public class MetadataProcessConfiguration {
   /**
    * The scrape comic book step.
    *
-   * @param stepBuilderFactory the step builder factory
+   * @param jobRepository the job repository
+   * @param platformTransactionManager the transaction manager
    * @param reader the step reader
    * @param processor the step processor
    * @param writer the step writer
@@ -83,14 +85,14 @@ public class MetadataProcessConfiguration {
   @Bean
   @Qualifier("scrapeComicBook")
   public Step scrapeComicBook(
-      final StepBuilderFactory stepBuilderFactory,
+      final JobRepository jobRepository,
+      final PlatformTransactionManager platformTransactionManager,
       final ScrapeComicBookChunkListener listener,
       final ScrapeComicBookReader reader,
       final ScrapeComicBookProcessor processor,
       final ScrapeComicBookWriter writer) {
-    return stepBuilderFactory
-        .get("scrapeComicBook")
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize)
+    return new StepBuilder("scrapeComicBook", jobRepository)
+        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

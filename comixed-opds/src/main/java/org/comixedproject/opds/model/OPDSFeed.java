@@ -71,7 +71,7 @@ public abstract class OPDSFeed<E extends OPDSFeedEntry> {
   private List<OPDSLink> links =
       new ArrayList<>() {
         {
-          add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, "start", "/opds/"));
+          add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, "start", "/opds"));
           add(new OPDSLink(SEARCH_LINK_TYPE, "search", "/opds/search.xml"));
         }
       };

@@ -20,7 +20,7 @@ package org.comixedproject.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.comixedproject.views.View.UserList;
 

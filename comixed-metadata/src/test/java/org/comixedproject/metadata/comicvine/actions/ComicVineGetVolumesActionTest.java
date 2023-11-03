@@ -63,7 +63,7 @@ public class ComicVineGetVolumesActionTest {
     comicVineServer = new MockWebServer();
     comicVineServer.start();
 
-    final String hostname = String.format("localhost:%s", this.comicVineServer.getPort());
+    final String hostname = String.format("http://localhost:%s", this.comicVineServer.getPort());
     getVolumesAction.setBaseUrl(hostname);
     getVolumesAction.setApiKey(TEST_API_KEY);
     getVolumesAction.setSeries(TEST_VOLUME_NAME);

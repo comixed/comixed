@@ -24,8 +24,8 @@ import static junit.framework.TestCase.assertTrue;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import jakarta.transaction.Transactional;
 import java.util.List;
-import javax.transaction.Transactional;
 import org.comixedproject.model.collections.Issue;
 import org.comixedproject.repositories.RepositoryContext;
 import org.junit.Test;

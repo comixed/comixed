@@ -25,13 +25,15 @@ import org.comixedproject.batch.comicbooks.writers.UpdateComicBooksWriter;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
 
 /**
  * <code>UpdateComicBooksConfiguration</code> defines the process for updating the details for
@@ -56,10 +58,9 @@ public class UpdateComicBooksConfiguration {
   @Bean
   @Qualifier("updateComicBooksJob")
   public Job updateComicBooksJob(
-      final JobBuilderFactory jobBuilderFactory,
+      final JobRepository jobRepository,
       @Qualifier("updateComicBooksStep") final Step updateComicBooksStep) {
-    return jobBuilderFactory
-        .get("updateComicBooksJob")
+    return new JobBuilder("updateComicBooksJob", jobRepository)
         .incrementer(new RunIdIncrementer())
         .start(updateComicBooksStep)
         .build();
@@ -68,13 +69,13 @@ public class UpdateComicBooksConfiguration {
   @Bean
   @Qualifier("updateComicBooksStep")
   public Step updateComicBooksStep(
-      final StepBuilderFactory stepBuilderFactory,
+      final JobRepository jobRepository,
+      final PlatformTransactionManager platformTransactionManager,
       final UpdateComicBooksReader reader,
       final UpdateComicBooksProcessor processor,
       final UpdateComicBooksWriter writer) {
-    return stepBuilderFactory
-        .get("updateComicBooksStep")
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize)
+    return new StepBuilder("updateComicBooksStep", jobRepository)
+        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

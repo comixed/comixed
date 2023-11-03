@@ -252,6 +252,12 @@ public class ComicStateMachineConfiguration
         // the comic was marked for deletion
         .and()
         .withExternal()
+        .source(ComicState.UNPROCESSED)
+        .target(ComicState.DELETED)
+        .event(ComicEvent.deleteComic)
+        // the comic was marked for deletion
+        .and()
+        .withExternal()
         .source(ComicState.ADDED)
         .target(ComicState.DELETED)
         .event(ComicEvent.deleteComic)

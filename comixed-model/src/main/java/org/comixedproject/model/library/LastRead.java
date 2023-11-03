@@ -19,9 +19,9 @@
 package org.comixedproject.model.library;
 
 import com.fasterxml.jackson.annotation.*;
+import jakarta.persistence.*;
 import java.util.Date;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.user.ComiXedUser;
