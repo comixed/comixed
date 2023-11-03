@@ -19,7 +19,6 @@
 package org.comixedproject.batch.comicbooks.writers;
 
 import java.util.ArrayList;
-import java.util.List;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
@@ -29,6 +28,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.batch.item.Chunk;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MoveComicBookWriterTest {
@@ -36,7 +36,7 @@ public class MoveComicBookWriterTest {
   @Mock private ComicStateHandler comicStateHandler;
   @Mock private ComicBook comicBook;
 
-  private List<ComicBook> comicBookList = new ArrayList<>();
+  private Chunk<ComicBook> comicBookList = new Chunk<>(new ArrayList<>());
 
   @Test
   public void testWrite() {

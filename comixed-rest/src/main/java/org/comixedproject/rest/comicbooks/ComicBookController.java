@@ -22,6 +22,7 @@ import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LI
 
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
+import jakarta.servlet.http.HttpSession;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +30,6 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import javax.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;

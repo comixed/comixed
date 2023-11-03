@@ -96,7 +96,7 @@ public class OPDSAcquisitionService {
             new OPDSLink(
                 NAVIGATION_FEED_LINK_TYPE,
                 SELF,
-                String.format("/opds/collections/%s/%s/", type, name)));
+                String.format("/opds/collections/%s/%s", type, name)));
     return feed;
   }
 
@@ -170,7 +170,7 @@ public class OPDSAcquisitionService {
               String.valueOf(READING_LIST_FACTOR_ID + list.getId()));
       response
           .getLinks()
-          .add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, String.format("/opds/lists/%d/", id)));
+          .add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, String.format("/opds/lists/%d", id)));
       list.getEntries().stream()
           .forEach(
               comic -> {

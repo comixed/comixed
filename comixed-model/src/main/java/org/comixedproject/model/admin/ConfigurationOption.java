@@ -21,9 +21,9 @@ package org.comixedproject.model.admin;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import jakarta.persistence.*;
 import java.util.Date;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.comixedproject.views.View;
 

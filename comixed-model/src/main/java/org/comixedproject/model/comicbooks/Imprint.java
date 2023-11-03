@@ -20,8 +20,8 @@ package org.comixedproject.model.comicbooks;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import jakarta.persistence.*;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.Getter;
 import org.comixedproject.views.View;
 

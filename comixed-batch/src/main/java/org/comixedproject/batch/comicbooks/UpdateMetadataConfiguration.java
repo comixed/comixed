@@ -25,14 +25,16 @@ import org.comixedproject.batch.comicbooks.writers.UpdateMetadataWriter;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.transaction.PlatformTransactionManager;
 
 /**
  * <code>UpdateMetadataConfiguration</code> defines a batch process that updates the metadata within
@@ -52,17 +54,16 @@ public class UpdateMetadataConfiguration {
   /**
    * Returns the job bean to update comic metadata.
    *
-   * @param jobBuilderFactory the job builder factory
+   * @param jobRepository the job repository
    * @param updateMetadataStep the update metadata step
    * @return the job
    */
   @Bean
   @Qualifier("updateMetadataJob")
   public Job updateMetadataJob(
-      final JobBuilderFactory jobBuilderFactory,
+      final JobRepository jobRepository,
       @Qualifier("updateMetadataStep") final Step updateMetadataStep) {
-    return jobBuilderFactory
-        .get("updateMetadataJob")
+    return new JobBuilder("updateMetadataJob", jobRepository)
         .incrementer(new RunIdIncrementer())
         .start(updateMetadataStep)
         .build();
@@ -71,7 +72,8 @@ public class UpdateMetadataConfiguration {
   /**
    * The update metadata step.
    *
-   * @param stepBuilderFactory the step factory
+   * @param jobRepository the job repository
+   * @param platformTransactionManager the transaction manager
    * @param reader the reader
    * @param processor the processor
    * @param writer the writer
@@ -80,13 +82,13 @@ public class UpdateMetadataConfiguration {
   @Bean
   @Qualifier("updateMetadataStep")
   public Step updateMetadataStep(
-      final StepBuilderFactory stepBuilderFactory,
+      final JobRepository jobRepository,
+      final PlatformTransactionManager platformTransactionManager,
       final UpdateMetadataReader reader,
       final UpdateMetadataProcessor processor,
       final UpdateMetadataWriter writer) {
-    return stepBuilderFactory
-        .get("updateMetadataStep")
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize)
+    return new StepBuilder("updateMetadataStep", jobRepository)
+        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

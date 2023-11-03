@@ -18,12 +18,12 @@
 
 package org.comixedproject.batch.comicbooks.writers;
 
-import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.state.comicbooks.ComicEvent;
+import org.springframework.batch.item.Chunk;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,7 +42,7 @@ public class ComicInsertWriter extends AbstractComicBookWriter {
   }
 
   @Override
-  public void write(final List<? extends ComicBook> comics) {
+  public void write(final Chunk<? extends ComicBook> comics) {
     super.write(comics);
     comics.forEach(
         comicBook -> {

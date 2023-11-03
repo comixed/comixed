@@ -608,12 +608,11 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
 
   @Modifying
   @Query(
-      "UPDATE ComicBook c SET c.consolidating = true WHERE c.id IN (:ids) AND c.consolidating IS FALSE")
+      "UPDATE ComicBook c SET c.consolidating = true WHERE c.id IN (:ids) AND c.consolidating = FALSE")
   void markForConsolidationById(@Param("ids") List<Long> ids);
 
   @Modifying
-  @Query(
-      "UPDATE ComicBook c SET c.recreating = true WHERE c.id IN (:ids) AND c.recreating IS FALSE")
+  @Query("UPDATE ComicBook c SET c.recreating = true WHERE c.id IN (:ids) AND c.recreating = FALSE")
   void markForRecreationById(@Param("ids") List<Long> ids);
 
   @Query("SELECT b FROM ComicBook b WHERE b.comicDetail.id IN (:comicDetailIds)")

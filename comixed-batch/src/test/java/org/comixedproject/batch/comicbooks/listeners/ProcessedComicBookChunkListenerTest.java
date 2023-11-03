@@ -38,7 +38,7 @@ import org.springframework.batch.item.ExecutionContext;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProcessedComicBookChunkListenerTest {
-  private static final int TEST_WRITE_COUNT = 328;
+  private static final long TEST_WRITE_COUNT = 328L;
   private static final long TEST_TOTAL_COMICS = 77L;
   private static final Date TEST_JOB_STARTED = new Date();
   private static final String TEST_STEP_NAME = "step-name";

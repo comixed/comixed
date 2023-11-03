@@ -22,10 +22,10 @@ import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LI
 
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
-import javax.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.lists.ReadingList;

@@ -48,7 +48,7 @@ public class MarkBlockedPagesProcessorTest {
   @Mock private BlockedHashService blockedHashService;
   @Mock private ComicBook comicBook;
   @Mock private Page page;
-  @Mock private Map<String, JobParameter> parameters;
+  @Mock private Map<String, JobParameter<?>> parameters;
   @Mock private JobParameters jobParameters;
   @Mock private JobExecution jobExecution;
   @Mock private StepExecution stepExecution;

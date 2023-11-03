@@ -28,13 +28,15 @@ import org.comixedproject.batch.writers.NoopWriter;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
 
 /**
  * <code>PurgeLibraryConfiguration</code> defines a batch process that deletes comics that have been
@@ -53,18 +55,17 @@ public class PurgeLibraryConfiguration {
   /**
    * Returns the purge library job.
    *
-   * @param jobBuilderFactory the job factory
+   * @param jobRepository the job repository
    * @param purgeMarkedComicsStep the purge library step
    * @return the job
    */
   @Bean
   @Qualifier("purgeLibraryJob")
   public Job purgeLibraryJob(
-      final JobBuilderFactory jobBuilderFactory,
+      final JobRepository jobRepository,
       @Qualifier("purgeMarkedComicsStep") final Step purgeMarkedComicsStep,
       @Qualifier("removeComicBooksWithoutDetailsStep") final Step removeMalformedComicBooksStep) {
-    return jobBuilderFactory
-        .get("purgeLibraryJob")
+    return new JobBuilder("purgeLibraryJob", jobRepository)
         .incrementer(new RunIdIncrementer())
         .start(removeMalformedComicBooksStep)
         .next(purgeMarkedComicsStep)
@@ -74,7 +75,8 @@ public class PurgeLibraryConfiguration {
   /**
    * Returns the remove malformed comics step.
    *
-   * @param stepBuilderFactory the step factory
+   * @param jobRepository the job repository
+   * @param platformTransactionManager the transaction manager
    * @param reader the reader
    * @param processor the processor
    * @param writer the writer
@@ -83,13 +85,13 @@ public class PurgeLibraryConfiguration {
   @Bean
   @Qualifier("removeComicBooksWithoutDetailsStep")
   public Step removeComicBooksWithoutDetailsStep(
-      final StepBuilderFactory stepBuilderFactory,
+      final JobRepository jobRepository,
+      final PlatformTransactionManager platformTransactionManager,
       final RemoveComicBooksWithoutDetailsReader reader,
       final RemoveComicBooksWithoutDetailsProcessor processor,
       final NoopWriter<ComicBook> writer) {
-    return stepBuilderFactory
-        .get("removeComicBooksWithoutDetailsStep")
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize)
+    return new StepBuilder("removeComicBooksWithoutDetailsStep", jobRepository)
+        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
@@ -99,7 +101,8 @@ public class PurgeLibraryConfiguration {
   /**
    * Returns the purge marked comics step.
    *
-   * @param stepBuilderFactory the step factory
+   * @param jobRepository the job repository
+   * @param platformTransactionManager the transaction manager
    * @param reader the reader
    * @param processor the processor
    * @param writer the writer
@@ -108,13 +111,13 @@ public class PurgeLibraryConfiguration {
   @Bean
   @Qualifier("purgeMarkedComicsStep")
   public Step purgeMarkedComicsStep(
-      final StepBuilderFactory stepBuilderFactory,
+      final JobRepository jobRepository,
+      final PlatformTransactionManager platformTransactionManager,
       final PurgeMarkedComicsReader reader,
       final PurgeMarkedComicsProcessor processor,
       final PurgeMarkedComicBooksWriter writer) {
-    return stepBuilderFactory
-        .get("purgeMarkedComicsStep")
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize)
+    return new StepBuilder("purgeMarkedComicsStep", jobRepository)
+        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

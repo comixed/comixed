@@ -50,7 +50,7 @@ public class LoadFileContentsProcessorTest {
   @Mock private ComicMetadataContentAdaptor comicMetadataContentAdaptor;
   @Mock private ComicBook comicBook;
   @Mock private List<Page> pageList;
-  @Mock private Map<String, JobParameter> parameters;
+  @Mock private Map<String, JobParameter<?>> parameters;
   @Mock private JobParameters jobParameters;
   @Mock private JobExecution jobExecution;
   @Mock private StepExecution stepExecution;

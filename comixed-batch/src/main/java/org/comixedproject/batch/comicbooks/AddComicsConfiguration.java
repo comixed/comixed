@@ -32,13 +32,15 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
 
 /**
  * <code>AddComicsConfiguration</code> defines the batch process for adding comics to the library.
@@ -58,7 +60,7 @@ public class AddComicsConfiguration {
   /**
    * Returns the add comics batch job.
    *
-   * @param jobBuilderFactory the job factory
+   * @param jobRepository the job repository
    * @param jobListener the job listener
    * @param createInsertStep the insert step
    * @param recordInsertedStep the post-insert step
@@ -68,13 +70,12 @@ public class AddComicsConfiguration {
   @Bean
   @Qualifier("addComicsToLibraryJob")
   public Job addComicsToLibraryJob(
-      final JobBuilderFactory jobBuilderFactory,
       final AddComicsToLibraryJobListener jobListener,
+      final JobRepository jobRepository,
       @Qualifier("createInsertStep") final Step createInsertStep,
       @Qualifier("recordInsertedStep") Step recordInsertedStep,
       @Qualifier("processComicsJobStep") Step processComicsJobStep) {
-    return jobBuilderFactory
-        .get("addComicsToLibraryJob")
+    return new JobBuilder("addComicsToLibraryJob", jobRepository)
         .incrementer(new RunIdIncrementer())
         .listener(jobListener)
         .start(createInsertStep)
@@ -86,7 +87,8 @@ public class AddComicsConfiguration {
   /**
    * Returns the insert step.
    *
-   * @param stepBuilderFactory the step factory
+   * @param jobRepository the job repository
+   * @param platformTransactionManager the transaction manager
    * @param stepExecutionListener the step listener
    * @param reader the reader
    * @param processor the processor
@@ -96,16 +98,16 @@ public class AddComicsConfiguration {
   @Bean
   @Qualifier("createInsertStep")
   public Step createInsertStep(
-      final StepBuilderFactory stepBuilderFactory,
+      final JobRepository jobRepository,
+      final PlatformTransactionManager platformTransactionManager,
       final CreateInsertStepExecutionListener stepExecutionListener,
       final ComicFileDescriptorReader reader,
       final ComicInsertProcessor processor,
       final ComicInsertWriter writer,
       final ProcessedComicChunkListener chunkListener) {
-    return stepBuilderFactory
-        .get("createInsertStep")
+    return new StepBuilder("createInsertStep", jobRepository)
         .listener(stepExecutionListener)
-        .<ComicFileDescriptor, ComicBook>chunk(this.batchChunkSize)
+        .<ComicFileDescriptor, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
@@ -116,7 +118,8 @@ public class AddComicsConfiguration {
   /**
    * Returns the record inserted step.
    *
-   * @param stepBuilderFactory the step factory
+   * @param jobRepository the job repository
+   * @param platformTransactionManager the transaction manager
    * @param chunkListener the chunk listener
    * @param reader the reader
    * @param processor the processor
@@ -126,14 +129,14 @@ public class AddComicsConfiguration {
   @Bean
   @Qualifier("recordInsertedStep")
   public Step recordInsertedStep(
-      final StepBuilderFactory stepBuilderFactory,
+      final JobRepository jobRepository,
+      final PlatformTransactionManager platformTransactionManager,
       final ProcessedComicChunkListener chunkListener,
       final RecordInsertedReader reader,
       final NoopComicProcessor processor,
       final ReaderInsertedWriter writer) {
-    return stepBuilderFactory
-        .get("recordInsertedStep")
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize)
+    return new StepBuilder("recordInsertedStep", jobRepository)
+        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

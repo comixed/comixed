@@ -21,9 +21,9 @@ package org.comixedproject.rest.comicbooks;
 import static junit.framework.TestCase.*;
 import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
 
+import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.http.HttpSession;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.net.comicbooks.AddComicBookSelectionsByIdRequest;
 import org.comixedproject.model.net.comicbooks.MultipleComicBooksSelectionRequest;

@@ -20,6 +20,8 @@ package org.comixedproject.service.batch;
 
 import static junit.framework.TestCase.*;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,13 +44,13 @@ import org.springframework.batch.core.launch.NoSuchJobException;
 @RunWith(MockitoJUnitRunner.class)
 public class BatchProcessesServiceTest {
   private static final String TEST_JOB_NAME = "jobName:";
-  private static final int TEST_INSTANCE_COUNT = 1;
+  private static final long TEST_INSTANCE_COUNT = 1L;
   private static final Long TEST_INSTANCE_ID = RandomUtils.nextLong();
   private static final Long TEST_JOB_ID = RandomUtils.nextLong();
   private static final BatchStatus TEST_STATUS =
       BatchStatus.values()[RandomUtils.nextInt(BatchStatus.values().length)];
-  private static final Date TEST_START_TIME = new Date();
-  private static final Date TEST_END_TIME = new Date();
+  private static final LocalDateTime TEST_START_TIME = LocalDateTime.now();
+  private static final LocalDateTime TEST_END_TIME = LocalDateTime.now();
   private static final ExitStatus TEST_EXIT_STATUS = ExitStatus.COMPLETED;
 
   @InjectMocks private BatchProcessesService service;
@@ -105,14 +107,19 @@ public class BatchProcessesServiceTest {
     assertEquals(TEST_INSTANCE_ID, batchProcess.getInstanceId());
     assertEquals(TEST_JOB_ID, batchProcess.getJobId());
     assertSame(TEST_STATUS, batchProcess.getStatus());
-    assertEquals(TEST_START_TIME, batchProcess.getStartTime());
-    assertEquals(TEST_END_TIME, batchProcess.getEndTime());
+    assertEquals(
+        Date.from(TEST_START_TIME.atZone(ZoneId.systemDefault()).toInstant()),
+        batchProcess.getStartTime());
+    assertEquals(
+        Date.from(TEST_END_TIME.atZone(ZoneId.systemDefault()).toInstant()),
+        batchProcess.getEndTime());
     assertSame(TEST_EXIT_STATUS.getExitCode(), batchProcess.getExitCode());
     assertEquals(TEST_EXIT_STATUS.getExitDescription(), batchProcess.getExitDescription());
 
     Mockito.verify(jobExplorer, Mockito.times(1)).getJobNames();
     Mockito.verify(jobExplorer, Mockito.times(1))
-        .getJobInstances(TEST_JOB_NAME, 0, TEST_INSTANCE_COUNT);
-    Mockito.verify(jobExplorer, Mockito.times(TEST_INSTANCE_COUNT)).getJobExecutions(jobInstance);
+        .getJobInstances(TEST_JOB_NAME, 0, Math.toIntExact(TEST_INSTANCE_COUNT));
+    Mockito.verify(jobExplorer, Mockito.times(Math.toIntExact(TEST_INSTANCE_COUNT)))
+        .getJobExecutions(jobInstance);
   }
 }

@@ -19,8 +19,8 @@
 package org.comixedproject.rest.comicbooks;
 
 import io.micrometer.core.annotation.Timed;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
-import javax.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.net.comicbooks.AddComicBookSelectionsByIdRequest;

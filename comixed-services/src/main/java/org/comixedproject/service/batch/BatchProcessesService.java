@@ -18,7 +18,9 @@
 
 package org.comixedproject.service.batch;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.batch.BatchProcess;
@@ -53,7 +55,7 @@ public class BatchProcessesService {
             name -> {
               log.debug("Loading job instance for job: {}", name);
               try {
-                final int count = this.jobExplorer.getJobInstanceCount(name);
+                final int count = Math.toIntExact(this.jobExplorer.getJobInstanceCount(name));
                 this.jobExplorer
                     .getJobInstances(name, 0, count)
                     .forEach(
@@ -73,8 +75,18 @@ public class BatchProcessesService {
                                         jobExecution.getJobId(),
                                         jobInstance.getInstanceId(),
                                         jobExecution.getStatus(),
-                                        jobExecution.getStartTime(),
-                                        jobExecution.getEndTime(),
+                                        Date.from(
+                                            jobExecution
+                                                .getStartTime()
+                                                .atZone(ZoneId.systemDefault())
+                                                .toInstant()),
+                                        jobExecution.getEndTime() != null
+                                            ? Date.from(
+                                                jobExecution
+                                                    .getEndTime()
+                                                    .atZone(ZoneId.systemDefault())
+                                                    .toInstant())
+                                            : null,
                                         jobExecution.getExitStatus().getExitCode(),
                                         jobExecution.getExitStatus().getExitDescription()));
                               });

@@ -18,8 +18,8 @@
 package org.comixedproject.model.comicpages;
 
 import com.fasterxml.jackson.annotation.*;
+import jakarta.persistence.*;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;

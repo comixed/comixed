@@ -31,7 +31,7 @@ import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestComponent;
+import org.springframework.stereotype.Component;
 
 /**
  * <code>DeleteComicProcessor</code> deletes comics, removing the file from the database as well as
@@ -39,7 +39,7 @@ import org.springframework.boot.test.context.TestComponent;
  *
  * @author Darryl L. Pierce
  */
-@TestComponent
+@Component
 @Log4j2
 public class DeleteComicProcessor
     implements ItemProcessor<ComicBook, ComicBook>, StepExecutionListener {

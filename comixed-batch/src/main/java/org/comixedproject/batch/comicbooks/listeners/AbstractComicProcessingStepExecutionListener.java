@@ -22,7 +22,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
-import org.springframework.batch.item.ExecutionContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -37,8 +36,7 @@ public abstract class AbstractComicProcessingStepExecutionListener
     extends AbstractComicProcessingListener implements StepExecutionListener {
   @Override
   public ExitStatus afterStep(final StepExecution stepExecution) {
-    final ExecutionContext context = stepExecution.getJobExecution().getExecutionContext();
-    this.doPublishState(context);
+    this.doPublishState(stepExecution.getJobExecution().getExecutionContext());
     return null;
   }
 }
