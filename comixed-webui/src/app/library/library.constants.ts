@@ -37,7 +37,10 @@ export const UPDATE_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
 export const LOAD_SCRAPING_VOLUMES_URL = `${API_ROOT_URL}/metadata/sources/\${sourceId}/volumes`;
 export const LOAD_SCRAPING_ISSUE_URL = `${API_ROOT_URL}/metadata/sources/\${sourceId}/volumes/\${volumeId}/issues/\${issueNumber}`;
 
-export const SCRAPE_COMIC_URL = `${API_ROOT_URL}/metadata/sources/\${sourceId}/comics/\${comicId}`;
+export const SCRAPE_SINGLE_BOOK_COMIC_URL = `${API_ROOT_URL}/metadata/sources/\${sourceId}/comics/single/\${comicId}`;
+export const START_MULTI_BOOK_SCRAPING_URL = `${API_ROOT_URL}/metadata/scraping/selected`;
+export const REMOVE_MULTI_BOOK_COMIC_URL = `${API_ROOT_URL}/metadata/scraping/\${comicBookId}`;
+export const SCRAPE_MULTI_BOOK_COMIC_URL = `${API_ROOT_URL}/metadata/sources/\${sourceId}/comics/multi/\${comicBookId}`;
 
 export const CLEAR_METADATA_CACHE_URL = `${API_ROOT_URL}/metadata/cache`;
 export const START_METADATA_UPDATE_PROCESS_URL = `${API_ROOT_URL}/metadata/batch/start`;

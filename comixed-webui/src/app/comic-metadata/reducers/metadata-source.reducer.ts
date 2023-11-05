@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   clearMetadataSource,
   deleteMetadataSource,
@@ -66,3 +66,8 @@ export const reducer = createReducer(
   on(metadataSourceDeleted, state => ({ ...state, busy: false, source: null })),
   on(deleteMetadataSourceFailed, state => ({ ...state, busy: false }))
 );
+
+export const metadataSourceFeature = createFeature({
+  name: METADATA_SOURCE_FEATURE_KEY,
+  reducer
+});

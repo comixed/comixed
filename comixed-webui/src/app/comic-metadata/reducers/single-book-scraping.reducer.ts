@@ -16,35 +16,35 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   clearMetadataCache,
-  clearMetadataCacheFailed,
-  comicScraped,
+  clearMetadataCacheFailure,
   issueMetadataLoaded,
   loadIssueMetadata,
   loadIssueMetadataFailed,
   loadVolumeMetadata,
   loadVolumeMetadataFailed,
-  metadataCacheCleared,
-  startMetadataUpdateProcessSuccess,
+  clearMetadataCacheSuccess,
   resetMetadataState,
-  scrapeComic,
-  scrapeComicFailed,
+  scrapeSingleComicBook,
+  scrapeSingleComicBookFailure,
+  scrapeSingleComicBookSuccess,
   setAutoSelectExactMatch,
   setChosenMetadataSource,
   setConfirmBeforeScraping,
   startMetadataUpdateProcess,
   startMetadataUpdateProcessFailure,
+  startMetadataUpdateProcessSuccess,
   volumeMetadataLoaded
-} from '@app/comic-metadata/actions/metadata.actions';
+} from '@app/comic-metadata/actions/single-book-scraping.actions';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import { IssueMetadata } from '@app/comic-metadata/models/issue-metadata';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 
-export const METADATA_FEATURE_KEY = 'metadata_state';
+export const SINGLE_BOOK_SCRAPING_FEATURE_KEY = 'single_book_scraping_state';
 
-export interface MetadataState {
+export interface SingleBookScrapingState {
   busy: boolean;
   loadingRecords: boolean;
   clearingCache: boolean;
@@ -55,7 +55,7 @@ export interface MetadataState {
   autoSelectExactMatch: boolean;
 }
 
-export const initialState: MetadataState = {
+export const initialState: SingleBookScrapingState = {
   busy: false,
   loadingRecords: false,
   clearingCache: false,
@@ -100,21 +100,24 @@ export const reducer = createReducer(
     scrapingIssue: action.issue
   })),
   on(loadIssueMetadataFailed, state => ({ ...state, loadingRecords: false })),
-  on(scrapeComic, state => ({ ...state, loadingRecords: true })),
-  on(comicScraped, state => ({
+  on(scrapeSingleComicBook, state => ({ ...state, loadingRecords: true })),
+  on(scrapeSingleComicBookSuccess, state => ({
     ...state,
     loadingRecords: false,
     volumes: [],
     scrapingIssue: null
   })),
-  on(scrapeComicFailed, state => ({ ...state, loadingRecords: false })),
+  on(scrapeSingleComicBookFailure, state => ({
+    ...state,
+    loadingRecords: false
+  })),
   on(setChosenMetadataSource, (state, action) => ({
     ...state,
     metadataSource: action.metadataSource
   })),
   on(clearMetadataCache, state => ({ ...state, clearingCache: true })),
-  on(metadataCacheCleared, state => ({ ...state, clearingCache: false })),
-  on(clearMetadataCacheFailed, state => ({ ...state, clearingCache: false })),
+  on(clearMetadataCacheSuccess, state => ({ ...state, clearingCache: false })),
+  on(clearMetadataCacheFailure, state => ({ ...state, clearingCache: false })),
   on(startMetadataUpdateProcess, state => ({ ...state, busy: true })),
   on(startMetadataUpdateProcessSuccess, state => ({ ...state, busy: false })),
   on(startMetadataUpdateProcessFailure, state => ({
@@ -122,3 +125,8 @@ export const reducer = createReducer(
     busy: false
   }))
 );
+
+export const singleBookScrapingFeature = createFeature({
+  name: SINGLE_BOOK_SCRAPING_FEATURE_KEY,
+  reducer
+});

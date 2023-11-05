@@ -21,8 +21,14 @@ import { AdminGuard } from '../user';
 import { NgModule } from '@angular/core';
 import { MetadataProcessPageComponent } from '@app/comic-metadata/pages/metadata-process-page/metadata-process-page.component';
 import { FetchIssuesPageComponent } from '@app/comic-metadata/pages/fetch-issues-page/fetch-issues-page.component';
+import { ScrapingPageComponent } from '@app/comic-metadata/pages/scraping-page/scraping-page.component';
 
 const routes: Routes = [
+  {
+    path: 'metadata/scraping',
+    component: ScrapingPageComponent,
+    canActivate: [AdminGuard]
+  },
   {
     path: 'metadata/process',
     component: MetadataProcessPageComponent,

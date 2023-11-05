@@ -21,7 +21,7 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { TranslateService } from '@ngx-translate/core';
-import { startMetadataUpdateProcess } from '@app/comic-metadata/actions/metadata.actions';
+import { startMetadataUpdateProcess } from '@app/comic-metadata/actions/single-book-scraping.actions';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { SKIP_CACHE_PREFERENCE } from '@app/library/library.constants';
 import { Subscription } from 'rxjs';

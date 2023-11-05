@@ -16,20 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { initialState, MetadataState, reducer } from './metadata.reducer';
+import {
+  initialState,
+  reducer,
+  SingleBookScrapingState
+} from './single-book-scraping.reducer';
 import {
   clearMetadataCache,
-  clearMetadataCacheFailed,
-  comicScraped,
+  clearMetadataCacheFailure,
+  clearMetadataCacheSuccess,
   issueMetadataLoaded,
   loadIssueMetadata,
   loadIssueMetadataFailed,
   loadVolumeMetadata,
   loadVolumeMetadataFailed,
-  metadataCacheCleared,
   resetMetadataState,
-  scrapeComic,
-  scrapeComicFailed,
+  scrapeSingleComicBook,
+  scrapeSingleComicBookFailure,
+  scrapeSingleComicBookSuccess,
   setAutoSelectExactMatch,
   setChosenMetadataSource,
   setConfirmBeforeScraping,
@@ -37,7 +41,7 @@ import {
   startMetadataUpdateProcessFailure,
   startMetadataUpdateProcessSuccess,
   volumeMetadataLoaded
-} from '@app/comic-metadata/actions/metadata.actions';
+} from '@app/comic-metadata/actions/single-book-scraping.actions';
 import { COMIC_BOOK_4 } from '@app/comic-books/comic-books.fixtures';
 import {
   METADATA_SOURCE_1,
@@ -47,7 +51,7 @@ import {
   SCRAPING_VOLUME_3
 } from '@app/comic-metadata/comic-metadata.fixtures';
 
-describe('Scraping Reducer', () => {
+describe('SingleBookScraping Reducer', () => {
   const SERIES = 'The Series';
   const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
@@ -59,7 +63,7 @@ describe('Scraping Reducer', () => {
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const IDS = [7, 17, 65, 1, 29, 71];
 
-  let state: MetadataState;
+  let state: SingleBookScrapingState;
 
   beforeEach(() => {
     state = { ...initialState };
@@ -259,7 +263,7 @@ describe('Scraping Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, loadingRecords: false },
-        scrapeComic({
+        scrapeSingleComicBook({
           metadataSource: METADATA_SOURCE,
           comic: COMIC,
           issueId: SCRAPING_ISSUE.id,
@@ -271,41 +275,44 @@ describe('Scraping Reducer', () => {
     it('sets the loading records flag', () => {
       expect(state.loadingRecords).toBeTrue();
     });
-  });
 
-  describe('when a comic is scraped', () => {
-    beforeEach(() => {
-      state = reducer(
-        {
-          ...state,
-          loadingRecords: true,
-          volumes: VOLUMES,
-          scrapingIssue: SCRAPING_ISSUE
-        },
-        comicScraped()
-      );
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          {
+            ...state,
+            loadingRecords: true,
+            volumes: VOLUMES,
+            scrapingIssue: SCRAPING_ISSUE
+          },
+          scrapeSingleComicBookSuccess()
+        );
+      });
+
+      it('clears the loading records flag', () => {
+        expect(state.loadingRecords).toBeFalse();
+      });
+
+      it('clears the scraping volumes', () => {
+        expect(state.volumes).toEqual([]);
+      });
+
+      it('clears the scraping issue', () => {
+        expect(state.scrapingIssue).toBeNull();
+      });
     });
 
-    it('clears the loading records flag', () => {
-      expect(state.loadingRecords).toBeFalse();
-    });
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, loadingRecords: true },
+          scrapeSingleComicBookFailure()
+        );
+      });
 
-    it('clears the scraping volumes', () => {
-      expect(state.volumes).toEqual([]);
-    });
-
-    it('clears the scraping issue', () => {
-      expect(state.scrapingIssue).toBeNull();
-    });
-  });
-
-  describe('failure to scrape a comic', () => {
-    beforeEach(() => {
-      state = reducer({ ...state, loadingRecords: true }, scrapeComicFailed());
-    });
-
-    it('clears the loading records flag', () => {
-      expect(state.loadingRecords).toBeFalse();
+      it('clears the loading records flag', () => {
+        expect(state.loadingRecords).toBeFalse();
+      });
     });
   });
 
@@ -330,31 +337,31 @@ describe('Scraping Reducer', () => {
     it('sets the clearing cache flag', () => {
       expect(state.clearingCache).toBeTrue();
     });
-  });
 
-  describe('successfully cleared the metadata cache', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, clearingCache: true },
-        metadataCacheCleared()
-      );
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, clearingCache: true },
+          clearMetadataCacheSuccess()
+        );
+      });
+
+      it('clears the clearing cache flag', () => {
+        expect(state.clearingCache).toBeFalse();
+      });
     });
 
-    it('clears the clearing cache flag', () => {
-      expect(state.clearingCache).toBeFalse();
-    });
-  });
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, clearingCache: true },
+          clearMetadataCacheFailure()
+        );
+      });
 
-  describe('failed to clear the metadata cache', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, clearingCache: true },
-        clearMetadataCacheFailed()
-      );
-    });
-
-    it('clears the clearing cache flag', () => {
-      expect(state.clearingCache).toBeFalse();
+      it('clears the clearing cache flag', () => {
+        expect(state.clearingCache).toBeFalse();
+      });
     });
   });
 

@@ -1,0 +1,164 @@
+<div
+  *ngIf="showPopup && !!popupComicDetail"
+  class="cx-hover cx-centered cx-width-25 cx-border-primary-1"
+>
+  <mat-card appearance="outlined">
+    <mat-card-title class="cx-text-nowrap">
+      {{ popupComicDetail | comicTitle }}
+    </mat-card-title>
+    <mat-card-subtitle
+      *ngIf="!!popupComicDetail.title && popupComicDetail.length > 0"
+      class="cx-text-nowrap"
+    >
+      {{ popupComicDetail.title }}
+    </mat-card-subtitle>
+    <mat-card-content class="cx-padding-5">
+      <img
+        loading="lazy"
+        [src]="popupComicDetail | comicCoverUrl"
+        width="100%"
+        height="auto"
+        [alt]="popupComicDetail | comicTitle"
+      />
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<h2>{{ "scraping-page.page-title" | translate }}</h2>
+
+<div *ngIf="!started" class="cx-width-100 cx-align-content-center">
+  <p>{{ "scraping-page.inactive.page-content" | translate }}</p>
+
+  <button
+    id="cx-show-all-comics-button"
+    class="cx-action-button"
+    mat-raised-button
+    color="primary"
+    routerLink="/library/all"
+  >
+    <mat-icon>library_books</mat-icon>
+    <mat-label>
+      {{ "scraping-page.button.show-all-comics" | translate }}
+    </mat-label>
+  </button>
+</div>
+
+<div *ngIf="started" class="cx-horizontal-container cx-width-100">
+  <div class="cx-width-25">
+    <h3>
+      {{
+        "scraping.current-comic.title"
+          | translate: { count: comicBooks?.length }
+      }}
+    </h3>
+    <mat-card>
+      <mat-card-title>
+        {{ currentComicBook?.detail | comicTitle }}
+      </mat-card-title>
+      <mat-card-content>
+        <img
+          [style.width]="'100%'"
+          [style.height]="'auto'"
+          [alt]="currentComicBook?.detail | comicTitle"
+          [src]="currentComicBook?.detail | comicCoverUrl"
+        />
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div
+    *ngIf="!!currentComicBook && scrapingVolumes.length === 0"
+    class="cx-width-75"
+  >
+    <cx-comic-scraping
+      [comic]="currentComicBook"
+      [metadataSource]="metadataSource"
+      [skipCache]="skipCache"
+      [maximumRecords]="maximumRecords"
+      [multimode]="true"
+      (scrape)="onScrape($event)"
+    ></cx-comic-scraping>
+
+    <h4>{{ "scraping.comic-book-queue.title" | translate }}</h4>
+    <mat-table class="cx-width-100" [dataSource]="dataSource">
+      <ng-container matColumnDef="thumbnail">
+        <mat-header-cell *matHeaderCellDef>
+          {{ "comic-book.label.thumbnail" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span class="cx-width-100 cx-text-nowrap cx-padding-2">
+            <img
+              loading="lazy"
+              [src]="entry | comicCoverUrl"
+              [alt]="entry | comicTitle"
+              width="100%"
+              height="auto"
+              (mouseenter)="onShowPopup(true, entry)"
+              (mouseleave)="onShowPopup(false, null)"
+            />
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="publisher">
+        <mat-header-cell *matHeaderCellDef>
+          {{ "comic-book.label.publisher" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">{{ entry.publisher }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="series">
+        <mat-header-cell *matHeaderCellDef>
+          {{ "comic-book.label.series" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">{{ entry.series }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="volume">
+        <mat-header-cell *matHeaderCellDef>
+          {{ "comic-book.label.volume" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">{{ entry.volume }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="issue-number">
+        <mat-header-cell *matHeaderCellDef>
+          {{ "comic-book.label.issue-number" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">{{ entry.issueNumber }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <button
+            mat-icon-button
+            [id]="'remove-multi-book-entry' + entry.id"
+            color="warn"
+            (click)="onRemoveComicBook(entry); $event.stopPropagation()"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+      <mat-row
+        *matRowDef="let row; columns: displayColumns"
+        (click)="onSelectComicBook(row)"
+      ></mat-row>
+    </mat-table>
+  </div>
+  <div *ngIf="scrapingVolumes.length > 0" class="cx-width-75">
+    <cx-scraping-volume-selection
+      [comicBook]="currentComicBook"
+      [metadataSource]="metadataSource"
+      [comicSeriesName]="currentSeries"
+      [comicVolume]="currentVolume"
+      [comicIssueNumber]="this.currentIssueNumber"
+      [skipCache]="skipCache"
+      [pageSize]="pageSize"
+      [multimode]="true"
+      [volumes]="scrapingVolumes"
+    ></cx-scraping-volume-selection>
+  </div>
+</div>

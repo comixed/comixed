@@ -32,8 +32,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   initialState as initialScrapingState,
-  METADATA_FEATURE_KEY
-} from '@app/comic-metadata/reducers/metadata.reducer';
+  SINGLE_BOOK_SCRAPING_FEATURE_KEY
+} from '@app/comic-metadata/reducers/single-book-scraping.reducer';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {
   initialState as initialLibraryState,
@@ -43,12 +43,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import {
+  COMIC_BOOK_1,
+  COMIC_BOOK_2,
   COMIC_BOOK_3,
-  COMIC_DETAIL_1,
-  COMIC_DETAIL_3,
-  COMIC_DETAIL_5
+  COMIC_BOOK_4,
+  COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
-import { loadVolumeMetadata } from '@app/comic-metadata/actions/metadata.actions';
+import { loadVolumeMetadata } from '@app/comic-metadata/actions/single-book-scraping.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
 import { loadComicBook } from '@app/comic-books/actions/comic-book.actions';
@@ -61,23 +62,36 @@ import {
   initialState as initialComicBookSelectionState
 } from '@app/comic-books/reducers/comic-book-selection.reducer';
 import {
-  COMIC_DETAILS_LIST_FEATURE_KEY,
-  initialState as initialComicDetailListState
-} from '@app/comic-books/reducers/comic-details-list.reducer';
+  initialState as initialMultiBookScrapingState,
+  MULTI_BOOK_SCRAPING_FEATURE_KEY
+} from '@app/comic-metadata/reducers/multi-book-scraping.reducer';
+import {
+  multiBookScrapingRemoveBook,
+  multiBookScrapingSetCurrentBook
+} from '@app/comic-metadata/actions/multi-book-scraping.actions';
 
 describe('ScrapingPageComponent', () => {
   const USER = USER_READER;
-  const COMIC = COMIC_BOOK_3;
-  const COMIC_DETAILS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
+  const COMIC_BOOK = COMIC_BOOK_3;
+  const COMIC_BOOKS = [
+    COMIC_BOOK_1,
+    COMIC_BOOK_2,
+    COMIC_BOOK_3,
+    COMIC_BOOK_4,
+    COMIC_BOOK_5
+  ];
   const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const initialState = {
     [LIBRARY_FEATURE_KEY]: { ...initialLibraryState },
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
-    [METADATA_FEATURE_KEY]: { ...initialScrapingState },
+    [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: { ...initialScrapingState },
     [COMIC_BOOK_FEATURE_KEY]: { ...initialComicBookState },
-    [COMIC_DETAILS_LIST_FEATURE_KEY]: initialComicDetailListState,
+    [MULTI_BOOK_SCRAPING_FEATURE_KEY]: {
+      ...initialMultiBookScrapingState,
+      comicBooks: COMIC_BOOKS
+    },
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState
   };
 
@@ -124,24 +138,6 @@ describe('ScrapingPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('receiving the list of selected comic details', () => {
-    beforeEach(() => {
-      store.setState({
-        ...initialState,
-        [COMIC_DETAILS_LIST_FEATURE_KEY]: {
-          ...initialComicDetailListState,
-          comicDetails: COMIC_DETAILS
-        }
-      });
-    });
-
-    it('loads the comic book for the first comic detail', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        loadComicBook({ id: COMIC_DETAILS[0].comicId })
-      );
-    });
-  });
-
   describe('when the language used is changed', () => {
     beforeEach(() => {
       translateService.use('fr');
@@ -154,17 +150,17 @@ describe('ScrapingPageComponent', () => {
 
   describe('when the comic is changed', () => {
     beforeEach(() => {
-      component.currentComic = null;
-      component.onSelectionChanged(COMIC.detail);
+      component.currentComicBook = null;
+      component.onSelectionChanged(COMIC_BOOK.detail);
     });
 
     it('clears the current comic', () => {
-      expect(component.currentComic).toBeNull();
+      expect(component.currentComicBook).toBeNull();
     });
 
     it('load the comic book', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        loadComicBook({ id: COMIC.detail.comicId })
+        loadComicBook({ id: COMIC_BOOK.detail.comicId })
       );
     });
   });
@@ -173,11 +169,11 @@ describe('ScrapingPageComponent', () => {
     beforeEach(() => {
       component.metadataSource = METADATA_SOURCE;
       component.onScrape({
-        series: COMIC.detail.series,
+        series: COMIC_BOOK.detail.series,
         maximumRecords: MAXIMUM_RECORDS,
         skipCache: SKIP_CACHE,
-        issueNumber: COMIC.detail.issueNumber,
-        volume: COMIC.detail.volume
+        issueNumber: COMIC_BOOK.detail.issueNumber,
+        volume: COMIC_BOOK.detail.volume
       });
     });
 
@@ -185,10 +181,50 @@ describe('ScrapingPageComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         loadVolumeMetadata({
           metadataSource: METADATA_SOURCE,
-          series: COMIC.detail.series,
+          series: COMIC_BOOK.detail.series,
           maximumRecords: MAXIMUM_RECORDS,
           skipCache: SKIP_CACHE
         })
+      );
+    });
+  });
+
+  describe('showing the cover of different comic in a popup', () => {
+    beforeEach(() => {
+      component.showPopup = false;
+      component.popupComicDetail;
+      component.onShowPopup(true, COMIC_BOOK.detail);
+    });
+
+    it('sets the comic to show', () => {
+      expect(component.popupComicDetail).toBe(COMIC_BOOK.detail);
+    });
+
+    it('shows the popup', () => {
+      expect(component.showPopup).toBeTrue();
+    });
+  });
+
+  describe('removing a comic book from the queue', () => {
+    beforeEach(() => {
+      component.onRemoveComicBook(COMIC_BOOK.detail);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        multiBookScrapingRemoveBook({ comicBook: COMIC_BOOK })
+      );
+    });
+  });
+
+  describe('selecting a different comic book from the queue', () => {
+    beforeEach(() => {
+      component.onSelectComicBook(COMIC_BOOK.detail);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        multiBookScrapingSetCurrentBook({ comicBook: COMIC_BOOK })
       );
     });
   });

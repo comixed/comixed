@@ -47,7 +47,6 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { ComicDetailsDialogComponent } from './components/comic-details-dialog/comic-details-dialog.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { ScrapingPageComponent } from '@app/library/pages/scraping-page/scraping-page.component';
 import { ComicBooksModule } from '@app/comic-books/comic-books.module';
 import { ArchiveTypePipe } from './pipes/archive-type.pipe';
 import { duplicatePageListFeature } from '@app/library/reducers/duplicate-page-list.reducer';
@@ -81,7 +80,6 @@ import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
     LibraryPageComponent,
     SelectedComicsComponent,
     ComicDetailsDialogComponent,
-    ScrapingPageComponent,
     ArchiveTypePipe,
     DuplicatePageListPageComponent,
     ComicDetailListDialogComponent,

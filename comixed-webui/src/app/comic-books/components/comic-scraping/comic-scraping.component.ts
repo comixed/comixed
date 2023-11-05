@@ -49,17 +49,17 @@ import {
 import { selectScrapeMetadataState } from '@app/comic-files/selectors/scrape-metadata.selectors';
 import { filter } from 'rxjs/operators';
 import {
-  scrapeComic,
+  scrapeSingleComicBook,
   setAutoSelectExactMatch,
   setChosenMetadataSource,
   setConfirmBeforeScraping
-} from '@app/comic-metadata/actions/metadata.actions';
+} from '@app/comic-metadata/actions/single-book-scraping.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { ListItem } from '@app/core/models/ui/list-item';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { selectMetadataSourceList } from '@app/comic-metadata/selectors/metadata-source-list.selectors';
 import { loadMetadataSources } from '@app/comic-metadata/actions/metadata-source-list.actions';
-import { selectMetadataState } from '@app/comic-metadata/selectors/metadata.selectors';
+import { selectSingleBookScrapingState } from '@app/comic-metadata/selectors/single-book-scraping.selectors';
 
 @Component({
   selector: 'cx-comic-scraping',
@@ -132,7 +132,7 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
         );
       });
     this.metadataSubscription = this.store
-      .select(selectMetadataState)
+      .select(selectSingleBookScrapingState)
       .subscribe(state => {
         this.logger.debug('Metadata state changed');
         this.confirmBeforeScraping = state.confirmBeforeScraping;
@@ -304,7 +304,7 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
       ),
       confirm: () => {
         this.store.dispatch(
-          scrapeComic({
+          scrapeSingleComicBook({
             comic: this.comic,
             metadataSource: this.metadataSource,
             issueId: referenceId,

@@ -25,13 +25,16 @@ import {
   CLEAR_METADATA_CACHE_URL,
   LOAD_SCRAPING_ISSUE_URL,
   LOAD_SCRAPING_VOLUMES_URL,
-  SCRAPE_COMIC_URL,
-  START_METADATA_UPDATE_PROCESS_URL
+  REMOVE_MULTI_BOOK_COMIC_URL,
+  SCRAPE_MULTI_BOOK_COMIC_URL,
+  SCRAPE_SINGLE_BOOK_COMIC_URL,
+  START_METADATA_UPDATE_PROCESS_URL,
+  START_MULTI_BOOK_SCRAPING_URL
 } from '@app/library/library.constants';
 import { LoadVolumeMetadataRequest } from '@app/comic-metadata/models/net/load-volume-metadata-request';
 import { LoadIssueMetadataRequest } from '@app/comic-metadata/models/net/load-issue-metadata-request';
 import { ComicBook } from '@app/comic-books/models/comic-book';
-import { ScrapeComicRequest } from '@app/comic-metadata/models/net/scrape-comic-request';
+import { ScrapeSingleBookComicRequest } from '@app/comic-metadata/models/net/scrape-single-book-comic-request';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { StartMetadataUpdateProcessRequest } from '@app/comic-metadata/models/net/start-metadata-update-process-request';
 import { Store } from '@ngrx/store';
@@ -53,7 +56,7 @@ import { FetchIssuesForSeriesRequest } from '@app/comic-metadata/models/net/fetc
 @Injectable({
   providedIn: 'root'
 })
-export class MetadataService {
+export class ComicBookScrapingService {
   subscription: Subscription;
 
   constructor(
@@ -151,25 +154,58 @@ export class MetadataService {
    *
    * @param args.metadataSource the metadata source
    * @param args.issueId the source issue id
-   * @param args.comic the comic to be updated
+   * @param args.comicBook the comic to be updated
    * @param args.skipCache the skip cache flag
    */
-  scrapeComic(args: {
+  scrapeSingleBookComic(args: {
     metadataSource: MetadataSource;
     issueId: string;
-    comic: ComicBook;
+    comicBook: ComicBook;
     skipCache: boolean;
   }): Observable<any> {
     this.logger.debug('Scrape comic:', args);
     return this.http.post(
-      interpolate(SCRAPE_COMIC_URL, {
+      interpolate(SCRAPE_SINGLE_BOOK_COMIC_URL, {
         sourceId: args.metadataSource.id,
-        comicId: args.comic.id
+        comicId: args.comicBook.id
       }),
       {
         issueId: args.issueId,
         skipCache: args.skipCache
-      } as ScrapeComicRequest
+      } as ScrapeSingleBookComicRequest
+    );
+  }
+
+  startMultiBookScraping(): Observable<any> {
+    this.logger.debug('Starting multi-book comic scraping');
+    return this.http.put(interpolate(START_MULTI_BOOK_SCRAPING_URL), {});
+  }
+
+  removeMultiBookComic(args: { comicBook: ComicBook }): Observable<any> {
+    this.logger.debug('Removing comic from multi-books scraping:', args);
+    return this.http.delete(
+      interpolate(REMOVE_MULTI_BOOK_COMIC_URL, {
+        comicBookId: args.comicBook.id
+      })
+    );
+  }
+
+  scrapeMultiBookComic(args: {
+    metadataSource: MetadataSource;
+    issueId: string;
+    comicBook: ComicBook;
+    skipCache: boolean;
+  }): Observable<any> {
+    this.logger.debug('Scrape comic:', args);
+    return this.http.post(
+      interpolate(SCRAPE_MULTI_BOOK_COMIC_URL, {
+        sourceId: args.metadataSource.id,
+        comicBookId: args.comicBook.id
+      }),
+      {
+        issueId: args.issueId,
+        skipCache: args.skipCache
+      } as ScrapeSingleBookComicRequest
     );
   }
 
