@@ -36,13 +36,13 @@ import { setBusyState } from '@app/core/actions/busy.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { MetadataSourceListState } from '@app/comic-metadata/reducers/metadata-source-list.reducer';
-import { loadVolumeMetadata } from '@app/comic-metadata/actions/metadata.actions';
+import { loadVolumeMetadata } from '@app/comic-metadata/actions/single-book-scraping.actions';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import {
-  selectMetadataState,
-  selectVolumeMetadata
-} from '@app/comic-metadata/selectors/metadata.selectors';
-import { MetadataState } from '@app/comic-metadata/reducers/metadata.reducer';
+  selectSingleBookScrapingState,
+  selectScrapingVolumeMetadata
+} from '@app/comic-metadata/selectors/single-book-scraping.selectors';
+import { SingleBookScrapingState } from '@app/comic-metadata/reducers/single-book-scraping.reducer';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
 import { SKIP_CACHE_PREFERENCE } from '@app/library/library.constants';
@@ -74,7 +74,7 @@ export class FetchIssuesPageComponent implements OnInit, OnDestroy {
   scrapingVolumes: VolumeMetadata[] = [];
   pageSize = 10;
   metadataStateSubscription: Subscription;
-  metadataState: MetadataState;
+  metadataState: SingleBookScrapingState;
   busy = false;
   metadataSourceList: MetadataSource[] = [];
   langChangeSubscription: Subscription;
@@ -137,7 +137,7 @@ export class FetchIssuesPageComponent implements OnInit, OnDestroy {
     );
     this.logger.trace('Subscribing to metadata volume list updates');
     this.scrapingVolumeSubscription = this.store
-      .select(selectVolumeMetadata)
+      .select(selectScrapingVolumeMetadata)
       .subscribe(volumes => (this.scrapingVolumes = volumes));
     this.logger.trace(
       'Subscribing to fetching issues for series state updates'
@@ -149,7 +149,7 @@ export class FetchIssuesPageComponent implements OnInit, OnDestroy {
         this.updateBusyState();
       });
     this.metadataStateSubscription = this.store
-      .select(selectMetadataState)
+      .select(selectSingleBookScrapingState)
       .subscribe(state => {
         this.metadataState = state;
         this.updateBusyState();

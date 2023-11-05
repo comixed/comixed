@@ -18,27 +18,29 @@
 
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
-  METADATA_FEATURE_KEY,
-  MetadataState
-} from '../reducers/metadata.reducer';
+  SINGLE_BOOK_SCRAPING_FEATURE_KEY,
+  SingleBookScrapingState
+} from '../reducers/single-book-scraping.reducer';
 
 /** Selects for the feature state. */
-export const selectMetadataState =
-  createFeatureSelector<MetadataState>(METADATA_FEATURE_KEY);
+export const selectSingleBookScrapingState =
+  createFeatureSelector<SingleBookScrapingState>(
+    SINGLE_BOOK_SCRAPING_FEATURE_KEY
+  );
 
 /** Selects for the scraping volumes. */
-export const selectVolumeMetadata = createSelector(
-  selectMetadataState,
+export const selectScrapingVolumeMetadata = createSelector(
+  selectSingleBookScrapingState,
   state => state.volumes
 );
 
 /** Selects for the scraping issue. */
-export const selectIssueMetadata = createSelector(
-  selectMetadataState,
+export const selectScrapingIssueMetadata = createSelector(
+  selectSingleBookScrapingState,
   state => state.scrapingIssue
 );
 
 export const selectChosenMetadataSource = createSelector(
-  selectMetadataState,
+  selectSingleBookScrapingState,
   state => state.metadataSource
 );

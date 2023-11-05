@@ -111,7 +111,23 @@
     },
     "tab-title": "Update Metadata Process"
   },
+  "multi-book-scraping": {
+    "remove-book": {
+      "effect-failure": "Failed to remove comic from multi-book metadata update...",
+      "effect-success": "Removed comic from multi-book metadata update..."
+    },
+    "scrape-book": {
+      "effect-failure": "Failed to update metadata...",
+      "effect-success": "Comic book metadata updated..."
+    },
+    "start-process": {
+      "effect-failure": "Failed to start multi-book scraping..."
+    }
+  },
   "scraping": {
+    "comic-book-queue": {
+      "title": "All Comic Books To Be Scraped"
+    },
     "current-comic": {
       "title": "Current Comic ({count} Remaining)"
     },

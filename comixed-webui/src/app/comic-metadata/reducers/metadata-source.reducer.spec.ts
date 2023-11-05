@@ -34,7 +34,7 @@ import {
   saveMetadataSource,
   saveMetadataSourceFailed
 } from '@app/comic-metadata/actions/metadata-source.actions';
-import { resetMetadataState } from '@app/comic-metadata/actions/metadata.actions';
+import { resetMetadataState } from '@app/comic-metadata/actions/single-book-scraping.actions';
 
 describe('MetadataSource Reducer', () => {
   const METADATA_SOURCE = METADATA_SOURCE_1;

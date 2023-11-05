@@ -36,20 +36,20 @@ import { Store } from '@ngrx/store';
 import {
   loadIssueMetadata,
   resetMetadataState,
-  scrapeComic
-} from '@app/comic-metadata/actions/metadata.actions';
+  scrapeSingleComicBook
+} from '@app/comic-metadata/actions/single-book-scraping.actions';
 import { Subscription } from 'rxjs';
 import {
-  selectIssueMetadata,
-  selectMetadataState
-} from '@app/comic-metadata/selectors/metadata.selectors';
+  selectScrapingIssueMetadata,
+  selectSingleBookScrapingState
+} from '@app/comic-metadata/selectors/single-book-scraping.selectors';
 import { TranslateService } from '@ngx-translate/core';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { PAGE_SIZE_OPTIONS } from '@app/core';
-import { removeSingleComicBookSelection } from '@app/comic-books/actions/comic-book-selection.actions';
+import { multiBookScrapeComic } from '@app/comic-metadata/actions/multi-book-scraping.actions';
 
 export const MATCHABILITY = 'matchability';
 export const EXACT_MATCH = 2;
@@ -104,10 +104,10 @@ export class ComicScrapingVolumeSelectionComponent
     private translateService: TranslateService
   ) {
     this.issueSubscription = this.store
-      .select(selectIssueMetadata)
+      .select(selectScrapingIssueMetadata)
       .subscribe(issue => (this.issue = issue));
     this.scrapingStateSubscription = this.store
-      .select(selectMetadataState)
+      .select(selectSingleBookScrapingState)
       .subscribe(state => {
         this.store.dispatch(setBusyState({ enabled: state.loadingRecords }));
         this.autoSelectExactMatch = state.autoSelectExactMatch;
@@ -234,21 +234,26 @@ export class ComicScrapingVolumeSelectionComponent
   scrapeComic(): void {
     this.logger.debug('User confirmed scraping the comic:', this.multimode);
     if (this.multimode) {
-      this.logger.debug('Removing comic from scraping queue:', this.comicBook);
+      this.logger.debug('Scraping multi-book comic');
       this.store.dispatch(
-        removeSingleComicBookSelection({
-          comicBookId: this.comicBook.id
+        multiBookScrapeComic({
+          comicBook: this.comicBook,
+          metadataSource: this.metadataSource,
+          issueId: this.issue.id,
+          skipCache: this.skipCache
+        })
+      );
+    } else {
+      this.logger.debug('Scraping single comic book');
+      this.store.dispatch(
+        scrapeSingleComicBook({
+          metadataSource: this.metadataSource,
+          issueId: this.issue.id,
+          comic: this.comicBook,
+          skipCache: this.skipCache
         })
       );
     }
-    this.store.dispatch(
-      scrapeComic({
-        metadataSource: this.metadataSource,
-        issueId: this.issue.id,
-        comic: this.comicBook,
-        skipCache: this.skipCache
-      })
-    );
   }
 
   matchesFilter(value: string, filter: string): boolean {
