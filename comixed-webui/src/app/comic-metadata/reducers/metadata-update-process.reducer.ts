@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import { metadataUpdateProcessStatusUpdated } from '../actions/metadata-update-process.actions';
 
 export const METADATA_UPDATE_PROCESS_FEATURE_KEY =
@@ -44,3 +44,8 @@ export const reducer = createReducer(
     completedComics: action.completedComics
   }))
 );
+
+export const metadataUpdateProcessFeature = createFeature({
+  name: METADATA_UPDATE_PROCESS_FEATURE_KEY,
+  reducer
+});

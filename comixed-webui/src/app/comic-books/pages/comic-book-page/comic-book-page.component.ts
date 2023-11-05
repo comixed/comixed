@@ -38,12 +38,12 @@ import {
   loadVolumeMetadata,
   resetMetadataState,
   setChosenMetadataSource
-} from '@app/comic-metadata/actions/metadata.actions';
+} from '@app/comic-metadata/actions/single-book-scraping.actions';
 import {
   selectChosenMetadataSource,
-  selectMetadataState,
-  selectVolumeMetadata
-} from '@app/comic-metadata/selectors/metadata.selectors';
+  selectSingleBookScrapingState,
+  selectScrapingVolumeMetadata
+} from '@app/comic-metadata/selectors/single-book-scraping.selectors';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import { TranslateService } from '@ngx-translate/core';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
@@ -132,7 +132,7 @@ export class ComicBookPageComponent
       this.store.dispatch(loadComicBook({ id: this.comicId }));
     });
     this.scrapingStateSubscription = this.store
-      .select(selectMetadataState)
+      .select(selectSingleBookScrapingState)
       .subscribe(state =>
         this.store.dispatch(setBusyState({ enabled: state.loadingRecords }))
       );
@@ -177,7 +177,7 @@ export class ComicBookPageComponent
       );
     });
     this.volumesSubscription = this.store
-      .select(selectVolumeMetadata)
+      .select(selectScrapingVolumeMetadata)
       .subscribe(volumes => (this.volumes = volumes));
     this.lastReadSubscription = this.store
       .select(selectComicBookLastReadEntries)

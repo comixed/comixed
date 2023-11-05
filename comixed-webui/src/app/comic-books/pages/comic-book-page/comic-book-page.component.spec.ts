@@ -45,13 +45,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import {
   initialState as initialScrapingState,
-  METADATA_FEATURE_KEY
-} from '@app/comic-metadata/reducers/metadata.reducer';
+  SINGLE_BOOK_SCRAPING_FEATURE_KEY
+} from '@app/comic-metadata/reducers/single-book-scraping.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
 import {
   loadVolumeMetadata,
   setChosenMetadataSource
-} from '@app/comic-metadata/actions/metadata.actions';
+} from '@app/comic-metadata/actions/single-book-scraping.actions';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import {
   COMIC_BOOK_FEATURE_KEY,
@@ -109,7 +109,7 @@ describe('ComicBookPageComponent', () => {
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
-    [METADATA_FEATURE_KEY]: { ...initialScrapingState },
+    [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: { ...initialScrapingState },
     [COMIC_BOOK_FEATURE_KEY]: { ...initialComicBookState },
     [LAST_READ_LIST_FEATURE_KEY]: { ...initialLastReadState },
     [MESSAGING_FEATURE_KEY]: { ...initialMessagingState }

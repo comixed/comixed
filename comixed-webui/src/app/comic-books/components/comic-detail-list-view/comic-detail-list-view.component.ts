@@ -467,7 +467,7 @@ export class ComicDetailListViewComponent implements OnDestroy {
       ),
       confirm: () => {
         this.logger.debug('Scraping comics:', ids);
-        this.router.navigateByUrl('/library/scrape');
+        this.router.navigateByUrl('/metadata/scraping');
       }
     });
   }
@@ -525,11 +525,6 @@ export class ComicDetailListViewComponent implements OnDestroy {
     this.logger.debug('Filtered flag:', filtered);
     this.filtered.emit(filtered);
     this.dataSource.data = this.comics.map(comic => {
-      this.logger.debug(
-        `Comic id: ${comic.comicId} selected: ${this.selectedIds.includes(
-          comic.comicId
-        )}`
-      );
       return {
         item: comic,
         selected: this.selectedIds.includes(comic.comicId)

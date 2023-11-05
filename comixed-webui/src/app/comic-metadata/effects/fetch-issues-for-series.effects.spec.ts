@@ -20,7 +20,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { FetchIssuesForSeriesEffects } from './fetch-issues-for-series.effects';
-import { MetadataService } from '@app/comic-metadata/services/metadata.service';
+import { ComicBookScrapingService } from '@app/comic-metadata/services/comic-book-scraping.service';
 import {
   fetchIssuesForSeries,
   fetchIssuesForSeriesFailed,
@@ -43,7 +43,7 @@ describe('FetchIssuesForSeriesEffects', () => {
 
   let actions$: Observable<any>;
   let effects: FetchIssuesForSeriesEffects;
-  let metadataService: jasmine.SpyObj<MetadataService>;
+  let metadataService: jasmine.SpyObj<ComicBookScrapingService>;
   let alertService: AlertService;
 
   beforeEach(() => {
@@ -57,10 +57,10 @@ describe('FetchIssuesForSeriesEffects', () => {
         FetchIssuesForSeriesEffects,
         provideMockActions(() => actions$),
         {
-          provide: MetadataService,
+          provide: ComicBookScrapingService,
           useValue: {
             fetchIssuesForSeries: jasmine.createSpy(
-              'MetadataService.fetchIssuesForSeries()'
+              'ComicBookScrapingService.fetchIssuesForSeries()'
             )
           }
         },
@@ -70,8 +70,8 @@ describe('FetchIssuesForSeriesEffects', () => {
 
     effects = TestBed.inject(FetchIssuesForSeriesEffects);
     metadataService = TestBed.inject(
-      MetadataService
-    ) as jasmine.SpyObj<MetadataService>;
+      ComicBookScrapingService
+    ) as jasmine.SpyObj<ComicBookScrapingService>;
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'info');
     spyOn(alertService, 'error');

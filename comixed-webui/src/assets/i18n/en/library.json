@@ -223,6 +223,6 @@
     "inactive": {
       "page-content": "There are currently no comics having their metadata scraped. To scrape comics, please select one or more and then select scraping metadata for the selections..."
     },
-    "page-title": "Comic Metadata Scraping"
+    "page-title": "Multi-Comic Metadata Scraping"
   }
 }

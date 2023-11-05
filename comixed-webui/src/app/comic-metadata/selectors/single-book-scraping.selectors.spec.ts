@@ -17,15 +17,15 @@
  */
 
 import {
-  METADATA_FEATURE_KEY,
-  MetadataState
-} from '../reducers/metadata.reducer';
+  SINGLE_BOOK_SCRAPING_FEATURE_KEY,
+  SingleBookScrapingState
+} from '../reducers/single-book-scraping.reducer';
 import {
   selectChosenMetadataSource,
-  selectIssueMetadata,
-  selectMetadataState,
-  selectVolumeMetadata
-} from './metadata.selectors';
+  selectScrapingIssueMetadata,
+  selectSingleBookScrapingState,
+  selectScrapingVolumeMetadata
+} from './single-book-scraping.selectors';
 import {
   METADATA_SOURCE_1,
   SCRAPING_ISSUE_1,
@@ -34,11 +34,11 @@ import {
   SCRAPING_VOLUME_3
 } from '@app/comic-metadata/comic-metadata.fixtures';
 
-describe('Metadata Selectors', () => {
+describe('SingleBookScraping Selectors', () => {
   const VOLUMES = [SCRAPING_VOLUME_1, SCRAPING_VOLUME_2, SCRAPING_VOLUME_3];
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
 
-  let state: MetadataState;
+  let state: SingleBookScrapingState;
 
   beforeEach(() => {
     state = {
@@ -55,24 +55,24 @@ describe('Metadata Selectors', () => {
 
   it('should select the feature state', () => {
     expect(
-      selectMetadataState({
-        [METADATA_FEATURE_KEY]: state
+      selectSingleBookScrapingState({
+        [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: state
       })
     ).toEqual(state);
   });
 
   it('should select the scraping volumes', () => {
     expect(
-      selectVolumeMetadata({
-        [METADATA_FEATURE_KEY]: state
+      selectScrapingVolumeMetadata({
+        [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: state
       })
     ).toEqual(state.volumes);
   });
 
   it('should select the scraping issue', () => {
     expect(
-      selectIssueMetadata({
-        [METADATA_FEATURE_KEY]: state
+      selectScrapingIssueMetadata({
+        [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: state
       })
     ).toEqual(state.scrapingIssue);
   });
@@ -80,7 +80,7 @@ describe('Metadata Selectors', () => {
   it('should select the selected metadata source', () => {
     expect(
       selectChosenMetadataSource({
-        [METADATA_FEATURE_KEY]: state
+        [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: state
       })
     ).toEqual(state.metadataSource);
   });

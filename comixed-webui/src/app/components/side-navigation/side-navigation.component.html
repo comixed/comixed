@@ -129,6 +129,17 @@
   *ngIf="isAdmin"
   mat-button
   class="menu-button"
+  routerLink="/metadata/scraping"
+  routerLinkActive="active"
+>
+  <mat-icon>data_object</mat-icon>
+  <span>{{ "navigation.option.metadata-scraping" | translate }}</span>
+</button>
+
+<button
+  *ngIf="isAdmin"
+  mat-button
+  class="menu-button"
   routerLink="/metadata/process"
   routerLinkActive="active"
 >

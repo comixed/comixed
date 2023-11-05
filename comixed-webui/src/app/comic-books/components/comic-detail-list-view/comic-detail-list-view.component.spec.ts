@@ -786,7 +786,7 @@ describe('ComicDetailListViewComponent', () => {
     });
 
     it('navigates to the metadata scraping page', () => {
-      expect(router.navigateByUrl).toHaveBeenCalledWith('/library/scrape');
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/metadata/scraping');
     });
   });
 

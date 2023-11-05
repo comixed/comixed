@@ -19,26 +19,26 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
-import { MetadataEffects } from './metadata.effects';
-import { MetadataService } from '@app/comic-metadata/services/metadata.service';
+import { SingleBookScrapingEffects } from './single-book-scraping.effects';
+import { ComicBookScrapingService } from '@app/comic-metadata/services/comic-book-scraping.service';
 import { COMIC_BOOK_4 } from '@app/comic-books/comic-books.fixtures';
 import {
   clearMetadataCache,
-  clearMetadataCacheFailed,
-  comicScraped,
+  clearMetadataCacheFailure,
+  scrapeSingleComicBookSuccess,
   issueMetadataLoaded,
   loadIssueMetadata,
   loadIssueMetadataFailed,
   loadVolumeMetadata,
   loadVolumeMetadataFailed,
-  metadataCacheCleared,
-  scrapeComic,
-  scrapeComicFailed,
+  clearMetadataCacheSuccess,
+  scrapeSingleComicBook,
+  scrapeSingleComicBookFailure,
   startMetadataUpdateProcess,
   startMetadataUpdateProcessFailure,
   startMetadataUpdateProcessSuccess,
   volumeMetadataLoaded
-} from '@app/comic-metadata/actions/metadata.actions';
+} from '@app/comic-metadata/actions/single-book-scraping.actions';
 import { hot } from 'jasmine-marbles';
 import { AlertService } from '@app/core/services/alert.service';
 import { LoggerModule } from '@angular-ru/cdk/logger';
@@ -58,7 +58,7 @@ import {
   removeSingleComicBookSelection
 } from '@app/comic-books/actions/comic-book-selection.actions';
 
-describe('MetadataEffects', () => {
+describe('SingleBookScrapingEffects', () => {
   const SERIES = 'The Series';
   const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
@@ -66,12 +66,12 @@ describe('MetadataEffects', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
   const VOLUME_ID = SCRAPING_VOLUME_1.id;
   const ISSUE_NUMBER = '27';
-  const COMIC = COMIC_BOOK_4;
+  const COMIC_BOOK = COMIC_BOOK_4;
   const METADATA_SOURCE = METADATA_SOURCE_1;
 
   let actions$: Observable<any>;
-  let effects: MetadataEffects;
-  let scrapingService: jasmine.SpyObj<MetadataService>;
+  let effects: SingleBookScrapingEffects;
+  let scrapingService: jasmine.SpyObj<ComicBookScrapingService>;
   let alertService: AlertService;
 
   beforeEach(() => {
@@ -82,21 +82,25 @@ describe('MetadataEffects', () => {
         MatSnackBarModule
       ],
       providers: [
-        MetadataEffects,
+        SingleBookScrapingEffects,
         provideMockActions(() => actions$),
         {
-          provide: MetadataService,
+          provide: ComicBookScrapingService,
           useValue: {
             loadScrapingVolumes: jasmine.createSpy(
-              'MetadataService.loadScrapingVolumes()'
+              'ComicBookScrapingService.loadScrapingVolumes()'
             ),
             loadScrapingIssue: jasmine.createSpy(
-              'MetadataService.loadScrapingIssue()'
+              'ComicBookScrapingService.loadScrapingIssue()'
             ),
-            scrapeComic: jasmine.createSpy('MetadataService.scrapeComic()'),
-            clearCache: jasmine.createSpy('MetadataService.clearCache()'),
+            scrapeSingleBookComic: jasmine.createSpy(
+              'ComicBookScrapingService.scrapeSingleBookComic()'
+            ),
+            clearCache: jasmine.createSpy(
+              'ComicBookScrapingService.clearCache()'
+            ),
             startMetadataUpdateProcess: jasmine.createSpy(
-              'MetadataService.startMetadataUpdateProcess()'
+              'ComicBookScrapingService.startMetadataUpdateProcess()'
             )
           }
         },
@@ -104,10 +108,10 @@ describe('MetadataEffects', () => {
       ]
     });
 
-    effects = TestBed.inject(MetadataEffects);
+    effects = TestBed.inject(SingleBookScrapingEffects);
     scrapingService = TestBed.inject(
-      MetadataService
-    ) as jasmine.SpyObj<MetadataService>;
+      ComicBookScrapingService
+    ) as jasmine.SpyObj<ComicBookScrapingService>;
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'info');
     spyOn(alertService, 'error');
@@ -229,61 +233,65 @@ describe('MetadataEffects', () => {
     });
   });
 
-  describe('scraping a comic', () => {
+  describe('scraping a single comic book', () => {
     it('fires an action on success', () => {
-      const serviceResponse = COMIC;
-      const action = scrapeComic({
+      const serviceResponse = COMIC_BOOK;
+      const action = scrapeSingleComicBook({
         metadataSource: METADATA_SOURCE,
         issueId: SCRAPING_ISSUE.id,
-        comic: COMIC,
+        comic: COMIC_BOOK,
         skipCache: SKIP_CACHE
       });
-      const outcome1 = comicScraped();
-      const outcome2 = comicBookLoaded({ comicBook: COMIC });
+      const outcome1 = scrapeSingleComicBookSuccess();
+      const outcome2 = comicBookLoaded({ comicBook: COMIC_BOOK });
       const outcome3 = removeSingleComicBookSelection({
-        comicBookId: COMIC.id
+        comicBookId: COMIC_BOOK.id
       });
 
       actions$ = hot('-a', { a: action });
-      scrapingService.scrapeComic.and.returnValue(of(serviceResponse));
+      scrapingService.scrapeSingleBookComic.and.returnValue(
+        of(serviceResponse)
+      );
 
       const expected = hot('-(bcd)', { b: outcome1, c: outcome2, d: outcome3 });
-      expect(effects.scrapeComic$).toBeObservable(expected);
+      expect(effects.scrapeSingleComicBook$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = scrapeComic({
+      const action = scrapeSingleComicBook({
         metadataSource: METADATA_SOURCE,
         issueId: SCRAPING_ISSUE.id,
-        comic: COMIC,
+        comic: COMIC_BOOK,
         skipCache: SKIP_CACHE
       });
-      const outcome = scrapeComicFailed();
+      const outcome = scrapeSingleComicBookFailure();
 
       actions$ = hot('-a', { a: action });
-      scrapingService.scrapeComic.and.returnValue(throwError(serviceResponse));
+      scrapingService.scrapeSingleBookComic.and.returnValue(
+        throwError(serviceResponse)
+      );
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.scrapeComic$).toBeObservable(expected);
+      expect(effects.scrapeSingleComicBook$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = scrapeComic({
+      const action = scrapeSingleComicBook({
         metadataSource: METADATA_SOURCE,
         issueId: SCRAPING_ISSUE.id,
-        comic: COMIC,
+        comic: COMIC_BOOK,
         skipCache: SKIP_CACHE
       });
-      const outcome = scrapeComicFailed();
+      const outcome = scrapeSingleComicBookFailure();
 
       actions$ = hot('-a', { a: action });
-      scrapingService.scrapeComic.and.throwError('expected');
+      scrapingService.scrapeSingleBookComic.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.scrapeComic$).toBeObservable(expected);
+      expect(effects.scrapeSingleComicBook$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
@@ -345,7 +353,7 @@ describe('MetadataEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
       const action = clearMetadataCache();
-      const outcome = metadataCacheCleared();
+      const outcome = clearMetadataCacheSuccess();
 
       actions$ = hot('-a', { a: action });
       scrapingService.clearCache.and.returnValue(of(serviceResponse));
@@ -358,7 +366,7 @@ describe('MetadataEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = clearMetadataCache();
-      const outcome = clearMetadataCacheFailed();
+      const outcome = clearMetadataCacheFailure();
 
       actions$ = hot('-a', { a: action });
       scrapingService.clearCache.and.returnValue(throwError(serviceResponse));
@@ -370,7 +378,7 @@ describe('MetadataEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = clearMetadataCache();
-      const outcome = clearMetadataCacheFailed();
+      const outcome = clearMetadataCacheFailure();
 
       actions$ = hot('-a', { a: action });
       scrapingService.clearCache.and.throwError('expected');

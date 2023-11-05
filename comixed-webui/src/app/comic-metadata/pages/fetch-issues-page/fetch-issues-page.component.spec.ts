@@ -42,8 +42,8 @@ import {
 } from '@app/comic-metadata/reducers/metadata-source-list.reducer';
 import {
   initialState as initialMetadataState,
-  METADATA_FEATURE_KEY
-} from '@app/comic-metadata/reducers/metadata.reducer';
+  SINGLE_BOOK_SCRAPING_FEATURE_KEY
+} from '@app/comic-metadata/reducers/single-book-scraping.reducer';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -55,7 +55,7 @@ import {
 import { TitleService } from '@app/core/services/title.service';
 import { SKIP_CACHE_PREFERENCE } from '@app/library/library.constants';
 import { Preference } from '@app/user/models/preference';
-import { loadVolumeMetadata } from '@app/comic-metadata/actions/metadata.actions';
+import { loadVolumeMetadata } from '@app/comic-metadata/actions/single-book-scraping.actions';
 import {
   Confirmation,
   ConfirmationService
@@ -76,7 +76,7 @@ describe('FetchIssuesPageComponent', () => {
       ...initialMetadataSourceListState,
       sources: [{ ...METADATA_SOURCE_1, preferred: true }, METADATA_SOURCE_2]
     },
-    [METADATA_FEATURE_KEY]: { ...initialMetadataState },
+    [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: { ...initialMetadataState },
     [FETCH_ISSUES_FOR_SERIES_FEATURE_KEY]: {
       ...initialFetchIssuesForSeriesState
     }

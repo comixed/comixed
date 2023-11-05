@@ -17,8 +17,15 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { MetadataService } from './metadata.service';
-import { COMIC_BOOK_4 } from '@app/comic-books/comic-books.fixtures';
+import { ComicBookScrapingService } from './comic-book-scraping.service';
+import {
+  COMIC_BOOK_1,
+  COMIC_BOOK_2,
+  COMIC_BOOK_3,
+  COMIC_BOOK_4,
+  COMIC_BOOK_5,
+  COMIC_DETAIL_1
+} from '@app/comic-books/comic-books.fixtures';
 import {
   HttpClientTestingModule,
   HttpTestingController
@@ -29,11 +36,14 @@ import {
   CLEAR_METADATA_CACHE_URL,
   LOAD_SCRAPING_ISSUE_URL,
   LOAD_SCRAPING_VOLUMES_URL,
-  SCRAPE_COMIC_URL,
-  START_METADATA_UPDATE_PROCESS_URL
+  REMOVE_MULTI_BOOK_COMIC_URL,
+  SCRAPE_MULTI_BOOK_COMIC_URL,
+  SCRAPE_SINGLE_BOOK_COMIC_URL,
+  START_METADATA_UPDATE_PROCESS_URL,
+  START_MULTI_BOOK_SCRAPING_URL
 } from '@app/library/library.constants';
 import { LoadIssueMetadataRequest } from '@app/comic-metadata/models/net/load-issue-metadata-request';
-import { ScrapeComicRequest } from '@app/comic-metadata/models/net/scrape-comic-request';
+import { ScrapeSingleBookComicRequest } from '@app/comic-metadata/models/net/scrape-single-book-comic-request';
 import {
   METADATA_SOURCE_1,
   SCRAPING_ISSUE_1,
@@ -58,8 +68,11 @@ import { metadataUpdateProcessStatusUpdated } from '@app/comic-metadata/actions/
 import { MetadataUpdateProcessUpdate } from '@app/comic-metadata/models/net/metadata-update-process-update';
 import { FetchIssuesForSeriesRequest } from '@app/comic-metadata/models/net/fetch-issues-for-series-request';
 import { LoadVolumeMetadataRequest } from '@app/comic-metadata/models/net/load-volume-metadata-request';
+import { ScrapeMultiBookComicResponse } from '@app/comic-metadata/models/net/scrape-multi-book-comic-response';
+import { StartMultiBookScrapingResponse } from '@app/comic-metadata/models/net/start-multi-book-scraping-response';
+import { RemoveMultiBookComicResponse } from '@app/comic-metadata/models/net/remove-multi-book-comic-response';
 
-describe('MetadataService', () => {
+describe('ComicBookScrapingService', () => {
   const SERIES = 'The Series';
   const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
@@ -67,7 +80,15 @@ describe('MetadataService', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
   const VOLUME_ID = SCRAPING_VOLUME_1.id;
   const ISSUE_NUMBER = '27';
-  const COMIC = COMIC_BOOK_4;
+  const COMIC_BOOK = COMIC_BOOK_4;
+  const COMIC_DETAIL = COMIC_DETAIL_1;
+  const COMIC_BOOKS = [
+    COMIC_BOOK_1,
+    COMIC_BOOK_2,
+    COMIC_BOOK_3,
+    COMIC_BOOK_4,
+    COMIC_BOOK_5
+  ];
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const SCRAPING_VOLUME = SCRAPING_VOLUME_1;
   const PROCESS_STATE = {
@@ -77,7 +98,7 @@ describe('MetadataService', () => {
   } as MetadataUpdateProcessUpdate;
   const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
 
-  let service: MetadataService;
+  let service: ComicBookScrapingService;
   let httpMock: HttpTestingController;
   let webSocketService: jasmine.SpyObj<WebSocketService>;
   let store: MockStore<any>;
@@ -97,7 +118,7 @@ describe('MetadataService', () => {
       ]
     });
 
-    service = TestBed.inject(MetadataService);
+    service = TestBed.inject(ComicBookScrapingService);
     httpMock = TestBed.inject(HttpTestingController);
     webSocketService = TestBed.inject(
       WebSocketService
@@ -155,28 +176,85 @@ describe('MetadataService', () => {
     req.flush(SCRAPING_ISSUE);
   });
 
-  it('can scrape a comic', () => {
+  it('can scrape a comic book as part of single-book scraping', () => {
     service
-      .scrapeComic({
+      .scrapeSingleBookComic({
         metadataSource: METADATA_SOURCE,
         issueId: SCRAPING_ISSUE.id,
-        comic: COMIC,
+        comicBook: COMIC_BOOK,
         skipCache: SKIP_CACHE
       })
-      .subscribe(response => expect(response).toEqual(COMIC));
+      .subscribe(response => expect(response).toEqual(COMIC_BOOK));
 
     const req = httpMock.expectOne(
-      interpolate(SCRAPE_COMIC_URL, {
+      interpolate(SCRAPE_SINGLE_BOOK_COMIC_URL, {
         sourceId: METADATA_SOURCE.id,
-        comicId: COMIC.id
+        comicId: COMIC_BOOK.id
       })
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
       issueId: SCRAPING_ISSUE.id,
       skipCache: SKIP_CACHE
-    } as ScrapeComicRequest);
-    req.flush(COMIC);
+    } as ScrapeSingleBookComicRequest);
+    req.flush(COMIC_BOOK);
+  });
+
+  it('can start multi-book scraping', () => {
+    const serverResponse = {
+      comicBooks: COMIC_BOOKS
+    } as StartMultiBookScrapingResponse;
+    service
+      .startMultiBookScraping()
+      .subscribe(response => expect(response).toEqual(serverResponse));
+
+    const req = httpMock.expectOne(interpolate(START_MULTI_BOOK_SCRAPING_URL));
+    expect(req.request.method).toEqual('PUT');
+    req.flush(serverResponse);
+  });
+
+  it('can remove a comic from multi-book scraping', () => {
+    const serverResponse = {
+      comicBooks: COMIC_BOOKS
+    } as RemoveMultiBookComicResponse;
+    service
+      .removeMultiBookComic({ comicBook: COMIC_BOOK })
+      .subscribe(response => expect(response).toEqual(serverResponse));
+
+    const req = httpMock.expectOne(
+      interpolate(REMOVE_MULTI_BOOK_COMIC_URL, {
+        comicBookId: COMIC_BOOK.id
+      })
+    );
+    expect(req.request.method).toEqual('DELETE');
+    req.flush(serverResponse);
+  });
+
+  it('can scrape a comic book as part of multi-book scraping', () => {
+    const serverResponse = {
+      comicBooks: COMIC_BOOKS
+    } as ScrapeMultiBookComicResponse;
+    service
+      .scrapeMultiBookComic({
+        metadataSource: METADATA_SOURCE,
+        issueId: SCRAPING_ISSUE.id,
+        comicBook: COMIC_BOOK,
+        skipCache: SKIP_CACHE
+      })
+      .subscribe(response => expect(response).toEqual(serverResponse));
+
+    const req = httpMock.expectOne(
+      interpolate(SCRAPE_MULTI_BOOK_COMIC_URL, {
+        sourceId: METADATA_SOURCE.id,
+        comicBookId: COMIC_BOOK.id
+      })
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      issueId: SCRAPING_ISSUE.id,
+      skipCache: SKIP_CACHE
+    } as ScrapeSingleBookComicRequest);
+    req.flush(serverResponse);
   });
 
   it('can clear the metadata cache', () => {

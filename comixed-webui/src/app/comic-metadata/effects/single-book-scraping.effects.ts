@@ -20,24 +20,24 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   clearMetadataCache,
-  clearMetadataCacheFailed,
-  comicScraped,
+  clearMetadataCacheFailure,
+  scrapeSingleComicBookSuccess,
   issueMetadataLoaded,
   loadIssueMetadata,
   loadIssueMetadataFailed,
   loadVolumeMetadata,
   loadVolumeMetadataFailed,
-  metadataCacheCleared,
-  scrapeComic,
-  scrapeComicFailed,
+  clearMetadataCacheSuccess,
+  scrapeSingleComicBook,
+  scrapeSingleComicBookFailure,
   startMetadataUpdateProcess,
   startMetadataUpdateProcessFailure,
   startMetadataUpdateProcessSuccess,
   volumeMetadataLoaded
-} from '@app/comic-metadata/actions/metadata.actions';
+} from '@app/comic-metadata/actions/single-book-scraping.actions';
 import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { MetadataService } from '@app/comic-metadata/services/metadata.service';
+import { ComicBookScrapingService } from '@app/comic-metadata/services/comic-book-scraping.service';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from '@app/core/services/alert.service';
@@ -51,7 +51,7 @@ import {
 } from '@app/comic-books/actions/comic-book-selection.actions';
 
 @Injectable()
-export class MetadataEffects {
+export class SingleBookScrapingEffects {
   loadScrapingVolumes$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadVolumeMetadata),
@@ -130,16 +130,16 @@ export class MetadataEffects {
     );
   });
 
-  scrapeComic$ = createEffect(() => {
+  scrapeSingleComicBook$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(scrapeComic),
+      ofType(scrapeSingleComicBook),
       tap(action => this.logger.debug('Effect: scrape comic:', action)),
       switchMap(action =>
         this.metadataService
-          .scrapeComic({
+          .scrapeSingleBookComic({
             metadataSource: action.metadataSource,
             issueId: action.issueId,
-            comic: action.comic,
+            comicBook: action.comic,
             skipCache: action.skipCache
           })
           .pipe(
@@ -152,7 +152,7 @@ export class MetadataEffects {
               )
             ),
             mergeMap((response: ComicBook) => [
-              comicScraped(),
+              scrapeSingleComicBookSuccess(),
               comicBookLoaded({ comicBook: response }),
               removeSingleComicBookSelection({
                 comicBookId: response.id
@@ -165,7 +165,7 @@ export class MetadataEffects {
                   'scraping.scrape-comic.effect-failure'
                 )
               );
-              return of(scrapeComicFailed());
+              return of(scrapeSingleComicBookFailure());
             })
           )
       ),
@@ -174,7 +174,7 @@ export class MetadataEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(scrapeComicFailed());
+        return of(scrapeSingleComicBookFailure());
       })
     );
   });
@@ -238,7 +238,7 @@ export class MetadataEffects {
               )
             )
           ),
-          map(() => metadataCacheCleared()),
+          map(() => clearMetadataCacheSuccess()),
           catchError(error => {
             this.logger.error('Service failure:', error);
             this.alertService.error(
@@ -246,7 +246,7 @@ export class MetadataEffects {
                 'metadata-cache.clear-cache.effect-failure'
               )
             );
-            return of(clearMetadataCacheFailed());
+            return of(clearMetadataCacheFailure());
           })
         )
       ),
@@ -255,7 +255,7 @@ export class MetadataEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(clearMetadataCacheFailed());
+        return of(clearMetadataCacheFailure());
       })
     );
   });
@@ -263,7 +263,7 @@ export class MetadataEffects {
   constructor(
     private logger: LoggerService,
     private actions$: Actions,
-    private metadataService: MetadataService,
+    private metadataService: ComicBookScrapingService,
     private alertService: AlertService,
     private translateService: TranslateService
   ) {}

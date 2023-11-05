@@ -40,11 +40,11 @@ import {
 } from '@app/comic-files/reducers/scrape-metadata.reducer';
 import { scrapeMetadataFromFilename } from '@app/comic-files/actions/scrape-metadata.actions';
 import {
-  scrapeComic,
+  scrapeSingleComicBook,
   setAutoSelectExactMatch,
   setChosenMetadataSource,
   setConfirmBeforeScraping
-} from '@app/comic-metadata/actions/metadata.actions';
+} from '@app/comic-metadata/actions/single-book-scraping.actions';
 import {
   Confirmation,
   ConfirmationService
@@ -58,8 +58,8 @@ import { ComicBook } from '@app/comic-books/models/comic-book';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import {
   initialState as initialMetadataState,
-  METADATA_FEATURE_KEY
-} from '@app/comic-metadata/reducers/metadata.reducer';
+  SINGLE_BOOK_SCRAPING_FEATURE_KEY
+} from '@app/comic-metadata/reducers/single-book-scraping.reducer';
 
 describe('ComicScrapingComponent', () => {
   const COMIC = COMIC_BOOK_2;
@@ -72,7 +72,7 @@ describe('ComicScrapingComponent', () => {
   const initialState = {
     [SCRAPE_METADATA_FEATURE_KEY]: initialScrapeMetadataState,
     [METADATA_SOURCE_LIST_FEATURE_KEY]: initialMetadataSourceListState,
-    [METADATA_FEATURE_KEY]: initialMetadataState
+    [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: initialMetadataState
   };
 
   let component: ComicScrapingComponent;
@@ -475,7 +475,7 @@ describe('ComicScrapingComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        scrapeComic({
+        scrapeSingleComicBook({
           metadataSource: METADATA_SOURCE,
           issueId: REFERENCE_ID,
           comic: SCRAPING_COMIC,

@@ -25,7 +25,7 @@ import {
   issuesForSeriesFetched
 } from '../actions/fetch-issues-for-series.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { MetadataService } from '@app/comic-metadata/services/metadata.service';
+import { ComicBookScrapingService } from '@app/comic-metadata/services/comic-book-scraping.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
@@ -84,7 +84,7 @@ export class FetchIssuesForSeriesEffects {
   constructor(
     private logger: LoggerService,
     private actions$: Actions,
-    private metadataService: MetadataService,
+    private metadataService: ComicBookScrapingService,
     private alertService: AlertService,
     private translateService: TranslateService
   ) {}

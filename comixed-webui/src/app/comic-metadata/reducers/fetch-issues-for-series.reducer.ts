@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   fetchIssuesForSeries,
   fetchIssuesForSeriesFailed,
@@ -41,3 +41,8 @@ export const reducer = createReducer(
   on(issuesForSeriesFetched, state => ({ ...state, busy: false })),
   on(fetchIssuesForSeriesFailed, state => ({ ...state, busy: false }))
 );
+
+export const fetchIssuesForSeriesFeature = createFeature({
+  name: FETCH_ISSUES_FOR_SERIES_FEATURE_KEY,
+  reducer
+});

@@ -26,7 +26,7 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
-import { startMetadataUpdateProcess } from '@app/comic-metadata/actions/metadata.actions';
+import { startMetadataUpdateProcess } from '@app/comic-metadata/actions/single-book-scraping.actions';
 import {
   initialState as initialUserState,
   USER_FEATURE_KEY

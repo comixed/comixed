@@ -58,6 +58,7 @@
       "store-date": "Store Date",
       "stories": "Story Arcs In This Issue ({count})",
       "teams": "Teams In This Issue ({count})",
+      "thumbnail": "",
       "title": "Title",
       "volume": "Volume"
     },

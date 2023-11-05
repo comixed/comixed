@@ -20,7 +20,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { AdminGuard, ReaderGuard } from '@app/user';
 import { LibraryPageComponent } from '@app/library/pages/library-page/library-page.component';
-import { ScrapingPageComponent } from '@app/library/pages/scraping-page/scraping-page.component';
 import { DuplicatePageListPageComponent } from '@app/library/pages/duplicate-page-list-page/duplicate-page-list-page.component';
 import { DuplicatePageDetailPageComponent } from '@app/library/pages/duplicate-page-detail-page/duplicate-page-detail-page.component';
 import { DuplicateComicsPageComponent } from '@app/library/pages/duplicate-comics-page/duplicate-comics-page.component';
@@ -60,11 +59,6 @@ const routes: Routes = [
     component: LibraryPageComponent,
     canActivate: [AdminGuard],
     data: { deleted: true }
-  },
-  {
-    path: 'library/scrape',
-    component: ScrapingPageComponent,
-    canActivate: [AdminGuard]
   },
   {
     path: 'library/comics/duplicates',

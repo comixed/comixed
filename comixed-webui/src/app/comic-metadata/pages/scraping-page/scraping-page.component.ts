@@ -28,13 +28,13 @@ import {
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
 import { MetadataEvent } from '@app/comic-metadata/models/event/metadata-event';
-import { loadVolumeMetadata } from '@app/comic-metadata/actions/metadata.actions';
+import { loadVolumeMetadata } from '@app/comic-metadata/actions/single-book-scraping.actions';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import {
   selectChosenMetadataSource,
-  selectMetadataState,
-  selectVolumeMetadata
-} from '@app/comic-metadata/selectors/metadata.selectors';
+  selectScrapingVolumeMetadata,
+  selectSingleBookScrapingState
+} from '@app/comic-metadata/selectors/single-book-scraping.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
@@ -43,9 +43,20 @@ import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { loadComicBook } from '@app/comic-books/actions/comic-book.actions';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { selectComicBook } from '@app/comic-books/selectors/comic-book.selectors';
-import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
-import { selectLoadComicDetailsList } from '@app/comic-books/selectors/load-comic-details-list.selectors';
-import { loadComicDetailsById } from '@app/comic-books/actions/comic-details-list.actions';
+import {
+  selectMultiBookScrapingCurrent,
+  selectMultiBookScrapingList,
+  selectMultiBookScrapingState
+} from '@app/comic-metadata/selectors/multi-book-scraping.selectors';
+import { MultiBookScrapingProcessStatus } from '@app/comic-metadata/models/multi-book-scraping-process-status';
+import {
+  multiBookScrapingRemoveBook,
+  multiBookScrapingSetCurrentBook,
+  startMultiBookScraping
+} from '@app/comic-metadata/actions/multi-book-scraping.actions';
+import { MultiBookScrapingState } from '@app/comic-metadata/reducers/multi-book-scraping.reducer';
+import { selectMetadataSourceListState } from '@app/comic-metadata/selectors/metadata-source-list.selectors';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'cx-scraping-page',
@@ -53,14 +64,27 @@ import { loadComicDetailsById } from '@app/comic-books/actions/comic-details-lis
   styleUrls: ['./scraping-page.component.scss']
 })
 export class ScrapingPageComponent implements OnInit, OnDestroy {
+  readonly displayColumns = [
+    'thumbnail',
+    'publisher',
+    'series',
+    'volume',
+    'issue-number',
+    'actions'
+  ];
+
   langChangeSubscription: Subscription;
   userSubscription: Subscription;
-  comicDetailListSubscription: Subscription;
-  selectedComicsSubscription: Subscription;
+  multiBookScrapingStateSubscription: Subscription;
+  multiBookScrapingState: MultiBookScrapingState;
+  multiBookListSubscription: Subscription;
+  comicBooks: ComicBook[] = [];
+  dataSource = new MatTableDataSource<ComicDetail>();
+  multiBookCurrentComicDetailSubscription: Subscription;
+  currentComicBook: ComicBook = null;
   metadataSourceSubscription: Subscription;
   metadataSource: MetadataSource;
   comicBookSubscription: Subscription;
-  currentComic: ComicBook = null;
   currentSeries = '';
   currentVolume = '';
   currentIssueNumber = '';
@@ -70,8 +94,11 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
   scrapingVolumeSubscription: Subscription;
   scrapingVolumes: VolumeMetadata[] = [];
   pageSize = PAGE_SIZE_DEFAULT;
-  comicDetails: ComicDetail[] = [];
   selectedIds: number[] = [];
+  showPopup = false;
+  popupComicDetail: ComicDetail = null;
+  protected readonly selectMetadataSourceListState =
+    selectMetadataSourceListState;
 
   constructor(
     private logger: LoggerService,
@@ -106,49 +133,68 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
         10
       );
     });
-    this.comicDetailListSubscription = this.store
-      .select(selectLoadComicDetailsList)
-      .subscribe(comicDetails => {
-        this.comicDetails = comicDetails;
-        if (this.comicDetails.length > 0) {
-          this.store.dispatch(
-            loadComicBook({ id: this.comicDetails[0].comicId })
-          );
+    this.multiBookScrapingStateSubscription = this.store
+      .select(selectMultiBookScrapingState)
+      .subscribe(state => {
+        this.multiBookScrapingState = state;
+        if (
+          this.multiBookScrapingState.status ===
+            MultiBookScrapingProcessStatus.SETUP &&
+          !this.multiBookScrapingState.busy
+        ) {
+          this.logger.debug('Starting multi-book comic scraping');
+          this.store.dispatch(startMultiBookScraping());
         }
-      });
-    this.selectedComicsSubscription = this.store
-      .select(selectComicBookSelectionIds)
-      .subscribe(selectedIds => {
-        this.selectedIds = selectedIds;
-        this.logger.trace('Loading comic details for selections');
         this.store.dispatch(
-          loadComicDetailsById({ comicBookIds: this.selectedIds })
+          setBusyState({ enabled: this.multiBookScrapingState.busy })
         );
+      });
+    this.multiBookListSubscription = this.store
+      .select(selectMultiBookScrapingList)
+      .subscribe(comicBooks => {
+        this.comicBooks = comicBooks;
+        this.dataSource.data = this.comicBooks.map(entry => entry.detail);
+      });
+    this.multiBookCurrentComicDetailSubscription = this.store
+      .select(selectMultiBookScrapingCurrent)
+      .subscribe(currentComicBook => {
+        this.currentComicBook = currentComicBook;
+        this.scrapingVolumes = [];
+        this.currentVolume = null;
       });
     this.metadataSourceSubscription = this.store
       .select(selectChosenMetadataSource)
       .subscribe(metadataSource => (this.metadataSource = metadataSource));
     this.scrapingStateSubscription = this.store
-      .select(selectMetadataState)
+      .select(selectSingleBookScrapingState)
       .subscribe(state => {
         this.store.dispatch(setBusyState({ enabled: state.loadingRecords }));
       });
     this.scrapingVolumeSubscription = this.store
-      .select(selectVolumeMetadata)
+      .select(selectScrapingVolumeMetadata)
       .subscribe(volumes => (this.scrapingVolumes = volumes));
     this.comicBookSubscription = this.store
       .select(selectComicBook)
-      .subscribe(comicBook => (this.currentComic = comicBook));
+      .subscribe(comicBook => (this.currentComicBook = comicBook));
+  }
+
+  get started(): boolean {
+    return (
+      this.multiBookScrapingState?.status ===
+      MultiBookScrapingProcessStatus.STARTED
+    );
   }
 
   ngOnInit(): void {
+    this.store.dispatch(startMultiBookScraping());
     this.loadTranslations();
   }
 
   ngOnDestroy(): void {
     this.userSubscription.unsubscribe();
-    this.comicDetailListSubscription.unsubscribe();
-    this.selectedComicsSubscription.unsubscribe();
+    this.multiBookScrapingStateSubscription.unsubscribe();
+    this.multiBookListSubscription.unsubscribe();
+    this.multiBookCurrentComicDetailSubscription.unsubscribe();
     this.metadataSourceSubscription.unsubscribe();
     this.scrapingVolumeSubscription.unsubscribe();
     this.comicBookSubscription.unsubscribe();
@@ -156,7 +202,7 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
 
   onSelectionChanged(comicBook: ComicDetail): void {
     this.logger.trace('Selected comic changed:', comicBook);
-    this.currentComic = null;
+    this.currentComicBook = null;
     this.store.dispatch(loadComicBook({ id: comicBook.comicId }));
   }
 
@@ -174,6 +220,37 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
         skipCache: event.skipCache
       })
     );
+  }
+
+  onShowPopup(showPopup: boolean, comicDetail: ComicDetail): void {
+    this.showPopup = showPopup;
+    this.popupComicDetail = comicDetail;
+    this.logger.info(
+      '*** showPopup:',
+      showPopup,
+      ' comicDetail:',
+      comicDetail,
+      ' popupComicDetail:',
+      this.popupComicDetail
+    );
+  }
+
+  onRemoveComicBook(comicDetail: ComicDetail) {
+    this.store.dispatch(
+      multiBookScrapingRemoveBook({
+        comicBook: this.comicBooks.find(
+          entry => entry.id === comicDetail.comicId
+        )
+      })
+    );
+  }
+
+  onSelectComicBook(comicDetail: ComicDetail): void {
+    const comicBook = this.comicBooks.find(
+      entry => entry.id === comicDetail.comicId
+    );
+    this.logger.debug('Selecting comic book:', comicDetail);
+    this.store.dispatch(multiBookScrapingSetCurrentBook({ comicBook }));
   }
 
   private loadTranslations(): void {

@@ -615,4 +615,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   @Query(
       "UPDATE ComicBook c SET c.recreating = true WHERE c.id IN (:ids) AND c.recreating IS FALSE")
   void markForRecreationById(@Param("ids") List<Long> ids);
+
+  @Query("SELECT b FROM ComicBook b WHERE b.comicDetail.id IN (:comicDetailIds)")
+  List<ComicBook> loadByComicDetailId(@Param("comicDetailIds") List comicDetailIds);
 }
