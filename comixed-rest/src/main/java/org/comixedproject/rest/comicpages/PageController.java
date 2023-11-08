@@ -18,9 +18,12 @@
 
 package org.comixedproject.rest.comicpages;
 
+import static org.comixedproject.rest.comicbooks.ComicBookController.MISSING_COMIC_COVER_FILENAME;
+
 import io.micrometer.core.annotation.Timed;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.log4j.Log4j2;
@@ -84,11 +87,13 @@ public class PageController {
         content = this.comicBookAdaptor.loadPageContent(page.getComicBook(), page.getPageNumber());
         log.debug("Caching image for hash: {} bytes hash={}", content.length, page.getHash());
         this.pageCacheService.saveByHash(page.getHash(), content);
-      } catch (IOException error) {
-        log.error("Failed to add comic page to cache", error);
       } catch (AdaptorException error) {
-        throw new PageException("Failed to load page content", error);
+        log.error("Failed to load page content", error);
       }
+    }
+
+    if (content == null) {
+      content = this.doLoadMissingPageImage();
     }
 
     String type =
@@ -148,5 +153,15 @@ public class PageController {
     final List<Long> ids = request.getIds();
     log.info("Unmarking {} page{} as deleted", ids.size(), ids.size() == 1 ? "" : "s");
     this.pageService.updatePageDeletion(ids, false);
+  }
+
+  private byte[] doLoadMissingPageImage() {
+    try (final InputStream input =
+        this.getClass().getResourceAsStream(MISSING_COMIC_COVER_FILENAME)) {
+      return input.readAllBytes();
+    } catch (IOException error) {
+      log.error("Failed to load missing page image", error);
+      return null;
+    }
   }
 }

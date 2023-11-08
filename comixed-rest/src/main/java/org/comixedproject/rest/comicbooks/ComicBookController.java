@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.Principal;
 import java.util.List;
 import java.util.Set;
@@ -60,7 +61,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Log4j2
 public class ComicBookController {
-  private static final String MISSING_COMIC_COVER_FILENAME = "/images/missing-comic.png";
+  public static final String MISSING_COMIC_COVER_FILENAME = "/images/missing-comic.png";
 
   public static final String MISSING_COMIC_COVER = "missing-comic-cover";
   public static final String ATTACHMENT_FILENAME_FORMAT = "attachment; filename=\"%s\"";
@@ -246,20 +247,16 @@ public class ComicBookController {
    * @param id the comic id
    * @return the page content
    * @throws ComicBookException if an error occurs
-   * @throws IOException if an error occurs
-   * @throws AdaptorException if an error occurs
    */
   @GetMapping(value = "/api/comics/{id}/cover/content")
   @Timed(value = "comixed.comic-book.pages.get-cover")
   public ResponseEntity<byte[]> getCoverImage(@PathVariable("id") final long id)
-      throws ComicBookException, IOException, AdaptorException {
+      throws ComicBookException {
     log.info("Getting cover for comicBook: id={}", id);
     final ComicBook comicBook = this.comicBookService.getComic(id);
 
     if (comicBook == null || comicBook.isMissing()) {
-      return this.getResponseEntityForImage(
-          this.getClass().getResourceAsStream(MISSING_COMIC_COVER_FILENAME).readAllBytes(),
-          MISSING_COMIC_COVER);
+      return this.getResponseEntityForImage(this.doLoadMissingPageImage(), MISSING_COMIC_COVER);
     }
 
     if (comicBook.getPageCount() > 0) {
@@ -269,16 +266,36 @@ public class ComicBookController {
       byte[] content = this.pageCacheService.findByHash(page.getHash());
       if (content == null) {
         log.debug("Loading page from archive");
-        content = this.comicBookAdaptor.loadPageContent(comicBook, 0);
-        this.pageCacheService.saveByHash(page.getHash(), content);
+        try {
+          content = this.comicBookAdaptor.loadPageContent(comicBook, 0);
+          this.pageCacheService.saveByHash(page.getHash(), content);
+        } catch (AdaptorException error) {
+          log.error("Failed to load page content", error);
+        }
       }
       log.debug("Returning comicBook cover: filename={} size={}", filename, content.length);
       return this.getResponseEntityForImage(content, filename);
     } else {
       log.debug("ComicBook is unprocessed; getting the first image instead");
-      return this.getResponseEntityForImage(
-          this.comicFileService.getImportFileCover(comicBook.getComicDetail().getFilename()),
-          "cover-image");
+      byte[] coverContent;
+      try {
+        coverContent =
+            this.comicFileService.getImportFileCover(comicBook.getComicDetail().getFilename());
+      } catch (AdaptorException error) {
+        log.error("Failed to load cover content", error);
+        coverContent = this.doLoadMissingPageImage();
+      }
+      return this.getResponseEntityForImage(coverContent, "cover-image");
+    }
+  }
+
+  private byte[] doLoadMissingPageImage() {
+    try (final InputStream input =
+        this.getClass().getResourceAsStream(MISSING_COMIC_COVER_FILENAME)) {
+      return input.readAllBytes();
+    } catch (IOException error) {
+      log.error("Failed to load missing page image", error);
+      return null;
     }
   }
 
