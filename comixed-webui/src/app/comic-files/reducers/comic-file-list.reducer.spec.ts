@@ -29,9 +29,10 @@ import {
 } from '@app/comic-files/comic-file.fixtures';
 import {
   clearComicFileSelections,
-  comicFilesLoaded,
-  loadComicFiles,
-  loadComicFilesFailed,
+  loadComicFileListFailure,
+  loadComicFileLists,
+  loadComicFileListSuccess,
+  resetComicFileList,
   setComicFilesSelectedState
 } from '@app/comic-files/actions/comic-file-list.actions';
 import { ComicFileGroup } from '@app/comic-files/models/comic-file-group';
@@ -77,57 +78,78 @@ describe('ComicFileList Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, loading: false },
-        loadComicFiles({ directory: ROOT_DIRECTORY, maximum: 100 })
+        loadComicFileLists({ directory: ROOT_DIRECTORY, maximum: 100 })
       );
     });
 
     it('sets the loading flag', () => {
       expect(state.loading).toBeTrue();
     });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, loading: true, groups: [], files: [], selections: FILES },
+          loadComicFileListSuccess({ groups: GROUPS })
+        );
+      });
+
+      it('clears the loading flag', () => {
+        expect(state.loading).toBeFalse();
+      });
+
+      it('sets the comic file groups', () => {
+        expect(state.groups).toEqual(GROUPS);
+      });
+
+      it('sets the comic files', () => {
+        expect(state.files).toEqual([COMIC_FILE_1, COMIC_FILE_3, COMIC_FILE_2]);
+      });
+
+      it('clears any previous selections', () => {
+        expect(state.selections).toEqual([]);
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, loading: true, files: FILES, selections: FILES },
+          loadComicFileListFailure()
+        );
+      });
+
+      it('clears the loading flag', () => {
+        expect(state.loading).toBeFalse();
+      });
+
+      it('clears the comic files', () => {
+        expect(state.files).toEqual([]);
+      });
+
+      it('clears any previous selections', () => {
+        expect(state.selections).toEqual([]);
+      });
+    });
   });
 
-  describe('comic files received', () => {
+  describe('clearing the list of comic files', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, loading: true, groups: [], files: [], selections: FILES },
-        comicFilesLoaded({ groups: GROUPS })
+        { ...state, files: FILES, selections: FILES, groups: GROUPS },
+        resetComicFileList()
       );
     });
 
-    it('clears the loading flag', () => {
-      expect(state.loading).toBeFalse();
-    });
-
-    it('sets the comic file groups', () => {
-      expect(state.groups).toEqual(GROUPS);
-    });
-
-    it('sets the comic files', () => {
-      expect(state.files).toEqual([COMIC_FILE_1, COMIC_FILE_3, COMIC_FILE_2]);
-    });
-
-    it('clears any previous selections', () => {
-      expect(state.selections).toEqual([]);
-    });
-  });
-
-  describe('failure to load comic files', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, loading: true, files: FILES, selections: FILES },
-        loadComicFilesFailed()
-      );
-    });
-
-    it('clears the loading flag', () => {
-      expect(state.loading).toBeFalse();
-    });
-
-    it('clears the comic files', () => {
+    it('clears the list of comic files', () => {
       expect(state.files).toEqual([]);
     });
 
-    it('clears any previous selections', () => {
+    it('clears the groups', () => {
+      expect(state.groups).toEqual([]);
+    });
+
+    it('clears the list of selections', () => {
       expect(state.selections).toEqual([]);
     });
   });

@@ -16,11 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  comicFilesSent,
+  sendComicFilesSuccess,
   sendComicFiles,
-  sendComicFilesFailed
+  sendComicFilesFailure
 } from '@app/comic-files/actions/import-comic-files.actions';
 
 export const IMPORT_COMIC_FILES_FEATURE_KEY = 'import_comic_files_state';
@@ -37,6 +37,11 @@ export const reducer = createReducer(
   initialState,
 
   on(sendComicFiles, state => ({ ...state, sending: true })),
-  on(comicFilesSent, state => ({ ...state, sending: false })),
-  on(sendComicFilesFailed, state => ({ ...state, sending: false }))
+  on(sendComicFilesSuccess, state => ({ ...state, sending: false })),
+  on(sendComicFilesFailure, state => ({ ...state, sending: false }))
 );
+
+export const comicFilesFeature = createFeature({
+  name: IMPORT_COMIC_FILES_FEATURE_KEY,
+  reducer
+});

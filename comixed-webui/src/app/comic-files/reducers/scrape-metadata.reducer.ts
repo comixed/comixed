@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   metadataScrapedFromFilename,
   resetScrapedMetadata,
@@ -70,3 +70,8 @@ export const reducer = createReducer(
     found: false
   }))
 );
+
+export const scrapeMetadataFeature = createFeature({
+  name: SCRAPE_METADATA_FEATURE_KEY,
+  reducer
+});

@@ -34,9 +34,9 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LoadComicFilesResponse } from '@app/library/models/net/load-comic-files-response';
 import {
-  comicFilesLoaded,
-  loadComicFiles,
-  loadComicFilesFailed
+  loadComicFileListSuccess,
+  loadComicFileLists,
+  loadComicFileListFailure
 } from '@app/comic-files/actions/comic-file-list.actions';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import {
@@ -106,11 +106,11 @@ describe('ComicFileListEffects', () => {
 
     it('fires an action on success', () => {
       const serviceResponse = { groups: GROUPS } as LoadComicFilesResponse;
-      const action = loadComicFiles({
+      const action = loadComicFileLists({
         directory: ROOT_DIRECTORY,
         maximum: MAXIMUM_RESULT
       });
-      const outcome1 = comicFilesLoaded({ groups: GROUPS });
+      const outcome1 = loadComicFileListSuccess({ groups: GROUPS });
       const outcome2 = saveUserPreference({
         name: IMPORT_ROOT_DIRECTORY_PREFERENCE,
         value: ROOT_DIRECTORY
@@ -130,11 +130,11 @@ describe('ComicFileListEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = loadComicFiles({
+      const action = loadComicFileLists({
         directory: ROOT_DIRECTORY,
         maximum: 100
       });
-      const outcome = loadComicFilesFailed();
+      const outcome = loadComicFileListFailure();
 
       actions$ = hot('-a', { a: action });
       comicImportService.loadComicFiles.and.returnValue(
@@ -147,11 +147,11 @@ describe('ComicFileListEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = loadComicFiles({
+      const action = loadComicFileLists({
         directory: ROOT_DIRECTORY,
         maximum: 100
       });
-      const outcome = loadComicFilesFailed();
+      const outcome = loadComicFileListFailure();
 
       actions$ = hot('-a', { a: action });
       comicImportService.loadComicFiles.and.throwError('expected');

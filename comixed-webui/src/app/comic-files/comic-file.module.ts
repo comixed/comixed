@@ -33,14 +33,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { ComicFileListEffects } from '@app/comic-files/effects/comic-file-list.effects';
 import { ImportComicFilesEffects } from '@app/comic-files/effects/import-comic-files.effects';
-import {
-  IMPORT_COMIC_FILES_FEATURE_KEY,
-  reducer as importComicFilesReducer
-} from '@app/comic-files/reducers/import-comic-files.reducer';
-import {
-  COMIC_FILE_LIST_FEATURE_KEY,
-  reducer as comicFileListReducer
-} from '@app/comic-files/reducers/comic-file-list.reducer';
+import { comicFilesFeature } from '@app/comic-files/reducers/import-comic-files.reducer';
+import { comicFileListFeature } from '@app/comic-files/reducers/comic-file-list.reducer';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -49,10 +43,7 @@ import { MatCardModule } from '@angular/material/card';
 import { LibraryModule } from '@app/library/library.module';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ComicBooksModule } from '@app/comic-books/comic-books.module';
-import {
-  reducer as scrapeMetadataReducer,
-  SCRAPE_METADATA_FEATURE_KEY
-} from '@app/comic-files/reducers/scrape-metadata.reducer';
+import { scrapeMetadataFeature } from '@app/comic-files/reducers/scrape-metadata.reducer';
 import { ScrapeMetadataEffects } from '@app/comic-files/effects/scrape-metadata.effects';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -73,12 +64,9 @@ import { ImportStatusPageComponent } from './pages/import-status-page/import-sta
     ReactiveFormsModule,
     ComicFileRouting,
     TranslateModule.forRoot(),
-    StoreModule.forFeature(COMIC_FILE_LIST_FEATURE_KEY, comicFileListReducer),
-    StoreModule.forFeature(
-      IMPORT_COMIC_FILES_FEATURE_KEY,
-      importComicFilesReducer
-    ),
-    StoreModule.forFeature(SCRAPE_METADATA_FEATURE_KEY, scrapeMetadataReducer),
+    StoreModule.forFeature(comicFileListFeature),
+    StoreModule.forFeature(comicFilesFeature),
+    StoreModule.forFeature(scrapeMetadataFeature),
     EffectsModule.forFeature([
       ComicFileListEffects,
       ImportComicFilesEffects,

@@ -27,9 +27,9 @@ import {
   COMIC_FILE_3
 } from '@app/comic-files/comic-file.fixtures';
 import {
-  comicFilesSent,
   sendComicFiles,
-  sendComicFilesFailed
+  sendComicFilesFailure,
+  sendComicFilesSuccess
 } from '@app/comic-files/actions/import-comic-files.actions';
 
 describe('ImportComicFiles Reducer', () => {
@@ -68,25 +68,25 @@ describe('ImportComicFiles Reducer', () => {
     it('sets the sending flag', () => {
       expect(state.sending).toBeTrue();
     });
-  });
 
-  describe('successfully sending files', () => {
-    beforeEach(() => {
-      state = reducer({ ...state, sending: true }, comicFilesSent());
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer({ ...state, sending: true }, sendComicFilesSuccess());
+      });
+
+      it('clears the sending flag', () => {
+        expect(state.sending).toBeFalse();
+      });
     });
 
-    it('clears the sending flag', () => {
-      expect(state.sending).toBeFalse();
-    });
-  });
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer({ ...state, sending: true }, sendComicFilesFailure());
+      });
 
-  describe('failure to send files', () => {
-    beforeEach(() => {
-      state = reducer({ ...state, sending: true }, sendComicFilesFailed());
-    });
-
-    it('clears the sending flag', () => {
-      expect(state.sending).toBeFalse();
+      it('clears the sending flag', () => {
+        expect(state.sending).toBeFalse();
+      });
     });
   });
 });
