@@ -164,7 +164,7 @@ export class ComicBookScrapingService {
     skipCache: boolean;
   }): Observable<any> {
     this.logger.debug('Scrape comic:', args);
-    return this.http.post(
+    return this.http.put(
       interpolate(SCRAPE_SINGLE_BOOK_COMIC_URL, {
         sourceId: args.metadataSource.id,
         comicId: args.comicBook.id
