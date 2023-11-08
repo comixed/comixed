@@ -140,8 +140,8 @@ public class ComicBookScrapingController {
    * @return the scraped and updated {@link ComicBook}
    * @throws MetadataException if an error occurs
    */
-  @PostMapping(
-      value = "/api/metadata/sources/{sourceId}/comics/{comicId}",
+  @PutMapping(
+      value = "/api/metadata/sources/{sourceId}/comics/single/{comicId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
