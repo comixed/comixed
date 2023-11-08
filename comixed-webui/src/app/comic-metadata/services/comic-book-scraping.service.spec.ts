@@ -192,7 +192,7 @@ describe('ComicBookScrapingService', () => {
         comicId: COMIC_BOOK.id
       })
     );
-    expect(req.request.method).toEqual('POST');
+    expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual({
       issueId: SCRAPING_ISSUE.id,
       skipCache: SKIP_CACHE
