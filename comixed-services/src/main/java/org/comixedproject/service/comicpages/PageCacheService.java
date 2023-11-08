@@ -18,10 +18,7 @@
 
 package org.comixedproject.service.comicpages;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -83,13 +80,16 @@ public class PageCacheService {
    *
    * @param hash the page hash
    * @param content the page content
-   * @throws IOException if an error occurs
    */
-  public void saveByHash(final String hash, final byte[] content) throws IOException {
-    log.debug("Saving image to cache: hash={}", hash);
-    final File file = this.getFileForHash(hash);
-    file.getParentFile().mkdirs();
-    IOUtils.write(content, new FileOutputStream(file, false));
+  public void saveByHash(final String hash, final byte[] content) {
+    try {
+      log.debug("Saving image to cache: hash={}", hash);
+      final File file = this.getFileForHash(hash);
+      file.getParentFile().mkdirs();
+      IOUtils.write(content, new FileOutputStream(file, false));
+    } catch (IOException error) {
+      log.error("Failed to add page to image cache", error);
+    }
   }
 
   /**
