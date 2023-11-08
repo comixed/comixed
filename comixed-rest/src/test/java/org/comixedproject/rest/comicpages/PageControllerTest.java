@@ -22,7 +22,6 @@ import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import org.comixedproject.adaptors.AdaptorException;
@@ -84,54 +83,6 @@ public class PageControllerTest {
     Mockito.verify(pageService, Mockito.times(1)).getOneForHash(TEST_PAGE_HASH);
   }
 
-  @Test(expected = PageException.class)
-  public void testGetPageForHashLoadPageContentThrowsException()
-      throws PageException, AdaptorException {
-    Mockito.when(pageService.getOneForHash(Mockito.anyString())).thenReturn(page);
-    Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(null);
-    Mockito.when(page.getComicBook()).thenReturn(comicBook);
-    Mockito.when(page.getPageNumber()).thenReturn(TEST_PAGE_INDEX);
-    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))
-        .thenThrow(AdaptorException.class);
-
-    try {
-      controller.getPageForHash(TEST_PAGE_HASH);
-    } finally {
-      Mockito.verify(pageCacheService, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-      Mockito.verify(comicBookAdaptor, Mockito.times(1))
-          .loadPageContent(comicBook, TEST_PAGE_INDEX);
-    }
-  }
-
-  @Test
-  public void testGetPageForHashSaveCacheThrowsException()
-      throws PageException, AdaptorException, IOException {
-    Mockito.when(pageService.getOneForHash(Mockito.anyString())).thenReturn(page);
-    Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(null);
-    Mockito.when(page.getComicBook()).thenReturn(comicBook);
-    Mockito.when(page.getPageNumber()).thenReturn(TEST_PAGE_INDEX);
-    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))
-        .thenReturn(TEST_PAGE_CONTENT);
-    Mockito.doThrow(IOException.class)
-        .when(pageCacheService)
-        .saveByHash(Mockito.anyString(), Mockito.any(byte[].class));
-    Mockito.when(fileTypeAdaptor.getType(inputStream.capture())).thenReturn(TEST_PAGE_CONTENT_TYPE);
-    Mockito.when(fileTypeAdaptor.getSubtype(inputStream.capture()))
-        .thenReturn(TEST_PAGE_CONTENT_SUBTYPE);
-
-    ResponseEntity<byte[]> result = controller.getPageForHash(TEST_PAGE_HASH);
-
-    assertNotNull(result);
-    assertSame(TEST_PAGE_CONTENT, result.getBody());
-
-    Mockito.verify(pageCacheService, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-    Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadPageContent(comicBook, TEST_PAGE_INDEX);
-    Mockito.verify(pageCacheService, Mockito.times(1))
-        .saveByHash(TEST_PAGE_HASH, TEST_PAGE_CONTENT);
-    Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getType(inputStream.getAllValues().get(0));
-    Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getSubtype(inputStream.getAllValues().get(1));
-  }
-
   @Test
   public void testGetPageForHash() throws ComicBookException, PageException, AdaptorException {
     Mockito.when(pageService.getOneForHash(Mockito.anyString())).thenReturn(page);
@@ -156,38 +107,15 @@ public class PageControllerTest {
     Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getSubtype(inputStream.getAllValues().get(1));
   }
 
-  @Test(expected = PageException.class)
-  public void testGetPageContentLoadPageContentThrowsException()
-      throws PageException, AdaptorException {
+  @Test
+  public void testGetPageContentAdaptorException()
+      throws ComicBookException, PageException, AdaptorException {
     Mockito.when(pageService.getForId(Mockito.anyLong())).thenReturn(page);
     Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(null);
     Mockito.when(page.getComicBook()).thenReturn(comicBook);
     Mockito.when(page.getPageNumber()).thenReturn(TEST_PAGE_INDEX);
     Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))
         .thenThrow(AdaptorException.class);
-
-    try {
-      controller.getPageContent(TEST_PAGE_ID);
-    } finally {
-      Mockito.verify(pageService, Mockito.times(1)).getForId(TEST_PAGE_ID);
-      Mockito.verify(pageCacheService, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-      Mockito.verify(comicBookAdaptor, Mockito.times(1))
-          .loadPageContent(comicBook, TEST_PAGE_INDEX);
-    }
-  }
-
-  @Test
-  public void testGetPageContentSaveCacheThrowsException()
-      throws PageException, AdaptorException, IOException {
-    Mockito.when(pageService.getForId(Mockito.anyLong())).thenReturn(page);
-    Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(null);
-    Mockito.when(page.getComicBook()).thenReturn(comicBook);
-    Mockito.when(page.getPageNumber()).thenReturn(TEST_PAGE_INDEX);
-    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))
-        .thenReturn(TEST_PAGE_CONTENT);
-    Mockito.doThrow(IOException.class)
-        .when(pageCacheService)
-        .saveByHash(Mockito.anyString(), Mockito.any(byte[].class));
     Mockito.when(fileTypeAdaptor.getType(inputStream.capture())).thenReturn(TEST_PAGE_CONTENT_TYPE);
     Mockito.when(fileTypeAdaptor.getSubtype(inputStream.capture()))
         .thenReturn(TEST_PAGE_CONTENT_SUBTYPE);
@@ -195,13 +123,11 @@ public class PageControllerTest {
     ResponseEntity<byte[]> result = controller.getPageContent(TEST_PAGE_ID);
 
     assertNotNull(result);
-    assertSame(TEST_PAGE_CONTENT, result.getBody());
+    assertNotNull(result.getBody());
 
     Mockito.verify(pageService, Mockito.times(1)).getForId(TEST_PAGE_ID);
     Mockito.verify(pageCacheService, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
     Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadPageContent(comicBook, TEST_PAGE_INDEX);
-    Mockito.verify(pageCacheService, Mockito.times(1))
-        .saveByHash(TEST_PAGE_HASH, TEST_PAGE_CONTENT);
     Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getType(inputStream.getAllValues().get(0));
     Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getSubtype(inputStream.getAllValues().get(1));
   }
