@@ -27,7 +27,7 @@ import {
   IMPORT_ROOT_DIRECTORY_DEFAULT,
   IMPORT_ROOT_DIRECTORY_PREFERENCE
 } from '@app/library/library.constants';
-import { loadComicFiles } from '@app/comic-files/actions/comic-file-list.actions';
+import { loadComicFileLists } from '@app/comic-files/actions/comic-file-list.actions';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -79,7 +79,7 @@ export class ComicFileLoaderComponent {
 
   onLoadFiles() {
     this.store.dispatch(
-      loadComicFiles({
+      loadComicFileLists({
         directory: this.loadFilesForm.controls.rootDirectory.value,
         maximum: this.loadFilesForm.controls.maximum.value
       })

@@ -16,13 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import { ComicFile } from '@app/comic-files/models/comic-file';
 import {
   clearComicFileSelections,
-  comicFilesLoaded,
-  loadComicFiles,
-  loadComicFilesFailed,
+  loadComicFileListFailure,
+  loadComicFileLists,
+  loadComicFileListSuccess,
+  resetComicFileList,
   setComicFilesSelectedState
 } from '@app/comic-files/actions/comic-file-list.actions';
 import { ComicFileGroup } from '@app/comic-files/models/comic-file-group';
@@ -46,8 +47,8 @@ export const initialState: ComicFileListState = {
 export const reducer = createReducer(
   initialState,
 
-  on(loadComicFiles, state => ({ ...state, loading: true })),
-  on(comicFilesLoaded, (state, action) => {
+  on(loadComicFileLists, state => ({ ...state, loading: true })),
+  on(loadComicFileListSuccess, (state, action) => {
     const groups = action.groups;
     const files = action.groups
       .map(entry => entry.files)
@@ -60,10 +61,16 @@ export const reducer = createReducer(
       selections: []
     };
   }),
-  on(loadComicFilesFailed, state => ({
+  on(loadComicFileListFailure, state => ({
     ...state,
     loading: false,
     files: [],
+    selections: []
+  })),
+  on(resetComicFileList, state => ({
+    ...state,
+    files: [],
+    groups: [],
     selections: []
   })),
   on(setComicFilesSelectedState, (state, action) => {
@@ -80,3 +87,8 @@ export const reducer = createReducer(
     selections: []
   }))
 );
+
+export const comicFileListFeature = createFeature({
+  name: COMIC_FILE_LIST_FEATURE_KEY,
+  reducer
+});

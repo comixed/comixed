@@ -33,12 +33,15 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import {
-  comicFilesSent,
+  sendComicFilesSuccess,
   sendComicFiles,
-  sendComicFilesFailed
+  sendComicFilesFailure
 } from '@app/comic-files/actions/import-comic-files.actions';
 import { hot } from 'jasmine-marbles';
-import { clearComicFileSelections } from '@app/comic-files/actions/comic-file-list.actions';
+import {
+  clearComicFileSelections,
+  resetComicFileList
+} from '@app/comic-files/actions/comic-file-list.actions';
 
 describe('ImportComicFilesEffects', () => {
   const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];
@@ -92,8 +95,8 @@ describe('ImportComicFilesEffects', () => {
         skipMetadata: SKIP_METADATA,
         skipBlockingPages: SKIP_BLOCKING_PAGES
       });
-      const outcome1 = comicFilesSent();
-      const outcome2 = clearComicFileSelections();
+      const outcome1 = sendComicFilesSuccess();
+      const outcome2 = resetComicFileList();
 
       actions$ = hot('-a', { a: action });
       comicImportService.sendComicFiles
@@ -119,7 +122,7 @@ describe('ImportComicFilesEffects', () => {
         skipMetadata: SKIP_METADATA,
         skipBlockingPages: SKIP_BLOCKING_PAGES
       });
-      const outcome = sendComicFilesFailed();
+      const outcome = sendComicFilesFailure();
 
       actions$ = hot('-a', { a: action });
       comicImportService.sendComicFiles
@@ -141,7 +144,7 @@ describe('ImportComicFilesEffects', () => {
         skipMetadata: SKIP_METADATA,
         skipBlockingPages: SKIP_BLOCKING_PAGES
       });
-      const outcome = sendComicFilesFailed();
+      const outcome = sendComicFilesFailure();
 
       actions$ = hot('-a', { a: action });
       comicImportService.sendComicFiles
