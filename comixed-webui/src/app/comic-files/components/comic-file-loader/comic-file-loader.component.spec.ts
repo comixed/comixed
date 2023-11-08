@@ -31,7 +31,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { USER_ADMIN } from '@app/user/user.fixtures';
 import { ROOT_DIRECTORY } from '@app/comic-files/comic-file.fixtures';
-import { loadComicFiles } from '@app/comic-files/actions/comic-file-list.actions';
+import { loadComicFileLists } from '@app/comic-files/actions/comic-file-list.actions';
 
 describe('ComicFileLoaderComponent', () => {
   const MAXIMUM = Math.abs(Math.floor(Math.random() * 1000));
@@ -81,7 +81,7 @@ describe('ComicFileLoaderComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        loadComicFiles({ directory: ROOT_DIRECTORY, maximum: MAXIMUM })
+        loadComicFileLists({ directory: ROOT_DIRECTORY, maximum: MAXIMUM })
       );
     });
   });

@@ -28,10 +28,10 @@ export const sendComicFiles = createAction(
   }>()
 );
 
-export const comicFilesSent = createAction(
+export const sendComicFilesSuccess = createAction(
   '[Import ComicBook Files] Importing comic files has started'
 );
 
-export const sendComicFilesFailed = createAction(
+export const sendComicFilesFailure = createAction(
   '[Import ComicBook Files] Failed to begin importing comic files'
 );

@@ -22,15 +22,15 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import {
-  comicFilesSent,
   sendComicFiles,
-  sendComicFilesFailed
+  sendComicFilesFailure,
+  sendComicFilesSuccess
 } from '@app/comic-files/actions/import-comic-files.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicImportService } from '@app/comic-files/services/comic-import.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
-import { clearComicFileSelections } from '@app/comic-files/actions/comic-file-list.actions';
+import { resetComicFileList } from '@app/comic-files/actions/comic-file-list.actions';
 
 @Injectable()
 export class ImportComicFilesEffects {
@@ -55,7 +55,7 @@ export class ImportComicFilesEffects {
                 )
               )
             ),
-            mergeMap(() => [comicFilesSent(), clearComicFileSelections()]),
+            mergeMap(() => [sendComicFilesSuccess(), resetComicFileList()]),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(
@@ -63,7 +63,7 @@ export class ImportComicFilesEffects {
                   'comic-files.import-comic-files.effect-failure'
                 )
               );
-              return of(sendComicFilesFailed());
+              return of(sendComicFilesFailure());
             })
           )
       ),
@@ -72,7 +72,7 @@ export class ImportComicFilesEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(sendComicFilesFailed());
+        return of(sendComicFilesFailure());
       })
     );
   });

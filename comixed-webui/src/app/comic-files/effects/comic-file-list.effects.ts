@@ -25,9 +25,9 @@ import { ComicImportService } from '@app/comic-files/services/comic-import.servi
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  comicFilesLoaded,
-  loadComicFiles,
-  loadComicFilesFailed
+  loadComicFileListSuccess,
+  loadComicFileLists,
+  loadComicFileListFailure
 } from '@app/comic-files/actions/comic-file-list.actions';
 import { LoadComicFilesResponse } from '@app/library/models/net/load-comic-files-response';
 import { saveUserPreference } from '@app/user/actions/user.actions';
@@ -40,7 +40,7 @@ import {
 export class ComicFileListEffects {
   loadComicFiles$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadComicFiles),
+      ofType(loadComicFileLists),
       tap(action => this.logger.debug('Effect: load comic files:', action)),
       switchMap(action =>
         this.comicImportService
@@ -67,7 +67,7 @@ export class ComicFileListEffects {
               )
             ),
             mergeMap((response: LoadComicFilesResponse) => [
-              comicFilesLoaded({ groups: response.groups }),
+              loadComicFileListSuccess({ groups: response.groups }),
               saveUserPreference({
                 name: IMPORT_ROOT_DIRECTORY_PREFERENCE,
                 value: action.directory
@@ -84,7 +84,7 @@ export class ComicFileListEffects {
                   'comic-files.load-comic-files.effect-failure'
                 )
               );
-              return of(loadComicFilesFailed());
+              return of(loadComicFileListFailure());
             })
           )
       ),
@@ -93,7 +93,7 @@ export class ComicFileListEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(loadComicFilesFailed());
+        return of(loadComicFileListFailure());
       })
     );
   });

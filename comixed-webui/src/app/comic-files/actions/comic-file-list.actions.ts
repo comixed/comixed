@@ -20,25 +20,29 @@ import { createAction, props } from '@ngrx/store';
 import { ComicFile } from '@app/comic-files/models/comic-file';
 import { ComicFileGroup } from '@app/comic-files/models/comic-file-group';
 
-export const loadComicFiles = createAction(
-  '[ComicBook File List] Load comics in a file system',
+export const loadComicFileLists = createAction(
+  '[Comic File List] Load comics in a file system',
   props<{ directory: string; maximum: number }>()
 );
 
-export const comicFilesLoaded = createAction(
-  '[ComicBook File List] Loaded comics in a file system',
+export const loadComicFileListSuccess = createAction(
+  '[Comic File List] Loaded comics in a file system',
   props<{ groups: ComicFileGroup[] }>()
 );
 
-export const loadComicFilesFailed = createAction(
-  '[ComicBook File List] Failed to load comic files in a file system'
+export const loadComicFileListFailure = createAction(
+  '[Comic File List] Failed to load comic files in a file system'
+);
+
+export const resetComicFileList = createAction(
+  '[Comic File List] Clears the list of comic book files'
 );
 
 export const setComicFilesSelectedState = createAction(
-  '[ComicBook File List] Set the selected state on comic files',
+  '[Comic File List] Set the selected state on comic files',
   props<{ files: ComicFile[]; selected: boolean }>()
 );
 
 export const clearComicFileSelections = createAction(
-  '[ComicBook File List] Clear all selected comic files'
+  '[Comic File List] Clear all selected comic files'
 );
