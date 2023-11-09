@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   configurationOptionsSaved,
   saveConfigurationOptions,
@@ -41,3 +41,8 @@ export const reducer = createReducer(
   on(configurationOptionsSaved, state => ({ ...state, saving: false })),
   on(saveConfigurationOptionsFailed, state => ({ ...state, saving: false }))
 );
+
+export const saveConfigurationOptionsFeature = createFeature({
+  name: SAVE_CONFIGURATION_OPTIONS_FEATURE_KEY,
+  reducer
+});

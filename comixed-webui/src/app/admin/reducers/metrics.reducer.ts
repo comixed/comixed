@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   loadMetricDetails,
   loadMetricDetailsFailed,
@@ -60,3 +60,8 @@ export const reducer = createReducer(
   })),
   on(loadMetricDetailsFailed, state => ({ ...state, busy: false }))
 );
+
+export const metricsFeature = createFeature({
+  name: METRICS_FEATURE_KEY,
+  reducer
+});

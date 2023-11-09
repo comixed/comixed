@@ -27,12 +27,12 @@ import {
   FILENAME_SCRAPING_RULE_3
 } from '@app/admin/admin.fixtures';
 import {
-  filenameScrapingRulesLoaded,
-  filenameScrapingRulesSaved,
   loadFilenameScrapingRules,
-  loadFilenameScrapingRulesFailed,
+  loadFilenameScrapingRulesFailure,
+  loadFilenameScrapingRulesSuccess,
   saveFilenameScrapingRules,
-  saveFilenameScrapingRulesFailed
+  saveFilenameScrapingRulesFailure,
+  saveFilenameScrapingRulesSuccess
 } from '@app/admin/actions/filename-scraping-rule-list.actions';
 
 describe('FilenameScrapingRuleList Reducer', () => {
@@ -70,35 +70,35 @@ describe('FilenameScrapingRuleList Reducer', () => {
     it('sets the busy flag', () => {
       expect(state.busy).toBeTrue();
     });
-  });
 
-  describe('success loading the rules', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, busy: false, rules: [] },
-        filenameScrapingRulesLoaded({ rules: RULES })
-      );
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: false, rules: [] },
+          loadFilenameScrapingRulesSuccess({ rules: RULES })
+        );
+      });
+
+      it('sets the rules', () => {
+        expect(state.rules).toEqual(RULES);
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
     });
 
-    it('sets the rules', () => {
-      expect(state.rules).toEqual(RULES);
-    });
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: true },
+          loadFilenameScrapingRulesFailure()
+        );
+      });
 
-    it('clears the busy flag', () => {
-      expect(state.busy).toBeFalse();
-    });
-  });
-
-  describe('failure loading the rules', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, busy: true },
-        loadFilenameScrapingRulesFailed()
-      );
-    });
-
-    it('clears the busy flag', () => {
-      expect(state.busy).toBeFalse();
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
     });
   });
 
@@ -113,35 +113,35 @@ describe('FilenameScrapingRuleList Reducer', () => {
     it('sts the busy flag', () => {
       expect(state.busy).toBeTrue();
     });
-  });
 
-  describe('successfully saved the rules', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, busy: true, rules: [] },
-        filenameScrapingRulesSaved({ rules: RULES })
-      );
+    describe('successful', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: true, rules: [] },
+          saveFilenameScrapingRulesSuccess({ rules: RULES })
+        );
+      });
+
+      it('sets the rules', () => {
+        expect(state.rules).toEqual(RULES);
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
     });
 
-    it('sets the rules', () => {
-      expect(state.rules).toEqual(RULES);
-    });
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: true },
+          saveFilenameScrapingRulesFailure()
+        );
+      });
 
-    it('clears the busy flag', () => {
-      expect(state.busy).toBeFalse();
-    });
-  });
-
-  describe('failure saving the rules', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, busy: true },
-        saveFilenameScrapingRulesFailed()
-      );
-    });
-
-    it('clears the busy flag', () => {
-      expect(state.busy).toBeFalse();
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
     });
   });
 });

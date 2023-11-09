@@ -19,12 +19,12 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
-  filenameScrapingRulesLoaded,
-  filenameScrapingRulesSaved,
+  loadFilenameScrapingRulesSuccess,
+  saveFilenameScrapingRulesSuccess,
   loadFilenameScrapingRules,
-  loadFilenameScrapingRulesFailed,
+  loadFilenameScrapingRulesFailure,
   saveFilenameScrapingRules,
-  saveFilenameScrapingRulesFailed
+  saveFilenameScrapingRulesFailure
 } from '@app/admin/actions/filename-scraping-rule-list.actions';
 import { FilenameScrapingRuleService } from '@app/admin/services/filename-scraping-rule.service';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -46,7 +46,7 @@ export class FilenameScrapingRuleListEffects {
         this.filenameScrapingRuleService.load().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map((response: FilenameScrapingRule[]) =>
-            filenameScrapingRulesLoaded({ rules: response })
+            loadFilenameScrapingRulesSuccess({ rules: response })
           ),
           catchError(error => {
             this.logger.error('Service failure:', error);
@@ -55,7 +55,7 @@ export class FilenameScrapingRuleListEffects {
                 'filename-scraping-rules.load-all.effect-failure'
               )
             );
-            return of(loadFilenameScrapingRulesFailed());
+            return of(loadFilenameScrapingRulesFailure());
           })
         )
       ),
@@ -64,7 +64,7 @@ export class FilenameScrapingRuleListEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(loadFilenameScrapingRulesFailed());
+        return of(loadFilenameScrapingRulesFailure());
       })
     );
   });
@@ -86,7 +86,7 @@ export class FilenameScrapingRuleListEffects {
             )
           ),
           map((response: FilenameScrapingRule[]) =>
-            filenameScrapingRulesSaved({ rules: response })
+            saveFilenameScrapingRulesSuccess({ rules: response })
           ),
           catchError(error => {
             this.logger.error('Service failure:', error);
@@ -95,7 +95,7 @@ export class FilenameScrapingRuleListEffects {
                 'filename-scraping-rules.save-all.effect-failure'
               )
             );
-            return of(saveFilenameScrapingRulesFailed());
+            return of(saveFilenameScrapingRulesFailure());
           })
         )
       ),
@@ -104,7 +104,7 @@ export class FilenameScrapingRuleListEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(saveFilenameScrapingRulesFailed());
+        return of(saveFilenameScrapingRulesFailure());
       })
     );
   });
