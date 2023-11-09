@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   loadServerHealth,
   loadServerHealthFailed,
@@ -57,3 +57,8 @@ export const reducer = createReducer(
   on(serverShutdown, state => ({ ...state, busy: false, shuttingDown: true })),
   on(shutdownServerFailed, state => ({ ...state, busy: false }))
 );
+
+export const serverRuntimeFeature = createFeature({
+  name: SERVER_RUNTIME_FEATURE_KEY,
+  reducer
+});

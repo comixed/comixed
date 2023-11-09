@@ -180,7 +180,8 @@ describe('FilenameScrapingRulesConfigurationComponent', () => {
   });
 
   describe('editing a rule', () => {
-    const VALUE = Math.random();
+    const VALUE = Math.floor(Math.random());
+
     let rule: EditableListItem<FilenameScrapingRule>;
 
     beforeEach(() => {
@@ -218,7 +219,7 @@ describe('FilenameScrapingRulesConfigurationComponent', () => {
 
     describe('the series position', () => {
       beforeEach(() => {
-        component.onSeriesPositionEdited(rule, VALUE);
+        component.onSeriesPositionEdited(rule, `${VALUE}`);
       });
 
       it('updates the edited value', () => {
@@ -232,7 +233,7 @@ describe('FilenameScrapingRulesConfigurationComponent', () => {
 
     describe('the volume position', () => {
       beforeEach(() => {
-        component.onVolumePositionEdited(rule, VALUE);
+        component.onVolumePositionEdited(rule, `${VALUE}`);
       });
 
       it('updates the edited value', () => {
@@ -246,7 +247,7 @@ describe('FilenameScrapingRulesConfigurationComponent', () => {
 
     describe('the issue number position', () => {
       beforeEach(() => {
-        component.onIssueNumberPositionEdited(rule, VALUE);
+        component.onIssueNumberPositionEdited(rule, `${VALUE}`);
       });
 
       it('updates the edited value', () => {
@@ -260,7 +261,7 @@ describe('FilenameScrapingRulesConfigurationComponent', () => {
 
     describe('the cover date position', () => {
       beforeEach(() => {
-        component.onCoverDatePositionEdited(rule, VALUE);
+        component.onCoverDatePositionEdited(rule, `${VALUE}`);
       });
 
       it('updates the edited value', () => {

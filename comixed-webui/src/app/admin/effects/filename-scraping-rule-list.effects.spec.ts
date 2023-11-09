@@ -27,12 +27,12 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {
-  filenameScrapingRulesLoaded,
-  filenameScrapingRulesSaved,
+  loadFilenameScrapingRulesSuccess,
+  saveFilenameScrapingRulesSuccess,
   loadFilenameScrapingRules,
-  loadFilenameScrapingRulesFailed,
+  loadFilenameScrapingRulesFailure,
   saveFilenameScrapingRules,
-  saveFilenameScrapingRulesFailed
+  saveFilenameScrapingRulesFailure
 } from '@app/admin/actions/filename-scraping-rule-list.actions';
 import { hot } from 'jasmine-marbles';
 import {
@@ -92,7 +92,7 @@ describe('FilenameScrapingRuleListEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = RULES;
       const action = loadFilenameScrapingRules();
-      const outcome = filenameScrapingRulesLoaded({ rules: RULES });
+      const outcome = loadFilenameScrapingRulesSuccess({ rules: RULES });
 
       actions$ = hot('-a', { a: action });
       filenameScrapingRuleService.load.and.returnValue(of(serviceResponse));
@@ -104,7 +104,7 @@ describe('FilenameScrapingRuleListEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = loadFilenameScrapingRules();
-      const outcome = loadFilenameScrapingRulesFailed();
+      const outcome = loadFilenameScrapingRulesFailure();
 
       actions$ = hot('-a', { a: action });
       filenameScrapingRuleService.load.and.returnValue(
@@ -118,7 +118,7 @@ describe('FilenameScrapingRuleListEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = loadFilenameScrapingRules();
-      const outcome = loadFilenameScrapingRulesFailed();
+      const outcome = loadFilenameScrapingRulesFailure();
 
       actions$ = hot('-a', { a: action });
       filenameScrapingRuleService.load.and.throwError('expected');
@@ -133,7 +133,7 @@ describe('FilenameScrapingRuleListEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = RULES;
       const action = saveFilenameScrapingRules({ rules: RULES });
-      const outcome = filenameScrapingRulesSaved({ rules: RULES });
+      const outcome = saveFilenameScrapingRulesSuccess({ rules: RULES });
 
       actions$ = hot('-a', { a: action });
       filenameScrapingRuleService.save.and.returnValue(of(serviceResponse));
@@ -146,7 +146,7 @@ describe('FilenameScrapingRuleListEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = saveFilenameScrapingRules({ rules: RULES });
-      const outcome = saveFilenameScrapingRulesFailed();
+      const outcome = saveFilenameScrapingRulesFailure();
 
       actions$ = hot('-a', { a: action });
       filenameScrapingRuleService.save.and.returnValue(
@@ -160,7 +160,7 @@ describe('FilenameScrapingRuleListEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = saveFilenameScrapingRules({ rules: RULES });
-      const outcome = saveFilenameScrapingRulesFailed();
+      const outcome = saveFilenameScrapingRulesFailure();
 
       actions$ = hot('-a', { a: action });
       filenameScrapingRuleService.save.and.throwError('expected');

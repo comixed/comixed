@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   batchProcessListLoaded,
   loadBatchProcessList,
@@ -46,3 +46,8 @@ export const reducer = createReducer(
   })),
   on(loadBatchProcessListFailed, state => ({ ...state, busy: false }))
 );
+
+export const batchProcessFeature = createFeature({
+  name: BATCH_PROCESSES_FEATURE_KEY,
+  reducer
+});

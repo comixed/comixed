@@ -76,7 +76,7 @@ export class FilenameScrapingRulesConfigurationComponent
     this.ruleStateSubscription = this.store
       .select(selectFilenameScrapingRulesState)
       .subscribe(state => {
-        this.logger.trace('Filename scraping rules state changed');
+        this.logger.debug('Filename scraping rules state changed');
         this.store.dispatch(setBusyState({ enabled: state.busy }));
       });
     this.rulesSubscription = this.store
@@ -84,52 +84,49 @@ export class FilenameScrapingRulesConfigurationComponent
       .subscribe(rules => (this.rules = rules));
   }
 
-  private _rules: FilenameScrapingRule[] = [];
-
   get rules(): FilenameScrapingRule[] {
-    return this._rules;
+    return this.dataSource.data.map(entry => entry.editedValue);
   }
 
   set rules(rules: FilenameScrapingRule[]) {
-    this.logger.trace('Setting filename scraping rules');
-    this._rules = rules;
+    this.logger.debug('Setting filename scraping rules:', rules);
     const oldRules = this.dataSource.data;
-    this.dataSource.data = _.cloneDeep(rules).map(rule => {
+    this.dataSource.data = rules.map(rule => {
       const oldRule = oldRules.find(entry => entry.item.id === rule.id);
 
       return {
         item: rule,
         edited: oldRule?.edited || false,
-        editedValue: oldRule?.editedValue || rule
+        editedValue: rule
       };
     });
   }
 
   ngOnInit(): void {
-    this.logger.trace('Loading filename scraping rules');
+    this.logger.debug('Loading filename scraping rules');
     this.store.dispatch(loadFilenameScrapingRules());
   }
 
   ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from language changes');
+    this.logger.debug('Unsubscribing from language changes');
     this.langChangeSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from rule list state changes');
+    this.logger.debug('Unsubscribing from rule list state changes');
     this.ruleStateSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from rule list changes');
+    this.logger.debug('Unsubscribing from rule list changes');
     this.rulesSubscription.unsubscribe();
   }
 
   onReorderRules(
     dragDropEvent: CdkDragDrop<EditableListItem<FilenameScrapingRule>[], any>
   ): void {
-    this.logger.trace('Filename scraping rules reordered');
+    this.logger.debug('Filename scraping rules reordered');
     const rules = _.cloneDeep(this.rules);
     moveItemInArray(
       rules,
       dragDropEvent.previousIndex,
       dragDropEvent.currentIndex
     );
-    this.logger.trace('Updating priority values');
+    this.logger.debug('Updating priority values');
     rules.forEach((rule, index) => (rule.priority = index + 1));
     this.rules = rules;
   }
@@ -160,38 +157,38 @@ export class FilenameScrapingRulesConfigurationComponent
 
   onCoverDatePositionEdited(
     entry: EditableListItem<FilenameScrapingRule>,
-    value: number
+    value: string
   ): void {
-    entry.editedValue.coverDatePosition = value;
+    entry.editedValue.coverDatePosition = parseInt(value, 10);
     entry.edited = true;
   }
 
   onIssueNumberPositionEdited(
     entry: EditableListItem<FilenameScrapingRule>,
-    value: number
+    value: string
   ): void {
-    entry.editedValue.issueNumberPosition = value;
+    entry.editedValue.issueNumberPosition = parseInt(value, 10);
     entry.edited = true;
   }
 
   onVolumePositionEdited(
     entry: EditableListItem<FilenameScrapingRule>,
-    value: number
+    value: string
   ): void {
-    entry.editedValue.volumePosition = value;
+    entry.editedValue.volumePosition = parseInt(value, 10);
     entry.edited = true;
   }
 
   onSeriesPositionEdited(
     entry: EditableListItem<FilenameScrapingRule>,
-    value: number
+    value: string
   ): void {
-    entry.editedValue.seriesPosition = value;
+    entry.editedValue.seriesPosition = parseInt(value, 10);
     entry.edited = true;
   }
 
   onSaveRules(): void {
-    this.logger.trace('Confirming saving filename scraping rules');
+    this.logger.debug('Confirming saving filename scraping rules');
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'filename-scraping-rules.save-all.confirmation-title'
@@ -200,14 +197,14 @@ export class FilenameScrapingRulesConfigurationComponent
         'filename-scraping-rules.save-all.confirmation-message'
       ),
       confirm: () => {
-        this.logger.trace('Firing action: save filename scraping rules');
+        this.logger.debug('Firing action: save filename scraping rules');
         this.store.dispatch(saveFilenameScrapingRules({ rules: this.rules }));
       }
     });
   }
 
   private loadTranslations(): void {
-    this.logger.trace('Loading tab title');
+    this.logger.debug('Loading tab title');
     this.titleService.setTitle(
       this.translateService.instant('filename-scraping-rules.tab-title')
     );
