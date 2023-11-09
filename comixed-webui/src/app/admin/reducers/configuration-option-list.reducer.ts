@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   configurationOptionsLoaded,
   loadConfigurationOptions,
@@ -50,3 +50,8 @@ export const reducer = createReducer(
   })),
   on(loadConfigurationOptionsFailed, state => ({ ...state, loading: false }))
 );
+
+export const configurationOptionListFeature = createFeature({
+  name: CONFIGURATION_OPTION_LIST_FEATURE_KEY,
+  reducer
+});

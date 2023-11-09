@@ -16,14 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  filenameScrapingRulesLoaded,
-  filenameScrapingRulesSaved,
   loadFilenameScrapingRules,
-  loadFilenameScrapingRulesFailed,
+  loadFilenameScrapingRulesFailure,
+  loadFilenameScrapingRulesSuccess,
   saveFilenameScrapingRules,
-  saveFilenameScrapingRulesFailed
+  saveFilenameScrapingRulesFailure,
+  saveFilenameScrapingRulesSuccess
 } from '../actions/filename-scraping-rule-list.actions';
 import { FilenameScrapingRule } from '@app/admin/models/filename-scraping-rule';
 
@@ -44,17 +44,22 @@ export const reducer = createReducer(
   initialState,
 
   on(loadFilenameScrapingRules, state => ({ ...state, busy: true })),
-  on(filenameScrapingRulesLoaded, (state, action) => ({
+  on(loadFilenameScrapingRulesSuccess, (state, action) => ({
     ...state,
     busy: false,
     rules: action.rules
   })),
-  on(loadFilenameScrapingRulesFailed, state => ({ ...state, busy: false })),
+  on(loadFilenameScrapingRulesFailure, state => ({ ...state, busy: false })),
   on(saveFilenameScrapingRules, state => ({ ...state, busy: true })),
-  on(filenameScrapingRulesSaved, (state, action) => ({
+  on(saveFilenameScrapingRulesSuccess, (state, action) => ({
     ...state,
     busy: false,
     rules: action.rules
   })),
-  on(saveFilenameScrapingRulesFailed, state => ({ ...state, busy: false }))
+  on(saveFilenameScrapingRulesFailure, state => ({ ...state, busy: false }))
 );
+
+export const filenameScrapingRulesFeature = createFeature({
+  name: FILENAME_SCRAPING_RULES_FEATURE_KEY,
+  reducer
+});

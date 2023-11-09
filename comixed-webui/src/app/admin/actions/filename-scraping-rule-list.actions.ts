@@ -23,12 +23,12 @@ export const loadFilenameScrapingRules = createAction(
   '[Filename Scraping Rules] Load filename scraping rules'
 );
 
-export const filenameScrapingRulesLoaded = createAction(
+export const loadFilenameScrapingRulesSuccess = createAction(
   '[Filename Scraping Rules] Filename scraping rules were loaded',
   props<{ rules: FilenameScrapingRule[] }>()
 );
 
-export const loadFilenameScrapingRulesFailed = createAction(
+export const loadFilenameScrapingRulesFailure = createAction(
   '[Filename Scraping Rules] Failed to load the filename scraping rues'
 );
 
@@ -37,11 +37,11 @@ export const saveFilenameScrapingRules = createAction(
   props<{ rules: FilenameScrapingRule[] }>()
 );
 
-export const filenameScrapingRulesSaved = createAction(
+export const saveFilenameScrapingRulesSuccess = createAction(
   '[Filename Scraping Rules] Filename scraping rules saved',
   props<{ rules: FilenameScrapingRule[] }>()
 );
 
-export const saveFilenameScrapingRulesFailed = createAction(
+export const saveFilenameScrapingRulesFailure = createAction(
   '[Filename Scraping Rules] Failed to save filename scraping rules'
 );
