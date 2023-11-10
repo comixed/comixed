@@ -26,13 +26,13 @@ import org.comixedproject.model.comicbooks.ComicDetail;
 
 /**
  * <code>LoadComicDetailsForTagRequest</code> represents the payload when loading {@link
- * ComicDetail} records for a tag type.
+ * ComicDetail} records that are unread by a user.
  *
  * @author Darryl L. Pierce
  */
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoadComicDetailsForTagRequest {
+public class LoadUnreadComicDetailsRequest {
   @JsonProperty("pageSize")
   @Getter
   private int pageSize;
@@ -40,14 +40,6 @@ public class LoadComicDetailsForTagRequest {
   @JsonProperty("pageIndex")
   @Getter
   private int pageIndex;
-
-  @JsonProperty("tagType")
-  @Getter
-  private String tagType;
-
-  @JsonProperty("tagValue")
-  @Getter
-  private String tagValue;
 
   @JsonProperty("sortBy")
   @Getter

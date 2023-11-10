@@ -24,7 +24,8 @@ import {
   loadComicDetails,
   loadComicDetailsById,
   loadComicDetailsFailed,
-  loadComicDetailsForCollection
+  loadComicDetailsForCollection,
+  loadUnreadComicDetails
 } from '../actions/comic-details-list.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicDetailListService } from '@app/comic-books/services/comic-detail-list.service';
@@ -39,6 +40,7 @@ export class ComicDetailsListEffects {
   loadComicDetails$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadComicDetails),
+      tap(action => this.logger.debug('Loading comic details:', action)),
       switchMap(action =>
         this.comicBookListService
           .loadComicDetails({
@@ -49,7 +51,6 @@ export class ComicDetailsListEffects {
             archiveType: action.archiveType,
             comicType: action.comicType,
             comicState: action.comicState,
-            readState: action.readState,
             unscrapedState: action.unscrapedState,
             searchText: action.searchText,
             publisher: action.publisher,
@@ -73,6 +74,7 @@ export class ComicDetailsListEffects {
   loadComicDetailsById$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadComicDetailsById),
+      tap(action => this.logger.debug('Loading comic details by id:', action)),
       switchMap(action =>
         this.comicBookListService
           .loadComicDetailsById({
@@ -93,6 +95,9 @@ export class ComicDetailsListEffects {
   loadComicDetailsForCollection$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadComicDetailsForCollection),
+      tap(action =>
+        this.logger.debug('Loading comic details for collection:', action)
+      ),
       switchMap(action =>
         this.comicBookListService
           .loadComicDetailsForCollection({
@@ -100,6 +105,30 @@ export class ComicDetailsListEffects {
             pageIndex: action.pageIndex,
             tagType: action.tagType,
             tagValue: action.tagValue,
+            sortBy: action.sortBy,
+            sortDirection: action.sortDirection
+          })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            mergeMap((response: LoadComicDetailsResponse) =>
+              this.doComicDetailsLoaded(response)
+            ),
+            catchError(error => this.doServiceFailure(error))
+          )
+      ),
+      catchError(error => this.doGeneralFailure(error))
+    );
+  });
+
+  loadUnreadComicDetails$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(loadUnreadComicDetails),
+      tap(action => this.logger.debug('Loading unread comic details:', action)),
+      switchMap(action =>
+        this.comicBookListService
+          .loadUnreadComicDetails({
+            pageSize: action.pageSize,
+            pageIndex: action.pageIndex,
             sortBy: action.sortBy,
             sortDirection: action.sortDirection
           })

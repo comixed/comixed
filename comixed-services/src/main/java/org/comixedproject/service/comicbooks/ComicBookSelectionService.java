@@ -92,7 +92,6 @@ public class ComicBookSelectionService {
    * @param archiveType the optional archive type
    * @param comicType the optional cover type
    * @param comicState the optional comic state
-   * @param unreadState the optional unread state
    * @param unscrapedState the optional unscraped state
    * @param searchText the optional search text
    * @param adding adding or removing flag
@@ -105,7 +104,6 @@ public class ComicBookSelectionService {
       final ArchiveType archiveType,
       final ComicType comicType,
       final ComicState comicState,
-      final Boolean unreadState,
       final Boolean unscrapedState,
       final String searchText,
       final boolean adding) {
@@ -115,7 +113,6 @@ public class ComicBookSelectionService {
     builder.setArchiveType(archiveType);
     builder.setComicType(comicType);
     builder.setComicState(comicState);
-    builder.setUnreadState(unreadState);
     builder.setUnscrapedState(unscrapedState);
     builder.setSearchText(searchText);
 

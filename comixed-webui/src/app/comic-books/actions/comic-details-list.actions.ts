@@ -35,7 +35,6 @@ export const loadComicDetails = createAction(
     archiveType: ArchiveType;
     comicType: ComicType;
     comicState: ComicState;
-    readState: boolean;
     unscrapedState: boolean;
     searchText: string;
     publisher: string;
@@ -56,6 +55,16 @@ export const loadComicDetailsForCollection = createAction(
     pageIndex: number;
     tagType: TagType;
     tagValue: string;
+    sortBy: string;
+    sortDirection: string;
+  }>()
+);
+
+export const loadUnreadComicDetails = createAction(
+  '[Comic Detail List] Load comic details for unread comic books',
+  props<{
+    pageSize: number;
+    pageIndex: number;
     sortBy: string;
     sortDirection: string;
   }>()

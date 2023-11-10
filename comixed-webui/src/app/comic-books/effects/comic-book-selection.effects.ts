@@ -155,7 +155,6 @@ export class ComicBookSelectionEffects {
             archiveType: action.archiveType,
             comicType: action.comicType,
             comicState: action.comicState,
-            readState: action.readState,
             unscrapedState: action.unscrapedState,
             searchText: action.searchText,
             selected: action.selected

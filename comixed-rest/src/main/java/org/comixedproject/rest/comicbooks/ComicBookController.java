@@ -27,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -357,7 +358,6 @@ public class ComicBookController {
             request.getArchiveType(),
             request.getComicType(),
             request.getComicState(),
-            request.getReadState(),
             request.getUnscrapedState(),
             request.getSearchText(),
             request.getPublisher(),
@@ -372,7 +372,6 @@ public class ComicBookController {
             request.getArchiveType(),
             request.getComicType(),
             request.getComicState(),
-            request.getReadState(),
             request.getUnscrapedState(),
             request.getSearchText(),
             request.getPublisher(),
@@ -385,7 +384,6 @@ public class ComicBookController {
             request.getArchiveType(),
             request.getComicType(),
             request.getComicState(),
-            request.getReadState(),
             request.getUnscrapedState(),
             request.getSearchText(),
             request.getPublisher(),
@@ -398,7 +396,6 @@ public class ComicBookController {
             request.getArchiveType(),
             request.getComicType(),
             request.getComicState(),
-            request.getReadState(),
             request.getUnscrapedState(),
             request.getSearchText(),
             request.getPublisher(),
@@ -484,6 +481,39 @@ public class ComicBookController {
         this.comicDetailService.getCoverMonths(tagType, tagValue),
         this.comicBookService.getComicBookCount(),
         this.comicDetailService.getFilterCount(tagType, tagValue),
+        this.lastReadService.loadForComicDetails(email, comicDetails));
+  }
+
+  @PostMapping(
+      value = "/api/comics/details/load/unread",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.comic-book.load-for-collection")
+  @PreAuthorize("hasRole('READER')")
+  @JsonView(ComicDetailsView.class)
+  public LoadComicDetailsResponse loadUnreadComicDetailList(
+      final Principal principal, @RequestBody() final LoadUnreadComicDetailsRequest request)
+      throws LastReadException {
+    final String email = principal.getName();
+    final int pageSize = request.getPageSize();
+    final int pageIndex = request.getPageIndex();
+    final String sortBy = request.getSortBy();
+    final String sortDirection = request.getSortDirection();
+    log.debug(
+        "Loading unread comics: size={} index={} sort by ={} [{}]",
+        pageSize,
+        pageIndex,
+        sortBy,
+        sortDirection);
+    final List<ComicDetail> comicDetails =
+        this.comicDetailService.loadUnreadComicDetails(
+            email, pageSize, pageIndex, sortBy, sortDirection);
+    return new LoadComicDetailsResponse(
+        comicDetails,
+        Collections.emptyList(),
+        Collections.emptyList(),
+        this.comicBookService.getComicBookCount(),
+        this.lastReadService.getUnreadCountForUser(email),
         this.lastReadService.loadForComicDetails(email, comicDetails));
   }
 }

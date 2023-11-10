@@ -56,10 +56,6 @@ public class MultipleComicBooksSelectionRequest {
   @Getter
   private ComicState comicState;
 
-  @JsonProperty("readState")
-  @Getter
-  private Boolean readState;
-
   @JsonProperty("unscrapedState")
   @Getter
   private Boolean unscrapedState;
@@ -85,8 +81,6 @@ public class MultipleComicBooksSelectionRequest {
         + comicType
         + ", comicState="
         + comicState
-        + ", readState="
-        + readState
         + ", unscrapedState="
         + unscrapedState
         + ", searchText='"
