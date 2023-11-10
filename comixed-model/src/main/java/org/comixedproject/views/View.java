@@ -58,6 +58,9 @@ public interface View {
   /** Used when viewing the details of a user. */
   public interface UserDetailsView extends UserList {}
 
+  /** Used when viewing user statistics. */
+  public interface UserStatistics {}
+
   /** Used when viewing the list of reading lists. */
   public interface ReadingLists {}
 

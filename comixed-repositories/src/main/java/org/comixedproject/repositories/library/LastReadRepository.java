@@ -21,6 +21,7 @@ package org.comixedproject.repositories.library;
 import java.util.List;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.library.LastRead;
+import org.comixedproject.model.net.user.ComicsReadStatistic;
 import org.comixedproject.model.user.ComiXedUser;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -86,4 +87,8 @@ public interface LastReadRepository extends JpaRepository<LastRead, Long> {
   @Query("SELECT e FROM LastRead e WHERE e.user = :user AND e.comicDetail IN (:comicDetails)")
   List<LastRead> loadByComicBookIds(
       @Param("user") final ComiXedUser user, @Param("comicDetails") List<ComicDetail> comicDetails);
+
+  @Query(
+      "SELECT new org.comixedproject.model.net.user.ComicsReadStatistic(d.publisher, COUNT(d)) FROM ComicDetail d WHERE d.publisher IS NOT NULL AND d IN (SELECT l.comicDetail FROM LastRead l WHERE l.user = :user) GROUP BY d.publisher")
+  List<ComicsReadStatistic> loadComicsReadStatistics(@Param("user") ComiXedUser user);
 }

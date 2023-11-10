@@ -18,7 +18,7 @@
 
 import { ActionReducerMap } from '@ngrx/store';
 import {
-  reducer as buildDetailsReducer,
+  reducer as releaseDetailsReducer,
   RELEASE_DETAILS_FEATURE_KEY,
   ReleaseDetailsState
 } from '@app/reducers/release.reducer';
@@ -32,17 +32,24 @@ import {
   DarkThemeState,
   reducer as activeThemeReducer
 } from '@app/reducers/dark-theme.reducer';
+import {
+  COMICS_READ_STATISTICS_FEATURE_KEY,
+  ComicsReadStatisticsState,
+  reducer as comicsReadStatisticsReducer
+} from '@app/reducers/comics-read-statistics.reducer';
 
 export interface AppState {
   [RELEASE_DETAILS_FEATURE_KEY]: ReleaseDetailsState;
   [PROCESS_COMICS_FEATURE_KEY]: ProcessComicsState;
   [DARK_THEME_FEATURE_KEY]: DarkThemeState;
+  [COMICS_READ_STATISTICS_FEATURE_KEY]: ComicsReadStatisticsState;
 }
 
 export type State = AppState;
 
 export const APP_REDUCERS: ActionReducerMap<State> = {
-  [RELEASE_DETAILS_FEATURE_KEY]: buildDetailsReducer,
+  [RELEASE_DETAILS_FEATURE_KEY]: releaseDetailsReducer,
   [PROCESS_COMICS_FEATURE_KEY]: importCountReducer,
-  [DARK_THEME_FEATURE_KEY]: activeThemeReducer
+  [DARK_THEME_FEATURE_KEY]: activeThemeReducer,
+  [COMICS_READ_STATISTICS_FEATURE_KEY]: comicsReadStatisticsReducer
 };
