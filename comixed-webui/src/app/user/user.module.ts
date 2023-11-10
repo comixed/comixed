@@ -19,10 +19,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
-import {
-  reducer as userReducer,
-  USER_FEATURE_KEY
-} from './reducers/user.reducer';
+import { userFeature } from './reducers/user.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { UserEffects } from './effects/user.effects';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
@@ -59,7 +56,7 @@ import { MatSelectModule } from '@angular/material/select';
     UserRouting,
     HttpClientModule,
     TranslateModule.forRoot(),
-    StoreModule.forFeature(USER_FEATURE_KEY, userReducer),
+    StoreModule.forFeature(userFeature),
     EffectsModule.forFeature([UserEffects]),
     GravatarModule,
     MatCardModule,

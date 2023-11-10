@@ -21,10 +21,14 @@ package org.comixedproject.rest.user;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import java.security.Principal;
+import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.net.user.ComicsReadStatistic;
 import org.comixedproject.model.net.user.SaveCurrentUserPreferenceRequest;
 import org.comixedproject.model.net.user.UpdateCurrentUserRequest;
 import org.comixedproject.model.user.ComiXedUser;
+import org.comixedproject.service.library.LastReadException;
+import org.comixedproject.service.library.LastReadService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.comixedproject.views.View;
@@ -42,6 +46,7 @@ import org.springframework.web.bind.annotation.*;
 @Log4j2
 public class UserController {
   @Autowired private UserService userService;
+  @Autowired private LastReadService lastReadService;
 
   /**
    * Loads the current user.
@@ -128,5 +133,28 @@ public class UserController {
     final String password = request.getPassword();
     log.info("Updated user account: id={} email={}", id, email);
     return this.userService.updateCurrentUser(id, email, password);
+  }
+
+  /**
+   * Loads the comics read statistics for a user.
+   *
+   * @param principal the user principal
+   * @return the statistics
+   * @throws ComiXedUserException if an error occurs
+   */
+  @GetMapping(
+      value = "/api/user/statistics/comics/read",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.user.comics-read-statistics")
+  @JsonView(View.UserStatistics.class)
+  public List<ComicsReadStatistic> loadComicsReadStatistics(final Principal principal)
+      throws ComiXedUserException {
+    final String email = principal.getName();
+    log.info("Loading comics read statistics: {}", email);
+    try {
+      return this.lastReadService.loadComicsReadStatistics(email);
+    } catch (LastReadException error) {
+      throw new ComiXedUserException("Failed to load comics read statistics", error);
+    }
   }
 }

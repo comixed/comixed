@@ -74,9 +74,10 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { CollectionsChartComponent } from './components/collections-chart/collections-chart.component';
 import { ComicStateChartComponent } from './components/comic-state-chart/comic-state-chart.component';
 import { ComicsByYearChartComponent } from './components/comics-by-year-chart/comics-by-year-chart.component';
-import { ReadComicsChartComponent } from './components/read-comics-chart/read-comics-chart.component';
+import { ComicsReadChartComponent } from '@app/components/comics-read-chart/comics-read-chart.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
+import { ComicsReadStatisticsEffects } from '@app/effects/comics-read-statistics.effects';
 
 @NgModule({
   declarations: [
@@ -89,7 +90,7 @@ import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
     CollectionsChartComponent,
     ComicStateChartComponent,
     ComicsByYearChartComponent,
-    ReadComicsChartComponent
+    ComicsReadChartComponent
   ],
   imports: [
     AdminModule,
@@ -108,7 +109,12 @@ import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
     MatToolbarModule,
     MatIconModule,
     StoreModule.forRoot(APP_REDUCERS, {}),
-    EffectsModule.forRoot([AppEffects, ReleaseEffects, ImportCountEffects]),
+    EffectsModule.forRoot([
+      AppEffects,
+      ReleaseEffects,
+      ImportCountEffects,
+      ComicsReadStatisticsEffects
+    ]),
     StoreRouterConnectingModule.forRoot(),
     LoggerModule.forRoot({ useLevelGroup: true }),
     TranslateModule.forRoot({

@@ -87,6 +87,9 @@
       "loading-comics": "Loading library..."
     }
   },
+  "load-comics-read-statistics": {
+    "effect-failure": "Failed to load comics read statistics..."
+  },
   "menu": {
     "help": "Project help page...",
     "language-menu": {

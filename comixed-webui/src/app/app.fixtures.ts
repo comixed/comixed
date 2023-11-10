@@ -18,6 +18,7 @@
 
 import { CurrentRelease } from './models/current-release';
 import { LatestRelease } from '@app/models/latest-release';
+import { ComicsReadStatistic } from '@app/models/ui/comics-read-statistic';
 
 export const CURRENT_RELEASE: CurrentRelease = {
   branch: 'branch-name',
@@ -39,4 +40,29 @@ export const LATEST_RELEASE: LatestRelease = {
   url: 'http://latest.release.link',
   updated: new Date().getTime(),
   newer: true
+};
+
+export const COMICS_READ_STATISTICS_1: ComicsReadStatistic = {
+  publisher: 'Publisher 1',
+  count: 804
+};
+
+export const COMICS_READ_STATISTICS_2: ComicsReadStatistic = {
+  publisher: 'Publisher 2',
+  count: 129
+};
+
+export const COMICS_READ_STATISTICS_3: ComicsReadStatistic = {
+  publisher: 'Publisher 3',
+  count: 717
+};
+
+export const COMICS_READ_STATISTICS_4: ComicsReadStatistic = {
+  publisher: 'Publisher 4',
+  count: 320
+};
+
+export const COMICS_READ_STATISTICS_5: ComicsReadStatistic = {
+  publisher: 'Publisher 5',
+  count: 921
 };

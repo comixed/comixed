@@ -26,6 +26,7 @@ import {
 import { interpolate } from '@app/core';
 import {
   DELETE_USER_PREFERENCE_URL,
+  LOAD_COMICS_READ_STATISTICS_URL,
   LOAD_CURRENT_USER_URL,
   LOGIN_USER_URL,
   SAVE_CURRENT_USER_URL,
@@ -45,12 +46,26 @@ import { currentUserLoaded } from '@app/user/actions/user.actions';
 import { WebSocketService } from '@app/messaging';
 import { SaveCurrentUserRequest } from '@app/user/models/net/save-current-user-request';
 import { SaveUserPreferenceRequest } from '@app/user/models/net/save-user-preference-request';
+import {
+  COMICS_READ_STATISTICS_1,
+  COMICS_READ_STATISTICS_2,
+  COMICS_READ_STATISTICS_3,
+  COMICS_READ_STATISTICS_4,
+  COMICS_READ_STATISTICS_5
+} from '@app/app.fixtures';
 
 describe('UserService', () => {
   const USER = USER_READER;
   const PASSWORD = 'this!is!my!password';
   const PREFERENCE_NAME = 'user.preference';
   const PREFERENCE_VALUE = 'preference.value';
+  const COMICS_READ_STATISTICS_DATA = [
+    COMICS_READ_STATISTICS_1,
+    COMICS_READ_STATISTICS_2,
+    COMICS_READ_STATISTICS_3,
+    COMICS_READ_STATISTICS_4,
+    COMICS_READ_STATISTICS_5
+  ];
   const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
 
   let service: UserService;
@@ -231,5 +246,21 @@ describe('UserService', () => {
       password: PASSWORD
     } as SaveCurrentUserRequest);
     req.flush(USER);
+  });
+
+  it('can load the comics read statistics for a user', () => {
+    const serverResponse = COMICS_READ_STATISTICS_DATA;
+
+    service
+      .loadComicsReadStatistics()
+      .subscribe(response =>
+        expect(response).toEqual(COMICS_READ_STATISTICS_DATA)
+      );
+
+    const req = httpMock.expectOne(
+      interpolate(LOAD_COMICS_READ_STATISTICS_URL)
+    );
+    expect(req.request.method).toEqual('GET');
+    req.flush(serverResponse);
   });
 });
