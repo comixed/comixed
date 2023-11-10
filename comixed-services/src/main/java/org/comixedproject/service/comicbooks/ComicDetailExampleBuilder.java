@@ -46,7 +46,6 @@ public class ComicDetailExampleBuilder {
   @Setter private ArchiveType archiveType;
   @Setter private ComicType comicType;
   @Setter private ComicState comicState;
-  @Setter private boolean unreadState = false;
   @Setter private boolean unscrapedState = false;
   @Setter private String searchText;
   @Setter private String publisher;

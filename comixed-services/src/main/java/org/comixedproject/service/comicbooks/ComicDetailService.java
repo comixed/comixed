@@ -369,7 +369,6 @@ public class ComicDetailService {
    * @param archiveType the archive type filter
    * @param comicType the comic type filter
    * @param comicState the comic state filter
-   * @param readState the read state filter
    * @param unscrapedState the unscraped state filter
    * @param searchText the search text filter
    * @param publisher the publisher filter
@@ -387,7 +386,6 @@ public class ComicDetailService {
       final ArchiveType archiveType,
       final ComicType comicType,
       final ComicState comicState,
-      final Boolean readState,
       final Boolean unscrapedState,
       final String searchText,
       final String publisher,
@@ -433,7 +431,6 @@ public class ComicDetailService {
    * @param archiveType the archive type filter
    * @param comicType the comic type filter
    * @param comicState the comic state filter
-   * @param readState the read state filter
    * @param unscrapedState the unscraped state filter
    * @param searchText the search text filter
    * @param publisher the publisher filter
@@ -447,7 +444,6 @@ public class ComicDetailService {
       final ArchiveType archiveType,
       final ComicType comicType,
       final ComicState comicState,
-      final Boolean readState,
       final Boolean unscrapedState,
       final String searchText,
       final String publisher,
@@ -503,7 +499,6 @@ public class ComicDetailService {
    * @param archiveType the archive type filter
    * @param comicType the comic type filter
    * @param comicState the comic state filter
-   * @param readState the read state filter
    * @param unscrapedState the unscraped state filter
    * @param searchText the search text filter
    * @param publisher the publisher filter
@@ -517,7 +512,6 @@ public class ComicDetailService {
       final ArchiveType archiveType,
       final ComicType comicType,
       final ComicState comicState,
-      final Boolean readState,
       final Boolean unscrapedState,
       final String searchText,
       final String publisher,
@@ -579,7 +573,6 @@ public class ComicDetailService {
    * @param archiveType the archive type filter
    * @param comicType the comic type filter
    * @param comicState the comic state filter
-   * @param readState the read state filter
    * @param unscrapedState the unscraped state filter
    * @param searchText the search text filter
    * @param publisher the publisher filter
@@ -593,7 +586,6 @@ public class ComicDetailService {
       final ArchiveType archiveType,
       final ComicType comicType,
       final ComicState comicState,
-      final Boolean readState,
       final Boolean unscrapedState,
       final String searchText,
       final String publisher,
@@ -756,5 +748,17 @@ public class ComicDetailService {
       direction = Sort.Direction.ASC;
     }
     return Sort.by(direction, fieldName);
+  }
+
+  public List<ComicDetail> loadUnreadComicDetails(
+      final String email,
+      final int pageSize,
+      final int pageIndex,
+      final String sortBy,
+      final String sortDirection) {
+    log.debug(
+        "Loading unread comics for user: email={} page={} size={}", email, pageIndex, pageSize);
+    return this.comicDetailRepository.loadUnreadComicDetails(
+        email, PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
   }
 }

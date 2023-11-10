@@ -45,7 +45,8 @@ import {
   loadComicDetails,
   loadComicDetailsById,
   loadComicDetailsFailed,
-  loadComicDetailsForCollection
+  loadComicDetailsForCollection,
+  loadUnreadComicDetails
 } from '@app/comic-books/actions/comic-details-list.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -62,7 +63,6 @@ describe('ComicDetailsListEffects', () => {
   const ARCHIVE_TYPE = ArchiveType.CB7;
   const COMIC_TYPE = ComicType.ISSUE;
   const COMIC_STATE = ComicState.UNPROCESSED;
-  const READ_STATE = Math.random() > 0.5;
   const SCRAPED_STATE = Math.random() > 0.5;
   const SEARCH_TEXT = 'This is some text';
   const SORT_BY = 'addedDate';
@@ -113,6 +113,9 @@ describe('ComicDetailsListEffects', () => {
             ),
             loadComicDetailsForCollection: jasmine.createSpy(
               'ComicDetailListService.loadComicDetailsForCollection()'
+            ),
+            loadUnreadComicDetails: jasmine.createSpy(
+              'ComicDetailListService.loadUnreadComicDetails()'
             )
           }
         }
@@ -154,7 +157,6 @@ describe('ComicDetailsListEffects', () => {
         archiveType: ARCHIVE_TYPE,
         comicType: COMIC_TYPE,
         comicState: COMIC_STATE,
-        readState: READ_STATE,
         unscrapedState: SCRAPED_STATE,
         searchText: SEARCH_TEXT,
         publisher: PUBLISHER,
@@ -182,7 +184,6 @@ describe('ComicDetailsListEffects', () => {
           archiveType: ARCHIVE_TYPE,
           comicType: COMIC_TYPE,
           comicState: COMIC_STATE,
-          readState: READ_STATE,
           unscrapedState: SCRAPED_STATE,
           searchText: SEARCH_TEXT,
           publisher: PUBLISHER,
@@ -207,7 +208,6 @@ describe('ComicDetailsListEffects', () => {
         archiveType: ARCHIVE_TYPE,
         comicType: COMIC_TYPE,
         comicState: COMIC_STATE,
-        readState: READ_STATE,
         unscrapedState: SCRAPED_STATE,
         searchText: SEARCH_TEXT,
         publisher: PUBLISHER,
@@ -228,7 +228,6 @@ describe('ComicDetailsListEffects', () => {
           archiveType: ARCHIVE_TYPE,
           comicType: COMIC_TYPE,
           comicState: COMIC_STATE,
-          readState: READ_STATE,
           unscrapedState: SCRAPED_STATE,
           searchText: SEARCH_TEXT,
           publisher: PUBLISHER,
@@ -253,7 +252,6 @@ describe('ComicDetailsListEffects', () => {
         archiveType: ARCHIVE_TYPE,
         comicType: COMIC_TYPE,
         comicState: COMIC_STATE,
-        readState: READ_STATE,
         unscrapedState: SCRAPED_STATE,
         searchText: SEARCH_TEXT,
         publisher: PUBLISHER,
@@ -274,7 +272,6 @@ describe('ComicDetailsListEffects', () => {
           archiveType: ARCHIVE_TYPE,
           comicType: COMIC_TYPE,
           comicState: COMIC_STATE,
-          readState: READ_STATE,
           unscrapedState: SCRAPED_STATE,
           searchText: SEARCH_TEXT,
           publisher: PUBLISHER,
@@ -447,6 +444,95 @@ describe('ComicDetailsListEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.loadComicDetailsForCollection$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('loading comic details unread by user', () => {
+    it('fires an action on success', () => {
+      const serverResponse = {
+        comicDetails: COMIC_DETAILS,
+        coverYears: COVER_YEARS,
+        coverMonths: COVER_MONTHS,
+        totalCount: TOTAL_COUNT,
+        filteredCount: FILTERED_COUNT,
+        lastReadEntries: LAST_READ_ENTRIES
+      } as LoadComicDetailsResponse;
+      const action = loadUnreadComicDetails({
+        pageSize: PAGE_SIZE,
+        pageIndex: PAGE_INDEX,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      });
+      const outcome1 = comicDetailsLoaded({
+        comicDetails: COMIC_DETAILS,
+        coverYears: COVER_YEARS,
+        coverMonths: COVER_MONTHS,
+        totalCount: TOTAL_COUNT,
+        filteredCount: FILTERED_COUNT
+      });
+      const outcome2 = setLastReadList({ entries: LAST_READ_ENTRIES });
+
+      actions$ = hot('-a', { a: action });
+      comicDetailListService.loadUnreadComicDetails
+        .withArgs({
+          pageSize: PAGE_SIZE,
+          pageIndex: PAGE_INDEX,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
+        .and.returnValue(of(serverResponse));
+
+      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
+      expect(effects.loadUnreadComicDetails$).toBeObservable(expected);
+    });
+
+    it('fires an action on service failure', () => {
+      const serverResponse = new HttpErrorResponse({});
+      const action = loadUnreadComicDetails({
+        pageSize: PAGE_SIZE,
+        pageIndex: PAGE_INDEX,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      });
+      const outcome = loadComicDetailsFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicDetailListService.loadUnreadComicDetails
+        .withArgs({
+          pageSize: PAGE_SIZE,
+          pageIndex: PAGE_INDEX,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
+        .and.returnValue(throwError(serverResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.loadUnreadComicDetails$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = loadUnreadComicDetails({
+        pageSize: PAGE_SIZE,
+        pageIndex: PAGE_INDEX,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      });
+      const outcome = loadComicDetailsFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicDetailListService.loadUnreadComicDetails
+        .withArgs({
+          pageSize: PAGE_SIZE,
+          pageIndex: PAGE_INDEX,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
+        .and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.loadUnreadComicDetails$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

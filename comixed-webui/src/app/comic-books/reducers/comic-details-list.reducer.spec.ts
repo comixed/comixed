@@ -28,7 +28,8 @@ import {
   loadComicDetails,
   loadComicDetailsById,
   loadComicDetailsFailed,
-  loadComicDetailsForCollection
+  loadComicDetailsForCollection,
+  loadUnreadComicDetails
 } from '@app/comic-books/actions/comic-details-list.actions';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
@@ -50,7 +51,6 @@ describe('ComicDetailsList Reducer', () => {
   const ARCHIVE_TYPE = ArchiveType.CB7;
   const COMIC_TYPE = ComicType.ISSUE;
   const COMIC_STATE = ComicState.UNPROCESSED;
-  const READ_STATE = Math.random() > 0.5;
   const UNSCRAPED_STATE = Math.random() > 0.5;
   const SEARCH_TEXT = 'This is some text';
   const SORT_BY = 'addedDate';
@@ -121,7 +121,6 @@ describe('ComicDetailsList Reducer', () => {
           archiveType: ARCHIVE_TYPE,
           comicType: COMIC_TYPE,
           comicState: COMIC_STATE,
-          readState: READ_STATE,
           unscrapedState: UNSCRAPED_STATE,
           searchText: SEARCH_TEXT,
           publisher: PUBLISHER,
@@ -160,6 +159,24 @@ describe('ComicDetailsList Reducer', () => {
           pageIndex: PAGE_INDEX,
           tagType: TAG_TYPE,
           tagValue: TAG_VALUE,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
+      );
+    });
+
+    it('sets the loading flag', () => {
+      expect(state.loading).toBeTrue();
+    });
+  });
+
+  describe('loading comic details that are unread', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, loading: false },
+        loadUnreadComicDetails({
+          pageSize: PAGE_SIZE,
+          pageIndex: PAGE_INDEX,
           sortBy: SORT_BY,
           sortDirection: SORT_DIRECTION
         })

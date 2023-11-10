@@ -98,11 +98,10 @@ public class ComicBookSelectionControllerTest {
   public void testSelectMultipleComicWithAdded() throws ComicBookSelectionException {
     controller.selectComicBooksByFilter(
         httpSession,
-        new MultipleComicBooksSelectionRequest(
-            null, null, null, null, null, false, false, null, true));
+        new MultipleComicBooksSelectionRequest(null, null, null, null, null, false, null, true));
 
     Mockito.verify(comicBookSelectionService, Mockito.times(1))
-        .selectByFilter(selectionIdList, null, null, null, null, null, false, false, null, true);
+        .selectByFilter(selectionIdList, null, null, null, null, null, false, null, true);
     Mockito.verify(comicBookSelectionService, Mockito.times(1)).encodeSelections(selectionIdList);
     Mockito.verify(httpSession, Mockito.times(1))
         .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
@@ -112,11 +111,10 @@ public class ComicBookSelectionControllerTest {
   public void testSelectMultipleComicWithRemoving() throws ComicBookSelectionException {
     controller.selectComicBooksByFilter(
         httpSession,
-        new MultipleComicBooksSelectionRequest(
-            null, null, null, null, null, false, false, null, false));
+        new MultipleComicBooksSelectionRequest(null, null, null, null, null, false, null, false));
 
     Mockito.verify(comicBookSelectionService, Mockito.times(1))
-        .selectByFilter(selectionIdList, null, null, null, null, null, false, false, null, false);
+        .selectByFilter(selectionIdList, null, null, null, null, null, false, null, false);
     Mockito.verify(comicBookSelectionService, Mockito.times(1)).encodeSelections(selectionIdList);
     Mockito.verify(httpSession, Mockito.times(1))
         .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);

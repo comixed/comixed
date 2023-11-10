@@ -24,6 +24,7 @@ import { SECURED_PREFIX } from '@app/messaging/messaging.constants';
 export const LOAD_COMIC_DETAILS_URL = `${API_ROOT_URL}/comics/details/load`;
 export const LOAD_COMIC_DETAILS_BY_ID_URL = `${API_ROOT_URL}/comics/details/load/ids`;
 export const LOAD_COMIC_DETAILS_FOR_COLLECTION_URL = `${API_ROOT_URL}/comics/details/load/tag`;
+export const LOAD_UNREAD_COMIC_DETAILS_URL = `${API_ROOT_URL}/comics/details/load/unread`;
 
 export const LOAD_COMIC_BOOK_SELECTIONS_URL = `${API_ROOT_URL}/comics/selections`;
 export const ADD_SINGLE_COMIC_SELECTION_URL = `${API_ROOT_URL}/comics/selections/\${comicBookId}`;

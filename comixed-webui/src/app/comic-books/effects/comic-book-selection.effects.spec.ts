@@ -55,7 +55,6 @@ describe('ComicBookSelectionEffects', () => {
   const ARCHIVE_TYPE = ArchiveType.CB7;
   const COMIC_TYPE = ComicType.ISSUE;
   const COMIC_STATE = ComicState.UNPROCESSED;
-  const READ_STATE = Math.random() > 0.5;
   const UNSCRAPED_STATE = Math.random() > 0.5;
   const SEARCH_TEXT = 'This is some text';
   const COMIC_BOOK_ID = 65;
@@ -292,7 +291,6 @@ describe('ComicBookSelectionEffects', () => {
         archiveType: ARCHIVE_TYPE,
         comicType: COMIC_TYPE,
         comicState: COMIC_STATE,
-        readState: READ_STATE,
         unscrapedState: UNSCRAPED_STATE,
         searchText: SEARCH_TEXT,
         selected: SELECTED
@@ -307,7 +305,6 @@ describe('ComicBookSelectionEffects', () => {
           archiveType: ARCHIVE_TYPE,
           comicType: COMIC_TYPE,
           comicState: COMIC_STATE,
-          readState: READ_STATE,
           unscrapedState: UNSCRAPED_STATE,
           searchText: SEARCH_TEXT,
           selected: SELECTED
@@ -326,7 +323,6 @@ describe('ComicBookSelectionEffects', () => {
         archiveType: ARCHIVE_TYPE,
         comicType: COMIC_TYPE,
         comicState: COMIC_STATE,
-        readState: READ_STATE,
         unscrapedState: UNSCRAPED_STATE,
         searchText: SEARCH_TEXT,
         selected: SELECTED
@@ -341,7 +337,6 @@ describe('ComicBookSelectionEffects', () => {
           archiveType: ARCHIVE_TYPE,
           comicType: COMIC_TYPE,
           comicState: COMIC_STATE,
-          readState: READ_STATE,
           unscrapedState: UNSCRAPED_STATE,
           searchText: SEARCH_TEXT,
           selected: SELECTED
@@ -360,7 +355,6 @@ describe('ComicBookSelectionEffects', () => {
         archiveType: ARCHIVE_TYPE,
         comicType: COMIC_TYPE,
         comicState: COMIC_STATE,
-        readState: READ_STATE,
         unscrapedState: UNSCRAPED_STATE,
         searchText: SEARCH_TEXT,
         selected: SELECTED
@@ -375,7 +369,6 @@ describe('ComicBookSelectionEffects', () => {
           archiveType: ARCHIVE_TYPE,
           comicType: COMIC_TYPE,
           comicState: COMIC_STATE,
-          readState: READ_STATE,
           unscrapedState: UNSCRAPED_STATE,
           searchText: SEARCH_TEXT,
           selected: SELECTED

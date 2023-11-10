@@ -73,7 +73,6 @@ public class ComicBookControllerTest {
   private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CB7;
   private static final ComicType TEST_COMIC_TYPE = ComicType.ISSUE;
   private static final ComicState TEST_COMIC_STATE = ComicState.REMOVED;
-  private static final Boolean TEST_READ_STATE = RandomUtils.nextBoolean();
   private static final Boolean TEST_UNSCRAPED_STATE = RandomUtils.nextBoolean();
   private static final String TEST_SEARCH_TEXT = "The search text";
   private static final String TEST_PUBLISHER = "THe Publisher Name";
@@ -91,6 +90,7 @@ public class ComicBookControllerTest {
   private static final Object TEST_ENCODED_SELECTIONS = "The encoded selection ids";
   private static final String TEST_REENCODED_SELECTIONS = "The re-encoded selection ids";
   private static final String TEST_EMAIL = "comixedreader@localhost";
+  private static final long TEST_UNREAD_COMIC_COUNT = 804L;
 
   @InjectMocks private ComicBookController controller;
   @Mock private ComicBookService comicBookService;
@@ -466,7 +466,6 @@ public class ComicBookControllerTest {
                 TEST_ARCHIVE_TYPE,
                 TEST_COMIC_TYPE,
                 TEST_COMIC_STATE,
-                TEST_READ_STATE,
                 TEST_UNSCRAPED_STATE,
                 TEST_SEARCH_TEXT,
                 TEST_PUBLISHER,
@@ -482,7 +481,6 @@ public class ComicBookControllerTest {
                 TEST_ARCHIVE_TYPE,
                 TEST_COMIC_TYPE,
                 TEST_COMIC_STATE,
-                TEST_READ_STATE,
                 TEST_UNSCRAPED_STATE,
                 TEST_SEARCH_TEXT,
                 TEST_PUBLISHER,
@@ -496,7 +494,6 @@ public class ComicBookControllerTest {
                 TEST_ARCHIVE_TYPE,
                 TEST_COMIC_TYPE,
                 TEST_COMIC_STATE,
-                TEST_READ_STATE,
                 TEST_UNSCRAPED_STATE,
                 TEST_SEARCH_TEXT,
                 TEST_PUBLISHER,
@@ -512,7 +509,6 @@ public class ComicBookControllerTest {
                 TEST_ARCHIVE_TYPE,
                 TEST_COMIC_TYPE,
                 TEST_COMIC_STATE,
-                TEST_READ_STATE,
                 TEST_UNSCRAPED_STATE,
                 TEST_SEARCH_TEXT,
                 TEST_PUBLISHER,
@@ -528,7 +524,6 @@ public class ComicBookControllerTest {
                 TEST_ARCHIVE_TYPE,
                 TEST_COMIC_TYPE,
                 TEST_COMIC_STATE,
-                TEST_READ_STATE,
                 TEST_UNSCRAPED_STATE,
                 TEST_SEARCH_TEXT,
                 TEST_PUBLISHER,
@@ -549,7 +544,6 @@ public class ComicBookControllerTest {
                 TEST_ARCHIVE_TYPE,
                 TEST_COMIC_TYPE,
                 TEST_COMIC_STATE,
-                TEST_READ_STATE,
                 TEST_UNSCRAPED_STATE,
                 TEST_SEARCH_TEXT,
                 TEST_PUBLISHER,
@@ -647,5 +641,40 @@ public class ComicBookControllerTest {
         .getCoverMonths(TEST_TAG_TYPE, TEST_TAG_VALUE);
     Mockito.verify(comicDetailService, Mockito.times(1))
         .getFilterCount(TEST_TAG_TYPE, TEST_TAG_VALUE);
+  }
+
+  @Test
+  public void testLoadUnreadComicDetails() throws LastReadException {
+    Mockito.when(
+            comicDetailService.loadUnreadComicDetails(
+                Mockito.anyString(),
+                Mockito.anyInt(),
+                Mockito.anyInt(),
+                Mockito.anyString(),
+                Mockito.anyString()))
+        .thenReturn(comicDetailList);
+    Mockito.when(lastReadService.getUnreadCountForUser(Mockito.anyString()))
+        .thenReturn(TEST_UNREAD_COMIC_COUNT);
+    Mockito.when(lastReadService.loadForComicDetails(Mockito.anyString(), Mockito.anyList()))
+        .thenReturn(lastReadEntryList);
+
+    final LoadComicDetailsResponse result =
+        controller.loadUnreadComicDetailList(
+            principal,
+            new LoadUnreadComicDetailsRequest(
+                TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_FIELD, TEST_SORT_DIRECTION));
+
+    assertNotNull(result);
+    assertSame(comicDetailList, result.getComicDetails());
+    assertTrue(result.getCoverYears().isEmpty());
+    assertTrue(result.getCoverMonths().isEmpty());
+    assertEquals(TEST_COMIC_BOOK_COUNT, result.getTotalCount());
+    assertEquals(TEST_UNREAD_COMIC_COUNT, result.getFilteredCount());
+    assertSame(lastReadEntryList, result.getLastReadEntries());
+
+    Mockito.verify(comicDetailService, Mockito.times(1))
+        .loadUnreadComicDetails(
+            TEST_EMAIL, TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_FIELD, TEST_SORT_DIRECTION);
+    Mockito.verify(lastReadService, Mockito.times(1)).getUnreadCountForUser(TEST_EMAIL);
   }
 }

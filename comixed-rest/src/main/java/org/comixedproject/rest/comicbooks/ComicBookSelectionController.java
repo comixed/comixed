@@ -135,7 +135,6 @@ public class ComicBookSelectionController {
         request.getArchiveType(),
         request.getComicType(),
         request.getComicState(),
-        request.getReadState(),
         request.getUnscrapedState(),
         request.getSearchText(),
         request.getSelected());

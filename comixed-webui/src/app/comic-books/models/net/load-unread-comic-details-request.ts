@@ -16,23 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
-import { ComicType } from '@app/comic-books/models/comic-type';
-import { ComicState } from '@app/comic-books/models/comic-state';
-
-export interface LoadComicDetailsRequest {
+export interface LoadUnreadComicDetailsRequest {
   pageSize: number;
   pageIndex: number;
-  coverYear: number;
-  coverMonth: number;
-  archiveType: ArchiveType;
-  comicType: ComicType;
-  comicState: ComicState;
-  unscrapedState: boolean;
-  searchText: string;
-  publisher: string;
-  series: string;
-  volume: string;
   sortBy: string;
   sortDirection: string;
 }

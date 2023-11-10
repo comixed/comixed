@@ -63,10 +63,6 @@ public class LoadComicDetailsRequest {
   @Getter
   private ComicState comicState;
 
-  @JsonProperty("readState")
-  @Getter
-  private Boolean readState;
-
   @JsonProperty("unscrapedState")
   @Getter
   private Boolean unscrapedState;
@@ -112,8 +108,6 @@ public class LoadComicDetailsRequest {
         + comicType
         + ", comicState="
         + comicState
-        + ", readState="
-        + readState
         + ", unscrapedState="
         + unscrapedState
         + ", searchText='"

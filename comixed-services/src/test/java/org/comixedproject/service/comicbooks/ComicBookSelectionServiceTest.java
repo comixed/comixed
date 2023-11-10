@@ -141,7 +141,7 @@ public class ComicBookSelectionServiceTest {
   public void testAddingMultipleComics() throws PublishingException {
     selectedIds.clear();
 
-    service.selectByFilter(selectedIds, null, null, null, null, null, false, false, null, true);
+    service.selectByFilter(selectedIds, null, null, null, null, null, false, null, true);
 
     assertFalse(selectedIds.isEmpty());
 
@@ -153,7 +153,7 @@ public class ComicBookSelectionServiceTest {
   public void testRemovingMultipleComics() throws PublishingException {
     selectedIds.add(TEST_COMIC_BOOK_ID);
 
-    service.selectByFilter(selectedIds, null, null, null, null, null, false, false, null, false);
+    service.selectByFilter(selectedIds, null, null, null, null, null, false, null, false);
 
     Mockito.verify(publishComicBookSelectionStateAction, Mockito.times(1)).publish(selectedIds);
   }

@@ -67,6 +67,7 @@
   <ng-container matColumnDef="action">
     <mat-header-cell *matHeaderCellDef>
       <mat-icon
+        *ngIf="showFilter"
         (click)="onFilterComics(); $event.stopPropagation()"
         [matTooltip]="'comic-detail-list-view.tooltip.filter-list' | translate"
       >

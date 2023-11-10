@@ -144,7 +144,6 @@ export class SeriesDetailPageComponent
             archiveType: null,
             comicType: null,
             comicState: null,
-            readState: false,
             unscrapedState: false,
             searchText: null,
             publisher: this.publisher,
