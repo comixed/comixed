@@ -31,6 +31,7 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.library.LastRead;
+import org.comixedproject.model.net.user.ComicsReadStatistic;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.library.LastReadRepository;
 import org.comixedproject.service.comicbooks.ComicBookException;
@@ -249,5 +250,23 @@ public class LastReadService implements InitializingBean, ComicStateChangeListen
   public List<LastRead> loadForComicDetails(
       final String email, final List<ComicDetail> comicDetails) throws LastReadException {
     return this.lastReadRepository.loadByComicBookIds(this.doFindUser(email), comicDetails);
+  }
+
+  /**
+   * Loads the comics read statistics for the given user.
+   *
+   * @param email the user's email
+   * @return the statistics
+   * @throws LastReadException if the email is invalid
+   */
+  public List<ComicsReadStatistic> loadComicsReadStatistics(final String email)
+      throws LastReadException {
+    try {
+      final ComiXedUser user = this.doFindUser(email);
+
+      return this.lastReadRepository.loadComicsReadStatistics(user);
+    } catch (LastReadException error) {
+      throw new LastReadException("Failed to load comics read statistics", error);
+    }
   }
 }

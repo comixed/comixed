@@ -31,4 +31,6 @@ export const LOGIN_USER_URL = `${API_ROOT_URL}/token/generate`;
 export const SAVE_USER_PREFERENCE_URL = `${API_ROOT_URL}/user/preferences/\${name}`;
 export const DELETE_USER_PREFERENCE_URL = `${API_ROOT_URL}/user/preferences/\${name}`;
 
+export const LOAD_COMICS_READ_STATISTICS_URL = `${API_ROOT_URL}/user/statistics/comics/read`;
+
 export const USER_SELF_TOPIC = '/secured/user/topic/user/current';

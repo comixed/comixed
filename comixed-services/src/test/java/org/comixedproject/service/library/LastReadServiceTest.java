@@ -31,6 +31,7 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.library.LastRead;
+import org.comixedproject.model.net.user.ComicsReadStatistic;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.library.LastReadRepository;
 import org.comixedproject.service.comicbooks.ComicBookException;
@@ -74,6 +75,8 @@ public class LastReadServiceTest {
 
   @Captor private ArgumentCaptor<PageRequest> pageRequestArgumentCaptor;
   @Captor private ArgumentCaptor<LastRead> lastReadArgumentCaptor;
+  @Mock private List<ComicsReadStatistic> comicsReadStatisticList;
+  @Mock private List<ComicDetail> comicDetailList;
 
   private List<Long> comicIdList = new ArrayList<>();
   private List<LastRead> lastReadList = new ArrayList<>();
@@ -340,5 +343,46 @@ public class LastReadServiceTest {
 
     Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
     Mockito.verify(lastReadRepository, Mockito.times(1)).loadCountForUser(user);
+  }
+
+  @Test
+  public void testLoadForComicDetails() throws LastReadException {
+    Mockito.when(
+            lastReadRepository.loadByComicBookIds(
+                Mockito.any(ComiXedUser.class), Mockito.anyList()))
+        .thenReturn(lastReadList);
+
+    final List<LastRead> result = service.loadForComicDetails(TEST_EMAIL, comicDetailList);
+
+    assertNotNull(result);
+    assertSame(lastReadList, result);
+
+    Mockito.verify(lastReadRepository, Mockito.times(1)).loadByComicBookIds(user, comicDetailList);
+  }
+
+  @Test(expected = LastReadException.class)
+  public void testLoadComicsReadStatisticsInvalidUser()
+      throws LastReadException, ComiXedUserException {
+    Mockito.when(userService.findByEmail(Mockito.anyString()))
+        .thenThrow(ComiXedUserException.class);
+
+    try {
+      service.loadComicsReadStatistics(TEST_EMAIL);
+    } finally {
+      Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    }
+  }
+
+  @Test
+  public void testLoadComicsReadStatistics() throws LastReadException {
+    Mockito.when(lastReadRepository.loadComicsReadStatistics(Mockito.any(ComiXedUser.class)))
+        .thenReturn(comicsReadStatisticList);
+
+    final List<ComicsReadStatistic> result = service.loadComicsReadStatistics(TEST_EMAIL);
+
+    assertNotNull(result);
+    assertSame(comicsReadStatisticList, result);
+
+    Mockito.verify(lastReadRepository, Mockito.times(1)).loadComicsReadStatistics(user);
   }
 }

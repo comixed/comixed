@@ -11,7 +11,7 @@ public class ComiXedUserException extends Exception {
     super(message);
   }
 
-  public ComiXedUserException(final String message, final RuntimeException cause) {
+  public ComiXedUserException(final String message, final Exception cause) {
     super(message, cause);
   }
 }

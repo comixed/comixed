@@ -1,10 +1,10 @@
 <div #container class="cx-width-100 cx-height-100">
   <ngx-charts-advanced-pie-chart
-    *ngIf="!!libraryState"
+    *ngIf="comicsReadStatistics?.length > 0"
     [title]="'home.title.last-read-statistics' | translate"
     [label]="'home.title.last-read-statistics' | translate"
     scheme="ocean"
     [view]="[chartWidth$ | async, chartHeight$ | async]"
-    [results]="lastReadComicBooksData"
+    [results]="comicsReadStatistics"
   ></ngx-charts-advanced-pie-chart>
 </div>

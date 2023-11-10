@@ -23,6 +23,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { interpolate } from '@app/core';
 import {
   DELETE_USER_PREFERENCE_URL,
+  LOAD_COMICS_READ_STATISTICS_URL,
   LOAD_CURRENT_USER_URL,
   LOGIN_USER_URL,
   SAVE_CURRENT_USER_URL,
@@ -131,5 +132,10 @@ export class UserService {
         password: args.password
       } as SaveCurrentUserRequest
     );
+  }
+
+  loadComicsReadStatistics(): Observable<any> {
+    this.logger.debug('Loading comics read statistics');
+    return this.http.get(interpolate(LOAD_COMICS_READ_STATISTICS_URL));
   }
 }
