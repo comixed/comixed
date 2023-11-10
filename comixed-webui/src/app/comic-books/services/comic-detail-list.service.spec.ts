@@ -52,7 +52,8 @@ import { LoadComicDetailsRequest } from '@app/comic-books/models/net/load-comic-
 import {
   LOAD_COMIC_DETAILS_BY_ID_URL,
   LOAD_COMIC_DETAILS_FOR_COLLECTION_URL,
-  LOAD_COMIC_DETAILS_URL
+  LOAD_COMIC_DETAILS_URL,
+  LOAD_UNREAD_COMIC_DETAILS_URL
 } from '@app/comic-books/comic-books.constants';
 import { LoadComicDetailsResponse } from '@app/comic-books/models/net/load-comic-details-response';
 import { LoadComicDetailsByIdRequest } from '@app/comic-books/models/net/load-comic-details-by-id-request';
@@ -62,6 +63,7 @@ import {
 } from '@app/comic-books/actions/comic-details-list.actions';
 import { TagType } from '@app/collections/models/comic-collection.enum';
 import { LoadComicDetailsForCollectionRequest } from '@app/comic-books/models/net/load-comic-details-for-collection-request';
+import { LoadUnreadComicDetailsRequest } from '@app/comic-books/models/net/load-unread-comic-details-request';
 
 describe('ComicDetailListService', () => {
   const PAGE_SIZE = 25;
@@ -71,7 +73,6 @@ describe('ComicDetailListService', () => {
   const ARCHIVE_TYPE = ArchiveType.CB7;
   const COMIC_TYPE = ComicType.ISSUE;
   const COMIC_STATE = ComicState.UNPROCESSED;
-  const READ_STATE = Math.random() > 0.5;
   const SCRAPED_STATE = Math.random() > 0.5;
   const SEARCH_TEXT = 'This is some text';
   const SORT_BY = 'addedDate';
@@ -237,7 +238,6 @@ describe('ComicDetailListService', () => {
         archiveType: ARCHIVE_TYPE,
         comicType: COMIC_TYPE,
         comicState: COMIC_STATE,
-        readState: READ_STATE,
         unscrapedState: SCRAPED_STATE,
         searchText: SEARCH_TEXT,
         publisher: PUBLISHER,
@@ -258,7 +258,6 @@ describe('ComicDetailListService', () => {
       archiveType: ARCHIVE_TYPE,
       comicType: COMIC_TYPE,
       comicState: COMIC_STATE,
-      readState: READ_STATE,
       unscrapedState: SCRAPED_STATE,
       searchText: SEARCH_TEXT,
       publisher: PUBLISHER,
@@ -317,6 +316,32 @@ describe('ComicDetailListService', () => {
       sortBy: SORT_BY,
       sortDirection: SORT_DIRECTION
     } as LoadComicDetailsForCollectionRequest);
+    req.flush(serviceResponse);
+  });
+
+  it('can load unread comic details', () => {
+    const serviceResponse = {
+      comicDetails: COMIC_DETAILS,
+      totalCount: TOTAL_COUNT,
+      filteredCount: FILTERED_COUNT
+    } as LoadComicDetailsResponse;
+    service
+      .loadUnreadComicDetails({
+        pageSize: PAGE_SIZE,
+        pageIndex: PAGE_INDEX,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      })
+      .subscribe(response => expect(response).toEqual(serviceResponse));
+
+    const req = httpMock.expectOne(interpolate(LOAD_UNREAD_COMIC_DETAILS_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      pageSize: PAGE_SIZE,
+      pageIndex: PAGE_INDEX,
+      sortBy: SORT_BY,
+      sortDirection: SORT_DIRECTION
+    } as LoadUnreadComicDetailsRequest);
     req.flush(serviceResponse);
   });
 });

@@ -114,7 +114,6 @@ export class ComicBookSelectionService {
     archiveType: ArchiveType;
     comicType: ComicType;
     comicState: ComicState;
-    readState: boolean;
     unscrapedState: boolean;
     searchText: string;
     selected: boolean;
@@ -126,7 +125,6 @@ export class ComicBookSelectionService {
       archiveType: args.archiveType,
       comicType: args.comicType,
       comicState: args.comicState,
-      readState: args.readState,
       unscrapedState: args.unscrapedState,
       searchText: args.searchText,
       selected: args.selected

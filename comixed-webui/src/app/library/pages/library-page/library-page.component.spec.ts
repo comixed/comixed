@@ -87,7 +87,10 @@ import {
   initialState as initialComicDetailListState
 } from '@app/comic-books/reducers/comic-details-list.reducer';
 import { ComicType } from '@app/comic-books/models/comic-type';
-import { loadComicDetails } from '@app/comic-books/actions/comic-details-list.actions';
+import {
+  loadComicDetails,
+  loadUnreadComicDetails
+} from '@app/comic-books/actions/comic-details-list.actions';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
@@ -357,7 +360,6 @@ describe('LibraryPageComponent', () => {
             archiveType: null,
             comicType: null,
             comicState: ComicState.UNPROCESSED,
-            readState: false,
             unscrapedState: false,
             searchText: null,
             publisher: null,
@@ -388,7 +390,6 @@ describe('LibraryPageComponent', () => {
             archiveType: null,
             comicType: null,
             comicState: ComicState.DELETED,
-            readState: false,
             unscrapedState: false,
             searchText: null,
             publisher: null,
@@ -419,12 +420,31 @@ describe('LibraryPageComponent', () => {
             archiveType: null,
             comicType: null,
             comicState: ComicState.CHANGED,
-            readState: false,
             unscrapedState: false,
             searchText: null,
             publisher: null,
             series: null,
             volume: null,
+            sortBy: null,
+            sortDirection: null
+          })
+        );
+      });
+    });
+
+    describe('for unread comics', () => {
+      beforeEach(() => {
+        component.unreadOnly = true;
+        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+          foo: 'bar'
+        });
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          loadUnreadComicDetails({
+            pageSize: 10,
+            pageIndex: 0,
             sortBy: null,
             sortDirection: null
           })
@@ -449,7 +469,6 @@ describe('LibraryPageComponent', () => {
             archiveType: null,
             comicType: null,
             comicState: null,
-            readState: false,
             unscrapedState: false,
             searchText: null,
             publisher: null,
@@ -478,7 +497,6 @@ describe('LibraryPageComponent', () => {
           archiveType: null,
           comicType: null,
           comicState: null,
-          readState: false,
           unscrapedState: false,
           searchText: null,
           selected: SELECTED

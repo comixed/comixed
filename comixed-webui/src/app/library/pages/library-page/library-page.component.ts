@@ -41,7 +41,10 @@ import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import { loadComicDetails } from '@app/comic-books/actions/comic-details-list.actions';
+import {
+  loadComicDetails,
+  loadUnreadComicDetails
+} from '@app/comic-books/actions/comic-details-list.actions';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import {
   selectLoadComicDetailsCoverMonths,
@@ -191,25 +194,35 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     );
     this.pageChangedSubscription = this.activatedRoute.queryParams.subscribe(
       () => {
-        this.store.dispatch(
-          loadComicDetails({
-            pageSize: this.queryParameterService.pageSize$.value,
-            pageIndex: this.queryParameterService.pageIndex$.value,
-            coverYear: this.queryParameterService.coverYear$?.value?.year,
-            coverMonth: this.queryParameterService.coverYear$?.value?.month,
-            archiveType: this.queryParameterService.archiveType$.value,
-            comicType: this.queryParameterService.comicType$.value,
-            comicState: this.targetComicState,
-            readState: this.unreadOnly,
-            unscrapedState: this.unscrapedOnly,
-            searchText: this.queryParameterService.filterText$.value,
-            publisher: null,
-            series: null,
-            volume: null,
-            sortBy: this.queryParameterService.sortBy$.value,
-            sortDirection: this.queryParameterService.sortDirection$.value
-          })
-        );
+        if (this.unreadOnly) {
+          this.store.dispatch(
+            loadUnreadComicDetails({
+              pageSize: this.queryParameterService.pageSize$.value,
+              pageIndex: this.queryParameterService.pageIndex$.value,
+              sortBy: this.queryParameterService.sortBy$.value,
+              sortDirection: this.queryParameterService.sortDirection$.value
+            })
+          );
+        } else {
+          this.store.dispatch(
+            loadComicDetails({
+              pageSize: this.queryParameterService.pageSize$.value,
+              pageIndex: this.queryParameterService.pageIndex$.value,
+              coverYear: this.queryParameterService.coverYear$?.value?.year,
+              coverMonth: this.queryParameterService.coverYear$?.value?.month,
+              archiveType: this.queryParameterService.archiveType$.value,
+              comicType: this.queryParameterService.comicType$.value,
+              comicState: this.targetComicState,
+              unscrapedState: this.unscrapedOnly,
+              searchText: this.queryParameterService.filterText$.value,
+              publisher: null,
+              series: null,
+              volume: null,
+              sortBy: this.queryParameterService.sortBy$.value,
+              sortDirection: this.queryParameterService.sortDirection$.value
+            })
+          );
+        }
       }
     );
   }
@@ -253,7 +266,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         archiveType: this.queryParameterService.archiveType$.value,
         comicType: this.queryParameterService.comicType$.value,
         comicState: this.targetComicState,
-        readState: this.unreadOnly,
         unscrapedState: this.unscrapedOnly,
         searchText: this.queryParameterService.filterText$.value,
         selected

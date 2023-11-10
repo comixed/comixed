@@ -84,6 +84,7 @@ export class ComicDetailListViewComponent implements OnDestroy {
   @Input() isAdmin = false;
   @Input() readingLists: ReadingList[] = [];
   @Input() unreadOnly = false;
+  @Input() showFilter = true;
   @Input() extraFieldTitle = '';
   @Input() followClick = true;
   @Input() usePopups = true;

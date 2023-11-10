@@ -69,12 +69,11 @@ public class ComicDetailServiceTest {
   private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CB7;
   private static final ComicType TEST_COMIC_TYPE = ComicType.ISSUE;
   private static final ComicState TEST_COMIC_STATE = ComicState.REMOVED;
-  private static final Boolean TEST_READ_STATE = RandomUtils.nextBoolean();
   private static final Boolean TEST_UNSCRAPED_STATE = RandomUtils.nextBoolean();
   private static final String TEST_SEARCH_TEXT = "The search text";
   private static final long TEST_TOTAL_COMIC_COUNT = RandomUtils.nextLong() * 30000L;
   private static final long TEST_FILTER_COUNT = RandomUtils.nextLong() * 30000L;
-  private static final String TEST_COLLECTION_SORT_BY = "comic-count";
+  private static final String TEST_SORT_BY = "comic-count";
   private static final String TEST_SORT_DIRECTION = "asc";
 
   @InjectMocks private ComicDetailService service;
@@ -532,7 +531,6 @@ public class ComicDetailServiceTest {
                   TEST_ARCHIVE_TYPE,
                   TEST_COMIC_TYPE,
                   TEST_COMIC_STATE,
-                  TEST_READ_STATE,
                   TEST_UNSCRAPED_STATE,
                   TEST_SEARCH_TEXT,
                   TEST_PUBLISHER,
@@ -576,7 +574,6 @@ public class ComicDetailServiceTest {
                   TEST_ARCHIVE_TYPE,
                   TEST_COMIC_TYPE,
                   TEST_COMIC_STATE,
-                  TEST_READ_STATE,
                   TEST_UNSCRAPED_STATE,
                   TEST_SEARCH_TEXT,
                   TEST_PUBLISHER,
@@ -618,7 +615,6 @@ public class ComicDetailServiceTest {
                   TEST_ARCHIVE_TYPE,
                   TEST_COMIC_TYPE,
                   TEST_COMIC_STATE,
-                  TEST_READ_STATE,
                   TEST_UNSCRAPED_STATE,
                   TEST_SEARCH_TEXT,
                   TEST_PUBLISHER,
@@ -688,7 +684,6 @@ public class ComicDetailServiceTest {
                   TEST_ARCHIVE_TYPE,
                   TEST_COMIC_TYPE,
                   TEST_COMIC_STATE,
-                  TEST_READ_STATE,
                   TEST_UNSCRAPED_STATE,
                   TEST_SEARCH_TEXT,
                   TEST_PUBLISHER,
@@ -754,7 +749,6 @@ public class ComicDetailServiceTest {
             TEST_ARCHIVE_TYPE,
             TEST_COMIC_TYPE,
             TEST_COMIC_STATE,
-            TEST_READ_STATE,
             TEST_UNSCRAPED_STATE,
             TEST_SEARCH_TEXT,
             TEST_PUBLISHER,
@@ -845,11 +839,7 @@ public class ComicDetailServiceTest {
 
     final List<CollectionEntry> result =
         service.loadCollectionEntries(
-            TEST_TAG_TYPE,
-            TEST_PAGE_SIZE,
-            TEST_PAGE_INDEX,
-            TEST_COLLECTION_SORT_BY,
-            TEST_SORT_DIRECTION);
+            TEST_TAG_TYPE, TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION);
 
     assertNotNull(result);
     assertSame(collectionEntryList, result);
@@ -872,5 +862,27 @@ public class ComicDetailServiceTest {
     assertEquals(TEST_TOTAL_COMIC_COUNT, result);
 
     Mockito.verify(comicDetailRepository, Mockito.times(1)).getFilterCount(TEST_TAG_TYPE);
+  }
+
+  @Test
+  public void testLoadUnreadComicDetails() {
+    Mockito.when(
+            comicDetailRepository.loadUnreadComicDetails(
+                Mockito.anyString(), pageableArgumentCaptor.capture()))
+        .thenReturn(comicDetailList);
+
+    final List<ComicDetail> result =
+        service.loadUnreadComicDetails(
+            TEST_EMAIL, TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION);
+
+    assertNotNull(result);
+    assertSame(comicDetailList, result);
+
+    final Pageable pageable = pageableArgumentCaptor.getValue();
+    assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
+    assertEquals(TEST_PAGE_INDEX, pageable.getPageNumber());
+
+    Mockito.verify(comicDetailRepository, Mockito.times(1))
+        .loadUnreadComicDetails(TEST_EMAIL, pageable);
   }
 }

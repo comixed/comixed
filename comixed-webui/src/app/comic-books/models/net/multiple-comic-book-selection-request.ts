@@ -26,7 +26,6 @@ export interface MultipleComicBookSelectionRequest {
   archiveType: ArchiveType;
   comicType: ComicType;
   comicState: ComicState;
-  readState: boolean;
   unscrapedState: boolean;
   searchText: string;
   selected: boolean;
