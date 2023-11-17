@@ -1,5 +1,5 @@
 !define NAME "ComiXed"
-!define VERSION "1.6.3-1"
+!define VERSION "1.6.4-1"
 !define SLUG "${NAME} ${VERSION}"
 
 Name "${NAME}"
