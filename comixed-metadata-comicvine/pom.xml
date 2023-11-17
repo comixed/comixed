@@ -15,7 +15,7 @@
     <url>http://www.comixedproject.org</url>
     <properties>
         <spring-plugin.version>2.0.0.RELEASE</spring-plugin.version>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <lombok.version>1.18.22</lombok.version>
     </properties>
 

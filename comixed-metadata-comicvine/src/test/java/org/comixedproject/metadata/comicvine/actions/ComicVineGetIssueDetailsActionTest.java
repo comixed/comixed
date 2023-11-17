@@ -27,6 +27,7 @@ import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.comicvine.adaptors.ComicVineMetadataAdaptor;
 import org.comixedproject.metadata.comicvine.model.*;
 import org.comixedproject.metadata.model.IssueDetailsMetadata;
+import org.comixedproject.model.comicbooks.ComicTagType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,7 +54,10 @@ public class ComicVineGetIssueDetailsActionTest {
   private static final String TEST_LOCATION_NAME = "Location Name";
   private static final String TEST_STORY_NAME = "Story Name";
   private static final String TEST_CREDIT_NAME = "Credit Name";
-  private static final String TEST_CREDIT_ROLE = "Credit ComiXedRole";
+  private static final String TEST_CREDIT_ROLE_1 = ComicVineCreditType.PENCILLER.getTagValue();
+  private static final String TEST_CREDIT_TAG_1 = ComicTagType.PENCILLER.getValue();
+  private static final String TEST_CREDIT_ROLE_2 = ComicVineCreditType.EDITOR.getTagValue();
+  private static final String TEST_CREDIT_TAG_2 = ComicTagType.EDITOR.getValue();
   private static final String TEST_COMIC_VINE_ISSUE_ID = "71765";
 
   @InjectMocks private ComicVineGetIssueDetailsAction action;
@@ -116,7 +120,8 @@ public class ComicVineGetIssueDetailsActionTest {
     Mockito.when(comicVineStory.getName()).thenReturn(TEST_STORY_NAME);
     Mockito.when(comicVineIssue.getPeople()).thenReturn(credits);
     Mockito.when(comicVineCredit.getName()).thenReturn(TEST_CREDIT_NAME);
-    Mockito.when(comicVineCredit.getRole()).thenReturn(TEST_CREDIT_ROLE);
+    Mockito.when(comicVineCredit.getRole())
+        .thenReturn(String.format("%s, %s", TEST_CREDIT_ROLE_1, TEST_CREDIT_ROLE_2));
   }
 
   @Test(expected = MetadataException.class)
@@ -207,10 +212,10 @@ public class ComicVineGetIssueDetailsActionTest {
       assertEquals(TEST_STORY_NAME, story);
     }
     assertFalse(result.getCredits().isEmpty());
-    for (IssueDetailsMetadata.CreditEntry credit : result.getCredits()) {
-      assertEquals(TEST_CREDIT_NAME, credit.getName());
-      assertEquals(TEST_CREDIT_ROLE, credit.getRole());
-    }
+    assertEquals(TEST_CREDIT_NAME, result.getCredits().get(0).getName());
+    assertEquals(TEST_CREDIT_TAG_1, result.getCredits().get(0).getRole());
+    assertEquals(TEST_CREDIT_NAME, result.getCredits().get(1).getName());
+    assertEquals(TEST_CREDIT_TAG_2, result.getCredits().get(1).getRole());
   }
 
   private void assertFalse(final boolean empty) {}
