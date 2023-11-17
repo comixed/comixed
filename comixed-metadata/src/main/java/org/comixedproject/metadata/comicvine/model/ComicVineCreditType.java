@@ -16,40 +16,37 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.comicbooks;
+package org.comixedproject.metadata.comicvine.model;
 
 import java.util.Arrays;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.comixedproject.model.comicbooks.ComicTagType;
 
 /**
- * <code>ComicTagType</code> defines the types of collections.
+ * <code>ComicVineCreditType</code> maps a ComicVine credit type to a {@link ComicTagType}.
  *
  * @author Darryl L. Pierce
  */
 @AllArgsConstructor
-public enum ComicTagType {
-  CHARACTER("characters", "CHARACTER"),
-  TEAM("teams", "TEAM"),
-  LOCATION("locations", "LOCATION"),
-  STORY("stories", "STORIE"),
-  WRITER("writers", "WRITER"),
-  EDITOR("editors", "EDITOR"),
-  PENCILLER("pencillers", "PENCILLER"),
-  INKER("inkers", "INKER"),
-  COLORIST("colorists", "COLORIST"),
-  LETERRER("leterrers", "LETERRER"),
-  COVER("covers", "COVER"),
-  OTHER("other", "OTHER");
+public enum ComicVineCreditType {
+  WRITER("writer", ComicTagType.WRITER),
+  EDITOR("editor", ComicTagType.EDITOR),
+  PENCILLER("penciler", ComicTagType.PENCILLER),
+  INKER("inker", ComicTagType.INKER),
+  COLORIST("colorist", ComicTagType.COLORIST),
+  LETERRER("letterer", ComicTagType.LETERRER),
+  COVER("cover", ComicTagType.COVER),
+  OTHER("other", ComicTagType.OTHER);
 
-  @Getter private String value;
-  @Getter private String opdsValue;
+  @Getter private String tagValue;
+  @Getter private ComicTagType tagType;
 
-  public static ComicTagType forValue(final String value) {
-    final Optional<ComicTagType> result =
-        Arrays.stream(ComicTagType.values())
-            .filter(tag -> tag.getValue().equals(value))
+  public static ComicVineCreditType forValue(final String value) {
+    final Optional<ComicVineCreditType> result =
+        Arrays.stream(ComicVineCreditType.values())
+            .filter(tag -> tag.getTagValue().equals(value))
             .findFirst();
     return (result.isPresent()) ? result.get() : OTHER;
   }
