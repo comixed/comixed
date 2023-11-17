@@ -18,6 +18,8 @@
 
 package org.comixedproject.metadata.comicvine.actions;
 
+import java.util.Arrays;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -90,11 +92,23 @@ public class ComicVineGetIssueDetailsAction
       result.getLocations().add(location.getName());
     for (ComicVineStory story : issueDetails.getStories()) result.getStories().add(story.getName());
     for (ComicVineCredit credit : issueDetails.getPeople())
-      result
-          .getCredits()
-          .add(new IssueDetailsMetadata.CreditEntry(credit.getName(), credit.getRole()));
+      result.getCredits().addAll(createCreditEntry(credit.getName(), credit.getRole()));
 
     return result;
+  }
+
+  private List<IssueDetailsMetadata.CreditEntry> createCreditEntry(
+      final String name, final String roles) {
+    return doSplitString(roles).stream()
+        .map(role -> new IssueDetailsMetadata.CreditEntry(name, role))
+        .toList();
+  }
+
+  private List<String> doSplitString(final String roles) {
+    return Arrays.stream(roles.split(","))
+        .map(String::trim)
+        .map(role -> ComicVineCreditType.forValue(role).getTagType().getValue())
+        .toList();
   }
 
   private ComicVinePublisher getPublisherDetails(final ComicVinePublisher publisher)
