@@ -44,7 +44,6 @@
       </includes>
     </fileSet>
     <fileSet>
-      <!-- intentionally leaving this directory empty -->
       <outputDirectory>lib</outputDirectory>
       <excludes>
         <exclude>**/*</exclude>
