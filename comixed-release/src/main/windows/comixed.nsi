@@ -1,5 +1,5 @@
 !define NAME "ComiXed"
-!define VERSION "2.0.0-0.dev"
+!define VERSION "2.0-SNAPSHOT"
 !define SLUG "${NAME} ${VERSION}"
 
 Name "${NAME}"
@@ -21,7 +21,7 @@ File ..\assembly\scripts\run.bat
 File ..\assembly\scripts\dbbackup.bat
 File ..\assembly\scripts\dbrestore.bat
 File ..\assembly\scripts\dbtool.bat
-File ..\..\..\..\comixed-app\target\comixed-app-2.0.0-0.dev.jar
+File ..\..\..\..\comixed-app\target\comixed-app-2.0-SNAPSHOT.jar
 
 SetOutPath $INSTDIR\lib
 File ..\..\..\target\lib\h2*jar
