@@ -5,15 +5,20 @@ on:
     types: [released]
 
 jobs:
-  pulish:
+  publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Maven Central repository
-        uses: actions/setup-java@v3
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Cache Maven artifacts
+        uses: actions/cache@v2
         with:
-          java-version: '17'
-          distribution: 'temurin'
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+      - name: Setup build environment
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
           server-id: ossrh
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
