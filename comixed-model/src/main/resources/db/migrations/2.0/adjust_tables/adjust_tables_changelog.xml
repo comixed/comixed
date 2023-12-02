@@ -34,5 +34,6 @@
     <include file="/db/migrations/2.0/adjust_tables/024_1707_rename_filename_scraping_rules_table.xml"/>
     <include file="/db/migrations/2.0/adjust_tables/031_1707_remove_smart_list_matchers_table.xml"/>
     <include file="/db/migrations/2.0/adjust_tables/030_1707_remove_smart_reading_lists_table.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/040_1808_fixed_letterer_spelling.xml"/>
 
 </databaseChangeLog>
