@@ -53,6 +53,7 @@ import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import {
   clearComicFileSelections,
+  resetComicFileList,
   setComicFilesSelectedState
 } from '@app/comic-files/actions/comic-file-list.actions';
 import { Router } from '@angular/router';
@@ -187,6 +188,8 @@ export class ImportComicsPageComponent
       }
       return data.item.id;
     };
+    this.logger.debug('Resetting the list of comic files');
+    this.store.dispatch(resetComicFileList());
   }
 
   ngOnInit(): void {
