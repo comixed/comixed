@@ -39,7 +39,7 @@ public enum ComicTagType {
   PENCILLER("pencillers", "PENCILLER"),
   INKER("inkers", "INKER"),
   COLORIST("colorists", "COLORIST"),
-  LETERRER("leterrers", "LETERRER"),
+  LETTERER("letterers", "LETTERER"),
   COVER("covers", "COVER"),
   OTHER("other", "OTHER");
 
