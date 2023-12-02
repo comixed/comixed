@@ -26,7 +26,7 @@ export enum ComicTagType {
   PENCILLER = 'PENCILLER',
   INKER = 'INKER',
   COLORIST = 'COLORIST',
-  LETERRER = 'LETERRER',
+  LETTERER = 'LETTERER',
   COVER = 'COVER'
 }
 
@@ -36,6 +36,6 @@ export const CreditTags = [
   ComicTagType.PENCILLER,
   ComicTagType.INKER,
   ComicTagType.COLORIST,
-  ComicTagType.LETERRER,
+  ComicTagType.LETTERER,
   ComicTagType.COVER
 ];

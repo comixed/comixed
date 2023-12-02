@@ -36,7 +36,7 @@ public enum ComicVineCreditType {
   PENCILLER("penciler", ComicTagType.PENCILLER),
   INKER("inker", ComicTagType.INKER),
   COLORIST("colorist", ComicTagType.COLORIST),
-  LETERRER("letterer", ComicTagType.LETERRER),
+  LETTERER("letterer", ComicTagType.LETTERER),
   COVER("cover", ComicTagType.COVER),
   OTHER("other", ComicTagType.OTHER);
 

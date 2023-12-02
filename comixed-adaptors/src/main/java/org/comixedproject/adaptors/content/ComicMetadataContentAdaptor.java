@@ -118,7 +118,7 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor
       this.commandSeparatedList(comicInfo.getColorist())
           .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.COLORIST, name)));
       this.commandSeparatedList(comicInfo.getLetterer())
-          .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.LETERRER, name)));
+          .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.LETTERER, name)));
       this.commandSeparatedList(comicInfo.getCoverArtist())
           .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.COVER, name)));
     } catch (IOException error) {
@@ -230,7 +230,7 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor
         String.join(
             ",",
             detail.getTags().stream()
-                .filter(tag -> tag.getType() == ComicTagType.LETERRER)
+                .filter(tag -> tag.getType() == ComicTagType.LETTERER)
                 .map(ComicTag::getValue)
                 .collect(Collectors.toList())));
     comicInfo.setCoverArtist(

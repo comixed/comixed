@@ -12,5 +12,6 @@
   <include file="/db/migrations/1.6/004_1691_dropped_comic_file_details.xml"/>
   <include file="/db/migrations/1.6/005_1580_add_indices_to_support_comic_book_loading.xml"/>
   <include file="/db/migrations/1.6/005_1759_add_unique_constraint_on_last_read_dates.xml"/>
+  <include file="/db/migrations/1.6/006_1808_fix_spelling_of_letterer.xml"/>
 
 </databaseChangeLog>
