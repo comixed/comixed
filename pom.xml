@@ -246,7 +246,7 @@
   </dependencies>
   <build>
     <plugins>
-      <plugin>
+    <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
@@ -360,6 +360,26 @@
         </configuration>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+            <configuration>
+              <gpgArguments>
+                <argument>--pinentry-mode</argument>
+                <argument>loopback</argument>
+              </gpgArguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
         <version>1.6.13</version>
@@ -405,7 +425,36 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
+    <plugin>
+      <groupId>com.github.danielflower.mavenplugins</groupId>
+      <artifactId>gitlog-maven-plugin</artifactId>
+      <version>1.14.0</version>
+      <configuration>
+        <reportTitle>Changelog for Maven Git Log Plugin version v2.0-SNAPSHOT</reportTitle>
+        <verbose>false</verbose>
+        <outputDirectory>${project.basedir}</outputDirectory>
+        <generateMarkdownChangeLog>true</generateMarkdownChangeLog>
+        <markdownChangeLogFilename>CHANGELOG.md</markdownChangeLogFilename>
+        <generateSimpleHTMLChangeLog>false</generateSimpleHTMLChangeLog>
+        <generatePlainTextChangeLog>false</generatePlainTextChangeLog>
+        <generateAsciidocChangeLog>false</generateAsciidocChangeLog>
+        <generateJSONChangeLog>false</generateJSONChangeLog>
+        <generateHTMLTableOnlyChangeLog>false</generateHTMLTableOnlyChangeLog>
+        <issueManagementSystem>GitHub issue tracker</issueManagementSystem>
+        <issueManagementUrl>https://github.com/comixed/comixed/issues</issueManagementUrl>
+        <fullGitMessage>false</fullGitMessage>
+        <dateFormat>yyyy-MM-dd HH:mm:ss Z</dateFormat>
+        <bugzillaPattern>(?:Bug|UPDATE|FIX|ADD|NEW|#) ?#?(\d+)</bugzillaPattern>
+      </configuration>
+      <executions>
+        <execution>
+          <goals>
+            <goal>generate</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
+      <!-- plugin>
         <groupId>com.github.danielflower.mavenplugins</groupId>
         <artifactId>gitlog-maven-plugin</artifactId>
         <version>1.14.0</version>
@@ -428,7 +477,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
+      </plugin -->
     </plugins>
   </build>
   <modules>
