@@ -47,8 +47,10 @@ public class CreateMetadataSourceProcessorTest {
   private static final byte[] TEST_METADATA_CONTENT = "The file content".getBytes();
   private static final String TEST_COMIC_VINE_ID = "73823";
   private static final String TEST_WEB_ADDRESS_NO_MATCH = "http://this.is.not.comicvine";
-  private static final String TEST_WEB_ADDRESS =
+  private static final String TEST_GAMESPOT_WEB_ADDRESS =
       String.format("https://comicvine.gamespot.com/spider-man-1/4000-%s/", TEST_COMIC_VINE_ID);
+  private static final String TEST_COMICVINE_WEB_ADDRESS =
+      String.format("https://www.comicvine.com/spider-man-1/4000-%s/", TEST_COMIC_VINE_ID);
   private static final String TEST_METADATA_SOURCE_NAME = "Metadata Source Name";
   private static final String TEST_METADATA_REFERENCE_ID = "R3F3R3NC31D";
 
@@ -198,7 +200,7 @@ public class CreateMetadataSourceProcessorTest {
 
   @Test
   public void testProcessNoComicVineBean() throws Exception {
-    Mockito.when(comicInfo.getWeb()).thenReturn(TEST_WEB_ADDRESS);
+    Mockito.when(comicInfo.getWeb()).thenReturn(TEST_GAMESPOT_WEB_ADDRESS);
     Mockito.when(metadataSourceService.getByBeanName(Mockito.anyString())).thenReturn(null);
 
     final ComicBook result = processor.process(comicBook);
@@ -218,8 +220,34 @@ public class CreateMetadataSourceProcessorTest {
   }
 
   @Test
-  public void testProcess() throws Exception {
-    Mockito.when(comicInfo.getWeb()).thenReturn(TEST_WEB_ADDRESS);
+  public void testProcessWithGamespotLink() throws Exception {
+    Mockito.when(comicInfo.getWeb()).thenReturn(TEST_GAMESPOT_WEB_ADDRESS);
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+
+    final ByteArrayInputStream inputStream = byteArrayInputStreamArgumentCaptor.getValue();
+    assertNotNull(inputStream);
+    assertArrayEquals(TEST_METADATA_CONTENT, inputStream.readAllBytes());
+
+    final ComicMetadataSource metadata = comicMetadataSourceArgumentCaptor.getValue();
+    assertNotNull(metadata);
+    assertSame(comicBook, metadata.getComicBook());
+    assertSame(metadataSource, metadata.getMetadataSource());
+    assertEquals(TEST_COMIC_VINE_ID, metadata.getReferenceId());
+
+    Mockito.verify(metadataSourceService, Mockito.times(1))
+        .getByBeanName(COMIC_VINE_METADATA_ADAPTOR);
+    Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadFile(comicBook, COMIC_INFO_XML);
+    Mockito.verify(comicInfo, Mockito.times(1)).getWeb();
+    Mockito.verify(comicBook, Mockito.times(1)).setMetadata(metadata);
+  }
+
+  @Test
+  public void testProcessWithComicVineLink() throws Exception {
+    Mockito.when(comicInfo.getWeb()).thenReturn(TEST_COMICVINE_WEB_ADDRESS);
 
     final ComicBook result = processor.process(comicBook);
 

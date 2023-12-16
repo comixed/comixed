@@ -49,8 +49,10 @@ public class CreateMetadataSourceProcessor
     implements ItemProcessor<ComicBook, ComicBook>, InitializingBean {
   public static final String COMIC_INFO_XML = "ComicInfo.xml";
   public static final String COMIC_VINE_METADATA_ADAPTOR = "comicVineMetadataAdaptor";
+  private static final int TEST_CVID_POSITION = 2;
   private final Pattern pattern =
-      Pattern.compile("^http.*comicvine\\.gamespot\\.com.*4000-([\\d]{3,6})\\/");
+      Pattern.compile(
+          "^http.*(comicvine\\.gamespot\\.com|www\\.comicvine\\.com).*4000-([\\d]{3,6})\\/");
   @Autowired MappingJackson2XmlHttpMessageConverter xmlConverter;
   @Autowired private MetadataSourceService metadataSourceService;
   @Autowired private ComicBookAdaptor comicBookAdaptor;
@@ -97,7 +99,7 @@ public class CreateMetadataSourceProcessor
               final Matcher matcher = this.pattern.matcher(web);
               if (matcher.matches()) {
                 log.trace("Web address matches: extracting ComicVine ID");
-                final String comicVineId = matcher.group(1);
+                final String comicVineId = matcher.group(TEST_CVID_POSITION);
                 log.trace("Creating ComicVine metadata source reference");
                 comicBook.setMetadata(new ComicMetadataSource(comicBook, source, comicVineId));
               }
