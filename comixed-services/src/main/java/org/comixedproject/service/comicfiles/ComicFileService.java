@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.adaptors.AdaptorException;
@@ -176,7 +177,7 @@ public class ComicFileService {
   public List<ComicFileDescriptor> findComicFileDescriptors(final int pageSize) {
     log.debug("Loading all comic file descriptors");
     return this.comicFileDescriptorRepository.findAll(PageRequest.of(0, pageSize)).stream()
-        .toList();
+        .collect(Collectors.toList());
   }
 
   /**
