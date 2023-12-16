@@ -71,9 +71,14 @@ public class CbrArchiveAdaptor
       final FileHeader fileHeader = iter.next();
       log.trace("Creating archive entry");
       final InputStream stream = archiveHandle.getArchiveHandle().getInputStream(fileHeader);
-      result.add(
-          createArchiveEntry(
-              index++, fileHeader.getFileName(), fileHeader.getFullUnpackSize(), stream));
+      try {
+        result.add(
+            createArchiveEntry(
+                index++, fileHeader.getFileName(), fileHeader.getFullUnpackSize(), stream));
+      } catch (Exception error) {
+        log.error("Could not load archive entry", error);
+        result.add(createArchiveEntryForCorruptedPage(index++, fileHeader.getFileName()));
+      }
     }
     log.trace("Returning entries");
     return result;

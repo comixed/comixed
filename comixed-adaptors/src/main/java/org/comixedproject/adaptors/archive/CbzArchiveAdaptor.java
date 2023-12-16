@@ -18,9 +18,7 @@
 
 package org.comixedproject.adaptors.archive;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -73,8 +71,13 @@ public class CbzArchiveAdaptor
       final ZipArchiveEntry archiveEntry = iter.nextElement();
       log.trace("Creating archive entry");
       final InputStream stream = archiveHandle.getArchiveHandle().getInputStream(archiveEntry);
-      result.add(
-          createArchiveEntry(index++, archiveEntry.getName(), archiveEntry.getSize(), stream));
+      try {
+        result.add(
+            createArchiveEntry(index++, archiveEntry.getName(), archiveEntry.getSize(), stream));
+      } catch (Exception error) {
+        log.error("Could not load archive entry", error);
+        result.add(createArchiveEntryForCorruptedPage(index++, archiveEntry.getName()));
+      }
     }
     log.trace("Returning entries");
     return result;
@@ -92,7 +95,12 @@ public class CbzArchiveAdaptor
     final ZipArchiveEntry zipEntry = entries.next();
     final byte[] result = new byte[(int) zipEntry.getSize()];
     log.trace("Loading file entry content: {} bytes", zipEntry.getSize());
-    IOUtils.readFully(archiveHandle.getArchiveHandle().getInputStream(zipEntry), result);
+    try {
+      IOUtils.readFully(archiveHandle.getArchiveHandle().getInputStream(zipEntry), result);
+    } catch (Exception error) {
+      log.error("Failed to load zipfile entry", error);
+      return this.doLoadMissingPageContent();
+    }
     return result;
   }
 
