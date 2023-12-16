@@ -6,6 +6,7 @@
     <changeSet id="040_1808_fixed_letterer_spelling.xml" author="mcpierce">
 
         <preConditions onFail="MARK_RAN">
+          <tableExists tableName="comic_tags"/>
             <not>
               <sqlCheck expectedResult="0">SELECT COUNT(*)
                 FROM comic_tags
