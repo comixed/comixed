@@ -107,6 +107,19 @@ public abstract class AbstractArchiveAdaptor<
     return new ComicArchiveEntry(index, name, size, mimeType, entryType);
   }
 
+  protected ComicArchiveEntry createArchiveEntryForCorruptedPage(
+      final int index, final String filename) throws IOException {
+    final byte[] content = this.doLoadMissingPageContent();
+    return createArchiveEntry(index, filename, content.length, new ByteArrayInputStream(content));
+  }
+
+  byte[] doLoadMissingPageContent() throws IOException {
+    final byte[] content =
+        IOUtils.toByteArray(this.getClass().getResourceAsStream("/corrupted-page.png"));
+
+    return content;
+  }
+
   protected abstract byte[] doGetEntry(final R archiveHandle, final String filename)
       throws Exception;
 
