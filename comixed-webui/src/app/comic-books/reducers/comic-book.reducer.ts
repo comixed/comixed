@@ -52,7 +52,7 @@ export const initialState: ComicBookState = {
 export const reducer = createReducer(
   initialState,
 
-  on(loadComicBook, state => ({ ...state, loading: true })),
+  on(loadComicBook, state => ({ ...state, comicBook: null, loading: true })),
   on(comicBookLoaded, (state, action) => ({
     ...state,
     loading: false,
