@@ -73,9 +73,13 @@ describe('ComicBook Reducer', () => {
   describe('loading a single comic', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, loading: false },
+        { ...state, comicBook: COMIC, loading: false },
         loadComicBook({ id: COMIC.id })
       );
+    });
+
+    it('clears the current comic book', () => {
+      expect(state.comicBook).toBeNull();
     });
 
     it('sets the loading flag', () => {
