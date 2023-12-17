@@ -13,6 +13,9 @@
       "confirmation-message": "Are you sure you want to {deleted, select, true{mark} other{unmark}} this comic as deleted?",
       "confirmation-title": "{deleted, select, true{Mark} other{Unmark}} Comic As Deleted"
     },
+    "download": {
+      "effect-failure": "Failed to start comic book download..."
+    },
     "hint": {
       "required-for-scraping": "This value is required for scraping...",
       "useful-for-scraping": "This value is used when scraping..."

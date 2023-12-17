@@ -24,14 +24,15 @@ import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertSame;
 import static junit.framework.TestCase.assertTrue;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
+import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishComicBookRemovalAction;
 import org.comixedproject.messaging.comicbooks.PublishComicBookUpdateAction;
@@ -44,6 +45,7 @@ import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicType;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.library.LastRead;
+import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.comicbooks.PageOrderEntry;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
@@ -110,9 +112,11 @@ public class ComicBookServiceTest {
   private final GregorianCalendar calendar = new GregorianCalendar();
   private final Date now = new Date();
   private final List<LastRead> lastReadList = new ArrayList<>();
+
   @InjectMocks private ComicBookService service;
   @Mock private ComicStateHandler comicStateHandler;
   @Mock private ComicBookRepository comicBookRepository;
+  @Mock private FileTypeAdaptor fileTypeAdaptor;
   @Mock private PublishComicBookUpdateAction comicUpdatePublishAction;
   @Mock private PublishComicBookRemovalAction comicRemovalPublishAction;
   @Mock private ComicBookMetadataAdaptor comicBookMetadataAdaptor;
@@ -349,27 +353,42 @@ public class ComicBookServiceTest {
         .fireEvent(comicBookRecord, ComicEvent.undeleteComic);
   }
 
-  @Test
-  public void testGetComicContentNonexistent() {
+  @Test(expected = ComicBookException.class)
+  public void testGetComicContentNoSuchComicBook() throws ComicBookException {
+    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+
+    try {
+      this.service.getComicContent(TEST_COMIC_BOOK_ID);
+    } finally {
+      Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
+    }
+  }
+
+  @Test(expected = ComicBookException.class)
+  public void testGetComicContentFileNotFound() throws ComicBookException {
+    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME.substring(1));
 
-    final byte[] result = this.service.getComicContent(comicBook);
-
-    assertNull(result);
-
-    Mockito.verify(comicDetail, Mockito.atLeast(1)).getFilename();
+    try {
+      this.service.getComicContent(TEST_COMIC_BOOK_ID);
+    } finally {
+      Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
+    }
   }
 
   @Test
-  public void testGetComicContent() {
+  public void testGetComicContent() throws ComicBookException {
+    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME);
 
-    final byte[] result = this.service.getComicContent(comicBook);
+    final DownloadDocument result = this.service.getComicContent(TEST_COMIC_BOOK_ID);
 
     assertNotNull(result);
-    assertEquals(new File(TEST_COMIC_FILENAME).length(), result.length);
+    assertEquals(FilenameUtils.getName(TEST_COMIC_FILENAME), result.getFilename());
+    assertNotNull(result.getContent());
+    assertTrue(result.getContent().length > 0);
 
-    Mockito.verify(comicDetail, Mockito.atLeast(1)).getFilename();
+    Mockito.verify(comicBookRepository, Mockito.atLeast(1)).getById(TEST_COMIC_BOOK_ID);
   }
 
   @Test(expected = ComicBookException.class)

@@ -39,6 +39,7 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.comicbooks.*;
 import org.comixedproject.service.comicbooks.*;
 import org.comixedproject.service.comicfiles.ComicFileService;
@@ -47,7 +48,6 @@ import org.comixedproject.service.library.LastReadException;
 import org.comixedproject.service.library.LastReadService;
 import org.comixedproject.views.View.ComicDetailsView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -195,30 +195,9 @@ public class ComicBookController {
    */
   @GetMapping(value = "/api/comics/{id}/download")
   @Timed(value = "comixed.comic-book.download")
-  public ResponseEntity<InputStreamResource> downloadComic(@PathVariable("id") long id)
-      throws ComicBookException {
-    log.debug("Preparing to download comicBook: id={}", id);
-
-    final ComicBook comicBook = this.comicBookService.getComic(id);
-    if (comicBook == null) {
-      log.error("No such comicBook");
-      return null;
-    }
-
-    final byte[] content = this.comicBookService.getComicContent(comicBook);
-    if (content == null) {
-      log.error("No comicBook content found");
-      return null;
-    }
-
-    return ResponseEntity.ok()
-        .contentLength(content.length)
-        .header(
-            "Content-Disposition",
-            "attachment; filename=\"" + comicBook.getComicDetail().getFilename() + "\"")
-        .contentType(
-            MediaType.parseMediaType(comicBook.getComicDetail().getArchiveType().getMimeType()))
-        .body(new InputStreamResource(new ByteArrayInputStream(content)));
+  public DownloadDocument downloadComic(@PathVariable("id") long id) throws ComicBookException {
+    log.debug("Download comic book: id={}", id);
+    return this.comicBookService.getComicContent(id);
   }
 
   /**

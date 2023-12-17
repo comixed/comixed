@@ -41,14 +41,15 @@ import {
 } from '@app/comic-metadata/actions/single-book-scraping.actions';
 import {
   selectChosenMetadataSource,
-  selectSingleBookScrapingState,
-  selectScrapingVolumeMetadata
+  selectScrapingVolumeMetadata,
+  selectSingleBookScrapingState
 } from '@app/comic-metadata/selectors/single-book-scraping.selectors';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import { TranslateService } from '@ngx-translate/core';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import {
   comicBookLoaded,
+  downloadComicBook,
   loadComicBook,
   savePageOrder
 } from '@app/comic-books/actions/comic-book.actions';
@@ -340,6 +341,11 @@ export class ComicBookPageComponent
         );
       }
     });
+  }
+
+  onDownloadComicFile(): void {
+    this.logger.debug('Downloading comic file');
+    this.store.dispatch(downloadComicBook({ comicBook: this.comicBook }));
   }
 
   private loadTranslations(): void {
