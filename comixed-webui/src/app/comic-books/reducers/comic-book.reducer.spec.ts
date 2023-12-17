@@ -24,6 +24,9 @@ import {
 import {
   comicBookLoaded,
   comicBookUpdated,
+  downloadComicBook,
+  downloadComicBookFailure,
+  downloadComicBookSuccess,
   loadComicBook,
   loadComicBookFailed,
   pageDeletionUpdated,
@@ -85,32 +88,32 @@ describe('ComicBook Reducer', () => {
     it('sets the loading flag', () => {
       expect(state.loading).toBeTrue();
     });
-  });
 
-  describe('receiving a single comic', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, loading: true, comicBook: null },
-        comicBookLoaded({ comicBook: COMIC })
-      );
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, loading: true, comicBook: null },
+          comicBookLoaded({ comicBook: COMIC })
+        );
+      });
+
+      it('clears the loading flag', () => {
+        expect(state.loading).toBeFalse();
+      });
+
+      it('sets the comic', () => {
+        expect(state.comicBook).toEqual(COMIC);
+      });
     });
 
-    it('clears the loading flag', () => {
-      expect(state.loading).toBeFalse();
-    });
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer({ ...state, loading: true }, loadComicBookFailed());
+      });
 
-    it('sets the comic', () => {
-      expect(state.comicBook).toEqual(COMIC);
-    });
-  });
-
-  describe('failure to load a single comic', () => {
-    beforeEach(() => {
-      state = reducer({ ...state, loading: true }, loadComicBookFailed());
-    });
-
-    it('clears the loading flag', () => {
-      expect(state.loading).toBeFalse();
+      it('clears the loading flag', () => {
+        expect(state.loading).toBeFalse();
+      });
     });
   });
 
@@ -129,72 +132,72 @@ describe('ComicBook Reducer', () => {
     it('clears the saved flag', () => {
       expect(state.saved).toBeFalse();
     });
-  });
 
-  describe('successfully updating a single comic', () => {
-    const UPDATED_COMIC = {
-      ...COMIC,
-      filename: COMIC.detail.filename.substr(1)
-    };
+    describe('success', () => {
+      const UPDATED_COMIC = {
+        ...COMIC,
+        filename: COMIC.detail.filename.substr(1)
+      };
 
-    beforeEach(() => {
-      state = reducer(
-        { ...state, saving: true, saved: false, comicBook: COMIC },
-        comicBookUpdated({ comicBook: UPDATED_COMIC })
-      );
+      beforeEach(() => {
+        state = reducer(
+          { ...state, saving: true, saved: false, comicBook: COMIC },
+          comicBookUpdated({ comicBook: UPDATED_COMIC })
+        );
+      });
+
+      it('clears the saving flag', () => {
+        expect(state.saving).toBeFalse();
+      });
+
+      it('sets the saved flag', () => {
+        expect(state.saved).toBeTrue();
+      });
+
+      it('updates the comic', () => {
+        expect(state.comicBook).toEqual(UPDATED_COMIC);
+      });
     });
 
-    it('clears the saving flag', () => {
-      expect(state.saving).toBeFalse();
+    describe('update received for different comic', () => {
+      const CURRENT_COMIC = COMIC_BOOK_2;
+      const OTHER_COMIC = COMIC_BOOK_4;
+
+      beforeEach(() => {
+        state = reducer(
+          { ...state, saving: true, saved: false, comicBook: CURRENT_COMIC },
+          comicBookUpdated({ comicBook: OTHER_COMIC })
+        );
+      });
+
+      it('does not affect the current comic', () => {
+        expect(state.comicBook).toEqual(CURRENT_COMIC);
+      });
+
+      it('does not change the saving flag', () => {
+        expect(state.saving).toBeTrue();
+      });
+
+      it('does not change the saved flag', () => {
+        expect(state.saved).toBeFalse();
+      });
     });
 
-    it('sets the saved flag', () => {
-      expect(state.saved).toBeTrue();
-    });
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, saving: true, saved: true },
+          updateComicBookFailed()
+        );
+      });
 
-    it('updates the comic', () => {
-      expect(state.comicBook).toEqual(UPDATED_COMIC);
-    });
-  });
+      it('clears the saving flag', () => {
+        expect(state.saving).toBeFalse();
+      });
 
-  describe('update received for different comic', () => {
-    const CURRENT_COMIC = COMIC_BOOK_2;
-    const OTHER_COMIC = COMIC_BOOK_4;
-
-    beforeEach(() => {
-      state = reducer(
-        { ...state, saving: true, saved: false, comicBook: CURRENT_COMIC },
-        comicBookUpdated({ comicBook: OTHER_COMIC })
-      );
-    });
-
-    it('does not affect the current comic', () => {
-      expect(state.comicBook).toEqual(CURRENT_COMIC);
-    });
-
-    it('does not change the saving flag', () => {
-      expect(state.saving).toBeTrue();
-    });
-
-    it('does not change the saved flag', () => {
-      expect(state.saved).toBeFalse();
-    });
-  });
-
-  describe('failure to update a single comic', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, saving: true, saved: true },
-        updateComicBookFailed()
-      );
-    });
-
-    it('clears the saving flag', () => {
-      expect(state.saving).toBeFalse();
-    });
-
-    it('clears the saved flag', () => {
-      expect(state.saved).toBeFalse();
+      it('clears the saved flag', () => {
+        expect(state.saved).toBeFalse();
+      });
     });
   });
 
@@ -209,25 +212,25 @@ describe('ComicBook Reducer', () => {
     it('sets the saving flag', () => {
       expect(state.saving).toBeTrue();
     });
-  });
 
-  describe('success setting the deleted state', () => {
-    beforeEach(() => {
-      state = reducer({ ...state, saving: true }, pageDeletionUpdated());
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer({ ...state, saving: true }, pageDeletionUpdated());
+      });
+
+      it('clears the saving flag', () => {
+        expect(state.saving).toBeFalse();
+      });
     });
 
-    it('clears the saving flag', () => {
-      expect(state.saving).toBeFalse();
-    });
-  });
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer({ ...state, saving: true }, updatePageDeletionFailed());
+      });
 
-  describe('failure setting the deleted state', () => {
-    beforeEach(() => {
-      state = reducer({ ...state, saving: true }, updatePageDeletionFailed());
-    });
-
-    it('clears the saving flag', () => {
-      expect(state.saving).toBeFalse();
+      it('clears the saving flag', () => {
+        expect(state.saving).toBeFalse();
+      });
     });
   });
 
@@ -245,25 +248,64 @@ describe('ComicBook Reducer', () => {
     it('sets the saving flag', () => {
       expect(state.saving).toBeTrue();
     });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer({ ...state, saving: true }, pageOrderSaved());
+      });
+
+      it('clears the saving flag', () => {
+        expect(state.saving).toBeFalse();
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer({ ...state, saving: true }, savePageOrderFailed());
+      });
+
+      it('clears the saving flag', () => {
+        expect(state.saving).toBeFalse();
+      });
+    });
   });
 
-  describe('page order saved', () => {
+  describe('downloading a comic book file', () => {
     beforeEach(() => {
-      state = reducer({ ...state, saving: true }, pageOrderSaved());
+      state = reducer(
+        { ...state, loading: false },
+        downloadComicBook({ comicBook: COMIC })
+      );
     });
 
-    it('clears the saving flag', () => {
-      expect(state.saving).toBeFalse();
-    });
-  });
-
-  describe('save page order failed', () => {
-    beforeEach(() => {
-      state = reducer({ ...state, saving: true }, savePageOrderFailed());
+    it('sets the loading flag', () => {
+      expect(state.loading).toBeTrue();
     });
 
-    it('clears the saving flag', () => {
-      expect(state.saving).toBeFalse();
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, loading: true },
+          downloadComicBookSuccess()
+        );
+      });
+
+      it('clears the loading flag', () => {
+        expect(state.loading).toBeFalse();
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, loading: true },
+          downloadComicBookFailure()
+        );
+      });
+
+      it('clears the loading flag', () => {
+        expect(state.loading).toBeFalse();
+      });
     });
   });
 });

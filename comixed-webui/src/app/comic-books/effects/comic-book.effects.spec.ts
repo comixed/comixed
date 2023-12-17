@@ -26,6 +26,9 @@ import { COMIC_BOOK_2 } from '@app/comic-books/comic-books.fixtures';
 import {
   comicBookLoaded,
   comicBookUpdated,
+  downloadComicBook,
+  downloadComicBookFailure,
+  downloadComicBookSuccess,
   loadComicBook,
   loadComicBookFailed,
   pageDeletionUpdated,
@@ -43,16 +46,24 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
+import { DownloadDocument } from '@app/core/models/download-document';
+import { FileDownloadService } from '@app/core/services/file-download.service';
 
 describe('ComicBookEffects', () => {
   const COMIC_BOOK = COMIC_BOOK_2;
   const PAGE = PAGE_1;
   const DELETED = Math.random() > 0.5;
+  const DOWNLOAD_COMIC_BOOK = {
+    filename: COMIC_BOOK.detail.filename,
+    content: 'content',
+    mediaType: 'application/octet'
+  } as DownloadDocument;
 
   let actions$: Observable<any>;
   let effects: ComicBookEffects;
   let comicService: jasmine.SpyObj<ComicBookService>;
   let alertService: AlertService;
+  let fileDownloadService: FileDownloadService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -72,10 +83,16 @@ describe('ComicBookEffects', () => {
             updatePageDeletion: jasmine.createSpy(
               'ComicBookService.updatePageDeletion()'
             ),
-            savePageOrder: jasmine.createSpy('ComicBookService.savePageOrder()')
+            savePageOrder: jasmine.createSpy(
+              'ComicBookService.savePageOrder()'
+            ),
+            downloadComicBook: jasmine.createSpy(
+              'ComicBookService.downloadComicBook()'
+            )
           }
         },
-        AlertService
+        AlertService,
+        FileDownloadService
       ]
     });
 
@@ -86,6 +103,8 @@ describe('ComicBookEffects', () => {
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'error');
     spyOn(alertService, 'info');
+    fileDownloadService = TestBed.inject(FileDownloadService);
+    spyOn(fileDownloadService, 'saveFile');
   });
 
   it('should be created', () => {
@@ -283,6 +302,60 @@ describe('ComicBookEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.savePageOrder$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('downloading a comic book', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = DOWNLOAD_COMIC_BOOK;
+      const action = downloadComicBook({
+        comicBook: COMIC_BOOK
+      });
+      const outcome = downloadComicBookSuccess();
+
+      actions$ = hot('-a', { a: action });
+      comicService.downloadComicBook
+        .withArgs({ comicBook: COMIC_BOOK })
+        .and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.downloadComicBook$).toBeObservable(expected);
+      expect(fileDownloadService.saveFile).toHaveBeenCalledWith({
+        document: DOWNLOAD_COMIC_BOOK
+      });
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = downloadComicBook({
+        comicBook: COMIC_BOOK
+      });
+      const outcome = downloadComicBookFailure();
+
+      actions$ = hot('-a', { a: action });
+      comicService.downloadComicBook
+        .withArgs({ comicBook: COMIC_BOOK })
+        .and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.downloadComicBook$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = downloadComicBook({
+        comicBook: COMIC_BOOK
+      });
+      const outcome = downloadComicBookFailure();
+
+      actions$ = hot('-a', { a: action });
+      comicService.downloadComicBook
+        .withArgs({ comicBook: COMIC_BOOK })
+        .and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.downloadComicBook$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

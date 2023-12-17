@@ -25,6 +25,9 @@ import { ComicBookService } from '@app/comic-books/services/comic-book.service';
 import {
   comicBookLoaded,
   comicBookUpdated,
+  downloadComicBook,
+  downloadComicBookFailure,
+  downloadComicBookSuccess,
   loadComicBook,
   loadComicBookFailed,
   pageDeletionUpdated,
@@ -39,6 +42,7 @@ import {
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { of } from 'rxjs';
+import { FileDownloadService } from '@app/core/services/file-download.service';
 
 @Injectable()
 export class ComicBookEffects {
@@ -114,7 +118,7 @@ export class ComicBookEffects {
   updatePageDeletion$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(updatePageDeletion),
-      tap(action => this.logger.trace('Updating page deletion:', action)),
+      tap(action => this.logger.debug('Updating page deletion:', action)),
       switchMap(action =>
         this.comicService
           .updatePageDeletion({ pages: action.pages, deleted: action.deleted })
@@ -160,7 +164,7 @@ export class ComicBookEffects {
   savePageOrder$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(savePageOrder),
-      tap(action => this.logger.trace('Saving page order:', action)),
+      tap(action => this.logger.debug('Saving page order:', action)),
       switchMap(action =>
         this.comicService
           .savePageOrder({
@@ -198,11 +202,46 @@ export class ComicBookEffects {
     );
   });
 
+  downloadComicBook$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(downloadComicBook),
+      tap(action => this.logger.debug('Download comic book:', action)),
+      switchMap(action =>
+        this.comicService
+          .downloadComicBook({ comicBook: action.comicBook })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            tap(response =>
+              this.fileDownloadService.saveFile({ document: response })
+            ),
+            map(response => downloadComicBookSuccess()),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'comic-book.download.effect-failure'
+                )
+              );
+              return of(downloadComicBookFailure());
+            })
+          )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(downloadComicBookFailure());
+      })
+    );
+  });
+
   constructor(
     private logger: LoggerService,
     private actions$: Actions,
     private comicService: ComicBookService,
     private alertService: AlertService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private fileDownloadService: FileDownloadService
   ) {}
 }

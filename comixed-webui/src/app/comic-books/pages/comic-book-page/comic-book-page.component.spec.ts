@@ -78,6 +78,7 @@ import { COMIC_BOOK_UPDATE_TOPIC } from '@app/comic-books/comic-books.constants'
 import { interpolate } from '@app/core';
 import {
   comicBookLoaded,
+  downloadComicBook,
   savePageOrder
 } from '@app/comic-books/actions/comic-book.actions';
 import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
@@ -538,6 +539,19 @@ describe('ComicBookPageComponent', () => {
       it('returns false', () => {
         expect(component.hasChangedState).toBeFalse();
       });
+    });
+  });
+
+  describe('downloading a comic book file', () => {
+    beforeEach(() => {
+      component.comicBook = COMIC_BOOK;
+      component.onDownloadComicFile();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        downloadComicBook({ comicBook: COMIC_BOOK })
+      );
     });
   });
 });
