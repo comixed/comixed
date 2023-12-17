@@ -270,6 +270,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    * @param filename the filename
    * @return the comic
    */
+  @Transactional
   public ComicBook findByFilename(final String filename) {
     return this.comicBookRepository.findByFilename(filename);
   }

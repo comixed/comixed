@@ -22,6 +22,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishComicBookSelectionStateAction;
@@ -160,7 +161,10 @@ public class ComicBookSelectionService {
       try {
         final List result = this.objectMapper.readValue(storeSelections.toString(), List.class);
         // Jackson unmarshalls the elements as Integer, so we need to adjust them
-        return (List) result.stream().map(entry -> ((Integer) entry).longValue()).toList();
+        return (List)
+            result.stream()
+                .map(entry -> ((Integer) entry).longValue())
+                .collect(Collectors.toList());
       } catch (JsonProcessingException error) {
         throw new ComicBookSelectionException("failed to load selections from session", error);
       }
