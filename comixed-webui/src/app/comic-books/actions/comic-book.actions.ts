@@ -22,53 +22,66 @@ import { Page } from '@app/comic-books/models/page';
 import { PageOrderEntry } from '@app/comic-books/models/net/page-order-entry';
 
 export const loadComicBook = createAction(
-  '[ComicBook] Loads a single comic',
+  '[Comic Book] Loads a single comic',
   props<{ id: number }>()
 );
 
 export const comicBookLoaded = createAction(
-  '[ComicBook] A single comic was loaded',
+  '[Comic Book] A single comic was loaded',
   props<{ comicBook: ComicBook }>()
 );
 
 export const loadComicBookFailed = createAction(
-  '[ComicBook] Failed to load a single comic'
+  '[Comic Book] Failed to load a single comic'
 );
 
 export const updateComicBook = createAction(
-  '[ComicBook] Update a comic',
+  '[Comic Book] Update a comic',
   props<{ comicBook: ComicBook }>()
 );
 
 export const comicBookUpdated = createAction(
-  '[ComicBook] ComicBook updated',
+  '[Comic Book] ComicBook updated',
   props<{ comicBook: ComicBook }>()
 );
 
 export const updateComicBookFailed = createAction(
-  '[ComicBook] Failed to update a comic'
+  '[Comic Book] Failed to update a comic'
 );
 
 export const updatePageDeletion = createAction(
-  '[ComicBook] Update page deletion state',
+  '[Comic Book] Update page deletion state',
   props<{ pages: Page[]; deleted: boolean }>()
 );
 
 export const pageDeletionUpdated = createAction(
-  '[ComicBook] Page deletion was updated'
+  '[Comic Book] Page deletion was updated'
 );
 
 export const updatePageDeletionFailed = createAction(
-  '[ComicBook] Failed to update page deletion state'
+  '[Comic Book] Failed to update page deletion state'
 );
 
 export const savePageOrder = createAction(
-  '[ComicBook] Save page order',
+  '[Comic Book] Save page order',
   props<{ comicBook: ComicBook; entries: PageOrderEntry[] }>()
 );
 
-export const pageOrderSaved = createAction('[ComicBook] Page order saved');
+export const pageOrderSaved = createAction('[Comic Book] Page order saved');
 
 export const savePageOrderFailed = createAction(
-  '[ComicBook] Save page order failed'
+  '[Comic Book] Save page order failed'
+);
+
+export const downloadComicBook = createAction(
+  '[Comic Book] Attempt to download a comic book file',
+  props<{ comicBook: ComicBook }>()
+);
+
+export const downloadComicBookSuccess = createAction(
+  '[Comic Book] Download comic book file started'
+);
+
+export const downloadComicBookFailure = createAction(
+  '[Comic Book] Failed to download a comic book file'
 );

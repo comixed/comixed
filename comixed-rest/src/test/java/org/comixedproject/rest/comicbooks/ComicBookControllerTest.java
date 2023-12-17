@@ -39,6 +39,7 @@ import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.*;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.library.LastRead;
+import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.comicbooks.*;
 import org.comixedproject.service.comicbooks.*;
 import org.comixedproject.service.comicfiles.ComicFileService;
@@ -51,8 +52,6 @@ import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -112,6 +111,7 @@ public class ComicBookControllerTest {
   @Mock private HttpSession httpSession;
   @Mock private Principal principal;
   @Mock private List<LastRead> lastReadEntryList;
+  @Mock private DownloadDocument comicBookContent;
 
   @Captor private ArgumentCaptor<InputStream> inputStreamCaptor;
 
@@ -237,69 +237,28 @@ public class ComicBookControllerTest {
         .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
   }
 
-  @Test
-  public void testDownloadComicForNonexistentComic() throws IOException, ComicBookException {
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(null);
+  @Test(expected = ComicBookException.class)
+  public void testDownloadComicFileServiceException() throws IOException, ComicBookException {
+    Mockito.when(comicBookService.getComicContent(Mockito.anyLong()))
+        .thenThrow(ComicBookException.class);
 
-    assertNull(controller.downloadComic(TEST_COMIC_ID));
-
-    Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
-  }
-
-  @Test
-  public void testDownloadComicFileDoesNotExist() throws IOException, ComicBookException {
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
-    Mockito.when(comicBookService.getComicContent(Mockito.any(ComicBook.class))).thenReturn(null);
-
-    assertNull(controller.downloadComic(TEST_COMIC_ID));
-
-    Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
-    Mockito.verify(comicBookService, Mockito.times(1)).getComicContent(comicBook);
+    try {
+      controller.downloadComic(TEST_COMIC_ID);
+    } finally {
+      Mockito.verify(comicBookService, Mockito.times(1)).getComicContent(TEST_COMIC_ID);
+    }
   }
 
   @Test
   public void testDownloadComic() throws IOException, ComicBookException {
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
-    Mockito.when(comicBookService.getComicContent(Mockito.any(ComicBook.class)))
-        .thenReturn(TEST_COMIC_CONTENT);
-    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILE);
-    Mockito.when(comicDetail.getArchiveType()).thenReturn(ArchiveType.CBZ);
+    Mockito.when(comicBookService.getComicContent(Mockito.anyLong())).thenReturn(comicBookContent);
 
-    ResponseEntity<InputStreamResource> result = controller.downloadComic(TEST_COMIC_ID);
+    final DownloadDocument result = controller.downloadComic(TEST_COMIC_ID);
 
     assertNotNull(result);
-    assertSame(HttpStatus.OK, result.getStatusCode());
-    assertTrue(result.getBody().contentLength() > 0);
-    assertEquals(ArchiveType.CBZ.getMimeType(), result.getHeaders().getContentType().toString());
+    assertSame(comicBookContent, result);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
-    Mockito.verify(comicBookService, Mockito.times(1)).getComicContent(comicBook);
-    Mockito.verify(comicDetail, Mockito.atLeast(1)).getFilename();
-    Mockito.verify(comicDetail, Mockito.times(1)).getArchiveType();
-  }
-
-  @Test
-  public void testDownloadComicNonexistent() throws IOException, ComicBookException {
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(null);
-
-    ResponseEntity<InputStreamResource> result = controller.downloadComic(TEST_COMIC_ID);
-
-    assertNull(result);
-
-    Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
-  }
-
-  @Test
-  public void testDownloadComicFileNotFound() throws IOException, ComicBookException {
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
-    Mockito.when(comicBookService.getComicContent(Mockito.any(ComicBook.class))).thenReturn(null);
-
-    ResponseEntity<InputStreamResource> result = controller.downloadComic(TEST_COMIC_ID);
-
-    assertNull(result);
-
-    Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
-    Mockito.verify(comicBookService, Mockito.times(1)).getComicContent(comicBook);
+    Mockito.verify(comicBookService, Mockito.times(1)).getComicContent(TEST_COMIC_ID);
   }
 
   @Test(expected = ComicBookException.class)

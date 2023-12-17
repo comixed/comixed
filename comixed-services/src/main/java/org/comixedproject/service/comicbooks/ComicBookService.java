@@ -20,6 +20,7 @@ package org.comixedproject.service.comicbooks;
 
 import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
@@ -28,7 +29,9 @@ import java.util.List;
 import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
+import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishComicBookRemovalAction;
 import org.comixedproject.messaging.comicbooks.PublishComicBookUpdateAction;
@@ -38,6 +41,7 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.comicbooks.PageOrderEntry;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
@@ -67,6 +71,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   @Autowired private PublishComicBookUpdateAction publishComicBookUpdateAction;
   @Autowired private PublishComicBookRemovalAction publishComicBookRemovalAction;
   @Autowired private ImprintService imprintService;
+  @Autowired private FileTypeAdaptor fileTypeAdaptor;
 
   /**
    * Retrieves a single comic by id. It is expected that this comic exists.
@@ -212,18 +217,23 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   /**
    * Retrieves the full content of the comicBook file.
    *
-   * @param comicBook the comicBook
+   * @param comicBookId the comicBook
    * @return the comicBook content
    */
   @Transactional
-  public byte[] getComicContent(final ComicBook comicBook) {
-    log.debug("Getting file content: filename={}", comicBook.getComicDetail().getFilename());
+  public DownloadDocument getComicContent(final long comicBookId) throws ComicBookException {
+    final ComicBook comicBook = this.doGetComic(comicBookId);
+    final String filename = comicBook.getComicDetail().getFilename();
+    final String baseFilenaem = FilenameUtils.getName(filename);
 
     try {
-      return FileUtils.readFileToByteArray(new File(comicBook.getComicDetail().getFilename()));
+      final byte[] content = FileUtils.readFileToByteArray(new File(filename));
+      return new DownloadDocument(
+          baseFilenaem,
+          this.fileTypeAdaptor.getMimeTypeFor(new ByteArrayInputStream(content)),
+          content);
     } catch (IOException error) {
-      log.error("Failed to read comicBook file content", error);
-      return null;
+      throw new ComicBookException("Failed to load comic book file", error);
     }
   }
 

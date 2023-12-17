@@ -30,6 +30,7 @@ import { OldLoadComicsRequest } from '@app/comic-books/models/net/old-load-comic
 import {
   DELETE_SELECTED_COMIC_BOOKS_URL,
   DELETE_SINGLE_COMIC_BOOK_URL,
+  DOWNLOAD_COMIC_BOOK_URL,
   MARK_PAGES_DELETED_URL,
   MARK_PAGES_UNDELETED_URL,
   SAVE_PAGE_ORDER_URL,
@@ -55,7 +56,7 @@ export class ComicBookService {
    * @param args.lastId the last id received
    */
   loadBatch(args: { maxRecords: number; lastId: number }): Observable<any> {
-    this.logger.trace('Service: loading a batch of comics:', args);
+    this.logger.debug('Service: loading a batch of comics:', args);
     return this.http.post(interpolate(OLD_LOAD_COMICS_URL), {
       maxRecords: args.maxRecords,
       lastId: args.lastId
@@ -68,7 +69,7 @@ export class ComicBookService {
    * @param args.id the comic id
    */
   loadOne(args: { id: number }): Observable<any> {
-    this.logger.trace('Service: loading one comic:', args);
+    this.logger.debug('Service: loading one comic:', args);
     return this.http.get(interpolate(LOAD_COMIC_URL, { id: args.id }));
   }
 
@@ -78,7 +79,7 @@ export class ComicBookService {
    * @param args.comic the comic
    */
   updateOne(args: { comicBook: ComicBook }): Observable<any> {
-    this.logger.trace('Service: updating one comic:', args);
+    this.logger.debug('Service: updating one comic:', args);
     return this.http.put(
       interpolate(UPDATE_COMIC_URL, { id: args.comicBook.id }),
       args.comicBook
@@ -135,13 +136,13 @@ export class ComicBookService {
     deleted: boolean;
   }): Observable<any> {
     if (args.deleted) {
-      this.logger.trace('Marking pages for deletion');
+      this.logger.debug('Marking pages for deletion');
       return this.http.post(interpolate(MARK_PAGES_DELETED_URL), {
         ids: args.pages.map(page => page.id),
         deleted: true
       } as MarkPagesDeletedRequest);
     } else {
-      this.logger.trace('Unmarking pages for deletion');
+      this.logger.debug('Unmarking pages for deletion');
       return this.http.post(interpolate(MARK_PAGES_UNDELETED_URL), {
         ids: args.pages.map(page => page.id),
         deleted: false
@@ -153,10 +154,17 @@ export class ComicBookService {
     comicBook: ComicBook;
     entries: PageOrderEntry[];
   }): Observable<any> {
-    this.logger.trace('Saving page order');
+    this.logger.debug('Saving page order:', args);
     return this.http.post(
       interpolate(SAVE_PAGE_ORDER_URL, { id: args.comicBook.id }),
       { entries: args.entries } as SavePageOrderRequest
+    );
+  }
+
+  downloadComicBook(args: { comicBook: ComicBook }): Observable<any> {
+    this.logger.debug('Downloading comic book:', args);
+    return this.http.get(
+      interpolate(DOWNLOAD_COMIC_BOOK_URL, { comicBookId: args.comicBook.id })
     );
   }
 }

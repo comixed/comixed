@@ -43,6 +43,7 @@ import { OldLoadComicsRequest } from '@app/comic-books/models/net/old-load-comic
 import {
   DELETE_SELECTED_COMIC_BOOKS_URL,
   DELETE_SINGLE_COMIC_BOOK_URL,
+  DOWNLOAD_COMIC_BOOK_URL,
   MARK_PAGES_DELETED_URL,
   MARK_PAGES_UNDELETED_URL,
   SAVE_PAGE_ORDER_URL,
@@ -53,14 +54,21 @@ import { HttpResponse } from '@angular/common/http';
 import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
 import { MarkPagesDeletedRequest } from '@app/comic-books/models/net/mark-pages-deleted-request';
 import { SavePageOrderRequest } from '@app/comic-books/models/net/save-page-order-request';
+import { DownloadDocument } from '@app/core/models/download-document';
 
 describe('ComicBookService', () => {
   const COMIC_DETAIL = COMIC_DETAIL_2;
-  const COMIC_BOOKS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
+  const COMIC_DETAILS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
+  const COMIC_BOOK = COMIC_BOOK_1;
   const MAX_RECORDS = 1000;
   const LAST_ID = Math.floor(Math.abs(Math.random() * 1000));
   const LAST_PAGE = Math.random() > 0.5;
   const PAGE = PAGE_1;
+  const DOWNLOAD_COMIC_BOOK = {
+    filename: COMIC_BOOK.detail.filename,
+    content: 'content',
+    mediaType: 'application/octet'
+  } as DownloadDocument;
 
   let service: ComicBookService;
   let httpMock: HttpTestingController;
@@ -83,7 +91,7 @@ describe('ComicBookService', () => {
       .loadBatch({ maxRecords: MAX_RECORDS, lastId: LAST_ID })
       .subscribe(response =>
         expect(response).toEqual({
-          comicBooks: COMIC_BOOKS,
+          comicBooks: COMIC_DETAILS,
           lastId: LAST_ID,
           lastPayload: LAST_PAGE
         } as OldLoadComicsResponse)
@@ -96,7 +104,7 @@ describe('ComicBookService', () => {
       lastId: LAST_ID
     } as OldLoadComicsRequest);
     req.flush({
-      comicBooks: COMIC_BOOKS,
+      comicBooks: COMIC_DETAILS,
       lastId: LAST_ID,
       lastPayload: LAST_PAGE
     } as OldLoadComicsResponse);
@@ -116,14 +124,14 @@ describe('ComicBookService', () => {
 
   it('can update a single comic', () => {
     service
-      .updateOne({ comicBook: COMIC_BOOK_1 })
+      .updateOne({ comicBook: COMIC_BOOK })
       .subscribe(response => expect(response).toEqual(COMIC_BOOK_2));
 
     const req = httpMock.expectOne(
-      interpolate(UPDATE_COMIC_URL, { id: COMIC_BOOK_1.id })
+      interpolate(UPDATE_COMIC_URL, { id: COMIC_BOOK.id })
     );
     expect(req.request.method).toEqual('PUT');
-    expect(req.request.body).toEqual(COMIC_BOOK_1);
+    expect(req.request.body).toEqual(COMIC_BOOK);
     req.flush(COMIC_BOOK_2);
   });
 
@@ -218,18 +226,30 @@ describe('ComicBookService', () => {
   it('can save the page order', () => {
     service
       .savePageOrder({
-        comicBook: COMIC_BOOK_1,
+        comicBook: COMIC_BOOK,
         entries: [{ index: 0, filename: PAGE.filename }]
       })
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
-      interpolate(SAVE_PAGE_ORDER_URL, { id: COMIC_BOOK_1.id })
+      interpolate(SAVE_PAGE_ORDER_URL, { id: COMIC_BOOK.id })
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
       entries: [{ index: 0, filename: PAGE.filename }]
     } as SavePageOrderRequest);
     req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('can download a comic book file', () => {
+    service
+      .downloadComicBook({ comicBook: COMIC_BOOK })
+      .subscribe(response => expect(response).toEqual(DOWNLOAD_COMIC_BOOK));
+
+    const req = httpMock.expectOne(
+      interpolate(DOWNLOAD_COMIC_BOOK_URL, { comicBookId: COMIC_BOOK.id })
+    );
+    expect(req.request.method).toEqual('GET');
+    req.flush(DOWNLOAD_COMIC_BOOK);
   });
 });

@@ -20,6 +20,9 @@ import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   comicBookLoaded,
   comicBookUpdated,
+  downloadComicBook,
+  downloadComicBookFailure,
+  downloadComicBookSuccess,
   loadComicBook,
   loadComicBookFailed,
   pageDeletionUpdated,
@@ -82,7 +85,10 @@ export const reducer = createReducer(
   on(updatePageDeletionFailed, state => ({ ...state, saving: false })),
   on(savePageOrder, state => ({ ...state, saving: true })),
   on(pageOrderSaved, state => ({ ...state, saving: false })),
-  on(savePageOrderFailed, state => ({ ...state, saving: false }))
+  on(savePageOrderFailed, state => ({ ...state, saving: false })),
+  on(downloadComicBook, state => ({ ...state, loading: true })),
+  on(downloadComicBookSuccess, state => ({ ...state, loading: false })),
+  on(downloadComicBookFailure, state => ({ ...state, loading: false }))
 );
 
 export const comicBookFeature = createFeature({
