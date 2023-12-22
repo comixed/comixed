@@ -29,6 +29,7 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.collections.Publisher;
 import org.comixedproject.model.collections.Series;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -83,6 +84,10 @@ public class ComicBookRepositoryTest {
   private static final String TEST_HASH_WITH_NO_COMICS = "FEDCBA9876543210FEDCBA9876543210";
   private static final String TEST_HASH_WITH_COMICS = "0123456789ABCDEF0123456789ABCDEF";
   private static final int TEST_BATCH_SIZE = 1;
+  private static final String TEST_COMICBOOK_FILENAME = "src/test/resources/comicbook.cbz";
+  private static final String TEST_TITLE = "The title of this issue";
+  private static final String TEST_DESCRIPTION = "Some comic book description";
+  private static final String TEST_NOTES = "The notes for this comic book";
 
   @Autowired private ComicBookRepository repository;
 
@@ -341,5 +346,59 @@ public class ComicBookRepositoryTest {
     assertNotNull(result);
     assertFalse(result.isEmpty());
     assertTrue(result.stream().allMatch(comic -> comic.getComicBook().getDuplicatePageCount() > 0));
+  }
+
+  @Test
+  public void testSaveWithNullFields() {
+    final ComicBook incoming = new ComicBook();
+    incoming.setComicDetail(new ComicDetail(incoming, TEST_COMICBOOK_FILENAME, ArchiveType.CBZ));
+
+    final ComicBook saved = this.repository.save(incoming);
+
+    this.repository.flush();
+    ;
+
+    assertNotNull(saved.getId());
+
+    final Optional<ComicBook> record = this.repository.findById(saved.getId());
+
+    assertTrue(record.isPresent());
+    assertNull(record.get().getComicDetail().getPublisher());
+    assertNull(record.get().getComicDetail().getSeries());
+    assertNull(record.get().getComicDetail().getVolume());
+    assertNull(record.get().getComicDetail().getIssueNumber());
+    assertNull(record.get().getComicDetail().getTitle());
+    assertNull(record.get().getComicDetail().getDescription());
+  }
+
+  @Test
+  public void testSaveTrimsFields() {
+    final ComicBook incoming = new ComicBook();
+    incoming.setComicDetail(new ComicDetail(incoming, TEST_COMICBOOK_FILENAME, ArchiveType.CBZ));
+    incoming.getComicDetail().setPublisher(String.format(" %s ", TEST_PUBLISHER));
+    incoming.getComicDetail().setSeries(String.format(" %s ", TEST_SERIES));
+    incoming.getComicDetail().setVolume(String.format(" %s ", TEST_VOLUME));
+    incoming.getComicDetail().setIssueNumber(String.format(" %s ", TEST_ISSUE_WITH_NEXT));
+    incoming.getComicDetail().setTitle(String.format(" %s ", TEST_TITLE));
+    incoming.getComicDetail().setDescription(String.format(" %s ", TEST_DESCRIPTION));
+    incoming.getComicDetail().setNotes(String.format(" %s ", TEST_NOTES));
+
+    final ComicBook saved = this.repository.save(incoming);
+
+    this.repository.flush();
+    ;
+
+    assertNotNull(saved.getId());
+
+    final Optional<ComicBook> record = this.repository.findById(saved.getId());
+
+    assertTrue(record.isPresent());
+    assertEquals(TEST_PUBLISHER, record.get().getComicDetail().getPublisher());
+    assertEquals(TEST_SERIES, record.get().getComicDetail().getSeries());
+    assertEquals(TEST_VOLUME, record.get().getComicDetail().getVolume());
+    assertEquals(TEST_ISSUE_WITH_NEXT, record.get().getComicDetail().getIssueNumber());
+    assertEquals(TEST_TITLE, record.get().getComicDetail().getTitle());
+    assertEquals(TEST_DESCRIPTION, record.get().getComicDetail().getDescription());
+    assertEquals(TEST_NOTES, record.get().getComicDetail().getNotes());
   }
 }
