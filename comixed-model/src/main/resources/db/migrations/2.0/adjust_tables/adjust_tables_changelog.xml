@@ -35,5 +35,6 @@
     <include file="/db/migrations/2.0/adjust_tables/031_1707_remove_smart_list_matchers_table.xml"/>
     <include file="/db/migrations/2.0/adjust_tables/030_1707_remove_smart_reading_lists_table.xml"/>
     <include file="/db/migrations/2.0/adjust_tables/040_1808_fixed_letterer_spelling.xml"/>
+    <include file="/db/migrations/2.0/adjust_tables/041_1827_trim_comic_detail_fields.xml"/>
 
 </databaseChangeLog>
