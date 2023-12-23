@@ -18,10 +18,12 @@
 
 package org.comixedproject.service.user;
 
+import static org.comixedproject.service.user.UserService.IMPORT_ROOT_DIRECTORY;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
 import java.util.Date;
+import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.user.PublishCurrentUserAction;
@@ -45,6 +47,8 @@ public class UserServiceTest {
   private static final String TEST_PASSWORD_HASH = "the password hashed";
   private static final String TEST_PROPERTY_NAME = "some.property.name";
   private static final String TEST_PROPERTY_VALUE = "The value of that property";
+  private static final String TEST_DENORMALIZED_ROOT_DIRECTORY =
+      "/User/comixedreader/Documents/../Downloads/../Library/../Documents/comics";
 
   @InjectMocks private UserService service;
   @Mock private ComiXedUserRepository userRepository;
@@ -112,6 +116,28 @@ public class UserServiceTest {
 
     Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
     Mockito.verify(user, Mockito.times(1)).setProperty(TEST_PROPERTY_NAME, TEST_PROPERTY_VALUE);
+    Mockito.verify(userRepository, Mockito.times(1)).save(user);
+    Mockito.verify(publishCurrentUserAction, Mockito.times(1)).publish(userRecord);
+  }
+
+  @Test
+  public void testSetUserPropertyImportRootDirectory()
+      throws ComiXedUserException, PublishingException {
+    Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
+    Mockito.doNothing().when(user).setProperty(Mockito.anyString(), Mockito.anyString());
+    Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class))).thenReturn(userRecord);
+
+    final ComiXedUser result =
+        service.setUserProperty(
+            TEST_EMAIL, IMPORT_ROOT_DIRECTORY, TEST_DENORMALIZED_ROOT_DIRECTORY);
+
+    assertNotNull(result);
+    assertSame(userRecord, result);
+
+    Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    Mockito.verify(user, Mockito.times(1))
+        .setProperty(
+            IMPORT_ROOT_DIRECTORY, FilenameUtils.normalize(TEST_DENORMALIZED_ROOT_DIRECTORY));
     Mockito.verify(userRepository, Mockito.times(1)).save(user);
     Mockito.verify(publishCurrentUserAction, Mockito.times(1)).publish(userRecord);
   }

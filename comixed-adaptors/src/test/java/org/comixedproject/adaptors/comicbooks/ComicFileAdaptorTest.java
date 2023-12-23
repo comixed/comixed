@@ -67,10 +67,12 @@ public class ComicFileAdaptorTest {
   private static final Date TEST_STORE_DATE = new Date(120, 5, 1);
   private static final String TEST_PUBLISHED_MONTH = "5";
   private static final String TEST_PUBLISHED_YEAR = "2020";
-  private static final String TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS = "\"?Publisher*'";
-  private static final String TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED = "__Publisher__";
-  private static final String TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS = "<|Series?>";
-  private static final String TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED = "__Series__";
+  private static final String TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS =
+      "\"?/\\:|'{}?%Publisher*'";
+  private static final String TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED =
+      "___________Publisher__";
+  private static final String TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS = "<|{:}Series?>";
+  private static final String TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED = "_____Series__";
   private static final String TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS = "\\/717:";
   private static final String TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED = "__717_";
   private static final String TEST_RENAMING_RULE_WITH_UNSUPPORTED_CHARACTERS =
