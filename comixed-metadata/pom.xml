@@ -13,9 +13,6 @@
   <version>2.0-SNAPSHOT</version>
   <name>comixed-metadata</name>
   <url>http://www.comixedproject.org</url>
-  <properties>
-    <spring-plugin.version>2.0.0.RELEASE</spring-plugin.version>
-  </properties>
   <dependencies>
     <dependency>
       <groupId>org.springframework.plugin</groupId>

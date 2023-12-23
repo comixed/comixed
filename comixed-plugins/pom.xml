@@ -16,40 +16,14 @@
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
-      <groupId>org.python</groupId>
-      <artifactId>jython-standalone</artifactId>
-      <version>2.7.2</version>
+      <groupId>org.springframework.plugin</groupId>
+      <artifactId>spring-plugin-core</artifactId>
+      <version>${spring-plugin.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.comixedproject</groupId>
-      <artifactId>comixed-services</artifactId>
-      <version>2.0-SNAPSHOT</version>
+      <groupId>org.springframework.plugin</groupId>
+      <artifactId>spring-plugin-metadata</artifactId>
+      <version>${spring-plugin.version}</version>
     </dependency>
   </dependencies>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>add-sources</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>add-resource</goal>
-            </goals>
-            <configuration>
-              <resources>
-                <resource>
-                  <directory>src/main/python</directory>
-                  <targetPath>python</targetPath>
-                  <includes>**/*.py</includes>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 </project>
