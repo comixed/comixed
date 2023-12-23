@@ -78,6 +78,7 @@ import { ComicsReadChartComponent } from '@app/components/comics-read-chart/comi
 import { MatDialogModule } from '@angular/material/dialog';
 import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
 import { ComicsReadStatisticsEffects } from '@app/effects/comics-read-statistics.effects';
+import { LibraryPluginsModule } from '@app/library-plugins/library-plugins.module';
 
 @NgModule({
   declarations: [
@@ -103,6 +104,7 @@ import { ComicsReadStatisticsEffects } from '@app/effects/comics-read-statistics
     CollectionsModule,
     ListsModule,
     ComicMetadataModule,
+    LibraryPluginsModule,
     BrowserModule,
     AppRouting,
     BrowserAnimationsModule,

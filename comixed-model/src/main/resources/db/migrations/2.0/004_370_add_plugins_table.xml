@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet id="004_370_add_plugins_table.xml" author="mcpierce">
+
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="plugins"/>
+      </not>
+    </preConditions>
+
+    <createTable tableName="library_plugins">
+      <column name="id" type="bigint" autoIncrement="true">
+        <constraints primaryKey="true"/>
+      </column>
+
+      <column name="name" type="varchar(64)">
+        <constraints nullable="false"/>
+      </column>
+
+      <column name="unique_name" type="varchar(64)">
+        <constraints unique="true" nullable="false"/>
+      </column>
+
+      <column name="language" type="varchar(32)">
+        <constraints nullable="false"/>
+      </column>
+
+      <column name="version" type="varchar(16)">
+        <constraints nullable="false"/>
+      </column>
+
+      <column name="filename" type="varchar(1024)">
+        <constraints nullable="false"/>
+      </column>
+
+      <column name="admin_only" type="boolean">
+        <constraints nullable="false"/>
+      </column>
+
+    </createTable>
+
+    <createTable tableName="library_plugin_properties">
+      <column name="id" type="bigint" autoIncrement="true">
+        <constraints primaryKey="true"/>
+      </column>
+
+      <column name="library_plugin_id" type="bigint">
+        <constraints nullable="false"/>
+      </column>
+
+      <column name="property_name" type="varchar(32)">
+        <constraints nullable="false"/>
+      </column>
+
+      <column name="property_length" type="int">
+        <constraints nullable="false"/>
+      </column>
+
+      <column name="property_value" type="varchar(128)">
+        <constraints nullable="true"/>
+      </column>
+    </createTable>
+
+    <addForeignKeyConstraint baseTableName="library_plugin_properties" baseColumnNames="library_plugin_id"
+                             constraintName="library_plugin_properties_plugin_fk"
+                             referencedTableName="library_plugins"
+                             referencedColumnNames="id"/>
+
+    <addUniqueConstraint tableName="library_plugin_properties" columnNames="library_plugin_id,property_name"
+                         constraintName="library_plugin_properties_unique_plugin_and_property_name"/>
+
+  </changeSet>
+</databaseChangeLog>

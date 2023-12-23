@@ -63,6 +63,7 @@
       **/ComiXed*App
     </sonar.exclusions>
     <sonar.test.inclusions>**/test/**</sonar.test.inclusions>
+    <spring-plugin.version>2.0.0.RELEASE</spring-plugin.version>
   </properties>
   <profiles>
     <profile>

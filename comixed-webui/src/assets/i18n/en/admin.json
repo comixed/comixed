@@ -46,6 +46,7 @@
     },
     "tab": {
       "library": "Library",
+      "library-plugins": "Plugins",
       "metadata-sources": "Metadata Sources",
       "scraping-rules": "Scraping Rules",
       "server-metrics": "Server Metrics",

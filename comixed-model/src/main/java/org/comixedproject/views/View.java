@@ -77,7 +77,10 @@ public interface View {
   public interface DuplicatePageDetail extends DuplicatePageList {}
 
   /** Used when viewing the list of plugins. */
-  public interface PluginList {}
+  public interface LibraryPluginList {}
+
+  /** Used when viewing the list of plugin languages. */
+  public interface PluginLanguageList {}
 
   /** Used when viewing a list of comic files. */
   public interface ComicFileList {}

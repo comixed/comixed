@@ -162,4 +162,14 @@ public class ComiXedUser {
   public int hashCode() {
     return Objects.hash(email);
   }
+
+  /**
+   * Returns if the user is an admin.
+   *
+   * @return <code>true</code> if the admin role was found
+   */
+  @Transient
+  public boolean isAdmin() {
+    return this.roles.stream().anyMatch(roles -> roles.getName().equals("ADMIN"));
+  }
 }
