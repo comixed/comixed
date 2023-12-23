@@ -67,6 +67,7 @@ export class BuildDetailsComponent implements OnInit, OnDestroy {
   }
 
   copyToClipboard(): void {
+    console.log('*** this.details:', this.details);
     this.clipboard.copy(
       `
 ${this.translateService.instant('build-details.label.branch', {
@@ -76,31 +77,31 @@ ${this.translateService.instant('build-details.label.build-time', {
   time: this.details.buildTime
 })}
 ${this.translateService.instant('build-details.label.build-host', {
-  time: this.details.buildHost
+  name: this.details.buildHost
 })}
 ${this.translateService.instant('build-details.label.build-version', {
-  time: this.details.buildVersion
+  version: this.details.buildVersion
 })}
 ${this.translateService.instant('build-details.label.commit-id', {
-  time: this.details.commitId
+  id: this.details.commitId
 })}
-${this.translateService.instant('build-details.label.comit-time', {
+${this.translateService.instant('build-details.label.commit-time', {
   time: this.details.commitTime
 })}
-${this.translateService.instant('build-details.label.commit-message', {
-  time: this.details.commitMessage
-})}
+${this.translateService.instant('build-details.label.commit-message')}
+${this.details.commitMessage}
 ${this.translateService.instant('build-details.label.commit-user', {
-  time: this.details.commitUser
+  name: this.details.commitUser,
+  email: this.details.commitEmail
 })}
 ${this.translateService.instant('build-details.label.dirty', {
-  time: this.details.dirty
+  name: this.details.dirty
 })}
 ${this.translateService.instant('build-details.label.remote-origin-url', {
-  time: this.details.remoteOriginURL
+  url: this.details.remoteOriginURL
 })}
-${this.translateService.instant('build-details.label.jdbcUrl', {
-  time: this.details.jdbcUrl
+${this.translateService.instant('build-details.label.jdbc-url', {
+  url: this.details.jdbcUrl
 })}`
     );
   }
