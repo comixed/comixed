@@ -20,6 +20,7 @@ package org.comixedproject.service.user;
 
 import java.util.Date;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.messaging.PublishingException;
@@ -34,6 +35,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Log4j2
 public class UserService {
+  static final String IMPORT_ROOT_DIRECTORY = "preference.import.root-directory";
+
   @Autowired private ComiXedUserRepository userRepository;
   @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
   @Autowired private PublishCurrentUserAction publishCurrentUserAction;
@@ -72,13 +75,17 @@ public class UserService {
   public ComiXedUser setUserProperty(
       final String email, final String propertyName, final String propertyValue)
       throws ComiXedUserException {
-    log.debug(
-        "Setting user property: email={} property[{}]={}", email, propertyName, propertyValue);
+    String value = propertyValue;
+    if (propertyName.equals(IMPORT_ROOT_DIRECTORY)) {
+      log.trace("Normalizing import root directory");
+      value = FilenameUtils.normalize(propertyValue);
+    }
+    log.debug("Setting user property: email={} property[{}]={}", email, propertyName, value);
 
     final ComiXedUser user = this.userRepository.findByEmail(email);
 
     if (user == null) throw new ComiXedUserException("Invalid user: " + email);
-    user.setProperty(propertyName, propertyValue);
+    user.setProperty(propertyName, value);
 
     final ComiXedUser result = this.userRepository.save(user);
     this.doPublishUserUpdate(result);
