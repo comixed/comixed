@@ -70,9 +70,6 @@ import { PurgeLibraryEffects } from '@app/library/effects/purge-library.effects'
 import { EditMultipleComicsComponent } from './components/edit-multiple-comics/edit-multiple-comics.component';
 import { LibraryEffects } from '@app/library/effects/library.effects';
 import { ComicBookListComponent } from './components/comic-book-list/comic-book-list.component';
-import { DuplicateComicsPageComponent } from './pages/duplicate-comics-page/duplicate-comics-page.component';
-import { duplicateComicFeature } from '@app/library/reducers/duplicate-comic.reducer';
-import { DuplicateComicEffects } from '@app/library/effects/duplicate-comic.effects';
 import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
 
 @NgModule({
@@ -85,8 +82,7 @@ import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
     ComicDetailListDialogComponent,
     DuplicatePageDetailPageComponent,
     EditMultipleComicsComponent,
-    ComicBookListComponent,
-    DuplicateComicsPageComponent
+    ComicBookListComponent
   ],
   providers: [],
   imports: [
@@ -97,7 +93,6 @@ import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
     ReactiveFormsModule,
     TranslateModule.forRoot(),
     StoreModule.forFeature(libraryFeature),
-    StoreModule.forFeature(duplicateComicFeature),
     StoreModule.forFeature(duplicatePageListFeature),
     StoreModule.forFeature(duplicatePageDetailFeature),
     StoreModule.forFeature(rescanComicBooksFeature),
@@ -107,7 +102,6 @@ import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
     StoreModule.forFeature(purgeLibraryFeature),
     EffectsModule.forFeature([
       LibraryEffects,
-      DuplicateComicEffects,
       DuplicatePageListEffects,
       DuplicatePageDetailEffects,
       RescanComicsEffects,
