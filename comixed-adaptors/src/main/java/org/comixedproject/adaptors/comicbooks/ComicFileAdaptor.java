@@ -43,7 +43,7 @@ import org.springframework.util.StringUtils;
 @Log4j2
 public class ComicFileAdaptor {
   private static final String FORBIDDEN_RULE_CHARACTERS = "[\"':\\\\*?|<>]";
-  private static final String FORBIDDEN_PROPERTY_CHARACTERS = "[\"':\\\\/*?|<>]";
+  private static final String FORBIDDEN_PROPERTY_CHARACTERS = "[\"':\\\\/*?|<>{}:%]";
   static final String UNKNOWN_VALUE = "Unknown";
   public static final String NO_COVER_DATE = "No Cover Date";
   public static final String PLACEHOLDER_PUBLISHER = "$PUBLISHER";
@@ -178,10 +178,27 @@ public class ComicFileAdaptor {
             .replace(PLACEHOLDER_COVER_DATE, coverDate)
             .replace(PLACEHOLDER_PUBLISHED_YEAR, publishedYear)
             .replace(PLACEHOLDER_PUBLISHED_MONTH, publishedMonth);
+    final String directory = FilenameUtils.getPath(result);
+    final String filename = FilenameUtils.getName(result);
 
-    result = String.format("%s/%s", targetDirectory, result);
+    result =
+        FilenameUtils.normalize(
+            String.format(
+                "%s%s%s%s%s",
+                targetDirectory,
+                File.separator,
+                directory,
+                File.separator,
+                sanitizeFilename(filename)));
     log.trace("Relative comicBook filename: {}", result);
     return result;
+  }
+
+  private String sanitizeFilename(final String filename) {
+    return filename
+        .trim()
+        .replaceAll("[\\.|\\/|\\\\|\\*|\\:|\\||\"|\'|\\<|\\>|\\{|\\}|\\?|\\%|,]", "_")
+        .replaceAll("\\s+", " ");
   }
 
   private String checkForPadding(final String rule, final String placeholder, final String value) {
