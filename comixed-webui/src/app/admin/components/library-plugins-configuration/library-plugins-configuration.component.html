@@ -1,0 +1,68 @@
+<div class="cx-fab-container-bottom-left">
+  <button
+    id="create-plugin-button"
+    mat-fab
+    [matTooltip]="
+      'library-plugin-list.tooltip.create-plugin-dialog' | translate
+    "
+    (click)="onShowCreatePluginForm()"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
+
+<mat-table
+  [dataSource]="dataSource"
+  matSort
+  [matSortActive]="queryParameterService.sortBy$ | async"
+  [matSortDirection]="queryParameterService.sortDirection$ | async"
+  (matSortChange)="
+    queryParameterService.onSortChange($event.active, $event.direction)
+  "
+>
+  <ng-container matColumnDef="name">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "library-plugin-list.label.name" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{
+          "library-plugin-list.text.plugin-name-and-version"
+            | translate
+              : {
+                  name: entry.name,
+                  version: entry.version
+                }
+        }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="language">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "library-plugin-list.label.language" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">{{ entry.language }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="property-count">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "library-plugin-list.label.property-count" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.properties.length }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  <tr class="mat-row" *matNoDataRow>
+    <td class="mat-cell" colspan="4">
+      {{ "library-plugin-list.text.no-plugins-found" | translate }}
+    </td>
+  </tr>
+</mat-table>

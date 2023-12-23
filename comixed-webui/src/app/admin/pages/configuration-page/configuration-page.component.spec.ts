@@ -81,6 +81,12 @@ import {
   initialState as initialMetricState,
   METRICS_FEATURE_KEY
 } from '@app/admin/reducers/metrics.reducer';
+import { LibraryPluginsConfigurationComponent } from '@app/admin/components/library-plugins-configuration/library-plugins-configuration.component';
+import { MatSortModule } from '@angular/material/sort';
+import {
+  initialState as initialLibraryPluginState,
+  LIBRARY_PLUGIN_FEATURE_KEY
+} from '@app/library-plugins/reducers/library-plugin.reducer';
 
 describe('ConfigurationPageComponent', () => {
   const OPTIONS = [
@@ -99,7 +105,8 @@ describe('ConfigurationPageComponent', () => {
     [METADATA_SOURCE_LIST_FEATURE_KEY]: initialMetadataSourceListState,
     [METADATA_SOURCE_FEATURE_KEY]: initialMetadataSourceState,
     [FILENAME_SCRAPING_RULES_FEATURE_KEY]: initialFilenameScrapingRulesState,
-    [METRICS_FEATURE_KEY]: initialMetricState
+    [METRICS_FEATURE_KEY]: initialMetricState,
+    [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState
   };
 
   let component: ConfigurationPageComponent;
@@ -120,7 +127,8 @@ describe('ConfigurationPageComponent', () => {
           ServerRuntimeComponent,
           FilenameScrapingRulesConfigurationComponent,
           MetadataSourceListComponent,
-          MetadataSourceDetailComponent
+          MetadataSourceDetailComponent,
+          LibraryPluginsConfigurationComponent
         ],
         imports: [
           NoopAnimationsModule,
@@ -142,7 +150,8 @@ describe('ConfigurationPageComponent', () => {
           MatTooltipModule,
           MatCheckboxModule,
           DragDropModule,
-          MatSelectModule
+          MatSelectModule,
+          MatSortModule
         ],
         providers: [provideMockStore({ initialState }), TitleService]
       }).compileComponents();

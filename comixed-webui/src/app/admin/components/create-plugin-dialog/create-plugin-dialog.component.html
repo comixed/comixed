@@ -1,0 +1,47 @@
+<form [formGroup]="pluginForm">
+  <mat-card>
+    <mat-card-title>
+      {{ "create-plugin.form-title" | translate }}
+    </mat-card-title>
+
+    <mat-card-content>
+      <mat-form-field class="cx-width-100" appearance="fill" required>
+        <input
+          id="plugin-filename"
+          matInput
+          formControlName="filename"
+          [placeholder]="'create-plugin.placeholder.filename' | translate"
+        />
+      </mat-form-field>
+
+      <mat-form-field class="cx-width-100" appearance="fill" required>
+        <mat-label>{{ "create-plugin.label.language" | translate }}</mat-label>
+        <mat-select
+          id="plugin-language"
+          formControlName="language"
+          [disabled]="pluginLanguageState?.busy"
+        >
+          <mat-option
+            *ngFor="let option of pluginLanguageList"
+            [value]="option.name"
+          >
+            {{ option.name }}
+          </mat-option>
+        </mat-select>
+        <input matInput hidden />
+      </mat-form-field>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button
+        mat-icon-button
+        id="install-plugin-button"
+        color="primary"
+        [disabled]="!pluginForm.valid"
+        (click)="onCreatePlugin()"
+      >
+        <mat-icon>save</mat-icon>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

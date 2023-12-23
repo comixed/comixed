@@ -16,5 +16,6 @@
     <include file="/db/migrations/2.0/001_1707_add_comicvine_metadata_adaptor.xml"/>
     <include file="/db/migrations/2.0/002_1707_add_month_and_year_sprox_for_postgres.xml"/>
     <include file="/db/migrations/2.0/003_429_metadata_adaptor_name_column_only.xml"/>
+    <include file="/db/migrations/2.0/004_370_add_plugins_table.xml"/>
 
 </databaseChangeLog>

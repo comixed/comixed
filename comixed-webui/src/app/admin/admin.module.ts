@@ -64,6 +64,8 @@ import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
 import { batchProcessFeature } from '@app/admin/reducers/batch-processes.reducer';
 import { BatchProcessesEffects } from '@app/admin/effects/batch-processes.effects';
 import { BatchProcessListPageComponent } from './pages/batch-process-list-page/batch-process-list-page.component';
+import { LibraryPluginsConfigurationComponent } from '@app/admin/components/library-plugins-configuration/library-plugins-configuration.component';
+import { CreatePluginDialogComponent } from '@app/admin/components/create-plugin-dialog/create-plugin-dialog.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +78,9 @@ import { BatchProcessListPageComponent } from './pages/batch-process-list-page/b
     ServerMetricsComponent,
     ServerMetricDetailsComponent,
     MetricMeasurementPipe,
-    BatchProcessListPageComponent
+    BatchProcessListPageComponent,
+    LibraryPluginsConfigurationComponent,
+    CreatePluginDialogComponent
   ],
   imports: [
     CommonModule,

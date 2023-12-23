@@ -1,0 +1,47 @@
+{
+  "create-plugin": {
+    "confirmation-message": "Are you sure you want to install this plugin?",
+    "confirmation-title": "Install Plugin",
+    "form-title": "Install Plugin",
+    "label": {
+      "language": "Language"
+    },
+    "placeholder": {
+      "filename": "The plugin filename."
+    }
+  },
+  "library-plugin-list": {
+    "create-plugin": {
+      "effect-failure": "Failed to install plugin...",
+      "effect-success": "Installed plugin {name} v{version}..."
+    },
+    "delete-plugin": {
+      "effect-failure": "Failed to delete plugin...",
+      "effect-success": "Deleted plugin: {name} v{version}"
+    },
+    "label": {
+      "language": "Language",
+      "name": "Plugin Name",
+      "property-count": "# Properties"
+    },
+    "load-all": {
+      "effect-failure": "Failed to load the list of library plugins"
+    },
+    "text": {
+      "no-plugins-found": "No library plugins found...",
+      "plugin-name-and-version": "{name} v{version}"
+    },
+    "tooltip": {
+      "create-plugin": "Install a new plugin..."
+    },
+    "update-plugin": {
+      "effect-failure": "Failed to update plugin: {name}...",
+      "effect-success": "Plugin updated: {name}..."
+    }
+  },
+  "plugin-language-list": {
+    "load-all": {
+      "effect-failure": "Failed to load the list of plugin languages..."
+    }
+  }
+}
