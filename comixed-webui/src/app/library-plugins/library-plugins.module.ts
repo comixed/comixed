@@ -25,6 +25,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { LibraryPluginEffects } from '@app/library-plugins/effects/library-plugin.effects';
 import { pluginLanguageFeature } from '@app/library-plugins/reducers/plugin-language.reducer';
 import { PluginLanguageEffects } from '@app/library-plugins/effects/plugin-language.effects';
+import { runLibraryPluginFeature } from '@app/library-plugins/reducers/run-library-plugin.reducer';
+import { RunLibraryPluginEffects } from '@app/library-plugins/effects/run-library-plugin.effects';
 
 @NgModule({
   declarations: [],
@@ -33,7 +35,12 @@ import { PluginLanguageEffects } from '@app/library-plugins/effects/plugin-langu
     LibraryPluginsRouting,
     StoreModule.forFeature(libraryPluginFeature),
     StoreModule.forFeature(pluginLanguageFeature),
-    EffectsModule.forFeature([LibraryPluginEffects, PluginLanguageEffects])
+    StoreModule.forFeature(runLibraryPluginFeature),
+    EffectsModule.forFeature([
+      LibraryPluginEffects,
+      PluginLanguageEffects,
+      RunLibraryPluginEffects
+    ])
   ]
 })
 export class LibraryPluginsModule {}

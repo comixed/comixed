@@ -50,7 +50,20 @@ If a plugin is marked as **admin-only**, then only users with admin
 privileges will be able to see the plugin.
 
 
-## Groovy Plugins
+# Available Properties
+
+The following properties are available to the plugin when running:
+
+ * ```log``` the logger used by the server
+ * ```comicBookIds``` the selected comic book ids, as am instance of ```List<Long>```
+ * ```comicBookService``` provides access to the comic book table
+ * ```readingListService``` provides access to the reading list table
+
+For the list of methods available on a service, please consult the Javadocs for
+that service.
+
+
+# Groovy Plugins
 
 The minimal Groovy plugin will have the following:
 ```groovy

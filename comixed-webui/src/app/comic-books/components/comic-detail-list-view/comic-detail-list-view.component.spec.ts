@@ -29,13 +29,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   COMIC_DETAIL_1,
-  COMIC_DETAIL_2
+  COMIC_DETAIL_2,
+  LAST_READ_1
 } from '@app/comic-books/comic-books.fixtures';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { Router } from '@angular/router';
-import { LAST_READ_1 } from '@app/comic-books/comic-books.fixtures';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -85,6 +85,15 @@ import {
   addSingleComicBookSelection,
   removeSingleComicBookSelection
 } from '@app/comic-books/actions/comic-book-selection.actions';
+import {
+  initialState as initialLibraryPluginState,
+  LIBRARY_PLUGIN_FEATURE_KEY
+} from '@app/library-plugins/reducers/library-plugin.reducer';
+import { LIBRARY_PLUGIN_4 } from '@app/library-plugins/library-plugins.fixtures';
+import {
+  runLibraryPluginOnOneComicBook,
+  runLibraryPluginOnSelectedComicBooks
+} from '@app/library-plugins/actions/run-library-plugin.actions';
 
 describe('ComicDetailListViewComponent', () => {
   const COMIC_DETAILS = [
@@ -106,11 +115,15 @@ describe('ComicDetailListViewComponent', () => {
   };
   const LAST_READ_DATES = [LAST_READ_1];
   const COMIC_DETAIL = COMIC_DETAILS[0];
-  const initialState = {};
+  const PLUGIN = LIBRARY_PLUGIN_4;
+  const initialState = {
+    [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState
+  };
 
   let component: ComicDetailListViewComponent;
   let fixture: ComponentFixture<ComicDetailListViewComponent>;
   let store: MockStore<any>;
+  let spyOnStoreDispatch: jasmine.Spy;
   let router: Router;
   let confirmationService: ConfirmationService;
   let dialog: MatDialog;
@@ -164,7 +177,7 @@ describe('ComicDetailListViewComponent', () => {
       SelectableListItem<ComicDetail>
     >([]);
     store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
+    spyOnStoreDispatch = spyOn(store, 'dispatch');
     router = TestBed.inject(Router);
     spyOn(router, 'navigate');
     spyOn(router, 'navigateByUrl');
@@ -659,6 +672,7 @@ describe('ComicDetailListViewComponent', () => {
             selected: true
           };
         });
+        spyOnStoreDispatch.calls.reset();
         component.onEditMultipleComics();
       });
 
@@ -824,6 +838,43 @@ describe('ComicDetailListViewComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(rescanSelectedComicBooks());
+      });
+    });
+  });
+
+  describe('running library plugins', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+    });
+
+    describe('on a single comic book', () => {
+      beforeEach(() => {
+        component.onRunLibraryPluginSingleOnComicBook(PLUGIN, COMIC_DETAIL);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          runLibraryPluginOnOneComicBook({
+            plugin: PLUGIN,
+            comicBookId: COMIC_DETAIL.comicId
+          })
+        );
+      });
+    });
+
+    describe('on selected comic books', () => {
+      beforeEach(() => {
+        component.onRunLibraryPluginOnSelectedComicBooks(PLUGIN);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          runLibraryPluginOnSelectedComicBooks({
+            plugin: PLUGIN
+          })
+        );
       });
     });
   });

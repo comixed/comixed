@@ -87,6 +87,10 @@ import {
   QUERY_PARAM_SORT_DIRECTION
 } from '@app/core';
 import { setMultipleComicBooksByTagTypeAndValueSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import {
+  initialState as initialLibraryPluginState,
+  LIBRARY_PLUGIN_FEATURE_KEY
+} from '@app/library-plugins/reducers/library-plugin.reducer';
 
 describe('CollectionDetailComponent', () => {
   const PAGE_SIZE = 10;
@@ -109,7 +113,8 @@ describe('CollectionDetailComponent', () => {
       comicBooks: COMIC_DETAILS
     },
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
-    [USER_FEATURE_KEY]: { ...initialUserState, user: USER }
+    [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
+    [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState
   };
 
   let component: CollectionDetailComponent;

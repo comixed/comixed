@@ -86,6 +86,9 @@ public class GroovyPluginRuntime extends AbstractPluginRuntime {
     try {
       log.trace(
           "Executing libraryPlugin: {} v{}", libraryPlugin.getName(), libraryPlugin.getVersion());
+      this.getProperties()
+          .entrySet()
+          .forEach(entry -> shell.setProperty(entry.getKey(), entry.getValue()));
       shell.evaluate(new File(libraryPlugin.getFilename()));
       log.trace("LibraryPlugin completed without error");
       return true;

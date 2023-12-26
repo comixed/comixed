@@ -18,8 +18,10 @@
 
 package org.comixedproject.rest.plugin;
 
+import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
 import static org.junit.Assert.*;
 
+import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -27,35 +29,48 @@ import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.net.plugin.CreatePluginRequest;
 import org.comixedproject.model.net.plugin.UpdatePluginRequest;
 import org.comixedproject.model.plugin.LibraryPlugin;
+import org.comixedproject.service.comicbooks.ComicBookSelectionException;
+import org.comixedproject.service.comicbooks.ComicBookSelectionService;
 import org.comixedproject.service.plugin.LibraryPluginException;
 import org.comixedproject.service.plugin.LibraryPluginService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class LibraryLibraryPluginControllerTest {
+public class LibraryPluginControllerTest {
   private static final String TEST_USER_EMAIL = "reader@comixedproject.org";
   private static final long TEST_PLUGIN_ID = 129L;
   private static final String TEST_PLUGIN_LANGUAGE = "The libraryPlugin language";
   private static final String TEST_PLUGIN_FILENAME = "The libraryPlugin filename";
   private static final Boolean TEST_ADMIN_ONLY = RandomUtils.nextBoolean();
+  private static final Long TEST_COMIC_BOOK_ID = 320L;
+  private static final String TEST_ENCODED_IDS = "The encoded selected ids";
+  private static final String TEST_REENCODED_IDS = "The re-encoded selected ids";
 
   @InjectMocks private LibraryPluginController controller;
   @Mock private LibraryPluginService libraryPluginService;
+  @Mock private ComicBookSelectionService comicBookSelectionService;
   @Mock private Principal principal;
   @Mock private List<LibraryPlugin> libraryPluginList;
   @Mock private LibraryPlugin libraryPlugin;
   @Mock private LibraryPlugin savedLibraryPlugin;
   @Mock private Map<String, String> pluginProperties;
+  @Mock private HttpSession session;
+  @Mock private List selectedIds;
+
+  @Captor private ArgumentCaptor<List<Long>> idListArgumentCaptor;
 
   @Before
-  public void setUp() {
+  public void setUp() throws ComicBookSelectionException {
     Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
+    Mockito.when(session.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_IDS);
+    Mockito.when(comicBookSelectionService.decodeSelections(TEST_ENCODED_IDS))
+        .thenReturn(selectedIds);
+    Mockito.when(comicBookSelectionService.encodeSelections(Mockito.anyList()))
+        .thenReturn(TEST_REENCODED_IDS);
   }
 
   @Test(expected = LibraryPluginException.class)
@@ -163,5 +178,85 @@ public class LibraryLibraryPluginControllerTest {
     controller.deletePlugin(TEST_PLUGIN_ID);
 
     Mockito.verify(libraryPluginService, Mockito.times(1)).deletePlugin(TEST_PLUGIN_ID);
+  }
+
+  @Test(expected = LibraryPluginException.class)
+  public void testRunLibraryPluginOnOneComicServiceException() throws LibraryPluginException {
+    Mockito.doThrow(LibraryPluginException.class)
+        .when(libraryPluginService)
+        .runLibraryPlugin(Mockito.anyLong(), idListArgumentCaptor.capture());
+
+    try {
+      controller.runLibraryPluginOnOneComicBook(TEST_PLUGIN_ID, TEST_COMIC_BOOK_ID);
+    } finally {
+      final List<Long> idList = idListArgumentCaptor.getValue();
+
+      assertNotNull(idList);
+      assertFalse(idList.isEmpty());
+      assertEquals(1, idList.size());
+      assertTrue(idList.contains(TEST_COMIC_BOOK_ID));
+
+      Mockito.verify(libraryPluginService, Mockito.times(1))
+          .runLibraryPlugin(TEST_PLUGIN_ID, idList);
+    }
+  }
+
+  @Test
+  public void testRunLibraryPluginOnOneComic() throws LibraryPluginException {
+    Mockito.doNothing()
+        .when(libraryPluginService)
+        .runLibraryPlugin(Mockito.anyLong(), idListArgumentCaptor.capture());
+
+    controller.runLibraryPluginOnOneComicBook(TEST_PLUGIN_ID, TEST_COMIC_BOOK_ID);
+
+    final List<Long> idList = idListArgumentCaptor.getValue();
+
+    assertNotNull(idList);
+    assertFalse(idList.isEmpty());
+    assertEquals(1, idList.size());
+    assertTrue(idList.contains(TEST_COMIC_BOOK_ID));
+
+    Mockito.verify(libraryPluginService, Mockito.times(1)).runLibraryPlugin(TEST_PLUGIN_ID, idList);
+  }
+
+  @Test(expected = LibraryPluginException.class)
+  public void testRunLibraryPluginOnSelectedComicBooksSelectionDecodingException()
+      throws LibraryPluginException, ComicBookSelectionException {
+    Mockito.when(comicBookSelectionService.decodeSelections(TEST_ENCODED_IDS))
+        .thenThrow(ComicBookSelectionException.class);
+
+    try {
+      controller.runLibraryPluginOnSelectedComicBooks(session, TEST_PLUGIN_ID);
+    } finally {
+      Mockito.verify(libraryPluginService, Mockito.never())
+          .runLibraryPlugin(Mockito.anyLong(), Mockito.anyList());
+    }
+  }
+
+  @Test(expected = LibraryPluginException.class)
+  public void testRunLibraryPluginOnSelectedComicBooksServiceException()
+      throws LibraryPluginException {
+    Mockito.doThrow(LibraryPluginException.class)
+        .when(libraryPluginService)
+        .runLibraryPlugin(Mockito.anyLong(), Mockito.anyList());
+
+    try {
+      controller.runLibraryPluginOnSelectedComicBooks(session, TEST_PLUGIN_ID);
+    } finally {
+      Mockito.verify(libraryPluginService, Mockito.times(1))
+          .runLibraryPlugin(TEST_PLUGIN_ID, selectedIds);
+      Mockito.verify(comicBookSelectionService, Mockito.never())
+          .clearSelectedComicBooks(Mockito.anyList());
+    }
+  }
+
+  @Test
+  public void testRunLibraryPluginOnSelectedComicBooks() throws LibraryPluginException {
+    controller.runLibraryPluginOnSelectedComicBooks(session, TEST_PLUGIN_ID);
+
+    Mockito.verify(libraryPluginService, Mockito.times(1))
+        .runLibraryPlugin(TEST_PLUGIN_ID, selectedIds);
+    Mockito.verify(comicBookSelectionService, Mockito.times(1))
+        .clearSelectedComicBooks(selectedIds);
   }
 }

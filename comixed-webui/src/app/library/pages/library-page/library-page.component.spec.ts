@@ -97,6 +97,10 @@ import {
   initialState as initialComicBooksSelectionState
 } from '@app/comic-books/reducers/comic-book-selection.reducer';
 import { setMultipleComicBookByFilterSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import {
+  initialState as initialLibraryPluginState,
+  LIBRARY_PLUGIN_FEATURE_KEY
+} from '@app/library-plugins/reducers/library-plugin.reducer';
 
 describe('LibraryPageComponent', () => {
   const ONE_DAY = 24 * 60 * 60 * 100;
@@ -133,7 +137,8 @@ describe('LibraryPageComponent', () => {
     [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
     [COMIC_DETAILS_LIST_FEATURE_KEY]: initialComicDetailListState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadListState,
-    [READING_LISTS_FEATURE_KEY]: initialReadingListsState
+    [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
+    [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState
   };
 
   let component: LibraryPageComponent;

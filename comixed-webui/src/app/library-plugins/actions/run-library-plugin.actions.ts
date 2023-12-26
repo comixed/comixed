@@ -16,26 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.plugins;
+import { createAction, props } from '@ngrx/store';
+import { LibraryPlugin } from '@app/library-plugins/models/library-plugin';
 
-import java.util.HashMap;
-import java.util.Map;
-import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
+export const runLibraryPluginOnOneComicBook = createAction(
+  '[Run Library Plugin] Load a library plugin against one comic book',
+  props<{
+    plugin: LibraryPlugin;
+    comicBookId: number;
+  }>()
+);
 
-/**
- * <code>AbstractPluginRuntime</code> provides a foundation for creating new instances of {@link
- * PluginRuntime}.
- *
- * @author Darryl L. Pierce
- */
-@Log4j2
-public abstract class AbstractPluginRuntime implements PluginRuntime {
-  @Getter private Map<String, Object> properties = new HashMap<>();
+export const runLibraryPluginOnSelectedComicBooks = createAction(
+  '[Run Library Plugin] Load a library plugin against all selected comic book',
+  props<{
+    plugin: LibraryPlugin;
+  }>()
+);
 
-  @Override
-  public void addProperty(final String propertyName, final Object propertyValue) {
-    log.trace("Adding property: {}={}", propertyName, propertyValue);
-    this.properties.put(propertyName, propertyValue);
-  }
-}
+export const runLibraryPluginSuccess = createAction(
+  '[Run Library Plugin] The plugin ran successfully'
+);
+
+export const runLibraryPluginFailure = createAction(
+  '[Run Library Plugin] The plugin failed to run'
+);

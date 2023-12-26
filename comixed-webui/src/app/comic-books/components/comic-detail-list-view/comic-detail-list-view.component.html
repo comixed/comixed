@@ -304,6 +304,15 @@
     <mat-label>{{ "library.context-menu.convert" | translate }}</mat-label>
   </button>
   <button
+    *ngIf="libraryPluginlist?.length > 0"
+    mat-menu-item
+    [matMenuTriggerFor]="currentComicPluginMenu"
+  >
+    <mat-label>
+      {{ "library.context-menu.plugin-menu" | translate }}
+    </mat-label>
+  </button>
+  <button
     *ngIf="!isRead(selectedComicDetail)"
     mat-menu-item
     (click)="onMarkOneAsRead(true)"
@@ -370,6 +379,16 @@
   </button>
 </mat-menu>
 
+<mat-menu #currentComicPluginMenu="matMenu">
+  <button
+    *ngFor="let plugin of libraryPluginlist"
+    mat-menu-item
+    (click)="onRunLibraryPluginSingleOnComicBook(plugin, selectedComicDetail)"
+  >
+    <mat-label>{{ plugin.name }}</mat-label>
+  </button>
+</mat-menu>
+
 <mat-menu #currentComicReadingListsMenu="matMenu">
   <button
     *ngIf="readingLists?.length === 0"
@@ -404,6 +423,15 @@
   </button>
   <button mat-menu-item [matMenuTriggerFor]="selectedMarkAsMenu">
     <mat-label>{{ "library.context-menu.mark-as" | translate }}</mat-label>
+  </button>
+  <button
+    *ngIf="libraryPluginlist?.length > 0"
+    mat-menu-item
+    [matMenuTriggerFor]="selectedComicsPluginMenu"
+  >
+    <mat-label>
+      {{ "library.context-menu.multiple-comics-plugin-menu" | translate }}
+    </mat-label>
   </button>
   <button mat-menu-item (click)="onEditMultipleComics()">
     <mat-label>
@@ -490,6 +518,16 @@
     <mat-label>
       {{ "library.context-menu.convert-selected-to-cb7" | translate }}
     </mat-label>
+  </button>
+</mat-menu>
+
+<mat-menu #selectedComicsPluginMenu="matMenu">
+  <button
+    *ngFor="let plugin of libraryPluginlist"
+    mat-menu-item
+    (click)="onRunLibraryPluginOnSelectedComicBooks(plugin)"
+  >
+    <mat-label>{{ plugin.name }}</mat-label>
   </button>
 </mat-menu>
 

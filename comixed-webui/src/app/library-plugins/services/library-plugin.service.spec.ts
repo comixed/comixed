@@ -32,14 +32,18 @@ import {
   CREATE_PLUGIN_URL,
   DELETE_PLUGIN_URL,
   LOAD_ALL_PLUGINS_URL,
+  RUN_LIBRARY_PLUGIN_ON_ONE_COMIC_BOOK_URL,
+  RUN_LIBRARY_PLUGIN_ON_SELECTED_COMIC_BOOKS_URL,
   UPDATE_PLUGIN_URL
 } from '@app/library-plugins/library-plugins.constants';
 import { CreatePluginRequest } from '@app/library-plugins/models/net/create-plugin-request';
 import { UpdatePluginRequest } from '@app/library-plugins/models/net/update-plugin-request';
 import { HttpResponse } from '@angular/common/http';
+import { COMIC_BOOK_2 } from '@app/comic-books/comic-books.fixtures';
 
 describe('LibraryPluginService', () => {
   const PLUGIN = LIBRARY_PLUGIN_4;
+  const COMIC_BOOK = COMIC_BOOK_2;
 
   let service: LibraryPluginService;
   let httpMock: HttpTestingController;
@@ -116,6 +120,42 @@ describe('LibraryPluginService', () => {
       interpolate(DELETE_PLUGIN_URL, { pluginId: PLUGIN.id })
     );
     expect(req.request.method).toEqual('DELETE');
+    req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('can run a plugin against a single comic book', () => {
+    service
+      .runLibraryPluginOnOneComicBook({
+        plugin: PLUGIN,
+        comicBookId: COMIC_BOOK.id
+      })
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(
+      interpolate(RUN_LIBRARY_PLUGIN_ON_ONE_COMIC_BOOK_URL, {
+        pluginId: PLUGIN.id,
+        comicBookId: COMIC_BOOK.id
+      })
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({});
+    req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('can run a plugin against all selected comic books', () => {
+    service
+      .runLibraryPluginOnSelectedComicBooks({
+        plugin: PLUGIN
+      })
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(
+      interpolate(RUN_LIBRARY_PLUGIN_ON_SELECTED_COMIC_BOOKS_URL, {
+        pluginId: PLUGIN.id
+      })
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({});
     req.flush(new HttpResponse({ status: 200 }));
   });
 });

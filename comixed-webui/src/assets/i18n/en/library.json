@@ -104,6 +104,8 @@
       "mark-as-read": "Mark as read",
       "mark-as-unread": "Mark as unread",
       "multiple-comics-menu": "Selected Comics",
+      "multiple-comics-plugin-menu": "Plugins",
+      "plugin-menu": "Plugins",
       "reading-lists": "Add to list...",
       "rescan-one": "Rescan comic...",
       "rescan-selected": "Rescan {count, plural, =1{1 comic} other{# comics}}...",
@@ -182,6 +184,10 @@
       "confirmation-title": "Rescan Selected Comics",
       "effect-failure": "Failed to start rescanning comics.",
       "effect-success": "Rescanning comics started."
+    },
+    "run-library-plugin": {
+      "confirmation-message": "Are you sure you want to run this plugin on {count, plural, =1{one comic book} other{# comic books}}?",
+      "confirmation-title": "{name} v{version}"
     },
     "scrape-comics": {
       "confirmation-message": "Are you sure you want to start scraping metadata for {count, plural, =1{one comic} other{# comics}}?",

@@ -38,7 +38,7 @@ public interface LibraryPluginRepository extends JpaRepository<LibraryPlugin, Lo
    *
    * @return the plugins
    */
-  @Query("SELECT p FROM LibraryPlugin p JOIN FETCH p.properties")
+  @Query("SELECT p FROM LibraryPlugin p")
   List<LibraryPlugin> getAll();
 
   /**
@@ -47,6 +47,6 @@ public interface LibraryPluginRepository extends JpaRepository<LibraryPlugin, Lo
    * @param id the record id
    * @return the plugin
    */
-  @Query("SELECT p FROM LibraryPlugin p JOIN FETCH p.properties WHERE p.id = :id")
+  @Query("SELECT p FROM LibraryPlugin p WHERE p.id = :id")
   LibraryPlugin getById(@Param("id") Long id);
 }

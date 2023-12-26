@@ -26,8 +26,11 @@ import org.comixedproject.model.plugin.LibraryPlugin;
 import org.comixedproject.model.plugin.LibraryPluginProperty;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.plugins.PluginRuntime;
+import org.comixedproject.plugins.PluginRuntimeException;
 import org.comixedproject.plugins.PluginRuntimeRegistry;
 import org.comixedproject.repositories.plugin.LibraryPluginRepository;
+import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.lists.ReadingListService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +44,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Log4j2
 public class LibraryPluginService {
+  public static final String PROPERTY_NAME_LOG = "log";
+  public static final String PROPERTY_NAME_COMIC_BOOK_SERVICE = "comicBookService";
+  public static final String PROPERTY_NAME_READING_LIST_SERVICE = "readingListService";
   @Autowired private LibraryPluginRepository libraryPluginRepository;
   @Autowired private UserService userService;
   @Autowired private PluginRuntimeRegistry pluginRuntimeRegistry;
+
+  // the following are provided to the plugin runtime and are not used by this service
+  @Autowired private ComicBookService comicBookService;
+  @Autowired private ReadingListService readingListService;
 
   /**
    * Returns the list of all configured plugins.
@@ -159,5 +169,34 @@ public class LibraryPluginService {
     final LibraryPlugin result = this.libraryPluginRepository.getById(id);
     if (result == null) throw new LibraryPluginException("No such plugin: id=" + id);
     return result;
+  }
+
+  /**
+   * Runs a plugin against a list of comic books.
+   *
+   * @param pluginId the plugin id
+   * @param comicBookIds the comic book id
+   * @throws LibraryPluginException if an error occurs
+   */
+  @Transactional
+  public void runLibraryPlugin(final long pluginId, final List<Long> comicBookIds)
+      throws LibraryPluginException {
+    try {
+      log.trace("Loading plugin: id={}", pluginId);
+      final LibraryPlugin plugin = this.doLoadPlugin(pluginId);
+      log.trace("Loading plugin runtime: {}", plugin.getLanguage());
+      final PluginRuntime pluginRuntime =
+          this.pluginRuntimeRegistry.getPluginRuntime(plugin.getLanguage());
+      pluginRuntime.addProperty(PROPERTY_NAME_LOG, log);
+      log.trace("Adding services to runtime");
+      pluginRuntime.addProperty(PROPERTY_NAME_COMIC_BOOK_SERVICE, this.comicBookService);
+      pluginRuntime.addProperty(PROPERTY_NAME_READING_LIST_SERVICE, this.readingListService);
+      log.trace("Adding comic book ids to runtime");
+      pluginRuntime.addProperty("comicBookIds", comicBookIds);
+      log.debug("Running plugin");
+      pluginRuntime.execute(plugin);
+    } catch (PluginRuntimeException error) {
+      throw new LibraryPluginException("Failed to run plugin", error);
+    }
   }
 }

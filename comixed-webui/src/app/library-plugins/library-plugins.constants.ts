@@ -24,3 +24,6 @@ export const UPDATE_PLUGIN_URL = `${API_ROOT_URL}/plugins/\${pluginId}`;
 export const DELETE_PLUGIN_URL = `${API_ROOT_URL}/plugins/\${pluginId}`;
 
 export const LOAD_LANGUAGE_RUNTIME_LIST_URL = `${API_ROOT_URL}/plugins/languages`;
+
+export const RUN_LIBRARY_PLUGIN_ON_ONE_COMIC_BOOK_URL = `${API_ROOT_URL}/plugins/\${pluginId}/comics/\${comicBookId}`;
+export const RUN_LIBRARY_PLUGIN_ON_SELECTED_COMIC_BOOKS_URL = `${API_ROOT_URL}/plugins/\${pluginId}/comics/selected`;
