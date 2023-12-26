@@ -58,4 +58,12 @@ public interface PluginRuntime {
    * @return <code>true</code> if the libraryPlugin runs without error
    */
   Boolean execute(LibraryPlugin libraryPlugin);
+
+  /**
+   * Defines a property for the plugin runtime.
+   *
+   * @param propertyName the property name
+   * @param propertyValue the property value
+   */
+  void addProperty(String propertyName, Object propertyValue);
 }

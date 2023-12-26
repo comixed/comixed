@@ -22,6 +22,7 @@ import {
   HostListener,
   Input,
   OnDestroy,
+  OnInit,
   Output
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
@@ -70,13 +71,20 @@ import {
   removeSingleComicBookSelection
 } from '@app/comic-books/actions/comic-book-selection.actions';
 import { archiveTypeFromString } from '@app/comic-books/comic-books.functions';
+import { LibraryPlugin } from '@app/library-plugins/models/library-plugin';
+import { selectLibraryPluginList } from '@app/library-plugins/selectors/library-plugin.selectors';
+import { loadLibraryPlugins } from '@app/library-plugins/actions/library-plugin.actions';
+import {
+  runLibraryPluginOnOneComicBook,
+  runLibraryPluginOnSelectedComicBooks
+} from '@app/library-plugins/actions/run-library-plugin.actions';
 
 @Component({
   selector: 'cx-comic-detail-list-view',
   templateUrl: './comic-detail-list-view.component.html',
   styleUrls: ['./comic-detail-list-view.component.scss']
 })
-export class ComicDetailListViewComponent implements OnDestroy {
+export class ComicDetailListViewComponent implements OnInit, OnDestroy {
   @Output() selectAll = new EventEmitter<boolean>();
   @Output() filtered = new EventEmitter<boolean>();
   @Output() showing = new EventEmitter<number>();
@@ -111,6 +119,8 @@ export class ComicDetailListViewComponent implements OnDestroy {
   selectedComicDetail: ComicDetail;
   dataSource = new MatTableDataSource<SelectableListItem<ComicDetail>>();
   queryParamsSubscription: Subscription;
+  libraryPluginListSubscription: Subscription;
+  libraryPluginlist: LibraryPlugin[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -122,9 +132,14 @@ export class ComicDetailListViewComponent implements OnDestroy {
     private dialog: MatDialog,
     public queryParameterService: QueryParameterService
   ) {
+    this.logger.trace('Subscribing to query parameter updates');
     this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
       () => this.applyFilters()
     );
+    this.logger.trace('Subscribing to library plugin list updates');
+    this.libraryPluginListSubscription = this.store
+      .select(selectLibraryPluginList)
+      .subscribe(list => (this.libraryPluginlist = list));
   }
 
   private _lastReadDates: LastRead[] = [];
@@ -179,9 +194,16 @@ export class ComicDetailListViewComponent implements OnDestroy {
     this.applyFilters();
   }
 
+  ngOnInit(): void {
+    this.logger.trace('Loading library plugin list');
+    this.store.dispatch(loadLibraryPlugins());
+  }
+
   ngOnDestroy(): void {
-    this.logger.debug('Unsbuscribing from query param updates');
+    this.logger.trace('Unsbuscribing from query param updates');
     this.queryParamsSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from library plugin list updates');
+    this.libraryPluginListSubscription.unsubscribe();
   }
 
   getIconForState(comicState: ComicState): string {
@@ -202,14 +224,14 @@ export class ComicDetailListViewComponent implements OnDestroy {
   @HostListener('window:keydown.control.a', ['$event']) onHotkeySelectAll(
     event: KeyboardEvent
   ): void {
-    this.logger.debug('Select all hotkey pressed');
+    this.logger.trace('Select all hotkey pressed');
     event.preventDefault();
     this.selectAll.emit(true);
   }
 
   @HostListener('window:keydown.control.shift.a', ['$event'])
   onHotkeyDeselectAll(event: KeyboardEvent): void {
-    this.logger.debug('Deselect all hotkey pressed');
+    this.logger.trace('Deselect all hotkey pressed');
     event.preventDefault();
     this.selectAll.emit(false);
   }
@@ -507,6 +529,56 @@ export class ComicDetailListViewComponent implements OnDestroy {
     });
   }
 
+  onRunLibraryPluginSingleOnComicBook(
+    plugin: LibraryPlugin,
+    comicDetail: ComicDetail
+  ): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library.run-library-plugin.confirmation-title',
+        { name: plugin.name, version: plugin.version }
+      ),
+      message: this.translateService.instant(
+        'library.run-library-plugin.confirmation-message',
+        { count: 1 }
+      ),
+      confirm: () => {
+        this.logger.debug(
+          'Running plugin on current comic book:',
+          plugin,
+          comicDetail.comicId
+        );
+        this.store.dispatch(
+          runLibraryPluginOnOneComicBook({
+            plugin,
+            comicBookId: comicDetail.comicId
+          })
+        );
+      }
+    });
+  }
+
+  onRunLibraryPluginOnSelectedComicBooks(plugin: LibraryPlugin): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library.run-library-plugin.confirmation-title',
+        { name: plugin.name, version: plugin.version }
+      ),
+      message: this.translateService.instant(
+        'library.run-library-plugin.confirmation-message',
+        { count: this.selectedIds.length }
+      ),
+      confirm: () => {
+        this.logger.debug('Running plugin on selected comic books:', plugin);
+        this.store.dispatch(
+          runLibraryPluginOnSelectedComicBooks({
+            plugin
+          })
+        );
+      }
+    });
+  }
+
   private doAddToReadingList(
     comicBooks: ComicDetail[],
     list: ReadingList
@@ -516,7 +588,7 @@ export class ComicDetailListViewComponent implements OnDestroy {
   }
 
   private applyFilters(): void {
-    this.logger.debug('Setting data source');
+    this.logger.trace('Setting data source');
     const filtered =
       !!this.queryParameterService.coverYear$?.value?.year ||
       !!this.queryParameterService.coverYear$?.value?.month ||

@@ -18,9 +18,13 @@
 
 package org.comixedproject.rest.plugin;
 
+import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
+
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
+import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import lombok.NonNull;
@@ -28,6 +32,8 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.net.plugin.CreatePluginRequest;
 import org.comixedproject.model.net.plugin.UpdatePluginRequest;
 import org.comixedproject.model.plugin.LibraryPlugin;
+import org.comixedproject.service.comicbooks.ComicBookSelectionException;
+import org.comixedproject.service.comicbooks.ComicBookSelectionService;
 import org.comixedproject.service.plugin.LibraryPluginException;
 import org.comixedproject.service.plugin.LibraryPluginService;
 import org.comixedproject.views.View;
@@ -46,6 +52,7 @@ import org.springframework.web.bind.annotation.*;
 @Log4j2
 public class LibraryPluginController {
   @Autowired private LibraryPluginService libraryPluginService;
+  @Autowired private ComicBookSelectionService comicBookSelectionService;
 
   /**
    * Returns the list of all plugins.
@@ -127,5 +134,52 @@ public class LibraryPluginController {
   public void deletePlugin(@PathVariable("pluginId") final long id) throws LibraryPluginException {
     log.info("Deleting plugin: id={}", id);
     this.libraryPluginService.deletePlugin(id);
+  }
+
+  /**
+   * Runs a plugin against a single comic book.
+   *
+   * @param pluginId the plugin id
+   * @param comicBookId the comic book id
+   * @throws LibraryPluginException if an error occurs
+   */
+  @PostMapping(value = "/api/plugins/{pluginId}/comics/{comicBookId}")
+  @Timed(value = "comixed.plugins.run-single-comic-book")
+  public void runLibraryPluginOnOneComicBook(
+      @PathVariable("pluginId") final long pluginId,
+      @PathVariable("comicBookId") final Long comicBookId)
+      throws LibraryPluginException {
+    log.info(
+        "Running plugin on single comic book: plugin id={} comic book id={}",
+        pluginId,
+        comicBookId);
+    final List<Long> idList = new ArrayList<>();
+    idList.add(comicBookId);
+    this.libraryPluginService.runLibraryPlugin(pluginId, idList);
+  }
+
+  /**
+   * Runs a plugin against the selected comic books.
+   *
+   * @param pluginId the plugin id
+   * @throws LibraryPluginException if an error occurs
+   */
+  @PostMapping(value = "/api/plugins/{pluginId}/comics/selected")
+  @Timed(value = "comixed.plugins.run-selected-comic-books")
+  public void runLibraryPluginOnSelectedComicBooks(
+      final HttpSession session, @PathVariable("pluginId") final long pluginId)
+      throws LibraryPluginException {
+    try {
+      final List<Long> selectedComicBookIdList =
+          this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+      log.info("Running plugin on selected comic books: plugin id={}", pluginId);
+      this.libraryPluginService.runLibraryPlugin(pluginId, selectedComicBookIdList);
+      this.comicBookSelectionService.clearSelectedComicBooks(selectedComicBookIdList);
+      session.setAttribute(
+          LIBRARY_SELECTIONS,
+          this.comicBookSelectionService.encodeSelections(selectedComicBookIdList));
+    } catch (ComicBookSelectionException error) {
+      throw new LibraryPluginException("Failed to run plugin against selected comic books", error);
+    }
   }
 }

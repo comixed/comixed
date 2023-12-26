@@ -43,5 +43,15 @@
     "load-all": {
       "effect-failure": "Failed to load the list of plugin languages..."
     }
+  },
+  "run-library-plugin": {
+    "one-comic-book": {
+      "effect-failure": "Failed to run {name}.",
+      "effect-success": "{name} completed successfully on one comic book."
+    },
+    "selected-comic-books": {
+      "effect-failure": "Failed to run {name}.",
+      "effect-success": "{name} completed successfully on one comic book."
+    }
   }
 }

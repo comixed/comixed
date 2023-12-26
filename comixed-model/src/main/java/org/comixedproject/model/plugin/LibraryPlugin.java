@@ -40,6 +40,8 @@ import org.hibernate.annotations.ColumnTransformer;
 public class LibraryPlugin {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonProperty("id")
+  @JsonView(View.LibraryPluginList.class)
   @Getter
   private Long id;
 

@@ -94,6 +94,10 @@ import {
   initialState as initialComicBookSelectionState
 } from '@app/comic-books/reducers/comic-book-selection.reducer';
 import { setMultipleComicBookByIdSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import {
+  initialState as initialLibraryPluginState,
+  LIBRARY_PLUGIN_FEATURE_KEY
+} from '@app/library-plugins/reducers/library-plugin.reducer';
 
 describe('ReadingListDetailPageComponent', () => {
   const READING_LIST = {
@@ -106,7 +110,8 @@ describe('ReadingListDetailPageComponent', () => {
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
     [DOWNLOAD_READING_LIST_FEATURE_KEY]: initialDownloadReadingListState,
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
-    [LAST_READ_LIST_FEATURE_KEY]: initialLastReadListState
+    [LAST_READ_LIST_FEATURE_KEY]: initialLastReadListState,
+    [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState
   };
 
   let component: ReadingListDetailPageComponent;

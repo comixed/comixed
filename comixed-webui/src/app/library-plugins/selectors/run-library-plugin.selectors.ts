@@ -16,26 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.plugins;
+import { createFeatureSelector } from '@ngrx/store';
+import {
+  RUN_LIBRARY_PLUGIN_FEATURE_KEY,
+  RunLibraryPluginState
+} from '../reducers/run-library-plugin.reducer';
 
-import java.util.HashMap;
-import java.util.Map;
-import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
-
-/**
- * <code>AbstractPluginRuntime</code> provides a foundation for creating new instances of {@link
- * PluginRuntime}.
- *
- * @author Darryl L. Pierce
- */
-@Log4j2
-public abstract class AbstractPluginRuntime implements PluginRuntime {
-  @Getter private Map<String, Object> properties = new HashMap<>();
-
-  @Override
-  public void addProperty(final String propertyName, final Object propertyValue) {
-    log.trace("Adding property: {}={}", propertyName, propertyValue);
-    this.properties.put(propertyName, propertyValue);
-  }
-}
+export const selectRunLibraryPluginState =
+  createFeatureSelector<RunLibraryPluginState>(RUN_LIBRARY_PLUGIN_FEATURE_KEY);

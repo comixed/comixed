@@ -56,6 +56,10 @@ import {
 import { ComicDetailListViewComponent } from '@app/comic-books/components/comic-detail-list-view/comic-detail-list-view.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import {
+  initialState as initialLibraryPluginState,
+  LIBRARY_PLUGIN_FEATURE_KEY
+} from '@app/library-plugins/reducers/library-plugin.reducer';
 
 describe('ComicDetailListDialogComponent', () => {
   const COMICS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
@@ -64,7 +68,8 @@ describe('ComicDetailListDialogComponent', () => {
     [COMIC_BOOK_LIST_FEATURE_KEY]: {
       ...initialComicBookListState,
       comicBooks: COMICS
-    }
+    },
+    [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState
   };
 
   let component: ComicDetailListDialogComponent;
