@@ -59,7 +59,7 @@ SHIFT
 GOTO process_command_line
 
 :show_help
-ECHO Usage: dbrestore.bat FILENAME -d [DATABASE] -j [URL] [OPTIONS]
+ECHO Usage: dbrestore.bat -d [DATABASE] -j [URL] [OPTIONS] FILENAME
 ECHO.
 ECHO  FILENAME      - The backup filename
 ECHO.
