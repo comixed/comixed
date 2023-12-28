@@ -16,18 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export interface LibraryPluginProperty {
-  name: string;
-  value: string;
-  length: number;
-}
+import { Pipe, PipeTransform } from '@angular/core';
+import { LibraryPlugin } from '@app/library-plugins/models/library-plugin';
 
-export interface LibraryPlugin {
-  id: number;
-  name: string;
-  version: string;
-  language: string;
-  filename: string;
-  adminOnly: boolean;
-  properties: LibraryPluginProperty[];
+@Pipe({
+  name: 'pluginTitle'
+})
+export class PluginTitlePipe implements PipeTransform {
+  transform(plugin: LibraryPlugin): string {
+    return `${plugin?.name} v${plugin?.version}`;
+  }
 }

@@ -66,6 +66,8 @@ import { BatchProcessesEffects } from '@app/admin/effects/batch-processes.effect
 import { BatchProcessListPageComponent } from './pages/batch-process-list-page/batch-process-list-page.component';
 import { LibraryPluginsConfigurationComponent } from '@app/admin/components/library-plugins-configuration/library-plugins-configuration.component';
 import { CreatePluginDialogComponent } from '@app/admin/components/create-plugin-dialog/create-plugin-dialog.component';
+import { LibraryPluginSetupComponent } from './components/library-plugin-setup/library-plugin-setup.component';
+import { LibraryPluginsModule } from '@app/library-plugins/library-plugins.module';
 
 @NgModule({
   declarations: [
@@ -80,7 +82,8 @@ import { CreatePluginDialogComponent } from '@app/admin/components/create-plugin
     MetricMeasurementPipe,
     BatchProcessListPageComponent,
     LibraryPluginsConfigurationComponent,
-    CreatePluginDialogComponent
+    CreatePluginDialogComponent,
+    LibraryPluginSetupComponent
   ],
   imports: [
     CommonModule,
@@ -119,7 +122,8 @@ import { CreatePluginDialogComponent } from '@app/admin/components/create-plugin
     ComicBooksModule,
     MatCheckboxModule,
     MatSelectModule,
-    MatListModule
+    MatListModule,
+    LibraryPluginsModule
   ],
   exports: [CommonModule, CoreModule]
 })

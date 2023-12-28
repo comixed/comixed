@@ -1,0 +1,82 @@
+<form [formGroup]="pluginFormGroup">
+  <mat-card>
+    <mat-card-title>{{ plugin | pluginTitle }}</mat-card-title>
+    <mat-card-content>
+      <table class="table cx-width-100" formArrayName="properties">
+        <caption>Plugin Properties</caption>
+        <colgroup>
+          <col class="cx-width-25" />
+          <col class="cx-width-75" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th>{{ "metadata-source.label.property-name" | translate }}</th>
+            <th>{{ "metadata-source.label.property-value" | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let sourceProperty of properties.controls; let i = index"
+            [formGroupName]="i"
+          >
+            <td>
+              <mat-form-field class="cx-width-100" required>
+                <input
+                  [id]="'property-name-' + i"
+                  matInput
+                  class="cx-width-100"
+                  formControlName="propertyName"
+                  readonly
+                />
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field class="cx-width-100" required>
+                <input
+                  [id]="'property-value-' + i"
+                  matInput
+                  class="cx-width-100"
+                  formControlName="propertyValue"
+                />
+              </mat-form-field>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </mat-card-content>
+    <mat-card-actions class="cx-action-button-container-horizontal">
+      <button
+        id="save-button"
+        mat-flat-button
+        class="cx-action-button"
+        color="primary"
+        [disabled]="!pluginFormGroup.valid"
+        (click)="onSave()"
+      >
+        <mat-icon>save</mat-icon>
+        <mat-label>{{ "button.save" | translate }}</mat-label>
+      </button>
+      <button
+        id="reset-button"
+        mat-flat-button
+        class="cx-action-button"
+        color="warn"
+        [disabled]="!pluginFormGroup.dirty"
+        (click)="onReset()"
+      >
+        <mat-icon>undo</mat-icon>
+        <mat-label>{{ "button.reset" | translate }}</mat-label>
+      </button>
+      <button
+        id="close-button"
+        mat-flat-button
+        class="cx-action-button"
+        color="warn"
+        (click)="onClose()"
+      >
+        <mat-icon>close</mat-icon>
+        <mat-label>{{ "button.close" | translate }}</mat-label>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

@@ -21,16 +21,23 @@ import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import {
+  selectLibraryPluginCurrent,
   selectLibraryPluginList,
   selectLibraryPluginState
 } from '@app/library-plugins/selectors/library-plugin.selectors';
 import { MatTableDataSource } from '@angular/material/table';
 import { LibraryPlugin } from '@app/library-plugins/models/library-plugin';
-import { loadLibraryPlugins } from '@app/library-plugins/actions/library-plugin.actions';
+import {
+  loadLibraryPlugins,
+  setCurrentLibraryPlugin
+} from '@app/library-plugins/actions/library-plugin.actions';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CreatePluginDialogComponent } from '@app/admin/components/create-plugin-dialog/create-plugin-dialog.component';
+import { LibraryPluginSetupComponent } from '@app/admin/components/library-plugin-setup/library-plugin-setup.component';
+import { AlertService } from '@app/core/services/alert.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'cx-library-plugins-configuration',
@@ -43,11 +50,15 @@ export class LibraryPluginsConfigurationComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource<LibraryPlugin>();
   libraryPluginStateSubscription: Subscription;
   libraryPluginListSubscription: Subscription;
+  currentPluginSubscription: Subscription;
+  dialogRef: MatDialogRef<LibraryPluginSetupComponent, any>;
 
   constructor(
     private logger: LoggerService,
     private store: Store,
     private dialog: MatDialog,
+    private alertService: AlertService,
+    private translateService: TranslateService,
     public queryParameterService: QueryParameterService
   ) {
     this.logger.trace('Subscription to library plugin list state updates');
@@ -60,6 +71,35 @@ export class LibraryPluginsConfigurationComponent implements OnInit, OnDestroy {
     this.libraryPluginListSubscription = this.store
       .select(selectLibraryPluginList)
       .subscribe(pluginList => (this.dataSource.data = pluginList));
+    this.logger.trace('Subscribing to the current library plugin updates');
+    this.currentPluginSubscription = this.store
+      .select(selectLibraryPluginCurrent)
+      .subscribe(libraryPlugin => {
+        if (!!libraryPlugin) {
+          if (libraryPlugin.properties.length > 0) {
+            this.dialogRef = this.dialog.open(LibraryPluginSetupComponent, {
+              data: libraryPlugin
+            });
+          } else {
+            this.store.dispatch(setCurrentLibraryPlugin({ plugin: null }));
+            this.alertService.info(
+              this.translateService.instant(
+                'library-plugin-setup.text.plugin-has-no-properties',
+                {
+                  name: libraryPlugin.name,
+                  version: libraryPlugin.version
+                }
+              )
+            );
+          }
+        } else {
+          if (!!this.dialogRef) {
+            this.dialogRef.close();
+            this.dialogRef = null;
+            this.store.dispatch(setCurrentLibraryPlugin({ plugin: null }));
+          }
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -67,6 +107,8 @@ export class LibraryPluginsConfigurationComponent implements OnInit, OnDestroy {
     this.libraryPluginStateSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from library plugin list updates');
     this.libraryPluginListSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from current library plugin updates');
+    this.currentPluginSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -77,5 +119,10 @@ export class LibraryPluginsConfigurationComponent implements OnInit, OnDestroy {
   onShowCreatePluginForm(): void {
     this.logger.trace('Opening the creating plugin dialog');
     this.dialog.open(CreatePluginDialogComponent);
+  }
+
+  onSelectPlugin(libraryPlugin: LibraryPlugin): void {
+    this.logger.trace('Selecting library plugin:', libraryPlugin);
+    this.store.dispatch(setCurrentLibraryPlugin({ plugin: libraryPlugin }));
   }
 }

@@ -19,7 +19,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LibraryPluginsConfigurationComponent } from './library-plugins-configuration.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { provideMockStore } from '@ngrx/store/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
@@ -34,15 +34,22 @@ import {
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSortModule } from '@angular/material/sort';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { setCurrentLibraryPlugin } from '@app/library-plugins/actions/library-plugin.actions';
+import { LIBRARY_PLUGIN_4 } from '@app/library-plugins/library-plugins.fixtures';
+import { AlertService } from '@app/core/services/alert.service';
 
 describe('LibraryPluginsConfigurationComponent', () => {
   const initialState = {
     [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginListState
   };
+  const PLUGIN = LIBRARY_PLUGIN_4;
 
   let component: LibraryPluginsConfigurationComponent;
   let fixture: ComponentFixture<LibraryPluginsConfigurationComponent>;
   let dialog: MatDialog;
+  let store: MockStore;
+  let alertService: AlertService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -60,9 +67,10 @@ describe('LibraryPluginsConfigurationComponent', () => {
         MatButtonModule,
         MatTableModule,
         MatTooltipModule,
-        MatSortModule
+        MatSortModule,
+        MatSnackBarModule
       ],
-      providers: [provideMockStore({ initialState })]
+      providers: [provideMockStore({ initialState }), AlertService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LibraryPluginsConfigurationComponent);
@@ -70,6 +78,10 @@ describe('LibraryPluginsConfigurationComponent', () => {
     fixture.detectChanges();
     dialog = TestBed.inject(MatDialog);
     spyOn(dialog, 'open');
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    alertService = TestBed.inject(AlertService);
+    spyOn(alertService, 'info');
   });
 
   it('should create', () => {
@@ -83,6 +95,77 @@ describe('LibraryPluginsConfigurationComponent', () => {
 
     it('opens the create plugin dialog', () => {
       expect(dialog.open).toHaveBeenCalledWith(CreatePluginDialogComponent);
+    });
+  });
+
+  describe('selecting a plugin', () => {
+    beforeEach(() => {
+      component.onSelectPlugin(PLUGIN);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        setCurrentLibraryPlugin({ plugin: PLUGIN })
+      );
+    });
+  });
+
+  describe('showing the plugin configuration dialog', () => {
+    describe('a plugin with no properties', () => {
+      beforeEach(() => {
+        component.dialogRef = null;
+        store.setState({
+          ...initialState,
+          [LIBRARY_PLUGIN_FEATURE_KEY]: {
+            ...initialLibraryPluginListState,
+            current: { ...PLUGIN, properties: [] }
+          }
+        });
+      });
+
+      it('displays an info alert', () => {
+        expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
+      });
+
+      it('does not create a dialog reference', () => {
+        expect(component.dialogRef).toBeNull();
+      });
+    });
+
+    describe('a plugin with properties', () => {
+      beforeEach(() => {
+        component.dialogRef = null;
+        store.setState({
+          ...initialState,
+          [LIBRARY_PLUGIN_FEATURE_KEY]: {
+            ...initialLibraryPluginListState,
+            current: PLUGIN
+          }
+        });
+      });
+
+      it('creates a dialog reference', () => {
+        expect(component.dialogRef).not.toBeNull();
+      });
+
+      describe('when the dialog is closed', () => {
+        beforeEach(() => {
+          component.dialogRef = {
+            close: jasmine.createSpy('MatDialogRef.close()')
+          } as any;
+          store.setState({
+            ...initialState,
+            [LIBRARY_PLUGIN_FEATURE_KEY]: {
+              ...initialLibraryPluginListState,
+              current: null
+            }
+          });
+        });
+
+        it('clears the dialog reference', () => {
+          expect(component.dialogRef).toBeNull();
+        });
+      });
     });
   });
 });

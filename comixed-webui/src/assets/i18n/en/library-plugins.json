@@ -39,6 +39,15 @@
       "effect-success": "Plugin updated: {name}..."
     }
   },
+  "library-plugin-setup": {
+    "save": {
+      "confirmation-message": "Are you sure you want to save these changes to {name} v{version}?",
+      "confirmation-title": "Save Plugin Settings"
+    },
+    "text": {
+      "plugin-has-no-properties": "{name} v{version} has no properties to configure..."
+    }
+  },
   "plugin-language-list": {
     "load-all": {
       "effect-failure": "Failed to load the list of plugin languages..."
