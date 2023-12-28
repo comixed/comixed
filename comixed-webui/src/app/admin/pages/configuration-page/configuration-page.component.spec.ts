@@ -87,6 +87,7 @@ import {
   initialState as initialLibraryPluginState,
   LIBRARY_PLUGIN_FEATURE_KEY
 } from '@app/library-plugins/reducers/library-plugin.reducer';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('ConfigurationPageComponent', () => {
   const OPTIONS = [
@@ -151,7 +152,8 @@ describe('ConfigurationPageComponent', () => {
           MatCheckboxModule,
           DragDropModule,
           MatSelectModule,
-          MatSortModule
+          MatSortModule,
+          MatSnackBarModule
         ],
         providers: [provideMockStore({ initialState }), TitleService]
       }).compileComponents();

@@ -16,18 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export interface LibraryPluginProperty {
-  name: string;
-  value: string;
-  length: number;
-}
+import { PluginTitlePipe } from './plugin-title.pipe';
+import { LIBRARY_PLUGIN_4 } from '@app/library-plugins/library-plugins.fixtures';
 
-export interface LibraryPlugin {
-  id: number;
-  name: string;
-  version: string;
-  language: string;
-  filename: string;
-  adminOnly: boolean;
-  properties: LibraryPluginProperty[];
-}
+describe('PluginTitlePipe', () => {
+  const PLUGIN = LIBRARY_PLUGIN_4;
+
+  let pipe: PluginTitlePipe;
+
+  beforeEach(() => {
+    pipe = new PluginTitlePipe();
+  });
+
+  it('create an instance', () => {
+    expect(pipe).toBeTruthy();
+  });
+
+  it('generates a title from a plugin', () => {
+    expect(pipe.transform(PLUGIN)).toEqual(`${PLUGIN.name} v${PLUGIN.version}`);
+  });
+});

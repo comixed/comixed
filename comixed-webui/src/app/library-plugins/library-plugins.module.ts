@@ -27,9 +27,11 @@ import { pluginLanguageFeature } from '@app/library-plugins/reducers/plugin-lang
 import { PluginLanguageEffects } from '@app/library-plugins/effects/plugin-language.effects';
 import { runLibraryPluginFeature } from '@app/library-plugins/reducers/run-library-plugin.reducer';
 import { RunLibraryPluginEffects } from '@app/library-plugins/effects/run-library-plugin.effects';
+import { PluginTitlePipe } from './pipes/plugin-title.pipe';
 
 @NgModule({
-  declarations: [],
+  declarations: [PluginTitlePipe],
+  exports: [PluginTitlePipe],
   imports: [
     CommonModule,
     LibraryPluginsRouting,
