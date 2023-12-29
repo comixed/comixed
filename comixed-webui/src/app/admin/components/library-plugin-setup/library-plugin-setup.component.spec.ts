@@ -106,18 +106,12 @@ describe('LibraryPluginSetupComponent', () => {
 
   describe('resetting changes', () => {
     beforeEach(() => {
-      console.log(
-        '*** component.properties.controls[0].value:',
-        component.properties.controls[0].value
-      );
       component.properties.controls[0].value.propertyValue = 'FARKLE!';
 
       component.onReset();
     });
 
     it('resets the plugin property values', () => {
-      console.log('*** encoded:', component.encodePlugin());
-      console.log('*** PLUGIN:', PLUGIN);
       expect(component.encodePlugin()).toEqual(PLUGIN);
     });
   });

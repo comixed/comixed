@@ -18,8 +18,9 @@
 
 package org.comixedproject.plugins;
 
-import java.util.Map;
+import java.util.List;
 import org.comixedproject.model.plugin.LibraryPlugin;
+import org.comixedproject.model.plugin.LibraryPluginProperty;
 
 /**
  * <code>PluginRuntime</code> defines type for providing a runtime environment for plugins.
@@ -49,7 +50,7 @@ public interface PluginRuntime {
    * @param filename the plugin filename
    * @return the property list
    */
-  Map<String, Integer> getProperties(String filename);
+  List<LibraryPluginProperty> getProperties(String filename);
 
   /**
    * Executes the given libraryPlugin.

@@ -118,11 +118,13 @@ export class LibraryPluginSetupComponent {
         propertyName: [property.name, [Validators.required]],
         propertyValue: [
           property.value,
-          [
-            Validators.required,
-            Validators.minLength(1),
-            Validators.maxLength(property.length)
-          ]
+          property.required
+            ? [
+                Validators.required,
+                Validators.minLength(1),
+                Validators.maxLength(property.length)
+              ]
+            : [Validators.maxLength(property.length)]
         ]
       });
       this.properties.push(propertyFormField);

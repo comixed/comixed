@@ -41,12 +41,17 @@ public class LibraryPluginProperty {
   private Long id;
 
   @ManyToOne()
-  @JoinColumn(name = "library_plugin_id")
+  @JoinColumn(name = "library_plugin_id", insertable = true, updatable = false, nullable = false)
   @Getter
-  @NonNull
+  @Setter
   private LibraryPlugin plugin;
 
-  @Column(name = "property_name", length = 32, updatable = true, nullable = false)
+  @Column(
+      name = "property_name",
+      length = 32,
+      insertable = true,
+      updatable = true,
+      nullable = false)
   @JsonProperty("name")
   @JsonView(View.LibraryPluginList.class)
   @Getter
@@ -54,7 +59,7 @@ public class LibraryPluginProperty {
   @NonNull
   private String name;
 
-  @Column(name = "property_length", nullable = false)
+  @Column(name = "property_length", insertable = true, updatable = true, nullable = false)
   @JsonProperty("length")
   @JsonView(View.LibraryPluginList.class)
   @Getter
@@ -62,24 +67,62 @@ public class LibraryPluginProperty {
   @NonNull
   private Integer length;
 
-  @Column(name = "property_value", length = 128, updatable = true, nullable = true)
+  @Column(name = "property_required", insertable = true, updatable = true, nullable = false)
+  @JsonProperty("required")
+  @JsonView(View.LibraryPluginList.class)
+  @Getter
+  @Setter
+  private Boolean required = false;
+
+  @Column(name = "property_default_value", length = 128, insertable = true, updatable = false)
+  @JsonProperty("defaultValue")
+  @JsonView(View.LibraryPluginList.class)
+  @Getter
+  @Setter
+  private String defaultValue = "";
+
+  @Column(
+      name = "property_value",
+      length = 128,
+      insertable = true,
+      updatable = true,
+      nullable = false)
   @JsonProperty("value")
   @JsonView(View.LibraryPluginList.class)
   @Getter
   @Setter
-  @NonNull
   private String value = "";
+
+  public static LibraryPluginProperty createProperty(
+      final String name, final int length, final String defaultValue) {
+    return new LibraryPluginProperty(name, length);
+  }
+
+  public static LibraryPluginProperty createRequiredProperty(
+      final String name, final int length, final String defaultValue) {
+    final LibraryPluginProperty result = new LibraryPluginProperty(name, length);
+    result.setRequired(true);
+    return result;
+  }
 
   @Override
   public String toString() {
     return "LibraryPluginProperty{"
-        + "libraryPlugin="
+        + "plugin="
         + plugin
         + ", name='"
         + name
         + '\''
-        + ", value="
+        + ", length="
+        + length
+        + ", value='"
         + value
+        + '\''
+        + ", required="
+        + required
+        + ", defaultValue='"
+        + defaultValue
+        + '\''
         + '}';
   }
 
@@ -88,15 +131,16 @@ public class LibraryPluginProperty {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final LibraryPluginProperty that = (LibraryPluginProperty) o;
-    return Objects.equals(id, that.id)
-        && Objects.equals(plugin, that.plugin)
+    return Objects.equals(plugin, that.plugin)
         && Objects.equals(name, that.name)
         && Objects.equals(length, that.length)
-        && Objects.equals(value, that.value);
+        && Objects.equals(value, that.value)
+        && Objects.equals(required, that.required)
+        && Objects.equals(defaultValue, that.defaultValue);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, plugin, name, value);
+    return Objects.hash(plugin, name, length, value, required, defaultValue);
   }
 }

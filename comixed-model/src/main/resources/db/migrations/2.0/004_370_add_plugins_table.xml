@@ -59,6 +59,14 @@
         <constraints nullable="false"/>
       </column>
 
+      <column name="property_default_value" type="varchar(128)">
+        <constraints nullable="true"/>
+      </column>
+
+      <column name="property_required" type="boolean">
+        <constraints nullable="false"/>
+      </column>
+
       <column name="property_value" type="varchar(128)">
         <constraints nullable="true"/>
       </column>

@@ -20,6 +20,8 @@ export interface LibraryPluginProperty {
   name: string;
   value: string;
   length: number;
+  required: boolean;
+  defaultValue: string;
 }
 
 export interface LibraryPlugin {

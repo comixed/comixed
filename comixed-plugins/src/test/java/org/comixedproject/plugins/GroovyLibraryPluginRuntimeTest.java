@@ -20,8 +20,9 @@ package org.comixedproject.plugins;
 
 import static junit.framework.TestCase.*;
 
-import java.util.Map;
+import java.util.List;
 import org.comixedproject.model.plugin.LibraryPlugin;
+import org.comixedproject.model.plugin.LibraryPluginProperty;
 import org.comixedproject.plugins.groovy.GroovyPluginRuntime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -121,19 +122,35 @@ public class GroovyLibraryPluginRuntimeTest {
 
   @Test
   public void testLoadProperties() {
-    final Map<String, Integer> result = runner.getProperties(TEST_GOOD_PLUGIN);
+    final List<LibraryPluginProperty> result = runner.getProperties(TEST_GOOD_PLUGIN);
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertTrue(result.keySet().contains(TEST_PROPERTY_NAME_1));
-    assertEquals(TEST_PROPERTY_1_LENGTH, result.get(TEST_PROPERTY_NAME_1));
-    assertTrue(result.keySet().contains(TEST_PROPERTY_NAME_2));
-    assertEquals(TEST_PROPERTY_2_LENGTH, result.get(TEST_PROPERTY_NAME_2));
+    assertTrue(
+        result.stream()
+            .map(property -> property.getName())
+            .toList()
+            .contains(TEST_PROPERTY_NAME_1));
+    assertTrue(
+        result.stream()
+            .map(property -> property.getLength())
+            .toList()
+            .contains(TEST_PROPERTY_1_LENGTH));
+    assertTrue(
+        result.stream()
+            .map(property -> property.getName())
+            .toList()
+            .contains(TEST_PROPERTY_NAME_2));
+    assertTrue(
+        result.stream()
+            .map(property -> property.getLength())
+            .toList()
+            .contains(TEST_PROPERTY_2_LENGTH));
   }
 
   @Test
   public void testLoadPropertiesBadScript() {
-    final Map<String, Integer> result = runner.getProperties(TEST_BROKEN_PLUGIN);
+    final List<LibraryPluginProperty> result = runner.getProperties(TEST_BROKEN_PLUGIN);
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -141,7 +158,8 @@ public class GroovyLibraryPluginRuntimeTest {
 
   @Test
   public void testLoadPropertiesMissingPlugin() {
-    final Map<String, Integer> result = runner.getProperties(TEST_BROKEN_PLUGIN.substring(1));
+    final List<LibraryPluginProperty> result =
+        runner.getProperties(TEST_BROKEN_PLUGIN.substring(1));
 
     assertNotNull(result);
     assertTrue(result.isEmpty());

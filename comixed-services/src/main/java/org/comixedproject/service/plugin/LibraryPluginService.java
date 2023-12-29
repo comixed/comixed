@@ -95,19 +95,15 @@ public class LibraryPluginService {
       log.trace("Getting libraryPlugin version");
       final String version = pluginRuntime.getVersion(pluginFilename);
       log.trace("Getting libraryPlugin properties");
-      final Map<String, Integer> properties = pluginRuntime.getProperties(pluginFilename);
+      final List<LibraryPluginProperty> properties = pluginRuntime.getProperties(pluginFilename);
       log.debug("Creating libraryPlugin: {} v{}", name, version);
       final LibraryPlugin libraryPlugin =
           new LibraryPlugin(name, name, pluginLanguage, version, pluginFilename);
-      properties
-          .entrySet()
-          .forEach(
-              property ->
-                  libraryPlugin
-                      .getProperties()
-                      .add(
-                          new LibraryPluginProperty(
-                              libraryPlugin, property.getKey(), property.getValue())));
+      properties.forEach(
+          property -> {
+            property.setPlugin(libraryPlugin);
+            libraryPlugin.getProperties().add(property);
+          });
       log.debug("Saving libraryPlugin");
       return this.libraryPluginRepository.save(libraryPlugin);
     } catch (Exception error) {
