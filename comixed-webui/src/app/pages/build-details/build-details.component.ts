@@ -67,7 +67,6 @@ export class BuildDetailsComponent implements OnInit, OnDestroy {
   }
 
   copyToClipboard(): void {
-    console.log('*** this.details:', this.details);
     this.clipboard.copy(
       `
 ${this.translateService.instant('build-details.label.branch', {

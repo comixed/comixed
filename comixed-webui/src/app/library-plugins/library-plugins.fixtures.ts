@@ -26,7 +26,15 @@ export const LIBRARY_PLUGIN_1: LibraryPlugin = {
   language: 'Groovy',
   adminOnly: false,
   filename: 'plugin1.cxplugin',
-  properties: [{ name: 'PROPERTY1', value: 'VALUE1', length: 24 }]
+  properties: [
+    {
+      name: 'PROPERTY1',
+      value: 'VALUE1',
+      length: 24,
+      required: true,
+      defaultValue: ''
+    }
+  ]
 };
 
 export const LIBRARY_PLUGIN_2: LibraryPlugin = {
@@ -36,7 +44,15 @@ export const LIBRARY_PLUGIN_2: LibraryPlugin = {
   language: 'Groovy',
   adminOnly: false,
   filename: 'plugin2.cxplugin',
-  properties: [{ name: 'PROPERTY2', value: 'VALUE2', length: 24 }]
+  properties: [
+    {
+      name: 'PROPERTY2',
+      value: 'VALUE2',
+      length: 24,
+      required: true,
+      defaultValue: ''
+    }
+  ]
 };
 
 export const LIBRARY_PLUGIN_3: LibraryPlugin = {
@@ -46,7 +62,15 @@ export const LIBRARY_PLUGIN_3: LibraryPlugin = {
   language: 'Groovy',
   adminOnly: false,
   filename: 'plugin3.cxplugin',
-  properties: [{ name: 'PROPERTY3', value: 'VALUE3', length: 24 }]
+  properties: [
+    {
+      name: 'PROPERTY3',
+      value: 'VALUE3',
+      length: 24,
+      required: true,
+      defaultValue: ''
+    }
+  ]
 };
 
 export const LIBRARY_PLUGIN_4: LibraryPlugin = {
@@ -56,7 +80,22 @@ export const LIBRARY_PLUGIN_4: LibraryPlugin = {
   language: 'Groovy',
   adminOnly: false,
   filename: 'plugin4.cxplugin',
-  properties: [{ name: 'PROPERTY4', value: 'VALUE4', length: 24 }]
+  properties: [
+    {
+      name: 'PROPERTY4.1',
+      value: 'VALUE4.1',
+      length: 24,
+      required: true,
+      defaultValue: ''
+    },
+    {
+      name: 'PROPERTY4.2',
+      value: 'VALUE4.2',
+      length: 24,
+      required: false,
+      defaultValue: ''
+    }
+  ]
 };
 
 export const LIBRARY_PLUGIN_5: LibraryPlugin = {
@@ -66,7 +105,15 @@ export const LIBRARY_PLUGIN_5: LibraryPlugin = {
   language: 'Groovy',
   adminOnly: false,
   filename: 'plugin5.cxplugin',
-  properties: [{ name: 'PROPERTY5', value: 'VALUE5', length: 24 }]
+  properties: [
+    {
+      name: 'PROPERTY5',
+      value: 'VALUE5',
+      length: 24,
+      required: true,
+      defaultValue: ''
+    }
+  ]
 };
 
 export const PLUGIN_LIST = [

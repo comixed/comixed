@@ -58,7 +58,6 @@ export class LibraryPluginService {
     args.plugin.properties.forEach(
       entry => (properties[entry.name] = entry.value)
     );
-    console.log('*** properties:', properties);
     return this.http.put(
       interpolate(UPDATE_PLUGIN_URL, { pluginId: args.plugin.id }),
       {

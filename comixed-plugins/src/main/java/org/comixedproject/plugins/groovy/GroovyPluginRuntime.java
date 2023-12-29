@@ -22,10 +22,11 @@ import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.plugin.LibraryPlugin;
+import org.comixedproject.model.plugin.LibraryPluginProperty;
 import org.comixedproject.plugins.AbstractPluginRuntime;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -68,15 +69,16 @@ public class GroovyPluginRuntime extends AbstractPluginRuntime {
   }
 
   @Override
-  public Map<String, Integer> getProperties(final String filename) {
+  public List<LibraryPluginProperty> getProperties(final String filename) {
     final GroovyShell shell = doCreatePluginShell();
     try {
       log.trace("Loading plugin properties: {}", filename);
       final Script script = shell.parse(new File(filename));
-      return (Map<String, Integer>) script.invokeMethod("plugin_properties", new Object[] {});
+      return (List<LibraryPluginProperty>)
+          script.invokeMethod("plugin_properties", new Object[] {});
     } catch (Exception error) {
       log.error("Failed to load plugin properties", error);
-      return new HashMap<>();
+      return new ArrayList<>();
     }
   }
 

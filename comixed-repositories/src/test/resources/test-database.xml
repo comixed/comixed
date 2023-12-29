@@ -681,6 +681,7 @@
                                library_plugin_id="1000"
                                property_name="test.property"
                                property_length="32"
+                               property_required="true"
                                property_value="property-value"
                                />
 </dataset>

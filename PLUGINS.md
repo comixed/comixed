@@ -67,11 +67,25 @@ that service.
 
 The minimal Groovy plugin will have the following:
 ```groovy
-def plugin_name()       { return "My First Plugin" }
-def plugin_version()    { return "1.2.3.4" }
-def plugin_properties() { return [] }
+import org.comixedproject.model.plugin.LibraryPluginProperty
 
-print "Hello world!"
+def plugin_name()       { return "Good Plugin" }
+def plugin_version()    { return "1.2.3.4" }
+def plugin_properties() {
+    var property1 = LibraryPluginProperty.createProperty("test_property_1", 32, "")
+    var property2 = LibraryPluginProperty.createRequiredProperty("test_property_2", 64, "default value")
+
+    return [property1, property2]
+}
+
+print "Hello World!"
 ```
 
 This plugin, when invoked, would simply print "Hello world!" to the logs.
+
+This example, though, shows how to add two properties:
+1. a regular property using ```LibraryPluginProperty.createProperty()```, and
+1. a required property with a default value using ```LibraryPluginProperty.createRequiredProperty()```.
+
+The ```LibraryPluginProperty``` provides these two methods to make defining
+plugin properties easier.

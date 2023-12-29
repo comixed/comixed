@@ -69,11 +69,12 @@ public class LibraryLibraryPluginServiceTest {
   @Mock private LibraryPlugin savedLibraryPlugin;
   @Mock private LibraryPlugin adminOnlyPlugin;
   @Mock private PluginRuntime pluginRuntime;
+  @Mock private LibraryPluginProperty libraryPluginProperty;
 
   @Captor private ArgumentCaptor<LibraryPlugin> saveArgumentCaptor;
 
   private List<LibraryPlugin> libraryPluginList = new ArrayList<>();
-  private Map<String, Integer> pluginProperties = new HashMap<>();
+  private List<LibraryPluginProperty> pluginProperties = new ArrayList<>();
   private Map<String, String> pluginPropertyMap = new HashMap<>();
   private List<LibraryPluginProperty> libraryPluginPropertyList = new ArrayList<>();
   private List<Long> comicBookIdList = new ArrayList<>();
@@ -96,11 +97,11 @@ public class LibraryLibraryPluginServiceTest {
 
     Mockito.when(pluginRuntime.getName(Mockito.anyString())).thenReturn(TEST_PLUGIN_NAME);
     Mockito.when(pluginRuntime.getVersion(Mockito.anyString())).thenReturn(TEST_PLUGIN_VERSION);
-    pluginProperties.put(TEST_PROPERTY_NAME, TEST_PROPERTY_LENGTH);
+    Mockito.when(libraryPluginProperty.getName()).thenReturn(TEST_PROPERTY_NAME);
+    pluginProperties.add(libraryPluginProperty);
     Mockito.when(pluginRuntime.getProperties(Mockito.anyString())).thenReturn(pluginProperties);
 
-    libraryPluginPropertyList.add(
-        new LibraryPluginProperty(libraryPlugin, TEST_PROPERTY_NAME, TEST_PROPERTY_LENGTH));
+    libraryPluginPropertyList.add(libraryPluginProperty);
     Mockito.when(libraryPlugin.getProperties()).thenReturn(libraryPluginPropertyList);
     Mockito.when(libraryPluginRepository.getById(Mockito.anyLong())).thenReturn(libraryPlugin);
 
@@ -198,10 +199,7 @@ public class LibraryLibraryPluginServiceTest {
     assertEquals(TEST_PLUGIN_NAME, record.getUniqueName());
     assertEquals(TEST_PLUGIN_VERSION, record.getVersion());
     assertFalse(record.getProperties().isEmpty());
-    assertTrue(
-        record
-            .getProperties()
-            .contains(new LibraryPluginProperty(record, TEST_PROPERTY_NAME, TEST_PROPERTY_LENGTH)));
+    assertTrue(record.getProperties().contains(libraryPluginProperty));
 
     Mockito.verify(libraryPluginRepository, Mockito.times(1)).save(record);
   }
@@ -227,11 +225,11 @@ public class LibraryLibraryPluginServiceTest {
 
     final LibraryPlugin updatedLibraryPlugin = saveArgumentCaptor.getValue();
     assertNotNull(updatedLibraryPlugin);
-    Mockito.verify(updatedLibraryPlugin, Mockito.times(1)).setAdminOnly(TEST_ADMIN_ONLY);
     assertEquals(1, libraryPluginPropertyList.size());
-    assertEquals(TEST_PROPERTY_NAME, libraryPluginPropertyList.get(0).getName());
-    assertEquals(TEST_PROPERTY_VALUE, libraryPluginPropertyList.get(0).getValue());
 
+    Mockito.verify(libraryPluginPropertyList.get(0), Mockito.times(1))
+        .setValue(TEST_PROPERTY_VALUE);
+    Mockito.verify(updatedLibraryPlugin, Mockito.times(1)).setAdminOnly(TEST_ADMIN_ONLY);
     Mockito.verify(libraryPluginRepository, Mockito.times(1)).getById(TEST_PLUGIN_ID);
   }
 
