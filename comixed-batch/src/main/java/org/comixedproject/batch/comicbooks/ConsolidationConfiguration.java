@@ -20,7 +20,7 @@ package org.comixedproject.batch.comicbooks;
 
 import java.io.File;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicbooks.processors.DeleteComicProcessor;
+import org.comixedproject.batch.comicbooks.processors.DeleteComicBookProcessor;
 import org.comixedproject.batch.comicbooks.processors.DeleteEmptyDirectoriesProcessor;
 import org.comixedproject.batch.comicbooks.processors.MoveComicProcessor;
 import org.comixedproject.batch.comicbooks.readers.DeleteComicReader;
@@ -63,7 +63,7 @@ public class ConsolidationConfiguration {
    * Returns a consolidate library job bean.
    *
    * @param jobRepository the job repository
-   * @param deleteComicStep the delete comics step
+   * @param deleteComicBookStep the delete comics step
    * @param moveComicStep the move comics step
    * @param deleteEmptyDirectoriesStep the delete empty directories step
    * @return the job
@@ -72,12 +72,12 @@ public class ConsolidationConfiguration {
   @Qualifier("consolidateLibraryJob")
   public Job consolidateLibraryJob(
       final JobRepository jobRepository,
-      @Qualifier("deleteComicStep") final Step deleteComicStep,
+      @Qualifier("deleteComicBookStep") final Step deleteComicBookStep,
       @Qualifier("moveComicStep") final Step moveComicStep,
       @Qualifier("deleteEmptyDirectoriesStep") final Step deleteEmptyDirectoriesStep) {
     return new JobBuilder("consolidateLibraryJob", jobRepository)
         .incrementer(new RunIdIncrementer())
-        .start(deleteComicStep)
+        .start(deleteComicBookStep)
         .next(moveComicStep)
         .next(deleteEmptyDirectoriesStep)
         .build();
@@ -94,14 +94,14 @@ public class ConsolidationConfiguration {
    * @return the step
    */
   @Bean
-  @Qualifier("deleteComicStep")
-  public Step deleteComicStep(
+  @Qualifier("deleteComicBookStep")
+  public Step deleteComicBookStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
       final DeleteComicReader reader,
-      final DeleteComicProcessor processor,
+      final DeleteComicBookProcessor processor,
       final PurgeMarkedComicBooksWriter writer) {
-    return new StepBuilder("deleteComicStep", jobRepository)
+    return new StepBuilder("deleteComicBookStep", jobRepository)
         .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
