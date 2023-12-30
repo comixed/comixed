@@ -26,6 +26,7 @@ import java.util.List;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.lists.ReadingListService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -37,19 +38,19 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class PurgeMarkedComicsProcessorTest {
   @InjectMocks private PurgeMarkedComicsProcessor processor;
   @Mock private ComicBookService comicBookService;
+  @Mock private ReadingListService readingListService;
   @Mock private ComicBook comicBook;
 
   private List<Page> pageList = new ArrayList<>();
 
   @Test
   public void testProcess() throws Exception {
-    Mockito.doNothing().when(comicBookService).deleteComicBook(Mockito.any(ComicBook.class));
-
     final ComicBook result = processor.process(comicBook);
 
     assertNotNull(result);
     assertSame(comicBook, result);
 
+    Mockito.verify(readingListService, Mockito.times(1)).deleteEntriesForComicBook(comicBook);
     Mockito.verify(comicBookService, Mockito.times(1)).deleteComicBook(comicBook);
   }
 }

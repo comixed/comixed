@@ -42,7 +42,7 @@ import org.springframework.batch.item.ExecutionContext;
 public class DeleteComicBookProcessorTest {
   private static final String TEST_FILENAME = "/Users/comixed/Documents/comics/comicBook.cbz";
 
-  @InjectMocks private DeleteComicProcessor processor;
+  @InjectMocks private DeleteComicBookProcessor processor;
   @Mock private ComicBookService comicBookService;
   @Mock private FileAdaptor fileAdaptor;
   @Mock private ComicBookAdaptor comicBookAdaptor;
