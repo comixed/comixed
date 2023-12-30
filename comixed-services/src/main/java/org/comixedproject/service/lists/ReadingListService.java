@@ -468,4 +468,23 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
           }
         });
   }
+
+  /**
+   * Deletes reading list entries that reference the given comic book.
+   *
+   * @param comicBook the comic book
+   */
+  @Transactional
+  public void deleteEntriesForComicBook(final ComicBook comicBook) {
+    log.trace("Deleting all reading list entries for comic book: id={}", comicBook.getId());
+    this.readingListRepository
+        .getReadingListsWithComic(comicBook.getComicDetail())
+        .forEach(
+            readingList -> {
+              log.trace("Removing comic book from reading list: list id={}", readingList.getId());
+              readingList.getEntries().remove(comicBook.getComicDetail());
+              log.trace("Saving reading list");
+              this.readingListRepository.save(readingList);
+            });
+  }
 }

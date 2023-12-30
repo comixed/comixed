@@ -20,7 +20,7 @@ package org.comixedproject.batch.comicbooks;
 
 import java.io.File;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicbooks.processors.DeleteComicProcessor;
+import org.comixedproject.batch.comicbooks.processors.DeleteComicBookProcessor;
 import org.comixedproject.batch.comicbooks.processors.DeleteEmptyDirectoriesProcessor;
 import org.comixedproject.batch.comicbooks.processors.MoveComicProcessor;
 import org.comixedproject.batch.comicbooks.readers.DeleteComicReader;
@@ -96,7 +96,7 @@ public class ConsolidationConfiguration {
   public Step deleteComicStep(
       final StepBuilderFactory stepBuilderFactory,
       final DeleteComicReader reader,
-      final DeleteComicProcessor processor,
+      final DeleteComicBookProcessor processor,
       final PurgeMarkedComicBooksWriter writer) {
     return stepBuilderFactory
         .get("deleteComicStep")

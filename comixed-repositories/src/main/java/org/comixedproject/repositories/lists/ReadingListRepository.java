@@ -20,6 +20,7 @@ package org.comixedproject.repositories.lists;
 
 import java.util.List;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.user.ComiXedUser;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -73,4 +74,7 @@ public interface ReadingListRepository extends JpaRepository<ReadingList, Long> 
    */
   @Query("SELECT l FROM ReadingList l LEFT JOIN FETCH l.entries WHERE l.id = :id")
   ReadingList getById(@Param("id") Long id);
+
+  @Query("SELECT l FROM ReadingList l WHERE :comicDetail MEMBER OF l.entries ")
+  List<ReadingList> getReadingListsWithComic(@Param("comicDetail") ComicDetail comicDetail);
 }

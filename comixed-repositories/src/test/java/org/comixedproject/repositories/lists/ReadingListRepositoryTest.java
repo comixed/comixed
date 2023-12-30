@@ -152,4 +152,11 @@ public class ReadingListRepositoryTest {
 
     assertFalse(result.isPresent());
   }
+
+  @Test
+  public void testGetReadingListsWithComicBook() {
+    final List<ReadingList> result = repository.getReadingListsWithComic(comicDetail1);
+
+    assertNotNull(result);
+  }
 }

@@ -117,6 +117,7 @@ public class ReadingListServiceTest {
     Mockito.when(comicDetail.getSeries()).thenReturn(TEST_SERIES);
     Mockito.when(comicDetail.getVolume()).thenReturn(TEST_VOLUME);
     Mockito.when(comicDetail.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
   }
 
   @Test(expected = ReadingListException.class)
@@ -697,5 +698,24 @@ public class ReadingListServiceTest {
     Mockito.verify(readingListRepository, Mockito.times(1)).getById(TEST_READING_LIST_ID);
     Mockito.verify(readingListRepository, Mockito.times(1)).delete(readingList);
     Mockito.verify(publishReadingListDeletedAction, Mockito.times(1)).publish(readingList);
+  }
+
+  @Test
+  public void testDeleteReadingListEntriesForComicBook() {
+    final List<ComicDetail> entries = new ArrayList<>();
+    final List<ReadingList> readingListEntries = new ArrayList<>();
+    Mockito.when(readingList.getEntries()).thenReturn(entries);
+    readingListEntries.add(readingList);
+
+    Mockito.when(readingListRepository.getReadingListsWithComic(Mockito.any(ComicDetail.class)))
+        .thenReturn(readingListEntries);
+
+    service.deleteEntriesForComicBook(comicBook);
+
+    assertTrue(entries.isEmpty());
+
+    Mockito.verify(readingListRepository, Mockito.times(1)).getReadingListsWithComic(comicDetail);
+    Mockito.verify(readingList, Mockito.times(1)).getEntries();
+    Mockito.verify(readingListRepository, Mockito.times(1)).save(readingList);
   }
 }
