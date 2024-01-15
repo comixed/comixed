@@ -70,6 +70,17 @@ export const loadUnreadComicDetails = createAction(
   }>()
 );
 
+export const loadComicDetailsForReadingList = createAction(
+  '[Comic Detail list] Load comic details for reading list',
+  props<{
+    readingListId: number;
+    pageSize: number;
+    pageIndex: number;
+    sortBy: string;
+    sortDirection: string;
+  }>()
+);
+
 export const comicDetailsLoaded = createAction(
   '[Comic Details List] A page worth of comic details were loaded',
   props<{

@@ -718,4 +718,19 @@ public class ReadingListServiceTest {
     Mockito.verify(readingList, Mockito.times(1)).getEntries();
     Mockito.verify(readingListRepository, Mockito.times(1)).save(readingList);
   }
+
+  @Test
+  public void testLoadEntryCount() throws ReadingListException {
+    Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(readingList);
+
+    final List<ComicDetail> entryList = new ArrayList<>();
+    for (int index = 0; index < 25; index++) entryList.add(Mockito.mock(ComicDetail.class));
+    Mockito.when(readingList.getEntries()).thenReturn(entryList);
+
+    final long result = service.getEntryCount(TEST_READING_LIST_ID);
+
+    assertEquals(entryList.size(), result);
+
+    Mockito.verify(readingListRepository, Mockito.times(1)).getById(TEST_READING_LIST_ID);
+  }
 }

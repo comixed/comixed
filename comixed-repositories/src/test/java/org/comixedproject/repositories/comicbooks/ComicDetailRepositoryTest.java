@@ -18,9 +18,7 @@
 
 package org.comixedproject.repositories.comicbooks;
 
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.*;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
@@ -32,6 +30,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -56,6 +55,7 @@ public class ComicDetailRepositoryTest {
   private static final String TEST_READ_SERIES = "Steve Rogers: Captain America";
   private static final String TEST_READ_VOLUME = "2017";
   private static final String TEST_EMAIL = "comixedreader@localhost";
+  private static final long TEST_READING_LIST_ID = 1001L;
 
   @Autowired private ComicDetailRepository repository;
 
@@ -98,5 +98,15 @@ public class ComicDetailRepositoryTest {
             .filter(entry -> entry.getUnscraped())
             .collect(Collectors.toList())
             .isEmpty());
+  }
+
+  @Test
+  public void testLoadReadingListEntries() {
+    final List<ComicDetail> result =
+        repository.loadComicDetailsForReadingList(TEST_READING_LIST_ID, PageRequest.of(0, 10));
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertEquals(1, result.size());
   }
 }

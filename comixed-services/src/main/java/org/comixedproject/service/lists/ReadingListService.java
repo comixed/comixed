@@ -487,4 +487,15 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
               this.readingListRepository.save(readingList);
             });
   }
+
+  /**
+   * Returns the number of entries for a reading list.
+   *
+   * @param readingListId the reading list id
+   * @return the entri count
+   * @throws ReadingListException if an error occurs
+   */
+  public long getEntryCount(final long readingListId) throws ReadingListException {
+    return this.doLoadReadingList(readingListId).getEntries().size();
+  }
 }

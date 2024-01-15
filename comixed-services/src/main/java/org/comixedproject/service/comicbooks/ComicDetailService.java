@@ -27,7 +27,10 @@ import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.comicbooks.ComicType;
+import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
+import org.comixedproject.service.lists.ReadingListException;
+import org.comixedproject.service.lists.ReadingListService;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -46,6 +49,7 @@ import org.springframework.util.StringUtils;
 @Log4j2
 public class ComicDetailService {
   @Autowired private ComicDetailRepository comicDetailRepository;
+  @Autowired private ReadingListService readingListService;
 
   @Autowired
   private ObjectFactory<ComicDetailExampleBuilder> comicDetailExampleBuilderObjectFactory;
@@ -760,5 +764,36 @@ public class ComicDetailService {
         "Loading unread comics for user: email={} page={} size={}", email, pageIndex, pageSize);
     return this.comicDetailRepository.loadUnreadComicDetails(
         email, PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
+  }
+
+  /**
+   * Loads comic details for a reading list.
+   *
+   * @param email the reading list owner's email
+   * @param readingListId the reading list id
+   * @param pageSize the page size
+   * @param pageIndex the page index
+   * @param sortBy the sort field
+   * @param sortDirection the sort direction
+   * @return the entries
+   * @throws ComicDetailException if an error occurs
+   */
+  public List<ComicDetail> loadComicDetailsForReadingList(
+      final String email,
+      final long readingListId,
+      final int pageSize,
+      final int pageIndex,
+      final String sortBy,
+      final String sortDirection)
+      throws ComicDetailException {
+    try {
+      log.debug("Loading reading list entries");
+      final ReadingList readingList =
+          this.readingListService.loadReadingListForUser(email, readingListId);
+      return this.comicDetailRepository.loadComicDetailsForReadingList(
+          readingList.getId(), PageRequest.of(pageIndex, pageSize));
+    } catch (ReadingListException error) {
+      throw new ComicDetailException("Failed to load entries for reading list", error);
+    }
   }
 }

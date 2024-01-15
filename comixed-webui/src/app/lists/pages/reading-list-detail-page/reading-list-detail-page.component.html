@@ -79,7 +79,8 @@
 </div>
 
 <cx-comic-detail-list-view
-  [comics]="readingList?.entries || []"
+  [comics]="comicDetails"
+  [totalComics]="readingList?.entries.length"
   [selectedIds]="selectedIds"
   [lastReadDates]="lastReadDates"
   [showAction]="false"

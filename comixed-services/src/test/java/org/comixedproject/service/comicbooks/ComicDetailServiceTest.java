@@ -34,7 +34,10 @@ import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.comicbooks.ComicType;
+import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
+import org.comixedproject.service.lists.ReadingListException;
+import org.comixedproject.service.lists.ReadingListService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -75,9 +78,11 @@ public class ComicDetailServiceTest {
   private static final long TEST_FILTER_COUNT = RandomUtils.nextLong() * 30000L;
   private static final String TEST_SORT_BY = "comic-count";
   private static final String TEST_SORT_DIRECTION = "asc";
+  private static final long TEST_READING_LIST_ID = 901L;
 
   @InjectMocks private ComicDetailService service;
   @Mock private ComicDetailRepository comicDetailRepository;
+  @Mock private ReadingListService readingListService;
   @Mock private Set<String> publisherList;
   @Mock private Set<String> seriesList;
   @Mock private Set<String> volumeList;
@@ -94,6 +99,7 @@ public class ComicDetailServiceTest {
   @Mock private List<Integer> coverYearList;
   @Mock private List<Integer> coverMonthList;
   @Mock private List<CollectionEntry> collectionEntryList;
+  @Mock private ReadingList readingList;
 
   @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
   @Captor private ArgumentCaptor<Date> startDateArgumentCaptor;
@@ -884,5 +890,55 @@ public class ComicDetailServiceTest {
 
     Mockito.verify(comicDetailRepository, Mockito.times(1))
         .loadUnreadComicDetails(TEST_EMAIL, pageable);
+  }
+
+  @Test(expected = ComicDetailException.class)
+  public void testLoadForReadingListReadingListException()
+      throws ReadingListException, ComicDetailException {
+    Mockito.when(readingListService.loadReadingListForUser(Mockito.anyString(), Mockito.anyLong()))
+        .thenThrow(ReadingListException.class);
+
+    try {
+      service.loadComicDetailsForReadingList(
+          TEST_EMAIL,
+          TEST_READING_LIST_ID,
+          TEST_PAGE_SIZE,
+          TEST_PAGE_INDEX,
+          TEST_SORT_BY,
+          TEST_SORT_DIRECTION);
+    } finally {
+      Mockito.verify(readingListService, Mockito.times(1))
+          .loadReadingListForUser(TEST_EMAIL, TEST_READING_LIST_ID);
+    }
+  }
+
+  @Test
+  public void testLoadForReadingList() throws ReadingListException, ComicDetailException {
+    Mockito.when(readingListService.loadReadingListForUser(Mockito.anyString(), Mockito.anyLong()))
+        .thenReturn(readingList);
+    Mockito.when(readingList.getId()).thenReturn(TEST_READING_LIST_ID);
+    Mockito.when(
+            comicDetailRepository.loadComicDetailsForReadingList(
+                Mockito.anyLong(), pageableArgumentCaptor.capture()))
+        .thenReturn(comicDetailList);
+
+    final List<ComicDetail> result =
+        service.loadComicDetailsForReadingList(
+            TEST_EMAIL,
+            TEST_READING_LIST_ID,
+            TEST_PAGE_SIZE,
+            TEST_PAGE_INDEX,
+            TEST_SORT_BY,
+            TEST_SORT_DIRECTION);
+
+    assertNotNull(result);
+    assertSame(comicDetailList, result);
+
+    final Pageable pageable = pageableArgumentCaptor.getValue();
+    assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
+    assertEquals(TEST_PAGE_INDEX, pageable.getPageNumber());
+
+    Mockito.verify(readingListService, Mockito.times(1))
+        .loadReadingListForUser(TEST_EMAIL, TEST_READING_LIST_ID);
   }
 }

@@ -580,6 +580,8 @@
                       ComicDetailId="2003"/>
   <ReadingListEntries ReadingListId="1000"
                       ComicDetailId="2004"/>
+  <ReadingListEntries ReadingListId="1001"
+                      ComicDetailId="2004"/>
   <SmartReadingLists Id="1000"
                      Name="First Smart Reading List"
                      OwnerId="1000"
