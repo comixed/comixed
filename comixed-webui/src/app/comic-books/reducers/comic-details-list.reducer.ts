@@ -25,6 +25,7 @@ import {
   loadComicDetailsById,
   loadComicDetailsFailed,
   loadComicDetailsForCollection,
+  loadComicDetailsForReadingList,
   loadUnreadComicDetails
 } from '../actions/comic-details-list.actions';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
@@ -56,6 +57,7 @@ export const reducer = createReducer(
   on(loadComicDetailsById, state => ({ ...state, loading: true })),
   on(loadComicDetailsForCollection, state => ({ ...state, loading: true })),
   on(loadUnreadComicDetails, state => ({ ...state, loading: true })),
+  on(loadComicDetailsForReadingList, state => ({ ...state, loading: true })),
   on(comicDetailsLoaded, (state, action) => ({
     ...state,
     loading: false,

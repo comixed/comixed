@@ -578,6 +578,8 @@
                           comic_detail_id="2003"/>
     <reading_list_entries reading_list_id="1000"
                           comic_detail_id="2004"/>
+    <reading_list_entries reading_list_id="1001"
+                          comic_detail_id="2004"/>
     <metadata_cache id="1000"
                     metadata_source="ComicVine"
                     cache_key="volumes[Iron Man]"

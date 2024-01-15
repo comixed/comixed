@@ -25,6 +25,7 @@ import {
   loadComicDetailsById,
   loadComicDetailsFailed,
   loadComicDetailsForCollection,
+  loadComicDetailsForReadingList,
   loadUnreadComicDetails
 } from '../actions/comic-details-list.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -127,6 +128,33 @@ export class ComicDetailsListEffects {
       switchMap(action =>
         this.comicBookListService
           .loadUnreadComicDetails({
+            pageSize: action.pageSize,
+            pageIndex: action.pageIndex,
+            sortBy: action.sortBy,
+            sortDirection: action.sortDirection
+          })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            mergeMap((response: LoadComicDetailsResponse) =>
+              this.doComicDetailsLoaded(response)
+            ),
+            catchError(error => this.doServiceFailure(error))
+          )
+      ),
+      catchError(error => this.doGeneralFailure(error))
+    );
+  });
+
+  loadComicDetailsForReadingList$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(loadComicDetailsForReadingList),
+      tap(action =>
+        this.logger.debug('Loading comic details for reading list:', action)
+      ),
+      switchMap(action =>
+        this.comicBookListService
+          .loadComicDetailsForReadingList({
+            readingListId: action.readingListId,
             pageSize: action.pageSize,
             pageIndex: action.pageIndex,
             sortBy: action.sortBy,

@@ -29,6 +29,7 @@ import {
   loadComicDetailsById,
   loadComicDetailsFailed,
   loadComicDetailsForCollection,
+  loadComicDetailsForReadingList,
   loadUnreadComicDetails
 } from '@app/comic-books/actions/comic-details-list.actions';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
@@ -42,6 +43,7 @@ import {
   COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import { TagType } from '@app/collections/models/comic-collection.enum';
+import { READING_LIST_3 } from '@app/lists/lists.fixtures';
 
 describe('ComicDetailsList Reducer', () => {
   const PAGE_SIZE = 25;
@@ -72,6 +74,7 @@ describe('ComicDetailsList Reducer', () => {
   const COVER_MONTHS = [1, 3, 4, 7, 9];
   const TOTAL_COUNT = COMIC_DETAILS.length * 2;
   const FILTERED_COUNT = Math.floor(TOTAL_COUNT * 0.75);
+  const READING_LIST_ID = READING_LIST_3.id;
 
   let state: ComicDetailsListState;
 
@@ -175,6 +178,25 @@ describe('ComicDetailsList Reducer', () => {
       state = reducer(
         { ...state, loading: false },
         loadUnreadComicDetails({
+          pageSize: PAGE_SIZE,
+          pageIndex: PAGE_INDEX,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
+      );
+    });
+
+    it('sets the loading flag', () => {
+      expect(state.loading).toBeTrue();
+    });
+  });
+
+  describe('loading comic details for a reading list', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, loading: false },
+        loadComicDetailsForReadingList({
+          readingListId: READING_LIST_ID,
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
           sortBy: SORT_BY,

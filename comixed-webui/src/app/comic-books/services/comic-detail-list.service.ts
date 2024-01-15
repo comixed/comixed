@@ -37,6 +37,7 @@ import { LoadComicDetailsRequest } from '@app/comic-books/models/net/load-comic-
 import {
   LOAD_COMIC_DETAILS_BY_ID_URL,
   LOAD_COMIC_DETAILS_FOR_COLLECTION_URL,
+  LOAD_COMIC_DETAILS_FOR_READING_LIST_URL,
   LOAD_COMIC_DETAILS_URL,
   LOAD_UNREAD_COMIC_DETAILS_URL
 } from '@app/comic-books/comic-books.constants';
@@ -48,6 +49,7 @@ import {
 import { TagType } from '@app/collections/models/comic-collection.enum';
 import { LoadComicDetailsForCollectionRequest } from '@app/comic-books/models/net/load-comic-details-for-collection-request';
 import { LoadUnreadComicDetailsRequest } from '@app/comic-books/models/net/load-unread-comic-details-request';
+import { LoadComicDetailsForReadingListRequest } from '@app/comic-books/models/net/load-comic-details-for-reading-list-request';
 
 @Injectable({
   providedIn: 'root'
@@ -173,5 +175,26 @@ export class ComicDetailListService {
       sortBy: args.sortBy,
       sortDirection: args.sortDirection
     } as LoadUnreadComicDetailsRequest);
+  }
+
+  loadComicDetailsForReadingList(args: {
+    readingListId: number;
+    sortDirection: string;
+    pageIndex: number;
+    pageSize: number;
+    sortBy: string;
+  }): Observable<any> {
+    this.logger.debug('Loading comic details for reading list:', args);
+    return this.http.post(
+      interpolate(LOAD_COMIC_DETAILS_FOR_READING_LIST_URL, {
+        readingListId: args.readingListId
+      }),
+      {
+        pageSize: args.pageSize,
+        pageIndex: args.pageIndex,
+        sortBy: args.sortBy,
+        sortDirection: args.sortDirection
+      } as LoadComicDetailsForReadingListRequest
+    );
   }
 }

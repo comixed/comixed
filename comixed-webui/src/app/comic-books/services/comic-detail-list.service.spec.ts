@@ -52,6 +52,7 @@ import { LoadComicDetailsRequest } from '@app/comic-books/models/net/load-comic-
 import {
   LOAD_COMIC_DETAILS_BY_ID_URL,
   LOAD_COMIC_DETAILS_FOR_COLLECTION_URL,
+  LOAD_COMIC_DETAILS_FOR_READING_LIST_URL,
   LOAD_COMIC_DETAILS_URL,
   LOAD_UNREAD_COMIC_DETAILS_URL
 } from '@app/comic-books/comic-books.constants';
@@ -64,6 +65,8 @@ import {
 import { TagType } from '@app/collections/models/comic-collection.enum';
 import { LoadComicDetailsForCollectionRequest } from '@app/comic-books/models/net/load-comic-details-for-collection-request';
 import { LoadUnreadComicDetailsRequest } from '@app/comic-books/models/net/load-unread-comic-details-request';
+import { READING_LIST_3 } from '@app/lists/lists.fixtures';
+import { LoadComicDetailsForReadingListRequest } from '@app/comic-books/models/net/load-comic-details-for-reading-list-request';
 
 describe('ComicDetailListService', () => {
   const PAGE_SIZE = 25;
@@ -92,6 +95,7 @@ describe('ComicDetailListService', () => {
   const IDS = COMIC_DETAILS.map(entry => entry.comicId);
   const TOTAL_COUNT = COMIC_DETAILS.length * 2;
   const FILTERED_COUNT = Math.floor(TOTAL_COUNT * 0.75);
+  const READING_LIST_ID = READING_LIST_3.id;
   const initialState = {
     [MESSAGING_FEATURE_KEY]: { ...initialMessagingState }
   };
@@ -342,6 +346,37 @@ describe('ComicDetailListService', () => {
       sortBy: SORT_BY,
       sortDirection: SORT_DIRECTION
     } as LoadUnreadComicDetailsRequest);
+    req.flush(serviceResponse);
+  });
+
+  it('can load comic details for a reading list', () => {
+    const serviceResponse = {
+      comicDetails: COMIC_DETAILS,
+      totalCount: TOTAL_COUNT,
+      filteredCount: FILTERED_COUNT
+    } as LoadComicDetailsResponse;
+    service
+      .loadComicDetailsForReadingList({
+        readingListId: READING_LIST_ID,
+        pageSize: PAGE_SIZE,
+        pageIndex: PAGE_INDEX,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      })
+      .subscribe(response => expect(response).toEqual(serviceResponse));
+
+    const req = httpMock.expectOne(
+      interpolate(LOAD_COMIC_DETAILS_FOR_READING_LIST_URL, {
+        readingListId: READING_LIST_ID
+      })
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      pageSize: PAGE_SIZE,
+      pageIndex: PAGE_INDEX,
+      sortBy: SORT_BY,
+      sortDirection: SORT_DIRECTION
+    } as LoadComicDetailsForReadingListRequest);
     req.flush(serviceResponse);
   });
 });
