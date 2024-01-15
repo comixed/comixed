@@ -98,6 +98,10 @@ import {
   initialState as initialLibraryPluginState,
   LIBRARY_PLUGIN_FEATURE_KEY
 } from '@app/library-plugins/reducers/library-plugin.reducer';
+import {
+  COMIC_DETAILS_LIST_FEATURE_KEY,
+  initialState as initialComicDetailListState
+} from '@app/comic-books/reducers/comic-details-list.reducer';
 
 describe('ReadingListDetailPageComponent', () => {
   const READING_LIST = {
@@ -111,7 +115,8 @@ describe('ReadingListDetailPageComponent', () => {
     [DOWNLOAD_READING_LIST_FEATURE_KEY]: initialDownloadReadingListState,
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadListState,
-    [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState
+    [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState,
+    [COMIC_DETAILS_LIST_FEATURE_KEY]: initialComicDetailListState
   };
 
   let component: ReadingListDetailPageComponent;

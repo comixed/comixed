@@ -62,6 +62,9 @@ import { LastRead } from '@app/comic-books/models/last-read';
 import { selectComicBookLastReadEntries } from '@app/comic-books/selectors/last-read-list.selectors';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { setMultipleComicBookByIdSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import { selectLoadComicDetailsList } from '@app/comic-books/selectors/load-comic-details-list.selectors';
+import { loadComicDetailsForReadingList } from '@app/comic-books/actions/comic-details-list.actions';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
 
 @Component({
   selector: 'cx-user-reading-list-page',
@@ -72,6 +75,7 @@ export class ReadingListDetailPageComponent implements OnDestroy {
   dataSource = new MatTableDataSource<SelectableListItem<ComicDetail>>([]);
 
   paramsSubscription: Subscription;
+  queryParamsSubscription: Subscription;
   readingListStateSubscription: Subscription;
   readingListSubscription: Subscription;
   messagingSubscription: Subscription;
@@ -84,6 +88,8 @@ export class ReadingListDetailPageComponent implements OnDestroy {
   selectedIds: number[] = [];
   lastReadDates: LastRead[] = [];
   langChangeSubscription: Subscription;
+  comicDetailListSubscription: Subscription;
+  comicDetails: ComicDetail[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -94,8 +100,10 @@ export class ReadingListDetailPageComponent implements OnDestroy {
     private formBuilder: UntypedFormBuilder,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private titleService: TitleService
+    private titleService: TitleService,
+    private queryParameterService: QueryParameterService
   ) {
+    this.logger.trace('Subscribing to parameter updates');
     this.paramsSubscription = this.activatedRoute.params.subscribe(params => {
       if (!!params.id) {
         this.readingListId = +params.id;
@@ -110,10 +118,26 @@ export class ReadingListDetailPageComponent implements OnDestroy {
         this.store.dispatch(createReadingList());
       }
     });
+    this.logger.trace('Subscribing to query parameter updates');
+    this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
+      params => {
+        this.logger.trace('Loading reading list entries');
+        this.store.dispatch(
+          loadComicDetailsForReadingList({
+            readingListId: this.readingListId,
+            pageSize: this.queryParameterService.pageSize$.value,
+            pageIndex: this.queryParameterService.pageIndex$.value,
+            sortBy: this.queryParameterService.sortBy$.value,
+            sortDirection: this.queryParameterService.sortDirection$.value
+          })
+        );
+      }
+    );
     this.readingListForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.maxLength(128)]],
       summary: ['']
     });
+    this.logger.trace('Subscribing to reading list state updates');
     this.readingListStateSubscription = this.store
       .select(selectReadingListState)
       .subscribe(state => {
@@ -124,6 +148,7 @@ export class ReadingListDetailPageComponent implements OnDestroy {
           this.store.dispatch(setBusyState({ enabled: state.loading }));
         }
       });
+    this.logger.trace('Subscribing to reading list updates');
     this.readingListSubscription = this.store
       .select(selectReadingList)
       .pipe(filter(list => !!list))
@@ -137,14 +162,20 @@ export class ReadingListDetailPageComponent implements OnDestroy {
           this.loadTranslations();
         }
       });
+    this.logger.trace('Subscribing to comic detail list updates');
+    this.comicDetailListSubscription = this.store
+      .select(selectLoadComicDetailsList)
+      .subscribe(comicDetails => (this.comicDetails = comicDetails));
     this.selectionSubscription = this.store
       .select(selectComicBookSelectionIds)
       .subscribe(selections => {
         this.selectedIds = selections;
       });
+    this.logger.trace('Subscribing to last read updates');
     this.lastReadDataSubscription = this.store
       .select(selectComicBookLastReadEntries)
       .subscribe(lastReadDates => (this.lastReadDates = lastReadDates));
+    this.logger.trace('Subscribing to messaging updates');
     this.messagingSubscription = this.store
       .select(selectMessagingState)
       .subscribe(state => {
@@ -196,6 +227,7 @@ export class ReadingListDetailPageComponent implements OnDestroy {
           );
         }
       });
+    this.logger.trace('Subscribing to language change updates');
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
@@ -222,10 +254,14 @@ export class ReadingListDetailPageComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from param updates');
+    this.logger.trace('Unsubscribing from parameter updates');
     this.paramsSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from query parameter updates');
+    this.queryParamsSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from reading list updates');
     this.readingListSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from comic detail list updates');
+    this.comicDetailListSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from selection updates');
     this.selectionSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from last read updates');

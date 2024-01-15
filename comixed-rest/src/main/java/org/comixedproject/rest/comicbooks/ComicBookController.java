@@ -46,6 +46,8 @@ import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.service.library.LastReadException;
 import org.comixedproject.service.library.LastReadService;
+import org.comixedproject.service.lists.ReadingListException;
+import org.comixedproject.service.lists.ReadingListService;
 import org.comixedproject.views.View.ComicDetailsView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
@@ -72,6 +74,7 @@ public class ComicBookController {
   @Autowired private ComicBookSelectionService comicBookSelectionService;
   @Autowired private PageCacheService pageCacheService;
   @Autowired private ComicFileService comicFileService;
+  @Autowired private ReadingListService readingListService;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
   @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private LastReadService lastReadService;
@@ -463,11 +466,19 @@ public class ComicBookController {
         this.lastReadService.loadForComicDetails(email, comicDetails));
   }
 
+  /**
+   * Loads unread comics for the requesting user.
+   *
+   * @param principal the user principal
+   * @param request the request body
+   * @return the comic detail list
+   * @throws LastReadException if an error occurs
+   */
   @PostMapping(
       value = "/api/comics/details/load/unread",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  @Timed(value = "comixed.comic-book.load-for-collection")
+  @Timed(value = "comixed.comic-book.load-unread")
   @PreAuthorize("hasRole('READER')")
   @JsonView(ComicDetailsView.class)
   public LoadComicDetailsResponse loadUnreadComicDetailList(
@@ -493,6 +504,55 @@ public class ComicBookController {
         Collections.emptyList(),
         this.comicBookService.getComicBookCount(),
         this.lastReadService.getUnreadCountForUser(email),
+        this.lastReadService.loadForComicDetails(email, comicDetails));
+  }
+
+  /**
+   * Loads comic details for a reading list.
+   *
+   * @param principal the user principal
+   * @param request the rquest body
+   * @param readingListId the reading list id
+   * @return the entries
+   * @throws LastReadException if an error occurs
+   * @throws ComicDetailException if an error occurs
+   * @throws ReadingListException if an error occurs
+   */
+  @PostMapping(
+      value = "/api/comics/details/load/readinglist/{readingListId}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.comic-book.load-for-reading-list")
+  @PreAuthorize("hasRole('READER')")
+  @JsonView(ComicDetailsView.class)
+  public LoadComicDetailsResponse loadComicDetailsForReadingList(
+      final Principal principal,
+      @RequestBody() final LoadComicDetailsForReadingListRequest request,
+      @PathVariable("readingListId") final long readingListId)
+      throws LastReadException, ComicDetailException, ReadingListException {
+    final String email = principal.getName();
+    final int pageSize = request.getPageSize();
+    final int pageIndex = request.getPageIndex();
+    final String sortBy = request.getSortBy();
+    final String sortDirection = request.getSortDirection();
+    log.debug(
+        "Loading comic details for a reading list: reading list={} size={} index={} sort by ={} [{}]",
+        readingListId,
+        pageSize,
+        pageIndex,
+        sortBy,
+        sortDirection);
+
+    final List<ComicDetail> comicDetails =
+        this.comicDetailService.loadComicDetailsForReadingList(
+            email, readingListId, pageSize, pageIndex, sortBy, sortDirection);
+
+    return new LoadComicDetailsResponse(
+        comicDetails,
+        Collections.emptyList(),
+        Collections.emptyList(),
+        this.readingListService.getEntryCount(readingListId),
+        this.readingListService.getEntryCount(readingListId),
         this.lastReadService.loadForComicDetails(email, comicDetails));
   }
 }

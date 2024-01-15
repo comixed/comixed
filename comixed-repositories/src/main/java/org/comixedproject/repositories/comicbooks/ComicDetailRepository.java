@@ -375,4 +375,16 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
   @Query(
       "SELECT d FROM ComicDetail d WHERE d.id NOT IN (SELECT r.comicDetail.id FROM LastRead r WHERE r.user.email = :email)")
   List<ComicDetail> loadUnreadComicDetails(@Param("email") String email, Pageable pageable);
+
+  /**
+   * Returns comic details for a given reading list.
+   *
+   * @param readingListId the reading list id
+   * @param pageable the page request
+   * @return the entries
+   */
+  @Query(
+      "SELECT d FROM ComicDetail d WHERE d IN (SELECT l.entries FROM ReadingList  l WHERE l.id = :readingListId)")
+  List<ComicDetail> loadComicDetailsForReadingList(
+      @Param("readingListId") long readingListId, Pageable pageable);
 }
