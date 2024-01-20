@@ -12,6 +12,12 @@
           (keyup)="queryParameterService.onFilterTextChanged(filterInput.value)"
         />
       </mat-form-field>
+
+      <span class="cx-width-100 cx-centered-horiz cx-larg">
+        <strong>{{ "comic-detail-filter.text.form-title" | translate }}</strong>
+      </span>
+      <br />
+
       <mat-form-field class="cx-width-50">
         <mat-label>{{ "filtering.label.year" | translate }}</mat-label>
         <mat-select
@@ -19,6 +25,7 @@
             queryParameterService.onCoverYearChanged($event.value)
           "
           [value]="(queryParameterService.coverYear$ | async)?.year"
+          [disabled]="queryParameterService.filterText$.value?.length > 0"
         >
           <mat-option
             *ngFor="let option of displayableCoverYears"
@@ -35,6 +42,7 @@
             queryParameterService.onCoverMonthChanged($event.value)
           "
           [value]="(queryParameterService.coverYear$ | async)?.month"
+          [disabled]="queryParameterService.filterText$.value?.length > 0"
         >
           <mat-option
             *ngFor="let option of displayableCoverMonths"
@@ -51,6 +59,7 @@
             queryParameterService.onArchiveTypeChanged($event.value)
           "
           [value]="queryParameterService.archiveType$ | async"
+          [disabled]="queryParameterService.filterText$.value?.length > 0"
         >
           <mat-option
             *ngFor="let option of archiveTypeOptions"
@@ -67,6 +76,7 @@
             queryParameterService.onComicTypeChanged($event.value)
           "
           [value]="queryParameterService.comicType$ | async"
+          [disabled]="queryParameterService.filterText$.value?.length > 0"
         >
           <mat-option
             *ngFor="let option of comicTypeOptions"
