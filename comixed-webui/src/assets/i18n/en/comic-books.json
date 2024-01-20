@@ -142,6 +142,11 @@
       "effect-failure": "Failed to load comics to display."
     }
   },
+  "comic-detail-filter": {
+    "text": {
+      "form-title": "Enter Search Text OR Set Filters"
+    }
+  },
   "comic-detail-list-view": {
     "label": {
       "added-date": "Added",
