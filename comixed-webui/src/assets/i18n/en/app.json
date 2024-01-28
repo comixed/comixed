@@ -163,7 +163,8 @@
   },
   "validation": {
     "email-required": "Value must be a valid email address.",
-    "field-required": "This field is required",
+    "field-required": "This field is required.",
+    "password-mismatch": "Passwords do not match.",
     "value-too-long": "Maximum length is {length, plural, =1{one character} other{# characters}}.",
     "value-too-short": "Minimum length is {length, plural, =1{one character} other{# characters}}."
   }

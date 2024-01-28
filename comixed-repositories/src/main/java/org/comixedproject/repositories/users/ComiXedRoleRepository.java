@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2017, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,32 +18,26 @@
 
 package org.comixedproject.repositories.users;
 
-import org.comixedproject.model.user.ComiXedUser;
+import org.comixedproject.model.user.ComiXedRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 /**
- * <code>ComiXedUserRepository</code> provides APIs for working with persistenced instances of
- * {@link ComiXedUser}.
+ * <code>ComiXedRoleRepository</code> provides methods for working with persisted instances of
+ * {@link ComiXedRole}.
  *
  * @author Darryl L. Pierce
  */
-public interface ComiXedUserRepository extends JpaRepository<ComiXedUser, Long> {
+@Repository
+public interface ComiXedRoleRepository extends JpaRepository<ComiXedRole, Long> {
   /**
-   * Find a single user by email address.
+   * Retrieves the role with a given name.
    *
-   * @param email the email address
-   * @return the user, or null if not found
+   * @param name the role name
+   * @return the role
    */
-  ComiXedUser findByEmail(String email);
-
-  /**
-   * Retrieves a user by record id.
-   *
-   * @param id the record id.
-   * @return the user record
-   */
-  @Query("SELECT u FROM ComiXedUser u WHERE u.id = :id")
-  ComiXedUser getById(@Param("id") long id);
+  @Query("SELECT r FROM ComiXedRole r WHERE r.name = :name")
+  ComiXedRole findByName(@Param("name") String name);
 }

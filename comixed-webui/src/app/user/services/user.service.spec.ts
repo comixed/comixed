@@ -25,6 +25,8 @@ import {
 } from '@angular/common/http/testing';
 import { interpolate } from '@app/core';
 import {
+  CHECK_FOR_ADMIN_ACCOUNT_URL,
+  CREATE_ADMIN_ACCOUNT_URL,
   DELETE_USER_PREFERENCE_URL,
   LOAD_COMICS_READ_STATISTICS_URL,
   LOAD_CURRENT_USER_URL,
@@ -42,7 +44,7 @@ import {
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
 import { Subscription } from 'webstomp-client';
-import { currentUserLoaded } from '@app/user/actions/user.actions';
+import { loadCurrentUserSuccess } from '@app/user/actions/user.actions';
 import { WebSocketService } from '@app/messaging';
 import { SaveCurrentUserRequest } from '@app/user/models/net/save-current-user-request';
 import { SaveUserPreferenceRequest } from '@app/user/models/net/save-user-preference-request';
@@ -53,9 +55,13 @@ import {
   COMICS_READ_STATISTICS_4,
   COMICS_READ_STATISTICS_5
 } from '@app/app.fixtures';
+import { CheckForAdminResponse } from '@app/user/models/net/check-for-admin-response';
+import { HttpResponse } from '@angular/common/http';
+import { CreateAccountRequest } from '@app/user/models/net/create-account-request';
 
 describe('UserService', () => {
   const USER = USER_READER;
+  const EMAIL = USER.email;
   const PASSWORD = 'this!is!my!password';
   const PREFERENCE_NAME = 'user.preference';
   const PREFERENCE_VALUE = 'preference.value';
@@ -99,6 +105,38 @@ describe('UserService', () => {
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  it('can check if there are existing admin accounts', () => {
+    const serverResponse = {
+      hasExisting: true
+    } as CheckForAdminResponse;
+    service
+      .checkForAdminAccount()
+      .subscribe(response => expect(response).toEqual(serverResponse));
+
+    const req = httpMock.expectOne(interpolate(CHECK_FOR_ADMIN_ACCOUNT_URL));
+    expect(req.request.method).toEqual('GET');
+    req.flush(serverResponse);
+  });
+
+  it('can create the initial admin user', () => {
+    const serverResponse = new HttpResponse({ status: 200 });
+
+    service
+      .createAdminAccount({
+        email: EMAIL,
+        password: PASSWORD
+      })
+      .subscribe(response => expect(response).toEqual(serverResponse));
+
+    const req = httpMock.expectOne(interpolate(CREATE_ADMIN_ACCOUNT_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      email: EMAIL,
+      password: PASSWORD
+    } as CreateAccountRequest);
+    req.flush(serverResponse);
   });
 
   it('can load the current user', () => {
@@ -206,7 +244,7 @@ describe('UserService', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          currentUserLoaded({ user: USER })
+          loadCurrentUserSuccess({ user: USER })
         );
       });
     });

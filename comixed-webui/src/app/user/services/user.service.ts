@@ -22,6 +22,8 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { interpolate } from '@app/core';
 import {
+  CHECK_FOR_ADMIN_ACCOUNT_URL,
+  CREATE_ADMIN_ACCOUNT_URL,
   DELETE_USER_PREFERENCE_URL,
   LOAD_COMICS_READ_STATISTICS_URL,
   LOAD_CURRENT_USER_URL,
@@ -34,10 +36,11 @@ import { Store } from '@ngrx/store';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import { Subscription } from 'webstomp-client';
 import { WebSocketService } from '@app/messaging';
-import { currentUserLoaded } from '@app/user/actions/user.actions';
+import { loadCurrentUserSuccess } from '@app/user/actions/user.actions';
 import { User } from '@app/user/models/user';
 import { SaveCurrentUserRequest } from '@app/user/models/net/save-current-user-request';
 import { SaveUserPreferenceRequest } from '@app/user/models/net/save-user-preference-request';
+import { CreateAccountRequest } from '@app/user/models/net/create-account-request';
 
 /**
  * Provides methods for interacting the backend REST APIs for working with users.
@@ -56,12 +59,12 @@ export class UserService {
   ) {
     this.store.select(selectMessagingState).subscribe(state => {
       if (state.started && !this.subscription) {
-        this.logger.trace('Subscribing to self updates');
+        this.logger.debug('Subscribing to self updates');
         this.subscription = this.webSocketService.subscribe<User>(
           USER_SELF_TOPIC,
           user => {
             this.logger.debug('Received user update:', user);
-            this.store.dispatch(currentUserLoaded({ user }));
+            this.store.dispatch(loadCurrentUserSuccess({ user }));
           }
         );
       }
@@ -73,11 +76,27 @@ export class UserService {
     });
   }
 
+  checkForAdminAccount(): Observable<any> {
+    this.logger.debug('Checking if there are existing user accounts');
+    return this.http.get(interpolate(CHECK_FOR_ADMIN_ACCOUNT_URL));
+  }
+
+  createAdminAccount(args: {
+    email: string;
+    password: string;
+  }): Observable<any> {
+    this.logger.debug('Creating admin account:', args);
+    return this.http.post(interpolate(CREATE_ADMIN_ACCOUNT_URL), {
+      email: args.email,
+      password: args.password
+    } as CreateAccountRequest);
+  }
+
   /**
    * Retrieve the current user's details.
    */
   loadCurrentUser(): Observable<any> {
-    this.logger.trace('Service: load current user');
+    this.logger.debug('Load current user');
     return this.http.get(interpolate(LOAD_CURRENT_USER_URL));
   }
 
@@ -88,7 +107,7 @@ export class UserService {
    * @param args.password the user's password
    */
   loginUser(args: { email: string; password: string }): Observable<any> {
-    this.logger.trace('Service: logging in user:', args.email);
+    this.logger.debug('Logging in user:', args.email);
     return this.http.post(
       interpolate(LOGIN_USER_URL),
       new HttpParams().set('email', args.email).set('password', args.password)
@@ -102,13 +121,13 @@ export class UserService {
    */
   saveUserPreference(args: { name: string; value: string }): Observable<any> {
     if (!!args.value && args.value.length > 0) {
-      this.logger.trace('Service: saving user preference:', args);
+      this.logger.debug('Saving user preference:', args);
       return this.http.post(
         interpolate(SAVE_USER_PREFERENCE_URL, { name: args.name }),
         { value: args.value } as SaveUserPreferenceRequest
       );
     } else {
-      this.logger.trace('Service: deleting user preference:', args);
+      this.logger.debug('Deleting user preference:', args);
       return this.http.delete(
         interpolate(DELETE_USER_PREFERENCE_URL, { name: args.name })
       );
@@ -124,7 +143,7 @@ export class UserService {
    * @param args.password the password
    */
   saveUser(args: { user: User; password: string }): Observable<any> {
-    this.logger.debug('Service: saving user:', args);
+    this.logger.debug('Saving user:', args);
     return this.http.put(
       interpolate(SAVE_CURRENT_USER_URL, { id: args.user.id }),
       {

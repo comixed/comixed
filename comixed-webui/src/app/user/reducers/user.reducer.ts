@@ -18,19 +18,19 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  currentUserLoaded,
+  loadCurrentUserSuccess,
   loadCurrentUser,
-  loadCurrentUserFailed,
+  loadCurrentUserFailure,
   loginUser,
-  loginUserFailed,
+  loginUserFailure,
   logoutUser,
   saveCurrentUser,
-  saveCurrentUserFailed,
+  saveCurrentUserFailure,
   saveUserPreference,
-  saveUserPreferenceFailed,
-  userLoggedIn,
-  userLoggedOut,
-  userPreferenceSaved
+  saveUserPreferenceFailure,
+  loginUserSuccess,
+  logutUserSuccess,
+  saveUserPreferenceSuccess
 } from '../actions/user.actions';
 import { User } from '@app/user/models/user';
 
@@ -62,7 +62,7 @@ export const reducer = createReducer(
     initializing: true,
     loading: true
   })),
-  on(currentUserLoaded, (state, action) => ({
+  on(loadCurrentUserSuccess, (state, action) => ({
     ...state,
     initializing: false,
     loading: false,
@@ -70,7 +70,7 @@ export const reducer = createReducer(
     authenticated: true,
     user: action.user
   })),
-  on(loadCurrentUserFailed, state => ({
+  on(loadCurrentUserFailure, state => ({
     ...state,
     initializing: false,
     authenticating: false,
@@ -84,28 +84,28 @@ export const reducer = createReducer(
     authenticated: false,
     user: null
   })),
-  on(userLoggedIn, (state, action) => ({
+  on(loginUserSuccess, (state, action) => ({
     ...state,
     authenticating: false,
     authenticated: true
   })),
-  on(loginUserFailed, state => ({ ...state, authenticating: false })),
+  on(loginUserFailure, state => ({ ...state, authenticating: false })),
   on(logoutUser, state => ({ ...state, authenticating: true })),
-  on(userLoggedOut, state => ({
+  on(logutUserSuccess, state => ({
     ...state,
     authenticating: false,
     authenticated: false,
     user: null
   })),
   on(saveUserPreference, state => ({ ...state, saving: true })),
-  on(userPreferenceSaved, (state, action) => ({
+  on(saveUserPreferenceSuccess, (state, action) => ({
     ...state,
     saving: false,
     user: action.user
   })),
-  on(saveUserPreferenceFailed, state => ({ ...state, saving: false })),
+  on(saveUserPreferenceFailure, state => ({ ...state, saving: false })),
   on(saveCurrentUser, state => ({ ...state, saving: true })),
-  on(saveCurrentUserFailed, state => ({ ...state, saving: false }))
+  on(saveCurrentUserFailure, state => ({ ...state, saving: false }))
 );
 
 export const userFeature = createFeature({

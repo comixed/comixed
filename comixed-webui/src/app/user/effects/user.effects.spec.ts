@@ -23,19 +23,19 @@ import { UserEffects } from './user.effects';
 import { UserService } from '@app/user/services/user.service';
 import { USER_READER } from '@app/user/user.fixtures';
 import {
-  currentUserLoaded,
+  loadCurrentUserSuccess,
   loadCurrentUser,
-  loadCurrentUserFailed,
+  loadCurrentUserFailure,
   loginUser,
-  loginUserFailed,
+  loginUserFailure,
   logoutUser,
   saveCurrentUser,
-  saveCurrentUserFailed,
+  saveCurrentUserFailure,
   saveUserPreference,
-  saveUserPreferenceFailed,
-  userLoggedIn,
-  userLoggedOut,
-  userPreferenceSaved
+  saveUserPreferenceFailure,
+  loginUserSuccess,
+  logutUserSuccess,
+  saveUserPreferenceSuccess
 } from '@app/user/actions/user.actions';
 import { hot } from 'jasmine-marbles';
 import { LoggerModule } from '@angular-ru/cdk/logger';
@@ -101,7 +101,7 @@ describe('UserEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = USER;
       const action = loadCurrentUser();
-      const outcome = currentUserLoaded({ user: USER });
+      const outcome = loadCurrentUserSuccess({ user: USER });
 
       actions$ = hot('-a', { a: action });
       userService.loadCurrentUser.and.returnValue(of(serviceResponse));
@@ -113,7 +113,7 @@ describe('UserEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = loadCurrentUser();
-      const outcome = loadCurrentUserFailed();
+      const outcome = loadCurrentUserFailure();
 
       actions$ = hot('-a', { a: action });
       userService.loadCurrentUser.and.returnValue(throwError(serviceResponse));
@@ -124,7 +124,7 @@ describe('UserEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = loadCurrentUser();
-      const outcome = loadCurrentUserFailed();
+      const outcome = loadCurrentUserFailure();
 
       actions$ = hot('-a', { a: action });
       userService.loadCurrentUser.and.throwError('expected');
@@ -141,7 +141,7 @@ describe('UserEffects', () => {
         token: AUTH_TOKEN
       } as LoginResponse;
       const action = loginUser({ email: USER.email, password: PASSWORD });
-      const outcome1 = userLoggedIn();
+      const outcome1 = loginUserSuccess();
       const outcome2 = loadCurrentUser();
 
       actions$ = hot('-a', { a: action });
@@ -155,7 +155,7 @@ describe('UserEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = loginUser({ email: USER.email, password: PASSWORD });
-      const outcome = loginUserFailed();
+      const outcome = loginUserFailure();
 
       actions$ = hot('-a', { a: action });
       userService.loginUser.and.returnValue(throwError(serviceResponse));
@@ -168,7 +168,7 @@ describe('UserEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = loginUser({ email: USER.email, password: PASSWORD });
-      const outcome = loginUserFailed();
+      const outcome = loginUserFailure();
 
       actions$ = hot('-a', { a: action });
       userService.loginUser.and.throwError('expected');
@@ -183,7 +183,7 @@ describe('UserEffects', () => {
   describe('user logout', () => {
     it('fires an action on success', () => {
       const action = logoutUser();
-      const outcome = userLoggedOut();
+      const outcome = logutUserSuccess();
 
       actions$ = hot('-a', { a: action });
 
@@ -200,7 +200,7 @@ describe('UserEffects', () => {
         name: PREFERENCE_NAME,
         value: PREFERENCE_VALUE
       });
-      const outcome = userPreferenceSaved({ user: USER });
+      const outcome = saveUserPreferenceSuccess({ user: USER });
 
       actions$ = hot('-a', { a: action });
       userService.saveUserPreference.and.returnValue(of(serviceResponse));
@@ -215,7 +215,7 @@ describe('UserEffects', () => {
         name: PREFERENCE_NAME,
         value: PREFERENCE_VALUE
       });
-      const outcome = saveUserPreferenceFailed();
+      const outcome = saveUserPreferenceFailure();
 
       actions$ = hot('-a', { a: action });
       userService.saveUserPreference.and.returnValue(
@@ -231,7 +231,7 @@ describe('UserEffects', () => {
         name: PREFERENCE_NAME,
         value: PREFERENCE_VALUE
       });
-      const outcome = saveUserPreferenceFailed();
+      const outcome = saveUserPreferenceFailure();
 
       actions$ = hot('-a', { a: action });
       userService.saveUserPreference.and.throwError('expected');
@@ -245,7 +245,7 @@ describe('UserEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = USER;
       const action = saveCurrentUser({ user: USER, password: PASSWORD });
-      const outcome = currentUserLoaded({ user: USER });
+      const outcome = loadCurrentUserSuccess({ user: USER });
 
       actions$ = hot('-a', { a: action });
       userService.saveUser.and.returnValue(of(serviceResponse));
@@ -258,7 +258,7 @@ describe('UserEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = saveCurrentUser({ user: USER, password: PASSWORD });
-      const outcome = saveCurrentUserFailed();
+      const outcome = saveCurrentUserFailure();
 
       actions$ = hot('-a', { a: action });
       userService.saveUser.and.returnValue(throwError(serviceResponse));
@@ -270,7 +270,7 @@ describe('UserEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = saveCurrentUser({ user: USER, password: PASSWORD });
-      const outcome = saveCurrentUserFailed();
+      const outcome = saveCurrentUserFailure();
 
       actions$ = hot('-a', { a: action });
       userService.saveUser.and.throwError('expected');

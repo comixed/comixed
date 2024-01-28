@@ -24,36 +24,36 @@ export const loginUser = createAction(
   props<{ email: string; password: string }>()
 );
 
-export const userLoggedIn = createAction('[User] User login successful');
+export const loginUserSuccess = createAction('[User] User login successful');
 
-export const loginUserFailed = createAction('[User] User login failed');
+export const loginUserFailure = createAction('[User] User login failed');
 
 export const loadCurrentUser = createAction('[User] Load the current user');
 
-export const currentUserLoaded = createAction(
+export const loadCurrentUserSuccess = createAction(
   '[User] Current user is loaded',
   props<{ user: User }>()
 );
 
-export const loadCurrentUserFailed = createAction(
+export const loadCurrentUserFailure = createAction(
   '[User] Failed to load current user'
 );
 
 export const logoutUser = createAction('[User] Log out current user');
 
-export const userLoggedOut = createAction('[User] Current user logged out');
+export const logutUserSuccess = createAction('[User] Current user logged out');
 
 export const saveUserPreference = createAction(
   '[User] Save a user preference',
   props<{ name: string; value: string }>()
 );
 
-export const userPreferenceSaved = createAction(
+export const saveUserPreferenceSuccess = createAction(
   '[User] User preference saved',
   props<{ user: User }>()
 );
 
-export const saveUserPreferenceFailed = createAction(
+export const saveUserPreferenceFailure = createAction(
   '[User] Failed to save a user preference'
 );
 
@@ -62,6 +62,6 @@ export const saveCurrentUser = createAction(
   props<{ user: User; password: string }>()
 );
 
-export const saveCurrentUserFailed = createAction(
+export const saveCurrentUserFailure = createAction(
   '[User] Failed to save user account changes'
 );

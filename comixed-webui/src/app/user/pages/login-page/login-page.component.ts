@@ -37,6 +37,8 @@ import {
   MAX_PASSWORD_LENGTH,
   MIN_PASSWORD_LENGTH
 } from '@app/user/user.constants';
+import { selectInitialUserAccountState } from '@app/user/selectors/initial-user-account.selectors';
+import { loadInitialUserAccount } from '@app/user/actions/initial-user-account.actions';
 
 @Component({
   selector: 'cx-login',
@@ -45,6 +47,7 @@ import {
 })
 export class LoginPageComponent implements OnInit, OnDestroy, AfterViewInit {
   loginForm: UntypedFormGroup;
+  initialAccountSubscription: Subscription;
   userSubscription: Subscription;
   langChangeSubscription: Subscription;
   busy = false;
@@ -58,6 +61,7 @@ export class LoginPageComponent implements OnInit, OnDestroy, AfterViewInit {
     private translateService: TranslateService,
     private router: Router
   ) {
+    this.logger.trace('Creating the login form');
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: [
@@ -69,6 +73,16 @@ export class LoginPageComponent implements OnInit, OnDestroy, AfterViewInit {
         ]
       ]
     });
+    this.logger.trace('Subscribing to initial account state updates');
+    this.initialAccountSubscription = this.store
+      .select(selectInitialUserAccountState)
+      .subscribe(state => {
+        if (!state.busy && !state.hasExisting) {
+          this.logger.trace('Redirecting to account creation page');
+          this.router.navigateByUrl('/users/create/admin');
+        }
+      });
+    this.logger.trace('Subscribing to user account updates');
     this.userSubscription = this.store
       .select(selectUserState)
       .subscribe(state => {
@@ -78,6 +92,7 @@ export class LoginPageComponent implements OnInit, OnDestroy, AfterViewInit {
           this.router.navigateByUrl('/');
         }
       });
+    this.logger.trace('Subscribing to language updates');
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
@@ -94,10 +109,15 @@ export class LoginPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.loadTranslations();
+    this.logger.trace('Checking for existing accounts');
+    this.store.dispatch(loadInitialUserAccount());
   }
 
   ngOnDestroy(): void {
+    this.logger.trace('Unsubscribing from initial user updates');
+    this.logger.trace('Unsubscribing from user updates');
     this.userSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from language change updates');
     this.langChangeSubscription.unsubscribe();
   }
 
