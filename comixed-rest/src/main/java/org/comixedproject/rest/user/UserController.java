@@ -23,9 +23,7 @@ import io.micrometer.core.annotation.Timed;
 import java.security.Principal;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.net.user.ComicsReadStatistic;
-import org.comixedproject.model.net.user.SaveCurrentUserPreferenceRequest;
-import org.comixedproject.model.net.user.UpdateCurrentUserRequest;
+import org.comixedproject.model.net.user.*;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.service.library.LastReadException;
 import org.comixedproject.service.library.LastReadService;
@@ -156,5 +154,33 @@ public class UserController {
     } catch (LastReadException error) {
       throw new ComiXedUserException("Failed to load comics read statistics", error);
     }
+  }
+
+  /**
+   * Returns whether any admin accounts exist.
+   *
+   * @return the response body
+   */
+  @GetMapping(value = "/api/user/admins/existing", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.user.existing-accounts")
+  public checkForAdminAccountResponse checkForAdmin() {
+    log.info("Checking if there are existing user accounts");
+    return new checkForAdminAccountResponse(this.userService.hasAdminAccounts());
+  }
+
+  /**
+   * Creates the initial admin account.
+   *
+   * @param request the request body
+   * @throws ComiXedUserException if an error occurs
+   */
+  @PostMapping(value = "/api/user/admins", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.user.create-admin-account")
+  public void createAdminAccount(@RequestBody final CreateAccountRequest request)
+      throws ComiXedUserException {
+    final String email = request.getEmail();
+    final String password = request.getPassword();
+    log.info("Creating initial admin account: {}", email);
+    this.userService.createAdminAccount(email, password);
   }
 }

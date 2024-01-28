@@ -18,7 +18,11 @@
 
 package org.comixedproject.service.user;
 
+import static org.comixedproject.model.user.ComiXedRole.ADMIN_ROLE;
+import static org.comixedproject.model.user.ComiXedRole.READER_ROLE;
+
 import java.util.Date;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -26,6 +30,7 @@ import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.user.PublishCurrentUserAction;
 import org.comixedproject.model.user.ComiXedUser;
+import org.comixedproject.repositories.users.ComiXedRoleRepository;
 import org.comixedproject.repositories.users.ComiXedUserRepository;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +43,7 @@ public class UserService {
   static final String IMPORT_ROOT_DIRECTORY = "preference.import.root-directory";
 
   @Autowired private ComiXedUserRepository userRepository;
+  @Autowired private ComiXedRoleRepository roleRepository;
   @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
   @Autowired private PublishCurrentUserAction publishCurrentUserAction;
 
@@ -172,5 +178,48 @@ public class UserService {
     final ComiXedUser result = this.userRepository.getById(id);
     if (result == null) throw new ComiXedUserException("No such user: id=" + id);
     return result;
+  }
+
+  /**
+   * Checks if there are existing user accounts.
+   *
+   * @return <code>true</code> if there are existing accounts
+   */
+  public boolean hasAdminAccounts() {
+    log.debug("Checking if there are existing accounts");
+    return !this.userRepository.findAll().stream()
+        .filter(ComiXedUser::isAdmin)
+        .collect(Collectors.toList())
+        .isEmpty();
+  }
+
+  /**
+   * Creates the initial admin account.
+   *
+   * @param email
+   * @param password
+   * @throws ComiXedUserException if an admin account already exists, or the email is already used
+   *     by an account
+   */
+  @Transactional
+  public void createAdminAccount(final String email, final String password)
+      throws ComiXedUserException {
+    log.trace("Checking for existing admin accounts");
+    if (this.hasAdminAccounts()) {
+      throw new ComiXedUserException(
+          "Cannot create initial admin account: admin accounts already exist");
+    }
+    log.trace("Checking for existing account for {}", email);
+    if (this.userRepository.findByEmail(email) != null)
+      throw new ComiXedUserException("Email already in use: " + email);
+
+    log.debug("Creating initial admin account: {}", email);
+    final ComiXedUser user = new ComiXedUser();
+    user.setEmail(email);
+    user.setPasswordHash(this.genericUtilitiesAdaptor.createHash(password.getBytes()));
+    user.getRoles().add(this.roleRepository.findByName(ADMIN_ROLE));
+    user.getRoles().add(this.roleRepository.findByName(READER_ROLE));
+    log.debug("Saving new user account: {}", user);
+    this.userRepository.save(user);
   }
 }

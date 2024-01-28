@@ -1,0 +1,103 @@
+<h2>{{ "create-admin-account.page-title" | translate }}</h2>
+
+<div
+  class="
+    cx-width-50
+    cx-position-absolute
+    cx-border-primary-1
+    cx-centered
+    cx-padding-5
+  "
+>
+  <div class="cx-padding-5">
+    {{ "create-admin-account.text.description" | translate }}
+  </div>
+
+  <form [formGroup]="createAdminForm">
+    <mat-card appearance="outlined">
+      <mat-card-content class="cx-padding-left-15 cx-padding-right-15">
+        <mat-form-field class="cx-width-100" required>
+          <input
+            id="cx-login-email"
+            matInput
+            type="email"
+            formControlName="email"
+            [placeholder]="'create-admin-account.placeholder.email' | translate"
+          />
+          <mat-error>
+            <span *ngIf="controls.email.errors?.required">
+              {{ "validation.field-required" | translate }}
+            </span>
+            <span *ngIf="controls.email.errors?.email">
+              {{ "validation.email-required" | translate }}
+            </span>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="cx-width-100" required>
+          <input
+            id="cx-login-password"
+            matInput
+            type="password"
+            formControlName="password"
+            [placeholder]="
+              'create-admin-account.placeholder.password' | translate
+            "
+          />
+          <mat-error>
+            <span *ngIf="controls.password.errors?.required">
+              {{ "validation.field-required" | translate }}
+            </span>
+            <span *ngIf="!!controls.password.errors?.minlength">
+              {{
+                "validation.value-too-short"
+                  | translate
+                    : {
+                        length:
+                          controls.password.errors.minlength.requiredLength
+                      }
+              }}
+            </span>
+            <span *ngIf="!!controls.password.errors?.maxlength">
+              {{
+                "validation.value-too-long"
+                  | translate
+                    : {
+                        length:
+                          controls.password.errors.maxlength.requiredLength
+                      }
+              }}
+            </span>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="cx-width-100" required>
+          <input
+            id="cx-login-password-verification"
+            matInput
+            type="password"
+            formControlName="passwordVerify"
+            [placeholder]="
+              'create-admin-account.placeholder.password-validation' | translate
+            "
+          />
+          <mat-error>
+            <span *ngIf="controls.passwordVerify.errors?.required">
+              {{ "validation.field-required" | translate }}
+            </span>
+            <span *ngIf="createAdminForm.errors?.passwordsDontMatch">
+              {{ "validation.password-mismatch" | translate }}
+            </span>
+          </mat-error>
+        </mat-form-field>
+        <button
+          id="cx-login-submit-button"
+          mat-raised-button
+          (click)="onCreateAccount()"
+          [disabled]="!createAdminForm.valid"
+        >
+          <mat-label>{{ "button.save" | translate }}</mat-label>
+          <mat-icon>person</mat-icon>
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </form>
+</div>

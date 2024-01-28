@@ -20,19 +20,19 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import {
-  currentUserLoaded,
+  loadCurrentUserSuccess,
   loadCurrentUser,
-  loadCurrentUserFailed,
+  loadCurrentUserFailure,
   loginUser,
-  loginUserFailed,
+  loginUserFailure,
   logoutUser,
   saveCurrentUser,
-  saveCurrentUserFailed,
+  saveCurrentUserFailure,
   saveUserPreference,
-  saveUserPreferenceFailed,
-  userLoggedIn,
-  userLoggedOut,
-  userPreferenceSaved
+  saveUserPreferenceFailure,
+  loginUserSuccess,
+  logutUserSuccess,
+  saveUserPreferenceSuccess
 } from '@app/user/actions/user.actions';
 import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { UserService } from '@app/user/services/user.service';
@@ -52,16 +52,16 @@ export class UserEffects {
       switchMap(action =>
         this.userService.loadCurrentUser().pipe(
           tap(response => this.logger.debug('Received response:', response)),
-          map((response: User) => currentUserLoaded({ user: response })),
+          map((response: User) => loadCurrentUserSuccess({ user: response })),
           catchError(error => {
             this.logger.error('Service failure:', error);
-            return of(loadCurrentUserFailed());
+            return of(loadCurrentUserFailure());
           })
         )
       ),
       catchError(error => {
         this.logger.error('General failure:', error);
-        return of(loadCurrentUserFailed());
+        return of(loadCurrentUserFailure());
       })
     );
   });
@@ -79,7 +79,7 @@ export class UserEffects {
               this.tokenService.setAuthToken(response.token)
             ),
             mergeMap((response: LoginResponse) => [
-              userLoggedIn(),
+              loginUserSuccess(),
               loadCurrentUser()
             ]),
             catchError(error => {
@@ -88,7 +88,7 @@ export class UserEffects {
               this.alertService.error(
                 this.translateService.instant('user.login-user.effect-failure')
               );
-              return of(loginUserFailed());
+              return of(loginUserFailure());
             })
           )
       ),
@@ -98,7 +98,7 @@ export class UserEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(loginUserFailed());
+        return of(loginUserFailure());
       })
     );
   });
@@ -109,7 +109,7 @@ export class UserEffects {
       tap(action => this.logger.trace('Logout out user:', action)),
       mergeMap(() => {
         this.tokenService.clearAuthToken();
-        return of(userLoggedOut());
+        return of(logutUserSuccess());
       })
     );
   });
@@ -123,16 +123,18 @@ export class UserEffects {
           .saveUserPreference({ name: action.name, value: action.value })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map((response: User) => userPreferenceSaved({ user: response })),
+            map((response: User) =>
+              saveUserPreferenceSuccess({ user: response })
+            ),
             catchError(error => {
               this.logger.error('Service failure:', error);
-              return of(saveUserPreferenceFailed());
+              return of(saveUserPreferenceFailure());
             })
           )
       ),
       catchError(error => {
         this.logger.error('General failure:', error);
-        return of(saveUserPreferenceFailed());
+        return of(saveUserPreferenceFailure());
       })
     );
   });
@@ -153,7 +155,7 @@ export class UserEffects {
                 )
               )
             ),
-            map((response: User) => currentUserLoaded({ user: response })),
+            map((response: User) => loadCurrentUserSuccess({ user: response })),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(
@@ -161,7 +163,7 @@ export class UserEffects {
                   'user.save-current-user.effect-failure'
                 )
               );
-              return of(saveCurrentUserFailed());
+              return of(saveCurrentUserFailure());
             })
           )
       ),
@@ -170,7 +172,7 @@ export class UserEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(saveCurrentUserFailed());
+        return of(saveCurrentUserFailure());
       })
     );
   });

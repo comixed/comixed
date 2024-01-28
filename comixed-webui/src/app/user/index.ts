@@ -24,6 +24,11 @@ import {
   USER_FEATURE_KEY,
   UserState
 } from './reducers/user.reducer';
+import {
+  INITIAL_USER_ACCOUNT_FEATURE_KEY,
+  InitialUserAccountState,
+  reducer as initialUserAccountReducer
+} from '@app/user/reducers/initial-user-account.reducer';
 
 export { getUserPreference } from '@app/user/user.functions';
 export { AdminGuard } from '@app/user/guards/admin.guard';
@@ -38,11 +43,13 @@ interface RouterStateUrl {
 export interface UserModuleState {
   router: RouterReducerState<RouterStateUrl>;
   [USER_FEATURE_KEY]: UserState;
+  [INITIAL_USER_ACCOUNT_FEATURE_KEY]: InitialUserAccountState;
 }
 
 export type ModuleState = UserModuleState;
 
 export const reducers: ActionReducerMap<UserModuleState> = {
   router: routerReducer,
-  [USER_FEATURE_KEY]: userReducer
+  [USER_FEATURE_KEY]: userReducer,
+  [INITIAL_USER_ACCOUNT_FEATURE_KEY]: initialUserAccountReducer
 };

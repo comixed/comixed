@@ -18,14 +18,12 @@
 
 package org.comixedproject.rest.user;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.*;
 
 import java.security.Principal;
 import java.util.List;
-import org.comixedproject.model.net.user.ComicsReadStatistic;
-import org.comixedproject.model.net.user.SaveCurrentUserPreferenceRequest;
-import org.comixedproject.model.net.user.UpdateCurrentUserRequest;
+import org.apache.commons.lang.math.RandomUtils;
+import org.comixedproject.model.net.user.*;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.service.library.LastReadException;
 import org.comixedproject.service.library.LastReadService;
@@ -48,6 +46,7 @@ public class UserControllerTest {
   private static final String TEST_PASSWORD = "My!P455w0rD";
   private static final String TEST_PROPERTY_NAME = "property.name";
   private static final String TEST_PROPERTY_VALUE = "property value";
+  private static final Boolean TEST_HAS_EXISTING = RandomUtils.nextBoolean();
 
   @InjectMocks private UserController controller;
   @Mock private UserService userService;
@@ -59,6 +58,38 @@ public class UserControllerTest {
   @Before
   public void setUp() {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
+  }
+
+  @Test
+  public void testCheckForAdminAccount() {
+    Mockito.when(userService.hasAdminAccounts()).thenReturn(TEST_HAS_EXISTING);
+
+    final checkForAdminAccountResponse result = controller.checkForAdmin();
+
+    assertNotNull(result);
+    assertEquals(TEST_HAS_EXISTING, result.isHasExisting());
+
+    Mockito.verify(userService, Mockito.times(1)).hasAdminAccounts();
+  }
+
+  @Test(expected = ComiXedUserException.class)
+  public void testCreateAdminAccountServiceThrowsException() throws ComiXedUserException {
+    Mockito.doThrow(ComiXedUserException.class)
+        .when(userService)
+        .createAdminAccount(Mockito.anyString(), Mockito.anyString());
+
+    try {
+      controller.createAdminAccount(new CreateAccountRequest(TEST_EMAIL, TEST_PASSWORD));
+    } finally {
+      Mockito.verify(userService, Mockito.times(1)).createAdminAccount(TEST_EMAIL, TEST_PASSWORD);
+    }
+  }
+
+  @Test
+  public void testCreateAdminAccount() throws ComiXedUserException {
+    controller.createAdminAccount(new CreateAccountRequest(TEST_EMAIL, TEST_PASSWORD));
+
+    Mockito.verify(userService, Mockito.times(1)).createAdminAccount(TEST_EMAIL, TEST_PASSWORD);
   }
 
   @Test(expected = ComiXedUserException.class)

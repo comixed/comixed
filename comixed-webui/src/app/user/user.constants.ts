@@ -24,6 +24,8 @@ export const MAX_PASSWORD_LENGTH = 128;
 export const ROLE_NAME_READER = 'READER';
 export const ROLE_NAME_ADMIN = 'ADMIN';
 
+export const CHECK_FOR_ADMIN_ACCOUNT_URL = `${API_ROOT_URL}/user/admins/existing`;
+export const CREATE_ADMIN_ACCOUNT_URL = `${API_ROOT_URL}/user/admins`;
 export const LOAD_CURRENT_USER_URL = `${API_ROOT_URL}/user`;
 export const SAVE_CURRENT_USER_URL = `${API_ROOT_URL}/user/\${id}`;
 export const LOGIN_USER_URL = `${API_ROOT_URL}/token/generate`;

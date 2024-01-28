@@ -19,22 +19,23 @@
 package org.comixedproject.service.user;
 
 import static org.comixedproject.service.user.UserService.IMPORT_ROOT_DIRECTORY;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.user.PublishCurrentUserAction;
+import org.comixedproject.model.user.ComiXedRole;
 import org.comixedproject.model.user.ComiXedUser;
+import org.comixedproject.repositories.users.ComiXedRoleRepository;
 import org.comixedproject.repositories.users.ComiXedUserRepository;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -52,10 +53,17 @@ public class UserServiceTest {
 
   @InjectMocks private UserService service;
   @Mock private ComiXedUserRepository userRepository;
+  @Mock private ComiXedRoleRepository roleRepository;
   @Mock private PublishCurrentUserAction publishCurrentUserAction;
   @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
   @Mock private ComiXedUser user;
   @Mock private ComiXedUser userRecord;
+  @Mock private ComiXedRole adminRole;
+  @Mock private ComiXedRole readerRole;
+
+  @Captor private ArgumentCaptor<ComiXedUser> userArgumentCaptor;
+
+  private List<ComiXedUser> userList = new ArrayList<>();
 
   @Test(expected = ComiXedUserException.class)
   public void testFindByEmailDoesNotExist() throws ComiXedUserException {
@@ -291,5 +299,98 @@ public class UserServiceTest {
     Mockito.verify(user, Mockito.times(1)).setEmail(TEST_EMAIL);
     Mockito.verify(user, Mockito.never()).setPasswordHash(Mockito.anyString());
     Mockito.verify(userRepository, Mockito.times(1)).save(user);
+  }
+
+  @Test
+  public void testHasAdminAccountsNoUsers() {
+    userList.clear();
+
+    Mockito.when(userRepository.findAll()).thenReturn(userList);
+
+    final boolean result = service.hasAdminAccounts();
+
+    assertFalse(result);
+
+    Mockito.verify(userRepository, Mockito.times(1)).findAll();
+  }
+
+  @Test
+  public void testHasAdminAccountsNoAdminUsers() {
+    Mockito.when(user.isAdmin()).thenReturn(false);
+    userList.add(user);
+    Mockito.when(userRepository.findAll()).thenReturn(userList);
+
+    final boolean result = service.hasAdminAccounts();
+
+    assertFalse(result);
+
+    Mockito.verify(userRepository, Mockito.times(1)).findAll();
+  }
+
+  @Test
+  public void testHasAdminAccounts() {
+    Mockito.when(user.isAdmin()).thenReturn(true);
+    userList.add(user);
+    Mockito.when(userRepository.findAll()).thenReturn(userList);
+
+    final boolean result = service.hasAdminAccounts();
+
+    assertTrue(result);
+
+    Mockito.verify(userRepository, Mockito.times(1)).findAll();
+  }
+
+  @Test(expected = ComiXedUserException.class)
+  public void testCreateAdminAccountHasExistingAdmin() throws ComiXedUserException {
+    Mockito.when(user.isAdmin()).thenReturn(true);
+    userList.add(user);
+    Mockito.when(userRepository.findAll()).thenReturn(userList);
+
+    try {
+      service.createAdminAccount(TEST_EMAIL, TEST_PASSWORD);
+    } finally {
+      Mockito.verify(userRepository, Mockito.times(1)).findAll();
+    }
+  }
+
+  @Test(expected = ComiXedUserException.class)
+  public void testCreateAdminAccountEmailAlreadyUsed() throws ComiXedUserException {
+    Mockito.when(user.isAdmin()).thenReturn(false);
+    userList.add(user);
+    Mockito.when(userRepository.findAll()).thenReturn(userList);
+    Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
+
+    try {
+      service.createAdminAccount(TEST_EMAIL, TEST_PASSWORD);
+    } finally {
+      Mockito.verify(userRepository, Mockito.times(1)).findAll();
+      Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    }
+  }
+
+  @Test
+  public void testCreateAdminAccount() throws ComiXedUserException {
+    userList.clear();
+    Mockito.when(userRepository.findAll()).thenReturn(userList);
+    Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(null);
+    Mockito.when(userRepository.save(userArgumentCaptor.capture())).thenReturn(userRecord);
+    Mockito.when(genericUtilitiesAdaptor.createHash(Mockito.any(byte[].class)))
+        .thenReturn(TEST_PASSWORD_HASH);
+    Mockito.when(roleRepository.findByName(ComiXedRole.ADMIN_ROLE)).thenReturn(adminRole);
+    Mockito.when(roleRepository.findByName(ComiXedRole.READER_ROLE)).thenReturn(readerRole);
+
+    service.createAdminAccount(TEST_EMAIL, TEST_PASSWORD);
+
+    final ComiXedUser savedUser = userArgumentCaptor.getValue();
+    assertEquals(TEST_EMAIL, savedUser.getEmail());
+    assertEquals(TEST_PASSWORD_HASH, savedUser.getPasswordHash());
+    assertTrue(savedUser.getRoles().contains(adminRole));
+    assertTrue(savedUser.getRoles().contains(readerRole));
+    assertNotNull(savedUser.getLastLoginDate());
+
+    Mockito.verify(userRepository, Mockito.times(1)).findAll();
+    Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    Mockito.verify(genericUtilitiesAdaptor, Mockito.times(1)).createHash(TEST_PASSWORD.getBytes());
+    Mockito.verify(userRepository, Mockito.times(1)).save(savedUser);
   }
 }

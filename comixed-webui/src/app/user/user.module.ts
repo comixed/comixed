@@ -42,12 +42,16 @@ import { UserCardComponent } from './components/user-card/user-card.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { EditAccountBarComponent } from './components/edit-account-bar/edit-account-bar.component';
 import { MatSelectModule } from '@angular/material/select';
+import { initialUserAccountFeature } from '@app/user/reducers/initial-user-account.reducer';
+import { InitialUserAccountEffects } from '@app/user/effects/initial-user-account.effects';
+import { CreateAdminPageComponent } from './pages/create-admin-page/create-admin-page.component';
 
 @NgModule({
   declarations: [
     LoginPageComponent,
     UserCardComponent,
-    EditAccountBarComponent
+    EditAccountBarComponent,
+    CreateAdminPageComponent
   ],
   providers: [UserService],
   imports: [
@@ -56,8 +60,9 @@ import { MatSelectModule } from '@angular/material/select';
     UserRouting,
     HttpClientModule,
     TranslateModule.forRoot(),
+    StoreModule.forFeature(initialUserAccountFeature),
     StoreModule.forFeature(userFeature),
-    EffectsModule.forFeature([UserEffects]),
+    EffectsModule.forFeature([InitialUserAccountEffects, UserEffects]),
     GravatarModule,
     MatCardModule,
     ReactiveFormsModule,

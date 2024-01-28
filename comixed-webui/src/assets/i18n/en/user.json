@@ -1,4 +1,23 @@
 {
+  "create-admin-account": {
+    "effect-failure": "Failed to created an admin account for {email}...",
+    "effect-success": "Created an admin account for {email}.",
+    "page-title": "Create Admin Account",
+    "placeholder": {
+      "email": "Enter your email address",
+      "password": "Enter your password",
+      "password-validation": "Enter your password again"
+    },
+    "tab-title": "Create Admin Account",
+    "text": {
+      "confirmation-message": "Are you sure you want to create an admin account for {email}?",
+      "confirmation-title": "Create Initial Admin Account",
+      "description": "Please enter your email address and create a password and those will be used to create the initial administrative account."
+    }
+  },
+  "initial-account": {
+    "effect-failure": "Failed to check for existing user accounts..."
+  },
   "login": {
     "title": "Login"
   },

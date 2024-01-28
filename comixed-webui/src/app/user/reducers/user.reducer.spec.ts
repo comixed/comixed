@@ -19,19 +19,19 @@
 import { initialState, reducer, UserState } from './user.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
 import {
-  currentUserLoaded,
   loadCurrentUser,
-  loadCurrentUserFailed,
+  loadCurrentUserFailure,
+  loadCurrentUserSuccess,
   loginUser,
-  loginUserFailed,
+  loginUserFailure,
+  loginUserSuccess,
   logoutUser,
+  logutUserSuccess,
   saveCurrentUser,
-  saveCurrentUserFailed,
+  saveCurrentUserFailure,
   saveUserPreference,
-  saveUserPreferenceFailed,
-  userLoggedIn,
-  userLoggedOut,
-  userPreferenceSaved
+  saveUserPreferenceFailure,
+  saveUserPreferenceSuccess
 } from '@app/user/actions/user.actions';
 
 describe('User Reducer', () => {
@@ -91,76 +91,76 @@ describe('User Reducer', () => {
     it('sets the loading flag', () => {
       expect(state.loading).toBeTrue();
     });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          {
+            ...state,
+            initializing: true,
+            loading: true,
+            authenticated: false,
+            user: null,
+            saving: true
+          },
+          loadCurrentUserSuccess({ user: USER })
+        );
+      });
+
+      it('clears the initializing flag', () => {
+        expect(state.initializing).toBeFalse();
+      });
+
+      it('clears the loading flag', () => {
+        expect(state.loading).toBeFalse();
+      });
+
+      it('sets the authenticated flag', () => {
+        expect(state.authenticated).toBeTrue();
+      });
+
+      it('clears the saving flag', () => {
+        expect(state.saving).toBeFalse();
+      });
+
+      it('sets the current user', () => {
+        expect(state.user).toEqual(USER);
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          {
+            ...state,
+            initializing: true,
+            loading: true,
+            user: USER,
+            authenticated: true
+          },
+          loadCurrentUserFailure()
+        );
+      });
+
+      it('clears the initializing flag', () => {
+        expect(state.initializing).toBeFalse();
+      });
+
+      it('clears the loading flag', () => {
+        expect(state.loading).toBeFalse();
+      });
+
+      it('clears the authenticated flag', () => {
+        expect(state.authenticated).toBeFalse();
+      });
+
+      it('clears the user', () => {
+        expect(state.user).toBeNull();
+      });
+    });
   });
 
-  describe('when the current user is loaded', () => {
-    beforeEach(() => {
-      state = reducer(
-        {
-          ...state,
-          initializing: true,
-          loading: true,
-          authenticated: false,
-          user: null,
-          saving: true
-        },
-        currentUserLoaded({ user: USER })
-      );
-    });
-
-    it('clears the initializing flag', () => {
-      expect(state.initializing).toBeFalse();
-    });
-
-    it('clears the loading flag', () => {
-      expect(state.loading).toBeFalse();
-    });
-
-    it('sets the authenticated flag', () => {
-      expect(state.authenticated).toBeTrue();
-    });
-
-    it('clears the saving flag', () => {
-      expect(state.saving).toBeFalse();
-    });
-
-    it('sets the current user', () => {
-      expect(state.user).toEqual(USER);
-    });
-  });
-
-  describe('failure to load the current user', () => {
-    beforeEach(() => {
-      state = reducer(
-        {
-          ...state,
-          initializing: true,
-          loading: true,
-          user: USER,
-          authenticated: true
-        },
-        loadCurrentUserFailed()
-      );
-    });
-
-    it('clears the initializing flag', () => {
-      expect(state.initializing).toBeFalse();
-    });
-
-    it('clears the loading flag', () => {
-      expect(state.loading).toBeFalse();
-    });
-
-    it('clears the authenticated flag', () => {
-      expect(state.authenticated).toBeFalse();
-    });
-
-    it('clears the user', () => {
-      expect(state.user).toBeNull();
-    });
-  });
-
-  describe('sending the login credentials', () => {
+  describe('login user', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, authenticating: false, authenticated: true, user: USER },
@@ -182,36 +182,36 @@ describe('User Reducer', () => {
     it('clears the current user', () => {
       expect(state.user).toBeNull();
     });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, authenticating: true, authenticated: false, user: null },
+          loginUserSuccess()
+        );
+      });
+
+      it('clears the authenticating flag', () => {
+        expect(state.authenticating).toBeFalse();
+      });
+
+      it('sets the authenticated flag', () => {
+        expect(state.authenticated).toBeTrue();
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer({ ...state, authenticating: true }, loginUserFailure());
+      });
+
+      it('clears the authenticating flag', () => {
+        expect(state.authenticating).toBeFalse();
+      });
+    });
   });
 
-  describe('user login success', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, authenticating: true, authenticated: false, user: null },
-        userLoggedIn()
-      );
-    });
-
-    it('clears the authenticating flag', () => {
-      expect(state.authenticating).toBeFalse();
-    });
-
-    it('sets the authenticated flag', () => {
-      expect(state.authenticated).toBeTrue();
-    });
-  });
-
-  describe('user login failure', () => {
-    beforeEach(() => {
-      state = reducer({ ...state, authenticating: true }, loginUserFailed());
-    });
-
-    it('clears the authenticating flag', () => {
-      expect(state.authenticating).toBeFalse();
-    });
-  });
-
-  describe('logging out the current user', () => {
+  describe('logout user', () => {
     beforeEach(() => {
       state = reducer({ ...state, authenticating: false }, logoutUser());
     });
@@ -219,26 +219,26 @@ describe('User Reducer', () => {
     it('sets the authenticating flag', () => {
       expect(state.authenticating).toBeTrue();
     });
-  });
 
-  describe('user logout success', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, authenticating: true, authenticated: true, user: USER },
-        userLoggedOut()
-      );
-    });
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, authenticating: true, authenticated: true, user: USER },
+          logutUserSuccess()
+        );
+      });
 
-    it('clears the authenticating flag', () => {
-      expect(state.authenticating).toBeFalse();
-    });
+      it('clears the authenticating flag', () => {
+        expect(state.authenticating).toBeFalse();
+      });
 
-    it('clears the authenticated flag', () => {
-      expect(state.authenticated).toBeFalse();
-    });
+      it('clears the authenticated flag', () => {
+        expect(state.authenticated).toBeFalse();
+      });
 
-    it('clears the user', () => {
-      expect(state.user).toBeNull();
+      it('clears the user', () => {
+        expect(state.user).toBeNull();
+      });
     });
   });
 
@@ -253,32 +253,35 @@ describe('User Reducer', () => {
     it('sets the saving flag', () => {
       expect(state.saving).toBeTrue();
     });
-  });
 
-  describe('when a preference is saved', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, user: null, saving: true },
-        userPreferenceSaved({ user: USER })
-      );
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, user: null, saving: true },
+          saveUserPreferenceSuccess({ user: USER })
+        );
+      });
+
+      it('clears the saving flag', () => {
+        expect(state.saving).toBeFalse();
+      });
+
+      it('updates the user', () => {
+        expect(state.user).toEqual(USER);
+      });
     });
 
-    it('clears the saving flag', () => {
-      expect(state.saving).toBeFalse();
-    });
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, saving: true },
+          saveUserPreferenceFailure()
+        );
+      });
 
-    it('updates the user', () => {
-      expect(state.user).toEqual(USER);
-    });
-  });
-
-  describe('failure to save a user preference', () => {
-    beforeEach(() => {
-      state = reducer({ ...state, saving: true }, saveUserPreferenceFailed());
-    });
-
-    it('clears the saving flag', () => {
-      expect(state.saving).toBeFalse();
+      it('clears the saving flag', () => {
+        expect(state.saving).toBeFalse();
+      });
     });
   });
 
@@ -293,15 +296,15 @@ describe('User Reducer', () => {
     it('sets the saving flag', () => {
       expect(state.saving).toBeTrue();
     });
-  });
 
-  describe('failure to save the current user', () => {
-    beforeEach(() => {
-      state = reducer({ ...state, saving: true }, saveCurrentUserFailed());
-    });
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer({ ...state, saving: true }, saveCurrentUserFailure());
+      });
 
-    it('clears the saving flag', () => {
-      expect(state.saving).toBeFalse();
+      it('clears the saving flag', () => {
+        expect(state.saving).toBeFalse();
+      });
     });
   });
 });

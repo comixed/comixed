@@ -36,12 +36,17 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TitleService } from '@app/core/services/title.service';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import {
+  INITIAL_USER_ACCOUNT_FEATURE_KEY,
+  initialState as initialUserAccountState
+} from '@app/user/reducers/initial-user-account.reducer';
 
 describe('LoginPageComponent', () => {
   const USER = USER_READER;
   const PASSWORD = 'this!is!my!password';
 
   const initialState = {
+    [INITIAL_USER_ACCOUNT_FEATURE_KEY]: initialUserAccountState,
     [USER_FEATURE_KEY]: initialUserState
   };
 
@@ -148,6 +153,23 @@ describe('LoginPageComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         loginUser({ email: USER.email, password: PASSWORD })
       );
+    });
+  });
+
+  describe('when there are no existing user accounts', () => {
+    beforeEach(() => {
+      store.setState({
+        ...initialState,
+        [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
+          ...initialUserAccountState,
+          loading: false,
+          hasExisting: false
+        }
+      });
+    });
+
+    it('redirects to the create admin account page', () => {
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/users/create/admin');
     });
   });
 });

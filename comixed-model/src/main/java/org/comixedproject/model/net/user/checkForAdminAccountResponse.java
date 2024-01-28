@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,24 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { RouterModule, Routes } from '@angular/router';
-import { LoginPageComponent } from './pages/login-page/login-page.component';
-import { NgModule } from '@angular/core';
-import { CreateAdminPageComponent } from '@app/user/pages/create-admin-page/create-admin-page.component';
+package org.comixedproject.model.net.user;
 
-const routes: Routes = [
-  {
-    path: 'login',
-    component: LoginPageComponent
-  },
-  {
-    path: 'users/create/admin',
-    component: CreateAdminPageComponent
-  }
-];
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
-export class UserRouting {}
+/**
+ * <code>checkForAdminAccountResponse</code> contains the response body when checking if there are
+ * existing accounts.
+ *
+ * @author Darryl L. Pierce
+ */
+@AllArgsConstructor
+public class checkForAdminAccountResponse {
+  @JsonProperty("hasExisting")
+  @Getter()
+  private boolean hasExisting;
+}
