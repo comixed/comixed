@@ -2,7 +2,9 @@
 
 Installation is simple:
 
-``` $ docker pull comixed/comixed:latest```
+```
+ $ docker pull comixed/comixed:latest
+```
 
 This pulls the latest version. Or you can replace **latest** with a specific version if you wish.
 
@@ -22,12 +24,13 @@ database files under a directory named **database**.
 
 To create the Docker image using the above directories, we'll use the following command line:
 
-``` $ docker create --name comixed \
-                    -it -p 7171:7171/tcp \
-                    -v /Users/reader/comixed/library:/library \
-                    -v /Users/reader/comixed/imports:/imports \
-                    -v /Users/reader/comixed/database:/root/.comixed \
-                    comixed/comixed:latest
+``` 
+  $ docker create --name comixed \
+      -it -p 7171:7171/tcp \
+      -v /Users/reader/comixed/library:/library \
+      -v /Users/reader/comixed/imports:/imports \
+      -v /Users/reader/comixed/database:/root/.comixed \
+      comixed/comixed:latest
 ```
 
 This command line:
@@ -56,36 +59,20 @@ to log into the database and access the schema to be used by the application.
 
 Currently, ComiXed ships with support for the following databases:
 
-| Database   | Notes                       | More Information                          |
-|------------|-----------------------------|-------------------------------------------|
-| H2         | The default database        | https://www.h2database.com/html/main.html |
-| HyperSQL   | Alternate embedded database | http://hsqldb.org/                        |
-| MySQL      | v5.5 is the tested version  | https://www.mysql.com/                    |
+| Database   | Notes                       | More Information           |
+|------------|-----------------------------|----------------------------|
+| H2         | The default database        | https://www.h2database.com |
+| MySQL      | v8 is the tested version    | https://www.mysql.com/     |
+| PostgreSQl | v42is the tested version    | https://www.postgresql.org |
 
-### Example: User MySQL
+For example, to create a container that uses a schema named cxschema, a user named cxuser with a password of cxpassword
+on MySQL, the following command line would be used:
 
-First, log into the MySQL instance as an administrator. For this example, we're going to assume that the MySQL server
-is running on a computer named **mysqldb** and is visible to the container.
-
-Next, create a new account that will be used by ComiXed, called **cx-user**, that will use a password of **cx-password**:
-
-``` > CREATE USER 'cx-user'@'%' IDENTIFIED BY 'cx-password';```
-
-Finally, you will need to grant all privileges on the schema we'll be using to this user account. For this example, we'll
-call the schema **cxschema** to keep things simple. So you'll next enter the following command in MySQL:
 
 ```
- > GRANT ALL PRIVILEGES ON cxschema.* TO 'cx-user'@'%';
- > FLUSH PRIVILEGES;
- ```
-
-The account **cx-user** can now create tables and perform migrations.
-
-After the above, you would then create your Docker container using the following command line:
-
+ $ docker create --name comixed  -e DBURL=jdbc:mysql://mysqldb:3306/cxschema -e DBUSERNAME=cxuser -e DBPASSWORD=cxpassword comixed/comixed:latest
 ```
- $ docker create --name comixed  -e DBURL=jdbc:mysql://mysqldb:3306/cxschema -e DBUSERNAME=cx-user -e DBPASSWORD=cx-password comixed/comixed:latest
-```
+
 
 ## Starting Your Container
 
