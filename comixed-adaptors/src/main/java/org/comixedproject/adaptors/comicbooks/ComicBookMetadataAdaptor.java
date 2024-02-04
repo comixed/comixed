@@ -49,14 +49,16 @@ public class ComicBookMetadataAdaptor {
    */
   public void clear(ComicBook comicBook) {
     comicBook.setMetadata(null);
-    comicBook.getComicDetail().setPublisher("");
-    comicBook.getComicDetail().setSeries("");
-    comicBook.getComicDetail().setVolume("");
-    comicBook.getComicDetail().setIssueNumber("");
-    comicBook.getComicDetail().setCoverDate(null);
-    comicBook.getComicDetail().setTitle("");
-    comicBook.getComicDetail().setDescription("");
-    comicBook.getComicDetail().getTags().clear();
+    final ComicDetail detail = comicBook.getComicDetail();
+    detail.setPublisher("");
+    detail.setImprint("");
+    detail.setSeries("");
+    detail.setVolume("");
+    detail.setIssueNumber("");
+    detail.setCoverDate(null);
+    detail.setTitle("");
+    detail.setDescription("");
+    detail.getTags().clear();
   }
 
   /**
