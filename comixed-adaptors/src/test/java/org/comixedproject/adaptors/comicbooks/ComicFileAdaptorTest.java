@@ -247,6 +247,29 @@ public class ComicFileAdaptorTest {
         formattedName(
             TEST_TARGET_DIRECTORY,
             TEST_PUBLISHER,
+            TEST_PUBLISHER,
+            TEST_SERIES,
+            TEST_VOLUME,
+            TEST_ISSUE,
+            TEST_TITLE,
+            TEST_FORMATTED_COVER_DATE,
+            TEST_PUBLISHED_MONTH,
+            TEST_PUBLISHED_YEAR),
+        result);
+  }
+
+  @Test
+  public void testCreateFileFromRuleNoImprintOrPublisher() {
+    Mockito.when(comicDetail.getPublisher()).thenReturn(null);
+    Mockito.when(comicDetail.getImprint()).thenReturn(null);
+
+    final String result =
+        adaptor.createFilenameFromRule(comicBook, TEST_RENAMING_RULE, TEST_TARGET_DIRECTORY);
+
+    assertEquals(
+        formattedName(
+            TEST_TARGET_DIRECTORY,
+            UNKNOWN_VALUE,
             UNKNOWN_VALUE,
             TEST_SERIES,
             TEST_VOLUME,

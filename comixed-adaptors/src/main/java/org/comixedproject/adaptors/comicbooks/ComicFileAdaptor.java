@@ -30,6 +30,7 @@ import java.util.regex.Pattern;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -124,40 +125,23 @@ public class ComicFileAdaptor {
     final String rule = this.scrub(renamingRule, FORBIDDEN_RULE_CHARACTERS);
 
     log.trace("Generating relative filename based on renaming rule: {}", rule);
-    final String publisher =
-        StringUtils.hasLength(comicBook.getComicDetail().getPublisher())
-            ? scrub(comicBook.getComicDetail().getPublisher())
-            : UNKNOWN_VALUE;
-    final String imprint =
-        StringUtils.hasLength(comicBook.getComicDetail().getImprint())
-            ? scrub(comicBook.getComicDetail().getImprint())
-            : UNKNOWN_VALUE;
-    final String series =
-        StringUtils.hasLength(comicBook.getComicDetail().getSeries())
-            ? scrub(comicBook.getComicDetail().getSeries())
-            : UNKNOWN_VALUE;
-    final String volume =
-        StringUtils.hasLength(comicBook.getComicDetail().getVolume())
-            ? comicBook.getComicDetail().getVolume()
-            : UNKNOWN_VALUE;
-    final String title =
-        StringUtils.hasLength(comicBook.getComicDetail().getTitle())
-            ? comicBook.getComicDetail().getTitle()
-            : UNKNOWN_VALUE;
-    String issueNumber =
-        StringUtils.hasLength(comicBook.getComicDetail().getIssueNumber())
-            ? scrub(comicBook.getComicDetail().getIssueNumber())
-            : UNKNOWN_VALUE;
-    final String coverDate =
-        comicBook.getComicDetail().getCoverDate() != null
-            ? coverDateFormat.format(comicBook.getComicDetail().getCoverDate())
-            : NO_COVER_DATE;
+    final ComicDetail detail = comicBook.getComicDetail();
+    final String publisher = this.getValueToUse(detail.getPublisher(), UNKNOWN_VALUE);
+    final String imprint = this.getValueToUse(detail.getImprint(), publisher);
+    final String series = this.getValueToUse(detail.getSeries(), UNKNOWN_VALUE);
+    final String volume = this.getValueToUse(detail.getVolume(), UNKNOWN_VALUE);
+    String issueNumber = this.getValueToUse(detail.getIssueNumber(), UNKNOWN_VALUE);
     issueNumber = this.checkForPadding(rule, PLACEHOLDER_ISSUE_NUMBER, issueNumber);
+    final String title = this.getValueToUse(detail.getTitle(), UNKNOWN_VALUE);
+    final String coverDate =
+        detail.getCoverDate() != null
+            ? coverDateFormat.format(detail.getCoverDate())
+            : NO_COVER_DATE;
     String publishedMonth = "";
     String publishedYear = "";
-    if (comicBook.getComicDetail().getStoreDate() != null) {
+    if (detail.getStoreDate() != null) {
       final GregorianCalendar calendar = new GregorianCalendar();
-      calendar.setTime(comicBook.getComicDetail().getStoreDate());
+      calendar.setTime(detail.getStoreDate());
       log.trace("Getting store year");
       publishedYear = String.valueOf(calendar.get(Calendar.YEAR));
       log.trace("Getting store month");
@@ -192,6 +176,13 @@ public class ComicFileAdaptor {
                 sanitizeFilename(filename)));
     log.trace("Relative comicBook filename: {}", result);
     return result;
+  }
+
+  private String getValueToUse(final String text, final String fallbackText) {
+    if (StringUtils.hasLength(text)) {
+      return scrub(text);
+    }
+    return fallbackText;
   }
 
   private String sanitizeFilename(final String filename) {
