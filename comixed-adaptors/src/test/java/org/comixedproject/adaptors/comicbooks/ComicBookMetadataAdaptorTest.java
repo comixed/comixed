@@ -68,6 +68,7 @@ public class ComicBookMetadataAdaptorTest {
     adaptor.clear(comicBook);
 
     Mockito.verify(comicDetail, Mockito.times(1)).setPublisher("");
+    Mockito.verify(comicDetail, Mockito.times(1)).setImprint("");
     Mockito.verify(comicDetail, Mockito.times(1)).setSeries("");
     Mockito.verify(comicDetail, Mockito.times(1)).setVolume("");
     Mockito.verify(comicDetail, Mockito.times(1)).setIssueNumber("");
