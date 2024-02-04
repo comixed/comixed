@@ -1,6 +1,6 @@
 {
   "name": "ComiXed",
-  "version": "1.6.8-1",
+  "version": "1.6.9-1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
