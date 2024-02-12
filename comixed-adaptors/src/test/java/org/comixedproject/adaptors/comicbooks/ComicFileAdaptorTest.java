@@ -79,7 +79,8 @@ public class ComicFileAdaptorTest {
       "?*$PUBLISHER/<|?>$SERIES/\\:$VOLUME/$SERIES v$VOLUME #$ISSUE ($COVERDATE) $IMPRINT";
   private static final String TEST_ORIGINAL_FILENAME = "src/test/resources/available.cbz";
   private static final String TEST_EXISTING_FILENAME = "src/test/resources/example.cbz";
-  private static final String TEST_TARGET_DIRECTORY = "target/test-classes/library";
+  private static final String TEST_TARGET_DIRECTORY =
+      String.join(File.separator, new String[] {"target", "test-classes", "library"});
 
   @InjectMocks private ComicFileAdaptor adaptor;
   @Mock private ComicBook comicBook;
@@ -155,7 +156,9 @@ public class ComicFileAdaptorTest {
 
     assertEquals(
         String.format(
-            "%s/__%s/____%s/__%s/%s v%s #%s (%s) %s",
+            String.join(
+                File.separator,
+                new String[] {"%s", "__%s", "____%s", "__%s", "%s v%s #%s (%s) %s"}),
             TEST_TARGET_DIRECTORY,
             TEST_PUBLISHER,
             TEST_SERIES,
@@ -337,7 +340,8 @@ public class ComicFileAdaptorTest {
       final String publishedMonth,
       final String publishedYear) {
     return String.format(
-        "%s/%s/%s/%s/%s v%s #%s %s %s %s %s %s",
+        String.join(
+            File.separator, new String[] {"%s", "%s", "%s", "%s", "%s v%s #%s %s %s %s %s %s"}),
         targetDirectory,
         publisher,
         series,

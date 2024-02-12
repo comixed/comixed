@@ -12,3 +12,4 @@ what it is today.
  * Arturo Pérez <theotocopulitos@gmail.com>
  * J Fine <jfine@jfine.com>
  * Natalie Stroud @natastro
+ * Heather Anderson <heath@odysseus.anderson.name>
