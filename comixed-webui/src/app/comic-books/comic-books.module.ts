@@ -28,7 +28,6 @@ import { ComicPagesComponent } from './components/comic-pages/comic-pages.compon
 import { ComicPageComponent } from './components/comic-page/comic-page.component';
 import { ComicScrapingVolumeSelectionComponent } from './components/comic-scraping-volume-selection/comic-scraping-volume-selection.component';
 import { ComicStoryComponent } from './components/comic-story/comic-story.component';
-import { IssueMetadataDetailComponent } from './components/issue-metadata-detail/issue-metadata-detail.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
@@ -46,7 +45,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
-import { IssueMetadataTitlePipe } from '@app/comic-books/pipes/issue-metadata-title.pipe';
 import { comicBookListFeature } from '@app/comic-books/reducers/comic-book-list.reducer';
 import { comicBookFeature } from '@app/comic-books/reducers/comic-book.reducer';
 import { ComicBookListEffects } from '@app/comic-books/effects/comic-book-list.effects';
@@ -92,12 +90,10 @@ import { ComicBooksReadEffects } from '@app/comic-books/effects/comic-books-read
     ComicPageComponent,
     ComicScrapingVolumeSelectionComponent,
     ComicStoryComponent,
-    IssueMetadataDetailComponent,
     ComicDetailCardComponent,
     ComicCoverUrlPipe,
     ComicPageUrlPipe,
     ComicTitlePipe,
-    IssueMetadataTitlePipe,
     PageHashUrlPipe,
     CoverDateFilterPipe,
     VolumeMetadataTableComponent,

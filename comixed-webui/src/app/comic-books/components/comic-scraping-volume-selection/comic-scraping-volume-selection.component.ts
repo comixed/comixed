@@ -34,7 +34,6 @@ import { MatSort } from '@angular/material/sort';
 import { IssueMetadata } from '@app/comic-metadata/models/issue-metadata';
 import { Store } from '@ngrx/store';
 import {
-  loadIssueMetadata,
   resetMetadataState,
   scrapeSingleComicBook
 } from '@app/comic-metadata/actions/single-book-scraping.actions';
@@ -89,6 +88,7 @@ export class ComicScrapingVolumeSelectionComponent
   dataSource = new MatTableDataSource<SortableListItem<VolumeMetadata>>();
   displayedColumns = [
     MATCHABILITY,
+    'thumbnail',
     'publisher',
     'name',
     'start-year',
@@ -96,6 +96,8 @@ export class ComicScrapingVolumeSelectionComponent
   ];
   confirmBeforeScraping = true;
   autoSelectExactMatch = false;
+  showPopup = false;
+  currentItem: VolumeMetadata | null;
 
   constructor(
     private logger: LoggerService,
@@ -192,15 +194,11 @@ export class ComicScrapingVolumeSelectionComponent
 
   onVolumeSelected(volume: VolumeMetadata): void {
     this.logger.trace('Volume selected:', volume);
-    this.selectedVolume = volume;
-    this.store.dispatch(
-      loadIssueMetadata({
-        metadataSource: this.metadataSource,
-        volumeId: volume.id,
-        issueNumber: this.comicIssueNumber,
-        skipCache: this.skipCache
-      })
-    );
+    if (this.selectedVolume === volume) {
+      this.selectedVolume = null;
+    } else {
+      this.selectedVolume = volume;
+    }
   }
 
   onDecision(decision: boolean, volume: VolumeMetadata): void {
@@ -261,5 +259,10 @@ export class ComicScrapingVolumeSelectionComponent
       (value || '').toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !==
       -1
     );
+  }
+
+  onShowPopup(item: VolumeMetadata): void {
+    this.currentItem = item;
+    this.showPopup = !!this.currentItem;
   }
 }
