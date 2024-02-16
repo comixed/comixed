@@ -42,13 +42,11 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSortModule } from '@angular/material/sort';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import {
-  loadIssueMetadata,
   resetMetadataState,
   scrapeSingleComicBook
 } from '@app/comic-metadata/actions/single-book-scraping.actions';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { IssueMetadataDetailComponent } from '@app/comic-books/components/issue-metadata-detail/issue-metadata-detail.component';
 import { MatInputModule } from '@angular/material/input';
 import {
   Confirmation,
@@ -59,10 +57,7 @@ import {
   SCRAPING_ISSUE_1,
   SCRAPING_VOLUME_3
 } from '@app/comic-metadata/comic-metadata.fixtures';
-import {
-  multiBookScrapeComic,
-  multiBookScrapingRemoveBook
-} from '@app/comic-metadata/actions/multi-book-scraping.actions';
+import { multiBookScrapeComic } from '@app/comic-metadata/actions/multi-book-scraping.actions';
 
 describe('ComicScrapingVolumeSelectionComponent', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
@@ -89,10 +84,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [
-          ComicScrapingVolumeSelectionComponent,
-          IssueMetadataDetailComponent
-        ],
+        declarations: [ComicScrapingVolumeSelectionComponent],
         imports: [
           NoopAnimationsModule,
           LoggerModule.forRoot(),
@@ -247,20 +239,28 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
   });
 
   describe('when a volume is selected', () => {
-    beforeEach(() => {
-      component.metadataSource = METADATA_SOURCE;
-      component.onVolumeSelected(SCRAPING_VOLUME);
+    describe('selecting a volume', () => {
+      beforeEach(() => {
+        component.selectedVolume = null;
+        component.metadataSource = METADATA_SOURCE;
+        component.onVolumeSelected(SCRAPING_VOLUME);
+      });
+
+      it('sets the selected volume', () => {
+        expect(component.selectedVolume).toBe(SCRAPING_VOLUME);
+      });
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        loadIssueMetadata({
-          metadataSource: METADATA_SOURCE,
-          volumeId: SCRAPING_VOLUME.id,
-          issueNumber: ISSUE_NUMBER,
-          skipCache: SKIP_CACHE
-        })
-      );
+    describe('deselecting a volume', () => {
+      beforeEach(() => {
+        component.selectedVolume = SCRAPING_VOLUME;
+        component.metadataSource = METADATA_SOURCE;
+        component.onVolumeSelected(SCRAPING_VOLUME);
+      });
+
+      it('clears the selected volume', () => {
+        expect(component.selectedVolume).toBeNull();
+      });
     });
   });
 
@@ -428,6 +428,40 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
 
       it('does not fire an action', () => {
         expect(store.dispatch).not.toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('the volume cover popup', () => {
+    describe('showing the cover', () => {
+      beforeEach(() => {
+        component.showPopup = false;
+        component.currentItem = null;
+        component.onShowPopup(SCRAPING_VOLUME);
+      });
+
+      it('sets the current item', () => {
+        expect(component.currentItem).toEqual(SCRAPING_VOLUME);
+      });
+
+      it('sets the show popup flag', () => {
+        expect(component.showPopup).toBeTrue();
+      });
+    });
+
+    describe('hiding the cover', () => {
+      beforeEach(() => {
+        component.showPopup = true;
+        component.currentItem = SCRAPING_VOLUME;
+        component.onShowPopup(null);
+      });
+
+      it('clears the current item', () => {
+        expect(component.currentItem).toBeNull();
+      });
+
+      it('clears the show popup flag', () => {
+        expect(component.showPopup).toBeFalse();
       });
     });
   });
