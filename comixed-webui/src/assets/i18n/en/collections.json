@@ -9,8 +9,8 @@
         "volume": "Volume"
       },
       "list-publishers": {
-        "page-title": "Publishers ({shown} of {total})",
-        "tab-title": "Publishers"
+        "page-title": "All Publishers",
+        "tab-title": "Collections|All Publishers"
       },
       "load-publisher-detail": {
         "effect-failure": "Failed to load details for {name}."
@@ -32,11 +32,11 @@
         "total-issues": "# Of Issues",
         "volume": "Volume"
       },
-      "page-title": "Publisher: {name} ({shown} of {total})",
+      "page-title": "Publisher|{name}",
       "placeholder": {
         "filter-series": "Enter text to filter the series displayed."
       },
-      "tab-title": "Publisher: {name}",
+      "tab-title": "Collections|Publisher|{name}",
       "text": {
         "no-detail-found": "No series were found."
       }
@@ -56,8 +56,8 @@
         "volume": "Volume"
       },
       "list-page": {
-        "page-title": "Series List ({shown} of {total})",
-        "tab-title": "Collections: Series List"
+        "page-title": "All Series",
+        "tab-title": "Collections|All Series"
       },
       "load-series": {
         "effect-failure": "Failed to load series."
@@ -74,12 +74,12 @@
     },
     "series-detail": {
       "load-effect-failure": "Failed to load details for series.",
-      "page-title": "{publisher} : {name} V{volume}",
+      "page-title": "{publisher} | {name} V{volume}",
       "page-title-percentage": "{percentage}% Complete ({inLibrary} Of {totalIssues, plural, =1{# Comic} other{# Comics}})",
       "placeholder": {
         "filter-issues": "Enter text to filter the issues displayed."
       },
-      "tab-title": "{publisher} : {name} V{volume}",
+      "tab-title": "Collections|{publisher}|{name} V{volume}",
       "text": {
         "found-in-library": "This issue {exists, select, true{is} other{is not}} found in the library."
       },
@@ -90,15 +90,15 @@
     }
   },
   "collection-detail": {
-    "page-title": "{tagType, select, characters{Character} teams{Teams} locations{Location} stories{Story} other{Unknown}}: {tagValue} ({count, plural, =1{One Comic} other{# Comics}})",
-    "tab-title": "{tagType, select, characters{Character} teams{Team} locations{Location} stories{Story} other{Unknown}}: {tagValue}",
+    "page-title": "{tagType, select, characters{Character} teams{Team} locations{Location} stories{Story} other{Unknown}} | {tagValue}",
+    "tab-title": "Collection|{tagType, select, characters{Character} teams{Team} locations{Location} stories{Story} other{Unknown}}|{tagValue}",
     "title": {
-      "characters": "Character: {name} ({count, plural, =1{One Comic} other{# Comics}})",
-      "locations": "Location: {name} ({count, plural, =1{One Comic} other{# Comics}})",
-      "publishers": "Publisher: {name} ({count, plural, =1{One Comic} other{# Comics}})",
-      "series": "Series: {name} v{volume} ({count, plural, =1{One Comic} other{# Comics}})",
-      "stories": "Story: {name} ({count, plural, =1{One Comic} other{# Comics}})",
-      "teams": "Team: {name} ({count, plural, =1{One Comic} other{# Comics}})"
+      "characters": "Character | {name} ({count, plural, =1{One Comic} other{# Comics}})",
+      "locations": "Location | {name} ({count, plural, =1{One Comic} other{# Comics}})",
+      "publishers": "Publisher | {name} ({count, plural, =1{One Comic} other{# Comics}})",
+      "series": "Series | {name} v{volume} ({count, plural, =1{One Comic} other{# Comics}})",
+      "stories": "Story | {name} ({count, plural, =1{One Comic} other{# Comics}})",
+      "teams": "Team | {name} ({count, plural, =1{One Comic} other{# Comics}})"
     }
   },
   "collection-list": {
@@ -106,11 +106,11 @@
       "comic-count": "# Comics",
       "name": "Collection Name"
     },
-    "page-title": "Collections: {collection, select, characters{Characters} teams{Teams} locations{Locations} stories{Stories} publishers{Publishers} series{Series} other{Unknown}} ({shown} of {total}})",
+    "page-title": "All {collection, select, characters{Characters} teams{Teams} locations{Locations} stories{Stories} publishers{Publishers} series{Series} other{Unknown}}",
     "placeholder": {
       "filter-entries": "Enter text to filer the entries displayed."
     },
-    "tab-title": "Collections: {collection, select, characters{Characters} teams{Teams} locations{Locations} stories{Stories} publishers{Publishers} series{Series} other{Unknown}}",
+    "tab-title": "Collections|All {collection, select, characters{Characters} teams{Teams} locations{Locations} stories{Stories} publishers{Publishers} series{Series} other{Unknown}}",
     "text": {
       "undefined": "[UNDEFINED]"
     }
