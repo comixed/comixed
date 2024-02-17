@@ -23,10 +23,7 @@ import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.collections.CollectionEntry;
-import org.comixedproject.model.comicbooks.ComicDetail;
-import org.comixedproject.model.comicbooks.ComicState;
-import org.comixedproject.model.comicbooks.ComicTagType;
-import org.comixedproject.model.comicbooks.ComicType;
+import org.comixedproject.model.comicbooks.*;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
 import org.comixedproject.service.lists.ReadingListException;
@@ -698,8 +695,13 @@ public class ComicDetailService {
       final String sortBy,
       final String sortDirection) {
     log.debug("Loading collection entries: type={} page={} size={}", tagType, pageIndex, pageSize);
-    return this.comicDetailRepository.loadCollectionEntries(
-        tagType, PageRequest.of(pageIndex, pageSize));
+
+    return this.comicDetailRepository
+        .loadCollectionEntries(
+            tagType, PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)))
+        .stream()
+        .map(comicTag -> new CollectionEntry(comicTag.getValue(), comicTag.getComicCount()))
+        .collect(Collectors.toList());
   }
 
   /**
@@ -728,6 +730,8 @@ public class ComicDetailService {
       case "issue-number" -> fieldName = "sortableIssueNumber";
       case "added-date" -> fieldName = "addedDate";
       case "cover-date" -> fieldName = "coverDate";
+      case "comic-count" -> fieldName = "comicCount";
+      case "tag-value" -> fieldName = "tagValue";
       default -> fieldName = "id";
     }
 

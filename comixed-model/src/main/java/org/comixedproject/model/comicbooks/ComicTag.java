@@ -36,6 +36,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.comixedproject.views.View;
+import org.hibernate.annotations.Formula;
 
 /**
  * <code>ComicTag</code> represents a single tag for a comic book.
@@ -72,6 +73,13 @@ public class ComicTag {
   @Getter
   @NonNull
   private String value;
+
+  @Formula(
+      "(SELECT COUNT(*) FROM comic_tags WHERE comic_tags.tag_type = tag_type AND comic_tags.tag_value = tag_value)")
+  @JsonView({View.ComicListView.class})
+  @JsonProperty("comicCount")
+  @Getter
+  private Integer comicCount;
 
   @Override
   public boolean equals(final Object o) {
