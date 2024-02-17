@@ -29,10 +29,7 @@ import java.util.stream.Stream;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.collections.CollectionEntry;
-import org.comixedproject.model.comicbooks.ComicDetail;
-import org.comixedproject.model.comicbooks.ComicState;
-import org.comixedproject.model.comicbooks.ComicTagType;
-import org.comixedproject.model.comicbooks.ComicType;
+import org.comixedproject.model.comicbooks.*;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
 import org.comixedproject.service.lists.ReadingListException;
@@ -97,7 +94,10 @@ public class ComicDetailServiceTest {
   @Mock private Example<ComicDetail> example;
   @Mock private List<Integer> coverYearList;
   @Mock private List<Integer> coverMonthList;
+  @Mock private Stream<ComicTag> comicTagListStream;
+  @Mock private Stream<Object> collectionEntryMap;
   @Mock private List<CollectionEntry> collectionEntryList;
+  @Mock private List<ComicTag> comicTagList;
   @Mock private ReadingList readingList;
 
   @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
@@ -116,6 +116,9 @@ public class ComicDetailServiceTest {
     Mockito.when(exampleBuilderObjectFactory.getObject()).thenReturn(exampleBuilder);
     Mockito.when(exampleBuilder.build()).thenReturn(comicDetailExample);
     Mockito.when(comicDetailListStream.toList()).thenReturn(comicDetailList);
+    Mockito.when(comicTagList.stream()).thenReturn(comicTagListStream);
+    Mockito.when(comicTagListStream.map(Mockito.any())).thenReturn(collectionEntryMap);
+    Mockito.when(collectionEntryMap.collect(Mockito.any())).thenReturn(collectionEntryList);
     Mockito.when(comicDetailListPage.stream()).thenReturn(comicDetailListStream);
 
     sortFieldNames.add("archive-type");
@@ -840,18 +843,19 @@ public class ComicDetailServiceTest {
     Mockito.when(
             comicDetailRepository.loadCollectionEntries(
                 Mockito.any(ComicTagType.class), pageableArgumentCaptor.capture()))
-        .thenReturn(collectionEntryList);
+        .thenReturn(comicTagList);
 
     final List<CollectionEntry> result =
         service.loadCollectionEntries(
             TEST_TAG_TYPE, TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION);
 
     assertNotNull(result);
-    assertSame(collectionEntryList, result);
+    assertFalse(result.isEmpty());
 
     final Pageable pageable = pageableArgumentCaptor.getValue();
     assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
     assertEquals(TEST_PAGE_INDEX, pageable.getPageNumber());
+    assertFalse(pageable.getSort().stream().toList().isEmpty());
 
     Mockito.verify(comicDetailRepository, Mockito.times(1))
         .loadCollectionEntries(TEST_TAG_TYPE, pageable);

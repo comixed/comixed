@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 import org.comixedproject.model.collections.CollectionEntry;
 import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.ComicTag;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -364,10 +365,8 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @param pageable the page request
    * @return the entries
    */
-  @Query(
-      "SELECT new org.comixedproject.model.collections.CollectionEntry(t.value, COUNT(t)) FROM ComicTag t WHERE t.type = :tagType GROUP BY t.value")
-  List<CollectionEntry> loadCollectionEntries(
-      @Param("tagType") ComicTagType tagType, Pageable pageable);
+  @Query("SELECT DISTINCT t FROM ComicTag t WHERE t.type = :tagType")
+  List<ComicTag> loadCollectionEntries(@Param("tagType") ComicTagType tagType, Pageable pageable);
 
   @Query("SELECT COUNT(DISTINCT t.value) FROM ComicTag t WHERE t.type = :tagType")
   long getFilterCount(@Param("tagType") ComicTagType tag);
