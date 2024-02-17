@@ -75,7 +75,7 @@
     "all-comics": {
       "tab-title": "All Comics",
       "tab-title-changed": "Changed Comics",
-      "tab-title-deleted": "Deleted Comics",
+      "tab-title-deleted": "Marked For Removal",
       "tab-title-unread": "Unread Comics",
       "tab-title-unprocessed": "Unprocessed Comics",
       "tab-title-unscraped": "Unscraped Comics"
@@ -97,8 +97,8 @@
       "convert-selected-to-cb7": "Convert selections To CB7",
       "convert-selected-to-cbz": "Convert selections To CBZ",
       "create-reading-list": "Create new reading list...",
-      "delete-one": "Mark as deleted",
-      "delete-selected": "Mark as deleted",
+      "delete-one": "Mark for removal",
+      "delete-selected": "Mark for removal",
       "edit-multiple-comics": "Edit details for {count, plural, =1{one comic} other{# comics}}...",
       "mark-as": "Mark",
       "mark-as-read": "Mark as read",
@@ -115,8 +115,8 @@
       "set-page-undeleted": "Don't Delete This Page",
       "scrape-comics-selected": "Scrape metadata for {count, plural, =1{one comic} other{# comics}}...",
       "single-comic-menu": "This Comic",
-      "undelete-one": "Mark as undeleted",
-      "undelete-selected": "Mark as undeleted",
+      "undelete-one": "Unmark for removal",
+      "undelete-selected": "Unmark for removal",
       "update-metadata-one": "Update metadata...",
       "update-metadata-selected": "Update metadata for {count, plural, =1{one comic} other{# comics}}..."
     },
@@ -166,12 +166,12 @@
       "stories": "Stories"
     },
     "page-title": {
-      "all": "{filtered, select, true{Filtering } other{}}All Comics ({showing} of {count, plural, =1{One Comic} other{# Comics}})",
-      "changed-only": "{filtered, select, true{Filtering } other{}}Changed Comics ({showing} of {count, plural, =1{One Comic} other{# Comics}})",
-      "deleted-only": "{filtered, select, true{Filtering } other{}}Deleted Comics ({showing} of {count, plural, =1{One Comic} other{# Comics}})",
-      "unprocessed-only": "{filtered, select, true{Filtering } other{}}Unprocessed Comics ({showing} of {count, plural, =1{One Comic} other{# Comics}})",
-      "unread-only": "{filtered, select, true{Filtering } other{}}Unread Comics ({showing} of {count, plural, =1{One Comic} other{# Comics}})",
-      "unscraped-only": "{filtered, select, true{Filtering } other{}}Unscraped Comics ({showing} of {count, plural, =1{One Comic} other{# Comics}})"
+      "all": "All Comics{filtered, select, true{ [Filtered]} other{}}",
+      "changed-only": "Changed Comics{filtered, select, true{ [Filtered]} other{}}",
+      "deleted-only": "Marked For Removal{filtered, select, true{ [Filtered]} other{}}",
+      "unprocessed-only": "Unprocessed Comics{filtered, select, true{ [Filtered]} other{}}",
+      "unread-only": "Unread Comics{filtered, select, true{ [Filtered]} other{}}",
+      "unscraped-only": "Unscraped Comics{filtered, select, true{ [Filtered]} other{}}"
     },
     "purge-library": {
       "confirmation-message": "Are you sure you want to purge the selected deleted comics? This action cannot be undone.",
