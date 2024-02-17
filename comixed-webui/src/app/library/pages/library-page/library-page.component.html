@@ -1,13 +1,5 @@
 <h2>
-  {{
-    "library.page-title." + pageContent
-      | translate
-        : {
-            count: comicDetailListState?.totalCount,
-            showing: comicDetailListState?.filteredCount,
-            filtered: filtered
-          }
-  }}
+  {{ "library.page-title." + pageContent | translate: { filtered: filtered } }}
 </h2>
 
 <cx-comic-detail-list-view
