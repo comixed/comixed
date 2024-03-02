@@ -62,6 +62,7 @@
     "d3-color": "~3.1.0",
     "deepmerge-ts": "^5.0.0",
     "engine.io": "~6",
+    "fast-xml-parser": "~4.1",
     "file-saver": "^2.0.5",
     "glob-parent": "^5.1.2",
     "hosted-git-info": "^3.0.8",
