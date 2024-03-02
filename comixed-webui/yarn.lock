@@ -5198,10 +5198,10 @@ fast-xml-parser@^3.19.0:
   resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-3.19.0.tgz#cb637ec3f3999f51406dd8ff0e6fc4d83e520d01"
   integrity sha512-4pXwmBplsCPv8FOY1WRakF970TjNGnGnfbOnLqjlYvMiF1SR3yOHyxMR/YCXpPTOspNF5gwudqktIP4VsWkvBg==
 
-fast-xml-parser@~4.1:
-  version "4.1.4"
-  resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-4.1.4.tgz#bb0d02d33854325b3eded07e4a4f2ceb8202ce8b"
-  integrity sha512-jKw5Miu3xRSWhXxpWWx3Jujvy231pInmUJgCtsov8JGeuLQsKmYKXlXXPXN1Hopo0YHGuesIlu1cDMKmHa2fJQ==
+fast-xml-parser@~4.2:
+  version "4.2.5"
+  resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-4.2.5.tgz#a6747a09296a6cb34f2ae634019bf1738f3b421f"
+  integrity sha512-B9/wizE4WngqQftFPmdaMYlXoJlJOYxGQOanC77fq9k8+Z0v5dDSVh+3glErdIROP//s/jgb7ZuxKfB8nVyo0g==
   dependencies:
     strnum "^1.0.5"
 
