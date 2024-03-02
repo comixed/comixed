@@ -29,13 +29,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ComicFileDescriptorReader</code> reads descriptors used to import comics into the library.
+ * <code>ComicInsertReader</code> reads descriptors used to import comics into the library.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class ComicFileDescriptorReader implements ItemReader<ComicFileDescriptor> {
+public class ComicInsertReader implements ItemReader<ComicFileDescriptor> {
   @Autowired private ComicFileService comicFileService;
 
   @Value("${comixed.batch.chunk-size}")
@@ -58,8 +58,6 @@ public class ComicFileDescriptorReader implements ItemReader<ComicFileDescriptor
       return null;
     }
 
-    final ComicFileDescriptor result = this.comicFileDescriptorList.remove(0);
-    log.trace("Deleting descriptor record");
-    return result;
+    return this.comicFileDescriptorList.remove(0);
   }
 }

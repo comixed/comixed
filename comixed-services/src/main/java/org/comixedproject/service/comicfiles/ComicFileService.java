@@ -176,7 +176,9 @@ public class ComicFileService {
    */
   public List<ComicFileDescriptor> findComicFileDescriptors(final int pageSize) {
     log.debug("Loading all comic file descriptors");
-    return this.comicFileDescriptorRepository.findAll(PageRequest.of(0, pageSize)).stream()
+    return this.comicFileDescriptorRepository
+        .findUnprocessedDescriptors(PageRequest.of(0, pageSize))
+        .stream()
         .collect(Collectors.toList());
   }
 

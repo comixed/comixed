@@ -399,7 +399,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the publishers
    */
   @Query(
-      "SELECT DISTINCT d.publisher FROM ComicDetail d WHERE d IN (SELECT t.comicDetail.id FROM ComicTag t WHERE t.type = 'STORY' AND t.value = :name)")
+      "SELECT DISTINCT d.publisher FROM ComicDetail d WHERE d.id IN (SELECT t.comicDetail.id FROM ComicTag t WHERE t.type = 'STORY' AND t.value = :name)")
   List<String> findDistinctPublishersForStory(@Param("name") String name);
 
   /**
@@ -566,7 +566,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the list of comics
    */
   @Query(
-      "SELECT d FROM ComicDetail d JOIN FETCH d.comicBook WHERE LOWER(d.title) LIKE LOWER(concat('%', :term, '%')) OR LOWER(d.description) LIKE LOWER(concat('%', :term, '%'))")
+      "SELECT d FROM ComicDetail d JOIN FETCH d.comicBook WHERE LOWER(CAST(d.title AS STRING)) LIKE LOWER(concat('%', :term, '%')) OR LOWER(CAST(d.description AS STRING)) LIKE LOWER(concat('%', :term, '%'))")
   List<ComicDetail> findForSearchTerms(@Param("term") String term);
 
   /**

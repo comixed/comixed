@@ -24,7 +24,7 @@ import org.comixedproject.batch.comicbooks.listeners.CreateInsertStepExecutionLi
 import org.comixedproject.batch.comicbooks.listeners.ProcessedComicChunkListener;
 import org.comixedproject.batch.comicbooks.processors.ComicInsertProcessor;
 import org.comixedproject.batch.comicbooks.processors.NoopComicProcessor;
-import org.comixedproject.batch.comicbooks.readers.ComicFileDescriptorReader;
+import org.comixedproject.batch.comicbooks.readers.ComicInsertReader;
 import org.comixedproject.batch.comicbooks.readers.RecordInsertedReader;
 import org.comixedproject.batch.comicbooks.writers.ComicInsertWriter;
 import org.comixedproject.batch.comicbooks.writers.ReaderInsertedWriter;
@@ -101,7 +101,7 @@ public class AddComicsConfiguration {
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
       final CreateInsertStepExecutionListener stepExecutionListener,
-      final ComicFileDescriptorReader reader,
+      final ComicInsertReader reader,
       final ComicInsertProcessor processor,
       final ComicInsertWriter writer,
       final ProcessedComicChunkListener chunkListener) {
