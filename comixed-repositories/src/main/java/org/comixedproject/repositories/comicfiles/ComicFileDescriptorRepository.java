@@ -18,7 +18,9 @@
 
 package org.comixedproject.repositories.comicfiles;
 
+import java.util.List;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -40,4 +42,8 @@ public interface ComicFileDescriptorRepository extends JpaRepository<ComicFileDe
    */
   @Query("SELECT d FROM ComicFileDescriptor d WHERE d.filename = :filename")
   ComicFileDescriptor findByFilename(@Param("filename") String filename);
+
+  @Query(
+      "SELECT d FROM ComicFileDescriptor d WHERE d.filename NOT IN (SELECT c.filename FROM ComicDetail c)")
+  List<ComicFileDescriptor> findUnprocessedDescriptors(Pageable pageable);
 }

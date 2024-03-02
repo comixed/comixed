@@ -279,7 +279,7 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @return the matching records
    */
   @Query(
-      "SELECT d FROM ComicDetail d JOIN FETCH d.comicBook WHERE LOWER(d.title) LIKE LOWER(concat('%', :term, '%')) OR LOWER(d.description) LIKE LOWER(concat('%', :term, '%'))")
+      "SELECT d FROM ComicDetail d JOIN FETCH d.comicBook WHERE LOWER(CAST(d.title AS STRING)) LIKE LOWER(concat('%', :term, '%')) OR LOWER(CAST(d.description AS STRING)) LIKE LOWER(concat('%', :term, '%'))")
   List<ComicDetail> getForSearchTerm(@Param("term") String term);
 
   /**

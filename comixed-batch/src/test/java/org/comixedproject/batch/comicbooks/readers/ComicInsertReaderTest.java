@@ -32,8 +32,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ComicFileDescriptorReaderTest {
-  @InjectMocks private ComicFileDescriptorReader reader;
+public class ComicInsertReaderTest {
+  @InjectMocks private ComicInsertReader reader;
   @Mock private ComicFileService comicFileService;
   @Mock private ComicFileDescriptor descriptor;
 
