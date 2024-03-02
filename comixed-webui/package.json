@@ -82,6 +82,7 @@
     "postcss": "^8.4.31",
     "rxjs": "~6.5.5",
     "sass-loader": "13.2.1",
+    "semver": "~6.3",
     "set-value": "^4.0.1",
     "socket.io": "^2.4",
     "sockjs-client": "^1.5.0",
