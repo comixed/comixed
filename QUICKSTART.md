@@ -1,44 +1,100 @@
-# Quick Start Guide
-
-## Overview
+# Overview
 
 This document is to help you go from 0 to running the ComiXed application on your system.
 
-## Installation
+# Installation
 
-To install the application, simply place the comixed-app-\*.jar file in the directory from which you would like to run it. The JAR file contains all of its dependencies, so you won't need to download any other files to run it: as long as you have Java 12 or later installed you can run the application.
+## Prerequisites
 
-### A Note On Java Requirements
+### Java Runtime Environment
 
-As of v0.7, ComiXed requires Java 11 or later, and will not run with any version prior to that. Since Oracle no longer ships a JRE (Java Runtime Environment) for Java after 9, you'll instead need to download a Java Development Kit (JDK) from [here](https://www.oracle.com/java/technologies/javase/jdk12-archive-downloads.html).
+As of v2.0, ComiXed requires Java 17 or later, and will not run with any
+version prior to that. Since Oracle no longer ships a JRE (Java Runtime
+Environment) for Java after 9, you'll instead need to download a Java
+Development Kit (JDK) from [here](https://www.oracle.com/java/technologies/javase/jdk12-archive-downloads.html).
 
-## Configuring The Application
+### Database Support
 
-The JAR file contains the default **application.properties** file, which controls the runtime of the application.
+ComiXed makes heavy use of databases to manage the information for a
+comic book library. As such, it requires one that provides a stable,
+durable environment.
 
-By default, the application creates the runtime database, which contains your comic library, in:
+ComiXed ships with support for two database environments:
+ * [MySQL](https://www.mysql.com/) v8.1 or later
+ * [PosgreSQL](https://www.postgresql.org/) v16.0 or later
 
-* c:/users/[your name]/.comixed [on Windows]
-* /home/[your name]/.comixed [on Linux, *nix]
-* /Users/[your name]/.comixed [on Mac OS X]
+It also ships with support for the embedded H2 database. However, it is
+**strongly** recommended that you do not use this embedded database for
+long term data management. It is included to make it easier to evaluate
+the ComiXed project and is **not** a supported feature.
 
-## Launching The Application
+See the section below on configuration for how to enable support for one
+of the external database systems.
 
-To run the application use the following command line, use one of the following options from the **bin** directory. So,
-after extracting the contents of the distribution archive, do one of the following:
+# Installing The Server
 
-### Linux Or Mac
+To install ComiXed, simply extract the [release bundle](https://github.com/comixed/comixed/releases)
+in the directory from which you wish to run it. Several directories are created:
+
+ * **$ROOT/bin** which contains the scripts to launch the server, along with the main code,
+ * **$ROOT/config** which contains the example external configuration file,
+ * **$ROOT/docs** which contains any documentation, as well as the project's license, and
+ * **$ROOT/lib** which will hold any plugins, external libraries, and extensions. 
+
+
+# Configuring The Application
+
+## Using An External Configuration File
+
+The JAR file contains the default **application.properties** file, which
+controls the runtime of the application. However, an external configuration
+can be used, allow you to override default values. This file is:
+
+    $ROOT/config/application.properties-example
+
+where **$ROOT** is the directory where the release was copied. Simply copy
+this file to:
+
+    $ROOT/config/application.properties
+
+and edit the contents. When you restart the server, this configuration will
+be used instead.
+
+
+## Using An External Database
+
+To enable using an external database, edit the external configuration file
+and comment out the section that defines the H2 environment
+
+Then, depending on which environment you plan to use, either uncomment the
+MySQL or the Postgres options. Then you will need to provide the name of
+server, the username, and the password for that user that will be used to
+manage the database.
+
+It's beyond the scope of this document to show how to do these steps. But
+you can always check the comixed mailing list archives for where others
+have described how to do these steps.
+
+
+# Launching The Application
+
+To run the application, use one of the following options from the **bin**
+directory where you installed the product:
+
+## Linux Or Mac
 ```
  $ sh ./run.sh
 ```
 
-
-### Windows
+## Windows
 ```
  C:\users\comixed> run.bat
 ```
 
-This will launch the application in the current window as a text-only application. You'll see output as the application starts, creates your library database (when run the first time). When you see the following text, the application is ready for the next step:
+This will launch the application in the current window as a text-only
+application. You'll see output as the application starts, creates your
+library database (when run the first time). When you see the following
+text, the application is ready for the next step:
 
 ```
 2018-07-24 08:38:44.509  INFO 75198 --- [           main] o.s.j.e.a.AnnotationMBeanExporter        : Registering beans for JMX exposure on startup
@@ -47,7 +103,7 @@ This will launch the application in the current window as a text-only applicatio
 2018-07-24 08:38:44.644  INFO 75198 --- [           main] org.comixedproject.ComiXedApp            : Started ComiXedApp in 8.979 seconds (JVM running for 9.62)
 ```
 
-## Logging In And Configuring Your Account
+# Logging In And Configuring Your Account
 
 ![account administration](images/account_change.png)
 

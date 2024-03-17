@@ -6,6 +6,13 @@
     <format>zip</format>
     <format>tar.gz</format>
   </formats>
+  <files>
+    <file>
+      <source>${project.basedir}/../comixed-app/src/main/resources/application.properties</source>
+      <outputDirectory>config</outputDirectory>
+      <destName>application.properties-example</destName>
+    </file>
+  </files>
   <dependencySets>
     <dependencySet>
       <outputDirectory>bin</outputDirectory>

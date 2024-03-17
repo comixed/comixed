@@ -23,6 +23,7 @@ realpath() {
 ME=$(realpath "$0")
 BINDIR=$(dirname "${ME}")
 LIBDIR=$(realpath "${BINDIR}"/../lib)
+CFGFILE=$(realpath "${BINDIR}"/../config/application.properties)
 
 JAVA=$(which java)
 JAROPTIONS=""
@@ -146,12 +147,16 @@ if [[ $ENABLE_SSL ]]; then
   JAROPTIONS="${JAROPTIONS} --server.ssl.enabled=true"
 fi
 
+if [[ -f $CFGFILE ]]; then
+  JAROPTIONS="${JAROPTIONS} --spring.config.location=file:${CFGFILE}"
+fi
+
 # build a list of JVM arguments
 
 if [[ $LIBDIR ]]; then
   LOADER_PATH="-Dloader.path=${LIBDIR}"
   JVMOPTIONS="-cp ${COMIXED_JAR_FILE} ${JVMOPTIONS}"
-  COMIXED_JAR_FILE="-Dloader.main=org.comixedproject.ComiXedApp org.springframework.boot.loader.PropertiesLauncher"
+  COMIXED_JAR_FILE="-Dloader.main=org.comixedproject.ComiXedApp org.springframework.boot.loader.launch.PropertiesLauncher"
 fi
 
 $JAVA ${JVMOPTIONS} ${LOADER_PATH} ${COMIXED_JAR_FILE} ${JAROPTIONS}
