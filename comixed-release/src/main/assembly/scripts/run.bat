@@ -22,6 +22,7 @@ CD /d %~dp0
 FOR %%f IN (comixed-app*.jar) DO SET COMIXED_JAR_FILE=%%f
 FOR %%f IN (..\lib) DO SET LIBDIR=%%f
 SET LOGFILE="%COMIXEDLOG%"
+SET CFGFILE="..\config\application.properties"
 
 :process_command_line
 IF "%~1" == "" GOTO end_process_command_line
@@ -173,10 +174,14 @@ IF "%ENABLE_SSL%" == "" GOTO skip_enable_ssl
 SET JAROPTIONS=%JAROPTIONS% --server.ssl.enabled=true
 :skip_enable_ssl
 
+IF NOT EXIST "%CFGFILE%" GOTO skip_cfg_file
+SET JAROPTIONS=%JAROPTIONS% --spring.config.location=file:%CFGFILE%
+:skip_cfg_file
+
 IF "%LIBDIR%" == "" GOTO skip_lib_dir
 SET LOADER_PATH=-Dloader.path=%LIBDIR%
-SET JVMOPTIONS=-cp %COMIXED_JAR_FILE% %JVMOPTIONS
-SET COMIXED_JAR_FILE=-Dloader.main=org.comixedproject.ComiXedApp org.springframework.boot.loader.PropertiesLauncher
+SET JVMOPTIONS=-cp %COMIXED_JAR_FILE% %JVMOPTIONS%
+SET COMIXED_JAR_FILE=-Dloader.main=org.comixedproject.ComiXedApp org.springframework.boot.loader.launch.PropertiesLauncher
 
 :skip_lib_dir
 
