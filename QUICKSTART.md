@@ -103,26 +103,25 @@ text, the application is ready for the next step:
 2018-07-24 08:38:44.644  INFO 75198 --- [           main] org.comixedproject.ComiXedApp            : Started ComiXedApp in 8.979 seconds (JVM running for 9.62)
 ```
 
-# Logging In And Configuring Your Account
+# Logging In
 
-![account administration](images/account_change.png)
+## The First Account Is The Administrator
 
-Now that your server is up and running, you need to connect to it with your browser and log into the server.
+The first person to log into the server is granted administrator rights.
 
-Point your browser to ```https://localhost:7171``` and login. This assumes you're running ComiXed on the same computer as your browser: if your server is on another computer then replaced ```localhost``` with that computer's name or IP address.
+To create this administrator account, simply start the login process by
+pointing your browser to the following URL (assuming you're running ComiXed
+locally):
 
-When run for the first time, ComiXed creates two default accounts for logging into the system:
+    http://localhost:7171/
 
-1. Username: comixedadmin@localhost Password: comixedadmin
-1. Username: comixedreader@localhost Password: comixedreader
+You will see a page like this:
 
-It is **highly** recommended that you change at least the passwords for these accounts.
+![admin account create](images/admin_account_create.png)
 
-To log into the system as the user **comixedadmin@localhost**, open your web browser and go to **https://localhost:7171** and log in.
-
-Once logged in, click on the **Account** link at the top of the page. This will take you to the account page. You can then change your password, and your login name.
-
-Once you've done this, you'll need to log back into the application using that new name and password.
+Enter the email address and the password for the account you wish to create,
+and then submit the form. This will create a new account with administrator
+privileges.
 
 ## Importing Your Comic Library
 
