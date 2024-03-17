@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Optional;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tika.Tika;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
@@ -67,18 +69,18 @@ public class FileTypeAdaptor {
    */
   public ArchiveAdaptor getArchiveAdaptorFor(final String filename) throws AdaptorException {
     log.trace("Determining archive type for stream");
-    final String subtype;
     try (InputStream input = new BufferedInputStream(new FileInputStream(filename))) {
-      subtype = this.getSubtype(input);
+      final String subtype = this.getSubtype(input);
+      final String extension = FilenameUtils.getExtension(filename);
+      return this.getArchiveAdaptor(
+          this.archiveAdaptors.stream()
+              .filter(definition -> definition.isMatch(subtype, extension))
+              .findFirst());
     } catch (FileNotFoundException error) {
       throw new AdaptorException("Failed to determine subtype", error);
     } catch (IOException error) {
       throw new AdaptorException("Failed to determine archive type", error);
     }
-    return this.getArchiveAdaptor(
-        this.archiveAdaptors.stream()
-            .filter(definition -> definition.format.equals(subtype))
-            .findFirst());
   }
 
   private ArchiveAdaptor getArchiveAdaptor(final Optional<ArchiveAdaptorDefinition> adaptor)
@@ -219,7 +221,13 @@ public class FileTypeAdaptor {
     @Getter @Setter @NonNull private String format;
     @Getter @Setter @NonNull private String name;
     @Getter @Setter @NonNull private ArchiveType archiveType;
+    @Getter @Setter @NonNull private String extension;
     @Getter @Setter private ArchiveAdaptor bean = null;
+
+    public boolean isMatch(final String subtype, final String extension) {
+      return StringUtils.equals(this.format, subtype)
+          || StringUtils.equals(this.extension, extension);
+    }
   }
 
   @NoArgsConstructor
