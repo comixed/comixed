@@ -45,9 +45,10 @@ public class FileTypeAdaptorTest {
   private static final MediaType TEST_MEDIA_TYPE = MediaType.APPLICATION_ZIP;
   private static final String TEST_BEAN_NAME = "The adaptor name";
   private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CBZ;
-  private static final String TEST_MIME_TYPE = "image/jpeg";
   private static final ArchiveEntryType TEST_ARCHIVE_ENTRY_TYPE = ArchiveEntryType.IMAGE;
   private static final byte[] TEST_CONTENT = "Some file content".getBytes();
+  private static final String TEST_EXTENSION = "cbz";
+  private static final String TEST_FORMAT = "zip";
 
   @InjectMocks private FileTypeAdaptor adaptor;
   @Mock private ApplicationContext applicationContext;
@@ -61,11 +62,14 @@ public class FileTypeAdaptorTest {
 
   private FileTypeAdaptor.ArchiveAdaptorDefinition archiveAdaptorEntry =
       new FileTypeAdaptor.ArchiveAdaptorDefinition(
-          TEST_MEDIA_TYPE.getSubtype(), TEST_BEAN_NAME, TEST_ARCHIVE_TYPE);
+          TEST_MEDIA_TYPE.getSubtype(), TEST_BEAN_NAME, TEST_ARCHIVE_TYPE, TEST_EXTENSION);
   private FileTypeAdaptor.EntryTypeDefinition entryLoader =
       new FileTypeAdaptor.EntryTypeDefinition(
           TEST_MEDIA_TYPE.getSubtype(), TEST_BEAN_NAME, TEST_ARCHIVE_ENTRY_TYPE);
   private ByteArrayInputStream inputStream = new ByteArrayInputStream(TEST_CONTENT);
+  private FileTypeAdaptor.ArchiveAdaptorDefinition definition =
+      new FileTypeAdaptor.ArchiveAdaptorDefinition(
+          TEST_FORMAT, TEST_BEAN_NAME, TEST_ARCHIVE_TYPE, TEST_EXTENSION);
 
   @Before
   public void setUp() {
@@ -80,21 +84,15 @@ public class FileTypeAdaptorTest {
   }
 
   @Test(expected = AdaptorException.class)
-  public void testGetArchiveAdaptorForFilenameSubtypeDetectFailed()
+  public void testGetArchiveAdaptorForFilenameSubtypeDetectFailedExtensionsDontMatch()
       throws AdaptorException, IOException {
-    Mockito.when(detector.detect(Mockito.any(InputStream.class), Mockito.any(Metadata.class)))
-        .thenThrow(IOException.class);
-
-    adaptor.getArchiveAdaptorFor(TEST_ARCHIVE_FILENAME);
+    adaptor.getArchiveAdaptorFor(TEST_ARCHIVE_FILENAME + "z");
   }
 
   @Test(expected = AdaptorException.class)
-  public void testGetArchiveAdaptorForFilenameNoAdaptorFound()
+  public void testGetArchiveAdaptorForFilenameNoAdaptorFoundExtensionsDontMatch()
       throws AdaptorException, IOException {
-    Mockito.when(detector.detect(Mockito.any(InputStream.class), Mockito.any(Metadata.class)))
-        .thenReturn(new MediaType("foo", "bar"));
-
-    adaptor.getArchiveAdaptorFor(TEST_ARCHIVE_FILENAME);
+    adaptor.getArchiveAdaptorFor(TEST_ARCHIVE_FILENAME + "z");
   }
 
   @Test
@@ -213,5 +211,20 @@ public class FileTypeAdaptorTest {
 
     Mockito.verify(detector, Mockito.times(1))
         .detect(argumentCaptorInputStream.getValue(), metadata);
+  }
+
+  @Test
+  public void testIsMatchNeitherMatch() {
+    assertFalse(definition.isMatch(TEST_FORMAT.substring(1), TEST_EXTENSION.substring(1)));
+  }
+
+  @Test
+  public void testIsMatchOnlyFormat() {
+    assertTrue(definition.isMatch(TEST_FORMAT, TEST_EXTENSION.substring(1)));
+  }
+
+  @Test
+  public void testIsMatchOnlyExtension() {
+    assertTrue(definition.isMatch(TEST_FORMAT.substring(1), TEST_EXTENSION));
   }
 }
