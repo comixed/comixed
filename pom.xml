@@ -40,6 +40,19 @@
     <url>https://github.com/comixed/comixed/issues</url>
   </issueManagement>
 
+  <repositories>
+    <repository>
+      <id>oss.sonatype.org-snapshot</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
   <properties>
     <assembly.name>local</assembly.name>
     <maven-git-code-format.version>5.1</maven-git-code-format.version>
@@ -491,7 +504,6 @@
     <module>comixed-webui</module>
     <module>comixed-dbtool</module>
     <module>comixed-app</module>
-    <module>comixed-metadata-comicvine</module>
     <module>comixed-release</module>
   </modules>
 </project>

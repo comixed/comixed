@@ -103,7 +103,7 @@ public class MetadataSourceServiceTest {
     final List<MetadataSource> result = service.loadMetadataSources();
 
     assertNotNull(result);
-    assertTrue(result.isEmpty());
+    assertFalse(result.isEmpty());
 
     Mockito.verify(metadataSourceRepository, Mockito.times(2)).loadMetadataSources();
   }

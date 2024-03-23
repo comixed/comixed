@@ -37,6 +37,6 @@ export const METADATA_SOURCE_TEMPLATE: MetadataSource = {
   id: null,
   name: '',
   preferred: false,
-  beanName: '',
+  available: false,
   properties: []
 };

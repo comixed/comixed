@@ -22,17 +22,17 @@ import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 
 export const METADATA_SOURCE_1: MetadataSource = {
   id: 1,
-  beanName: 'farkleVineScrapingAdaptor',
-  name: 'Farkle ComicBook Data',
+  name: 'farkleVineScrapingAdaptor',
   preferred: false,
+  available: true,
   properties: [{ name: 'property.name', value: 'property.value' }]
 };
 
 export const METADATA_SOURCE_2: MetadataSource = {
   id: 2,
-  beanName: 'farkleVineScrapingAdaptor',
-  name: 'Farkle ComicBook Data',
+  name: 'farkleVineScrapingAdaptor',
   preferred: false,
+  available: true,
   properties: [{ name: 'property.name', value: 'property.value' }]
 };
 

@@ -100,13 +100,13 @@
     </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="bean-name">
+  <ng-container matColumnDef="available">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
-      {{ "metadata-source-list.label.bean-name" | translate }}
+      {{ "metadata-source-list.label.available" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.beanName }}
+        {{ entry.available | yesNo | translate }}
       </span>
     </mat-cell>
   </ng-container>
