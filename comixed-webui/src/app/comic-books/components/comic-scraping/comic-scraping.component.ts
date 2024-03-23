@@ -81,7 +81,6 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
   ];
 
   comicForm: UntypedFormGroup;
-  scrapingMode = false;
   scrapedMetadataSubscription: Subscription;
   metadataSourceListSubscription: Subscription;
   metadataSourceList: ListItem<MetadataSource>[] = [];
@@ -150,8 +149,7 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
     this.logger.debug('Loading comic form:', comic);
     this._comic = comic;
     this.logger.debug('Loading form fields');
-    if (!!comic.metadata) {
-      this.logger.debug('Preselecting metadata source');
+    if (!!comic.metadata?.metadataSource) {
       this.store.dispatch(
         setChosenMetadataSource({
           metadataSource: comic.metadata.metadataSource

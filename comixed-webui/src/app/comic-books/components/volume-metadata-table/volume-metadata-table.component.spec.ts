@@ -33,8 +33,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { VolumeMetadataTitlePipe } from '@app/comic-books/pipes/volume-metadata-title.pipe';
+import { IssueMetadataTitlePipe } from '@app/comic-books/pipes/issue-metadata-title.pipe';
 import { MatIconModule } from '@angular/material/icon';
+import { VolumeMetadataTitlePipe } from '@app/comic-books/pipes/volume-metadata-title.pipe';
 
 describe('VolumeMetadataTableComponent', () => {
   const VOLUMES = [SCRAPING_VOLUME_1, SCRAPING_VOLUME_2, SCRAPING_VOLUME_3];
@@ -44,7 +45,11 @@ describe('VolumeMetadataTableComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [VolumeMetadataTableComponent, VolumeMetadataTitlePipe],
+      declarations: [
+        VolumeMetadataTableComponent,
+        IssueMetadataTitlePipe,
+        VolumeMetadataTitlePipe
+      ],
       imports: [
         NoopAnimationsModule,
         LoggerModule.forRoot(),

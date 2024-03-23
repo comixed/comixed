@@ -1,35 +1,3 @@
-<div class="cx-fab-container-bottom-right">
-  <button
-    id="accept-button"
-    mat-fab
-    [disabled]="selectedVolume === null"
-    [matTooltip]="'scraping.tooltip.select-scraping-issue' | translate"
-    (click)="onDecision(true, selectedVolume)"
-  >
-    <mat-icon>check_box</mat-icon>
-  </button>
-</div>
-
-<div
-  *ngIf="showPopup && !!currentItem"
-  class="cx-hover cx-centered cx-width-25 cx-border-primary-1"
->
-  <mat-card appearance="outlined">
-    <mat-card-title class="cx-text-nowrap">
-      {{ currentItem | volumeMetadataTitle }}
-    </mat-card-title>
-    <mat-card-content class="cx-padding-5">
-      <img
-        loading="lazy"
-        [src]="currentItem.imageUrl"
-        width="100%"
-        height="auto"
-        [alt]="currentItem | volumeMetadataTitle"
-      />
-    </mat-card-content>
-  </mat-card>
-</div>
-
 <mat-toolbar>
   <mat-paginator
     class="cx-height-100"
@@ -59,6 +27,41 @@
   </button>
 </mat-toolbar>
 
+<div
+  *ngIf="showPopup && !!issue"
+  class="cx-hover cx-centered cx-width-25 cx-border-primary-1"
+>
+  <mat-card appearance="outlined">
+    <mat-card-content class="cx-padding-5">
+      <h2 class="cx-width-100 cx-align-content-center">
+        <strong>{{ issue | issueMetadataTitle }}</strong>
+      </h2>
+      <h3 class="cx-width-100 cx-align-content-center">
+        {{ issue.coverDate | date: "MMM YYYY" }}
+      </h3>
+      <img
+        loading="lazy"
+        [src]="issue.coverUrl"
+        width="100%"
+        height="auto"
+        [alt]="issue | issueMetadataTitle"
+      />
+    </mat-card-content>
+    <mat-card-actions>
+      <button
+        mat-icon-button
+        color="primary"
+        (click)="onDecision(true, selectedVolume)"
+      >
+        <mat-icon>check</mat-icon>
+      </button>
+      <button mat-icon-button color="warn" (click)="showPopup = false">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
 <div class="cx-width-100 cx-detail-card-container">
   <mat-table
     aria-label="ComicBook files available for import"
@@ -74,15 +77,16 @@
         <mat-icon>thumbs_up_down</mat-icon>
       </mat-header-cell>
       <mat-cell *matCellDef="let entry">
-        <span
-          [matTooltip]="
-            'comic-book.tooltip.match-' + entry.sortOrder | translate
-          "
+        <button
+          id="accept-button"
+          mat-icon-button
+          [matTooltip]="'scraping.tooltip.select-scraping-issue' | translate"
+          (click)="onDecision(true, entry.item)"
         >
           <mat-icon *ngIf="entry.sortOrder === 2">thumb_up</mat-icon>
           <mat-icon *ngIf="entry.sortOrder === 1">thumbs_up_down</mat-icon>
           <mat-icon *ngIf="entry.sortOrder === 0">thumb_down</mat-icon>
-        </span>
+        </button>
       </mat-cell>
     </ng-container>
 
@@ -94,11 +98,9 @@
         <img
           loading="lazy"
           [src]="entry.item.imageUrl"
-          [alt]="entry.item.coverUrl"
+          [alt]="entry.item | volumeMetadataTitle"
           [style.width]="'100%'"
           [style.height]="'auto'"
-          (mouseenter)="onShowPopup(entry.item)"
-          (mouseleave)="onShowPopup(null)"
         />
       </mat-cell>
     </ng-container>
