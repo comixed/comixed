@@ -58,6 +58,7 @@ import {
   SCRAPING_VOLUME_3
 } from '@app/comic-metadata/comic-metadata.fixtures';
 import { multiBookScrapeComic } from '@app/comic-metadata/actions/multi-book-scraping.actions';
+import { VolumeMetadataTitlePipe } from '@app/comic-books/pipes/volume-metadata-title.pipe';
 
 describe('ComicScrapingVolumeSelectionComponent', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
@@ -84,7 +85,10 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ComicScrapingVolumeSelectionComponent],
+        declarations: [
+          ComicScrapingVolumeSelectionComponent,
+          VolumeMetadataTitlePipe
+        ],
         imports: [
           NoopAnimationsModule,
           LoggerModule.forRoot(),
@@ -435,29 +439,29 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
   describe('the volume cover popup', () => {
     describe('showing the cover', () => {
       beforeEach(() => {
-        component.showPopup = false;
-        component.currentItem = null;
+        component.showPopup = true;
+        component.currentVolume = null;
         component.onShowPopup(SCRAPING_VOLUME);
       });
 
       it('sets the current item', () => {
-        expect(component.currentItem).toEqual(SCRAPING_VOLUME);
+        expect(component.currentVolume).toEqual(SCRAPING_VOLUME);
       });
 
-      it('sets the show popup flag', () => {
-        expect(component.showPopup).toBeTrue();
+      it('clears the show popup flag', () => {
+        expect(component.showPopup).toBeFalse();
       });
     });
 
     describe('hiding the cover', () => {
       beforeEach(() => {
         component.showPopup = true;
-        component.currentItem = SCRAPING_VOLUME;
+        component.currentVolume = SCRAPING_VOLUME;
         component.onShowPopup(null);
       });
 
       it('clears the current item', () => {
-        expect(component.currentItem).toBeNull();
+        expect(component.currentVolume).toBeNull();
       });
 
       it('clears the show popup flag', () => {

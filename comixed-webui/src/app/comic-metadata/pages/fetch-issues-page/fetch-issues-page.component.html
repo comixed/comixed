@@ -99,9 +99,9 @@
       <mat-card appearance="outlined" class="cx-width-100 cx-padding-5">
         <mat-card-title
           class="cx-text-nowrap"
-          [matTooltip]="selectedVolume | volumeMetadataTitle"
+          [matTooltip]="selectedVolume | IssueMetadataTitlePipe"
         >
-          {{ selectedVolume | volumeMetadataTitle }}
+          {{ selectedVolume | IssueMetadataTitlePipe }}
         </mat-card-title>
         <mat-card-subtitle class="cx-text-nowrap">
           {{ selectedVolume.publisher }}
@@ -112,7 +112,7 @@
             [src]="selectedVolume.imageUrl"
             width="100%"
             height="auto"
-            [alt]="selectedVolume | volumeMetadataTitle"
+            [alt]="selectedVolume | IssueMetadataTitlePipe"
           />
         </mat-card-content>
       </mat-card>

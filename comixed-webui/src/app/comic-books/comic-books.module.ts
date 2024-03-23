@@ -65,7 +65,7 @@ import { ImprintListEffects } from '@app/comic-books/effects/imprint-list.effect
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CoverDateFilterPipe } from './pipes/cover-date-filter.pipe';
 import { VolumeMetadataTableComponent } from '@app/comic-books/components/volume-metadata-table/volume-metadata-table.component';
-import { VolumeMetadataTitlePipe } from '@app/comic-books/pipes/volume-metadata-title.pipe';
+import { IssueMetadataTitlePipe } from '@app/comic-books/pipes/issue-metadata-title.pipe';
 import { ComicDetailListViewComponent } from './components/comic-detail-list-view/comic-detail-list-view.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -80,6 +80,7 @@ import { lastReadListFeature } from '@app/comic-books/reducers/last-read-list.re
 import { comicBooksReadFeature } from '@app/comic-books/reducers/comic-books-read.reducer';
 import { LastReadListEffects } from '@app/comic-books/effects/last-read-list.effects';
 import { ComicBooksReadEffects } from '@app/comic-books/effects/comic-books-read.effects';
+import { VolumeMetadataTitlePipe } from './pipes/volume-metadata-title.pipe';
 
 @NgModule({
   declarations: [
@@ -97,9 +98,10 @@ import { ComicBooksReadEffects } from '@app/comic-books/effects/comic-books-read
     PageHashUrlPipe,
     CoverDateFilterPipe,
     VolumeMetadataTableComponent,
-    VolumeMetadataTitlePipe,
+    IssueMetadataTitlePipe,
     ComicDetailListViewComponent,
-    ComicDetailFilterComponent
+    ComicDetailFilterComponent,
+    VolumeMetadataTitlePipe
   ],
   imports: [
     CommonModule,
@@ -161,6 +163,7 @@ import { ComicBooksReadEffects } from '@app/comic-books/effects/comic-books-read
     CoverDateFilterPipe,
     VolumeMetadataTableComponent,
     ComicDetailListViewComponent,
+    IssueMetadataTitlePipe,
     VolumeMetadataTitlePipe
   ]
 })

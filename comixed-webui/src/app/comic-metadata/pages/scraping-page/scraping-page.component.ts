@@ -164,7 +164,9 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
       });
     this.metadataSourceSubscription = this.store
       .select(selectChosenMetadataSource)
-      .subscribe(metadataSource => (this.metadataSource = metadataSource));
+      .subscribe(metadataSource => {
+        this.metadataSource = metadataSource;
+      });
     this.scrapingStateSubscription = this.store
       .select(selectSingleBookScrapingState)
       .subscribe(state => {
@@ -225,14 +227,6 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
   onShowPopup(showPopup: boolean, comicDetail: ComicDetail): void {
     this.showPopup = showPopup;
     this.popupComicDetail = comicDetail;
-    this.logger.info(
-      '*** showPopup:',
-      showPopup,
-      ' comicDetail:',
-      comicDetail,
-      ' popupComicDetail:',
-      this.popupComicDetail
-    );
   }
 
   onRemoveComicBook(comicDetail: ComicDetail) {

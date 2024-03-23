@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2022, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,25 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { SCRAPING_VOLUME_1 } from '@app/comic-metadata/comic-metadata.fixtures';
-import { VolumeMetadataTitlePipe } from '@app/comic-books/pipes/volume-metadata-title.pipe';
+import { Pipe, PipeTransform } from '@angular/core';
+import { IssueMetadata } from '@app/comic-metadata/models/issue-metadata';
 
-describe('VolumeMetadataTitlePipe', () => {
-  const VOLUME = SCRAPING_VOLUME_1;
-
-  let pipe: VolumeMetadataTitlePipe;
-
-  beforeEach(() => {
-    pipe = new VolumeMetadataTitlePipe();
-  });
-
-  it('create an instance', () => {
-    expect(pipe).toBeTruthy();
-  });
-
-  it('generates a title from a volume', () => {
-    expect(pipe.transform(VOLUME)).toEqual(
-      `${VOLUME.name} v${VOLUME.startYear}`
-    );
-  });
-});
+@Pipe({
+  name: 'issueMetadataTitle'
+})
+export class IssueMetadataTitlePipe implements PipeTransform {
+  transform(issue: IssueMetadata): string {
+    return `${issue.volumeName} #${issue.issueNumber}`;
+  }
+}

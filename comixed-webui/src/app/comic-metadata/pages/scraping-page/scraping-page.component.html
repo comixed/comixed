@@ -55,6 +55,14 @@
       <mat-card-title>
         {{ currentComicBook?.detail | comicTitle }}
       </mat-card-title>
+      <mat-card-subtitle>
+        <span
+          class="cx-width-100 cx-text-nowrap"
+          [matTooltip]="currentComicBook?.detail.filename"
+        >
+          {{ currentComicBook?.detail.filename }}
+        </span>
+      </mat-card-subtitle>
       <mat-card-content>
         <img
           [style.width]="'100%'"

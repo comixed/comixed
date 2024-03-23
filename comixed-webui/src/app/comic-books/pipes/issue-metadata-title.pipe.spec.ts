@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2022, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,25 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { SCRAPING_VOLUME_1 } from '@app/comic-metadata/comic-metadata.fixtures';
-import { VolumeMetadataTitlePipe } from '@app/comic-books/pipes/volume-metadata-title.pipe';
+import { IssueMetadataTitlePipe } from './issue-metadata-title.pipe';
+import {
+  SCRAPING_ISSUE_1,
+  SCRAPING_VOLUME_1
+} from '@app/comic-metadata/comic-metadata.fixtures';
 
-describe('VolumeMetadataTitlePipe', () => {
-  const VOLUME = SCRAPING_VOLUME_1;
+describe('IssueMetadataTitlePipe', () => {
+  const ISSUE = SCRAPING_ISSUE_1;
 
-  let pipe: VolumeMetadataTitlePipe;
+  let pipe: IssueMetadataTitlePipe;
 
   beforeEach(() => {
-    pipe = new VolumeMetadataTitlePipe();
+    pipe = new IssueMetadataTitlePipe();
   });
 
   it('create an instance', () => {
     expect(pipe).toBeTruthy();
   });
 
-  it('generates a title from a volume', () => {
-    expect(pipe.transform(VOLUME)).toEqual(
-      `${VOLUME.name} v${VOLUME.startYear}`
+  it('generates a title from an issue', () => {
+    expect(pipe.transform(ISSUE)).toEqual(
+      `${ISSUE.volumeName} #${ISSUE.issueNumber}`
     );
   });
 });

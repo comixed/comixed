@@ -34,6 +34,7 @@ import { MatSort } from '@angular/material/sort';
 import { IssueMetadata } from '@app/comic-metadata/models/issue-metadata';
 import { Store } from '@ngrx/store';
 import {
+  loadIssueMetadata,
   resetMetadataState,
   scrapeSingleComicBook
 } from '@app/comic-metadata/actions/single-book-scraping.actions';
@@ -97,7 +98,7 @@ export class ComicScrapingVolumeSelectionComponent
   confirmBeforeScraping = true;
   autoSelectExactMatch = false;
   showPopup = false;
-  currentItem: VolumeMetadata | null;
+  currentVolume: VolumeMetadata | null;
 
   constructor(
     private logger: LoggerService,
@@ -107,7 +108,10 @@ export class ComicScrapingVolumeSelectionComponent
   ) {
     this.issueSubscription = this.store
       .select(selectScrapingIssueMetadata)
-      .subscribe(issue => (this.issue = issue));
+      .subscribe(issue => {
+        this.issue = issue;
+        this.showPopup = !!issue;
+      });
     this.scrapingStateSubscription = this.store
       .select(selectSingleBookScrapingState)
       .subscribe(state => {
@@ -199,6 +203,16 @@ export class ComicScrapingVolumeSelectionComponent
     } else {
       this.selectedVolume = volume;
     }
+    if (!!this.selectedVolume) {
+      this.store.dispatch(
+        loadIssueMetadata({
+          metadataSource: this.metadataSource,
+          volumeId: this.selectedVolume.id,
+          issueNumber: this.comicIssueNumber,
+          skipCache: this.skipCache
+        })
+      );
+    }
   }
 
   onDecision(decision: boolean, volume: VolumeMetadata): void {
@@ -261,8 +275,19 @@ export class ComicScrapingVolumeSelectionComponent
     );
   }
 
-  onShowPopup(item: VolumeMetadata): void {
-    this.currentItem = item;
-    this.showPopup = !!this.currentItem;
+  onShowPopup(volume: VolumeMetadata): void {
+    this.currentVolume = volume;
+    this.issue = null;
+    if (!!this.currentVolume) {
+      this.store.dispatch(
+        loadIssueMetadata({
+          metadataSource: this.metadataSource,
+          volumeId: this.currentVolume.id,
+          issueNumber: this.comicIssueNumber,
+          skipCache: this.skipCache
+        })
+      );
+    }
+    this.showPopup = false;
   }
 }
