@@ -53,7 +53,6 @@
     },
     "detail-title": "Metadata Source Details",
     "label": {
-      "bean-name": "Bean Name",
       "ignore-empty-values": "Do not overwrite properties using empty values.",
       "property-name": "Property Name",
       "property-value": "Property Value",
@@ -83,7 +82,7 @@
   "metadata-source-list": {
     "label": {
       "actions": "",
-      "bean-name": "Bean Name",
+      "available": "Available?",
       "name": "Source Name",
       "no-rows-loaded": "No sources loaded",
       "preferred": "Preferred",

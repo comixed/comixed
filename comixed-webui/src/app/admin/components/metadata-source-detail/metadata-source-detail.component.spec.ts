@@ -106,20 +106,11 @@ describe('MetadataSourceDetailComponent', () => {
     describe('resetting the source', () => {
       beforeEach(() => {
         component.sourceForm.controls.name.setValue(SOURCE.name.substr(1));
-        component.sourceForm.controls.beanName.setValue(
-          SOURCE.beanName.substr(1)
-        );
         component.source = SOURCE;
       });
 
       it('updates the name input field', () => {
         expect(component.sourceForm.controls.name.value).toEqual(SOURCE.name);
-      });
-
-      it('updates the bean name input field', () => {
-        expect(component.sourceForm.controls.beanName.value).toEqual(
-          SOURCE.beanName
-        );
       });
     });
   });
@@ -184,9 +175,6 @@ describe('MetadataSourceDetailComponent', () => {
     beforeEach(() => {
       propertyCount = component.properties.length;
       component.sourceForm.controls.name.setValue(SOURCE.name.substring(1));
-      component.sourceForm.controls.beanName.setValue(
-        SOURCE.beanName.substring(1)
-      );
       component.sourceForm.controls.preferredSource.setValue(!SOURCE.preferred);
       component.onAddProperty();
       component.onAddProperty();
@@ -196,12 +184,6 @@ describe('MetadataSourceDetailComponent', () => {
 
     it('restores the source name', () => {
       expect(component.sourceForm.controls.name.value).toEqual(SOURCE.name);
-    });
-
-    it('restores the bean name', () => {
-      expect(component.sourceForm.controls.beanName.value).toEqual(
-        SOURCE.beanName
-      );
     });
 
     it('restores the preferred state', () => {

@@ -54,14 +54,6 @@ export class MetadataSourceDetailComponent {
         '',
         [Validators.required, Validators.minLength(3), Validators.maxLength(64)]
       ],
-      beanName: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(255)
-        ]
-      ],
       preferredSource: [''],
       properties: this.formBuilder.array([])
     });
@@ -80,7 +72,6 @@ export class MetadataSourceDetailComponent {
     this.resetProperties();
     this.sourceForm.controls.properties.reset([]);
     this.sourceForm.controls.name.setValue(source.name);
-    this.sourceForm.controls.beanName.setValue(source.beanName);
     this.sourceForm.controls.preferredSource.setValue(source.preferred);
     this.logger.debug('Loading metadata source properties');
     source.properties.forEach(property =>
@@ -125,7 +116,6 @@ export class MetadataSourceDetailComponent {
     return {
       ...this.source,
       name: this.sourceForm.controls.name.value,
-      beanName: this.sourceForm.controls.beanName.value,
       preferred: this.sourceForm.controls.preferredSource.value,
       properties: this.properties.controls.map(control => {
         return {

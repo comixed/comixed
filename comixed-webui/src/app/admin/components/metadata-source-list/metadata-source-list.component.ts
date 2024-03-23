@@ -63,7 +63,7 @@ export class MetadataSourceListComponent
   readonly displayedColumns = [
     'actions',
     'name',
-    'bean-name',
+    'available',
     'property-count'
   ];
   metadataForm: FormGroup;
@@ -125,8 +125,6 @@ export class MetadataSourceListComponent
           return data.preferred ? 1 : 0;
         case 'name':
           return data.name;
-        case 'bean-name':
-          return data.beanName;
       }
     };
   }

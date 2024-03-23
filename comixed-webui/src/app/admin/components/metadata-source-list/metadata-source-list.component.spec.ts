@@ -164,12 +164,6 @@ describe('MetadataSourceListComponent', () => {
         SOURCE.name
       );
     });
-
-    it('can sort by bean name', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(SOURCE, 'bean-name')
-      ).toEqual(SOURCE.beanName);
-    });
   });
 
   describe('ignoring empty values', () => {

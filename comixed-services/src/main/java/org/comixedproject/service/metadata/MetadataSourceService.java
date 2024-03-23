@@ -50,12 +50,11 @@ public class MetadataSourceService {
    */
   @Transactional
   public List<MetadataSource> loadMetadataSources() {
-    log.debug("Loading all metadata sources");
+    log.debug("Identifying available metadata sources");
     final List<MetadataAdaptorProvider> adaptors = this.metadataAdaptorRegistry.getAdaptors();
     this.doRegisterMissingAdaptors(adaptors);
     final List<String> adaptorNames = adaptors.stream().map(adaptor -> adaptor.getName()).toList();
     return this.metadataSourceRepository.loadMetadataSources().stream()
-        .filter(metadataSource -> adaptorNames.contains(metadataSource.getAdaptorName()))
         .map(
             metadataSource -> {
               metadataSource.setAvailable(adaptorNames.contains(metadataSource.getAdaptorName()));
