@@ -55,10 +55,18 @@ can be used, allow you to override default values. This file is:
 where **$ROOT** is the directory where the release was copied. Simply copy
 this file to:
 
-    $ROOT/config/application.properties
+    $HOME/.comixed/application.properties
 
-and edit the contents. When you restart the server, this configuration will
-be used instead.
+| OS      | $HOME LOCATION                         |
+|---------|----------------------------------------|
+| Windows | ```C:\users\YOURUSERNAME\\.comixed```  |
+| Linux   | ```/home/YOURUSERNAME/.comixed```      |
+| MacOS   | ```/Users/YOURUSERNAME/.comixed```     |
+
+Copy the file and edit the contents. When you restart the server, this
+configuration will be used instead. And, when a new release comes out,
+you'll want to make sure to copy your changes into it and replace this
+file.
 
 
 ## Using An External Database

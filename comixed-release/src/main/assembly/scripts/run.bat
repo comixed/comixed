@@ -22,7 +22,7 @@ CD /d %~dp0
 FOR %%f IN (comixed-app*.jar) DO SET COMIXED_JAR_FILE=%%f
 FOR %%f IN (..\lib) DO SET LIBDIR=%%f
 SET LOGFILE="%COMIXEDLOG%"
-SET CFGFILE="..\config\application.properties"
+SET CFGFILE="%USERPROFILE%\.comixed\application.properties"
 
 :process_command_line
 IF "%~1" == "" GOTO end_process_command_line
