@@ -424,7 +424,7 @@
       <artifactId>gitlog-maven-plugin</artifactId>
       <version>1.14.0</version>
       <configuration>
-        <reportTitle>Changelog for Maven Git Log Plugin version v2.0-SNAPSHOT</reportTitle>
+        <reportTitle>Changelog for ComiXed v2.0-SNAPSHOT</reportTitle>
         <verbose>false</verbose>
         <outputDirectory>${project.basedir}</outputDirectory>
         <generateMarkdownChangeLog>true</generateMarkdownChangeLog>
