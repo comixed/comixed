@@ -23,7 +23,7 @@ realpath() {
 ME=$(realpath "$0")
 BINDIR=$(dirname "${ME}")
 LIBDIR=$(realpath "${BINDIR}"/../lib)
-CFGFILE=$(realpath "${BINDIR}"/../config/application.properties)
+CFGFILE=$(realpath "${HOME}/.comixed/application.properties")
 
 JAVA=$(which java)
 JAROPTIONS=""
