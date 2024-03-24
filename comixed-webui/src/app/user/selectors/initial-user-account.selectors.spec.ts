@@ -28,6 +28,7 @@ describe('InitialUserAccount Selectors', () => {
   beforeEach(() => {
     state = {
       busy: Math.random() > 0.5,
+      checked: Math.random() > 0.5,
       hasExisting: Math.random() > 0.5
     };
   });

@@ -40,7 +40,6 @@ import {
 } from '@app/user/user.constants';
 import { passwordVerifyValidator } from '@app/user/user.functions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-create-admin-page',
@@ -82,11 +81,13 @@ export class CreateAdminPageComponent implements OnInit, OnDestroy {
     this.logger.trace('Subscribing to initial user state updates');
     this.initialUserSubscription = this.store
       .select(selectInitialUserAccountState)
-      .pipe(filter(state => !!state && !state.busy))
       .subscribe(state => {
-        if (state.hasExisting) {
+        if (!state.checked && !state.busy) {
+          this.logger.debug('Loading initial user accounts');
+          this.store.dispatch(loadInitialUserAccount());
+        } else if (!state.busy && state.checked && state.hasExisting) {
           this.logger.trace('Has users: redirecting to root page');
-          this.router.navigateByUrl('/');
+          this.router.navigateByUrl('/login');
         }
       });
     this.logger.trace('Subscribing to language change updates');
@@ -100,14 +101,12 @@ export class CreateAdminPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.logger.debug('Loading initial user accounts');
-    this.store.dispatch(loadInitialUserAccount());
+    this.logger.trace('Unsubscribing to initial user state updates');
+    this.initialUserSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
     this.loadTranslations();
-    this.logger.trace('Unsubscribing to initial user state updates');
-    this.initialUserSubscription.unsubscribe();
   }
 
   onCreateAccount(): void {

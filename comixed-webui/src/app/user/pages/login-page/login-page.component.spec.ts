@@ -163,6 +163,7 @@ describe('LoginPageComponent', () => {
         [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
           ...initialUserAccountState,
           loading: false,
+          checked: true,
           hasExisting: false
         }
       });
