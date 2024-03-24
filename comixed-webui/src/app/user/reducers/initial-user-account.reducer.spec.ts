@@ -32,21 +32,29 @@ describe('InitialUserAccount Reducer', () => {
       expect(state.busy).toBeFalse();
     });
 
+    it('clears the checked flag', () => {
+      expect(state.checked).toBeFalse();
+    });
+
     it('clears the has existing flag', () => {
       expect(state.hasExisting).toBeFalse();
     });
   });
 
-  describe('busy the existing account state', () => {
+  describe('checking the existing account state', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, busy: false, hasExisting: true },
+        { ...state, busy: false, checked: true, hasExisting: true },
         loadInitialUserAccount()
       );
     });
 
     it('sets the busy flag', () => {
       expect(state.busy).toBeTrue();
+    });
+
+    it('clears the busy flag', () => {
+      expect(state.checked).toBeFalse();
     });
 
     it('clears the has existing flag', () => {
@@ -61,6 +69,7 @@ describe('InitialUserAccount Reducer', () => {
           {
             ...state,
             busy: true,
+            checked: false,
             hasExisting: !HAS_EXISTING
           },
           loadInitialUserAccountSuccess({ hasExisting: HAS_EXISTING })
@@ -69,6 +78,10 @@ describe('InitialUserAccount Reducer', () => {
 
       it('clears the busy flag', () => {
         expect(state.busy).toBeFalse();
+      });
+
+      it('sets the checked flag', () => {
+        expect(state.checked).toBeTrue();
       });
 
       it('sets the has existing flag', () => {
@@ -81,7 +94,8 @@ describe('InitialUserAccount Reducer', () => {
         state = reducer(
           {
             ...state,
-            busy: true
+            busy: true,
+            checked: false
           },
           loadInitialUserAccountFailure()
         );
@@ -89,6 +103,10 @@ describe('InitialUserAccount Reducer', () => {
 
       it('clears the busy flag', () => {
         expect(state.busy).toBeFalse();
+      });
+
+      it('leaves the checked flag as cleared', () => {
+        expect(state.checked).toBeFalse();
       });
     });
   });

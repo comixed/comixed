@@ -39,7 +39,10 @@ import {
   ConfirmationService
 } from '@tragically-slick/confirmation';
 import { TitleService } from '@app/core/services/title.service';
-import { createAdminAccount } from '@app/user/actions/initial-user-account.actions';
+import {
+  createAdminAccount,
+  loadInitialUserAccount
+} from '@app/user/actions/initial-user-account.actions';
 import { USER_ADMIN } from '@app/user/user.fixtures';
 
 describe('CreateAdminPageComponent', () => {
@@ -106,21 +109,59 @@ describe('CreateAdminPageComponent', () => {
     });
   });
 
-  // TODO this state never seems to work in the component
-  xdescribe('when there are existing accounts', () => {
-    beforeEach(() => {
-      store.setState({
-        ...initialState,
-        [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
-          ...initialUserAccountState,
-          busy: false,
-          hasExisting: true
-        }
+  describe('before checking', () => {
+    describe('when not previously run', () => {
+      beforeEach(() => {
+        store.setState({
+          ...initialState,
+          [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
+            ...initialUserAccountState,
+            busy: false,
+            checked: false,
+            hasExisting: true
+          }
+        });
+      });
+
+      it('redirects the user to the root page', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(loadInitialUserAccount());
       });
     });
 
-    it('redirects the user to the root page', () => {
-      expect(router.navigateByUrl).toHaveBeenCalledWith('/');
+    describe('finding not existing accounts', () => {
+      beforeEach(() => {
+        store.setState({
+          ...initialState,
+          [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
+            ...initialUserAccountState,
+            busy: false,
+            checked: true,
+            hasExisting: false
+          }
+        });
+      });
+
+      it('redirects the user to the root page', () => {
+        expect(router.navigateByUrl).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('finding existing accounts', () => {
+      beforeEach(() => {
+        store.setState({
+          ...initialState,
+          [INITIAL_USER_ACCOUNT_FEATURE_KEY]: {
+            ...initialUserAccountState,
+            busy: false,
+            checked: true,
+            hasExisting: true
+          }
+        });
+      });
+
+      it('redirects the user to the root page', () => {
+        expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
+      });
     });
   });
 

@@ -77,7 +77,10 @@ export class LoginPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.initialAccountSubscription = this.store
       .select(selectInitialUserAccountState)
       .subscribe(state => {
-        if (!state.busy && !state.hasExisting) {
+        if (!state.busy && !state.checked) {
+          this.logger.debug('Loading initial user accounts');
+          this.store.dispatch(loadInitialUserAccount());
+        } else if (!state.busy && state.checked && !state.hasExisting) {
           this.logger.trace('Redirecting to account creation page');
           this.router.navigateByUrl('/users/create/admin');
         }

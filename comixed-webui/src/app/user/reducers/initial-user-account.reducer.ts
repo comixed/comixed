@@ -30,11 +30,13 @@ export const INITIAL_USER_ACCOUNT_FEATURE_KEY = 'initial_user_account_state';
 
 export interface InitialUserAccountState {
   busy: boolean;
+  checked: boolean;
   hasExisting: boolean;
 }
 
 export const initialState: InitialUserAccountState = {
   busy: false,
+  checked: false,
   hasExisting: false
 };
 
@@ -43,11 +45,13 @@ export const reducer = createReducer(
   on(loadInitialUserAccount, state => ({
     ...state,
     busy: true,
+    checked: false,
     hasExisting: false
   })),
   on(loadInitialUserAccountSuccess, (state, action) => ({
     ...state,
     busy: false,
+    checked: true,
     hasExisting: action.hasExisting
   })),
   on(loadInitialUserAccountFailure, state => ({ ...state, busy: false })),
