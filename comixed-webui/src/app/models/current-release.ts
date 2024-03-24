@@ -29,4 +29,9 @@ export interface CurrentRelease {
   dirty: boolean;
   remoteOriginURL: string;
   jdbcUrl: string;
+  javaVersion: string;
+  javaVendor: string;
+  osName: string;
+  osArch: string;
+  osVersion: string;
 }

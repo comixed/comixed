@@ -86,6 +86,11 @@ public class ReleaseServiceTest {
     assertEquals(TEST_COMMIT_USER, result.getCommitUser());
     assertEquals(Boolean.parseBoolean(TEST_COMMIT_DIRTY), result.isDirty());
     assertEquals(TEST_REMOTE_ORIGIN_URL, result.getRemoteOriginURL());
+    assertEquals(System.getProperty("java.runtime.version"), result.getJavaVersion());
+    assertEquals(System.getProperty("java.vendor"), result.getJavaVendor());
+    assertEquals(System.getProperty("os.name"), result.getOsName());
+    assertEquals(System.getProperty("os.arch"), result.getOsArch());
+    assertEquals(System.getProperty("os.version"), result.getOsVersion());
   }
 
   @Test

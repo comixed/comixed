@@ -101,6 +101,13 @@ ${this.translateService.instant('build-details.label.remote-origin-url', {
 })}
 ${this.translateService.instant('build-details.label.jdbc-url', {
   url: this.details.jdbcUrl
+})}
+${this.translateService.instant('build-details.label.java-runtime', {
+  version: this.details.javaVersion,
+  vendor: this.details.javaVendor,
+  osName: this.details.osName,
+  osArch: this.details.osArch,
+  osVersion: this.details.osVersion
 })}`
     );
   }

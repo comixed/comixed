@@ -32,7 +32,12 @@ export const CURRENT_RELEASE: CurrentRelease = {
   commitEmail: 'commit@email.com',
   dirty: Math.random() > 0.5,
   remoteOriginURL: 'http://remote.origin.url',
-  jdbcUrl: 'jdbc:h2:mem://localhost/comixed'
+  jdbcUrl: 'jdbc:h2:mem://localhost/comixed',
+  javaVendor: 'Java Vendor',
+  javaVersion: '17.7.65',
+  osName: 'Mac OS X',
+  osVersion: '14.4',
+  osArch: 'aarch64'
 };
 
 export const LATEST_RELEASE: LatestRelease = {

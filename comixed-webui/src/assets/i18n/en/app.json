@@ -15,6 +15,7 @@
       "commit-time": "This commit was created on {time}.",
       "commit-user": "Commit was created by {name} <{email}>",
       "dirty": "The branch {dirty, select, true{contains} other{does not contain}} uncommitted changes.",
+      "java-runtime": "Using Java {version} ({vendor}) running on {osName} v{osVersion} ({osArch})",
       "jdbc-url": "The database URL being used is {url}",
       "remote-origin-url": "This branch is tracking the remote branch {url}"
     },

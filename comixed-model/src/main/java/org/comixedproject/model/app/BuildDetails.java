@@ -102,4 +102,34 @@ public class BuildDetails {
   @Getter
   @Setter
   private String jdbcUrl;
+
+  @JsonProperty("javaVersion")
+  @JsonView(View.ReleaseDetails.class)
+  @Getter
+  @Setter
+  private String javaVersion;
+
+  @JsonProperty("javaVendor")
+  @JsonView(View.ReleaseDetails.class)
+  @Getter
+  @Setter
+  private String javaVendor;
+
+  @JsonProperty("osName")
+  @JsonView(View.ReleaseDetails.class)
+  @Getter
+  @Setter
+  private String osName;
+
+  @JsonProperty("osArch")
+  @JsonView(View.ReleaseDetails.class)
+  @Getter
+  @Setter
+  private String osArch;
+
+  @JsonProperty("osVersion")
+  @JsonView(View.ReleaseDetails.class)
+  @Getter
+  @Setter
+  private String osVersion;
 }

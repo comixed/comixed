@@ -60,6 +60,19 @@
           "build-details.label.jdbc-url" | translate: { url: details?.jdbcUrl }
         }}
       </div>
+      <div>
+        {{
+          "build-details.label.java-runtime"
+            | translate
+              : {
+                  version: details?.javaVersion,
+                  vendor: details?.javaVendor,
+                  osName: details?.osName,
+                  osArch: details?.osArch,
+                  osVersion: details?.osVersion
+                }
+        }}
+      </div>
     </mat-card-content>
     <mat-card-actions>
       <button
