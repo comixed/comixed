@@ -118,6 +118,11 @@ public class ReleaseService {
       this.buildDetails.setDirty(Boolean.valueOf(this.dirty));
       this.buildDetails.setRemoteOriginURL(this.remoteOriginURL);
       this.buildDetails.setJdbcUrl(this.jdbcUrl);
+      this.buildDetails.setJavaVersion(System.getProperty("java.runtime.version"));
+      this.buildDetails.setJavaVendor(System.getProperty("java.vendor"));
+      this.buildDetails.setOsName(System.getProperty("os.name"));
+      this.buildDetails.setOsArch(System.getProperty("os.arch"));
+      this.buildDetails.setOsVersion(System.getProperty("os.version"));
     }
 
     return this.buildDetails;
