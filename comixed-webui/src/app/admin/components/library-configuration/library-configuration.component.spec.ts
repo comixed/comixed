@@ -28,6 +28,7 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import {
+  BLOCKED_PAGES_ENABLED,
   CREATE_EXTERNAL_METADATA_FILES,
   LIBRARY_COMIC_RENAMING_RULE,
   LIBRARY_DELETE_EMPTY_DIRECTORIES,
@@ -55,6 +56,7 @@ describe('LibraryConfigurationComponent', () => {
   const COMIC_RENAMING_RULE = 'The comic renaming rule';
   const NO_RECREATE_COMICS = Math.random() > 0.5;
   const PAGE_RENAMING_RULE = 'The page renaming rule';
+  const BLOCKED_PAGES_ENABLED_FEATURE_STATE = Math.random() > 0.5;
   const OPTIONS = [
     {
       name: LIBRARY_COMIC_RENAMING_RULE,
@@ -83,6 +85,10 @@ describe('LibraryConfigurationComponent', () => {
     {
       name: SKIP_INTERNAL_METADATA_FILES,
       value: `${SKIP_INTERNAL_METADATA}`
+    },
+    {
+      name: BLOCKED_PAGES_ENABLED,
+      value: `${BLOCKED_PAGES_ENABLED_FEATURE_STATE}`
     }
   ];
   const initialState = {};
@@ -90,6 +96,7 @@ describe('LibraryConfigurationComponent', () => {
   let component: LibraryConfigurationComponent;
   let fixture: ComponentFixture<LibraryConfigurationComponent>;
   let store: MockStore<any>;
+  let spyOnStoreDispatch: jasmine.Spy;
   let confirmationService: ConfirmationService;
 
   beforeEach(
@@ -117,7 +124,7 @@ describe('LibraryConfigurationComponent', () => {
       fixture = TestBed.createComponent(LibraryConfigurationComponent);
       component = fixture.componentInstance;
       store = TestBed.inject(MockStore);
-      spyOn(store, 'dispatch');
+      spyOnStoreDispatch = spyOn(store, 'dispatch');
       confirmationService = TestBed.inject(ConfirmationService);
       fixture.detectChanges();
     })
@@ -168,6 +175,7 @@ describe('LibraryConfigurationComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
+      spyOnStoreDispatch.calls.reset();
       component.options = OPTIONS;
       component.onSave();
     });
@@ -198,7 +206,11 @@ describe('LibraryConfigurationComponent', () => {
             },
             { name: LIBRARY_ROOT_DIRECTORY, value: LIBRARY_ROOT },
             { name: LIBRARY_COMIC_RENAMING_RULE, value: COMIC_RENAMING_RULE },
-            { name: LIBRARY_PAGE_RENAMING_RULE, value: PAGE_RENAMING_RULE }
+            { name: LIBRARY_PAGE_RENAMING_RULE, value: PAGE_RENAMING_RULE },
+            {
+              name: BLOCKED_PAGES_ENABLED,
+              value: `${BLOCKED_PAGES_ENABLED_FEATURE_STATE}`
+            }
           ]
         })
       );

@@ -62,6 +62,10 @@ import {
   SKIP_BLOCKING_PAGES_USER_PREFERENCE,
   SKIP_METADATA_USER_PREFERENCE
 } from '@app/comic-files/comic-file.constants';
+import { selectFeatureEnabledState } from '@app/admin/selectors/feature-enabled.selectors';
+import { hasFeature, isFeatureEnabled } from '@app/admin';
+import { BLOCKED_PAGES_ENABLED } from '@app/admin/admin.constants';
+import { getFeatureEnabled } from '@app/admin/actions/feature-enabled.actions';
 
 @Component({
   selector: 'cx-import-comics',
@@ -84,15 +88,15 @@ export class ImportComicsPageComponent
   ];
   dataSource = new MatTableDataSource<SelectableListItem<ComicFile>>([]);
   langChangeSubscription: Subscription;
-  filesSubscription: Subscription;
+  filesSubscription$: Subscription;
   files: ComicFile[];
-  translateSubscription: Subscription;
-  userSubscription: Subscription;
+  translateSubscription$: Subscription;
+  userSubscription$: Subscription;
   user: User;
-  comicImportStateSubscription: Subscription;
-  comicFileListStateSubscription: Subscription;
-  sendComicFilesStateSubscription: Subscription;
-  selectedFilesSubscription: Subscription;
+  comicImportStateSubscription$: Subscription;
+  comicFileListStateSubscription$: Subscription;
+  sendComicFilesStateSubscription$: Subscription;
+  selectedFilesSubscription$: Subscription;
   selectedFiles: ComicFile[] = [];
   pageSize = PAGE_SIZE_DEFAULT;
   showFinderForm = false;
@@ -102,6 +106,8 @@ export class ImportComicsPageComponent
   skipBlockingPages = false;
   showCoverPopup = false;
   comicFile: ComicFile = null;
+  featureEnabledSubscription$: Subscription;
+  blockedPagesEnabled = false;
 
   constructor(
     private logger: LoggerService,
@@ -113,10 +119,10 @@ export class ImportComicsPageComponent
     private router: Router,
     public queryParameterService: QueryParameterService
   ) {
-    this.translateSubscription = this.translateService.onLangChange.subscribe(
+    this.translateSubscription$ = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
-    this.userSubscription = this.store
+    this.userSubscription$ = this.store
       .select(selectUser)
       .pipe(filter(user => !!user))
       .subscribe(user => {
@@ -135,7 +141,7 @@ export class ImportComicsPageComponent
             `${false}`
           ) === `${true}`;
       });
-    this.filesSubscription = this.store
+    this.filesSubscription$ = this.store
       .select(selectComicFiles)
       .subscribe(files => {
         this.files = files;
@@ -143,29 +149,44 @@ export class ImportComicsPageComponent
         this.updateSelectionState();
         this.showFinderForm = false;
       });
-    this.selectedFilesSubscription = this.store
+    this.selectedFilesSubscription$ = this.store
       .select(selectComicFileSelections)
       .subscribe(selectedFiles => {
         this.selectedFiles = selectedFiles;
         this.updateDataSource();
         this.updateSelectionState();
       });
-    this.comicFileListStateSubscription = this.store
+    this.comicFileListStateSubscription$ = this.store
       .select(selectComicFileListState)
       .subscribe(state =>
         this.store.dispatch(setBusyState({ enabled: state.loading }))
       );
-    this.sendComicFilesStateSubscription = this.store
+    this.sendComicFilesStateSubscription$ = this.store
       .select(selectImportComicFilesState)
       .subscribe(state =>
         this.store.dispatch(setBusyState({ enabled: state.sending }))
       );
-    this.comicImportStateSubscription = this.store
+    this.comicImportStateSubscription$ = this.store
       .select(selectProcessComicsState)
       .subscribe(state => {
         if (state.active) {
           this.logger.debug('Redirecting to import status page');
           this.router.navigateByUrl('/library/import/status');
+        }
+      });
+    this.featureEnabledSubscription$ = this.store
+      .select(selectFeatureEnabledState)
+      .subscribe(state => {
+        if (!state.busy && !hasFeature(state.features, BLOCKED_PAGES_ENABLED)) {
+          this.logger.debug('Loading feature state:', BLOCKED_PAGES_ENABLED);
+          this.store.dispatch(
+            getFeatureEnabled({ name: BLOCKED_PAGES_ENABLED })
+          );
+        } else {
+          this.blockedPagesEnabled = isFeatureEnabled(
+            state.features,
+            BLOCKED_PAGES_ENABLED
+          );
         }
       });
   }
@@ -197,13 +218,22 @@ export class ImportComicsPageComponent
   }
 
   ngOnDestroy(): void {
-    this.translateSubscription.unsubscribe();
-    this.userSubscription.unsubscribe();
-    this.filesSubscription.unsubscribe();
-    this.selectedFilesSubscription.unsubscribe();
-    this.comicFileListStateSubscription.unsubscribe();
-    this.sendComicFilesStateSubscription.unsubscribe();
-    this.comicImportStateSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from language change updates');
+    this.translateSubscription$.unsubscribe();
+    this.logger.trace('Unsubscribing from user state updates');
+    this.userSubscription$.unsubscribe();
+    this.logger.trace('Unsubscribing from comic file updates');
+    this.filesSubscription$.unsubscribe();
+    this.logger.trace('Unsubscribing from selected comic file updates');
+    this.selectedFilesSubscription$.unsubscribe();
+    this.logger.trace('Unsubscribing from comic file list state updates');
+    this.comicFileListStateSubscription$.unsubscribe();
+    this.logger.trace('Unsubscribing from send comic file state updates');
+    this.sendComicFilesStateSubscription$.unsubscribe();
+    this.logger.trace('Unsubscribing from import state updates');
+    this.comicImportStateSubscription$.unsubscribe();
+    this.logger.trace('Unsubscribing from feature enabled updates');
+    this.featureEnabledSubscription$.unsubscribe();
   }
 
   onStartImport(): void {

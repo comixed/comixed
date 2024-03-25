@@ -68,6 +68,8 @@ import { LibraryPluginsConfigurationComponent } from '@app/admin/components/libr
 import { CreatePluginDialogComponent } from '@app/admin/components/create-plugin-dialog/create-plugin-dialog.component';
 import { LibraryPluginSetupComponent } from './components/library-plugin-setup/library-plugin-setup.component';
 import { LibraryPluginsModule } from '@app/library-plugins/library-plugins.module';
+import { featureEnabledFeature } from '@app/admin/reducers/feature-enabled.reducer';
+import { FeatureEnabledEffects } from '@app/admin/effects/feature-enabled.effects';
 
 @NgModule({
   declarations: [
@@ -96,13 +98,15 @@ import { LibraryPluginsModule } from '@app/library-plugins/library-plugins.modul
     StoreModule.forFeature(serverRuntimeFeature),
     StoreModule.forFeature(metricsFeature),
     StoreModule.forFeature(batchProcessFeature),
+    StoreModule.forFeature(featureEnabledFeature),
     EffectsModule.forFeature([
       ConfigurationOptionListEffects,
       SaveConfigurationOptionsEffects,
       FilenameScrapingRuleListEffects,
       ServerRuntimeEffects,
       MetricsEffects,
-      BatchProcessesEffects
+      BatchProcessesEffects,
+      FeatureEnabledEffects
     ]),
     MatTableModule,
     MatToolbarModule,

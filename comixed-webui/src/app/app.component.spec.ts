@@ -82,6 +82,10 @@ import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
 } from '@app/comic-books/reducers/comic-book-selection.reducer';
+import {
+  FEATURE_ENABLED_FEATURE_KEY,
+  initialState as initialFeatureEnabledState
+} from '@app/admin/reducers/feature-enabled.reducer';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -101,7 +105,8 @@ describe('AppComponent', () => {
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
-    [DARK_THEME_FEATURE_KEY]: initialDarkThemeState
+    [DARK_THEME_FEATURE_KEY]: initialDarkThemeState,
+    [FEATURE_ENABLED_FEATURE_KEY]: { ...initialFeatureEnabledState }
   };
 
   let component: AppComponent;

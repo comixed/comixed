@@ -36,7 +36,6 @@ import org.springframework.stereotype.Service;
 @Service
 @Log4j2
 public class ConfigurationService {
-  public static final String CFG_LIBRARY_MAX_RECORDS = "library.max-records";
   public static final String CFG_LIBRARY_ROOT_DIRECTORY = "library.root-directory";
   public static final String CFG_LIBRARY_COMIC_RENAMING_RULE = "library.comic-book.renaming-rule";
   public static final String CFG_LIBRARY_NO_RECREATE_COMICS = "library.comic-book.no-recreate";
@@ -48,6 +47,7 @@ public class ConfigurationService {
       "library.metadata.ignore-empty-values";
   public static final String CREATE_EXTERNAL_METADATA_FILE =
       "library.metadata.create-external-files";
+  public static final String CFG_MANAGE_BLOCKED_PAGES = "library.blocked-pages-enabled";
 
   @Autowired private ConfigurationRepository configurationRepository;
 
