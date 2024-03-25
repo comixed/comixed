@@ -19,7 +19,7 @@
 </mat-toolbar>
 
 <form [formGroup]="libraryConfigurationForm">
-  <mat-form-field class="cx-width-25">
+  <mat-form-field class="cx-width-20">
     <mat-checkbox
       id="delete-empty-directories-checkbox"
       formControlName="deleteEmptyDirectories"
@@ -28,7 +28,7 @@
     </mat-checkbox>
     <input hidden matInput />
   </mat-form-field>
-  <mat-form-field class="cx-width-25">
+  <mat-form-field class="cx-width-20">
     <mat-checkbox
       id="create-external-metadata-file-checkbox"
       formControlName="createExternalMetadataFile"
@@ -37,7 +37,7 @@
     </mat-checkbox>
     <input hidden matInput />
   </mat-form-field>
-  <mat-form-field class="cx-width-25">
+  <mat-form-field class="cx-width-20">
     <mat-checkbox
       id="skip-internal-metadata-file-checkbox"
       formControlName="skipInternalMetadataFile"
@@ -46,12 +46,21 @@
     </mat-checkbox>
     <input hidden matInput />
   </mat-form-field>
-  <mat-form-field class="cx-width-25">
+  <mat-form-field class="cx-width-20">
     <mat-checkbox
       id="no-recreate-comics-checkbox"
       formControlName="noRecreateComics"
     >
       {{ "configuration.label.no-recreate-comics" | translate }}
+    </mat-checkbox>
+    <input hidden matInput />
+  </mat-form-field>
+  <mat-form-field class="cx-width-20">
+    <mat-checkbox
+      id="blocked-pages-enabled-checkbox"
+      formControlName="blockedPagesEnabled"
+    >
+      {{ "configuration.label.blocked-pages-enabled" | translate }}
     </mat-checkbox>
     <input hidden matInput />
   </mat-form-field>

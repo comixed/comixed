@@ -21,6 +21,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import {
+  GET_FEATURE_ENABLED_URL,
   LOAD_CONFIGURATION_OPTIONS_URL,
   SAVE_CONFIGURATION_OPTIONS_URL
 } from '@app/admin/admin.constants';
@@ -35,14 +36,21 @@ export class ConfigurationService {
   constructor(private logger: LoggerService, private http: HttpClient) {}
 
   loadAll(): Observable<any> {
-    this.logger.debug('Service: loading configuration options');
+    this.logger.debug('Loading configuration options');
     return this.http.get(interpolate(LOAD_CONFIGURATION_OPTIONS_URL));
   }
 
   saveOptions(args: { options: ConfigurationOption[] }): Observable<any> {
-    this.logger.debug('Service: save configuration options:', args);
+    this.logger.debug('Save configuration options:', args);
     return this.http.post(interpolate(SAVE_CONFIGURATION_OPTIONS_URL), {
       options: args.options
     } as SaveConfigurationOptionsRequest);
+  }
+
+  getFeatureEnabled(args: { name: string }): Observable<any> {
+    this.logger.debug('Loading feature enabled state:', args);
+    return this.http.get(
+      interpolate(GET_FEATURE_ENABLED_URL, { name: args.name })
+    );
   }
 }

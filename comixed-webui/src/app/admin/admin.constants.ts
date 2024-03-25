@@ -31,12 +31,15 @@ export const SKIP_INTERNAL_METADATA_FILES =
   'library.metadata.no-comicinfo-entry';
 export const METADATA_IGNORE_EMPTY_VALUES =
   'library.metadata.ignore-empty-values';
+export const BLOCKED_PAGES_ENABLED = 'library.blocked-pages-enabled';
 
 export const LOAD_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
 export const SAVE_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
 export const LOAD_FILENAME_SCRAPING_RULES_URL = `${API_ROOT_URL}/admin/scraping/rules`;
 export const SAVE_FILENAME_SCRAPING_RULES_URL = `${API_ROOT_URL}/admin/scraping/rules`;
 export const GET_ALL_BATCH_PROCESSES_URL = `${API_ROOT_URL}/admin/processes`;
+
+export const GET_FEATURE_ENABLED_URL = `${API_ROOT_URL}/admin/config/\${name}/enabled`;
 
 // actuator URLS
 export const LOAD_METRIC_LIST_URL = `/actuator/metrics`;

@@ -29,6 +29,7 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { ConfigurationOption } from '@app/admin/models/configuration-option';
 import { getConfigurationOption } from '@app/admin';
 import {
+  BLOCKED_PAGES_ENABLED,
   CREATE_EXTERNAL_METADATA_FILES,
   LIBRARY_COMIC_RENAMING_RULE,
   LIBRARY_DELETE_EMPTY_DIRECTORIES,
@@ -102,6 +103,7 @@ export class LibraryConfigurationComponent {
       deleteEmptyDirectories: ['', []],
       createExternalMetadataFile: ['', []],
       skipInternalMetadataFile: ['', []],
+      blockedPagesEnabled: ['', []],
       rootDirectory: ['', [Validators.required]],
       comicRenamingRule: ['', []],
       noRecreateComics: ['', []],
@@ -147,6 +149,10 @@ export class LibraryConfigurationComponent {
         SKIP_INTERNAL_METADATA_FILES,
         `${false}`
       ) === `${true}`
+    );
+    this.libraryConfigurationForm.controls.blockedPagesEnabled.setValue(
+      getConfigurationOption(options, BLOCKED_PAGES_ENABLED, `${false}`) ===
+        `${true}`
     );
   }
 
@@ -212,6 +218,10 @@ export class LibraryConfigurationComponent {
       {
         name: LIBRARY_PAGE_RENAMING_RULE,
         value: this.libraryConfigurationForm.controls.pageRenamingRule.value
+      },
+      {
+        name: BLOCKED_PAGES_ENABLED,
+        value: `${this.libraryConfigurationForm.controls.blockedPagesEnabled.value}`
       }
     ];
   }

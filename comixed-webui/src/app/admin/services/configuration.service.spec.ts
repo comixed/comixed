@@ -32,11 +32,13 @@ import {
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/core';
 import {
+  GET_FEATURE_ENABLED_URL,
   LOAD_CONFIGURATION_OPTIONS_URL,
   SAVE_CONFIGURATION_OPTIONS_URL
 } from '@app/admin/admin.constants';
 import { SaveConfigurationOptionsResponse } from '@app/admin/models/net/save-configuration-options-response';
 import { SaveConfigurationOptionsRequest } from '@app/admin/models/net/save-configuration-options-request';
+import { FeatureEnabledResponse } from '@app/admin/models/net/feature-enabled-response';
 
 describe('ConfigurationService', () => {
   const OPTIONS = [
@@ -46,6 +48,8 @@ describe('ConfigurationService', () => {
     CONFIGURATION_OPTION_4,
     CONFIGURATION_OPTION_5
   ];
+  const FEATURE_NAME = 'feature.name';
+  const FEATURE_ENABLED = Math.random() > 0.5;
 
   let service: ConfigurationService;
   let httpMock: HttpTestingController;
@@ -84,5 +88,20 @@ describe('ConfigurationService', () => {
       options: OPTIONS
     } as SaveConfigurationOptionsRequest);
     req.flush({ options: OPTIONS } as SaveConfigurationOptionsResponse);
+  });
+
+  it('can load the enabled state for a feature', () => {
+    const serverResponse = {
+      enabled: FEATURE_ENABLED
+    } as FeatureEnabledResponse;
+    service
+      .getFeatureEnabled({ name: FEATURE_NAME })
+      .subscribe(response => expect(response).toEqual(serverResponse));
+
+    const req = httpMock.expectOne(
+      interpolate(GET_FEATURE_ENABLED_URL, { name: FEATURE_NAME })
+    );
+    expect(req.request.method).toEqual('GET');
+    req.flush(serverResponse);
   });
 });

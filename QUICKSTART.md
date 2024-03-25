@@ -131,7 +131,25 @@ Enter the email address and the password for the account you wish to create,
 and then submit the form. This will create a new account with administrator
 privileges.
 
-## Importing Your Comic Library
+# Configuration and Feature Flags
+
+Once you've created your administrator account, you can change the following
+configuration options and feature flags. 
+
+Navigate to the **Configuration** page and select the **Library** tab. There
+you can set the following options:
+
+| Option                                              | Required | Description                                                                    |
+|-----------------------------------------------------|----------|--------------------------------------------------------------------------------|
+| **Delete empty directories after consolidation**    | No       | Removes any directories that are left empty after organizing your comic books  |
+| **Create external metadata files for each comic**   | No       | Stores the comic's portable metadata as an external file next to the comic     |
+| **Do not create or update internal metadata files** | No       | Turns off storing metadata in the internal ComicInfo.xml file in each comic    |
+| **Do not recreate comic files**                     | No       | Disables changing the physical files for all comic books                       |
+| **Manage blocked pages**                            | No       | When enabled, the server will automatically mark any blocked page for deletion |
+| **Comic Renaming Rule**                             | Yes      | Defines the file naming rule when organizing your comic library                |
+| **Page Renaming Rule**                              | Yes      | Defines the file naming rule for individual pages within a comic file          |
+
+# Importing Your Comic Library
 
 To import your existing comic library, click on **Admin** -> **Import** to go to the import page.
 
@@ -147,7 +165,7 @@ As each comic is imported, your browser will be updated to show the newly added 
 
 ![comic library view](images/comic_library_during_import.png)
 
-### ComicInfo.xml Support
+## ComicInfo.xml Support
 
 When importing comics, and if you select to do so, then all files that contain the comicinfo.xml file will have the information contained in it imported into your database. This way you won't have to rescrape sources like the ComicVine database for those comics.
 
@@ -171,7 +189,7 @@ The easiest way to scrape a single comic is to open its details view, and go to 
 
 Once all of the data required is entered, click on the **Fetch** button below.
 
-#### Caching Metadata
+### Caching Metadata
 
 To reduce the amount of data needed, ComiXed will cache data its retrieved while scraping to use again. This *greatly* increases performance when you're scraping multiple issues from a single series.
 
@@ -179,11 +197,11 @@ This is why there are two buttons when fetching. The **Fetch** button will look 
 
 It's **highly** recommended that you use your cache and only skip it if the comic being scraped wasn't found locally.
 
-### Scraping Multiple Comics
+## Scraping Multiple Comics
 
 The core of a multi-comic scrape is described above. Here we'll describe how to select the comics and start the process.
 
-#### Selecting Comics
+### Selecting Comics
 
 ![selecting multiple comics](images/multi_scraping_select.png)
 
@@ -197,7 +215,7 @@ Here you can begin scraping by clicking the **Start Scraping** button.
 
 As it scrapes, you'll see the running total of comics remaining to be scraped as well as the details for the current comic being processed.
 
-#### WARNING
+### WARNING
 
 If you reload your browser, you **will** lose your list of remaining comics to be scraped. The list of comics is currently maintained in the browser, so reloading the browser will result in that list being lost.
 
@@ -209,7 +227,7 @@ Any comics already processed will keep their data, but all other comics that hav
 
 ComiXed provides support for accessing a comic's library via an OPDS browser.
 
-## Reading Comics Remotely
+# Reading Comics Remotely
 
 You can read comics from your library using any comic reader that supports the [OPDS](https://opds.io/),
 such as [Chunky Reader](http://chunkyreader.com/).

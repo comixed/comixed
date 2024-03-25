@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,23 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ConfigurationOption } from './models/configuration-option';
-import { FeatureFlag } from '@app/admin/models/feature-flag';
+import { createAction, props } from '@ngrx/store';
 
-export function getConfigurationOption(
-  options: ConfigurationOption[],
-  name: string,
-  defaultValue: string = null
-): string {
-  const option = options.find(entry => entry.name === name);
+export const getFeatureEnabled = createAction(
+  '[Feature Enabled] Load a feature and its enabled state',
+  props<{ name: string }>()
+);
 
-  return option?.value || defaultValue;
-}
+export const getFeatureEnabledSuccess = createAction(
+  '[Feature Enabled] Load a feature and its enabled state success',
+  props<{ name: string; enabled: boolean }>()
+);
 
-export function hasFeature(features: FeatureFlag[], name: string) {
-  return features.map(feature => feature.name).includes(name);
-}
-
-export function isFeatureEnabled(features: FeatureFlag[], name: string) {
-  return features.find(feature => feature.name === name)?.enabled || false;
-}
+export const getFeatureEnabledFailure = createAction(
+  '[Feature Enabled] Load a feature and its enabled state failure'
+);

@@ -18,9 +18,11 @@
 
 package org.comixedproject.batch.comicbooks.readers;
 
+import java.util.Collections;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,9 +37,17 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class MarkBlockedPagesReader extends AbstractComicReader {
   @Autowired private ComicBookService comicBookService;
+  @Autowired private ConfigurationService configurationService;
 
   @Override
   protected List<ComicBook> doLoadComics() {
+    log.trace("Checking if manage blocked pages is enabled");
+    if (!this.configurationService.isFeatureEnabled(
+        ConfigurationService.CFG_MANAGE_BLOCKED_PAGES)) {
+      log.debug("Managing blocked pages is disabled");
+      return Collections.emptyList();
+    }
+    log.trace("Loading comic books for blocked page processing");
     return this.comicBookService.findUnprocessedComicsForMarkedPageBlocking(
         this.getBatchChunkSize());
   }

@@ -159,7 +159,7 @@
 </button>
 
 <button
-  *ngIf="isAdmin"
+  *ngIf="isAdmin && blockedPagesEnabled"
   mat-button
   class="menu-button"
   routerLink="/library/pages/blocked"

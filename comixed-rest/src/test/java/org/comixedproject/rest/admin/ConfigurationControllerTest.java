@@ -18,11 +18,12 @@
 
 package org.comixedproject.rest.admin;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.*;
 
 import java.util.List;
+import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.admin.ConfigurationOption;
+import org.comixedproject.model.net.admin.FeatureEnabledResponse;
 import org.comixedproject.model.net.admin.SaveConfigurationOptionsRequest;
 import org.comixedproject.model.net.admin.SaveConfigurationOptionsResponse;
 import org.comixedproject.service.admin.ConfigurationOptionException;
@@ -36,6 +37,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ConfigurationControllerTest {
+  private static final Boolean TEST_FEATURE_ENABLED = RandomUtils.nextBoolean();
+  private static final String TEST_FEATURE_NAME = "test.feature-name";
+
   @InjectMocks private ConfigurationController controller;
   @Mock private ConfigurationService configurationService;
   @Mock private List<ConfigurationOption> optionList;
@@ -76,5 +80,18 @@ public class ConfigurationControllerTest {
     assertSame(savedOptionList, result.getOptions());
 
     Mockito.verify(configurationService, Mockito.times(1)).saveOptions(optionList);
+  }
+
+  @Test
+  public void testGetFeatureEnabled() {
+    Mockito.when(configurationService.isFeatureEnabled(Mockito.anyString()))
+        .thenReturn(TEST_FEATURE_ENABLED);
+
+    final FeatureEnabledResponse result = controller.getFeatureEnabled(TEST_FEATURE_NAME);
+
+    assertNotNull(result);
+    assertEquals(TEST_FEATURE_ENABLED, result.getEnabled());
+
+    Mockito.verify(configurationService, Mockito.times(1)).isFeatureEnabled(TEST_FEATURE_NAME);
   }
 }

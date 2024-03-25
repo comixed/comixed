@@ -28,6 +28,10 @@ import { selectComicBookUnreadCount } from '@app/comic-books/selectors/last-read
 import { selectLibraryState } from '@app/library/selectors/library.selectors';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { LibraryState } from '@app/library/reducers/library.reducer';
+import { selectFeatureEnabledState } from '@app/admin/selectors/feature-enabled.selectors';
+import { BLOCKED_PAGES_ENABLED } from '@app/admin/admin.constants';
+import { getFeatureEnabled } from '@app/admin/actions/feature-enabled.actions';
+import { hasFeature, isFeatureEnabled } from '@app/admin';
 
 @Component({
   selector: 'cx-side-navigation',
@@ -36,24 +40,40 @@ import { LibraryState } from '@app/library/reducers/library.reducer';
 })
 export class SideNavigationComponent implements OnDestroy {
   isAdmin = false;
+  blockedPagesEnabled = false;
+  featureEnabledSubscription$: Subscription;
   comicsCollapsed = false;
   collectionCollapsed = false;
   readingListsCollapsed = false;
-  libraryStateSubscription: Subscription;
+  libraryStateSubscription$: Subscription;
   libraryState: LibraryState;
-  lastReadUnreadCountSubscription: Subscription;
+  lastReadUnreadCountSubscription$: Subscription;
   totalComicBooks$ = new BehaviorSubject<number>(0);
   unprocessedComicBooks$ = new BehaviorSubject<number>(0);
   unreadComicBooks$ = new BehaviorSubject<number>(0);
   unscrapedComicBooks$ = new BehaviorSubject<number>(0);
   changedComicBooks$ = new BehaviorSubject<number>(0);
   deletedComicBooks$ = new BehaviorSubject<number>(0);
-  duplicateComicBooks = new BehaviorSubject<number>(0);
-  readingListsSubscription: Subscription;
+  readingListsSubscription$: Subscription;
   readingLists: ReadingList[] = [];
 
   constructor(private logger: LoggerService, private store: Store<any>) {
-    this.libraryStateSubscription = this.store
+    this.featureEnabledSubscription$ = this.store
+      .select(selectFeatureEnabledState)
+      .subscribe(state => {
+        if (!state.busy && !hasFeature(state.features, BLOCKED_PAGES_ENABLED)) {
+          this.logger.debug('Loading feature state:', BLOCKED_PAGES_ENABLED);
+          this.store.dispatch(
+            getFeatureEnabled({ name: BLOCKED_PAGES_ENABLED })
+          );
+        } else {
+          this.blockedPagesEnabled = isFeatureEnabled(
+            state.features,
+            BLOCKED_PAGES_ENABLED
+          );
+        }
+      });
+    this.libraryStateSubscription$ = this.store
       .select(selectLibraryState)
       .subscribe(state => {
         this.libraryState = state;
@@ -67,10 +87,10 @@ export class SideNavigationComponent implements OnDestroy {
         );
         this.deletedComicBooks$.next(state.deletedComics);
       });
-    this.lastReadUnreadCountSubscription = this.store
+    this.lastReadUnreadCountSubscription$ = this.store
       .select(selectComicBookUnreadCount)
       .subscribe(count => this.unreadComicBooks$.next(count));
-    this.readingListsSubscription = this.store
+    this.readingListsSubscription$ = this.store
       .select(selectUserReadingLists)
       .subscribe(lists => (this.readingLists = lists));
   }
@@ -89,11 +109,13 @@ export class SideNavigationComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.logger.trace('Unsubscribing from comic list updates');
-    this.libraryStateSubscription.unsubscribe();
+    this.libraryStateSubscription$.unsubscribe();
     this.logger.trace('Unsubscribing from unread count updates');
-    this.lastReadUnreadCountSubscription.unsubscribe();
+    this.lastReadUnreadCountSubscription$.unsubscribe();
     this.logger.trace('Unsubscribing from reading list updates');
-    this.readingListsSubscription.unsubscribe();
+    this.readingListsSubscription$.unsubscribe();
+    this.logger.trace('Unsubscribing from feature enabled updates');
+    this.featureEnabledSubscription$.unsubscribe();
   }
 
   onCollapseComics(collapsed: boolean): void {

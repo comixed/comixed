@@ -82,6 +82,12 @@ import {
   setComicFilesSelectedState
 } from '@app/comic-files/actions/comic-file-list.actions';
 import { saveUserPreference } from '@app/user/actions/user.actions';
+import {
+  FEATURE_ENABLED_FEATURE_KEY,
+  initialState as initialFeatureEnabledState
+} from '@app/admin/reducers/feature-enabled.reducer';
+import { getFeatureEnabled } from '@app/admin/actions/feature-enabled.actions';
+import { BLOCKED_PAGES_ENABLED } from '@app/admin/admin.constants';
 
 describe('ImportComicsPageComponent', () => {
   const USER = USER_READER;
@@ -90,17 +96,20 @@ describe('ImportComicsPageComponent', () => {
   const PAGE_SIZE = 400;
   const SKIP_METADATA = Math.random() > 0.5;
   const SKIP_BLOCKING_PAGES = Math.random() > 0.5;
+  const BLOCKED_PAGES_ENABLED_FEATURE_ENABLED = Math.random() > 0.5;
 
   const initialState = {
     [COMIC_FILE_LIST_FEATURE_KEY]: initialComicFileListState,
     [IMPORT_COMIC_FILES_FEATURE_KEY]: initialImportComicFilesState,
     [PROCESS_COMICS_FEATURE_KEY]: initialProcessComicsState,
-    [USER_FEATURE_KEY]: { ...initialUserState, user: USER }
+    [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
+    [FEATURE_ENABLED_FEATURE_KEY]: { ...initialFeatureEnabledState }
   };
 
   let component: ImportComicsPageComponent;
   let fixture: ComponentFixture<ImportComicsPageComponent>;
   let store: MockStore<any>;
+  let spyOnStoreDispatch: jasmine.Spy;
   let confirmationService: ConfirmationService;
   let titleService: TitleService;
   let translateService: TranslateService;
@@ -146,7 +155,7 @@ describe('ImportComicsPageComponent', () => {
       fixture = TestBed.createComponent(ImportComicsPageComponent);
       component = fixture.componentInstance;
       store = TestBed.inject(MockStore);
-      spyOn(store, 'dispatch');
+      spyOnStoreDispatch = spyOn(store, 'dispatch');
       confirmationService = TestBed.inject(ConfirmationService);
       titleService = TestBed.inject(TitleService);
       spyOn(titleService, 'setTitle');
@@ -528,6 +537,58 @@ describe('ImportComicsPageComponent', () => {
 
       it('clears the show popup flag', () => {
         expect(component.showCoverPopup).toBeFalse();
+      });
+    });
+  });
+
+  describe('loading the managed blocked pages feature', () => {
+    describe('when not previously loaded', () => {
+      beforeEach(() => {
+        spyOnStoreDispatch.calls.reset();
+        store.setState({
+          ...initialState,
+          [FEATURE_ENABLED_FEATURE_KEY]: {
+            ...initialFeatureEnabledState,
+            busy: false,
+            features: []
+          }
+        });
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          getFeatureEnabled({ name: BLOCKED_PAGES_ENABLED })
+        );
+      });
+    });
+
+    describe('when already previously loaded', () => {
+      beforeEach(() => {
+        component.blockedPagesEnabled = !BLOCKED_PAGES_ENABLED_FEATURE_ENABLED;
+        spyOnStoreDispatch.calls.reset();
+        store.setState({
+          ...initialState,
+          [FEATURE_ENABLED_FEATURE_KEY]: {
+            ...initialFeatureEnabledState,
+            busy: false,
+            features: [
+              {
+                name: BLOCKED_PAGES_ENABLED,
+                enabled: BLOCKED_PAGES_ENABLED_FEATURE_ENABLED
+              }
+            ]
+          }
+        });
+      });
+
+      it('does not fire an action', () => {
+        expect(store.dispatch).not.toHaveBeenCalled();
+      });
+
+      it('sets the blocked pages enabled flag', () => {
+        expect(component.blockedPagesEnabled).toEqual(
+          BLOCKED_PAGES_ENABLED_FEATURE_ENABLED
+        );
       });
     });
   });

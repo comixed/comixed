@@ -23,6 +23,7 @@ import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.admin.ConfigurationOption;
+import org.comixedproject.model.net.admin.FeatureEnabledResponse;
 import org.comixedproject.model.net.admin.SaveConfigurationOptionsRequest;
 import org.comixedproject.model.net.admin.SaveConfigurationOptionsResponse;
 import org.comixedproject.service.admin.ConfigurationOptionException;
@@ -31,10 +32,7 @@ import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <code>ConfigurationController</code> provides a REST interface for working with intances of
@@ -81,5 +79,20 @@ public class ConfigurationController {
     log.info("Saving configuration options");
     return new SaveConfigurationOptionsResponse(
         this.configurationService.saveOptions(request.getOptions()));
+  }
+
+  /**
+   * Returns if the named feature is enabled.
+   *
+   * @param name the feature name
+   * @return the enabled state
+   */
+  @GetMapping(
+      value = "/api/admin/config/{name}/enabled",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.cofiguration.is-feature-enabled")
+  public FeatureEnabledResponse getFeatureEnabled(@PathVariable("name") final String name) {
+    log.info("Getting feature enabled setting: {}", name);
+    return new FeatureEnabledResponse(this.configurationService.isFeatureEnabled(name));
   }
 }

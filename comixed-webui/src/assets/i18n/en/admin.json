@@ -22,6 +22,7 @@
   },
   "configuration": {
     "label": {
+      "blocked-pages-enabled": "Manage blocked pages",
       "comic-renaming-rule": "Comic Renaming Rule",
       "comic-renaming-variables": "Comic Renaming Variables",
       "comic-variable-description": "Description",
@@ -73,6 +74,9 @@
       "save": "Save current configuration."
     }
   },
+  "feature-enabled": {
+    "effect-failure": "Failed to load feature state: {name}"
+  },
   "filename-scraping-rules": {
     "label": {
       "cover-date-format": "Cover Date Format",
@@ -114,7 +118,7 @@
     "confirmation-message": "Save changes to the configuration?",
     "confirmation-title": "Save Configuration",
     "effect-failure": "Failed to save configuration changes.",
-    "effect-success": "Configuration changes saved."
+    "effect-success": "Configuration changes saved. You may need to reload your browser if you toggled any feature flags."
   },
   "server-health": {
     "database-status": {
