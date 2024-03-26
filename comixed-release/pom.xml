@@ -63,11 +63,6 @@
       <artifactId>comixed-app</artifactId>
       <version>2.1-SNAPSHOT</version>
     </dependency>
-    <dependency>
-      <groupId>org.comixedproject</groupId>
-      <artifactId>comixed-metadata-comicvine</artifactId>
-      <version>2.1-SNAPSHOT</version>
-    </dependency>
   </dependencies>
   <build>
     <plugins>

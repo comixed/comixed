@@ -84,6 +84,26 @@ you can always check the comixed mailing list archives for where others
 have described how to do these steps.
 
 
+## Adding Extensions And Plugins
+
+ComiXed supports adding features and functionality through the use of extensions
+and plugins.
+
+For example, to scrape comic book metadata, such as the cover date,
+writer and artist, or other details for a comic, you can use the 
+[ComiXed ComicVine Metadata Adaptor](https://github.com/comixed/comixed-metadata-comicvine)
+extension.
+
+Referring to the $HOME location described earlier in
+[Configurating The Application](#configuring-the-application), the following
+lists the directories used:
+
+| Type       | Directory                 |
+|------------|---------------------------|
+| Extensions | $HOME/.comixed/extensions |
+| Plugins    | $HOME/.comixed/plugins    |
+
+
 # Launching The Application
 
 To run the application, use one of the following options from the **bin**
@@ -151,100 +171,108 @@ you can set the following options:
 
 # Importing Your Comic Library
 
-To import your existing comic library, click on **Admin** -> **Import** to go to the import page.
+To import your existing comic library, login as an admin and navigate to the
+**Import Comics** page.
 
-Here you enter the root directory for where your comic library is stored. For example, **c:/users/reader/Comics** or **/Users/reader/Comics** and then click the **Load** button. This will scan the directory you entered and all child directories looking for all comic files not already in the library (you can run this multiple times to import new comics). When it finishes you'll see something like the following screen shot:
+Click on the search button to enter the root directory and maximum number of
+comics to find. The server will only return comics that are not already in
+the library. 
 
-![importing comics](images/import_comics.png)
+Please be patient. Depending on the size of your existing library and the
+number of files to process, this can take some time. However, once it finishe,
+it will then present a list of comics found.
 
-This will display *only* comics not already included in your library that are found in the directory and its subdirectories.
+From this list, select those comic books to be added to the database. Then
+simply click on the **Start Import** button.
 
-When you're ready, you can then right-click on a cover and select to begin importing comics. You can either import the selected comics **with** or **without** metadata included in a **ComicInfo.xml** file if found in any comic.
+**NOTE:** You will not be able to look for more comics to import while an
+existing import is running. And while an import is running, some access to
+the comics being processed won't be available. So it's a good idea to strike
+a balance between how many comics you import in a single batch. A good rule
+of thumb would be to import no more than 1,000 comics at a time.
 
-As each comic is imported, your browser will be updated to show the newly added comic. 
-
-![comic library view](images/comic_library_during_import.png)
 
 ## ComicInfo.xml Support
 
-When importing comics, and if you select to do so, then all files that contain the comicinfo.xml file will have the information contained in it imported into your database. This way you won't have to rescrape sources like the ComicVine database for those comics.
+When importing comics, and if you select to do so, then all files that
+contain the comicinfo.xml file will have the information contained in it
+imported into your database. This way you won't have to rescrape sources
+like the ComicVine database for those comics.
 
-## Scraping Comics
+# Scraping Comics
+
+## Before You Begin
+
+Before you can scrape comics, you will need to:
+
+1. install a comic metadascrape, and
+1. configure the scraper.
+
+The following is a short list of available comic metadata scrapers:
+
+| Name                       | Supported Sources | Download Link                                         |
+|----------------------------|-------------------|-------------------------------------------------------|
+| ComiXed Metadata ComicVine | ComicVine         | https://github.com/comixed/comixed-metadata-comicvine |
+
+Simply download the release and then place the JAR file in the extension
+directory described [here](#adding-extensions-and-plugins).
 
 To scrape comics, you can either scrape them individually or scrape across multiple comics.
 
-### What You Will Need
+## Scraping A Single Comic
 
-To scrape comics, you'll need to get a ComicVine API key. Go [here](https://comicvine.gamespot.com/forums/api-developers-2334/obtaining-api-key-1949403/) for more details on how to obtain one.
-
-Once you have your API key, you'll need to enter during your first scrape. It will then be stored and automatically used for future scrapes.
-
-![entering your API key](images/scraping_enter_api_key.png)
-
-When scraping any comic, the data that needs to be entered is the series name, the volume and the issue number for the comic to be scraped. And for most comics, these pieces of information can be determined from the filename. However, if it was not, or if it was incorrect, you can manually change it during the scraping process. 
- 
-### Scraping A Single Comic
-
-The easiest way to scrape a single comic is to open its details view, and go to the **ComicVine** tab.
+The easiest way to scrape a single comic is to:
+1. go to the comic book's details page,
+1. click on the **Scraping** tab,
+1. select a **Metadata Source**,
+1. enter any missing required data for the comic, then
+1. click the **Scrape this comic** button in the toolbar.
 
 Once all of the data required is entered, click on the **Fetch** button below.
 
-### Caching Metadata
-
-To reduce the amount of data needed, ComiXed will cache data its retrieved while scraping to use again. This *greatly* increases performance when you're scraping multiple issues from a single series.
-
-This is why there are two buttons when fetching. The **Fetch** button will look to see if there is cached data for the current comic and only go to the ComicVine database if none is found. The **Fetch (Skip Cache)** will ignore the cache **for this comic** and just go to ComicVine directly, and then overwrite any locally cached data.
-
-It's **highly** recommended that you use your cache and only skip it if the comic being scraped wasn't found locally.
-
 ## Scraping Multiple Comics
 
-The core of a multi-comic scrape is described above. Here we'll describe how to select the comics and start the process.
+To scrape more than one comic, go to any view listing comic books and select
+the ones to be scraped. Then, from the action menu on the list, select the
+option for multi-comic scraping:
 
-### Selecting Comics
+![scraping multiple comics](images/start-multicomic-scraping.png)
 
-![selecting multiple comics](images/multi_scraping_select.png)
+You will then be taken to a page that shows the list of comics waiting to be
+scraped, and the current comic to be scraped.
 
-To select comics to be scraped, simply click on the covers for comics. You can also right-click on the titles and toggle all selections on or off.
+You can select any pending comic by simply clicking on its row in the queue.
 
-When you're ready to start scraping, select the **Scrape comics...** option. You'll be taken to the following view:
+You can remove a comic from the scraping queue by clicking on the trashcan
+icon for that entry.
 
-Here you can begin scraping by clicking the **Start Scraping** button.
 
-![scraping](images/multi_scraping_running.png)
 
-As it scrapes, you'll see the running total of comics remaining to be scraped as well as the details for the current comic being processed.
+# Reading Your Library
 
-### WARNING
-
-If you reload your browser, you **will** lose your list of remaining comics to be scraped. The list of comics is currently maintained in the browser, so reloading the browser will result in that list being lost.
-
-Any comics already processed will keep their data, but all other comics that haven't been processed will need to be reselected.
-
-## Reading Your Library
-
-### Open Publication Distribution System (OPDS) Support
+## Open Publication Distribution System (OPDS) Support
 
 ComiXed provides support for accessing a comic's library via an OPDS browser.
 
 # Reading Comics Remotely
 
-You can read comics from your library using any comic reader that supports the [OPDS](https://opds.io/),
-such as [Chunky Reader](http://chunkyreader.com/).
+You can read comics from your library using any comic reader that supports
+the [OPDS](https://opds.io/), such as [Chunky Reader](http://chunkyreader.com/).
 
-To allow your reader to access the library, you will need either the hostname or IP address for the computer
-running ComiXed. So, for example, if that computers IP address is **192.168.1.29** then you would tell the
-reader:
+To allow your reader to access the library, you will need either the hostname
+or IP address for the computer running ComiXed. So, for example, if that
+computers IP address is **192.168.1.29** then you would tell the reader:
 
     Hostname: https://192.168.1.29:7171/opds
     Username: [your login email address]
     Password: [your login password]
 
-Please note that some readers (such as Chunky) assume the **/opds** portion of the URL. SO if your reader
-does not see a reading list, try removing **/opds** from the URL.
+Please note that some readers (such as Chunky) assume the **/opds** portion
+of the URL. SO if your reader does not see a reading list, try removing
+**/opds** from the URL.
 
-Then your reader should see, at least, a reading list named **All Comics**. This list will allow you to read
-all comics in your library.
+Then your reader should see, at least, a reading list named **All Comics**.
+This list will allow you to read all comics in your library.
 
-Future work will allow for different reading lists to be presented via OPDS. Please stay tuned for those
-changes to arrive.
+Future work will allow for different reading lists to be presented via OPDS.
+Please stay tuned for those changes to arrive.
