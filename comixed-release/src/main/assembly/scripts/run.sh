@@ -22,7 +22,8 @@ realpath() {
 
 ME=$(realpath "$0")
 BINDIR=$(dirname "${ME}")
-LIBDIR=$(realpath "${BINDIR}"/../lib)
+EXTDIR=$(realpath "${HOME}/.comixed/extensions")
+PLGDIR=$(realpath "${HOME}/.comixed/plugins")
 CFGFILE=$(realpath "${HOME}/.comixed/application.properties")
 
 JAVA=$(which java)
@@ -39,7 +40,7 @@ DBUSER="${DBUSERNAME}"
 DBPWRD="${DBPASSWORD}"
 IMGCACHEDIR=""
 LOGFILE="${COMIXEDLOG}"
-PLUGINDIR=""
+PLGDIR=""
 
 usage() {
   echo "Usage: run.sh [OPTIONS]"
@@ -49,7 +50,6 @@ usage() {
   echo " -u [USERNAME] - Set the database username"
   echo " -p [PASSWORD] - Set the database password"
   echo " -i [DIR]      - Set the image caching directory"
-  echo " -l [DIR]      - Set the JAR library directory"
   echo " -P [DIR]      - Set the plugin directory"
   echo " -H [SIZE]     - Set the runtime heap size (in mb)"
   echo " -S            - Enable SSL (def. off)"
@@ -75,8 +75,7 @@ while getopts "j:u:p:i:l:P:H:SX:dDMCvL:" option; do
   u) DBUSER="${OPTARG}" ;;
   p) DBPWRD="${OPTARG}" ;;
   i) IMGCACHEDIR="${OPTARG}" ;;
-  l) LIBDIR="${OPTARG}" ;;
-  P) PLUGINDIR="${OPTARG}" ;;
+  P) PLGDIR="${OPTARG}" ;;
   H) JVMOPTIONS="${JVMOPTIONS} -Xmx${OPTARG}m" ;;
   S) ENABLE_SSL="ON" ;;
   X) JVMOPTIONS="${JVMOPTIONS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=${OPTARG}" ;;
@@ -139,8 +138,8 @@ if [[ $IMGCACHEDIR ]]; then
   JAROPTIONS="${JAROPTIONS} --comixed.images.cache.location=${IMGCACHEDIR}"
 fi
 
-if [[ $PLUGINDIR ]]; then
-  JAROPTIONS="${JAROPTIONS} --comixed.plugins.location=${PLUGINDIR}"
+if [[ $PLGDIR ]]; then
+  JAROPTIONS="${JAROPTIONS} --comixed.plugins.location=${PLGDIR}"
 fi
 
 if [[ $ENABLE_SSL ]]; then
@@ -153,8 +152,8 @@ fi
 
 # build a list of JVM arguments
 
-if [[ $LIBDIR ]]; then
-  LOADER_PATH="-Dloader.path=${LIBDIR}"
+if [[ $EXTDIR ]]; then
+  LOADER_PATH="-Dloader.path=${EXTDIR}"
   JVMOPTIONS="-cp ${COMIXED_JAR_FILE} ${JVMOPTIONS}"
   COMIXED_JAR_FILE="-Dloader.main=org.comixedproject.ComiXedApp org.springframework.boot.loader.launch.PropertiesLauncher"
 fi
