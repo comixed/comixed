@@ -19,7 +19,7 @@
 package org.comixedproject.rest.library;
 
 import static junit.framework.TestCase.*;
-import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.*;
+import static org.comixedproject.batch.comicbooks.LibraryOrganizationConfiguration.*;
 import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.JOB_PURGE_LIBRARY_START;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_TARGET_ARCHIVE;
@@ -103,8 +103,8 @@ public class LibraryControllerTest {
   private Job processComicsJob;
 
   @Mock
-  @Qualifier("consolidateLibraryJob")
-  private Job consolidateLibraryJob;
+  @Qualifier("organizeLibraryJob")
+  private Job organizeLibraryJob;
 
   @Mock
   @Qualifier("recreateComicFilesJob")
@@ -247,18 +247,18 @@ public class LibraryControllerTest {
   }
 
   @Test(expected = LibraryException.class)
-  public void testConsolidateServiceThrowsException() throws Exception {
+  public void testOrganizeLibraryServiceThrowsException() throws Exception {
     Mockito.when(configurationService.getOptionValue(CFG_LIBRARY_ROOT_DIRECTORY))
         .thenReturn(TEST_DESTINATION_DIRECTORY);
     Mockito.when(configurationService.getOptionValue(CFG_LIBRARY_COMIC_RENAMING_RULE))
         .thenReturn(TEST_RENAMING_RULE);
     Mockito.doThrow(LibraryException.class)
         .when(libraryService)
-        .prepareForConsolidation(Mockito.anyList(), Mockito.anyString());
+        .prepareForOrganization(Mockito.anyList(), Mockito.anyString());
 
     try {
-      controller.consolidateLibrary(
-          httpSession, new ConsolidateLibraryRequest(TEST_DELETE_REMOVED_COMIC_FILES));
+      controller.organizeLibrary(
+          httpSession, new OrganizeLibraryRequest(TEST_DELETE_REMOVED_COMIC_FILES));
     } finally {
       Mockito.verify(configurationService, Mockito.times(1))
           .getOptionValue(CFG_LIBRARY_ROOT_DIRECTORY);
@@ -266,7 +266,7 @@ public class LibraryControllerTest {
   }
 
   @Test
-  public void testConsolidate() throws Exception {
+  public void testOrganizeLibrary() throws Exception {
     Mockito.when(configurationService.getOptionValue(CFG_LIBRARY_ROOT_DIRECTORY))
         .thenReturn(TEST_DESTINATION_DIRECTORY);
     Mockito.when(configurationService.getOptionValue(CFG_LIBRARY_COMIC_RENAMING_RULE))
@@ -274,22 +274,23 @@ public class LibraryControllerTest {
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
 
-    controller.consolidateLibrary(
-        httpSession, new ConsolidateLibraryRequest(TEST_DELETE_REMOVED_COMIC_FILES));
+    controller.organizeLibrary(
+        httpSession, new OrganizeLibraryRequest(TEST_DELETE_REMOVED_COMIC_FILES));
 
     final JobParameters parameters = jobParametersArgumentCaptor.getValue();
     assertNotNull(parameters);
-    assertTrue(parameters.getParameters().containsKey(PARAM_CONSOLIDATION_JOB_STARTED));
+    assertTrue(parameters.getParameters().containsKey(JOB_ORGANIZATION_TIME_STARTED));
     assertEquals(
         String.valueOf(TEST_DELETE_REMOVED_COMIC_FILES),
-        parameters.getString(PARAM_DELETE_REMOVED_COMIC_FILES));
-    assertEquals(TEST_DESTINATION_DIRECTORY, parameters.getString(PARAM_TARGET_DIRECTORY));
-    assertEquals(TEST_RENAMING_RULE, parameters.getString(PARAM_RENAMING_RULE));
+        parameters.getString(JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES));
+    assertEquals(
+        TEST_DESTINATION_DIRECTORY, parameters.getString(JOB_ORGANIZATION_TARGET_DIRECTORY));
+    assertEquals(TEST_RENAMING_RULE, parameters.getString(JOB_ORGANIZATION_RENAMING_RULE));
 
     Mockito.verify(libraryService, Mockito.times(1))
-        .prepareForConsolidation(selectedIds, TEST_DESTINATION_DIRECTORY);
+        .prepareForOrganization(selectedIds, TEST_DESTINATION_DIRECTORY);
     Mockito.verify(jobLauncher, Mockito.times(1))
-        .run(consolidateLibraryJob, jobParametersArgumentCaptor.getValue());
+        .run(organizeLibraryJob, jobParametersArgumentCaptor.getValue());
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
     Mockito.verify(comicBookSelectionService, Mockito.times(1)).decodeSelections(TEST_ENCODED_IDS);
     Mockito.verify(comicBookSelectionService, Mockito.times(1))

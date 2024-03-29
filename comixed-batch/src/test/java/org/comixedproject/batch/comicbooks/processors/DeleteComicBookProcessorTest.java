@@ -19,7 +19,7 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import static junit.framework.TestCase.*;
-import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_DELETE_REMOVED_COMIC_FILES;
+import static org.comixedproject.batch.comicbooks.LibraryOrganizationConfiguration.JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES;
 
 import java.io.File;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
@@ -66,7 +66,8 @@ public class DeleteComicBookProcessorTest {
   @Test
   public void testProcessWithDeleteFile() {
     Mockito.when(
-            executionContext.getString(PARAM_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))
+            executionContext.getString(
+                JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))
         .thenReturn(String.valueOf(true));
 
     final ComicBook result = processor.process(comicBook);
@@ -82,7 +83,8 @@ public class DeleteComicBookProcessorTest {
   @Test
   public void testProcessWithDeleteFileThrowsException() {
     Mockito.when(
-            executionContext.getString(PARAM_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))
+            executionContext.getString(
+                JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))
         .thenReturn(String.valueOf(true));
 
     final ComicBook result = processor.process(comicBook);
@@ -98,7 +100,8 @@ public class DeleteComicBookProcessorTest {
   @Test
   public void testProcess() {
     Mockito.when(
-            executionContext.getString(PARAM_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))
+            executionContext.getString(
+                JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))
         .thenReturn(String.valueOf(false));
 
     final ComicBook result = processor.process(comicBook);

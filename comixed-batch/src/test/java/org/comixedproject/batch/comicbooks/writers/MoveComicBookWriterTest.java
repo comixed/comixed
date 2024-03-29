@@ -45,6 +45,6 @@ public class MoveComicBookWriterTest {
     writer.write(comicBookList);
 
     Mockito.verify(comicStateHandler, Mockito.times(comicBookList.size()))
-        .fireEvent(comicBook, ComicEvent.comicConsolidated);
+        .fireEvent(comicBook, ComicEvent.comicOrganized);
   }
 }

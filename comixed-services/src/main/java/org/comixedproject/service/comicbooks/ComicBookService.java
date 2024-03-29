@@ -862,8 +862,8 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   }
 
   @Transactional
-  public void prepareForConsolidation(final List<Long> ids) {
-    this.comicBookRepository.markForConsolidationById(ids);
+  public void prepareForOrganization(final List<Long> ids) {
+    this.comicBookRepository.markForOrganizationById(ids);
   }
 
   @Transactional

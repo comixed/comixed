@@ -18,7 +18,7 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
-import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_DELETE_REMOVED_COMIC_FILES;
+import static org.comixedproject.batch.comicbooks.LibraryOrganizationConfiguration.JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
@@ -54,7 +54,8 @@ public class DeleteComicBookProcessor
     log.debug("Removing comicBook from database: id={}", comicBook.getId());
     this.comicBookService.deleteComicBook(comicBook);
     if (Boolean.parseBoolean(
-        this.executionContext.getString(PARAM_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))) {
+        this.executionContext.getString(
+            JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))) {
       log.trace("Deleting physical file: {}", comicBook.getComicDetail().getFilename());
       this.fileAdaptor.deleteFile(comicBook.getComicDetail().getFile());
       this.comicBookAdaptor.deleteMetadataFile(comicBook);

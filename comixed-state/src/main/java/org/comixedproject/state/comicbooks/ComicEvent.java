@@ -42,8 +42,8 @@ public enum ComicEvent {
   updateMetadata,
   // the metadata within the physical comic file has been updated
   metadataUpdated,
-  // the comic has been consolidated
-  comicConsolidated,
+  // the comic has been organized
+  comicOrganized,
   // the comic is being marked for removal
   deleteComic,
   // the comic is being unmarked for removal

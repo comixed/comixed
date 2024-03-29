@@ -24,14 +24,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * <code>ConsolidateLibraryRequest</code> represents the request body for initiating library
- * consolidation.
+ * <code>OrganizeLibraryRequest</code> represents the request body for initiating library
+ * organization.
  *
  * @author Darryl L. Piece
  */
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConsolidateLibraryRequest {
+public class OrganizeLibraryRequest {
   @JsonProperty("deletePhysicalFiles")
   @Getter
   private Boolean deletePhysicalFiles;

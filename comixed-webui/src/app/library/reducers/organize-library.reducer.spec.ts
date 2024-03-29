@@ -17,20 +17,20 @@
  */
 
 import {
-  ConsolidateLibraryState,
+  OrganizeLibraryState,
   initialState,
   reducer
-} from './consolidate-library.reducer';
+} from './organize-library.reducer';
 import {
-  libraryConsolidationStarted,
-  startLibraryConsolidation,
-  startLibraryConsolidationFailed
-} from '@app/library/actions/consolidate-library.actions';
+  startLibraryOrganizationSuccess,
+  startLibraryOrganization,
+  startLibraryOrganizationFailure
+} from '@app/library/actions/organize-library.actions';
 
-describe('ConsolidateLibrary Reducer', () => {
+describe('OrganizeLibrary Reducer', () => {
   const IDS = [1000, 1001, 1002, 1003];
 
-  let state: ConsolidateLibraryState;
+  let state: OrganizeLibraryState;
 
   beforeEach(() => {
     state = { ...initialState };
@@ -46,42 +46,39 @@ describe('ConsolidateLibrary Reducer', () => {
     });
   });
 
-  describe('starting consolidation', () => {
+  describe('starting organization', () => {
     beforeEach(() => {
-      state = reducer(
-        { ...state, sending: false },
-        startLibraryConsolidation()
-      );
+      state = reducer({ ...state, sending: false }, startLibraryOrganization());
     });
 
     it('sets the sending flag', () => {
       expect(state.sending).toBeTrue();
     });
-  });
 
-  describe('success starting consolidation', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, sending: true },
-        libraryConsolidationStarted()
-      );
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, sending: true },
+          startLibraryOrganizationSuccess()
+        );
+      });
+
+      it('clears the sending flag', () => {
+        expect(state.sending).toBeFalse();
+      });
     });
 
-    it('clears the sending flag', () => {
-      expect(state.sending).toBeFalse();
-    });
-  });
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, sending: true },
+          startLibraryOrganizationFailure()
+        );
+      });
 
-  describe('failure starting consolidation', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, sending: true },
-        startLibraryConsolidationFailed()
-      );
-    });
-
-    it('clears the sending flag', () => {
-      expect(state.sending).toBeFalse();
+      it('clears the sending flag', () => {
+        expect(state.sending).toBeFalse();
+      });
     });
   });
 });

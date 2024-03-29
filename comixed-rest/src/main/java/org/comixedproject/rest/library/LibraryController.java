@@ -18,10 +18,10 @@
 
 package org.comixedproject.rest.library;
 
-import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_CONSOLIDATION_JOB_STARTED;
-import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_DELETE_REMOVED_COMIC_FILES;
-import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_RENAMING_RULE;
-import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_TARGET_DIRECTORY;
+import static org.comixedproject.batch.comicbooks.LibraryOrganizationConfiguration.JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES;
+import static org.comixedproject.batch.comicbooks.LibraryOrganizationConfiguration.JOB_ORGANIZATION_RENAMING_RULE;
+import static org.comixedproject.batch.comicbooks.LibraryOrganizationConfiguration.JOB_ORGANIZATION_TARGET_DIRECTORY;
+import static org.comixedproject.batch.comicbooks.LibraryOrganizationConfiguration.JOB_ORGANIZATION_TIME_STARTED;
 import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.JOB_PURGE_LIBRARY_START;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_RECREATE_COMICS_STARTED;
@@ -42,9 +42,9 @@ import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.net.admin.ClearImageCacheResponse;
 import org.comixedproject.model.net.comicbooks.ConvertComicsRequest;
 import org.comixedproject.model.net.comicbooks.EditMultipleComicsRequest;
-import org.comixedproject.model.net.library.ConsolidateLibraryRequest;
 import org.comixedproject.model.net.library.LoadLibraryRequest;
 import org.comixedproject.model.net.library.LoadLibraryResponse;
+import org.comixedproject.model.net.library.OrganizeLibraryRequest;
 import org.comixedproject.model.net.library.PurgeLibraryRequest;
 import org.comixedproject.model.net.library.RemoteLibraryState;
 import org.comixedproject.service.admin.ConfigurationService;
@@ -95,8 +95,8 @@ public class LibraryController {
   private Job updateMetadataJob;
 
   @Autowired
-  @Qualifier("consolidateLibraryJob")
-  private Job consolidateLibraryJob;
+  @Qualifier("organizeLibraryJob")
+  private Job organizeLibraryJob;
 
   @Autowired
   @Qualifier("recreateComicFilesJob")
@@ -231,25 +231,24 @@ public class LibraryController {
   }
 
   /**
-   * Initiates the library consolidation process.
+   * Initiates the library organization process.
    *
    * @param session the session
    * @param request the request body
    * @throws Exception if an error occurs
    */
   @PostMapping(
-      value = "/api/library/consolidate",
+      value = "/api/library/organize",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  @Timed(value = "comixed.library.consolidate")
-  public void consolidateLibrary(
-      final HttpSession session, @RequestBody() ConsolidateLibraryRequest request)
-      throws Exception {
+  @Timed(value = "comixed.library.organize")
+  public void organizeLibrary(
+      final HttpSession session, @RequestBody() OrganizeLibraryRequest request) throws Exception {
     final boolean deleteRemovedComicFiles = request.getDeletePhysicalFiles();
     final List<Long> selectedIds =
         this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     log.info(
-        "Consolidating library: count={} delete physic files={}",
+        "Organizing library: count={} delete physic files={}",
         selectedIds.size(),
         deleteRemovedComicFiles);
     log.trace("Loading target directory");
@@ -259,15 +258,17 @@ public class LibraryController {
     final String renamingRule =
         this.configurationService.getOptionValue(
             ConfigurationService.CFG_LIBRARY_COMIC_RENAMING_RULE);
-    this.libraryService.prepareForConsolidation(selectedIds, targetDirectory);
-    log.trace("Launch consolidation batch process");
+    this.libraryService.prepareForOrganization(selectedIds, targetDirectory);
+    log.trace("Launch organization batch process");
     this.jobLauncher.run(
-        this.consolidateLibraryJob,
+        this.organizeLibraryJob,
         new JobParametersBuilder()
-            .addLong(PARAM_CONSOLIDATION_JOB_STARTED, System.currentTimeMillis())
-            .addString(PARAM_DELETE_REMOVED_COMIC_FILES, String.valueOf(deleteRemovedComicFiles))
-            .addString(PARAM_TARGET_DIRECTORY, targetDirectory)
-            .addString(PARAM_RENAMING_RULE, renamingRule)
+            .addLong(JOB_ORGANIZATION_TIME_STARTED, System.currentTimeMillis())
+            .addString(
+                JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES,
+                String.valueOf(deleteRemovedComicFiles))
+            .addString(JOB_ORGANIZATION_TARGET_DIRECTORY, targetDirectory)
+            .addString(JOB_ORGANIZATION_RENAMING_RULE, renamingRule)
             .toJobParameters());
     log.debug("Clearing comic book selections");
     this.comicBookSelectionService.clearSelectedComicBooks(selectedIds);

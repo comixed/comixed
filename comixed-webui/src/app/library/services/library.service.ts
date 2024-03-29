@@ -31,12 +31,12 @@ import {
   RESCAN_SELECTED_COMIC_BOOKS_URL,
   RESCAN_SINGLE_COMIC_BOOK_URL,
   SET_READ_STATE_URL,
-  START_LIBRARY_CONSOLIDATION_URL,
+  START_LIBRARY_ORGANIZATION_URL,
   UPDATE_SELECTED_COMIC_BOOKS_METADATA_URL,
   UPDATE_SINGLE_COMIC_BOOK_METADATA_URL
 } from '@app/library/library.constants';
 import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-request';
-import { ConsolidateLibraryRequest } from '@app/library/models/net/consolidate-library-request';
+import { OrganizeLibraryRequest } from '@app/library/models/net/organize-library-request';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ConvertComicBooksRequest } from '@app/library/models/net/convert-comic-books-request';
 import { PurgeLibraryRequest } from '@app/library/models/net/purge-library-request';
@@ -99,11 +99,11 @@ export class LibraryService {
     } as SetComicReadRequest);
   }
 
-  startLibraryConsolidation(): Observable<any> {
-    this.logger.trace('Start library consolidation');
-    return this.http.post(interpolate(START_LIBRARY_CONSOLIDATION_URL), {
+  startLibraryOrganization(): Observable<any> {
+    this.logger.trace('Start library organization');
+    return this.http.post(interpolate(START_LIBRARY_ORGANIZATION_URL), {
       deletePhysicalFiles: false
-    } as ConsolidateLibraryRequest);
+    } as OrganizeLibraryRequest);
   }
 
   rescanSingleComicBook(args: { comicBookId: number }): Observable<any> {

@@ -40,13 +40,13 @@ import {
   RESCAN_SELECTED_COMIC_BOOKS_URL,
   RESCAN_SINGLE_COMIC_BOOK_URL,
   SET_READ_STATE_URL,
-  START_LIBRARY_CONSOLIDATION_URL,
+  START_LIBRARY_ORGANIZATION_URL,
   UPDATE_SELECTED_COMIC_BOOKS_METADATA_URL,
   UPDATE_SINGLE_COMIC_BOOK_METADATA_URL
 } from '@app/library/library.constants';
 import { HttpResponse } from '@angular/common/http';
 import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-request';
-import { ConsolidateLibraryRequest } from '@app/library/models/net/consolidate-library-request';
+import { OrganizeLibraryRequest } from '@app/library/models/net/organize-library-request';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ConvertComicBooksRequest } from '@app/library/models/net/convert-comic-books-request';
 import { PurgeLibraryRequest } from '@app/library/models/net/purge-library-request';
@@ -144,18 +144,16 @@ describe('LibraryService', () => {
     req.flush(serviceResponse);
   });
 
-  it('can start library consolidation', () => {
+  it('can start library organization', () => {
     service
-      .startLibraryConsolidation()
+      .startLibraryOrganization()
       .subscribe(response => expect(response).toEqual(COMIC_DETAILS));
 
-    const req = httpMock.expectOne(
-      interpolate(START_LIBRARY_CONSOLIDATION_URL)
-    );
+    const req = httpMock.expectOne(interpolate(START_LIBRARY_ORGANIZATION_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
       deletePhysicalFiles: false
-    } as ConsolidateLibraryRequest);
+    } as OrganizeLibraryRequest);
   });
 
   it('can start rescanning a single comic book', () => {

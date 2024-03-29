@@ -21,7 +21,7 @@ To achieve this goal, the project will:
    * blocking pages based on hash identifiers so that they are ignored,
    * sharing of blocked page files,
    * deleting blocked pages from comics,
-   * consolidating the library, including performing any or all of the following steps:
+   * organizing the library, including performing any or all of the following steps:
       * moving all files into a well-defined directory structure,
       * converting comics to a single archive type,
       * removing files from each comic that have been blocked, and

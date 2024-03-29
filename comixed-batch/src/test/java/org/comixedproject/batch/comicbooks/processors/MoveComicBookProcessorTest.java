@@ -19,8 +19,8 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import static junit.framework.TestCase.*;
-import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_RENAMING_RULE;
-import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_TARGET_DIRECTORY;
+import static org.comixedproject.batch.comicbooks.LibraryOrganizationConfiguration.JOB_ORGANIZATION_RENAMING_RULE;
+import static org.comixedproject.batch.comicbooks.LibraryOrganizationConfiguration.JOB_ORGANIZATION_TARGET_DIRECTORY;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,9 +74,12 @@ public class MoveComicBookProcessorTest {
 
   @Before
   public void setUp() throws IOException {
-    Mockito.when(jobParameters.getString(PARAM_TARGET_DIRECTORY)).thenReturn(TEST_TARGET_DIRECTORY);
-    Mockito.when(jobParameters.getString(PARAM_RENAMING_RULE)).thenReturn(TEST_RENAMING_RULE);
+    Mockito.when(jobParameters.getString(JOB_ORGANIZATION_TARGET_DIRECTORY))
+        .thenReturn(TEST_TARGET_DIRECTORY);
+    Mockito.when(jobParameters.getString(JOB_ORGANIZATION_RENAMING_RULE))
+        .thenReturn(TEST_RENAMING_RULE);
     Mockito.when(comicDetail.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
+    Mockito.when(comicDetailFile.exists()).thenReturn(true);
     Mockito.when(comicDetail.getFile()).thenReturn(comicDetailFile);
     Mockito.when(comicDetail.getFilename()).thenReturn(TEST_SOURCE_FILENAME);
     Mockito.when(
@@ -96,6 +99,18 @@ public class MoveComicBookProcessorTest {
     Mockito.doNothing()
         .when(fileAdaptor)
         .moveFile(moveFileSourceArgumentCaptor.capture(), moveFileTargetArgumentCaptor.capture());
+  }
+
+  @Test
+  public void testProcessComicBookNotFound() {
+    Mockito.when(comicDetailFile.exists()).thenReturn(false);
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+
+    Mockito.verify(comicDetail, Mockito.never()).setFilename(Mockito.anyString());
   }
 
   @Test
