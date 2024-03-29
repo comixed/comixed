@@ -82,7 +82,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   showing = 0;
   pageSize = PAGE_SIZE_DEFAULT;
   showUpdateMetadata = false;
-  showConsolidate = false;
+  showOrganize = false;
   showPurge = false;
   dataSubscription: Subscription;
   unreadOnly = false;
@@ -128,7 +128,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       this.deletedOnly = !!data.deleted && data.deleted === true;
       this.unprocessedOnly = !!data.unprocessed && data.unprocessed === true;
       this.showUpdateMetadata = !this.unprocessedOnly && !this.deletedOnly;
-      this.showConsolidate =
+      this.showOrganize =
         !this.unreadOnly && !this.unscrapedOnly && !this.deletedOnly;
       this.showPurge = this.deletedOnly;
       this.pageContent = 'all';

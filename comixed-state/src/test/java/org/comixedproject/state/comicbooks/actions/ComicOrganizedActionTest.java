@@ -32,8 +32,8 @@ import org.springframework.messaging.MessageHeaders;
 import org.springframework.statemachine.StateContext;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ComicBookConsolidatedActionTest {
-  @InjectMocks private ComicConsolidatedAction action;
+public class ComicOrganizedActionTest {
+  @InjectMocks private ComicOrganizedAction action;
   @Mock private StateContext<ComicState, ComicEvent> context;
   @Mock private MessageHeaders messageHeaders;
   @Mock private ComicBook comicBook;
@@ -49,6 +49,6 @@ public class ComicBookConsolidatedActionTest {
   public void testExecute() {
     action.execute(context);
 
-    Mockito.verify(comicBook, Mockito.times(1)).setConsolidating(false);
+    Mockito.verify(comicBook, Mockito.times(1)).setOrganizing(false);
   }
 }

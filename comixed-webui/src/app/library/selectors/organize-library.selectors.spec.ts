@@ -16,13 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector } from '@ngrx/store';
 import {
-  CONSOLIDATE_LIBRARY_FEATURE_KEY,
-  ConsolidateLibraryState
-} from '../reducers/consolidate-library.reducer';
+  ORGANIZE_LIBRARY_FEATURE_KEY,
+  OrganizeLibraryState
+} from '../reducers/organize-library.reducer';
+import { selectOrganizeLibraryState } from './organize-library.selectors';
 
-export const selectConsolidateLibraryState =
-  createFeatureSelector<ConsolidateLibraryState>(
-    CONSOLIDATE_LIBRARY_FEATURE_KEY
-  );
+describe('OrganizeLibrary Selectors', () => {
+  let state: OrganizeLibraryState;
+
+  beforeEach(() => {
+    state = { sending: Math.random() > 0.5 };
+  });
+
+  it('should select the feature state', () => {
+    expect(
+      selectOrganizeLibraryState({
+        [ORGANIZE_LIBRARY_FEATURE_KEY]: state
+      })
+    ).toEqual(state);
+  });
+});

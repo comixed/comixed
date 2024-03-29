@@ -16,16 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createAction } from '@ngrx/store';
+import { createFeatureSelector } from '@ngrx/store';
+import {
+  ORGANIZE_LIBRARY_FEATURE_KEY,
+  OrganizeLibraryState
+} from '../reducers/organize-library.reducer';
 
-export const startLibraryConsolidation = createAction(
-  '[Consolidate Library] Start the library consolidation process'
-);
-
-export const libraryConsolidationStarted = createAction(
-  '[Consolidate Library] The consolidation process is started'
-);
-
-export const startLibraryConsolidationFailed = createAction(
-  '[Consolidate Library] Failed to start the consolidation process'
-);
+export const selectOrganizeLibraryState =
+  createFeatureSelector<OrganizeLibraryState>(ORGANIZE_LIBRARY_FEATURE_KEY);

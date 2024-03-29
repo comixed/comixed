@@ -116,17 +116,17 @@ public class LibraryServiceTest {
   }
 
   @Test(expected = LibraryException.class)
-  public void testPrepareForConsolidationNoTargetDirectory() throws LibraryException {
-    service.prepareForConsolidation(comicIdList, "");
+  public void testPrepareForOrganizationNoTargetDirectory() throws LibraryException {
+    service.prepareForOrganization(comicIdList, "");
   }
 
   @Test
-  public void testPrepareForConsolidation() throws LibraryException {
+  public void testPrepareForOrganization() throws LibraryException {
     for (int index = 0; index < 25; index++) comicBookList.add(comicBook);
 
-    service.prepareForConsolidation(comicIdList, TEST_TARGET_DIRECTORY);
+    service.prepareForOrganization(comicIdList, TEST_TARGET_DIRECTORY);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).prepareForConsolidation(comicIdList);
+    Mockito.verify(comicBookService, Mockito.times(1)).prepareForOrganization(comicIdList);
   }
 
   @Test(expected = LibraryException.class)

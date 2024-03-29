@@ -222,13 +222,13 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   List<ComicBook> findComicsMarkedForDeletion(Pageable pageable);
 
   /**
-   * Returns all comics with the consolidating flag set.
+   * Returns all comics with the organizing flag set.
    *
    * @param pageable the page request
    * @return the list of comics
    */
   @Query(
-      "SELECT c FROM ComicBook c WHERE c.consolidating = true AND c.comicDetail.comicState != 'DELETED'")
+      "SELECT c FROM ComicBook c WHERE c.organizing = true AND c.comicDetail.comicState != 'DELETED'")
   List<ComicBook> findComicsToBeMoved(Pageable pageable);
 
   /**
@@ -607,9 +607,8 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   List<ComicBook> getComicBooksWithoutDetails(int batchChunkSize);
 
   @Modifying
-  @Query(
-      "UPDATE ComicBook c SET c.consolidating = true WHERE c.id IN (:ids) AND c.consolidating = FALSE")
-  void markForConsolidationById(@Param("ids") List<Long> ids);
+  @Query("UPDATE ComicBook c SET c.organizing = true WHERE c.id IN (:ids) AND c.organizing = FALSE")
+  void markForOrganizationById(@Param("ids") List<Long> ids);
 
   @Modifying
   @Query("UPDATE ComicBook c SET c.recreating = true WHERE c.id IN (:ids) AND c.recreating = FALSE")

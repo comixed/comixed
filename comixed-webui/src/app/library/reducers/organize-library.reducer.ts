@@ -18,30 +18,30 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  libraryConsolidationStarted,
-  startLibraryConsolidation,
-  startLibraryConsolidationFailed
-} from '@app/library/actions/consolidate-library.actions';
+  startLibraryOrganizationSuccess,
+  startLibraryOrganization,
+  startLibraryOrganizationFailure
+} from '@app/library/actions/organize-library.actions';
 
-export const CONSOLIDATE_LIBRARY_FEATURE_KEY = 'consolidate_library_state';
+export const ORGANIZE_LIBRARY_FEATURE_KEY = 'organize_library_state';
 
-export interface ConsolidateLibraryState {
+export interface OrganizeLibraryState {
   sending: boolean;
 }
 
-export const initialState: ConsolidateLibraryState = {
+export const initialState: OrganizeLibraryState = {
   sending: false
 };
 
 export const reducer = createReducer(
   initialState,
 
-  on(startLibraryConsolidation, state => ({ ...state, sending: true })),
-  on(libraryConsolidationStarted, state => ({ ...state, sending: false })),
-  on(startLibraryConsolidationFailed, state => ({ ...state, sending: false }))
+  on(startLibraryOrganization, state => ({ ...state, sending: true })),
+  on(startLibraryOrganizationSuccess, state => ({ ...state, sending: false })),
+  on(startLibraryOrganizationFailure, state => ({ ...state, sending: false }))
 );
 
-export const consolidateLibraryFeature = createFeature({
-  name: CONSOLIDATE_LIBRARY_FEATURE_KEY,
+export const organizeLibraryFeature = createFeature({
+  name: ORGANIZE_LIBRARY_FEATURE_KEY,
   reducer
 });

@@ -43,24 +43,25 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * <code>ConsolidationConfiguration</code> defines the consolidation batch process.
+ * <code>LibraryOrganizationConfiguration</code> defines the organization batch process.
  *
  * @author Darryl L. Pierce
  */
 @Configuration
 @Log4j2
-public class ConsolidationConfiguration {
-  public static final String PARAM_CONSOLIDATION_JOB_STARTED = "job.consolidation.time-started";
-  public static final String PARAM_DELETE_REMOVED_COMIC_FILES =
-      "job.consolidation.delete-removed-comic-files";
-  public static final String PARAM_TARGET_DIRECTORY = "job.consolidation.target-directory";
-  public static final String PARAM_RENAMING_RULE = "job.consolidation.renaming-rule";
+public class LibraryOrganizationConfiguration {
+  public static final String JOB_ORGANIZATION_TIME_STARTED = "job.organization.time-started";
+  public static final String JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES =
+      "job.organization.delete-removed-comic-files";
+  public static final String JOB_ORGANIZATION_TARGET_DIRECTORY =
+      "job.organization.target-directory";
+  public static final String JOB_ORGANIZATION_RENAMING_RULE = "job.organization.renaming-rule";
 
   @Value("${comixed.batch.chunk-size}")
   private int batchChunkSize = 10;
 
   /**
-   * Returns a consolidate library job bean.
+   * Returns a library organization job bean.
    *
    * @param jobRepository the job repository
    * @param deleteComicBookStep the delete comics step
@@ -69,13 +70,13 @@ public class ConsolidationConfiguration {
    * @return the job
    */
   @Bean
-  @Qualifier("consolidateLibraryJob")
-  public Job consolidateLibraryJob(
+  @Qualifier("organizeLibraryJob")
+  public Job organizeLibraryJob(
       final JobRepository jobRepository,
       @Qualifier("deleteComicBookStep") final Step deleteComicBookStep,
       @Qualifier("moveComicStep") final Step moveComicStep,
       @Qualifier("deleteEmptyDirectoriesStep") final Step deleteEmptyDirectoriesStep) {
-    return new JobBuilder("consolidateLibraryJob", jobRepository)
+    return new JobBuilder("organizeLibraryJob", jobRepository)
         .incrementer(new RunIdIncrementer())
         .start(deleteComicBookStep)
         .next(moveComicStep)
