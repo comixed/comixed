@@ -16,24 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  CONSOLIDATE_LIBRARY_FEATURE_KEY,
-  ConsolidateLibraryState
-} from '../reducers/consolidate-library.reducer';
-import { selectConsolidateLibraryState } from './consolidate-library.selectors';
+import { createAction } from '@ngrx/store';
 
-describe('ConsolidateLibrary Selectors', () => {
-  let state: ConsolidateLibraryState;
+export const startLibraryOrganization = createAction(
+  '[Organize Library] Start the library organization process'
+);
 
-  beforeEach(() => {
-    state = { sending: Math.random() > 0.5 };
-  });
+export const startLibraryOrganizationSuccess = createAction(
+  '[Organize Library] The organization process is started'
+);
 
-  it('should select the feature state', () => {
-    expect(
-      selectConsolidateLibraryState({
-        [CONSOLIDATE_LIBRARY_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
-  });
-});
+export const startLibraryOrganizationFailure = createAction(
+  '[Organize Library] Failed to start the organization process'
+);

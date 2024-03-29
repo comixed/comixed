@@ -45,10 +45,10 @@ import {
   UpdateMetadataState
 } from './reducers/update-metadata.reducer';
 import {
-  CONSOLIDATE_LIBRARY_FEATURE_KEY,
-  ConsolidateLibraryState,
-  reducer as consolidateLibraryReducer
-} from './reducers/consolidate-library.reducer';
+  ORGANIZE_LIBRARY_FEATURE_KEY,
+  OrganizeLibraryState,
+  reducer as organizeLibraryReducer
+} from './reducers/organize-library.reducer';
 import {
   CONVERT_COMIC_BOOKS_FEATURE_KEY,
   ConvertComicBooksState,
@@ -79,7 +79,7 @@ export interface LibraryModuleState {
   [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: DuplicatePageDetailState;
   [RESCAN_COMICS_FEATURE_KEY]: RescanComicsState;
   [UPDATE_METADATA_FEATURE_KEY]: UpdateMetadataState;
-  [CONSOLIDATE_LIBRARY_FEATURE_KEY]: ConsolidateLibraryState;
+  [ORGANIZE_LIBRARY_FEATURE_KEY]: OrganizeLibraryState;
   [CONVERT_COMIC_BOOKS_FEATURE_KEY]: ConvertComicBooksState;
   [PURGE_LIBRARY_FEATURE_KEY]: PurgeLibraryState;
 }
@@ -94,7 +94,7 @@ export const reducers: ActionReducerMap<LibraryModuleState> = {
   [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: duplicatePageDetailReducer,
   [RESCAN_COMICS_FEATURE_KEY]: rescanComicsReducer,
   [UPDATE_METADATA_FEATURE_KEY]: updateMetadataReducer,
-  [CONSOLIDATE_LIBRARY_FEATURE_KEY]: consolidateLibraryReducer,
+  [ORGANIZE_LIBRARY_FEATURE_KEY]: organizeLibraryReducer,
   [CONVERT_COMIC_BOOKS_FEATURE_KEY]: convertComicsReducer,
   [PURGE_LIBRARY_FEATURE_KEY]: purgeLibraryReducer
 };

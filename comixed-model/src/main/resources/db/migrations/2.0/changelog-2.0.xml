@@ -18,5 +18,6 @@
     <include file="/db/migrations/2.0/003_429_metadata_adaptor_name_column_only.xml"/>
     <include file="/db/migrations/2.0/004_370_add_plugins_table.xml"/>
     <include file="/db/migrations/2.0/005_1697_add_blocked_pages_feature_flag.xml"/>
+    <include file="/db/migrations/2.0/006_1905_renamed_consolidating_to_organizing.xml"/>
 
 </databaseChangeLog>

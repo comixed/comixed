@@ -75,18 +75,18 @@ public class LibraryService {
   }
 
   /**
-   * Updates all comics in preparation for library consolidation.
+   * Updates all comics in preparation for library organization.
    *
    * @param targetDirectory the target directory
    * @throws LibraryException if an error occurs
    */
-  public void prepareForConsolidation(final List<Long> ids, final String targetDirectory)
+  public void prepareForOrganization(final List<Long> ids, final String targetDirectory)
       throws LibraryException {
     if (StringUtils.isEmpty(targetDirectory)) {
       throw new LibraryException("Target directory is not configured");
     }
-    log.trace("Marking comics to be consolidated");
-    this.comicBookService.prepareForConsolidation(ids);
+    log.trace("Marking comics to be organized");
+    this.comicBookService.prepareForOrganization(ids);
   }
 
   @Transactional

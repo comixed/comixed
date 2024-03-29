@@ -134,11 +134,11 @@ public class ComicBook {
   @Setter
   private boolean batchMetadataUpdate = false;
 
-  @Column(name = "consolidating", nullable = false, updatable = true)
+  @Column(name = "organizing", nullable = false, updatable = true)
   @JsonIgnore
   @Getter
   @Setter
-  private boolean consolidating = false;
+  private boolean organizing = false;
 
   @Column(name = "recreating", nullable = false, updatable = true)
   @JsonIgnore

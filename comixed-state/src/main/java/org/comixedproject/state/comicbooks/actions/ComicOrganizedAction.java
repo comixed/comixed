@@ -26,18 +26,18 @@ import org.springframework.statemachine.StateContext;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ComicConsolidatedAction</code> is executed after a comic has been consolidated.
+ * <code>ComicOrganizedAction</code> is executed after a comic has been organized.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class ComicConsolidatedAction extends AbstractComicAction {
+public class ComicOrganizedAction extends AbstractComicAction {
   @Override
   public void execute(final StateContext<ComicState, ComicEvent> context) {
     log.trace("Fetching comicBook");
     final ComicBook comicBook = this.fetchComic(context);
-    log.trace("Clearing the consolidating flag");
-    comicBook.setConsolidating(false);
+    log.trace("Clearing the organizing flag");
+    comicBook.setOrganizing(false);
   }
 }

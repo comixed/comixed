@@ -20,46 +20,46 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import {
-  libraryConsolidationStarted,
-  startLibraryConsolidation,
-  startLibraryConsolidationFailed
-} from '../actions/consolidate-library.actions';
+  startLibraryOrganizationSuccess,
+  startLibraryOrganization,
+  startLibraryOrganizationFailure
+} from '../actions/organize-library.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from '@app/core/services/alert.service';
 import { LibraryService } from '@app/library/services/library.service';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { LIBRARY_CONSOLIDATION_CONFIG_URL } from '@app/library/library.constants';
+import { LIBRARY_ORGANIZATION_CONFIG_URL } from '@app/library/library.constants';
 
 @Injectable()
-export class ConsolidateLibraryEffects {
-  consolidateLibrary$ = createEffect(() => {
+export class OrganizeLibraryEffects {
+  organizeLibrary$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(startLibraryConsolidation),
+      ofType(startLibraryOrganization),
       tap(action =>
-        this.logger.trace('Effect: start library consolidation:', action)
+        this.logger.trace('Effect: start library organization:', action)
       ),
       switchMap(action =>
-        this.libraryService.startLibraryConsolidation().pipe(
+        this.libraryService.startLibraryOrganization().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map(() =>
             this.alertService.info(
               this.translateService.instant(
-                'library.consolidate.effect-success'
+                'library.organization.effect-success'
               )
             )
           ),
-          map(() => libraryConsolidationStarted()),
+          map(() => startLibraryOrganizationSuccess()),
           catchError(error => {
             this.logger.error('Service failure:', error);
             this.alertService.error(
               this.translateService.instant(
-                'library.consolidate.effect-failure'
+                'library.organization.effect-failure'
               ),
-              LIBRARY_CONSOLIDATION_CONFIG_URL
+              LIBRARY_ORGANIZATION_CONFIG_URL
             );
-            return of(startLibraryConsolidationFailed());
+            return of(startLibraryOrganizationFailure());
           })
         )
       ),
@@ -68,7 +68,7 @@ export class ConsolidateLibraryEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(startLibraryConsolidationFailed());
+        return of(startLibraryOrganizationFailure());
       })
     );
   });

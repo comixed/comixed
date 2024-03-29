@@ -83,14 +83,8 @@
     "comic-group": {
       "invalid-grouping": "The group \"{name}\" is not valid."
     },
-    "consolidate": {
-      "confirmation-message": "This process can take a long time and will move all comics based on the consolidation rules. Are you sure you want to continue?",
-      "confirmation-title": "Consolidate {count, plural, =1{One Comic} other{# Comics}}",
-      "effect-failure": "Failed to start library consolidation. Please verify your library confirmation and try again.",
-      "effect-success": "Library consolidation started."
-    },
     "context-menu": {
-      "consolidate-selected": "Consolidate {count, plural, =1{# comic} other{# comics}}...",
+      "organize-selected": "Organize {count, plural, =1{# comic} other{# comics}}...",
       "convert": "Recreate Archive",
       "convert-one-to-cb7": "Convert this comic to CB7",
       "convert-one-to-cbz": "Convert this comic to CBZ",
@@ -164,6 +158,12 @@
       "teams": "Teams",
       "locations": "Locations",
       "stories": "Stories"
+    },
+    "organization": {
+      "confirmation-message": "This process can take a long time and will move all comics based on the organization rules. Are you sure you want to continue?",
+      "confirmation-title": "Organize {count, plural, =1{One Comic} other{# Comics}}",
+      "effect-failure": "Failed to start library organization. Please verify your library confirmation and try again.",
+      "effect-success": "Library organization started."
     },
     "page-title": {
       "all": "All Comics{filtered, select, true{ [Filtered]} other{}}",

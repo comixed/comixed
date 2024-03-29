@@ -23,7 +23,7 @@ import org.comixedproject.state.comicbooks.ComicEvent;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>MoveComicBookWriter</code> publishes comics that have been consolidated.
+ * <code>MoveComicBookWriter</code> publishes comics that have been organized.
  *
  * @author Darryl L. pierce
  */
@@ -31,6 +31,6 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class MoveComicBookWriter extends AbstractComicBookWriter {
   public MoveComicBookWriter() {
-    super(ComicEvent.comicConsolidated);
+    super(ComicEvent.comicOrganized);
   }
 }

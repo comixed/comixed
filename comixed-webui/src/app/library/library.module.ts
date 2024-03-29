@@ -61,8 +61,8 @@ import { rescanComicBooksFeature } from '@app/library/reducers/rescan-comics.red
 import { RescanComicsEffects } from '@app/library/effects/rescan-comics.effects';
 import { updateMetadataFeature } from '@app/library/reducers/update-metadata.reducer';
 import { UpdateMetadataEffects } from '@app/library/effects/update-metadata.effects';
-import { consolidateLibraryFeature } from '@app/library/reducers/consolidate-library.reducer';
-import { ConsolidateLibraryEffects } from '@app/library/effects/consolidate-library.effects';
+import { organizeLibraryFeature } from '@app/library/reducers/organize-library.reducer';
+import { OrganizeLibraryEffects } from '@app/library/effects/organize-library.effects';
 import { convertComicBooksFeature } from '@app/library/reducers/convert-comic-books.reducer';
 import { ConvertComicBooksEffects } from '@app/library/effects/convert-comic-books.effects';
 import { purgeLibraryFeature } from '@app/library/reducers/purge-library.reducer';
@@ -97,7 +97,7 @@ import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
     StoreModule.forFeature(duplicatePageDetailFeature),
     StoreModule.forFeature(rescanComicBooksFeature),
     StoreModule.forFeature(updateMetadataFeature),
-    StoreModule.forFeature(consolidateLibraryFeature),
+    StoreModule.forFeature(organizeLibraryFeature),
     StoreModule.forFeature(convertComicBooksFeature),
     StoreModule.forFeature(purgeLibraryFeature),
     EffectsModule.forFeature([
@@ -106,7 +106,7 @@ import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
       DuplicatePageDetailEffects,
       RescanComicsEffects,
       UpdateMetadataEffects,
-      ConsolidateLibraryEffects,
+      OrganizeLibraryEffects,
       ConvertComicBooksEffects,
       PurgeLibraryEffects
     ]),

@@ -21,7 +21,7 @@ import { API_ROOT_URL } from '../core';
 export const UNKNOWN_VALUE_PLACEHOLDER = 'UNKNOWN';
 
 export const MISSING_COMIC_IMAGE_URL = '/assets/img/missing-comic-file.png';
-export const LIBRARY_CONSOLIDATION_CONFIG_URL = '/admin/configuration?tab=2';
+export const LIBRARY_ORGANIZATION_CONFIG_URL = '/admin/configuration?tab=2';
 
 export const GET_COMIC_COVER_URL = `${API_ROOT_URL}/comics/\${id}/cover/content`;
 export const GET_PAGE_CONTENT_URL = `${API_ROOT_URL}/pages/\${id}/content`;
@@ -50,7 +50,7 @@ export const SET_READ_STATE_URL = `${API_ROOT_URL}/library/read`;
 export const LOAD_COMICS_WITH_DUPLICATE_PAGES_URL = `${API_ROOT_URL}/library/pages/duplicates`;
 export const LOAD_DUPLICATE_PAGE_DETAIL_URL = `${API_ROOT_URL}/library/pages/duplicates/\${hash}`;
 
-export const START_LIBRARY_CONSOLIDATION_URL = `${API_ROOT_URL}/library/consolidate`;
+export const START_LIBRARY_ORGANIZATION_URL = `${API_ROOT_URL}/library/organize`;
 export const CONVERT_SINGLE_COMIC_BOOK_URL = `${API_ROOT_URL}/library/conversion/\${comicBookId}`;
 export const CONVERT_SELECTED_COMIC_BOOKS_URL = `${API_ROOT_URL}/library/conversion/selected`;
 export const RESCAN_SINGLE_COMIC_BOOK_URL = `${API_ROOT_URL}/library/rescan/\${comicBookId}`;

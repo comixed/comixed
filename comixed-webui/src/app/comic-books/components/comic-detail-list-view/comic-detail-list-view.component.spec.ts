@@ -76,7 +76,7 @@ import {
   updateSelectedComicBooksMetadata,
   updateSingleComicBookMetadata
 } from '@app/library/actions/update-metadata.actions';
-import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
+import { startLibraryOrganization } from '@app/library/actions/organize-library.actions';
 import {
   rescanSelectedComicBooks,
   rescanSingleComicBook
@@ -682,12 +682,12 @@ describe('ComicDetailListViewComponent', () => {
     });
   });
 
-  describe('consolidating comics', () => {
+  describe('organizing comics', () => {
     beforeEach(() => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.onConsolidateSelectedComicBooks();
+      component.onOrganizeSelectedComicBooks();
     });
 
     it('confirms with the user', () => {
@@ -695,7 +695,7 @@ describe('ComicDetailListViewComponent', () => {
     });
 
     it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(startLibraryConsolidation());
+      expect(store.dispatch).toHaveBeenCalledWith(startLibraryOrganization());
     });
   });
 

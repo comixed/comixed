@@ -159,15 +159,15 @@ configuration options and feature flags.
 Navigate to the **Configuration** page and select the **Library** tab. There
 you can set the following options:
 
-| Option                                              | Required | Description                                                                    |
-|-----------------------------------------------------|----------|--------------------------------------------------------------------------------|
-| **Delete empty directories after consolidation**    | No       | Removes any directories that are left empty after organizing your comic books  |
-| **Create external metadata files for each comic**   | No       | Stores the comic's portable metadata as an external file next to the comic     |
-| **Do not create or update internal metadata files** | No       | Turns off storing metadata in the internal ComicInfo.xml file in each comic    |
-| **Do not recreate comic files**                     | No       | Disables changing the physical files for all comic books                       |
-| **Manage blocked pages**                            | No       | When enabled, the server will automatically mark any blocked page for deletion |
-| **Comic Renaming Rule**                             | Yes      | Defines the file naming rule when organizing your comic library                |
-| **Page Renaming Rule**                              | Yes      | Defines the file naming rule for individual pages within a comic file          |
+| Option                                                  | Required | Description                                                                    |
+|---------------------------------------------------------|----------|--------------------------------------------------------------------------------|
+| **Delete empty directories after library organization** | No       | Removes any directories that are left empty after organizing your comic books  |
+| **Create external metadata files for each comic**       | No       | Stores the comic's portable metadata as an external file next to the comic     |
+| **Do not create or update internal metadata files**     | No       | Turns off storing metadata in the internal ComicInfo.xml file in each comic    |
+| **Do not recreate comic files**                         | No       | Disables changing the physical files for all comic books                       |
+| **Manage blocked pages**                                | No       | When enabled, the server will automatically mark any blocked page for deletion |
+| **Comic Renaming Rule**                                 | Yes      | Defines the file naming rule when organizing your comic library                |
+| **Page Renaming Rule**                                  | Yes      | Defines the file naming rule for individual pages within a comic file          |
 
 # Importing Your Comic Library
 

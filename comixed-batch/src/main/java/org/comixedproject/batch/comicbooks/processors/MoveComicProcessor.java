@@ -18,8 +18,8 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
-import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_RENAMING_RULE;
-import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_TARGET_DIRECTORY;
+import static org.comixedproject.batch.comicbooks.LibraryOrganizationConfiguration.JOB_ORGANIZATION_RENAMING_RULE;
+import static org.comixedproject.batch.comicbooks.LibraryOrganizationConfiguration.JOB_ORGANIZATION_TARGET_DIRECTORY;
 
 import java.io.File;
 import lombok.extern.log4j.Log4j2;
@@ -36,7 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>MoveComicProcessor</code> performs the action of moving comics during the consolidation
+ * <code>MoveComicProcessor</code> performs the action of moving comics during the organization
  * process.
  *
  * @author Darryl L. Pierce
@@ -53,10 +53,16 @@ public class MoveComicProcessor
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
+    if (!comicBook.getComicDetail().getFile().exists()) {
+      log.error("Comic file not found: {}", comicBook.getComicDetail().getFilename());
+      return comicBook;
+    }
+
     log.debug("Getting target directory: id={}", comicBook.getId());
-    final File targetDirectory = new File(this.jobParameters.getString(PARAM_TARGET_DIRECTORY));
+    final File targetDirectory =
+        new File(this.jobParameters.getString(JOB_ORGANIZATION_TARGET_DIRECTORY));
     log.trace("Getting renaming rule");
-    final String renamingRule = this.jobParameters.getString(PARAM_RENAMING_RULE);
+    final String renamingRule = this.jobParameters.getString(JOB_ORGANIZATION_RENAMING_RULE);
 
     try {
       log.trace("Creating target directory (if needed)");
