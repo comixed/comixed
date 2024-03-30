@@ -27,6 +27,7 @@ import java.util.Map;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.comicpages.PageState;
+import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicpages.BlockedHashService;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,6 +47,7 @@ public class MarkBlockedPagesProcessorTest {
 
   @InjectMocks private MarkBlockedPagesProcessor processor;
   @Mock private BlockedHashService blockedHashService;
+  @Mock private ConfigurationService configurationService;
   @Mock private ComicBook comicBook;
   @Mock private Page page;
   @Mock private Map<String, JobParameter<?>> parameters;
@@ -57,6 +59,9 @@ public class MarkBlockedPagesProcessorTest {
 
   @Before
   public void setUp() {
+    Mockito.when(
+            configurationService.isFeatureEnabled(ConfigurationService.CFG_MANAGE_BLOCKED_PAGES))
+        .thenReturn(true);
     Mockito.when(comicBook.getPages()).thenReturn(pageList);
     Mockito.when(page.getHash()).thenReturn(TEST_HASH);
     pageList.add(page);
@@ -81,6 +86,21 @@ public class MarkBlockedPagesProcessorTest {
 
     Mockito.verify(blockedHashService, Mockito.times(1)).isHashBlocked(TEST_HASH);
     Mockito.verify(page, Mockito.times(1)).setPageState(PageState.DELETED);
+  }
+
+  @Test
+  public void testProcessManageBlockePagesFeatureDisabled() {
+    Mockito.when(
+            configurationService.isFeatureEnabled(ConfigurationService.CFG_MANAGE_BLOCKED_PAGES))
+        .thenReturn(false);
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+
+    Mockito.verify(blockedHashService, Mockito.never()).isHashBlocked(Mockito.anyString());
+    Mockito.verify(page, Mockito.never()).setPageState(Mockito.any());
   }
 
   @Test
