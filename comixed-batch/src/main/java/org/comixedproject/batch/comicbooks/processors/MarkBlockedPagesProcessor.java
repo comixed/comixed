@@ -23,6 +23,7 @@ import static org.comixedproject.batch.comicbooks.AddComicsConfiguration.PARAM_S
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.PageState;
+import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicpages.BlockedHashService;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.JobParameters;
@@ -42,14 +43,16 @@ import org.springframework.stereotype.Component;
 public class MarkBlockedPagesProcessor
     implements ItemProcessor<ComicBook, ComicBook>, StepExecutionListener {
   @Autowired private BlockedHashService blockedHashService;
+  @Autowired private ConfigurationService configurationService;
 
   private JobParameters jobParameters;
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
     final boolean skipBlockingPages =
-        this.jobParameters.getParameters().containsKey(PARAM_SKIP_BLOCKING_PAGES)
-            && Boolean.valueOf(this.jobParameters.getString(PARAM_SKIP_BLOCKING_PAGES));
+        !this.configurationService.isFeatureEnabled(ConfigurationService.CFG_MANAGE_BLOCKED_PAGES)
+            || (this.jobParameters.getParameters().containsKey(PARAM_SKIP_BLOCKING_PAGES)
+                && Boolean.valueOf(this.jobParameters.getString(PARAM_SKIP_BLOCKING_PAGES)));
     if (skipBlockingPages) {
       log.trace("Skip blocking pages enabled");
       return comicBook;
