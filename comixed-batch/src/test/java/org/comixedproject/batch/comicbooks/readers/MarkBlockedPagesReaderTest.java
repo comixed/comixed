@@ -23,9 +23,7 @@ import static junit.framework.TestCase.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -39,31 +37,9 @@ public class MarkBlockedPagesReaderTest {
 
   @InjectMocks private MarkBlockedPagesReader reader;
   @Mock private ComicBookService comicBookService;
-  @Mock private ConfigurationService configurationService;
   @Mock private ComicBook comicBook;
 
   private final List<ComicBook> comicBookList = new ArrayList<>();
-
-  @Before
-  public void setUp() {
-    Mockito.when(
-            configurationService.isFeatureEnabled(ConfigurationService.CFG_MANAGE_BLOCKED_PAGES))
-        .thenReturn(true);
-  }
-
-  @Test
-  public void testReadFeatureDisabled() {
-    Mockito.when(
-            configurationService.isFeatureEnabled(ConfigurationService.CFG_MANAGE_BLOCKED_PAGES))
-        .thenReturn(false);
-
-    final ComicBook result = reader.read();
-
-    assertNull(result);
-
-    Mockito.verify(comicBookService, Mockito.never())
-        .findUnprocessedComicsForMarkedPageBlocking(reader.getBatchChunkSize());
-  }
 
   @Test
   public void testReadNoneLoadedManyFound() {
