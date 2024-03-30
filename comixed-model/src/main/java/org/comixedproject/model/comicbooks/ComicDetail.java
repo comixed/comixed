@@ -50,7 +50,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.views.View;
-import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.Formula;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -130,7 +129,6 @@ public class ComicDetail {
   private ComicType comicType = ComicType.ISSUE;
 
   @Column(name = "publisher", length = 255)
-  @ColumnTransformer(write = "TRIM(?)")
   @JsonProperty("publisher")
   @JsonView({
     View.ComicListView.class,
@@ -150,7 +148,6 @@ public class ComicDetail {
   private String imprint;
 
   @Column(name = "series", length = 255)
-  @ColumnTransformer(write = "TRIM(?)")
   @JsonProperty("series")
   @JsonView({
     View.ComicListView.class,
@@ -163,7 +160,6 @@ public class ComicDetail {
   private String series;
 
   @Column(name = "volume", length = 4)
-  @ColumnTransformer(write = "TRIM(?)")
   @JsonProperty("volume")
   @JsonView({
     View.ComicListView.class,
@@ -176,7 +172,6 @@ public class ComicDetail {
   private String volume;
 
   @Column(name = "issue_number", length = 16)
-  @ColumnTransformer(write = "TRIM(?)")
   @JsonProperty("issueNumber")
   @JsonView({
     View.ComicListView.class,
@@ -201,7 +196,6 @@ public class ComicDetail {
   private String sortName;
 
   @Column(name = "title", length = 128)
-  @ColumnTransformer(write = "TRIM(?)")
   @JsonProperty("title")
   @JsonView({View.ComicListView.class})
   @Getter
@@ -209,7 +203,6 @@ public class ComicDetail {
   private String title;
 
   @Column(name = "notes", length = 128, nullable = true, updatable = true)
-  @ColumnTransformer(write = "TRIM(?)")
   @Lob
   @JsonProperty("notes")
   @JsonView({View.ComicListView.class})
@@ -218,7 +211,6 @@ public class ComicDetail {
   private String notes;
 
   @Column(name = "description")
-  @ColumnTransformer(write = "TRIM(?)")
   @Lob
   @JsonProperty("description")
   @JsonView({View.ComicDetailsView.class})
