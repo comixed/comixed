@@ -46,7 +46,6 @@ public class LibraryPlugin {
   private Long id;
 
   @Column(name = "name", length = 64, insertable = true, updatable = false, nullable = false)
-  @ColumnTransformer(write = "TRIM(?)")
   @JsonProperty("name")
   @JsonView(View.LibraryPluginList.class)
   @Getter
@@ -60,7 +59,7 @@ public class LibraryPlugin {
       updatable = false,
       nullable = false,
       unique = true)
-  @ColumnTransformer(write = "UPPER(TRIM(?))")
+  @ColumnTransformer(write = "(UPPER(?))")
   @Getter
   @NonNull
   private String uniqueName;
@@ -75,7 +74,6 @@ public class LibraryPlugin {
   @Column(name = "version", length = 16, updatable = true, nullable = false)
   @JsonProperty("version")
   @JsonView(View.LibraryPluginList.class)
-  @ColumnTransformer(write = "TRIM(?)")
   @Getter
   @NonNull
   private String version;
@@ -83,7 +81,6 @@ public class LibraryPlugin {
   @Column(name = "filename", length = 1024, nullable = false, updatable = true)
   @JsonProperty("filename")
   @JsonView(View.LibraryPluginList.class)
-  @ColumnTransformer(write = "TRIM(?)")
   @Getter
   @NonNull
   private String filename;
