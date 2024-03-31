@@ -25,7 +25,6 @@ File ..\..\..\..\comixed-app\target\comixed-app-2.1-SNAPSHOT.jar
 
 SetOutPath $INSTDIR\lib
 File ..\..\..\target\lib\h2*jar
-File ..\..\..\target\comixed-metadata-comicvine*jar
 
 SetOutPath $INSTDIR\doc
 File ..\..\..\..\CHANGELOG.md
