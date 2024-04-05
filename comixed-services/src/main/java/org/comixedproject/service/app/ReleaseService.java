@@ -36,54 +36,54 @@ import org.springframework.util.StringUtils;
  * @author Darryl L. Pierce
  */
 @Service
-@PropertySource({"classpath:/build-details.properties"})
+@PropertySource(value = "classpath:/build-details.properties", ignoreResourceNotFound = true)
 @Log4j2
 public class ReleaseService {
   private SimpleDateFormat dateParser = new SimpleDateFormat("yyyyMMddhhmmss");
 
   @Autowired private GetLatestReleaseAction getLatestReleaseDetails;
 
-  @Value("${build-details.branch}")
+  @Value("${build-details.branch:UNKNOWN}")
   @Setter
   private String branch;
 
-  @Value("${build-details.build.host}")
+  @Value("${build-details.build.host:UNKNOWN}")
   @Setter
   private String buildHost;
 
-  @Value("${build-details.build.time}")
+  @Value("${build-details.build.time:19700101000000}")
   @Setter
   private String buildTime;
 
-  @Value("${build-details.build.version}")
+  @Value("${build-details.build.version:UNKNOWN}")
   @Setter
   private String buildVersion;
 
-  @Value("${build-details.commit.id}")
+  @Value("${build-details.commit.id:UNKNOWN}")
   @Setter
   private String commitId;
 
-  @Value("${build-details.commit.time}")
+  @Value("${build-details.commit.time:19700101000000}")
   @Setter
   private String commitTime;
 
-  @Value("${build-details.commit.message.short}")
+  @Value("${build-details.commit.message.short:UNKNOWN}")
   @Setter
   private String commitMessage;
 
-  @Value("${build-details.commit.user.name}")
+  @Value("${build-details.commit.user.name:UNKNOWN}")
   @Setter
   private String commitUser;
 
-  @Value("${build-details.commit.user.email}")
+  @Value("${build-details.commit.user.email:UNKNOWN}")
   @Setter
   private String commitEmail;
 
-  @Value("${build-details.dirty}")
+  @Value("${build-details.dirty:UNKNOWN}")
   @Setter
   private String dirty;
 
-  @Value("${build-details.remote.origin.url}")
+  @Value("${build-details.remote.origin.url:UNKNOWN}")
   @Setter
   private String remoteOriginURL;
 
