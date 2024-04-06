@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet id="007_1911_one_metadata_source_per_comic_book.xml" author="mcpierce">
+
+    <sql>
+      DELETE
+      FROM comic_metadata_sources
+      WHERE comic_book_id IN (SELECT comic_book_id
+                              FROM (SELECT comic_book_id, count(*) AS counter
+                                    FROM comic_metadata_sources
+                                    GROUP BY comic_book_id) AS subq
+                              WHERE counter > 1);
+    </sql>
+
+    <addUniqueConstraint tableName="comic_metadata_sources" constraintName="comic_metadata_source_unique_comic_book_id"
+                         columnNames="comic_book_id"/>
+
+  </changeSet>
+</databaseChangeLog>
