@@ -43,7 +43,7 @@ public class ComicMetadataSource {
   private Long id;
 
   @OneToOne
-  @JoinColumn(name = "comic_book_id", nullable = false, updatable = false)
+  @JoinColumn(name = "comic_book_id", nullable = false, updatable = false, unique = true)
   @Getter
   @NonNull
   private ComicBook comicBook;
