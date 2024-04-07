@@ -60,6 +60,7 @@
     "load-for-user": {
       "effect-failure": "Failed to load reading lists."
     },
+    "page-title": "Reading Lists",
     "tab-title": "Reading Lists",
     "tooltip": {
       "add-reading-list": "Add a new reading list.",

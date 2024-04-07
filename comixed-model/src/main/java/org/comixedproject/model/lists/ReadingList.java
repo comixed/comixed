@@ -84,7 +84,7 @@ public class ReadingList {
   @Setter
   private String summary;
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
       name = "reading_list_entries",
       joinColumns = {@JoinColumn(name = "reading_list_id")},

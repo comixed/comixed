@@ -45,6 +45,7 @@ import { selectUploadReadingListState } from '@app/lists/selectors/upload-readin
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { TitleService } from '@app/core/services/title.service';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
 
 @Component({
   selector: 'cx-reading-lists-page',
@@ -79,7 +80,8 @@ export class ReadingListsPageComponent
     private store: Store<any>,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private titleService: TitleService
+    private titleService: TitleService,
+    public queryParameterService: QueryParameterService
   ) {
     this.logger.trace('Subscribing to reading list state updates');
     this.readingListStateSubscription = this.store
@@ -102,7 +104,11 @@ export class ReadingListsPageComponent
     );
   }
 
-  private _readingLists: ReadingList[];
+  private _readingLists: ReadingList[] = [];
+
+  get readingLists(): ReadingList[] {
+    return this._readingLists;
+  }
 
   set readingLists(readingLists: ReadingList[]) {
     this.logger.trace('Received reading lists update');
@@ -156,9 +162,9 @@ export class ReadingListsPageComponent
     this.langChangeSubscription.unsubscribe();
   }
 
-  onShowUploadRow(): void {
+  onToggleUploadReadingLists(): void {
     this.logger.trace('Showing upload row');
-    this.showUploadRow = true;
+    this.showUploadRow = !this.showUploadRow;
   }
 
   onFileSelected(file: File): void {
