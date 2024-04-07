@@ -83,6 +83,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
    * @return the reading lists
    * @throws ReadingListException if the email is invalid
    */
+  @Transactional
   public List<ReadingList> loadReadingListsForUser(final String email) throws ReadingListException {
     log.debug("Getting user: {}", email);
     final ComiXedUser owner = this.doLoadUser(email);
