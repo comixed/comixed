@@ -50,6 +50,8 @@ import {
   ConfirmationService
 } from '@tragically-slick/confirmation';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { RouterTestingModule } from '@angular/router/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ReadingListsPageComponent', () => {
   const READING_LISTS = [READING_LIST_1, READING_LIST_3, READING_LIST_5];
@@ -74,6 +76,8 @@ describe('ReadingListsPageComponent', () => {
       TestBed.configureTestingModule({
         declarations: [ReadingListsPageComponent],
         imports: [
+          NoopAnimationsModule,
+          RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
           LoggerModule.forRoot(),
           TranslateModule.forRoot(),
           MatToolbarModule,
@@ -148,14 +152,27 @@ describe('ReadingListsPageComponent', () => {
     });
   });
 
-  describe('showing the upload row', () => {
-    beforeEach(() => {
-      component.showUploadRow = false;
-      component.onShowUploadRow();
+  describe('toggling the upload input', () => {
+    describe('showing the upload input', () => {
+      beforeEach(() => {
+        component.showUploadRow = false;
+        component.onToggleUploadReadingLists();
+      });
+
+      it('shows the upload input', () => {
+        expect(component.showUploadRow).toBeTrue();
+      });
     });
 
-    it('sets the show upload row flag', () => {
-      expect(component.showUploadRow).toBeTrue();
+    describe('hiding the upload input', () => {
+      beforeEach(() => {
+        component.showUploadRow = true;
+        component.onToggleUploadReadingLists();
+      });
+
+      it('hides the upload input', () => {
+        expect(component.showUploadRow).toBeFalse();
+      });
     });
   });
 
