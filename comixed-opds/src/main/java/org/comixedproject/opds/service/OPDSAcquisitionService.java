@@ -39,6 +39,7 @@ import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <code>OPDSAcquisitionService</code> generates acquisition feeds for the OPDS subsystem.
@@ -65,6 +66,7 @@ public class OPDSAcquisitionService {
    * @param unread the unread flag
    * @return the feed
    */
+  @Transactional
   public OPDSAcquisitionFeed getEntriesForCollectionFeed(
       final String email,
       final CollectionType collectionType,
@@ -111,6 +113,7 @@ public class OPDSAcquisitionService {
    * @param unread the unread flag
    * @return the acquisition feed
    */
+  @Transactional
   public OPDSAcquisitionFeed getComicFeedsForPublisherAndSeriesAndVolume(
       final String publisher,
       final String series,
@@ -194,6 +197,7 @@ public class OPDSAcquisitionService {
    * @param unread the unread flag
    * @return the acquisition feed
    */
+  @Transactional
   public OPDSAcquisitionFeed getComicsFeedForYearAndWeek(
       final String email, final int year, final int week, final boolean unread) {
     final Date weekStarts = this.getDateFor(year, week, Calendar.SUNDAY);
