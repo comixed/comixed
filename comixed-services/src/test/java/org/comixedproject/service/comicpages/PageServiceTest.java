@@ -39,11 +39,10 @@ import org.comixedproject.state.comicpages.PageStateHandler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.statemachine.state.State;
@@ -56,6 +55,7 @@ public class PageServiceTest {
   private static final int TEST_PAGE_INDEX = 7;
   private static final String TEST_PAGE_HASH = "1234567890ABCDEF";
   private static final PageState TEST_STATE = PageState.STABLE;
+  private static final int TEST_MAX_ENTRIES = 10;
 
   @InjectMocks private PageService service;
   @Mock private PageRepository pageRepository;
@@ -69,6 +69,8 @@ public class PageServiceTest {
   @Mock private State<PageState, PageEvent> state;
   @Mock private Message<PageEvent> message;
   @Mock private MessageHeaders messageHeaders;
+
+  @Captor private ArgumentCaptor<Pageable> argumentCaptorPageable;
 
   private List<Page> pageList = new ArrayList<>();
   private List<Long> idList = new ArrayList<>();
@@ -257,5 +259,30 @@ public class PageServiceTest {
 
     Mockito.verify(pageStateHandler, Mockito.times(idList.size()))
         .fireEvent(page, PageEvent.unmarkForDeletion);
+  }
+
+  @Test
+  public void testLoadPagesNeedingCacheEntries() {
+    Mockito.when(pageRepository.findPagesNeedingCacheEntries(argumentCaptorPageable.capture()))
+        .thenReturn(pageList);
+
+    final List<Page> result = service.loadPagesNeedingCacheEntries(TEST_MAX_ENTRIES);
+
+    assertNotNull(result);
+    assertSame(pageList, result);
+
+    final Pageable pageable = argumentCaptorPageable.getValue();
+    assertNotNull(pageable);
+    assertEquals(TEST_MAX_ENTRIES, pageable.getPageSize());
+    assertEquals(0, pageable.getPageNumber());
+
+    Mockito.verify(pageRepository, Mockito.times(1)).findPagesNeedingCacheEntries(pageable);
+  }
+
+  @Test
+  public void testMarkPagesAsHavingCacheEntry() {
+    service.markPagesAsHavingCacheEntry(TEST_PAGE_HASH);
+
+    Mockito.verify(pageRepository, Mockito.times(1)).markPagesAsAddedToImageCache(TEST_PAGE_HASH);
   }
 }
