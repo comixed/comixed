@@ -85,18 +85,18 @@ public class BatchConfiguration {
    * Returns the step that launches the processing batch job.
    *
    * @param jobRepository the step factory
-   * @param processComicsJob the job
+   * @param processComicBooksJob the job
    * @param jobLauncher the job launcher
    * @return the step the step
    */
   @Bean
-  @Qualifier("processComicsJobStep")
-  public Step processComicsJobStep(
+  @Qualifier("processComicBooksJobStep")
+  public Step processComicBooksJobStep(
       final JobRepository jobRepository,
-      final @Qualifier("processComicsJob") Job processComicsJob,
+      final @Qualifier("processComicBooksJob") Job processComicBooksJob,
       final @Qualifier("batchJobLauncher") JobLauncher jobLauncher) {
-    return new StepBuilder("processComicsJobStep", jobRepository)
-        .job(processComicsJob)
+    return new StepBuilder("processComicBooksJobStep", jobRepository)
+        .job(processComicBooksJob)
         .parametersExtractor(new DefaultJobParametersExtractor())
         .launcher(jobLauncher)
         .build();

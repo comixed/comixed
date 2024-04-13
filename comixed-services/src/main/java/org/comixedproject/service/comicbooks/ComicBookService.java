@@ -387,7 +387,6 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    * @return the comics
    */
   public List<ComicBook> findUnprocessedComicsWithoutContent(int count) {
-    log.trace("Loading unprocessed comics that need to have their contents loaded");
     return this.comicBookRepository.findUnprocessedComicsWithoutContent(PageRequest.of(0, count));
   }
 
@@ -891,4 +890,6 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   public List<ComicBook> loadByComicDetailId(final List comicDetailIds) {
     return this.comicBookRepository.loadByComicDetailId(comicDetailIds);
   }
+
+  public void prepareUnprocessedComicBooks() {}
 }

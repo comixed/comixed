@@ -21,23 +21,24 @@ package org.comixedproject.messaging.comicbooks;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.AbstractPublishAction;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.messaging.batch.ProcessComicStatus;
+import org.comixedproject.model.messaging.batch.ProcessComicBooksStatus;
 import org.comixedproject.views.View;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>PublishProcessComicsStatusAction</code> publishes the current state of adding comics to the
- * library.
+ * <code>PublishProcessComicBooksStatusAction</code> publishes the current state of adding comics to
+ * the library.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class PublishProcessComicsStatusAction extends AbstractPublishAction<ProcessComicStatus> {
-  private static final String PROCESS_COMIC_STATE_TOPIC = "/topic/process-comics.status";
+public class PublishProcessComicBooksStatusAction
+    extends AbstractPublishAction<ProcessComicBooksStatus> {
+  private static final String PROCESS_COMIC_BOOKS_STATE_TOPIC = "/topic/process-comic-books.status";
 
   @Override
-  public void publish(final ProcessComicStatus subject) throws PublishingException {
-    this.doPublish(PROCESS_COMIC_STATE_TOPIC, subject, View.GenericObjectView.class);
+  public void publish(final ProcessComicBooksStatus subject) throws PublishingException {
+    this.doPublish(PROCESS_COMIC_BOOKS_STATE_TOPIC, subject, View.GenericObjectView.class);
   }
 }

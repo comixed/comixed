@@ -25,15 +25,15 @@ import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>AbstractComicProcessingListener</code> provides a foundation for building listeners that
- * listen to the batch processes that add comics to, or process comics for, the library.
+ * <code>AbstractComicBookProcessingListener</code> provides a foundation for building listeners
+ * that listen to the batch processes that add comics to, or process comics for, the library.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public abstract class AbstractComicProcessingStepExecutionListener
-    extends AbstractComicProcessingListener implements StepExecutionListener {
+public abstract class AbstractComicBookProcessingStepExecutionListener
+    extends AbstractComicBookProcessingListener implements StepExecutionListener {
   @Override
   public ExitStatus afterStep(final StepExecution stepExecution) {
     this.doPublishState(stepExecution.getJobExecution().getExecutionContext());

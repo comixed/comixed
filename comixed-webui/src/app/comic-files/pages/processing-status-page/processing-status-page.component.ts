@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2023, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,52 +17,41 @@
  */
 
 import { Component, OnDestroy } from '@angular/core';
-import { LoggerService } from '@angular-ru/cdk/logger';
-import { Title } from '@angular/platform-browser';
-import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
-import { TitleService } from '@app/core/services/title.service';
 import { Subscription } from 'rxjs';
+import { LoggerService } from '@angular-ru/cdk/logger';
+import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
-import { selectAddingComicBooksState } from '@app/selectors/import-comic-books.selectors';
+import { selectProcessingComicBooksState } from '@app/selectors/import-comic-books.selectors';
 
 @Component({
-  selector: 'cx-import-status-page',
-  templateUrl: './import-status-page.component.html',
-  styleUrls: ['./import-status-page.component.scss']
+  selector: 'cx-processing-status-page',
+  templateUrl: './processing-status-page.component.html',
+  styleUrls: ['./processing-status-page.component.scss']
 })
-export class ImportStatusPageComponent implements OnDestroy {
+export class ProcessingStatusPageComponent implements OnDestroy {
   comicImportStateSubscription: Subscription;
   importing = false;
   started = 0;
   total = 0;
+  stepName = '';
   processed = 0;
   progress = 0;
 
   constructor(
     private logger: LoggerService,
-    private title: Title,
     private store: Store<any>,
-    private router: Router,
-    private translateService: TranslateService,
-    private titleService: TitleService
+    private router: Router
   ) {
     this.logger.debug('Subscribing to comic import state updates');
     this.comicImportStateSubscription = this.store
-      .select(selectAddingComicBooksState)
+      .select(selectProcessingComicBooksState)
       .subscribe(state => {
-        if (!state.active) {
-          this.logger.debug(
-            'No imports are active. Redirecting to import page'
-          );
-          this.router.navigateByUrl('/library/import');
-        } else {
-          this.importing = state.active;
-          this.started = state.started;
-          this.total = state.total;
-          this.processed = state.processed;
-          this.progress = (state.processed / state.total) * 100;
-        }
+        this.importing = state.active;
+        this.started = state.started;
+        this.total = state.total;
+        this.stepName = state.stepName;
+        this.processed = state.processed;
+        this.progress = (state.processed / state.total) * 100;
       });
   }
 

@@ -23,10 +23,10 @@ import {
   ReleaseDetailsState
 } from '@app/reducers/release.reducer';
 import {
-  PROCESS_COMICS_FEATURE_KEY,
-  ProcessComicsState,
+  IMPORT_COMIC_BOOKS_FEATURE_KEY,
+  ImportComicBooksState,
   reducer as importCountReducer
-} from '@app/reducers/process-comics.reducer';
+} from '@app/reducers/import-comic-books.reducer';
 import {
   DARK_THEME_FEATURE_KEY,
   DarkThemeState,
@@ -40,7 +40,7 @@ import {
 
 export interface AppState {
   [RELEASE_DETAILS_FEATURE_KEY]: ReleaseDetailsState;
-  [PROCESS_COMICS_FEATURE_KEY]: ProcessComicsState;
+  [IMPORT_COMIC_BOOKS_FEATURE_KEY]: ImportComicBooksState;
   [DARK_THEME_FEATURE_KEY]: DarkThemeState;
   [COMICS_READ_STATISTICS_FEATURE_KEY]: ComicsReadStatisticsState;
 }
@@ -49,7 +49,7 @@ export type State = AppState;
 
 export const APP_REDUCERS: ActionReducerMap<State> = {
   [RELEASE_DETAILS_FEATURE_KEY]: releaseDetailsReducer,
-  [PROCESS_COMICS_FEATURE_KEY]: importCountReducer,
+  [IMPORT_COMIC_BOOKS_FEATURE_KEY]: importCountReducer,
   [DARK_THEME_FEATURE_KEY]: activeThemeReducer,
   [COMICS_READ_STATISTICS_FEATURE_KEY]: comicsReadStatisticsReducer
 };

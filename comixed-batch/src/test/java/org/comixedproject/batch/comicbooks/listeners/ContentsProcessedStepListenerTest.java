@@ -20,12 +20,12 @@ package org.comixedproject.batch.comicbooks.listeners;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
-import static org.comixedproject.model.messaging.batch.ProcessComicStatus.*;
+import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
 
 import java.util.Date;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.messaging.comicbooks.PublishProcessComicsStatusAction;
-import org.comixedproject.model.messaging.batch.ProcessComicStatus;
+import org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAction;
+import org.comixedproject.model.messaging.batch.ProcessComicBooksStatus;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,23 +47,26 @@ public class ContentsProcessedStepListenerTest {
   @Mock private JobExecution jobExecution;
   @Mock private ExecutionContext executionContext;
   @Mock private ComicBookService comicBookService;
-  @Mock private PublishProcessComicsStatusAction publishProcessComicsStatusAction;
+  @Mock private PublishProcessComicBooksStatusAction publishProcessComicBooksStatusAction;
 
-  @Captor ArgumentCaptor<ProcessComicStatus> processComicStatusArgumentCaptor;
+  @Captor ArgumentCaptor<ProcessComicBooksStatus> processComicStatusArgumentCaptor;
 
   @Before
   public void setUp() throws PublishingException {
     Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
     Mockito.when(jobExecution.getExecutionContext()).thenReturn(executionContext);
-    Mockito.when(executionContext.containsKey(JOB_STARTED)).thenReturn(true);
-    Mockito.when(executionContext.containsKey(JOB_FINISHED)).thenReturn(false);
-    Mockito.when(executionContext.getLong(JOB_STARTED)).thenReturn(TEST_JOB_STARTED.getTime());
-    Mockito.when(executionContext.getString(STEP_NAME))
+    Mockito.when(executionContext.containsKey(PROCESS_COMIC_BOOKS_JOB_STARTED)).thenReturn(true);
+    Mockito.when(executionContext.containsKey(PROCESS_COMIC_BOOKS_JOB_FINISHED)).thenReturn(false);
+    Mockito.when(executionContext.getLong(PROCESS_COMIC_BOOKS_JOB_STARTED))
+        .thenReturn(TEST_JOB_STARTED.getTime());
+    Mockito.when(executionContext.getString(PROCESS_COMIC_BOOKS_STEP_NAME))
         .thenReturn(FILE_CONTENTS_PROCESSED_STEP_NAME);
-    Mockito.when(executionContext.getLong(TOTAL_COMICS)).thenReturn(TEST_TOTAL_COMICS);
-    Mockito.when(executionContext.getLong(PROCESSED_COMICS)).thenReturn(TEST_PROCESSED_COMICS);
+    Mockito.when(executionContext.getLong(PROCESS_COMIC_BOOKS_TOTAL_COMICS))
+        .thenReturn(TEST_TOTAL_COMICS);
+    Mockito.when(executionContext.getLong(PROCESS_COMIC_BOOKS_PROCESSED_COMICS))
+        .thenReturn(TEST_PROCESSED_COMICS);
     Mockito.doNothing()
-        .when(publishProcessComicsStatusAction)
+        .when(publishProcessComicBooksStatusAction)
         .publish(processComicStatusArgumentCaptor.capture());
   }
 
@@ -73,7 +76,7 @@ public class ContentsProcessedStepListenerTest {
 
     listener.beforeStep(stepExecution);
 
-    final ProcessComicStatus status = processComicStatusArgumentCaptor.getValue();
+    final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
     assertTrue(status.isActive());
     assertEquals(FILE_CONTENTS_PROCESSED_STEP_NAME, status.getStepName());
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
@@ -81,48 +84,50 @@ public class ContentsProcessedStepListenerTest {
 
     Mockito.verify(comicBookService, Mockito.times(1)).getProcessedComicsCount();
     Mockito.verify(executionContext, Mockito.times(1))
-        .putString(STEP_NAME, FILE_CONTENTS_PROCESSED_STEP_NAME);
-    Mockito.verify(executionContext, Mockito.times(1)).putLong(TOTAL_COMICS, TEST_TOTAL_COMICS);
-    Mockito.verify(publishProcessComicsStatusAction, Mockito.times(1)).publish(status);
+        .putString(PROCESS_COMIC_BOOKS_STEP_NAME, FILE_CONTENTS_PROCESSED_STEP_NAME);
+    Mockito.verify(executionContext, Mockito.times(1))
+        .putLong(PROCESS_COMIC_BOOKS_TOTAL_COMICS, TEST_TOTAL_COMICS);
+    Mockito.verify(publishProcessComicBooksStatusAction, Mockito.times(1)).publish(status);
   }
 
   @Test
   public void testBeforeStepPublisingException() throws PublishingException {
     Mockito.when(comicBookService.getProcessedComicsCount()).thenReturn(TEST_TOTAL_COMICS);
     Mockito.doThrow(PublishingException.class)
-        .when(publishProcessComicsStatusAction)
+        .when(publishProcessComicBooksStatusAction)
         .publish(Mockito.any());
 
     listener.beforeStep(stepExecution);
 
     Mockito.verify(comicBookService, Mockito.times(1)).getProcessedComicsCount();
     Mockito.verify(executionContext, Mockito.times(1))
-        .putString(STEP_NAME, FILE_CONTENTS_PROCESSED_STEP_NAME);
-    Mockito.verify(executionContext, Mockito.times(1)).putLong(TOTAL_COMICS, TEST_TOTAL_COMICS);
-    Mockito.verify(publishProcessComicsStatusAction, Mockito.times(1)).publish(Mockito.any());
+        .putString(PROCESS_COMIC_BOOKS_STEP_NAME, FILE_CONTENTS_PROCESSED_STEP_NAME);
+    Mockito.verify(executionContext, Mockito.times(1))
+        .putLong(PROCESS_COMIC_BOOKS_TOTAL_COMICS, TEST_TOTAL_COMICS);
+    Mockito.verify(publishProcessComicBooksStatusAction, Mockito.times(1)).publish(Mockito.any());
   }
 
   @Test
   public void testAfterStep() throws PublishingException {
     listener.afterStep(stepExecution);
 
-    final ProcessComicStatus status = processComicStatusArgumentCaptor.getValue();
+    final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
     assertTrue(status.isActive());
     assertEquals(FILE_CONTENTS_PROCESSED_STEP_NAME, status.getStepName());
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_PROCESSED_COMICS, status.getProcessed());
 
-    Mockito.verify(publishProcessComicsStatusAction, Mockito.times(1)).publish(status);
+    Mockito.verify(publishProcessComicBooksStatusAction, Mockito.times(1)).publish(status);
   }
 
   @Test
   public void testAfterStepPublisingException() throws PublishingException {
     Mockito.doThrow(PublishingException.class)
-        .when(publishProcessComicsStatusAction)
+        .when(publishProcessComicBooksStatusAction)
         .publish(Mockito.any());
 
     listener.afterStep(stepExecution);
 
-    Mockito.verify(publishProcessComicsStatusAction, Mockito.times(1)).publish(Mockito.any());
+    Mockito.verify(publishProcessComicBooksStatusAction, Mockito.times(1)).publish(Mockito.any());
   }
 }

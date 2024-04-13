@@ -50,13 +50,15 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
 import { ComicFileLoaderComponent } from './components/comic-file-loader/comic-file-loader.component';
 import { ImportStatusPageComponent } from './pages/import-status-page/import-status-page.component';
+import { ProcessingStatusPageComponent } from './pages/processing-status-page/processing-status-page.component';
 
 @NgModule({
   declarations: [
     ImportComicsPageComponent,
     ComicFileCoverUrlPipe,
     ComicFileLoaderComponent,
-    ImportStatusPageComponent
+    ImportStatusPageComponent,
+    ProcessingStatusPageComponent
   ],
   imports: [
     CommonModule,

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,23 +28,17 @@ import lombok.Setter;
 import org.comixedproject.views.View;
 
 /**
- * <code>ProcessComicStatus</code> represents the current state for adding comics to the library.
+ * <code>AddComicBooksStatus</code> represents the current state for adding comics to the library.
  *
  * @author Darryl L. Pierce
  */
 @NoArgsConstructor
-public class ProcessComicStatus {
-  public static final String JOB_STARTED = "add-comic-state.job-started";
-  public static final String JOB_FINISHED = "add-comic-state.job-finished";
-  public static final String STEP_NAME = "add-comic-state.step-name";
-  public static final String CREATE_INSERT_STEP_NAME = "create-insert-step";
-  public static final String CREATE_METADATA_SOURCE_STEP_NAME = "create-metadata-source-step";
-  public static final String LOAD_FILE_CONTENTS_STEP_NAME = "load-file-contents-step";
-  public static final String MARK_BLOCKED_PAGES_STEP_NAME = "mark-blocked-pages-step";
-  public static final String LOAD_FILE_DETAILS_STEP_NAME = "load-file-details-step";
-  public static final String FILE_CONTENTS_PROCESSED_STEP_NAME = "file-contents-processed-step";
-  public static final String TOTAL_COMICS = "add-comic-state.total-comics";
-  public static final String PROCESSED_COMICS = "add-comic-state.processed-comics";
+public class AddComicBooksStatus {
+  public static final String ADD_COMIC_BOOKS_JOB_STARTED = "add-comic-state.job-started";
+  public static final String ADD_COMIC_BOOKS_JOB_FINISHED = "add-comic-state.job-finished";
+  public static final String ADD_COMIC_BOOKS_TOTAL_COMICS = "add-comic-books-state.total-comics";
+  public static final String ADD_COMIC_BOOKS_PROCESSED_COMICS =
+      "add-comic-books-state.processed-comics";
 
   @JsonProperty("active")
   @JsonView(View.GenericObjectView.class)

@@ -26,7 +26,10 @@ import { WebSocketService } from '@app/messaging';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { Frame, Subscription } from 'webstomp-client';
-import { PROCESS_COMICS_TOPIC } from '@app/app.constants';
+import {
+  ADD_COMIC_BOOKS_TOPIC,
+  PROCESS_COMIC_BOOKS_TOPIC
+} from '@app/app.constants';
 import { ProcessComicsStatus } from '@app/models/messages/process-comics-status';
 
 describe('ProcessComicsService', () => {
@@ -40,10 +43,9 @@ describe('ProcessComicsService', () => {
 
   let service: ProcessComicsService;
   let webSocketService: jasmine.SpyObj<WebSocketService>;
-  const subscription = jasmine.createSpyObj(['unsubscribe']);
-  subscription.unsubscribe = jasmine.createSpy('Subscription.unsubscribe()');
+  const processComicsSubscription = jasmine.createSpyObj(['unsubscribe']);
+  const addComicsSubscription = jasmine.createSpyObj(['unsubscribe']);
   let store: MockStore<any>;
-
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [LoggerModule.forRoot()],
@@ -58,11 +60,17 @@ describe('ProcessComicsService', () => {
         }
       ]
     });
-
     service = TestBed.inject(ProcessComicsService);
+
     webSocketService = TestBed.inject(
       WebSocketService
     ) as jasmine.SpyObj<WebSocketService>;
+    processComicsSubscription.unsubscribe = jasmine.createSpy(
+      'processComicsSubscription.unsubscribe()'
+    );
+    addComicsSubscription.unsubscribe = jasmine.createSpy(
+      'addComicsSubscription.unsubscribe()'
+    );
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
   });
@@ -72,7 +80,7 @@ describe('ProcessComicsService', () => {
   });
 
   describe('when messaging starts', () => {
-    const MESSAGE = new Frame(
+    const PROCESSING_MESSAGE = new Frame(
       'scan type',
       {},
       JSON.stringify({
@@ -85,7 +93,7 @@ describe('ProcessComicsService', () => {
 
     beforeEach(() => {
       webSocketService.subscribe.and.callFake((topic, callback) => {
-        callback(MESSAGE);
+        callback(PROCESSING_MESSAGE);
         return {} as Subscription;
       });
       store.setState({
@@ -94,9 +102,16 @@ describe('ProcessComicsService', () => {
       });
     });
 
-    it('subscribes to the scan types topic', () => {
+    it('subscribes to the adding comic books updates', () => {
       expect(webSocketService.subscribe).toHaveBeenCalledWith(
-        PROCESS_COMICS_TOPIC,
+        ADD_COMIC_BOOKS_TOPIC,
+        jasmine.anything()
+      );
+    });
+
+    it('subscribes to the processing comic books updates', () => {
+      expect(webSocketService.subscribe).toHaveBeenCalledWith(
+        PROCESS_COMIC_BOOKS_TOPIC,
         jasmine.anything()
       );
     });
@@ -104,19 +119,28 @@ describe('ProcessComicsService', () => {
 
   describe('when messaging stops', () => {
     beforeEach(() => {
-      service.subscription = subscription;
+      service.addComicsSubscription = addComicsSubscription;
+      service.processComicsSubscription = processComicsSubscription;
       store.setState({
         ...initialState,
         [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: false }
       });
     });
 
-    it('unsubscribes from the add scan type queue', () => {
-      expect(subscription.unsubscribe).toHaveBeenCalled();
+    it('unsubscribes from add comics updates', () => {
+      expect(addComicsSubscription.unsubscribe).toHaveBeenCalled();
     });
 
-    it('clears the subscription', () => {
-      expect(service.subscription).toBeNull();
+    it('clears the add comics subscription', () => {
+      expect(service.addComicsSubscription).toBeNull();
+    });
+
+    it('unsubscribes from process comics updates', () => {
+      expect(processComicsSubscription.unsubscribe).toHaveBeenCalled();
+    });
+
+    it('clears the process comics subscription', () => {
+      expect(service.processComicsSubscription).toBeNull();
     });
   });
 });
