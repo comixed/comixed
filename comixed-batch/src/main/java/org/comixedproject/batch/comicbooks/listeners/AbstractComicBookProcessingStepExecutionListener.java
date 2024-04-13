@@ -16,28 +16,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.messaging.comicbooks;
+package org.comixedproject.batch.comicbooks.listeners;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.messaging.AbstractPublishAction;
-import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.messaging.batch.ProcessComicStatus;
-import org.comixedproject.views.View;
+import org.springframework.batch.core.ExitStatus;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>PublishProcessComicsStatusAction</code> publishes the current state of adding comics to the
- * library.
+ * <code>AbstractComicBookProcessingListener</code> provides a foundation for building listeners
+ * that listen to the batch processes that add comics to, or process comics for, the library.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class PublishProcessComicsStatusAction extends AbstractPublishAction<ProcessComicStatus> {
-  private static final String PROCESS_COMIC_STATE_TOPIC = "/topic/process-comics.status";
-
+public abstract class AbstractComicBookProcessingStepExecutionListener
+    extends AbstractComicBookProcessingListener implements StepExecutionListener {
   @Override
-  public void publish(final ProcessComicStatus subject) throws PublishingException {
-    this.doPublish(PROCESS_COMIC_STATE_TOPIC, subject, View.GenericObjectView.class);
+  public ExitStatus afterStep(final StepExecution stepExecution) {
+    this.doPublishState(stepExecution.getJobExecution().getExecutionContext());
+    return null;
   }
 }

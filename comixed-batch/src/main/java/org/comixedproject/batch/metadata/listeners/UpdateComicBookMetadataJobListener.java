@@ -21,19 +21,15 @@ package org.comixedproject.batch.metadata.listeners;
 import static org.comixedproject.batch.metadata.MetadataProcessConfiguration.*;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.item.ExecutionContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @Log4j2
 public class UpdateComicBookMetadataJobListener extends AbstractMetadataUpdateProcessingListener
     implements JobExecutionListener {
-  @Autowired private ComicBookService comicBookService;
-
   @Override
   public void beforeJob(final JobExecution jobExecution) {
     final ExecutionContext context = jobExecution.getExecutionContext();

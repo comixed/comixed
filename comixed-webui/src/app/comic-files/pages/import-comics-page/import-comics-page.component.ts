@@ -42,7 +42,7 @@ import { setBusyState } from '@app/core/actions/busy.actions';
 import { sendComicFiles } from '@app/comic-files/actions/import-comic-files.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { User } from '@app/user/models/user';
-import { selectProcessComicsState } from '@app/selectors/process-comics.selectors';
+import { selectAddingComicBooksState } from '@app/selectors/import-comic-books.selectors';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { PAGE_SIZE_DEFAULT } from '@app/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -167,7 +167,7 @@ export class ImportComicsPageComponent
         this.store.dispatch(setBusyState({ enabled: state.sending }))
       );
     this.comicImportStateSubscription$ = this.store
-      .select(selectProcessComicsState)
+      .select(selectAddingComicBooksState)
       .subscribe(state => {
         if (state.active) {
           this.logger.debug('Redirecting to import status page');

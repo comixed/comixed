@@ -37,14 +37,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * <code>ProcessComicsConfiguration</code> defines the batch process for importing comics.
+ * <code>ProcessComicBooksConfiguration</code> defines the batch process for importing comics.
  *
  * @author Darryl L. Pierce
  */
 @Configuration
 @Log4j2
-public class ProcessComicsConfiguration {
-  public static final String JOB_RESCAN_COMICS_START = "job.rescan-comics.started";
+public class ProcessComicBooksConfiguration {
+  public static final String JOB_PROCESS_COMIC_BOOKS_STARTED = "job.process-comic-books.started";
 
   @Value("${comixed.batch.chunk-size}")
   private int batchChunkSize = 10;
@@ -60,16 +60,15 @@ public class ProcessComicsConfiguration {
    * @param contentsProcessedStep the mark contents processed step
    * @return the job
    */
-  @Bean
-  @Qualifier("processComicsJob")
-  public Job processComicsJob(
+  @Bean(name = "processComicBooksJob")
+  public Job processComicBooksJob(
       final JobRepository jobRepository,
-      final ProcessComicsJobListener jobListener,
+      final ProcessComicBooksJobListener jobListener,
       @Qualifier("loadFileContentsStep") final Step loadFileContentsStep,
       @Qualifier("markBlockedPagesStep") final Step markBlockedPagesStep,
       @Qualifier("createMetadataSourceStep") final Step createMetadataSourceStep,
       @Qualifier("contentsProcessedStep") final Step contentsProcessedStep) {
-    return new JobBuilder("processComicsJob", jobRepository)
+    return new JobBuilder("processComicBooksJob", jobRepository)
         .incrementer(new RunIdIncrementer())
         .listener(jobListener)
         .start(loadFileContentsStep)
@@ -91,8 +90,7 @@ public class ProcessComicsConfiguration {
    * @param chunkListener the chunk listener
    * @return the step
    */
-  @Bean
-  @Qualifier("loadFileContentsStep")
+  @Bean(name = "loadFileContentsStep")
   public Step loadFileContentsStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
@@ -100,7 +98,7 @@ public class ProcessComicsConfiguration {
       final LoadFileContentsReader reader,
       final LoadFileContentsProcessor processor,
       final LoadFileContentsWriter writer,
-      final ProcessedComicChunkListener chunkListener) {
+      final ProcessedComicBookChunkListener chunkListener) {
     return new StepBuilder("loadFileContentsStep", jobRepository)
         .listener(stepListener)
         .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
@@ -123,8 +121,7 @@ public class ProcessComicsConfiguration {
    * @param chunkListener the chunk listener
    * @return the step
    */
-  @Bean
-  @Qualifier("createMetadataSourceStep")
+  @Bean(name = "createMetadataSourceStep")
   public Step createMetadataSourceStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
@@ -132,7 +129,7 @@ public class ProcessComicsConfiguration {
       final CreateMetadataSourceReader reader,
       final CreateMetadataSourceProcessor processor,
       final CreateMetadataSourceWriter writer,
-      final ProcessedComicChunkListener chunkListener) {
+      final ProcessedComicBookChunkListener chunkListener) {
     return new StepBuilder("createMetadataSourceStep", jobRepository)
         .listener(stepListener)
         .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
@@ -155,8 +152,7 @@ public class ProcessComicsConfiguration {
    * @param chunkListener the chunk listener
    * @return the step
    */
-  @Bean
-  @Qualifier("markBlockedPagesStep")
+  @Bean(name = "markBlockedPagesStep")
   public Step markBlockedPagesStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
@@ -164,7 +160,7 @@ public class ProcessComicsConfiguration {
       final MarkBlockedPagesReader reader,
       final MarkBlockedPagesProcessor processor,
       final MarkBlockedPagesWriter writer,
-      final ProcessedComicChunkListener chunkListener) {
+      final ProcessedComicBookChunkListener chunkListener) {
     return new StepBuilder("markBlockedPagesStep", jobRepository)
         .listener(stepListener)
         .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
@@ -187,8 +183,7 @@ public class ProcessComicsConfiguration {
    * @param chunkListener the chunk listener
    * @return the step
    */
-  @Bean
-  @Qualifier("contentsProcessedStep")
+  @Bean(name = "contentsProcessedStep")
   public Step contentsProcessedStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
@@ -196,7 +191,7 @@ public class ProcessComicsConfiguration {
       final ContentsProcessedReader reader,
       final NoopComicProcessor processor,
       final ContentsProcessedWriter writer,
-      final ProcessedComicChunkListener chunkListener) {
+      final ProcessedComicBookChunkListener chunkListener) {
     return new StepBuilder("contentsProcessedStep", jobRepository)
         .listener(stepListener)
         .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)

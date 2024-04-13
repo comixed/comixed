@@ -18,6 +18,8 @@
 
 package org.comixedproject.batch.writers;
 
+import static junit.framework.TestCase.assertTrue;
+
 import java.util.Collections;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,5 +34,6 @@ public class NoopWriterTest {
   @Test
   public void testWriter() throws Exception {
     writer.write(Chunk.of(Collections.emptyList()));
+    assertTrue(true);
   }
 }

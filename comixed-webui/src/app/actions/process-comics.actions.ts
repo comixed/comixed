@@ -18,8 +18,18 @@
 
 import { createAction, props } from '@ngrx/store';
 
-export const processComicsUpdate = createAction(
-  '[Process Comics] Update the process comic state',
+export const addComicBooksUpdate = createAction(
+  '[Process Comic Books] Add the process comic state',
+  props<{
+    active: boolean;
+    started: number;
+    total: number;
+    processed: number;
+  }>()
+);
+
+export const processComicBooksUpdate = createAction(
+  '[Process Comic Books] Update the process comic state',
   props<{
     active: boolean;
     started: number;

@@ -16,27 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.listeners;
+package org.comixedproject.messaging.comicbooks;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.batch.core.ExitStatus;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.StepExecutionListener;
+import org.comixedproject.messaging.AbstractPublishAction;
+import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.model.messaging.batch.AddComicBooksStatus;
+import org.comixedproject.views.View;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>AbstractComicProcessingListener</code> provides a foundation for building listeners that
- * listen to the batch processes that add comics to, or process comics for, the library.
+ * <code>PublishAddComicBooksStatusAction</code> publishes the current state of adding comics to the
+ * library.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public abstract class AbstractComicProcessingStepExecutionListener
-    extends AbstractComicProcessingListener implements StepExecutionListener {
+public class PublishAddComicBooksStatusAction extends AbstractPublishAction<AddComicBooksStatus> {
+  static final String ADD_COMIC_BOOK_STATE_TOPIC = "/topic/add-comic-books.status";
+
   @Override
-  public ExitStatus afterStep(final StepExecution stepExecution) {
-    this.doPublishState(stepExecution.getJobExecution().getExecutionContext());
-    return null;
+  public void publish(final AddComicBooksStatus subject) throws PublishingException {
+    this.doPublish(ADD_COMIC_BOOK_STATE_TOPIC, subject, View.GenericObjectView.class);
   }
 }

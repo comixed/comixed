@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2023, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,32 +17,33 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ImportStatusPageComponent } from './import-status-page.component';
-import { LoggerModule } from '@angular-ru/cdk/logger';
-import { TranslateModule } from '@ngx-translate/core';
-import { RouterTestingModule } from '@angular/router/testing';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
+
+import { ProcessingStatusPageComponent } from './processing-status-page.component';
 import {
   IMPORT_COMIC_BOOKS_FEATURE_KEY,
-  initialState as initialProcessComicsState
+  initialState as initialImportComicBooksComicsState
 } from '@app/reducers/import-comic-books.reducer';
 import { Router } from '@angular/router';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { LoggerModule } from '@angular-ru/cdk/logger';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
-describe('ImportStatusPageComponent', () => {
+describe('ProcessingStatusPageComponent', () => {
   const initialState = {
-    [IMPORT_COMIC_BOOKS_FEATURE_KEY]: initialProcessComicsState
+    [IMPORT_COMIC_BOOKS_FEATURE_KEY]: initialImportComicBooksComicsState
   };
 
-  let component: ImportStatusPageComponent;
-  let fixture: ComponentFixture<ImportStatusPageComponent>;
+  let component: ProcessingStatusPageComponent;
+  let fixture: ComponentFixture<ProcessingStatusPageComponent>;
   let router: Router;
   let navigateByUrlSpy: jasmine.Spy;
   let store: MockStore;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ImportStatusPageComponent],
+      declarations: [ProcessingStatusPageComponent],
       imports: [
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
@@ -52,7 +53,7 @@ describe('ImportStatusPageComponent', () => {
       providers: [provideMockStore({ initialState })]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ImportStatusPageComponent);
+    fixture = TestBed.createComponent(ProcessingStatusPageComponent);
     component = fixture.componentInstance;
     router = TestBed.inject(Router);
     navigateByUrlSpy = spyOn(router, 'navigateByUrl');
@@ -62,26 +63,6 @@ describe('ImportStatusPageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('when no import is in process', () => {
-    beforeEach(() => {
-      navigateByUrlSpy.calls.reset();
-      store.setState({
-        ...initialState,
-        [IMPORT_COMIC_BOOKS_FEATURE_KEY]: {
-          ...initialProcessComicsState,
-          adding: {
-            ...initialProcessComicsState,
-            active: false
-          }
-        }
-      });
-    });
-
-    it('redirects the browser to the import page', () => {
-      expect(router.navigateByUrl).toHaveBeenCalledWith('/library/import');
-    });
   });
 
   describe('when adding comic books is in process', () => {
@@ -99,8 +80,8 @@ describe('ImportStatusPageComponent', () => {
       store.setState({
         ...initialState,
         [IMPORT_COMIC_BOOKS_FEATURE_KEY]: {
-          ...initialProcessComicsState,
-          adding: {
+          ...initialImportComicBooksComicsState,
+          processing: {
             active: true,
             started: STARTED,
             total: TOTAL,

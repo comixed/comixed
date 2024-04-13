@@ -122,7 +122,18 @@
   routerLinkActive="active"
 >
   <mat-icon>publish</mat-icon>
-  <span>{{ "navigation.option.import-comics" | translate }}</span>
+  <span>{{ "navigation.option.import-comic-books" | translate }}</span>
+</button>
+
+<button
+  *ngIf="isAdmin"
+  mat-button
+  class="menu-button"
+  routerLink="/library/processing"
+  routerLinkActive="active"
+>
+  <mat-icon>publish</mat-icon>
+  <span>{{ "navigation.option.processing-comic-books" | translate }}</span>
 </button>
 
 <button

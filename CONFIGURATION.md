@@ -1,5 +1,21 @@
 # Configuring The ComiXed Server
 
+## Importing Unprocessed Comic Books
+
+By default, after comic books are imported, a process is started to import
+those comic books. This process involves such things are getting the list
+of pages in each issue, getting the dimensions for those pages, etc.
+
+### Changing The Frequence For Scanning For Unprocessed Comics
+
+By default, ComiXed will check every 15 minutes for unprocessed comics. You
+can override that schedule by changing the following property in the
+```application.properties``` file:
+
+    comixed.batch.process-comic-books.schedule=0 0,15,30,45 * * * *
+
+See [below](Scheduling-Processes) for details on the scheduling format.
+
 ## Image Caching
 
 Loading pages out of comic file archives is a relatively slow and painful
@@ -47,10 +63,20 @@ You can override that schedule by changing the following property in the
 
     comixed.batch.add-cover-to-image-cache.schedule=0 0 * * * *
 
-To simply describe things, from left to right, the values are the second,
+See [below](Scheduling-Processes) for details on the scheduling format.
+
+**NOTE:** There is no matching command line argument to override this.
+
+
+
+## Scheduling Processes
+
+The scheduling format used looks like the following:
+
+    property.name=* * * * * *
+
+To simply describe this, it represents, from left to right, the second,
 minute, hour, day of the month, and day of the week to run the job. It is
 beyond the scope of this document to give more information, but you can
 read more about it
 [here](https://spring.io/blog/2020/11/10/new-in-spring-5-3-improved-cron-expressions#usage).
-
-**NOTE:** There is no matching command line argument to override this.

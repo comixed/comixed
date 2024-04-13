@@ -18,7 +18,7 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
-import static org.comixedproject.model.messaging.batch.ProcessComicStatus.*;
+import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.service.comicbooks.ComicBookService;
@@ -35,15 +35,18 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class CreateMetadataSourceStepListener extends AbstractComicProcessingStepExecutionListener {
+public class CreateMetadataSourceStepListener
+    extends AbstractComicBookProcessingStepExecutionListener {
   @Autowired private ComicBookService comicBookService;
 
   @Override
   public void beforeStep(final StepExecution stepExecution) {
     final ExecutionContext context = stepExecution.getJobExecution().getExecutionContext();
-    context.putString(STEP_NAME, CREATE_METADATA_SOURCE_STEP_NAME);
+    context.putString(PROCESS_COMIC_BOOKS_STEP_NAME, CREATE_METADATA_SOURCE_STEP_NAME);
     log.trace("Getting comic count");
-    context.putLong(TOTAL_COMICS, this.comicBookService.getWithCreateMetadataSourceFlagCount());
+    context.putLong(
+        PROCESS_COMIC_BOOKS_TOTAL_COMICS,
+        this.comicBookService.getWithCreateMetadataSourceFlagCount());
     this.doPublishState(context);
   }
 }

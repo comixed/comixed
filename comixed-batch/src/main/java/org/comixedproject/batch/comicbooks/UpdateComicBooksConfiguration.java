@@ -55,8 +55,7 @@ public class UpdateComicBooksConfiguration {
   @Value("${comixed.batch.chunk-size}")
   private int batchChunkSize = 10;
 
-  @Bean
-  @Qualifier("updateComicBooksJob")
+  @Bean(name = "updateComicBooksJob")
   public Job updateComicBooksJob(
       final JobRepository jobRepository,
       @Qualifier("updateComicBooksStep") final Step updateComicBooksStep) {
@@ -66,8 +65,7 @@ public class UpdateComicBooksConfiguration {
         .build();
   }
 
-  @Bean
-  @Qualifier("updateComicBooksStep")
+  @Bean(name = "updateComicBooksStep")
   public Step updateComicBooksStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,

@@ -56,8 +56,7 @@ public class UpdateMetadataConfiguration {
    * @param updateMetadataStep the update metadata step
    * @return the job
    */
-  @Bean
-  @Qualifier("updateMetadataJob")
+  @Bean(name = "updateMetadataJob")
   public Job updateMetadataJob(
       final JobRepository jobRepository,
       @Qualifier("updateMetadataStep") final Step updateMetadataStep) {
@@ -77,8 +76,7 @@ public class UpdateMetadataConfiguration {
    * @param writer the writer
    * @return the step
    */
-  @Bean
-  @Qualifier("updateMetadataStep")
+  @Bean(name = "updateMetadataStep")
   public Step updateMetadataStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,

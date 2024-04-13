@@ -99,8 +99,8 @@ public class LibraryControllerTest {
   private Job updateMetadataJob;
 
   @Mock
-  @Qualifier("processComicsJob")
-  private Job processComicsJob;
+  @Qualifier("processComicBooksJob")
+  private Job processComicBooksJob;
 
   @Mock
   @Qualifier("organizeLibraryJob")
@@ -418,7 +418,7 @@ public class LibraryControllerTest {
     assertNotNull(jobParameters);
 
     Mockito.verify(comicBookService, Mockito.times(1)).prepareForRescan(TEST_COMIC_BOOK_ID);
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(processComicsJob, jobParameters);
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(processComicBooksJob, jobParameters);
   }
 
   @Test
@@ -433,7 +433,7 @@ public class LibraryControllerTest {
     assertNotNull(jobParameters);
 
     Mockito.verify(comicBookService, Mockito.times(1)).prepareForRescan(selectedIds);
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(processComicsJob, jobParameters);
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(processComicBooksJob, jobParameters);
   }
 
   @Test

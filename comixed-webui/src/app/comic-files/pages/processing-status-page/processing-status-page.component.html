@@ -1,0 +1,36 @@
+<h2>{{ "processing-status-page.page-title" | translate: { count: total } }}</h2>
+<h3 *ngIf="importing">
+  {{ "comic-files.processing-comics." + stepName | translate }}
+</h3>
+<h3 *ngIf="importing">
+  {{
+    "comic-files.processing-comics.subtitle"
+      | translate
+        : {
+            total: total,
+            processed: processed,
+            percentage: progress | number: "1.0-2"
+          }
+  }}
+</h3>
+<mat-progress-bar
+  *ngIf="importing"
+  mode="determinate"
+  [value]="progress"
+></mat-progress-bar>
+
+<br />
+
+<div
+  class="
+    cx-width-50 cx-margin-auto cx-border-primary-1 cx-padding-15 cx-font-larger
+  "
+>
+  <h4>{{ "processing-status-page.text.note-title" | translate }}</h4>
+  <p>
+    {{ "processing-status-page.text.processing-description" | translate }}
+  </p>
+  <p>
+    {{ "processing-status-page.text.how-to-start-processing" | translate }}
+  </p>
+</div>
