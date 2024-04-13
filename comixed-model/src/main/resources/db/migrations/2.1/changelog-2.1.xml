@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-  <include file="/db/migrations/2.0/changelog-2.0.xml"/>
-  <include file="/db/migrations/2.1/changelog-2.1.xml"/>
+    <include file="/db/migrations/2.1/001_1923_added_adding_to_image_cache_to_comic_pages.xml"/>
 
 </databaseChangeLog>

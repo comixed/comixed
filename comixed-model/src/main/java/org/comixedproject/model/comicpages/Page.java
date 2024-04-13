@@ -97,6 +97,12 @@ public class Page {
   @Setter
   private Integer height = -1;
 
+  @Column(name = "adding_to_cache", updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private Boolean addingToCache = false;
+
   @Formula(
       "(SELECT CASE WHEN (file_hash IN (SELECT b.hash_value FROM blocked_hashes b)) THEN true ELSE false END)")
   @JsonProperty("blocked")

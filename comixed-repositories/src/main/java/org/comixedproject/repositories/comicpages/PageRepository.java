@@ -19,9 +19,12 @@
 package org.comixedproject.repositories.comicpages;
 
 import java.util.List;
+import java.util.Set;
 import org.comixedproject.model.comicpages.DeletedPageAndComic;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.comicpages.PageState;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -77,4 +80,39 @@ public interface PageRepository extends CrudRepository<Page, Long> {
   @Query(
       "SELECT new org.comixedproject.model.comicpages.DeletedPageAndComic(p.hash, p.comicBook) FROM Page p WHERE p.pageState = 'DELETED'")
   List<DeletedPageAndComic> loadAllDeletedPages();
+
+  /**
+   * Returns a page of records with the add to cache column set to true.
+   *
+   * @param pageable the page detail
+   * @return the page list
+   */
+  @Query("SELECT p FROM Page p WHERE p.addingToCache = true")
+  List<Page> findPagesNeedingCacheEntries(Pageable pageable);
+
+  /**
+   * Marks all pages with a given hash as being added to the image cache.
+   *
+   * @param hash the page hash
+   */
+  @Modifying
+  @Query("UPDATE Page p SET p.addingToCache = false WHERE p.hash = :hash")
+  void markPagesAsAddedToImageCache(@Param("hash") String hash);
+
+  /**
+   * Returns the list of unique page hashes.
+   *
+   * @return the hash list
+   */
+  @Query("SELECT DISTINCT p.hash FROM Page p WHERE p.pageNumber = 0")
+  Set<String> findAllCoverPageHashes();
+
+  /**
+   * Marks all pages with a given hash to have an image cache entry created.
+   *
+   * @param hash the page hash
+   */
+  @Modifying
+  @Query("UPDATE Page p SET p.addingToCache = true WHERE p.hash = :hash")
+  void markCoverPagesToHaveCacheEntryCreated(@Param("hash") String hash);
 }

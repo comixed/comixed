@@ -29,6 +29,8 @@ import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.comixedproject.model.comicpages.DeletedPageAndComic;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.comicpages.PageState;
@@ -37,12 +39,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = RepositoryContext.class)
@@ -138,6 +142,37 @@ public class PageRepositoryTest {
   @Test
   public void testLoadAllDeletedPages() {
     final List<DeletedPageAndComic> result = repository.loadAllDeletedPages();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+  }
+
+  @Test
+  public void testFindPagesNeedingCacheEntries() {
+    final List<Page> result = repository.findPagesNeedingCacheEntries(PageRequest.of(0, 10));
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertTrue(result.stream().allMatch(page -> page.getAddingToCache()));
+  }
+
+  @Test
+  @Transactional
+  public void testMarkPagesAsAddedToImageCache() {
+    final Page page = repository.findPagesNeedingCacheEntries(PageRequest.of(0, 10)).get(0);
+
+    repository.markPagesAsAddedToImageCache(page.getHash());
+
+    final List<Page> result = repository.findPagesNeedingCacheEntries(PageRequest.of(0, 100));
+
+    assertNotNull(result);
+    assertFalse(
+        result.stream().map(Page::getHash).collect(Collectors.toSet()).contains(page.getHash()));
+  }
+
+  @Test
+  public void testFindAllCoverPageHashes() {
+    final Set<String> result = repository.findAllCoverPageHashes();
 
     assertNotNull(result);
     assertFalse(result.isEmpty());

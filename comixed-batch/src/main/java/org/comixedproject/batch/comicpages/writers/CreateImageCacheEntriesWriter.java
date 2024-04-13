@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,46 +16,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicpages.readers;
+package org.comixedproject.batch.comicpages.writers;
 
-import static org.comixedproject.batch.comicpages.UnmarkPagesWithHashConfiguration.PARAM_UNMARK_PAGES_TARGET_HASH;
-
-import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.service.comicpages.PageService;
-import org.springframework.batch.core.ExitStatus;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.StepExecutionListener;
+import org.springframework.batch.item.Chunk;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>UnmarkPageWithHashReader</code> defines a reader that loads pages based on their hash and
- * deletion state.
+ * <code>CreateImageCacheEntriesWriter</code> updates all {@link Page} records with the given hash
+ * value, marking them as having a cached entry.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class UnmarkPageWithHashReader extends AbstractPageReader implements StepExecutionListener {
+public class CreateImageCacheEntriesWriter implements ItemWriter<String> {
   @Autowired private PageService pageService;
 
-  String targetHash;
-
   @Override
-  protected List<Page> doLoadPages() {
-    log.trace("Loading pages with hash: {}", this.targetHash);
-    return this.pageService.getMarkedWithHash(this.targetHash);
-  }
-
-  @Override
-  public void beforeStep(final StepExecution stepExecution) {
-    this.targetHash = stepExecution.getJobParameters().getString(PARAM_UNMARK_PAGES_TARGET_HASH);
-  }
-
-  @Override
-  public ExitStatus afterStep(final StepExecution stepExecution) {
-    return null;
+  public void write(final Chunk<? extends String> hashList) {
+    hashList.forEach(
+        hash -> {
+          log.debug("Updating all pages with hash: {}", hash);
+          this.pageService.markPagesAsHavingCacheEntry(hash);
+        });
   }
 }

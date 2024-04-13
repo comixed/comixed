@@ -35,6 +35,7 @@
       <directory>${project.basedir}/..</directory>
       <outputDirectory>docs</outputDirectory>
       <includes>
+        <include>CONFIGURATION.md</include>
         <include>CONTRIBUTORS.md</include>
         <include>LICENSE</include>
         <include>QUICKSTART.md</include>

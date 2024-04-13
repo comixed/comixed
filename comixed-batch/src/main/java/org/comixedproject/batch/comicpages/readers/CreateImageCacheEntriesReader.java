@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,44 +18,47 @@
 
 package org.comixedproject.batch.comicpages.readers;
 
-import static org.comixedproject.batch.comicpages.UnmarkPagesWithHashConfiguration.PARAM_UNMARK_PAGES_TARGET_HASH;
-
 import java.util.List;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.service.comicpages.PageService;
-import org.springframework.batch.core.ExitStatus;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.StepExecutionListener;
+import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>UnmarkPageWithHashReader</code> defines a reader that loads pages based on their hash and
- * deletion state.
+ * <code>CreateImageCacheEntriesReader</code> provides a reader that returns only instances of
+ * {@link Page} that do not have an existing thumbnail.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class UnmarkPageWithHashReader extends AbstractPageReader implements StepExecutionListener {
+public class CreateImageCacheEntriesReader implements ItemReader<Page> {
+  @Value("${comixed.batch.add-cover-to-image-cache.chunk-size}")
+  @Getter
+  private int batchChunkSize = 10;
+
   @Autowired private PageService pageService;
 
-  String targetHash;
+  public List<Page> pageList;
 
   @Override
-  protected List<Page> doLoadPages() {
-    log.trace("Loading pages with hash: {}", this.targetHash);
-    return this.pageService.getMarkedWithHash(this.targetHash);
-  }
+  public Page read() {
+    if (this.pageList == null || this.pageList.isEmpty()) {
+      log.debug("Loading pages without thumbnails");
+      this.pageList = this.pageService.loadPagesNeedingCacheEntries(this.batchChunkSize);
+    }
 
-  @Override
-  public void beforeStep(final StepExecution stepExecution) {
-    this.targetHash = stepExecution.getJobParameters().getString(PARAM_UNMARK_PAGES_TARGET_HASH);
-  }
+    if (this.pageList.isEmpty()) {
+      log.debug("No pages need thumbnails currently");
+      this.pageList = null;
+      return null;
+    }
 
-  @Override
-  public ExitStatus afterStep(final StepExecution stepExecution) {
-    return null;
+    log.debug("Returning page: {}", this.pageList.get(0).getHash());
+    return this.pageList.remove(0);
   }
 }

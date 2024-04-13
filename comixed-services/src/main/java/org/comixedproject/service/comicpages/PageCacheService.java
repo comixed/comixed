@@ -21,14 +21,22 @@ package org.comixedproject.service.comicpages;
 import java.io.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
+import org.comixedproject.adaptors.AdaptorException;
+import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
+import org.comixedproject.model.comicpages.Page;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Log4j2
 public class PageCacheService {
+  @Autowired private PageService pageService;
+  @Autowired private ComicBookAdaptor comicBookAdaptor;
+
   @Value("${comixed.images.cache.location}")
-  private String cacheDirectory;
+  String cacheDirectory;
 
   /**
    * Returns a cache entry by page hash.
@@ -100,5 +108,35 @@ public class PageCacheService {
   public String getRootDirectory() {
     log.debug("Getting the image cache root directory: {}", this.cacheDirectory);
     return this.cacheDirectory;
+  }
+
+  /**
+   * Adds page content to the image cache.
+   *
+   * @param page the page
+   */
+  public void addPageToCache(final Page page) {
+    log.debug("Adding page to cache: id={}", page.getId());
+    try {
+      this.saveByHash(
+          page.getHash(),
+          this.comicBookAdaptor.loadPageContent(page.getComicBook(), page.getPageNumber()));
+    } catch (AdaptorException error) {
+      log.error("Failed to add page to image cache", error);
+    }
+  }
+
+  @Transactional
+  public void prepareCoverPagesWithoutCacheEntries() {
+    log.debug("Processing pages without image cache entries");
+    this.pageService
+        .findAllCoverPageHashes()
+        .forEach(
+            hash -> {
+              if (!this.getFileForHash(hash).exists()) {
+                log.trace("Marking page to have image cache entry created: {}", hash);
+                this.pageService.markCoverPagesToHaveCacheEntryCreated(hash);
+              }
+            });
   }
 }

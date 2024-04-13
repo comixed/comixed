@@ -34,7 +34,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
@@ -43,7 +42,6 @@ import org.springframework.transaction.PlatformTransactionManager;
  * @author Darryl L. Pierce
  */
 @Configuration
-@EnableScheduling
 @Log4j2
 public class ProcessComicsConfiguration {
   public static final String JOB_RESCAN_COMICS_START = "job.rescan-comics.started";

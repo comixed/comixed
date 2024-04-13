@@ -22,6 +22,7 @@ import static org.comixedproject.state.comicpages.PageStateHandler.HEADER_PAGE;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
@@ -36,6 +37,7 @@ import org.comixedproject.state.comicpages.PageStateChangeListener;
 import org.comixedproject.state.comicpages.PageStateHandler;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.Message;
 import org.springframework.statemachine.state.State;
 import org.springframework.stereotype.Service;
@@ -190,5 +192,45 @@ public class PageService implements InitializingBean, PageStateChangeListener {
             }
           }
         });
+  }
+
+  /**
+   * Returns up to a maximum number records for pages that need to have a cache entry generated.
+   *
+   * @param maxRecords the maximum records
+   * @return the page list
+   */
+  public List<Page> loadPagesNeedingCacheEntries(final int maxRecords) {
+    log.debug("Loading pages needing image cache entries");
+    return this.pageRepository.findPagesNeedingCacheEntries(PageRequest.of(0, maxRecords));
+  }
+
+  /**
+   * Marks all pages with a given hash as being in the image cache.
+   *
+   * @param hash the page hash
+   */
+  public void markPagesAsHavingCacheEntry(final String hash) {
+    log.debug("Marking pages as added to cache: hash={}", hash);
+    this.pageRepository.markPagesAsAddedToImageCache(hash);
+  }
+
+  /**
+   * Returns the list of all page hashes for all comic covers.
+   *
+   * @return the hash list
+   */
+  public Set<String> findAllCoverPageHashes() {
+    log.debug("Getting all page hashes");
+    return this.pageRepository.findAllCoverPageHashes();
+  }
+
+  /**
+   * Marks only the cover pages for image cache entry generation.
+   *
+   * @param hash the page has
+   */
+  public void markCoverPagesToHaveCacheEntryCreated(final String hash) {
+    this.pageRepository.markCoverPagesToHaveCacheEntryCreated(hash);
   }
 }

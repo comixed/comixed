@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,13 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks;
+package org.comixedproject.batch.comicpages;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicbooks.processors.UpdateMetadataProcessor;
-import org.comixedproject.batch.comicbooks.readers.UpdateMetadataReader;
-import org.comixedproject.batch.comicbooks.writers.UpdateMetadataWriter;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.batch.comicpages.processors.CreateImageCacheEntriesProcessor;
+import org.comixedproject.batch.comicpages.readers.CreateImageCacheEntriesReader;
+import org.comixedproject.batch.comicpages.writers.CreateImageCacheEntriesWriter;
+import org.comixedproject.model.comicpages.Page;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -36,39 +36,41 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * <code>UpdateMetadataConfiguration</code> defines a batch process that updates the metadata within
- * comics.
+ * <code>AddImageCacheEntriesConfiguration</code> defines a batch process that periodically creates
+ * image cache entries for comic pages that do not have one.
  *
- * @author Darryl L Pierce
+ * @author Darryl L. Pierce
  */
 @Configuration
 @Log4j2
-public class UpdateMetadataConfiguration {
-  public static final String JOB_UPDATE_METADATA_STARTED = "job.update-metadata.started";
+public class AddImageCacheEntriesConfiguration {
+  public static final String PARAM_ADD_IMAGE_CACHE_ENTRIES_STARTED =
+      "job.add-image-cache-entries.start";
 
   @Value("${comixed.batch.chunk-size}")
   private int batchChunkSize = 10;
 
   /**
-   * Returns the job bean to update comic metadata.
+   * Returns a job bean to added pages to the image cache.
    *
    * @param jobRepository the job repository
-   * @param updateMetadataStep the update metadata step
+   * @param createImageCacheEntriesStep the generate thumbnail step
    * @return the job
    */
   @Bean
-  @Qualifier("updateMetadataJob")
-  public Job updateMetadataJob(
+  @Qualifier("addPageToImageCacheJob")
+  public Job addPageToImageCacheJob(
       final JobRepository jobRepository,
-      @Qualifier("updateMetadataStep") final Step updateMetadataStep) {
-    return new JobBuilder("updateMetadataJob", jobRepository)
+      @Qualifier("createImageCacheEntriesStep") final Step createImageCacheEntriesStep) {
+    return new JobBuilder("addPageToImageCacheJob", jobRepository)
         .incrementer(new RunIdIncrementer())
-        .start(updateMetadataStep)
+        .start(createImageCacheEntriesStep)
+        .next(createImageCacheEntriesStep)
         .build();
   }
 
   /**
-   * The update metadata step.
+   * The generate image cache entries step.
    *
    * @param jobRepository the job repository
    * @param platformTransactionManager the transaction manager
@@ -78,15 +80,15 @@ public class UpdateMetadataConfiguration {
    * @return the step
    */
   @Bean
-  @Qualifier("updateMetadataStep")
-  public Step updateMetadataStep(
+  @Qualifier("createImageCacheEntriesStep")
+  public Step createImageCacheEntriesStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
-      final UpdateMetadataReader reader,
-      final UpdateMetadataProcessor processor,
-      final UpdateMetadataWriter writer) {
-    return new StepBuilder("updateMetadataStep", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
+      final CreateImageCacheEntriesReader reader,
+      final CreateImageCacheEntriesProcessor processor,
+      final CreateImageCacheEntriesWriter writer) {
+    return new StepBuilder("createImageCacheEntriesStep", jobRepository)
+        .<Page, String>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
