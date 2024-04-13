@@ -34,7 +34,7 @@ import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicbooks.ProcessComicsConfiguration;
+import org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration;
 import org.comixedproject.batch.comicbooks.UpdateMetadataConfiguration;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -87,8 +87,8 @@ public class LibraryController {
   private JobLauncher jobLauncher;
 
   @Autowired
-  @Qualifier("processComicsJob")
-  private Job processComicsJob;
+  @Qualifier("processComicBooksJob")
+  private Job processComicBooksJob;
 
   @Autowired
   @Qualifier("updateMetadataJob")
@@ -351,9 +351,11 @@ public class LibraryController {
     this.comicBookService.prepareForRescan(comicBookId);
     log.trace("Initiating a rescan batch process");
     this.jobLauncher.run(
-        processComicsJob,
+        processComicBooksJob,
         new JobParametersBuilder()
-            .addLong(ProcessComicsConfiguration.JOB_RESCAN_COMICS_START, System.currentTimeMillis())
+            .addLong(
+                ProcessComicBooksConfiguration.JOB_PROCESS_COMIC_BOOKS_STARTED,
+                System.currentTimeMillis())
             .toJobParameters());
   }
 
@@ -376,9 +378,11 @@ public class LibraryController {
         LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selectedIdList));
     log.trace("Launching rescan batch process");
     this.jobLauncher.run(
-        processComicsJob,
+        processComicBooksJob,
         new JobParametersBuilder()
-            .addLong(ProcessComicsConfiguration.JOB_RESCAN_COMICS_START, System.currentTimeMillis())
+            .addLong(
+                ProcessComicBooksConfiguration.JOB_PROCESS_COMIC_BOOKS_STARTED,
+                System.currentTimeMillis())
             .toJobParameters());
   }
 

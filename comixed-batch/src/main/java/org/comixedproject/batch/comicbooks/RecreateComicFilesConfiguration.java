@@ -50,21 +50,19 @@ public class RecreateComicFilesConfiguration {
   @Value("${comixed.batch.chunk-size}")
   private int batchChunkSize = 10;
 
-  @Bean
-  @Qualifier("recreateComicFilesJob")
+  @Bean(name = "recreateComicFilesJob")
   public Job recreateComicFilesJob(
       final JobRepository jobRepository,
       @Qualifier("recreateComicFileStep") final Step recreateComicFileStep,
-      @Qualifier("processComicsJobStep") final Step processComicsJobStep) {
+      @Qualifier("processComicBooksJobStep") final Step processComicBooksJobStep) {
     return new JobBuilder("recreateComicFilesJob", jobRepository)
         .incrementer(new RunIdIncrementer())
         .start(recreateComicFileStep)
-        .next(processComicsJobStep)
+        .next(processComicBooksJobStep)
         .build();
   }
 
-  @Bean
-  @Qualifier("recreateComicFileStep")
+  @Bean(name = "recreateComicFileStep")
   public Step recreateComicFileStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,

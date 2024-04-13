@@ -59,8 +59,7 @@ public class MarkPagesWithHashConfiguration {
    * @param markPageWithHashStep the mark pages with hash step
    * @return the job
    */
-  @Bean
-  @Qualifier("markPagesWithHashJob")
+  @Bean(name = "markPagesWithHashJob")
   public Job markPagesWithHashJob(
       final JobRepository jobRepository,
       @Qualifier("markPageWithHashStep") final Step markPageWithHashStep) {
@@ -80,8 +79,7 @@ public class MarkPagesWithHashConfiguration {
    * @param writer the writer
    * @return the step
    */
-  @Bean
-  @Qualifier("markPageWithHashStep")
+  @Bean(name = "markPageWithHashStep")
   public Step markPageWithHashStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,

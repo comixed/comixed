@@ -18,7 +18,7 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
-import static org.comixedproject.model.messaging.batch.ProcessComicStatus.PROCESSED_COMICS;
+import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.PROCESS_COMIC_BOOKS_PROCESSED_COMICS;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.batch.core.ChunkListener;
@@ -27,14 +27,14 @@ import org.springframework.batch.item.ExecutionContext;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ProcessedComicChunkListener</code> provides a chunk listener to relay the status of comics
- * processed.
+ * <code>ProcessedComicBookChunkListener</code> provides a chunk listener to relay the status of
+ * comics processed.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class ProcessedComicChunkListener extends AbstractComicProcessingListener
+public class ProcessedComicBookChunkListener extends AbstractComicBookProcessingListener
     implements ChunkListener {
   @Override
   public void beforeChunk(final ChunkContext context) {
@@ -56,7 +56,8 @@ public class ProcessedComicChunkListener extends AbstractComicProcessingListener
         context.getStepContext().getStepExecution().getJobExecution().getExecutionContext();
     log.trace("Publishing status after chunk");
     executionContext.putLong(
-        PROCESSED_COMICS, context.getStepContext().getStepExecution().getWriteCount());
+        PROCESS_COMIC_BOOKS_PROCESSED_COMICS,
+        context.getStepContext().getStepExecution().getWriteCount());
     this.doPublishState(executionContext);
   }
 }

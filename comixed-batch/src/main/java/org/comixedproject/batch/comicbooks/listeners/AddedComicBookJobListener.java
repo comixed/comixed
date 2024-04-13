@@ -18,7 +18,7 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
-import static org.comixedproject.model.messaging.batch.ProcessComicStatus.*;
+import static org.comixedproject.model.messaging.batch.AddComicBooksStatus.*;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.batch.core.JobExecution;
@@ -27,32 +27,33 @@ import org.springframework.batch.item.ExecutionContext;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ProcessComicsJobListener</code> relays overall job state during the comic processing batch
- * process.
+ * <code>AddedComicBookJobListener</code> provides a {@link JobExecutionListener} for the overall
+ * process of adding comics to the library.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class ProcessComicsJobListener extends AbstractComicProcessingListener
+public class AddedComicBookJobListener extends AbstractAddComicBooksExecutionListener
     implements JobExecutionListener {
   @Override
   public void beforeJob(final JobExecution jobExecution) {
-    log.trace("Publishing job start");
+    log.trace("Gathering job statistics");
     final ExecutionContext context = jobExecution.getExecutionContext();
-    context.putLong(JOB_STARTED, System.currentTimeMillis());
-    context.putString(STEP_NAME, "");
-    context.putLong(TOTAL_COMICS, 0);
-    context.putLong(PROCESSED_COMICS, 0);
-    log.trace("Publishing job statistics");
-    this.doPublishState(context);
+    context.putLong(ADD_COMIC_BOOKS_JOB_STARTED, System.currentTimeMillis());
+    context.putLong(
+        ADD_COMIC_BOOKS_TOTAL_COMICS, this.comicFileService.getComicFileDescriptorCount());
+    context.putLong(ADD_COMIC_BOOKS_PROCESSED_COMICS, 0);
+    this.doPublishStatus(context);
   }
 
   @Override
   public void afterJob(final JobExecution jobExecution) {
-    log.trace("Publishing job finish");
+    log.trace("Publishing completed job status");
     final ExecutionContext context = jobExecution.getExecutionContext();
-    context.putLong(JOB_FINISHED, System.currentTimeMillis());
-    this.doPublishState(jobExecution.getExecutionContext());
+    context.putLong(ADD_COMIC_BOOKS_JOB_FINISHED, System.currentTimeMillis());
+    context.putLong(
+        ADD_COMIC_BOOKS_PROCESSED_COMICS, context.getLong(ADD_COMIC_BOOKS_TOTAL_COMICS));
+    this.doPublishStatus(context);
   }
 }

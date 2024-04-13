@@ -53,9 +53,9 @@ public class LoadFileContentsProcessor
   public ComicBook process(final ComicBook comicBook) {
     final ContentAdaptorRules rules = new ContentAdaptorRules();
     rules.setSkipMetadata(
-        this.jobParameters.getParameters().containsKey(PARAM_SKIP_METADATA)
-            ? Boolean.valueOf(this.jobParameters.getString(PARAM_SKIP_METADATA))
-            : false);
+        (this.jobParameters.getParameters().containsKey(PARAM_SKIP_METADATA)
+                && Boolean.valueOf(this.jobParameters.getString(PARAM_SKIP_METADATA)))
+            || false);
     log.debug("Loading comicBook file contents: id={} rules={}", comicBook.getId(), rules);
     try {
       this.comicBookAdaptor.load(comicBook, rules);

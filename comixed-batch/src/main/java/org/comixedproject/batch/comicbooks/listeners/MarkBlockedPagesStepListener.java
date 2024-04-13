@@ -18,7 +18,7 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
-import static org.comixedproject.model.messaging.batch.ProcessComicStatus.*;
+import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.service.comicbooks.ComicBookService;
@@ -34,16 +34,17 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class MarkBlockedPagesStepListener extends AbstractComicProcessingStepExecutionListener {
+public class MarkBlockedPagesStepListener extends AbstractComicBookProcessingStepExecutionListener {
   @Autowired private ComicBookService comicBookService;
 
   @Override
   public void beforeStep(final StepExecution stepExecution) {
     final ExecutionContext context = stepExecution.getJobExecution().getExecutionContext();
-    context.putString(STEP_NAME, MARK_BLOCKED_PAGES_STEP_NAME);
+    context.putString(PROCESS_COMIC_BOOKS_STEP_NAME, MARK_BLOCKED_PAGES_STEP_NAME);
     log.trace("Getting comic count");
     context.putLong(
-        TOTAL_COMICS, this.comicBookService.getUnprocessedComicsForMarkedPageBlockingCount());
+        PROCESS_COMIC_BOOKS_TOTAL_COMICS,
+        this.comicBookService.getUnprocessedComicsForMarkedPageBlockingCount());
     this.doPublishState(context);
   }
 }

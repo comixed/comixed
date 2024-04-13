@@ -18,39 +18,41 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
-import static org.comixedproject.model.messaging.batch.ProcessComicStatus.*;
+import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
 
 import java.util.Date;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.messaging.comicbooks.PublishProcessComicsStatusAction;
-import org.comixedproject.model.messaging.batch.ProcessComicStatus;
+import org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAction;
+import org.comixedproject.model.messaging.batch.ProcessComicBooksStatus;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>AbstractComicProcessingListener</code> provides a foundation for building listeners that
- * listen to the batch processes that add comics to, or process comics for, the library.
+ * <code>AbstractComicBookProcessingListener</code> provides a foundation for building listeners
+ * that listen to the batch processes that add comics to, or process comics for, the library.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public abstract class AbstractComicProcessingListener {
-  @Autowired private PublishProcessComicsStatusAction publishProcessComicsStatusAction;
+public abstract class AbstractComicBookProcessingListener {
+  @Autowired private PublishProcessComicBooksStatusAction publishProcessComicBooksStatusAction;
 
   protected void doPublishState(final ExecutionContext context) {
     log.trace("Building add comics to library state");
-    final ProcessComicStatus state = new ProcessComicStatus();
-    state.setActive(context.containsKey(JOB_STARTED) && !context.containsKey(JOB_FINISHED));
-    state.setStarted(new Date(context.getLong(JOB_STARTED)));
-    state.setStepName(context.getString(STEP_NAME));
-    state.setTotal(context.getLong(TOTAL_COMICS));
-    state.setProcessed(context.getLong(PROCESSED_COMICS));
+    final ProcessComicBooksStatus state = new ProcessComicBooksStatus();
+    state.setActive(
+        context.containsKey(PROCESS_COMIC_BOOKS_JOB_STARTED)
+            && !context.containsKey(PROCESS_COMIC_BOOKS_JOB_FINISHED));
+    state.setStarted(new Date(context.getLong(PROCESS_COMIC_BOOKS_JOB_STARTED)));
+    state.setStepName(context.getString(PROCESS_COMIC_BOOKS_STEP_NAME));
+    state.setTotal(context.getLong(PROCESS_COMIC_BOOKS_TOTAL_COMICS));
+    state.setProcessed(context.getLong(PROCESS_COMIC_BOOKS_PROCESSED_COMICS));
     log.trace("Publishing add comics to library state");
     try {
-      this.publishProcessComicsStatusAction.publish(state);
+      this.publishProcessComicBooksStatusAction.publish(state);
     } catch (PublishingException error) {
       log.error("Failed to publish add comics to library state", error);
     }

@@ -43,8 +43,7 @@ public class BatchConfiguration {
    *
    * @return the task executor
    */
-  @Bean
-  @Qualifier("jobTaskExecutor")
+  @Bean(name = "jobTaskExecutor")
   public TaskExecutor jobTaskExecutor() {
     return new SimpleAsyncTaskExecutor("CX-Jarvis");
   }
@@ -54,8 +53,7 @@ public class BatchConfiguration {
    *
    * @return the task executor
    */
-  @Bean
-  @Qualifier("stepTaskExecutor")
+  @Bean(name = "stepTaskExecutor")
   public TaskExecutor stepTaskExecutor() {
     return new SimpleAsyncTaskExecutor("CX-Alfred");
   }
@@ -68,8 +66,7 @@ public class BatchConfiguration {
    * @return the job launcher
    * @throws Exception if an error occurs
    */
-  @Bean
-  @Qualifier("batchJobLauncher")
+  @Bean(name = "batchJobLauncher")
   public JobLauncher batchJobLauncher(
       final JobRepository jobRepository,
       @Qualifier("jobTaskExecutor") final TaskExecutor taskExecutor)
@@ -85,18 +82,17 @@ public class BatchConfiguration {
    * Returns the step that launches the processing batch job.
    *
    * @param jobRepository the step factory
-   * @param processComicsJob the job
+   * @param processComicBooksJob the job
    * @param jobLauncher the job launcher
    * @return the step the step
    */
-  @Bean
-  @Qualifier("processComicsJobStep")
-  public Step processComicsJobStep(
+  @Bean(name = "processComicBooksJobStep")
+  public Step processComicBooksJobStep(
       final JobRepository jobRepository,
-      final @Qualifier("processComicsJob") Job processComicsJob,
+      final @Qualifier("processComicBooksJob") Job processComicBooksJob,
       final @Qualifier("batchJobLauncher") JobLauncher jobLauncher) {
-    return new StepBuilder("processComicsJobStep", jobRepository)
-        .job(processComicsJob)
+    return new StepBuilder("processComicBooksJobStep", jobRepository)
+        .job(processComicBooksJob)
         .parametersExtractor(new DefaultJobParametersExtractor())
         .launcher(jobLauncher)
         .build();

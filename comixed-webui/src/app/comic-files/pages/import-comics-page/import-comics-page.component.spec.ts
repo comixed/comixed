@@ -59,9 +59,9 @@ import {
 import { TitleService } from '@app/core/services/title.service';
 import { MatMenuModule } from '@angular/material/menu';
 import {
-  initialState as initialProcessComicsState,
-  PROCESS_COMICS_FEATURE_KEY
-} from '@app/reducers/process-comics.reducer';
+  IMPORT_COMIC_BOOKS_FEATURE_KEY,
+  initialState as initialImportComicBooksComicsState
+} from '@app/reducers/import-comic-books.reducer';
 import {
   Confirmation,
   ConfirmationService
@@ -101,7 +101,7 @@ describe('ImportComicsPageComponent', () => {
   const initialState = {
     [COMIC_FILE_LIST_FEATURE_KEY]: initialComicFileListState,
     [IMPORT_COMIC_FILES_FEATURE_KEY]: initialImportComicFilesState,
-    [PROCESS_COMICS_FEATURE_KEY]: initialProcessComicsState,
+    [IMPORT_COMIC_BOOKS_FEATURE_KEY]: initialImportComicBooksComicsState,
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [FEATURE_ENABLED_FEATURE_KEY]: { ...initialFeatureEnabledState }
   };
@@ -383,9 +383,12 @@ describe('ImportComicsPageComponent', () => {
     beforeEach(() => {
       store.setState({
         ...initialState,
-        [PROCESS_COMICS_FEATURE_KEY]: {
-          ...initialProcessComicsState,
-          active: true
+        [IMPORT_COMIC_BOOKS_FEATURE_KEY]: {
+          ...initialImportComicBooksComicsState,
+          adding: {
+            ...initialImportComicBooksComicsState.adding,
+            active: true
+          }
         }
       });
     });

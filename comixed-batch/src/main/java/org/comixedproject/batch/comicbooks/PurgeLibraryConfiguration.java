@@ -59,8 +59,7 @@ public class PurgeLibraryConfiguration {
    * @param purgeMarkedComicsStep the purge library step
    * @return the job
    */
-  @Bean
-  @Qualifier("purgeLibraryJob")
+  @Bean(name = "purgeLibraryJob")
   public Job purgeLibraryJob(
       final JobRepository jobRepository,
       @Qualifier("purgeMarkedComicsStep") final Step purgeMarkedComicsStep,
@@ -82,8 +81,7 @@ public class PurgeLibraryConfiguration {
    * @param writer the writer
    * @return the step
    */
-  @Bean
-  @Qualifier("removeComicBooksWithoutDetailsStep")
+  @Bean(name = "removeComicBooksWithoutDetailsStep")
   public Step removeComicBooksWithoutDetailsStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
@@ -108,8 +106,7 @@ public class PurgeLibraryConfiguration {
    * @param writer the writer
    * @return the step
    */
-  @Bean
-  @Qualifier("purgeMarkedComicsStep")
+  @Bean(name = "purgeMarkedComicsStep")
   public Step purgeMarkedComicsStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,

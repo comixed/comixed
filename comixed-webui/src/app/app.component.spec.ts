@@ -49,8 +49,8 @@ import {
 import { RouterTestingModule } from '@angular/router/testing';
 import {
   initialState as initialImportCountState,
-  PROCESS_COMICS_FEATURE_KEY
-} from '@app/reducers/process-comics.reducer';
+  IMPORT_COMIC_BOOKS_FEATURE_KEY
+} from '@app/reducers/import-comic-books.reducer';
 import { LOGGER_LEVEL_PREFERENCE } from '@app/app.constants';
 import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -99,7 +99,7 @@ describe('AppComponent', () => {
     [USER_FEATURE_KEY]: initialUserState,
     [BUSY_FEATURE_KEY]: initialBusyState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
-    [PROCESS_COMICS_FEATURE_KEY]: initialImportCountState,
+    [IMPORT_COMIC_BOOKS_FEATURE_KEY]: initialImportCountState,
     [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,

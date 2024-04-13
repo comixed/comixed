@@ -18,13 +18,13 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
-import static org.comixedproject.model.messaging.batch.ProcessComicStatus.*;
+import static org.comixedproject.model.messaging.batch.AddComicBooksStatus.*;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.service.comicfiles.ComicFileService;
+import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.item.ExecutionContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -35,16 +35,29 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class CreateInsertStepExecutionListener
-    extends AbstractComicProcessingStepExecutionListener {
-  @Autowired private ComicFileService comicFileService;
+public class CreateInsertStepExecutionListener extends AbstractAddComicBooksExecutionListener
+    implements StepExecutionListener {
 
   @Override
   public void beforeStep(final StepExecution stepExecution) {
-    final ExecutionContext context = stepExecution.getJobExecution().getExecutionContext();
-    context.putString(STEP_NAME, CREATE_INSERT_STEP_NAME);
-    log.trace("Getting insert comic total count");
-    context.putLong(TOTAL_COMICS, this.comicFileService.getComicFileDescriptorCount());
-    this.doPublishState(context);
+    this.doPublishStatus(
+        this.generateContext(stepExecution.getJobExecution().getExecutionContext()));
+  }
+
+  @Override
+  public ExitStatus afterStep(final StepExecution stepExecution) {
+    this.doPublishStatus(
+        this.generateContext(stepExecution.getJobExecution().getExecutionContext()));
+    return null;
+  }
+
+  private ExecutionContext generateContext(final ExecutionContext context) {
+    context.putLong(
+        ADD_COMIC_BOOKS_TOTAL_COMICS, this.comicFileService.getComicFileDescriptorCount());
+    context.putLong(ADD_COMIC_BOOKS_JOB_STARTED, System.currentTimeMillis());
+    context.putLong(
+        ADD_COMIC_BOOKS_TOTAL_COMICS, this.comicFileService.getComicFileDescriptorCount());
+    context.putLong(ADD_COMIC_BOOKS_PROCESSED_COMICS, 0L);
+    return context;
   }
 }

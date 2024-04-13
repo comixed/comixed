@@ -57,8 +57,7 @@ public class AddImageCacheEntriesConfiguration {
    * @param createImageCacheEntriesStep the generate thumbnail step
    * @return the job
    */
-  @Bean
-  @Qualifier("addPageToImageCacheJob")
+  @Bean(name = "addPageToImageCacheJob")
   public Job addPageToImageCacheJob(
       final JobRepository jobRepository,
       @Qualifier("createImageCacheEntriesStep") final Step createImageCacheEntriesStep) {
@@ -79,8 +78,7 @@ public class AddImageCacheEntriesConfiguration {
    * @param writer the writer
    * @return the step
    */
-  @Bean
-  @Qualifier("createImageCacheEntriesStep")
+  @Bean(name = "createImageCacheEntriesStep")
   public Step createImageCacheEntriesStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,

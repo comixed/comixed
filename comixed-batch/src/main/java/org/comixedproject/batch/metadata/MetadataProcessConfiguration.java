@@ -60,8 +60,7 @@ public class MetadataProcessConfiguration {
    * @param scrapeComicBook the scrape comic stet
    * @return the job
    */
-  @Bean
-  @Qualifier("updateComicBookMetadata")
+  @Bean(name = "updateComicBookMetadata")
   public Job updateComicBookMetadata(
       final JobRepository jobRepository,
       final UpdateComicBookMetadataJobListener jobListener,
@@ -82,8 +81,7 @@ public class MetadataProcessConfiguration {
    * @param writer the step writer
    * @return the step
    */
-  @Bean
-  @Qualifier("scrapeComicBook")
+  @Bean(name = "scrapeComicBook")
   public Step scrapeComicBook(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,

@@ -59,8 +59,7 @@ public class UnmarkPagesWithHashConfiguration {
    * @param unmarkPageWithHashStep the unmark page step
    * @return the job
    */
-  @Bean
-  @Qualifier("unmarkPagesWithHashJob")
+  @Bean(name = "unmarkPagesWithHashJob")
   public Job unmarkPagesWithHashJob(
       final JobRepository jobRepository,
       @Qualifier("unmarkPageWithHashStep") final Step unmarkPageWithHashStep) {
@@ -80,8 +79,7 @@ public class UnmarkPagesWithHashConfiguration {
    * @param writer the writer
    * @return the step
    */
-  @Bean
-  @Qualifier("unmarkPageWithHashStep")
+  @Bean(name = "unmarkPageWithHashStep")
   public Step unmarkPageWithHashStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,

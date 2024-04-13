@@ -21,6 +21,7 @@ import { AdminGuard } from '../user';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { ImportStatusPageComponent } from '@app/comic-files/pages/import-status-page/import-status-page.component';
+import { ProcessingStatusPageComponent } from '@app/comic-files/pages/processing-status-page/processing-status-page.component';
 
 const routes: Routes = [
   {
@@ -31,6 +32,11 @@ const routes: Routes = [
   {
     path: 'library/import',
     component: ImportComicsPageComponent,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'library/processing',
+    component: ProcessingStatusPageComponent,
     canActivate: [AdminGuard]
   }
 ];

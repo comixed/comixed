@@ -14,13 +14,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses>
- */
+ */ package org.comixedproject.batch.initiators;
 
-package org.comixedproject.batch.initiators;
+import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.JOB_PROCESS_COMIC_BOOKS_STARTED;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicpages.AddImageCacheEntriesConfiguration;
-import org.comixedproject.service.comicpages.PageCacheService;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersInvalidException;
@@ -34,42 +33,45 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>CreateCoverPageImageCacheEntriesInitiator</code> provides the entry point to initiate the
- * create image cache entries batch process.
+ * <code>ProcessComicBooksInitiator</code> provides an initiator that periodically scans the library
+ * for unprocessed comic books and starts a batch job to process them.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class CreateCoverPageImageCacheEntriesInitiator {
-  @Autowired private PageCacheService pageCacheService;
+public class ProcessComicBooksInitiator {
+  @Autowired private ComicBookService comicBookService;
 
   @Autowired
-  @Qualifier("addPageToImageCacheJob")
-  private Job addPageToImageCacheJob;
+  @Qualifier("processComicBooksJob")
+  private Job processComicBooksJob;
 
   @Autowired
   @Qualifier("batchJobLauncher")
   private JobLauncher jobLauncher;
 
   /** Starts a batch process to add pages to the image cache. */
-  @Scheduled(cron = "${comixed.batch.add-cover-to-image-cache.schedule:'0 0 * * * *'}")
+  @Scheduled(cron = "${comixed.batch.process-comic-books.schedule:'0 0,10,20,30,40,50 * * * *'}")
   public void execute() {
-    log.info("Starting process: add pages to image cache");
+    log.info("Starting process: scan for incoming comics");
     try {
-      this.pageCacheService.prepareCoverPagesWithoutCacheEntries();
-      this.jobLauncher.run(
-          addPageToImageCacheJob,
-          new JobParametersBuilder()
-              .addLong(
-                  AddImageCacheEntriesConfiguration.PARAM_ADD_IMAGE_CACHE_ENTRIES_STARTED,
-                  System.currentTimeMillis())
-              .toJobParameters());
-    } catch (JobExecutionAlreadyRunningException
-        | JobInstanceAlreadyCompleteException
+      if (this.comicBookService.getUnprocessedComicsWithoutContentCount() > 0
+          || this.comicBookService.getUnprocessedComicsForMarkedPageBlockingCount() > 0
+          || this.comicBookService.getWithCreateMetadataSourceFlagCount() > 0
+          || this.comicBookService.getProcessedComicsCount() > 0) {
+        log.debug("Processing incoming comics");
+        this.jobLauncher.run(
+            processComicBooksJob,
+            new JobParametersBuilder()
+                .addLong(JOB_PROCESS_COMIC_BOOKS_STARTED, System.currentTimeMillis())
+                .toJobParameters());
+      }
+    } catch (JobInstanceAlreadyCompleteException
+        | JobExecutionAlreadyRunningException
         | JobParametersInvalidException
         | JobRestartException error) {
-      log.error("Failed to start batch process", error);
+      log.error("Failed to start scanning incoming comics", error);
     }
   }
 }

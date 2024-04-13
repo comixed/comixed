@@ -19,9 +19,9 @@
 package org.comixedproject.batch.comicbooks;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicbooks.listeners.AddComicsToLibraryJobListener;
+import org.comixedproject.batch.comicbooks.listeners.AddedComicBookChunkListener;
+import org.comixedproject.batch.comicbooks.listeners.AddedComicBookJobListener;
 import org.comixedproject.batch.comicbooks.listeners.CreateInsertStepExecutionListener;
-import org.comixedproject.batch.comicbooks.listeners.ProcessedComicChunkListener;
 import org.comixedproject.batch.comicbooks.processors.ComicInsertProcessor;
 import org.comixedproject.batch.comicbooks.processors.NoopComicProcessor;
 import org.comixedproject.batch.comicbooks.readers.ComicInsertReader;
@@ -64,23 +64,22 @@ public class AddComicsConfiguration {
    * @param jobListener the job listener
    * @param createInsertStep the insert step
    * @param recordInsertedStep the post-insert step
-   * @param processComicsJobStep the process comics job launch step
+   * @param processComicBooksJobStep the process comics job launch step
    * @return the job
    */
-  @Bean
-  @Qualifier("addComicsToLibraryJob")
+  @Bean(name = "addComicsToLibraryJob")
   public Job addComicsToLibraryJob(
-      final AddComicsToLibraryJobListener jobListener,
+      final AddedComicBookJobListener jobListener,
       final JobRepository jobRepository,
       @Qualifier("createInsertStep") final Step createInsertStep,
       @Qualifier("recordInsertedStep") Step recordInsertedStep,
-      @Qualifier("processComicsJobStep") Step processComicsJobStep) {
+      @Qualifier("processComicBooksJobStep") Step processComicBooksJobStep) {
     return new JobBuilder("addComicsToLibraryJob", jobRepository)
         .incrementer(new RunIdIncrementer())
         .listener(jobListener)
         .start(createInsertStep)
         .next(recordInsertedStep)
-        .next(processComicsJobStep)
+        .next(processComicBooksJobStep)
         .build();
   }
 
@@ -95,8 +94,7 @@ public class AddComicsConfiguration {
    * @param writer the writer
    * @return the step
    */
-  @Bean
-  @Qualifier("createInsertStep")
+  @Bean(name = "createInsertStep")
   public Step createInsertStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
@@ -104,7 +102,7 @@ public class AddComicsConfiguration {
       final ComicInsertReader reader,
       final ComicInsertProcessor processor,
       final ComicInsertWriter writer,
-      final ProcessedComicChunkListener chunkListener) {
+      final AddedComicBookChunkListener chunkListener) {
     return new StepBuilder("createInsertStep", jobRepository)
         .listener(stepExecutionListener)
         .<ComicFileDescriptor, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
@@ -126,12 +124,11 @@ public class AddComicsConfiguration {
    * @param writer the writer
    * @return the step
    */
-  @Bean
-  @Qualifier("recordInsertedStep")
+  @Bean(name = "recordInsertedStep")
   public Step recordInsertedStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
-      final ProcessedComicChunkListener chunkListener,
+      final AddedComicBookChunkListener chunkListener,
       final RecordInsertedReader reader,
       final NoopComicProcessor processor,
       final ReaderInsertedWriter writer) {

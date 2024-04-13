@@ -39,4 +39,5 @@ export const LATEST_RELEASE_TARGET = '_cx_latest_release';
 
 // messaging constants
 
-export const PROCESS_COMICS_TOPIC = '/topic/process-comics.status';
+export const PROCESS_COMIC_BOOKS_TOPIC = '/topic/process-comic-books.status';
+export const ADD_COMIC_BOOKS_TOPIC = '/topic/add-comic-books.status';
