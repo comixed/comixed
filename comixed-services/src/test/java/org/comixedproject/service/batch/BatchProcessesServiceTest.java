@@ -122,4 +122,31 @@ public class BatchProcessesServiceTest {
     Mockito.verify(jobExplorer, Mockito.times(Math.toIntExact(TEST_INSTANCE_COUNT)))
         .getJobExecutions(jobInstance);
   }
+
+  @Test
+  public void testGetAllBatchProcessesNoStartOrFinishedTime() {
+    Mockito.when(jobExecution.getStartTime()).thenReturn(null);
+    Mockito.when(jobExecution.getEndTime()).thenReturn(null);
+
+    final List<BatchProcess> result = service.getAllBatchProcesses();
+
+    assertNotNull(result);
+    assertEquals(TEST_INSTANCE_COUNT, result.size());
+
+    final BatchProcess batchProcess = result.get(0);
+    assertEquals(TEST_JOB_NAME, batchProcess.getName());
+    assertEquals(TEST_INSTANCE_ID, batchProcess.getInstanceId());
+    assertEquals(TEST_JOB_ID, batchProcess.getJobId());
+    assertSame(TEST_STATUS, batchProcess.getStatus());
+    assertNull(batchProcess.getStartTime());
+    assertNull(batchProcess.getEndTime());
+    assertSame(TEST_EXIT_STATUS.getExitCode(), batchProcess.getExitCode());
+    assertEquals(TEST_EXIT_STATUS.getExitDescription(), batchProcess.getExitDescription());
+
+    Mockito.verify(jobExplorer, Mockito.times(1)).getJobNames();
+    Mockito.verify(jobExplorer, Mockito.times(1))
+        .getJobInstances(TEST_JOB_NAME, 0, Math.toIntExact(TEST_INSTANCE_COUNT));
+    Mockito.verify(jobExplorer, Mockito.times(Math.toIntExact(TEST_INSTANCE_COUNT)))
+        .getJobExecutions(jobInstance);
+  }
 }

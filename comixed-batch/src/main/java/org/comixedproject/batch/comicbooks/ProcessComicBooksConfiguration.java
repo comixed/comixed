@@ -45,9 +45,11 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Log4j2
 public class ProcessComicBooksConfiguration {
   public static final String JOB_PROCESS_COMIC_BOOKS_STARTED = "job.process-comic-books.started";
+  public static final String JOB_PROCESS_COMIC_BOOKS_BATCH_NAME =
+      "job.process-comic-books.batch-name";
 
   @Value("${comixed.batch.chunk-size}")
-  private int batchChunkSize = 10;
+  private int batchChunkSize = 1;
 
   /**
    * Returns the process comics job.
@@ -55,9 +57,6 @@ public class ProcessComicBooksConfiguration {
    * @param jobRepository the job repository
    * @param jobListener the job listener
    * @param loadFileContentsStep the load file contents step
-   * @param markBlockedPagesStep the mark blocked pages step
-   * @param createMetadataSourceStep the create metadata source step
-   * @param contentsProcessedStep the mark contents processed step
    * @return the job
    */
   @Bean(name = "processComicBooksJob")
@@ -65,16 +64,12 @@ public class ProcessComicBooksConfiguration {
       final JobRepository jobRepository,
       final ProcessComicBooksJobListener jobListener,
       @Qualifier("loadFileContentsStep") final Step loadFileContentsStep,
-      @Qualifier("markBlockedPagesStep") final Step markBlockedPagesStep,
-      @Qualifier("createMetadataSourceStep") final Step createMetadataSourceStep,
-      @Qualifier("contentsProcessedStep") final Step contentsProcessedStep) {
+      @Qualifier("markComicBatchCompletedStep") final Step markComicBatchCompletedStep) {
     return new JobBuilder("processComicBooksJob", jobRepository)
         .incrementer(new RunIdIncrementer())
         .listener(jobListener)
         .start(loadFileContentsStep)
-        .next(markBlockedPagesStep)
-        .next(createMetadataSourceStep)
-        .next(contentsProcessedStep)
+        .next(markComicBatchCompletedStep)
         .build();
   }
 
@@ -94,105 +89,12 @@ public class ProcessComicBooksConfiguration {
   public Step loadFileContentsStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
-      final LoadFileContentsStepListener stepListener,
+      final LoadFileContentsStepExecutionListener stepListener,
       final LoadFileContentsReader reader,
       final LoadFileContentsProcessor processor,
       final LoadFileContentsWriter writer,
-      final ProcessedComicBookChunkListener chunkListener) {
+      final LoadFileContentsChunkListener chunkListener) {
     return new StepBuilder("loadFileContentsStep", jobRepository)
-        .listener(stepListener)
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
-        .reader(reader)
-        .processor(processor)
-        .writer(writer)
-        .listener(chunkListener)
-        .build();
-  }
-
-  /**
-   * Returns the create metadata source step.
-   *
-   * @param jobRepository the job repository
-   * @param platformTransactionManager the transaction manager
-   * @param stepListener the step listener
-   * @param reader the reader
-   * @param processor the processor
-   * @param writer the writer
-   * @param chunkListener the chunk listener
-   * @return the step
-   */
-  @Bean(name = "createMetadataSourceStep")
-  public Step createMetadataSourceStep(
-      final JobRepository jobRepository,
-      final PlatformTransactionManager platformTransactionManager,
-      final CreateMetadataSourceStepListener stepListener,
-      final CreateMetadataSourceReader reader,
-      final CreateMetadataSourceProcessor processor,
-      final CreateMetadataSourceWriter writer,
-      final ProcessedComicBookChunkListener chunkListener) {
-    return new StepBuilder("createMetadataSourceStep", jobRepository)
-        .listener(stepListener)
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
-        .reader(reader)
-        .processor(processor)
-        .writer(writer)
-        .listener(chunkListener)
-        .build();
-  }
-
-  /**
-   * Returns the mark blocked pages step.
-   *
-   * @param jobRepository the job repository
-   * @param platformTransactionManager the transaction manager
-   * @param stepListener the step listener
-   * @param reader the reader
-   * @param processor the processor
-   * @param writer the writer
-   * @param chunkListener the chunk listener
-   * @return the step
-   */
-  @Bean(name = "markBlockedPagesStep")
-  public Step markBlockedPagesStep(
-      final JobRepository jobRepository,
-      final PlatformTransactionManager platformTransactionManager,
-      final MarkBlockedPagesStepListener stepListener,
-      final MarkBlockedPagesReader reader,
-      final MarkBlockedPagesProcessor processor,
-      final MarkBlockedPagesWriter writer,
-      final ProcessedComicBookChunkListener chunkListener) {
-    return new StepBuilder("markBlockedPagesStep", jobRepository)
-        .listener(stepListener)
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
-        .reader(reader)
-        .processor(processor)
-        .writer(writer)
-        .listener(chunkListener)
-        .build();
-  }
-
-  /**
-   * Returns the contents processed step.
-   *
-   * @param jobRepository the job repository
-   * @param platformTransactionManager the transaction manager
-   * @param stepListener the step listener
-   * @param reader the reader
-   * @param processor the processor
-   * @param writer the writer @Param chunkListener the chunk listener
-   * @param chunkListener the chunk listener
-   * @return the step
-   */
-  @Bean(name = "contentsProcessedStep")
-  public Step contentsProcessedStep(
-      final JobRepository jobRepository,
-      final PlatformTransactionManager platformTransactionManager,
-      final ContentsProcessedStepListener stepListener,
-      final ContentsProcessedReader reader,
-      final NoopComicProcessor processor,
-      final ContentsProcessedWriter writer,
-      final ProcessedComicBookChunkListener chunkListener) {
-    return new StepBuilder("contentsProcessedStep", jobRepository)
         .listener(stepListener)
         .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)

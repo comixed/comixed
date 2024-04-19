@@ -351,86 +351,50 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   /**
    * Retrieves the number of unprocessed comics that are waiting to have their contents loaded.
    *
+   * @param batchName the batch name
    * @return the count
    */
-  public long getUnprocessedComicsWithoutContentCount() {
+  public long getUnprocessedComicsWithoutContentCount(final String batchName) {
     log.trace("Getting the number of unprocessed comics without content");
-    return this.comicBookRepository.findUnprocessedComicsWithoutContentCount();
-  }
-
-  /**
-   * Returns the number of comic books with the create metadata source flag set.
-   *
-   * @return the comic book count
-   */
-  public long getWithCreateMetadataSourceFlagCount() {
-    log.trace("Getting comics with the create metadata source flag set");
-    return this.comicBookRepository.findComicsWithCreateMeatadataSourceFlag();
+    return this.comicBookRepository.findUnprocessedComicsWithoutContentCount(batchName);
   }
 
   /**
    * Retrieves unprocessed comics that have the create metadata flag set.
    *
-   * @param count the number of comics to return
+   * @param batchName the comic batch name
+   * @param chunkSize the number of comics to return
    * @return the comics
    */
-  public List<ComicBook> findComicsWithCreateMetadataFlagSet(int count) {
+  public List<ComicBook> findComicsWithCreateMetadataFlagSet(
+      final String batchName, final int chunkSize) {
     log.trace("Loading unprocessed comics that need to have their contents loaded");
     return this.comicBookRepository.findUnprocessedComicsWithCreateMetadataFlagSet(
-        PageRequest.of(0, count));
+        batchName, PageRequest.of(0, chunkSize));
   }
 
   /**
    * Retrieves unprocessed comics that are waiting to have their contents loaded.
    *
+   * @param batchName the comic batch name
    * @param count the number of comics to return
    * @return the comics
    */
-  public List<ComicBook> findUnprocessedComicsWithoutContent(int count) {
-    return this.comicBookRepository.findUnprocessedComicsWithoutContent(PageRequest.of(0, count));
-  }
-
-  /**
-   * Returns the number of unprocessed comics that are waiting to have the blocked pages marked.
-   *
-   * @return the count
-   */
-  public long getUnprocessedComicsForMarkedPageBlockingCount() {
-    log.trace("Getting unprocessed comics that need page blocking count");
-    return this.comicBookRepository.findUnprocessedComicsForMarkedPageBlockingCount();
-  }
-
-  /**
-   * Retrieves unprocessed comics that are waiting to have the blocked pages marked.
-   *
-   * @param count the number of comics to return
-   * @return the comics
-   */
-  public List<ComicBook> findUnprocessedComicsForMarkedPageBlocking(final int count) {
-    log.trace("Loading unprocessed comics that need page blocking");
-    return this.comicBookRepository.findUnprocessedComicsForMarkedPageBlocking(
-        PageRequest.of(0, count));
-  }
-
-  /**
-   * Returns the number of unprocessed comics that have had their contents processed.
-   *
-   * @return the count
-   */
-  public long getProcessedComicsCount() {
-    log.trace("Getting count of unprocessed comics that are fully processed");
-    return this.comicBookRepository.findProcessedComicsCount();
+  public List<ComicBook> findUnprocessedComicsWithoutContent(final String batchName, int count) {
+    return this.comicBookRepository.findUnprocessedComicsWithoutContent(
+        batchName, PageRequest.of(0, count));
   }
 
   /**
    * Retrieves unprocessed comics that have had their contents processed.
    *
+   * @param batchName the comic batch name
    * @param count the number of comics to return
    * @return the comics
    */
-  public List<ComicBook> findProcessedComics(final int count) {
+  public List<ComicBook> findProcessedComics(final String batchName, final int count) {
     log.trace("Loading unprocessed comics that are fully processed");
-    return this.comicBookRepository.findProcessedComics(PageRequest.of(0, count));
+    return this.comicBookRepository.findProcessedComics(batchName, PageRequest.of(0, count));
   }
 
   /**
@@ -889,5 +853,15 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
 
   public List<ComicBook> loadByComicDetailId(final List comicDetailIds) {
     return this.comicBookRepository.loadByComicDetailId(comicDetailIds);
+  }
+
+  /**
+   * Returns all comic books that are unprocessed but not a part of an existing batch.
+   *
+   * @return the comic books
+   */
+  public List<ComicBook> getComicBooksForProcessing() {
+    log.debug("Loading unprocessed comic books not in a batch");
+    return this.comicBookRepository.getComicBooksForProcessing();
   }
 }

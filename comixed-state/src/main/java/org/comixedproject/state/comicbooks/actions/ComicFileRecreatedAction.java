@@ -44,7 +44,5 @@ public class ComicFileRecreatedAction extends AbstractComicAction {
     comicBook.getPages().clear();
     log.trace("Turning off file contents loaded flag");
     comicBook.setFileContentsLoaded(false);
-    log.trace("Turning off blocked pages marked flag");
-    comicBook.setBlockedPagesMarked(false);
   }
 }

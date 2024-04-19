@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,35 +16,41 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.listeners;
+package org.comixedproject.batch.comicbooks.readers;
 
-import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
+import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.JOB_PROCESS_COMIC_BOOKS_BATCH_NAME;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.model.batch.ComicBatch;
+import org.comixedproject.service.batch.ComicBatchService;
 import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.item.ExecutionContext;
+import org.springframework.batch.core.StepExecutionListener;
+import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>LoadFileContentsStepListener</code> relates batch status while loading comic file contents.
+ * <code>MarkComicBatchCompletedReader</code> loads a {@link ComicBatch} defined in the job
+ * parameters.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class LoadFileContentsStepListener extends AbstractComicBookProcessingStepExecutionListener {
-  @Autowired private ComicBookService comicBookService;
+public class MarkComicBatchCompletedReader
+    implements ItemReader<ComicBatch>, StepExecutionListener {
+  @Autowired private ComicBatchService comicBatchService;
+
+  String batchName;
 
   @Override
   public void beforeStep(final StepExecution stepExecution) {
-    final ExecutionContext context = stepExecution.getJobExecution().getExecutionContext();
-    context.putString(PROCESS_COMIC_BOOKS_STEP_NAME, LOAD_FILE_CONTENTS_STEP_NAME);
-    log.trace("Getting comic count");
-    context.putLong(
-        PROCESS_COMIC_BOOKS_TOTAL_COMICS,
-        this.comicBookService.getUnprocessedComicsWithoutContentCount());
-    this.doPublishState(context);
+    this.batchName = stepExecution.getJobParameters().getString(JOB_PROCESS_COMIC_BOOKS_BATCH_NAME);
+  }
+
+  @Override
+  public ComicBatch read() {
+    log.debug("Loading comic batch: {}", this.batchName);
+    return this.comicBatchService.getIncompleteBatchByName(this.batchName);
   }
 }

@@ -33,6 +33,7 @@ export const processComicBooksUpdate = createAction(
   props<{
     active: boolean;
     started: number;
+    batchName: string;
     stepName: string;
     total: number;
     processed: number;

@@ -35,10 +35,10 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class PublishProcessComicBooksStatusAction
     extends AbstractPublishAction<ProcessComicBooksStatus> {
-  static final String PROCESS_COMIC_BOOKS_STATE_TOPIC = "/topic/process-comic-books.status";
+  static final String PROCESS_COMIC_BOOKS_STATUS_TOPIC = "/topic/process-comic-books.status";
 
   @Override
   public void publish(final ProcessComicBooksStatus subject) throws PublishingException {
-    this.doPublish(PROCESS_COMIC_BOOKS_STATE_TOPIC, subject, View.GenericObjectView.class);
+    this.doPublish(PROCESS_COMIC_BOOKS_STATUS_TOPIC, subject, View.GenericObjectView.class);
   }
 }

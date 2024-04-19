@@ -57,6 +57,5 @@ public class ComicFileRecreatedActionTest {
     Mockito.verify(comicBook, Mockito.times(1)).setRecreating(false);
     Mockito.verify(pageList, Mockito.times(1)).clear();
     Mockito.verify(comicBook, Mockito.times(1)).setFileContentsLoaded(false);
-    Mockito.verify(comicBook, Mockito.times(1)).setBlockedPagesMarked(false);
   }
 }

@@ -22,6 +22,7 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { selectProcessingComicBooksState } from '@app/selectors/import-comic-books.selectors';
+import { ProcessingComicStatus } from '@app/reducers/import-comic-books.reducer';
 
 @Component({
   selector: 'cx-processing-status-page',
@@ -31,11 +32,7 @@ import { selectProcessingComicBooksState } from '@app/selectors/import-comic-boo
 export class ProcessingStatusPageComponent implements OnDestroy {
   comicImportStateSubscription: Subscription;
   importing = false;
-  started = 0;
-  total = 0;
-  stepName = '';
-  processed = 0;
-  progress = 0;
+  batches: ProcessingComicStatus[];
 
   constructor(
     private logger: LoggerService,
@@ -47,11 +44,7 @@ export class ProcessingStatusPageComponent implements OnDestroy {
       .select(selectProcessingComicBooksState)
       .subscribe(state => {
         this.importing = state.active;
-        this.started = state.started;
-        this.total = state.total;
-        this.stepName = state.stepName;
-        this.processed = state.processed;
-        this.progress = (state.processed / state.total) * 100;
+        this.batches = state.batches;
       });
   }
 

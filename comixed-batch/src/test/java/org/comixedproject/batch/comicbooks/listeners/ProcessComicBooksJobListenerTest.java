@@ -19,18 +19,25 @@
 package org.comixedproject.batch.comicbooks.listeners;
 
 import static junit.framework.TestCase.*;
+import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.JOB_PROCESS_COMIC_BOOKS_BATCH_NAME;
 import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAction;
+import org.comixedproject.model.batch.ComicBatch;
+import org.comixedproject.model.batch.ComicBatchEntry;
 import org.comixedproject.model.messaging.batch.ProcessComicBooksStatus;
+import org.comixedproject.service.batch.ComicBatchService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.item.ExecutionContext;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -39,25 +46,37 @@ public class ProcessComicBooksJobListenerTest {
   private static final String TEST_STEP_NAME = "step-name";
   private static final long TEST_TOTAL_COMICS = 27L;
   private static final long TEST_PROCESSED_COMICS = 15L;
+  private static final String TEST_BATCH_NAME = "The Batch Name";
 
   @InjectMocks private ProcessComicBooksJobListener listener;
+  @Mock private ComicBatchService comicBatchService;
   @Mock private JobExecution jobExecution;
   @Mock private ExecutionContext executionContext;
   @Mock private PublishProcessComicBooksStatusAction publishProcessComicBooksStatusAction;
+  @Mock private JobParameters jobParameters;
+  @Mock private ComicBatch comicBatch;
 
   @Captor ArgumentCaptor<Long> timestampArgumentCaptor;
   @Captor ArgumentCaptor<ProcessComicBooksStatus> processComicStatusArgumentCaptor;
 
+  private List<ComicBatchEntry> comicBatchEntries = new ArrayList<>();
+
   @Before
   public void setUp() throws PublishingException {
+    Mockito.when(comicBatch.getEntries()).thenReturn(comicBatchEntries);
+    Mockito.when(comicBatchService.getByName(TEST_BATCH_NAME)).thenReturn(comicBatch);
+
+    Mockito.when(jobParameters.getString(JOB_PROCESS_COMIC_BOOKS_BATCH_NAME))
+        .thenReturn(TEST_BATCH_NAME);
+    Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
     Mockito.when(jobExecution.getExecutionContext()).thenReturn(executionContext);
-    Mockito.when(executionContext.getLong(PROCESS_COMIC_BOOKS_JOB_STARTED))
+    Mockito.when(executionContext.getLong(PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED))
         .thenReturn(TEST_JOB_STARTED.getTime());
-    Mockito.when(executionContext.getString(PROCESS_COMIC_BOOKS_STEP_NAME))
+    Mockito.when(executionContext.getString(PROCESS_COMIC_BOOKS_STATUS_STEP_NAME))
         .thenReturn(TEST_STEP_NAME);
-    Mockito.when(executionContext.getLong(PROCESS_COMIC_BOOKS_TOTAL_COMICS))
+    Mockito.when(executionContext.getLong(PROCESS_COMIC_BOOKS_STATUS_TOTAL_COMICS))
         .thenReturn(TEST_TOTAL_COMICS);
-    Mockito.when(executionContext.getLong(PROCESS_COMIC_BOOKS_PROCESSED_COMICS))
+    Mockito.when(executionContext.getLong(PROCESS_COMIC_BOOKS_STATUS_PROCESSED_COMICS))
         .thenReturn(TEST_PROCESSED_COMICS);
     Mockito.doNothing()
         .when(publishProcessComicBooksStatusAction)
@@ -65,10 +84,41 @@ public class ProcessComicBooksJobListenerTest {
   }
 
   @Test
+  public void testBeforeJobNoStartTime() throws PublishingException {
+    Mockito.when(executionContext.containsKey(PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED))
+        .thenReturn(false);
+    Mockito.when(executionContext.getString(PROCESS_COMIC_BOOKS_STATUS_STEP_NAME)).thenReturn("");
+    Mockito.doNothing()
+        .when(executionContext)
+        .putLong(Mockito.anyString(), timestampArgumentCaptor.capture());
+
+    listener.beforeJob(jobExecution);
+
+    final Long timestamp = timestampArgumentCaptor.getAllValues().get(0);
+    assertNotNull(timestamp);
+
+    final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
+    assertNotNull(status);
+    assertTrue(status.isActive());
+    assertNull(status.getStarted());
+    assertEquals("", status.getStepName());
+    assertEquals(TEST_TOTAL_COMICS, status.getTotal());
+    assertEquals(TEST_PROCESSED_COMICS, status.getProcessed());
+
+    Mockito.verify(executionContext, Mockito.times(1))
+        .putLong(PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED, timestamp);
+    Mockito.verify(executionContext, Mockito.times(1))
+        .putLong(PROCESS_COMIC_BOOKS_STATUS_TOTAL_COMICS, 0L);
+    Mockito.verify(executionContext, Mockito.times(1))
+        .putLong(PROCESS_COMIC_BOOKS_STATUS_PROCESSED_COMICS, 0L);
+    Mockito.verify(publishProcessComicBooksStatusAction, Mockito.times(1)).publish(status);
+  }
+
+  @Test
   public void testBeforeJob() throws PublishingException {
-    Mockito.when(executionContext.containsKey(PROCESS_COMIC_BOOKS_JOB_STARTED)).thenReturn(true);
-    Mockito.when(executionContext.containsKey(PROCESS_COMIC_BOOKS_JOB_FINISHED)).thenReturn(false);
-    Mockito.when(executionContext.getString(PROCESS_COMIC_BOOKS_STEP_NAME)).thenReturn("");
+    Mockito.when(executionContext.containsKey(PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED))
+        .thenReturn(true);
+    Mockito.when(executionContext.getString(PROCESS_COMIC_BOOKS_STATUS_STEP_NAME)).thenReturn("");
     Mockito.doNothing()
         .when(executionContext)
         .putLong(Mockito.anyString(), timestampArgumentCaptor.capture());
@@ -87,19 +137,19 @@ public class ProcessComicBooksJobListenerTest {
     assertEquals(TEST_PROCESSED_COMICS, status.getProcessed());
 
     Mockito.verify(executionContext, Mockito.times(1))
-        .putLong(PROCESS_COMIC_BOOKS_JOB_STARTED, timestamp);
+        .putLong(PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED, timestamp);
     Mockito.verify(executionContext, Mockito.times(1))
-        .putLong(PROCESS_COMIC_BOOKS_TOTAL_COMICS, 0L);
+        .putLong(PROCESS_COMIC_BOOKS_STATUS_TOTAL_COMICS, 0L);
     Mockito.verify(executionContext, Mockito.times(1))
-        .putLong(PROCESS_COMIC_BOOKS_PROCESSED_COMICS, 0L);
+        .putLong(PROCESS_COMIC_BOOKS_STATUS_PROCESSED_COMICS, 0L);
     Mockito.verify(publishProcessComicBooksStatusAction, Mockito.times(1)).publish(status);
   }
 
   @Test
   public void testBeforeJobPublishingException() throws PublishingException {
-    Mockito.when(executionContext.containsKey(PROCESS_COMIC_BOOKS_JOB_STARTED)).thenReturn(true);
-    Mockito.when(executionContext.containsKey(PROCESS_COMIC_BOOKS_JOB_FINISHED)).thenReturn(false);
-    Mockito.when(executionContext.getString(PROCESS_COMIC_BOOKS_STEP_NAME)).thenReturn("");
+    Mockito.when(executionContext.containsKey(PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED))
+        .thenReturn(true);
+    Mockito.when(executionContext.getString(PROCESS_COMIC_BOOKS_STATUS_STEP_NAME)).thenReturn("");
     Mockito.doNothing()
         .when(executionContext)
         .putLong(Mockito.anyString(), timestampArgumentCaptor.capture());
@@ -122,18 +172,18 @@ public class ProcessComicBooksJobListenerTest {
     assertEquals(TEST_PROCESSED_COMICS, status.getProcessed());
 
     Mockito.verify(executionContext, Mockito.times(1))
-        .putLong(PROCESS_COMIC_BOOKS_JOB_STARTED, timestamp);
+        .putLong(PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED, timestamp);
     Mockito.verify(executionContext, Mockito.times(1))
-        .putLong(PROCESS_COMIC_BOOKS_TOTAL_COMICS, 0L);
+        .putLong(PROCESS_COMIC_BOOKS_STATUS_TOTAL_COMICS, 0L);
     Mockito.verify(executionContext, Mockito.times(1))
-        .putLong(PROCESS_COMIC_BOOKS_PROCESSED_COMICS, 0L);
+        .putLong(PROCESS_COMIC_BOOKS_STATUS_PROCESSED_COMICS, 0L);
     Mockito.verify(publishProcessComicBooksStatusAction, Mockito.times(1)).publish(status);
   }
 
   @Test
   public void testAfterJob() throws PublishingException {
-    Mockito.when(executionContext.containsKey(PROCESS_COMIC_BOOKS_JOB_STARTED)).thenReturn(true);
-    Mockito.when(executionContext.containsKey(PROCESS_COMIC_BOOKS_JOB_FINISHED)).thenReturn(true);
+    Mockito.when(executionContext.containsKey(PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED))
+        .thenReturn(true);
 
     listener.afterJob(jobExecution);
 
@@ -149,11 +199,8 @@ public class ProcessComicBooksJobListenerTest {
 
   @Test
   public void testAfterJobPublishingException() throws PublishingException {
-    Mockito.when(executionContext.containsKey(PROCESS_COMIC_BOOKS_JOB_STARTED)).thenReturn(true);
-    Mockito.when(executionContext.containsKey(PROCESS_COMIC_BOOKS_JOB_FINISHED)).thenReturn(true);
-    Mockito.doThrow(PublishingException.class)
-        .when(publishProcessComicBooksStatusAction)
-        .publish(processComicStatusArgumentCaptor.capture());
+    Mockito.when(executionContext.containsKey(PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED))
+        .thenReturn(true);
 
     listener.afterJob(jobExecution);
 

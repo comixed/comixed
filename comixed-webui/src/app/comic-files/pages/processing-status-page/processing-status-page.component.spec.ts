@@ -66,16 +66,14 @@ describe('ProcessingStatusPageComponent', () => {
   });
 
   describe('when adding comic books is in process', () => {
+    const BATCH_NAME = 'The Batch Name';
     const STARTED = Math.abs(Math.floor(Math.random() * 1000));
     const PROCESSED = Math.abs(Math.floor(Math.random() * 1000));
     const TOTAL = PROCESSED * 4;
 
     beforeEach(() => {
       navigateByUrlSpy.calls.reset();
-      component.started = 0;
-      component.total = 0;
-      component.processed = 0;
-      component.progress = 0;
+      component.batches = [];
 
       store.setState({
         ...initialState,
@@ -83,28 +81,29 @@ describe('ProcessingStatusPageComponent', () => {
           ...initialImportComicBooksComicsState,
           processing: {
             active: true,
-            started: STARTED,
-            total: TOTAL,
-            processed: PROCESSED
+            batches: [
+              {
+                batchName: BATCH_NAME,
+                started: STARTED,
+                total: TOTAL,
+                processed: PROCESSED
+              }
+            ]
           }
         }
       });
     });
 
     it('sets the started value', () => {
-      expect(component.started).toEqual(STARTED);
+      expect(component.batches[0].started).toEqual(STARTED);
     });
 
     it('sets the total value', () => {
-      expect(component.total).toEqual(TOTAL);
+      expect(component.batches[0].total).toEqual(TOTAL);
     });
 
     it('sets the processed value', () => {
-      expect(component.processed).toEqual(PROCESSED);
-    });
-
-    it('sets the progress value', () => {
-      expect(component.progress).toEqual((PROCESSED / TOTAL) * 100);
+      expect(component.batches[0].processed).toEqual(PROCESSED);
     });
   });
 });

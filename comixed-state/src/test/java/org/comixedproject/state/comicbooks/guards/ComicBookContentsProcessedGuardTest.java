@@ -58,19 +58,8 @@ public class ComicBookContentsProcessedGuardTest {
   }
 
   @Test
-  public void testEvaluateBlockedPagesNotProcessed() {
-    Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(true);
-    Mockito.when(comicBook.isBlockedPagesMarked()).thenReturn(false);
-
-    final boolean result = guard.evaluate(context);
-
-    assertFalse(result);
-  }
-
-  @Test
   public void testEvaluate() {
     Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(true);
-    Mockito.when(comicBook.isBlockedPagesMarked()).thenReturn(true);
 
     final boolean result = guard.evaluate(context);
 

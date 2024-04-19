@@ -24,6 +24,14 @@ import {
 
 export const IMPORT_COMIC_BOOKS_FEATURE_KEY = 'import_comic_books_state';
 
+export interface ProcessingComicStatus {
+  started: number;
+  batchName: string;
+  stepName: string;
+  total: number;
+  processed: number;
+}
+
 export interface ImportComicBooksState {
   adding: {
     active: boolean;
@@ -33,10 +41,7 @@ export interface ImportComicBooksState {
   };
   processing: {
     active: boolean;
-    started: number;
-    stepName: string;
-    total: number;
-    processed: number;
+    batches: ProcessingComicStatus[];
   };
 }
 
@@ -49,10 +54,7 @@ export const initialState: ImportComicBooksState = {
   },
   processing: {
     active: false,
-    started: 0,
-    stepName: '',
-    total: 0,
-    processed: 0
+    batches: []
   }
 };
 
@@ -68,14 +70,26 @@ export const reducer = createReducer(
       processed: action.processed
     }
   })),
-  on(processComicBooksUpdate, (state, action) => ({
-    ...state,
-    processing: {
-      active: action.active,
-      started: action.started,
-      stepName: action.stepName,
-      total: action.total,
-      processed: action.processed
+  on(processComicBooksUpdate, (state, action) => {
+    let batches = state.processing.batches.filter(
+      entry => entry.batchName !== action.batchName
+    );
+    if (action.active) {
+      batches = batches.concat({
+        batchName: action.batchName,
+        started: action.started,
+        stepName: action.stepName,
+        total: action.total,
+        processed: action.processed
+      });
     }
-  }))
+    batches = batches.sort((left, right) => left.started - right.started);
+    return {
+      ...state,
+      processing: {
+        active: batches.length > 0,
+        batches
+      }
+    };
+  })
 );

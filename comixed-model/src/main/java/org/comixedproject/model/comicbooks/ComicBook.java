@@ -104,23 +104,11 @@ public class ComicBook {
   @Setter
   private Long previousIssueId;
 
-  @Column(name = "create_metadata_source", nullable = false, updatable = true)
-  @JsonIgnore
-  @Getter
-  @Setter
-  private boolean createMetadataSource = false;
-
   @Column(name = "file_contents_loaded", nullable = false, updatable = true)
   @JsonIgnore
   @Getter
   @Setter
   private boolean fileContentsLoaded = false;
-
-  @Column(name = "blocked_pages_marked", nullable = false, updatable = true)
-  @JsonIgnore
-  @Getter
-  @Setter
-  private boolean blockedPagesMarked = false;
 
   @Column(name = "update_metadata", nullable = false, updatable = true)
   @JsonIgnore

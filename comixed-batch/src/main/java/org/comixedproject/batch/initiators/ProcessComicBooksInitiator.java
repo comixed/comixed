@@ -16,9 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */ package org.comixedproject.batch.initiators;
 
+import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.JOB_PROCESS_COMIC_BOOKS_BATCH_NAME;
 import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.JOB_PROCESS_COMIC_BOOKS_STARTED;
 
+import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.batch.ComicBatch;
+import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.service.batch.ComicBatchService;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -42,6 +47,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class ProcessComicBooksInitiator {
   @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicBatchService comicBatchService;
 
   @Autowired
   @Qualifier("processComicBooksJob")
@@ -51,27 +57,33 @@ public class ProcessComicBooksInitiator {
   @Qualifier("batchJobLauncher")
   private JobLauncher jobLauncher;
 
-  /** Starts a batch process to add pages to the image cache. */
-  @Scheduled(cron = "${comixed.batch.process-comic-books.schedule:'0 0,10,20,30,40,50 * * * *'}")
+  /** Checks for unprocessed comics not in a group and kicks off a new batch job to process them. */
+  @Scheduled(fixedDelay = 1000L)
   public void execute() {
-    log.info("Starting process: scan for incoming comics");
+    log.debug("Looking for unprocessed comic books");
+    final List<ComicBook> comicBooks = this.comicBookService.getComicBooksForProcessing();
+    if (comicBooks.isEmpty()) {
+      log.debug("No comic books to be processed");
+      return;
+    }
+    log.debug(
+        "Preparing comic batch for {} comic book{}",
+        comicBooks.size(),
+        comicBooks.size() > 1 ? "s" : "");
+    final ComicBatch group = this.comicBatchService.createProcessComicBooksGroup(comicBooks);
+    log.info("Starting process comics job: {}", group.getName());
     try {
-      if (this.comicBookService.getUnprocessedComicsWithoutContentCount() > 0
-          || this.comicBookService.getUnprocessedComicsForMarkedPageBlockingCount() > 0
-          || this.comicBookService.getWithCreateMetadataSourceFlagCount() > 0
-          || this.comicBookService.getProcessedComicsCount() > 0) {
-        log.debug("Processing incoming comics");
-        this.jobLauncher.run(
-            processComicBooksJob,
-            new JobParametersBuilder()
-                .addLong(JOB_PROCESS_COMIC_BOOKS_STARTED, System.currentTimeMillis())
-                .toJobParameters());
-      }
-    } catch (JobInstanceAlreadyCompleteException
-        | JobExecutionAlreadyRunningException
-        | JobParametersInvalidException
-        | JobRestartException error) {
-      log.error("Failed to start scanning incoming comics", error);
+      this.jobLauncher.run(
+          this.processComicBooksJob,
+          new JobParametersBuilder()
+              .addLong(JOB_PROCESS_COMIC_BOOKS_STARTED, System.currentTimeMillis())
+              .addString(JOB_PROCESS_COMIC_BOOKS_BATCH_NAME, group.getName())
+              .toJobParameters());
+    } catch (JobExecutionAlreadyRunningException
+        | JobRestartException
+        | JobInstanceAlreadyCompleteException
+        | JobParametersInvalidException error) {
+      log.error("Failed to start batch job processing comics", error);
     }
   }
 }

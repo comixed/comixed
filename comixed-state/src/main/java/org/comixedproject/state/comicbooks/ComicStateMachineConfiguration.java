@@ -42,8 +42,6 @@ public class ComicStateMachineConfiguration
     extends EnumStateMachineConfigurerAdapter<ComicState, ComicEvent> {
   @Autowired private PrepareComicForProcessingAction prepareComicForProcessingAction;
   @Autowired private FileContentsLoadedAction fileContentsLoadedAction;
-  @Autowired private MetadataSourceCreatedAction metadataSourceCreatedAction;
-  @Autowired private BlockedPagesMarkedAction blockedPagesMarkedAction;
   @Autowired private ComicContentsProcessedGuard comicContentsProcessedGuard;
   @Autowired private UpdateMetadataAction updateMetadataAction;
   @Autowired private MetadataUpdatedAction metadataUpdatedAction;
@@ -101,36 +99,15 @@ public class ComicStateMachineConfiguration
         .and()
         .withExternal()
         .source(ComicState.UNPROCESSED)
-        .target(ComicState.UNPROCESSED)
-        .event(ComicEvent.metadataSourceCreated)
-        .action(metadataSourceCreatedAction)
-        // the comic file contents have been loaded
-        .and()
-        .withExternal()
-        .source(ComicState.UNPROCESSED)
-        .target(ComicState.UNPROCESSED)
+        .target(ComicState.STABLE)
         .event(ComicEvent.fileContentsLoaded)
         .action(fileContentsLoadedAction)
-        // the blocked pages have been marked for deletion
         .and()
         .withExternal()
-        .source(ComicState.UNPROCESSED)
-        .target(ComicState.UNPROCESSED)
-        .event(ComicEvent.blockedPagesMarked)
-        .action(blockedPagesMarkedAction)
-        // all comic content has been processed
-        .and()
-        .withExternal()
-        .source(ComicState.UNPROCESSED)
+        .source(ComicState.STABLE)
         .target(ComicState.STABLE)
-        .event(ComicEvent.contentsProcessed)
-        .guard(comicContentsProcessedGuard)
-        // the comic file was reprocessed and the database details overwritten
-        .and()
-        .withExternal()
-        .source(ComicState.CHANGED)
-        .target(ComicState.STABLE)
-        .event(ComicEvent.contentsProcessed)
+        .event(ComicEvent.fileContentsLoaded)
+        .action(fileContentsLoadedAction)
         // the comic was organized
         .and()
         .withExternal()

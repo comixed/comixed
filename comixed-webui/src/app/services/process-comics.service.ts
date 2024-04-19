@@ -84,6 +84,7 @@ export class ProcessComicsService {
                       processComicBooksUpdate({
                         active: update.active,
                         started: update.started,
+                        batchName: update.batchName,
                         stepName: update.stepName,
                         total: update.total,
                         processed: update.processed

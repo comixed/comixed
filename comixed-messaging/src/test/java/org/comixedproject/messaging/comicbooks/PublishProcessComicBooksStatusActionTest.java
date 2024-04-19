@@ -18,8 +18,7 @@
 
 package org.comixedproject.messaging.comicbooks;
 
-import static org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAction.PROCESS_COMIC_BOOKS_STATE_TOPIC;
-import static org.junit.Assert.*;
+import static org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAction.PROCESS_COMIC_BOOKS_STATUS_TOPIC;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -74,8 +73,8 @@ public class PublishProcessComicBooksStatusActionTest {
     Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.GenericObjectView.class);
     Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(status);
     Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(PROCESS_COMIC_BOOKS_STATE_TOPIC, TEST_STATUS_AS_JSON);
+        .convertAndSend(PROCESS_COMIC_BOOKS_STATUS_TOPIC, TEST_STATUS_AS_JSON);
     Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(PROCESS_COMIC_BOOKS_STATE_TOPIC, TEST_STATUS_AS_JSON);
+        .convertAndSend(PROCESS_COMIC_BOOKS_STATUS_TOPIC, TEST_STATUS_AS_JSON);
   }
 }

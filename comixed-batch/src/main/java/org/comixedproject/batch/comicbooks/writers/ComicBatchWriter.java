@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,27 +16,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.state.comicbooks.actions;
+package org.comixedproject.batch.comicbooks.writers;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicState;
-import org.comixedproject.state.comicbooks.ComicEvent;
-import org.springframework.statemachine.StateContext;
+import org.comixedproject.model.batch.ComicBatch;
+import org.comixedproject.service.batch.ComicBatchService;
+import org.springframework.batch.item.Chunk;
+import org.springframework.batch.item.ItemWriter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>BlockedPagesMarkedAction</code> is executed after all blocked pages have been marked.
+ * <code>ComicBatchWriter</code> writes a {@link ComicBatch} to the database.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class BlockedPagesMarkedAction extends AbstractComicAction {
+public class ComicBatchWriter implements ItemWriter<ComicBatch> {
+  @Autowired private ComicBatchService comicBatchService;
+
   @Override
-  public void execute(final StateContext<ComicState, ComicEvent> context) {
-    final ComicBook comicBook = this.fetchComic(context);
-    log.trace("Turning on blocked pages marked flag");
-    comicBook.setBlockedPagesMarked(true);
+  public void write(final Chunk<? extends ComicBatch> chunk) {
+    log.debug("Updating comic batches");
+    chunk.forEach(
+        comicBatch -> {
+          log.trace("Saving comic batch: {}", comicBatch.getName());
+          this.comicBatchService.save(comicBatch);
+        });
   }
 }

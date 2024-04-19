@@ -18,6 +18,10 @@
 
 package org.comixedproject.batch;
 
+import org.comixedproject.batch.comicbooks.processors.MarkComicBatchCompletedProcessor;
+import org.comixedproject.batch.comicbooks.readers.MarkComicBatchCompletedReader;
+import org.comixedproject.batch.comicbooks.writers.ComicBatchWriter;
+import org.comixedproject.model.batch.ComicBatch;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.launch.JobLauncher;
@@ -26,10 +30,12 @@ import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.core.step.job.DefaultJobParametersExtractor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.transaction.PlatformTransactionManager;
 
 /**
  * <code>BatchConfiguration</code> provides a global batch configuration.
@@ -38,6 +44,12 @@ import org.springframework.core.task.TaskExecutor;
  */
 @Configuration
 public class BatchConfiguration {
+  @Value("${comixed.batch.chunk-size}")
+  private int batchChunkSize = 10;
+
+  @Value("${comixed.batch.thread-pool-size}")
+  private int batchThreadPoolSize = 10;
+
   /**
    * Returns the task executor for jobs.
    *
@@ -45,7 +57,9 @@ public class BatchConfiguration {
    */
   @Bean(name = "jobTaskExecutor")
   public TaskExecutor jobTaskExecutor() {
-    return new SimpleAsyncTaskExecutor("CX-Jarvis");
+    final SimpleAsyncTaskExecutor result = new SimpleAsyncTaskExecutor("CX-Jarvis");
+    result.setConcurrencyLimit(this.batchThreadPoolSize);
+    return result;
   }
 
   /**
@@ -95,6 +109,31 @@ public class BatchConfiguration {
         .job(processComicBooksJob)
         .parametersExtractor(new DefaultJobParametersExtractor())
         .launcher(jobLauncher)
+        .build();
+  }
+
+  /**
+   * Returns the step performs batch group deletion.
+   *
+   * @param jobRepository the step factory
+   * @param platformTransactionManager the transaction manager
+   * @param reader the reader
+   * @param processor the processor
+   * @param writer the writer
+   * @return the step the step
+   */
+  @Bean(name = "markComicBatchCompletedStep")
+  public Step markComicBatchCompletedStep(
+      final JobRepository jobRepository,
+      final PlatformTransactionManager platformTransactionManager,
+      final MarkComicBatchCompletedReader reader,
+      final MarkComicBatchCompletedProcessor processor,
+      final ComicBatchWriter writer) {
+    return new StepBuilder("processComicBooksJobStep", jobRepository)
+        .<ComicBatch, ComicBatch>chunk(this.batchChunkSize, platformTransactionManager)
+        .reader(reader)
+        .processor(processor)
+        .writer(writer)
         .build();
   }
 }

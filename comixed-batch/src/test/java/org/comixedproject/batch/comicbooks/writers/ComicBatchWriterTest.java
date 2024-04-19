@@ -1,6 +1,6 @@
 /*
- * ComiXed - A digital comicBook book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,8 @@
 package org.comixedproject.batch.comicbooks.writers;
 
 import java.util.ArrayList;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.state.comicbooks.ComicEvent;
-import org.comixedproject.state.comicbooks.ComicStateHandler;
+import org.comixedproject.model.batch.ComicBatch;
+import org.comixedproject.service.batch.ComicBatchService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -31,20 +30,19 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.batch.item.Chunk;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ContentsProcessedWriterTest {
-  @InjectMocks private ContentsProcessedWriter writer;
-  @Mock private ComicStateHandler comicStateHandler;
-  @Mock private ComicBook comicBook;
+public class ComicBatchWriterTest {
+  @InjectMocks private ComicBatchWriter writer;
+  @Mock private ComicBatchService comicBatchService;
+  @Mock private ComicBatch comicBatch;
 
-  private Chunk<ComicBook> comicBookList = new Chunk<>(new ArrayList<>());
+  private Chunk<ComicBatch> comicBatchList = new Chunk<>(new ArrayList<>());
 
   @Test
   public void testWrite() {
-    for (int index = 0; index < 25; index++) comicBookList.add(comicBook);
+    for (int index = 0; index < 25; index++) comicBatchList.add(comicBatch);
 
-    writer.write(comicBookList);
+    writer.write(comicBatchList);
 
-    Mockito.verify(comicStateHandler, Mockito.times(comicBookList.size()))
-        .fireEvent(comicBook, ComicEvent.contentsProcessed);
+    Mockito.verify(comicBatchService, Mockito.times(comicBatchList.size())).save(comicBatch);
   }
 }

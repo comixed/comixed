@@ -19,33 +19,63 @@
 package org.comixedproject.batch.comicbooks.readers;
 
 import static junit.framework.TestCase.*;
+import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.JOB_PROCESS_COMIC_BOOKS_BATCH_NAME;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.StepExecution;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoadFileContentsReaderTest {
   private static final int MAX_RECORDS = 25;
+  private static final String TEST_BATCH_NAME = "The batch name";
 
   @InjectMocks private LoadFileContentsReader reader;
   @Mock private ComicBookService comicBookService;
   @Mock private ComicBook comicBook;
+  @Mock private JobParameters jobParameters;
+  @Mock private JobExecution jobExecution;
+  @Mock private StepExecution stepExecution;
 
   private List<ComicBook> comicBookList = new ArrayList<>();
+
+  @Before
+  public void setUp() {
+    Mockito.when(jobParameters.getString(JOB_PROCESS_COMIC_BOOKS_BATCH_NAME))
+        .thenReturn(TEST_BATCH_NAME);
+    Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
+    Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
+    reader.batchName = TEST_BATCH_NAME;
+  }
+
+  @Test
+  public void testBeforeStep() {
+    reader.batchName = null;
+
+    reader.beforeStep(stepExecution);
+
+    assertNotNull(reader.getBatchName());
+    assertEquals(TEST_BATCH_NAME, reader.getBatchName());
+  }
 
   @Test
   public void testReadNoneLoadedManyFound() {
     for (int index = 0; index < MAX_RECORDS; index++) comicBookList.add(comicBook);
 
-    Mockito.when(comicBookService.findUnprocessedComicsWithoutContent(Mockito.anyInt()))
+    Mockito.when(
+            comicBookService.findUnprocessedComicsWithoutContent(
+                Mockito.anyString(), Mockito.anyInt()))
         .thenReturn(comicBookList);
 
     final ComicBook result = reader.read();
@@ -56,12 +86,14 @@ public class LoadFileContentsReaderTest {
     assertEquals(MAX_RECORDS - 1, comicBookList.size());
 
     Mockito.verify(comicBookService, Mockito.times(1))
-        .findUnprocessedComicsWithoutContent(reader.getBatchChunkSize());
+        .findUnprocessedComicsWithoutContent(TEST_BATCH_NAME, reader.getBatchChunkSize());
   }
 
   @Test
   public void testReadNoneRemaining() {
-    Mockito.when(comicBookService.findUnprocessedComicsWithoutContent(Mockito.anyInt()))
+    Mockito.when(
+            comicBookService.findUnprocessedComicsWithoutContent(
+                Mockito.anyString(), Mockito.anyInt()))
         .thenReturn(comicBookList);
 
     reader.comicBookList = comicBookList;
@@ -72,12 +104,14 @@ public class LoadFileContentsReaderTest {
     assertNull(reader.comicBookList);
 
     Mockito.verify(comicBookService, Mockito.times(1))
-        .findUnprocessedComicsWithoutContent(reader.getBatchChunkSize());
+        .findUnprocessedComicsWithoutContent(TEST_BATCH_NAME, reader.getBatchChunkSize());
   }
 
   @Test
   public void testReadNoneLoadedNoneFound() {
-    Mockito.when(comicBookService.findUnprocessedComicsWithoutContent(Mockito.anyInt()))
+    Mockito.when(
+            comicBookService.findUnprocessedComicsWithoutContent(
+                Mockito.anyString(), Mockito.anyInt()))
         .thenReturn(comicBookList);
 
     final ComicBook result = reader.read();
@@ -86,6 +120,6 @@ public class LoadFileContentsReaderTest {
     assertNull(reader.comicBookList);
 
     Mockito.verify(comicBookService, Mockito.times(1))
-        .findUnprocessedComicsWithoutContent(reader.getBatchChunkSize());
+        .findUnprocessedComicsWithoutContent(TEST_BATCH_NAME, reader.getBatchChunkSize());
   }
 }

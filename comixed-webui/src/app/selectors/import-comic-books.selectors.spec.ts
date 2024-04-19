@@ -39,10 +39,7 @@ describe('ImportComicBooks Selectors', () => {
       },
       processing: {
         active: Math.random() > 0.5,
-        started: new Date().getTime(),
-        stepName: 'step-name',
-        total: Math.abs(Math.floor(Math.random() * 1000)),
-        processed: Math.abs(Math.floor(Math.random() * 1000))
+        batches: [{} as any]
       }
     };
   });

@@ -18,6 +18,7 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
+import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.JOB_PROCESS_COMIC_BOOKS_STARTED;
 import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
 
 import lombok.extern.log4j.Log4j2;
@@ -34,25 +35,34 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class ProcessComicBooksJobListener extends AbstractComicBookProcessingListener
+public class ProcessComicBooksJobListener extends AbstractProcessComicBookExecution
     implements JobExecutionListener {
   @Override
   public void beforeJob(final JobExecution jobExecution) {
-    log.trace("Publishing job start");
     final ExecutionContext context = jobExecution.getExecutionContext();
-    context.putLong(PROCESS_COMIC_BOOKS_JOB_STARTED, System.currentTimeMillis());
-    context.putString(PROCESS_COMIC_BOOKS_STEP_NAME, "");
-    context.putLong(PROCESS_COMIC_BOOKS_TOTAL_COMICS, 0);
-    context.putLong(PROCESS_COMIC_BOOKS_PROCESSED_COMICS, 0);
-    log.trace("Publishing job statistics");
-    this.doPublishState(context);
+    final String batchName = this.getBatchName(jobExecution.getJobParameters());
+    context.putLong(PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED, System.currentTimeMillis());
+    context.putString(PROCESS_COMIC_BOOKS_STATUS_BATCH_NAME, batchName);
+    context.putString(PROCESS_COMIC_BOOKS_STATUS_STEP_NAME, PROCESS_COMIC_BOOKS_STEP_NAME_SETUP);
+    context.putLong(PROCESS_COMIC_BOOKS_STATUS_TOTAL_COMICS, this.getEntryCount(batchName));
+    context.putLong(PROCESS_COMIC_BOOKS_STATUS_PROCESSED_COMICS, 0);
+    this.doPublishStatus(context, true);
   }
 
   @Override
   public void afterJob(final JobExecution jobExecution) {
     log.trace("Publishing job finish");
     final ExecutionContext context = jobExecution.getExecutionContext();
-    context.putLong(PROCESS_COMIC_BOOKS_JOB_FINISHED, System.currentTimeMillis());
-    this.doPublishState(jobExecution.getExecutionContext());
+    final String batchName = this.getBatchName(jobExecution.getJobParameters());
+    context.putLong(
+        PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED,
+        jobExecution.getJobParameters().getLong(JOB_PROCESS_COMIC_BOOKS_STARTED));
+    context.putString(PROCESS_COMIC_BOOKS_STATUS_BATCH_NAME, batchName);
+    context.putString(
+        PROCESS_COMIC_BOOKS_STATUS_STEP_NAME, PROCESS_COMIC_BOOKS_STEP_NAME_COMPLETED);
+    context.putLong(PROCESS_COMIC_BOOKS_STATUS_JOB_FINISHED, System.currentTimeMillis());
+    context.putLong(PROCESS_COMIC_BOOKS_STATUS_TOTAL_COMICS, this.getEntryCount(batchName));
+    context.putLong(PROCESS_COMIC_BOOKS_STATUS_PROCESSED_COMICS, this.getEntryCount(batchName));
+    this.doPublishStatus(context, false);
   }
 }

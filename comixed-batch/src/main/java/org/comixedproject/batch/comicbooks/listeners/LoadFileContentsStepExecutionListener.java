@@ -22,29 +22,48 @@ import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>MarkBlockedPagesStepListener</code> relays status while marking blocked pages for deletion.
+ * <code>LoadFileContentsStepExecutionListener</code> relates batch status while loading comic file
+ * contents.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class MarkBlockedPagesStepListener extends AbstractComicBookProcessingStepExecutionListener {
+public class LoadFileContentsStepExecutionListener extends AbstractProcessComicBookExecution
+    implements StepExecutionListener {
   @Autowired private ComicBookService comicBookService;
 
   @Override
   public void beforeStep(final StepExecution stepExecution) {
+    this.doProcessState(stepExecution);
+  }
+
+  @Override
+  public ExitStatus afterStep(final StepExecution stepExecution) {
+    this.doProcessState(stepExecution);
+    return null;
+  }
+
+  private void doProcessState(final StepExecution stepExecution) {
     final ExecutionContext context = stepExecution.getJobExecution().getExecutionContext();
-    context.putString(PROCESS_COMIC_BOOKS_STEP_NAME, MARK_BLOCKED_PAGES_STEP_NAME);
-    log.trace("Getting comic count");
-    context.putLong(
-        PROCESS_COMIC_BOOKS_TOTAL_COMICS,
-        this.comicBookService.getUnprocessedComicsForMarkedPageBlockingCount());
-    this.doPublishState(context);
+    context.putString(
+        PROCESS_COMIC_BOOKS_STATUS_BATCH_NAME, this.getBatchName(stepExecution.getJobParameters()));
+    context.putString(
+        PROCESS_COMIC_BOOKS_STATUS_STEP_NAME, PROCESS_COMIC_BOOKS_STEP_NAME_LOAD_FILE_CONTENTS);
+    final String batchName = this.getBatchName(stepExecution.getJobParameters());
+    final long total = this.getEntryCount(batchName);
+    final long unprocessed =
+        this.comicBookService.getUnprocessedComicsWithoutContentCount(batchName);
+    context.putLong(PROCESS_COMIC_BOOKS_STATUS_TOTAL_COMICS, total);
+    context.putLong(PROCESS_COMIC_BOOKS_STATUS_PROCESSED_COMICS, total - unprocessed);
+    this.doPublishStatus(context, true);
   }
 }

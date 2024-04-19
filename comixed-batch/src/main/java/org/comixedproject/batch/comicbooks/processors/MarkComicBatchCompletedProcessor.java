@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,27 +16,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.listeners;
+package org.comixedproject.batch.comicbooks.processors;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.batch.core.ExitStatus;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.StepExecutionListener;
+import org.comixedproject.model.batch.ComicBatch;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>AbstractComicBookProcessingListener</code> provides a foundation for building listeners
- * that listen to the batch processes that add comics to, or process comics for, the library.
+ * <code>MarkComicBatchCompletedProcessor</code> handles marking a {@link ComicBatch} as completed.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public abstract class AbstractComicBookProcessingStepExecutionListener
-    extends AbstractComicBookProcessingListener implements StepExecutionListener {
+public class MarkComicBatchCompletedProcessor implements ItemProcessor<ComicBatch, ComicBatch> {
   @Override
-  public ExitStatus afterStep(final StepExecution stepExecution) {
-    this.doPublishState(stepExecution.getJobExecution().getExecutionContext());
-    return null;
+  public ComicBatch process(final ComicBatch comicBatch) {
+    log.debug("Deleting comic batch: {}", comicBatch.getName());
+    comicBatch.setCompleted(true);
+    return comicBatch;
   }
 }
