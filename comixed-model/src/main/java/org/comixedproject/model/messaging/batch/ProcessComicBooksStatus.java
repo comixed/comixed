@@ -35,19 +35,23 @@ import org.comixedproject.views.View;
  */
 @NoArgsConstructor
 public class ProcessComicBooksStatus {
-  public static final String PROCESS_COMIC_BOOKS_JOB_STARTED =
-      "process-comic-books-state.job-started";
-  public static final String PROCESS_COMIC_BOOKS_JOB_FINISHED =
-      "process-comic-books-state.job-finished";
-  public static final String PROCESS_COMIC_BOOKS_STEP_NAME = "process-comic-books-state.step-name";
-  public static final String PROCESS_COMIC_BOOKS_TOTAL_COMICS =
-      "process-comic-books-state.total-comics";
-  public static final String PROCESS_COMIC_BOOKS_PROCESSED_COMICS =
-      "process-comic-books-state.processed-comics";
-  public static final String CREATE_METADATA_SOURCE_STEP_NAME = "create-metadata-source-step";
-  public static final String LOAD_FILE_CONTENTS_STEP_NAME = "load-file-contents-step";
-  public static final String MARK_BLOCKED_PAGES_STEP_NAME = "mark-blocked-pages-step";
-  public static final String FILE_CONTENTS_PROCESSED_STEP_NAME = "file-contents-processed-step";
+  public static final String PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED =
+      "process-comic-books-status.job-started";
+  public static final String PROCESS_COMIC_BOOKS_STATUS_JOB_FINISHED =
+      "process-comic-books-status.job-finished";
+  public static final String PROCESS_COMIC_BOOKS_STATUS_BATCH_NAME =
+      "process-comic-books-status.batch-name";
+  public static final String PROCESS_COMIC_BOOKS_STATUS_STEP_NAME =
+      "process-comic-books-status.step-name";
+  public static final String PROCESS_COMIC_BOOKS_STATUS_TOTAL_COMICS =
+      "process-comic-books-status.total-comics";
+  public static final String PROCESS_COMIC_BOOKS_STATUS_PROCESSED_COMICS =
+      "process-comic-books-status.processed-comics";
+
+  public static final String PROCESS_COMIC_BOOKS_STEP_NAME_SETUP = "job-setup-step";
+  public static final String PROCESS_COMIC_BOOKS_STEP_NAME_LOAD_FILE_CONTENTS =
+      "load-file-contents-step";
+  public static final String PROCESS_COMIC_BOOKS_STEP_NAME_COMPLETED = "job-completed-step";
 
   @JsonProperty("active")
   @JsonView(View.GenericObjectView.class)
@@ -61,6 +65,12 @@ public class ProcessComicBooksStatus {
   @Getter
   @Setter
   private Date started;
+
+  @JsonProperty("batchName")
+  @JsonView(View.GenericObjectView.class)
+  @Getter
+  @Setter
+  private String batchName;
 
   @JsonProperty("stepName")
   @JsonView(View.GenericObjectView.class)

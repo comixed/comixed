@@ -48,10 +48,9 @@
     },
     "processing-comics": {
       "create-insert-step": "Creating Comic Records",
-      "create-metadata-source-step": "Loading Comic Book Metadata",
-      "file-contents-processed-step": "Completing Processing",
+      "job-completed-step": "Processing Completed",
+      "job-setup-step": "Processing Setting Up",
       "load-file-contents-step": "Loading File Contents",
-      "mark-blocked-pages-step": "Marking Blocked Pages",
       "subtitle": "Processed {processed} Of {total} Comics ({percentage}%)"
     },
     "tab-title": "Import Comics",

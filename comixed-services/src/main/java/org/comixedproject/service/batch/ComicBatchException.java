@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2022, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,23 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.writers;
+package org.comixedproject.service.batch;
 
-import lombok.extern.log4j.Log4j2;
-import org.comixedproject.state.comicbooks.ComicEvent;
-import org.springframework.batch.item.ItemWriter;
-import org.springframework.stereotype.Component;
+import org.comixedproject.model.batch.ComicBatch;
 
 /**
- * <code>CreateMetadataSourceWriter</code> provides an {@link ItemWriter} for comic books that have
- * been processed for creating a metadata source.
+ * <code>ComicBatchException</code> is thrown when an error occurs while working with an instance of
+ * {@link ComicBatch}.
  *
  * @author Darryl L. Pierce
  */
-@Component
-@Log4j2
-public class CreateMetadataSourceWriter extends AbstractComicBookWriter {
-  public CreateMetadataSourceWriter() {
-    super(ComicEvent.metadataSourceCreated);
+public class ComicBatchException extends Exception {
+  public ComicBatchException(final String message) {
+    super(message);
   }
 }

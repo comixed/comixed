@@ -75,11 +75,13 @@ public class BatchProcessesService {
                                         jobExecution.getJobId(),
                                         jobInstance.getInstanceId(),
                                         jobExecution.getStatus(),
-                                        Date.from(
-                                            jobExecution
-                                                .getStartTime()
-                                                .atZone(ZoneId.systemDefault())
-                                                .toInstant()),
+                                        jobExecution.getStartTime() != null
+                                            ? Date.from(
+                                                jobExecution
+                                                    .getStartTime()
+                                                    .atZone(ZoneId.systemDefault())
+                                                    .toInstant())
+                                            : null,
                                         jobExecution.getEndTime() != null
                                             ? Date.from(
                                                 jobExecution

@@ -100,6 +100,7 @@ public class ComicBookServiceTest {
   private static final long TEST_COMIC_COUNT = 239L;
   private static final String TEST_SEARCH_TERMS = "The search terms";
   private static final int TEST_BATCH_CHUNK_SIZE = 25;
+  private static final String TEST_BATCH_NAME = "The Batch Name";
   private final List<ComicBook> comicBookList = new ArrayList<>();
   private final List<ComicDetail> comicDetailList = new ArrayList<>();
   private final List<ComicBook> comicsBySeries = new ArrayList<>();
@@ -552,37 +553,26 @@ public class ComicBookServiceTest {
 
   @Test
   public void testGetUnprocessedComicsWithoutContentCount() {
-    Mockito.when(comicBookRepository.findUnprocessedComicsWithoutContentCount())
+    Mockito.when(comicBookRepository.findUnprocessedComicsWithoutContentCount(Mockito.anyString()))
         .thenReturn(TEST_MAXIMUM_COMICS);
 
-    final long result = service.getUnprocessedComicsWithoutContentCount();
+    final long result = service.getUnprocessedComicsWithoutContentCount(TEST_BATCH_NAME);
 
     assertEquals(TEST_MAXIMUM_COMICS, result);
 
     Mockito.verify(comicBookRepository, Mockito.times(1))
-        .findUnprocessedComicsWithoutContentCount();
-  }
-
-  @Test
-  public void testGetWithCreateMetadataSourceFlag() {
-    Mockito.when(comicBookRepository.findComicsWithCreateMeatadataSourceFlag())
-        .thenReturn(TEST_MAXIMUM_COMICS);
-
-    final long result = service.getWithCreateMetadataSourceFlagCount();
-
-    assertEquals(TEST_MAXIMUM_COMICS, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsWithCreateMeatadataSourceFlag();
+        .findUnprocessedComicsWithoutContentCount(TEST_BATCH_NAME);
   }
 
   @Test
   public void testFindComicsWithCreateMetadataFlagSet() {
     Mockito.when(
             comicBookRepository.findUnprocessedComicsWithCreateMetadataFlagSet(
-                pageableCaptor.capture()))
+                Mockito.anyString(), pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
-    final List<ComicBook> result = service.findComicsWithCreateMetadataFlagSet(TEST_MAXIMUM_COMICS);
+    final List<ComicBook> result =
+        service.findComicsWithCreateMetadataFlagSet(TEST_BATCH_NAME, TEST_MAXIMUM_COMICS);
 
     assertNotNull(result);
     assertSame(comicBookList, result);
@@ -593,50 +583,18 @@ public class ComicBookServiceTest {
     assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
 
     Mockito.verify(comicBookRepository, Mockito.times(1))
-        .findUnprocessedComicsWithCreateMetadataFlagSet(pageable);
+        .findUnprocessedComicsWithCreateMetadataFlagSet(TEST_BATCH_NAME, pageable);
   }
 
   @Test
   public void testFindUnprocessedComicsWithoutContent() {
-    Mockito.when(comicBookRepository.findUnprocessedComicsWithoutContent(pageableCaptor.capture()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result = service.findUnprocessedComicsWithoutContent(TEST_MAXIMUM_COMICS);
-
-    assertNotNull(result);
-    assertSame(comicBookList, result);
-
-    final Pageable pageable = pageableCaptor.getValue();
-    assertNotNull(pageable);
-    assertEquals(0, pageable.getPageNumber());
-    assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
-
-    Mockito.verify(comicBookRepository, Mockito.times(1))
-        .findUnprocessedComicsWithoutContent(pageable);
-  }
-
-  @Test
-  public void testGetUnprocessedComicsForMarkedPageBlockingCount() {
-    Mockito.when(comicBookRepository.findUnprocessedComicsForMarkedPageBlockingCount())
-        .thenReturn(TEST_MAXIMUM_COMICS);
-
-    final long result = service.getUnprocessedComicsForMarkedPageBlockingCount();
-
-    assertEquals(TEST_MAXIMUM_COMICS, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1))
-        .findUnprocessedComicsForMarkedPageBlockingCount();
-  }
-
-  @Test
-  public void testFindUnprocessedComicsForMarkedPageBlocking() {
     Mockito.when(
-            comicBookRepository.findUnprocessedComicsForMarkedPageBlocking(
-                pageableCaptor.capture()))
+            comicBookRepository.findUnprocessedComicsWithoutContent(
+                Mockito.anyString(), pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
     final List<ComicBook> result =
-        service.findUnprocessedComicsForMarkedPageBlocking(TEST_MAXIMUM_COMICS);
+        service.findUnprocessedComicsWithoutContent(TEST_BATCH_NAME, TEST_MAXIMUM_COMICS);
 
     assertNotNull(result);
     assertSame(comicBookList, result);
@@ -647,26 +605,17 @@ public class ComicBookServiceTest {
     assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
 
     Mockito.verify(comicBookRepository, Mockito.times(1))
-        .findUnprocessedComicsForMarkedPageBlocking(pageable);
-  }
-
-  @Test
-  public void testGetProcessedComicsCount() {
-    Mockito.when(comicBookRepository.findProcessedComicsCount()).thenReturn(TEST_MAXIMUM_COMICS);
-
-    final long result = service.getProcessedComicsCount();
-
-    assertEquals(TEST_MAXIMUM_COMICS, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findProcessedComicsCount();
+        .findUnprocessedComicsWithoutContent(TEST_BATCH_NAME, pageable);
   }
 
   @Test
   public void testFindProcessedComics() {
-    Mockito.when(comicBookRepository.findProcessedComics(pageableCaptor.capture()))
+    Mockito.when(
+            comicBookRepository.findProcessedComics(Mockito.anyString(), pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
-    final List<ComicBook> result = service.findProcessedComics(TEST_MAXIMUM_COMICS);
+    final List<ComicBook> result =
+        service.findProcessedComics(TEST_BATCH_NAME, TEST_MAXIMUM_COMICS);
 
     assertNotNull(result);
     assertSame(comicBookList, result);
@@ -676,7 +625,8 @@ public class ComicBookServiceTest {
     assertEquals(0, pageable.getPageNumber());
     assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findProcessedComics(pageable);
+    Mockito.verify(comicBookRepository, Mockito.times(1))
+        .findProcessedComics(TEST_BATCH_NAME, pageable);
   }
 
   @Test

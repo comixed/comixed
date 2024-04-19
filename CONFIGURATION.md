@@ -6,6 +6,18 @@ By default, after comic books are imported, a process is started to import
 those comic books. This process involves such things are getting the list
 of pages in each issue, getting the dimensions for those pages, etc.
 
+### Batch Thread Pool Size
+
+By default, the batch thread pool size is unbounded. You can set an upper
+limit to the number of threads the server will using by setting a value to
+the following property in ```application.properties```:
+
+    comixed.batch.thread-pool-size=10
+
+This example would limit the server to 10 parallel processes at most to
+run batch jobs.
+
+
 ### Changing The Frequence For Scanning For Unprocessed Comics
 
 By default, ComiXed will check every 15 minutes for unprocessed comics. You

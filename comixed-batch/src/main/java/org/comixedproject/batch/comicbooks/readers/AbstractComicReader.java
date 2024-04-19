@@ -18,11 +18,15 @@
 
 package org.comixedproject.batch.comicbooks.readers;
 
+import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.JOB_PROCESS_COMIC_BOOKS_BATCH_NAME;
+
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -33,12 +37,22 @@ import org.springframework.beans.factory.annotation.Value;
  * @author Darryl L. Pierce
  */
 @Log4j2
-public abstract class AbstractComicReader implements ItemReader<ComicBook> {
+public abstract class AbstractComicReader implements ItemReader<ComicBook>, StepExecutionListener {
   @Value("${comixed.batch.chunk-size}")
   @Getter
   private int batchChunkSize = 10;
 
+  @Getter String batchName;
   @Getter @Setter List<ComicBook> comicBookList = null;
+
+  @Override
+  public void beforeStep(final StepExecution stepExecution) {
+    this.batchName =
+        stepExecution
+            .getJobExecution()
+            .getJobParameters()
+            .getString(JOB_PROCESS_COMIC_BOOKS_BATCH_NAME);
+  }
 
   @Override
   public ComicBook read() {

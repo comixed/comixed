@@ -55,7 +55,6 @@ public class RemoteLibraryStateServiceTest {
   @Mock private List<RemoteLibrarySegmentState> storiesState;
   @Mock private List<RemoteLibrarySegmentState> comicsState;
   @Mock private List<PublisherAndYearSegment> byPublisherAndYear;
-  @Mock private List selectedIds;
   @Mock private PublishRemoteLibraryUpdateAction publishRemoteLibraryUpdateAction;
   @Mock private State<ComicState, ComicEvent> state;
   @Mock private Message<ComicEvent> message;

@@ -18,24 +18,28 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
-import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.PROCESS_COMIC_BOOKS_PROCESSED_COMICS;
+import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.ChunkListener;
+import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.item.ExecutionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ProcessedComicBookChunkListener</code> provides a chunk listener to relay the status of
- * comics processed.
+ * <code>LoadFileContentsChunkListener</code> provides a chunk listener for loading file content.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class ProcessedComicBookChunkListener extends AbstractComicBookProcessingListener
+public class LoadFileContentsChunkListener extends AbstractProcessComicBookExecution
     implements ChunkListener {
+  @Autowired private ComicBookService comicBookService;
+
   @Override
   public void beforeChunk(final ChunkContext context) {
     this.doPublishChunkState(context);
@@ -51,13 +55,20 @@ public class ProcessedComicBookChunkListener extends AbstractComicBookProcessing
     this.doPublishChunkState(context);
   }
 
-  private void doPublishChunkState(ChunkContext context) {
-    final ExecutionContext executionContext =
-        context.getStepContext().getStepExecution().getJobExecution().getExecutionContext();
-    log.trace("Publishing status after chunk");
-    executionContext.putLong(
-        PROCESS_COMIC_BOOKS_PROCESSED_COMICS,
-        context.getStepContext().getStepExecution().getWriteCount());
-    this.doPublishState(executionContext);
+  private void doPublishChunkState(ChunkContext chunkContext) {
+    final ExecutionContext context =
+        chunkContext.getStepContext().getStepExecution().getExecutionContext();
+    final StepExecution stepExecution = chunkContext.getStepContext().getStepExecution();
+    context.putString(
+        PROCESS_COMIC_BOOKS_STATUS_BATCH_NAME, this.getBatchName(stepExecution.getJobParameters()));
+    context.putString(
+        PROCESS_COMIC_BOOKS_STATUS_STEP_NAME, PROCESS_COMIC_BOOKS_STEP_NAME_LOAD_FILE_CONTENTS);
+    final String batchName = this.getBatchName(stepExecution.getJobParameters());
+    final long total = this.getEntryCount(batchName);
+    final long unprocessed =
+        this.comicBookService.getUnprocessedComicsWithoutContentCount(batchName);
+    context.putLong(PROCESS_COMIC_BOOKS_STATUS_TOTAL_COMICS, total);
+    context.putLong(PROCESS_COMIC_BOOKS_STATUS_PROCESSED_COMICS, total - unprocessed);
+    this.doPublishStatus(context, true);
   }
 }

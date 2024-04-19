@@ -31,8 +31,8 @@ describe('ImportComicBooks Reducer', () => {
   const ADDING_STARTED = new Date().getTime();
   const ADDING_TOTAL = 73;
   const ADDING_PROCESSED = 37;
-  const PROCESSING_ACTIVE = Math.random() > 0.5;
   const PROCESSING_STARTED = new Date().getTime();
+  const PROCESSING_STEP_BATCH_NAME = 'batch-name';
   const PROCESSING_STEP_NAME = 'step-name';
   const PROCESSING_TOTAL = 73;
   const PROCESSING_PROCESSED = 37;
@@ -68,20 +68,8 @@ describe('ImportComicBooks Reducer', () => {
       expect(state.processing.active).toBeFalse();
     });
 
-    it('has no processing started date', () => {
-      expect(state.processing.started).toEqual(0);
-    });
-
-    it('has no processing step name', () => {
-      expect(state.processing.stepName).toEqual('');
-    });
-
-    it('has no processing total comic count', () => {
-      expect(state.processing.total).toEqual(0);
-    });
-
-    it('has no processing processed comic count', () => {
-      expect(state.processing.processed).toEqual(0);
+    it('has no processing batches', () => {
+      expect(state.processing.batches.length).toEqual(0);
     });
   });
 
@@ -92,10 +80,9 @@ describe('ImportComicBooks Reducer', () => {
       state = reducer(
         {
           ...state,
-          processing: {
+          adding: {
             active: !ADDING_ACTIVE,
             started: 0,
-            stepName: '',
             total: 0,
             processed: 0
           }
@@ -126,24 +113,31 @@ describe('ImportComicBooks Reducer', () => {
     });
   });
 
-  describe('receiving an processing update', () => {
+  describe('receiving a processing update', () => {
     const COUNT = Math.abs(Math.floor(Math.random() * 1000));
+    const NEW_BATCH_NAME = `${PROCESSING_STEP_BATCH_NAME}1`;
 
     beforeEach(() => {
       state = reducer(
         {
           ...state,
           processing: {
-            active: !PROCESSING_ACTIVE,
-            started: 0,
-            stepName: '',
-            total: 0,
-            processed: 0
+            active: false,
+            batches: [
+              {
+                started: PROCESSING_STARTED,
+                batchName: PROCESSING_STEP_BATCH_NAME,
+                stepName: PROCESSING_STEP_NAME,
+                total: PROCESSING_TOTAL,
+                processed: PROCESSING_PROCESSED
+              }
+            ]
           }
         },
         processComicBooksUpdate({
-          active: PROCESSING_ACTIVE,
-          started: PROCESSING_STARTED,
+          active: true,
+          started: PROCESSING_STARTED + 1000,
+          batchName: NEW_BATCH_NAME,
           stepName: PROCESSING_STEP_NAME,
           total: PROCESSING_TOTAL,
           processed: PROCESSING_PROCESSED
@@ -152,23 +146,63 @@ describe('ImportComicBooks Reducer', () => {
     });
 
     it('sets the active flag', () => {
-      expect(state.processing.active).toEqual(PROCESSING_ACTIVE);
+      expect(state.processing.active).toEqual(true);
+    });
+
+    it('contains batches', () => {
+      expect(state.processing.batches.length).toEqual(2);
     });
 
     it('sets the started date', () => {
-      expect(state.processing.started).toEqual(PROCESSING_STARTED);
+      expect(state.processing.batches[0].started).toEqual(PROCESSING_STARTED);
     });
 
     it('sets the step name', () => {
-      expect(state.processing.stepName).toEqual(PROCESSING_STEP_NAME);
+      expect(state.processing.batches[0].stepName).toEqual(
+        PROCESSING_STEP_NAME
+      );
     });
 
     it('sets the total count', () => {
-      expect(state.processing.total).toEqual(PROCESSING_TOTAL);
+      expect(state.processing.batches[0].total).toEqual(PROCESSING_TOTAL);
     });
 
     it('sets the processed count', () => {
-      expect(state.processing.processed).toEqual(PROCESSING_PROCESSED);
+      expect(state.processing.batches[0].processed).toEqual(
+        PROCESSING_PROCESSED
+      );
+    });
+  });
+
+  describe('receiving a completed batch processing update', () => {
+    const COUNT = Math.abs(Math.floor(Math.random() * 1000));
+
+    beforeEach(() => {
+      state = reducer(
+        {
+          ...state,
+          processing: {
+            active: true,
+            batches: [{ batchName: PROCESSING_STEP_BATCH_NAME } as any]
+          }
+        },
+        processComicBooksUpdate({
+          active: false,
+          started: PROCESSING_STARTED,
+          batchName: PROCESSING_STEP_BATCH_NAME,
+          stepName: PROCESSING_STEP_NAME,
+          total: PROCESSING_TOTAL,
+          processed: PROCESSING_PROCESSED
+        })
+      );
+    });
+
+    it('sets the active flag', () => {
+      expect(state.processing.active).toEqual(false);
+    });
+
+    it('removes the completed batch', () => {
+      expect(state.processing.batches.length).toEqual(0);
     });
   });
 });

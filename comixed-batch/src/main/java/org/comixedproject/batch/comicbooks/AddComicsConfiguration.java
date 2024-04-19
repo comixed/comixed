@@ -64,7 +64,6 @@ public class AddComicsConfiguration {
    * @param jobListener the job listener
    * @param createInsertStep the insert step
    * @param recordInsertedStep the post-insert step
-   * @param processComicBooksJobStep the process comics job launch step
    * @return the job
    */
   @Bean(name = "addComicsToLibraryJob")
@@ -72,14 +71,12 @@ public class AddComicsConfiguration {
       final AddedComicBookJobListener jobListener,
       final JobRepository jobRepository,
       @Qualifier("createInsertStep") final Step createInsertStep,
-      @Qualifier("recordInsertedStep") Step recordInsertedStep,
-      @Qualifier("processComicBooksJobStep") Step processComicBooksJobStep) {
+      @Qualifier("recordInsertedStep") Step recordInsertedStep) {
     return new JobBuilder("addComicsToLibraryJob", jobRepository)
         .incrementer(new RunIdIncrementer())
         .listener(jobListener)
         .start(createInsertStep)
         .next(recordInsertedStep)
-        .next(processComicBooksJobStep)
         .build();
   }
 

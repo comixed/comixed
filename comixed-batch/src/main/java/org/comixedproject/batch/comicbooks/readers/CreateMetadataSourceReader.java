@@ -33,6 +33,7 @@ public class CreateMetadataSourceReader extends AbstractComicReader {
 
   @Override
   protected List<ComicBook> doLoadComics() {
-    return this.comicBookService.findComicsWithCreateMetadataFlagSet(this.getBatchChunkSize());
+    return this.comicBookService.findComicsWithCreateMetadataFlagSet(
+        this.getBatchName(), this.getBatchChunkSize());
   }
 }
