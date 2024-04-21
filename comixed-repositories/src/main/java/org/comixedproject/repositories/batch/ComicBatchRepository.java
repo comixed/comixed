@@ -18,6 +18,7 @@
 
 package org.comixedproject.repositories.batch;
 
+import java.util.List;
 import org.comixedproject.model.batch.ComicBatch;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -49,4 +50,12 @@ public interface ComicBatchRepository extends JpaRepository<ComicBatch, Long> {
    */
   @Query("SELECT b FROM ComicBatch b WHERE b.name = :batchName")
   ComicBatch getByName(@Param("batchName") String batchName);
+
+  /**
+   * Returns all records marked as completed.
+   *
+   * @return the batch list
+   */
+  @Query("SELECT b FROM ComicBatch b WHERE b.completed IS TRUE")
+  List<ComicBatch> loadCompletedBatches();
 }

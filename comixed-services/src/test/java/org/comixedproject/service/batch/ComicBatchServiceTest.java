@@ -45,6 +45,7 @@ public class ComicBatchServiceTest {
   @Captor private ArgumentCaptor<ComicBatch> comicBatchArgumentCaptor;
 
   private List<ComicBook> comicBookList = new ArrayList<>();
+  private List<ComicBatch> comicBatchList = new ArrayList<>();
 
   @Before
   public void setUp() {
@@ -107,5 +108,17 @@ public class ComicBatchServiceTest {
     assertSame(savedComicBatch, result);
 
     Mockito.verify(comicBatchRepository, Mockito.times(1)).getByName(TEST_BATCH_NAME);
+  }
+
+  @Test
+  public void testLoadCompletedBatches() {
+    Mockito.when(comicBatchRepository.loadCompletedBatches()).thenReturn(comicBatchList);
+
+    final List<ComicBatch> result = service.loadCompletedBatches();
+
+    assertNotNull(result);
+    assertSame(comicBatchList, result);
+
+    Mockito.verify(comicBatchRepository, Mockito.times(1)).loadCompletedBatches();
   }
 }
