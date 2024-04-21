@@ -17,17 +17,46 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { BatchProcess } from '@app/admin/models/batch-process';
+import { BatchProcessDetail } from '@app/admin/models/batch-process-detail';
 
 export const loadBatchProcessList = createAction(
   '[Batch Processes] Load the list of batch processes'
 );
 
-export const batchProcessListLoaded = createAction(
-  '[Batch Processes] The list of batch processes were loaded',
-  props<{ processes: BatchProcess[] }>()
+export const loadBatchProcessListSuccess = createAction(
+  '[Batch Processes] The list of batch processes loaded successfully',
+  props<{ processes: BatchProcessDetail[] }>()
 );
 
-export const loadBatchProcessListFailed = createAction(
+export const loadBatchProcessListFailure = createAction(
   '[Batch Processes] Failed to load the list of batch processes'
+);
+
+export const batchProcessUpdateReceived = createAction(
+  '[Batch Processes] Received a batch process update',
+  props<{
+    update: BatchProcessDetail;
+  }>()
+);
+
+export const setBatchProcessDetail = createAction(
+  '[Batch Processes] Sets the current batch process detail entry',
+  props<{
+    detail: BatchProcessDetail | null;
+  }>()
+);
+
+export const restartBatchProcess = createAction(
+  '[Batch Processes] Requests restart of a batch process',
+  props<{
+    detail: BatchProcessDetail;
+  }>()
+);
+
+export const restartBatchProcessSuccess = createAction(
+  '[Batch Processes] Restart request succeeded'
+);
+
+export const restartBatchProcessFailure = createAction(
+  '[Batch Processes] Restart request failed'
 );

@@ -18,16 +18,21 @@
 
 package org.comixedproject.service.batch;
 
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.batch.BatchProcess;
+import org.comixedproject.model.batch.BatchProcessDetail;
 import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.explore.JobExplorer;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.batch.core.launch.NoSuchJobException;
+import org.springframework.batch.core.launch.NoSuchJobExecutionException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
@@ -39,14 +44,19 @@ import org.springframework.stereotype.Service;
 @Log4j2
 public class BatchProcessesService {
   @Autowired private JobExplorer jobExplorer;
+  @Autowired private JobOperator jobOperator;
+
+  @Autowired
+  @Qualifier("batchJobLauncher")
+  private JobLauncher jobLauncher;
 
   /**
    * Returns the status for all batch processes.
    *
    * @return the status list
    */
-  public List<BatchProcess> getAllBatchProcesses() {
-    final List<BatchProcess> result = new ArrayList<>();
+  public List<BatchProcessDetail> getAllBatchProcesses() {
+    final List<BatchProcessDetail> result = new ArrayList<>();
 
     log.debug("Loading batch process status records");
     this.jobExplorer
@@ -69,28 +79,7 @@ public class BatchProcessesService {
                           jobExecutions.forEach(
                               jobExecution -> {
                                 log.trace("Adding job execution: {}", jobExecution.getJobId());
-                                result.add(
-                                    new BatchProcess(
-                                        name,
-                                        jobExecution.getJobId(),
-                                        jobInstance.getInstanceId(),
-                                        jobExecution.getStatus(),
-                                        jobExecution.getStartTime() != null
-                                            ? Date.from(
-                                                jobExecution
-                                                    .getStartTime()
-                                                    .atZone(ZoneId.systemDefault())
-                                                    .toInstant())
-                                            : null,
-                                        jobExecution.getEndTime() != null
-                                            ? Date.from(
-                                                jobExecution
-                                                    .getEndTime()
-                                                    .atZone(ZoneId.systemDefault())
-                                                    .toInstant())
-                                            : null,
-                                        jobExecution.getExitStatus().getExitCode(),
-                                        jobExecution.getExitStatus().getExitDescription()));
+                                result.add(BatchProcessDetail.from(jobExecution));
                               });
                         });
               } catch (NoSuchJobException error) {
@@ -99,5 +88,19 @@ public class BatchProcessesService {
             });
 
     return result;
+  }
+
+  public void restartJob(final long jobId) throws BatchProcessException {
+    log.debug("Loading job execution");
+    try {
+      this.jobOperator.restart(jobId);
+    } catch (JobInstanceAlreadyCompleteException
+        | NoSuchJobExecutionException
+        | NoSuchJobException
+        | JobRestartException
+        | JobParametersInvalidException error) {
+      log.error("Failed to restart batch job");
+      throw new BatchProcessException("Failed to restart job: " + jobId, error);
+    }
   }
 }

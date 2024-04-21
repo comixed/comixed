@@ -1,6 +1,6 @@
 @import 'styles';
 
-.mat-column-name {
+.mat-column-job-name {
   width: $cx-column-large;
   max-width: $cx-column-large;
   resize: none;
@@ -9,6 +9,12 @@
 .mat-column-job-id {
   width: $cx-column-medium;
   max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-running {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
   resize: none;
 }
 

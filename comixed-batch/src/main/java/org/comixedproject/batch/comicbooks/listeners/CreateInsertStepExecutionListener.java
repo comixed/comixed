@@ -21,6 +21,7 @@ package org.comixedproject.batch.comicbooks.listeners;
 import static org.comixedproject.model.messaging.batch.AddComicBooksStatus.*;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.batch.BatchProcessDetail;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
@@ -35,18 +36,20 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class CreateInsertStepExecutionListener extends AbstractAddComicBooksExecutionListener
+public class CreateInsertStepExecutionListener extends AbstractBatchProcessListener
     implements StepExecutionListener {
 
   @Override
   public void beforeStep(final StepExecution stepExecution) {
-    this.doPublishStatus(
+    this.doPublishBatchProcessDetail(BatchProcessDetail.from(stepExecution.getJobExecution()));
+    this.doPublishAddComicBookStatus(
         this.generateContext(stepExecution.getJobExecution().getExecutionContext()));
   }
 
   @Override
   public ExitStatus afterStep(final StepExecution stepExecution) {
-    this.doPublishStatus(
+    this.doPublishBatchProcessDetail(BatchProcessDetail.from(stepExecution.getJobExecution()));
+    this.doPublishAddComicBookStatus(
         this.generateContext(stepExecution.getJobExecution().getExecutionContext()));
     return null;
   }

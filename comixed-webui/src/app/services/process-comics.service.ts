@@ -70,29 +70,29 @@ export class ProcessComicsService {
                   );
                 }
               );
-            if (!this.processComicsSubscription) {
-              this.logger.trace('Subscribing to import count updates');
-              this.processComicsSubscription =
-                this.webSocketService.subscribe<ProcessComicsStatus>(
-                  PROCESS_COMIC_BOOKS_TOPIC,
-                  update => {
-                    this.logger.debug(
-                      'Received process comic status update:',
-                      update
-                    );
-                    this.store.dispatch(
-                      processComicBooksUpdate({
-                        active: update.active,
-                        started: update.started,
-                        batchName: update.batchName,
-                        stepName: update.stepName,
-                        total: update.total,
-                        processed: update.processed
-                      })
-                    );
-                  }
-                );
-            }
+          }
+          if (!this.processComicsSubscription) {
+            this.logger.trace('Subscribing to import count updates');
+            this.processComicsSubscription =
+              this.webSocketService.subscribe<ProcessComicsStatus>(
+                PROCESS_COMIC_BOOKS_TOPIC,
+                update => {
+                  this.logger.debug(
+                    'Received process comic status update:',
+                    update
+                  );
+                  this.store.dispatch(
+                    processComicBooksUpdate({
+                      active: update.active,
+                      started: update.started,
+                      batchName: update.batchName,
+                      stepName: update.stepName,
+                      total: update.total,
+                      processed: update.processed
+                    })
+                  );
+                }
+              );
           }
         } else if (!state.started) {
           if (!!this.addComicsSubscription) {

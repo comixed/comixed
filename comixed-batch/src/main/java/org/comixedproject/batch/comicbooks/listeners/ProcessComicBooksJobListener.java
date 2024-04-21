@@ -22,6 +22,7 @@ import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration
 import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.batch.BatchProcessDetail;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.item.ExecutionContext;
@@ -35,10 +36,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class ProcessComicBooksJobListener extends AbstractProcessComicBookExecution
+public class ProcessComicBooksJobListener extends AbstractBatchProcessListener
     implements JobExecutionListener {
   @Override
   public void beforeJob(final JobExecution jobExecution) {
+    this.doPublishBatchProcessDetail(BatchProcessDetail.from(jobExecution));
     final ExecutionContext context = jobExecution.getExecutionContext();
     final String batchName = this.getBatchName(jobExecution.getJobParameters());
     context.putLong(PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED, System.currentTimeMillis());
@@ -46,12 +48,12 @@ public class ProcessComicBooksJobListener extends AbstractProcessComicBookExecut
     context.putString(PROCESS_COMIC_BOOKS_STATUS_STEP_NAME, PROCESS_COMIC_BOOKS_STEP_NAME_SETUP);
     context.putLong(PROCESS_COMIC_BOOKS_STATUS_TOTAL_COMICS, this.getEntryCount(batchName));
     context.putLong(PROCESS_COMIC_BOOKS_STATUS_PROCESSED_COMICS, 0);
-    this.doPublishStatus(context, true);
+    this.doPublishProcessComicBookStatus(context, true);
   }
 
   @Override
   public void afterJob(final JobExecution jobExecution) {
-    log.trace("Publishing job finish");
+    this.doPublishBatchProcessDetail(BatchProcessDetail.from(jobExecution));
     final ExecutionContext context = jobExecution.getExecutionContext();
     final String batchName = this.getBatchName(jobExecution.getJobParameters());
     context.putLong(
@@ -63,6 +65,6 @@ public class ProcessComicBooksJobListener extends AbstractProcessComicBookExecut
     context.putLong(PROCESS_COMIC_BOOKS_STATUS_JOB_FINISHED, System.currentTimeMillis());
     context.putLong(PROCESS_COMIC_BOOKS_STATUS_TOTAL_COMICS, this.getEntryCount(batchName));
     context.putLong(PROCESS_COMIC_BOOKS_STATUS_PROCESSED_COMICS, this.getEntryCount(batchName));
-    this.doPublishStatus(context, false);
+    this.doPublishProcessComicBookStatus(context, false);
   }
 }

@@ -26,18 +26,27 @@ import {
 } from '@app/admin/reducers/batch-processes.reducer';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { BATCH_PROCESS_STATUS_1 } from '@app/admin/admin.fixtures';
+import { BATCH_PROCESS_DETAIL_1 } from '@app/admin/admin.fixtures';
 import { TitleService } from '@app/core/services/title.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { setBatchProcessDetail } from '@app/admin/actions/batch-processes.actions';
+import { BatchProcessDetailDialogComponent } from '@app/admin/components/batch-process-detail-dialog/batch-process-detail-dialog.component';
+import { MatListModule } from '@angular/material/list';
+import {
+  initialState as initialMessagingState,
+  MESSAGING_FEATURE_KEY
+} from '@app/messaging/reducers/messaging.reducer';
 
 describe('BatchProcessListPageComponent', () => {
-  const PROCESS = BATCH_PROCESS_STATUS_1;
+  const DETAIL = BATCH_PROCESS_DETAIL_1;
   const initialState = {
-    [BATCH_PROCESSES_FEATURE_KEY]: batchProcessInitialState
+    [BATCH_PROCESSES_FEATURE_KEY]: batchProcessInitialState,
+    [MESSAGING_FEATURE_KEY]: initialMessagingState
   };
 
   let component: BatchProcessListPageComponent;
@@ -45,10 +54,14 @@ describe('BatchProcessListPageComponent', () => {
   let store: MockStore;
   let translateService: TranslateService;
   let titleService: TitleService;
+  let dialog: MatDialog;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [BatchProcessListPageComponent],
+      declarations: [
+        BatchProcessListPageComponent,
+        BatchProcessDetailDialogComponent
+      ],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
@@ -57,7 +70,9 @@ describe('BatchProcessListPageComponent', () => {
         MatTooltipModule,
         MatPaginatorModule,
         MatTableModule,
-        MatSortModule
+        MatSortModule,
+        MatDialogModule,
+        MatListModule
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();
@@ -65,9 +80,12 @@ describe('BatchProcessListPageComponent', () => {
     fixture = TestBed.createComponent(BatchProcessListPageComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
     translateService = TestBed.inject(TranslateService);
     titleService = TestBed.inject(TitleService);
     spyOn(titleService, 'setTitle');
+    dialog = TestBed.inject(MatDialog);
+    spyOn(dialog, 'open');
     fixture.detectChanges();
   });
 
@@ -77,44 +95,44 @@ describe('BatchProcessListPageComponent', () => {
 
   describe('sorting', () => {
     it('can sort by name', () => {
-      expect(component.dataSource.sortingDataAccessor(PROCESS, 'name')).toEqual(
-        PROCESS.name
-      );
+      expect(
+        component.dataSource.sortingDataAccessor(DETAIL, 'job-name')
+      ).toEqual(DETAIL.jobName);
     });
 
     it('can sort by job id', () => {
       expect(
-        component.dataSource.sortingDataAccessor(PROCESS, 'job-id')
-      ).toEqual(PROCESS.jobId);
+        component.dataSource.sortingDataAccessor(DETAIL, 'job-id')
+      ).toEqual(DETAIL.jobId);
     });
 
     it('can sort by status', () => {
       expect(
-        component.dataSource.sortingDataAccessor(PROCESS, 'status')
-      ).toEqual(PROCESS.status);
+        component.dataSource.sortingDataAccessor(DETAIL, 'status')
+      ).toEqual(DETAIL.status);
     });
 
     it('can sort by start time', () => {
       expect(
-        component.dataSource.sortingDataAccessor(PROCESS, 'start-time')
-      ).toEqual(PROCESS.startTime);
+        component.dataSource.sortingDataAccessor(DETAIL, 'start-time')
+      ).toEqual(DETAIL.startTime);
     });
 
     it('can sort by end time', () => {
       expect(
-        component.dataSource.sortingDataAccessor(PROCESS, 'end-time')
-      ).toEqual(PROCESS.endTime);
+        component.dataSource.sortingDataAccessor(DETAIL, 'end-time')
+      ).toEqual(DETAIL.endTime);
     });
 
     it('can sort by exit code', () => {
       expect(
-        component.dataSource.sortingDataAccessor(PROCESS, 'exit-code')
-      ).toEqual(PROCESS.exitCode);
+        component.dataSource.sortingDataAccessor(DETAIL, 'exit-code')
+      ).toEqual(DETAIL.exitStatus);
     });
 
     it('returns null on an unknown column', () => {
       expect(
-        component.dataSource.sortingDataAccessor(PROCESS, 'farkle')
+        component.dataSource.sortingDataAccessor(DETAIL, 'farkle')
       ).toBeNull();
     });
   });
@@ -126,6 +144,25 @@ describe('BatchProcessListPageComponent', () => {
 
     it('updates the tab title', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('showing the detail for a single process', () => {
+    beforeEach(() => {
+      component.onShowDetail(DETAIL);
+    });
+
+    it('sets the current process', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        setBatchProcessDetail({ detail: DETAIL })
+      );
+    });
+
+    it('shows a dialog', () => {
+      expect(dialog.open).toHaveBeenCalledWith(
+        BatchProcessDetailDialogComponent,
+        { data: {} }
+      );
     });
   });
 });

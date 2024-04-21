@@ -21,6 +21,7 @@ package org.comixedproject.batch.comicbooks.listeners;
 import static org.comixedproject.model.messaging.batch.AddComicBooksStatus.*;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.batch.BatchProcessDetail;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.item.ExecutionContext;
@@ -34,26 +35,28 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class AddedComicBookJobListener extends AbstractAddComicBooksExecutionListener
+public class AddedComicBookJobListener extends AbstractBatchProcessListener
     implements JobExecutionListener {
   @Override
   public void beforeJob(final JobExecution jobExecution) {
+    this.doPublishBatchProcessDetail(BatchProcessDetail.from(jobExecution));
     log.trace("Gathering job statistics");
     final ExecutionContext context = jobExecution.getExecutionContext();
     context.putLong(ADD_COMIC_BOOKS_JOB_STARTED, System.currentTimeMillis());
     context.putLong(
         ADD_COMIC_BOOKS_TOTAL_COMICS, this.comicFileService.getComicFileDescriptorCount());
     context.putLong(ADD_COMIC_BOOKS_PROCESSED_COMICS, 0);
-    this.doPublishStatus(context);
+    this.doPublishAddComicBookStatus(context);
   }
 
   @Override
   public void afterJob(final JobExecution jobExecution) {
+    this.doPublishBatchProcessDetail(BatchProcessDetail.from(jobExecution));
     log.trace("Publishing completed job status");
     final ExecutionContext context = jobExecution.getExecutionContext();
     context.putLong(ADD_COMIC_BOOKS_JOB_FINISHED, System.currentTimeMillis());
     context.putLong(
         ADD_COMIC_BOOKS_PROCESSED_COMICS, context.getLong(ADD_COMIC_BOOKS_TOTAL_COMICS));
-    this.doPublishStatus(context);
+    this.doPublishAddComicBookStatus(context);
   }
 }

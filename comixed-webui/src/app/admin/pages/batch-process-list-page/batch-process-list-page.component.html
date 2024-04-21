@@ -24,12 +24,12 @@
     queryParameterService.onSortChange($event.active, $event.direction)
   "
 >
-  <ng-container matColumnDef="name">
+  <ng-container matColumnDef="job-name">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
-      {{ "batch-processes.batch-process-list.label.name" | translate }}
+      {{ "batch-processes.batch-process-list.label.job-name" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <span class="cx-width-100 cx-text-nowrap">{{ entry.name }}</span>
+      <span class="cx-width-100 cx-text-nowrap">{{ entry.jobName }}</span>
     </mat-cell>
   </ng-container>
 
@@ -39,6 +39,13 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">{{ entry.jobId }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="running">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <mat-icon *ngIf="entry.running">directions_run</mat-icon>
     </mat-cell>
   </ng-container>
 
@@ -101,7 +108,10 @@
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  <mat-row
+    *matRowDef="let row; columns: displayedColumns"
+    (click)="onShowDetail(row)"
+  ></mat-row>
   <tr class="mat-row" *matNoDataRow>
     <td class="mat-cell" colspan="4">
       {{

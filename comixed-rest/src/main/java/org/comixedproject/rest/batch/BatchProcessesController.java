@@ -18,14 +18,18 @@
 
 package org.comixedproject.rest.batch;
 
+import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.batch.BatchProcess;
+import org.comixedproject.model.batch.BatchProcessDetail;
+import org.comixedproject.service.batch.BatchProcessException;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -46,9 +50,26 @@ public class BatchProcessesController {
    */
   @GetMapping(value = "/api/admin/processes", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  public List<BatchProcess> getAllBatchProcesses() {
+  @Timed(value = "comixed.batch.get-list")
+  public List<BatchProcessDetail> getAllBatchProcesses() {
     log.info("Getting the status of all batch processes");
 
     return this.batchProcessesService.getAllBatchProcesses();
+  }
+
+  /**
+   * Restarts a batch job.
+   *
+   * @param jobId the job id
+   * @throws BatchProcessException if an error occurs
+   */
+  @PostMapping(
+      value = "/api/admin/processes/{jobId}/restart",
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.batch.restart-job")
+  public void restartJob(@PathVariable("jobId") long jobId) throws BatchProcessException {
+    log.info("Restarting job: id={}", jobId);
+    this.batchProcessesService.restartJob(jobId);
   }
 }

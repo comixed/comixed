@@ -24,15 +24,16 @@ import static org.comixedproject.model.messaging.batch.AddComicBooksStatus.*;
 
 import java.util.Date;
 import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
 import org.comixedproject.messaging.comicbooks.PublishAddComicBooksStatusAction;
+import org.comixedproject.model.batch.BatchProcessDetail;
 import org.comixedproject.model.messaging.batch.AddComicBooksStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.*;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.scope.context.StepContext;
 import org.springframework.batch.item.ExecutionContext;
@@ -42,19 +43,29 @@ public class AddedComicBookChunkListenerTest {
   private static final Date TEST_JOB_STARTED = new Date();
   private static final long TEST_WRITE_COUNT = 129L;
   private static final long TEST_TOTAL_COMICS = TEST_WRITE_COUNT * 2L;
+  private static final String TEST_JOB_NAME = "The job name";
 
   @InjectMocks private AddedComicBookChunkListener listener;
   @Mock private PublishAddComicBooksStatusAction publishAddComicBooksStatusAction;
+  @Mock private PublishBatchProcessDetailUpdateAction publishBatchProcessDetailUpdateAction;
   @Mock private ChunkContext chunkContext;
   @Mock private StepContext stepContext;
   @Mock private StepExecution stepExecution;
+  @Mock private JobParameters jobParameters;
+  @Mock private JobInstance jobInstance;
   @Mock private JobExecution jobExecution;
   @Mock private ExecutionContext executionContext;
 
   @Captor ArgumentCaptor<AddComicBooksStatus> addComicBooksStatusArgumentCaptor;
+  @Captor ArgumentCaptor<BatchProcessDetail> batchProcessDetailArgumentCaptor;
 
   @Before
   public void setUp() throws PublishingException {
+    Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
+    Mockito.when(jobInstance.getJobName()).thenReturn(TEST_JOB_NAME);
+    Mockito.when(jobExecution.getJobInstance()).thenReturn(jobInstance);
+    Mockito.when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
+    Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);
     Mockito.when(chunkContext.getStepContext()).thenReturn(stepContext);
     Mockito.when(stepContext.getStepExecution()).thenReturn(stepExecution);
     Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
@@ -71,6 +82,9 @@ public class AddedComicBookChunkListenerTest {
     Mockito.doNothing()
         .when(publishAddComicBooksStatusAction)
         .publish(addComicBooksStatusArgumentCaptor.capture());
+    Mockito.doNothing()
+        .when(publishBatchProcessDetailUpdateAction)
+        .publish(batchProcessDetailArgumentCaptor.capture());
   }
 
   @Test
@@ -82,9 +96,12 @@ public class AddedComicBookChunkListenerTest {
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_WRITE_COUNT, status.getProcessed());
 
+    final BatchProcessDetail detail = batchProcessDetailArgumentCaptor.getValue();
+
     Mockito.verify(executionContext, Mockito.times(1))
         .putLong(ADD_COMIC_BOOKS_PROCESSED_COMICS, TEST_WRITE_COUNT);
     Mockito.verify(publishAddComicBooksStatusAction, Mockito.times(1)).publish(status);
+    Mockito.verify(publishBatchProcessDetailUpdateAction, Mockito.times(1)).publish(detail);
   }
 
   @Test
@@ -109,9 +126,12 @@ public class AddedComicBookChunkListenerTest {
 
     listener.beforeChunk(chunkContext);
 
+    final BatchProcessDetail detail = batchProcessDetailArgumentCaptor.getValue();
+
     Mockito.verify(executionContext, Mockito.times(1))
         .putLong(ADD_COMIC_BOOKS_PROCESSED_COMICS, TEST_WRITE_COUNT);
     Mockito.verify(publishAddComicBooksStatusAction, Mockito.times(1)).publish(Mockito.any());
+    Mockito.verify(publishBatchProcessDetailUpdateAction, Mockito.times(1)).publish(detail);
   }
 
   @Test
@@ -123,7 +143,10 @@ public class AddedComicBookChunkListenerTest {
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_WRITE_COUNT, status.getProcessed());
 
+    final BatchProcessDetail detail = batchProcessDetailArgumentCaptor.getValue();
+
     Mockito.verify(publishAddComicBooksStatusAction, Mockito.times(1)).publish(status);
+    Mockito.verify(publishBatchProcessDetailUpdateAction, Mockito.times(1)).publish(detail);
   }
 
   @Test
@@ -134,6 +157,9 @@ public class AddedComicBookChunkListenerTest {
 
     listener.afterChunk(chunkContext);
 
+    final BatchProcessDetail detail = batchProcessDetailArgumentCaptor.getValue();
+
     Mockito.verify(publishAddComicBooksStatusAction, Mockito.times(1)).publish(Mockito.any());
+    Mockito.verify(publishBatchProcessDetailUpdateAction, Mockito.times(1)).publish(detail);
   }
 }
