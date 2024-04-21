@@ -19,11 +19,8 @@
 import { TestBed } from '@angular/core/testing';
 import { BatchProcessesService } from './batch-processes.service';
 import {
-  BATCH_PROCESS_STATUS_1,
-  BATCH_PROCESS_STATUS_2,
-  BATCH_PROCESS_STATUS_3,
-  BATCH_PROCESS_STATUS_4,
-  BATCH_PROCESS_STATUS_5
+  BATCH_PROCESS_DETAIL_1,
+  BATCH_PROCESS_DETAIL_2
 } from '@app/admin/admin.fixtures';
 import {
   HttpClientTestingModule,
@@ -31,31 +28,111 @@ import {
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/core';
-import { GET_ALL_BATCH_PROCESSES_URL } from '@app/admin/admin.constants';
+import {
+  BATCH_PROCESS_LIST_UPDATE_TOPIC,
+  GET_ALL_BATCH_PROCESSES_URL,
+  RESTART_BATCH_PROJECT_URL
+} from '@app/admin/admin.constants';
+import { Subscription } from 'webstomp-client';
+import {
+  initialState as initialMessagingState,
+  MESSAGING_FEATURE_KEY
+} from '@app/messaging/reducers/messaging.reducer';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { batchProcessUpdateReceived } from '@app/admin/actions/batch-processes.actions';
+import { WebSocketService } from '@app/messaging';
+import { HttpResponse } from '@angular/common/http';
 
 describe('BatchProcessesService', () => {
-  const ENTRIES = [
-    BATCH_PROCESS_STATUS_1,
-    BATCH_PROCESS_STATUS_2,
-    BATCH_PROCESS_STATUS_3,
-    BATCH_PROCESS_STATUS_4,
-    BATCH_PROCESS_STATUS_5
-  ];
+  const ENTRIES = [BATCH_PROCESS_DETAIL_1, BATCH_PROCESS_DETAIL_2];
+  const DETAIL = ENTRIES[0];
+  const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
 
   let service: BatchProcessesService;
   let httpMock: HttpTestingController;
+  let store: MockStore;
+  let webSocketService: jasmine.SpyObj<WebSocketService>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: WebSocketService,
+          useValue: {
+            send: jasmine.createSpy('WebSocketService.send()'),
+            subscribe: jasmine.createSpy('WebSocketService.subscribe()')
+          }
+        }
+      ]
     });
 
     service = TestBed.inject(BatchProcessesService);
     httpMock = TestBed.inject(HttpTestingController);
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    webSocketService = TestBed.inject(
+      WebSocketService
+    ) as jasmine.SpyObj<WebSocketService>;
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  describe('when messaging starts', () => {
+    let topic: string;
+    let subscription: any;
+
+    beforeEach(() => {
+      service.messagingSubscription = null;
+      webSocketService.subscribe.and.callFake((topicUsed, callback) => {
+        topic = topicUsed;
+        subscription = callback;
+        return {} as Subscription;
+      });
+      store.setState({
+        ...initialState,
+        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: true }
+      });
+    });
+
+    it('subscribes to user updates', () => {
+      expect(topic).toEqual(BATCH_PROCESS_LIST_UPDATE_TOPIC);
+    });
+
+    describe('when updates are received', () => {
+      beforeEach(() => {
+        subscription(DETAIL);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          batchProcessUpdateReceived({ update: DETAIL })
+        );
+      });
+    });
+  });
+
+  describe('when messaging is stopped', () => {
+    const subscription = jasmine.createSpyObj(['unsubscribe']);
+
+    beforeEach(() => {
+      service.processListUpdateSubscription = subscription;
+      store.setState({
+        ...initialState,
+        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: false }
+      });
+    });
+
+    it('unsubscribes from updates', () => {
+      expect(subscription.unsubscribe).toHaveBeenCalled();
+    });
+
+    it('clears the subscription reference', () => {
+      expect(service.processListUpdateSubscription).toBeNull();
+    });
   });
 
   it('can load the list of batch processes', () => {
@@ -64,5 +141,18 @@ describe('BatchProcessesService', () => {
     const req = httpMock.expectOne(interpolate(GET_ALL_BATCH_PROCESSES_URL));
     expect(req.request.method).toEqual('GET');
     req.flush(ENTRIES);
+  });
+
+  it('restarting a job', () => {
+    service
+      .restartJob({ detail: DETAIL })
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(
+      interpolate(RESTART_BATCH_PROJECT_URL, { jobId: DETAIL.jobId })
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({});
+    req.flush(new HttpResponse({ status: 200 }));
   });
 });

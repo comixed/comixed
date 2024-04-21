@@ -19,17 +19,20 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
-  batchProcessListLoaded,
   loadBatchProcessList,
-  loadBatchProcessListFailed
+  loadBatchProcessListFailure,
+  loadBatchProcessListSuccess,
+  restartBatchProcess,
+  restartBatchProcessFailure,
+  restartBatchProcessSuccess
 } from '../actions/batch-processes.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { BatchProcessesService } from '@app/admin/services/batch-processes.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { BatchProcess } from '@app/admin/models/batch-process';
 import { of } from 'rxjs';
+import { BatchProcessDetail } from '@app/admin/models/batch-process-detail';
 
 @Injectable()
 export class BatchProcessesEffects {
@@ -40,8 +43,8 @@ export class BatchProcessesEffects {
       switchMap(() =>
         this.batchProcessService.getAll().pipe(
           tap(response => this.logger.debug('Response received:', response)),
-          map((entries: BatchProcess[]) =>
-            batchProcessListLoaded({ processes: entries })
+          map((entries: BatchProcessDetail[]) =>
+            loadBatchProcessListSuccess({ processes: entries })
           ),
           catchError(error => {
             this.logger.error('Service failure:', error);
@@ -50,16 +53,54 @@ export class BatchProcessesEffects {
                 'batch-processes.load-batch-process-list.effect-failure'
               )
             );
-            return of(loadBatchProcessListFailed());
+            return of(loadBatchProcessListFailure());
           })
         )
       ),
       catchError(error => {
         this.logger.error('General failure:', error);
         this.alertService.error(
-          this.translateService.instant('ap.general-effect-failure')
+          this.translateService.instant('app.general-effect-failure')
         );
-        return of(loadBatchProcessListFailed());
+        return of(loadBatchProcessListFailure());
+      })
+    );
+  });
+
+  restartBatchProcess$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(restartBatchProcess),
+      tap(action => this.logger.trace('Restarting batch process:', action)),
+      switchMap(action =>
+        this.batchProcessService.restartJob({ detail: action.detail }).pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          tap(() =>
+            this.alertService.info(
+              this.translateService.instant(
+                'batch-processes.restart-process.effect-success',
+                { jobId: action.detail.jobId }
+              )
+            )
+          ),
+          map(() => restartBatchProcessSuccess()),
+          catchError(error => {
+            this.logger.error('Service failure:', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'batch-processes.restart-process.effect-failure',
+                { jobId: action.detail.jobId }
+              )
+            );
+            return of(restartBatchProcessFailure());
+          })
+        )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(restartBatchProcessFailure());
       })
     );
   });

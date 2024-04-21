@@ -22,26 +22,23 @@ import {
   reducer
 } from './batch-processes.reducer';
 import {
-  BATCH_PROCESS_STATUS_1,
-  BATCH_PROCESS_STATUS_2,
-  BATCH_PROCESS_STATUS_3,
-  BATCH_PROCESS_STATUS_4,
-  BATCH_PROCESS_STATUS_5
+  BATCH_PROCESS_DETAIL_1,
+  BATCH_PROCESS_DETAIL_2
 } from '@app/admin/admin.fixtures';
 import {
-  batchProcessListLoaded,
+  batchProcessUpdateReceived,
   loadBatchProcessList,
-  loadBatchProcessListFailed
+  loadBatchProcessListFailure,
+  loadBatchProcessListSuccess,
+  restartBatchProcess,
+  restartBatchProcessFailure,
+  restartBatchProcessSuccess,
+  setBatchProcessDetail
 } from '@app/admin/actions/batch-processes.actions';
 
 describe('BatchProcesses Reducer', () => {
-  const ENTRIES = [
-    BATCH_PROCESS_STATUS_1,
-    BATCH_PROCESS_STATUS_2,
-    BATCH_PROCESS_STATUS_3,
-    BATCH_PROCESS_STATUS_4,
-    BATCH_PROCESS_STATUS_5
-  ];
+  const ENTRIES = [BATCH_PROCESS_DETAIL_1, BATCH_PROCESS_DETAIL_2];
+  const DETAIL = ENTRIES[0];
 
   let state: BatchProcessesState;
 
@@ -61,6 +58,10 @@ describe('BatchProcesses Reducer', () => {
     it('has no entries', () => {
       expect(state.entries).toEqual([]);
     });
+
+    it('has no detail', () => {
+      expect(state.detail).toBeNull();
+    });
   });
 
   describe('loading the list of processes', () => {
@@ -71,32 +72,133 @@ describe('BatchProcesses Reducer', () => {
     it('sets the busy flag', () => {
       expect(state.busy).toBeTrue();
     });
+
+    describe('success ', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: true, entries: [] },
+          loadBatchProcessListSuccess({ processes: ENTRIES })
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+
+      it('sets the list of entries', () => {
+        expect(state.entries).toEqual(ENTRIES);
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: true },
+          loadBatchProcessListFailure()
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+    });
   });
 
-  describe('receiving the list of processes', () => {
+  describe('receiving a batch process update with a new entry', () => {
+    const DETAIL = BATCH_PROCESS_DETAIL_1;
+
     beforeEach(() => {
       state = reducer(
-        { ...state, busy: true, entries: [] },
-        batchProcessListLoaded({ processes: ENTRIES })
+        { ...state, entries: [BATCH_PROCESS_DETAIL_2] },
+        batchProcessUpdateReceived({ update: DETAIL })
       );
     });
 
-    it('clears the busy flag', () => {
-      expect(state.busy).toBeFalse();
-    });
-
-    it('sets the list of entries', () => {
-      expect(state.entries).toEqual(ENTRIES);
+    it('adds the new entry', () => {
+      expect(state.entries).toContain(DETAIL);
     });
   });
 
-  describe('failure to load the list of processes', () => {
+  describe('receiving a batch process update with an updated entry', () => {
+    const DETAIL = BATCH_PROCESS_DETAIL_1;
+
     beforeEach(() => {
-      state = reducer({ ...state, busy: true }, loadBatchProcessListFailed());
+      state = reducer(
+        {
+          ...state,
+          entries: [
+            {
+              ...DETAIL,
+              running: !DETAIL.running,
+              jobName: DETAIL.jobName.substring(1)
+            }
+          ]
+        },
+        batchProcessUpdateReceived({ update: DETAIL })
+      );
     });
 
-    it('clears the busy flag', () => {
-      expect(state.busy).toBeFalse();
+    it('adds the new entry', () => {
+      expect(state.entries).toContain(DETAIL);
+    });
+  });
+
+  describe('setting the current batch process detail', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, detail: null },
+        setBatchProcessDetail({ detail: DETAIL })
+      );
+    });
+
+    it('sets the detail', () => {
+      expect(state.detail).toBe(DETAIL);
+    });
+  });
+
+  describe('clearing the current batch process detail', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, detail: null },
+        setBatchProcessDetail({ detail: null })
+      );
+    });
+
+    it('clears the detail', () => {
+      expect(state.detail).toBeNull();
+    });
+  });
+
+  describe('restarting a job', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: false },
+        restartBatchProcess({ detail: DETAIL })
+      );
+    });
+
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer({ ...state, busy: true }, restartBatchProcessSuccess());
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer({ ...state, busy: true }, restartBatchProcessFailure());
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
     });
   });
 });

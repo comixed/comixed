@@ -18,33 +18,53 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  batchProcessListLoaded,
+  batchProcessUpdateReceived,
   loadBatchProcessList,
-  loadBatchProcessListFailed
+  loadBatchProcessListFailure,
+  loadBatchProcessListSuccess,
+  restartBatchProcess,
+  restartBatchProcessFailure,
+  restartBatchProcessSuccess,
+  setBatchProcessDetail
 } from '@app/admin/actions/batch-processes.actions';
-import { BatchProcess } from '@app/admin/models/batch-process';
+import { BatchProcessDetail } from '@app/admin/models/batch-process-detail';
 
 export const BATCH_PROCESSES_FEATURE_KEY = 'batch_processes_state';
 
 export interface BatchProcessesState {
   busy: boolean;
-  entries: BatchProcess[];
+  entries: BatchProcessDetail[];
+  detail: BatchProcessDetail;
 }
 
 export const initialState: BatchProcessesState = {
   busy: false,
-  entries: []
+  entries: [],
+  detail: null
 };
 
 export const reducer = createReducer(
   initialState,
   on(loadBatchProcessList, state => ({ ...state, busy: true })),
-  on(batchProcessListLoaded, (state, action) => ({
+  on(loadBatchProcessListSuccess, (state, action) => ({
     ...state,
     busy: false,
     entries: action.processes
   })),
-  on(loadBatchProcessListFailed, state => ({ ...state, busy: false }))
+  on(loadBatchProcessListFailure, state => ({ ...state, busy: false })),
+  on(batchProcessUpdateReceived, (state, action) => {
+    const entries = state.entries
+      .filter(entry => entry.jobId !== action.update.jobId)
+      .concat(action.update);
+    return { ...state, entries };
+  }),
+  on(setBatchProcessDetail, (state, action) => ({
+    ...state,
+    detail: action.detail
+  })),
+  on(restartBatchProcess, state => ({ ...state, busy: true })),
+  on(restartBatchProcessSuccess, state => ({ ...state, busy: false })),
+  on(restartBatchProcessFailure, state => ({ ...state, busy: false }))
 );
 
 export const batchProcessFeature = createFeature({

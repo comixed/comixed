@@ -1,0 +1,50 @@
+@import 'styles';
+
+.batch-process-detail-row {
+  padding-bottom: 15px;
+}
+
+table {
+  border-collapse: collapse;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+th,
+td {
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+th {
+  text-align: left;
+}
+
+thead {
+  th {
+    background-color: #55608f;
+  }
+}
+
+tbody {
+  tr {
+    td {
+      position: relative;
+      color: #004444;
+
+      &:hover {
+        &:before {
+          content: '';
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: -9999px;
+          bottom: -9999px;
+          background-color: rgba(255, 255, 255, 0.2);
+          z-index: -1;
+        }
+      }
+    }
+  }
+}

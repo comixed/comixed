@@ -26,7 +26,6 @@ import {
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { BatchProcess } from '@app/admin/models/batch-process';
 import { Subscription } from 'rxjs';
 import {
   selectBatchProcessesState,
@@ -34,12 +33,17 @@ import {
 } from '@app/admin/selectors/batch-processes.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { Store } from '@ngrx/store';
-import { loadBatchProcessList } from '@app/admin/actions/batch-processes.actions';
+import {
+  loadBatchProcessList,
+  setBatchProcessDetail
+} from '@app/admin/actions/batch-processes.actions';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { PAGE_SIZE_OPTIONS } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
+import { BatchProcessDetail } from '@app/admin/models/batch-process-detail';
+import { BatchProcessDetailDialogComponent } from '@app/admin/components/batch-process-detail-dialog/batch-process-detail-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'cx-batch-process-list-page',
@@ -52,13 +56,14 @@ export class BatchProcessListPageComponent
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  dataSource = new MatTableDataSource<BatchProcess>([]);
+  dataSource = new MatTableDataSource<BatchProcessDetail>([]);
 
   batchProcessStateSubscription: Subscription;
   batchProcessListSubscription: Subscription;
   readonly displayedColumns = [
-    'name',
+    'job-name',
     'job-id',
+    'running',
     'start-time',
     'end-time',
     'status',
@@ -67,13 +72,14 @@ export class BatchProcessListPageComponent
   ];
 
   langChangeSubscription: Subscription;
-  protected readonly PAGE_SIZE_OPTIONS = PAGE_SIZE_OPTIONS;
+  detail: BatchProcessDetail | null = null;
 
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
     private translateService: TranslateService,
     private titleService: TitleService,
+    private dialog: MatDialog,
     public queryParameterService: QueryParameterService
   ) {
     this.logger.debug('Subscribing to batch process state updates');
@@ -111,8 +117,8 @@ export class BatchProcessListPageComponent
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
       switch (sortHeaderId) {
-        case 'name':
-          return data.name;
+        case 'job-name':
+          return data.jobName;
         case 'job-id':
           return data.jobId;
         case 'status':
@@ -122,12 +128,18 @@ export class BatchProcessListPageComponent
         case 'end-time':
           return data.endTime;
         case 'exit-code':
-          return data.exitCode;
+          return data.exitStatus;
         default:
           this.logger.error('No such column:', sortHeaderId);
           return null;
       }
     };
+  }
+
+  onShowDetail(detail: BatchProcessDetail) {
+    this.logger.debug('Showing batch process detail:', detail);
+    this.store.dispatch(setBatchProcessDetail({ detail }));
+    this.dialog.open(BatchProcessDetailDialogComponent, { data: {} });
   }
 
   private doLoadBatchProcessList(): void {

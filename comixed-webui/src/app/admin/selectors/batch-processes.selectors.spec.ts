@@ -21,30 +21,26 @@ import {
   BatchProcessesState
 } from '../reducers/batch-processes.reducer';
 import {
+  selectBatchProcessDetail,
   selectBatchProcessesState,
   selectBatchProcessList
 } from './batch-processes.selectors';
 import {
-  BATCH_PROCESS_STATUS_1,
-  BATCH_PROCESS_STATUS_2,
-  BATCH_PROCESS_STATUS_3,
-  BATCH_PROCESS_STATUS_4,
-  BATCH_PROCESS_STATUS_5
+  BATCH_PROCESS_DETAIL_1,
+  BATCH_PROCESS_DETAIL_2
 } from '@app/admin/admin.fixtures';
 
 describe('BatchProcesses Selectors', () => {
-  const ENTRIES = [
-    BATCH_PROCESS_STATUS_1,
-    BATCH_PROCESS_STATUS_2,
-    BATCH_PROCESS_STATUS_3,
-    BATCH_PROCESS_STATUS_4,
-    BATCH_PROCESS_STATUS_5
-  ];
+  const ENTRIES = [BATCH_PROCESS_DETAIL_1, BATCH_PROCESS_DETAIL_2];
 
   let state: BatchProcessesState;
 
   beforeEach(() => {
-    state = { busy: Math.random() > 0.5, entries: ENTRIES };
+    state = {
+      busy: Math.random() > 0.5,
+      entries: ENTRIES,
+      detail: BATCH_PROCESS_DETAIL_1
+    };
   });
 
   it('should select the feature state', () => {
@@ -61,5 +57,13 @@ describe('BatchProcesses Selectors', () => {
         [BATCH_PROCESSES_FEATURE_KEY]: state
       })
     ).toEqual(state.entries);
+  });
+
+  it('returns the current process detail', () => {
+    expect(
+      selectBatchProcessDetail({
+        [BATCH_PROCESSES_FEATURE_KEY]: state
+      })
+    ).toEqual(state.detail);
   });
 });

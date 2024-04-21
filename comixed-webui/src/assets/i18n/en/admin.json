@@ -1,12 +1,15 @@
 {
   "batch-processes": {
+    "batch-process-detail": {
+      "dialog-title": "Batch Process Details For Job {jobId}"
+    },
     "batch-process-list": {
       "label": {
         "end-time": "Finished",
         "exit-code": "Exit Code",
         "exit-description": "Description",
-        "name": "Name",
         "job-id": "Job ID",
+        "job-name": "Name",
         "start-time": "Started",
         "status": "Status"
       },
@@ -16,8 +19,27 @@
         "no-records-found": "No batch process records found"
       }
     },
+    "label": {
+      "parameter-name": "Job Parameter",
+      "parameter-value": "Value"
+    },
     "load-batch-process-list": {
       "effect-failure": "Failed to load the list of batch processes."
+    },
+    "restart-process": {
+      "confirmation-message": "Are you sure you want to restart batch process {jobId}?",
+      "confirmation-title": "Restart Batch Process",
+      "effect-failure": "Failed to restart job {jobId}...",
+      "effect-success": "Job {jobId} restarted successful."
+    },
+    "text": {
+      "can-be-restarted": "The job can be restarted.",
+      "created": "The job was created {created}.",
+      "duration": "The job ran from {started} until {ended}.",
+      "error-header": "Errors Reported During Job Run",
+      "last-updated": "The job was last updated {updated}.",
+      "running-now": "This job was started {started} and is running now.",
+      "status": "The job's exit status is {status}."
     }
   },
   "configuration": {

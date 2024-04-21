@@ -34,7 +34,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class AddedComicBookChunkListener extends AbstractAddComicBooksExecutionListener
+public class AddedComicBookChunkListener extends AbstractBatchProcessListener
     implements ChunkListener {
 
   @Override
@@ -53,12 +53,14 @@ public class AddedComicBookChunkListener extends AbstractAddComicBooksExecutionL
   }
 
   private void doPublishChunkState(ChunkContext context) {
+    this.doPublishBatchProcessDetail(
+        this.getBatchDetails(context.getStepContext().getStepExecution().getJobExecution()));
     final ExecutionContext executionContext =
         context.getStepContext().getStepExecution().getJobExecution().getExecutionContext();
     log.trace("Publishing status after chunk");
     executionContext.putLong(
         ADD_COMIC_BOOKS_PROCESSED_COMICS,
         context.getStepContext().getStepExecution().getWriteCount());
-    this.doPublishStatus(executionContext);
+    this.doPublishAddComicBookStatus(executionContext);
   }
 }

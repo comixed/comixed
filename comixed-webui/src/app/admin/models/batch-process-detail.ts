@@ -16,21 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-import {
-  BATCH_PROCESSES_FEATURE_KEY,
-  BatchProcessesState
-} from '../reducers/batch-processes.reducer';
-
-export const selectBatchProcessesState =
-  createFeatureSelector<BatchProcessesState>(BATCH_PROCESSES_FEATURE_KEY);
-
-export const selectBatchProcessList = createSelector(
-  selectBatchProcessesState,
-  state => state.entries
-);
-
-export const selectBatchProcessDetail = createSelector(
-  selectBatchProcessesState,
-  state => state.detail
-);
+export interface BatchProcessDetail {
+  jobName: string;
+  jobId: number;
+  running: boolean;
+  status: string;
+  parameters: Map<string, string>;
+  createTime: number;
+  startTime: number;
+  endTime: number;
+  lastUpdateTime: number;
+  exitStatus: string;
+  errors: string;
+}

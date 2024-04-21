@@ -37,7 +37,7 @@ import org.springframework.stereotype.Component;
 public class DeleteCompletedComicBatchesInitiator {
   @Autowired private ComicBatchService comicBatchService;
 
-  @Scheduled(fixedDelay = 30000L)
+  @Scheduled(fixedDelay = 10L * 60L * 1000L)
   public void execute() {
     log.debug("Checking for completed comic batches");
     final List<ComicBatch> batchList = this.comicBatchService.loadCompletedBatches();

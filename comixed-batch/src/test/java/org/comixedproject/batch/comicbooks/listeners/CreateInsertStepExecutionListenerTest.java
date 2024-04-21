@@ -24,7 +24,9 @@ import static org.comixedproject.model.messaging.batch.AddComicBooksStatus.*;
 
 import java.util.Date;
 import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
 import org.comixedproject.messaging.comicbooks.PublishAddComicBooksStatusAction;
+import org.comixedproject.model.batch.BatchProcessDetail;
 import org.comixedproject.model.messaging.batch.AddComicBooksStatus;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.junit.Before;
@@ -32,8 +34,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.*;
 import org.springframework.batch.item.ExecutionContext;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -41,18 +42,28 @@ public class CreateInsertStepExecutionListenerTest {
   private static final long TEST_TOTAL_COMICS = 77L;
   private static final Date TEST_JOB_STARTED = new Date();
   private static final long TEST_PROCESSED_COMICS = 15L;
+  private static final String TEST_JOB_NAME = "The job name";
 
   @InjectMocks private CreateInsertStepExecutionListener listener;
   @Mock private StepExecution stepExecution;
+  @Mock private JobInstance jobInstance;
+  @Mock private JobParameters jobParameters;
   @Mock private JobExecution jobExecution;
   @Mock private ExecutionContext executionContext;
   @Mock private ComicFileService comicFileService;
   @Mock private PublishAddComicBooksStatusAction publishAddComicBooksStatusAction;
+  @Mock private PublishBatchProcessDetailUpdateAction publishBatchProcessDetailUpdateAction;
 
   @Captor ArgumentCaptor<AddComicBooksStatus> processComicStatusArgumentCaptor;
+  @Captor ArgumentCaptor<BatchProcessDetail> batchProcessDetailArgumentCaptor;
 
   @Before
   public void setUp() throws PublishingException {
+    Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
+    Mockito.when(jobInstance.getJobName()).thenReturn(TEST_JOB_NAME);
+    Mockito.when(jobExecution.getJobInstance()).thenReturn(jobInstance);
+    Mockito.when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
+    Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);
     Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
     Mockito.when(jobExecution.getExecutionContext()).thenReturn(executionContext);
     Mockito.when(executionContext.containsKey(ADD_COMIC_BOOKS_JOB_STARTED)).thenReturn(true);
@@ -66,6 +77,9 @@ public class CreateInsertStepExecutionListenerTest {
     Mockito.doNothing()
         .when(publishAddComicBooksStatusAction)
         .publish(processComicStatusArgumentCaptor.capture());
+    Mockito.doNothing()
+        .when(publishBatchProcessDetailUpdateAction)
+        .publish(batchProcessDetailArgumentCaptor.capture());
   }
 
   @Test
@@ -79,10 +93,14 @@ public class CreateInsertStepExecutionListenerTest {
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_PROCESSED_COMICS, status.getProcessed());
 
+    final BatchProcessDetail detail = batchProcessDetailArgumentCaptor.getValue();
+
     Mockito.verify(comicFileService, Mockito.times(2)).getComicFileDescriptorCount();
     Mockito.verify(executionContext, Mockito.times(2))
         .putLong(ADD_COMIC_BOOKS_TOTAL_COMICS, TEST_TOTAL_COMICS);
     Mockito.verify(publishAddComicBooksStatusAction, Mockito.times(1)).publish(status);
+    Mockito.verify(publishBatchProcessDetailUpdateAction, Mockito.times(1)).publish(Mockito.any());
+    Mockito.verify(publishBatchProcessDetailUpdateAction, Mockito.times(1)).publish(detail);
   }
 
   @Test
@@ -94,10 +112,13 @@ public class CreateInsertStepExecutionListenerTest {
 
     listener.beforeStep(stepExecution);
 
+    final BatchProcessDetail detail = batchProcessDetailArgumentCaptor.getValue();
+
     Mockito.verify(comicFileService, Mockito.times(2)).getComicFileDescriptorCount();
     Mockito.verify(executionContext, Mockito.times(2))
         .putLong(ADD_COMIC_BOOKS_TOTAL_COMICS, TEST_TOTAL_COMICS);
     Mockito.verify(publishAddComicBooksStatusAction, Mockito.times(1)).publish(Mockito.any());
+    Mockito.verify(publishBatchProcessDetailUpdateAction, Mockito.times(1)).publish(detail);
   }
 
   @Test
@@ -109,7 +130,10 @@ public class CreateInsertStepExecutionListenerTest {
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_PROCESSED_COMICS, status.getProcessed());
 
+    final BatchProcessDetail detail = batchProcessDetailArgumentCaptor.getValue();
+
     Mockito.verify(publishAddComicBooksStatusAction, Mockito.times(1)).publish(status);
+    Mockito.verify(publishBatchProcessDetailUpdateAction, Mockito.times(1)).publish(detail);
   }
 
   @Test
@@ -120,6 +144,9 @@ public class CreateInsertStepExecutionListenerTest {
 
     listener.afterStep(stepExecution);
 
+    final BatchProcessDetail detail = batchProcessDetailArgumentCaptor.getValue();
+
     Mockito.verify(publishAddComicBooksStatusAction, Mockito.times(1)).publish(Mockito.any());
+    Mockito.verify(publishBatchProcessDetailUpdateAction, Mockito.times(1)).publish(detail);
   }
 }

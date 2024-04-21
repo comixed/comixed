@@ -21,6 +21,7 @@ package org.comixedproject.batch.comicbooks.listeners;
 import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.batch.BatchProcessDetail;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
@@ -37,7 +38,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class LoadFileContentsStepExecutionListener extends AbstractProcessComicBookExecution
+public class LoadFileContentsStepExecutionListener extends AbstractBatchProcessListener
     implements StepExecutionListener {
   @Autowired private ComicBookService comicBookService;
 
@@ -53,6 +54,7 @@ public class LoadFileContentsStepExecutionListener extends AbstractProcessComicB
   }
 
   private void doProcessState(final StepExecution stepExecution) {
+    this.doPublishBatchProcessDetail(BatchProcessDetail.from(stepExecution.getJobExecution()));
     final ExecutionContext context = stepExecution.getJobExecution().getExecutionContext();
     context.putString(
         PROCESS_COMIC_BOOKS_STATUS_BATCH_NAME, this.getBatchName(stepExecution.getJobParameters()));
@@ -64,6 +66,6 @@ public class LoadFileContentsStepExecutionListener extends AbstractProcessComicB
         this.comicBookService.getUnprocessedComicsWithoutContentCount(batchName);
     context.putLong(PROCESS_COMIC_BOOKS_STATUS_TOTAL_COMICS, total);
     context.putLong(PROCESS_COMIC_BOOKS_STATUS_PROCESSED_COMICS, total - unprocessed);
-    this.doPublishStatus(context, true);
+    this.doPublishProcessComicBookStatus(context, true);
   }
 }

@@ -16,12 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export interface BatchProcess {
-  name: string;
-  jobId: number;
-  status: string;
-  startTime: number;
-  endTime: number;
-  exitCode: string;
-  exitDescription: string;
+package org.comixedproject.service.batch;
+
+/**
+ * <code>BatchProcessException</code> is thrown when errors occur while working with batch
+ * processes.
+ *
+ * @author Darryl L. Pierce
+ */
+public class BatchProcessException extends Exception {
+  public BatchProcessException(final String message) {
+    super(message);
+  }
+
+  public BatchProcessException(final String message, final Exception cause) {
+    super(message, cause);
+  }
 }
