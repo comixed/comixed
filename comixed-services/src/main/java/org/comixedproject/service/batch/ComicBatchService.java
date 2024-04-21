@@ -104,7 +104,18 @@ public class ComicBatchService {
    */
   @Transactional
   public ComicBatch getByName(final String batchName) {
-    log.debug("Loading comici batch: {}", batchName);
+    log.debug("Loading comic batch: {}", batchName);
     return this.comicBatchRepository.getByName(batchName);
+  }
+
+  /**
+   * Returns the list of all batches that are marked as completed.
+   *
+   * @return the batch list
+   */
+  @Transactional
+  public List<ComicBatch> loadCompletedBatches() {
+    log.debug("Loading completed comic batches");
+    return this.comicBatchRepository.loadCompletedBatches();
   }
 }
