@@ -20,13 +20,14 @@ run batch jobs.
 
 ### Changing The Frequence For Scanning For Unprocessed Comics
 
-By default, ComiXed will check every 15 minutes for unprocessed comics. You
+By default, ComiXed will check every 60 seconds for unprocessed comics. You
 can override that schedule by changing the following property in the
 ```application.properties``` file:
 
-    comixed.batch.process-comic-books.schedule=0 0,15,30,45 * * * *
+    comixed.batch.process-comic-books.period=60000
 
-See [below](Scheduling-Processes) for details on the scheduling format.
+This value is the number of milliseconds to wait before checking for
+unprocessed comics.
 
 ## Image Caching
 

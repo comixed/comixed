@@ -75,7 +75,7 @@
     "text": {
       "how-to-start-processing": "To start the processing, go to the Unprocessed page and select the comics to be processed, or else wait until the server starts the automated process.",
       "note-title": "A Note About Processing Comics",
-      "processing-description": "This page shows the current status for comic book files being processed. During this process, details about the file's contents are extracted, the pages are hashes, and other steps performed. This can take a long time, so please be patient..."
+      "processing-description": "This page shows the current status for comic book files being processed. During this process, details about the file's contents are extracted, the pages are hashed, and other steps performed. This can take a long time, so please be patient..."
     }
   },
   "scrape-filename": {

@@ -43,9 +43,8 @@ import org.springframework.batch.core.repository.JobRestartException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProcessComicBooksInitiatorTest {
-  private static final Long TEST_NEED_TO_HAVE_CONTENT_LOADED = 7L;
-  private static final Long TEST_FINISHED_PROCESSING = 12971L;
   private static final String TEST_BATCH_NAME = "The batch  name";
+  private static final long TEST_MAXL_RECORDS = 25L;
 
   @InjectMocks private ProcessComicBooksInitiator initiator;
   @Mock private ComicBookService comicBookService;
@@ -69,7 +68,8 @@ public class ProcessComicBooksInitiatorTest {
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
           JobRestartException {
-    for (int index = 0; index < 25; index++) comicBookList.add(Mockito.mock(ComicBook.class));
+    for (int index = 0; index < TEST_MAXL_RECORDS; index++)
+      comicBookList.add(Mockito.mock(ComicBook.class));
     Mockito.when(comicBatch.getName()).thenReturn(TEST_BATCH_NAME);
     Mockito.when(comicBatchService.createProcessComicBooksGroup(Mockito.anyList()))
         .thenReturn(comicBatch);

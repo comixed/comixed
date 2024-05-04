@@ -82,6 +82,9 @@ public abstract class AbstractArchiveAdaptor<
       return this.doGetEntries((R) archiveHandle);
     } catch (Exception error) {
       throw new ArchiveAdaptorException("Failed to load archive entries", error);
+    } catch (Error error) {
+      log.error("Failed to load archive entries", error);
+      throw error;
     }
   }
 

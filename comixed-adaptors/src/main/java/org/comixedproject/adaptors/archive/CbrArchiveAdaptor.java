@@ -76,7 +76,7 @@ public class CbrArchiveAdaptor
             createArchiveEntry(
                 index++, fileHeader.getFileName(), fileHeader.getFullUnpackSize(), stream));
       } catch (Exception error) {
-        log.error("Could not load archive entry", error);
+        log.error("Could not load archive entry: name={}", fileHeader.getFileName(), error);
         result.add(createArchiveEntryForCorruptedPage(index++, fileHeader.getFileName()));
       }
     }
