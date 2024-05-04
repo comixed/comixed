@@ -354,6 +354,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    * @param batchName the batch name
    * @return the count
    */
+  @Transactional
   public long getUnprocessedComicsWithoutContentCount(final String batchName) {
     log.trace("Getting the number of unprocessed comics without content");
     return this.comicBookRepository.findUnprocessedComicsWithoutContentCount(batchName);
@@ -632,6 +633,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @return the comic count
    */
+  @Transactional
   public long getComicBookCount() {
     log.trace("Getting total comics count");
     return this.comicBookRepository.count();
@@ -642,6 +644,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @return the deleted comic count
    */
+  @Transactional
   public long getDeletedComicCount() {
     log.trace("Getting the deleted comic count count");
     return this.getCountForState(ComicState.DELETED);
@@ -663,6 +666,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @return the publishers state
    */
+  @Transactional
   public List<RemoteLibrarySegmentState> getPublishersState() {
     log.trace("Getting the publishers state");
     return this.comicBookRepository.getPublishersState();
@@ -673,6 +677,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @return the series state
    */
+  @Transactional
   public List<RemoteLibrarySegmentState> getSeriesState() {
     log.trace("Getting the series state");
     return this.comicBookRepository.getSeriesState();
@@ -683,6 +688,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @return the characters state
    */
+  @Transactional
   public List<RemoteLibrarySegmentState> getCharactersState() {
     log.trace("Getting the characters state");
     return this.comicBookRepository.getCharactersState();
@@ -693,6 +699,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @return the teams state
    */
+  @Transactional
   public List<RemoteLibrarySegmentState> getTeamsState() {
     log.trace("Getting the teams state");
     return this.comicBookRepository.getTeamsState();
@@ -703,6 +710,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @return the locations state
    */
+  @Transactional
   public List<RemoteLibrarySegmentState> getLocationsState() {
     log.trace("Getting the locations state");
     return this.comicBookRepository.getLocationsState();
@@ -713,6 +721,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @return the stories state
    */
+  @Transactional
   public List<RemoteLibrarySegmentState> getStoriesState() {
     log.trace("Getting the stories state");
     return this.comicBookRepository.getStoriesState();
@@ -723,6 +732,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @return the comic book states
    */
+  @Transactional
   public List<RemoteLibrarySegmentState> getComicBooksState() {
     log.trace("Getting the comics state");
     return this.comicBookRepository.getComicBooksState();
@@ -733,6 +743,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @return the statistics
    */
+  @Transactional
   public List<PublisherAndYearSegment> getByPublisherAndYear() {
     log.trace("Getting counts by publisher and year");
     return this.comicBookRepository.getByPublisherAndYear();
@@ -808,6 +819,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @return the count
    */
+  @Transactional
   public long getUnscrapedComicCount() {
     log.debug("Getting the count of unprocessed comics");
     return this.comicBookRepository.getUnscrapedComicCount();
@@ -860,6 +872,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @return the comic books
    */
+  @Transactional
   public List<ComicBook> getComicBooksForProcessing() {
     log.debug("Loading unprocessed comic books not in a batch");
     return this.comicBookRepository.getComicBooksForProcessing();

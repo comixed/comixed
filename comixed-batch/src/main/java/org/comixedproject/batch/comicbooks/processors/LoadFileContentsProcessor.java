@@ -71,7 +71,7 @@ public class LoadFileContentsProcessor
       }
       log.trace("Returning updated comicBook");
       return comicBook;
-    } catch (Exception error) {
+    } catch (Throwable error) {
       log.error("Error loading comic file content", error);
       return comicBook;
     }

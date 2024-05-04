@@ -60,6 +60,7 @@
     id="restart-batch-process"
     mat-raised-button
     color="primary"
+    [matTooltip]="'batch-processes.tooltip.restart-batch-process' | translate"
     (click)="onRestartBatchProcess()"
   >
     <mat-icon>restart_alt</mat-icon>

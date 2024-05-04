@@ -40,6 +40,9 @@
       "last-updated": "The job was last updated {updated}.",
       "running-now": "This job was started {started} and is running now.",
       "status": "The job's exit status is {status}."
+    },
+    "tooltip": {
+      "restart-batch-process": "Attempt to restart failed batch process."
     }
   },
   "configuration": {

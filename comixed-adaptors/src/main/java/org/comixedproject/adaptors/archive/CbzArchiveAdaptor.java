@@ -75,7 +75,7 @@ public class CbzArchiveAdaptor
         result.add(
             createArchiveEntry(index++, archiveEntry.getName(), archiveEntry.getSize(), stream));
       } catch (Exception error) {
-        log.error("Could not load archive entry", error);
+        log.error("Could not load archive entry: name={}", archiveEntry.getName(), error);
         result.add(createArchiveEntryForCorruptedPage(index++, archiveEntry.getName()));
       }
     }

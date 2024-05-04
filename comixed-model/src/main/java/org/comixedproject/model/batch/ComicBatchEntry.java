@@ -47,7 +47,7 @@ public class ComicBatchEntry {
   @NonNull
   private ComicBatch batch;
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "comic_book_id", updatable = false, nullable = false)
   @Getter
   @NonNull

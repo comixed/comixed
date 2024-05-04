@@ -70,8 +70,13 @@ public class Cb7ArchiveAdaptor
       final SevenZArchiveEntry archiveEntry = iter.next();
       log.trace("Creating archive entry");
       final InputStream stream = archiveHandle.getArchiveHandle().getInputStream(archiveEntry);
-      result.add(
-          createArchiveEntry(index++, archiveEntry.getName(), archiveEntry.getSize(), stream));
+      try {
+        result.add(
+            createArchiveEntry(index++, archiveEntry.getName(), archiveEntry.getSize(), stream));
+      } catch (Exception error) {
+        log.error("Could not load archive entry: name={}", archiveEntry.getName(), error);
+        result.add(createArchiveEntryForCorruptedPage(index++, archiveEntry.getName()));
+      }
     }
     log.trace("Returning entries");
     return result;
