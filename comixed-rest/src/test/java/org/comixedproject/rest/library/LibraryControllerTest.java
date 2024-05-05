@@ -300,6 +300,31 @@ public class LibraryControllerTest {
   }
 
   @Test
+  public void testOrganizeEntireLibrary() throws Exception {
+    Mockito.when(configurationService.getOptionValue(CFG_LIBRARY_ROOT_DIRECTORY))
+        .thenReturn(TEST_DESTINATION_DIRECTORY);
+    Mockito.when(configurationService.getOptionValue(CFG_LIBRARY_COMIC_RENAMING_RULE))
+        .thenReturn(TEST_RENAMING_RULE);
+    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+        .thenReturn(jobExecution);
+
+    controller.organizeEntireLibrary(new OrganizeLibraryRequest(TEST_DELETE_REMOVED_COMIC_FILES));
+
+    final JobParameters parameters = jobParametersArgumentCaptor.getValue();
+    assertNotNull(parameters);
+    assertTrue(parameters.getParameters().containsKey(JOB_ORGANIZATION_TIME_STARTED));
+    assertEquals(
+        String.valueOf(TEST_DELETE_REMOVED_COMIC_FILES),
+        parameters.getString(JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES));
+    assertEquals(
+        TEST_DESTINATION_DIRECTORY, parameters.getString(JOB_ORGANIZATION_TARGET_DIRECTORY));
+    assertEquals(TEST_RENAMING_RULE, parameters.getString(JOB_ORGANIZATION_RENAMING_RULE));
+
+    Mockito.verify(jobLauncher, Mockito.times(1))
+        .run(organizeLibraryJob, jobParametersArgumentCaptor.getValue());
+  }
+
+  @Test
   public void testClearImageCache() throws LibraryException {
     Mockito.doNothing().when(libraryService).clearImageCache();
 

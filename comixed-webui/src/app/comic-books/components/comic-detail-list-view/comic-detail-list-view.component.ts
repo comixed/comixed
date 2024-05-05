@@ -61,7 +61,10 @@ import {
   updateSelectedComicBooksMetadata,
   updateSingleComicBookMetadata
 } from '@app/library/actions/update-metadata.actions';
-import { startLibraryOrganization } from '@app/library/actions/organize-library.actions';
+import {
+  startEntireLibraryOrganization,
+  startLibraryOrganization
+} from '@app/library/actions/organize-library.actions';
 import {
   rescanSelectedComicBooks,
   rescanSingleComicBook
@@ -574,6 +577,22 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
             plugin
           })
         );
+      }
+    });
+  }
+
+  onOrganizeEntireLibrary(): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library.organization-everything.confirmation-title',
+        { count: this.selectedIds.length }
+      ),
+      message: this.translateService.instant(
+        'library.organization-everything.confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.debug('Organizing the entire library');
+        this.store.dispatch(startEntireLibraryOrganization());
       }
     });
   }

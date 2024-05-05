@@ -31,9 +31,12 @@ import {
   COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
 import {
-  startLibraryOrganizationSuccess,
+  startEntireLibraryOrganization,
+  startEntireLibraryOrganizationFailure,
+  startEntireLibraryOrganizationSuccess,
   startLibraryOrganization,
-  startLibraryOrganizationFailure
+  startLibraryOrganizationFailure,
+  startLibraryOrganizationSuccess
 } from '@app/library/actions/organize-library.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -62,6 +65,9 @@ describe('OrganizeLibraryEffects', () => {
           useValue: {
             startLibraryOrganization: jasmine.createSpy(
               'LibraryService.startLibraryOrganization()'
+            ),
+            startEntireLibraryOrganization: jasmine.createSpy(
+              'LibraryService.startEntireLibraryOrganization()'
             )
           }
         }
@@ -124,6 +130,53 @@ describe('OrganizeLibraryEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.organizeLibrary$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('starting entire library organization', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = COMIC_BOOKS;
+      const action = startEntireLibraryOrganization();
+      const outcome = startEntireLibraryOrganizationSuccess();
+
+      actions$ = hot('-a', { a: action });
+      libraryService.startEntireLibraryOrganization.and.returnValue(
+        of(serviceResponse)
+      );
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.organizeEntireLibrary$).toBeObservable(expected);
+      expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = startEntireLibraryOrganization();
+      const outcome = startEntireLibraryOrganizationFailure();
+
+      actions$ = hot('-a', { a: action });
+      libraryService.startEntireLibraryOrganization.and.returnValue(
+        throwError(serviceResponse)
+      );
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.organizeEntireLibrary$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(
+        jasmine.any(String),
+        LIBRARY_ORGANIZATION_CONFIG_URL
+      );
+    });
+
+    it('fires an action on general failure', () => {
+      const action = startEntireLibraryOrganization();
+      const outcome = startEntireLibraryOrganizationFailure();
+
+      actions$ = hot('-a', { a: action });
+      libraryService.startEntireLibraryOrganization.and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.organizeEntireLibrary$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

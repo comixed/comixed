@@ -89,6 +89,16 @@ public class LibraryService {
     this.comicBookService.prepareForOrganization(ids);
   }
 
+  /**
+   * Updates the entire library for organization.
+   *
+   * @param targetDirectory the target directory
+   * @throws LibraryException if an error occurs
+   */
+  public void prepareForOrganization(final String targetDirectory) throws LibraryException {
+    this.prepareForOrganization(this.comicBookService.getAllIds(), targetDirectory);
+  }
+
   @Transactional
   public void prepareToRecreateComicBook(final long id) throws LibraryException {
     try {

@@ -84,6 +84,7 @@
       "invalid-grouping": "The group \"{name}\" is not valid."
     },
     "context-menu": {
+      "organize-entire-library": "Organize entire library...",
       "organize-selected": "Organize {count, plural, =1{# comic} other{# comics}}...",
       "convert": "Recreate Archive",
       "convert-one-to-cb7": "Convert this comic to CB7",
@@ -164,6 +165,12 @@
       "confirmation-title": "Organize {count, plural, =1{One Comic} other{# Comics}}",
       "effect-failure": "Failed to start library organization. Please verify your library confirmation and try again.",
       "effect-success": "Library organization started."
+    },
+    "organization-everything": {
+      "confirmation-message": "This process can take a long time and will move all comics based on the organization rules. Are you sure you want to continue?",
+      "confirmation-title": "Organize Entire Library",
+      "effect-failure": "Failed to start entire library organization. Please verify your library confirmation and try again.",
+      "effect-success": "Entire library organization started."
     },
     "page-title": {
       "all": "All Comics{filtered, select, true{ [Filtered]} other{}}",

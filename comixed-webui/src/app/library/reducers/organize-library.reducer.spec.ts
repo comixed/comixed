@@ -17,14 +17,17 @@
  */
 
 import {
-  OrganizeLibraryState,
   initialState,
+  OrganizeLibraryState,
   reducer
 } from './organize-library.reducer';
 import {
-  startLibraryOrganizationSuccess,
+  startEntireLibraryOrganization,
+  startEntireLibraryOrganizationFailure,
+  startEntireLibraryOrganizationSuccess,
   startLibraryOrganization,
-  startLibraryOrganizationFailure
+  startLibraryOrganizationFailure,
+  startLibraryOrganizationSuccess
 } from '@app/library/actions/organize-library.actions';
 
 describe('OrganizeLibrary Reducer', () => {
@@ -73,6 +76,45 @@ describe('OrganizeLibrary Reducer', () => {
         state = reducer(
           { ...state, sending: true },
           startLibraryOrganizationFailure()
+        );
+      });
+
+      it('clears the sending flag', () => {
+        expect(state.sending).toBeFalse();
+      });
+    });
+  });
+
+  describe('starting organization the entire library', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, sending: false },
+        startEntireLibraryOrganization()
+      );
+    });
+
+    it('sets the sending flag', () => {
+      expect(state.sending).toBeTrue();
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, sending: true },
+          startEntireLibraryOrganizationSuccess()
+        );
+      });
+
+      it('clears the sending flag', () => {
+        expect(state.sending).toBeFalse();
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, sending: true },
+          startEntireLibraryOrganizationFailure()
         );
       });
 

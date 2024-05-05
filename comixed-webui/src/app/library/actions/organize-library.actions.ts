@@ -29,3 +29,15 @@ export const startLibraryOrganizationSuccess = createAction(
 export const startLibraryOrganizationFailure = createAction(
   '[Organize Library] Failed to start the organization process'
 );
+
+export const startEntireLibraryOrganization = createAction(
+  '[Organize Library] Organize every comic in the library'
+);
+
+export const startEntireLibraryOrganizationSuccess = createAction(
+  '[Organize Library] Successfully started organizing every comic in the library'
+);
+
+export const startEntireLibraryOrganizationFailure = createAction(
+  '[Organize Library] Failed to organize every comic in the library'
+);

@@ -278,6 +278,42 @@ public class LibraryController {
   }
 
   /**
+   * Initiates the library organization process for all comics.
+   *
+   * @param request the request body
+   * @throws Exception if an error occurs
+   */
+  @PostMapping(
+      value = "/api/library/organize/all",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.library.organize")
+  public void organizeEntireLibrary(@RequestBody() OrganizeLibraryRequest request)
+      throws Exception {
+    log.info("Preapring to organize entire library");
+    final boolean deleteRemovedComicFiles = request.getDeletePhysicalFiles();
+    log.trace("Loading target directory");
+    final String targetDirectory =
+        this.configurationService.getOptionValue(ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY);
+    log.trace("Loading renaming rule");
+    final String renamingRule =
+        this.configurationService.getOptionValue(
+            ConfigurationService.CFG_LIBRARY_COMIC_RENAMING_RULE);
+    this.libraryService.prepareForOrganization(targetDirectory);
+    log.trace("Launch organization batch process");
+    this.jobLauncher.run(
+        this.organizeLibraryJob,
+        new JobParametersBuilder()
+            .addLong(JOB_ORGANIZATION_TIME_STARTED, System.currentTimeMillis())
+            .addString(
+                JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES,
+                String.valueOf(deleteRemovedComicFiles))
+            .addString(JOB_ORGANIZATION_TARGET_DIRECTORY, targetDirectory)
+            .addString(JOB_ORGANIZATION_RENAMING_RULE, renamingRule)
+            .toJobParameters());
+  }
+
+  /**
    * Clears the library image cache.
    *
    * @return the response

@@ -20,6 +20,7 @@ package org.comixedproject.batch.comicbooks;
 
 import java.io.File;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.batch.comicbooks.listeners.OrganizeLibraryListener;
 import org.comixedproject.batch.comicbooks.processors.DeleteComicBookProcessor;
 import org.comixedproject.batch.comicbooks.processors.DeleteEmptyDirectoriesProcessor;
 import org.comixedproject.batch.comicbooks.processors.MoveComicProcessor;
@@ -73,11 +74,13 @@ public class LibraryOrganizationConfiguration {
   @Qualifier("organizeLibraryJob")
   public Job organizeLibraryJob(
       final JobRepository jobRepository,
+      final OrganizeLibraryListener listener,
       @Qualifier("deleteComicBookStep") final Step deleteComicBookStep,
       @Qualifier("moveComicStep") final Step moveComicStep,
       @Qualifier("deleteEmptyDirectoriesStep") final Step deleteEmptyDirectoriesStep) {
     return new JobBuilder("organizeLibraryJob", jobRepository)
         .incrementer(new RunIdIncrementer())
+        .listener(listener)
         .start(deleteComicBookStep)
         .next(moveComicStep)
         .next(deleteEmptyDirectoriesStep)
