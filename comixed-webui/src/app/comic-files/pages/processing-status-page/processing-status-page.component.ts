@@ -16,40 +16,64 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { Router } from '@angular/router';
 import { selectProcessingComicBooksState } from '@app/selectors/import-comic-books.selectors';
 import { ProcessingComicStatus } from '@app/reducers/import-comic-books.reducer';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
 
 @Component({
   selector: 'cx-processing-status-page',
   templateUrl: './processing-status-page.component.html',
   styleUrls: ['./processing-status-page.component.scss']
 })
-export class ProcessingStatusPageComponent implements OnDestroy {
+export class ProcessingStatusPageComponent implements AfterViewInit, OnDestroy {
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  dataSource = new MatTableDataSource<ProcessingComicStatus>([]);
+
+  readonly displayedColumns = [
+    'batch-name',
+    'step-name',
+    'processed',
+    'total',
+    'progress'
+  ];
+
   comicImportStateSubscription: Subscription;
-  importing = false;
-  batches: ProcessingComicStatus[];
 
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
-    private router: Router
+    public queryParameterService: QueryParameterService
   ) {
     this.logger.debug('Subscribing to comic import state updates');
     this.comicImportStateSubscription = this.store
       .select(selectProcessingComicBooksState)
-      .subscribe(state => {
-        this.importing = state.active;
-        this.batches = state.batches;
-      });
+      .subscribe(state => (this.dataSource.data = state.batches));
   }
 
   ngOnDestroy(): void {
     this.logger.debug('Unsubscribing from comic import state updates');
     this.comicImportStateSubscription.unsubscribe();
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
+      switch (sortHeaderId) {
+        case 'batch-name':
+          return data.batchName;
+        case 'progress':
+          return data.progress;
+      }
+    };
   }
 }

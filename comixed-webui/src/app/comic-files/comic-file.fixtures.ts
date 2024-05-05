@@ -17,6 +17,7 @@
  */
 
 import { ComicFile } from './models/comic-file';
+import { ProcessingComicStatus } from '@app/reducers/import-comic-books.reducer';
 
 export const ROOT_DIRECTORY = '/home/comixedadmin/Documents/comics';
 
@@ -46,4 +47,13 @@ export const COMIC_FILE_4: ComicFile = {
   filename: '/Users/comixed/Documents/comics/that-comic-file.cbz',
   baseFilename: 'that-comic-file',
   size: 56213
+};
+
+export const PROCESSING_COMIC_STATUS_1: ProcessingComicStatus = {
+  batchName: 'the-batch-name',
+  stepName: 'the-step-name',
+  startTime: new Date().getTime(),
+  total: 1000,
+  processed: 500,
+  progress: 500 / 1000
 };

@@ -25,11 +25,12 @@ import {
 export const IMPORT_COMIC_BOOKS_FEATURE_KEY = 'import_comic_books_state';
 
 export interface ProcessingComicStatus {
-  started: number;
+  startTime: number;
   batchName: string;
   stepName: string;
   total: number;
   processed: number;
+  progress: number;
 }
 
 export interface ImportComicBooksState {
@@ -65,7 +66,7 @@ export const reducer = createReducer(
     ...state,
     adding: {
       active: action.active,
-      started: action.started,
+      started: action.startTime,
       total: action.total,
       processed: action.processed
     }
@@ -77,13 +78,13 @@ export const reducer = createReducer(
     if (action.active) {
       batches = batches.concat({
         batchName: action.batchName,
-        started: action.started,
+        startTime: action.startTime,
         stepName: action.stepName,
         total: action.total,
-        processed: action.processed
+        processed: action.processed,
+        progress: action.processed / action.total
       });
     }
-    batches = batches.sort((left, right) => left.started - right.started);
     return {
       ...state,
       processing: {

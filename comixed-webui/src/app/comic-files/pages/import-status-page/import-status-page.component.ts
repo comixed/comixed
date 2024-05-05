@@ -16,9 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { Title } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
@@ -31,8 +30,10 @@ import { selectAddingComicBooksState } from '@app/selectors/import-comic-books.s
   templateUrl: './import-status-page.component.html',
   styleUrls: ['./import-status-page.component.scss']
 })
-export class ImportStatusPageComponent implements OnDestroy {
+export class ImportStatusPageComponent implements OnInit, OnDestroy {
+  langChangeSubscription: Subscription;
   comicImportStateSubscription: Subscription;
+
   importing = false;
   started = 0;
   total = 0;
@@ -41,12 +42,15 @@ export class ImportStatusPageComponent implements OnDestroy {
 
   constructor(
     private logger: LoggerService,
-    private title: Title,
     private store: Store<any>,
     private router: Router,
     private translateService: TranslateService,
     private titleService: TitleService
   ) {
+    this.logger.debug('Subscribing to language change updates');
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
     this.logger.debug('Subscribing to comic import state updates');
     this.comicImportStateSubscription = this.store
       .select(selectAddingComicBooksState)
@@ -66,8 +70,20 @@ export class ImportStatusPageComponent implements OnDestroy {
       });
   }
 
+  ngOnInit(): void {
+    this.loadTranslations();
+  }
+
   ngOnDestroy(): void {
+    this.logger.debug('Unsubscribing from language updates');
+    this.langChangeSubscription.unsubscribe();
     this.logger.debug('Unsubscribing from comic import state updates');
     this.comicImportStateSubscription.unsubscribe();
+  }
+
+  private loadTranslations() {
+    this.titleService.setTitle(
+      this.translateService.instant('comic-files.tab-title')
+    );
   }
 }

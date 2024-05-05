@@ -19,7 +19,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ImportStatusPageComponent } from './import-status-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -28,6 +28,7 @@ import {
   initialState as initialProcessComicsState
 } from '@app/reducers/import-comic-books.reducer';
 import { Router } from '@angular/router';
+import { TitleService } from '@app/core/services/title.service';
 
 describe('ImportStatusPageComponent', () => {
   const initialState = {
@@ -39,6 +40,8 @@ describe('ImportStatusPageComponent', () => {
   let router: Router;
   let navigateByUrlSpy: jasmine.Spy;
   let store: MockStore;
+  let translateService: TranslateService;
+  let titleService: TitleService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -57,6 +60,9 @@ describe('ImportStatusPageComponent', () => {
     router = TestBed.inject(Router);
     navigateByUrlSpy = spyOn(router, 'navigateByUrl');
     store = TestBed.inject(MockStore);
+    translateService = TestBed.inject(TranslateService);
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
     fixture.detectChanges();
   });
 
@@ -124,6 +130,16 @@ describe('ImportStatusPageComponent', () => {
 
     it('sets the progress value', () => {
       expect(component.progress).toEqual((PROCESSED / TOTAL) * 100);
+    });
+  });
+
+  describe('when the language changes', () => {
+    beforeEach(() => {
+      translateService.use('fr');
+    });
+
+    it('updates the table title', () => {
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
 });

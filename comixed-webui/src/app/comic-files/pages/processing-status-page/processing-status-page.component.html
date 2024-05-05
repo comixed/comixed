@@ -1,46 +1,97 @@
 <h2>{{ "processing-status-page.page-title" | translate }}</h2>
-<div *ngIf="importing" class="cx-width-100">
-  <div
-    *ngFor="let batch of batches"
-    class="
-      cx-width-75
-      cx-margin-auto
-      cx-border-primary-5
-      cx-padding-50
-      cx-margin-bottom-5
-    "
-  >
-    <h3>{{ batch.batchName }}</h3>
-    <h4>
-      {{ "comic-files.processing-comics." + batch.stepName | translate }}
-    </h4>
-    <h4>
-      {{
-        "comic-files.processing-comics.subtitle"
-          | translate
-            : {
-                total: batch.total,
-                processed: batch.processed,
-                percentage:
-                  (batch.processed / batch.total) * 100 | number: "1.0-2"
-              }
-      }}
-    </h4>
-    <mat-progress-bar
-      mode="determinate"
-      [value]="(batch.processed / batch.total) * 100"
-    ></mat-progress-bar>
-  </div>
-</div>
 
-<br />
+<mat-paginator
+  class="cx-height-100"
+  showFirstLastButtons="true"
+  [pageIndex]="queryParameterService.pageIndex$ | async"
+  [pageSize]="queryParameterService.pageSize$ | async"
+  [pageSizeOptions]="queryParameterService.pageSizeOptions"
+  (page)="
+    queryParameterService.onPageChange(
+      $event.pageSize,
+      $event.pageIndex,
+      $event.previousPageIndex
+    )
+  "
+></mat-paginator>
 
-<div class="cx-width-75 cx-margin-auto cx-border-primary-1 cx-padding-50">
-  <h4>{{ "processing-status-page.text.note-title" | translate }}</h4>
-  <p>
-    {{ "processing-status-page.text.processing-description" | translate }}
-  </p>
-  <p>
-    {{ "processing-status-page.text.how-to-start-processing" | translate }}
-  </p>
-</div>
+<mat-table
+  [dataSource]="dataSource"
+  matSort
+  [matSortActive]="queryParameterService.sortBy$ | async"
+  [matSortDirection]="queryParameterService.sortDirection$ | async"
+  (matSortChange)="
+    queryParameterService.onSortChange($event.active, $event.direction)
+  "
+>
+  <ng-container matColumnDef="batch-name">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>
+      {{ "comic-files.processing-comics.header.batch-name" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry" [matTooltip]="entry.batchName">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.batchName }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="step-name">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "comic-files.processing-comics.header.step-name" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span
+        class="cx-width-100 cx-text-nowrap"
+        [matTooltip]="
+          'comic-files.processing-comics.' + entry.stepName | translate
+        "
+      >
+        {{ "comic-files.processing-comics." + entry.stepName | translate }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="processed">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "comic-files.processing-comics.header.processed" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.processed }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="total">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "comic-files.processing-comics.header.total" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.total }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="progress">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>
+      {{ "comic-files.processing-comics.header.progress" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        <mat-progress-bar
+          mode="determinate"
+          [value]="entry.progress * 100.0"
+        ></mat-progress-bar>
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  <tr class="mat-row" *matNoDataRow>
+    <td class="mat-cell" colspan="4">
+      {{ "comic-files.processing-comics.text.no-records-found" | translate }}
+    </td>
+  </tr>
+</mat-table>
