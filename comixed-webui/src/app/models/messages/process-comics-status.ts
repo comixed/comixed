@@ -17,7 +17,7 @@
  */
 
 export interface ProcessComicsStatus {
-  started: number;
+  startTime: number;
   batchName: string;
   stepName: string;
   total: number;

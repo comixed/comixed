@@ -23,40 +23,46 @@ import {
   IMPORT_COMIC_BOOKS_FEATURE_KEY,
   initialState as initialImportComicBooksComicsState
 } from '@app/reducers/import-comic-books.reducer';
-import { Router } from '@angular/router';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { RouterTestingModule } from '@angular/router/testing';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { PROCESSING_COMIC_STATUS_1 } from '@app/comic-files/comic-file.fixtures';
 
 describe('ProcessingStatusPageComponent', () => {
+  const STATUS = PROCESSING_COMIC_STATUS_1;
   const initialState = {
     [IMPORT_COMIC_BOOKS_FEATURE_KEY]: initialImportComicBooksComicsState
   };
 
   let component: ProcessingStatusPageComponent;
   let fixture: ComponentFixture<ProcessingStatusPageComponent>;
-  let router: Router;
-  let navigateByUrlSpy: jasmine.Spy;
   let store: MockStore;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ProcessingStatusPageComponent],
       imports: [
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+        NoopAnimationsModule,
+        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
-        MatProgressBarModule
+        MatProgressBarModule,
+        MatTableModule,
+        MatSortModule,
+        MatPaginatorModule
       ],
-      providers: [provideMockStore({ initialState })]
+      providers: [provideMockStore({ initialState }), QueryParameterService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProcessingStatusPageComponent);
     component = fixture.componentInstance;
-    router = TestBed.inject(Router);
-    navigateByUrlSpy = spyOn(router, 'navigateByUrl');
     store = TestBed.inject(MockStore);
     fixture.detectChanges();
   });
@@ -65,45 +71,17 @@ describe('ProcessingStatusPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('when adding comic books is in process', () => {
-    const BATCH_NAME = 'The Batch Name';
-    const STARTED = Math.abs(Math.floor(Math.random() * 1000));
-    const PROCESSED = Math.abs(Math.floor(Math.random() * 1000));
-    const TOTAL = PROCESSED * 4;
-
-    beforeEach(() => {
-      navigateByUrlSpy.calls.reset();
-      component.batches = [];
-
-      store.setState({
-        ...initialState,
-        [IMPORT_COMIC_BOOKS_FEATURE_KEY]: {
-          ...initialImportComicBooksComicsState,
-          processing: {
-            active: true,
-            batches: [
-              {
-                batchName: BATCH_NAME,
-                started: STARTED,
-                total: TOTAL,
-                processed: PROCESSED
-              }
-            ]
-          }
-        }
-      });
+  describe('sorting', () => {
+    it('can sort by batch name', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(STATUS, 'batch-name')
+      ).toEqual(STATUS.batchName);
     });
 
-    it('sets the started value', () => {
-      expect(component.batches[0].started).toEqual(STARTED);
-    });
-
-    it('sets the total value', () => {
-      expect(component.batches[0].total).toEqual(TOTAL);
-    });
-
-    it('sets the processed value', () => {
-      expect(component.batches[0].processed).toEqual(PROCESSED);
+    it('can sort by progress', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(STATUS, 'progress')
+      ).toEqual(STATUS.progress);
     });
   });
 });

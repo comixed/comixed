@@ -48,10 +48,21 @@
     },
     "processing-comics": {
       "create-insert-step": "Creating Comic Records",
+      "header": {
+        "batch-name": "Batch Name",
+        "processed": "Processed",
+        "progress": "Progress",
+        "started": "Started",
+        "step-name": "Current Step",
+        "total": "Total"
+      },
       "job-completed-step": "Processing Completed",
       "job-setup-step": "Processing Setting Up",
       "load-file-contents-step": "Loading File Contents",
-      "subtitle": "Processed {processed} Of {total} Comics ({percentage}%)"
+      "subtitle": "Processed {processed} Of {total} Comics ({percentage}%)",
+      "text": {
+        "no-records-found": "No current batch jobs"
+      }
     },
     "tab-title": "Import Comics",
     "text": {

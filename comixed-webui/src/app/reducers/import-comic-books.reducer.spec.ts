@@ -36,6 +36,7 @@ describe('ImportComicBooks Reducer', () => {
   const PROCESSING_STEP_NAME = 'step-name';
   const PROCESSING_TOTAL = 73;
   const PROCESSING_PROCESSED = 37;
+  const PROCESSING_PROGRESS = PROCESSING_PROCESSED / PROCESSING_TOTAL;
 
   let state: ImportComicBooksState;
 
@@ -89,7 +90,7 @@ describe('ImportComicBooks Reducer', () => {
         },
         addComicBooksUpdate({
           active: ADDING_ACTIVE,
-          started: ADDING_STARTED,
+          startTime: ADDING_STARTED,
           total: ADDING_TOTAL,
           processed: ADDING_PROCESSED
         })
@@ -125,18 +126,19 @@ describe('ImportComicBooks Reducer', () => {
             active: false,
             batches: [
               {
-                started: PROCESSING_STARTED,
+                startTime: PROCESSING_STARTED,
                 batchName: PROCESSING_STEP_BATCH_NAME,
                 stepName: PROCESSING_STEP_NAME,
                 total: PROCESSING_TOTAL,
-                processed: PROCESSING_PROCESSED
+                processed: PROCESSING_PROCESSED,
+                progress: PROCESSING_PROGRESS
               }
             ]
           }
         },
         processComicBooksUpdate({
           active: true,
-          started: PROCESSING_STARTED + 1000,
+          startTime: PROCESSING_STARTED + 1000,
           batchName: NEW_BATCH_NAME,
           stepName: PROCESSING_STEP_NAME,
           total: PROCESSING_TOTAL,
@@ -154,7 +156,7 @@ describe('ImportComicBooks Reducer', () => {
     });
 
     it('sets the started date', () => {
-      expect(state.processing.batches[0].started).toEqual(PROCESSING_STARTED);
+      expect(state.processing.batches[0].startTime).toEqual(PROCESSING_STARTED);
     });
 
     it('sets the step name', () => {
@@ -188,7 +190,7 @@ describe('ImportComicBooks Reducer', () => {
         },
         processComicBooksUpdate({
           active: false,
-          started: PROCESSING_STARTED,
+          startTime: PROCESSING_STARTED,
           batchName: PROCESSING_STEP_BATCH_NAME,
           stepName: PROCESSING_STEP_NAME,
           total: PROCESSING_TOTAL,

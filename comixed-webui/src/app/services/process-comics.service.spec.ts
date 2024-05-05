@@ -84,7 +84,7 @@ describe('ProcessComicsService', () => {
       'scan type',
       {},
       JSON.stringify({
-        started: new Date().getTime(),
+        startTime: new Date().getTime(),
         stepName: 'step-name',
         total: ADD_COUNT,
         processed: PROCESSING_COUNT

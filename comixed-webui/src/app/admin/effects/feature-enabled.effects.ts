@@ -39,7 +39,6 @@ export class FeatureEnabledEffects {
       tap(action =>
         this.logger.debug('Getting feature enabled state:', action)
       ),
-      tap(action => console.log('*** Getting feature enabled state:', action)),
       switchMap(action =>
         this.configurationService.getFeatureEnabled({ name: action.name }).pipe(
           tap(response => this.logger.debug('Response received:', response)),

@@ -63,7 +63,7 @@ export class ProcessComicsService {
                   this.store.dispatch(
                     addComicBooksUpdate({
                       active: update.active,
-                      started: update.started,
+                      startTime: update.startTime,
                       total: update.total,
                       processed: update.processed
                     })
@@ -84,7 +84,7 @@ export class ProcessComicsService {
                   this.store.dispatch(
                     processComicBooksUpdate({
                       active: update.active,
-                      started: update.started,
+                      startTime: update.startTime,
                       batchName: update.batchName,
                       stepName: update.stepName,
                       total: update.total,
