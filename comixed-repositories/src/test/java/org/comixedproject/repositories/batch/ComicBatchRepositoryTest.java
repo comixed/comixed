@@ -22,7 +22,6 @@ import static org.junit.Assert.*;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
-import java.util.List;
 import org.comixedproject.model.batch.ComicBatch;
 import org.comixedproject.repositories.RepositoryContext;
 import org.junit.Test;
@@ -51,22 +50,6 @@ public class ComicBatchRepositoryTest {
   @Autowired private ComicBatchRepository repository;
 
   @Test
-  public void testGetIncompleteBatchByNameNotFound() {
-    final ComicBatch result = repository.getIncompleteBatchByName(TEST_BATCH_NAME.substring(1));
-
-    assertNull(result);
-  }
-
-  @Test
-  public void testGetIncompleteBatchByName() {
-    final ComicBatch result = repository.getIncompleteBatchByName(TEST_BATCH_NAME);
-
-    assertNotNull(result);
-    assertEquals(TEST_BATCH_NAME, result.getName());
-    assertFalse(result.isCompleted());
-  }
-
-  @Test
   public void testGetByNameNotFound() {
     final ComicBatch result = repository.getByName(TEST_BATCH_NAME.substring(1));
 
@@ -79,14 +62,5 @@ public class ComicBatchRepositoryTest {
 
     assertNotNull(result);
     assertEquals(TEST_BATCH_NAME, result.getName());
-  }
-
-  @Test
-  public void testLoadCompletedBatches() {
-    final List<ComicBatch> result = repository.loadCompletedBatches();
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertTrue(result.stream().allMatch(ComicBatch::isCompleted));
   }
 }

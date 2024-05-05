@@ -55,7 +55,7 @@
 <div *ngIf="restartable" class="batch-process-detail-row">
   {{ "batch-processes.text.can-be-restarted" | translate }}
 </div>
-<div *ngIf="restartable" class="batch-process-detail-row">
+<div *ngIf="restartable && false" class="batch-process-detail-row">
   <button
     id="restart-batch-process"
     mat-raised-button
@@ -68,7 +68,9 @@
   </button>
 </div>
 
-<div *ngIf="containsErrors" class="cx-width-90 cx-padding-50">
+<div *ngIf="detail.errors?.length > 0" class="cx-width-100 cx-border-primary-1">
   <h3>{{ "batch-processes.text.error-header" | translate }}</h3>
+  <pre class="cx-padding-5">
   {{ detail.errors }}
+  </pre>
 </div>

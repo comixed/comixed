@@ -86,7 +86,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.exitCode }}
+        {{ entry.exitStatus }}
       </span>
     </mat-cell>
   </ng-container>
@@ -98,11 +98,8 @@
       }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <span
-        class="cx-width-100 cx-text-nowrap"
-        [matTooltip]="entry.exitDescription"
-      >
-        {{ entry.exitDescription }}
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.errors }}
       </span>
     </mat-cell>
   </ng-container>

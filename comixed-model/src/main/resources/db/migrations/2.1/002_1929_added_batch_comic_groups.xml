@@ -22,10 +22,6 @@
         <constraints nullable="false" unique="true"/>
       </column>
 
-      <column name="completed" type="bool">
-        <constraints nullable="false"/>
-      </column>
-
       <column name="created_on" type="datetime">
         <constraints nullable="false"/>
       </column>

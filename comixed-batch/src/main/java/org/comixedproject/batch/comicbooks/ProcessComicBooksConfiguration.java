@@ -63,13 +63,11 @@ public class ProcessComicBooksConfiguration {
   public Job processComicBooksJob(
       final JobRepository jobRepository,
       final ProcessComicBooksJobListener jobListener,
-      @Qualifier("loadFileContentsStep") final Step loadFileContentsStep,
-      @Qualifier("markComicBatchCompletedStep") final Step markComicBatchCompletedStep) {
+      @Qualifier("loadFileContentsStep") final Step loadFileContentsStep) {
     return new JobBuilder("processComicBooksJob", jobRepository)
         .incrementer(new RunIdIncrementer())
         .listener(jobListener)
         .start(loadFileContentsStep)
-        .next(markComicBatchCompletedStep)
         .build();
   }
 

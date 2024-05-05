@@ -25,7 +25,6 @@ import java.util.List;
 import org.comixedproject.model.batch.ComicBatch;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.repositories.batch.ComicBatchRepository;
-import org.comixedproject.service.comicbooks.ComicBookService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,20 +37,19 @@ public class ComicBatchServiceTest {
 
   @InjectMocks private ComicBatchService service;
   @Mock private ComicBatchRepository comicBatchRepository;
-  @Mock private ComicBookService comicBookService;
   @Mock private ComicBatch savedComicBatch;
   @Mock private ComicBatch incomingComicBatch;
 
   @Captor private ArgumentCaptor<ComicBatch> comicBatchArgumentCaptor;
 
   private List<ComicBook> comicBookList = new ArrayList<>();
-  private List<ComicBatch> comicBatchList = new ArrayList<>();
 
   @Before
   public void setUp() {
     for (int index = 0; index < 25; index++) comicBookList.add(Mockito.mock(ComicBook.class));
     Mockito.when(comicBatchRepository.save(comicBatchArgumentCaptor.capture()))
         .thenReturn(savedComicBatch);
+    Mockito.when(comicBatchRepository.getByName(Mockito.anyString())).thenReturn(savedComicBatch);
   }
 
   @Test
@@ -86,19 +84,6 @@ public class ComicBatchServiceTest {
   }
 
   @Test
-  public void testGetIncompleteByNameNotFound() {
-    Mockito.when(comicBatchRepository.getIncompleteBatchByName(Mockito.anyString()))
-        .thenReturn(null);
-
-    final ComicBatch result = service.getIncompleteBatchByName(TEST_BATCH_NAME);
-
-    assertNull(result);
-
-    Mockito.verify(comicBatchRepository, Mockito.times(1))
-        .getIncompleteBatchByName(TEST_BATCH_NAME);
-  }
-
-  @Test
   public void testGetByName() {
     Mockito.when(comicBatchRepository.getByName(Mockito.anyString())).thenReturn(savedComicBatch);
 
@@ -111,14 +96,20 @@ public class ComicBatchServiceTest {
   }
 
   @Test
-  public void testLoadCompletedBatches() {
-    Mockito.when(comicBatchRepository.loadCompletedBatches()).thenReturn(comicBatchList);
+  public void testDeleteByNameNotFound() {
+    Mockito.when(comicBatchRepository.getByName(Mockito.anyString())).thenReturn(null);
 
-    final List<ComicBatch> result = service.loadCompletedBatches();
+    service.deleteBatchByName(TEST_BATCH_NAME);
 
-    assertNotNull(result);
-    assertSame(comicBatchList, result);
+    Mockito.verify(comicBatchRepository, Mockito.times(1)).getByName(TEST_BATCH_NAME);
+    Mockito.verify(comicBatchRepository, Mockito.never()).delete(Mockito.any());
+  }
 
-    Mockito.verify(comicBatchRepository, Mockito.times(1)).loadCompletedBatches();
+  @Test
+  public void testDeleteByName() {
+    service.deleteBatchByName(TEST_BATCH_NAME);
+
+    Mockito.verify(comicBatchRepository, Mockito.times(1)).getByName(TEST_BATCH_NAME);
+    Mockito.verify(comicBatchRepository, Mockito.times(1)).delete(savedComicBatch);
   }
 }
