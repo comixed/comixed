@@ -23,6 +23,8 @@ import { User } from '@app/user/models/user';
 import { selectComicBookReadCount } from '@app/comic-books/selectors/last-read-list.selectors';
 import { selectLibraryState } from '@app/library/selectors/library.selectors';
 import { selectComicBookSelectionState } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import { Subscription } from 'rxjs';
+import { selectBatchProcessList } from '@app/admin/selectors/batch-processes.selectors';
 
 @Component({
   selector: 'cx-footer',
@@ -30,25 +32,52 @@ import { selectComicBookSelectionState } from '@app/comic-books/selectors/comic-
   styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent {
-  @Input() user: User;
-
+  stateSubscription: Subscription;
+  readSubscription: Subscription;
+  selectionsSubscription: Subscription;
+  jobsSubscription: Subscription;
   unscrapedCount = 0;
   comicCount = 0;
   readCount = 0;
   selectedCount = 0;
   deletedCount = 0;
+  batchJobs = 0;
 
-  constructor(private logger: LoggerModule, private store: Store<any>) {
-    this.store.select(selectLibraryState).subscribe(state => {
-      this.comicCount = state.totalComics;
-      this.unscrapedCount = state.unscrapedComics;
-      this.deletedCount = state.deletedComics;
-    });
-    this.store
-      .select(selectComicBookReadCount)
-      .subscribe(readCount => (this.readCount = readCount));
-    this.store
-      .select(selectComicBookSelectionState)
-      .subscribe(state => (this.selectedCount = state.ids.length));
+  constructor(private logger: LoggerModule, private store: Store<any>) {}
+
+  private _user: User = null;
+
+  get user(): User {
+    return this._user;
+  }
+
+  @Input() set user(user: User) {
+    this._user = user;
+
+    if (!!this._user) {
+      this.stateSubscription = this.store
+        .select(selectLibraryState)
+        .subscribe(state => {
+          this.comicCount = state.totalComics;
+          this.unscrapedCount = state.unscrapedComics;
+          this.deletedCount = state.deletedComics;
+        });
+      this.readSubscription = this.store
+        .select(selectComicBookReadCount)
+        .subscribe(readCount => (this.readCount = readCount));
+      this.selectionsSubscription = this.store
+        .select(selectComicBookSelectionState)
+        .subscribe(state => (this.selectedCount = state.ids.length));
+      this.jobsSubscription = this.store
+        .select(selectBatchProcessList)
+        .subscribe(
+          list => (this.batchJobs = list.filter(job => job.running).length)
+        );
+    } else {
+      this.stateSubscription?.unsubscribe();
+      this.readSubscription?.unsubscribe();
+      this.selectionsSubscription?.unsubscribe();
+      this.jobsSubscription?.unsubscribe();
+    }
   }
 }
