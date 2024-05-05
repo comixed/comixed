@@ -76,17 +76,6 @@ public class ComicBatchService {
   }
 
   /**
-   * Returns the instance with the given name.
-   *
-   * @param batchName the batch name
-   * @return the batch
-   */
-  public ComicBatch getIncompleteBatchByName(final String batchName) {
-    log.debug("Loading comic batch: {}", batchName);
-    return this.comicBatchRepository.getIncompleteBatchByName(batchName);
-  }
-
-  /**
    * Deletes a comic batch entry.
    *
    * @param comicBatch the batch
@@ -109,13 +98,16 @@ public class ComicBatchService {
   }
 
   /**
-   * Returns the list of all batches that are marked as completed.
+   * Deletes the comic batch by name.
    *
-   * @return the batch list
+   * @param name the batch name
    */
   @Transactional
-  public List<ComicBatch> loadCompletedBatches() {
-    log.debug("Loading completed comic batches");
-    return this.comicBatchRepository.loadCompletedBatches();
+  public void deleteBatchByName(final String name) {
+    final ComicBatch comicBatch = this.comicBatchRepository.getByName(name);
+    if (comicBatch != null) {
+      log.debug("Deleting comic batch: {}", name);
+      this.comicBatchRepository.delete(comicBatch);
+    }
   }
 }

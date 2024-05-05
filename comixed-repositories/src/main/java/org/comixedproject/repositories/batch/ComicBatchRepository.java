@@ -18,7 +18,6 @@
 
 package org.comixedproject.repositories.batch;
 
-import java.util.List;
 import org.comixedproject.model.batch.ComicBatch;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -34,15 +33,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ComicBatchRepository extends JpaRepository<ComicBatch, Long> {
   /**
-   * Returns the record with the given name if it's incomplete. Otherwise, it returns null.
-   *
-   * @param batchName the batch name
-   * @return the record
-   */
-  @Query("SELECT b FROM ComicBatch b WHERE b.name = :batchName AND b.completed IS FALSE")
-  ComicBatch getIncompleteBatchByName(@Param("batchName") String batchName);
-
-  /**
    * Returns the record with the given name.
    *
    * @param batchName the batch name
@@ -50,12 +40,4 @@ public interface ComicBatchRepository extends JpaRepository<ComicBatch, Long> {
    */
   @Query("SELECT b FROM ComicBatch b WHERE b.name = :batchName")
   ComicBatch getByName(@Param("batchName") String batchName);
-
-  /**
-   * Returns all records marked as completed.
-   *
-   * @return the batch list
-   */
-  @Query("SELECT b FROM ComicBatch b WHERE b.completed IS TRUE")
-  List<ComicBatch> loadCompletedBatches();
 }

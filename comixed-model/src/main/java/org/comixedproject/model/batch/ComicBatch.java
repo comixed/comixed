@@ -52,11 +52,6 @@ public class ComicBatch {
   @Getter
   private List<ComicBatchEntry> entries = new ArrayList<>();
 
-  @Column(name = "completed", insertable = true, updatable = true)
-  @Getter
-  @Setter
-  private boolean completed = false;
-
   @Column(name = "created_on", nullable = false, insertable = true, updatable = false)
   @Getter
   private Date createdOn = new Date();

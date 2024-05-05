@@ -46,7 +46,6 @@ export class BatchProcessDetailDialogComponent implements OnDestroy {
   detailUpdateSubscription: MessagingSubscription;
   detail: BatchProcessDetail;
   restartable = false;
-  containsErrors = false;
   messagingStarted = false;
 
   constructor(
