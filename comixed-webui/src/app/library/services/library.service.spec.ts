@@ -40,6 +40,7 @@ import {
   RESCAN_SELECTED_COMIC_BOOKS_URL,
   RESCAN_SINGLE_COMIC_BOOK_URL,
   SET_READ_STATE_URL,
+  START_ENTIRE_LIBRARY_ORGANIZATION_URL,
   START_LIBRARY_ORGANIZATION_URL,
   UPDATE_SELECTED_COMIC_BOOKS_METADATA_URL,
   UPDATE_SINGLE_COMIC_BOOK_METADATA_URL
@@ -150,6 +151,20 @@ describe('LibraryService', () => {
       .subscribe(response => expect(response).toEqual(COMIC_DETAILS));
 
     const req = httpMock.expectOne(interpolate(START_LIBRARY_ORGANIZATION_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      deletePhysicalFiles: false
+    } as OrganizeLibraryRequest);
+  });
+
+  it('can start library organization', () => {
+    service
+      .startEntireLibraryOrganization()
+      .subscribe(response => expect(response).toEqual(COMIC_DETAILS));
+
+    const req = httpMock.expectOne(
+      interpolate(START_ENTIRE_LIBRARY_ORGANIZATION_URL)
+    );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
       deletePhysicalFiles: false

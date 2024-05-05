@@ -18,9 +18,12 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  startLibraryOrganizationSuccess,
+  startEntireLibraryOrganization,
+  startEntireLibraryOrganizationFailure,
+  startEntireLibraryOrganizationSuccess,
   startLibraryOrganization,
-  startLibraryOrganizationFailure
+  startLibraryOrganizationFailure,
+  startLibraryOrganizationSuccess
 } from '@app/library/actions/organize-library.actions';
 
 export const ORGANIZE_LIBRARY_FEATURE_KEY = 'organize_library_state';
@@ -38,7 +41,16 @@ export const reducer = createReducer(
 
   on(startLibraryOrganization, state => ({ ...state, sending: true })),
   on(startLibraryOrganizationSuccess, state => ({ ...state, sending: false })),
-  on(startLibraryOrganizationFailure, state => ({ ...state, sending: false }))
+  on(startLibraryOrganizationFailure, state => ({ ...state, sending: false })),
+  on(startEntireLibraryOrganization, state => ({ ...state, sending: true })),
+  on(startEntireLibraryOrganizationSuccess, state => ({
+    ...state,
+    sending: false
+  })),
+  on(startEntireLibraryOrganizationFailure, state => ({
+    ...state,
+    sending: false
+  }))
 );
 
 export const organizeLibraryFeature = createFeature({

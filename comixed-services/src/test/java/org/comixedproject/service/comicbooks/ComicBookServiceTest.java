@@ -18,11 +18,7 @@
 
 package org.comixedproject.service.comicbooks;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertNull;
-import static junit.framework.TestCase.assertSame;
-import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -142,6 +138,7 @@ public class ComicBookServiceTest {
 
   @Before
   public void setUp() throws ComiXedUserException {
+    Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_BOOK_ID);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(incomingComicBook.getComicDetail()).thenReturn(incomingComicDetail);
 
@@ -1297,5 +1294,57 @@ public class ComicBookServiceTest {
     Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
     Mockito.verify(comicStateHandler, Mockito.times(1))
         .fireEvent(comicBook, ComicEvent.rescanComic);
+  }
+
+  @Test
+  public void testPrepareForOrganization() {
+    service.prepareForOrganization(idList);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).markForOrganizationById(idList);
+  }
+
+  @Test
+  public void testPrepareForRecreation() {
+    service.prepareForRecreation(idList);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).markForRecreationById(idList);
+  }
+
+  @Test
+  public void testLoadByComicDetailId() {
+    Mockito.when(comicBookRepository.loadByComicDetailId(Mockito.anyList()))
+        .thenReturn(comicBookList);
+
+    final List<ComicBook> result = service.loadByComicDetailId(comicDetailList);
+
+    assertNotNull(result);
+    assertSame(comicBookList, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).loadByComicDetailId(comicDetailList);
+  }
+
+  @Test
+  public void testGetComicBooksForProcessing() {
+    Mockito.when(comicBookRepository.getComicBooksForProcessing()).thenReturn(comicBookList);
+
+    final List<ComicBook> result = service.getComicBooksForProcessing();
+
+    assertNotNull(result);
+    assertSame(comicBookList, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getComicBooksForProcessing();
+  }
+
+  @Test
+  public void testGetAllIds() {
+    comicBookList.add(comicBook);
+    Mockito.when(comicBookRepository.findAll()).thenReturn(comicBookList);
+
+    final List<Long> result = service.getAllIds();
+
+    assertNotNull(result);
+    assertTrue(result.contains(TEST_COMIC_BOOK_ID));
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findAll();
   }
 }

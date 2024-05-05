@@ -31,6 +31,7 @@ import {
   RESCAN_SELECTED_COMIC_BOOKS_URL,
   RESCAN_SINGLE_COMIC_BOOK_URL,
   SET_READ_STATE_URL,
+  START_ENTIRE_LIBRARY_ORGANIZATION_URL,
   START_LIBRARY_ORGANIZATION_URL,
   UPDATE_SELECTED_COMIC_BOOKS_METADATA_URL,
   UPDATE_SINGLE_COMIC_BOOK_METADATA_URL
@@ -102,6 +103,13 @@ export class LibraryService {
   startLibraryOrganization(): Observable<any> {
     this.logger.trace('Start library organization');
     return this.http.post(interpolate(START_LIBRARY_ORGANIZATION_URL), {
+      deletePhysicalFiles: false
+    } as OrganizeLibraryRequest);
+  }
+
+  startEntireLibraryOrganization(): Observable<any> {
+    this.logger.trace('Start library organization');
+    return this.http.post(interpolate(START_ENTIRE_LIBRARY_ORGANIZATION_URL), {
       deletePhysicalFiles: false
     } as OrganizeLibraryRequest);
   }

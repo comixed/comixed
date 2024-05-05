@@ -292,6 +292,11 @@
       {{ "library.context-menu.multiple-comics-menu" | translate }}
     </mat-label>
   </button>
+  <button *ngIf="isAdmin" mat-menu-item (click)="onOrganizeEntireLibrary()">
+    <mat-label>
+      {{ "library.context-menu.organize-entire-library" | translate }}
+    </mat-label>
+  </button>
 </mat-menu>
 
 <mat-menu #currentComicMenu="matMenu">

@@ -27,6 +27,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -876,5 +877,18 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   public List<ComicBook> getComicBooksForProcessing() {
     log.debug("Loading unprocessed comic books not in a batch");
     return this.comicBookRepository.getComicBooksForProcessing();
+  }
+
+  /**
+   * Returns all ids from the database.
+   *
+   * @return the ids
+   */
+  @Transactional
+  public List<Long> getAllIds() {
+    log.debug("Getting the list of all comic book ids");
+    return this.comicBookRepository.findAll().stream()
+        .map(ComicBook::getId)
+        .collect(Collectors.toList());
   }
 }

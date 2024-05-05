@@ -20,9 +20,12 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import {
-  startLibraryOrganizationSuccess,
+  startEntireLibraryOrganization,
+  startEntireLibraryOrganizationFailure,
+  startEntireLibraryOrganizationSuccess,
   startLibraryOrganization,
-  startLibraryOrganizationFailure
+  startLibraryOrganizationFailure,
+  startLibraryOrganizationSuccess
 } from '../actions/organize-library.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from '@app/core/services/alert.service';
@@ -69,6 +72,45 @@ export class OrganizeLibraryEffects {
           this.translateService.instant('app.general-effect-failure')
         );
         return of(startLibraryOrganizationFailure());
+      })
+    );
+  });
+
+  organizeEntireLibrary$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(startEntireLibraryOrganization),
+      tap(action =>
+        this.logger.trace('Effect: start entire library organization:', action)
+      ),
+      switchMap(action =>
+        this.libraryService.startEntireLibraryOrganization().pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          map(() =>
+            this.alertService.info(
+              this.translateService.instant(
+                'library.organization-everything.effect-success'
+              )
+            )
+          ),
+          map(() => startEntireLibraryOrganizationSuccess()),
+          catchError(error => {
+            this.logger.error('Service failure:', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'library.organization-everything.effect-failure'
+              ),
+              LIBRARY_ORGANIZATION_CONFIG_URL
+            );
+            return of(startEntireLibraryOrganizationFailure());
+          })
+        )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(startEntireLibraryOrganizationFailure());
       })
     );
   });

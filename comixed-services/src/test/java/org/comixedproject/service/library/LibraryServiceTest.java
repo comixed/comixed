@@ -129,6 +129,16 @@ public class LibraryServiceTest {
     Mockito.verify(comicBookService, Mockito.times(1)).prepareForOrganization(comicIdList);
   }
 
+  @Test
+  public void testPrepareEntireLibraryForOrganization() throws LibraryException {
+    Mockito.when(comicBookService.getAllIds()).thenReturn(comicIdList);
+    for (int index = 0; index < 25; index++) comicIdList.add((long) index);
+
+    service.prepareForOrganization(TEST_TARGET_DIRECTORY);
+
+    Mockito.verify(comicBookService, Mockito.times(1)).prepareForOrganization(comicIdList);
+  }
+
   @Test(expected = LibraryException.class)
   public void testPrepareToRecreateComicBookInvalidComicBook()
       throws ComicBookException, LibraryException {
