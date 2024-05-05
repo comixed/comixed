@@ -46,8 +46,10 @@ public class ComicFileAdaptorTest {
   private static final String TEST_FULL_COMIC_FILENAME =
       TEST_ROOT_DIRECTORY + "/" + TEST_COMIC_FILENAME;
   private static final String TEST_RELATIVE_NAME_WITHOUT_RULE = "/" + TEST_COMIC_FILENAME;
-  private static final String TEST_RENAMING_RULE =
+  private static final String TEST_UNIX_RENAMING_RULE =
       "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE $TITLE $PUBMONTH $PUBYEAR $COVERDATE $IMPRINT";
+  private static final String TEST_WINDOWS_RENAMING_RULE =
+      "$PUBLISHER\\$SERIES\\$VOLUME\\$SERIES v$VOLUME #$ISSUE $TITLE $PUBMONTH $PUBYEAR $COVERDATE $IMPRINT";
   private static final String TEST_RENAMING_RULE_PADDED_ISSUE =
       "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE(8) $TITLE $PUBMONTH $PUBYEAR $COVERDATE $IMPRINT";
   private static final String TEST_PUBLISHER = "The Publisher";
@@ -67,16 +69,15 @@ public class ComicFileAdaptorTest {
   private static final Date TEST_STORE_DATE = new Date(120, 5, 1);
   private static final String TEST_PUBLISHED_MONTH = "5";
   private static final String TEST_PUBLISHED_YEAR = "2020";
-  private static final String TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS =
-      "\"?/\\:|'{}?%Publisher*'";
+  private static final String TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS = "\"?/:|'{}?%Publisher*'";
   private static final String TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED =
-      "___________Publisher__";
+      "__________Publisher__";
   private static final String TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS = "<|{:}Series?>";
   private static final String TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED = "_____Series__";
   private static final String TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS = "\\/717:";
-  private static final String TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED = "__717_";
+  private static final String TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED = "_717_";
   private static final String TEST_RENAMING_RULE_WITH_UNSUPPORTED_CHARACTERS =
-      "?*$PUBLISHER/<|?>$SERIES/\\:$VOLUME/$SERIES v$VOLUME #$ISSUE ($COVERDATE) $IMPRINT";
+      "?*$PUBLISHER/<|?>$SERIES/:$VOLUME/$SERIES v$VOLUME #$ISSUE ($COVERDATE) $IMPRINT";
   private static final String TEST_ORIGINAL_FILENAME = "src/test/resources/available.cbz";
   private static final String TEST_EXISTING_FILENAME = "src/test/resources/example.cbz";
   private static final String TEST_TARGET_DIRECTORY =
@@ -101,6 +102,27 @@ public class ComicFileAdaptorTest {
   }
 
   @Test
+  public void testCreateFilenameOnWindows() {
+    final String result =
+        adaptor.createFilenameFromRule(
+            comicBook, TEST_WINDOWS_RENAMING_RULE, TEST_TARGET_DIRECTORY);
+
+    assertEquals(
+        formattedName(
+            TEST_TARGET_DIRECTORY,
+            TEST_PUBLISHER,
+            TEST_IMPRINT,
+            TEST_SERIES,
+            TEST_VOLUME,
+            TEST_ISSUE,
+            TEST_TITLE,
+            TEST_FORMATTED_COVER_DATE,
+            TEST_PUBLISHED_MONTH,
+            TEST_PUBLISHED_YEAR),
+        result);
+  }
+
+  @Test
   public void testCreateFilenameFromRuleEmptyRule() {
     final String result = adaptor.createFilenameFromRule(comicBook, "", "");
 
@@ -110,7 +132,7 @@ public class ComicFileAdaptorTest {
   @Test
   public void testCreateFileFromRule() {
     final String result =
-        adaptor.createFilenameFromRule(comicBook, TEST_RENAMING_RULE, TEST_TARGET_DIRECTORY);
+        adaptor.createFilenameFromRule(comicBook, TEST_UNIX_RENAMING_RULE, TEST_TARGET_DIRECTORY);
 
     assertEquals(
         formattedName(
@@ -157,8 +179,7 @@ public class ComicFileAdaptorTest {
     assertEquals(
         String.format(
             String.join(
-                File.separator,
-                new String[] {"%s", "__%s", "____%s", "__%s", "%s v%s #%s (%s) %s"}),
+                File.separator, new String[] {"%s", "__%s", "____%s", "_%s", "%s v%s #%s (%s) %s"}),
             TEST_TARGET_DIRECTORY,
             TEST_PUBLISHER,
             TEST_SERIES,
@@ -178,7 +199,7 @@ public class ComicFileAdaptorTest {
     Mockito.when(comicDetail.getIssueNumber()).thenReturn(TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS);
 
     final String result =
-        adaptor.createFilenameFromRule(comicBook, TEST_RENAMING_RULE, TEST_TARGET_DIRECTORY);
+        adaptor.createFilenameFromRule(comicBook, TEST_UNIX_RENAMING_RULE, TEST_TARGET_DIRECTORY);
 
     assertEquals(
         formattedName(
@@ -200,7 +221,7 @@ public class ComicFileAdaptorTest {
     Mockito.when(comicDetail.getPublisher()).thenReturn(null);
 
     final String result =
-        adaptor.createFilenameFromRule(comicBook, TEST_RENAMING_RULE, TEST_TARGET_DIRECTORY);
+        adaptor.createFilenameFromRule(comicBook, TEST_UNIX_RENAMING_RULE, TEST_TARGET_DIRECTORY);
 
     assertEquals(
         formattedName(
@@ -222,7 +243,7 @@ public class ComicFileAdaptorTest {
     Mockito.when(comicDetail.getSeries()).thenReturn(null);
 
     final String result =
-        adaptor.createFilenameFromRule(comicBook, TEST_RENAMING_RULE, TEST_TARGET_DIRECTORY);
+        adaptor.createFilenameFromRule(comicBook, TEST_UNIX_RENAMING_RULE, TEST_TARGET_DIRECTORY);
 
     assertEquals(
         formattedName(
@@ -244,7 +265,7 @@ public class ComicFileAdaptorTest {
     Mockito.when(comicDetail.getImprint()).thenReturn(null);
 
     final String result =
-        adaptor.createFilenameFromRule(comicBook, TEST_RENAMING_RULE, TEST_TARGET_DIRECTORY);
+        adaptor.createFilenameFromRule(comicBook, TEST_UNIX_RENAMING_RULE, TEST_TARGET_DIRECTORY);
 
     assertEquals(
         formattedName(
@@ -267,7 +288,7 @@ public class ComicFileAdaptorTest {
     Mockito.when(comicDetail.getImprint()).thenReturn(null);
 
     final String result =
-        adaptor.createFilenameFromRule(comicBook, TEST_RENAMING_RULE, TEST_TARGET_DIRECTORY);
+        adaptor.createFilenameFromRule(comicBook, TEST_UNIX_RENAMING_RULE, TEST_TARGET_DIRECTORY);
 
     assertEquals(
         formattedName(
@@ -289,7 +310,7 @@ public class ComicFileAdaptorTest {
     Mockito.when(comicDetail.getVolume()).thenReturn(null);
 
     final String result =
-        adaptor.createFilenameFromRule(comicBook, TEST_RENAMING_RULE, TEST_TARGET_DIRECTORY);
+        adaptor.createFilenameFromRule(comicBook, TEST_UNIX_RENAMING_RULE, TEST_TARGET_DIRECTORY);
 
     assertEquals(
         formattedName(
@@ -311,7 +332,7 @@ public class ComicFileAdaptorTest {
     Mockito.when(comicDetail.getTitle()).thenReturn(null);
 
     final String result =
-        adaptor.createFilenameFromRule(comicBook, TEST_RENAMING_RULE, TEST_TARGET_DIRECTORY);
+        adaptor.createFilenameFromRule(comicBook, TEST_UNIX_RENAMING_RULE, TEST_TARGET_DIRECTORY);
 
     assertEquals(
         formattedName(
@@ -361,7 +382,7 @@ public class ComicFileAdaptorTest {
     Mockito.when(comicDetail.getIssueNumber()).thenReturn(null);
 
     final String result =
-        adaptor.createFilenameFromRule(comicBook, TEST_RENAMING_RULE, TEST_TARGET_DIRECTORY);
+        adaptor.createFilenameFromRule(comicBook, TEST_UNIX_RENAMING_RULE, TEST_TARGET_DIRECTORY);
 
     assertEquals(
         formattedName(
@@ -383,7 +404,7 @@ public class ComicFileAdaptorTest {
     Mockito.when(comicDetail.getCoverDate()).thenReturn(null);
 
     final String result =
-        adaptor.createFilenameFromRule(comicBook, TEST_RENAMING_RULE, TEST_TARGET_DIRECTORY);
+        adaptor.createFilenameFromRule(comicBook, TEST_UNIX_RENAMING_RULE, TEST_TARGET_DIRECTORY);
 
     assertEquals(
         formattedName(
