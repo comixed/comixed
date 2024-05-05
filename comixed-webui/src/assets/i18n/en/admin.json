@@ -3,6 +3,13 @@
     "batch-process-detail": {
       "dialog-title": "Batch Process Details For Job {jobId}"
     },
+    "delete-completed-jobs": {
+      "confirmation-message": "Are you sure you want to delete completed jobs?",
+      "confirmation-title": "Delete Completed JObs",
+      "effect-failure": "Failed to delete completed jobs...",
+      "effect-success": "Completed jobs deleted successful.",
+      "tooltip": "Deletes all completed or failed batch jobs..."
+    },
     "batch-process-list": {
       "label": {
         "end-time": "Finished",
@@ -26,23 +33,13 @@
     "load-batch-process-list": {
       "effect-failure": "Failed to load the list of batch processes."
     },
-    "restart-process": {
-      "confirmation-message": "Are you sure you want to restart batch process {jobId}?",
-      "confirmation-title": "Restart Batch Process",
-      "effect-failure": "Failed to restart job {jobId}...",
-      "effect-success": "Job {jobId} restarted successful."
-    },
     "text": {
-      "can-be-restarted": "The job can be restarted.",
       "created": "The job was created {created}.",
       "duration": "The job ran from {started} until {ended}.",
       "error-header": "Errors Reported During Job Run",
       "last-updated": "The job was last updated {updated}.",
       "running-now": "This job was started {started} and is running now.",
       "status": "The job's exit status is {status}."
-    },
-    "tooltip": {
-      "restart-batch-process": "Attempt to restart failed batch process."
     }
   },
   "configuration": {

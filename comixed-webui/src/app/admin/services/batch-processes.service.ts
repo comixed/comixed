@@ -23,8 +23,8 @@ import { Observable, Subscription } from 'rxjs';
 import { interpolate } from '@app/core';
 import {
   BATCH_PROCESS_LIST_UPDATE_TOPIC,
-  GET_ALL_BATCH_PROCESSES_URL,
-  RESTART_BATCH_PROJECT_URL
+  DELETE_COMPLETED_BATCH_JOBS_URL,
+  GET_ALL_BATCH_PROCESSES_URL
 } from '@app/admin/admin.constants';
 import { Store } from '@ngrx/store';
 import { Subscription as StompSubscription } from 'webstomp-client';
@@ -32,7 +32,6 @@ import { selectMessagingState } from '@app/messaging/selectors/messaging.selecto
 import { WebSocketService } from '@app/messaging';
 import { batchProcessUpdateReceived } from '@app/admin/actions/batch-processes.actions';
 import { filter } from 'rxjs/operators';
-import { BatchProcessDetail } from '@app/admin/models/batch-process-detail';
 
 @Injectable({
   providedIn: 'root'
@@ -72,11 +71,8 @@ export class BatchProcessesService {
     return this.http.get(interpolate(GET_ALL_BATCH_PROCESSES_URL));
   }
 
-  restartJob(args: { detail: BatchProcessDetail }): Observable<any> {
-    this.logger.trace('Restarting batch process:', args);
-    return this.http.post(
-      interpolate(RESTART_BATCH_PROJECT_URL, { jobId: args.detail.jobId }),
-      {}
-    );
+  deleteCompletedBatchJobs(): Observable<any> {
+    this.logger.trace('Deleting completed batch jobs');
+    return this.http.post(interpolate(DELETE_COMPLETED_BATCH_JOBS_URL), {});
   }
 }

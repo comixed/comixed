@@ -27,12 +27,12 @@ import {
 } from '@app/admin/admin.fixtures';
 import {
   batchProcessUpdateReceived,
+  deleteCompletedBatchJobsFailure,
+  deleteCompletedBatchJobsSuccess,
+  deleteCompletedBatchJobs,
   loadBatchProcessList,
   loadBatchProcessListFailure,
   loadBatchProcessListSuccess,
-  restartBatchProcess,
-  restartBatchProcessFailure,
-  restartBatchProcessSuccess,
   setBatchProcessDetail
 } from '@app/admin/actions/batch-processes.actions';
 
@@ -169,12 +169,9 @@ describe('BatchProcesses Reducer', () => {
     });
   });
 
-  describe('restarting a job', () => {
+  describe('deleting completed batch jobs', () => {
     beforeEach(() => {
-      state = reducer(
-        { ...state, busy: false },
-        restartBatchProcess({ detail: DETAIL })
-      );
+      state = reducer({ ...state, busy: false }, deleteCompletedBatchJobs());
     });
 
     it('sets the busy flag', () => {
@@ -183,17 +180,27 @@ describe('BatchProcesses Reducer', () => {
 
     describe('success', () => {
       beforeEach(() => {
-        state = reducer({ ...state, busy: true }, restartBatchProcessSuccess());
+        state = reducer(
+          { ...state, busy: true, entries: [] },
+          deleteCompletedBatchJobsSuccess({ processes: ENTRIES })
+        );
       });
 
       it('clears the busy flag', () => {
         expect(state.busy).toBeFalse();
       });
+
+      it('sets the list of remaining batch jobs', () => {
+        expect(state.entries).toEqual(ENTRIES);
+      });
     });
 
     describe('failure', () => {
       beforeEach(() => {
-        state = reducer({ ...state, busy: true }, restartBatchProcessFailure());
+        state = reducer(
+          { ...state, busy: true, entries: [] },
+          deleteCompletedBatchJobsFailure()
+        );
       });
 
       it('clears the busy flag', () => {

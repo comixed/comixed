@@ -38,7 +38,7 @@ export const SAVE_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
 export const LOAD_FILENAME_SCRAPING_RULES_URL = `${API_ROOT_URL}/admin/scraping/rules`;
 export const SAVE_FILENAME_SCRAPING_RULES_URL = `${API_ROOT_URL}/admin/scraping/rules`;
 export const GET_ALL_BATCH_PROCESSES_URL = `${API_ROOT_URL}/admin/processes`;
-export const RESTART_BATCH_PROJECT_URL = `${API_ROOT_URL}/admin/processes/\${jobId}/restart`;
+export const DELETE_COMPLETED_BATCH_JOBS_URL = `${API_ROOT_URL}/admin/processes/completed/delete`;
 
 export const GET_FEATURE_ENABLED_URL = `${API_ROOT_URL}/admin/config/\${name}/enabled`;
 
@@ -50,6 +50,5 @@ export const LOAD_SERVER_HEALTH_URL = `/actuator/health`;
 export const SHUTDOWN_SERVER_URL = `/actuator/shutdown`;
 
 // batch processes
-export const RESTARTABLE_STATES = ['FAILED', 'STOPPED'];
 export const BATCH_PROCESS_LIST_UPDATE_TOPIC =
   '/topic/batch-process-list.update';
