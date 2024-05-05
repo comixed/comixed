@@ -22,7 +22,6 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 import org.comixedproject.model.batch.BatchProcessDetail;
-import org.comixedproject.service.batch.BatchProcessException;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,8 +32,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BatchProcessesControllerTest {
-  private static final long TEST_JOB_ID = 717L;
-
   @InjectMocks private BatchProcessesController controller;
   @Mock private BatchProcessesService batchProcessesService;
   @Mock private List<BatchProcessDetail> batchProcessList;
@@ -51,22 +48,15 @@ public class BatchProcessesControllerTest {
     Mockito.verify(batchProcessesService, Mockito.times(1)).getAllBatchProcesses();
   }
 
-  @Test(expected = BatchProcessException.class)
-  public void testRestartJobServiceFailure() throws BatchProcessException {
-    Mockito.doThrow(BatchProcessException.class)
-        .when(batchProcessesService)
-        .restartJob(Mockito.anyLong());
-    try {
-      controller.restartJob(TEST_JOB_ID);
-    } finally {
-      Mockito.verify(batchProcessesService, Mockito.times(1)).restartJob(TEST_JOB_ID);
-    }
-  }
-
   @Test
-  public void testRestartJob() throws BatchProcessException {
-    controller.restartJob(TEST_JOB_ID);
+  public void testRestartJob() {
+    Mockito.when(batchProcessesService.deleteInactiveJobs()).thenReturn(batchProcessList);
 
-    Mockito.verify(batchProcessesService, Mockito.times(1)).restartJob(TEST_JOB_ID);
+    final List<BatchProcessDetail> result = controller.deleteCompletedJobs();
+
+    assertNotNull(result);
+    assertSame(batchProcessList, result);
+
+    Mockito.verify(batchProcessesService, Mockito.times(1)).deleteInactiveJobs();
   }
 }

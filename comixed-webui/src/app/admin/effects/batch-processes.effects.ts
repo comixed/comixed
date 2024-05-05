@@ -19,12 +19,12 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
+  deleteCompletedBatchJobsFailure,
+  deleteCompletedBatchJobsSuccess,
+  deleteCompletedBatchJobs,
   loadBatchProcessList,
   loadBatchProcessListFailure,
-  loadBatchProcessListSuccess,
-  restartBatchProcess,
-  restartBatchProcessFailure,
-  restartBatchProcessSuccess
+  loadBatchProcessListSuccess
 } from '../actions/batch-processes.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { BatchProcessesService } from '@app/admin/services/batch-processes.service';
@@ -67,31 +67,31 @@ export class BatchProcessesEffects {
     );
   });
 
-  restartBatchProcess$ = createEffect(() => {
+  deleteCompletedJobs$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(restartBatchProcess),
-      tap(action => this.logger.trace('Restarting batch process:', action)),
+      ofType(deleteCompletedBatchJobs),
+      tap(action => this.logger.trace('Deleting completed jobs:', action)),
       switchMap(action =>
-        this.batchProcessService.restartJob({ detail: action.detail }).pipe(
+        this.batchProcessService.deleteCompletedBatchJobs().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           tap(() =>
             this.alertService.info(
               this.translateService.instant(
-                'batch-processes.restart-process.effect-success',
-                { jobId: action.detail.jobId }
+                'batch-processes.delete-completed-jobs.effect-success'
               )
             )
           ),
-          map(() => restartBatchProcessSuccess()),
+          map((response: BatchProcessDetail[]) =>
+            deleteCompletedBatchJobsSuccess({ processes: response })
+          ),
           catchError(error => {
             this.logger.error('Service failure:', error);
             this.alertService.error(
               this.translateService.instant(
-                'batch-processes.restart-process.effect-failure',
-                { jobId: action.detail.jobId }
+                'batch-processes.delete-completed-jobs.effect-failure'
               )
             );
-            return of(restartBatchProcessFailure());
+            return of(deleteCompletedBatchJobsFailure());
           })
         )
       ),
@@ -100,7 +100,7 @@ export class BatchProcessesEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(restartBatchProcessFailure());
+        return of(deleteCompletedBatchJobsFailure());
       })
     );
   });

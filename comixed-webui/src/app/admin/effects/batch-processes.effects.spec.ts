@@ -30,15 +30,15 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AlertService } from '@app/core/services/alert.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {
+  deleteCompletedBatchJobsFailure,
+  deleteCompletedBatchJobsSuccess,
+  deleteCompletedBatchJobs,
   loadBatchProcessList,
   loadBatchProcessListFailure,
-  loadBatchProcessListSuccess,
-  restartBatchProcess,
-  restartBatchProcessFailure,
-  restartBatchProcessSuccess
+  loadBatchProcessListSuccess
 } from '@app/admin/actions/batch-processes.actions';
 import { hot } from 'jasmine-marbles';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('BatchProcessesEffects', () => {
   const ENTRIES = [BATCH_PROCESS_DETAIL_1, BATCH_PROCESS_DETAIL_2];
@@ -63,7 +63,9 @@ describe('BatchProcessesEffects', () => {
           provide: BatchProcessesService,
           useValue: {
             getAll: jasmine.createSpy('BatchProcessesService.getAll()'),
-            restartJob: jasmine.createSpy('BatchProcessesService.restartJob()')
+            deleteCompletedBatchJobs: jasmine.createSpy(
+              'BatchProcessesService.deleteCompletedBatchJobs()'
+            )
           }
         },
         AlertService
@@ -122,48 +124,46 @@ describe('BatchProcessesEffects', () => {
     });
   });
 
-  describe('restart a batch process', () => {
+  describe('deleting completed batch processes', () => {
     it('fires an action on success', () => {
-      const serviceResponse = new HttpResponse({ status: 200 });
-      const action = restartBatchProcess({ detail: DETAIL });
-      const outcome = restartBatchProcessSuccess();
+      const serviceResponse = ENTRIES;
+      const action = deleteCompletedBatchJobs();
+      const outcome = deleteCompletedBatchJobsSuccess({ processes: ENTRIES });
 
       actions$ = hot('-a', { a: action });
-      batchProcessesService.restartJob
-        .withArgs({ detail: DETAIL })
-        .and.returnValue(of(serviceResponse));
+      batchProcessesService.deleteCompletedBatchJobs.and.returnValue(
+        of(serviceResponse)
+      );
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.restartBatchProcess$).toBeObservable(expected);
+      expect(effects.deleteCompletedJobs$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = restartBatchProcess({ detail: DETAIL });
-      const outcome = restartBatchProcessFailure();
+      const action = deleteCompletedBatchJobs();
+      const outcome = deleteCompletedBatchJobsFailure();
 
       actions$ = hot('-a', { a: action });
-      batchProcessesService.restartJob
-        .withArgs({ detail: DETAIL })
-        .and.returnValue(throwError(serviceResponse));
+      batchProcessesService.deleteCompletedBatchJobs.and.returnValue(
+        throwError(serviceResponse)
+      );
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.restartBatchProcess$).toBeObservable(expected);
+      expect(effects.deleteCompletedJobs$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = restartBatchProcess({ detail: DETAIL });
-      const outcome = restartBatchProcessFailure();
+      const action = deleteCompletedBatchJobs();
+      const outcome = deleteCompletedBatchJobsFailure();
 
       actions$ = hot('-a', { a: action });
-      batchProcessesService.restartJob
-        .withArgs({ detail: DETAIL })
-        .and.throwError('expected');
+      batchProcessesService.deleteCompletedBatchJobs.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.restartBatchProcess$).toBeObservable(expected);
+      expect(effects.deleteCompletedJobs$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

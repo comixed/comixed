@@ -18,21 +18,16 @@
 
 package org.comixedproject.service.batch;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.batch.BatchProcessDetail;
+import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.JobInstance;
 import org.springframework.batch.core.explore.JobExplorer;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.batch.core.launch.NoSuchJobException;
-import org.springframework.batch.core.launch.NoSuchJobExecutionException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
@@ -44,11 +39,14 @@ import org.springframework.stereotype.Service;
 @Log4j2
 public class BatchProcessesService {
   @Autowired private JobExplorer jobExplorer;
-  @Autowired private JobOperator jobOperator;
+  @Autowired private JobRepository jobRepository;
 
-  @Autowired
-  @Qualifier("batchJobLauncher")
-  private JobLauncher jobLauncher;
+  private static final Set<String> DELETABLE_JOB_STATUSES =
+      new HashSet<>(
+          Arrays.asList(
+              ExitStatus.COMPLETED.getExitCode(),
+              ExitStatus.FAILED.getExitCode(),
+              ExitStatus.STOPPED.getExitCode()));
 
   /**
    * Returns the status for all batch processes.
@@ -56,6 +54,48 @@ public class BatchProcessesService {
    * @return the status list
    */
   public List<BatchProcessDetail> getAllBatchProcesses() {
+    return this.doGetAllBatchProcesses();
+  }
+
+  /**
+   * Delete all jobs that have either completed or failed.
+   *
+   * @return the list of remaining batches
+   */
+  public List<BatchProcessDetail> deleteInactiveJobs() {
+    log.debug("Deleting inactive jobs");
+    this.jobExplorer
+        .getJobNames()
+        .forEach(
+            jobName -> {
+              try {
+                this.doDeleteInactiveJobsFor(jobName);
+              } catch (NoSuchJobException error) {
+                log.error("Failed to delete inactive executions for job: {}", jobName, error);
+              }
+            });
+    return this.doGetAllBatchProcesses();
+  }
+
+  private void doDeleteInactiveJobsFor(final String jobName) throws NoSuchJobException {
+    final List<JobInstance> jobInstances =
+        this.jobExplorer.getJobInstances(
+            jobName, 0, (int) this.jobExplorer.getJobInstanceCount(jobName));
+    for (int whichInstance = 0; whichInstance < jobInstances.size(); whichInstance++) {
+      final JobInstance jobInstance = jobInstances.get(whichInstance);
+      final List<JobExecution> jobExecutions = this.jobExplorer.getJobExecutions(jobInstance);
+      for (int whichExecution = 0; whichExecution < jobExecutions.size(); whichExecution++) {
+        final JobExecution jobExecution = jobExecutions.get(whichExecution);
+        if (Objects.nonNull(jobExecution.getExitStatus())
+            && DELETABLE_JOB_STATUSES.contains(jobExecution.getExitStatus().getExitCode())) {
+          log.trace("Deleting job execution: {}", jobExecution.getJobId());
+          this.jobRepository.deleteJobExecution(jobExecution);
+        }
+      }
+    }
+  }
+
+  private List<BatchProcessDetail> doGetAllBatchProcesses() {
     final List<BatchProcessDetail> result = new ArrayList<>();
 
     log.debug("Loading batch process status records");
@@ -88,19 +128,5 @@ public class BatchProcessesService {
             });
 
     return result;
-  }
-
-  public void restartJob(final long jobId) throws BatchProcessException {
-    log.debug("Loading job execution");
-    try {
-      this.jobOperator.restart(jobId);
-    } catch (JobInstanceAlreadyCompleteException
-        | NoSuchJobExecutionException
-        | NoSuchJobException
-        | JobRestartException
-        | JobParametersInvalidException error) {
-      log.error("Failed to restart batch job");
-      throw new BatchProcessException("Failed to restart job: " + jobId, error);
-    }
   }
 }

@@ -34,11 +34,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.explore.JobExplorer;
-import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.batch.core.launch.NoSuchJobException;
-import org.springframework.batch.core.launch.NoSuchJobExecutionException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.batch.core.repository.JobRepository;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BatchProcessesServiceTest {
@@ -53,7 +50,7 @@ public class BatchProcessesServiceTest {
 
   @InjectMocks private BatchProcessesService service;
   @Mock private JobExplorer jobExplorer;
-  @Mock private JobOperator jobOperator;
+  @Mock private JobRepository jobRepository;
   @Mock private JobInstance jobInstance;
   @Mock private JobParameters jobParameters;
   @Mock private JobExecution jobExecution;
@@ -150,33 +147,55 @@ public class BatchProcessesServiceTest {
         .getJobExecutions(jobInstance);
   }
 
-  @Test(expected = BatchProcessException.class)
-  public void testRestartJobOperatorException()
-      throws JobInstanceAlreadyCompleteException,
-          NoSuchJobException,
-          NoSuchJobExecutionException,
-          JobParametersInvalidException,
-          JobRestartException,
-          BatchProcessException {
-    Mockito.when(jobOperator.restart(Mockito.anyLong())).thenThrow(NoSuchJobException.class);
+  @Test
+  public void testDeleteWhenCompleted() {
+    Mockito.when(jobExplorer.getJobExecutions(Mockito.any(JobInstance.class)))
+        .thenReturn(jobExecutionList);
+    Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);
 
-    try {
-      service.restartJob(TEST_JOB_ID);
-    } finally {
-      Mockito.verify(jobOperator, Mockito.times(1)).restart(TEST_JOB_ID);
-    }
+    final List<BatchProcessDetail> result = service.deleteInactiveJobs();
+
+    assertNotNull(result);
+    assertEquals(TEST_INSTANCE_COUNT, result.size());
+
+    Mockito.verify(jobRepository, Mockito.times(1)).deleteJobExecution(jobExecution);
   }
 
   @Test
-  public void testRestartJob()
-      throws JobInstanceAlreadyCompleteException,
-          NoSuchJobException,
-          NoSuchJobExecutionException,
-          JobParametersInvalidException,
-          JobRestartException,
-          BatchProcessException {
-    service.restartJob(TEST_JOB_ID);
+  public void testDeleteWhenFailed() {
+    Mockito.when(jobExplorer.getJobExecutions(Mockito.any(JobInstance.class)))
+        .thenReturn(jobExecutionList);
+    Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.FAILED);
 
-    Mockito.verify(jobOperator, Mockito.times(1)).restart(TEST_JOB_ID);
+    final List<BatchProcessDetail> result = service.deleteInactiveJobs();
+
+    assertNotNull(result);
+    assertEquals(TEST_INSTANCE_COUNT, result.size());
+
+    Mockito.verify(jobRepository, Mockito.times(1)).deleteJobExecution(jobExecution);
+  }
+
+  @Test
+  public void testDeleteWhenRunning() {
+    Mockito.when(jobExplorer.getJobExecutions(Mockito.any(JobInstance.class)))
+        .thenReturn(jobExecutionList);
+    Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.EXECUTING);
+
+    final List<BatchProcessDetail> result = service.deleteInactiveJobs();
+
+    assertNotNull(result);
+    assertEquals(TEST_INSTANCE_COUNT, result.size());
+
+    Mockito.verify(jobRepository, Mockito.never()).deleteJobExecution(Mockito.any());
+  }
+
+  @Test
+  public void testDeleteNoSuchJobException() throws NoSuchJobException {
+    Mockito.when(jobExplorer.getJobInstanceCount(Mockito.anyString()))
+        .thenThrow(NoSuchJobException.class);
+
+    final List<BatchProcessDetail> result = service.deleteInactiveJobs();
+
+    Mockito.verify(jobRepository, Mockito.never()).deleteJobExecution(Mockito.any());
   }
 }

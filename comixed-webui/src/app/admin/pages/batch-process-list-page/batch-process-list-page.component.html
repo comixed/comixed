@@ -1,3 +1,15 @@
+<div class="cx-fab-container-bottom-left">
+  <button
+    id="delete-completed-jobs-button"
+    mat-fab
+    [disabled]="dataSource.data.length === 0"
+    [matTooltip]="'batch-processes.delete-completed-jobs.tooltip' | translate"
+    (click)="onDeleteCompletedBatchJobs()"
+  >
+    <mat-icon>delete</mat-icon>
+  </button>
+</div>
+
 <mat-paginator
   class="cx-height-100"
   showFirstLastButtons="true"

@@ -34,13 +34,20 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { setBatchProcessDetail } from '@app/admin/actions/batch-processes.actions';
+import {
+  deleteCompletedBatchJobs,
+  setBatchProcessDetail
+} from '@app/admin/actions/batch-processes.actions';
 import { BatchProcessDetailDialogComponent } from '@app/admin/components/batch-process-detail-dialog/batch-process-detail-dialog.component';
 import { MatListModule } from '@angular/material/list';
 import {
   initialState as initialMessagingState,
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 
 describe('BatchProcessListPageComponent', () => {
   const DETAIL = BATCH_PROCESS_DETAIL_1;
@@ -55,6 +62,7 @@ describe('BatchProcessListPageComponent', () => {
   let translateService: TranslateService;
   let titleService: TitleService;
   let dialog: MatDialog;
+  let confirmationService: ConfirmationService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -74,7 +82,7 @@ describe('BatchProcessListPageComponent', () => {
         MatDialogModule,
         MatListModule
       ],
-      providers: [provideMockStore({ initialState })]
+      providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(BatchProcessListPageComponent);
@@ -86,6 +94,7 @@ describe('BatchProcessListPageComponent', () => {
     spyOn(titleService, 'setTitle');
     dialog = TestBed.inject(MatDialog);
     spyOn(dialog, 'open');
+    confirmationService = TestBed.inject(ConfirmationService);
     fixture.detectChanges();
   });
 
@@ -163,6 +172,23 @@ describe('BatchProcessListPageComponent', () => {
         BatchProcessDetailDialogComponent,
         { data: {} }
       );
+    });
+  });
+
+  describe('deleting completed batch jobs', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.onDeleteCompletedBatchJobs();
+    });
+
+    it('prompts the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(deleteCompletedBatchJobs());
     });
   });
 });

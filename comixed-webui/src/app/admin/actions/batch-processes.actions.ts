@@ -46,17 +46,17 @@ export const setBatchProcessDetail = createAction(
   }>()
 );
 
-export const restartBatchProcess = createAction(
-  '[Batch Processes] Requests restart of a batch process',
+export const deleteCompletedBatchJobs = createAction(
+  '[Batch Processes] Delete completed batch jobs'
+);
+
+export const deleteCompletedBatchJobsSuccess = createAction(
+  '[Batch Processes] Successfully deleted completed batch jobs',
   props<{
-    detail: BatchProcessDetail;
+    processes: BatchProcessDetail[];
   }>()
 );
 
-export const restartBatchProcessSuccess = createAction(
-  '[Batch Processes] Restart request succeeded'
-);
-
-export const restartBatchProcessFailure = createAction(
-  '[Batch Processes] Restart request failed'
+export const deleteCompletedBatchJobsFailure = createAction(
+  '[Batch Processes] Failed to delete completed batch jobs'
 );

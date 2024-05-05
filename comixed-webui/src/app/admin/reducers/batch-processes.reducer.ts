@@ -19,12 +19,12 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   batchProcessUpdateReceived,
+  deleteCompletedBatchJobs,
+  deleteCompletedBatchJobsFailure,
+  deleteCompletedBatchJobsSuccess,
   loadBatchProcessList,
   loadBatchProcessListFailure,
   loadBatchProcessListSuccess,
-  restartBatchProcess,
-  restartBatchProcessFailure,
-  restartBatchProcessSuccess,
   setBatchProcessDetail
 } from '@app/admin/actions/batch-processes.actions';
 import { BatchProcessDetail } from '@app/admin/models/batch-process-detail';
@@ -62,9 +62,13 @@ export const reducer = createReducer(
     ...state,
     detail: action.detail
   })),
-  on(restartBatchProcess, state => ({ ...state, busy: true })),
-  on(restartBatchProcessSuccess, state => ({ ...state, busy: false })),
-  on(restartBatchProcessFailure, state => ({ ...state, busy: false }))
+  on(deleteCompletedBatchJobs, state => ({ ...state, busy: true })),
+  on(deleteCompletedBatchJobsSuccess, (state, action) => ({
+    ...state,
+    busy: false,
+    entries: action.processes
+  })),
+  on(deleteCompletedBatchJobsFailure, state => ({ ...state, busy: false }))
 );
 
 export const batchProcessFeature = createFeature({

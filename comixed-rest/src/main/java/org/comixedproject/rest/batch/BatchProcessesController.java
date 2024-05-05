@@ -22,15 +22,11 @@ import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.batch.BatchProcessDetail;
-import org.comixedproject.service.batch.BatchProcessException;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <code>BatchProcessesController</code> provides REST APIs for working with the status of batch
@@ -58,18 +54,18 @@ public class BatchProcessesController {
   }
 
   /**
-   * Restarts a batch job.
+   * Deletes completed batch jobs.
    *
-   * @param jobId the job id
-   * @throws BatchProcessException if an error occurs
+   * @return the remaining batch jobs
    */
   @PostMapping(
-      value = "/api/admin/processes/{jobId}/restart",
+      value = "/api/admin/processes/completed/delete",
+      produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.batch.restart-job")
-  public void restartJob(@PathVariable("jobId") long jobId) throws BatchProcessException {
-    log.info("Restarting job: id={}", jobId);
-    this.batchProcessesService.restartJob(jobId);
+  public List<BatchProcessDetail> deleteCompletedJobs() {
+    log.info("Deleting completed jobs");
+    return this.batchProcessesService.deleteInactiveJobs();
   }
 }

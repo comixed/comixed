@@ -37,15 +37,8 @@ import {
 } from '@app/messaging/reducers/messaging.reducer';
 import { interpolate } from '@app/core';
 import { BATCH_PROCESS_DETAIL_UPDATE_TOPIC } from '@app/app.constants';
-import {
-  restartBatchProcess,
-  setBatchProcessDetail
-} from '@app/admin/actions/batch-processes.actions';
+import { setBatchProcessDetail } from '@app/admin/actions/batch-processes.actions';
 import { MatDialogModule } from '@angular/material/dialog';
-import {
-  Confirmation,
-  ConfirmationService
-} from '@tragically-slick/confirmation';
 
 describe('BatchProcessDetailDialogComponent', () => {
   const DETAIL = BATCH_PROCESS_DETAIL_1;
@@ -61,7 +54,6 @@ describe('BatchProcessDetailDialogComponent', () => {
   let fixture: ComponentFixture<BatchProcessDetailDialogComponent>;
   let store: MockStore;
   let webSocketService: jasmine.SpyObj<WebSocketService>;
-  let confirmationService: ConfirmationService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -90,8 +82,7 @@ describe('BatchProcessDetailDialogComponent', () => {
             subscribe: jasmine.createSpy('WebSocketService.subscribe()'),
             unsubscribe: jasmine.createSpy('WebSocketService.unsubscribe()')
           }
-        },
-        ConfirmationService
+        }
       ]
     }).compileComponents();
 
@@ -102,7 +93,6 @@ describe('BatchProcessDetailDialogComponent', () => {
     webSocketService = TestBed.inject(
       WebSocketService
     ) as jasmine.SpyObj<WebSocketService>;
-    confirmationService = TestBed.inject(ConfirmationService);
     fixture.detectChanges();
   });
 
@@ -143,26 +133,6 @@ describe('BatchProcessDetailDialogComponent', () => {
         setBatchProcessDetail({
           detail: DETAIL
         })
-      );
-    });
-  });
-
-  describe('restarting a job', () => {
-    beforeEach(() => {
-      spyOn(confirmationService, 'confirm').and.callFake(
-        (confirmation: Confirmation) => confirmation.confirm()
-      );
-      component.detail = DETAIL;
-      component.onRestartBatchProcess();
-    });
-
-    it('confirms with the user', () => {
-      expect(confirmationService.confirm).toHaveBeenCalled();
-    });
-
-    it('dispatches an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        restartBatchProcess({ detail: DETAIL })
       );
     });
   });

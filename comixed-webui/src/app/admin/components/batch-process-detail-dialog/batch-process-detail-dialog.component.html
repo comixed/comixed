@@ -52,21 +52,6 @@
       | translate: { updated: detail?.lastUpdateTime | date: "medium" }
   }}
 </div>
-<div *ngIf="restartable" class="batch-process-detail-row">
-  {{ "batch-processes.text.can-be-restarted" | translate }}
-</div>
-<div *ngIf="restartable && false" class="batch-process-detail-row">
-  <button
-    id="restart-batch-process"
-    mat-raised-button
-    color="primary"
-    [matTooltip]="'batch-processes.tooltip.restart-batch-process' | translate"
-    (click)="onRestartBatchProcess()"
-  >
-    <mat-icon>restart_alt</mat-icon>
-    <mat-label>{{ "button.restart" | translate }}</mat-label>
-  </button>
-</div>
 
 <div *ngIf="detail.errors?.length > 0" class="cx-width-100 cx-border-primary-1">
   <h3>{{ "batch-processes.text.error-header" | translate }}</h3>

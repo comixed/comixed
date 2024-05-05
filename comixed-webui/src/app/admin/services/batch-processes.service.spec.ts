@@ -30,8 +30,8 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/core';
 import {
   BATCH_PROCESS_LIST_UPDATE_TOPIC,
-  GET_ALL_BATCH_PROCESSES_URL,
-  RESTART_BATCH_PROJECT_URL
+  DELETE_COMPLETED_BATCH_JOBS_URL,
+  GET_ALL_BATCH_PROCESSES_URL
 } from '@app/admin/admin.constants';
 import { Subscription } from 'webstomp-client';
 import {
@@ -41,7 +41,6 @@ import {
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { batchProcessUpdateReceived } from '@app/admin/actions/batch-processes.actions';
 import { WebSocketService } from '@app/messaging';
-import { HttpResponse } from '@angular/common/http';
 
 describe('BatchProcessesService', () => {
   const ENTRIES = [BATCH_PROCESS_DETAIL_1, BATCH_PROCESS_DETAIL_2];
@@ -143,16 +142,16 @@ describe('BatchProcessesService', () => {
     req.flush(ENTRIES);
   });
 
-  it('restarting a job', () => {
+  it('deleted completed batch jobs', () => {
     service
-      .restartJob({ detail: DETAIL })
-      .subscribe(response => expect(response.status).toEqual(200));
+      .deleteCompletedBatchJobs()
+      .subscribe(response => expect(response).toEqual(ENTRIES));
 
     const req = httpMock.expectOne(
-      interpolate(RESTART_BATCH_PROJECT_URL, { jobId: DETAIL.jobId })
+      interpolate(DELETE_COMPLETED_BATCH_JOBS_URL)
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({});
-    req.flush(new HttpResponse({ status: 200 }));
+    req.flush(ENTRIES);
   });
 });

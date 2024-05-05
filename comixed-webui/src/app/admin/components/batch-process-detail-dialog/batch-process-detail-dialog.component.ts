@@ -27,13 +27,9 @@ import { BATCH_PROCESS_DETAIL_UPDATE_TOPIC } from '@app/app.constants';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
 import { interpolate } from '@app/core';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
-import {
-  restartBatchProcess,
-  setBatchProcessDetail
-} from '@app/admin/actions/batch-processes.actions';
+import { setBatchProcessDetail } from '@app/admin/actions/batch-processes.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { RESTARTABLE_STATES } from '@app/admin/admin.constants';
 
 @Component({
   selector: 'cx-batch-process-detail-dialog',
@@ -45,7 +41,6 @@ export class BatchProcessDetailDialogComponent implements OnDestroy {
   messagingSubscription: Subscription;
   detailUpdateSubscription: MessagingSubscription;
   detail: BatchProcessDetail;
-  restartable = false;
   messagingStarted = false;
 
   constructor(
@@ -60,7 +55,6 @@ export class BatchProcessDetailDialogComponent implements OnDestroy {
       .pipe(filter(detail => !!detail))
       .subscribe(detail => {
         this.detail = detail;
-        this.restartable = RESTARTABLE_STATES.includes(this.detail.exitStatus);
         this.subscribeToUpdates();
       });
     this.messagingSubscription = this.store
@@ -72,23 +66,6 @@ export class BatchProcessDetailDialogComponent implements OnDestroy {
           this.unsubscribeFromUpdates();
         }
       });
-  }
-
-  onRestartBatchProcess() {
-    this.confirmationService.confirm({
-      title: this.translateService.instant(
-        'batch-processes.restart-process.confirmation-title',
-        { jobId: this.detail.jobId }
-      ),
-      message: this.translateService.instant(
-        'batch-processes.restart-process.confirmation-message',
-        { jobId: this.detail.jobId }
-      ),
-      confirm: () => {
-        this.logger.debug('Restarting batch process:', this.detail);
-        this.store.dispatch(restartBatchProcess({ detail: this.detail }));
-      }
-    });
   }
 
   ngOnDestroy(): void {
