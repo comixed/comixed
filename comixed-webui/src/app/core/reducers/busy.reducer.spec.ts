@@ -17,7 +17,11 @@
  */
 
 import { BusyState, initialState, reducer } from './busy.reducer';
-import { setBusyState } from '@app/core/actions/busy.actions';
+import {
+  BusyIcon,
+  setBusyState,
+  setBusyStateWithIcon
+} from '@app/core/actions/busy.actions';
 
 describe('Busy Reducer', () => {
   let state: BusyState;
@@ -34,18 +38,45 @@ describe('Busy Reducer', () => {
     it('clears the enabled flag', () => {
       expect(state.enabled).toBeFalse();
     });
+
+    it('has the default icon', () => {
+      expect(state.icon).toBe(BusyIcon.DEFAULT);
+    });
   });
 
   describe('enabling busy mode', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, enabled: false },
+        { ...state, enabled: false, icon: BusyIcon.SEARCHING },
         setBusyState({ enabled: true })
       );
     });
 
     it('sets the enabled flag', () => {
       expect(state.enabled).toBeTrue();
+    });
+
+    it('has the default icon', () => {
+      expect(state.icon).toBe(BusyIcon.DEFAULT);
+    });
+  });
+
+  describe('enabling busy mode with an icon', () => {
+    const ICON = BusyIcon.LOADING;
+
+    beforeEach(() => {
+      state = reducer(
+        { ...state, enabled: false, icon: BusyIcon.DEFAULT },
+        setBusyStateWithIcon({ enabled: true, icon: ICON })
+      );
+    });
+
+    it('sets the enabled flag', () => {
+      expect(state.enabled).toBeTrue();
+    });
+
+    it('sets the icon', () => {
+      expect(state.icon).toBe(ICON);
     });
   });
 
