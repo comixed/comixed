@@ -29,6 +29,11 @@ export const LANGUAGE_PREFERENCE = 'preference.language';
 export const LOGGER_LEVEL_PREFERENCE = 'preference.logging.level';
 export const DARK_MODE_PREFERENCE = 'preference.dark-mode';
 
+// image
+export const LOADING_ICON_URL = '/assets/img/loading.png';
+export const SEARCHING_ICON_URL = '/assets/img/searching.png';
+export const WORKING_ICON_URL = '/assets/img/working.png';
+
 // external pages
 
 export const WIKI_PAGE_URL = 'https://github.com/comixed/comixed/wiki';

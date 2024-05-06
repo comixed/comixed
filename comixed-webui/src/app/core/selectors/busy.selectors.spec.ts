@@ -18,12 +18,13 @@
 
 import { BUSY_FEATURE_KEY, BusyState } from '../reducers/busy.reducer';
 import { selectBusyState } from './busy.selectors';
+import { BusyIcon } from '@app/core/actions/busy.actions';
 
 describe('Busy Selectors', () => {
   let state: BusyState;
 
   beforeEach(() => {
-    state = { enabled: Math.random() > 0.5 };
+    state = { enabled: Math.random() > 0.5, icon: BusyIcon.WORKING };
   });
 
   it('should select the feature state', () => {

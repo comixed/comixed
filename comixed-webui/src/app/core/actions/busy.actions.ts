@@ -18,7 +18,19 @@
 
 import { createAction, props } from '@ngrx/store';
 
+export enum BusyIcon {
+  DEFAULT,
+  LOADING,
+  SEARCHING,
+  WORKING
+}
+
 export const setBusyState = createAction(
   '[Busy] Set the busy state',
   props<{ enabled: boolean }>()
+);
+
+export const setBusyStateWithIcon = createAction(
+  '[Busy] Set the busy state with an icon',
+  props<{ enabled: boolean; icon: BusyIcon }>()
 );

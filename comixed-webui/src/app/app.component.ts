@@ -27,7 +27,10 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   DARK_MODE_PREFERENCE,
   LANGUAGE_PREFERENCE,
-  LOGGER_LEVEL_PREFERENCE
+  LOADING_ICON_URL,
+  LOGGER_LEVEL_PREFERENCE,
+  SEARCHING_ICON_URL,
+  WORKING_ICON_URL
 } from '@app/app.constants';
 import {
   startMessaging,
@@ -41,6 +44,7 @@ import { LibraryState } from '@app/library/reducers/library.reducer';
 import { toggleDarkThemeMode } from '@app/actions/dark-theme.actions';
 import { selectDarkThemeActive } from '@app/selectors/dark-theme.selectors';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { BusyIcon } from '@app/core/actions/busy.actions';
 
 @Component({
   selector: 'cx-root',
@@ -54,6 +58,7 @@ export class AppComponent implements OnInit {
   libraryStateSubscription: Subscription;
   libraryState: LibraryState;
   darkMode = false;
+  busyIcon = BusyIcon.DEFAULT;
 
   constructor(
     private logger: LoggerService,
@@ -131,9 +136,10 @@ export class AppComponent implements OnInit {
         );
       }
     });
-    this.store
-      .select(selectBusyState)
-      .subscribe(state => (this.busy = state.enabled));
+    this.store.select(selectBusyState).subscribe(state => {
+      this.busy = state.enabled;
+      this.busyIcon = state.icon;
+    });
     this.store.select(selectDarkThemeActive).subscribe(toggle => {
       this.darkMode = toggle;
       const element = window.document.body;
@@ -145,6 +151,19 @@ export class AppComponent implements OnInit {
         element.classList.remove('dark-theme');
       }
     });
+  }
+
+  get busyIconURL(): string {
+    switch (this.busyIcon) {
+      case BusyIcon.LOADING:
+        return LOADING_ICON_URL;
+      case BusyIcon.SEARCHING:
+        return SEARCHING_ICON_URL;
+      case BusyIcon.WORKING:
+      case BusyIcon.DEFAULT:
+      default:
+        return WORKING_ICON_URL;
+    }
   }
 
   ngOnInit(): void {

@@ -48,10 +48,15 @@ import {
 } from '@app/messaging/reducers/messaging.reducer';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
-  initialState as initialImportCountState,
-  IMPORT_COMIC_BOOKS_FEATURE_KEY
+  IMPORT_COMIC_BOOKS_FEATURE_KEY,
+  initialState as initialImportCountState
 } from '@app/reducers/import-comic-books.reducer';
-import { LOGGER_LEVEL_PREFERENCE } from '@app/app.constants';
+import {
+  LOADING_ICON_URL,
+  LOGGER_LEVEL_PREFERENCE,
+  SEARCHING_ICON_URL,
+  WORKING_ICON_URL
+} from '@app/app.constants';
 import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -86,6 +91,7 @@ import {
   FEATURE_ENABLED_FEATURE_KEY,
   initialState as initialFeatureEnabledState
 } from '@app/admin/reducers/feature-enabled.reducer';
+import { BusyIcon } from '@app/core/actions/busy.actions';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -294,6 +300,28 @@ describe('AppComponent', () => {
 
     it('updates the component state', () => {
       expect(component.darkMode).toEqual(DARK_MODE);
+    });
+  });
+
+  describe('busy icon urls', () => {
+    it('returns the loading image url', () => {
+      component.busyIcon = BusyIcon.LOADING;
+      expect(component.busyIconURL).toEqual(LOADING_ICON_URL);
+    });
+
+    it('returns the searcing image url', () => {
+      component.busyIcon = BusyIcon.SEARCHING;
+      expect(component.busyIconURL).toEqual(SEARCHING_ICON_URL);
+    });
+
+    it('returns the working image url', () => {
+      component.busyIcon = BusyIcon.WORKING;
+      expect(component.busyIconURL).toEqual(WORKING_ICON_URL);
+    });
+
+    it('returns the default image url', () => {
+      component.busyIcon = BusyIcon.DEFAULT;
+      expect(component.busyIconURL).toEqual(WORKING_ICON_URL);
     });
   });
 });

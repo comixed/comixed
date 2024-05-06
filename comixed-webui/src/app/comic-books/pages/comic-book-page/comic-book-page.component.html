@@ -1,3 +1,9 @@
+<div *ngIf="!comicBook" class="cx-overlay cx-width-100 cx-height-100">
+  <div class="cx-centered cx-position-absolute">
+    <img src="/assets/img/book.png" alt="Loading comic book..." />
+  </div>
+</div>
+
 <div *ngIf="!!comicBook" class="cx-fab-container-bottom-left cx-z-index-99">
   <div class="cx-horizontal-container">
     <button

@@ -45,7 +45,7 @@ import {
 } from '@app/comic-metadata/selectors/single-book-scraping.selectors';
 import { TranslateService } from '@ngx-translate/core';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
-import { setBusyState } from '@app/core/actions/busy.actions';
+import { BusyIcon, setBusyStateWithIcon } from '@app/core/actions/busy.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { PAGE_SIZE_OPTIONS } from '@app/core';
@@ -115,7 +115,12 @@ export class ComicScrapingVolumeSelectionComponent
     this.scrapingStateSubscription = this.store
       .select(selectSingleBookScrapingState)
       .subscribe(state => {
-        this.store.dispatch(setBusyState({ enabled: state.loadingRecords }));
+        this.store.dispatch(
+          setBusyStateWithIcon({
+            enabled: state.loadingRecords,
+            icon: BusyIcon.LOADING
+          })
+        );
         this.autoSelectExactMatch = state.autoSelectExactMatch;
       });
   }

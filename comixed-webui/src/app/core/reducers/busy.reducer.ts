@@ -17,20 +17,35 @@
  */
 
 import { createReducer, on } from '@ngrx/store';
-import { setBusyState } from '../actions/busy.actions';
+import {
+  BusyIcon,
+  setBusyState,
+  setBusyStateWithIcon
+} from '../actions/busy.actions';
 
 export const BUSY_FEATURE_KEY = 'busy_state';
 
 export interface BusyState {
   enabled: boolean;
+  icon: BusyIcon;
 }
 
 export const initialState: BusyState = {
-  enabled: false
+  enabled: false,
+  icon: BusyIcon.DEFAULT
 };
 
 export const reducer = createReducer(
   initialState,
 
-  on(setBusyState, (state, action) => ({ ...state, enabled: action.enabled }))
+  on(setBusyState, (state, action) => ({
+    ...state,
+    enabled: action.enabled,
+    icon: BusyIcon.DEFAULT
+  })),
+  on(setBusyStateWithIcon, (state, action) => ({
+    ...state,
+    enabled: action.enabled,
+    icon: action.icon
+  }))
 );

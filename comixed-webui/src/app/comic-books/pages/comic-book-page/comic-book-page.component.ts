@@ -22,7 +22,11 @@ import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
-import { setBusyState } from '@app/core/actions/busy.actions';
+import {
+  BusyIcon,
+  setBusyState,
+  setBusyStateWithIcon
+} from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import {
   getPageSize,
@@ -135,7 +139,12 @@ export class ComicBookPageComponent
     this.scrapingStateSubscription = this.store
       .select(selectSingleBookScrapingState)
       .subscribe(state =>
-        this.store.dispatch(setBusyState({ enabled: state.loadingRecords }))
+        this.store.dispatch(
+          setBusyStateWithIcon({
+            enabled: state.loadingRecords,
+            icon: BusyIcon.LOADING
+          })
+        )
       );
     this.comicSubscription = this.store
       .select(selectComicBook)
