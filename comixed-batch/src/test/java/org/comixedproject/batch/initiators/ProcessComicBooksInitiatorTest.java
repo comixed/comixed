@@ -44,7 +44,7 @@ import org.springframework.batch.core.repository.JobRestartException;
 @RunWith(MockitoJUnitRunner.class)
 public class ProcessComicBooksInitiatorTest {
   private static final String TEST_BATCH_NAME = "The batch  name";
-  private static final long TEST_MAXL_RECORDS = 25L;
+  private static final int TEST_BATCH_SIZE = 25;
 
   @InjectMocks private ProcessComicBooksInitiator initiator;
   @Mock private ComicBookService comicBookService;
@@ -68,10 +68,12 @@ public class ProcessComicBooksInitiatorTest {
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
           JobRestartException {
-    for (int index = 0; index < TEST_MAXL_RECORDS; index++)
+    initiator.batchSize = TEST_BATCH_SIZE;
+    for (int index = 0; index < TEST_BATCH_SIZE; index++)
       comicBookList.add(Mockito.mock(ComicBook.class));
     Mockito.when(comicBatch.getName()).thenReturn(TEST_BATCH_NAME);
-    Mockito.when(comicBatchService.createProcessComicBooksGroup(Mockito.anyList()))
+    Mockito.when(
+            comicBatchService.createProcessComicBooksGroup(Mockito.anyList(), Mockito.anyInt()))
         .thenReturn(comicBatch);
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
@@ -97,7 +99,7 @@ public class ProcessComicBooksInitiatorTest {
   }
 
   @Test
-  public void testExecuteOneComicVound()
+  public void testExecuteOneComicFound()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -111,6 +113,27 @@ public class ProcessComicBooksInitiatorTest {
     assertNotNull(jobParameters.getLong(JOB_PROCESS_COMIC_BOOKS_STARTED));
 
     Mockito.verify(jobLauncher, Mockito.times(1)).run(addPageToImageCacheJob, jobParameters);
+  }
+
+  @Test
+  public void testExecuteMultipleBatches()
+      throws JobInstanceAlreadyCompleteException,
+          JobExecutionAlreadyRunningException,
+          JobParametersInvalidException,
+          JobRestartException {
+    initiator.batchSize = TEST_BATCH_SIZE / 2;
+
+    initiator.execute();
+
+    final List<JobParameters> jobParameters = jobParametersArgumentCaptor.getAllValues();
+
+    assertFalse(jobParameters.isEmpty());
+    for (int index = 0; index < jobParameters.size(); index++) {
+      final JobParameters jobParameter = jobParameters.get(index);
+      assertNotNull(jobParameter.getLong(JOB_PROCESS_COMIC_BOOKS_STARTED));
+
+      Mockito.verify(jobLauncher, Mockito.times(1)).run(addPageToImageCacheJob, jobParameter);
+    }
   }
 
   @Test

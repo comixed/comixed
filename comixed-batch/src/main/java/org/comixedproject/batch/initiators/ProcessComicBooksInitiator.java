@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */ package org.comixedproject.batch.initiators;
 
-import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.JOB_PROCESS_COMIC_BOOKS_BATCH_NAME;
-import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.JOB_PROCESS_COMIC_BOOKS_STARTED;
+import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.batch.ComicBatch;
@@ -34,6 +34,7 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -48,6 +49,9 @@ import org.springframework.stereotype.Component;
 public class ProcessComicBooksInitiator {
   @Autowired private ComicBookService comicBookService;
   @Autowired private ComicBatchService comicBatchService;
+
+  @Value("${comixed.batch.process-comic-books.batch-size}")
+  int batchSize;
 
   @Autowired
   @Qualifier("processComicBooksJob")
@@ -66,24 +70,31 @@ public class ProcessComicBooksInitiator {
       log.debug("No comic books to be processed");
       return;
     }
-    log.debug(
-        "Preparing comic batch for {} comic book{}",
-        comicBooks.size(),
-        comicBooks.size() > 1 ? "s" : "");
-    final ComicBatch group = this.comicBatchService.createProcessComicBooksGroup(comicBooks);
-    log.info("Starting process comics job: {}", group.getName());
-    try {
-      this.jobLauncher.run(
-          this.processComicBooksJob,
-          new JobParametersBuilder()
-              .addLong(JOB_PROCESS_COMIC_BOOKS_STARTED, System.currentTimeMillis())
-              .addString(JOB_PROCESS_COMIC_BOOKS_BATCH_NAME, group.getName())
-              .toJobParameters());
-    } catch (JobExecutionAlreadyRunningException
-        | JobRestartException
-        | JobInstanceAlreadyCompleteException
-        | JobParametersInvalidException error) {
-      log.error("Failed to start batch job processing comics", error);
+    final List<ComicBook> batch = new ArrayList<>();
+    for (int batchIndex = 0; batchIndex < comicBooks.size(); batchIndex++) {
+      batch.add(comicBooks.get(batchIndex));
+      if (batch.size() == this.batchSize || batchIndex == (comicBooks.size() - 1)) {
+        log.debug(
+            "Preparing comic batch for {} comic book{}", batch.size(), batch.size() > 1 ? "s" : "");
+        final int index = batchIndex / this.batchSize;
+        final ComicBatch group = this.comicBatchService.createProcessComicBooksGroup(batch, index);
+        log.info("Starting process comics job: {}", group.getName());
+        try {
+          this.jobLauncher.run(
+              this.processComicBooksJob,
+              new JobParametersBuilder()
+                  .addLong(JOB_PROCESS_COMIC_BOOKS_STARTED, System.currentTimeMillis())
+                  .addLong(JOB_PROCESS_COMIC_BOOKS_INDEX, (long) index)
+                  .addString(JOB_PROCESS_COMIC_BOOKS_BATCH_NAME, group.getName())
+                  .toJobParameters());
+        } catch (JobExecutionAlreadyRunningException
+            | JobRestartException
+            | JobInstanceAlreadyCompleteException
+            | JobParametersInvalidException error) {
+          log.error("Failed to start batch job processing comics", error);
+        }
+        batch.clear();
+      }
     }
   }
 }

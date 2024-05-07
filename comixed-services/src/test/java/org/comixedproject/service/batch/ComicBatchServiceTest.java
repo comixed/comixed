@@ -34,6 +34,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class ComicBatchServiceTest {
   private static final String TEST_BATCH_NAME = "batch-name";
+  private static final int TEST_INDEX = 12;
 
   @InjectMocks private ComicBatchService service;
   @Mock private ComicBatchRepository comicBatchRepository;
@@ -54,7 +55,7 @@ public class ComicBatchServiceTest {
 
   @Test
   public void testCreateProcessComicBatchGroup() {
-    service.createProcessComicBooksGroup(comicBookList);
+    service.createProcessComicBooksGroup(comicBookList, TEST_INDEX);
 
     final ComicBatch comicBatchArgument = comicBatchArgumentCaptor.getValue();
     assertNotNull(comicBatchArgument);
