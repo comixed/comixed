@@ -40,18 +40,21 @@ import org.springframework.transaction.annotation.Transactional;
 public class ComicBatchService {
   @Autowired private ComicBatchRepository comicBatchRepository;
 
-  private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd yyyy HH:mm:ss");
+  private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/YYYY HH:mm");
 
   /**
    * Creates a comic batch for unprocessed comic books.
    *
    * @param comicBooks the comic books to process
+   * @param index the batch index
    * @return the comic batch
    */
   @Transactional
-  public ComicBatch createProcessComicBooksGroup(final List<ComicBook> comicBooks) {
+  public ComicBatch createProcessComicBooksGroup(
+      final List<ComicBook> comicBooks, final int index) {
     log.debug("Creating a process comic batch");
-    final String name = String.format("Process Comics (%s)", simpleDateFormat.format(new Date()));
+    final String name =
+        String.format("Process Comics %s %d", this.simpleDateFormat.format(new Date()), index);
     log.debug("Getting unprocessed comics");
     final ComicBatch batch = new ComicBatch(name);
     comicBooks.forEach(

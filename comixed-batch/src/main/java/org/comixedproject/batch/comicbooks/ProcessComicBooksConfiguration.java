@@ -45,6 +45,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Log4j2
 public class ProcessComicBooksConfiguration {
   public static final String JOB_PROCESS_COMIC_BOOKS_STARTED = "job.process-comic-books.started";
+  public static final String JOB_PROCESS_COMIC_BOOKS_INDEX = "job.process-comic-books.index";
   public static final String JOB_PROCESS_COMIC_BOOKS_BATCH_NAME =
       "job.process-comic-books.batch-name";
 
