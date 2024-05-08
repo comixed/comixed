@@ -21,14 +21,11 @@ package org.comixedproject.adaptors.content;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.junit.Before;
+import org.comixedproject.model.comicpages.Page;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
@@ -39,19 +36,23 @@ import org.springframework.test.context.TestPropertySource;
 public class ImageContentAdaptorTest extends BaseContentAdaptorTest {
   private static final String TEST_JPEG_FILENAME = "src/test/resources/example.jpg";
   private static final String TEST_WEBP_FILENAME = "src/test/resources/example.webp";
-  private static final String TEST_HASH = "928375298571098571209857";
 
   @InjectMocks private ImageContentAdaptor loader;
-  @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
-  private ComicBook comicBook;
+  private ComicBook comicBook = new ComicBook();
   private ContentAdaptorRules contentAdaptorRules = new ContentAdaptorRules();
 
-  @Before
-  public void setUp() {
-    comicBook = new ComicBook();
-    Mockito.when(genericUtilitiesAdaptor.createHash(Mockito.any(byte[].class)))
-        .thenReturn(TEST_HASH);
+  @Test
+  public void testLoadFileAlreadyExists() throws IOException {
+    comicBook.getPages().add(new Page());
+    comicBook.getPages().get(0).setFilename(TEST_JPEG_FILENAME);
+
+    byte[] content = loadFile(TEST_JPEG_FILENAME);
+
+    loader.loadContent(comicBook, TEST_JPEG_FILENAME, content, contentAdaptorRules);
+
+    assertEquals(1, comicBook.getPageCount());
+    assertNotNull(comicBook.getPage(0));
   }
 
   @Test

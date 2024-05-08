@@ -81,7 +81,7 @@ public class PageRepositoryTest {
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertEquals(6, result.size());
+    assertEquals(4, result.size());
   }
 
   @Test

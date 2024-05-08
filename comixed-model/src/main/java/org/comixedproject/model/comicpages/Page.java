@@ -68,7 +68,7 @@ public class Page {
   @NonNull
   private String filename;
 
-  @Column(name = "file_hash", length = 32, updatable = true, nullable = false)
+  @Column(name = "file_hash", length = 32, updatable = true, nullable = true)
   @JsonProperty("hash")
   @JsonView({View.ComicListView.class})
   @Getter
@@ -83,14 +83,14 @@ public class Page {
   @NonNull
   private Integer pageNumber;
 
-  @Column(name = "width", updatable = true)
+  @Column(name = "width", nullable = false, updatable = true)
   @JsonProperty("width")
   @JsonView({View.ComicDetailsView.class})
   @Getter
   @Setter
   private Integer width = -1;
 
-  @Column(name = "height", updatable = true)
+  @Column(name = "height", nullable = false, updatable = true)
   @JsonProperty("height")
   @JsonView({View.ComicDetailsView.class})
   @Getter

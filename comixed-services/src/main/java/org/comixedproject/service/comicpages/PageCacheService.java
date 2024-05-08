@@ -19,13 +19,19 @@
 package org.comixedproject.service.comicpages;
 
 import java.io.*;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
+import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.comicpages.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.CacheControl;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PageCacheService {
   @Autowired private PageService pageService;
   @Autowired private ComicBookAdaptor comicBookAdaptor;
+  @Autowired private FileTypeAdaptor fileTypeAdaptor;
 
   @Value("${comixed.images.cache.location}")
   String cacheDirectory;
@@ -66,7 +73,7 @@ public class PageCacheService {
   }
 
   File getFileForHash(final String hash) {
-    if (hash.length() != 32) {
+    if (Objects.isNull(hash) || hash.length() != 32) {
       return null;
     }
 
@@ -138,5 +145,85 @@ public class PageCacheService {
                 this.pageService.markCoverPagesToHaveCacheEntryCreated(hash);
               }
             });
+  }
+
+  /**
+   * Returns the content for a page, by record id, prepared for web display. If the content is not
+   * found then loads the alternate file and returns that instead.
+   *
+   * @param id the page id
+   * @param missingFilename the alternate content file
+   * @return the page content
+   * @throws PageException if the page is not found
+   * @see #saveByHash(String, byte[])
+   */
+  public ResponseEntity<byte[]> getPageContent(final long id, final String missingFilename)
+      throws PageException {
+    final Page page = this.pageService.getForId(id);
+    return this.doGetPageContent(page, missingFilename);
+  }
+
+  /**
+   * Returns the content for a page, by file hash, prepared for web display. If the content is not
+   * found then loads the alternate file and returns that instead.
+   *
+   * @param hash the page hash
+   * @param missingFilename the alternate content file
+   * @return the page content
+   * @throws PageException if the page was not found
+   * @see #getPageContent(long, String)
+   */
+  public ResponseEntity<byte[]> getPageContent(final String hash, final String missingFilename)
+      throws PageException {
+    final Page page = this.pageService.getOneForHash(hash);
+    if (page == null) throw new PageException("No pages with hash: " + hash);
+    return this.doGetPageContent(page, missingFilename);
+  }
+
+  private ResponseEntity<byte[]> doGetPageContent(Page page, final String missingFilename)
+      throws PageException {
+    log.debug("creating response entity for page: id={}", page.getId());
+    byte[] content = this.findByHash(page.getHash());
+
+    if (content == null) {
+      try {
+        log.debug("Fetching content for page");
+        content = this.comicBookAdaptor.loadPageContent(page.getComicBook(), page.getPageNumber());
+        if (!Objects.isNull(content) && Objects.isNull(page.getHash())) {
+          log.debug("Updating page content: id={}", page.getId());
+          page = this.pageService.updatePageContent(page, content);
+          log.debug("Caching image for hash: {} bytes hash={}", content.length, page.getHash());
+          this.saveByHash(page.getHash(), content);
+        }
+      } catch (AdaptorException error) {
+        throw new PageException("Failed to load page content", error);
+      }
+    }
+
+    if (content == null) {
+      content = this.doLoadMissingPageImage(missingFilename);
+    }
+
+    String type =
+        this.fileTypeAdaptor.getType(new ByteArrayInputStream(content))
+            + "/"
+            + this.fileTypeAdaptor.getSubtype(new ByteArrayInputStream(content));
+    log.debug("Page type: {}", type);
+
+    return ResponseEntity.ok()
+        .contentLength(content != null ? content.length : 0)
+        .header("Content-Disposition", "attachment; filename=\"" + page.getFilename() + "\"")
+        .contentType(MediaType.valueOf(type))
+        .cacheControl(CacheControl.maxAge(24, TimeUnit.DAYS))
+        .body(content);
+  }
+
+  private byte[] doLoadMissingPageImage(final String missingFilename) throws PageException {
+    try (final InputStream input = this.getClass().getResourceAsStream(missingFilename)) {
+      return input.readAllBytes();
+    } catch (Exception error) {
+      log.error("Failed to load missing page image", error);
+      throw new PageException("Cannot find image: " + missingFilename, error);
+    }
   }
 }

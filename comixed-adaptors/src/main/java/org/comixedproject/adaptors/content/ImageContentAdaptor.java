@@ -18,15 +18,9 @@
 
 package org.comixedproject.adaptors.content;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -37,8 +31,6 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class ImageContentAdaptor extends AbstractContentAdaptor {
-  @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
-
   @Override
   public void loadContent(
       final ComicBook comicBook,
@@ -50,23 +42,11 @@ public class ImageContentAdaptor extends AbstractContentAdaptor {
     if (comicBook.hasPageWithFilename(filename)) {
       log.trace("Ignore known file: {}", filename);
     } else {
-      final String hash = genericUtilitiesAdaptor.createHash(content);
-
-      try {
-        final BufferedImage bimage = ImageIO.read(new ByteArrayInputStream(content));
-        final int width = bimage.getWidth();
-        final int height = bimage.getHeight();
-        var page = new Page();
-        page.setFilename(filename);
-        page.setHash(hash);
-        page.setWidth(width);
-        page.setHeight(height);
-        page.setComicBook(comicBook);
-        comicBook.getPages().add(page);
-        page.setPageNumber(comicBook.getPages().size());
-      } catch (IOException error) {
-        log.error("Failed to load content: {}", filename, error);
-      }
+      var page = new Page();
+      page.setFilename(filename);
+      page.setComicBook(comicBook);
+      comicBook.getPages().add(page);
+      page.setPageNumber(comicBook.getPages().size());
     }
   }
 }

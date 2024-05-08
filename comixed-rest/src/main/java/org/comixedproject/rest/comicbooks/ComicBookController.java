@@ -23,34 +23,29 @@ import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LI
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicTagType;
-import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.comicbooks.*;
 import org.comixedproject.service.comicbooks.*;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.service.comicpages.PageCacheService;
+import org.comixedproject.service.comicpages.PageException;
+import org.comixedproject.service.comicpages.PageService;
 import org.comixedproject.service.library.LastReadException;
 import org.comixedproject.service.library.LastReadService;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.comixedproject.views.View.ComicDetailsView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -72,6 +67,7 @@ public class ComicBookController {
   @Autowired private ComicBookService comicBookService;
   @Autowired private ComicDetailService comicDetailService;
   @Autowired private ComicBookSelectionService comicBookSelectionService;
+  @Autowired private PageService pageService;
   @Autowired private PageCacheService pageCacheService;
   @Autowired private ComicFileService comicFileService;
   @Autowired private ReadingListService readingListService;
@@ -237,63 +233,12 @@ public class ComicBookController {
       throws ComicBookException {
     log.debug("Getting cover for comicBook: id={}", id);
     final ComicBook comicBook = this.comicBookService.getComic(id);
-
-    if (comicBook == null || comicBook.isMissing()) {
-      return this.getResponseEntityForImage(this.doLoadMissingPageImage(), MISSING_COMIC_COVER);
+    try {
+      return this.pageCacheService.getPageContent(
+          comicBook.getPages().get(0).getId(), MISSING_COMIC_COVER);
+    } catch (PageException error) {
+      throw new ComicBookException("Failed to load comic cover", error);
     }
-
-    if (comicBook.getPageCount() > 0) {
-      final String filename = comicBook.getPage(0).getFilename();
-      final Page page = comicBook.getPage(0);
-      log.debug("Looking for cached image: hash={}", page.getHash());
-      byte[] content = this.pageCacheService.findByHash(page.getHash());
-      if (content == null) {
-        log.debug("Loading page from archive");
-        try {
-          content = this.comicBookAdaptor.loadPageContent(comicBook, 0);
-          this.pageCacheService.saveByHash(page.getHash(), content);
-        } catch (AdaptorException error) {
-          log.error("Failed to load page content", error);
-        }
-      }
-      log.debug("Returning comicBook cover: filename={} size={}", filename, content.length);
-      return this.getResponseEntityForImage(content, filename);
-    } else {
-      log.debug("ComicBook is unprocessed; getting the first image instead");
-      byte[] coverContent;
-      try {
-        coverContent =
-            this.comicFileService.getImportFileCover(comicBook.getComicDetail().getFilename());
-      } catch (AdaptorException error) {
-        log.error("Failed to load cover content", error);
-        coverContent = this.doLoadMissingPageImage();
-      }
-      return this.getResponseEntityForImage(coverContent, "cover-image");
-    }
-  }
-
-  private byte[] doLoadMissingPageImage() {
-    try (final InputStream input =
-        this.getClass().getResourceAsStream(MISSING_COMIC_COVER_FILENAME)) {
-      return input.readAllBytes();
-    } catch (IOException error) {
-      log.error("Failed to load missing page image", error);
-      return null;
-    }
-  }
-
-  private ResponseEntity<byte[]> getResponseEntityForImage(byte[] content, String filename) {
-    final ByteArrayInputStream inputStream = new ByteArrayInputStream(content);
-    String type =
-        this.fileTypeAdaptor.getType(inputStream)
-            + "/"
-            + this.fileTypeAdaptor.getSubtype(inputStream);
-    return ResponseEntity.ok()
-        .contentLength(content.length)
-        .header("Content-Disposition", String.format(ATTACHMENT_FILENAME_FORMAT, filename))
-        .contentType(MediaType.valueOf(type))
-        .cacheControl(CacheControl.maxAge(24, TimeUnit.DAYS))
-        .body(content);
   }
 
   /**
