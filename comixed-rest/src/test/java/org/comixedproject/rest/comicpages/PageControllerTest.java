@@ -18,24 +18,17 @@
 
 package org.comixedproject.rest.comicpages;
 
-import static junit.framework.TestCase.assertNull;
+import static org.comixedproject.rest.comicbooks.ComicBookController.MISSING_COMIC_COVER_FILENAME;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
 import java.io.InputStream;
 import java.util.List;
-import org.comixedproject.adaptors.AdaptorException;
-import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.net.comicpages.UpdatePageDeletionRequest;
-import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.service.comicpages.PageException;
 import org.comixedproject.service.comicpages.PageService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -47,113 +40,70 @@ import org.springframework.http.ResponseEntity;
 @SpringBootTest
 public class PageControllerTest {
   private static final long TEST_PAGE_ID = 129;
-  private static final int TEST_PAGE_INDEX = 7;
-  private static final long TEST_COMIC_ID = 1002L;
-  private static final byte[] TEST_PAGE_CONTENT = new byte[53253];
   private static final String TEST_PAGE_HASH = "12345";
-  private static final String TEST_PAGE_CONTENT_TYPE = "application";
-  private static final String TEST_PAGE_CONTENT_SUBTYPE = "image";
 
   @InjectMocks private PageController controller;
   @Mock private PageService pageService;
   @Mock private PageCacheService pageCacheService;
-  @Mock private Page page;
-  @Mock private ComicBook comicBook;
-  @Mock private FileTypeAdaptor fileTypeAdaptor;
-  @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private List<Long> idList;
+  @Mock private ResponseEntity<byte[]> responseEntity;
 
   @Captor private ArgumentCaptor<InputStream> inputStream;
 
   private ArchiveType archiveType = ArchiveType.CB7;
 
-  @Before
-  public void setUp() {
-    Mockito.when(page.getHash()).thenReturn(TEST_PAGE_HASH);
+  @Test(expected = PageException.class)
+  public void testGetPageContentAdaptorException() throws PageException {
+    Mockito.when(pageCacheService.getPageContent(Mockito.anyLong(), Mockito.anyString()))
+        .thenThrow(PageException.class);
+
+    try {
+      controller.getPageContent(TEST_PAGE_ID);
+    } finally {
+      Mockito.verify(pageCacheService, Mockito.times(1))
+          .getPageContent(TEST_PAGE_ID, MISSING_COMIC_COVER_FILENAME);
+    }
   }
 
   @Test
-  public void testGetPageForHashNoPageFound() throws PageException, AdaptorException {
-    Mockito.when(pageService.getOneForHash(Mockito.anyString())).thenReturn(null);
+  public void testGetPageContent() throws PageException {
+    Mockito.when(pageCacheService.getPageContent(Mockito.anyLong(), Mockito.anyString()))
+        .thenReturn(responseEntity);
+
+    final ResponseEntity<byte[]> result = controller.getPageContent(TEST_PAGE_ID);
+
+    assertNotNull(result);
+    assertSame(responseEntity, result);
+
+    Mockito.verify(pageCacheService, Mockito.times(1))
+        .getPageContent(TEST_PAGE_ID, MISSING_COMIC_COVER_FILENAME);
+  }
+
+  @Test(expected = PageException.class)
+  public void testGetPageForHashNoPageFound() throws PageException {
+    Mockito.when(pageCacheService.getPageContent(Mockito.anyString(), Mockito.anyString()))
+        .thenThrow(PageException.class);
+
+    try {
+      controller.getPageForHash(TEST_PAGE_HASH);
+    } finally {
+      Mockito.verify(pageCacheService, Mockito.times(1))
+          .getPageContent(TEST_PAGE_HASH, MISSING_COMIC_COVER_FILENAME);
+    }
+  }
+
+  @Test
+  public void testGetPageForHash() throws PageException {
+    Mockito.when(pageCacheService.getPageContent(Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(responseEntity);
 
     final ResponseEntity<byte[]> result = controller.getPageForHash(TEST_PAGE_HASH);
 
-    assertNull(result);
-
-    Mockito.verify(pageService, Mockito.times(1)).getOneForHash(TEST_PAGE_HASH);
-  }
-
-  @Test
-  public void testGetPageForHash() throws ComicBookException, PageException, AdaptorException {
-    Mockito.when(pageService.getOneForHash(Mockito.anyString())).thenReturn(page);
-    Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(null);
-    Mockito.when(page.getComicBook()).thenReturn(comicBook);
-    Mockito.when(page.getPageNumber()).thenReturn(TEST_PAGE_INDEX);
-    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))
-        .thenReturn(TEST_PAGE_CONTENT);
-    Mockito.when(fileTypeAdaptor.getType(inputStream.capture())).thenReturn(TEST_PAGE_CONTENT_TYPE);
-    Mockito.when(fileTypeAdaptor.getSubtype(inputStream.capture()))
-        .thenReturn(TEST_PAGE_CONTENT_SUBTYPE);
-
-    ResponseEntity<byte[]> result = controller.getPageForHash(TEST_PAGE_HASH);
-
     assertNotNull(result);
-    assertSame(TEST_PAGE_CONTENT, result.getBody());
+    assertSame(responseEntity, result);
 
-    Mockito.verify(pageService, Mockito.times(1)).getOneForHash(TEST_PAGE_HASH);
-    Mockito.verify(pageCacheService, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-    Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadPageContent(comicBook, TEST_PAGE_INDEX);
-    Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getType(inputStream.getAllValues().get(0));
-    Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getSubtype(inputStream.getAllValues().get(1));
-  }
-
-  @Test
-  public void testGetPageContentAdaptorException()
-      throws ComicBookException, PageException, AdaptorException {
-    Mockito.when(pageService.getForId(Mockito.anyLong())).thenReturn(page);
-    Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(null);
-    Mockito.when(page.getComicBook()).thenReturn(comicBook);
-    Mockito.when(page.getPageNumber()).thenReturn(TEST_PAGE_INDEX);
-    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))
-        .thenThrow(AdaptorException.class);
-    Mockito.when(fileTypeAdaptor.getType(inputStream.capture())).thenReturn(TEST_PAGE_CONTENT_TYPE);
-    Mockito.when(fileTypeAdaptor.getSubtype(inputStream.capture()))
-        .thenReturn(TEST_PAGE_CONTENT_SUBTYPE);
-
-    ResponseEntity<byte[]> result = controller.getPageContent(TEST_PAGE_ID);
-
-    assertNotNull(result);
-    assertNotNull(result.getBody());
-
-    Mockito.verify(pageService, Mockito.times(1)).getForId(TEST_PAGE_ID);
-    Mockito.verify(pageCacheService, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-    Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadPageContent(comicBook, TEST_PAGE_INDEX);
-    Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getType(inputStream.getAllValues().get(0));
-    Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getSubtype(inputStream.getAllValues().get(1));
-  }
-
-  @Test
-  public void testGetPageContent() throws ComicBookException, PageException, AdaptorException {
-    Mockito.when(pageService.getForId(Mockito.anyLong())).thenReturn(page);
-    Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(null);
-    Mockito.when(page.getComicBook()).thenReturn(comicBook);
-    Mockito.when(page.getPageNumber()).thenReturn(TEST_PAGE_INDEX);
-    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))
-        .thenReturn(TEST_PAGE_CONTENT);
-    Mockito.when(fileTypeAdaptor.getType(inputStream.capture())).thenReturn(TEST_PAGE_CONTENT_TYPE);
-    Mockito.when(fileTypeAdaptor.getSubtype(inputStream.capture()))
-        .thenReturn(TEST_PAGE_CONTENT_SUBTYPE);
-
-    ResponseEntity<byte[]> result = controller.getPageContent(TEST_PAGE_ID);
-
-    assertNotNull(result);
-    assertSame(TEST_PAGE_CONTENT, result.getBody());
-
-    Mockito.verify(pageService, Mockito.times(1)).getForId(TEST_PAGE_ID);
-    Mockito.verify(pageCacheService, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-    Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadPageContent(comicBook, TEST_PAGE_INDEX);
-    Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getType(inputStream.getAllValues().get(0));
-    Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getSubtype(inputStream.getAllValues().get(1));
+    Mockito.verify(pageCacheService, Mockito.times(1))
+        .getPageContent(TEST_PAGE_HASH, MISSING_COMIC_COVER_FILENAME);
   }
 
   @Test

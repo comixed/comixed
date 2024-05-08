@@ -20,10 +20,15 @@ package org.comixedproject.service.comicpages;
 
 import static org.comixedproject.state.comicpages.PageStateHandler.HEADER_PAGE;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import javax.imageio.ImageIO;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.comicpages.PageState;
@@ -55,6 +60,7 @@ public class PageService implements InitializingBean, PageStateChangeListener {
   @Autowired private PageStateHandler pageStateHandler;
   @Autowired private ComicBookService comicBookService;
   @Autowired private ComicStateHandler comicStateHandler;
+  @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
   @Override
   public void afterPropertiesSet() throws Exception {
@@ -232,5 +238,30 @@ public class PageService implements InitializingBean, PageStateChangeListener {
    */
   public void markCoverPagesToHaveCacheEntryCreated(final String hash) {
     this.pageRepository.markCoverPagesToHaveCacheEntryCreated(hash);
+  }
+
+  /**
+   * Updates a page's details based on content.
+   *
+   * @param page the page
+   * @param content the content
+   * @return the updated page
+   */
+  @Transactional
+  public Page updatePageContent(final Page page, final byte[] content) {
+    log.debug("Getting page hash");
+    page.setHash(this.genericUtilitiesAdaptor.createHash(content));
+    try {
+      final BufferedImage image = ImageIO.read(new ByteArrayInputStream(content));
+      if (image != null) {
+        log.debug("Getting page dimensions ");
+        page.setWidth(image.getWidth());
+        page.setHeight(image.getHeight());
+      }
+    } catch (IOException error) {
+      log.error("Failed to load image from content");
+    }
+    log.debug("Saving updated page");
+    return this.pageRepository.save(page);
   }
 }

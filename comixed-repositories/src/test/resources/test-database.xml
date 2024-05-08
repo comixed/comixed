@@ -351,6 +351,8 @@
                  filename="frontpage.jpg"
                  page_number="0"
                  file_hash="0123456789ABCDEF0123456789ABCDEF"
+                 width="1024"
+                 height="768"
                  adding_to_cache="true"/>
     <comic_pages id="1001"
                  comic_book_id="1000"
@@ -358,6 +360,8 @@
                  filename="page1.jpg"
                  page_number="1"
                  file_hash="F0123456789ABCDEF0123456789ABCDE"
+                 width="1024"
+                 height="768"
                  adding_to_cache="true"/>
     <comic_pages id="1002"
                  comic_book_id="1000"
@@ -365,6 +369,8 @@
                  filename="page2.jpg"
                  page_number="2"
                  file_hash="EF0123456789ABCDEF0123456789ABCD"
+                 width="1024"
+                 height="768"
                  adding_to_cache="false"/>
     <comic_pages id="1003"
                  comic_book_id="1000"
@@ -372,6 +378,8 @@
                  filename="page3.jpg"
                  page_number="3"
                  file_hash="DEF0123456789ABCDEF0123456789ABC"
+                 width="1024"
+                 height="768"
                  adding_to_cache="false"/>
     <comic_pages id="1004"
                  comic_book_id="1000"
@@ -379,6 +387,8 @@
                  filename="backpage.jpg"
                  page_number="4"
                  file_hash="CDEF0123456789ABCDEF0123456789AB"
+                 width="1024"
+                 height="768"
                  adding_to_cache="false"/>
     <comic_pages id="2000"
                  comic_book_id="1001"
@@ -386,6 +396,8 @@
                  filename="frontpage.jpg"
                  page_number="0"
                  file_hash="BCDEF0123456789ABCDEF0123456789A"
+                 width="1024"
+                 height="768"
                  adding_to_cache="false"/>
     <comic_pages id="2001"
                  comic_book_id="1001"
@@ -393,6 +405,8 @@
                  filename="page1.jpg"
                  page_number="1"
                  file_hash="ABCDEF0123456789ABCDEF0123456789"
+                 width="1024"
+                 height="768"
                  adding_to_cache="false"/>
     <comic_pages id="2002"
                  comic_book_id="1001"
@@ -400,6 +414,8 @@
                  filename="page2.jpg"
                  page_number="2"
                  file_hash="9ABCDEF0123456789ABCDEF012345678"
+                 width="1024"
+                 height="768"
                  adding_to_cache="false"/>
     <comic_pages id="2003"
                  comic_book_id="1001"
@@ -407,6 +423,8 @@
                  filename="backcover.jpg"
                  page_number="4"
                  file_hash="89ABCDEF0123456789ABCDEF01234567"
+                 width="1024"
+                 height="768"
                  adding_to_cache="false"/>
     <comic_pages id="2102"
                  comic_book_id="1001"
@@ -414,6 +432,8 @@
                  filename="frontpage.jpg"
                  page_number="1"
                  file_hash="789ABCDEF0123456789ABCDEF0123456"
+                 width="1024"
+                 height="768"
                  adding_to_cache="false"/>
     <comic_pages id="3000"
                  comic_book_id="1002"
@@ -421,6 +441,8 @@
                  filename="frontpage.jpg"
                  page_number="0"
                  file_hash="6789ABCDEF0123456789ABCDEF012345"
+                 width="1024"
+                 height="768"
                  adding_to_cache="true"/>
     <comic_pages id="3001"
                  comic_book_id="1002"
@@ -428,6 +450,8 @@
                  filename="page1.jpg"
                  page_number="1"
                  file_hash="56789ABCDEF0123456789ABCDEF01234"
+                 width="1024"
+                 height="768"
                  adding_to_cache="true"/>
     <comic_pages id="3002"
                  comic_book_id="1002"
@@ -435,6 +459,8 @@
                  filename="page1.jpg"
                  page_number="2"
                  file_hash="456789ABCDEF0123456789ABCDEF0123"
+                 width="1024"
+                 height="768"
                  adding_to_cache="false"/>
     <comic_pages id="3003"
                  comic_book_id="1002"
@@ -442,6 +468,8 @@
                  filename="backpage.jpg"
                  page_number="3"
                  file_hash="3456789ABCDEF0123456789ABCDEF012"
+                 width="1024"
+                 height="768"
                  adding_to_cache="true"/>
     <comic_pages id="3004"
                  comic_book_id="1003"
@@ -449,6 +477,8 @@
                  filename="frontpage.jpg"
                  page_number="0"
                  file_hash="23456789ABCDEF0123456789ABCDEF01"
+                 width="1024"
+                 height="768"
                  adding_to_cache="false"/>
     <comic_pages id="3005"
                  comic_book_id="1003"
@@ -456,6 +486,8 @@
                  filename="page1.jpg"
                  page_number="1"
                  file_hash="123456789ABCDEF0123456789ABCDEF0"
+                 width="1024"
+                 height="768"
                  adding_to_cache="false"/>
     <comic_pages id="3006"
                  comic_book_id="1003"
@@ -463,13 +495,16 @@
                  filename="page2.jpg"
                  page_number="2"
                  file_hash="0123456789ABCDEF0123456789ABCDEF"
+                 width="1024"
+                 height="768"
                  adding_to_cache="true"/>
     <comic_pages id="3007"
                  comic_book_id="1003"
                  page_state="STABLE"
                  filename="page3.jpg"
                  page_number="3"
-                 file_hash="F0123456789ABCDEF0123456789ABCDE"
+                 width="1024"
+                 height="768"
                  adding_to_cache="false"/>
     <comic_pages id="3008"
                  comic_book_id="1003"
@@ -477,6 +512,8 @@
                  filename="backpage.jpg"
                  page_number="4"
                  file_hash="EF0123456789ABCDEF0123456789ABCD"
+                 width="1024"
+                 height="768"
                  adding_to_cache="true"/>
     <blocked_hashes id="1000"
                     label="Created Yesterday"

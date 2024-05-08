@@ -21,10 +21,11 @@ package org.comixedproject.service.comicpages;
 import static org.comixedproject.state.comicpages.PageStateHandler.HEADER_PAGE;
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import org.apache.commons.io.FileUtils;
+import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
@@ -56,12 +57,14 @@ public class PageServiceTest {
   private static final String TEST_PAGE_HASH = "1234567890ABCDEF";
   private static final PageState TEST_STATE = PageState.STABLE;
   private static final int TEST_MAX_ENTRIES = 10;
+  private static final String TEST_PAGE_FILENAME = "src/test/resources/example.jpg";
 
   @InjectMocks private PageService service;
   @Mock private PageRepository pageRepository;
   @Mock private ComicBookService comicBookService;
   @Mock private PageStateHandler pageStateHandler;
   @Mock private ComicStateHandler comicStateHandler;
+  @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
   @Mock private Page page;
   @Mock private Page savedPage;
   @Mock private Page pageRecord;
@@ -74,12 +77,16 @@ public class PageServiceTest {
 
   private List<Page> pageList = new ArrayList<>();
   private List<Long> idList = new ArrayList<>();
+  private byte[] pageContent;
+  private Set<String> hashList = new HashSet<>();
 
   @Before
-  public void setUp() {
+  public void setUp() throws IOException {
     Mockito.when(message.getHeaders()).thenReturn(messageHeaders);
     Mockito.when(messageHeaders.get(HEADER_PAGE, Page.class)).thenReturn(page);
     Mockito.when(state.getId()).thenReturn(TEST_STATE);
+
+    pageContent = FileUtils.readFileToByteArray(new File(TEST_PAGE_FILENAME));
   }
 
   @Test
@@ -284,5 +291,58 @@ public class PageServiceTest {
     service.markPagesAsHavingCacheEntry(TEST_PAGE_HASH);
 
     Mockito.verify(pageRepository, Mockito.times(1)).markPagesAsAddedToImageCache(TEST_PAGE_HASH);
+  }
+
+  @Test
+  public void testFindAllCoverPageHashes() {
+    Mockito.when(pageRepository.findAllCoverPageHashes()).thenReturn(hashList);
+
+    final Set<String> result = service.findAllCoverPageHashes();
+
+    assertNotNull(result);
+    assertSame(hashList, result);
+
+    Mockito.verify(pageRepository, Mockito.times(1)).findAllCoverPageHashes();
+  }
+
+  @Test
+  public void testMarkCoverPagesToHaveCacheEntryCreated() {
+    service.markCoverPagesToHaveCacheEntryCreated(TEST_PAGE_HASH);
+
+    Mockito.verify(pageRepository, Mockito.times(1))
+        .markCoverPagesToHaveCacheEntryCreated(TEST_PAGE_HASH);
+  }
+
+  @Test
+  public void testUpdatePageContentNotImageContent() {
+    final byte[] content = "Invalid image content".getBytes();
+    Mockito.when(genericUtilitiesAdaptor.createHash(Mockito.any(byte[].class)))
+        .thenReturn(TEST_PAGE_HASH);
+    Mockito.when(pageRepository.save(Mockito.any(Page.class))).thenReturn(savedPage);
+
+    final Page result = service.updatePageContent(page, content);
+
+    assertNotNull(result);
+    assertSame(savedPage, result);
+
+    Mockito.verify(genericUtilitiesAdaptor, Mockito.times(1)).createHash(content);
+    Mockito.verify(page, Mockito.times(1)).setHash(TEST_PAGE_HASH);
+    Mockito.verify(pageRepository, Mockito.times(1)).save(page);
+  }
+
+  @Test
+  public void testUpdatePageContent() {
+    Mockito.when(genericUtilitiesAdaptor.createHash(Mockito.any(byte[].class)))
+        .thenReturn(TEST_PAGE_HASH);
+    Mockito.when(pageRepository.save(Mockito.any(Page.class))).thenReturn(savedPage);
+
+    final Page result = service.updatePageContent(page, pageContent);
+
+    assertNotNull(result);
+    assertSame(savedPage, result);
+
+    Mockito.verify(genericUtilitiesAdaptor, Mockito.times(1)).createHash(pageContent);
+    Mockito.verify(page, Mockito.times(1)).setHash(TEST_PAGE_HASH);
+    Mockito.verify(pageRepository, Mockito.times(1)).save(page);
   }
 }
