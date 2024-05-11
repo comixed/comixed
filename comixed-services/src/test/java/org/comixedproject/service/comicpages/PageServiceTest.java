@@ -56,7 +56,7 @@ public class PageServiceTest {
   private static final int TEST_PAGE_INDEX = 7;
   private static final String TEST_PAGE_HASH = "1234567890ABCDEF";
   private static final PageState TEST_STATE = PageState.STABLE;
-  private static final int TEST_MAX_ENTRIES = 10;
+  private static final long TEST_MAX_ENTRIES = 10L;
   private static final String TEST_PAGE_FILENAME = "src/test/resources/example.jpg";
 
   @InjectMocks private PageService service;
@@ -273,7 +273,7 @@ public class PageServiceTest {
     Mockito.when(pageRepository.findPagesNeedingCacheEntries(argumentCaptorPageable.capture()))
         .thenReturn(pageList);
 
-    final List<Page> result = service.loadPagesNeedingCacheEntries(TEST_MAX_ENTRIES);
+    final List<Page> result = service.loadPagesNeedingCacheEntries((int) TEST_MAX_ENTRIES);
 
     assertNotNull(result);
     assertSame(pageList, result);
@@ -344,5 +344,45 @@ public class PageServiceTest {
     Mockito.verify(genericUtilitiesAdaptor, Mockito.times(1)).createHash(pageContent);
     Mockito.verify(page, Mockito.times(1)).setHash(TEST_PAGE_HASH);
     Mockito.verify(pageRepository, Mockito.times(1)).save(page);
+  }
+
+  @Test
+  public void testHasPagesWithoutHashWhenRecordsFound() {
+    Mockito.when(pageRepository.getPagesWithoutHashesCount()).thenReturn(TEST_MAX_ENTRIES);
+
+    assertTrue(service.hasPagesWithoutHash());
+
+    Mockito.verify(pageRepository, Mockito.times(1)).getPagesWithoutHashesCount();
+  }
+
+  @Test
+  public void testHasPagesWithoutHashWhenRecordsNotFound() {
+    Mockito.when(pageRepository.getPagesWithoutHashesCount()).thenReturn(0L);
+
+    assertFalse(service.hasPagesWithoutHash());
+
+    Mockito.verify(pageRepository, Mockito.times(1)).getPagesWithoutHashesCount();
+  }
+
+  @Test
+  public void testGetPagesWithoutHashesCount() {
+    Mockito.when(pageRepository.getPagesWithoutHashesCount()).thenReturn(TEST_MAX_ENTRIES);
+
+    final long result = service.getPagesWithoutHashCount();
+
+    assertEquals(TEST_MAX_ENTRIES, result);
+
+    Mockito.verify(pageRepository, Mockito.times(1)).getPagesWithoutHashesCount();
+  }
+
+  @Test
+  public void testGetCount() {
+    Mockito.when(pageRepository.count()).thenReturn(TEST_MAX_ENTRIES);
+
+    final long result = service.getCount();
+
+    assertEquals(TEST_MAX_ENTRIES, result);
+
+    Mockito.verify(pageRepository, Mockito.times(1)).count();
   }
 }

@@ -23,11 +23,10 @@ import static org.comixedproject.batch.comicpages.MarkPagesWithHashConfiguration
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicpages.Page;
-import org.comixedproject.service.comicpages.PageService;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -35,11 +34,10 @@ import org.springframework.stereotype.Component;
  *
  * @author Darryl L. Pierce
  */
+@StepScope
 @Component
 @Log4j2
 public class MarkPageWithHashReader extends AbstractPageReader implements StepExecutionListener {
-  @Autowired private PageService pageService;
-
   String targetHash;
 
   @Override

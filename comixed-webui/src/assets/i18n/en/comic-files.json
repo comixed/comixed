@@ -59,6 +59,7 @@
       "job-completed-step": "Processing Completed",
       "job-setup-step": "Processing Setting Up",
       "load-file-contents-step": "Loading File Contents",
+      "load-page-hash-step": "Loading Page Hashes",
       "subtitle": "Processed {processed} Of {total} Comics ({percentage}%)",
       "text": {
         "no-records-found": "No current batch jobs"

@@ -23,6 +23,7 @@ import java.util.Set;
 import org.comixedproject.model.comicpages.DeletedPageAndComic;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.comicpages.PageState;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -115,4 +116,15 @@ public interface PageRepository extends CrudRepository<Page, Long> {
   @Modifying
   @Query("UPDATE Page p SET p.addingToCache = true WHERE p.hash = :hash")
   void markCoverPagesToHaveCacheEntryCreated(@Param("hash") String hash);
+
+  /**
+   * Returns the number of pages without a hash.
+   *
+   * @return the record count
+   */
+  @Query("SELECT COUNT(p) FROM Page p WHERE p.hash IS NULL OR LENGTH(p.hash) = 0")
+  long getPagesWithoutHashesCount();
+
+  @Query("SELECT p FROM Page p WHERE p.hash IS NULL OR LENGTH(p.hash) = 0")
+  List<Page> findPagesWithoutHash(PageRequest of);
 }

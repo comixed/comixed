@@ -171,6 +171,7 @@ public class PageService implements InitializingBean, PageStateChangeListener {
    * @param hash the page hash
    * @return the pages
    */
+  @Transactional
   public List<Page> getMarkedWithHash(final String hash) {
     log.trace("Fetching marked pages with hash: {}", hash);
     return this.pageRepository.findByHashAndPageState(hash, PageState.DELETED);
@@ -206,6 +207,7 @@ public class PageService implements InitializingBean, PageStateChangeListener {
    * @param maxRecords the maximum records
    * @return the page list
    */
+  @Transactional
   public List<Page> loadPagesNeedingCacheEntries(final int maxRecords) {
     log.debug("Loading pages needing image cache entries");
     return this.pageRepository.findPagesNeedingCacheEntries(PageRequest.of(0, maxRecords));
@@ -216,6 +218,7 @@ public class PageService implements InitializingBean, PageStateChangeListener {
    *
    * @param hash the page hash
    */
+  @Transactional
   public void markPagesAsHavingCacheEntry(final String hash) {
     log.debug("Marking pages as added to cache: hash={}", hash);
     this.pageRepository.markPagesAsAddedToImageCache(hash);
@@ -236,6 +239,7 @@ public class PageService implements InitializingBean, PageStateChangeListener {
    *
    * @param hash the page has
    */
+  @Transactional
   public void markCoverPagesToHaveCacheEntryCreated(final String hash) {
     this.pageRepository.markCoverPagesToHaveCacheEntryCreated(hash);
   }
@@ -263,5 +267,45 @@ public class PageService implements InitializingBean, PageStateChangeListener {
     }
     log.debug("Saving updated page");
     return this.pageRepository.save(page);
+  }
+
+  /*
+   * Returns if there are any page records without a page hash.
+   *
+   * @return true if there are pages without hashes
+   */
+  @Transactional
+  public boolean hasPagesWithoutHash() {
+    return this.pageRepository.getPagesWithoutHashesCount() > 0L;
+  }
+
+  /**
+   * Loads a set of pages that do not have a page hash.
+   *
+   * @param size the record count
+   * @return the records
+   */
+  @Transactional
+  public List<Page> getPagesWithoutHash(final int size) {
+    log.debug("Loading pages without a hash");
+    return this.pageRepository.findPagesWithoutHash(PageRequest.of(0, size));
+  }
+
+  /**
+   * Returns the number of pages without a hash.
+   *
+   * @return the record count
+   */
+  public long getPagesWithoutHashCount() {
+    return this.pageRepository.getPagesWithoutHashesCount();
+  }
+
+  /**
+   * Returns the total number of pages.
+   *
+   * @return the page count
+   */
+  public long getCount() {
+    return this.pageRepository.count();
   }
 }

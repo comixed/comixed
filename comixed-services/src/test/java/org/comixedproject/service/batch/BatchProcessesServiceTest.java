@@ -198,4 +198,33 @@ public class BatchProcessesServiceTest {
 
     Mockito.verify(jobRepository, Mockito.never()).deleteJobExecution(Mockito.any());
   }
+
+  @Test
+  public void testExecutionCountForInvalidJob() throws NoSuchJobException {
+    Mockito.when(jobExplorer.getJobInstanceCount(Mockito.anyString()))
+        .thenThrow(NoSuchJobException.class);
+
+    final long result = service.activeExecutionCountFor(TEST_JOB_NAME);
+
+    assertEquals(0, result);
+  }
+
+  @Test
+  public void testExecutionCountFor() {
+    Mockito.when(jobExecution.isRunning()).thenReturn(true);
+    Mockito.when(jobExecution.getEndTime()).thenReturn(null);
+
+    final long result = service.activeExecutionCountFor(TEST_JOB_NAME);
+
+    assertEquals(1, result);
+  }
+
+  @Test
+  public void testExecutionCountForNoneFound() {
+    Mockito.when(jobExecution.isRunning()).thenReturn(false);
+
+    final long result = service.activeExecutionCountFor(TEST_JOB_NAME);
+
+    assertEquals(0, result);
+  }
 }

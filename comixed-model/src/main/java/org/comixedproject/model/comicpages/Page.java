@@ -122,26 +122,41 @@ public class Page {
     return this.comicBook.getIndexFor(this);
   }
 
-  @Override
-  public boolean equals(final Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    final Page page = (Page) o;
-    return pageState == page.pageState
-        && filename.equals(page.filename)
-        && hash.equals(page.hash)
-        && pageNumber.equals(page.pageNumber);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(pageState, filename, hash, pageNumber);
-  }
-
   @Transient
   @JsonProperty("deleted")
   @JsonView({View.ComicListView.class})
   public boolean isDeleted() {
     return PageState.DELETED.equals(this.pageState);
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    final Page page = (Page) o;
+    return isBlocked() == page.isBlocked()
+        && Objects.equals(getComicBook(), page.getComicBook())
+        && getPageState() == page.getPageState()
+        && Objects.equals(getFilename(), page.getFilename())
+        && Objects.equals(getHash(), page.getHash())
+        && Objects.equals(getPageNumber(), page.getPageNumber())
+        && Objects.equals(getWidth(), page.getWidth())
+        && Objects.equals(getHeight(), page.getHeight())
+        && Objects.equals(getAddingToCache(), page.getAddingToCache());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(
+        getId(),
+        getComicBook(),
+        getPageState(),
+        getFilename(),
+        getHash(),
+        getPageNumber(),
+        getWidth(),
+        getHeight(),
+        getAddingToCache(),
+        isBlocked());
   }
 }

@@ -51,6 +51,7 @@ public class ProcessComicBooksStatus {
   public static final String PROCESS_COMIC_BOOKS_STEP_NAME_SETUP = "job-setup-step";
   public static final String PROCESS_COMIC_BOOKS_STEP_NAME_LOAD_FILE_CONTENTS =
       "load-file-contents-step";
+  public static final String PROCESS_COMIC_BOOKS_STEP_NAME_LOAD_PAGE_HASH = "load-page-hash-step";
   public static final String PROCESS_COMIC_BOOKS_STEP_NAME_COMPLETED = "job-completed-step";
 
   @JsonProperty("active")

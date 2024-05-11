@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.listeners;
+package org.comixedproject.batch.comicpages.listeners;
 
 import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
 import org.comixedproject.model.batch.BatchProcessDetail;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicpages.PageService;
 import org.springframework.batch.core.ChunkListener;
-import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.item.ExecutionContext;
@@ -33,16 +32,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>LoadFileContentsChunkListener</code> provides a chunk listener for loading file content.
+ * <code>LoadPageHashChunkListener</code> sends notifications as the page hash job processes each
+ * chunk of data.
  *
  * @author Darryl L. Pierce
  */
 @Component
-@Log4j2
 @StepScope
-public class LoadFileContentsChunkListener extends AbstractBatchProcessListener
+@Log4j2
+public class LoadPageHashChunkListener extends AbstractBatchProcessListener
     implements ChunkListener {
-  @Autowired private ComicBookService comicBookService;
+  @Autowired private PageService pageService;
 
   @Override
   public void beforeChunk(final ChunkContext context) {
@@ -65,15 +65,12 @@ public class LoadFileContentsChunkListener extends AbstractBatchProcessListener
             chunkContext.getStepContext().getStepExecution().getJobExecution()));
     final ExecutionContext context =
         chunkContext.getStepContext().getStepExecution().getExecutionContext();
-    final StepExecution stepExecution = chunkContext.getStepContext().getStepExecution();
+    context.putString(PROCESS_COMIC_BOOKS_STATUS_BATCH_NAME, "");
     context.putString(
-        PROCESS_COMIC_BOOKS_STATUS_BATCH_NAME, this.getBatchName(stepExecution.getJobParameters()));
-    context.putString(
-        PROCESS_COMIC_BOOKS_STATUS_STEP_NAME, PROCESS_COMIC_BOOKS_STEP_NAME_LOAD_FILE_CONTENTS);
-    final String batchName = this.getBatchName(stepExecution.getJobParameters());
-    final long total = this.getEntryCount(batchName);
-    final long unprocessed =
-        this.comicBookService.getUnprocessedComicsWithoutContentCount(batchName);
+        PROCESS_COMIC_BOOKS_STATUS_STEP_NAME, PROCESS_COMIC_BOOKS_STEP_NAME_LOAD_PAGE_HASH);
+    context.putLong(PROCESS_COMIC_BOOKS_STATUS_JOB_FINISHED, System.currentTimeMillis());
+    final long total = this.pageService.getCount();
+    final long unprocessed = this.pageService.getPagesWithoutHashCount();
     context.putLong(PROCESS_COMIC_BOOKS_STATUS_TOTAL_COMICS, total);
     context.putLong(PROCESS_COMIC_BOOKS_STATUS_PROCESSED_COMICS, total - unprocessed);
     this.doPublishProcessComicBookStatus(context, true);

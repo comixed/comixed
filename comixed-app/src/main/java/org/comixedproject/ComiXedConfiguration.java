@@ -18,6 +18,7 @@
 
 package org.comixedproject;
 
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -34,5 +35,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableScheduling
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
+@EnableBatchProcessing(isolationLevelForCreate = "ISOLATION_REPEATABLE_READ")
 // @EnablePluginRegistries(MetadataAdaptor.class)
 public class ComiXedConfiguration {}

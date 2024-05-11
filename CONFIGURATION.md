@@ -81,6 +81,16 @@ See [below](Scheduling-Processes) for details on the scheduling format.
 **NOTE:** There is no matching command line argument to override this.
 
 
+## Loading Page Hashes
+
+Whe a comic is imported, the page hash is not initially loaded. Instead, a
+batch process runs periodically to load this value. The time between checks
+is controlled by the following configuration option:
+
+    comixed.batch.load-page-hashes.period=60000
+
+It defines the numbero milliseconds between checks.
+
 
 ## Scheduling Processes
 

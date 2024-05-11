@@ -22,45 +22,26 @@ import java.util.List;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicpages.Page;
-import org.comixedproject.service.comicpages.PageService;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.item.ItemReader;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>CreateImageCacheEntriesReader</code> provides a reader that returns only instances of
- * {@link Page} that do not have an existing thumbnail.
+ * <code>LoadPageHashReader</code> loads pages that do not have a hash.
  *
  * @author Darryl L. Pierce
  */
 @StepScope
 @Component
 @Log4j2
-public class CreateImageCacheEntriesReader implements ItemReader<Page> {
-  @Autowired private PageService pageService;
-
+public class LoadPageHashReader extends AbstractPageReader {
   @Value("${comixed.batch.add-cover-to-image-cache.chunk-size}")
   @Getter
-  private int batchChunkSize = 10;
-
-  public List<Page> pageList;
+  int batchChunkSize = 10;
 
   @Override
-  public Page read() {
-    if (this.pageList == null || this.pageList.isEmpty()) {
-      log.debug("Loading pages without thumbnails");
-      this.pageList = this.pageService.loadPagesNeedingCacheEntries(this.batchChunkSize);
-    }
-
-    if (this.pageList.isEmpty()) {
-      log.debug("No pages need thumbnails currently");
-      this.pageList = null;
-      return null;
-    }
-
-    log.debug("Returning page: {}", this.pageList.get(0).getHash());
-    return this.pageList.remove(0);
+  protected List<Page> doLoadPages() {
+    log.trace("Loading pages without a hash");
+    return this.pageService.getPagesWithoutHash(this.batchChunkSize);
   }
 }

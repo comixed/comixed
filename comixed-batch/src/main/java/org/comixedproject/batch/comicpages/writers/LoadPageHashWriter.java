@@ -16,31 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.listeners;
+package org.comixedproject.batch.comicpages.writers;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
-import org.comixedproject.model.batch.BatchProcessDetail;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobExecutionListener;
+import org.comixedproject.state.comicpages.PageEvent;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>OrganizeLibraryListener</code> provides a simple listener for the organizing library job.
+ * <code>LoadPageHashWriter</code> writes a page after its hash has been set.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class OrganizeLibraryListener extends AbstractBatchProcessListener
-    implements JobExecutionListener {
-  @Override
-  public void beforeJob(final JobExecution jobExecution) {
-    this.doPublishBatchProcessDetail(BatchProcessDetail.from(jobExecution));
-  }
-
-  @Override
-  public void afterJob(final JobExecution jobExecution) {
-    this.doPublishBatchProcessDetail(BatchProcessDetail.from(jobExecution));
+public class LoadPageHashWriter extends AbstractPageWriter {
+  public LoadPageHashWriter() {
+    super(PageEvent.savePage);
   }
 }
