@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.listeners;
+package org.comixedproject.batch.listeners;
 
 import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.JOB_PROCESS_COMIC_BOOKS_BATCH_NAME;
 import static org.comixedproject.model.messaging.batch.AddComicBooksStatus.*;
@@ -53,7 +53,7 @@ public abstract class AbstractBatchProcessListener {
   @Autowired private PublishAddComicBooksStatusAction publishAddComicBooksStatusAction;
   @Autowired private PublishProcessComicBooksStatusAction publishProcessComicBooksStatusAction;
   @Autowired private PublishBatchProcessDetailUpdateAction publishBatchProcessDetailUpdateAction;
-  @Autowired ComicFileService comicFileService;
+  @Autowired protected ComicFileService comicFileService;
   @Autowired private ComicBatchService comicBatchService;
 
   /**

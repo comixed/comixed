@@ -33,6 +33,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class CreateImageCacheEntriesProcessorTest {
   private static final String TEST_PAGE_HASH = "0123456789ABCDEF0123456789ABCDEF";
+
   @InjectMocks private CreateImageCacheEntriesProcessor processor;
   @Mock private PageCacheService pageCacheService;
   @Mock private Page page;

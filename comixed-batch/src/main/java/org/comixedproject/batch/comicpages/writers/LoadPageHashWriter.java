@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2017, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,22 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject;
+package org.comixedproject.batch.comicpages.writers;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
+import lombok.extern.log4j.Log4j2;
+import org.comixedproject.state.comicpages.PageEvent;
+import org.springframework.stereotype.Component;
 
 /**
- * <code>ComiXedConfiguration</code> provides the overall configuration for the application.
+ * <code>LoadPageHashWriter</code> writes a page after its hash has been set.
  *
  * @author Darryl L. Pierce
  */
-@Configuration
-@EnableTransactionManagement
-@EnableScheduling
-@EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true)
-public class ComiXedConfiguration {}
+@Component
+@Log4j2
+public class LoadPageHashWriter extends AbstractPageWriter {
+  public LoadPageHashWriter() {
+    super(PageEvent.savePage);
+  }
+}

@@ -21,7 +21,9 @@ package org.comixedproject.batch.comicpages.readers;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.service.comicpages.PageService;
 import org.springframework.batch.item.ItemReader;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * <code>AbstractPageReader</code> provides a foundation for creating new readers for {@link Page}s.
@@ -30,11 +32,13 @@ import org.springframework.batch.item.ItemReader;
  */
 @Log4j2
 public abstract class AbstractPageReader implements ItemReader<Page> {
+  @Autowired protected PageService pageService;
+
   List<Page> pageList = null;
 
   @Override
   public Page read() {
-    if (this.pageList == null) {
+    if (this.pageList == null || this.pageList.isEmpty()) {
       log.trace("Load more pages to process");
       this.pageList = this.doLoadPages();
     }

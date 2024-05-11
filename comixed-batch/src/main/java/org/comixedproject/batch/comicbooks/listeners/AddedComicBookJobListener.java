@@ -21,9 +21,11 @@ package org.comixedproject.batch.comicbooks.listeners;
 import static org.comixedproject.model.messaging.batch.AddComicBooksStatus.*;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
 import org.comixedproject.model.batch.BatchProcessDetail;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
+import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.stereotype.Component;
 
@@ -34,6 +36,7 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  */
 @Component
+@JobScope
 @Log4j2
 public class AddedComicBookJobListener extends AbstractBatchProcessListener
     implements JobExecutionListener {

@@ -21,6 +21,7 @@ package org.comixedproject.batch.comicbooks.listeners;
 import static org.comixedproject.model.messaging.batch.AddComicBooksStatus.*;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
 import org.springframework.batch.core.ChunkListener;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.item.ExecutionContext;

@@ -19,6 +19,7 @@
 package org.comixedproject.batch.comicbooks.listeners;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
 import org.comixedproject.model.batch.BatchProcessDetail;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;

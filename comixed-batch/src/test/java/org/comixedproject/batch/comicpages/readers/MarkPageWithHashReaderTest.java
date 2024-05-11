@@ -71,7 +71,7 @@ public class MarkPageWithHashReaderTest {
     assertNull(result);
     assertNull(reader.pageList);
 
-    Mockito.verify(pageService, Mockito.never()).getUnmarkedWithHash(TEST_PAGE_HASH);
+    Mockito.verify(pageService, Mockito.times(1)).getUnmarkedWithHash(TEST_PAGE_HASH);
   }
 
   @Test
