@@ -18,7 +18,7 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
-import static org.comixedproject.model.messaging.batch.AddComicBooksStatus.*;
+import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
@@ -26,11 +26,10 @@ import org.comixedproject.model.batch.BatchProcessDetail;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.configuration.annotation.JobScope;
-import org.springframework.batch.item.ExecutionContext;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>AddedComicBookJobListener</code> provides a {@link JobExecutionListener} for the overall
+ * <code>ImportComicFilesJobListener</code> provides a {@link JobExecutionListener} for the overall
  * process of adding comics to the library.
  *
  * @author Darryl L. Pierce
@@ -38,28 +37,17 @@ import org.springframework.stereotype.Component;
 @Component
 @JobScope
 @Log4j2
-public class AddedComicBookJobListener extends AbstractBatchProcessListener
+public class ImportComicFilesJobListener extends AbstractBatchProcessListener
     implements JobExecutionListener {
   @Override
   public void beforeJob(final JobExecution jobExecution) {
+    log.trace("Publishing status before job");
     this.doPublishBatchProcessDetail(BatchProcessDetail.from(jobExecution));
-    log.trace("Gathering job statistics");
-    final ExecutionContext context = jobExecution.getExecutionContext();
-    context.putLong(ADD_COMIC_BOOKS_JOB_STARTED, System.currentTimeMillis());
-    context.putLong(
-        ADD_COMIC_BOOKS_TOTAL_COMICS, this.comicFileService.getComicFileDescriptorCount());
-    context.putLong(ADD_COMIC_BOOKS_PROCESSED_COMICS, 0);
-    this.doPublishAddComicBookStatus(context);
   }
 
   @Override
   public void afterJob(final JobExecution jobExecution) {
+    log.trace("Publishing status after job");
     this.doPublishBatchProcessDetail(BatchProcessDetail.from(jobExecution));
-    log.trace("Publishing completed job status");
-    final ExecutionContext context = jobExecution.getExecutionContext();
-    context.putLong(ADD_COMIC_BOOKS_JOB_FINISHED, System.currentTimeMillis());
-    context.putLong(
-        ADD_COMIC_BOOKS_PROCESSED_COMICS, context.getLong(ADD_COMIC_BOOKS_TOTAL_COMICS));
-    this.doPublishAddComicBookStatus(context);
   }
 }

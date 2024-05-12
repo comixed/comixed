@@ -379,27 +379,6 @@ describe('ImportComicsPageComponent', () => {
     });
   });
 
-  describe('when commics are already importing', () => {
-    beforeEach(() => {
-      store.setState({
-        ...initialState,
-        [IMPORT_COMIC_BOOKS_FEATURE_KEY]: {
-          ...initialImportComicBooksComicsState,
-          adding: {
-            ...initialImportComicBooksComicsState.adding,
-            active: true
-          }
-        }
-      });
-    });
-
-    it('redirects the browser to the status page', () => {
-      expect(router.navigateByUrl).toHaveBeenCalledWith(
-        '/library/import/status'
-      );
-    });
-  });
-
   describe('sorting records', () => {
     const ITEM = {
       item: COMIC_FILE_3,

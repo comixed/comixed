@@ -49,7 +49,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
 import { ComicFileLoaderComponent } from './components/comic-file-loader/comic-file-loader.component';
-import { ImportStatusPageComponent } from './pages/import-status-page/import-status-page.component';
 import { ProcessingStatusPageComponent } from './pages/processing-status-page/processing-status-page.component';
 
 @NgModule({
@@ -57,7 +56,6 @@ import { ProcessingStatusPageComponent } from './pages/processing-status-page/pr
     ImportComicsPageComponent,
     ComicFileCoverUrlPipe,
     ComicFileLoaderComponent,
-    ImportStatusPageComponent,
     ProcessingStatusPageComponent
   ],
   imports: [

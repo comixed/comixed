@@ -19,15 +19,15 @@
 package org.comixedproject.batch.comicbooks;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicbooks.listeners.AddedComicBookChunkListener;
-import org.comixedproject.batch.comicbooks.listeners.AddedComicBookJobListener;
-import org.comixedproject.batch.comicbooks.listeners.CreateInsertStepExecutionListener;
-import org.comixedproject.batch.comicbooks.processors.ComicInsertProcessor;
+import org.comixedproject.batch.comicbooks.listeners.CreateComicBookChunkListener;
+import org.comixedproject.batch.comicbooks.listeners.ImportComicFilesJobListener;
+import org.comixedproject.batch.comicbooks.listeners.RecordInsertedChunkListener;
+import org.comixedproject.batch.comicbooks.processors.CreateComicBookProcessor;
 import org.comixedproject.batch.comicbooks.processors.NoopComicProcessor;
-import org.comixedproject.batch.comicbooks.readers.ComicInsertReader;
+import org.comixedproject.batch.comicbooks.readers.CreateComicBookReader;
 import org.comixedproject.batch.comicbooks.readers.RecordInsertedReader;
-import org.comixedproject.batch.comicbooks.writers.ComicInsertWriter;
-import org.comixedproject.batch.comicbooks.writers.ReaderInsertedWriter;
+import org.comixedproject.batch.comicbooks.writers.CreateComicBookWriter;
+import org.comixedproject.batch.comicbooks.writers.RecordInsertedWriter;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.springframework.batch.core.Job;
@@ -43,16 +43,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * <code>AddComicsConfiguration</code> defines the batch process for adding comics to the library.
+ * <code>ImportComicFilesConfiguration</code> defines the batch process for importing comic files to
+ * the library.
  *
  * @author Darryl L. Pierce
  */
 @Configuration
 @Log4j2
-public class AddComicsConfiguration {
-  public static final String PARAM_ADD_COMICS_STARTED = "job.add-comics.started";
-  public static final String PARAM_SKIP_METADATA = "job.add-comics.skip-metadata";
-  public static final String PARAM_SKIP_BLOCKING_PAGES = "job.add-comics.skip-blocking-pages";
+public class ImportComicFilesConfiguration {
+  public static final String IMPORT_COMIC_FILES_JOB = "importComicFilesJob";
+  public static final String IMPORT_COMIC_FILES_JOB_STARTED = "job.import-comic-files.started";
+  public static final String PARAM_SKIP_METADATA = "job.import-comic-files.skip-metadata";
 
   @Value("${comixed.batch.chunk-size}")
   private int batchChunkSize = 10;
@@ -62,20 +63,20 @@ public class AddComicsConfiguration {
    *
    * @param jobRepository the job repository
    * @param jobListener the job listener
-   * @param createInsertStep the insert step
+   * @param createComicBookStep the insert step
    * @param recordInsertedStep the post-insert step
    * @return the job
    */
-  @Bean(name = "addComicsToLibraryJob")
-  public Job addComicsToLibraryJob(
-      final AddedComicBookJobListener jobListener,
+  @Bean(name = IMPORT_COMIC_FILES_JOB)
+  public Job importComicFilesJob(
+      final ImportComicFilesJobListener jobListener,
       final JobRepository jobRepository,
-      @Qualifier("createInsertStep") final Step createInsertStep,
+      @Qualifier("createComicBookStep") final Step createComicBookStep,
       @Qualifier("recordInsertedStep") Step recordInsertedStep) {
-    return new JobBuilder("addComicsToLibraryJob", jobRepository)
+    return new JobBuilder(IMPORT_COMIC_FILES_JOB, jobRepository)
         .incrementer(new RunIdIncrementer())
         .listener(jobListener)
-        .start(createInsertStep)
+        .start(createComicBookStep)
         .next(recordInsertedStep)
         .build();
   }
@@ -85,23 +86,20 @@ public class AddComicsConfiguration {
    *
    * @param jobRepository the job repository
    * @param platformTransactionManager the transaction manager
-   * @param stepExecutionListener the step listener
    * @param reader the reader
    * @param processor the processor
    * @param writer the writer
    * @return the step
    */
-  @Bean(name = "createInsertStep")
-  public Step createInsertStep(
+  @Bean(name = "createComicBookStep")
+  public Step createComicBookStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
-      final CreateInsertStepExecutionListener stepExecutionListener,
-      final ComicInsertReader reader,
-      final ComicInsertProcessor processor,
-      final ComicInsertWriter writer,
-      final AddedComicBookChunkListener chunkListener) {
-    return new StepBuilder("createInsertStep", jobRepository)
-        .listener(stepExecutionListener)
+      final CreateComicBookReader reader,
+      final CreateComicBookProcessor processor,
+      final CreateComicBookWriter writer,
+      final CreateComicBookChunkListener chunkListener) {
+    return new StepBuilder("createComicBookStep", jobRepository)
         .<ComicFileDescriptor, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
@@ -115,20 +113,20 @@ public class AddComicsConfiguration {
    *
    * @param jobRepository the job repository
    * @param platformTransactionManager the transaction manager
-   * @param chunkListener the chunk listener
    * @param reader the reader
    * @param processor the processor
    * @param writer the writer
+   * @param chunkListener the chunk listener
    * @return the step
    */
   @Bean(name = "recordInsertedStep")
   public Step recordInsertedStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
-      final AddedComicBookChunkListener chunkListener,
       final RecordInsertedReader reader,
       final NoopComicProcessor processor,
-      final ReaderInsertedWriter writer) {
+      final RecordInsertedWriter writer,
+      final RecordInsertedChunkListener chunkListener) {
     return new StepBuilder("recordInsertedStep", jobRepository)
         .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)

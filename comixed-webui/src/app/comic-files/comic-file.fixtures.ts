@@ -52,7 +52,6 @@ export const COMIC_FILE_4: ComicFile = {
 export const PROCESSING_COMIC_STATUS_1: ProcessingComicStatus = {
   batchName: 'the-batch-name',
   stepName: 'the-step-name',
-  startTime: new Date().getTime(),
   total: 1000,
   processed: 500,
   progress: 500 / 1000

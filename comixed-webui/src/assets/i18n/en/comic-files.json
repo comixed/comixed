@@ -47,6 +47,7 @@
       "root-directory": "Root Directory To Search..."
     },
     "processing-comics": {
+      "comic-marked-as-added-step": "Mark Comics As Added",
       "create-insert-step": "Creating Comic Records",
       "header": {
         "batch-name": "Batch Name",
@@ -56,8 +57,7 @@
         "step-name": "Current Step",
         "total": "Total"
       },
-      "job-completed-step": "Processing Completed",
-      "job-setup-step": "Processing Setting Up",
+      "import-comic-files": "Importing Comic Files",
       "load-file-contents-step": "Loading File Contents",
       "load-page-hash-step": "Loading Page Hashes",
       "subtitle": "Processed {processed} Of {total} Comics ({percentage}%)",
@@ -82,8 +82,8 @@
     }
   },
   "processing-status-page": {
-    "page-title": "Comic Book Processing",
-    "tab-title": "Processing",
+    "page-title": "Comic Processing Status",
+    "tab-title": "Comic Processing Status",
     "text": {
       "how-to-start-processing": "To start the processing, go to the Unprocessed page and select the comics to be processed, or else wait until the server starts the automated process.",
       "note-title": "A Note About Processing Comics",

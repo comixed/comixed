@@ -18,9 +18,6 @@
 
 package org.comixedproject.batch.comicpages.listeners;
 
-import static org.comixedproject.batch.comicpages.LoadPageHashesConfiguration.JOB_LOAD_PAGE_HASHES_STARTED;
-import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
-
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
 import org.comixedproject.model.batch.BatchProcessDetail;
@@ -28,10 +25,14 @@ import org.comixedproject.service.comicpages.PageService;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.configuration.annotation.JobScope;
-import org.springframework.batch.item.ExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * <code>LoadPageHashesJobListener</code> sends job updates while loading page hashes.
+ *
+ * @author Darryl L. Pierce
+ */
 @Component
 @JobScope
 @Log4j2
@@ -42,24 +43,10 @@ public class LoadPageHashesJobListener extends AbstractBatchProcessListener
   @Override
   public void beforeJob(final JobExecution jobExecution) {
     this.doPublishBatchProcessDetail(BatchProcessDetail.from(jobExecution));
-    final ExecutionContext context = jobExecution.getExecutionContext();
-    context.putLong(JOB_LOAD_PAGE_HASHES_STARTED, System.currentTimeMillis());
   }
 
   @Override
   public void afterJob(final JobExecution jobExecution) {
     this.doPublishBatchProcessDetail(BatchProcessDetail.from(jobExecution));
-    final ExecutionContext context = jobExecution.getExecutionContext();
-    context.putLong(
-        PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED,
-        jobExecution.getJobParameters().getLong(JOB_LOAD_PAGE_HASHES_STARTED));
-    context.putString(PROCESS_COMIC_BOOKS_STATUS_BATCH_NAME, "");
-    context.putString(
-        PROCESS_COMIC_BOOKS_STATUS_STEP_NAME, PROCESS_COMIC_BOOKS_STEP_NAME_LOAD_PAGE_HASH);
-    final long total = this.pageService.getCount();
-    context.putLong(PROCESS_COMIC_BOOKS_STATUS_TOTAL_COMICS, total);
-    context.putLong(PROCESS_COMIC_BOOKS_STATUS_PROCESSED_COMICS, total);
-    context.putLong(PROCESS_COMIC_BOOKS_STATUS_JOB_FINISHED, System.currentTimeMillis());
-    this.doPublishProcessComicBookStatus(context, false);
   }
 }

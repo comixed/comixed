@@ -16,42 +16,48 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.writers;
+package org.comixedproject.batch.comicbooks.readers;
 
+import java.util.List;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.comixedproject.service.comicfiles.ComicFileService;
-import org.comixedproject.state.comicbooks.ComicEvent;
-import org.springframework.batch.item.Chunk;
+import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ComicInsertWriter</code> publishes comics after they're ready to insert into the database.
+ * <code>CreateComicBookReader</code> reads descriptors used to import comics into the library.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class ComicInsertWriter extends AbstractComicBookWriter {
+public class CreateComicBookReader implements ItemReader<ComicFileDescriptor> {
   @Autowired private ComicFileService comicFileService;
 
-  public ComicInsertWriter() {
-    super(ComicEvent.readyForProcessing);
-  }
+  @Value("${comixed.batch.chunk-size}")
+  @Getter
+  private int batchChunkSize = 10;
+
+  private List<ComicFileDescriptor> comicFileDescriptorList = null;
 
   @Override
-  public void write(final Chunk<? extends ComicBook> comics) {
-    super.write(comics);
-    comics.forEach(
-        comicBook -> {
-          log.trace("Loading comic file descriptor");
-          final ComicFileDescriptor descriptor =
-              this.comicFileService.getComicFileDescriptorByFilename(
-                  comicBook.getComicDetail().getFilename());
-          log.trace("Deleting descriptor record");
-          this.comicFileService.deleteComicFileDescriptor(descriptor);
-        });
+  public ComicFileDescriptor read() {
+    if (this.comicFileDescriptorList == null || this.comicFileDescriptorList.isEmpty()) {
+      log.trace("Load more descriptors to process");
+      this.comicFileDescriptorList =
+          this.comicFileService.findComicFileDescriptors(this.batchChunkSize);
+    }
+
+    if (this.comicFileDescriptorList.isEmpty()) {
+      log.trace("No descriptors to process");
+      this.comicFileDescriptorList = null;
+      return null;
+    }
+
+    return this.comicFileDescriptorList.remove(0);
   }
 }

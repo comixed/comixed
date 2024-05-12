@@ -26,11 +26,8 @@ import { WebSocketService } from '@app/messaging';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { Frame, Subscription } from 'webstomp-client';
-import {
-  ADD_COMIC_BOOKS_TOPIC,
-  PROCESS_COMIC_BOOKS_TOPIC
-} from '@app/app.constants';
-import { ProcessComicsStatus } from '@app/models/messages/process-comics-status';
+import { PROCESS_COMIC_BOOKS_TOPIC } from '@app/app.constants';
+import { ProcessComicBooksStatus } from '@app/models/messages/process-comic-books-status';
 
 describe('ProcessComicsService', () => {
   const ADD_COUNT = Math.abs(Math.floor(Math.random() * 1000));
@@ -44,7 +41,6 @@ describe('ProcessComicsService', () => {
   let service: ProcessComicsService;
   let webSocketService: jasmine.SpyObj<WebSocketService>;
   const processComicsSubscription = jasmine.createSpyObj(['unsubscribe']);
-  const addComicsSubscription = jasmine.createSpyObj(['unsubscribe']);
   let store: MockStore<any>;
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -68,9 +64,6 @@ describe('ProcessComicsService', () => {
     processComicsSubscription.unsubscribe = jasmine.createSpy(
       'processComicsSubscription.unsubscribe()'
     );
-    addComicsSubscription.unsubscribe = jasmine.createSpy(
-      'addComicsSubscription.unsubscribe()'
-    );
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
   });
@@ -84,11 +77,10 @@ describe('ProcessComicsService', () => {
       'scan type',
       {},
       JSON.stringify({
-        startTime: new Date().getTime(),
         stepName: 'step-name',
         total: ADD_COUNT,
         processed: PROCESSING_COUNT
-      } as ProcessComicsStatus)
+      } as ProcessComicBooksStatus)
     );
 
     beforeEach(() => {
@@ -102,13 +94,6 @@ describe('ProcessComicsService', () => {
       });
     });
 
-    it('subscribes to the adding comic books updates', () => {
-      expect(webSocketService.subscribe).toHaveBeenCalledWith(
-        ADD_COMIC_BOOKS_TOPIC,
-        jasmine.anything()
-      );
-    });
-
     it('subscribes to the processing comic books updates', () => {
       expect(webSocketService.subscribe).toHaveBeenCalledWith(
         PROCESS_COMIC_BOOKS_TOPIC,
@@ -119,20 +104,11 @@ describe('ProcessComicsService', () => {
 
   describe('when messaging stops', () => {
     beforeEach(() => {
-      service.addComicsSubscription = addComicsSubscription;
       service.processComicsSubscription = processComicsSubscription;
       store.setState({
         ...initialState,
         [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: false }
       });
-    });
-
-    it('unsubscribes from add comics updates', () => {
-      expect(addComicsSubscription.unsubscribe).toHaveBeenCalled();
-    });
-
-    it('clears the add comics subscription', () => {
-      expect(service.addComicsSubscription).toBeNull();
     });
 
     it('unsubscribes from process comics updates', () => {

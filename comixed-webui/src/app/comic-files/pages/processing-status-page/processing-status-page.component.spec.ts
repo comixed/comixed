@@ -25,7 +25,7 @@ import {
 } from '@app/reducers/import-comic-books.reducer';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { RouterTestingModule } from '@angular/router/testing';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
@@ -34,6 +34,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { PROCESSING_COMIC_STATUS_1 } from '@app/comic-files/comic-file.fixtures';
+import { TitleService } from '@app/core/services/title.service';
 
 describe('ProcessingStatusPageComponent', () => {
   const STATUS = PROCESSING_COMIC_STATUS_1;
@@ -44,6 +45,8 @@ describe('ProcessingStatusPageComponent', () => {
   let component: ProcessingStatusPageComponent;
   let fixture: ComponentFixture<ProcessingStatusPageComponent>;
   let store: MockStore;
+  let translateService: TranslateService;
+  let titleService: TitleService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -58,12 +61,19 @@ describe('ProcessingStatusPageComponent', () => {
         MatSortModule,
         MatPaginatorModule
       ],
-      providers: [provideMockStore({ initialState }), QueryParameterService]
+      providers: [
+        provideMockStore({ initialState }),
+        QueryParameterService,
+        TitleService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProcessingStatusPageComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
+    translateService = TestBed.inject(TranslateService);
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
     fixture.detectChanges();
   });
 
@@ -82,6 +92,16 @@ describe('ProcessingStatusPageComponent', () => {
       expect(
         component.dataSource.sortingDataAccessor(STATUS, 'progress')
       ).toEqual(STATUS.progress);
+    });
+  });
+
+  describe('when the language changes', () => {
+    beforeEach(() => {
+      translateService.use('fr');
+    });
+
+    it('updates the tab title', () => {
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
 });

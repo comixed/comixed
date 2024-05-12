@@ -18,25 +18,27 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
-import static org.comixedproject.model.messaging.batch.AddComicBooksStatus.*;
+import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.IMPORT_COMIC_FILES_STEP;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.ChunkListener;
 import org.springframework.batch.core.scope.context.ChunkContext;
-import org.springframework.batch.item.ExecutionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>AddedComicBookChunkListener</code> provides a chunk listener to relay the status of comics
+ * <code>CreateComicBookChunkListener</code> provides a chunk listener to relay the status of comics
  * processed.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class AddedComicBookChunkListener extends AbstractBatchProcessListener
+public class CreateComicBookChunkListener extends AbstractBatchProcessListener
     implements ChunkListener {
+  @Autowired private ComicBookService comicBookService;
 
   @Override
   public void beforeChunk(final ChunkContext context) {
@@ -56,12 +58,9 @@ public class AddedComicBookChunkListener extends AbstractBatchProcessListener
   private void doPublishChunkState(ChunkContext context) {
     this.doPublishBatchProcessDetail(
         this.getBatchDetails(context.getStepContext().getStepExecution().getJobExecution()));
-    final ExecutionContext executionContext =
-        context.getStepContext().getStepExecution().getJobExecution().getExecutionContext();
-    log.trace("Publishing status after chunk");
-    executionContext.putLong(
-        ADD_COMIC_BOOKS_PROCESSED_COMICS,
-        context.getStepContext().getStepExecution().getWriteCount());
-    this.doPublishAddComicBookStatus(executionContext);
+    final long comicFiles = this.comicFileService.getComicFileDescriptorCount();
+    final long comicBooks = this.comicBookService.getComicBookCount();
+    this.doPublishProcessComicBookStatus(
+        comicFiles > 0, IMPORT_COMIC_FILES_STEP, "", comicBooks + comicFiles, comicBooks);
   }
 }

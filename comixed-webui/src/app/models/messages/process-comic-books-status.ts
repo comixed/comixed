@@ -16,22 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.writers;
-
-import lombok.extern.log4j.Log4j2;
-import org.comixedproject.state.comicbooks.ComicEvent;
-import org.springframework.stereotype.Component;
-
-/**
- * <code>ReaderInsertedWriter</code> fires an event to announce that comics have been inserted into
- * the database.
- *
- * @author Darryl L. Pierce
- */
-@Component
-@Log4j2
-public class ReaderInsertedWriter extends AbstractComicBookWriter {
-  public ReaderInsertedWriter() {
-    super(ComicEvent.recordInserted);
-  }
+export interface ProcessComicBooksStatus {
+  batchName: string;
+  stepName: string;
+  total: number;
+  processed: number;
 }

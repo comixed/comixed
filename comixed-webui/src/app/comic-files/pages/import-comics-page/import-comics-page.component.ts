@@ -42,7 +42,6 @@ import { setBusyState } from '@app/core/actions/busy.actions';
 import { sendComicFiles } from '@app/comic-files/actions/import-comic-files.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { User } from '@app/user/models/user';
-import { selectAddingComicBooksState } from '@app/selectors/import-comic-books.selectors';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { PAGE_SIZE_DEFAULT } from '@app/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -93,7 +92,6 @@ export class ImportComicsPageComponent
   translateSubscription$: Subscription;
   userSubscription$: Subscription;
   user: User;
-  comicImportStateSubscription$: Subscription;
   comicFileListStateSubscription$: Subscription;
   sendComicFilesStateSubscription$: Subscription;
   selectedFilesSubscription$: Subscription;
@@ -166,14 +164,6 @@ export class ImportComicsPageComponent
       .subscribe(state =>
         this.store.dispatch(setBusyState({ enabled: state.sending }))
       );
-    this.comicImportStateSubscription$ = this.store
-      .select(selectAddingComicBooksState)
-      .subscribe(state => {
-        if (state.active) {
-          this.logger.debug('Redirecting to import status page');
-          this.router.navigateByUrl('/library/import/status');
-        }
-      });
     this.featureEnabledSubscription$ = this.store
       .select(selectFeatureEnabledState)
       .subscribe(state => {
@@ -230,8 +220,6 @@ export class ImportComicsPageComponent
     this.comicFileListStateSubscription$.unsubscribe();
     this.logger.trace('Unsubscribing from send comic file state updates');
     this.sendComicFilesStateSubscription$.unsubscribe();
-    this.logger.trace('Unsubscribing from import state updates');
-    this.comicImportStateSubscription$.unsubscribe();
     this.logger.trace('Unsubscribing from feature enabled updates');
     this.featureEnabledSubscription$.unsubscribe();
   }

@@ -18,10 +18,8 @@
 
 package org.comixedproject.model.messaging.batch;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
-import java.util.Date;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,37 +33,16 @@ import org.comixedproject.views.View;
  */
 @NoArgsConstructor
 public class ProcessComicBooksStatus {
-  public static final String PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED =
-      "process-comic-books-status.job-started";
-  public static final String PROCESS_COMIC_BOOKS_STATUS_JOB_FINISHED =
-      "process-comic-books-status.job-finished";
-  public static final String PROCESS_COMIC_BOOKS_STATUS_BATCH_NAME =
-      "process-comic-books-status.batch-name";
-  public static final String PROCESS_COMIC_BOOKS_STATUS_STEP_NAME =
-      "process-comic-books-status.step-name";
-  public static final String PROCESS_COMIC_BOOKS_STATUS_TOTAL_COMICS =
-      "process-comic-books-status.total-comics";
-  public static final String PROCESS_COMIC_BOOKS_STATUS_PROCESSED_COMICS =
-      "process-comic-books-status.processed-comics";
-
-  public static final String PROCESS_COMIC_BOOKS_STEP_NAME_SETUP = "job-setup-step";
-  public static final String PROCESS_COMIC_BOOKS_STEP_NAME_LOAD_FILE_CONTENTS =
-      "load-file-contents-step";
-  public static final String PROCESS_COMIC_BOOKS_STEP_NAME_LOAD_PAGE_HASH = "load-page-hash-step";
-  public static final String PROCESS_COMIC_BOOKS_STEP_NAME_COMPLETED = "job-completed-step";
+  public static final String IMPORT_COMIC_FILES_STEP = "import-comic-files";
+  public static final String COMIC_MARKED_AS_ADDED_STEP = "comic-marked-as-added-step";
+  public static final String LOAD_FILE_CONTENTS_STEP = "load-file-contents-step";
+  public static final String LOAD_PAGE_HASH_STEP = "load-page-hash-step";
 
   @JsonProperty("active")
   @JsonView(View.GenericObjectView.class)
   @Getter
   @Setter
   private boolean active = true;
-
-  @JsonProperty("started")
-  @JsonView(View.GenericObjectView.class)
-  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
-  @Getter
-  @Setter
-  private Date started;
 
   @JsonProperty("batchName")
   @JsonView(View.GenericObjectView.class)

@@ -16,28 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.messaging.comicbooks;
+package org.comixedproject.batch.comicbooks.writers;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.messaging.AbstractPublishAction;
-import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.messaging.batch.AddComicBooksStatus;
-import org.comixedproject.views.View;
+import org.comixedproject.state.comicbooks.ComicEvent;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>PublishAddComicBooksStatusAction</code> publishes the current state of adding comics to the
- * library.
+ * <code>RecordInsertedWriter</code> fires an event to announce that comics have been inserted into
+ * the database.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class PublishAddComicBooksStatusAction extends AbstractPublishAction<AddComicBooksStatus> {
-  static final String ADD_COMIC_BOOK_STATE_TOPIC = "/topic/add-comic-books.status";
-
-  @Override
-  public void publish(final AddComicBooksStatus subject) throws PublishingException {
-    this.doPublish(ADD_COMIC_BOOK_STATE_TOPIC, subject, View.GenericObjectView.class);
+public class RecordInsertedWriter extends AbstractComicBookWriter {
+  public RecordInsertedWriter() {
+    super(ComicEvent.recordInserted);
   }
 }

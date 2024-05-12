@@ -77,7 +77,6 @@ public class ProcessComicBooksConfiguration {
    *
    * @param jobRepository the step factory
    * @param platformTransactionManager the transaction manager
-   * @param stepListener the step listener
    * @param reader the reader
    * @param processor the processor
    * @param writer the writer
@@ -88,13 +87,11 @@ public class ProcessComicBooksConfiguration {
   public Step loadFileContentsStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
-      final LoadFileContentsStepExecutionListener stepListener,
       final LoadFileContentsReader reader,
       final LoadFileContentsProcessor processor,
       final LoadFileContentsWriter writer,
       final LoadFileContentsChunkListener chunkListener) {
     return new StepBuilder("loadFileContentsStep", jobRepository)
-        .listener(stepListener)
         .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)

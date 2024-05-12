@@ -17,15 +17,11 @@
  */
 
 import { createReducer, on } from '@ngrx/store';
-import {
-  addComicBooksUpdate,
-  processComicBooksUpdate
-} from '../actions/process-comics.actions';
+import { processComicBooksUpdate } from '../actions/process-comics.actions';
 
 export const IMPORT_COMIC_BOOKS_FEATURE_KEY = 'import_comic_books_state';
 
 export interface ProcessingComicStatus {
-  startTime: number;
   batchName: string;
   stepName: string;
   total: number;
@@ -34,51 +30,25 @@ export interface ProcessingComicStatus {
 }
 
 export interface ImportComicBooksState {
-  adding: {
-    active: boolean;
-    started: number;
-    total: number;
-    processed: number;
-  };
-  processing: {
-    active: boolean;
-    batches: ProcessingComicStatus[];
-  };
+  active: boolean;
+  batches: ProcessingComicStatus[];
 }
 
 export const initialState: ImportComicBooksState = {
-  adding: {
-    active: false,
-    started: 0,
-    total: 0,
-    processed: 0
-  },
-  processing: {
-    active: false,
-    batches: []
-  }
+  active: false,
+  batches: []
 };
 
 export const reducer = createReducer(
   initialState,
 
-  on(addComicBooksUpdate, (state, action) => ({
-    ...state,
-    adding: {
-      active: action.active,
-      started: action.startTime,
-      total: action.total,
-      processed: action.processed
-    }
-  })),
   on(processComicBooksUpdate, (state, action) => {
-    let batches = state.processing.batches.filter(
+    let batches = state.batches.filter(
       entry => entry.batchName !== action.batchName
     );
     if (action.active) {
       batches = batches.concat({
         batchName: action.batchName,
-        startTime: action.startTime,
         stepName: action.stepName,
         total: action.total,
         processed: action.processed,
@@ -87,10 +57,8 @@ export const reducer = createReducer(
     }
     return {
       ...state,
-      processing: {
-        active: batches.length > 0,
-        batches
-      }
+      active: batches.length > 0,
+      batches
     };
   })
 );

@@ -20,8 +20,12 @@ package org.comixedproject.batch.comicbooks.writers;
 
 import java.util.ArrayList;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicfiles.ComicFileDescriptor;
+import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -31,12 +35,24 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.batch.item.Chunk;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ReaderInsertedWriterTest {
-  @InjectMocks private ReaderInsertedWriter writer;
+public class CreateComicBookWriterTest {
+  private static final String TEST_FILENAME = "The filename";
+  @InjectMocks private CreateComicBookWriter writer;
   @Mock private ComicStateHandler comicStateHandler;
+  @Mock private ComicFileService comicFileService;
+  @Mock private ComicDetail comicDetail;
   @Mock private ComicBook comicBook;
+  @Mock private ComicFileDescriptor comicFileDescriptor;
 
   private Chunk<ComicBook> comicBookList = new Chunk<>(new ArrayList<>());
+
+  @Before
+  public void setUp() {
+    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_FILENAME);
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(comicFileService.getComicFileDescriptorByFilename(Mockito.anyString()))
+        .thenReturn(comicFileDescriptor);
+  }
 
   @Test
   public void testWrite() {
@@ -45,6 +61,10 @@ public class ReaderInsertedWriterTest {
     writer.write(comicBookList);
 
     Mockito.verify(comicStateHandler, Mockito.times(comicBookList.size()))
-        .fireEvent(comicBook, ComicEvent.recordInserted);
+        .fireEvent(comicBook, ComicEvent.readyForProcessing);
+    Mockito.verify(comicFileService, Mockito.times(comicBookList.size()))
+        .getComicFileDescriptorByFilename(TEST_FILENAME);
+    Mockito.verify(comicFileService, Mockito.times(comicBookList.size()))
+        .deleteComicFileDescriptor(comicFileDescriptor);
   }
 }

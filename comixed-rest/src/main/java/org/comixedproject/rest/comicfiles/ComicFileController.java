@@ -18,9 +18,6 @@
 
 package org.comixedproject.rest.comicfiles;
 
-import static org.comixedproject.batch.comicbooks.AddComicsConfiguration.PARAM_SKIP_BLOCKING_PAGES;
-import static org.comixedproject.batch.comicbooks.AddComicsConfiguration.PARAM_SKIP_METADATA;
-
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import java.io.IOException;
@@ -29,7 +26,6 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.comixedproject.adaptors.AdaptorException;
-import org.comixedproject.batch.comicbooks.AddComicsConfiguration;
 import org.comixedproject.model.metadata.FilenameMetadata;
 import org.comixedproject.model.net.comicfiles.FilenameMetadataRequest;
 import org.comixedproject.model.net.comicfiles.FilenameMetadataResponse;
@@ -39,15 +35,11 @@ import org.comixedproject.model.net.comicfiles.LoadComicFilesResponse;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.service.metadata.FilenameScrapingRuleService;
 import org.comixedproject.views.View;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -63,14 +55,6 @@ import org.springframework.web.bind.annotation.*;
 public class ComicFileController {
   @Autowired private ComicFileService comicFileService;
   @Autowired private FilenameScrapingRuleService filenameScrapingRuleService;
-
-  @Autowired
-  @Qualifier("batchJobLauncher")
-  private JobLauncher jobLauncher;
-
-  @Autowired
-  @Qualifier("addComicsToLibraryJob")
-  private Job addComicsToLibraryJob;
 
   /**
    * Retrieves all comic files under the specified directory.
@@ -158,14 +142,6 @@ public class ComicFileController {
 
     log.info("Importing comic files");
     this.comicFileService.importComicFiles(filenames);
-    log.trace("Launching add comics process");
-    this.jobLauncher.run(
-        addComicsToLibraryJob,
-        new JobParametersBuilder()
-            .addLong(AddComicsConfiguration.PARAM_ADD_COMICS_STARTED, System.currentTimeMillis())
-            .addString(PARAM_SKIP_METADATA, String.valueOf(request.getSkipMetadata()))
-            .addString(PARAM_SKIP_BLOCKING_PAGES, String.valueOf(request.getSkipBlockingPages()))
-            .toJobParameters());
   }
 
   /**

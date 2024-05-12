@@ -18,19 +18,12 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
-import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.JOB_PROCESS_COMIC_BOOKS_BATCH_NAME;
-import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.JOB_PROCESS_COMIC_BOOKS_STARTED;
-import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
-
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
 import org.comixedproject.model.batch.BatchProcessDetail;
-import org.comixedproject.service.batch.ComicBatchService;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.configuration.annotation.JobScope;
-import org.springframework.batch.item.ExecutionContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -44,39 +37,13 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class ProcessComicBooksJobListener extends AbstractBatchProcessListener
     implements JobExecutionListener {
-  @Autowired private ComicBatchService comicBatchService;
-
   @Override
   public void beforeJob(final JobExecution jobExecution) {
     this.doPublishBatchProcessDetail(BatchProcessDetail.from(jobExecution));
-    final ExecutionContext context = jobExecution.getExecutionContext();
-    final String batchName = this.getBatchName(jobExecution.getJobParameters());
-    context.putLong(PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED, System.currentTimeMillis());
-    context.putString(PROCESS_COMIC_BOOKS_STATUS_BATCH_NAME, batchName);
-    context.putString(PROCESS_COMIC_BOOKS_STATUS_STEP_NAME, PROCESS_COMIC_BOOKS_STEP_NAME_SETUP);
-    context.putLong(PROCESS_COMIC_BOOKS_STATUS_TOTAL_COMICS, this.getEntryCount(batchName));
-    context.putLong(PROCESS_COMIC_BOOKS_STATUS_PROCESSED_COMICS, 0);
-    this.doPublishProcessComicBookStatus(context, true);
   }
 
   @Override
   public void afterJob(final JobExecution jobExecution) {
     this.doPublishBatchProcessDetail(BatchProcessDetail.from(jobExecution));
-    final ExecutionContext context = jobExecution.getExecutionContext();
-    final String batchName = this.getBatchName(jobExecution.getJobParameters());
-    context.putLong(
-        PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED,
-        jobExecution.getJobParameters().getLong(JOB_PROCESS_COMIC_BOOKS_STARTED));
-    context.putString(PROCESS_COMIC_BOOKS_STATUS_BATCH_NAME, batchName);
-    context.putString(
-        PROCESS_COMIC_BOOKS_STATUS_STEP_NAME, PROCESS_COMIC_BOOKS_STEP_NAME_COMPLETED);
-    context.putLong(PROCESS_COMIC_BOOKS_STATUS_JOB_FINISHED, System.currentTimeMillis());
-    context.putLong(PROCESS_COMIC_BOOKS_STATUS_TOTAL_COMICS, this.getEntryCount(batchName));
-    context.putLong(PROCESS_COMIC_BOOKS_STATUS_PROCESSED_COMICS, this.getEntryCount(batchName));
-    final String comicBatchName =
-        jobExecution.getJobParameters().getString(JOB_PROCESS_COMIC_BOOKS_BATCH_NAME);
-    log.debug("Deleting comic batch: {}", comicBatchName);
-    this.comicBatchService.deleteBatchByName(comicBatchName);
-    this.doPublishProcessComicBookStatus(context, false);
   }
 }
