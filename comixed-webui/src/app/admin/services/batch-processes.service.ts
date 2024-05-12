@@ -30,7 +30,10 @@ import { Store } from '@ngrx/store';
 import { Subscription as StompSubscription } from 'webstomp-client';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import { WebSocketService } from '@app/messaging';
-import { batchProcessUpdateReceived } from '@app/admin/actions/batch-processes.actions';
+import {
+  batchProcessUpdateReceived,
+  loadBatchProcessList
+} from '@app/admin/actions/batch-processes.actions';
 import { filter } from 'rxjs/operators';
 
 @Injectable({
@@ -51,6 +54,9 @@ export class BatchProcessesService {
       .pipe(filter(state => !!state))
       .subscribe(state => {
         if (state.started && !this.processListUpdateSubscription) {
+          this.logger.trace('Loading the batch process list');
+          this.store.dispatch(loadBatchProcessList());
+          this.logger.trace('Subscribing to batch process list updates');
           this.processListUpdateSubscription = this.webSocketService.subscribe(
             BATCH_PROCESS_LIST_UPDATE_TOPIC,
             update => {
