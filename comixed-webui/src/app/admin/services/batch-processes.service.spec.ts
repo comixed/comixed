@@ -39,7 +39,10 @@ import {
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { batchProcessUpdateReceived } from '@app/admin/actions/batch-processes.actions';
+import {
+  batchProcessUpdateReceived,
+  loadBatchProcessList
+} from '@app/admin/actions/batch-processes.actions';
 import { WebSocketService } from '@app/messaging';
 
 describe('BatchProcessesService', () => {
@@ -95,6 +98,10 @@ describe('BatchProcessesService', () => {
         ...initialState,
         [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: true }
       });
+    });
+
+    it('loads the batch process list', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(loadBatchProcessList());
     });
 
     it('subscribes to user updates', () => {
