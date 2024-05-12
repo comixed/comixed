@@ -155,6 +155,8 @@ public class ComicFileServiceTest {
     for (int index = 0; index < 25; index++) {
       filenameList.add(String.format("comicBook-file-%d.cbz", index));
     }
+    Mockito.when(comicFileDescriptorRepository.findByFilename(Mockito.anyString()))
+        .thenReturn(null);
 
     Mockito.when(comicFileDescriptorRepository.save(Mockito.any(ComicFileDescriptor.class)))
         .thenReturn(savedComicFileDescriptor);
@@ -162,9 +164,30 @@ public class ComicFileServiceTest {
     service.importComicFiles(filenameList);
 
     filenameList.forEach(
-        filename ->
-            Mockito.verify(comicFileDescriptorRepository, Mockito.times(1))
-                .save(new ComicFileDescriptor(filename)));
+        filename -> {
+          Mockito.verify(comicFileDescriptorRepository, Mockito.times(1))
+              .save(new ComicFileDescriptor(filename));
+          Mockito.verify(comicFileDescriptorRepository, Mockito.times(1)).findByFilename(filename);
+        });
+  }
+
+  @Test
+  public void testImportComicFilesAlreadyImported() {
+    final List<String> filenameList = new ArrayList<>();
+    for (int index = 0; index < 25; index++) {
+      filenameList.add(String.format("comicBook-file-%d.cbz", index));
+    }
+    Mockito.when(comicFileDescriptorRepository.findByFilename(Mockito.anyString()))
+        .thenReturn(savedComicFileDescriptor);
+
+    service.importComicFiles(filenameList);
+
+    filenameList.forEach(
+        filename -> {
+          Mockito.verify(comicFileDescriptorRepository, Mockito.never())
+              .save(new ComicFileDescriptor(filename));
+          Mockito.verify(comicFileDescriptorRepository, Mockito.times(1)).findByFilename(filename);
+        });
   }
 
   @Test

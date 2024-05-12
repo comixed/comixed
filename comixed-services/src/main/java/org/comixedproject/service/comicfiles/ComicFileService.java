@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
@@ -153,8 +154,10 @@ public class ComicFileService {
   public void importComicFiles(final List<String> filenames) {
     for (int index = 0; index < filenames.size(); index++) {
       final String filename = filenames.get(index);
-      log.debug("Saving file descriptor: {}", filename);
-      this.comicFileDescriptorRepository.save(new ComicFileDescriptor(filename));
+      if (Objects.isNull(this.comicFileDescriptorRepository.findByFilename(filename))) {
+        log.debug("Saving file descriptor: {}", filename);
+        this.comicFileDescriptorRepository.save(new ComicFileDescriptor(filename));
+      }
     }
   }
 
