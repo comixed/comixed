@@ -18,12 +18,12 @@
 
 package org.comixedproject.batch.initiators;
 
-import static org.comixedproject.batch.comicpages.LoadPageHashesConfiguration.JOB_LOAD_PAGE_HASHES_STARTED;
-import static org.comixedproject.batch.comicpages.LoadPageHashesConfiguration.LOAD_PAGE_HASHES_JOB;
+import static org.comixedproject.batch.comicbooks.ImportComicFilesConfiguration.IMPORT_COMIC_FILES_JOB;
+import static org.comixedproject.batch.comicbooks.ImportComicFilesConfiguration.IMPORT_COMIC_FILES_JOB_STARTED;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.service.batch.BatchProcessesService;
-import org.comixedproject.service.comicpages.PageService;
+import org.comixedproject.service.comicfiles.ComicFileService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersInvalidException;
@@ -37,43 +37,42 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>LoadPageHashesInitiator</code> periodically checks for any pages that does not have a
- * defined hash. If any are found, and if the <code>library.blocked-pages-enabled</code> feature is
- * enabled, then it spawns a batch job to load those hashes.
+ * <code>ImportComicFilesInitiator</code> looks for unprocessed comic file descriptors and imports
+ * them into the library.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class LoadPageHashesInitiator {
-  @Autowired private PageService pageService;
+public class ImportComicFilesInitiator {
+  @Autowired private ComicFileService comicFileService;
   @Autowired private BatchProcessesService batchProcessesService;
 
   @Autowired
-  @Qualifier(value = LOAD_PAGE_HASHES_JOB)
+  @Qualifier(value = IMPORT_COMIC_FILES_JOB)
   private Job loadPageHashesJob;
 
   @Autowired
   @Qualifier("batchJobLauncher")
   private JobLauncher jobLauncher;
 
-  @Scheduled(fixedDelayString = "${comixed.batch.load-page-hashes.period}")
+  @Scheduled(fixedDelayString = "${comixed.batch.import-comic-files.period}")
   public void execute() {
-    log.trace("Checking for pages without hashes");
-    if (this.pageService.hasPagesWithoutHash()
-        && this.batchProcessesService.activeExecutionCountFor(LOAD_PAGE_HASHES_JOB) == 0L) {
+    log.trace("Checking for comic files to import");
+    if (this.comicFileService.getComicFileDescriptorCount() > 0
+        && this.batchProcessesService.activeExecutionCountFor(IMPORT_COMIC_FILES_JOB) == 0L) {
       try {
-        log.trace("Starting batch job: load page hashes");
+        log.trace("Starting batch job: import comic files");
         this.jobLauncher.run(
             this.loadPageHashesJob,
             new JobParametersBuilder()
-                .addLong(JOB_LOAD_PAGE_HASHES_STARTED, System.currentTimeMillis())
+                .addLong(IMPORT_COMIC_FILES_JOB_STARTED, System.currentTimeMillis())
                 .toJobParameters());
       } catch (JobExecutionAlreadyRunningException
           | JobRestartException
           | JobInstanceAlreadyCompleteException
           | JobParametersInvalidException error) {
-        log.error("Failed to run load page hash job", error);
+        log.error("Failed to run import comic files job", error);
       }
     }
   }

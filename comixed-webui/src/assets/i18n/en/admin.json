@@ -20,8 +20,8 @@
         "start-time": "Started",
         "status": "Status"
       },
-      "page-title": "Batch Process Status",
-      "tab-title": "Batch Process Status",
+      "page-title": "Batch Jobs",
+      "tab-title": "Batch Jobs",
       "text": {
         "no-records-found": "No batch process records found"
       }

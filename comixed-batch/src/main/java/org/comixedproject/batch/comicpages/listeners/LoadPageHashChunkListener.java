@@ -27,7 +27,6 @@ import org.comixedproject.service.comicpages.PageService;
 import org.springframework.batch.core.ChunkListener;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.scope.context.ChunkContext;
-import org.springframework.batch.item.ExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -63,16 +62,9 @@ public class LoadPageHashChunkListener extends AbstractBatchProcessListener
     this.doPublishBatchProcessDetail(
         BatchProcessDetail.from(
             chunkContext.getStepContext().getStepExecution().getJobExecution()));
-    final ExecutionContext context =
-        chunkContext.getStepContext().getStepExecution().getExecutionContext();
-    context.putString(PROCESS_COMIC_BOOKS_STATUS_BATCH_NAME, "");
-    context.putString(
-        PROCESS_COMIC_BOOKS_STATUS_STEP_NAME, PROCESS_COMIC_BOOKS_STEP_NAME_LOAD_PAGE_HASH);
-    context.putLong(PROCESS_COMIC_BOOKS_STATUS_JOB_FINISHED, System.currentTimeMillis());
     final long total = this.pageService.getCount();
     final long unprocessed = this.pageService.getPagesWithoutHashCount();
-    context.putLong(PROCESS_COMIC_BOOKS_STATUS_TOTAL_COMICS, total);
-    context.putLong(PROCESS_COMIC_BOOKS_STATUS_PROCESSED_COMICS, total - unprocessed);
-    this.doPublishProcessComicBookStatus(context, true);
+    this.doPublishProcessComicBookStatus(
+        unprocessed > 0, LOAD_PAGE_HASH_STEP, "", total, total - unprocessed);
   }
 }

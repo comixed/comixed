@@ -20,10 +20,7 @@ package org.comixedproject.batch.comicpages.listeners;
 
 import static junit.framework.TestCase.*;
 import static org.comixedproject.batch.comicpages.LoadPageHashesConfiguration.LOAD_PAGE_HASHES_JOB;
-import static org.comixedproject.model.messaging.batch.AddComicBooksStatus.*;
-import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
 
-import java.util.Date;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
 import org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAction;
@@ -38,11 +35,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.scope.context.StepContext;
-import org.springframework.batch.item.ExecutionContext;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoadPageHashChunkListenerTest {
-  private static final Date TEST_JOB_STARTED = new Date();
   private static final long TEST_PAGE_COUNT = 717L;
   private static final long TEST_PAGE_WITHOUT_HASH_COUNT = TEST_PAGE_COUNT / 2L;
 
@@ -56,7 +51,6 @@ public class LoadPageHashChunkListenerTest {
   @Mock private JobParameters jobParameters;
   @Mock private JobInstance jobInstance;
   @Mock private JobExecution jobExecution;
-  @Mock private ExecutionContext executionContext;
 
   @Captor private ArgumentCaptor<ProcessComicBooksStatus> publishComicBooksStatusArgumentCaptor;
   @Captor private ArgumentCaptor<BatchProcessDetail> batchProcessDetailArgumentCaptor;
@@ -74,11 +68,6 @@ public class LoadPageHashChunkListenerTest {
     Mockito.when(chunkContext.getStepContext()).thenReturn(stepContext);
     Mockito.when(stepContext.getStepExecution()).thenReturn(stepExecution);
     Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
-    Mockito.when(stepExecution.getExecutionContext()).thenReturn(executionContext);
-    Mockito.when(executionContext.containsKey(PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED))
-        .thenReturn(true);
-    Mockito.when(executionContext.getLong(PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED))
-        .thenReturn(TEST_JOB_STARTED.getTime());
     Mockito.doNothing()
         .when(publishProcessComicBooksStatusAction)
         .publish(publishComicBooksStatusArgumentCaptor.capture());
@@ -89,9 +78,6 @@ public class LoadPageHashChunkListenerTest {
 
   @Test
   public void testBeforeChunk() throws PublishingException {
-    Mockito.when(executionContext.containsKey(PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED))
-        .thenReturn(true);
-
     listener.beforeChunk(chunkContext);
 
     this.doCommonChecks();
@@ -99,9 +85,6 @@ public class LoadPageHashChunkListenerTest {
 
   @Test
   public void testAftereChunk() throws PublishingException {
-    Mockito.when(executionContext.containsKey(PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED))
-        .thenReturn(true);
-
     listener.afterChunk(chunkContext);
 
     this.doCommonChecks();
@@ -109,9 +92,6 @@ public class LoadPageHashChunkListenerTest {
 
   @Test
   public void testAfterChunkError() throws PublishingException {
-    Mockito.when(executionContext.containsKey(PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED))
-        .thenReturn(true);
-
     listener.afterChunkError(chunkContext);
 
     this.doCommonChecks();
@@ -124,12 +104,5 @@ public class LoadPageHashChunkListenerTest {
     assertTrue(status.isActive());
 
     Mockito.verify(publishProcessComicBooksStatusAction, Mockito.times(1)).publish(status);
-
-    Mockito.verify(executionContext, Mockito.times(1))
-        .putLong(PROCESS_COMIC_BOOKS_STATUS_TOTAL_COMICS, TEST_PAGE_COUNT);
-    Mockito.verify(executionContext, Mockito.times(1))
-        .putLong(
-            PROCESS_COMIC_BOOKS_STATUS_PROCESSED_COMICS,
-            TEST_PAGE_COUNT - TEST_PAGE_WITHOUT_HASH_COUNT);
   }
 }

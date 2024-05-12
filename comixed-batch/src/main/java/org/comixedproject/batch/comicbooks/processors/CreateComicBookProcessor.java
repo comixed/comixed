@@ -30,14 +30,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ComicInsertProcessor</code> converts a descriptor into a comic record. If there is already
- * an existing comic in the library for the provided file then that record is discarded.
+ * <code>CreateComicBookProcessor</code> converts a descriptor into a comic record. If there is
+ * already an existing comic in the library for the provided file then that record is discarded.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class ComicInsertProcessor implements ItemProcessor<ComicFileDescriptor, ComicBook> {
+public class CreateComicBookProcessor implements ItemProcessor<ComicFileDescriptor, ComicBook> {
   @Autowired private ComicBookService comicBookService;
   @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private FilenameScrapingRuleService filenameScrapingRuleService;

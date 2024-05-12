@@ -18,28 +18,26 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
-import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
+import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.COMIC_MARKED_AS_ADDED_STEP;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
-import org.comixedproject.model.batch.BatchProcessDetail;
+import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.ChunkListener;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>LoadFileContentsChunkListener</code> provides a chunk listener for loading file content.
+ * <code>RecordInsertedChunkListener</code> relays status as imported comics are marked as reading
+ * for processing.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-@StepScope
-public class LoadFileContentsChunkListener extends AbstractBatchProcessListener
+public class RecordInsertedChunkListener extends AbstractBatchProcessListener
     implements ChunkListener {
   @Autowired private ComicBookService comicBookService;
 
@@ -58,14 +56,12 @@ public class LoadFileContentsChunkListener extends AbstractBatchProcessListener
     this.doPublishChunkState(context);
   }
 
-  private void doPublishChunkState(ChunkContext chunkContext) {
-    final StepExecution stepExecution = chunkContext.getStepContext().getStepExecution();
-    this.doPublishBatchProcessDetail(BatchProcessDetail.from(stepExecution.getJobExecution()));
-    final String batchName = this.getBatchName(stepExecution.getJobParameters());
-    final long total = this.getEntryCount(batchName);
-    final long unprocessed =
-        this.comicBookService.getUnprocessedComicsWithoutContentCount(batchName);
+  private void doPublishChunkState(ChunkContext context) {
+    this.doPublishBatchProcessDetail(
+        this.getBatchDetails(context.getStepContext().getStepExecution().getJobExecution()));
+    final long unprocessed = this.comicBookService.getCountForState(ComicState.ADDED);
+    final long comicBooks = this.comicBookService.getComicBookCount();
     this.doPublishProcessComicBookStatus(
-        unprocessed > 0, LOAD_FILE_CONTENTS_STEP, batchName, total, total - unprocessed);
+        unprocessed > 0, COMIC_MARKED_AS_ADDED_STEP, "", comicBooks, comicBooks - unprocessed);
   }
 }

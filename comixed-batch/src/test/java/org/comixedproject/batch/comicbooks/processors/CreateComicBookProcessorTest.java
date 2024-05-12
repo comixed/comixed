@@ -38,7 +38,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ComicBookInsertProcessorTest {
+public class CreateComicBookProcessorTest {
   private static final String TEST_BASE_FILENAME = "comicBook.cbz";
   private static final String TEST_FILENAME = "/users/comixed/library/" + TEST_BASE_FILENAME;
   private static final String TEST_SERIES = "Test Series";
@@ -46,7 +46,7 @@ public class ComicBookInsertProcessorTest {
   private static final String TEST_ISSUE_NUMBER = "27";
   private static final Date TEST_COVER_DATE = new Date();
 
-  @InjectMocks private ComicInsertProcessor processor;
+  @InjectMocks private CreateComicBookProcessor processor;
   @Mock private ComicBookService comicBookService;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private ComicFileDescriptor descriptor;

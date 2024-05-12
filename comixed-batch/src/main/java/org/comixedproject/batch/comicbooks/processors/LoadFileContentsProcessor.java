@@ -18,7 +18,7 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
-import static org.comixedproject.batch.comicbooks.AddComicsConfiguration.PARAM_SKIP_METADATA;
+import static org.comixedproject.batch.comicbooks.ImportComicFilesConfiguration.PARAM_SKIP_METADATA;
 
 import java.io.File;
 import lombok.extern.log4j.Log4j2;

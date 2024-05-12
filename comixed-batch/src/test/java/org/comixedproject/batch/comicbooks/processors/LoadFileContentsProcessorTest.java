@@ -20,7 +20,7 @@ package org.comixedproject.batch.comicbooks.processors;
 
 import static junit.framework.TestCase.*;
 import static junit.framework.TestCase.assertFalse;
-import static org.comixedproject.batch.comicbooks.AddComicsConfiguration.PARAM_SKIP_METADATA;
+import static org.comixedproject.batch.comicbooks.ImportComicFilesConfiguration.PARAM_SKIP_METADATA;
 
 import java.util.List;
 import java.util.Map;

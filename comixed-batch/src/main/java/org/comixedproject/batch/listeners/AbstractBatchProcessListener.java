@@ -19,25 +19,19 @@
 package org.comixedproject.batch.listeners;
 
 import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.JOB_PROCESS_COMIC_BOOKS_BATCH_NAME;
-import static org.comixedproject.model.messaging.batch.AddComicBooksStatus.*;
-import static org.comixedproject.model.messaging.batch.AddComicBooksStatus.ADD_COMIC_BOOKS_PROCESSED_COMICS;
 import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
 
-import java.util.Date;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
-import org.comixedproject.messaging.comicbooks.PublishAddComicBooksStatusAction;
 import org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAction;
 import org.comixedproject.model.batch.BatchProcessDetail;
 import org.comixedproject.model.batch.ComicBatch;
-import org.comixedproject.model.messaging.batch.AddComicBooksStatus;
 import org.comixedproject.model.messaging.batch.ProcessComicBooksStatus;
 import org.comixedproject.service.batch.ComicBatchService;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.item.ExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -50,7 +44,6 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public abstract class AbstractBatchProcessListener {
-  @Autowired private PublishAddComicBooksStatusAction publishAddComicBooksStatusAction;
   @Autowired private PublishProcessComicBooksStatusAction publishProcessComicBooksStatusAction;
   @Autowired private PublishBatchProcessDetailUpdateAction publishBatchProcessDetailUpdateAction;
   @Autowired protected ComicFileService comicFileService;
@@ -71,34 +64,18 @@ public abstract class AbstractBatchProcessListener {
     return jobParameters.getString(JOB_PROCESS_COMIC_BOOKS_BATCH_NAME);
   }
 
-  protected void doPublishAddComicBookStatus(final ExecutionContext context) {
-    final AddComicBooksStatus status = new AddComicBooksStatus();
-    status.setActive(
-        context.containsKey(ADD_COMIC_BOOKS_JOB_STARTED)
-            && !context.containsKey(ADD_COMIC_BOOKS_JOB_FINISHED));
-    status.setStarted(new Date(context.getLong(ADD_COMIC_BOOKS_JOB_STARTED)));
-    status.setTotal(context.getLong(ADD_COMIC_BOOKS_TOTAL_COMICS));
-    status.setProcessed(context.getLong(ADD_COMIC_BOOKS_PROCESSED_COMICS));
-    try {
-      this.publishAddComicBooksStatusAction.publish(status);
-    } catch (PublishingException error) {
-      log.error("Failed to publish add comic books status", error);
-    }
-  }
-
   protected void doPublishProcessComicBookStatus(
-      final ExecutionContext context, final boolean active) {
-    log.trace("Building add comics to library status");
+      final boolean active,
+      final String stepName,
+      final String batchName,
+      final long total,
+      final long processed) {
     final ProcessComicBooksStatus status = new ProcessComicBooksStatus();
     status.setActive(active);
-    status.setBatchName(context.getString(PROCESS_COMIC_BOOKS_STATUS_BATCH_NAME));
-    status.setStarted(
-        context.containsKey(PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED)
-            ? new Date(context.getLong(PROCESS_COMIC_BOOKS_STATUS_JOB_STARTED))
-            : null);
-    status.setStepName(context.getString(PROCESS_COMIC_BOOKS_STATUS_STEP_NAME));
-    status.setTotal(context.getLong(PROCESS_COMIC_BOOKS_STATUS_TOTAL_COMICS));
-    status.setProcessed(context.getLong(PROCESS_COMIC_BOOKS_STATUS_PROCESSED_COMICS));
+    status.setStepName(stepName);
+    status.setTotal(total);
+    status.setProcessed(processed);
+    status.setBatchName(batchName);
     log.trace("Publishing add comics to library status");
     try {
       this.publishProcessComicBooksStatusAction.publish(status);

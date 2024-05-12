@@ -54,7 +54,7 @@ export class ReadingListEntriesEffects {
             tap((response: ReadingList) =>
               this.alertService.info(
                 this.translateService.instant(
-                  'reading-list-entries.add-comics.effect-success',
+                  'reading-list-entries.import-comic-files.effect-success',
                   { name: response.name }
                 )
               )
@@ -128,7 +128,7 @@ export class ReadingListEntriesEffects {
     this.logger.error('Service failure:', error);
     this.alertService.error(
       this.translateService.instant(
-        'reading-list-entries.add-comics.effect-failure'
+        'reading-list-entries.import-comic-files.effect-failure'
       )
     );
     return of(addComicBooksToReadingListFailure());

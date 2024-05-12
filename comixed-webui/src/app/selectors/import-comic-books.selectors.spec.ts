@@ -20,51 +20,23 @@ import {
   IMPORT_COMIC_BOOKS_FEATURE_KEY,
   ImportComicBooksState
 } from '../reducers/import-comic-books.reducer';
-import {
-  selectAddingComicBooksState,
-  selectImportingComicBooksState,
-  selectProcessingComicBooksState
-} from './import-comic-books.selectors';
+import { selectProcessingComicBooksState } from './import-comic-books.selectors';
 
 describe('ImportComicBooks Selectors', () => {
   let state: ImportComicBooksState;
 
   beforeEach(() => {
     state = {
-      adding: {
-        active: Math.random() > 0.5,
-        started: new Date().getTime(),
-        total: Math.abs(Math.floor(Math.random() * 1000)),
-        processed: Math.abs(Math.floor(Math.random() * 1000))
-      },
-      processing: {
-        active: Math.random() > 0.5,
-        batches: [{} as any]
-      }
+      active: Math.random() > 0.5,
+      batches: [{} as any]
     };
   });
 
   it('should select the feature state', () => {
     expect(
-      selectImportingComicBooksState({
-        [IMPORT_COMIC_BOOKS_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
-  });
-
-  it('should select the adding comic books state', () => {
-    expect(
-      selectAddingComicBooksState({
-        [IMPORT_COMIC_BOOKS_FEATURE_KEY]: state
-      })
-    ).toEqual(state.adding);
-  });
-
-  it('should select the processing comic books state', () => {
-    expect(
       selectProcessingComicBooksState({
         [IMPORT_COMIC_BOOKS_FEATURE_KEY]: state
       })
-    ).toEqual(state.processing);
+    ).toEqual(state);
   });
 });

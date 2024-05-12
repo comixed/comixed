@@ -16,7 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
@@ -26,13 +32,17 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { TranslateService } from '@ngx-translate/core';
+import { TitleService } from '@app/core/services/title.service';
 
 @Component({
   selector: 'cx-processing-status-page',
   templateUrl: './processing-status-page.component.html',
   styleUrls: ['./processing-status-page.component.scss']
 })
-export class ProcessingStatusPageComponent implements AfterViewInit, OnDestroy {
+export class ProcessingStatusPageComponent
+  implements AfterViewInit, OnInit, OnDestroy
+{
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -47,16 +57,26 @@ export class ProcessingStatusPageComponent implements AfterViewInit, OnDestroy {
   ];
 
   comicImportStateSubscription: Subscription;
+  landChangeSubscription: Subscription;
 
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
+    private translateService: TranslateService,
+    private titleService: TitleService,
     public queryParameterService: QueryParameterService
   ) {
+    this.landChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
     this.logger.debug('Subscribing to comic import state updates');
     this.comicImportStateSubscription = this.store
       .select(selectProcessingComicBooksState)
       .subscribe(state => (this.dataSource.data = state.batches));
+  }
+
+  ngOnInit(): void {
+    this.loadTranslations();
   }
 
   ngOnDestroy(): void {
@@ -75,5 +95,11 @@ export class ProcessingStatusPageComponent implements AfterViewInit, OnDestroy {
           return data.progress;
       }
     };
+  }
+
+  private loadTranslations() {
+    this.titleService.setTitle(
+      this.translateService.instant('processing-status-page.tab-title')
+    );
   }
 }

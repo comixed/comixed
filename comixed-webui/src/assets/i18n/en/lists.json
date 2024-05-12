@@ -68,7 +68,7 @@
     }
   },
   "reading-list-entries": {
-    "add-comics": {
+    "import-comic-files": {
       "effect-failure": "Failed to add comics to reading list.",
       "effect-success": "Added comics to reading list: {name}"
     },
