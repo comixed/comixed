@@ -50,7 +50,6 @@
       "comic-marked-as-added-step": "Mark Comics As Added",
       "create-insert-step": "Creating Comic Records",
       "header": {
-        "batch-name": "Batch Name",
         "processed": "Processed",
         "progress": "Progress",
         "started": "Started",

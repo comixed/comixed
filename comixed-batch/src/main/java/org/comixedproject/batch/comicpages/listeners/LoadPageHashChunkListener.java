@@ -65,6 +65,6 @@ public class LoadPageHashChunkListener extends AbstractBatchProcessListener
     final long total = this.pageService.getCount();
     final long unprocessed = this.pageService.getPagesWithoutHashCount();
     this.doPublishProcessComicBookStatus(
-        unprocessed > 0, LOAD_PAGE_HASH_STEP, "", total, total - unprocessed);
+        unprocessed > 0, LOAD_PAGE_HASH_STEP, total, total - unprocessed);
   }
 }

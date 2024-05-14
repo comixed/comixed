@@ -64,7 +64,7 @@ public class LoadPageHashesInitiatorTest {
           JobParametersInvalidException,
           JobRestartException {
     Mockito.when(pageService.hasPagesWithoutHash()).thenReturn(true);
-    Mockito.when(batchProcessesService.activeExecutionCountFor(Mockito.anyString())).thenReturn(0L);
+    Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(false);
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
   }
@@ -88,7 +88,7 @@ public class LoadPageHashesInitiatorTest {
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
           JobRestartException {
-    Mockito.when(batchProcessesService.activeExecutionCountFor(Mockito.anyString())).thenReturn(1L);
+    Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(true);
 
     initiator.execute();
 

@@ -62,6 +62,6 @@ public class RecordInsertedChunkListener extends AbstractBatchProcessListener
     final long unprocessed = this.comicBookService.getCountForState(ComicState.ADDED);
     final long comicBooks = this.comicBookService.getComicBookCount();
     this.doPublishProcessComicBookStatus(
-        unprocessed > 0, COMIC_MARKED_AS_ADDED_STEP, "", comicBooks, comicBooks - unprocessed);
+        unprocessed > 0, COMIC_MARKED_AS_ADDED_STEP, comicBooks, comicBooks - unprocessed);
   }
 }

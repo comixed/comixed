@@ -24,19 +24,8 @@
     queryParameterService.onSortChange($event.active, $event.direction)
   "
 >
-  <ng-container matColumnDef="batch-name">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>
-      {{ "comic-files.processing-comics.header.batch-name" | translate }}
-    </mat-header-cell>
-    <mat-cell *matCellDef="let entry" [matTooltip]="entry.batchName">
-      <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.batchName }}
-      </span>
-    </mat-cell>
-  </ng-container>
-
   <ng-container matColumnDef="step-name">
-    <mat-header-cell *matHeaderCellDef>
+    <mat-header-cell *matHeaderCellDef mat-sort-header>
       {{ "comic-files.processing-comics.header.step-name" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">

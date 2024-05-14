@@ -56,7 +56,6 @@ export class ProcessComicsService {
                   this.store.dispatch(
                     processComicBooksUpdate({
                       active: update.active,
-                      batchName: update.batchName,
                       stepName: update.stepName,
                       total: update.total,
                       processed: update.processed

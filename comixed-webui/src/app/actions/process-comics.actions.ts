@@ -22,7 +22,6 @@ export const processComicBooksUpdate = createAction(
   '[Process Comic Books] Update the process comic state',
   props<{
     active: boolean;
-    batchName: string;
     stepName: string;
     total: number;
     processed: number;

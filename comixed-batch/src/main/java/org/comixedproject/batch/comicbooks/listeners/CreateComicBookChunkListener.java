@@ -61,6 +61,6 @@ public class CreateComicBookChunkListener extends AbstractBatchProcessListener
     final long comicFiles = this.comicFileService.getComicFileDescriptorCount();
     final long comicBooks = this.comicBookService.getComicBookCount();
     this.doPublishProcessComicBookStatus(
-        comicFiles > 0, IMPORT_COMIC_FILES_STEP, "", comicBooks + comicFiles, comicBooks);
+        comicFiles > 0, IMPORT_COMIC_FILES_STEP, comicBooks + comicFiles, comicBooks);
   }
 }

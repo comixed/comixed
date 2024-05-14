@@ -60,7 +60,7 @@ public class ImportComicFilesInitiator {
   public void execute() {
     log.trace("Checking for comic files to import");
     if (this.comicFileService.getComicFileDescriptorCount() > 0
-        && this.batchProcessesService.activeExecutionCountFor(IMPORT_COMIC_FILES_JOB) == 0L) {
+        && !this.batchProcessesService.hasActiveExecutions(IMPORT_COMIC_FILES_JOB)) {
       try {
         log.trace("Starting batch job: import comic files");
         this.jobLauncher.run(
