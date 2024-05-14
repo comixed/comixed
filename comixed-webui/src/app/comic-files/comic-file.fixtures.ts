@@ -50,7 +50,6 @@ export const COMIC_FILE_4: ComicFile = {
 };
 
 export const PROCESSING_COMIC_STATUS_1: ProcessingComicStatus = {
-  batchName: 'the-batch-name',
   stepName: 'the-step-name',
   total: 1000,
   processed: 500,

@@ -1,35 +1,50 @@
 # Configuring The ComiXed Server
 
-## Importing Unprocessed Comic Books
+## List Of Properties
 
-By default, after comic books are imported, a process is started to import
-those comic books. This process involves such things are getting the list
-of pages in each issue, getting the dimensions for those pages, etc.
+Below is a list of configurable properties that can be altered to suit the
+needs of the server administrator.
 
-### Batch Thread Pool Size
+| PROPERTY                                        | USAGE                                             | FORMAT    |
+|-------------------------------------------------|---------------------------------------------------|-----------|
+| comixed.batch.thread-pool                       | The number of threads to use for batch jobs       | count     |
+| comixed.batch.import-comic-files.period         | Delay before checking for importable comics       | delay     |
+| comixed.batch.process-comic-books.period        | Delay before checking for unprocessed comics      | delay     |
+| comixed.batch.load-page-hashes.period           | Delay before checking for unprocessed comic pages | delay     | 
+| comixed.batch.add-cover-to-image-cache.schedule | The schedule for updating the image cache         | scheduled |
+| comixed.images.cache.location                   | The location of the image cache                   | path      |
 
-By default, the batch thread pool size is unbounded. You can set an upper
-limit to the number of threads the server will using by setting a value to
-the following property in ```application.properties```:
+### Count Values
 
-    comixed.batch.thread-pool-size=10
+This sort of value is simple: it's the number of items to be used. For
+example, for the thread pool, it's the maximum number of threads to be
+created.
 
-This example would limit the server to 10 parallel processes at most to
-run batch jobs.
+### Delay Values
+
+Delay values are the number of milliseconds between when the instances of the
+controlled component is processed.
+
+### Schedule Values
+
+This value looks like the following in the properties file:
+
+    property.name=* * * * * *
+
+To simply describe this, it represents, from left to right, the second,
+minute, hour, day of the month, and day of the week to run the job. It is
+beyond the scope of this document to give more information, but you can
+read more about it
+[here](https://spring.io/blog/2020/11/10/new-in-spring-5-3-improved-cron-expressions#usage).
+
+### Path Values
+
+THis is an absolute path or filename.
 
 
-### Changing The Frequence For Scanning For Unprocessed Comics
+# Image Caching
 
-By default, ComiXed will check every 60 seconds for unprocessed comics. You
-can override that schedule by changing the following property in the
-```application.properties``` file:
-
-    comixed.batch.process-comic-books.period=60000
-
-This value is the number of milliseconds to wait before checking for
-unprocessed comics.
-
-## Image Caching
+## Overview
 
 Loading pages out of comic file archives is a relatively slow and painful
 process. Anything that reduces the need to open the comic file directly
@@ -48,58 +63,10 @@ to put your image cache on a large enough drive if the default location
 is too small.
 
 
-## Changing The Image Cache Location
+## Changing The Image Cache Location Temporarily
 
-By default, these cached files are stored in the directory
-```$HOME/.comixed/image-cache```.
-
-This can be overridden from the command line temporarily using the
-command line option:
+By default, these cached files are stored in the directory specified in the
+application.properties file. However, this can be overridden from the
+command line temporarily using the option:
 
     -i $DIRECTORY
-
-This can also be overridden permanently by changing the following
-property in the ```application.properties``` file:
-
-    comixed.images.cache.location=$DIRECTORY
-
-In both cases, replace **$DIRECTORY** with the full path to where you
-want to have the cached images store.
-
-
-## Change The Frequency For Generating Cache Entries 
-
-By default, ComiXed will scan the database at the top of the hour. 
-
-You can override that schedule by changing the following property in the
-```application.properties``` file:
-
-    comixed.batch.add-cover-to-image-cache.schedule=0 0 * * * *
-
-See [below](Scheduling-Processes) for details on the scheduling format.
-
-**NOTE:** There is no matching command line argument to override this.
-
-
-## Loading Page Hashes
-
-Whe a comic is imported, the page hash is not initially loaded. Instead, a
-batch process runs periodically to load this value. The time between checks
-is controlled by the following configuration option:
-
-    comixed.batch.load-page-hashes.period=60000
-
-It defines the numbero milliseconds between checks.
-
-
-## Scheduling Processes
-
-The scheduling format used looks like the following:
-
-    property.name=* * * * * *
-
-To simply describe this, it represents, from left to right, the second,
-minute, hour, day of the month, and day of the week to run the job. It is
-beyond the scope of this document to give more information, but you can
-read more about it
-[here](https://spring.io/blog/2020/11/10/new-in-spring-5-3-improved-cron-expressions#usage).

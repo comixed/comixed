@@ -51,8 +51,10 @@ public abstract class AbstractPublishAction<T> implements PublishAction<T> {
       throws PublishingException {
     log.trace("Publishing object to {}", destination);
     try {
-      this.messagingTemplate.convertAndSend(
-          destination, this.objectMapper.writerWithView(viewClass).writeValueAsString(subject));
+      final String payload =
+          this.objectMapper.writerWithView(viewClass).writeValueAsString(subject);
+      log.debug("Payload: {}", payload);
+      this.messagingTemplate.convertAndSend(destination, payload);
     } catch (JsonProcessingException error) {
       throw new PublishingException(error);
     }

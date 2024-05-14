@@ -19,19 +19,13 @@
 package org.comixedproject.batch.comicbooks.listeners;
 
 import static junit.framework.TestCase.*;
-import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.JOB_PROCESS_COMIC_BOOKS_BATCH_NAME;
 import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
 import org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAction;
 import org.comixedproject.model.batch.BatchProcessDetail;
-import org.comixedproject.model.batch.ComicBatch;
-import org.comixedproject.model.batch.ComicBatchEntry;
 import org.comixedproject.model.messaging.batch.ProcessComicBooksStatus;
-import org.comixedproject.service.batch.ComicBatchService;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,12 +40,10 @@ import org.springframework.batch.core.scope.context.StepContext;
 public class LoadFileContentsChunkListenerTest {
   private static final long TEST_TOTAL_COMICS = 77L;
   private static final long TEST_PROCESSED_COMICS = 15L;
-  private static final String TEST_BATCH_NAME = "The batch name";
   private static final String TEST_JOB_NAME = "The job name";
 
   @InjectMocks private LoadFileContentsChunkListener listener;
   @Mock private ComicBookService comicBookService;
-  @Mock private ComicBatchService comicBatchService;
   @Mock private ChunkContext chunkContext;
   @Mock private StepContext stepContext;
   @Mock private StepExecution stepExecution;
@@ -60,12 +52,9 @@ public class LoadFileContentsChunkListenerTest {
   @Mock private PublishProcessComicBooksStatusAction publishProcessComicBooksStatusAction;
   @Mock private PublishBatchProcessDetailUpdateAction publishBatchProcessDetailUpdateAction;
   @Mock private JobParameters jobParameters;
-  @Mock private ComicBatch comicBatch;
 
   @Captor ArgumentCaptor<ProcessComicBooksStatus> processComicStatusArgumentCaptor;
   @Captor ArgumentCaptor<BatchProcessDetail> batchProcessDetailArgumentCaptor;
-
-  private List<ComicBatchEntry> comicBatchEntries = new ArrayList<>();
 
   @Before
   public void setUp() throws PublishingException {
@@ -74,19 +63,11 @@ public class LoadFileContentsChunkListenerTest {
     Mockito.when(jobExecution.getJobInstance()).thenReturn(jobInstance);
     Mockito.when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);
-    Mockito.when(comicBookService.getUnprocessedComicsWithoutContentCount(TEST_BATCH_NAME))
-        .thenReturn(TEST_PROCESSED_COMICS);
-
-    for (int index = 0; index < TEST_TOTAL_COMICS; index++)
-      comicBatchEntries.add(Mockito.mock(ComicBatchEntry.class));
-    Mockito.when(comicBatch.getEntries()).thenReturn(comicBatchEntries);
-    Mockito.when(comicBatchService.getByName(TEST_BATCH_NAME)).thenReturn(comicBatch);
+    Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_TOTAL_COMICS);
+    Mockito.when(comicBookService.getComicsWithoutContentCount()).thenReturn(TEST_PROCESSED_COMICS);
 
     Mockito.when(chunkContext.getStepContext()).thenReturn(stepContext);
-    Mockito.when(jobParameters.getString(JOB_PROCESS_COMIC_BOOKS_BATCH_NAME))
-        .thenReturn(TEST_BATCH_NAME);
     Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
-    Mockito.when(stepExecution.getJobParameters()).thenReturn(jobParameters);
     Mockito.when(stepContext.getStepExecution()).thenReturn(stepExecution);
     Mockito.doNothing()
         .when(publishProcessComicBooksStatusAction)

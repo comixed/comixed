@@ -48,13 +48,7 @@ export class ProcessingStatusPageComponent
 
   dataSource = new MatTableDataSource<ProcessingComicStatus>([]);
 
-  readonly displayedColumns = [
-    'batch-name',
-    'step-name',
-    'processed',
-    'total',
-    'progress'
-  ];
+  readonly displayedColumns = ['step-name', 'processed', 'total', 'progress'];
 
   comicImportStateSubscription: Subscription;
   landChangeSubscription: Subscription;
@@ -89,10 +83,11 @@ export class ProcessingStatusPageComponent
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
       switch (sortHeaderId) {
-        case 'batch-name':
-          return data.batchName;
         case 'progress':
           return data.progress;
+        case 'step-name':
+        default:
+          return data.stepName;
       }
     };
   }

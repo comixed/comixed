@@ -61,7 +61,7 @@ public class LoadPageHashesInitiator {
   public void execute() {
     log.trace("Checking for pages without hashes");
     if (this.pageService.hasPagesWithoutHash()
-        && this.batchProcessesService.activeExecutionCountFor(LOAD_PAGE_HASHES_JOB) == 0L) {
+        && !this.batchProcessesService.hasActiveExecutions(LOAD_PAGE_HASHES_JOB)) {
       try {
         log.trace("Starting batch job: load page hashes");
         this.jobLauncher.run(

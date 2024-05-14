@@ -196,6 +196,8 @@ public class BatchProcessesServiceTest {
 
     final List<BatchProcessDetail> result = service.deleteInactiveJobs();
 
+    assertNotNull(result);
+
     Mockito.verify(jobRepository, Mockito.never()).deleteJobExecution(Mockito.any());
   }
 
@@ -204,9 +206,9 @@ public class BatchProcessesServiceTest {
     Mockito.when(jobExplorer.getJobInstanceCount(Mockito.anyString()))
         .thenThrow(NoSuchJobException.class);
 
-    final long result = service.activeExecutionCountFor(TEST_JOB_NAME);
+    final boolean result = service.hasActiveExecutions(TEST_JOB_NAME);
 
-    assertEquals(0, result);
+    assertFalse(result);
   }
 
   @Test
@@ -214,17 +216,17 @@ public class BatchProcessesServiceTest {
     Mockito.when(jobExecution.isRunning()).thenReturn(true);
     Mockito.when(jobExecution.getEndTime()).thenReturn(null);
 
-    final long result = service.activeExecutionCountFor(TEST_JOB_NAME);
+    final boolean result = service.hasActiveExecutions(TEST_JOB_NAME);
 
-    assertEquals(1, result);
+    assertTrue(result);
   }
 
   @Test
   public void testExecutionCountForNoneFound() {
     Mockito.when(jobExecution.isRunning()).thenReturn(false);
 
-    final long result = service.activeExecutionCountFor(TEST_JOB_NAME);
+    final boolean result = service.hasActiveExecutions(TEST_JOB_NAME);
 
-    assertEquals(0, result);
+    assertFalse(result);
   }
 }

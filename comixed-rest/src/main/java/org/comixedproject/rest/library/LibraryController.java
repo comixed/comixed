@@ -390,7 +390,7 @@ public class LibraryController {
         processComicBooksJob,
         new JobParametersBuilder()
             .addLong(
-                ProcessComicBooksConfiguration.JOB_PROCESS_COMIC_BOOKS_STARTED,
+                ProcessComicBooksConfiguration.PROCESS_COMIC_BOOKS_STARTED_JOB,
                 System.currentTimeMillis())
             .toJobParameters());
   }
@@ -417,7 +417,7 @@ public class LibraryController {
         processComicBooksJob,
         new JobParametersBuilder()
             .addLong(
-                ProcessComicBooksConfiguration.JOB_PROCESS_COMIC_BOOKS_STARTED,
+                ProcessComicBooksConfiguration.PROCESS_COMIC_BOOKS_STARTED_JOB,
                 System.currentTimeMillis())
             .toJobParameters());
   }

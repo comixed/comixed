@@ -120,46 +120,39 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   /**
    * Returns unprocessed comics that have their file loaded flag turned off.
    *
-   * @param batchName the comic batch name
    * @param pageable the page request
    * @return the list of comics
    */
-  @Query(
-      "SELECT c FROM ComicBook c WHERE c.id IN (SELECT e.comicBook.id FROM ComicBatchEntry e WHERE e.batch.name = :batchName) AND c.comicDetail.comicState = 'UNPROCESSED'")
-  List<ComicBook> findUnprocessedComicsWithCreateMetadataFlagSet(
-      @Param("batchName") String batchName, Pageable pageable);
+  @Query("SELECT c FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED'")
+  List<ComicBook> findUnprocessedComicsWithCreateMetadataFlagSet(Pageable pageable);
 
   /**
    * Returns unprocessed comics that have their file loaded flag turned off.
    *
-   * @param batchName the batch name
    * @param pageable the page request
    * @return the list of comics
    */
   @Query(
-      "SELECT c FROM ComicBook c WHERE c.id IN (SELECT e.comicBook.id FROM ComicBatchEntry e WHERE e.batch.name = :batchName) AND c.comicDetail.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = false")
-  List<ComicBook> findUnprocessedComicsWithoutContent(
-      @Param("batchName") String batchName, Pageable pageable);
+      "SELECT c FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = false")
+  List<ComicBook> findUnprocessedComicsWithoutContent(Pageable pageable);
 
   /**
    * Returns the number of unprocessed comics without file contents loaded.
    *
-   * @param batchName the batch name
    * @return the count
    */
   @Query(
-      "SELECT COUNT(c) FROM ComicBook c WHERE c.id IN (SELECT e.comicBook.id FROM ComicBatchEntry e WHERE e.batch.name = :batchName) AND c.comicDetail.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = false")
-  int findUnprocessedComicsWithoutContentCount(@Param("batchName") String batchName);
+      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' OR c.fileContentsLoaded = false")
+  int findUnprocessedComicsWithoutContentCount();
 
   /**
    * Returns unprocessed comics that have been fully processed.
    *
-   * @param pageable the page request
    * @return the list of comics
    */
   @Query(
-      "SELECT c FROM ComicBook c WHERE c.id IN (SELECT e.comicBook.id FROM ComicBatchEntry e WHERE e.batch.name = :batchName) AND c.comicDetail.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true")
-  List<ComicBook> findProcessedComics(@Param("batchName") String batchName, Pageable pageable);
+      "SELECT c FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true")
+  List<ComicBook> findProcessedComics();
 
   /**
    * Returns comics that are waiting to have their metadata update flag set.
@@ -591,6 +584,6 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the list of comic books
    */
   @Query(
-      "SELECT b FROM ComicBook b WHERE b.id IN (select d.comicBook.id FROM ComicDetail d WHERE d.comicState = 'UNPROCESSED') AND b.id NOT IN (SELECT e.comicBook.id FROM ComicBatchEntry e)")
+      "SELECT b FROM ComicBook b WHERE b.id IN (select d.comicBook.id FROM ComicDetail d WHERE d.comicState = 'UNPROCESSED')")
   List<ComicBook> getComicBooksForProcessing();
 }

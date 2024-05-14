@@ -131,12 +131,12 @@ public class BatchProcessesService {
   }
 
   /**
-   * Returns the number of active executions for a job.
+   * Returns if there any any active jobs with the given name.
    *
    * @param jobName the job name
-   * @return the active executions
+   * @return true if there are active jobs
    */
-  public long activeExecutionCountFor(final String jobName) {
+  public boolean hasActiveExecutions(final String jobName) {
     try {
       final long instances = this.jobExplorer.getJobInstanceCount(jobName);
       final List<JobExecution> executions = new ArrayList<>();
@@ -144,12 +144,13 @@ public class BatchProcessesService {
           .map(instance -> this.jobExplorer.getJobExecutions(instance))
           .forEach(executions::addAll);
       return executions.stream()
-          .filter(JobExecution::isRunning)
-          .filter(execution -> Objects.isNull(execution.getEndTime()))
-          .count();
+              .filter(JobExecution::isRunning)
+              .filter(execution -> Objects.isNull(execution.getEndTime()))
+              .count()
+          > 0L;
     } catch (NoSuchJobException error) {
       log.error("Failed to get active job count for " + jobName, error);
-      return 0;
+      return false;
     }
   }
 }

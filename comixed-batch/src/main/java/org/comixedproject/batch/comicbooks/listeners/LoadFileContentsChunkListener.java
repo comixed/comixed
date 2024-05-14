@@ -61,11 +61,9 @@ public class LoadFileContentsChunkListener extends AbstractBatchProcessListener
   private void doPublishChunkState(ChunkContext chunkContext) {
     final StepExecution stepExecution = chunkContext.getStepContext().getStepExecution();
     this.doPublishBatchProcessDetail(BatchProcessDetail.from(stepExecution.getJobExecution()));
-    final String batchName = this.getBatchName(stepExecution.getJobParameters());
-    final long total = this.getEntryCount(batchName);
-    final long unprocessed =
-        this.comicBookService.getUnprocessedComicsWithoutContentCount(batchName);
+    final long total = this.comicBookService.getComicBookCount();
+    final long unprocessed = this.comicBookService.getComicsWithoutContentCount();
     this.doPublishProcessComicBookStatus(
-        unprocessed > 0, LOAD_FILE_CONTENTS_STEP, batchName, total, total - unprocessed);
+        unprocessed > 0, LOAD_FILE_CONTENTS_STEP, total, total - unprocessed);
   }
 }

@@ -24,7 +24,6 @@ import {
 import { processComicBooksUpdate } from '@app/actions/process-comics.actions';
 
 describe('ImportComicBooks Reducer', () => {
-  const BATCH_NAME = 'batch-name';
   const STEP_NAME = 'step-name';
   const PROCESSING_TOTAL = 73;
   const PROCESSING_PROCESSED = 37;
@@ -52,7 +51,6 @@ describe('ImportComicBooks Reducer', () => {
 
   describe('receiving a processing update', () => {
     const COUNT = Math.abs(Math.floor(Math.random() * 1000));
-    const NEW_BATCH_NAME = `${BATCH_NAME}1`;
 
     beforeEach(() => {
       state = reducer(
@@ -61,7 +59,6 @@ describe('ImportComicBooks Reducer', () => {
           active: false,
           batches: [
             {
-              batchName: BATCH_NAME,
               stepName: STEP_NAME,
               total: PROCESSING_TOTAL,
               processed: PROCESSING_PROCESSED,
@@ -71,7 +68,6 @@ describe('ImportComicBooks Reducer', () => {
         },
         processComicBooksUpdate({
           active: true,
-          batchName: NEW_BATCH_NAME,
           stepName: STEP_NAME,
           total: PROCESSING_TOTAL,
           processed: PROCESSING_PROCESSED
@@ -84,7 +80,7 @@ describe('ImportComicBooks Reducer', () => {
     });
 
     it('contains batches', () => {
-      expect(state.batches.length).toEqual(2);
+      expect(state.batches.length).toEqual(1);
     });
 
     it('sets the step name', () => {
@@ -108,11 +104,10 @@ describe('ImportComicBooks Reducer', () => {
         {
           ...state,
           active: true,
-          batches: [{ batchName: BATCH_NAME } as any]
+          batches: [{ stepName: STEP_NAME } as any]
         },
         processComicBooksUpdate({
           active: false,
-          batchName: BATCH_NAME,
           stepName: STEP_NAME,
           total: PROCESSING_TOTAL,
           processed: PROCESSING_PROCESSED

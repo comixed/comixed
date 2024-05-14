@@ -39,7 +39,6 @@ public class LoadFileContentsReader extends AbstractComicReader {
 
   @Override
   protected List<ComicBook> doLoadComics() {
-    return this.comicBookService.findUnprocessedComicsWithoutContent(
-        this.getBatchName(), this.getBatchChunkSize());
+    return this.comicBookService.findUnprocessedComicsWithoutContent(this.getBatchChunkSize());
   }
 }

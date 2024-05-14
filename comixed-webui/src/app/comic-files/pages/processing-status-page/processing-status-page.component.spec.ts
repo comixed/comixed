@@ -82,16 +82,22 @@ describe('ProcessingStatusPageComponent', () => {
   });
 
   describe('sorting', () => {
-    it('can sort by batch name', () => {
+    it('can sort by step name', () => {
       expect(
-        component.dataSource.sortingDataAccessor(STATUS, 'batch-name')
-      ).toEqual(STATUS.batchName);
+        component.dataSource.sortingDataAccessor(STATUS, 'step-name')
+      ).toEqual(STATUS.stepName);
     });
 
     it('can sort by progress', () => {
       expect(
         component.dataSource.sortingDataAccessor(STATUS, 'progress')
       ).toEqual(STATUS.progress);
+    });
+
+    it('defaults to sort by step name', () => {
+      expect(component.dataSource.sortingDataAccessor(STATUS, '')).toEqual(
+        STATUS.stepName
+      );
     });
   });
 

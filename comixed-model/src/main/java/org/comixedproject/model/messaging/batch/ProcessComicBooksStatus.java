@@ -44,12 +44,6 @@ public class ProcessComicBooksStatus {
   @Setter
   private boolean active = true;
 
-  @JsonProperty("batchName")
-  @JsonView(View.GenericObjectView.class)
-  @Getter
-  @Setter
-  private String batchName;
-
   @JsonProperty("stepName")
   @JsonView(View.GenericObjectView.class)
   @Getter

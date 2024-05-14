@@ -22,7 +22,6 @@ import { processComicBooksUpdate } from '../actions/process-comics.actions';
 export const IMPORT_COMIC_BOOKS_FEATURE_KEY = 'import_comic_books_state';
 
 export interface ProcessingComicStatus {
-  batchName: string;
   stepName: string;
   total: number;
   processed: number;
@@ -44,11 +43,10 @@ export const reducer = createReducer(
 
   on(processComicBooksUpdate, (state, action) => {
     let batches = state.batches.filter(
-      entry => entry.batchName !== action.batchName
+      entry => entry.stepName !== action.stepName
     );
     if (action.active) {
       batches = batches.concat({
-        batchName: action.batchName,
         stepName: action.stepName,
         total: action.total,
         processed: action.processed,
