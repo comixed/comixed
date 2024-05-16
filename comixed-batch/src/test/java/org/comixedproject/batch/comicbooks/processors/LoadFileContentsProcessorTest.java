@@ -61,6 +61,7 @@ public class LoadFileContentsProcessorTest {
 
   @Before
   public void setUp() throws ContentAdaptorException, AdaptorException {
+    Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(false);
     Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.any(ComicBook.class)))
         .thenReturn(TEST_METADATA_FILENAME);
     Mockito.doNothing()
@@ -108,6 +109,20 @@ public class LoadFileContentsProcessorTest {
     Mockito.verify(pageList, Mockito.times(1)).sort(Mockito.any());
     Mockito.verify(comicMetadataContentAdaptor, Mockito.times(1))
         .loadContent(comicBook, "", content, contentRules);
+  }
+
+  @Test
+  public void testProcessContentsAlreadyLoaded() throws Exception {
+    Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(true);
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+
+    Mockito.verify(comicBookAdaptor, Mockito.never()).load(Mockito.any(), Mockito.any());
+    Mockito.verify(comicMetadataContentAdaptor, Mockito.never())
+        .loadContent(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
   }
 
   @Test

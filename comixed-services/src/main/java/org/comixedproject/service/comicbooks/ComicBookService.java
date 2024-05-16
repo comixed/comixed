@@ -377,9 +377,8 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @return the comics
    */
-  public List<ComicBook> findUnprocessedComicsWithoutContent(final int batchSize) {
-    return this.comicBookRepository.findUnprocessedComicsWithoutContent(
-        PageRequest.of(0, batchSize));
+  public List<ComicBook> findComicsWithContentToLoad(final int batchSize) {
+    return this.comicBookRepository.findUnprocessedComics(PageRequest.of(0, batchSize));
   }
 
   /**

@@ -64,7 +64,7 @@ public class ProcessComicBooksInitiator {
       log.debug("No comic books to be processed");
       return;
     }
-    if (!this.batchProcessesService.hasActiveExecutions(PROCESS_COMIC_BOOKS_STARTED_JOB)) {
+    if (!this.batchProcessesService.hasActiveExecutions(PROCESS_COMIC_BOOKS_JOB)) {
       log.info("Starting process comics job");
       try {
         this.jobLauncher.run(

@@ -571,11 +571,11 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFindUnprocessedComicsWithoutContent() {
-    Mockito.when(comicBookRepository.findUnprocessedComicsWithoutContent(pageableCaptor.capture()))
+  public void testFindComicsWithContentToLoad() {
+    Mockito.when(comicBookRepository.findUnprocessedComics(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
-    final List<ComicBook> result = service.findUnprocessedComicsWithoutContent(TEST_MAXIMUM_COMICS);
+    final List<ComicBook> result = service.findComicsWithContentToLoad(TEST_MAXIMUM_COMICS);
 
     assertNotNull(result);
     assertSame(comicBookList, result);
@@ -585,8 +585,7 @@ public class ComicBookServiceTest {
     assertEquals(0, pageable.getPageNumber());
     assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
 
-    Mockito.verify(comicBookRepository, Mockito.times(1))
-        .findUnprocessedComicsWithoutContent(pageable);
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findUnprocessedComics(pageable);
   }
 
   @Test
