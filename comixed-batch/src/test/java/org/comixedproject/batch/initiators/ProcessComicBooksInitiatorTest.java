@@ -18,6 +18,7 @@
 
 package org.comixedproject.batch.initiators;
 
+import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.PROCESS_COMIC_BOOKS_JOB;
 import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.PROCESS_COMIC_BOOKS_STARTED_JOB;
 import static org.junit.Assert.*;
 
@@ -63,6 +64,8 @@ public class ProcessComicBooksInitiatorTest {
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
           JobRestartException {
+    Mockito.when(batchProcessesService.hasActiveExecutions(PROCESS_COMIC_BOOKS_JOB))
+        .thenReturn(false);
     for (int index = 0; index < 100; index++) comicBookList.add(Mockito.mock(ComicBook.class));
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
@@ -150,5 +153,19 @@ public class ProcessComicBooksInitiatorTest {
     assertFalse(jobParameters.isEmpty());
 
     Mockito.verify(jobLauncher, Mockito.times(1)).run(addPageToImageCacheJob, jobParameters);
+  }
+
+  @Test
+  public void testExecuteHasActiveJob()
+      throws JobInstanceAlreadyCompleteException,
+          JobExecutionAlreadyRunningException,
+          JobParametersInvalidException,
+          JobRestartException {
+    Mockito.when(batchProcessesService.hasActiveExecutions(PROCESS_COMIC_BOOKS_JOB))
+        .thenReturn(true);
+
+    initiator.execute();
+
+    Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(), Mockito.any());
   }
 }

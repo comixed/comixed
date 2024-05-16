@@ -51,6 +51,10 @@ public class LoadFileContentsProcessor
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
+    if (comicBook.isFileContentsLoaded()) {
+      log.debug("Comic book contents already loaded: id={}", comicBook.getId());
+      return comicBook;
+    }
     final ContentAdaptorRules rules = new ContentAdaptorRules();
     rules.setSkipMetadata(
         (this.jobParameters.getParameters().containsKey(PARAM_SKIP_METADATA)

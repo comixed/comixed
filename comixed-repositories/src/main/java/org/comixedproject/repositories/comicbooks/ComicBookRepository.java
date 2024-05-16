@@ -127,14 +127,13 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   List<ComicBook> findUnprocessedComicsWithCreateMetadataFlagSet(Pageable pageable);
 
   /**
-   * Returns unprocessed comics that have their file loaded flag turned off.
+   * Returns comics that have their file content loaded flag turned off.
    *
    * @param pageable the page request
    * @return the list of comics
    */
-  @Query(
-      "SELECT c FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = false")
-  List<ComicBook> findUnprocessedComicsWithoutContent(Pageable pageable);
+  @Query("SELECT c FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED'")
+  List<ComicBook> findUnprocessedComics(Pageable pageable);
 
   /**
    * Returns the number of unprocessed comics without file contents loaded.
