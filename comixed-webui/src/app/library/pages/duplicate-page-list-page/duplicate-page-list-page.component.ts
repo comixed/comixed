@@ -215,7 +215,7 @@ export class DuplicatePageListPageComponent
   onShowComicBooksWithPage(row: SelectableListItem<DuplicatePage>): void {
     this.logger.trace('Displaying dialog of affected comics');
     this.dialog.open(ComicDetailListDialogComponent, {
-      data: this.comics.filter(comic => row.item.comics.includes(comic))
+      data: row.item.comics
     });
   }
 

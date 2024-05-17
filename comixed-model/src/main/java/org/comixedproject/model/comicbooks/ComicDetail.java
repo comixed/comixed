@@ -70,7 +70,8 @@ public class ComicDetail {
     View.ComicListView.class,
     View.DeletedPageList.class,
     View.LastReadList.class,
-    View.ReadingListDetail.class
+    View.ReadingListDetail.class,
+    View.DuplicatePageList.class
   })
   @Getter
   private Long id;
@@ -105,7 +106,8 @@ public class ComicDetail {
     View.ComicListView.class,
     View.DuplicatePageDetail.class,
     View.ReadingListDetail.class,
-    View.DeletedPageList.class
+    View.DeletedPageList.class,
+    View.DuplicatePageList.class
   })
   @Getter
   @Setter
@@ -115,7 +117,12 @@ public class ComicDetail {
   @Column(name = "comic_state", nullable = false, updatable = true)
   @Enumerated(EnumType.STRING)
   @JsonProperty("comicState")
-  @JsonView({View.ComicListView.class, View.ReadingListDetail.class, View.DeletedPageList.class})
+  @JsonView({
+    View.ComicListView.class,
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class,
+    View.DuplicatePageList.class
+  })
   @Getter
   @Setter
   private ComicState comicState = ComicState.ADDED;
@@ -123,7 +130,12 @@ public class ComicDetail {
   @Column(name = "comic_type", nullable = false, updatable = true)
   @Enumerated(EnumType.STRING)
   @JsonProperty("comicType")
-  @JsonView({View.ComicListView.class, View.ReadingListDetail.class, View.DeletedPageList.class})
+  @JsonView({
+    View.ComicListView.class,
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class,
+    View.DuplicatePageList.class
+  })
   @Getter
   @Setter
   private ComicType comicType = ComicType.ISSUE;
@@ -134,7 +146,8 @@ public class ComicDetail {
     View.ComicListView.class,
     View.DuplicatePageDetail.class,
     View.ReadingListDetail.class,
-    View.DeletedPageList.class
+    View.DeletedPageList.class,
+    View.DuplicatePageList.class
   })
   @Getter
   @Setter
@@ -153,7 +166,8 @@ public class ComicDetail {
     View.ComicListView.class,
     View.DuplicatePageDetail.class,
     View.ReadingListDetail.class,
-    View.DeletedPageList.class
+    View.DeletedPageList.class,
+    View.DuplicatePageList.class
   })
   @Getter
   @Setter
@@ -165,7 +179,8 @@ public class ComicDetail {
     View.ComicListView.class,
     View.DuplicatePageDetail.class,
     View.ReadingListDetail.class,
-    View.DeletedPageList.class
+    View.DeletedPageList.class,
+    View.DuplicatePageList.class
   })
   @Getter
   @Setter
@@ -177,7 +192,8 @@ public class ComicDetail {
     View.ComicListView.class,
     View.DuplicatePageDetail.class,
     View.ReadingListDetail.class,
-    View.DeletedPageList.class
+    View.DeletedPageList.class,
+    View.DuplicatePageList.class
   })
   @Getter
   private String issueNumber;
@@ -236,7 +252,8 @@ public class ComicDetail {
     View.ComicListView.class,
     View.DuplicatePageDetail.class,
     View.ReadingListDetail.class,
-    View.DeletedPageList.class
+    View.DeletedPageList.class,
+    View.DuplicatePageList.class
   })
   @Getter
   @Setter
@@ -295,7 +312,8 @@ public class ComicDetail {
     View.LastReadList.class,
     View.DuplicatePageDetail.class,
     View.ReadingListDetail.class,
-    View.DeletedPageList.class
+    View.DeletedPageList.class,
+    View.DuplicatePageList.class
   })
   public Long getComicId() {
     return this.comicBook.getId();

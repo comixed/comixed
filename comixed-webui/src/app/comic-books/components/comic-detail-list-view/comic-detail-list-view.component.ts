@@ -263,7 +263,7 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
   }
 
   onShowPopup(show: boolean, comic: ComicDetail): void {
-    this.logger.debug('Setting show pup:', show, this.usePopups);
+    this.logger.debug('Setting show popup:', show, this.usePopups);
     this.showComicDetailPopup = show && this.usePopups;
     this.selectedComicDetail = comic;
   }

@@ -1,4 +1,4 @@
-<div class="cx-fab-container-bottom-right">
+<div class="cx-fab-container-bottom-left">
   <button
     id="unblocked-only"
     mat-fab
@@ -7,12 +7,28 @@
   >
     <mat-icon>filter_list</mat-icon>
   </button>
+  <button
+    mat-fab
+    [matTooltip]="'duplicate-pages.tooltip.block-selections' | translate"
+    [disabled]="selectedCount === 0"
+    (click)="onBlockSelected()"
+  >
+    <mat-icon>block</mat-icon>
+  </button>
+  <button
+    mat-fab
+    [matTooltip]="'duplicate-pages.tooltip.unblock-selections' | translate"
+    [disabled]="selectedCount === 0"
+    (click)="onUnblockSelected()"
+  >
+    <mat-icon>remove_circle_outline</mat-icon>
+  </button>
 </div>
 
 <h2>
   {{
-  "duplicate-pages.list-page.page-title"
-    | translate: {count: dataSource.data.length, selected: selectedCount, unblockedOnly}
+    "duplicate-pages.list-page.page-title"
+      | translate: {count: dataSource.data.length, selected: selectedCount, unblockedOnly}
   }}
 </h2>
 
@@ -43,6 +59,7 @@
       <mat-checkbox
         [checked]="allSelected"
         (change)="onSelectAll($event.checked)"
+        (keypress)="$event.stopPropagation()"
         (click)="$event.stopPropagation()"
       ></mat-checkbox>
     </mat-header-cell>
@@ -50,6 +67,7 @@
       <mat-checkbox
         [checked]="row.selected"
         (change)="onSelectOne(row, $event.checked)"
+        (keypress)="$event.stopPropagation()"
         (click)="$event.stopPropagation()"
       ></mat-checkbox>
     </mat-cell>
@@ -67,7 +85,7 @@
           alt="thumbnail"
           width="100%"
           height="auto"
-          (click)="onShowComicBooksWithPage(row)"
+          (click)="onShowComicBooksWithPage(row); $event.stopPropagation()"
         />
       </div>
     </mat-cell>
@@ -103,32 +121,8 @@
   </ng-container>
 
   <ng-container matColumnDef="actions">
-    <mat-header-cell *matHeaderCellDef>
-      <button
-        *ngIf="selectedCount > 0"
-        mat-icon-button
-        [matTooltip]="'duplicate-pages.tooltip.block-selections' | translate"
-        (click)="onBlockSelected()"
-      >
-        <mat-icon>block</mat-icon>
-      </button>
-      <button
-        *ngIf="selectedCount > 0"
-        mat-icon-button
-        [matTooltip]="'duplicate-pages.tooltip.unblock-selections' | translate"
-        (click)="onUnblockSelected()"
-      >
-        <mat-icon>remove_circle_outline</mat-icon>
-      </button>
-    </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
     <mat-cell *matCellDef="let row">
-      <button
-        mat-icon-button
-        [matTooltip]="'duplicate-pages.tooltip.view-page-detail' | translate"
-        [routerLink]="['/library', 'pages', 'duplicates', row.item.hash]"
-      >
-        <mat-icon>info</mat-icon>
-      </button>
       <button
         *ngIf="!isBlocked(row)"
         mat-icon-button
@@ -149,5 +143,8 @@
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayColumns"></mat-row>
+  <mat-row
+    *matRowDef="let row; columns: displayColumns"
+    [routerLink]="['/library', 'pages', 'duplicates', row.item.hash]"
+  ></mat-row>
 </mat-table>
