@@ -62,7 +62,7 @@ public class BatchProcessesService {
    *
    * @return the list of remaining batches
    */
-  public List<BatchProcessDetail> deleteInactiveJobs() {
+  public List<BatchProcessDetail> deleteCompletedJobs() {
     log.debug("Deleting inactive jobs");
     this.jobExplorer
         .getJobNames()
@@ -75,6 +75,41 @@ public class BatchProcessesService {
               }
             });
     return this.doGetAllBatchProcesses();
+  }
+
+  public List<BatchProcessDetail> deleteSelectedJobs(final List<Long> jobIds) {
+    log.debug("Deleting {} job(s) by id", jobIds.size());
+    jobIds.forEach(
+        jobId -> {
+          final JobExecution jobExecution = this.jobExplorer.getJobExecution(jobId);
+          log.trace("Deleting job execution: id={}", jobExecution.getJobId());
+          this.jobRepository.deleteJobExecution(jobExecution);
+        });
+    return this.getAllBatchProcesses();
+  }
+
+  /**
+   * Returns if there any any active jobs with the given name.
+   *
+   * @param jobName the job name
+   * @return true if there are active jobs
+   */
+  public boolean hasActiveExecutions(final String jobName) {
+    try {
+      final long instances = this.jobExplorer.getJobInstanceCount(jobName);
+      final List<JobExecution> executions = new ArrayList<>();
+      this.jobExplorer.getJobInstances(jobName, 0, (int) instances).stream()
+          .map(instance -> this.jobExplorer.getJobExecutions(instance))
+          .forEach(executions::addAll);
+      return executions.stream()
+              .filter(JobExecution::isRunning)
+              .filter(execution -> Objects.isNull(execution.getEndTime()))
+              .count()
+          > 0L;
+    } catch (NoSuchJobException error) {
+      log.error("Failed to get active job count for " + jobName, error);
+      return false;
+    }
   }
 
   private void doDeleteInactiveJobsFor(final String jobName) throws NoSuchJobException {
@@ -128,29 +163,5 @@ public class BatchProcessesService {
             });
 
     return result;
-  }
-
-  /**
-   * Returns if there any any active jobs with the given name.
-   *
-   * @param jobName the job name
-   * @return true if there are active jobs
-   */
-  public boolean hasActiveExecutions(final String jobName) {
-    try {
-      final long instances = this.jobExplorer.getJobInstanceCount(jobName);
-      final List<JobExecution> executions = new ArrayList<>();
-      this.jobExplorer.getJobInstances(jobName, 0, (int) instances).stream()
-          .map(instance -> this.jobExplorer.getJobExecutions(instance))
-          .forEach(executions::addAll);
-      return executions.stream()
-              .filter(JobExecution::isRunning)
-              .filter(execution -> Objects.isNull(execution.getEndTime()))
-              .count()
-          > 0L;
-    } catch (NoSuchJobException error) {
-      log.error("Failed to get active job count for " + jobName, error);
-      return false;
-    }
   }
 }

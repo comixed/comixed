@@ -83,6 +83,7 @@ public class BatchProcessesServiceTest {
     jobExecutionList.add(jobExecution);
     Mockito.when(jobExplorer.getJobExecutions(Mockito.any(JobInstance.class)))
         .thenReturn(jobExecutionList);
+    Mockito.when(jobExplorer.getJobExecution(Mockito.anyLong())).thenReturn(jobExecution);
   }
 
   @Test
@@ -153,7 +154,7 @@ public class BatchProcessesServiceTest {
         .thenReturn(jobExecutionList);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);
 
-    final List<BatchProcessDetail> result = service.deleteInactiveJobs();
+    final List<BatchProcessDetail> result = service.deleteCompletedJobs();
 
     assertNotNull(result);
     assertEquals(TEST_INSTANCE_COUNT, result.size());
@@ -167,7 +168,7 @@ public class BatchProcessesServiceTest {
         .thenReturn(jobExecutionList);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.FAILED);
 
-    final List<BatchProcessDetail> result = service.deleteInactiveJobs();
+    final List<BatchProcessDetail> result = service.deleteCompletedJobs();
 
     assertNotNull(result);
     assertEquals(TEST_INSTANCE_COUNT, result.size());
@@ -181,7 +182,7 @@ public class BatchProcessesServiceTest {
         .thenReturn(jobExecutionList);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.EXECUTING);
 
-    final List<BatchProcessDetail> result = service.deleteInactiveJobs();
+    final List<BatchProcessDetail> result = service.deleteCompletedJobs();
 
     assertNotNull(result);
     assertEquals(TEST_INSTANCE_COUNT, result.size());
@@ -194,7 +195,7 @@ public class BatchProcessesServiceTest {
     Mockito.when(jobExplorer.getJobInstanceCount(Mockito.anyString()))
         .thenThrow(NoSuchJobException.class);
 
-    final List<BatchProcessDetail> result = service.deleteInactiveJobs();
+    final List<BatchProcessDetail> result = service.deleteCompletedJobs();
 
     assertNotNull(result);
 
@@ -228,5 +229,15 @@ public class BatchProcessesServiceTest {
     final boolean result = service.hasActiveExecutions(TEST_JOB_NAME);
 
     assertFalse(result);
+  }
+
+  @Test
+  public void testDeleteSelectedJobIds() {
+    final List<BatchProcessDetail> result = service.deleteSelectedJobs(Arrays.asList(TEST_JOB_ID));
+
+    assertNotNull(result);
+
+    Mockito.verify(jobExplorer, Mockito.times(1)).getJobExecution(TEST_JOB_ID);
+    Mockito.verify(jobRepository, Mockito.times(1)).deleteJobExecution(jobExecution);
   }
 }

@@ -60,3 +60,19 @@ export const deleteCompletedBatchJobsSuccess = createAction(
 export const deleteCompletedBatchJobsFailure = createAction(
   '[Batch Processes] Failed to delete completed batch jobs'
 );
+
+export const deleteSelectedBatchJobs = createAction(
+  '[Batch Processes] Delete selected batch jobs',
+  props<{ jobIds: number[] }>()
+);
+
+export const deleteSelectedBatchJobsSuccess = createAction(
+  '[Batch Processes] Successfully selected completed batch jobs',
+  props<{
+    processes: BatchProcessDetail[];
+  }>()
+);
+
+export const deleteSelectedBatchJobsFailure = createAction(
+  '[Batch Processes] Failed to delete selected batch jobs'
+);

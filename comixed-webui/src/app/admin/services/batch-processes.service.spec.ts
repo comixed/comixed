@@ -30,7 +30,8 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/core';
 import {
   BATCH_PROCESS_LIST_UPDATE_TOPIC,
-  DELETE_COMPLETED_BATCH_JOBS_URL,
+  DELETE_COMPLETED_JOBS_URL,
+  DELETE_SELECTED_JOBS_URL,
   GET_ALL_BATCH_PROCESSES_URL
 } from '@app/admin/admin.constants';
 import { Subscription } from 'webstomp-client';
@@ -44,9 +45,11 @@ import {
   loadBatchProcessList
 } from '@app/admin/actions/batch-processes.actions';
 import { WebSocketService } from '@app/messaging';
+import { DeleteSelectedJobsRequest } from '@app/admin/models/net/delete-selected-jobs-request';
 
 describe('BatchProcessesService', () => {
   const ENTRIES = [BATCH_PROCESS_DETAIL_1, BATCH_PROCESS_DETAIL_2];
+  const SELECTED_IDS = ENTRIES.map(entry => entry.jobId);
   const DETAIL = ENTRIES[0];
   const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
 
@@ -151,14 +154,25 @@ describe('BatchProcessesService', () => {
 
   it('deleted completed batch jobs', () => {
     service
-      .deleteCompletedBatchJobs()
+      .deleteCompletedJobs()
       .subscribe(response => expect(response).toEqual(ENTRIES));
 
-    const req = httpMock.expectOne(
-      interpolate(DELETE_COMPLETED_BATCH_JOBS_URL)
-    );
+    const req = httpMock.expectOne(interpolate(DELETE_COMPLETED_JOBS_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({});
+    req.flush(ENTRIES);
+  });
+
+  it('deleted selected batch jobs', () => {
+    service
+      .deleteSelectedJobs({ jobIds: SELECTED_IDS })
+      .subscribe(response => expect(response).toEqual(ENTRIES));
+
+    const req = httpMock.expectOne(interpolate(DELETE_SELECTED_JOBS_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      jobIds: SELECTED_IDS
+    } as DeleteSelectedJobsRequest);
     req.flush(ENTRIES);
   });
 });

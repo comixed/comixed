@@ -35,6 +35,7 @@ import { setBusyState } from '@app/core/actions/busy.actions';
 import { Store } from '@ngrx/store';
 import {
   deleteCompletedBatchJobs,
+  deleteSelectedBatchJobs,
   loadBatchProcessList
 } from '@app/admin/actions/batch-processes.actions';
 import { MatSort } from '@angular/material/sort';
@@ -43,6 +44,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { BatchProcessDetail } from '@app/admin/models/batch-process-detail';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 
 @Component({
   selector: 'cx-batch-process-list-page',
@@ -55,11 +57,14 @@ export class BatchProcessListPageComponent
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  dataSource = new MatTableDataSource<BatchProcessDetail>([]);
+  dataSource = new MatTableDataSource<SelectableListItem<BatchProcessDetail>>(
+    []
+  );
 
   batchProcessStateSubscription: Subscription;
   batchProcessListSubscription: Subscription;
   readonly displayedColumns = [
+    'selection',
     'job-name',
     'job-id',
     'running',
@@ -72,6 +77,8 @@ export class BatchProcessListPageComponent
 
   langChangeSubscription: Subscription;
   detail: BatchProcessDetail | null = null;
+  anySelected = false;
+  allSelected = false;
 
   constructor(
     private logger: LoggerService,
@@ -90,11 +97,22 @@ export class BatchProcessListPageComponent
     this.logger.debug('Subscribing to batch process list updates');
     this.batchProcessListSubscription = this.store
       .select(selectBatchProcessList)
-      .subscribe(list => (this.dataSource.data = list));
+      .subscribe(list => (this.batchList = list));
     this.logger.debug('Subscribing to language change updates');
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
+  }
+
+  set batchList(batchList: BatchProcessDetail[]) {
+    const oldList = this.dataSource.data;
+    this.dataSource.data = batchList.map(item => {
+      const oldEntry = oldList.find(entry => entry.item.jobId === item.jobId);
+      return {
+        item,
+        selected: oldEntry?.selected || false
+      };
+    });
   }
 
   ngOnDestroy(): void {
@@ -116,26 +134,26 @@ export class BatchProcessListPageComponent
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
       switch (sortHeaderId) {
+        case 'selection':
+          return `${data.selected}`;
         case 'job-name':
-          return data.jobName;
-        case 'job-id':
-          return data.jobId;
+          return data.item.jobName;
         case 'status':
-          return data.status;
+          return data.item.status;
         case 'start-time':
-          return data.startTime;
+          return data.item.startTime;
         case 'end-time':
-          return data.endTime;
+          return data.item.endTime;
         case 'exit-code':
-          return data.exitStatus;
+          return data.item.exitStatus;
+        case 'job-id':
         default:
-          this.logger.error('No such column:', sortHeaderId);
-          return null;
+          return data.item.jobId;
       }
     };
   }
 
-  onDeleteCompletedBatchJobs(): void {
+  onDeleteCompletedJobs(): void {
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'batch-processes.delete-completed-jobs.confirmation-title'
@@ -148,6 +166,45 @@ export class BatchProcessListPageComponent
         this.store.dispatch(deleteCompletedBatchJobs());
       }
     });
+  }
+
+  onSelectOne(
+    entry: SelectableListItem<BatchProcessDetail>,
+    selected: boolean
+  ): void {
+    entry.selected = selected;
+    this.updateSelections();
+  }
+
+  onSelectAll(selected: boolean): void {
+    this.dataSource.data.forEach(entry => (entry.selected = selected));
+    this.updateSelections();
+  }
+
+  onDeleteSelectedJobs(): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'batch-processes.delete-selected-jobs.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'batch-processes.delete-selected-jobs.confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.debug('Deleted selected batch jobs:', this.detail);
+        this.store.dispatch(
+          deleteSelectedBatchJobs({
+            jobIds: this.dataSource.data
+              .filter(entry => entry.selected)
+              .map(entry => entry.item.jobId)
+          })
+        );
+      }
+    });
+  }
+
+  private updateSelections(): void {
+    this.anySelected = this.dataSource.data.some(entry => entry.selected);
+    this.allSelected = this.dataSource.data.every(entry => entry.selected);
   }
 
   private doLoadBatchProcessList(): void {

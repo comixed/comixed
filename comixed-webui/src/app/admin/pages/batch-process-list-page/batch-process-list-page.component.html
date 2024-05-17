@@ -4,9 +4,18 @@
     mat-fab
     [disabled]="dataSource.data.length === 0"
     [matTooltip]="'batch-processes.delete-completed-jobs.tooltip' | translate"
-    (click)="onDeleteCompletedBatchJobs()"
+    (click)="onDeleteCompletedJobs()"
   >
     <mat-icon>delete</mat-icon>
+  </button>
+  <button
+    id="delete-selected-jobs-button"
+    mat-fab
+    [disabled]="!anySelected"
+    [matTooltip]="'batch-processes.delete-selected-jobs.tooltip' | translate"
+    (click)="onDeleteSelectedJobs()"
+  >
+    <mat-icon>delete_sweep</mat-icon>
   </button>
 </div>
 
@@ -36,12 +45,29 @@
     queryParameterService.onSortChange($event.active, $event.direction)
   "
 >
+  <ng-container matColumnDef="selection">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      <mat-checkbox
+        [checked]="allSelected"
+        [disabled]="dataSource.data.length === 0"
+        (change)="onSelectAll($event.checked)"
+        (click)="$event.stopPropagation()"
+      ></mat-checkbox>
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <mat-checkbox
+        [checked]="entry.selected"
+        (change)="onSelectOne(entry, $event.checked)"
+        (click)="$event.stopPropagation()"
+      ></mat-checkbox>
+    </mat-cell>
+  </ng-container>
   <ng-container matColumnDef="job-name">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "batch-processes.batch-process-list.label.job-name" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <span class="cx-width-100 cx-text-nowrap">{{ entry.jobName }}</span>
+      <span class="cx-width-100 cx-text-nowrap">{{ entry.item.jobName }}</span>
     </mat-cell>
   </ng-container>
 
@@ -50,14 +76,14 @@
       {{ "batch-processes.batch-process-list.label.job-id" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <span class="cx-width-100 cx-text-nowrap">{{ entry.jobId }}</span>
+      <span class="cx-width-100 cx-text-nowrap">{{ entry.item.jobId }}</span>
     </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="running">
     <mat-header-cell *matHeaderCellDef></mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <mat-icon *ngIf="entry.running">directions_run</mat-icon>
+      <mat-icon *ngIf="entry.item.running">directions_run</mat-icon>
     </mat-cell>
   </ng-container>
 
@@ -66,7 +92,7 @@
       {{ "batch-processes.batch-process-list.label.status" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <span class="cx-width-100 cx-text-nowrap">{{ entry.status }}</span>
+      <span class="cx-width-100 cx-text-nowrap">{{ entry.item.status }}</span>
     </mat-cell>
   </ng-container>
 
@@ -76,7 +102,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.startTime | date: "medium" }}
+        {{ entry.item.startTime | date: "medium" }}
       </span>
     </mat-cell>
   </ng-container>
@@ -87,7 +113,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.endTime | date: "medium" }}
+        {{ entry.item.endTime | date: "medium" }}
       </span>
     </mat-cell>
   </ng-container>
@@ -98,7 +124,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.exitStatus }}
+        {{ entry.item.exitStatus }}
       </span>
     </mat-cell>
   </ng-container>
@@ -111,7 +137,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.errors }}
+        {{ entry.item.errors }}
       </span>
     </mat-cell>
   </ng-container>
@@ -119,8 +145,7 @@
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row
     *matRowDef="let row; columns: displayedColumns"
-    [routerLink]="['/admin/processes', row.jobId]"
-    (click)="onShowDetail(row)"
+    [routerLink]="['/admin/processes', row.item.jobId]"
   ></mat-row>
   <tr class="mat-row" *matNoDataRow>
     <td class="mat-cell" colspan="4">

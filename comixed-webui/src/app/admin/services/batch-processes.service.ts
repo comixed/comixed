@@ -23,7 +23,8 @@ import { Observable, Subscription } from 'rxjs';
 import { interpolate } from '@app/core';
 import {
   BATCH_PROCESS_LIST_UPDATE_TOPIC,
-  DELETE_COMPLETED_BATCH_JOBS_URL,
+  DELETE_COMPLETED_JOBS_URL,
+  DELETE_SELECTED_JOBS_URL,
   GET_ALL_BATCH_PROCESSES_URL
 } from '@app/admin/admin.constants';
 import { Store } from '@ngrx/store';
@@ -35,6 +36,7 @@ import {
   loadBatchProcessList
 } from '@app/admin/actions/batch-processes.actions';
 import { filter } from 'rxjs/operators';
+import { DeleteSelectedJobsRequest } from '@app/admin/models/net/delete-selected-jobs-request';
 
 @Injectable({
   providedIn: 'root'
@@ -77,8 +79,15 @@ export class BatchProcessesService {
     return this.http.get(interpolate(GET_ALL_BATCH_PROCESSES_URL));
   }
 
-  deleteCompletedBatchJobs(): Observable<any> {
+  deleteCompletedJobs(): Observable<any> {
     this.logger.trace('Deleting completed batch jobs');
-    return this.http.post(interpolate(DELETE_COMPLETED_BATCH_JOBS_URL), {});
+    return this.http.post(interpolate(DELETE_COMPLETED_JOBS_URL), {});
+  }
+
+  deleteSelectedJobs(args: { jobIds: number[] }): Observable<any> {
+    this.logger.trace('Deleting completed batch jobs');
+    return this.http.post(interpolate(DELETE_SELECTED_JOBS_URL), {
+      jobIds: args.jobIds
+    } as DeleteSelectedJobsRequest);
   }
 }

@@ -22,6 +22,9 @@ import {
   deleteCompletedBatchJobs,
   deleteCompletedBatchJobsFailure,
   deleteCompletedBatchJobsSuccess,
+  deleteSelectedBatchJobs,
+  deleteSelectedBatchJobsFailure,
+  deleteSelectedBatchJobsSuccess,
   loadBatchProcessList,
   loadBatchProcessListFailure,
   loadBatchProcessListSuccess,
@@ -68,7 +71,14 @@ export const reducer = createReducer(
     busy: false,
     entries: action.processes
   })),
-  on(deleteCompletedBatchJobsFailure, state => ({ ...state, busy: false }))
+  on(deleteCompletedBatchJobsFailure, state => ({ ...state, busy: false })),
+  on(deleteSelectedBatchJobs, state => ({ ...state, busy: true })),
+  on(deleteSelectedBatchJobsSuccess, (state, action) => ({
+    ...state,
+    busy: false,
+    entries: action.processes
+  })),
+  on(deleteSelectedBatchJobsFailure, state => ({ ...state, busy: false }))
 );
 
 export const batchProcessFeature = createFeature({

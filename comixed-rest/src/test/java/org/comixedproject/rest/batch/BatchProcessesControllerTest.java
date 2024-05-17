@@ -22,6 +22,7 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 import org.comixedproject.model.batch.BatchProcessDetail;
+import org.comixedproject.model.net.batch.DeleteSelectedJobsRequest;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,6 +36,7 @@ public class BatchProcessesControllerTest {
   @InjectMocks private BatchProcessesController controller;
   @Mock private BatchProcessesService batchProcessesService;
   @Mock private List<BatchProcessDetail> batchProcessList;
+  @Mock private List<Long> jobIdList;
 
   @Test
   public void testGetAllBatchProcesses() {
@@ -49,14 +51,28 @@ public class BatchProcessesControllerTest {
   }
 
   @Test
-  public void testRestartJob() {
-    Mockito.when(batchProcessesService.deleteInactiveJobs()).thenReturn(batchProcessList);
+  public void testDeleteCompletedJobs() {
+    Mockito.when(batchProcessesService.deleteCompletedJobs()).thenReturn(batchProcessList);
 
     final List<BatchProcessDetail> result = controller.deleteCompletedJobs();
 
     assertNotNull(result);
     assertSame(batchProcessList, result);
 
-    Mockito.verify(batchProcessesService, Mockito.times(1)).deleteInactiveJobs();
+    Mockito.verify(batchProcessesService, Mockito.times(1)).deleteCompletedJobs();
+  }
+
+  @Test
+  public void testDeleteSelectedJobs() {
+    Mockito.when(batchProcessesService.deleteSelectedJobs(Mockito.anyList()))
+        .thenReturn(batchProcessList);
+
+    final List<BatchProcessDetail> result =
+        controller.delectedSelectedJobs(new DeleteSelectedJobsRequest(jobIdList));
+
+    assertNotNull(result);
+    assertSame(batchProcessList, result);
+
+    Mockito.verify(batchProcessesService, Mockito.times(1)).deleteSelectedJobs(jobIdList);
   }
 }

@@ -22,6 +22,7 @@ import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.batch.BatchProcessDetail;
+import org.comixedproject.model.net.batch.DeleteSelectedJobsRequest;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -63,9 +64,26 @@ public class BatchProcessesController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @Timed(value = "comixed.batch.restart-job")
+  @Timed(value = "comixed.batch.deleted-completed-jobs")
   public List<BatchProcessDetail> deleteCompletedJobs() {
     log.info("Deleting completed jobs");
-    return this.batchProcessesService.deleteInactiveJobs();
+    return this.batchProcessesService.deleteCompletedJobs();
+  }
+
+  /**
+   * Deletes batch jobs by job id.
+   *
+   * @return the remaining batch jobs
+   */
+  @PostMapping(
+      value = "/api/admin/processes/selected/delete",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.batch.deleted-selected-jobs")
+  public List<BatchProcessDetail> delectedSelectedJobs(
+      @RequestBody() final DeleteSelectedJobsRequest request) {
+    log.info("Deleting completed jobs");
+    return this.batchProcessesService.deleteSelectedJobs(request.getJobIds());
   }
 }

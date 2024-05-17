@@ -19,9 +19,12 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
+  deleteCompletedBatchJobs,
   deleteCompletedBatchJobsFailure,
   deleteCompletedBatchJobsSuccess,
-  deleteCompletedBatchJobs,
+  deleteSelectedBatchJobs,
+  deleteSelectedBatchJobsFailure,
+  deleteSelectedBatchJobsSuccess,
   loadBatchProcessList,
   loadBatchProcessListFailure,
   loadBatchProcessListSuccess
@@ -72,7 +75,7 @@ export class BatchProcessesEffects {
       ofType(deleteCompletedBatchJobs),
       tap(action => this.logger.trace('Deleting completed jobs:', action)),
       switchMap(action =>
-        this.batchProcessService.deleteCompletedBatchJobs().pipe(
+        this.batchProcessService.deleteCompletedJobs().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           tap(() =>
             this.alertService.info(
@@ -101,6 +104,46 @@ export class BatchProcessesEffects {
           this.translateService.instant('app.general-effect-failure')
         );
         return of(deleteCompletedBatchJobsFailure());
+      })
+    );
+  });
+
+  deleteSelectedJobs$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(deleteSelectedBatchJobs),
+      tap(action => this.logger.trace('Deleting selected jobs:', action)),
+      switchMap(action =>
+        this.batchProcessService
+          .deleteSelectedJobs({ jobIds: action.jobIds })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            tap(() =>
+              this.alertService.info(
+                this.translateService.instant(
+                  'batch-processes.delete-selected-jobs.effect-success'
+                )
+              )
+            ),
+            map((response: BatchProcessDetail[]) =>
+              deleteSelectedBatchJobsSuccess({ processes: response })
+            ),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'batch-processes.delete-selected-jobs.effect-failure'
+                )
+              );
+              return of(deleteSelectedBatchJobsFailure());
+            })
+          )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(deleteSelectedBatchJobsFailure());
       })
     );
   });

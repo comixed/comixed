@@ -6,10 +6,17 @@
     },
     "delete-completed-jobs": {
       "confirmation-message": "Are you sure you want to delete completed jobs?",
-      "confirmation-title": "Delete Completed JObs",
+      "confirmation-title": "Delete Completed Jobs",
       "effect-failure": "Failed to delete completed jobs...",
       "effect-success": "Completed jobs deleted successful.",
       "tooltip": "Deletes all completed or failed batch jobs..."
+    },
+    "delete-selected-jobs": {
+      "confirmation-message": "Are you sure you want to delete the selected jobs?",
+      "confirmation-title": "Delete Selected Jobs",
+      "effect-failure": "Failed to delete selected jobs...",
+      "effect-success": "Selected jobs deleted successful.",
+      "tooltip": "Deletes all selected batch jobs..."
     },
     "batch-process-list": {
       "label": {
