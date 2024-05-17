@@ -851,11 +851,6 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     this.comicStateHandler.fireEvent(comicBook, ComicEvent.updateMetadata);
   }
 
-  public void prepareForRescan(final long comicBookId) throws ComicBookException {
-    final ComicBook comicBook = this.doGetComic(comicBookId);
-    this.comicStateHandler.fireEvent(comicBook, ComicEvent.rescanComic);
-  }
-
   public List<ComicBook> loadByComicDetailId(final List comicDetailIds) {
     return this.comicBookRepository.loadByComicDetailId(comicDetailIds);
   }

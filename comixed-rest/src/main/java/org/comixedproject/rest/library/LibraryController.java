@@ -32,9 +32,9 @@ import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LI
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
+import java.util.Arrays;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration;
 import org.comixedproject.batch.comicbooks.UpdateMetadataConfiguration;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -85,10 +85,6 @@ public class LibraryController {
   @Autowired
   @Qualifier("batchJobLauncher")
   private JobLauncher jobLauncher;
-
-  @Autowired
-  @Qualifier("processComicBooksJob")
-  private Job processComicBooksJob;
 
   @Autowired
   @Qualifier("updateMetadataJob")
@@ -384,15 +380,7 @@ public class LibraryController {
   public void rescanSingleComicBook(@PathVariable("comicBookId") final long comicBookId)
       throws Exception {
     log.info("Rescanning single comic book: id={}", comicBookId);
-    this.comicBookService.prepareForRescan(comicBookId);
-    log.trace("Initiating a rescan batch process");
-    this.jobLauncher.run(
-        processComicBooksJob,
-        new JobParametersBuilder()
-            .addLong(
-                ProcessComicBooksConfiguration.PROCESS_COMIC_BOOKS_STARTED_JOB,
-                System.currentTimeMillis())
-            .toJobParameters());
+    this.comicBookService.prepareForRescan(Arrays.asList(comicBookId));
   }
 
   /**
@@ -412,14 +400,6 @@ public class LibraryController {
     this.comicBookSelectionService.clearSelectedComicBooks(selectedIdList);
     session.setAttribute(
         LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selectedIdList));
-    log.trace("Launching rescan batch process");
-    this.jobLauncher.run(
-        processComicBooksJob,
-        new JobParametersBuilder()
-            .addLong(
-                ProcessComicBooksConfiguration.PROCESS_COMIC_BOOKS_STARTED_JOB,
-                System.currentTimeMillis())
-            .toJobParameters());
   }
 
   /**
