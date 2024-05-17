@@ -33,12 +33,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import {
-  deleteCompletedBatchJobs,
-  setBatchProcessDetail
-} from '@app/admin/actions/batch-processes.actions';
-import { BatchProcessDetailDialogComponent } from '@app/admin/components/batch-process-detail-dialog/batch-process-detail-dialog.component';
+import { deleteCompletedBatchJobs } from '@app/admin/actions/batch-processes.actions';
 import { MatListModule } from '@angular/material/list';
 import {
   initialState as initialMessagingState,
@@ -48,6 +43,7 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('BatchProcessListPageComponent', () => {
   const DETAIL = BATCH_PROCESS_DETAIL_1;
@@ -61,15 +57,11 @@ describe('BatchProcessListPageComponent', () => {
   let store: MockStore;
   let translateService: TranslateService;
   let titleService: TitleService;
-  let dialog: MatDialog;
   let confirmationService: ConfirmationService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        BatchProcessListPageComponent,
-        BatchProcessDetailDialogComponent
-      ],
+      declarations: [BatchProcessListPageComponent],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
@@ -92,8 +84,6 @@ describe('BatchProcessListPageComponent', () => {
     translateService = TestBed.inject(TranslateService);
     titleService = TestBed.inject(TitleService);
     spyOn(titleService, 'setTitle');
-    dialog = TestBed.inject(MatDialog);
-    spyOn(dialog, 'open');
     confirmationService = TestBed.inject(ConfirmationService);
     fixture.detectChanges();
   });
@@ -153,25 +143,6 @@ describe('BatchProcessListPageComponent', () => {
 
     it('updates the tab title', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
-    });
-  });
-
-  describe('showing the detail for a single process', () => {
-    beforeEach(() => {
-      component.onShowDetail(DETAIL);
-    });
-
-    it('sets the current process', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        setBatchProcessDetail({ detail: DETAIL })
-      );
-    });
-
-    it('shows a dialog', () => {
-      expect(dialog.open).toHaveBeenCalledWith(
-        BatchProcessDetailDialogComponent,
-        { data: {} }
-      );
     });
   });
 

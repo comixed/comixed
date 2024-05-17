@@ -35,16 +35,13 @@ import { setBusyState } from '@app/core/actions/busy.actions';
 import { Store } from '@ngrx/store';
 import {
   deleteCompletedBatchJobs,
-  loadBatchProcessList,
-  setBatchProcessDetail
+  loadBatchProcessList
 } from '@app/admin/actions/batch-processes.actions';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { BatchProcessDetail } from '@app/admin/models/batch-process-detail';
-import { BatchProcessDetailDialogComponent } from '@app/admin/components/batch-process-detail-dialog/batch-process-detail-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
@@ -81,7 +78,6 @@ export class BatchProcessListPageComponent
     private store: Store<any>,
     private translateService: TranslateService,
     private titleService: TitleService,
-    private dialog: MatDialog,
     private confirmationService: ConfirmationService,
     public queryParameterService: QueryParameterService
   ) {
@@ -137,12 +133,6 @@ export class BatchProcessListPageComponent
           return null;
       }
     };
-  }
-
-  onShowDetail(detail: BatchProcessDetail) {
-    this.logger.debug('Showing batch process detail:', detail);
-    this.store.dispatch(setBatchProcessDetail({ detail }));
-    this.dialog.open(BatchProcessDetailDialogComponent, { data: {} });
   }
 
   onDeleteCompletedBatchJobs(): void {

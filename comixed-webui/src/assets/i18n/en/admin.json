@@ -1,7 +1,8 @@
 {
   "batch-processes": {
     "batch-process-detail": {
-      "dialog-title": "Batch Process Details For Job {jobId}"
+      "page-title": "Batch Process Details: {jobName} #{jobId}",
+      "tag-title": "Batch Process Details: {jobName} #{jobId}"
     },
     "delete-completed-jobs": {
       "confirmation-message": "Are you sure you want to delete completed jobs?",

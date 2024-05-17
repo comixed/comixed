@@ -119,6 +119,7 @@
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row
     *matRowDef="let row; columns: displayedColumns"
+    [routerLink]="['/admin/processes', row.jobId]"
     (click)="onShowDetail(row)"
   ></mat-row>
   <tr class="mat-row" *matNoDataRow>
