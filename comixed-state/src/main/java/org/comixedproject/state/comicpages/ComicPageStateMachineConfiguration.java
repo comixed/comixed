@@ -19,8 +19,8 @@
 package org.comixedproject.state.comicpages;
 
 import java.util.EnumSet;
-import org.comixedproject.model.comicpages.Page;
-import org.comixedproject.model.comicpages.PageState;
+import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.model.comicpages.ComicPageState;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter;
@@ -28,45 +28,46 @@ import org.springframework.statemachine.config.builders.StateMachineStateConfigu
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 
 /**
- * <code>PageStateMachineConfiguration</code> defines the state machine for instances of {@link
- * Page}.
+ * <code>ComicPageStateMachineConfiguration</code> defines the state machine for instances of {@link
+ * ComicPage}.
  *
  * @author Darryl L. Pierce
  */
 @Configuration
 @EnableStateMachine(name = "pageStateMachine")
-public class PageStateMachineConfiguration
-    extends EnumStateMachineConfigurerAdapter<PageState, PageEvent> {
+public class ComicPageStateMachineConfiguration
+    extends EnumStateMachineConfigurerAdapter<ComicPageState, ComicPageEvent> {
   @Override
-  public void configure(final StateMachineStateConfigurer<PageState, PageEvent> states)
+  public void configure(final StateMachineStateConfigurer<ComicPageState, ComicPageEvent> states)
       throws Exception {
     states
         .withStates()
-        .initial(PageState.STABLE)
-        .end(PageState.REMOVED)
-        .states(EnumSet.allOf(PageState.class));
+        .initial(ComicPageState.STABLE)
+        .end(ComicPageState.REMOVED)
+        .states(EnumSet.allOf(ComicPageState.class));
   }
 
   @Override
-  public void configure(final StateMachineTransitionConfigurer<PageState, PageEvent> transitions)
+  public void configure(
+      final StateMachineTransitionConfigurer<ComicPageState, ComicPageEvent> transitions)
       throws Exception {
     transitions
         // a page is saved
         .withExternal()
-        .source(PageState.STABLE)
-        .target(PageState.STABLE)
-        .event(PageEvent.savePage)
+        .source(ComicPageState.STABLE)
+        .target(ComicPageState.STABLE)
+        .event(ComicPageEvent.savePage)
         // a page is marked for deletion
         .and()
         .withExternal()
-        .source(PageState.STABLE)
-        .target(PageState.DELETED)
-        .event(PageEvent.markForDeletion)
+        .source(ComicPageState.STABLE)
+        .target(ComicPageState.DELETED)
+        .event(ComicPageEvent.markForDeletion)
         // a page is unmarked for deletion
         .and()
         .withExternal()
-        .source(PageState.DELETED)
-        .target(PageState.STABLE)
-        .event(PageEvent.unmarkForDeletion);
+        .source(ComicPageState.DELETED)
+        .target(ComicPageState.STABLE)
+        .event(ComicPageEvent.unmarkForDeletion);
   }
 }

@@ -26,9 +26,9 @@ import java.io.InputStream;
 import java.util.List;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.net.comicpages.UpdatePageDeletionRequest;
+import org.comixedproject.service.comicpages.ComicPageException;
+import org.comixedproject.service.comicpages.ComicPageService;
 import org.comixedproject.service.comicpages.PageCacheService;
-import org.comixedproject.service.comicpages.PageException;
-import org.comixedproject.service.comicpages.PageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -43,7 +43,7 @@ public class PageControllerTest {
   private static final String TEST_PAGE_HASH = "12345";
 
   @InjectMocks private PageController controller;
-  @Mock private PageService pageService;
+  @Mock private ComicPageService comicPageService;
   @Mock private PageCacheService pageCacheService;
   @Mock private List<Long> idList;
   @Mock private ResponseEntity<byte[]> responseEntity;
@@ -52,10 +52,10 @@ public class PageControllerTest {
 
   private ArchiveType archiveType = ArchiveType.CB7;
 
-  @Test(expected = PageException.class)
-  public void testGetPageContentAdaptorException() throws PageException {
+  @Test(expected = ComicPageException.class)
+  public void testGetPageContentAdaptorException() throws ComicPageException {
     Mockito.when(pageCacheService.getPageContent(Mockito.anyLong(), Mockito.anyString()))
-        .thenThrow(PageException.class);
+        .thenThrow(ComicPageException.class);
 
     try {
       controller.getPageContent(TEST_PAGE_ID);
@@ -66,7 +66,7 @@ public class PageControllerTest {
   }
 
   @Test
-  public void testGetPageContent() throws PageException {
+  public void testGetPageContent() throws ComicPageException {
     Mockito.when(pageCacheService.getPageContent(Mockito.anyLong(), Mockito.anyString()))
         .thenReturn(responseEntity);
 
@@ -79,10 +79,10 @@ public class PageControllerTest {
         .getPageContent(TEST_PAGE_ID, MISSING_COMIC_COVER_FILENAME);
   }
 
-  @Test(expected = PageException.class)
-  public void testGetPageForHashNoPageFound() throws PageException {
+  @Test(expected = ComicPageException.class)
+  public void testGetPageForHashNoPageFound() throws ComicPageException {
     Mockito.when(pageCacheService.getPageContent(Mockito.anyString(), Mockito.anyString()))
-        .thenThrow(PageException.class);
+        .thenThrow(ComicPageException.class);
 
     try {
       controller.getPageForHash(TEST_PAGE_HASH);
@@ -93,7 +93,7 @@ public class PageControllerTest {
   }
 
   @Test
-  public void testGetPageForHash() throws PageException {
+  public void testGetPageForHash() throws ComicPageException {
     Mockito.when(pageCacheService.getPageContent(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(responseEntity);
 
@@ -110,13 +110,13 @@ public class PageControllerTest {
   public void testUpdatePageDeletionMarkDeleted() {
     controller.markPagesForDeletion(new UpdatePageDeletionRequest(idList));
 
-    Mockito.verify(pageService, Mockito.times(1)).updatePageDeletion(idList, true);
+    Mockito.verify(comicPageService, Mockito.times(1)).updatePageDeletion(idList, true);
   }
 
   @Test
   public void testUpdatePageDeletionUnmarkDeleted() {
     controller.unmarkPagesForDeletion(new UpdatePageDeletionRequest(idList));
 
-    Mockito.verify(pageService, Mockito.times(1)).updatePageDeletion(idList, false);
+    Mockito.verify(comicPageService, Mockito.times(1)).updatePageDeletion(idList, false);
   }
 }

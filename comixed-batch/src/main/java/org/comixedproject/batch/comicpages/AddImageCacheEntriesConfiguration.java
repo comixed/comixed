@@ -22,7 +22,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.comicpages.processors.CreateImageCacheEntriesProcessor;
 import org.comixedproject.batch.comicpages.readers.CreateImageCacheEntriesReader;
 import org.comixedproject.batch.comicpages.writers.CreateImageCacheEntriesWriter;
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -86,7 +86,7 @@ public class AddImageCacheEntriesConfiguration {
       final CreateImageCacheEntriesProcessor processor,
       final CreateImageCacheEntriesWriter writer) {
     return new StepBuilder("createImageCacheEntriesStep", jobRepository)
-        .<Page, String>chunk(this.batchChunkSize, platformTransactionManager)
+        .<ComicPage, String>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

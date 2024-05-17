@@ -21,8 +21,8 @@ package org.comixedproject.batch.comicpages.readers;
 import java.util.List;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicpages.Page;
-import org.comixedproject.service.comicpages.PageService;
+import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.service.comicpages.ComicPageService;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,27 +31,27 @@ import org.springframework.stereotype.Component;
 
 /**
  * <code>CreateImageCacheEntriesReader</code> provides a reader that returns only instances of
- * {@link Page} that do not have an existing thumbnail.
+ * {@link ComicPage} that do not have an existing thumbnail.
  *
  * @author Darryl L. Pierce
  */
 @StepScope
 @Component
 @Log4j2
-public class CreateImageCacheEntriesReader implements ItemReader<Page> {
-  @Autowired private PageService pageService;
+public class CreateImageCacheEntriesReader implements ItemReader<ComicPage> {
+  @Autowired private ComicPageService comicPageService;
 
   @Value("${comixed.batch.add-cover-to-image-cache.chunk-size}")
   @Getter
   private int batchChunkSize = 10;
 
-  public List<Page> pageList;
+  public List<ComicPage> pageList;
 
   @Override
-  public Page read() {
+  public ComicPage read() {
     if (this.pageList == null || this.pageList.isEmpty()) {
       log.debug("Loading pages without thumbnails");
-      this.pageList = this.pageService.loadPagesNeedingCacheEntries(this.batchChunkSize);
+      this.pageList = this.comicPageService.loadPagesNeedingCacheEntries(this.batchChunkSize);
     }
 
     if (this.pageList.isEmpty()) {

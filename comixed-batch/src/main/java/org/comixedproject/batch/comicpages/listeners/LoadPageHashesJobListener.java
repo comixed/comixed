@@ -21,11 +21,9 @@ package org.comixedproject.batch.comicpages.listeners;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
 import org.comixedproject.model.batch.BatchProcessDetail;
-import org.comixedproject.service.comicpages.PageService;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.configuration.annotation.JobScope;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -38,8 +36,6 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class LoadPageHashesJobListener extends AbstractBatchProcessListener
     implements JobExecutionListener {
-  @Autowired private PageService pageService;
-
   @Override
   public void beforeJob(final JobExecution jobExecution) {
     this.doPublishBatchProcessDetail(BatchProcessDetail.from(jobExecution));

@@ -59,6 +59,7 @@
       "import-comic-files": "Importing Comic Files",
       "load-file-contents-step": "Loading File Contents",
       "load-page-hash-step": "Loading Page Hashes",
+      "mark-blocked-page-step": "Marking Pages With Blocked Hash",
       "subtitle": "Processed {processed} Of {total} Comics ({percentage}%)",
       "text": {
         "no-records-found": "No current batch jobs"

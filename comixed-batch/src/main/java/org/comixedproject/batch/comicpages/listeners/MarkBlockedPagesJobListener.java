@@ -16,26 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicpages.readers;
+package org.comixedproject.batch.comicpages.listeners;
 
-import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicpages.ComicPage;
-import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
+import org.comixedproject.model.batch.BatchProcessDetail;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobExecutionListener;
+import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.stereotype.Component;
 
-/**
- * <code>LoadPageHashReader</code> loads pages that do not have a hash.
- *
- * @author Darryl L. Pierce
- */
-@StepScope
+@JobScope
 @Component
 @Log4j2
-public class LoadPageHashReader extends AbstractPageReader {
+public class MarkBlockedPagesJobListener extends AbstractBatchProcessListener
+    implements JobExecutionListener {
   @Override
-  protected List<ComicPage> doLoadPages() {
-    log.trace("Loading pages without a hash");
-    return this.comicPageService.getPagesWithoutHash(this.getBatchChunkSize());
+  public void beforeJob(final JobExecution jobExecution) {
+    this.doPublishBatchProcessDetail(BatchProcessDetail.from(jobExecution));
+  }
+
+  @Override
+  public void afterJob(final JobExecution jobExecution) {
+    this.doPublishBatchProcessDetail(BatchProcessDetail.from(jobExecution));
   }
 }

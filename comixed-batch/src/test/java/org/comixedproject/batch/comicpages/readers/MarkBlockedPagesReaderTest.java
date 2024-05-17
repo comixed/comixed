@@ -36,11 +36,10 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CreateImageCacheEntriesReaderTest {
+public class MarkBlockedPagesReaderTest {
   private static final int MAX_RECORDS = 25;
-  private static final String TEST_PAGE_HASH = "T4RG3TP4G3H45H";
 
-  @InjectMocks private CreateImageCacheEntriesReader reader;
+  @InjectMocks private MarkBlockedPagesReader reader;
   @Mock private ComicPageService comicPageService;
   @Mock private ComicPage page;
 
@@ -50,7 +49,7 @@ public class CreateImageCacheEntriesReaderTest {
   public void testReadNoneLoaded() {
     for (int index = 0; index < MAX_RECORDS; index++) pageList.add(page);
 
-    Mockito.when(comicPageService.loadPagesNeedingCacheEntries(Mockito.anyInt()))
+    Mockito.when(comicPageService.getUnmarkedWithBlockedHash(Mockito.anyInt()))
         .thenReturn(pageList);
 
     reader.pageList = null;
@@ -63,14 +62,14 @@ public class CreateImageCacheEntriesReaderTest {
     assertEquals(MAX_RECORDS - 1, pageList.size());
 
     Mockito.verify(comicPageService, Mockito.times(1))
-        .loadPagesNeedingCacheEntries(reader.getBatchChunkSize());
+        .getUnmarkedWithBlockedHash(reader.getBatchChunkSize());
   }
 
   @Test
   public void testReadNoneRemaining() {
     for (int index = 0; index < MAX_RECORDS; index++) pageList.add(page);
 
-    Mockito.when(comicPageService.loadPagesNeedingCacheEntries(Mockito.anyInt()))
+    Mockito.when(comicPageService.getUnmarkedWithBlockedHash(Mockito.anyInt()))
         .thenReturn(pageList);
 
     reader.pageList = new ArrayList<>();
@@ -83,7 +82,7 @@ public class CreateImageCacheEntriesReaderTest {
     assertEquals(MAX_RECORDS - 1, pageList.size());
 
     Mockito.verify(comicPageService, Mockito.times(1))
-        .loadPagesNeedingCacheEntries(reader.getBatchChunkSize());
+        .getUnmarkedWithBlockedHash(reader.getBatchChunkSize());
   }
 
   @Test
@@ -99,13 +98,12 @@ public class CreateImageCacheEntriesReaderTest {
     assertFalse(pageList.isEmpty());
     assertEquals(MAX_RECORDS - 1, pageList.size());
 
-    Mockito.verify(comicPageService, Mockito.never())
-        .loadPagesNeedingCacheEntries(Mockito.anyInt());
+    Mockito.verify(comicPageService, Mockito.never()).getUnmarkedWithBlockedHash(Mockito.anyInt());
   }
 
   @Test
   public void testReadNoneLoadedNoneFound() {
-    Mockito.when(comicPageService.loadPagesNeedingCacheEntries(Mockito.anyInt()))
+    Mockito.when(comicPageService.getUnmarkedWithBlockedHash(Mockito.anyInt()))
         .thenReturn(pageList);
 
     final ComicPage result = reader.read();
@@ -114,6 +112,6 @@ public class CreateImageCacheEntriesReaderTest {
     assertNull(reader.pageList);
 
     Mockito.verify(comicPageService, Mockito.times(1))
-        .loadPagesNeedingCacheEntries(reader.getBatchChunkSize());
+        .getUnmarkedWithBlockedHash(reader.getBatchChunkSize());
   }
 }

@@ -19,7 +19,7 @@
 package org.comixedproject.batch.comicpages.writers;
 
 import java.util.ArrayList;
-import org.comixedproject.service.comicpages.PageService;
+import org.comixedproject.service.comicpages.ComicPageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -33,7 +33,7 @@ public class CreateImageCacheEntriesWriterTest {
   private static final String TEST_PAGE_HASH = "0123456789ABCDEF0123456789ABCDEF";
 
   @InjectMocks private CreateImageCacheEntriesWriter writer;
-  @Mock private PageService pageService;
+  @Mock private ComicPageService comicPageService;
   private Chunk<String> hashList = new Chunk<>(new ArrayList<>());
 
   @Test
@@ -42,7 +42,7 @@ public class CreateImageCacheEntriesWriterTest {
 
     writer.write(hashList);
 
-    Mockito.verify(pageService, Mockito.times(hashList.size()))
+    Mockito.verify(comicPageService, Mockito.times(hashList.size()))
         .markPagesAsHavingCacheEntry(TEST_PAGE_HASH);
   }
 }

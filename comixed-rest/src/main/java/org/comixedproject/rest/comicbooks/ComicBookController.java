@@ -37,9 +37,9 @@ import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.comicbooks.*;
 import org.comixedproject.service.comicbooks.*;
 import org.comixedproject.service.comicfiles.ComicFileService;
+import org.comixedproject.service.comicpages.ComicPageException;
+import org.comixedproject.service.comicpages.ComicPageService;
 import org.comixedproject.service.comicpages.PageCacheService;
-import org.comixedproject.service.comicpages.PageException;
-import org.comixedproject.service.comicpages.PageService;
 import org.comixedproject.service.library.LastReadException;
 import org.comixedproject.service.library.LastReadService;
 import org.comixedproject.service.lists.ReadingListException;
@@ -67,7 +67,7 @@ public class ComicBookController {
   @Autowired private ComicBookService comicBookService;
   @Autowired private ComicDetailService comicDetailService;
   @Autowired private ComicBookSelectionService comicBookSelectionService;
-  @Autowired private PageService pageService;
+  @Autowired private ComicPageService comicPageService;
   @Autowired private PageCacheService pageCacheService;
   @Autowired private ComicFileService comicFileService;
   @Autowired private ReadingListService readingListService;
@@ -236,7 +236,7 @@ public class ComicBookController {
     try {
       return this.pageCacheService.getPageContent(
           comicBook.getPages().get(0).getId(), MISSING_COMIC_COVER);
-    } catch (PageException error) {
+    } catch (ComicPageException error) {
       throw new ComicBookException("Failed to load comic cover", error);
     }
   }

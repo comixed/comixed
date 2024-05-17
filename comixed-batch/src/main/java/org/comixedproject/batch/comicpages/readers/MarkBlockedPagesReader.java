@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,25 +16,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.state.comicpages;
+package org.comixedproject.batch.comicpages.readers;
 
-import org.comixedproject.model.comicpages.Page;
-import org.comixedproject.model.comicpages.PageState;
-import org.springframework.messaging.Message;
-import org.springframework.statemachine.state.State;
+import groovy.util.logging.Log4j;
+import java.util.List;
+import org.comixedproject.model.comicpages.ComicPage;
+import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.stereotype.Component;
 
 /**
- * <code>PageStateChangeListener</code> defines a type that is notified of state changes for a
- * {@link Page}.
+ * <code>MarkBlockedPagesReader</code> loads pages that have a blocked hash and are not currently
+ * marked for deletion.
  *
  * @author Darryl L. Pierce
  */
-public interface PageStateChangeListener {
-  /**
-   * Invokes with the details of a state change.
-   *
-   * @param state the new state
-   * @param message the event message
-   */
-  void onPageStateChange(State<PageState, PageEvent> state, Message<PageEvent> message);
+@Component
+@Log4j
+@StepScope
+public class MarkBlockedPagesReader extends AbstractPageReader {
+  @Override
+  protected List<ComicPage> doLoadPages() {
+    return this.comicPageService.getUnmarkedWithBlockedHash(this.getBatchChunkSize());
+  }
 }

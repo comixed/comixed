@@ -36,7 +36,7 @@ import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.opds.OPDSException;
 import org.comixedproject.opds.OPDSUtils;
 import org.comixedproject.service.comicbooks.ComicBookException;
@@ -75,7 +75,7 @@ public class OPDSComicBookControllerTest {
   @Mock private ComicBook comicBook;
   @Mock private ComicDetail comicDetail;
   @Mock private ResponseEntity<InputStreamResource> encodedInputStreamResourceResponse;
-  @Mock private Page page;
+  @Mock private ComicPage page;
   @Mock private ResponseEntity<byte[]> encodedByteArrayResponse;
   @Mock private Principal principal;
 
@@ -83,7 +83,7 @@ public class OPDSComicBookControllerTest {
 
   private File comicFile = new File("src/test/resources/example.cbz");
   private long fileLength = 0L;
-  private List<Page> pageList = new ArrayList<>();
+  private List<ComicPage> pageList = new ArrayList<>();
   private byte[] imageContent;
 
   @Before

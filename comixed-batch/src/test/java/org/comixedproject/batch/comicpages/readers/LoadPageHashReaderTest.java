@@ -23,12 +23,11 @@ import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertSame;
-import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.comixedproject.model.comicpages.Page;
-import org.comixedproject.service.comicpages.PageService;
+import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.service.comicpages.ComicPageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -41,45 +40,47 @@ public class LoadPageHashReaderTest {
   private static final int MAX_RECORDS = 25;
 
   @InjectMocks private LoadPageHashReader reader;
-  @Mock private PageService pageService;
-  @Mock private Page page;
+  @Mock private ComicPageService comicPageService;
+  @Mock private ComicPage page;
 
-  private List<Page> pageList = new ArrayList<>();
+  private List<ComicPage> pageList = new ArrayList<>();
 
   @Test
   public void testReadNoneLoaded() {
     for (int index = 0; index < MAX_RECORDS; index++) pageList.add(page);
 
-    Mockito.when(pageService.getPagesWithoutHash(Mockito.anyInt())).thenReturn(pageList);
+    Mockito.when(comicPageService.getPagesWithoutHash(Mockito.anyInt())).thenReturn(pageList);
 
     reader.pageList = null;
 
-    final Page result = reader.read();
+    final ComicPage result = reader.read();
 
     assertNotNull(result);
     assertSame(page, result);
     assertFalse(pageList.isEmpty());
     assertEquals(MAX_RECORDS - 1, pageList.size());
 
-    Mockito.verify(pageService, Mockito.times(1)).getPagesWithoutHash(reader.getBatchChunkSize());
+    Mockito.verify(comicPageService, Mockito.times(1))
+        .getPagesWithoutHash(reader.getBatchChunkSize());
   }
 
   @Test
   public void testReadNoneRemaining() {
     for (int index = 0; index < MAX_RECORDS; index++) pageList.add(page);
 
-    Mockito.when(pageService.getPagesWithoutHash(Mockito.anyInt())).thenReturn(pageList);
+    Mockito.when(comicPageService.getPagesWithoutHash(Mockito.anyInt())).thenReturn(pageList);
 
     reader.pageList = new ArrayList<>();
 
-    final Page result = reader.read();
+    final ComicPage result = reader.read();
 
     assertNotNull(result);
     assertSame(page, result);
     assertFalse(pageList.isEmpty());
     assertEquals(MAX_RECORDS - 1, pageList.size());
 
-    Mockito.verify(pageService, Mockito.times(1)).getPagesWithoutHash(reader.getBatchChunkSize());
+    Mockito.verify(comicPageService, Mockito.times(1))
+        .getPagesWithoutHash(reader.getBatchChunkSize());
   }
 
   @Test
@@ -88,25 +89,26 @@ public class LoadPageHashReaderTest {
 
     reader.pageList = pageList;
 
-    final Page result = reader.read();
+    final ComicPage result = reader.read();
 
     assertNotNull(result);
     assertSame(page, result);
     assertFalse(pageList.isEmpty());
     assertEquals(MAX_RECORDS - 1, pageList.size());
 
-    Mockito.verify(pageService, Mockito.never()).getPagesWithoutHash(Mockito.anyInt());
+    Mockito.verify(comicPageService, Mockito.never()).getPagesWithoutHash(Mockito.anyInt());
   }
 
   @Test
   public void testReadNoneLoadedNoneFound() {
-    Mockito.when(pageService.getPagesWithoutHash(Mockito.anyInt())).thenReturn(pageList);
+    Mockito.when(comicPageService.getPagesWithoutHash(Mockito.anyInt())).thenReturn(pageList);
 
-    final Page result = reader.read();
+    final ComicPage result = reader.read();
 
     assertNull(result);
     assertNull(reader.pageList);
 
-    Mockito.verify(pageService, Mockito.times(1)).getPagesWithoutHash(reader.getBatchChunkSize());
+    Mockito.verify(comicPageService, Mockito.times(1))
+        .getPagesWithoutHash(reader.getBatchChunkSize());
   }
 }

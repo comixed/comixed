@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,10 +19,12 @@
 package org.comixedproject.batch.comicpages;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicpages.readers.UnmarkPageWithHashReader;
-import org.comixedproject.batch.comicpages.writers.UnmarkPageWithHashWriter;
+import org.comixedproject.batch.comicpages.listeners.MarkBlockedPagesChunkListener;
+import org.comixedproject.batch.comicpages.listeners.MarkBlockedPagesJobListener;
+import org.comixedproject.batch.comicpages.readers.MarkBlockedPagesReader;
+import org.comixedproject.batch.comicpages.writers.MarkBlockedPagesWriter;
 import org.comixedproject.batch.processors.NoopProcessor;
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -36,61 +38,65 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * <code>UnmarkPagesWithHashConfiguration</code> defines a process that unmarks all pages with a
- * given hash for deletion.
+ * <code>MarkBlockedPagesConfiguration</code> defines the batch job for marking pages with a blocked
+ * hash for deletion.
  *
  * @author Darryl L. Pierce
  */
 @Configuration
 @Log4j2
-public class UnmarkPagesWithHashConfiguration {
-  public static final String PARAM_UNMARK_PAGES_WITH_HASH_STARTED =
-      "job.undelete-pages-with-hash.started";
-  public static final String PARAM_UNMARK_PAGES_TARGET_HASH =
-      "job.undelete-pages-with-hash.target-hash";
+public class MarkBlockedPagesConfiguration {
+  public static final String MARK_BLOCKED_PAGES_JOB = "markBlockedPagesJob";
+  public static final String JOB_MARK_BLOCKED_PAGES_STARTED = "job.mark-blocked-pages.started";
 
   @Value("${comixed.batch.chunk-size}")
-  private int batchChunkSize = 10;
+  private int batchChunkSize = 1;
 
   /**
-   * Returns the job bean to delete pages with a hash.
+   * Returns the mark blocked pages job.
    *
    * @param jobRepository the job repository
-   * @param unmarkPageWithHashStep the unmark page step
+   * @param jobListener the job listener
+   * @param markBlockedPagesStep the mark blocked pages step
    * @return the job
    */
-  @Bean(name = "unmarkPagesWithHashJob")
-  public Job unmarkPagesWithHashJob(
+  @Bean(name = MARK_BLOCKED_PAGES_JOB)
+  public Job markBlockedPagesJob(
       final JobRepository jobRepository,
-      @Qualifier("unmarkPageWithHashStep") final Step unmarkPageWithHashStep) {
-    return new JobBuilder("unmarkPagesWithHashJob", jobRepository)
+      final MarkBlockedPagesJobListener jobListener,
+      @Qualifier("markBlockedPagesStep") final Step markBlockedPagesStep) {
+    return new JobBuilder(MARK_BLOCKED_PAGES_JOB, jobRepository)
         .incrementer(new RunIdIncrementer())
-        .start(unmarkPageWithHashStep)
+        .listener(jobListener)
+        .start(markBlockedPagesStep)
         .build();
   }
 
   /**
-   * The mark page step.
+   * Returns the load file contents step.
    *
-   * @param jobRepository the job repository
+   * @param jobRepository the step factory
    * @param platformTransactionManager the transaction manager
    * @param reader the reader
    * @param processor the processor
    * @param writer the writer
+   * @param chunkListener the chunk listener
    * @return the step
    */
-  @Bean(name = "unmarkPageWithHashStep")
-  public Step unmarkPageWithHashStep(
+  @Bean(name = "markBlockedPagesStep")
+  public Step markBlockedPagesStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
-      final UnmarkPageWithHashReader reader,
-      final NoopProcessor<Page> processor,
-      final UnmarkPageWithHashWriter writer) {
-    return new StepBuilder("unmarkPageWithHashStep", jobRepository)
-        .<Page, Page>chunk(this.batchChunkSize, platformTransactionManager)
+      final MarkBlockedPagesReader reader,
+      final NoopProcessor<ComicPage> processor,
+      final MarkBlockedPagesWriter writer,
+      final MarkBlockedPagesChunkListener chunkListener) {
+    return new StepBuilder("markBlockedPagesStep", jobRepository)
+        .<ComicPage, ComicPage>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
+        .listener(chunkListener)
         .build();
   }
 }

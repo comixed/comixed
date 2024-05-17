@@ -19,9 +19,9 @@
 package org.comixedproject.batch.comicpages.writers;
 
 import java.util.ArrayList;
-import org.comixedproject.model.comicpages.Page;
-import org.comixedproject.state.comicpages.PageEvent;
-import org.comixedproject.state.comicpages.PageStateHandler;
+import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.state.comicpages.ComicPageEvent;
+import org.comixedproject.state.comicpages.ComicPageStateHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -33,10 +33,10 @@ import org.springframework.batch.item.Chunk;
 @RunWith(MockitoJUnitRunner.class)
 public class UnmarkPageWithHashWriterTest {
   @InjectMocks private UnmarkPageWithHashWriter writer;
-  @Mock private PageStateHandler pageStateHandler;
-  @Mock private Page page;
+  @Mock private ComicPageStateHandler comicPageStateHandler;
+  @Mock private ComicPage page;
 
-  private Chunk<Page> pageList = new Chunk<>(new ArrayList<>());
+  private Chunk<ComicPage> pageList = new Chunk<>(new ArrayList<>());
 
   @Test
   public void testWrite() throws Exception {
@@ -44,7 +44,7 @@ public class UnmarkPageWithHashWriterTest {
 
     writer.write(pageList);
 
-    Mockito.verify(pageStateHandler, Mockito.times(pageList.size()))
-        .fireEvent(page, PageEvent.unmarkForDeletion);
+    Mockito.verify(comicPageStateHandler, Mockito.times(pageList.size()))
+        .fireEvent(page, ComicPageEvent.unmarkForDeletion);
   }
 }

@@ -28,7 +28,7 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicpages.DeletedPage;
 import org.comixedproject.model.comicpages.DeletedPageAndComic;
-import org.comixedproject.repositories.comicpages.PageRepository;
+import org.comixedproject.repositories.comicpages.ComicPageRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,7 +40,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class DeletedPageServiceTest {
   @InjectMocks private DeletedPageService service;
-  @Mock private PageRepository pageRepository;
+  @Mock private ComicPageRepository comicPageRepository;
 
   private List<DeletedPageAndComic> deletedPageList = new ArrayList<>();
 
@@ -60,7 +60,7 @@ public class DeletedPageServiceTest {
 
   @Test
   public void testLoadAll() {
-    Mockito.when(pageRepository.loadAllDeletedPages()).thenReturn(deletedPageList);
+    Mockito.when(comicPageRepository.loadAllDeletedPages()).thenReturn(deletedPageList);
 
     final List<DeletedPage> result = service.loadAll();
 
@@ -68,6 +68,6 @@ public class DeletedPageServiceTest {
     assertFalse(result.isEmpty());
     assertFalse(result.stream().anyMatch(deletedPage -> deletedPage.getComics().isEmpty()));
 
-    Mockito.verify(pageRepository, Mockito.times(1)).loadAllDeletedPages();
+    Mockito.verify(comicPageRepository, Mockito.times(1)).loadAllDeletedPages();
   }
 }

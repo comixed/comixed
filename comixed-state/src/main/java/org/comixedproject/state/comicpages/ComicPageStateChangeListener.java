@@ -18,15 +18,24 @@
 
 package org.comixedproject.state.comicpages;
 
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.model.comicpages.ComicPageState;
+import org.springframework.messaging.Message;
+import org.springframework.statemachine.state.State;
 
 /**
- * <code>PageEvent</code> represents the events that cause a state change for a {@link Page}.
+ * <code>ComicPageStateChangeListener</code> defines a type that is notified of state changes for a
+ * {@link ComicPage}.
  *
  * @author Darryl L. Pierce
  */
-public enum PageEvent {
-  savePage,
-  markForDeletion,
-  unmarkForDeletion
+public interface ComicPageStateChangeListener {
+  /**
+   * Invokes with the details of a state change.
+   *
+   * @param state the new state
+   * @param message the event message
+   */
+  void onPageStateChange(
+      State<ComicPageState, ComicPageEvent> state, Message<ComicPageEvent> message);
 }

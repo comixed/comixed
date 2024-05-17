@@ -24,7 +24,7 @@ import static junit.framework.TestCase.assertSame;
 import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.lists.ReadingListService;
 import org.junit.Test;
@@ -41,7 +41,7 @@ public class PurgeMarkedComicsProcessorTest {
   @Mock private ReadingListService readingListService;
   @Mock private ComicBook comicBook;
 
-  private List<Page> pageList = new ArrayList<>();
+  private List<ComicPage> pageList = new ArrayList<>();
 
   @Test
   public void testProcess() throws Exception {

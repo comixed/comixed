@@ -18,10 +18,12 @@
 
 package org.comixedproject.batch.initiators;
 
-import static org.comixedproject.batch.comicpages.LoadPageHashesConfiguration.JOB_LOAD_PAGE_HASHES_STARTED;
-import static org.comixedproject.batch.comicpages.LoadPageHashesConfiguration.LOAD_PAGE_HASHES_JOB;
+import static org.comixedproject.batch.comicpages.MarkBlockedPagesConfiguration.JOB_MARK_BLOCKED_PAGES_STARTED;
+import static org.comixedproject.batch.comicpages.MarkBlockedPagesConfiguration.MARK_BLOCKED_PAGES_JOB;
+import static org.comixedproject.service.admin.ConfigurationService.CFG_MANAGE_BLOCKED_PAGES;
 import static org.junit.Assert.*;
 
+import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicpages.ComicPageService;
 import org.junit.Before;
@@ -40,13 +42,14 @@ import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 @RunWith(MockitoJUnitRunner.class)
-public class LoadPageHashesInitiatorTest {
-  @InjectMocks private LoadPageHashesInitiator initiator;
+public class MarkBlockedPagesInitiatorTest {
+  @InjectMocks private MarkBlockedPagesInitiator initiator;
+  @Mock private ConfigurationService configurationService;
   @Mock private ComicPageService comicPageService;
   @Mock private BatchProcessesService batchProcessesService;
 
   @Mock
-  @Qualifier(value = LOAD_PAGE_HASHES_JOB)
+  @Qualifier(value = MARK_BLOCKED_PAGES_JOB)
   private Job loadPageHashesJob;
 
   @Mock
@@ -63,10 +66,26 @@ public class LoadPageHashesInitiatorTest {
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
           JobRestartException {
-    Mockito.when(comicPageService.hasPagesWithoutHash()).thenReturn(true);
+    Mockito.when(configurationService.isFeatureEnabled(CFG_MANAGE_BLOCKED_PAGES)).thenReturn(true);
+    Mockito.when(comicPageService.getUnmarkedWithBlockedHashCount()).thenReturn(1L);
     Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(false);
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
+  }
+
+  @Test
+  public void testExecuteNotManagingBlockedPages()
+      throws JobInstanceAlreadyCompleteException,
+          JobExecutionAlreadyRunningException,
+          JobParametersInvalidException,
+          JobRestartException {
+    Mockito.when(configurationService.isFeatureEnabled(CFG_MANAGE_BLOCKED_PAGES)).thenReturn(false);
+
+    initiator.execute();
+
+    Mockito.verify(configurationService, Mockito.times(1))
+        .isFeatureEnabled(CFG_MANAGE_BLOCKED_PAGES);
+    Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(), Mockito.any());
   }
 
   @Test
@@ -75,7 +94,7 @@ public class LoadPageHashesInitiatorTest {
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
           JobRestartException {
-    Mockito.when(comicPageService.hasPagesWithoutHash()).thenReturn(false);
+    Mockito.when(comicPageService.getUnmarkedWithBlockedHashCount()).thenReturn(0L);
 
     initiator.execute();
 
@@ -105,7 +124,7 @@ public class LoadPageHashesInitiatorTest {
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
-    assertNotNull(jobParameters.getLong(JOB_LOAD_PAGE_HASHES_STARTED));
+    assertNotNull(jobParameters.getLong(JOB_MARK_BLOCKED_PAGES_STARTED));
 
     Mockito.verify(jobLauncher, Mockito.times(1)).run(loadPageHashesJob, jobParameters);
   }
@@ -123,7 +142,7 @@ public class LoadPageHashesInitiatorTest {
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
-    assertNotNull(jobParameters.getLong(JOB_LOAD_PAGE_HASHES_STARTED));
+    assertNotNull(jobParameters.getLong(JOB_MARK_BLOCKED_PAGES_STARTED));
 
     Mockito.verify(jobLauncher, Mockito.times(1)).run(loadPageHashesJob, jobParameters);
   }

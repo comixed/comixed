@@ -39,7 +39,7 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicType;
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.comicbooks.PageOrderEntry;
@@ -914,11 +914,11 @@ public class ComicBookServiceTest {
   @Test(expected = ComicBookException.class)
   public void testSavePageOrderMissingFilename() throws ComicBookException {
     List<PageOrderEntry> entryList = new ArrayList<>();
-    List<Page> pageList = new ArrayList<>();
+    List<ComicPage> pageList = new ArrayList<>();
     for (int index = 0; index < 25; index++) {
       final String filename = String.format("filename-%d", index);
       entryList.add(new PageOrderEntry(filename, 24 - index));
-      final Page page = new Page();
+      final ComicPage page = new ComicPage();
       page.setFilename(filename.substring(1));
       pageList.add(page);
     }
@@ -936,11 +936,11 @@ public class ComicBookServiceTest {
   @Test
   public void testSavePageOrder() throws ComicBookException {
     List<PageOrderEntry> entryList = new ArrayList<>();
-    List<Page> pageList = new ArrayList<>();
+    List<ComicPage> pageList = new ArrayList<>();
     for (int index = 0; index < 25; index++) {
       final String filename = String.format("filename-%d", index);
       entryList.add(new PageOrderEntry(filename, 24 - index));
-      final Page page = new Page();
+      final ComicPage page = new ComicPage();
       page.setFilename(filename);
       pageList.add(page);
     }
@@ -952,7 +952,7 @@ public class ComicBookServiceTest {
 
     for (int index = 0; index < entryList.size(); index++) {
       final PageOrderEntry pageOrderEntry = entryList.get(index);
-      final Optional<Page> pageListEntry =
+      final Optional<ComicPage> pageListEntry =
           pageList.stream()
               .filter(entry -> entry.getFilename().equals(pageOrderEntry.getFilename()))
               .findFirst();

@@ -20,7 +20,7 @@ package org.comixedproject.batch.comicpages.processors;
 
 import static org.junit.Assert.*;
 
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +36,7 @@ public class CreateImageCacheEntriesProcessorTest {
 
   @InjectMocks private CreateImageCacheEntriesProcessor processor;
   @Mock private PageCacheService pageCacheService;
-  @Mock private Page page;
+  @Mock private ComicPage page;
 
   private byte[] cachedPage = "THis is the cached page".getBytes();
 

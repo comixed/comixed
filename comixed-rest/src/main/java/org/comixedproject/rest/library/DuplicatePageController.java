@@ -23,7 +23,7 @@ import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.library.DuplicatePage;
-import org.comixedproject.service.comicpages.PageService;
+import org.comixedproject.service.comicpages.ComicPageService;
 import org.comixedproject.service.library.DuplicatePageException;
 import org.comixedproject.service.library.DuplicatePageService;
 import org.comixedproject.views.View;
@@ -44,7 +44,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 public class DuplicatePageController {
   @Autowired private DuplicatePageService duplicatePageService;
-  @Autowired private PageService pageService;
+  @Autowired private ComicPageService comicPageService;
 
   /**
    * Returns the list of duplicate pages.

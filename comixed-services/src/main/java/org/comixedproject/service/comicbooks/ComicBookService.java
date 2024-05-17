@@ -41,7 +41,7 @@ import org.comixedproject.model.collections.Series;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.comicbooks.PageOrderEntry;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
@@ -591,7 +591,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
 
     log.trace("Applying order");
     for (int index = 0; index < comicBook.getPages().size(); index++) {
-      final Page page = comicBook.getPages().get(index);
+      final ComicPage page = comicBook.getPages().get(index);
       final Optional<PageOrderEntry> position =
           entryList.stream()
               .filter(pageOrderEntry -> pageOrderEntry.getFilename().equals(page.getFilename()))
