@@ -601,7 +601,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testPrepareForRescanById() {
+  public void testPrepareForRescan() {
     for (long index = 0L; index < 25L; index++) idList.add(index + 100);
 
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
@@ -615,7 +615,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testPrepareForRescanByIdNoSuchComic() {
+  public void testPrepareForRescanNoSuchComic() {
     idList.add(TEST_COMIC_BOOK_ID);
 
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
@@ -1248,28 +1248,6 @@ public class ComicBookServiceTest {
     Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
     Mockito.verify(comicStateHandler, Mockito.times(1))
         .fireEvent(comicBook, ComicEvent.updateMetadata);
-  }
-
-  @Test(expected = ComicBookException.class)
-  public void testPrepareForRescanSingleComicInvalidComicBookId() throws ComicBookException {
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
-
-    try {
-      service.prepareForRescan(TEST_COMIC_BOOK_ID);
-    } finally {
-      Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
-    }
-  }
-
-  @Test
-  public void testPrepareForRescanSingleComic() throws ComicBookException {
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
-
-    service.prepareForRescan(TEST_COMIC_BOOK_ID);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.rescanComic);
   }
 
   @Test

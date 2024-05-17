@@ -89,18 +89,12 @@ public class LibraryControllerTest {
   @Mock private JobExecution jobExecution;
   @Mock private EditMultipleComicsRequest editMultipleComicsRequest;
   @Mock private RemoteLibraryState remoteLibraryState;
-  @Mock private HttpSession httpState;
   @Mock private List selectedIds;
-  @Mock private List<Long> comicIds;
   @Mock private HttpSession httpSession;
 
   @Mock
   @Qualifier("updateMetadataJob")
   private Job updateMetadataJob;
-
-  @Mock
-  @Qualifier("processComicBooksJob")
-  private Job processComicBooksJob;
 
   @Mock
   @Qualifier("organizeLibraryJob")
@@ -432,33 +426,10 @@ public class LibraryControllerTest {
   }
 
   @Test
-  public void testRescanSingleComicBook() throws Exception {
-    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
-        .thenReturn(jobExecution);
-
-    controller.rescanSingleComicBook(TEST_COMIC_BOOK_ID);
-
-    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
-
-    assertNotNull(jobParameters);
-
-    Mockito.verify(comicBookService, Mockito.times(1)).prepareForRescan(TEST_COMIC_BOOK_ID);
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(processComicBooksJob, jobParameters);
-  }
-
-  @Test
-  public void testRescanComics() throws Exception {
-    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
-        .thenReturn(jobExecution);
-
+  public void testRescanComicBooks() throws Exception {
     controller.rescanSelectedComicBooks(httpSession);
 
-    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
-
-    assertNotNull(jobParameters);
-
     Mockito.verify(comicBookService, Mockito.times(1)).prepareForRescan(selectedIds);
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(processComicBooksJob, jobParameters);
   }
 
   @Test
