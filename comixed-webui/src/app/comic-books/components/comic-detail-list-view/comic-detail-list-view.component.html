@@ -2,7 +2,7 @@
   *ngIf="showComicDetailPopup"
   class="cx-hover cx-centered cx-width-25 cx-border-primary-1"
 >
-  <mat-card appearance="outlined">
+  <mat-card appearance="outlined" (click)="showComicDetailPopup = false">
     <mat-card-title class="cx-text-nowrap">
       {{ selectedComicDetail | comicTitle }}
     </mat-card-title>
