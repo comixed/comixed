@@ -17,7 +17,7 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BatchProcessDetailDialogComponent } from './batch-process-detail-dialog.component';
+import { BatchProcessDetailPageComponent } from './batch-process-detail-page.component';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
@@ -45,19 +45,20 @@ describe('BatchProcessDetailDialogComponent', () => {
   const initialState = {
     [BATCH_PROCESSES_FEATURE_KEY]: {
       ...initialBatchProcessState,
-      detail: DETAIL
+      detail: DETAIL,
+      entries: [DETAIL]
     },
     [MESSAGING_FEATURE_KEY]: { ...initialMessagingState }
   };
 
-  let component: BatchProcessDetailDialogComponent;
-  let fixture: ComponentFixture<BatchProcessDetailDialogComponent>;
+  let component: BatchProcessDetailPageComponent;
+  let fixture: ComponentFixture<BatchProcessDetailPageComponent>;
   let store: MockStore;
   let webSocketService: jasmine.SpyObj<WebSocketService>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [BatchProcessDetailDialogComponent],
+      declarations: [BatchProcessDetailPageComponent],
       imports: [
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
@@ -86,7 +87,7 @@ describe('BatchProcessDetailDialogComponent', () => {
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(BatchProcessDetailDialogComponent);
+    fixture = TestBed.createComponent(BatchProcessDetailPageComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');

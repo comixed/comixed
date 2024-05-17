@@ -1,0 +1,72 @@
+<h2>
+  {{
+    "batch-processes.batch-process-detail.page-title"
+      | translate: { jobId: detail?.jobId, jobName: detail?.jobName }
+  }}
+</h2>
+
+<div class="batch-process-detail-row cx-centered-horiz">
+  <table class="cx-width-90 cx-border-primary-1 cx-padding-5">
+    <thead>
+      <tr>
+        <th>{{ "batch-processes.label.parameter-name" | translate }}</th>
+        <th>{{ "batch-processes.label.parameter-value" | translate }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let entry of detail?.parameters | keyvalue">
+        <td>{{ entry.key }}</td>
+        <td>{{ entry.value }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="batch-process-detail-row cx-centered-horiz">
+  <div class="cx-width-90">
+    <ul>
+      <li *ngIf="detail?.running">
+        {{
+          "batch-processes.text.running-now"
+            | translate: { started: detail?.startTime | date: "medium" }
+        }}
+      </li>
+
+      <li *ngIf="!detail?.running">
+        {{
+          "batch-processes.text.status" | translate: { status: detail?.status }
+        }}
+      </li>
+
+      <li>
+        {{
+          "batch-processes.text.created"
+            | translate: { created: detail?.createTime | date: "medium" }
+        }}
+      </li>
+      <li *ngIf="!detail?.running">
+        {{
+          "batch-processes.text.duration"
+            | translate
+              : {
+                  started: detail?.startTime | date: "medium",
+                  ended: detail?.endTime | date: "medium"
+                }
+        }}
+      </li>
+      <li>
+        {{
+          "batch-processes.text.last-updated"
+            | translate: { updated: detail?.lastUpdateTime | date: "medium" }
+        }}
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div *ngIf="detail?.errors?.length > 0" class="cx-width-100">
+  <h3>{{ "batch-processes.text.error-header" | translate }}</h3>
+  <pre class="cx-padding-5 cx-width-100">
+  {{ detail?.errors }}
+  </pre>
+</div>

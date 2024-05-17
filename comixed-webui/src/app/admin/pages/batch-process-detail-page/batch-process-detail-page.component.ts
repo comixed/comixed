@@ -16,27 +16,38 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { selectBatchProcessDetail } from '@app/admin/selectors/batch-processes.selectors';
+import {
+  selectBatchProcessDetail,
+  selectBatchProcessList
+} from '@app/admin/selectors/batch-processes.selectors';
 import { BatchProcessDetail } from '@app/admin/models/batch-process-detail';
 import { filter } from 'rxjs/operators';
 import { BATCH_PROCESS_DETAIL_UPDATE_TOPIC } from '@app/app.constants';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
 import { interpolate } from '@app/core';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
-import { setBatchProcessDetail } from '@app/admin/actions/batch-processes.actions';
+import {
+  loadBatchProcessList,
+  setBatchProcessDetail
+} from '@app/admin/actions/batch-processes.actions';
 import { TranslateService } from '@ngx-translate/core';
-import { ConfirmationService } from '@tragically-slick/confirmation';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TitleService } from '@app/core/services/title.service';
 
 @Component({
-  selector: 'cx-batch-process-detail-dialog',
-  templateUrl: './batch-process-detail-dialog.component.html',
-  styleUrls: ['./batch-process-detail-dialog.component.scss']
+  selector: 'cx-batch-process-detail-page',
+  templateUrl: './batch-process-detail-page.component.html',
+  styleUrls: ['./batch-process-detail-page.component.scss']
 })
-export class BatchProcessDetailDialogComponent implements OnDestroy {
+export class BatchProcessDetailPageComponent implements OnInit, OnDestroy {
+  paramSubscription: Subscription;
+  jobId = 0;
+  batchListSubscription: Subscription;
+  batchList: BatchProcessDetail[] = [];
   detailSubscription: Subscription;
   messagingSubscription: Subscription;
   detailUpdateSubscription: MessagingSubscription;
@@ -46,10 +57,24 @@ export class BatchProcessDetailDialogComponent implements OnDestroy {
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
     private webSocketService: WebSocketService,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private titleService: TitleService
   ) {
+    this.paramSubscription = this.activatedRoute.params.subscribe(params => {
+      this.jobId = +params.jobId;
+      this.logger.debug('Job id:', this.jobId);
+      this.loadJobDetail();
+    });
+    this.batchListSubscription = this.store
+      .select(selectBatchProcessList)
+      .subscribe(list => {
+        this.batchList = list;
+        console.log('*** this.batchList:', this.batchList);
+        this.loadJobDetail();
+      });
     this.detailSubscription = this.store
       .select(selectBatchProcessDetail)
       .pipe(filter(detail => !!detail))
@@ -68,8 +93,16 @@ export class BatchProcessDetailDialogComponent implements OnDestroy {
       });
   }
 
+  ngOnInit(): void {
+    this.store.dispatch(loadBatchProcessList());
+  }
+
   ngOnDestroy(): void {
     this.unsubscribeFromUpdates();
+    this.logger.debug('Unsubscribing from parameter updates');
+    this.paramSubscription.unsubscribe();
+    this.logger.debug('Unsubscribing from batch list updates');
+    this.batchListSubscription.unsubscribe();
     this.logger.debug('Unsubscribing from messaging updates');
     this.messagingSubscription.unsubscribe();
   }
@@ -84,7 +117,7 @@ export class BatchProcessDetailDialogComponent implements OnDestroy {
   subscribeToUpdates(): void {
     if (!this.detailUpdateSubscription) {
       const topic = interpolate(BATCH_PROCESS_DETAIL_UPDATE_TOPIC, {
-        jobId: this.detail.jobId
+        jobId: this.jobId
       });
       this.logger.trace('Subscribing to batch process updates:', topic);
       this.detailUpdateSubscription =
@@ -93,5 +126,19 @@ export class BatchProcessDetailDialogComponent implements OnDestroy {
           this.store.dispatch(setBatchProcessDetail({ detail: update }));
         });
     }
+  }
+
+  loadJobDetail(): void {
+    this.detail = this.batchList.find(entry => entry.jobId === this.jobId);
+    this.loadTranslations();
+  }
+
+  private loadTranslations(): void {
+    this.titleService.setTitle(
+      this.translateService.instant(
+        'batch-processes.batch-process-detail.page-title',
+        { jobId: this.detail?.jobId, jobName: this.detail?.jobName }
+      )
+    );
   }
 }
