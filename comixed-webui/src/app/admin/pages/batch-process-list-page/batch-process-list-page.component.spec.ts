@@ -22,18 +22,23 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   BATCH_PROCESSES_FEATURE_KEY,
-  initialState as batchProcessInitialState
+  initialState as initialBatchProcessState
 } from '@app/admin/reducers/batch-processes.reducer';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { BATCH_PROCESS_DETAIL_1 } from '@app/admin/admin.fixtures';
+import {
+  BATCH_PROCESS_DETAIL_1,
+  BATCH_PROCESS_DETAIL_2
+} from '@app/admin/admin.fixtures';
 import { TitleService } from '@app/core/services/title.service';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { deleteCompletedBatchJobs } from '@app/admin/actions/batch-processes.actions';
+import {
+  deleteCompletedBatchJobs,
+  deleteSelectedBatchJobs
+} from '@app/admin/actions/batch-processes.actions';
 import { MatListModule } from '@angular/material/list';
 import {
   initialState as initialMessagingState,
@@ -43,12 +48,18 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
+import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
+import { BatchProcessDetail } from '@app/admin/models/batch-process-detail';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('BatchProcessListPageComponent', () => {
-  const DETAIL = BATCH_PROCESS_DETAIL_1;
+  const DETAIL1 = BATCH_PROCESS_DETAIL_1;
+  const DETAIL2 = BATCH_PROCESS_DETAIL_2;
   const initialState = {
-    [BATCH_PROCESSES_FEATURE_KEY]: batchProcessInitialState,
+    [BATCH_PROCESSES_FEATURE_KEY]: initialBatchProcessState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState
   };
 
@@ -72,7 +83,9 @@ describe('BatchProcessListPageComponent', () => {
         MatTableModule,
         MatSortModule,
         MatDialogModule,
-        MatListModule
+        MatListModule,
+        MatIconModule,
+        MatCheckboxModule
       ],
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
@@ -93,46 +106,57 @@ describe('BatchProcessListPageComponent', () => {
   });
 
   describe('sorting', () => {
+    const ELEMENT = {
+      item: DETAIL1,
+      selected: Math.random() > 0.5
+    } as SelectableListItem<BatchProcessDetail>;
+
+    it('can sort by selection', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(ELEMENT, 'selection')
+      ).toEqual(`${ELEMENT.selected}`);
+    });
+
     it('can sort by name', () => {
       expect(
-        component.dataSource.sortingDataAccessor(DETAIL, 'job-name')
-      ).toEqual(DETAIL.jobName);
+        component.dataSource.sortingDataAccessor(ELEMENT, 'job-name')
+      ).toEqual(ELEMENT.item.jobName);
     });
 
     it('can sort by job id', () => {
       expect(
-        component.dataSource.sortingDataAccessor(DETAIL, 'job-id')
-      ).toEqual(DETAIL.jobId);
+        component.dataSource.sortingDataAccessor(ELEMENT, 'job-id')
+      ).toEqual(ELEMENT.item.jobId);
     });
 
     it('can sort by status', () => {
       expect(
-        component.dataSource.sortingDataAccessor(DETAIL, 'status')
-      ).toEqual(DETAIL.status);
+        component.dataSource.sortingDataAccessor(ELEMENT, 'status')
+      ).toEqual(ELEMENT.item.status);
     });
 
     it('can sort by start time', () => {
       expect(
-        component.dataSource.sortingDataAccessor(DETAIL, 'start-time')
-      ).toEqual(DETAIL.startTime);
+        component.dataSource.sortingDataAccessor(ELEMENT, 'start-time')
+      ).toEqual(ELEMENT.item.startTime);
     });
 
     it('can sort by end time', () => {
       expect(
-        component.dataSource.sortingDataAccessor(DETAIL, 'end-time')
-      ).toEqual(DETAIL.endTime);
+        component.dataSource.sortingDataAccessor(ELEMENT, 'end-time')
+      ).toEqual(ELEMENT.item.endTime);
     });
 
     it('can sort by exit code', () => {
       expect(
-        component.dataSource.sortingDataAccessor(DETAIL, 'exit-code')
-      ).toEqual(DETAIL.exitStatus);
+        component.dataSource.sortingDataAccessor(ELEMENT, 'exit-code')
+      ).toEqual(ELEMENT.item.exitStatus);
     });
 
-    it('returns null on an unknown column', () => {
+    it('returns job id on an unknown column', () => {
       expect(
-        component.dataSource.sortingDataAccessor(DETAIL, 'farkle')
-      ).toBeNull();
+        component.dataSource.sortingDataAccessor(ELEMENT, 'farkle')
+      ).toEqual(ELEMENT.item.jobId);
     });
   });
 
@@ -151,7 +175,7 @@ describe('BatchProcessListPageComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.onDeleteCompletedBatchJobs();
+      component.onDeleteCompletedJobs();
     });
 
     it('prompts the user', () => {
@@ -160,6 +184,146 @@ describe('BatchProcessListPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(deleteCompletedBatchJobs());
+    });
+  });
+
+  describe('deleting selected batch jobs', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.dataSource.data = [
+        { item: DETAIL1, selected: false },
+        { item: DETAIL2, selected: true }
+      ];
+      component.onDeleteSelectedJobs();
+    });
+
+    it('prompts the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        deleteSelectedBatchJobs({
+          jobIds: component.dataSource.data
+            .filter(entry => entry.selected)
+            .map(entry => entry.item.jobId)
+        })
+      );
+    });
+  });
+
+  describe('when the list changes', () => {
+    beforeEach(() => {
+      component.dataSource.data = [
+        {
+          item: DETAIL1,
+          selected: true
+        },
+        {
+          item: DETAIL2,
+          selected: false
+        }
+      ];
+      store.setState({
+        ...initialState,
+        [BATCH_PROCESSES_FEATURE_KEY]: {
+          ...initialBatchProcessState,
+          entries: [DETAIL1, DETAIL2]
+        }
+      });
+    });
+
+    it('maintains existing selections', () => {
+      expect(component.dataSource.data[0].selected).toBeTrue();
+    });
+
+    it('maintains existing non-selections', () => {
+      expect(component.dataSource.data[1].selected).toBeFalse();
+    });
+  });
+
+  describe('selections', () => {
+    beforeEach(() => {
+      component.dataSource.data = [
+        {
+          item: DETAIL1,
+          selected: false
+        },
+        {
+          item: DETAIL2,
+          selected: false
+        }
+      ];
+    });
+
+    describe('selecting one element', () => {
+      beforeEach(() => {
+        component.dataSource.data[0].selected = false;
+        component.anySelected = false;
+        component.onSelectOne(component.dataSource.data[0], true);
+      });
+
+      it('marks the entry as selected', () => {
+        expect(component.dataSource.data[0].selected).toBeTrue();
+      });
+
+      it('sets the any selected flag', () => {
+        expect(component.anySelected).toBeTrue();
+      });
+    });
+
+    describe('deselecting one element', () => {
+      beforeEach(() => {
+        component.dataSource.data[0].selected = true;
+        component.anySelected = true;
+        component.onSelectOne(component.dataSource.data[0], false);
+      });
+
+      it('marks the entry as unselected', () => {
+        expect(component.dataSource.data[0].selected).toBeFalse();
+      });
+
+      it('clears the any selected flag', () => {
+        expect(component.anySelected).toBeFalse();
+      });
+    });
+
+    describe('selecting all elements', () => {
+      beforeEach(() => {
+        component.dataSource.data.forEach(entry => (entry.selected = false));
+        component.allSelected = false;
+        component.onSelectAll(true);
+      });
+
+      it('marks the entry as selected', () => {
+        expect(
+          component.dataSource.data.every(entry => entry.selected)
+        ).toBeTrue();
+      });
+
+      it('sets the all selected flag', () => {
+        expect(component.allSelected).toBeTrue();
+      });
+    });
+
+    describe('deselecting all elements', () => {
+      beforeEach(() => {
+        component.dataSource.data.forEach(entry => (entry.selected = true));
+        component.allSelected = true;
+        component.onSelectAll(false);
+      });
+
+      it('marks the entry as unselected', () => {
+        expect(
+          component.dataSource.data.every(entry => entry.selected)
+        ).toBeFalse();
+      });
+
+      it('clears the all selected flag', () => {
+        expect(component.allSelected).toBeFalse();
+      });
     });
   });
 });

@@ -27,9 +27,12 @@ import {
 } from '@app/admin/admin.fixtures';
 import {
   batchProcessUpdateReceived,
+  deleteCompletedBatchJobs,
   deleteCompletedBatchJobsFailure,
   deleteCompletedBatchJobsSuccess,
-  deleteCompletedBatchJobs,
+  deleteSelectedBatchJobs,
+  deleteSelectedBatchJobsFailure,
+  deleteSelectedBatchJobsSuccess,
   loadBatchProcessList,
   loadBatchProcessListFailure,
   loadBatchProcessListSuccess,
@@ -38,6 +41,7 @@ import {
 
 describe('BatchProcesses Reducer', () => {
   const ENTRIES = [BATCH_PROCESS_DETAIL_1, BATCH_PROCESS_DETAIL_2];
+  const SELECTED_IDS = ENTRIES.map(entry => entry.jobId);
   const DETAIL = ENTRIES[0];
 
   let state: BatchProcessesState;
@@ -200,6 +204,49 @@ describe('BatchProcesses Reducer', () => {
         state = reducer(
           { ...state, busy: true, entries: [] },
           deleteCompletedBatchJobsFailure()
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+    });
+  });
+
+  describe('deleting selected batch jobs', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: false },
+        deleteSelectedBatchJobs({ jobIds: SELECTED_IDS })
+      );
+    });
+
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: true, entries: [] },
+          deleteSelectedBatchJobsSuccess({ processes: ENTRIES })
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+
+      it('sets the list of remaining batch jobs', () => {
+        expect(state.entries).toEqual(ENTRIES);
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: true, entries: [] },
+          deleteSelectedBatchJobsFailure()
         );
       });
 

@@ -30,9 +30,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AlertService } from '@app/core/services/alert.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {
+  deleteCompletedBatchJobs,
   deleteCompletedBatchJobsFailure,
   deleteCompletedBatchJobsSuccess,
-  deleteCompletedBatchJobs,
+  deleteSelectedBatchJobs,
+  deleteSelectedBatchJobsFailure,
+  deleteSelectedBatchJobsSuccess,
   loadBatchProcessList,
   loadBatchProcessListFailure,
   loadBatchProcessListSuccess
@@ -42,6 +45,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 describe('BatchProcessesEffects', () => {
   const ENTRIES = [BATCH_PROCESS_DETAIL_1, BATCH_PROCESS_DETAIL_2];
+  const SELECTED_IDS = ENTRIES.map(entry => entry.jobId);
   const DETAIL = ENTRIES[0];
 
   let actions$: Observable<any>;
@@ -63,8 +67,11 @@ describe('BatchProcessesEffects', () => {
           provide: BatchProcessesService,
           useValue: {
             getAll: jasmine.createSpy('BatchProcessesService.getAll()'),
-            deleteCompletedBatchJobs: jasmine.createSpy(
-              'BatchProcessesService.deleteCompletedBatchJobs()'
+            deleteCompletedJobs: jasmine.createSpy(
+              'BatchProcessesService.deleteCompletedJobs()'
+            ),
+            deleteSelectedJobs: jasmine.createSpy(
+              'BatchProcessesService.deleteSelectedJobs()'
             )
           }
         },
@@ -131,7 +138,7 @@ describe('BatchProcessesEffects', () => {
       const outcome = deleteCompletedBatchJobsSuccess({ processes: ENTRIES });
 
       actions$ = hot('-a', { a: action });
-      batchProcessesService.deleteCompletedBatchJobs.and.returnValue(
+      batchProcessesService.deleteCompletedJobs.and.returnValue(
         of(serviceResponse)
       );
 
@@ -146,7 +153,7 @@ describe('BatchProcessesEffects', () => {
       const outcome = deleteCompletedBatchJobsFailure();
 
       actions$ = hot('-a', { a: action });
-      batchProcessesService.deleteCompletedBatchJobs.and.returnValue(
+      batchProcessesService.deleteCompletedJobs.and.returnValue(
         throwError(serviceResponse)
       );
 
@@ -160,10 +167,56 @@ describe('BatchProcessesEffects', () => {
       const outcome = deleteCompletedBatchJobsFailure();
 
       actions$ = hot('-a', { a: action });
-      batchProcessesService.deleteCompletedBatchJobs.and.throwError('expected');
+      batchProcessesService.deleteCompletedJobs.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.deleteCompletedJobs$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('deleting selected batch processes', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = ENTRIES;
+      const action = deleteSelectedBatchJobs({ jobIds: SELECTED_IDS });
+      const outcome = deleteSelectedBatchJobsSuccess({ processes: ENTRIES });
+
+      actions$ = hot('-a', { a: action });
+      batchProcessesService.deleteSelectedJobs
+        .withArgs({ jobIds: SELECTED_IDS })
+        .and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.deleteSelectedJobs$).toBeObservable(expected);
+      expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = deleteSelectedBatchJobs({ jobIds: SELECTED_IDS });
+      const outcome = deleteSelectedBatchJobsFailure();
+
+      actions$ = hot('-a', { a: action });
+      batchProcessesService.deleteSelectedJobs
+        .withArgs({ jobIds: SELECTED_IDS })
+        .and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.deleteSelectedJobs$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = deleteSelectedBatchJobs({ jobIds: SELECTED_IDS });
+      const outcome = deleteSelectedBatchJobsFailure();
+
+      actions$ = hot('-a', { a: action });
+      batchProcessesService.deleteSelectedJobs
+        .withArgs({ jobIds: SELECTED_IDS })
+        .and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.deleteSelectedJobs$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
