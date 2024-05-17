@@ -18,10 +18,11 @@
 
 package org.comixedproject.batch.initiators;
 
-import static org.comixedproject.batch.comicpages.LoadPageHashesConfiguration.JOB_LOAD_PAGE_HASHES_STARTED;
-import static org.comixedproject.batch.comicpages.LoadPageHashesConfiguration.LOAD_PAGE_HASHES_JOB;
+import static org.comixedproject.batch.comicpages.MarkBlockedPagesConfiguration.JOB_MARK_BLOCKED_PAGES_STARTED;
+import static org.comixedproject.batch.comicpages.MarkBlockedPagesConfiguration.MARK_BLOCKED_PAGES_JOB;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicpages.ComicPageService;
 import org.springframework.batch.core.Job;
@@ -37,37 +38,42 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>LoadPageHashesInitiator</code> periodically checks for any pages that does not have a
- * defined hash. If any are found, and if the <code>library.blocked-pages-enabled</code> feature is
- * enabled, then it spawns a batch job to load those hashes.
+ * <code>MarkBlockedPagesInitiator</code> starts a job to mark pages with a blocked has for
+ * deletion.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class LoadPageHashesInitiator {
+public class MarkBlockedPagesInitiator {
+  @Autowired private ConfigurationService configurationService;
   @Autowired private ComicPageService comicPageService;
   @Autowired private BatchProcessesService batchProcessesService;
 
   @Autowired
-  @Qualifier(value = LOAD_PAGE_HASHES_JOB)
-  private Job loadPageHashesJob;
+  @Qualifier(value = MARK_BLOCKED_PAGES_JOB)
+  private Job markBlockedPagesJob;
 
   @Autowired
   @Qualifier("batchJobLauncher")
   private JobLauncher jobLauncher;
 
-  @Scheduled(fixedDelayString = "${comixed.batch.load-page-hashes.period}")
+  @Scheduled(fixedDelayString = "${comixed.batch.mark-blocked-pages.period}")
   public void execute() {
-    log.trace("Checking for pages without hashes");
-    if (this.comicPageService.hasPagesWithoutHash()
-        && !this.batchProcessesService.hasActiveExecutions(LOAD_PAGE_HASHES_JOB)) {
+    if (!this.configurationService.isFeatureEnabled(
+        ConfigurationService.CFG_MANAGE_BLOCKED_PAGES)) {
+      log.trace("Skipping batch since managing blocked pages is disabled");
+      return;
+    }
+    log.trace("Checking for pages with blocked hash");
+    if (this.comicPageService.getUnmarkedWithBlockedHashCount() > 0L
+        && !this.batchProcessesService.hasActiveExecutions(MARK_BLOCKED_PAGES_JOB)) {
       try {
-        log.trace("Starting batch job: load page hashes");
+        log.trace("Starting batch job: mark pages with blocked hash");
         this.jobLauncher.run(
-            this.loadPageHashesJob,
+            this.markBlockedPagesJob,
             new JobParametersBuilder()
-                .addLong(JOB_LOAD_PAGE_HASHES_STARTED, System.currentTimeMillis())
+                .addLong(JOB_MARK_BLOCKED_PAGES_STARTED, System.currentTimeMillis())
                 .toJobParameters());
       } catch (JobExecutionAlreadyRunningException
           | JobRestartException

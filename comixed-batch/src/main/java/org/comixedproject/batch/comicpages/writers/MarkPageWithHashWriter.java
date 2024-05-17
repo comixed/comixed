@@ -19,7 +19,7 @@
 package org.comixedproject.batch.comicpages.writers;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.state.comicpages.PageEvent;
+import org.comixedproject.state.comicpages.ComicPageEvent;
 import org.springframework.stereotype.Component;
 
 /**
@@ -31,6 +31,6 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class MarkPageWithHashWriter extends AbstractPageWriter {
   public MarkPageWithHashWriter() {
-    super(PageEvent.markForDeletion);
+    super(ComicPageEvent.markForDeletion);
   }
 }

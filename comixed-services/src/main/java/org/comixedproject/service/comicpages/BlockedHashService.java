@@ -34,7 +34,7 @@ import org.comixedproject.messaging.comicpages.PublishBlockedPageRemovalAction;
 import org.comixedproject.messaging.comicpages.PublishBlockedPageUpdateAction;
 import org.comixedproject.messaging.library.PublishDuplicatePageListUpdateAction;
 import org.comixedproject.model.comicpages.BlockedHash;
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.repositories.comicpages.BlockedHashRepository;
 import org.comixedproject.service.library.DuplicatePageService;
@@ -50,7 +50,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @Log4j2
 public class BlockedHashService {
-  static final String PAGE_LABEL_HEADER = "Page Label";
+  static final String PAGE_LABEL_HEADER = "ComicPage Label";
   static final String PAGE_HASH_HEADER = "Hash Value";
   static final String PAGE_SNAPSHOT_HEADER = "Encoded Snapshot";
 
@@ -60,7 +60,7 @@ public class BlockedHashService {
   @Autowired private PublishBlockedPageRemovalAction publishBlockedPageRemovalAction;
   @Autowired private PublishDuplicatePageListUpdateAction publishDuplicatePageListUpdateAction;
   @Autowired private DuplicatePageService duplicatePageService;
-  @Autowired private PageService pageService;
+  @Autowired private ComicPageService comicPageService;
   @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private DataEncoder dataEncoder;
 
@@ -160,7 +160,7 @@ public class BlockedHashService {
     for (int index = 0; index < hashes.size(); index++) {
       try {
         final String hash = hashes.get(index);
-        final Page page = this.pageService.getOneForHash(hash);
+        final ComicPage page = this.comicPageService.getOneForHash(hash);
         final byte[] pageContent =
             this.comicBookAdaptor.loadPageContent(page.getComicBook(), page.getPageNumber());
         final String encodedPageContent = this.dataEncoder.encode(pageContent);
@@ -200,7 +200,7 @@ public class BlockedHashService {
   public BlockedHash doUnblockPageHash(final String hash) {
     final BlockedHash entry = this.blockedHashRepository.findByHash(hash);
     if (entry == null) {
-      log.trace("Page hash not blocked: {}", hash);
+      log.trace("ComicPage hash not blocked: {}", hash);
       return null;
     }
     log.trace("Deleting record");

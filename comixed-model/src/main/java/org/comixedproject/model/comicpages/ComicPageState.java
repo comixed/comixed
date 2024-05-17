@@ -19,11 +19,11 @@
 package org.comixedproject.model.comicpages;
 
 /**
- * <code>PageState</code> represents the current state of a page.
+ * <code>ComicPageState</code> represents the current state of a page.
  *
  * @author Darryl L. Pierce
  */
-public enum PageState {
+public enum ComicPageState {
   // the page is unchanged
   STABLE,
   // the page is to be deleted

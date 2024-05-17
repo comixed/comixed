@@ -20,10 +20,9 @@ package org.comixedproject.repositories.comicpages;
 
 import java.util.List;
 import java.util.Set;
+import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.model.comicpages.ComicPageState;
 import org.comixedproject.model.comicpages.DeletedPageAndComic;
-import org.comixedproject.model.comicpages.Page;
-import org.comixedproject.model.comicpages.PageState;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -32,20 +31,20 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
- * <code>PageRepository</code> provides persistence methods for instances of {@link Page}.
+ * <code>ComicPageRepository</code> provides persistence methods for instances of {@link ComicPage}.
  *
  * @author Darryl L. Pierce
  */
 @Repository
-public interface PageRepository extends CrudRepository<Page, Long> {
+public interface ComicPageRepository extends CrudRepository<ComicPage, Long> {
   /**
    * Fetches a single page by record id.
    *
    * @param id the record id
    * @return the page
    */
-  @Query("SELECT p FROM Page p WHERE p.id = :id")
-  Page getById(@Param("id") long id);
+  @Query("SELECT p FROM ComicPage p WHERE p.id = :id")
+  ComicPage getById(@Param("id") long id);
 
   /**
    * Finds a single page with a given hash.
@@ -53,16 +52,16 @@ public interface PageRepository extends CrudRepository<Page, Long> {
    * @param hash the page hash
    * @return the page
    */
-  List<Page> findByHash(String hash);
+  List<ComicPage> findByHash(String hash);
 
   /**
    * Returns a list of Pages with duplicate hashes.
    *
-   * @return a list of Page objects with duplicate hashes
+   * @return a list of ComicPage objects with duplicate hashes
    */
   @Query(
-      "SELECT p FROM Page p JOIN FETCH p.comicBook WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1)")
-  List<Page> getDuplicatePages();
+      "SELECT p FROM ComicPage p JOIN FETCH p.comicBook WHERE p.hash IN (SELECT d.hash FROM ComicPage d GROUP BY d.hash HAVING COUNT(*) > 1)")
+  List<ComicPage> getDuplicatePages();
 
   /**
    * Returns the list of pages that have the given hash and state flag value.
@@ -71,7 +70,7 @@ public interface PageRepository extends CrudRepository<Page, Long> {
    * @param state the state
    * @return the pages
    */
-  List<Page> findByHashAndPageState(String hash, PageState state);
+  List<ComicPage> findByHashAndPageState(String hash, ComicPageState state);
 
   /**
    * Loads all pages marked for deletion along with their owning comic.
@@ -79,7 +78,7 @@ public interface PageRepository extends CrudRepository<Page, Long> {
    * @return the page list
    */
   @Query(
-      "SELECT new org.comixedproject.model.comicpages.DeletedPageAndComic(p.hash, p.comicBook) FROM Page p WHERE p.pageState = 'DELETED'")
+      "SELECT new org.comixedproject.model.comicpages.DeletedPageAndComic(p.hash, p.comicBook) FROM ComicPage p WHERE p.pageState = 'DELETED'")
   List<DeletedPageAndComic> loadAllDeletedPages();
 
   /**
@@ -88,8 +87,8 @@ public interface PageRepository extends CrudRepository<Page, Long> {
    * @param pageable the page detail
    * @return the page list
    */
-  @Query("SELECT p FROM Page p WHERE p.addingToCache = true")
-  List<Page> findPagesNeedingCacheEntries(Pageable pageable);
+  @Query("SELECT p FROM ComicPage p WHERE p.addingToCache = true")
+  List<ComicPage> findPagesNeedingCacheEntries(Pageable pageable);
 
   /**
    * Marks all pages with a given hash as being added to the image cache.
@@ -97,7 +96,7 @@ public interface PageRepository extends CrudRepository<Page, Long> {
    * @param hash the page hash
    */
   @Modifying
-  @Query("UPDATE Page p SET p.addingToCache = false WHERE p.hash = :hash")
+  @Query("UPDATE ComicPage p SET p.addingToCache = false WHERE p.hash = :hash")
   void markPagesAsAddedToImageCache(@Param("hash") String hash);
 
   /**
@@ -105,7 +104,7 @@ public interface PageRepository extends CrudRepository<Page, Long> {
    *
    * @return the hash list
    */
-  @Query("SELECT DISTINCT p.hash FROM Page p WHERE p.pageNumber = 0")
+  @Query("SELECT DISTINCT p.hash FROM ComicPage p WHERE p.pageNumber = 0")
   Set<String> findAllCoverPageHashes();
 
   /**
@@ -114,7 +113,7 @@ public interface PageRepository extends CrudRepository<Page, Long> {
    * @param hash the page hash
    */
   @Modifying
-  @Query("UPDATE Page p SET p.addingToCache = true WHERE p.hash = :hash")
+  @Query("UPDATE ComicPage p SET p.addingToCache = true WHERE p.hash = :hash")
   void markCoverPagesToHaveCacheEntryCreated(@Param("hash") String hash);
 
   /**
@@ -122,9 +121,20 @@ public interface PageRepository extends CrudRepository<Page, Long> {
    *
    * @return the record count
    */
-  @Query("SELECT COUNT(p) FROM Page p WHERE p.hash IS NULL OR LENGTH(p.hash) = 0")
+  @Query("SELECT COUNT(p) FROM ComicPage p WHERE p.hash IS NULL OR LENGTH(p.hash) = 0")
   long getPagesWithoutHashesCount();
 
-  @Query("SELECT p FROM Page p WHERE p.hash IS NULL OR LENGTH(p.hash) = 0")
-  List<Page> findPagesWithoutHash(PageRequest of);
+  @Query("SELECT p FROM ComicPage p WHERE p.hash IS NULL OR LENGTH(p.hash) = 0")
+  List<ComicPage> findPagesWithoutHash(Pageable pageable);
+
+  @Query(
+      "SELECT p FROM ComicPage p WHERE p.pageState != 'DELETED' AND p.hash IN (SELECT b.hash FROM BlockedHash b)")
+  List<ComicPage> getUnmarkedWithBlockedHash(Pageable pageable);
+
+  @Query(
+      "SELECT count(p) FROM ComicPage p WHERE p.pageState != 'DELETED' AND p.hash IN (SELECT b.hash FROM BlockedHash b)")
+  long getUnmarkedWithBlockedHashCount();
+
+  @Query("SELECT p FROM ComicPage p WHERE p.hash ilike :hash")
+  List<ComicPage> getPagesWithHash(@Param("hash") String hash);
 }

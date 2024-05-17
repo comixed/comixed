@@ -21,7 +21,7 @@ package org.comixedproject.adaptors.comicbooks;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.util.FileUtils;
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.springframework.stereotype.Component;
 
 /**
@@ -44,7 +44,7 @@ public class ComicPageAdaptor {
    * @return the page name
    */
   public String createFilenameFromRule(
-      final Page page, final String renamingRule, final int pageIndex, final int length) {
+      final ComicPage page, final String renamingRule, final int pageIndex, final int length) {
     log.debug("Scrubbing renaming rule: {}", renamingRule);
     final String rule = this.scrub(renamingRule, FORBIDDEN_RULE_CHARACTERS);
 

@@ -23,11 +23,11 @@ import static org.comixedproject.rest.comicbooks.ComicBookController.MISSING_COM
 import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.net.comicpages.UpdatePageDeletionRequest;
+import org.comixedproject.service.comicpages.ComicPageException;
+import org.comixedproject.service.comicpages.ComicPageService;
 import org.comixedproject.service.comicpages.PageCacheService;
-import org.comixedproject.service.comicpages.PageException;
-import org.comixedproject.service.comicpages.PageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,14 +35,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * <code>PageController</code> provides REST APIs for working with instances of {@link Page}.
+ * <code>PageController</code> provides REST APIs for working with instances of {@link ComicPage}.
  *
  * @author Darryl L. Pierce
  */
 @RestController
 @Log4j2
 public class PageController {
-  @Autowired private PageService pageService;
+  @Autowired private ComicPageService comicPageService;
   @Autowired private PageCacheService pageCacheService;
 
   /**
@@ -50,12 +50,12 @@ public class PageController {
    *
    * @param pageId the comic id
    * @return the page content
-   * @throws PageException if an error occurs
+   * @throws ComicPageException if an error occurs
    */
   @GetMapping(value = "/api/pages/{pageId}/content")
   @Timed(value = "comixed.page.get-content")
   public ResponseEntity<byte[]> getPageContent(@PathVariable("pageId") long pageId)
-      throws PageException {
+      throws ComicPageException {
     log.info("Getting image content for page: pageId={}", pageId);
     return this.pageCacheService.getPageContent(pageId, MISSING_COMIC_COVER_FILENAME);
   }
@@ -65,12 +65,12 @@ public class PageController {
    *
    * @param hash the page hash
    * @return the page content
-   * @throws PageException if an error occurs
+   * @throws ComicPageException if an error occurs
    */
   @GetMapping(value = "/api/pages/hashes/{hash}/content")
   @Timed(value = "comixed.page.get-content-for-hash")
   public ResponseEntity<byte[]> getPageForHash(@PathVariable("hash") final String hash)
-      throws PageException {
+      throws ComicPageException {
     log.info("Getting image content for page hash: {}", hash);
     return this.pageCacheService.getPageContent(hash, MISSING_COMIC_COVER_FILENAME);
   }
@@ -86,7 +86,7 @@ public class PageController {
   public void markPagesForDeletion(@RequestBody() final UpdatePageDeletionRequest request) {
     final List<Long> ids = request.getIds();
     log.info("Marking {} page(s) as deleted", ids.size());
-    this.pageService.updatePageDeletion(ids, true);
+    this.comicPageService.updatePageDeletion(ids, true);
   }
 
   /**
@@ -100,6 +100,6 @@ public class PageController {
   public void unmarkPagesForDeletion(@RequestBody() final UpdatePageDeletionRequest request) {
     final List<Long> ids = request.getIds();
     log.info("Unmarking {} page(s) as deleted", ids.size());
-    this.pageService.updatePageDeletion(ids, false);
+    this.comicPageService.updatePageDeletion(ids, false);
   }
 }

@@ -18,13 +18,11 @@
 
 package org.comixedproject.batch.comicpages.processors;
 
-import static org.junit.Assert.*;
-
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,7 +40,7 @@ public class LoadPageHashProcessorTest {
   @InjectMocks private LoadPageHashProcessor processor;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
-  @Mock private Page page;
+  @Mock private ComicPage page;
   @Mock private ComicBook comicBook;
 
   @Before

@@ -19,10 +19,6 @@
 package org.comixedproject.rest.comicpages;
 
 import static junit.framework.TestCase.assertSame;
-import static org.comixedproject.batch.comicpages.MarkPagesWithHashConfiguration.PARAM_MARK_PAGES_TARGET_HASH;
-import static org.comixedproject.batch.comicpages.MarkPagesWithHashConfiguration.PARAM_MARK_PAGES_WITH_HASH_STARTED;
-import static org.comixedproject.batch.comicpages.UnmarkPagesWithHashConfiguration.PARAM_UNMARK_PAGES_TARGET_HASH;
-import static org.comixedproject.batch.comicpages.UnmarkPagesWithHashConfiguration.PARAM_UNMARK_PAGES_WITH_HASH_STARTED;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
@@ -38,20 +34,12 @@ import org.comixedproject.model.net.blockedpage.UnmarkPageWithHashRequest;
 import org.comixedproject.model.net.comicpages.SetBlockedPageRequest;
 import org.comixedproject.service.comicpages.BlockedHashException;
 import org.comixedproject.service.comicpages.BlockedHashService;
+import org.comixedproject.service.comicpages.ComicPageService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -62,6 +50,7 @@ public class BlockedHashControllerTest {
 
   @InjectMocks private BlockedHashController controller;
   @Mock private BlockedHashService blockedHashService;
+  @Mock private ComicPageService comicPageService;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
   @Mock private List<BlockedHash> blockedHashList;
   @Mock private BlockedHash blockedHash;
@@ -72,19 +61,6 @@ public class BlockedHashControllerTest {
   @Mock private List<String> hashList;
   @Mock private List<String> updatedHashList;
   @Mock private List<BlockedHash> blockedHashes = new ArrayList<>();
-
-  @Mock
-  @Qualifier("markPagesWithHashJob")
-  private Job markPagesWithHashJob;
-
-  @Mock
-  @Qualifier("unmarkPagesWithHashJob")
-  private Job unmarkPagesWithHashJob;
-
-  @Mock private JobLauncher jobLauncher;
-  @Mock private JobExecution jobExecution;
-
-  @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
   @Before
   public void setUp() {
@@ -129,97 +105,43 @@ public class BlockedHashControllerTest {
   }
 
   @Test
-  public void testBlockPage()
-      throws JobInstanceAlreadyCompleteException,
-          JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
-          JobRestartException {
+  public void testBlockPage() {
     final List<String> pageHashList = new ArrayList<>();
     pageHashList.add(TEST_PAGE_HASH);
-
-    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
-        .thenReturn(jobExecution);
 
     controller.blockPageHashes(new SetBlockedPageRequest(pageHashList));
 
-    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
-
-    assertNotNull(jobParameters);
-    assertTrue(jobParameters.getParameters().containsKey(PARAM_MARK_PAGES_WITH_HASH_STARTED));
-    assertEquals(TEST_PAGE_HASH, jobParameters.getString(PARAM_MARK_PAGES_TARGET_HASH));
-
     Mockito.verify(blockedHashService, Mockito.times(1)).blockPages(pageHashList);
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(markPagesWithHashJob, jobParameters);
   }
 
   @Test
-  public void testMarkPagesWithHash()
-      throws JobInstanceAlreadyCompleteException,
-          JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
-          JobRestartException {
+  public void testMarkPagesWithHash() {
     final List<String> pageHashList = new ArrayList<>();
     pageHashList.add(TEST_PAGE_HASH);
-
-    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
-        .thenReturn(jobExecution);
 
     controller.markPagesWithHash(new MarkPageWithHashRequest(pageHashList));
 
-    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
-
-    assertNotNull(jobParameters);
-    assertTrue(jobParameters.getParameters().containsKey(PARAM_MARK_PAGES_WITH_HASH_STARTED));
-    assertEquals(TEST_PAGE_HASH, jobParameters.getString(PARAM_MARK_PAGES_TARGET_HASH));
-
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(markPagesWithHashJob, jobParameters);
+    Mockito.verify(comicPageService, Mockito.times(1)).markPagesWithHashForDeletion(pageHashList);
   }
 
   @Test
-  public void testUnblockPage()
-      throws JobInstanceAlreadyCompleteException,
-          JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
-          JobRestartException {
+  public void testUnblockPage() {
     final List<String> pageHashList = new ArrayList<>();
     pageHashList.add(TEST_PAGE_HASH);
-
-    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
-        .thenReturn(jobExecution);
 
     controller.unblockPageHashes(new SetBlockedPageRequest(pageHashList));
 
-    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
-
-    assertNotNull(jobParameters);
-    assertTrue(jobParameters.getParameters().containsKey(PARAM_UNMARK_PAGES_WITH_HASH_STARTED));
-    assertEquals(TEST_PAGE_HASH, jobParameters.getString(PARAM_UNMARK_PAGES_TARGET_HASH));
-
     Mockito.verify(blockedHashService, Mockito.times(1)).unblockPages(pageHashList);
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(unmarkPagesWithHashJob, jobParameters);
   }
 
   @Test
-  public void testUnmarkPagesWithHash()
-      throws JobInstanceAlreadyCompleteException,
-          JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
-          JobRestartException {
+  public void testUnmarkPagesWithHash() {
     final List<String> pageHashList = new ArrayList<>();
     pageHashList.add(TEST_PAGE_HASH);
 
-    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
-        .thenReturn(jobExecution);
-
     controller.unmarkPagesWithHash(new UnmarkPageWithHashRequest(pageHashList));
 
-    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
-
-    assertNotNull(jobParameters);
-    assertTrue(jobParameters.getParameters().containsKey(PARAM_UNMARK_PAGES_WITH_HASH_STARTED));
-    assertEquals(TEST_PAGE_HASH, jobParameters.getString(PARAM_UNMARK_PAGES_TARGET_HASH));
-
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(unmarkPagesWithHashJob, jobParameters);
+    Mockito.verify(comicPageService, Mockito.times(1)).unmarkPagesWithHashForDeletion(pageHashList);
   }
 
   @Test

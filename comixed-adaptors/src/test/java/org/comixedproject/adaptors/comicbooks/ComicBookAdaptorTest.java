@@ -40,7 +40,7 @@ import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,7 +74,7 @@ public class ComicBookAdaptorTest {
   @Mock private ArchiveAdaptor writeableArchiveAdaptor;
   @Mock private ComicBook comicBook;
   @Mock private ComicDetail comicDetail;
-  @Mock private Page page;
+  @Mock private ComicPage page;
   @Mock private ArchiveReadHandle readHandle;
   @Mock private ArchiveWriteHandle writeHandle;
   @Mock private ContentAdaptor contentAdaptor;
@@ -91,7 +91,7 @@ public class ComicBookAdaptorTest {
 
   private File comicFile = new File(TEST_REAL_COMIC_FILE);
   private List<ComicArchiveEntry> archiveEntryList = new ArrayList<>();
-  private List<Page> pageList = new ArrayList<>();
+  private List<ComicPage> pageList = new ArrayList<>();
 
   @Before
   public void setUp()
@@ -383,7 +383,10 @@ public class ComicBookAdaptorTest {
       throws AdaptorException, ArchiveAdaptorException, ContentAdaptorException {
     Mockito.when(
             comicPageAdaptor.createFilenameFromRule(
-                Mockito.any(Page.class), Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt()))
+                Mockito.any(ComicPage.class),
+                Mockito.anyString(),
+                Mockito.anyInt(),
+                Mockito.anyInt()))
         .thenReturn(TEST_NEW_PAGE_FILENAME);
 
     adaptor.save(comicBook, TEST_ARCHIVE_TYPE, false, TEST_PAGE_RENAMING_RULE);

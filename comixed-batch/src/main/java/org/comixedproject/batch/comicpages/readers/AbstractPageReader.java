@@ -19,25 +19,32 @@
 package org.comixedproject.batch.comicpages.readers;
 
 import java.util.List;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicpages.Page;
-import org.comixedproject.service.comicpages.PageService;
+import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.service.comicpages.ComicPageService;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
- * <code>AbstractPageReader</code> provides a foundation for creating new readers for {@link Page}s.
+ * <code>AbstractPageReader</code> provides a foundation for creating new readers for {@link
+ * ComicPage}s.
  *
  * @author Darryl L. Pierce
  */
 @Log4j2
-public abstract class AbstractPageReader implements ItemReader<Page> {
-  @Autowired protected PageService pageService;
+public abstract class AbstractPageReader implements ItemReader<ComicPage> {
+  @Autowired protected ComicPageService comicPageService;
 
-  List<Page> pageList = null;
+  @Value("${comixed.batch.chunk-size}")
+  @Getter
+  private int batchChunkSize;
+
+  List<ComicPage> pageList = null;
 
   @Override
-  public Page read() {
+  public ComicPage read() {
     if (this.pageList == null || this.pageList.isEmpty()) {
       log.trace("Load more pages to process");
       this.pageList = this.doLoadPages();
@@ -58,5 +65,5 @@ public abstract class AbstractPageReader implements ItemReader<Page> {
    *
    * @return the comics
    */
-  protected abstract List<Page> doLoadPages();
+  protected abstract List<ComicPage> doLoadPages();
 }

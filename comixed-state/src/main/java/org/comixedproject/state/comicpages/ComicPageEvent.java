@@ -16,21 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicpages.writers;
+package org.comixedproject.state.comicpages;
 
-import lombok.extern.log4j.Log4j2;
-import org.comixedproject.state.comicpages.ComicPageEvent;
-import org.springframework.stereotype.Component;
+import org.comixedproject.model.comicpages.ComicPage;
 
 /**
- * <code>UnmarkPageWithHashWriter</code> writes pages that have had their deleted flag cleared.
+ * <code>ComicPageEvent</code> represents the events that cause a state change for a {@link
+ * ComicPage}.
  *
  * @author Darryl L. Pierce
  */
-@Component
-@Log4j2
-public class UnmarkPageWithHashWriter extends AbstractPageWriter {
-  public UnmarkPageWithHashWriter() {
-    super(ComicPageEvent.unmarkForDeletion);
-  }
+public enum ComicPageEvent {
+  savePage,
+  markForDeletion,
+  unmarkForDeletion
 }

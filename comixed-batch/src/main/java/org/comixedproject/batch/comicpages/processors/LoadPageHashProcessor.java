@@ -22,7 +22,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,12 +34,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class LoadPageHashProcessor implements ItemProcessor<Page, Page> {
+public class LoadPageHashProcessor implements ItemProcessor<ComicPage, ComicPage> {
   @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
   @Override
-  public Page process(final Page page) {
+  public ComicPage process(final ComicPage page) {
     log.trace("Loading page content");
     try {
       final byte[] content =

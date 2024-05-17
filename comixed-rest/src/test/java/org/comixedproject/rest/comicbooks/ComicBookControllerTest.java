@@ -32,13 +32,13 @@ import java.util.Set;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.*;
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.comicbooks.*;
 import org.comixedproject.service.comicbooks.*;
+import org.comixedproject.service.comicpages.ComicPageException;
 import org.comixedproject.service.comicpages.PageCacheService;
-import org.comixedproject.service.comicpages.PageException;
 import org.comixedproject.service.library.LastReadException;
 import org.comixedproject.service.library.LastReadService;
 import org.comixedproject.service.lists.ReadingListException;
@@ -92,7 +92,7 @@ public class ComicBookControllerTest {
   @Mock private ComicBook comicBook;
   @Mock private List<Long> selectedIdList;
   @Mock private LastReadService lastReadService;
-  @Mock private Page page;
+  @Mock private ComicPage page;
   @Mock private List<PageOrderEntry> pageOrderEntrylist;
   @Mock private List<ComicDetail> comicDetailList;
   @Mock private List<Integer> coverYearList;
@@ -104,7 +104,7 @@ public class ComicBookControllerTest {
   @Mock private ResponseEntity<byte[]> responseEntity;
 
   private final Set<Long> comicBookIdSet = new HashSet<>();
-  private List<Page> pageList = new ArrayList<>();
+  private List<ComicPage> pageList = new ArrayList<>();
 
   @Before
   public void setUp() throws ComicBookSelectionException, ComicBookException {
@@ -265,9 +265,9 @@ public class ComicBookControllerTest {
   }
 
   @Test(expected = ComicBookException.class)
-  public void testGetCachedCoverImageNoPageContent() throws ComicBookException, PageException {
+  public void testGetCachedCoverImageNoPageContent() throws ComicBookException, ComicPageException {
     Mockito.when(pageCacheService.getPageContent(Mockito.anyLong(), Mockito.anyString()))
-        .thenThrow(PageException.class);
+        .thenThrow(ComicPageException.class);
 
     try {
       controller.getCoverImage(TEST_COMIC_ID);
@@ -279,7 +279,7 @@ public class ComicBookControllerTest {
   }
 
   @Test
-  public void testGetCachedCoverImage() throws ComicBookException, PageException {
+  public void testGetCachedCoverImage() throws ComicBookException, ComicPageException {
     Mockito.when(pageCacheService.getPageContent(Mockito.anyLong(), Mockito.anyString()))
         .thenReturn(responseEntity);
 

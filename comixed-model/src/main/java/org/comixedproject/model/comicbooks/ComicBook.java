@@ -30,8 +30,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicpages.Page;
-import org.comixedproject.model.comicpages.PageState;
+import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.model.comicpages.ComicPageState;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
 
@@ -73,7 +73,7 @@ public class ComicBook {
   @JsonProperty("pages")
   @JsonView({View.ComicListView.class, View.ReadingListDetail.class})
   @Getter
-  List<Page> pages = new ArrayList<>();
+  List<ComicPage> pages = new ArrayList<>();
 
   @Formula(
       "(SELECT COUNT(*) FROM comic_pages p WHERE p.comic_book_id = id AND p.file_hash IN (SELECT d.file_hash FROM comic_pages d GROUP BY d.file_hash HAVING COUNT(*) > 1))")
@@ -169,7 +169,7 @@ public class ComicBook {
     return !this.getComicDetail().getFile().exists();
   }
 
-  public int getIndexFor(Page page) {
+  public int getIndexFor(ComicPage page) {
     if (this.pages.contains(page)) return this.pages.indexOf(page);
 
     return -1;
@@ -183,7 +183,7 @@ public class ComicBook {
    * @deprecated use #getPages() instead
    */
   @Deprecated
-  public Page getPage(int index) {
+  public ComicPage getPage(int index) {
     log.trace("Returning offset: index=" + index);
     return this.pages.get(index);
   }
@@ -215,11 +215,11 @@ public class ComicBook {
    * Returns the offset for the given filename.
    *
    * @param filename the filename
-   * @return the {@link Page} or null
+   * @return the {@link ComicPage} or null
    */
-  public Page getPageWithFilename(String filename) {
+  public ComicPage getPageWithFilename(String filename) {
     if (this.pages.isEmpty()) return null;
-    for (Page page : this.pages) {
+    for (ComicPage page : this.pages) {
       if (page.getFilename().equals(filename)) return page;
     }
 
@@ -227,7 +227,7 @@ public class ComicBook {
   }
 
   public void sortPages() {
-    this.pages.sort((Page p1, Page p2) -> p1.getFilename().compareTo(p2.getFilename()));
+    this.pages.sort((ComicPage p1, ComicPage p2) -> p1.getFilename().compareTo(p2.getFilename()));
     for (int index = 0; index < this.pages.size(); index++) {
       this.pages.get(index).setPageNumber(index);
     }
@@ -235,10 +235,10 @@ public class ComicBook {
 
   /** Removes pages that are marked for deletion. */
   public void removeDeletedPages() {
-    List<Page> pages = new ArrayList<>(this.pages);
+    List<ComicPage> pages = new ArrayList<>(this.pages);
     pages.forEach(
         page -> {
-          if (page.getPageState() == PageState.DELETED) {
+          if (page.getPageState() == ComicPageState.DELETED) {
             log.trace("Removing page: {}", page.getId());
             this.pages.remove(page);
           }

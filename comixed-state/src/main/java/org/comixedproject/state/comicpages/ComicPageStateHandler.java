@@ -23,8 +23,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicpages.Page;
-import org.comixedproject.model.comicpages.PageState;
+import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.model.comicpages.ComicPageState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
@@ -37,18 +37,18 @@ import org.springframework.statemachine.transition.Transition;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>PageStateHandler</code> handles firing actions and notifying listeners for state changes to
- * {@link Page} objectes.
+ * <code>ComicPageStateHandler</code> handles firing actions and notifying listeners for state
+ * changes to {@link ComicPage} objectes.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class PageStateHandler extends LifecycleObjectSupport {
+public class ComicPageStateHandler extends LifecycleObjectSupport {
   public static final String HEADER_PAGE = "header.page";
-  @Autowired private StateMachine<PageState, PageEvent> stateMachine;
+  @Autowired private StateMachine<ComicPageState, ComicPageEvent> stateMachine;
 
-  private Set<PageStateChangeListener> listeners = new HashSet<>();
+  private Set<ComicPageStateChangeListener> listeners = new HashSet<>();
 
   @Override
   protected void onInit() throws Exception {
@@ -60,11 +60,11 @@ public class PageStateHandler extends LifecycleObjectSupport {
                     new StateMachineInterceptorAdapter<>() {
                       @Override
                       public void postStateChange(
-                          final State<PageState, PageEvent> state,
-                          final Message<PageEvent> message,
-                          final Transition<PageState, PageEvent> transition,
-                          final StateMachine<PageState, PageEvent> stateMachine,
-                          final StateMachine<PageState, PageEvent> rootStateMachine) {
+                          final State<ComicPageState, ComicPageEvent> state,
+                          final Message<ComicPageEvent> message,
+                          final Transition<ComicPageState, ComicPageEvent> transition,
+                          final StateMachine<ComicPageState, ComicPageEvent> stateMachine,
+                          final StateMachine<ComicPageState, ComicPageEvent> rootStateMachine) {
                         listeners.forEach(listener -> listener.onPageStateChange(state, message));
                       }
                     }));
@@ -75,7 +75,7 @@ public class PageStateHandler extends LifecycleObjectSupport {
    *
    * @param listener the listener
    */
-  public void addListener(final PageStateChangeListener listener) {
+  public void addListener(final ComicPageStateChangeListener listener) {
     log.debug("Adding listener: {}", listener);
     this.listeners.add(listener);
   }
@@ -86,7 +86,7 @@ public class PageStateHandler extends LifecycleObjectSupport {
    * @param page the page
    * @param event the event
    */
-  public void fireEvent(final Page page, final PageEvent event) {
+  public void fireEvent(final ComicPage page, final ComicPageEvent event) {
     this.fireEvent(page, event, Collections.emptyMap());
   }
 
@@ -97,9 +97,10 @@ public class PageStateHandler extends LifecycleObjectSupport {
    * @param event the event
    * @param headers the message headers
    */
-  public void fireEvent(final Page page, final PageEvent event, final Map<String, String> headers) {
+  public void fireEvent(
+      final ComicPage page, final ComicPageEvent event, final Map<String, String> headers) {
     log.debug("Firing page event: {} => {}", page.getId(), event);
-    final Message<PageEvent> message =
+    final Message<ComicPageEvent> message =
         MessageBuilder.withPayload(event).copyHeaders(headers).setHeader(HEADER_PAGE, page).build();
     this.stateMachine.stop();
     this.stateMachine

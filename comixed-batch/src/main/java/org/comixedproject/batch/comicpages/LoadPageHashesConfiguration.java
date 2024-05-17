@@ -24,7 +24,7 @@ import org.comixedproject.batch.comicpages.listeners.LoadPageHashesJobListener;
 import org.comixedproject.batch.comicpages.processors.LoadPageHashProcessor;
 import org.comixedproject.batch.comicpages.readers.LoadPageHashReader;
 import org.comixedproject.batch.comicpages.writers.LoadPageHashWriter;
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -84,7 +84,7 @@ public class LoadPageHashesConfiguration {
       final LoadPageHashWriter writer,
       final LoadPageHashChunkListener chunkListener) {
     return new StepBuilder("loadPageHashStep", jobRepository)
-        .<Page, Page>chunk(this.batchChunkSize, platformTransactionManager)
+        .<ComicPage, ComicPage>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

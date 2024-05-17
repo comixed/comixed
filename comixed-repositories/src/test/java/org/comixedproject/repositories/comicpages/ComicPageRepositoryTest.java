@@ -31,9 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.model.comicpages.ComicPageState;
 import org.comixedproject.model.comicpages.DeletedPageAndComic;
-import org.comixedproject.model.comicpages.Page;
-import org.comixedproject.model.comicpages.PageState;
 import org.comixedproject.repositories.RepositoryContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,7 +58,7 @@ import org.springframework.transaction.annotation.Transactional;
   TransactionalTestExecutionListener.class,
   DbUnitTestExecutionListener.class
 })
-public class PageRepositoryTest {
+public class ComicPageRepositoryTest {
   private static final String TEST_DUPLICATE_PAGE_HASH_1 = "F0123456789ABCDEF0123456789ABCDE";
   private static final String TEST_DUPLICATE_PAGE_HASH_2 = "0123456789ABCDEF0123456789ABCDEF";
   private static final String TEST_DUPLICATE_PAGE_HASH_3 = "123456789ABCDEF0123456789ABCDEF0";
@@ -73,11 +73,11 @@ public class PageRepositoryTest {
     TEST_DUPLICATE_PAGE_HASHES.add(TEST_DUPLICATE_PAGE_HASH_3);
   }
 
-  @Autowired private PageRepository repository;
+  @Autowired private ComicPageRepository repository;
 
   @Test
   public void testGetDuplicatePages() {
-    List<Page> result = repository.getDuplicatePages();
+    List<ComicPage> result = repository.getDuplicatePages();
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
@@ -86,14 +86,14 @@ public class PageRepositoryTest {
 
   @Test
   public void testFindByHashNotFound() {
-    final List<Page> result = repository.findByHash(TEST_INVALID_HASH);
+    final List<ComicPage> result = repository.findByHash(TEST_INVALID_HASH);
 
     assertTrue(result.isEmpty());
   }
 
   @Test
   public void testFindByHash() {
-    final List<Page> result = repository.findByHash(TEST_DUPLICATE_PAGE_HASH_1);
+    final List<ComicPage> result = repository.findByHash(TEST_DUPLICATE_PAGE_HASH_1);
 
     assertFalse(result.isEmpty());
     assertEquals(TEST_DUPLICATE_PAGE_HASH_1, result.get(0).getHash());
@@ -101,19 +101,19 @@ public class PageRepositoryTest {
 
   @Test
   public void testFindByHashAndPageStateWantNotDeleted() {
-    final List<Page> result =
-        repository.findByHashAndPageState(TEST_NOT_DELETED_HASH, PageState.STABLE);
+    final List<ComicPage> result =
+        repository.findByHashAndPageState(TEST_NOT_DELETED_HASH, ComicPageState.STABLE);
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
     assertEquals(TEST_NOT_DELETED_HASH, result.get(0).getHash());
-    assertNotSame(PageState.DELETED, result.get(0).getPageState());
+    assertNotSame(ComicPageState.DELETED, result.get(0).getPageState());
   }
 
   @Test
   public void testFindByHashAndPageStateNotDeletedWantsDeleted() {
-    final List<Page> result =
-        repository.findByHashAndPageState(TEST_NOT_DELETED_HASH, PageState.DELETED);
+    final List<ComicPage> result =
+        repository.findByHashAndPageState(TEST_NOT_DELETED_HASH, ComicPageState.DELETED);
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -121,19 +121,19 @@ public class PageRepositoryTest {
 
   @Test
   public void testFindByHashAndPageStateDeleted() {
-    final List<Page> result =
-        repository.findByHashAndPageState(TEST_DELETED_HASH, PageState.DELETED);
+    final List<ComicPage> result =
+        repository.findByHashAndPageState(TEST_DELETED_HASH, ComicPageState.DELETED);
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
     assertEquals(TEST_DELETED_HASH, result.get(0).getHash());
-    assertSame(PageState.DELETED, result.get(0).getPageState());
+    assertSame(ComicPageState.DELETED, result.get(0).getPageState());
   }
 
   @Test
   public void testFindByHashAndPageStateDeletedWantsNotDeleted() {
-    final List<Page> result =
-        repository.findByHashAndPageState(TEST_DELETED_HASH, PageState.STABLE);
+    final List<ComicPage> result =
+        repository.findByHashAndPageState(TEST_DELETED_HASH, ComicPageState.STABLE);
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -149,7 +149,7 @@ public class PageRepositoryTest {
 
   @Test
   public void testFindPagesNeedingCacheEntries() {
-    final List<Page> result = repository.findPagesNeedingCacheEntries(PageRequest.of(0, 10));
+    final List<ComicPage> result = repository.findPagesNeedingCacheEntries(PageRequest.of(0, 10));
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
@@ -159,15 +159,18 @@ public class PageRepositoryTest {
   @Test
   @Transactional
   public void testMarkPagesAsAddedToImageCache() {
-    final Page page = repository.findPagesNeedingCacheEntries(PageRequest.of(0, 10)).get(0);
+    final ComicPage page = repository.findPagesNeedingCacheEntries(PageRequest.of(0, 10)).get(0);
 
     repository.markPagesAsAddedToImageCache(page.getHash());
 
-    final List<Page> result = repository.findPagesNeedingCacheEntries(PageRequest.of(0, 100));
+    final List<ComicPage> result = repository.findPagesNeedingCacheEntries(PageRequest.of(0, 100));
 
     assertNotNull(result);
     assertFalse(
-        result.stream().map(Page::getHash).collect(Collectors.toSet()).contains(page.getHash()));
+        result.stream()
+            .map(ComicPage::getHash)
+            .collect(Collectors.toSet())
+            .contains(page.getHash()));
   }
 
   @Test

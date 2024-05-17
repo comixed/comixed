@@ -27,7 +27,7 @@ import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
 
 /**
- * <code>Page</code> represents a single offset from a comicBook.
+ * <code>ComicPage</code> represents a single offset from a comicBook.
  *
  * @author Darryl L. Pierce
  */
@@ -37,7 +37,7 @@ import org.hibernate.annotations.Formula;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class Page {
+public class ComicPage {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
@@ -58,7 +58,7 @@ public class Page {
   @Getter
   @Setter
   @NonNull
-  private PageState pageState = PageState.STABLE;
+  private ComicPageState pageState = ComicPageState.STABLE;
 
   @Column(name = "filename", length = 1024, updatable = true, nullable = false)
   @JsonProperty("filename")
@@ -126,14 +126,14 @@ public class Page {
   @JsonProperty("deleted")
   @JsonView({View.ComicListView.class})
   public boolean isDeleted() {
-    return PageState.DELETED.equals(this.pageState);
+    return ComicPageState.DELETED.equals(this.pageState);
   }
 
   @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    final Page page = (Page) o;
+    final ComicPage page = (ComicPage) o;
     return isBlocked() == page.isBlocked()
         && Objects.equals(getComicBook(), page.getComicBook())
         && getPageState() == page.getPageState()

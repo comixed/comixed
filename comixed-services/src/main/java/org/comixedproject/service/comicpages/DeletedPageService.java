@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicpages.DeletedPage;
-import org.comixedproject.repositories.comicpages.PageRepository;
+import org.comixedproject.repositories.comicpages.ComicPageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Log4j2
 public class DeletedPageService {
-  @Autowired private PageRepository pageRepository;
+  @Autowired private ComicPageRepository comicPageRepository;
 
   /**
    * Returns the list of all pages marked for deletion.
@@ -48,7 +48,7 @@ public class DeletedPageService {
   public List<DeletedPage> loadAll() {
     log.debug("Loading all deleted pages");
     final Map<String, DeletedPage> result = new HashMap<>();
-    this.pageRepository
+    this.comicPageRepository
         .loadAllDeletedPages()
         .forEach(
             deletedPageAndComic -> {

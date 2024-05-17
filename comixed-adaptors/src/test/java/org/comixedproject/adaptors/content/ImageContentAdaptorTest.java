@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -44,7 +44,7 @@ public class ImageContentAdaptorTest extends BaseContentAdaptorTest {
 
   @Test
   public void testLoadFileAlreadyExists() throws IOException {
-    comicBook.getPages().add(new Page());
+    comicBook.getPages().add(new ComicPage());
     comicBook.getPages().get(0).setFilename(TEST_JPEG_FILENAME);
 
     byte[] content = loadFile(TEST_JPEG_FILENAME);

@@ -5,14 +5,15 @@
 Below is a list of configurable properties that can be altered to suit the
 needs of the server administrator.
 
-| PROPERTY                                        | USAGE                                             | FORMAT    |
-|-------------------------------------------------|---------------------------------------------------|-----------|
-| comixed.batch.thread-pool                       | The number of threads to use for batch jobs       | count     |
-| comixed.batch.import-comic-files.period         | Delay before checking for importable comics       | delay     |
-| comixed.batch.process-comic-books.period        | Delay before checking for unprocessed comics      | delay     |
-| comixed.batch.load-page-hashes.period           | Delay before checking for unprocessed comic pages | delay     | 
-| comixed.batch.add-cover-to-image-cache.schedule | The schedule for updating the image cache         | scheduled |
-| comixed.images.cache.location                   | The location of the image cache                   | path      |
+| PROPERTY                                        | USAGE                                       | FORMAT    |
+|-------------------------------------------------|---------------------------------------------|-----------|
+| comixed.batch.thread-pool                       | The number of threads to use for batch jobs | count     |
+| comixed.batch.import-comic-files.period         | Check for importable comics                 | delay     |
+| comixed.batch.process-comic-books.period        | Check for unprocessed comics                | delay     |
+| comixed.batch.load-page-hashes.period           | Check for unprocessed comic pages           | delay     | 
+| comixed.batch.mark-blocked-pages.period         | Check for unmarked blocked pages            | delay     | 
+| comixed.batch.add-cover-to-image-cache.schedule | Update the image cache                      | scheduled |
+| comixed.images.cache.location                   | The location of the image cache             | path      |
 
 ### Count Values
 

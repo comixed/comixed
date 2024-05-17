@@ -37,6 +37,7 @@ public class ProcessComicBooksStatus {
   public static final String COMIC_MARKED_AS_ADDED_STEP = "comic-marked-as-added-step";
   public static final String LOAD_FILE_CONTENTS_STEP = "load-file-contents-step";
   public static final String LOAD_PAGE_HASH_STEP = "load-page-hash-step";
+  public static final String MARK_BLOCKED_PAGE_STEP = "mark-blocked-page-step";
 
   @JsonProperty("active")
   @JsonView(View.GenericObjectView.class)

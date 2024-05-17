@@ -20,11 +20,11 @@ package org.comixedproject.adaptors.content;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ImageContentAdaptor</code> loads an image and makes it a {@link Page} for a comic.
+ * <code>ImageContentAdaptor</code> loads an image and makes it a {@link ComicPage} for a comic.
  *
  * @author Darryl L. Pierce
  */
@@ -42,7 +42,7 @@ public class ImageContentAdaptor extends AbstractContentAdaptor {
     if (comicBook.hasPageWithFilename(filename)) {
       log.trace("Ignore known file: {}", filename);
     } else {
-      var page = new Page();
+      var page = new ComicPage();
       page.setFilename(filename);
       page.setComicBook(comicBook);
       comicBook.getPages().add(page);

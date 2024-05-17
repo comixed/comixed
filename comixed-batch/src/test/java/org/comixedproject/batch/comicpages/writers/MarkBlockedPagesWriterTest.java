@@ -18,31 +18,35 @@
 
 package org.comixedproject.batch.comicpages.writers;
 
-import lombok.extern.log4j.Log4j2;
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
 import org.comixedproject.model.comicpages.ComicPage;
-import org.comixedproject.service.comicpages.ComicPageService;
+import org.comixedproject.state.comicpages.ComicPageEvent;
+import org.comixedproject.state.comicpages.ComicPageStateHandler;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.batch.item.Chunk;
-import org.springframework.batch.item.ItemWriter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-/**
- * <code>CreateImageCacheEntriesWriter</code> updates all {@link ComicPage} records with the given
- * hash value, marking them as having a cached entry.
- *
- * @author Darryl L. Pierce
- */
-@Component
-@Log4j2
-public class CreateImageCacheEntriesWriter implements ItemWriter<String> {
-  @Autowired private ComicPageService comicPageService;
+@RunWith(MockitoJUnitRunner.class)
+public class MarkBlockedPagesWriterTest {
+  @InjectMocks private MarkBlockedPagesWriter writer;
+  @Mock private ComicPageStateHandler comicPageStateHandler;
+  @Mock private ComicPage page;
 
-  @Override
-  public void write(final Chunk<? extends String> hashList) {
-    hashList.forEach(
-        hash -> {
-          log.debug("Updating all pages with hash: {}", hash);
-          this.comicPageService.markPagesAsHavingCacheEntry(hash);
-        });
+  private Chunk<ComicPage> pageList = new Chunk<>(new ArrayList<>());
+
+  @Test
+  public void testWrite() throws Exception {
+    pageList.add(page);
+
+    writer.write(pageList);
+
+    Mockito.verify(comicPageStateHandler, Mockito.times(pageList.size()))
+        .fireEvent(page, ComicPageEvent.markForDeletion);
   }
 }

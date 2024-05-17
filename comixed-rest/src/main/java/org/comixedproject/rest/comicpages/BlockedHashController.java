@@ -18,11 +18,6 @@
 
 package org.comixedproject.rest.comicpages;
 
-import static org.comixedproject.batch.comicpages.MarkPagesWithHashConfiguration.PARAM_MARK_PAGES_TARGET_HASH;
-import static org.comixedproject.batch.comicpages.MarkPagesWithHashConfiguration.PARAM_MARK_PAGES_WITH_HASH_STARTED;
-import static org.comixedproject.batch.comicpages.UnmarkPagesWithHashConfiguration.PARAM_UNMARK_PAGES_TARGET_HASH;
-import static org.comixedproject.batch.comicpages.UnmarkPagesWithHashConfiguration.PARAM_UNMARK_PAGES_WITH_HASH_STARTED;
-
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import java.io.ByteArrayInputStream;
@@ -39,16 +34,9 @@ import org.comixedproject.model.net.blockedpage.UnmarkPageWithHashRequest;
 import org.comixedproject.model.net.comicpages.SetBlockedPageRequest;
 import org.comixedproject.service.comicpages.BlockedHashException;
 import org.comixedproject.service.comicpages.BlockedHashService;
+import org.comixedproject.service.comicpages.ComicPageService;
 import org.comixedproject.views.View;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -66,19 +54,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Log4j2
 public class BlockedHashController {
   @Autowired private BlockedHashService blockedHashService;
+  @Autowired private ComicPageService comicPageService;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
-
-  @Autowired
-  @Qualifier("batchJobLauncher")
-  private JobLauncher jobLauncher;
-
-  @Autowired
-  @Qualifier("markPagesWithHashJob")
-  private Job markPagesWithHashJob;
-
-  @Autowired
-  @Qualifier("unmarkPagesWithHashJob")
-  private Job unmarkPagesWithHashJob;
 
   /**
    * Retrieves the list of all blocked pages.
@@ -132,10 +109,6 @@ public class BlockedHashController {
    * Blocks pages by type.
    *
    * @param request the request body
-   * @throws JobInstanceAlreadyCompleteException if an error occurs
-   * @throws JobExecutionAlreadyRunningException if an error occurs
-   * @throws JobParametersInvalidException if an error occurs
-   * @throws JobRestartException if an error occurs
    */
   @PostMapping(
       value = "/api/pages/blocked/add",
@@ -143,73 +116,30 @@ public class BlockedHashController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.blocked-hash.add")
-  public void blockPageHashes(@RequestBody() final SetBlockedPageRequest request)
-      throws JobInstanceAlreadyCompleteException,
-          JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
-          JobRestartException {
+  public void blockPageHashes(@RequestBody() final SetBlockedPageRequest request) {
     final List<String> hashes = request.getHashes();
     log.info("Block {} hash{}", hashes.size(), hashes.size() == 1 ? "" : "es");
     this.blockedHashService.blockPages(hashes);
-    this.launchMarkPagesWithHashProcess(hashes);
   }
 
   /**
    * Marks all comics with hashes from a givens et for deletion.
    *
    * @param request the request body
-   * @throws JobInstanceAlreadyCompleteException if a job error occurs
-   * @throws JobExecutionAlreadyRunningException if a job error occurs
-   * @throws JobParametersInvalidException if a job error occurs
-   * @throws JobRestartException if a job error occurs
    */
   @PostMapping(value = "/api/pages/blocked/mark", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.blocked-hash.mark-pages")
-  public void markPagesWithHash(@RequestBody() final MarkPageWithHashRequest request)
-      throws JobInstanceAlreadyCompleteException,
-          JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
-          JobRestartException {
+  public void markPagesWithHash(@RequestBody() final MarkPageWithHashRequest request) {
     final List<String> hashes = request.getHashes();
     log.info("Marking pages with hash for deletion");
-    launchMarkPagesWithHashProcess(hashes);
-  }
-
-  /**
-   * Launches the process to mark all pages with a hash for deletion.
-   *
-   * @param hashes the hash
-   * @throws JobExecutionAlreadyRunningException if an error occurs
-   * @throws JobRestartException if an error occurs
-   * @throws JobInstanceAlreadyCompleteException if an error occurs
-   * @throws JobParametersInvalidException if an error occurs
-   */
-  private void launchMarkPagesWithHashProcess(final List<String> hashes)
-      throws JobExecutionAlreadyRunningException,
-          JobRestartException,
-          JobInstanceAlreadyCompleteException,
-          JobParametersInvalidException {
-    for (int index = 0; index < hashes.size(); index++) {
-      final String hash = hashes.get(index);
-      log.trace("Marking pages with hash: {}", hash);
-      this.jobLauncher.run(
-          this.markPagesWithHashJob,
-          new JobParametersBuilder()
-              .addLong(PARAM_MARK_PAGES_WITH_HASH_STARTED, System.currentTimeMillis())
-              .addString(PARAM_MARK_PAGES_TARGET_HASH, hash)
-              .toJobParameters());
-    }
+    this.comicPageService.markPagesWithHashForDeletion(hashes);
   }
 
   /**
    * Unblocks pages by hash.
    *
    * @param request the request body
-   * @throws JobInstanceAlreadyCompleteException if a job error occurs
-   * @throws JobExecutionAlreadyRunningException if a job error occurs
-   * @throws JobParametersInvalidException if a job error occurs
-   * @throws JobRestartException if a job error occurs
    */
   @PostMapping(
       value = "/api/pages/blocked/remove",
@@ -217,63 +147,24 @@ public class BlockedHashController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.blocked-hash.unblock-pages")
-  public void unblockPageHashes(@RequestBody() final SetBlockedPageRequest request)
-      throws JobInstanceAlreadyCompleteException,
-          JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
-          JobRestartException {
+  public void unblockPageHashes(@RequestBody() final SetBlockedPageRequest request) {
     final List<String> hashes = request.getHashes();
     log.info("Unblock {} hash{}", hashes.size(), hashes.size() == 1 ? "" : "es");
     this.blockedHashService.unblockPages(hashes);
-    this.launchUnmarkPagesWithHashProcess(hashes);
   }
 
   /**
    * Unmarks all comics with hashes from a givens et for deletion.
    *
    * @param request the request body
-   * @throws JobInstanceAlreadyCompleteException if a job error occurs
-   * @throws JobExecutionAlreadyRunningException if a job error occurs
-   * @throws JobParametersInvalidException if a job error occurs
-   * @throws JobRestartException if a job error occurs
    */
   @PostMapping(value = "/api/pages/blocked/unmark", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.blocked-hash.unmark")
-  public void unmarkPagesWithHash(@RequestBody() final UnmarkPageWithHashRequest request)
-      throws JobInstanceAlreadyCompleteException,
-          JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
-          JobRestartException {
+  public void unmarkPagesWithHash(@RequestBody() final UnmarkPageWithHashRequest request) {
     final List<String> hashes = request.getHashes();
     log.info("Unmarking pages with hash for deletion");
-    this.launchUnmarkPagesWithHashProcess(hashes);
-  }
-
-  /**
-   * Launches the process to unmark all pages with a given set of hashes.
-   *
-   * @param hashes the hashes
-   * @throws JobInstanceAlreadyCompleteException if a job error occurs
-   * @throws JobExecutionAlreadyRunningException if a job error occurs
-   * @throws JobParametersInvalidException if a job error occurs
-   * @throws JobRestartException if a job error occurs
-   */
-  private void launchUnmarkPagesWithHashProcess(final List<String> hashes)
-      throws JobInstanceAlreadyCompleteException,
-          JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
-          JobRestartException {
-    for (int index = 0; index < hashes.size(); index++) {
-      final String hash = hashes.get(index);
-      log.trace("Unmarking pages with hash: {}", hash);
-      this.jobLauncher.run(
-          this.unmarkPagesWithHashJob,
-          new JobParametersBuilder()
-              .addLong(PARAM_UNMARK_PAGES_WITH_HASH_STARTED, System.currentTimeMillis())
-              .addString(PARAM_UNMARK_PAGES_TARGET_HASH, hash)
-              .toJobParameters());
-    }
+    this.comicPageService.unmarkPagesWithHashForDeletion(hashes);
   }
 
   /**
@@ -344,7 +235,7 @@ public class BlockedHashController {
         this.fileTypeAdaptor.getType(new ByteArrayInputStream(content))
             + "/"
             + this.fileTypeAdaptor.getSubtype(new ByteArrayInputStream(content));
-    log.debug("Page type: {}", type);
+    log.debug("ComicPage type: {}", type);
 
     return ResponseEntity.ok()
         .contentLength(content != null ? content.length : 0)

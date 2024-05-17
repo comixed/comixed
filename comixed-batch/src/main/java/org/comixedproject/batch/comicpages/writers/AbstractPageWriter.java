@@ -21,9 +21,9 @@ package org.comixedproject.batch.comicpages.writers;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicpages.Page;
-import org.comixedproject.state.comicpages.PageEvent;
-import org.comixedproject.state.comicpages.PageStateHandler;
+import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.state.comicpages.ComicPageEvent;
+import org.comixedproject.state.comicpages.ComicPageStateHandler;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,24 +31,24 @@ import org.springframework.stereotype.Component;
 
 /**
  * <code>AbstractPageWriter</code> provides a foundation for building writers for instances of
- * {@link Page}.
+ * {@link ComicPage}.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
 @RequiredArgsConstructor
-public abstract class AbstractPageWriter implements ItemWriter<Page> {
-  @Autowired private PageStateHandler pageStateHandler;
+public abstract class AbstractPageWriter implements ItemWriter<ComicPage> {
+  @Autowired private ComicPageStateHandler comicPageStateHandler;
 
-  @NonNull private PageEvent pageEvent;
+  @NonNull private ComicPageEvent pageEvent;
 
   @Override
-  public void write(final Chunk<? extends Page> pages) throws Exception {
+  public void write(final Chunk<? extends ComicPage> pages) throws Exception {
     pages.forEach(
         page -> {
           log.trace("Publishing page event: {}", this.pageEvent);
-          this.pageStateHandler.fireEvent(page, this.pageEvent);
+          this.comicPageStateHandler.fireEvent(page, this.pageEvent);
         });
   }
 }

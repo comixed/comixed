@@ -26,7 +26,7 @@ import org.apache.commons.io.IOUtils;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.CacheControl;
@@ -38,7 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Log4j2
 public class PageCacheService {
-  @Autowired private PageService pageService;
+  @Autowired private ComicPageService comicPageService;
   @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
 
@@ -122,7 +122,7 @@ public class PageCacheService {
    *
    * @param page the page
    */
-  public void addPageToCache(final Page page) {
+  public void addPageToCache(final ComicPage page) {
     log.debug("Adding page to cache: id={}", page.getId());
     try {
       this.saveByHash(
@@ -136,13 +136,13 @@ public class PageCacheService {
   @Transactional
   public void prepareCoverPagesWithoutCacheEntries() {
     log.debug("Processing pages without image cache entries");
-    this.pageService
+    this.comicPageService
         .findAllCoverPageHashes()
         .forEach(
             hash -> {
               if (!this.getFileForHash(hash).exists()) {
                 log.trace("Marking page to have image cache entry created: {}", hash);
-                this.pageService.markCoverPagesToHaveCacheEntryCreated(hash);
+                this.comicPageService.markCoverPagesToHaveCacheEntryCreated(hash);
               }
             });
   }
@@ -154,12 +154,12 @@ public class PageCacheService {
    * @param id the page id
    * @param missingFilename the alternate content file
    * @return the page content
-   * @throws PageException if the page is not found
+   * @throws ComicPageException if the page is not found
    * @see #saveByHash(String, byte[])
    */
   public ResponseEntity<byte[]> getPageContent(final long id, final String missingFilename)
-      throws PageException {
-    final Page page = this.pageService.getForId(id);
+      throws ComicPageException {
+    final ComicPage page = this.comicPageService.getForId(id);
     return this.doGetPageContent(page, missingFilename);
   }
 
@@ -170,18 +170,18 @@ public class PageCacheService {
    * @param hash the page hash
    * @param missingFilename the alternate content file
    * @return the page content
-   * @throws PageException if the page was not found
+   * @throws ComicPageException if the page was not found
    * @see #getPageContent(long, String)
    */
   public ResponseEntity<byte[]> getPageContent(final String hash, final String missingFilename)
-      throws PageException {
-    final Page page = this.pageService.getOneForHash(hash);
-    if (page == null) throw new PageException("No pages with hash: " + hash);
+      throws ComicPageException {
+    final ComicPage page = this.comicPageService.getOneForHash(hash);
+    if (page == null) throw new ComicPageException("No pages with hash: " + hash);
     return this.doGetPageContent(page, missingFilename);
   }
 
-  private ResponseEntity<byte[]> doGetPageContent(Page page, final String missingFilename)
-      throws PageException {
+  private ResponseEntity<byte[]> doGetPageContent(ComicPage page, final String missingFilename)
+      throws ComicPageException {
     log.debug("creating response entity for page: id={}", page.getId());
     byte[] content = this.findByHash(page.getHash());
 
@@ -191,12 +191,12 @@ public class PageCacheService {
         content = this.comicBookAdaptor.loadPageContent(page.getComicBook(), page.getPageNumber());
         if (!Objects.isNull(content) && Objects.isNull(page.getHash())) {
           log.debug("Updating page content: id={}", page.getId());
-          page = this.pageService.updatePageContent(page, content);
+          page = this.comicPageService.updatePageContent(page, content);
           log.debug("Caching image for hash: {} bytes hash={}", content.length, page.getHash());
           this.saveByHash(page.getHash(), content);
         }
       } catch (AdaptorException error) {
-        throw new PageException("Failed to load page content", error);
+        throw new ComicPageException("Failed to load page content", error);
       }
     }
 
@@ -208,7 +208,7 @@ public class PageCacheService {
         this.fileTypeAdaptor.getType(new ByteArrayInputStream(content))
             + "/"
             + this.fileTypeAdaptor.getSubtype(new ByteArrayInputStream(content));
-    log.debug("Page type: {}", type);
+    log.debug("ComicPage type: {}", type);
 
     return ResponseEntity.ok()
         .contentLength(content != null ? content.length : 0)
@@ -218,12 +218,12 @@ public class PageCacheService {
         .body(content);
   }
 
-  private byte[] doLoadMissingPageImage(final String missingFilename) throws PageException {
+  private byte[] doLoadMissingPageImage(final String missingFilename) throws ComicPageException {
     try (final InputStream input = this.getClass().getResourceAsStream(missingFilename)) {
       return input.readAllBytes();
     } catch (Exception error) {
       log.error("Failed to load missing page image", error);
-      throw new PageException("Cannot find image: " + missingFilename, error);
+      throw new ComicPageException("Cannot find image: " + missingFilename, error);
     }
   }
 }

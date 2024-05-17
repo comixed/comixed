@@ -21,7 +21,7 @@ package org.comixedproject.adaptors.comicbooks;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,7 +39,7 @@ public class ComicPageAdaptorTest {
   private static final int TEST_PAGE_COUNT_LENGTH = 4;
 
   @InjectMocks private ComicPageAdaptor adaptor;
-  @Mock private Page page;
+  @Mock private ComicPage page;
 
   @Before
   public void setUp() {

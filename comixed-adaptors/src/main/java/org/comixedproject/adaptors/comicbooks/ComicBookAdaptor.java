@@ -43,7 +43,7 @@ import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -173,7 +173,7 @@ public class ComicBookAdaptor {
       log.trace("Writing comic book pages");
       final int length = String.valueOf(comicBook.getPages().size()).length();
       for (int index = 0; index < comicBook.getPages().size(); index++) {
-        final Page page = comicBook.getPages().get(index);
+        final ComicPage page = comicBook.getPages().get(index);
         log.trace("Reading comic book page content: {}", page.getFilename());
         final byte[] content = sourceArchive.readEntry(readHandle, page.getFilename());
         @NonNull String pageFilename = page.getFilename();

@@ -95,7 +95,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the comic list
    */
   @Query(
-      "SELECT c FROM ComicBook c WHERE c IN (SELECT p.comicBook FROM Page p WHERE p.hash = :hash)")
+      "SELECT c FROM ComicBook c WHERE c IN (SELECT p.comicBook FROM ComicPage p WHERE p.hash = :hash)")
   List<ComicBook> findComicsForPageHash(@Param("hash") String hash);
 
   /**

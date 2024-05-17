@@ -18,7 +18,7 @@
 
 package org.comixedproject.service.comicpages;
 
-import static org.comixedproject.state.comicpages.PageStateHandler.HEADER_PAGE;
+import static org.comixedproject.state.comicpages.ComicPageStateHandler.HEADER_PAGE;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -30,16 +30,16 @@ import javax.imageio.ImageIO;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicpages.Page;
-import org.comixedproject.model.comicpages.PageState;
-import org.comixedproject.repositories.comicpages.PageRepository;
+import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.model.comicpages.ComicPageState;
+import org.comixedproject.repositories.comicpages.ComicPageRepository;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
-import org.comixedproject.state.comicpages.PageEvent;
-import org.comixedproject.state.comicpages.PageStateChangeListener;
-import org.comixedproject.state.comicpages.PageStateHandler;
+import org.comixedproject.state.comicpages.ComicPageEvent;
+import org.comixedproject.state.comicpages.ComicPageStateChangeListener;
+import org.comixedproject.state.comicpages.ComicPageStateHandler;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -49,15 +49,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * <code>PageService</code> provides business methods for instances of {@link Page}.
+ * <code>ComicPageService</code> provides business methods for instances of {@link ComicPage}.
  *
  * @author Darryl L. Pierce
  */
 @Service
 @Log4j2
-public class PageService implements InitializingBean, PageStateChangeListener {
-  @Autowired private PageRepository pageRepository;
-  @Autowired private PageStateHandler pageStateHandler;
+public class ComicPageService implements InitializingBean, ComicPageStateChangeListener {
+  @Autowired private ComicPageRepository comicPageRepository;
+  @Autowired private ComicPageStateHandler comicPageStateHandler;
   @Autowired private ComicBookService comicBookService;
   @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
@@ -65,17 +65,17 @@ public class PageService implements InitializingBean, PageStateChangeListener {
   @Override
   public void afterPropertiesSet() throws Exception {
     log.trace("Subscribing to page state changes");
-    this.pageStateHandler.addListener(this);
+    this.comicPageStateHandler.addListener(this);
   }
 
   @Override
   public void onPageStateChange(
-      final State<PageState, PageEvent> state, final Message<PageEvent> message) {
-    final var page = message.getHeaders().get(HEADER_PAGE, Page.class);
+      final State<ComicPageState, ComicPageEvent> state, final Message<ComicPageEvent> message) {
+    final var page = message.getHeaders().get(HEADER_PAGE, ComicPage.class);
     if (page == null) return;
     log.debug("Processing page state change: [{}] =>  {}", page.getId(), state.getId());
     page.setPageState(state.getId());
-    final Page updated = this.pageRepository.save(page);
+    final ComicPage updated = this.comicPageRepository.save(page);
     log.trace("Firing comic event");
     this.comicStateHandler.fireEvent(updated.getComicBook(), ComicEvent.detailsUpdated);
   }
@@ -87,9 +87,9 @@ public class PageService implements InitializingBean, PageStateChangeListener {
    * @return the page
    */
   @Transactional
-  public Page getOneForHash(final String hash) {
+  public ComicPage getOneForHash(final String hash) {
     log.trace("Finding a page with hash: {}", hash);
-    final List<Page> results = this.pageRepository.findByHash(hash);
+    final List<ComicPage> results = this.comicPageRepository.findByHash(hash);
     return results.isEmpty() ? null : results.get(0);
   }
 
@@ -101,7 +101,7 @@ public class PageService implements InitializingBean, PageStateChangeListener {
    * @return the content
    * @throws ComicBookException if the comic does not exist
    */
-  public Page getPageInComicByIndex(final long comicId, final int pageIndex)
+  public ComicPage getPageInComicByIndex(final long comicId, final int pageIndex)
       throws ComicBookException {
     log.debug(
         "Getting page content for comicBook: comicBook id={} page index={}", comicId, pageIndex);
@@ -121,9 +121,9 @@ public class PageService implements InitializingBean, PageStateChangeListener {
     return null;
   }
 
-  private Page doGetPage(final long id) throws PageException {
-    final Optional<Page> result = this.pageRepository.findById(id);
-    if (result.isEmpty()) throw new PageException("No such page: id=" + id);
+  private ComicPage doGetPage(final long id) throws ComicPageException {
+    final Optional<ComicPage> result = this.comicPageRepository.findById(id);
+    if (result.isEmpty()) throw new ComicPageException("No such page: id=" + id);
     return result.get();
   }
 
@@ -132,9 +132,9 @@ public class PageService implements InitializingBean, PageStateChangeListener {
    *
    * @param id the record id
    * @return the page
-   * @throws PageException if the id is invalid
+   * @throws ComicPageException if the id is invalid
    */
-  public Page getForId(final long id) throws PageException {
+  public ComicPage getForId(final long id) throws ComicPageException {
     log.trace("Getting page: id={}", id);
     return this.doGetPage(id);
   }
@@ -144,12 +144,12 @@ public class PageService implements InitializingBean, PageStateChangeListener {
    *
    * @param page the page
    * @return the updated page
-   * @throws PageException if an error occurs
+   * @throws ComicPageException if an error occurs
    */
   @Transactional
-  public Page save(final Page page) throws PageException {
+  public ComicPage save(final ComicPage page) throws ComicPageException {
     log.trace("Firing page event: save");
-    this.pageStateHandler.fireEvent(page, PageEvent.savePage);
+    this.comicPageStateHandler.fireEvent(page, ComicPageEvent.savePage);
     log.trace("Returning updated page");
     return this.doGetPage(page.getId());
   }
@@ -160,9 +160,9 @@ public class PageService implements InitializingBean, PageStateChangeListener {
    * @param hash the page hash
    * @return the pages
    */
-  public List<Page> getUnmarkedWithHash(final String hash) {
+  public List<ComicPage> getUnmarkedWithHash(final String hash) {
     log.trace("Fetching unmarked pages with hash: {}", hash);
-    return this.pageRepository.findByHashAndPageState(hash, PageState.STABLE);
+    return this.comicPageRepository.findByHashAndPageState(hash, ComicPageState.STABLE);
   }
 
   /**
@@ -172,9 +172,9 @@ public class PageService implements InitializingBean, PageStateChangeListener {
    * @return the pages
    */
   @Transactional
-  public List<Page> getMarkedWithHash(final String hash) {
+  public List<ComicPage> getMarkedWithHash(final String hash) {
     log.trace("Fetching marked pages with hash: {}", hash);
-    return this.pageRepository.findByHashAndPageState(hash, PageState.DELETED);
+    return this.comicPageRepository.findByHashAndPageState(hash, ComicPageState.DELETED);
   }
 
   /**
@@ -188,14 +188,14 @@ public class PageService implements InitializingBean, PageStateChangeListener {
     idList.forEach(
         id -> {
           log.trace("Loading page: id={}", id);
-          final Page page = this.pageRepository.getById(id);
+          final ComicPage page = this.comicPageRepository.getById(id);
           if (page != null) {
             if (deleted) {
               log.trace("Marking page for deletion");
-              this.pageStateHandler.fireEvent(page, PageEvent.markForDeletion);
+              this.comicPageStateHandler.fireEvent(page, ComicPageEvent.markForDeletion);
             } else {
               log.trace("Unmarking page for deletion");
-              this.pageStateHandler.fireEvent(page, PageEvent.unmarkForDeletion);
+              this.comicPageStateHandler.fireEvent(page, ComicPageEvent.unmarkForDeletion);
             }
           }
         });
@@ -208,9 +208,9 @@ public class PageService implements InitializingBean, PageStateChangeListener {
    * @return the page list
    */
   @Transactional
-  public List<Page> loadPagesNeedingCacheEntries(final int maxRecords) {
+  public List<ComicPage> loadPagesNeedingCacheEntries(final int maxRecords) {
     log.debug("Loading pages needing image cache entries");
-    return this.pageRepository.findPagesNeedingCacheEntries(PageRequest.of(0, maxRecords));
+    return this.comicPageRepository.findPagesNeedingCacheEntries(PageRequest.of(0, maxRecords));
   }
 
   /**
@@ -221,7 +221,7 @@ public class PageService implements InitializingBean, PageStateChangeListener {
   @Transactional
   public void markPagesAsHavingCacheEntry(final String hash) {
     log.debug("Marking pages as added to cache: hash={}", hash);
-    this.pageRepository.markPagesAsAddedToImageCache(hash);
+    this.comicPageRepository.markPagesAsAddedToImageCache(hash);
   }
 
   /**
@@ -231,7 +231,7 @@ public class PageService implements InitializingBean, PageStateChangeListener {
    */
   public Set<String> findAllCoverPageHashes() {
     log.debug("Getting all page hashes");
-    return this.pageRepository.findAllCoverPageHashes();
+    return this.comicPageRepository.findAllCoverPageHashes();
   }
 
   /**
@@ -241,7 +241,7 @@ public class PageService implements InitializingBean, PageStateChangeListener {
    */
   @Transactional
   public void markCoverPagesToHaveCacheEntryCreated(final String hash) {
-    this.pageRepository.markCoverPagesToHaveCacheEntryCreated(hash);
+    this.comicPageRepository.markCoverPagesToHaveCacheEntryCreated(hash);
   }
 
   /**
@@ -252,7 +252,7 @@ public class PageService implements InitializingBean, PageStateChangeListener {
    * @return the updated page
    */
   @Transactional
-  public Page updatePageContent(final Page page, final byte[] content) {
+  public ComicPage updatePageContent(final ComicPage page, final byte[] content) {
     log.debug("Getting page hash");
     page.setHash(this.genericUtilitiesAdaptor.createHash(content));
     try {
@@ -266,7 +266,7 @@ public class PageService implements InitializingBean, PageStateChangeListener {
       log.error("Failed to load image from content");
     }
     log.debug("Saving updated page");
-    return this.pageRepository.save(page);
+    return this.comicPageRepository.save(page);
   }
 
   /*
@@ -276,7 +276,7 @@ public class PageService implements InitializingBean, PageStateChangeListener {
    */
   @Transactional
   public boolean hasPagesWithoutHash() {
-    return this.pageRepository.getPagesWithoutHashesCount() > 0L;
+    return this.comicPageRepository.getPagesWithoutHashesCount() > 0L;
   }
 
   /**
@@ -286,9 +286,9 @@ public class PageService implements InitializingBean, PageStateChangeListener {
    * @return the records
    */
   @Transactional
-  public List<Page> getPagesWithoutHash(final int size) {
+  public List<ComicPage> getPagesWithoutHash(final int size) {
     log.debug("Loading pages without a hash");
-    return this.pageRepository.findPagesWithoutHash(PageRequest.of(0, size));
+    return this.comicPageRepository.findPagesWithoutHash(PageRequest.of(0, size));
   }
 
   /**
@@ -297,7 +297,7 @@ public class PageService implements InitializingBean, PageStateChangeListener {
    * @return the record count
    */
   public long getPagesWithoutHashCount() {
-    return this.pageRepository.getPagesWithoutHashesCount();
+    return this.comicPageRepository.getPagesWithoutHashesCount();
   }
 
   /**
@@ -306,6 +306,47 @@ public class PageService implements InitializingBean, PageStateChangeListener {
    * @return the page count
    */
   public long getCount() {
-    return this.pageRepository.count();
+    return this.comicPageRepository.count();
+  }
+
+  /**
+   * Returns the list of comic pages that are not marked for deletion but which have a blocked has.
+   *
+   * @param maxRecords the maximum records to return
+   * @return the list of pages
+   */
+  public List<ComicPage> getUnmarkedWithBlockedHash(final int maxRecords) {
+    log.debug("Getting unmarked pages with blocked hash");
+    return this.comicPageRepository.getUnmarkedWithBlockedHash(PageRequest.of(0, maxRecords));
+  }
+
+  public long getUnmarkedWithBlockedHashCount() {
+    return this.comicPageRepository.getUnmarkedWithBlockedHashCount();
+  }
+
+  @Transactional
+  public void markPagesWithHashForDeletion(final List<String> hashes) {
+    log.debug("Deleting pages with hashes");
+    hashes.forEach(
+        hash -> {
+          this.comicPageRepository
+              .getPagesWithHash(hash)
+              .forEach(
+                  page ->
+                      this.comicPageStateHandler.fireEvent(page, ComicPageEvent.markForDeletion));
+        });
+  }
+
+  @Transactional
+  public void unmarkPagesWithHashForDeletion(final List<String> hashes) {
+    log.debug("Deleting pages with hashes");
+    hashes.forEach(
+        hash -> {
+          this.comicPageRepository
+              .getPagesWithHash(hash)
+              .forEach(
+                  page ->
+                      this.comicPageStateHandler.fireEvent(page, ComicPageEvent.unmarkForDeletion));
+        });
   }
 }

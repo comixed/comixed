@@ -21,7 +21,7 @@ package org.comixedproject.state.comicbooks.actions;
 import java.util.List;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class PrepareComicBookForProcessingActionTest {
   @Mock private StateContext<ComicState, ComicEvent> context;
   @Mock private MessageHeaders messageHeaders;
   @Mock private ComicBook comicBook;
-  @Mock private List<Page> pageList;
+  @Mock private List<ComicPage> pageList;
 
   @Before
   public void setUp() {

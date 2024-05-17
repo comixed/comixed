@@ -23,9 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.library.DuplicatePage;
-import org.comixedproject.repositories.comicpages.PageRepository;
+import org.comixedproject.repositories.comicpages.ComicPageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -40,7 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Log4j2
 public class DuplicatePageService {
-  @Autowired private PageRepository pageRepository;
+  @Autowired private ComicPageRepository comicPageRepository;
 
   /**
    * Retrieves the list of all duplicate pages in the library.
@@ -50,10 +50,10 @@ public class DuplicatePageService {
   @Transactional(isolation = Isolation.READ_UNCOMMITTED)
   public List<DuplicatePage> getDuplicatePages() {
     log.trace("Getting pages from repository");
-    final List<Page> pages = this.pageRepository.getDuplicatePages();
+    final List<ComicPage> pages = this.comicPageRepository.getDuplicatePages();
     log.trace("Build duplicate page list");
     Map<String, DuplicatePage> mapped = new HashMap<>();
-    for (Page page : pages) {
+    for (ComicPage page : pages) {
       log.trace("Looking for existing entry");
       DuplicatePage entry = mapped.get(page.getHash());
       if (entry == null) {
@@ -78,7 +78,7 @@ public class DuplicatePageService {
   @Transactional
   public DuplicatePage getForHash(final String hash) throws DuplicatePageException {
     log.trace("Loading all pages with a given hash");
-    final List<Page> pages = this.pageRepository.findByHash(hash);
+    final List<ComicPage> pages = this.comicPageRepository.findByHash(hash);
     if (pages.isEmpty()) {
       log.trace("Hash not found: raising exception");
       throw new DuplicatePageException("Hash not found: " + hash);

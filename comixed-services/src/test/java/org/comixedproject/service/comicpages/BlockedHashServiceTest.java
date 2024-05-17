@@ -46,7 +46,7 @@ import org.comixedproject.messaging.comicpages.PublishBlockedPageUpdateAction;
 import org.comixedproject.messaging.library.PublishDuplicatePageListUpdateAction;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.BlockedHash;
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.repositories.comicpages.BlockedHashRepository;
@@ -75,7 +75,7 @@ public class BlockedHashServiceTest {
 
   @InjectMocks private BlockedHashService service;
   @Mock private DuplicatePageService duplicatePageService;
-  @Mock private PageService pageService;
+  @Mock private ComicPageService comicPageService;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private BlockedHashRepository blockedHashRepository;
   @Mock private CsvAdaptor csvAdaptor;
@@ -88,7 +88,7 @@ public class BlockedHashServiceTest {
   @Mock private List<BlockedHash> blockedHashList;
   @Mock private InputStream inputStream;
   @Mock private List<DuplicatePage> duplicatePageList;
-  @Mock private Page page;
+  @Mock private ComicPage page;
   @Mock private ComicBook comicBook;
   @Mock private DataEncoder dataEncoder;
 
@@ -109,7 +109,7 @@ public class BlockedHashServiceTest {
     Mockito.when(duplicatePageService.getDuplicatePages()).thenReturn(duplicatePageList);
     Mockito.when(page.getComicBook()).thenReturn(comicBook);
     Mockito.when(page.getPageNumber()).thenReturn(TEST_PAGE_NUMBER);
-    Mockito.when(pageService.getOneForHash(Mockito.anyString())).thenReturn(page);
+    Mockito.when(comicPageService.getOneForHash(Mockito.anyString())).thenReturn(page);
     Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))
         .thenReturn(TEST_PAGE_CONTENT);
     Mockito.when(dataEncoder.encode(Mockito.any(byte[].class))).thenReturn(TEST_ENCODED_PAGE);

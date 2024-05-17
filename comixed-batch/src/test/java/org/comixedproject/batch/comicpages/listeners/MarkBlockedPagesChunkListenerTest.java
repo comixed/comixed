@@ -18,8 +18,9 @@
 
 package org.comixedproject.batch.comicpages.listeners;
 
-import static junit.framework.TestCase.*;
-import static org.comixedproject.batch.comicpages.LoadPageHashesConfiguration.LOAD_PAGE_HASHES_JOB;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertTrue;
+import static org.comixedproject.batch.comicpages.MarkBlockedPagesConfiguration.MARK_BLOCKED_PAGES_JOB;
 
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
@@ -37,11 +38,11 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.scope.context.StepContext;
 
 @RunWith(MockitoJUnitRunner.class)
-public class LoadPageHashChunkListenerTest {
+public class MarkBlockedPagesChunkListenerTest {
   private static final long TEST_PAGE_COUNT = 717L;
-  private static final long TEST_PAGE_WITHOUT_HASH_COUNT = TEST_PAGE_COUNT / 2L;
+  private static final long TEST_UNPROCESSED_PAGE_COUNT = TEST_PAGE_COUNT / 2L;
 
-  @InjectMocks private LoadPageHashChunkListener listener;
+  @InjectMocks private MarkBlockedPagesChunkListener listener;
   @Mock private PublishProcessComicBooksStatusAction publishProcessComicBooksStatusAction;
   @Mock private PublishBatchProcessDetailUpdateAction publishBatchProcessDetailUpdateAction;
   @Mock private ComicPageService comicPageService;
@@ -58,11 +59,11 @@ public class LoadPageHashChunkListenerTest {
   @Before
   public void setUp() throws PublishingException {
     Mockito.when(comicPageService.getCount()).thenReturn(TEST_PAGE_COUNT);
-    Mockito.when(comicPageService.getPagesWithoutHashCount())
-        .thenReturn(TEST_PAGE_WITHOUT_HASH_COUNT);
+    Mockito.when(comicPageService.getUnmarkedWithBlockedHashCount())
+        .thenReturn(TEST_UNPROCESSED_PAGE_COUNT);
 
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
-    Mockito.when(jobInstance.getJobName()).thenReturn(LOAD_PAGE_HASHES_JOB);
+    Mockito.when(jobInstance.getJobName()).thenReturn(MARK_BLOCKED_PAGES_JOB);
     Mockito.when(jobExecution.getJobInstance()).thenReturn(jobInstance);
     Mockito.when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);

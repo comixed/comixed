@@ -30,7 +30,7 @@ import org.comixedproject.adaptors.content.ComicMetadataContentAdaptor;
 import org.comixedproject.adaptors.content.ContentAdaptorException;
 import org.comixedproject.adaptors.content.ContentAdaptorRules;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,7 +49,7 @@ public class LoadFileContentsProcessorTest {
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private ComicMetadataContentAdaptor comicMetadataContentAdaptor;
   @Mock private ComicBook comicBook;
-  @Mock private List<Page> pageList;
+  @Mock private List<ComicPage> pageList;
   @Mock private Map<String, JobParameter<?>> parameters;
   @Mock private JobParameters jobParameters;
   @Mock private JobExecution jobExecution;

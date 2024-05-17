@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,14 +23,14 @@ import org.comixedproject.state.comicpages.ComicPageEvent;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>UnmarkPageWithHashWriter</code> writes pages that have had their deleted flag cleared.
+ * <code>MarkBlockedPagesWriter</code> handles writing pages that have been marked as deleted.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class UnmarkPageWithHashWriter extends AbstractPageWriter {
-  public UnmarkPageWithHashWriter() {
-    super(ComicPageEvent.unmarkForDeletion);
+public class MarkBlockedPagesWriter extends AbstractPageWriter {
+  public MarkBlockedPagesWriter() {
+    super(ComicPageEvent.markForDeletion);
   }
 }
