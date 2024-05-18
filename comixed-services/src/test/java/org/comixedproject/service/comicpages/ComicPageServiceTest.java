@@ -33,8 +33,6 @@ import org.comixedproject.model.comicpages.ComicPageState;
 import org.comixedproject.repositories.comicpages.ComicPageRepository;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.state.comicbooks.ComicEvent;
-import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.comixedproject.state.comicpages.ComicPageEvent;
 import org.comixedproject.state.comicpages.ComicPageStateHandler;
 import org.junit.Before;
@@ -64,7 +62,6 @@ public class ComicPageServiceTest {
   @Mock private ComicPageRepository comicPageRepository;
   @Mock private ComicBookService comicBookService;
   @Mock private ComicPageStateHandler comicPageStateHandler;
-  @Mock private ComicStateHandler comicStateHandler;
   @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
   @Mock private ComicPage page;
   @Mock private ComicPage savedPage;
@@ -79,7 +76,8 @@ public class ComicPageServiceTest {
   private List<ComicPage> pageList = new ArrayList<>();
   private List<Long> idList = new ArrayList<>();
   private byte[] pageContent;
-  private Set<String> hashList = new HashSet<>();
+  private Set<String> hashSet = new HashSet<>();
+  private List<String> hashList = new ArrayList<>();
 
   @Before
   public void setUp() throws IOException {
@@ -100,14 +98,11 @@ public class ComicPageServiceTest {
   @Test
   public void testOnPageStateChange() throws PublishingException {
     Mockito.when(comicPageRepository.save(Mockito.any(ComicPage.class))).thenReturn(savedPage);
-    Mockito.when(savedPage.getComicBook()).thenReturn(comicBook);
 
     service.onPageStateChange(state, message);
 
     Mockito.verify(page, Mockito.times(1)).setPageState(TEST_STATE);
     Mockito.verify(comicPageRepository, Mockito.times(1)).save(page);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.detailsUpdated);
   }
 
   @Test
@@ -299,12 +294,12 @@ public class ComicPageServiceTest {
 
   @Test
   public void testFindAllCoverPageHashes() {
-    Mockito.when(comicPageRepository.findAllCoverPageHashes()).thenReturn(hashList);
+    Mockito.when(comicPageRepository.findAllCoverPageHashes()).thenReturn(hashSet);
 
     final Set<String> result = service.findAllCoverPageHashes();
 
     assertNotNull(result);
-    assertSame(hashList, result);
+    assertSame(hashSet, result);
 
     Mockito.verify(comicPageRepository, Mockito.times(1)).findAllCoverPageHashes();
   }
@@ -418,5 +413,31 @@ public class ComicPageServiceTest {
     assertEquals(TEST_MAX_ENTRIES, result);
 
     Mockito.verify(comicPageRepository, Mockito.times(1)).getUnmarkedWithBlockedHashCount();
+  }
+
+  @Test
+  public void testMarkPagesWithHashForDeletion() {
+    pageList.add(page);
+    hashList.add(TEST_PAGE_HASH);
+
+    Mockito.when(comicPageRepository.getPagesWithHash(Mockito.anyString())).thenReturn(pageList);
+
+    service.markPagesWithHashForDeletion(hashList);
+
+    Mockito.verify(comicPageStateHandler, Mockito.times(1))
+        .fireEvent(page, ComicPageEvent.markForDeletion);
+  }
+
+  @Test
+  public void testUnmarkPagesWithHashForDeletion() {
+    pageList.add(page);
+    hashList.add(TEST_PAGE_HASH);
+
+    Mockito.when(comicPageRepository.getPagesWithHash(Mockito.anyString())).thenReturn(pageList);
+
+    service.unmarkPagesWithHashForDeletion(hashList);
+
+    Mockito.verify(comicPageStateHandler, Mockito.times(1))
+        .fireEvent(page, ComicPageEvent.unmarkForDeletion);
   }
 }
