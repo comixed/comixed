@@ -23,7 +23,7 @@ import org.comixedproject.batch.comicbooks.processors.PurgeMarkedComicsProcessor
 import org.comixedproject.batch.comicbooks.processors.RemoveComicBooksWithoutDetailsProcessor;
 import org.comixedproject.batch.comicbooks.readers.PurgeMarkedComicsReader;
 import org.comixedproject.batch.comicbooks.readers.RemoveComicBooksWithoutDetailsReader;
-import org.comixedproject.batch.comicbooks.writers.PurgeMarkedComicBooksWriter;
+import org.comixedproject.batch.comicbooks.writers.RemoveDeletedComicBooksWriter;
 import org.comixedproject.batch.writers.NoopWriter;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.Job;
@@ -112,7 +112,7 @@ public class PurgeLibraryConfiguration {
       final PlatformTransactionManager platformTransactionManager,
       final PurgeMarkedComicsReader reader,
       final PurgeMarkedComicsProcessor processor,
-      final PurgeMarkedComicBooksWriter writer) {
+      final RemoveDeletedComicBooksWriter writer) {
     return new StepBuilder("purgeMarkedComicsStep", jobRepository)
         .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)

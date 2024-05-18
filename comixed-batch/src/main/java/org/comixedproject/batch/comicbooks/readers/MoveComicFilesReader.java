@@ -22,17 +22,19 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>MoveComicReader</code> returns comics that are to be moved.
+ * <code>MoveComicFilesReader</code> returns comics that are to be moved.
  *
  * @author Darryl L. Pierce
  */
 @Component
+@StepScope
 @Log4j2
-public class MoveComicReader extends AbstractComicReader {
+public class MoveComicFilesReader extends AbstractComicReader {
   @Autowired private ComicBookService comicBookService;
 
   @Override

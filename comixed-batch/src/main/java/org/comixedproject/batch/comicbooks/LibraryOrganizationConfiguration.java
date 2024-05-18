@@ -20,15 +20,17 @@ package org.comixedproject.batch.comicbooks;
 
 import java.io.File;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.batch.comicbooks.listeners.MoveComicFilesChunkListener;
 import org.comixedproject.batch.comicbooks.listeners.OrganizeLibraryListener;
-import org.comixedproject.batch.comicbooks.processors.DeleteComicBookProcessor;
+import org.comixedproject.batch.comicbooks.listeners.RemoveDeletedComicBooksChunkListener;
 import org.comixedproject.batch.comicbooks.processors.DeleteEmptyDirectoriesProcessor;
-import org.comixedproject.batch.comicbooks.processors.MoveComicProcessor;
-import org.comixedproject.batch.comicbooks.readers.DeleteComicReader;
+import org.comixedproject.batch.comicbooks.processors.MoveComicFilesProcessor;
+import org.comixedproject.batch.comicbooks.processors.RemoveDeletedComicBooksProcessor;
 import org.comixedproject.batch.comicbooks.readers.DeleteEmptyDirectoriesReader;
-import org.comixedproject.batch.comicbooks.readers.MoveComicReader;
-import org.comixedproject.batch.comicbooks.writers.MoveComicBookWriter;
-import org.comixedproject.batch.comicbooks.writers.PurgeMarkedComicBooksWriter;
+import org.comixedproject.batch.comicbooks.readers.MoveComicFilesReader;
+import org.comixedproject.batch.comicbooks.readers.RemoveDeletedComicBooksReader;
+import org.comixedproject.batch.comicbooks.writers.MoveComicFilesWriter;
+import org.comixedproject.batch.comicbooks.writers.RemoveDeletedComicBooksWriter;
 import org.comixedproject.batch.writers.NoopWriter;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.Job;
@@ -57,6 +59,7 @@ public class LibraryOrganizationConfiguration {
   public static final String JOB_ORGANIZATION_TARGET_DIRECTORY =
       "job.organization.target-directory";
   public static final String JOB_ORGANIZATION_RENAMING_RULE = "job.organization.renaming-rule";
+  public static final String ORGANIZE_LIBRARY_JOB = "organizeLibraryJob";
 
   @Value("${comixed.batch.chunk-size}")
   private int batchChunkSize = 10;
@@ -65,24 +68,23 @@ public class LibraryOrganizationConfiguration {
    * Returns a library organization job bean.
    *
    * @param jobRepository the job repository
-   * @param deleteComicBookStep the delete comics step
-   * @param moveComicStep the move comics step
+   * @param removeDeletedComicBooksStep the delete comics step
+   * @param moveComicFilesStep the move comics step
    * @param deleteEmptyDirectoriesStep the delete empty directories step
    * @return the job
    */
-  @Bean
-  @Qualifier("organizeLibraryJob")
+  @Bean(name = ORGANIZE_LIBRARY_JOB)
   public Job organizeLibraryJob(
       final JobRepository jobRepository,
       final OrganizeLibraryListener listener,
-      @Qualifier("deleteComicBookStep") final Step deleteComicBookStep,
-      @Qualifier("moveComicStep") final Step moveComicStep,
+      @Qualifier("removeDeletedComicBooksStep") final Step removeDeletedComicBooksStep,
+      @Qualifier("moveComicFilesStep") final Step moveComicFilesStep,
       @Qualifier("deleteEmptyDirectoriesStep") final Step deleteEmptyDirectoriesStep) {
-    return new JobBuilder("organizeLibraryJob", jobRepository)
+    return new JobBuilder(ORGANIZE_LIBRARY_JOB, jobRepository)
         .incrementer(new RunIdIncrementer())
         .listener(listener)
-        .start(deleteComicBookStep)
-        .next(moveComicStep)
+        .start(removeDeletedComicBooksStep)
+        .next(moveComicFilesStep)
         .next(deleteEmptyDirectoriesStep)
         .build();
   }
@@ -97,19 +99,20 @@ public class LibraryOrganizationConfiguration {
    * @param writer the writer
    * @return the step
    */
-  @Bean
-  @Qualifier("deleteComicBookStep")
-  public Step deleteComicBookStep(
+  @Bean(name = "removeDeletedComicBooksStep")
+  public Step removeDeletedComicBooksStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
-      final DeleteComicReader reader,
-      final DeleteComicBookProcessor processor,
-      final PurgeMarkedComicBooksWriter writer) {
-    return new StepBuilder("deleteComicBookStep", jobRepository)
+      final RemoveDeletedComicBooksReader reader,
+      final RemoveDeletedComicBooksProcessor processor,
+      final RemoveDeletedComicBooksWriter writer,
+      final RemoveDeletedComicBooksChunkListener listener) {
+    return new StepBuilder("removeDeletedComicBooksStep", jobRepository)
         .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
+        .listener(listener)
         .build();
   }
 
@@ -123,19 +126,20 @@ public class LibraryOrganizationConfiguration {
    * @param writer the writer
    * @return the step
    */
-  @Bean
-  @Qualifier("moveComicStep")
-  public Step moveComicStep(
+  @Bean(name = "moveComicFilesStep")
+  public Step moveComicFilesStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
-      final MoveComicReader reader,
-      final MoveComicProcessor processor,
-      final MoveComicBookWriter writer) {
-    return new StepBuilder("moveComicStep", jobRepository)
+      final MoveComicFilesReader reader,
+      final MoveComicFilesProcessor processor,
+      final MoveComicFilesWriter writer,
+      final MoveComicFilesChunkListener listener) {
+    return new StepBuilder("moveComicFilesStep", jobRepository)
         .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
+        .listener(listener)
         .build();
   }
 
@@ -149,8 +153,7 @@ public class LibraryOrganizationConfiguration {
    * @param writer the writer
    * @return the step
    */
-  @Bean
-  @Qualifier("deleteEmptyDirectoriesStep")
+  @Bean(name = "deleteEmptyDirectoriesStep")
   public Step deleteEmptyDirectoriesStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,

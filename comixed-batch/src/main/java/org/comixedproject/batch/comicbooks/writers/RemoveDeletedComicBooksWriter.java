@@ -23,14 +23,14 @@ import org.comixedproject.state.comicbooks.ComicEvent;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>PurgeMarkedComicBooksWriter</code> fires an event after a comic has been purged.
+ * <code>RemoveDeletedComicBooksWriter</code> fires an event after a comic has been purged.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class PurgeMarkedComicBooksWriter extends AbstractComicBookWriter {
-  public PurgeMarkedComicBooksWriter() {
+public class RemoveDeletedComicBooksWriter extends AbstractComicBookWriter {
+  public RemoveDeletedComicBooksWriter() {
     super(ComicEvent.comicPurged);
   }
 }

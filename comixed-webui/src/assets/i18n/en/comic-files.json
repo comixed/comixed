@@ -60,6 +60,9 @@
       "load-file-contents-step": "Loading File Contents",
       "load-page-hash-step": "Loading Page Hashes",
       "mark-blocked-page-step": "Marking Pages With Blocked Hash",
+      "move-comic-files-step": "Moving Comic Files",
+      "purge-marked-comic-books-step": "Purging Deleted Comic Books",
+      "remove-deleted-comic-books-step": "Removing Deleted Comic Books",
       "subtitle": "Processed {processed} Of {total} Comics ({percentage}%)",
       "text": {
         "no-records-found": "No current batch jobs"

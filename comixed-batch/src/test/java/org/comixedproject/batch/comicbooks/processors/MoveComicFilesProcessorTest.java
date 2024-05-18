@@ -41,7 +41,7 @@ import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.StepExecution;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MoveComicBookProcessorTest {
+public class MoveComicFilesProcessorTest {
   private static final String TEST_TARGET_DIRECTORY = "the target directory";
   private static final String TEST_RENAMING_RULE = "the renaming rule";
   private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CBZ;
@@ -58,7 +58,7 @@ public class MoveComicBookProcessorTest {
   private static final String TEST_TARGET_METADATA_FILENAME =
       new File("target/test-classes/example-metadata.xml-out").getAbsolutePath();
 
-  @InjectMocks private MoveComicProcessor processor;
+  @InjectMocks private MoveComicFilesProcessor processor;
   @Mock private JobParameters jobParameters;
   @Mock private JobExecution jobExecution;
   @Mock private StepExecution stepExecution;
@@ -137,8 +137,6 @@ public class MoveComicBookProcessorTest {
         .thenReturn(true);
 
     processor.process(comicBook);
-
-    List<File> moveFileSources = moveFileSourceArgumentCaptor.getAllValues();
 
     Mockito.verify(fileAdaptor, Mockito.never())
         .moveFile(Mockito.any(File.class), Mockito.any(File.class));

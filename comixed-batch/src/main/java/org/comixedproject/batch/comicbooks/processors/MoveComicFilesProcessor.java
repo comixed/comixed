@@ -36,14 +36,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>MoveComicProcessor</code> performs the action of moving comics during the organization
+ * <code>MoveComicFilesProcessor</code> performs the action of moving comics during the organization
  * process.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class MoveComicProcessor
+public class MoveComicFilesProcessor
     implements ItemProcessor<ComicBook, ComicBook>, StepExecutionListener {
   @Autowired private FileAdaptor fileAdaptor;
   @Autowired private ComicFileAdaptor comicFileAdaptor;

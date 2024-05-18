@@ -32,10 +32,10 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MoveComicBookReaderTest {
+public class MoveComicFilesReaderTest {
   private static final int MAX_RECORDS = 25;
 
-  @InjectMocks private MoveComicReader reader;
+  @InjectMocks private MoveComicFilesReader reader;
   @Mock private ComicBookService comicBookService;
   @Mock private ComicBook comicBook;
 

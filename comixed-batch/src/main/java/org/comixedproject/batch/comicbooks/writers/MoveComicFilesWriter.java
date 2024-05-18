@@ -16,28 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.readers;
+package org.comixedproject.batch.comicbooks.writers;
 
-import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.service.comicbooks.ComicBookService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.comixedproject.state.comicbooks.ComicEvent;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>DeleteComicReader</code> returns comics that are marked for removing from the library.
+ * <code>MoveComicFilesWriter</code> updates records for comic books that have been organized.
  *
- * @author Darryl L. Pierce
+ * @author Darryl L. pierce
  */
 @Component
 @Log4j2
-public class DeleteComicReader extends AbstractComicReader {
-  @Autowired private ComicBookService comicBookService;
-
-  @Override
-  protected List<ComicBook> doLoadComics() {
-    log.trace("Loading comics in the DELETED state");
-    return this.comicBookService.findComicsMarkedForDeletion(this.getBatchChunkSize());
+public class MoveComicFilesWriter extends AbstractComicBookWriter {
+  public MoveComicFilesWriter() {
+    super(ComicEvent.comicOrganized);
   }
 }

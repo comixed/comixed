@@ -28,20 +28,22 @@ import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>DeleteComicBookProcessor</code> deletes comics, removing the file from the database as well
- * as from the physical file if requested.
+ * <code>RemoveDeletedComicBooksProcessor</code> deletes comics, removing the file from the database
+ * as well as from the physical file if requested.
  *
  * @author Darryl L. Pierce
  */
 @Component
+@StepScope
 @Log4j2
-public class DeleteComicBookProcessor
+public class RemoveDeletedComicBooksProcessor
     implements ItemProcessor<ComicBook, ComicBook>, StepExecutionListener {
   @Autowired private ComicBookService comicBookService;
   @Autowired private FileAdaptor fileAdaptor;
