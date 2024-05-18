@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,24 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createAction } from '@ngrx/store';
+import { TestBed } from '@angular/core/testing';
+import { StompService } from './stomp.service';
 
-export const startMessaging = createAction(
-  '[Messaging] Start the messaging subsystem'
-);
+describe('StompService', () => {
+  let service: StompService;
 
-export const startMessagingSuccess = createAction(
-  '[Messaging] The messaging subsystem was started'
-);
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(StompService);
+  });
 
-export const restartMessaging = createAction(
-  '[Messaging] The message subsystem needs restarting'
-);
-
-export const stopMessaging = createAction(
-  '[Messaging] Stop the messaging subsystem'
-);
-
-export const messagingStopped = createAction(
-  '[Messaging] The message subsystem has stopped'
-);
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+});

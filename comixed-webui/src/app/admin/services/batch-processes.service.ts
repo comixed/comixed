@@ -28,7 +28,6 @@ import {
   GET_ALL_BATCH_PROCESSES_URL
 } from '@app/admin/admin.constants';
 import { Store } from '@ngrx/store';
-import { Subscription as StompSubscription } from 'webstomp-client';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import { WebSocketService } from '@app/messaging';
 import {
@@ -43,7 +42,7 @@ import { DeleteSelectedJobsRequest } from '@app/admin/models/net/delete-selected
 })
 export class BatchProcessesService {
   messagingSubscription: Subscription;
-  processListUpdateSubscription: StompSubscription;
+  processListUpdateSubscription: Subscription;
 
   constructor(
     private logger: LoggerService,

@@ -17,7 +17,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
 import { interpolate } from '@app/core';
@@ -48,7 +48,6 @@ import { WebSocketService } from '@app/messaging';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import { User } from '@app/user/models/user';
 import { libraryStateLoaded } from '@app/library/actions/library.actions';
-import { Subscription } from 'webstomp-client';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Injectable({

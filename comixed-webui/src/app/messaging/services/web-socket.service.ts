@@ -20,63 +20,60 @@ import { Injectable } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { WS_ROOT_URL } from '@app/core';
-import webstomp, { Client, Frame, over, Subscription } from 'webstomp-client';
 import {
-  messagingStarted,
-  messagingStopped,
+  startMessagingSuccess,
   stopMessaging
 } from '@app/messaging/actions/messaging.actions';
 import * as SockJS from 'sockjs-client';
 import { HTTP_AUTHORIZATION_HEADER } from '@app/app.constants';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { securedTopic } from '@app/messaging/messaging.functions';
 import { TokenService } from '@app/core/services/token.service';
+import { IFrame, RxStompState } from '@stomp/rx-stomp';
+import { Message } from '@stomp/stompjs';
+import { StompService } from '@app/messaging/services/stomp.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebSocketService {
-  client: Client;
-
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private stompService: StompService
   ) {}
 
   connect(): Observable<any> {
     return new Observable(() => {
-      if (!this.client && this.tokenService.hasAuthToken()) {
-        this.logger.debug('Creating STOMP client');
-        this.client = over(new SockJS(WS_ROOT_URL), {
-          protocols: webstomp.VERSIONS.supportedProtocols()
+      if (this.tokenService.hasAuthToken() && !this.stompService.connected()) {
+        this.stompService.configure({
+          webSocketFactory: () => new SockJS(WS_ROOT_URL),
+          connectHeaders: {
+            [HTTP_AUTHORIZATION_HEADER]: this.tokenService.getAuthToken()
+          },
+          reconnectDelay: 200,
+          debug: (message: string): void => {
+            /* istanbul ignore next */
+            this.logger.debug(message);
+          }
         });
-        this.client.onreceipt = frame => this.logger.trace('[FRAME]', frame);
-        this.client.debug = text => this.logger.trace('[STOMP]', text);
-      }
-
-      if (!!this.client && !this.client.connected) {
-        const token = this.tokenService.getAuthToken();
-        const headers =
-          !!token && token !== '' ? { [HTTP_AUTHORIZATION_HEADER]: token } : {};
-        this.logger.debug('Connecting STOMP client:', headers);
-        this.client.connect(
-          headers,
-          frame => this.onConnected(frame),
-          error => this.onError(error)
+        this.stompService.connected$.subscribe(state =>
+          this.onConnected(state)
         );
+        this.stompService.stompErrors$.subscribe(state => this.onError(state));
+        this.stompService.activate();
       }
     });
   }
 
   disconnect(): Observable<any> {
     return new Observable(() => {
-      if (!!this.client && this.client.connected) {
-        this.logger.trace('Stopping STOMP client');
+      if (this.stompService.connected()) {
+        this.logger.trace('Stopping STOMP service');
+        this.stompService.deactivate();
         this.store.dispatch(stopMessaging());
-        this.client.disconnect(() => this.onDisconnected());
       }
-      this.client = null;
     });
   }
 
@@ -89,13 +86,15 @@ export class WebSocketService {
    * @param callback the callback function
    */
   subscribe<T>(destination: string, callback: (T) => void): Subscription {
-    this.logger.debug('Subscribing to destination:', destination);
-    return this.client.subscribe(destination, frame => {
-      this.logger.debug('Extracting payload for callback:', frame);
-      const content = JSON.parse(frame.body);
-      this.logger.debug('Sending content to callback:', content);
-      callback(content);
-    });
+    this.logger.debug('Subscribing to topic:', destination);
+    /* istanbul ignore next */
+    return this.stompService
+      .watch(destination)
+      .subscribe((message: Message) => {
+        const content = JSON.parse(message.body);
+        this.logger.debug('Received content:', content);
+        callback(content);
+      });
   }
 
   /**
@@ -111,51 +110,37 @@ export class WebSocketService {
     body: string,
     destination: string,
     callback: (T) => void
-  ): void {
+  ): Subscription {
     this.logger.trace('Subscribing to temporary queue:', destination);
-    const subscription = this.client.subscribe(
-      securedTopic(destination),
-      frame => {
-        const content = JSON.parse(frame.body);
-        if (content.finished === true) {
-          this.logger.trace('End of content');
-          subscription.unsubscribe();
-        } else {
-          this.logger.trace('Received content:', content);
-          callback(content);
-        }
-      }
-    );
-    this.logger.trace('Sending request message:', message);
-    this.client.send(message, body);
+    /* istanbul ignore next */
+    const subscription = this.stompService
+      .watch(securedTopic(destination))
+      .subscribe((message: Message) => {
+        const content = JSON.parse(message.body);
+        this.logger.debug('Received content:', content);
+        callback(content);
+      });
+    /* istanbul ignore next */
+    this.stompService.publish({ destination: message, body });
+    return subscription;
   }
 
   /**
    * Sends a message to a given destination.
-   * @param destination the destination
+   * @param topic the topic
    * @param message the message
    */
-  send(destination: string, message: string): void {
-    this.logger.debug('Publishing message:', destination, message);
-    this.client.send(destination, message);
+  send(topic: string, message: string): void {
+    this.logger.debug('Publishing message:', topic, message);
+    this.stompService.publish({ destination: topic, body: message });
   }
 
-  onConnected(frame: Frame): void {
-    this.logger.debug('[STOMP] Connected');
-    this.store.dispatch(messagingStarted());
+  private onError(state: IFrame) {
+    this.logger.error('Stomp error state now', state);
   }
 
-  onError(error: CloseEvent | Frame): void {
-    this.logger.error('[STOMP] ERROR:', error);
-    if (error instanceof CloseEvent) {
-      this.store.dispatch(messagingStopped());
-      this.client = null;
-    }
-  }
-
-  onDisconnected(): void {
-    this.logger.debug('[STOMP] Disconnected');
-    this.store.dispatch(messagingStopped());
-    this.client = null;
+  private onConnected(state: RxStompState) {
+    this.logger.debug('[STOMP] connected state now', state);
+    this.store.dispatch(startMessagingSuccess());
   }
 }

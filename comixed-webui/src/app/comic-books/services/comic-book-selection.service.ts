@@ -19,8 +19,7 @@
 import { Injectable } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Subscription } from 'webstomp-client';
+import { Observable, Subscription } from 'rxjs';
 import { interpolate } from '@app/core';
 import {
   ADD_SINGLE_COMIC_SELECTION_URL,

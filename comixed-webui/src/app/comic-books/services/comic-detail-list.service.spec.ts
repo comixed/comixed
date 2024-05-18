@@ -35,7 +35,7 @@ import {
 import { WebSocketService } from '@app/messaging';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { Subscription } from 'webstomp-client';
+import { Subscription } from 'rxjs';
 import {
   COMIC_LIST_REMOVAL_TOPIC,
   COMIC_LIST_UPDATE_TOPIC

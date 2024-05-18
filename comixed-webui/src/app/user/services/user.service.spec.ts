@@ -43,7 +43,7 @@ import {
   initialState as initialMessagingState,
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
-import { Subscription } from 'webstomp-client';
+import { Subscription } from 'rxjs';
 import { loadCurrentUserSuccess } from '@app/user/actions/user.actions';
 import { WebSocketService } from '@app/messaging';
 import { SaveCurrentUserRequest } from '@app/user/models/net/save-current-user-request';

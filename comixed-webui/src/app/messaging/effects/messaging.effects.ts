@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
-  messagingStarted,
+  startMessagingSuccess,
   messagingStopped,
   startMessaging,
   stopMessaging
@@ -36,7 +36,7 @@ export class MessagingEffects {
       ofType(startMessaging),
       tap(action => this.logger.debug('Effect: start messaging:', action)),
       switchMap(() =>
-        this.webSocketService.connect().pipe(map(() => messagingStarted()))
+        this.webSocketService.connect().pipe(map(() => startMessagingSuccess()))
       ),
       catchError(error => {
         this.logger.error('General failure:', error);

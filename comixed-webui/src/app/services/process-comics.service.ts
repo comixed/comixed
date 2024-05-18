@@ -17,7 +17,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Subscription } from 'webstomp-client';
+import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { WebSocketService } from '@app/messaging';
 import { Store } from '@ngrx/store';

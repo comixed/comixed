@@ -20,14 +20,10 @@ import { TestBed } from '@angular/core/testing';
 import { WebSocketService } from './web-socket.service';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import * as WebStomp from 'webstomp-client';
-import { Client, Frame, Subscription } from 'webstomp-client';
-import {
-  messagingStarted,
-  messagingStopped,
-  stopMessaging
-} from '@app/messaging/actions/messaging.actions';
 import { TokenService } from '@app/core/services/token.service';
+import { StompService } from '@app/messaging/services/stomp.service';
+import { BehaviorSubject } from 'rxjs';
+import { stopMessaging } from '@app/messaging/actions/messaging.actions';
 
 describe('WebSocketService', () => {
   const initialState = {};
@@ -38,7 +34,7 @@ describe('WebSocketService', () => {
 
   let service: WebSocketService;
   let store: MockStore<any>;
-  let client: jasmine.SpyObj<Client>;
+  let stompService: jasmine.SpyObj<StompService>;
   let tokenService: jasmine.SpyObj<TokenService>;
 
   beforeEach(() => {
@@ -47,12 +43,16 @@ describe('WebSocketService', () => {
       providers: [
         provideMockStore({ initialState }),
         {
-          provide: Client,
+          provide: StompService,
           useValue: {
-            connect: jasmine.createSpy('Client.connect()'),
-            disconnect: jasmine.createSpy('Client.disconnect()'),
-            subscribe: jasmine.createSpy('Client.subscribe()'),
-            send: jasmine.createSpy('Client.send()')
+            connected: jasmine.createSpy('StompService.connected'),
+            configure: jasmine.createSpy('StompService.configure()'),
+            activate: jasmine.createSpy('StompService.activate()'),
+            deactivate: jasmine.createSpy('StompService.deactivate()'),
+            publish: jasmine.createSpy('StompService.publish()'),
+            watch: jasmine.createSpy('StompService.watch()'),
+            connected$: new BehaviorSubject<any>(null),
+            stompErrors$: new BehaviorSubject<any>(null)
           }
         },
         {
@@ -68,8 +68,7 @@ describe('WebSocketService', () => {
     service = TestBed.inject(WebSocketService);
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
-    client = TestBed.inject(Client) as jasmine.SpyObj<Client>;
-    spyOn(WebStomp, 'over').and.returnValue(client);
+    stompService = TestBed.inject(StompService) as jasmine.SpyObj<StompService>;
     tokenService = TestBed.inject(TokenService) as jasmine.SpyObj<TokenService>;
   });
 
@@ -77,163 +76,87 @@ describe('WebSocketService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('connecting', () => {
-    describe('when not already connected', () => {
+  describe('when the user has authenticated', () => {
+    beforeEach(() => {
+      tokenService.hasAuthToken.and.returnValue(true);
+    });
+
+    describe('if messaging is not started', () => {
       beforeEach(() => {
-        service.client = null;
-        service.connect();
-        tokenService.hasAuthToken.and.returnValue(true);
-        tokenService.getAuthToken.and.returnValue(AUTH_TOKEN);
+        stompService.connected.and.returnValue(false);
         service.connect().subscribe(() => {});
       });
 
-      it('creates a client', () => {
-        expect(service.client).not.toBeNull();
+      it('configures the service', () => {
+        expect(stompService.configure).toHaveBeenCalled();
       });
 
-      it('establishes a connection', () => {
-        expect(client.connect).toHaveBeenCalled();
-      });
-
-      it('assigns a trace function', () => {
-        expect(client.onreceipt).not.toBeNull();
-      });
-
-      it('assigns a debug function', () => {
-        expect(client.debug).not.toBeNull();
+      it('activates the service', () => {
+        expect(stompService.activate).toHaveBeenCalled();
       });
     });
 
-    describe('when already connected', () => {
+    describe('if messaging is already started', () => {
       beforeEach(() => {
-        service.client = client;
-        service.client.connected = true;
+        stompService.connected.and.returnValue(true);
         service.connect().subscribe(() => {});
       });
 
-      it('does not establish a connection', () => {
-        expect(client.connect).not.toHaveBeenCalled();
+      it('does not configure the service', () => {
+        expect(stompService.configure).not.toHaveBeenCalled();
+      });
+
+      it('does not activate the service', () => {
+        expect(stompService.activate).not.toHaveBeenCalled();
       });
     });
   });
 
   describe('disconnecting', () => {
-    describe('when connected', () => {
+    describe('if messaging is not started', () => {
       beforeEach(() => {
-        client.connected = true;
-        service.client = client;
-        client.disconnect.and.callFake(callback => callback());
-        service.disconnect().subscribe(() => {});
+        stompService.connected.and.returnValue(false);
+        service.disconnect();
       });
 
-      it('breaks the connection', () => {
-        expect(client.disconnect).toHaveBeenCalled();
+      it('does not deactivate the service', () => {
+        expect(stompService.deactivate).not.toHaveBeenCalled();
       });
 
-      it('fires a message', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(stopMessaging());
-      });
-    });
-
-    describe('when disconnected', () => {
-      beforeEach(() => {
-        client.connected = false;
-        service.client = client;
-        service.disconnect().subscribe(() => {});
-      });
-
-      it('does not try to break the connection', () => {
-        expect(client.disconnect).not.toHaveBeenCalled();
-      });
-
-      it('does not fire a message', () => {
+      it('does not fire an action', () => {
         expect(store.dispatch).not.toHaveBeenCalled();
       });
     });
-  });
 
-  describe('subscribing to a topic', () => {
-    const SUBSCRIPTION = {} as Subscription;
-    const CONTENT = { something: true };
-    let result: Subscription;
-    let processingCallback: any;
-
-    beforeEach(() => {
-      service.client = client;
-      client.subscribe.and.callFake((topic, callback) => {
-        processingCallback = callback;
-        return SUBSCRIPTION;
-      });
-      result = service.subscribe(TOPIC, CALLBACK);
-    });
-
-    it('notifies the client', () => {
-      expect(client.subscribe).toHaveBeenCalledWith(TOPIC, processingCallback);
-    });
-
-    it('returns a subscription', () => {
-      expect(result).toBe(SUBSCRIPTION);
-    });
-  });
-
-  describe('sending a message', () => {
-    beforeEach(() => {
-      service.client = client;
-      service.send(TOPIC, MESSAGE);
-    });
-
-    it('notifies the client', () => {
-      expect(client.send).toHaveBeenCalledWith(TOPIC, MESSAGE);
-    });
-  });
-
-  describe('the connection callback', () => {
-    beforeEach(() => {
-      service.onConnected({} as Frame);
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(messagingStarted());
-    });
-  });
-
-  describe('the error callback', () => {
-    beforeEach(() => {
-      service.client = client;
-    });
-
-    describe('when not a close event', () => {
+    describe('if messaging is started', () => {
       beforeEach(() => {
-        service.onError(new Frame('error'));
+        stompService.connected.and.returnValue(true);
+        service.disconnect().subscribe(() => {});
       });
 
-      it('does not clear the client reference', () => {
-        expect(service.client).not.toBeNull();
-      });
-    });
-
-    describe('when a close event', () => {
-      beforeEach(() => {
-        service.onError(new CloseEvent('close'));
+      it('deactivates the service', () => {
+        expect(stompService.deactivate).toHaveBeenCalled();
       });
 
       it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(messagingStopped());
-      });
-
-      it('clears the client reference', () => {
-        expect(service.client).toBeNull();
+        expect(store.dispatch).toHaveBeenCalledWith(stopMessaging());
       });
     });
   });
 
-  describe('the disconnection callback', () => {
+  describe('publishing a message', () => {
+    const TOPIC = 'this.topic';
+    const MESSAGE = 'The messasge body';
+
     beforeEach(() => {
-      service.onDisconnected();
+      service.send(TOPIC, MESSAGE);
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(messagingStopped());
+    it('calls the publish method', () => {
+      expect(stompService.publish).toHaveBeenCalledWith({
+        destination: TOPIC,
+        body: MESSAGE
+      });
     });
   });
 });

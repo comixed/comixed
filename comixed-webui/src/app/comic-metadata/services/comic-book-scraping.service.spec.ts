@@ -59,7 +59,7 @@ import {
   initialState as initialMessagingState,
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
-import { Subscription } from 'webstomp-client';
+import { Subscription } from 'rxjs';
 import {
   FETCH_ISSUES_FOR_VOLUME,
   METADATA_UPDATE_PROCESS_UPDATE_TOPIC

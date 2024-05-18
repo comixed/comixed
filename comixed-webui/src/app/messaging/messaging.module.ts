@@ -25,10 +25,14 @@ import {
 } from '@app/messaging/reducers/messaging.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { MessagingEffects } from '@app/messaging/effects/messaging.effects';
+import {
+  StompService,
+  stompServiceFactory
+} from '@app/messaging/services/stomp.service';
 
 @NgModule({
   declarations: [],
-  providers: [],
+  providers: [{ provide: StompService, useFactory: stompServiceFactory }],
   imports: [
     CommonModule,
     StoreModule.forFeature(MESSAGING_FEATURE_KEY, messagingReducer),

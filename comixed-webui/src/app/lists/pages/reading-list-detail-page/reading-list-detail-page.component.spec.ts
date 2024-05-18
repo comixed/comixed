@@ -36,7 +36,7 @@ import {
   ActivatedRouteSnapshot,
   Router
 } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import {
   createReadingList,
   loadReadingList,
@@ -64,7 +64,6 @@ import {
   DOWNLOAD_READING_LIST_FEATURE_KEY,
   initialState as initialDownloadReadingListState
 } from '@app/lists/reducers/download-reading-list.reducer';
-import { Subscription as WebstompSubscription } from 'webstomp-client';
 import { downloadReadingList } from '@app/lists/actions/download-reading-list.actions';
 import { deleteReadingLists } from '@app/lists/actions/reading-lists.actions';
 import { TitleService } from '@app/core/services/title.service';
@@ -428,13 +427,13 @@ describe('ReadingListDetailPageComponent', () => {
         )
         .and.callFake((topic, callback) => {
           callback(READING_LIST);
-          return {} as WebstompSubscription;
+          return {} as Subscription;
         });
       webSocketService.subscribe
         .withArgs(READING_LIST_REMOVAL_TOPIC, jasmine.anything())
         .and.callFake((topic, callback) => {
           readingListRemovalSubscription = callback;
-          return {} as WebstompSubscription;
+          return {} as Subscription;
         });
       store.setState({
         ...initialState,
@@ -477,14 +476,16 @@ describe('ReadingListDetailPageComponent', () => {
   });
 
   describe('when messaging stops', () => {
-    let readingListUpdateSubscription: WebstompSubscription;
-    let readingListRemovalSubscription: WebstompSubscription;
+    let readingListUpdateSubscription: Subscription;
+    let readingListRemovalSubscription: Subscription;
 
     beforeEach(() => {
-      readingListUpdateSubscription =
-        jasmine.createSpyObj<WebstompSubscription>(['unsubscribe']);
-      readingListRemovalSubscription =
-        jasmine.createSpyObj<WebstompSubscription>(['unsubscribe']);
+      readingListUpdateSubscription = jasmine.createSpyObj<Subscription>([
+        'unsubscribe'
+      ]);
+      readingListRemovalSubscription = jasmine.createSpyObj<Subscription>([
+        'unsubscribe'
+      ]);
       component.readingListUpdateSubscription = readingListUpdateSubscription;
       component.readingListRemovalSubscription = readingListRemovalSubscription;
       store.setState({

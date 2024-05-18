@@ -34,7 +34,7 @@ import {
   DELETE_SELECTED_JOBS_URL,
   GET_ALL_BATCH_PROCESSES_URL
 } from '@app/admin/admin.constants';
-import { Subscription } from 'webstomp-client';
+import { Subscription } from 'rxjs';
 import {
   initialState as initialMessagingState,
   MESSAGING_FEATURE_KEY

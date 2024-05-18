@@ -18,7 +18,7 @@
 
 import { createReducer, on } from '@ngrx/store';
 import {
-  messagingStarted,
+  startMessagingSuccess,
   messagingStopped,
   restartMessaging,
   startMessaging,
@@ -44,7 +44,7 @@ export const reducer = createReducer(
     busy: true,
     started: false
   })),
-  on(messagingStarted, state => ({
+  on(startMessagingSuccess, state => ({
     ...state,
     busy: false,
     started: true
