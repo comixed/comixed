@@ -17,7 +17,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { interpolate } from '@app/core';
@@ -34,7 +34,6 @@ import {
 } from '@app/user/user.constants';
 import { Store } from '@ngrx/store';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
-import { Subscription } from 'webstomp-client';
 import { WebSocketService } from '@app/messaging';
 import { loadCurrentUserSuccess } from '@app/user/actions/user.actions';
 import { User } from '@app/user/models/user';

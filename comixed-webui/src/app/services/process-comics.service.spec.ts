@@ -25,9 +25,8 @@ import {
 import { WebSocketService } from '@app/messaging';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { Frame, Subscription } from 'webstomp-client';
 import { PROCESS_COMIC_BOOKS_TOPIC } from '@app/app.constants';
-import { ProcessComicBooksStatus } from '@app/models/messages/process-comic-books-status';
+import { Subscription } from 'rxjs';
 
 describe('ProcessComicsService', () => {
   const ADD_COUNT = Math.abs(Math.floor(Math.random() * 1000));
@@ -73,15 +72,13 @@ describe('ProcessComicsService', () => {
   });
 
   describe('when messaging starts', () => {
-    const PROCESSING_MESSAGE = new Frame(
-      'scan type',
-      {},
-      JSON.stringify({
+    const PROCESSING_MESSAGE = {
+      body: {
         stepName: 'step-name',
         total: ADD_COUNT,
         processed: PROCESSING_COUNT
-      } as ProcessComicBooksStatus)
-    );
+      }
+    } as any;
 
     beforeEach(() => {
       webSocketService.subscribe.and.callFake((topic, callback) => {

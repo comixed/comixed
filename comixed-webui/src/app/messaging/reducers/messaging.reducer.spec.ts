@@ -18,7 +18,7 @@
 
 import { initialState, MessagingState, reducer } from './messaging.reducer';
 import {
-  messagingStarted,
+  startMessagingSuccess,
   messagingStopped,
   restartMessaging,
   startMessaging,
@@ -67,7 +67,7 @@ describe('Messaging Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: true, started: false },
-        messagingStarted()
+        startMessagingSuccess()
       );
     });
 

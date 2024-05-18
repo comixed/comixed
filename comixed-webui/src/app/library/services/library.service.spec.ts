@@ -54,7 +54,7 @@ import { PurgeLibraryRequest } from '@app/library/models/net/purge-library-reque
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { EditMultipleComicsRequest } from '@app/library/models/net/edit-multiple-comics-request';
 import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
-import { Subscription } from 'webstomp-client';
+import { Subscription } from 'rxjs';
 import {
   initialState as initialMessagingState,
   MESSAGING_FEATURE_KEY

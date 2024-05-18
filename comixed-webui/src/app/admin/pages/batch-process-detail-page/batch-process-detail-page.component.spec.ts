@@ -30,7 +30,7 @@ import { BATCH_PROCESS_DETAIL_1 } from '@app/admin/admin.fixtures';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { WebSocketService } from '@app/messaging';
-import { Subscription } from 'webstomp-client';
+import { Subscription } from 'rxjs';
 import {
   initialState as initialMessagingState,
   MESSAGING_FEATURE_KEY

@@ -24,7 +24,7 @@ import {
   reducer as messagingReducer
 } from '@app/messaging/reducers/messaging.reducer';
 import { ActionReducerMap } from '@ngrx/store';
-import { Subscription } from 'webstomp-client';
+import { Subscription } from 'rxjs';
 
 export { WebSocketService } from './services/web-socket.service';
 

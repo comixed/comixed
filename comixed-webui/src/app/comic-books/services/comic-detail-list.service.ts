@@ -17,7 +17,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Subscription } from 'webstomp-client';
+import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { WebSocketService } from '@app/messaging';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -27,7 +27,6 @@ import {
   COMIC_LIST_UPDATE_TOPIC
 } from '@app/library/library.constants';
 import { ComicBook } from '@app/comic-books/models/comic-book';
-import { Observable } from 'rxjs';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';

@@ -58,7 +58,7 @@ import {
   blockedHashRemoved,
   blockedHashUpdated
 } from '@app/comic-pages/actions/blocked-hash-list.actions';
-import { Subscription } from 'webstomp-client';
+import { Subscription } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 import { DeleteBlockedPagesRequest } from '@app/comic-pages/models/net/delete-blocked-pages-request';
 import { SetBlockedStateRequest } from '@app/comic-pages/models/net/set-blocked-state-request';

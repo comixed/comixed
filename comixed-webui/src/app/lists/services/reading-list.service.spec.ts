@@ -51,12 +51,12 @@ import {
   initialState as initialMessagingState,
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
-import { Subscription as WebstompSubscription } from 'webstomp-client';
 import {
   readingListRemoved,
   readingListUpdate
 } from '@app/lists/actions/reading-lists.actions';
 import { WebSocketService } from '@app/messaging';
+import { Subscription } from 'rxjs';
 
 describe('ReadingListService', () => {
   const READING_LISTS = [READING_LIST_1, READING_LIST_3, READING_LIST_5];
@@ -238,13 +238,13 @@ describe('ReadingListService', () => {
         .withArgs(READING_LISTS_UPDATES_TOPIC, jasmine.anything())
         .and.callFake((topic, callback) => {
           callback(READING_LIST);
-          return {} as WebstompSubscription;
+          return {} as Subscription;
         });
       webSocketService.subscribe
         .withArgs(READING_LIST_REMOVAL_TOPIC, jasmine.anything())
         .and.callFake((topic, callback) => {
           callback(READING_LIST);
-          return {} as WebstompSubscription;
+          return {} as Subscription;
         });
       store.setState({
         ...initialState,

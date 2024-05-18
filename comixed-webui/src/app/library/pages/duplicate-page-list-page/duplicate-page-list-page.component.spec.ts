@@ -31,7 +31,7 @@ import {
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
 import { WebSocketService } from '@app/messaging';
-import { Subscription } from 'webstomp-client';
+import { Subscription } from 'rxjs';
 import {
   DUPLICATE_PAGE_1,
   DUPLICATE_PAGE_2,

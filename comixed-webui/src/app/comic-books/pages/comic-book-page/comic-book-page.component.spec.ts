@@ -73,7 +73,7 @@ import {
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
 import { WebSocketService } from '@app/messaging';
-import { Subscription } from 'webstomp-client';
+import { Subscription } from 'rxjs';
 import { COMIC_BOOK_UPDATE_TOPIC } from '@app/comic-books/comic-books.constants';
 import { interpolate } from '@app/core';
 import {

@@ -23,7 +23,7 @@ import { MessagingEffects } from './messaging.effects';
 import { WebSocketService } from '@app/messaging/services/web-socket.service';
 import { provideMockStore } from '@ngrx/store/testing';
 import {
-  messagingStarted,
+  startMessagingSuccess,
   messagingStopped,
   startMessaging,
   stopMessaging
@@ -68,7 +68,7 @@ describe('MessagingEffects', () => {
   describe('starting the messaging service', () => {
     it('fires an action on success', () => {
       const action = startMessaging();
-      const outcome = messagingStarted();
+      const outcome = startMessagingSuccess();
 
       actions$ = hot('-a', { a: action });
       webSocketService.connect.and.returnValue(of({}));
