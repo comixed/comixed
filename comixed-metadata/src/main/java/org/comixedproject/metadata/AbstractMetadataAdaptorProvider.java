@@ -32,6 +32,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public abstract class AbstractMetadataAdaptorProvider implements MetadataAdaptorProvider {
   @Getter private final String name;
+  @Getter private final String version;
+  @Getter private final String homepage;
 
   private final Set<String> properties = new HashSet<>();
 

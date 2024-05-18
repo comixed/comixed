@@ -19,9 +19,6 @@
 import { API_ROOT_URL } from '@app/core';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 
-export const COMICVINE_ISSUE_LINK =
-  'https://comicvine.gamespot.com/issues/4000-${id}/';
-
 export const LOAD_METADATA_SOURCE_LIST_URL = `${API_ROOT_URL}/metadata/sources`;
 export const LOAD_METADATA_SOURCE_URL = `${API_ROOT_URL}/metadata/sources/\${id}`;
 export const CREATE_METADATA_SOURCE_URL = `${API_ROOT_URL}/metadata/sources`;
@@ -36,6 +33,8 @@ export const METADATA_UPDATE_PROCESS_UPDATE_TOPIC =
 export const METADATA_SOURCE_TEMPLATE: MetadataSource = {
   id: null,
   name: '',
+  version: '',
+  homepage: '',
   preferred: false,
   available: false,
   properties: []

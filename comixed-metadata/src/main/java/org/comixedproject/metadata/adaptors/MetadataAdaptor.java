@@ -32,6 +32,7 @@ import org.comixedproject.model.metadata.MetadataSource;
  * @author Darryl L. Pierce
  */
 public interface MetadataAdaptor {
+
   /**
    * Returns the source identifier for the adaptor.
    *

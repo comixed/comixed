@@ -100,6 +100,17 @@
     </mat-cell>
   </ng-container>
 
+  <ng-container matColumnDef="version">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "metadata-source-list.label.version" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.version }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
   <ng-container matColumnDef="available">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "metadata-source-list.label.available" | translate }}
@@ -118,6 +129,23 @@
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
         {{ entry.properties.length }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="homepage">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "metadata-source-list.label.homepage" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        <a
+          [href]="entry.homepage"
+          target="_adaptor"
+          (click)="$event.stopPropagation()"
+        >
+          {{ entry.homepage }}
+        </a>
       </span>
     </mat-cell>
   </ng-container>

@@ -21,6 +21,8 @@ import { MetadataSourceProperty } from '@app/comic-metadata/models/metadata-sour
 export interface MetadataSource {
   id: number;
   name: string;
+  version: string;
+  homepage: string;
   preferred: boolean;
   available: boolean;
   properties: MetadataSourceProperty[];
