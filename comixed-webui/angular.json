@@ -88,19 +88,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "comixed-webui:build",
-            "proxyConfig": "proxy.conf.json"
+            "proxyConfig": "proxy.conf.json",
+            "buildTarget": "comixed-webui:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "comixed-webui:build:production"
+              "buildTarget": "comixed-webui:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "comixed-webui:build"
+            "buildTarget": "comixed-webui:build"
           }
         },
         "test": {
@@ -139,5 +139,13 @@
   "cli": {
     "schematicCollections": ["@ngrx/schematics"],
     "analytics": false
+  },
+  "schematics": {
+    "@angular-eslint/schematics:application": {
+      "setParserOptionsProject": true
+    },
+    "@angular-eslint/schematics:library": {
+      "setParserOptionsProject": true
+    }
   }
 }

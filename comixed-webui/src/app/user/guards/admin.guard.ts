@@ -19,7 +19,6 @@
 import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
-  CanActivate,
   Router,
   RouterStateSnapshot
 } from '@angular/router';
@@ -33,7 +32,7 @@ import { isAdmin } from '@app/user/user.functions';
 @Injectable({
   providedIn: 'root'
 })
-export class AdminGuard implements CanActivate {
+export class AdminGuard {
   authenticated = false;
   isAdmin = false;
   delayed$ = new Subject<boolean>();

@@ -134,7 +134,8 @@ import { LibraryPluginsModule } from '@app/library-plugins/library-plugins.modul
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       trace: true,
-      logOnly: environment.production
+      logOnly: environment.production,
+      connectInZone: true
     }),
     MatButtonModule,
     MatFormFieldModule,

@@ -123,6 +123,10 @@ $cx-max-image-width: 600px;
   overflow-y: auto;
 }
 
+.cx-overflow-y-clip {
+  overflow-y: clip;
+}
+
 // positioning
 
 .cx-overlay {
@@ -275,6 +279,7 @@ $cx-column-small: 50px;
 $cx-column-smallish: 100px;
 $cx-column-medium: 150px;
 $cx-column-large: 325px;
+$cx-row-height: 50px;
 
 .cx-table-column-medium {
   width: $cx-column-medium;
