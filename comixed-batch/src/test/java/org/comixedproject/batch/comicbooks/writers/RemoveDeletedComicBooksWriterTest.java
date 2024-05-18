@@ -31,8 +31,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.batch.item.Chunk;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PurgeMarkedComicBooksWriterTest {
-  @InjectMocks private PurgeMarkedComicBooksWriter writer;
+public class RemoveDeletedComicBooksWriterTest {
+  @InjectMocks private RemoveDeletedComicBooksWriter writer;
   @Mock private ComicStateHandler comicStateHandler;
   @Mock private ComicBook comicBook;
 

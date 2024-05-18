@@ -34,7 +34,6 @@ import org.comixedproject.model.collections.Publisher;
 import org.comixedproject.model.collections.Series;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
-import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.comixedproject.repositories.RepositoryContext;
@@ -43,7 +42,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -89,7 +87,7 @@ public class ComicBookRepositoryTest {
   private ComicBook deletableComicBook;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     comicBook = repository.getById(TEST_COMIC_ID);
     deletableComicBook = repository.getById(TEST_DELETABLE_COMIC_ID);
   }
@@ -122,22 +120,6 @@ public class ComicBookRepositoryTest {
     assertNotNull(result);
     assertFalse(result.isEmpty());
     assertEquals(1, result.size());
-  }
-
-  private void testComicOrder(long id, long timestamp, List<ComicBook> comicBookList) {
-    for (int index = 0; index < comicBookList.size(); index++) {
-      long thisId = comicBookList.get(index).getId();
-      long thisTimestamp = comicBookList.get(index).getLastModifiedOn().getTime();
-
-      if (thisTimestamp == timestamp) {
-        assertTrue(id < thisId);
-        id = thisId;
-      } else {
-        assertTrue(timestamp < thisTimestamp);
-        timestamp = thisTimestamp;
-        id = 0L;
-      }
-    }
   }
 
   @Test
@@ -196,19 +178,6 @@ public class ComicBookRepositoryTest {
     for (int index = 0; index < result.size(); index++) {
       assertTrue(
           result.get(index).getComicDetail().getIssueNumber().compareTo(TEST_ISSUE_WITH_PREV) < 0);
-    }
-  }
-
-  @Test
-  public void testFindAllMarkedForDeletion() {
-    List<ComicBook> result =
-        repository.findComicsMarkedForDeletion(PageRequest.of(0, TEST_BATCH_SIZE));
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertEquals(TEST_BATCH_SIZE, result.size());
-    for (ComicBook comicBook : result) {
-      assertEquals(ComicState.DELETED, comicBook.getComicDetail().getComicState());
     }
   }
 
@@ -354,14 +323,14 @@ public class ComicBookRepositoryTest {
 
     assertNotNull(saved.getId());
 
-    final Optional<ComicBook> record = this.repository.findById(saved.getId());
+    final Optional<ComicBook> updated = this.repository.findById(saved.getId());
 
-    assertTrue(record.isPresent());
-    assertNull(record.get().getComicDetail().getPublisher());
-    assertNull(record.get().getComicDetail().getSeries());
-    assertNull(record.get().getComicDetail().getVolume());
-    assertNull(record.get().getComicDetail().getIssueNumber());
-    assertNull(record.get().getComicDetail().getTitle());
-    assertNull(record.get().getComicDetail().getDescription());
+    assertTrue(updated.isPresent());
+    assertNull(updated.get().getComicDetail().getPublisher());
+    assertNull(updated.get().getComicDetail().getSeries());
+    assertNull(updated.get().getComicDetail().getVolume());
+    assertNull(updated.get().getComicDetail().getIssueNumber());
+    assertNull(updated.get().getComicDetail().getTitle());
+    assertNull(updated.get().getComicDetail().getDescription());
   }
 }

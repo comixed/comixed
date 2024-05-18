@@ -692,7 +692,9 @@ public class ComicBookServiceTest {
 
   @Test
   public void testFindAllComicsMarkedForDeletion() {
-    Mockito.when(comicBookRepository.findComicsMarkedForDeletion(pageableCaptor.capture()))
+    Mockito.when(
+            comicBookRepository.findForState(
+                Mockito.any(ComicState.class), pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
     final List<ComicBook> result = service.findComicsMarkedForDeletion(TEST_MAXIMUM_COMICS);
@@ -705,7 +707,8 @@ public class ComicBookServiceTest {
     assertEquals(0, pageable.getPageNumber());
     assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsMarkedForDeletion(pageable);
+    Mockito.verify(comicBookRepository, Mockito.times(1))
+        .findForState(ComicState.DELETED, pageable);
   }
 
   @Test

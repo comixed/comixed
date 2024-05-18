@@ -173,15 +173,6 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   List<ComicBook> findComicsForBatchMetadataUpdate(Pageable pageable);
 
   /**
-   * Returns comics that are in the deleted state.
-   *
-   * @param pageable the page request
-   * @return the list of comics
-   */
-  @Query("SELECT c FROM ComicBook c WHERE c.comicDetail.comicState = 'DELETED'")
-  List<ComicBook> findComicsMarkedForDeletion(Pageable pageable);
-
-  /**
    * Returns all comics with the organizing flag set.
    *
    * @param pageable the page request
@@ -190,6 +181,15 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   @Query(
       "SELECT c FROM ComicBook c WHERE c.organizing = true AND c.comicDetail.comicState != 'DELETED'")
   List<ComicBook> findComicsToBeMoved(Pageable pageable);
+
+  /**
+   * Returns the number of comics with the organizing flag set.
+   *
+   * @return the record count
+   */
+  @Query(
+      "SELECT count(c) FROM ComicBook c WHERE c.organizing = true AND c.comicDetail.comicState != 'DELETED'")
+  long findComicsToBeMovedCount();
 
   /**
    * Returns comics that are marked to be recreated.

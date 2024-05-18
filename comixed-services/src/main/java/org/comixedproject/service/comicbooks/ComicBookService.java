@@ -444,7 +444,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    */
   public List<ComicBook> findComicsMarkedForDeletion(final int count) {
     log.trace("Finding all comics marked for deletion");
-    return this.comicBookRepository.findComicsMarkedForDeletion(PageRequest.of(0, count));
+    return this.comicBookRepository.findForState(ComicState.DELETED, PageRequest.of(0, count));
   }
 
   /**
@@ -456,6 +456,16 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   public List<ComicBook> findComicsToBeMoved(final int count) {
     log.trace("Finding all comics to be moved");
     return this.comicBookRepository.findComicsToBeMoved(PageRequest.of(0, count));
+  }
+
+  /**
+   * Finds the number of comics that are to be moved.
+   *
+   * @return the record count
+   */
+  public long findComicsToBeMovedCount() {
+    log.trace("Finding all comics to be moved");
+    return this.comicBookRepository.findComicsToBeMovedCount();
   }
 
   /**

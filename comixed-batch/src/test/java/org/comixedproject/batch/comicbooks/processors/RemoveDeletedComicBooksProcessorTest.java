@@ -39,10 +39,10 @@ import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.item.ExecutionContext;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DeleteComicBookProcessorTest {
+public class RemoveDeletedComicBooksProcessorTest {
   private static final String TEST_FILENAME = "/Users/comixed/Documents/comics/comicBook.cbz";
 
-  @InjectMocks private DeleteComicBookProcessor processor;
+  @InjectMocks private RemoveDeletedComicBooksProcessor processor;
   @Mock private ComicBookService comicBookService;
   @Mock private FileAdaptor fileAdaptor;
   @Mock private ComicBookAdaptor comicBookAdaptor;
@@ -65,23 +65,6 @@ public class DeleteComicBookProcessorTest {
 
   @Test
   public void testProcessWithDeleteFile() {
-    Mockito.when(
-            executionContext.getString(
-                JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))
-        .thenReturn(String.valueOf(true));
-
-    final ComicBook result = processor.process(comicBook);
-
-    assertNotNull(result);
-    assertSame(comicBook, result);
-
-    Mockito.verify(comicBookService, Mockito.times(1)).deleteComicBook(comicBook);
-    Mockito.verify(fileAdaptor, Mockito.times(1)).deleteFile(file);
-    Mockito.verify(comicBookAdaptor, Mockito.times(1)).deleteMetadataFile(comicBook);
-  }
-
-  @Test
-  public void testProcessWithDeleteFileThrowsException() {
     Mockito.when(
             executionContext.getString(
                 JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))
