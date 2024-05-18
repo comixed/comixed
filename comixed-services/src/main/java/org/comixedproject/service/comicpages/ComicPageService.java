@@ -35,7 +35,6 @@ import org.comixedproject.model.comicpages.ComicPageState;
 import org.comixedproject.repositories.comicpages.ComicPageRepository;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.comixedproject.state.comicpages.ComicPageEvent;
 import org.comixedproject.state.comicpages.ComicPageStateChangeListener;
@@ -75,9 +74,7 @@ public class ComicPageService implements InitializingBean, ComicPageStateChangeL
     if (page == null) return;
     log.debug("Processing page state change: [{}] =>  {}", page.getId(), state.getId());
     page.setPageState(state.getId());
-    final ComicPage updated = this.comicPageRepository.save(page);
-    log.trace("Firing comic event");
-    this.comicStateHandler.fireEvent(updated.getComicBook(), ComicEvent.detailsUpdated);
+    this.comicPageRepository.save(page);
   }
 
   /**
