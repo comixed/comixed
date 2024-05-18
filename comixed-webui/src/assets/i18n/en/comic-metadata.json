@@ -83,10 +83,12 @@
     "label": {
       "actions": "",
       "available": "Available?",
+      "homepage": "Project Homepage",
       "name": "Source Name",
       "no-rows-loaded": "No sources loaded",
       "preferred": "Preferred",
-      "property-count": "# of Properties"
+      "property-count": "# of Properties",
+      "version": "Version"
     },
     "tooltip": {
       "preferred-source": "This is the preferred metadata source."

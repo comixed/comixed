@@ -43,6 +43,20 @@ public interface MetadataAdaptorProvider {
   String getName();
 
   /**
+   * Returns the version of the provider.
+   *
+   * @return the version
+   */
+  String getVersion();
+
+  /**
+   * Returns the URL for the homepage of the provider project.
+   *
+   * @return the url
+   */
+  String getHomepage();
+
+  /**
    * Returns the list of adaptor properties.
    *
    * @return the properties list

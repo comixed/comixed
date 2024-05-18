@@ -7,6 +7,18 @@
 }
 
 .mat-column-name {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+  resize: none;
+}
+
+.mat-column-version {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-homepge {
 }
 
 .mat-column-available {

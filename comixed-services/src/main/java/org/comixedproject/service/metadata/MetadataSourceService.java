@@ -20,7 +20,9 @@ package org.comixedproject.service.metadata;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.metadata.MetadataAdaptorProvider;
 import org.comixedproject.metadata.MetadataAdaptorRegistry;
@@ -53,11 +55,19 @@ public class MetadataSourceService {
     log.debug("Identifying available metadata sources");
     final List<MetadataAdaptorProvider> adaptors = this.metadataAdaptorRegistry.getAdaptors();
     this.doRegisterMissingAdaptors(adaptors);
-    final List<String> adaptorNames = adaptors.stream().map(adaptor -> adaptor.getName()).toList();
+    final Map<String, MetadataAdaptorProvider> providerMap =
+        adaptors.stream()
+            .collect(Collectors.toMap(adaptor -> adaptor.getName(), adaptor -> adaptor));
     return this.metadataSourceRepository.loadMetadataSources().stream()
         .map(
             metadataSource -> {
-              metadataSource.setAvailable(adaptorNames.contains(metadataSource.getAdaptorName()));
+              final MetadataAdaptorProvider provider =
+                  providerMap.get(metadataSource.getAdaptorName());
+              metadataSource.setAvailable(provider != null);
+              if (provider != null) {
+                metadataSource.setVersion(provider.getVersion());
+                metadataSource.setHomepage(provider.getHomepage());
+              }
               return metadataSource;
             })
         .toList();

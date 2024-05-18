@@ -83,6 +83,20 @@ public class MetadataSource {
   @Setter
   private boolean available = false;
 
+  @Transient
+  @JsonProperty("version")
+  @JsonView(View.MetadataSourceList.class)
+  @Getter
+  @Setter
+  private String version;
+
+  @Transient
+  @JsonProperty("homepage")
+  @JsonView(View.MetadataSourceList.class)
+  @Getter
+  @Setter
+  private String homepage;
+
   @Override
   public int hashCode() {
     return Objects.hash(adaptorName);

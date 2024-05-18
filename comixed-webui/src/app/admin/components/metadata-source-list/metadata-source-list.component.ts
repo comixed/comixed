@@ -63,8 +63,10 @@ export class MetadataSourceListComponent
   readonly displayedColumns = [
     'actions',
     'name',
+    'version',
     'available',
-    'property-count'
+    'property-count',
+    'homepage'
   ];
   metadataForm: FormGroup;
   configurationStateSubscription: Subscription;
