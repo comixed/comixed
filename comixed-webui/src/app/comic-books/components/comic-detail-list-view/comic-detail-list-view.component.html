@@ -109,7 +109,7 @@
       {{ "comic-detail-list-view.label.thumbnail" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <span class="cx-width-100 cx-text-nowrap cx-padding-2">
+      <span class="cx-width-100 cx-text-nowrap cx-padding-2 cx-overflow-y-clip">
         <img
           loading="lazy"
           [src]="entry.item | comicCoverUrl"

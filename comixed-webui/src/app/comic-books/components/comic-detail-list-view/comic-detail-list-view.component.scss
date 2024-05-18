@@ -1,4 +1,9 @@
-@import 'src/styles';
+@import 'styles';
+
+mat-row {
+  height: $cx-row-height !important;
+  max-height: $cx-row-height !important;
+}
 
 .mat-column-selection {
   width: $cx-column-smallish;

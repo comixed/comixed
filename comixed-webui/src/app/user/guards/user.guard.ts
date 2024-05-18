@@ -19,7 +19,6 @@
 import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
-  CanActivate,
   Router,
   RouterStateSnapshot
 } from '@angular/router';
@@ -32,7 +31,7 @@ import { filter } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class UserGuard implements CanActivate {
+export class UserGuard {
   initialized = false;
   authenticated = false;
   hasUser = false;

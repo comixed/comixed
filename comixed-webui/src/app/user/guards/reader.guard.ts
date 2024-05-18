@@ -19,7 +19,6 @@
 import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
-  CanActivate,
   Router,
   RouterStateSnapshot
 } from '@angular/router';
@@ -33,7 +32,7 @@ import { isReader } from '@app/user/user.functions';
 @Injectable({
   providedIn: 'root'
 })
-export class ReaderGuard implements CanActivate {
+export class ReaderGuard {
   authenticated = false;
   isReader = false;
   delayed$ = new Subject<boolean>();

@@ -41,7 +41,7 @@
             </goals>
             <phase>initialize</phase>
             <configuration>
-              <nodeVersion>v16.16.0</nodeVersion>
+              <nodeVersion>v20.10.0</nodeVersion>
               <yarnVersion>v1.22.19</yarnVersion>
             </configuration>
           </execution>
