@@ -160,7 +160,9 @@
   "text": {
     "archive-type": "{type, select, CBZ{Zip File (CBZ)} CBR{RAR File (CBR)} CB7{7Zip File (CB7)} other{Unknown}}",
     "clear-value": "Clear value",
+    "end-year": "End Year",
     "no": "No",
+    "start-year": "Start Year",
     "view-details": "View Details",
     "yes": "Yes"
   },

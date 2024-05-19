@@ -1,4 +1,4 @@
-<div *ngIf="!!data" #container class="cx-width-100 cx-height-100">
+<div *ngIf="!!data" #container class="cx-width-100 cx-height-100 cx-padding-5">
   <h2>{{ "home.title.comics-by-year-and-publisher-chart" | translate }}</h2>
   <ngx-charts-heat-map
     [view]="[chartWidth$ | async, chartHeight$ | async]"
@@ -8,4 +8,30 @@
     [yAxis]="true"
     [legend]="true"
   ></ngx-charts-heat-map>
+  <div class="cx-horizontal-container">
+    <mat-form-field class="cx-width-10" appearance="fill">
+      <mat-label>{{ "text.start-year" | translate }}</mat-label>
+      <mat-select
+        id="start-year"
+        [disabled]="yearOptions.length === 0"
+        (selectionChange)="onShowData($event.value, endYear)"
+      >
+        <mat-option *ngFor="let year of yearOptions" [value]="year">
+          {{ year }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="cx-width-10" appearance="fill">
+      <mat-label>{{ "text.end-year" | translate }}</mat-label>
+      <mat-select
+        id="end-year"
+        [disabled]="yearOptions.length === 0"
+        (selectionChange)="onShowData(startYear, $event.value)"
+      >
+        <mat-option *ngFor="let year of yearOptions" [value]="year">
+          {{ year }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 </div>

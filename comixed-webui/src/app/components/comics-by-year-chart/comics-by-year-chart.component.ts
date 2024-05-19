@@ -27,6 +27,7 @@ import { ComicsByYearData } from '@app/models/ui/comics-by-year-data';
 import { BehaviorSubject } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { LibraryState } from '@app/library/reducers/library.reducer';
+import { yearsPerRow } from '@angular/material/datepicker';
 
 @Component({
   selector: 'cx-comics-by-year-chart',
@@ -38,7 +39,12 @@ export class ComicsByYearChartComponent implements AfterViewInit {
   chartHeight$ = new BehaviorSubject<number>(0);
   chartWidth$ = new BehaviorSubject<number>(0);
 
-  data: ComicsByYearData[];
+  allData: ComicsByYearData[] = [];
+  data: ComicsByYearData[] = [];
+  yearOptions = [];
+  startYear = 0;
+  endYear = 0;
+  protected readonly yearsPerRow = yearsPerRow;
 
   constructor(private logger: LoggerService) {}
 
@@ -61,13 +67,32 @@ export class ComicsByYearChartComponent implements AfterViewInit {
         value: entry.count
       });
     });
-    this.data = data.sort((left, right) =>
+    this.data = this.allData = data.sort((left, right) =>
       left.name > right.name ? 1 : left.name < right.name ? -1 : 0
     );
+    this.yearOptions = libraryState.byPublisherAndYear
+      .map(entry => entry.year)
+      .filter((value, index, array) => index === array.indexOf(value))
+      .sort();
+    this.startYear = this.yearOptions.length > 0 ? this.yearOptions[0] : 0;
+    this.endYear =
+      this.yearOptions.length > 0
+        ? this.yearOptions[this.yearOptions.length - 1]
+        : 0;
   }
 
   ngAfterViewInit(): void {
     this.loadComponentDimensions();
+  }
+
+  onShowData(startYear: number, endYear: number): void {
+    if (startYear <= endYear) {
+      this.startYear = startYear;
+      this.endYear = endYear;
+      this.data = this.allData
+        .filter(entry => parseInt(entry.name) >= this.startYear)
+        .filter(entry => parseInt(entry.name) <= this.endYear);
+    }
   }
 
   private loadComponentDimensions(): void {
@@ -79,6 +104,6 @@ export class ComicsByYearChartComponent implements AfterViewInit {
     if (height < 0) {
       height = 0;
     }
-    this.chartHeight$.next(height);
+    this.chartHeight$.next(height - 65);
   }
 }
