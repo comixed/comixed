@@ -31,6 +31,7 @@ import {
   LOAD_COMICS_READ_STATISTICS_URL,
   LOAD_CURRENT_USER_URL,
   LOGIN_USER_URL,
+  LOGOUT_USER_URL,
   SAVE_CURRENT_USER_URL,
   SAVE_USER_PREFERENCE_URL,
   USER_SELF_TOPIC
@@ -164,6 +165,17 @@ describe('UserService', () => {
     expect(req.request.body.get('email')).toEqual(USER.email);
     expect(req.request.body.get('password')).toEqual(PASSWORD);
     req.flush(serviceResponse);
+  });
+
+  it('can logout the current user out', () => {
+    service
+      .logoutUser()
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(interpolate(LOGOUT_USER_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({});
+    req.flush(new HttpResponse({ status: 200 }));
   });
 
   describe('user preferences', () => {

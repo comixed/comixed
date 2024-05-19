@@ -18,6 +18,8 @@
 
 package org.comixedproject.rest;
 
+import static org.comixedproject.auth.ComiXedSecurityConfiguration.COMIXED_SESSION_COOKIE_NAME;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.session.web.http.CookieSerializer;
@@ -33,7 +35,7 @@ public class ComiXedRESTConfiguration {
   @Bean
   public CookieSerializer cookieSerializer() {
     DefaultCookieSerializer serializer = new DefaultCookieSerializer();
-    serializer.setCookieName("ComiXed-Session-Id");
+    serializer.setCookieName(COMIXED_SESSION_COOKIE_NAME);
     serializer.setCookiePath("/");
     serializer.setDomainNamePattern("^.+?\\.(\\w+\\.[a-z]+)$");
     return serializer;

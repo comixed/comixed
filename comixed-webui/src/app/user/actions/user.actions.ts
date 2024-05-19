@@ -41,7 +41,13 @@ export const loadCurrentUserFailure = createAction(
 
 export const logoutUser = createAction('[User] Log out current user');
 
-export const logutUserSuccess = createAction('[User] Current user logged out');
+export const logoutUserSuccess = createAction(
+  '[User] Successfully logged out the current user'
+);
+
+export const logoutUserFailure = createAction(
+  '[User] Failed to log out the current user'
+);
 
 export const saveUserPreference = createAction(
   '[User] Save a user preference',
