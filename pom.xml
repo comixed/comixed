@@ -502,7 +502,6 @@
     <module>comixed-opds</module>
     <module>comixed-rest</module>
     <module>comixed-webui</module>
-    <module>comixed-dbtool</module>
     <module>comixed-app</module>
     <module>comixed-release</module>
   </modules>
