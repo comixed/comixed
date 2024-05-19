@@ -44,9 +44,11 @@
       "login-tooltip": "Go to the login page...",
       "logout-tooltip": "Log out..."
     },
-    "logout": {
+    "logout-user": {
       "confirmation-title": "Logout",
-      "confirmation-message": "Are you sure you want to logout?"
+      "confirmation-message": "Are you sure you want to logout?",
+      "effect-failure": "Failed to logout user...",
+      "effect-success": "You've been logged out."
     },
     "preference": {
       "label": {

@@ -18,18 +18,19 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  loadCurrentUserSuccess,
   loadCurrentUser,
   loadCurrentUserFailure,
+  loadCurrentUserSuccess,
   loginUser,
   loginUserFailure,
+  loginUserSuccess,
   logoutUser,
+  logoutUserFailure,
+  logoutUserSuccess,
   saveCurrentUser,
   saveCurrentUserFailure,
   saveUserPreference,
   saveUserPreferenceFailure,
-  loginUserSuccess,
-  logutUserSuccess,
   saveUserPreferenceSuccess
 } from '../actions/user.actions';
 import { User } from '@app/user/models/user';
@@ -91,12 +92,13 @@ export const reducer = createReducer(
   })),
   on(loginUserFailure, state => ({ ...state, authenticating: false })),
   on(logoutUser, state => ({ ...state, authenticating: true })),
-  on(logutUserSuccess, state => ({
+  on(logoutUserSuccess, state => ({
     ...state,
     authenticating: false,
     authenticated: false,
     user: null
   })),
+  on(logoutUserFailure, state => ({ ...state, authenticating: false })),
   on(saveUserPreference, state => ({ ...state, saving: true })),
   on(saveUserPreferenceSuccess, (state, action) => ({
     ...state,

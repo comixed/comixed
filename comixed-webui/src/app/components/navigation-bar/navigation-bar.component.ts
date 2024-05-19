@@ -153,9 +153,11 @@ export class NavigationBarComponent {
   onLogout(): void {
     this.logger.trace('Logout button clicked');
     this.confirmationService.confirm({
-      title: this.translateService.instant('user.logout.confirmation-title'),
+      title: this.translateService.instant(
+        'user.logout-user.confirmation-title'
+      ),
       message: this.translateService.instant(
-        'user.logout.confirmation-message'
+        'user.logout-user.confirmation-message'
       ),
       confirm: () => {
         this.logger.debug('User logged out');

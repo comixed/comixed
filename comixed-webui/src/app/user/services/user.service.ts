@@ -28,6 +28,7 @@ import {
   LOAD_COMICS_READ_STATISTICS_URL,
   LOAD_CURRENT_USER_URL,
   LOGIN_USER_URL,
+  LOGOUT_USER_URL,
   SAVE_CURRENT_USER_URL,
   SAVE_USER_PREFERENCE_URL,
   USER_SELF_TOPIC
@@ -111,6 +112,11 @@ export class UserService {
       interpolate(LOGIN_USER_URL),
       new HttpParams().set('email', args.email).set('password', args.password)
     );
+  }
+
+  logoutUser(): Observable<any> {
+    this.logger.debug('Logout user out');
+    return this.http.post(interpolate(LOGOUT_USER_URL), {});
   }
 
   /**

@@ -23,28 +23,31 @@ import { UserEffects } from './user.effects';
 import { UserService } from '@app/user/services/user.service';
 import { USER_READER } from '@app/user/user.fixtures';
 import {
-  loadCurrentUserSuccess,
   loadCurrentUser,
   loadCurrentUserFailure,
+  loadCurrentUserSuccess,
   loginUser,
   loginUserFailure,
+  loginUserSuccess,
   logoutUser,
+  logoutUserFailure,
+  logoutUserSuccess,
   saveCurrentUser,
   saveCurrentUserFailure,
   saveUserPreference,
   saveUserPreferenceFailure,
-  loginUserSuccess,
-  logutUserSuccess,
   saveUserPreferenceSuccess
 } from '@app/user/actions/user.actions';
 import { hot } from 'jasmine-marbles';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { LoginResponse } from '@app/user/models/net/login-response';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { TokenService } from '@app/core/services/token.service';
 import { AlertService } from '@app/core/services/alert.service';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
 
 describe('UserEffects', () => {
   const USER = USER_READER;
@@ -58,10 +61,12 @@ describe('UserEffects', () => {
   let userService: jasmine.SpyObj<UserService>;
   let alertService: AlertService;
   let tokenService: TokenService;
+  let router: Router;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
+        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatSnackBarModule
@@ -74,6 +79,7 @@ describe('UserEffects', () => {
           useValue: {
             loadCurrentUser: jasmine.createSpy('UserService.loadCurrentUser()'),
             loginUser: jasmine.createSpy('UserService.loginUser()'),
+            logoutUser: jasmine.createSpy('UserService.logoutUser()'),
             saveUserPreference: jasmine.createSpy(
               'UserService.saveUserPreference()'
             ),
@@ -91,6 +97,8 @@ describe('UserEffects', () => {
     tokenService = TestBed.inject(TokenService);
     spyOn(tokenService, 'setAuthToken');
     spyOn(tokenService, 'clearAuthToken');
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigateByUrl');
   });
 
   it('should be created', () => {
@@ -182,13 +190,29 @@ describe('UserEffects', () => {
 
   describe('user logout', () => {
     it('fires an action on success', () => {
+      const serverResponse = new HttpResponse({ status: 200 });
       const action = logoutUser();
-      const outcome = logutUserSuccess();
+      const outcome = logoutUserSuccess();
 
       actions$ = hot('-a', { a: action });
+      userService.logoutUser.and.returnValue(of(serverResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.logoutUser$).toBeObservable(expected);
+      expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
+      expect(tokenService.clearAuthToken).toHaveBeenCalled();
+    });
+
+    it('fires an action on general failure', () => {
+      const action = logoutUser();
+      const outcome = logoutUserFailure();
+
+      actions$ = hot('-a', { a: action });
+      userService.logoutUser.and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.logoutUser$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
       expect(tokenService.clearAuthToken).toHaveBeenCalled();
     });
   });

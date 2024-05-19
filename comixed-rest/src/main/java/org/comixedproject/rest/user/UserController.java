@@ -76,6 +76,7 @@ public class UserController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.user.save-preference")
   @JsonView(View.UserDetailsView.class)
+  @PreAuthorize("hasAnyRole('READER', 'ADMIN')")
   public ComiXedUser saveCurrentUserPreference(
       final Principal principal,
       @PathVariable("name") final String name,
@@ -101,6 +102,7 @@ public class UserController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.user.delete-preference")
   @JsonView(View.UserDetailsView.class)
+  @PreAuthorize("hasAnyRole('READER', 'ADMIN')")
   public ComiXedUser deleteCurrentUserProperty(
       final Principal principal, @PathVariable("name") final String name)
       throws ComiXedUserException {
@@ -124,6 +126,7 @@ public class UserController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.user.update-current")
   @JsonView(View.UserDetailsView.class)
+  @PreAuthorize("hasRole('READER')")
   public ComiXedUser updateCurrentUser(
       @PathVariable("id") final long id, @RequestBody() final UpdateCurrentUserRequest request)
       throws ComiXedUserException {
@@ -145,6 +148,7 @@ public class UserController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.user.comics-read-statistics")
   @JsonView(View.UserStatistics.class)
+  @PreAuthorize("hasRole('READER')")
   public List<ComicsReadStatistic> loadComicsReadStatistics(final Principal principal)
       throws ComiXedUserException {
     final String email = principal.getName();

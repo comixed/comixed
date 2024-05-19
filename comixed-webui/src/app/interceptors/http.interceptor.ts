@@ -73,7 +73,7 @@ export class HttpInterceptor implements HttpInterceptor {
             return throwError(error);
           }
           this.logger.info('Ensuring user is logged out');
-          this.store.dispatch(logoutUser());
+          this.tokenService.clearAuthToken();
           this.logger.info('Redirecting to login page');
           this.router.navigateByUrl('/login');
           return throwError(error);

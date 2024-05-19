@@ -38,6 +38,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  */
 @Configuration
 public class ComiXedSecurityConfiguration {
+  public static final String COMIXED_SESSION_COOKIE_NAME = "ComiXed-Session-Id";
+
   @Autowired private ComiXedAuthenticationFilter authenticationFilter;
   @Autowired private ComiXedAuthenticationProvider authenticationProvider;
   @Autowired private ComiXedUnauthorizedEntryPoint unauthorizedHandler;
@@ -67,6 +69,15 @@ public class ComiXedSecurityConfiguration {
         .securityMatcher("/api/**")
         .authorizeHttpRequests(authz -> authz.anyRequest().permitAll());
     http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+    http.logout(
+        logout ->
+            logout
+                .logoutUrl("/api/token/destroy")
+                .clearAuthentication(true)
+                .logoutSuccessUrl("/")
+                .invalidateHttpSession(true)
+                .deleteCookies(COMIXED_SESSION_COOKIE_NAME)
+                .permitAll());
 
     return http.build();
   }

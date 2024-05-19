@@ -26,7 +26,8 @@ import {
   loginUserFailure,
   loginUserSuccess,
   logoutUser,
-  logutUserSuccess,
+  logoutUserFailure,
+  logoutUserSuccess,
   saveCurrentUser,
   saveCurrentUserFailure,
   saveUserPreference,
@@ -224,7 +225,7 @@ describe('User Reducer', () => {
       beforeEach(() => {
         state = reducer(
           { ...state, authenticating: true, authenticated: true, user: USER },
-          logutUserSuccess()
+          logoutUserSuccess()
         );
       });
 
@@ -238,6 +239,27 @@ describe('User Reducer', () => {
 
       it('clears the user', () => {
         expect(state.user).toBeNull();
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, authenticating: true, authenticated: true, user: USER },
+          logoutUserFailure()
+        );
+      });
+
+      it('clears the authenticating flag', () => {
+        expect(state.authenticating).toBeFalse();
+      });
+
+      it('leaves the authenticated flag intact', () => {
+        expect(state.authenticated).toBeTrue();
+      });
+
+      it('leaves the user intact', () => {
+        expect(state.user).toBe(USER);
       });
     });
   });

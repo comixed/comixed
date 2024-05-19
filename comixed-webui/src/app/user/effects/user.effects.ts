@@ -20,18 +20,19 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import {
-  loadCurrentUserSuccess,
   loadCurrentUser,
   loadCurrentUserFailure,
+  loadCurrentUserSuccess,
   loginUser,
   loginUserFailure,
+  loginUserSuccess,
   logoutUser,
+  logoutUserFailure,
+  logoutUserSuccess,
   saveCurrentUser,
   saveCurrentUserFailure,
   saveUserPreference,
   saveUserPreferenceFailure,
-  loginUserSuccess,
-  logutUserSuccess,
   saveUserPreferenceSuccess
 } from '@app/user/actions/user.actions';
 import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
@@ -42,6 +43,7 @@ import { LoginResponse } from '@app/user/models/net/login-response';
 import { AlertService } from '@app/core/services/alert.service';
 import { TokenService } from '@app/core/services/token.service';
 import { User } from '@app/user/models/user';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class UserEffects {
@@ -107,9 +109,24 @@ export class UserEffects {
     return this.actions$.pipe(
       ofType(logoutUser),
       tap(action => this.logger.trace('Logout out user:', action)),
-      mergeMap(() => {
+      // we clear the auth token before calling the logout endpoint so that we don't get re-authenticated
+      // tap(() => this.tokenService.clearAuthToken()),
+      switchMap(() => {
         this.tokenService.clearAuthToken();
-        return of(logutUserSuccess());
+        this.userService.logoutUser().subscribe(() => {
+          this.alertService.info(
+            this.translateService.instant('user.logout-user.effect-success')
+          );
+          this.router.navigateByUrl('/');
+        });
+        return of(logoutUserSuccess());
+      }),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app,.general-effect-failure')
+        );
+        return of(logoutUserFailure());
       })
     );
   });
@@ -183,6 +200,7 @@ export class UserEffects {
     private userService: UserService,
     private alertService: AlertService,
     private translateService: TranslateService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private router: Router
   ) {}
 }
