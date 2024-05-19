@@ -28,6 +28,7 @@ import { selectLastReadListState } from '@app/comic-books/selectors/last-read-li
 import { selectLibraryState } from '@app/library/selectors/library.selectors';
 import { LibraryState } from '@app/library/reducers/library.reducer';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-home',
@@ -57,6 +58,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
     this.libraryStateSubscription = this.store
       .select(selectLibraryState)
+      .pipe(filter(state => !!state))
       .subscribe(state => {
         this.logger.debug('Library state updated:', state);
         this.libraryState = state;

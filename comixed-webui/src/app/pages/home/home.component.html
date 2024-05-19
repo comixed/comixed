@@ -5,32 +5,25 @@
 
 <h1>{{ "home.title.comic-statistics" | translate }}</h1>
 
-<div *ngIf="!!libraryState" class="cx-width-100 cx-centered-horiz cx-padding-5">
-  <div class="cx-width-90">
-    <mat-grid-list *ngIf="!loading" [cols]="10" rowHeight="100px">
-      <mat-grid-tile class="cx-border-primary-1" colspan="5" rowspan="6">
-        <cx-collections-chart
-          class="cx-width-100 cx-height-100"
-          [libraryState]="libraryState"
-        ></cx-collections-chart>
-      </mat-grid-tile>
-      <mat-grid-tile class="cx-border-primary-1" colspan="5" rowspan="3">
-        <cx-comic-state-chart
-          class="cx-width-100 cx-height-100"
-          [libraryState]="libraryState"
-        ></cx-comic-state-chart>
-      </mat-grid-tile>
-      <mat-grid-tile class="cx-border-primary-1" colspan="5" rowspan="3">
-        <cx-comics-read-chart
-          class="cx-width-100 cx-height-100"
-        ></cx-comics-read-chart>
-      </mat-grid-tile>
-      <mat-grid-tile class="cx-border-primary-1" colspan="10" rowspan="3">
-        <cx-comics-by-year-chart
-          class="cx-width-100 cx-height-100"
-          [libraryState]="libraryState"
-        ></cx-comics-by-year-chart>
-      </mat-grid-tile>
-    </mat-grid-list>
+<div *ngIf="!!libraryState" class="cx-width-100 cx-centered-horiz">
+  <div class="cx-width-90 cx-border-primary-1 cx-padding-5">
+    <cx-collections-chart [libraryState]="libraryState"></cx-collections-chart>
+  </div>
+</div>
+
+<div *ngIf="!!libraryState" class="cx-width-100 cx-centered-horiz">
+  <div class="cx-width-90 cx-border-primary-1 cx-padding-5">
+    <cx-comics-by-year-chart
+      class="cx-width-100 cx-height-100"
+      [libraryState]="libraryState"
+    ></cx-comics-by-year-chart>
+  </div>
+</div>
+
+<div *ngIf="lastRead.length > 0" class="cx-width-100 cx-centered-horiz">
+  <div class="cx-width-90 cx-border-primary-1 cx-padding-5">
+    <cx-comics-read-chart
+      class="cx-width-100 cx-height-100"
+    ></cx-comics-read-chart>
   </div>
 </div>
