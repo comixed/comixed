@@ -55,11 +55,6 @@
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
-      <artifactId>comixed-dbtool</artifactId>
-      <version>2.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.comixedproject</groupId>
       <artifactId>comixed-app</artifactId>
       <version>2.1-SNAPSHOT</version>
     </dependency>
