@@ -13,6 +13,15 @@
 
 <div *ngIf="!!libraryState" class="cx-width-100 cx-centered-horiz">
   <div class="cx-width-90 cx-border-primary-1 cx-padding-5">
+    <cx-comic-state-chart
+      class="cx-width-100 cx-height-100"
+      [libraryState]="libraryState"
+    ></cx-comic-state-chart>
+  </div>
+</div>
+
+<div *ngIf="!!libraryState" class="cx-width-100 cx-centered-horiz">
+  <div class="cx-width-90 cx-border-primary-1 cx-padding-5">
     <cx-comics-by-year-chart
       class="cx-width-100 cx-height-100"
       [libraryState]="libraryState"
