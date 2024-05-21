@@ -72,7 +72,6 @@ export class BatchProcessDetailPageComponent implements OnInit, OnDestroy {
       .select(selectBatchProcessList)
       .subscribe(list => {
         this.batchList = list;
-        console.log('*** this.batchList:', this.batchList);
         this.loadJobDetail();
       });
     this.detailSubscription = this.store
