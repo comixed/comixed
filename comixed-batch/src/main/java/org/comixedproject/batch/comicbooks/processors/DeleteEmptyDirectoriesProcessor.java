@@ -22,6 +22,7 @@ import java.io.File;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.ArrayUtils;
 import org.comixedproject.adaptors.file.FileAdaptor;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,7 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  */
 @Component
+@StepScope
 @Log4j2
 public class DeleteEmptyDirectoriesProcessor implements ItemProcessor<File, Void> {
   @Autowired private FileAdaptor fileAdaptor;

@@ -60,7 +60,7 @@ public class LoadFileContentsProcessorTest {
   @Captor private ArgumentCaptor<ContentAdaptorRules> contentAdaptorRulesArgumentCaptor;
 
   @Before
-  public void setUp() throws ContentAdaptorException, AdaptorException {
+  public void setUp() throws ContentAdaptorException, AdaptorException, InterruptedException {
     Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(false);
     Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.any(ComicBook.class)))
         .thenReturn(TEST_METADATA_FILENAME);

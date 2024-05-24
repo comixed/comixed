@@ -20,14 +20,18 @@ package org.comixedproject.batch.comicbooks;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.comicbooks.listeners.CreateComicBookChunkListener;
+import org.comixedproject.batch.comicbooks.listeners.DeleteImportedDescriptorsListener;
 import org.comixedproject.batch.comicbooks.listeners.ImportComicFilesJobListener;
 import org.comixedproject.batch.comicbooks.listeners.RecordInsertedChunkListener;
 import org.comixedproject.batch.comicbooks.processors.CreateComicBookProcessor;
 import org.comixedproject.batch.comicbooks.processors.NoopComicProcessor;
 import org.comixedproject.batch.comicbooks.readers.CreateComicBookReader;
+import org.comixedproject.batch.comicbooks.readers.DeleteImportedDescriptorsReader;
 import org.comixedproject.batch.comicbooks.readers.RecordInsertedReader;
 import org.comixedproject.batch.comicbooks.writers.CreateComicBookWriter;
+import org.comixedproject.batch.comicbooks.writers.DeleteImportedDescriptorsWriter;
 import org.comixedproject.batch.comicbooks.writers.RecordInsertedWriter;
+import org.comixedproject.batch.processors.NoopProcessor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.springframework.batch.core.Job;
@@ -72,11 +76,13 @@ public class ImportComicFilesConfiguration {
       final ImportComicFilesJobListener jobListener,
       final JobRepository jobRepository,
       @Qualifier("createComicBookStep") final Step createComicBookStep,
-      @Qualifier("recordInsertedStep") Step recordInsertedStep) {
+      @Qualifier("recordInsertedStep") Step recordInsertedStep,
+      @Qualifier("deleteImportedDescriptorsStep") Step deleteImportedDescriptorsStep) {
     return new JobBuilder(IMPORT_COMIC_FILES_JOB, jobRepository)
         .incrementer(new RunIdIncrementer())
         .listener(jobListener)
         .start(createComicBookStep)
+        .next(deleteImportedDescriptorsStep)
         .next(recordInsertedStep)
         .build();
   }
@@ -101,6 +107,35 @@ public class ImportComicFilesConfiguration {
       final CreateComicBookChunkListener chunkListener) {
     return new StepBuilder("createComicBookStep", jobRepository)
         .<ComicFileDescriptor, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
+        .reader(reader)
+        .processor(processor)
+        .writer(writer)
+        .listener(chunkListener)
+        .build();
+  }
+
+  /**
+   * Returns the record inserted step.
+   *
+   * @param jobRepository the job repository
+   * @param platformTransactionManager the transaction manager
+   * @param reader the reader
+   * @param processor the processor
+   * @param writer the writer
+   * @param chunkListener the chunk listener
+   * @return the step
+   */
+  @Bean(name = "deleteImportedDescriptorsStep")
+  public Step deleteImportedDescriptorsStep(
+      final JobRepository jobRepository,
+      final PlatformTransactionManager platformTransactionManager,
+      final DeleteImportedDescriptorsReader reader,
+      final NoopProcessor<ComicFileDescriptor> processor,
+      final DeleteImportedDescriptorsWriter writer,
+      final DeleteImportedDescriptorsListener chunkListener) {
+    return new StepBuilder("deleteImportedDescriptorsStep", jobRepository)
+        .<ComicFileDescriptor, ComicFileDescriptor>chunk(
+            this.batchChunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

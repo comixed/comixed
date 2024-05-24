@@ -25,6 +25,7 @@ import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.comixedproject.model.metadata.FilenameMetadata;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.metadata.FilenameScrapingRuleService;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,6 +37,7 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  */
 @Component
+@StepScope
 @Log4j2
 public class CreateComicBookProcessor implements ItemProcessor<ComicFileDescriptor, ComicBook> {
   @Autowired private ComicBookService comicBookService;

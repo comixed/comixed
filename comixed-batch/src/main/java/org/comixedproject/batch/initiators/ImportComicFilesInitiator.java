@@ -59,7 +59,7 @@ public class ImportComicFilesInitiator {
   @Scheduled(fixedDelayString = "${comixed.batch.import-comic-files.period}")
   public void execute() {
     log.trace("Checking for comic files to import");
-    if (this.comicFileService.getComicFileDescriptorCount() > 0
+    if (this.comicFileService.getUnimportedComicFileDescriptorCount() > 0
         && !this.batchProcessesService.hasActiveExecutions(IMPORT_COMIC_FILES_JOB)) {
       try {
         log.trace("Starting batch job: import comic files");

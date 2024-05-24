@@ -170,7 +170,10 @@ public class ComicBookAdaptorTest {
 
   @Test(expected = AdaptorException.class)
   public void testLoadGetArchiveAdaptorThrowsException()
-      throws AdaptorException, ArchiveAdaptorException, ContentAdaptorException {
+      throws AdaptorException,
+          ArchiveAdaptorException,
+          ContentAdaptorException,
+          InterruptedException {
     Mockito.when(fileTypeAdaptor.getArchiveAdaptorFor(Mockito.anyString()))
         .thenThrow(AdaptorException.class);
 
@@ -183,7 +186,10 @@ public class ComicBookAdaptorTest {
 
   @Test(expected = AdaptorException.class)
   public void testLoadOpenArchiveThrowsException()
-      throws AdaptorException, ArchiveAdaptorException, ContentAdaptorException {
+      throws AdaptorException,
+          ArchiveAdaptorException,
+          ContentAdaptorException,
+          InterruptedException {
     Mockito.when(readableArchiveAdaptor.openArchiveForRead(Mockito.anyString()))
         .thenThrow(ArchiveAdaptorException.class);
 
@@ -197,7 +203,10 @@ public class ComicBookAdaptorTest {
 
   @Test(expected = AdaptorException.class)
   public void testLoadGetEntriesThrowsException()
-      throws AdaptorException, ArchiveAdaptorException, ContentAdaptorException {
+      throws AdaptorException,
+          ArchiveAdaptorException,
+          ContentAdaptorException,
+          InterruptedException {
     Mockito.when(readableArchiveAdaptor.getEntries(Mockito.any(ArchiveReadHandle.class)))
         .thenThrow(ArchiveAdaptorException.class);
 
@@ -210,7 +219,10 @@ public class ComicBookAdaptorTest {
 
   @Test(expected = AdaptorException.class)
   public void testLoadReadEntryThrowsException()
-      throws AdaptorException, ArchiveAdaptorException, ContentAdaptorException {
+      throws AdaptorException,
+          ArchiveAdaptorException,
+          ContentAdaptorException,
+          InterruptedException {
     archiveEntryList.add(archiveEntry);
 
     Mockito.when(
@@ -228,7 +240,10 @@ public class ComicBookAdaptorTest {
 
   @Test
   public void testLoadNoAdaptorForContent()
-      throws AdaptorException, ArchiveAdaptorException, ContentAdaptorException {
+      throws AdaptorException,
+          ArchiveAdaptorException,
+          ContentAdaptorException,
+          InterruptedException {
     archiveEntryList.add(archiveEntry);
 
     Mockito.when(fileTypeAdaptor.getContentAdaptorFor(Mockito.any(byte[].class))).thenReturn(null);
@@ -246,7 +261,10 @@ public class ComicBookAdaptorTest {
 
   @Test(expected = AdaptorException.class)
   public void testLoadContentAdaptorThrowsException()
-      throws AdaptorException, ArchiveAdaptorException, ContentAdaptorException {
+      throws AdaptorException,
+          ArchiveAdaptorException,
+          ContentAdaptorException,
+          InterruptedException {
     archiveEntryList.add(archiveEntry);
 
     Mockito.doThrow(ContentAdaptorException.class)
@@ -268,7 +286,10 @@ public class ComicBookAdaptorTest {
 
   @Test
   public void testLoadNoContent()
-      throws AdaptorException, ArchiveAdaptorException, ContentAdaptorException {
+      throws AdaptorException,
+          ArchiveAdaptorException,
+          ContentAdaptorException,
+          InterruptedException {
     Mockito.when(
             readableArchiveAdaptor.readEntry(
                 Mockito.any(ArchiveReadHandle.class), Mockito.anyString()))
@@ -293,7 +314,11 @@ public class ComicBookAdaptorTest {
   }
 
   @Test
-  public void testLoad() throws AdaptorException, ArchiveAdaptorException, ContentAdaptorException {
+  public void testLoad()
+      throws AdaptorException,
+          ArchiveAdaptorException,
+          ContentAdaptorException,
+          InterruptedException {
     archiveEntryList.add(archiveEntry);
 
     adaptor.load(comicBook, contentAdaptorRules);

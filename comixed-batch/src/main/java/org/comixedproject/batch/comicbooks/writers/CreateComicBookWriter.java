@@ -19,12 +19,8 @@
 package org.comixedproject.batch.comicbooks.writers;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicfiles.ComicFileDescriptor;
-import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.state.comicbooks.ComicEvent;
-import org.springframework.batch.item.Chunk;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -34,25 +30,10 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  */
 @Component
+@StepScope
 @Log4j2
 public class CreateComicBookWriter extends AbstractComicBookWriter {
-  @Autowired private ComicFileService comicFileService;
-
   public CreateComicBookWriter() {
     super(ComicEvent.readyForProcessing);
-  }
-
-  @Override
-  public void write(final Chunk<? extends ComicBook> comics) {
-    super.write(comics);
-    comics.forEach(
-        comicBook -> {
-          log.trace("Loading comic file descriptor");
-          final ComicFileDescriptor descriptor =
-              this.comicFileService.getComicFileDescriptorByFilename(
-                  comicBook.getComicDetail().getFilename());
-          log.trace("Deleting descriptor record");
-          this.comicFileService.deleteComicFileDescriptor(descriptor);
-        });
   }
 }

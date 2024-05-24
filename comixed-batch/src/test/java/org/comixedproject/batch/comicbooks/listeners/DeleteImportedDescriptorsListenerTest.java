@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,11 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
-import static junit.framework.TestCase.*;
 import static junit.framework.TestCase.assertEquals;
-import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.IMPORT_COMIC_FILES_STEP;
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertTrue;
+import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.DELETE_DESCRIPTORS_STEP;
 
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
@@ -39,12 +41,12 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.scope.context.StepContext;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CreateComicBookChunkListenerTest {
+public class DeleteImportedDescriptorsListenerTest {
   private static final String TEST_JOB_NAME = "The job name";
   private static final long TEST_COMIC_FILE_COUNT = 717L;
   private static final long TEST_COMIC_BOOK_COUNT = 129L;
 
-  @InjectMocks private CreateComicBookChunkListener listener;
+  @InjectMocks private DeleteImportedDescriptorsListener listener;
   @Mock private ComicFileService comicFileService;
   @Mock private ComicBookService comicBookService;
   @Mock private ChunkContext chunkContext;
@@ -88,7 +90,7 @@ public class CreateComicBookChunkListenerTest {
 
     assertNotNull(status);
     assertTrue(status.isActive());
-    assertEquals(IMPORT_COMIC_FILES_STEP, status.getStepName());
+    assertEquals(DELETE_DESCRIPTORS_STEP, status.getStepName());
     assertEquals(TEST_COMIC_BOOK_COUNT + TEST_COMIC_FILE_COUNT, status.getTotal());
     assertEquals(TEST_COMIC_BOOK_COUNT, status.getProcessed());
 
@@ -106,7 +108,7 @@ public class CreateComicBookChunkListenerTest {
 
     assertNotNull(status);
     assertTrue(status.isActive());
-    assertEquals(IMPORT_COMIC_FILES_STEP, status.getStepName());
+    assertEquals(DELETE_DESCRIPTORS_STEP, status.getStepName());
     assertEquals(TEST_COMIC_BOOK_COUNT + TEST_COMIC_FILE_COUNT, status.getTotal());
     assertEquals(TEST_COMIC_BOOK_COUNT, status.getProcessed());
 
@@ -124,7 +126,7 @@ public class CreateComicBookChunkListenerTest {
 
     assertNotNull(status);
     assertTrue(status.isActive());
-    assertEquals(IMPORT_COMIC_FILES_STEP, status.getStepName());
+    assertEquals(DELETE_DESCRIPTORS_STEP, status.getStepName());
     assertEquals(TEST_COMIC_BOOK_COUNT + TEST_COMIC_FILE_COUNT, status.getTotal());
     assertEquals(TEST_COMIC_BOOK_COUNT, status.getProcessed());
 
@@ -144,7 +146,7 @@ public class CreateComicBookChunkListenerTest {
 
     assertNotNull(status);
     assertFalse(status.isActive());
-    assertEquals(IMPORT_COMIC_FILES_STEP, status.getStepName());
+    assertEquals(DELETE_DESCRIPTORS_STEP, status.getStepName());
     assertEquals(TEST_COMIC_BOOK_COUNT, status.getTotal());
     assertEquals(TEST_COMIC_BOOK_COUNT, status.getProcessed());
 

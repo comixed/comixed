@@ -208,11 +208,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
 
     this.imprintService.update(comicBook);
 
-    final ComicBook result = this.comicBookRepository.save(comicBook);
-
-    this.comicBookRepository.flush();
-
-    return result;
+    return this.comicBookRepository.saveAndFlush(comicBook);
   }
 
   /**
@@ -287,7 +283,6 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   }
 
   @Override
-  @Transactional
   public void onComicStateChange(
       final State<ComicState, ComicEvent> state, final Message<ComicEvent> message) {
     final var comic = message.getHeaders().get(HEADER_COMIC, ComicBook.class);
@@ -303,7 +298,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     } else {
       comic.getComicDetail().setComicState(state.getId());
       comic.setLastModifiedOn(new Date());
-      final ComicBook updated = this.comicBookRepository.save(comic);
+      final ComicBook updated = ComicBookService.this.save(comic);
       log.trace("Publishing comic  update");
       try {
         this.publishComicBookUpdateAction.publish(updated);

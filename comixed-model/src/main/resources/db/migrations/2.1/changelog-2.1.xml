@@ -8,5 +8,6 @@
 
     <include file="/db/migrations/2.1/001_1923_added_adding_to_image_cache_to_comic_pages.xml"/>
     <include file="/db/migrations/2.1/002_1953_allow_null_page_hash.xml"/>
+    <include file="/db/migrations/2.1/003_1970_add_unique_comic_detail_filename.xml"/>
 
 </databaseChangeLog>

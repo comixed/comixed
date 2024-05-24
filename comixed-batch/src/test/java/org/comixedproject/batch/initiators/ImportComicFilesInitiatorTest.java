@@ -63,7 +63,7 @@ public class ImportComicFilesInitiatorTest {
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
           JobRestartException {
-    Mockito.when(comicFileService.getComicFileDescriptorCount()).thenReturn(100L);
+    Mockito.when(comicFileService.getUnimportedComicFileDescriptorCount()).thenReturn(100L);
     Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(false);
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
@@ -75,7 +75,7 @@ public class ImportComicFilesInitiatorTest {
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
           JobRestartException {
-    Mockito.when(comicFileService.getComicFileDescriptorCount()).thenReturn(0L);
+    Mockito.when(comicFileService.getUnimportedComicFileDescriptorCount()).thenReturn(0L);
 
     initiator.execute();
 

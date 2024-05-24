@@ -20,6 +20,7 @@ package org.comixedproject.batch.comicbooks.writers;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.state.comicbooks.ComicEvent;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  */
 @Component
+@StepScope
 @Log4j2
 public class RecordInsertedWriter extends AbstractComicBookWriter {
   public RecordInsertedWriter() {

@@ -23,6 +23,7 @@ import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
 import org.comixedproject.model.batch.BatchProcessDetail;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
+import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -31,6 +32,7 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  */
 @Component
+@JobScope
 @Log4j2
 public class OrganizeLibraryListener extends AbstractBatchProcessListener
     implements JobExecutionListener {

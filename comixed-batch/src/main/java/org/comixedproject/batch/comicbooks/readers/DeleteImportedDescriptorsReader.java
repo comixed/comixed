@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,14 +30,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>CreateComicBookReader</code> reads descriptors used to import comics into the library.
+ * <code>DeleteImportedDescriptorsReader</code> reads comic file descriptors that have been
+ * imported.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @StepScope
 @Log4j2
-public class CreateComicBookReader implements ItemReader<ComicFileDescriptor> {
+public class DeleteImportedDescriptorsReader implements ItemReader<ComicFileDescriptor> {
   @Autowired private ComicFileService comicFileService;
 
   @Value("${comixed.batch.chunk-size}")
@@ -48,10 +49,11 @@ public class CreateComicBookReader implements ItemReader<ComicFileDescriptor> {
 
   @Override
   public ComicFileDescriptor read() {
+
     if (this.comicFileDescriptorList == null || this.comicFileDescriptorList.isEmpty()) {
       log.trace("Load more descriptors to process");
       this.comicFileDescriptorList =
-          this.comicFileService.findUnprocessedComicFileDescriptors(this.batchChunkSize);
+          this.comicFileService.getImportedFileDescriptors(this.batchChunkSize);
     }
 
     if (this.comicFileDescriptorList.isEmpty()) {
