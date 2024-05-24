@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
-import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.IMPORT_COMIC_FILES_STEP;
+import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.DELETE_DESCRIPTORS_STEP;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
@@ -28,15 +28,15 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>CreateComicBookChunkListener</code> provides a chunk listener to relay the status of comics
- * processed.
+ * <code>DeleteImportedDescriptorsListener</code> relays status while comic file descriptors that
+ * have been imported are deleted.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @StepScope
 @Log4j2
-public class CreateComicBookChunkListener extends AbstractBatchProcessListener
+public class DeleteImportedDescriptorsListener extends AbstractBatchProcessListener
     implements ChunkListener {
   @Override
   public void beforeChunk(final ChunkContext context) {
@@ -59,6 +59,6 @@ public class CreateComicBookChunkListener extends AbstractBatchProcessListener
     final long comicFiles = this.comicFileService.getUnimportedComicFileDescriptorCount();
     final long comicBooks = this.comicBookService.getComicBookCount();
     this.doPublishProcessComicBookStatus(
-        comicFiles > 0, IMPORT_COMIC_FILES_STEP, comicBooks + comicFiles, comicBooks);
+        comicFiles > 0, DELETE_DESCRIPTORS_STEP, comicBooks + comicFiles, comicBooks);
   }
 }

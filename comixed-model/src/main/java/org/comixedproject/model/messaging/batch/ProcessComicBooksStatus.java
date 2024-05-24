@@ -33,13 +33,13 @@ import org.comixedproject.views.View;
  */
 @NoArgsConstructor
 public class ProcessComicBooksStatus {
-  public static final String IMPORT_COMIC_FILES_STEP = "import-comic-files";
+  public static final String IMPORT_COMIC_FILES_STEP = "import-comic-files-step";
+  public static final String DELETE_DESCRIPTORS_STEP = "delete-descriptors-step";
   public static final String COMIC_MARKED_AS_ADDED_STEP = "comic-marked-as-added-step";
   public static final String LOAD_FILE_CONTENTS_STEP = "load-file-contents-step";
   public static final String LOAD_PAGE_HASH_STEP = "load-page-hash-step";
   public static final String MARK_BLOCKED_PAGE_STEP = "mark-blocked-page-step";
   public static final String REMOVE_DELETED_COMIC_BOOKS_STEP = "remove-deleted-comic-books-step";
-  public static final String PURGE_MARKED_COMIC_BOOKS_STEP = "purge-marked-comic-books-step";
   public static final String MOVE_COMIC_FILES_STEP = "move-comic-files-step";
 
   @JsonProperty("active")

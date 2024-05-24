@@ -49,6 +49,7 @@
     "processing-comics": {
       "comic-marked-as-added-step": "Mark Comics As Added",
       "create-insert-step": "Creating Comic Records",
+      "delete-descriptors-step": "Cleaning Up Import Descriptors",
       "header": {
         "processed": "Processed",
         "progress": "Progress",
@@ -56,12 +57,11 @@
         "step-name": "Current Step",
         "total": "Total"
       },
-      "import-comic-files": "Importing Comic Files",
+      "import-comic-files-step": "Importing Comic Files",
       "load-file-contents-step": "Loading File Contents",
       "load-page-hash-step": "Loading Page Hashes",
       "mark-blocked-page-step": "Marking Pages With Blocked Hash",
       "move-comic-files-step": "Moving Comic Files",
-      "purge-marked-comic-books-step": "Purging Deleted Comic Books",
       "remove-deleted-comic-books-step": "Removing Deleted Comic Books",
       "subtitle": "Processed {processed} Of {total} Comics ({percentage}%)",
       "text": {

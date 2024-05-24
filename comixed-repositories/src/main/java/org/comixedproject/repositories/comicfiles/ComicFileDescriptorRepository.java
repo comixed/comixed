@@ -46,4 +46,12 @@ public interface ComicFileDescriptorRepository extends JpaRepository<ComicFileDe
   @Query(
       "SELECT d FROM ComicFileDescriptor d WHERE d.filename NOT IN (SELECT c.filename FROM ComicDetail c)")
   List<ComicFileDescriptor> findUnprocessedDescriptors(Pageable pageable);
+
+  @Query(
+      "SELECT d FROM ComicFileDescriptor d WHERE d.filename IN (SELECT c.filename from ComicDetail c)")
+  List<ComicFileDescriptor> getImportedFileDescriptors(Pageable pageable);
+
+  @Query(
+      "SELECT COUNT(d) FROM ComicFileDescriptor d WHERE d.filename NOT IN (SELECT c.filename FROM ComicDetail c)")
+  long getUnimportedComicFileDescriptorCount();
 }

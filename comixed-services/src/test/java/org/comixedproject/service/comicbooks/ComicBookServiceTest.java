@@ -225,14 +225,14 @@ public class ComicBookServiceTest {
     Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
         .thenReturn(comicBook);
     Mockito.when(state.getId()).thenReturn(TEST_STATE);
-    Mockito.when(comicBookRepository.save(Mockito.any(ComicBook.class)))
+    Mockito.when(comicBookRepository.saveAndFlush(Mockito.any(ComicBook.class)))
         .thenReturn(comicBookRecord);
 
     service.onComicStateChange(state, message);
 
     Mockito.verify(comicDetail, Mockito.times(1)).setComicState(TEST_STATE);
     Mockito.verify(comicBook, Mockito.times(1)).setLastModifiedOn(Mockito.any(Date.class));
-    Mockito.verify(comicBookRepository, Mockito.times(1)).save(comicBook);
+    Mockito.verify(comicBookRepository, Mockito.times(1)).saveAndFlush(comicBook);
     Mockito.verify(comicUpdatePublishAction, Mockito.times(1)).publish(comicBookRecord);
   }
 
@@ -242,7 +242,7 @@ public class ComicBookServiceTest {
     Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
         .thenReturn(comicBook);
     Mockito.when(state.getId()).thenReturn(TEST_STATE);
-    Mockito.when(comicBookRepository.save(Mockito.any(ComicBook.class)))
+    Mockito.when(comicBookRepository.saveAndFlush(Mockito.any(ComicBook.class)))
         .thenReturn(comicBookRecord);
     Mockito.doThrow(PublishingException.class)
         .when(comicUpdatePublishAction)
@@ -252,7 +252,7 @@ public class ComicBookServiceTest {
 
     Mockito.verify(comicDetail, Mockito.times(1)).setComicState(TEST_STATE);
     Mockito.verify(comicBook, Mockito.times(1)).setLastModifiedOn(Mockito.any(Date.class));
-    Mockito.verify(comicBookRepository, Mockito.times(1)).save(comicBook);
+    Mockito.verify(comicBookRepository, Mockito.times(1)).saveAndFlush(comicBook);
     Mockito.verify(comicUpdatePublishAction, Mockito.times(1)).publish(comicBookRecord);
   }
 
@@ -439,14 +439,15 @@ public class ComicBookServiceTest {
 
   @Test
   public void testSave() {
-    Mockito.when(comicBookRepository.save(Mockito.any(ComicBook.class))).thenReturn(comicBook);
+    Mockito.when(comicBookRepository.saveAndFlush(Mockito.any(ComicBook.class)))
+        .thenReturn(comicBook);
 
     final ComicBook result = this.service.save(comicBook);
 
     assertNotNull(result);
     assertSame(comicBook, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).save(comicBook);
+    Mockito.verify(comicBookRepository, Mockito.times(1)).saveAndFlush(comicBook);
   }
 
   @Test

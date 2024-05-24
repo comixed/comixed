@@ -21,6 +21,8 @@ package org.comixedproject.adaptors.comicbooks;
 import java.io.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.compress.utils.FileNameUtils;
@@ -61,6 +63,8 @@ public class ComicBookAdaptor {
   @Autowired private ComicMetadataContentAdaptor comicMetadataContentAdaptor;
   @Autowired private FileAdaptor fileAdaptor;
 
+  private Set<String> openFiles = new ConcurrentSkipListSet<>();
+
   /**
    * Creates a new comic. Determines the archive type for the underlying file.
    *
@@ -86,38 +90,46 @@ public class ComicBookAdaptor {
    * @throws AdaptorException if an error occurs while loading the comic book file
    */
   public void load(final ComicBook comicBook, final ContentAdaptorRules rules)
-      throws AdaptorException {
-    try {
-      log.trace(
-          "Getting archive adaptor for comic book file: id={} rule={}",
-          comicBook.getId(),
-          rules.toString());
-      final ArchiveAdaptor archiveAdaptor =
-          this.fileTypeAdaptor.getArchiveAdaptorFor(comicBook.getComicDetail().getFilename());
-      log.trace("Opening comic book file");
-      final ArchiveReadHandle readHandle =
-          archiveAdaptor.openArchiveForRead(comicBook.getComicDetail().getFilename());
-      log.trace("Loading comic book file entries");
-      final List<ComicArchiveEntry> entries = archiveAdaptor.getEntries(readHandle);
-      for (int index = 0; index < entries.size(); index++) {
-        final ComicArchiveEntry entry = entries.get(index);
-        log.trace("Loading entry content: {}", entry.getFilename());
-        final byte[] content = archiveAdaptor.readEntry(readHandle, entry.getFilename());
-        if (content.length > 0) {
-          log.trace("Getting content adaptor for entry: {}", entry.getFilename());
-          final ContentAdaptor adaptor = this.fileTypeAdaptor.getContentAdaptorFor(content);
-          if (adaptor != null) {
-            log.trace("Invoking content adaptor");
-            adaptor.loadContent(comicBook, entry.getFilename(), content, rules);
-          }
-        } else {
-          log.trace("Content contains no data");
-        }
+      throws AdaptorException, InterruptedException {
+    @NonNull final String filename = comicBook.getComicDetail().getFilename();
+    synchronized (this.openFiles) {
+      while (this.openFiles.contains(filename)) {
+        this.openFiles.wait();
       }
-      log.trace("Closing comic book file");
-      archiveAdaptor.closeArchiveForRead(readHandle);
-    } catch (AdaptorException | ArchiveAdaptorException | ContentAdaptorException error) {
-      throw new AdaptorException("Failed to load comic book file", error);
+      try {
+        this.openFiles.add(filename);
+        log.trace(
+            "Getting archive adaptor for comic book file: id={} rule={}",
+            comicBook.getId(),
+            rules.toString());
+        final ArchiveAdaptor archiveAdaptor = this.fileTypeAdaptor.getArchiveAdaptorFor(filename);
+        log.trace("Opening comic book file");
+        final ArchiveReadHandle readHandle = archiveAdaptor.openArchiveForRead(filename);
+        log.trace("Loading comic book file entries");
+        final List<ComicArchiveEntry> entries = archiveAdaptor.getEntries(readHandle);
+        for (int index = 0; index < entries.size(); index++) {
+          final ComicArchiveEntry entry = entries.get(index);
+          log.trace("Loading entry content: {}", entry.getFilename());
+          final byte[] content = archiveAdaptor.readEntry(readHandle, entry.getFilename());
+          if (content.length > 0) {
+            log.trace("Getting content adaptor for entry: {}", entry.getFilename());
+            final ContentAdaptor adaptor = this.fileTypeAdaptor.getContentAdaptorFor(content);
+            if (adaptor != null) {
+              log.trace("Invoking content adaptor");
+              adaptor.loadContent(comicBook, entry.getFilename(), content, rules);
+            }
+          } else {
+            log.trace("Content contains no data");
+          }
+        }
+        log.trace("Closing comic book file");
+        archiveAdaptor.closeArchiveForRead(readHandle);
+      } catch (AdaptorException | ArchiveAdaptorException | ContentAdaptorException error) {
+        throw new AdaptorException("Failed to load comic book file", error);
+      } finally {
+        this.openFiles.remove(filename);
+        this.openFiles.notifyAll();
+      }
     }
   }
 

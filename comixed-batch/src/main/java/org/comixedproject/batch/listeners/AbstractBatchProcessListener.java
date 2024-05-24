@@ -24,10 +24,10 @@ import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
 import org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAction;
 import org.comixedproject.model.batch.BatchProcessDetail;
 import org.comixedproject.model.messaging.batch.ProcessComicBooksStatus;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * <code>AbstractBatchProcessListener</code> provides a foundation for building listeners for batch
@@ -35,12 +35,12 @@ import org.springframework.stereotype.Component;
  *
  * @author Darryl L. Pierce
  */
-@Component
 @Log4j2
 public abstract class AbstractBatchProcessListener {
   @Autowired private PublishProcessComicBooksStatusAction publishProcessComicBooksStatusAction;
   @Autowired private PublishBatchProcessDetailUpdateAction publishBatchProcessDetailUpdateAction;
   @Autowired protected ComicFileService comicFileService;
+  @Autowired protected ComicBookService comicBookService;
 
   protected void doPublishProcessComicBookStatus(
       final boolean active, final String stepName, final long total, final long processed) {

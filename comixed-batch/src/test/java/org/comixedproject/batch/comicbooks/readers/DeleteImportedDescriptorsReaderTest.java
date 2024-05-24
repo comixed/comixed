@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,9 @@
 
 package org.comixedproject.batch.comicbooks.readers;
 
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertNull;
+import static junit.framework.TestCase.assertSame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +34,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CreateComicBookReaderTest {
-  @InjectMocks private CreateComicBookReader reader;
+public class DeleteImportedDescriptorsReaderTest {
+  @InjectMocks private DeleteImportedDescriptorsReader reader;
   @Mock private ComicFileService comicFileService;
   @Mock private ComicFileDescriptor descriptor;
 
@@ -43,7 +45,7 @@ public class CreateComicBookReaderTest {
   public void read() {
     comicFileDescriptors.add(descriptor);
 
-    Mockito.when(comicFileService.findUnprocessedComicFileDescriptors(Mockito.anyInt()))
+    Mockito.when(comicFileService.getImportedFileDescriptors(Mockito.anyInt()))
         .thenReturn(comicFileDescriptors);
 
     final ComicFileDescriptor result = reader.read();
@@ -52,12 +54,12 @@ public class CreateComicBookReaderTest {
     assertSame(descriptor, result);
 
     Mockito.verify(comicFileService, Mockito.times(1))
-        .findUnprocessedComicFileDescriptors(reader.getBatchChunkSize());
+        .getImportedFileDescriptors(reader.getBatchChunkSize());
   }
 
   @Test
   public void readNoRecordsFound() {
-    Mockito.when(comicFileService.findUnprocessedComicFileDescriptors(Mockito.anyInt()))
+    Mockito.when(comicFileService.getImportedFileDescriptors(Mockito.anyInt()))
         .thenReturn(comicFileDescriptors);
 
     final ComicFileDescriptor result = reader.read();
@@ -65,6 +67,6 @@ public class CreateComicBookReaderTest {
     assertNull(result);
 
     Mockito.verify(comicFileService, Mockito.times(1))
-        .findUnprocessedComicFileDescriptors(reader.getBatchChunkSize());
+        .getImportedFileDescriptors(reader.getBatchChunkSize());
   }
 }

@@ -27,6 +27,7 @@ import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -37,6 +38,7 @@ import org.springframework.util.StringUtils;
  * @author Darryl L. Pierce
  */
 @Component
+@StepScope
 @Log4j2
 public class UpdateComicBooksProcessor
     implements ItemProcessor<ComicBook, ComicBook>, StepExecutionListener {

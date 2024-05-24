@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.adaptors.AdaptorException;
@@ -39,6 +38,7 @@ import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -166,9 +166,10 @@ public class ComicFileService {
    *
    * @return the count
    */
-  public long getComicFileDescriptorCount() {
-    log.debug("Getting comic file descriptor count");
-    return this.comicFileDescriptorRepository.count();
+  @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+  public long getUnimportedComicFileDescriptorCount() {
+    log.debug("Getting unimported comic file descriptor count");
+    return this.comicFileDescriptorRepository.getUnimportedComicFileDescriptorCount();
   }
 
   /**
@@ -177,12 +178,11 @@ public class ComicFileService {
    * @param pageSize the number of descriptors to return
    * @return the descriptors
    */
-  public List<ComicFileDescriptor> findComicFileDescriptors(final int pageSize) {
+  @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+  public List<ComicFileDescriptor> findUnprocessedComicFileDescriptors(final int pageSize) {
     log.debug("Loading all comic file descriptors");
-    return this.comicFileDescriptorRepository
-        .findUnprocessedDescriptors(PageRequest.of(0, pageSize))
-        .stream()
-        .collect(Collectors.toList());
+    return this.comicFileDescriptorRepository.findUnprocessedDescriptors(
+        PageRequest.of(0, pageSize));
   }
 
   /**
@@ -196,8 +196,20 @@ public class ComicFileService {
     this.comicFileDescriptorRepository.delete(descriptor);
   }
 
-  public ComicFileDescriptor getComicFileDescriptorByFilename(final String filename) {
-    log.debug("Loading comic file descriptor for file: {}", filename);
-    return this.comicFileDescriptorRepository.findByFilename(filename);
+  /**
+   * Returns a batch of imported file descriptors.
+   *
+   * @param batchSize the batch size
+   * @return the descriptor list
+   */
+  @Transactional
+  public List<ComicFileDescriptor> getImportedFileDescriptors(final int batchSize) {
+    return this.comicFileDescriptorRepository.getImportedFileDescriptors(
+        PageRequest.of(0, batchSize));
+  }
+
+  @Transactional
+  public void delete(final ComicFileDescriptor descriptor) {
+    this.comicFileDescriptorRepository.delete(descriptor);
   }
 }

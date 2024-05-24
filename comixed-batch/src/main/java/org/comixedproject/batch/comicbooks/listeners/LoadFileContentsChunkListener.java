@@ -23,12 +23,10 @@ import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
 import org.comixedproject.model.batch.BatchProcessDetail;
-import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.ChunkListener;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.scope.context.ChunkContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -37,12 +35,10 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  */
 @Component
-@Log4j2
 @StepScope
+@Log4j2
 public class LoadFileContentsChunkListener extends AbstractBatchProcessListener
     implements ChunkListener {
-  @Autowired private ComicBookService comicBookService;
-
   @Override
   public void beforeChunk(final ChunkContext context) {
     this.doPublishChunkState(context);

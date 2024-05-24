@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,29 +16,34 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.readers;
+package org.comixedproject.batch.comicbooks.writers;
 
-import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.model.comicfiles.ComicFileDescriptor;
+import org.comixedproject.service.comicfiles.ComicFileService;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.item.Chunk;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>LoadFileContentsReader</code> loads unprocessed comics that need to have metadata loaded.
+ * <code>DeleteImportedDescriptorsWriter</code> actively deletes the comic file descriptor.
  *
- * @author Darryl L. Piere
+ * @author Darryl L. Pierce
  */
 @Component
 @StepScope
 @Log4j2
-public class LoadFileContentsReader extends AbstractComicReader {
-  @Autowired private ComicBookService comicBookService;
+public class DeleteImportedDescriptorsWriter implements ItemWriter<ComicFileDescriptor> {
+  @Autowired private ComicFileService comicFileService;
 
   @Override
-  protected List<ComicBook> doLoadComics() {
-    return this.comicBookService.findComicsWithContentToLoad(this.getBatchChunkSize());
+  public void write(final Chunk<? extends ComicFileDescriptor> comicFileDescriptors) {
+    comicFileDescriptors.forEach(
+        comicFileDescriptor -> {
+          log.debug("Deleting comic file descriptor for {}", comicFileDescriptor.getFilename());
+          this.comicFileService.delete(comicFileDescriptor);
+        });
   }
 }
