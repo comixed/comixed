@@ -147,6 +147,36 @@ public class ComicFileServiceTest {
   }
 
   @Test
+  public void testGetAllComicsUnderWithExistingDescriptor() throws IOException {
+    Mockito.when(comicFileDescriptorRepository.findByFilename(Mockito.anyString()))
+        .thenReturn(comicFileDescriptor);
+    Mockito.when(comicFileAdaptor.isComicFile(Mockito.any(File.class))).thenCallRealMethod();
+
+    final List<ComicFileGroup> result =
+        service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_NO_LIMIT);
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+
+    Mockito.verify(comicFileDescriptorRepository, Mockito.atLeast(1))
+        .findByFilename(Mockito.anyString());
+  }
+
+  @Test
+  public void testGetAllComicsUnderWithExistingComicBook() throws IOException {
+    Mockito.when(comicBookService.findByFilename(Mockito.anyString())).thenReturn(comicBook);
+    Mockito.when(comicFileAdaptor.isComicFile(Mockito.any(File.class))).thenCallRealMethod();
+
+    final List<ComicFileGroup> result =
+        service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_NO_LIMIT);
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+
+    Mockito.verify(comicBookService, Mockito.atLeast(1)).findByFilename(Mockito.anyString());
+  }
+
+  @Test
   public void testImportComicFiles() {
     final List<String> filenameList = new ArrayList<>();
     for (int index = 0; index < 25; index++) {

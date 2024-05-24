@@ -141,8 +141,10 @@ public class ComicFileService {
     final String filePath = file.getCanonicalPath().replace("\\", "/");
     log.debug("Checking if comicBook file is already in the database");
     final ComicBook comicBook = this.comicBookService.findByFilename(filePath);
+    final ComicFileDescriptor comicDescriptor =
+        this.comicFileDescriptorRepository.findByFilename(filePath);
 
-    return isComic && (comicBook == null);
+    return isComic && Objects.isNull(comicBook) && Objects.isNull(comicDescriptor);
   }
 
   /**
