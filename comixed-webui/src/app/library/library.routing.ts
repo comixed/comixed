@@ -30,6 +30,12 @@ const routes: Routes = [
     canActivate: [ReaderGuard]
   },
   {
+    path: 'library/selected',
+    component: LibraryPageComponent,
+    canActivate: [ReaderGuard],
+    data: { selected: true }
+  },
+  {
     path: 'library/unprocessed',
     component: LibraryPageComponent,
     canActivate: [AdminGuard],

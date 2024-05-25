@@ -24,11 +24,22 @@ package org.comixedproject.service.library;
  * @author Darryl L. Pierce
  */
 public class LibraryException extends Exception {
-  public LibraryException(String message, Exception cause) {
-    super(message, cause);
-  }
-
+  /**
+   * Creates an instance with a message.
+   *
+   * @param message the message
+   */
   public LibraryException(final String message) {
     super(message);
+  }
+
+  /**
+   * Creates an instance with a message and cause.
+   *
+   * @param message the message
+   * @param cause the cause
+   */
+  public LibraryException(String message, Exception cause) {
+    super(message, cause);
   }
 }

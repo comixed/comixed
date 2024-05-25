@@ -64,6 +64,7 @@ describe('ComicDetailsListEffects', () => {
   const ARCHIVE_TYPE = ArchiveType.CB7;
   const COMIC_TYPE = ComicType.ISSUE;
   const COMIC_STATE = ComicState.UNPROCESSED;
+  const SELECTED_STATE = Math.random() > 0.5;
   const SCRAPED_STATE = Math.random() > 0.5;
   const SEARCH_TEXT = 'This is some text';
   const SORT_BY = 'addedDate';
@@ -162,6 +163,7 @@ describe('ComicDetailsListEffects', () => {
         archiveType: ARCHIVE_TYPE,
         comicType: COMIC_TYPE,
         comicState: COMIC_STATE,
+        selected: SELECTED_STATE,
         unscrapedState: SCRAPED_STATE,
         searchText: SEARCH_TEXT,
         publisher: PUBLISHER,
@@ -188,6 +190,7 @@ describe('ComicDetailsListEffects', () => {
           archiveType: ARCHIVE_TYPE,
           comicType: COMIC_TYPE,
           comicState: COMIC_STATE,
+          selected: SELECTED_STATE,
           unscrapedState: SCRAPED_STATE,
           searchText: SEARCH_TEXT,
           publisher: PUBLISHER,
@@ -212,6 +215,7 @@ describe('ComicDetailsListEffects', () => {
         archiveType: ARCHIVE_TYPE,
         comicType: COMIC_TYPE,
         comicState: COMIC_STATE,
+        selected: SELECTED_STATE,
         unscrapedState: SCRAPED_STATE,
         searchText: SEARCH_TEXT,
         publisher: PUBLISHER,
@@ -232,6 +236,7 @@ describe('ComicDetailsListEffects', () => {
           archiveType: ARCHIVE_TYPE,
           comicType: COMIC_TYPE,
           comicState: COMIC_STATE,
+          selected: SELECTED_STATE,
           unscrapedState: SCRAPED_STATE,
           searchText: SEARCH_TEXT,
           publisher: PUBLISHER,
@@ -256,6 +261,7 @@ describe('ComicDetailsListEffects', () => {
         archiveType: ARCHIVE_TYPE,
         comicType: COMIC_TYPE,
         comicState: COMIC_STATE,
+        selected: SELECTED_STATE,
         unscrapedState: SCRAPED_STATE,
         searchText: SEARCH_TEXT,
         publisher: PUBLISHER,
@@ -276,6 +282,7 @@ describe('ComicDetailsListEffects', () => {
           archiveType: ARCHIVE_TYPE,
           comicType: COMIC_TYPE,
           comicState: COMIC_STATE,
+          selected: SELECTED_STATE,
           unscrapedState: SCRAPED_STATE,
           searchText: SEARCH_TEXT,
           publisher: PUBLISHER,

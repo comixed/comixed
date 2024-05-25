@@ -108,6 +108,7 @@ export class ComicDetailListService {
     archiveType: ArchiveType;
     comicType: ComicType;
     comicState: ComicState;
+    selected: boolean;
     unscrapedState: boolean;
     searchText: string;
     publisher: string;
@@ -126,6 +127,7 @@ export class ComicDetailListService {
       comicType: args.comicType,
       comicState: args.comicState,
       unscrapedState: args.unscrapedState,
+      selected: args.selected,
       searchText: args.searchText,
       publisher: args.publisher,
       series: args.series,

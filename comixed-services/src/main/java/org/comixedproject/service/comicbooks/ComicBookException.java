@@ -27,9 +27,20 @@ import org.comixedproject.model.comicbooks.ComicBook;
  * @author Darryl L. Pierce
  */
 public class ComicBookException extends Exception {
+  /**
+   * Creates an instance with the given message.
+   *
+   * @param message the message
+   */
   public ComicBookException(final String message) {
     super(message);
   }
 
+  /**
+   * Creates an instance with the given message and cause.
+   *
+   * @param message the message
+   * @param error the cause
+   */
   public ComicBookException(final String message, final Exception error) {}
 }

@@ -22,12 +22,10 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
 import { TitleService } from '@app/core/services/title.service';
 import { Store } from '@ngrx/store';
-import { selectComicBookListState } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { LastRead } from '@app/comic-books/models/last-read';
 import { selectLastReadListState } from '@app/comic-books/selectors/last-read-list.selectors';
 import { selectLibraryState } from '@app/library/selectors/library.selectors';
 import { LibraryState } from '@app/library/reducers/library.reducer';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -42,8 +40,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   libraryStateSubscription: Subscription;
   libraryState: LibraryState = null;
-  comicBookListStateSubscription: Subscription;
-  comicBooks: ComicDetail[] = [];
   lastReadStateSubscription: Subscription;
   lastRead: LastRead[] = [];
 
@@ -63,15 +59,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.logger.debug('Library state updated:', state);
         this.libraryState = state;
       });
-    this.comicBookListStateSubscription = this.store
-      .select(selectComicBookListState)
-      .subscribe(state => {
-        this.loading = state.loading;
-        // don't process comics till we've finished loading
-        if (!state.loading && state.lastPayload) {
-          this.comicBooks = state.comicBooks;
-        }
-      });
     this.lastReadStateSubscription = this.store
       .select(selectLastReadListState)
       .subscribe(state => {
@@ -86,8 +73,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.logger.trace('Unsubscribing from language changes');
     this.langChangeSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from comic updates');
-    this.comicBookListStateSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from last read updates');
     this.lastReadStateSubscription.unsubscribe();
   }

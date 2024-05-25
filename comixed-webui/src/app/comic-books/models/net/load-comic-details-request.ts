@@ -28,6 +28,7 @@ export interface LoadComicDetailsRequest {
   archiveType: ArchiveType;
   comicType: ComicType;
   comicState: ComicState;
+  selected: boolean;
   unscrapedState: boolean;
   searchText: string;
   publisher: string;

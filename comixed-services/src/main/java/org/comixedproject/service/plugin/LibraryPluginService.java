@@ -44,9 +44,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Log4j2
 public class LibraryPluginService {
-  public static final String PROPERTY_NAME_LOG = "log";
-  public static final String PROPERTY_NAME_COMIC_BOOK_SERVICE = "comicBookService";
+  /** The log property name. */
   public static final String PROPERTY_NAME_READING_LIST_SERVICE = "readingListService";
+
+  /** The reading list service property name. */
+  public static final String PROPERTY_NAME_LOG = "log";
+
+  /** The comic book ervice property name. */
+  public static final String PROPERTY_NAME_COMIC_BOOK_SERVICE = "comicBookService";
+
   @Autowired private LibraryPluginRepository libraryPluginRepository;
   @Autowired private UserService userService;
   @Autowired private PluginRuntimeRegistry pluginRuntimeRegistry;

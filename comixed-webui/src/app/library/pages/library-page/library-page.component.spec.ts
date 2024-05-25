@@ -48,10 +48,6 @@ import {
 } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import {
-  COMIC_BOOK_LIST_FEATURE_KEY,
-  initialState as initialComicBookListState
-} from '@app/comic-books/reducers/comic-book-list.reducer';
-import {
   COMIC_DETAIL_1,
   COMIC_DETAIL_2,
   COMIC_DETAIL_3,
@@ -134,7 +130,6 @@ describe('LibraryPageComponent', () => {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBooksSelectionState,
-    [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
     [COMIC_DETAILS_LIST_FEATURE_KEY]: initialComicDetailListState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadListState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
@@ -246,6 +241,18 @@ describe('LibraryPageComponent', () => {
       component.unscrapedOnly = false;
       component.changedOnly = false;
       component.deletedOnly = false;
+    });
+
+    describe('when showing selected comics', () => {
+      beforeEach(() => {
+        (activatedRoute.data as BehaviorSubject<{}>).next({
+          selected: true
+        });
+      });
+
+      it('sets the selected only flag', () => {
+        expect(component.selectedOnly).toBeTrue();
+      });
     });
 
     describe('when showing unprocessed comics', () => {
@@ -365,6 +372,7 @@ describe('LibraryPageComponent', () => {
             archiveType: null,
             comicType: null,
             comicState: ComicState.UNPROCESSED,
+            selected: false,
             unscrapedState: false,
             searchText: null,
             publisher: null,
@@ -395,6 +403,7 @@ describe('LibraryPageComponent', () => {
             archiveType: null,
             comicType: null,
             comicState: ComicState.DELETED,
+            selected: false,
             unscrapedState: false,
             searchText: null,
             publisher: null,
@@ -425,6 +434,7 @@ describe('LibraryPageComponent', () => {
             archiveType: null,
             comicType: null,
             comicState: ComicState.CHANGED,
+            selected: false,
             unscrapedState: false,
             searchText: null,
             publisher: null,
@@ -474,6 +484,7 @@ describe('LibraryPageComponent', () => {
             archiveType: null,
             comicType: null,
             comicState: null,
+            selected: false,
             unscrapedState: false,
             searchText: null,
             publisher: null,

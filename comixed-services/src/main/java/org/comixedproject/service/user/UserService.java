@@ -37,6 +37,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * <code>UserService</code> provides methdos for working with instances of {@link ComiXedUser}.
+ *
+ * @author Darryl L. Pierce
+ */
 @Service
 @Log4j2
 public class UserService {
@@ -196,8 +201,8 @@ public class UserService {
   /**
    * Creates the initial admin account.
    *
-   * @param email
-   * @param password
+   * @param email the user's email
+   * @param password the user's password
    * @throws ComiXedUserException if an admin account already exists, or the email is already used
    *     by an account
    */

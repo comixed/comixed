@@ -187,6 +187,12 @@ public class ComicBookSelectionService {
     }
   }
 
+  /**
+   * Publishes the selection update.
+   *
+   * @param selections the selected ids
+   * @throws ComicBookSelectionException if an error occurs
+   */
   public void publisherSelections(final List<Long> selections) throws ComicBookSelectionException {
     try {
       this.publishComicBookSelectionStateAction.publish(selections);
@@ -204,6 +210,13 @@ public class ComicBookSelectionService {
     }
   }
 
+  /**
+   * Adds comics by their type and value.
+   *
+   * @param selections the selections
+   * @param tagType the tag type
+   * @param tagValue the tag value
+   */
   public void addByTagTypeAndValue(
       final List selections, final ComicTagType tagType, final String tagValue) {
     selections.addAll(
@@ -213,6 +226,13 @@ public class ComicBookSelectionService {
             .toList());
   }
 
+  /**
+   * Removes comics by their tga type and value.
+   *
+   * @param selections the selections
+   * @param tagType the tag type
+   * @param tagValue the tag value
+   */
   public void removeByTagTypeAndValue(
       final List selections, final ComicTagType tagType, final String tagValue) {
     selections.removeAll(

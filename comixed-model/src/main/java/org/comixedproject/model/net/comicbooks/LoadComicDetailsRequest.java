@@ -63,6 +63,10 @@ public class LoadComicDetailsRequest {
   @Getter
   private ComicState comicState;
 
+  @JsonProperty("selected")
+  @Getter
+  private Boolean selected;
+
   @JsonProperty("unscrapedState")
   @Getter
   private Boolean unscrapedState;

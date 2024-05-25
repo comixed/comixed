@@ -38,12 +38,9 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.comicbooks.UpdateMetadataConfiguration;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.net.admin.ClearImageCacheResponse;
 import org.comixedproject.model.net.comicbooks.ConvertComicsRequest;
 import org.comixedproject.model.net.comicbooks.EditMultipleComicsRequest;
-import org.comixedproject.model.net.library.LoadLibraryRequest;
-import org.comixedproject.model.net.library.LoadLibraryResponse;
 import org.comixedproject.model.net.library.OrganizeLibraryRequest;
 import org.comixedproject.model.net.library.PurgeLibraryRequest;
 import org.comixedproject.model.net.library.RemoteLibraryState;
@@ -327,43 +324,6 @@ public class LibraryController {
     }
 
     return new ClearImageCacheResponse(true);
-  }
-
-  /**
-   * Loads a batch of comics during the initial startup process.
-   *
-   * @param request the request
-   * @return the response
-   */
-  @PostMapping(
-      value = "/api/library",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("hasRole('READER')")
-  @Timed(value = "comixed.library.load")
-  @JsonView(View.ComicListView.class)
-  public LoadLibraryResponse loadLibrary(@RequestBody() final LoadLibraryRequest request) {
-    final Integer maxRecords = request.getMaxRecords();
-    final Long lastId = request.getLastId();
-    log.info("Loading library content: max records={} last id was {}", maxRecords, lastId);
-
-    List<ComicDetail> comicBooks = this.comicDetailService.loadById(lastId, maxRecords + 1);
-    boolean lastPayload = true;
-    if (comicBooks.size() > maxRecords) {
-      comicBooks = comicBooks.subList(0, maxRecords);
-      lastPayload = false;
-    }
-
-    return new LoadLibraryResponse(
-        comicBooks,
-        comicBooks.isEmpty()
-            ? 0
-            : comicBooks.stream()
-                .sorted((left, right) -> left.getId().compareTo(right.getId()))
-                .toList()
-                .get(comicBooks.size() - 1)
-                .getId(),
-        lastPayload);
   }
 
   /**

@@ -25,6 +25,12 @@ package org.comixedproject.service.comicbooks;
  * @author Darryl L. Pierce
  */
 public class ComicBookSelectionException extends Exception {
+  /**
+   * Creates an instance with the given message and cause.
+   *
+   * @param message the message
+   * @param cause the cause
+   */
   public ComicBookSelectionException(final String message, final Exception cause) {
     super(message, cause);
   }

@@ -34,6 +34,24 @@
 </button>
 
 <button
+  *ngIf="!!user"
+  mat-button
+  class="menu-button"
+  routerLink="/library/selected"
+  routerLinkActive="active"
+>
+  <mat-icon>check_circle</mat-icon>
+  <mat-label>
+    <span class="cx-align-left">
+      {{ "navigation.option.selected-comics" | translate }}
+    </span>
+    <span class="cx-align-right">
+      ({{ selectedComicBooks$ | async | number }})
+    </span>
+  </mat-label>
+</button>
+
+<button
   *ngIf="isAdmin"
   mat-button
   class="menu-button"

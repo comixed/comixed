@@ -33,13 +33,10 @@ import {
 } from '@app/comic-books/comic-books.fixtures';
 import {
   LOAD_COMIC_URL,
-  OLD_LOAD_COMICS_URL,
   UPDATE_COMIC_URL
 } from '@app/library/library.constants';
 import { interpolate } from '@app/core';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { OldLoadComicsResponse } from '@app/comic-books/models/net/old-load-comics-response';
-import { OldLoadComicsRequest } from '@app/comic-books/models/net/old-load-comics-request';
 import {
   DELETE_SELECTED_COMIC_BOOKS_URL,
   DELETE_SINGLE_COMIC_BOOK_URL,
@@ -84,30 +81,6 @@ describe('ComicBookService', () => {
 
   it('should be created', () => {
     expect(service).toBeTruthy();
-  });
-
-  it('can load a batch of comics', () => {
-    service
-      .loadBatch({ maxRecords: MAX_RECORDS, lastId: LAST_ID })
-      .subscribe(response =>
-        expect(response).toEqual({
-          comicBooks: COMIC_DETAILS,
-          lastId: LAST_ID,
-          lastPayload: LAST_PAGE
-        } as OldLoadComicsResponse)
-      );
-
-    const req = httpMock.expectOne(interpolate(OLD_LOAD_COMICS_URL));
-    expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({
-      maxRecords: MAX_RECORDS,
-      lastId: LAST_ID
-    } as OldLoadComicsRequest);
-    req.flush({
-      comicBooks: COMIC_DETAILS,
-      lastId: LAST_ID,
-      lastPayload: LAST_PAGE
-    } as OldLoadComicsResponse);
   });
 
   it('can load a single comic', () => {

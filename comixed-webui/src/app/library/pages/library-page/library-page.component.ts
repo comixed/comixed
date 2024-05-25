@@ -85,6 +85,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   showOrganize = false;
   showPurge = false;
   dataSubscription: Subscription;
+  selectedOnly = false;
   unreadOnly = false;
   unscrapedOnly = false;
   changedOnly = false;
@@ -122,6 +123,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     private queryParameterService: QueryParameterService
   ) {
     this.dataSubscription = this.activatedRoute.data.subscribe(data => {
+      this.selectedOnly = !!data.selected && data.selected === true;
       this.unreadOnly = !!data.unread && data.unread === true;
       this.unscrapedOnly = !!data.unscraped && data.unscraped === true;
       this.changedOnly = !!data.changed && data.changed === true;
@@ -132,6 +134,9 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         !this.unreadOnly && !this.unscrapedOnly && !this.deletedOnly;
       this.showPurge = this.deletedOnly;
       this.pageContent = 'all';
+      if (this.selectedOnly) {
+        this.pageContent = 'selected-only';
+      }
       if (this.unreadOnly) {
         this.pageContent = 'unread-only';
       }
@@ -213,6 +218,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
               archiveType: this.queryParameterService.archiveType$.value,
               comicType: this.queryParameterService.comicType$.value,
               comicState: this.targetComicState,
+              selected: this.selectedOnly,
               unscrapedState: this.unscrapedOnly,
               searchText: this.queryParameterService.filterText$.value,
               publisher: null,

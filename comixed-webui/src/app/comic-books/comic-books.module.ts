@@ -45,9 +45,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
-import { comicBookListFeature } from '@app/comic-books/reducers/comic-book-list.reducer';
 import { comicBookFeature } from '@app/comic-books/reducers/comic-book.reducer';
-import { ComicBookListEffects } from '@app/comic-books/effects/comic-book-list.effects';
 import { ComicBookEffects } from '@app/comic-books/effects/comic-book.effects';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule } from '@ngx-translate/core';
@@ -106,7 +104,6 @@ import { VolumeMetadataTitlePipe } from './pipes/volume-metadata-title.pipe';
   imports: [
     CommonModule,
     ComicBooksRouting,
-    StoreModule.forFeature(comicBookListFeature),
     StoreModule.forFeature(comicBookFeature),
     StoreModule.forFeature(imprintListFeature),
     StoreModule.forFeature(markComicsDeletedFeature),
@@ -115,7 +112,6 @@ import { VolumeMetadataTitlePipe } from './pipes/volume-metadata-title.pipe';
     StoreModule.forFeature(lastReadListFeature),
     StoreModule.forFeature(comicBooksReadFeature),
     EffectsModule.forFeature([
-      ComicBookListEffects,
       ComicBookEffects,
       ImprintListEffects,
       DeleteComicBooksEffects,

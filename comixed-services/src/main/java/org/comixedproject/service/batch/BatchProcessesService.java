@@ -77,6 +77,12 @@ public class BatchProcessesService {
     return this.doGetAllBatchProcesses();
   }
 
+  /**
+   * Deletes jobs by id.
+   *
+   * @param jobIds the job ids
+   * @return the remaining jobs
+   */
   public List<BatchProcessDetail> deleteSelectedJobs(final List<Long> jobIds) {
     log.debug("Deleting {} job(s) by id", jobIds.size());
     jobIds.forEach(
