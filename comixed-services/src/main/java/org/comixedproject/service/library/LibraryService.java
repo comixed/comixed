@@ -33,6 +33,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * <code>LibraryService</code> provides methods for working with the library of comics.
+ *
+ * @author Darryl L. Pierce
+ */
 @Service
 @Log4j2
 public class LibraryService {
@@ -77,6 +82,7 @@ public class LibraryService {
   /**
    * Updates all comics in preparation for library organization.
    *
+   * @param ids the comic book ids
    * @param targetDirectory the target directory
    * @throws LibraryException if an error occurs
    */
@@ -99,6 +105,12 @@ public class LibraryService {
     this.prepareForOrganization(this.comicBookService.getAllIds(), targetDirectory);
   }
 
+  /**
+   * Prepares comics to be recreated.
+   *
+   * @param id the comic ids
+   * @throws LibraryException if an error occurs
+   */
   @Transactional
   public void prepareToRecreateComicBook(final long id) throws LibraryException {
     try {

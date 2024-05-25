@@ -27,6 +27,11 @@ import org.comixedproject.model.lists.Story;
  * @author Darryl L. Pierce
  */
 public class StoryException extends Exception {
+  /**
+   * Creates an instance with the given message.
+   *
+   * @param message the message
+   */
   public StoryException(final String message) {
     super(message);
   }

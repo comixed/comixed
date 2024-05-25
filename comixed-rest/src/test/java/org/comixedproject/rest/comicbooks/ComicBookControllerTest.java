@@ -25,10 +25,7 @@ import static org.junit.Assert.*;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.*;
@@ -90,7 +87,6 @@ public class ComicBookControllerTest {
   @Mock private ComicBookSelectionService comicBookSelectionService;
   @Mock private ReadingListService readingListService;
   @Mock private ComicBook comicBook;
-  @Mock private List<Long> selectedIdList;
   @Mock private LastReadService lastReadService;
   @Mock private ComicPage page;
   @Mock private List<PageOrderEntry> pageOrderEntrylist;
@@ -103,6 +99,7 @@ public class ComicBookControllerTest {
   @Mock private DownloadDocument comicBookContent;
   @Mock private ResponseEntity<byte[]> responseEntity;
 
+  private List<Long> selectedIdList = new ArrayList<>();
   private final Set<Long> comicBookIdSet = new HashSet<>();
   private List<ComicPage> pageList = new ArrayList<>();
 
@@ -120,6 +117,9 @@ public class ComicBookControllerTest {
     Mockito.when(comicBookSelectionService.encodeSelections(selectedIdList))
         .thenReturn(TEST_REENCODED_SELECTIONS);
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
+    for (long index = 0L; index < 100L; index++) {
+      selectedIdList.add(index);
+    }
   }
 
   @Test
@@ -328,7 +328,7 @@ public class ComicBookControllerTest {
   }
 
   @Test
-  public void testLoadComicDetailList() throws LastReadException {
+  public void testLoadComicDetailList() throws LastReadException, ComicBookSelectionException {
     Mockito.when(
             comicDetailService.loadComicDetailList(
                 TEST_PAGE_SIZE,
@@ -405,6 +405,7 @@ public class ComicBookControllerTest {
 
     final LoadComicDetailsResponse result =
         controller.loadComicDetailList(
+            httpSession,
             principal,
             new LoadComicDetailsRequest(
                 TEST_PAGE_SIZE,
@@ -414,6 +415,7 @@ public class ComicBookControllerTest {
                 TEST_ARCHIVE_TYPE,
                 TEST_COMIC_TYPE,
                 TEST_COMIC_STATE,
+                false,
                 TEST_UNSCRAPED_STATE,
                 TEST_SEARCH_TEXT,
                 TEST_PUBLISHER,
@@ -428,6 +430,47 @@ public class ComicBookControllerTest {
     assertSame(coverMonthList, result.getCoverMonths());
     assertEquals(TEST_COMIC_BOOK_COUNT, result.getTotalCount());
     assertEquals(TEST_TOTAL_COMIC_COUNT, result.getFilteredCount());
+  }
+
+  @Test
+  public void testLoadSelectedComicDetailList()
+      throws LastReadException, ComicBookSelectionException {
+    Mockito.when(
+            comicDetailService.loadComicDetailList(
+                TEST_PAGE_SIZE,
+                TEST_PAGE_INDEX,
+                TEST_SORT_FIELD,
+                TEST_SORT_DIRECTION,
+                selectedIdList))
+        .thenReturn(comicDetailList);
+
+    final LoadComicDetailsResponse result =
+        controller.loadComicDetailList(
+            httpSession,
+            principal,
+            new LoadComicDetailsRequest(
+                TEST_PAGE_SIZE,
+                TEST_PAGE_INDEX,
+                TEST_COVER_YEAR,
+                TEST_COVER_MONTH,
+                TEST_ARCHIVE_TYPE,
+                TEST_COMIC_TYPE,
+                TEST_COMIC_STATE,
+                true,
+                TEST_UNSCRAPED_STATE,
+                TEST_SEARCH_TEXT,
+                TEST_PUBLISHER,
+                TEST_SERIES,
+                TEST_VOLUME,
+                TEST_SORT_FIELD,
+                TEST_SORT_DIRECTION));
+
+    assertNotNull(result);
+    assertSame(comicDetailList, result.getComicDetails());
+    assertSame(Collections.emptyList(), result.getCoverYears());
+    assertSame(Collections.emptyList(), result.getCoverMonths());
+    assertEquals(selectedIdList.size(), result.getTotalCount());
+    assertEquals(comicDetailList.size(), result.getFilteredCount());
   }
 
   @Test

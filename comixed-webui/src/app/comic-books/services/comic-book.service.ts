@@ -22,11 +22,9 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
 import {
   LOAD_COMIC_URL,
-  OLD_LOAD_COMICS_URL,
   UPDATE_COMIC_URL
 } from '@app/library/library.constants';
 import { interpolate } from '@app/core';
-import { OldLoadComicsRequest } from '@app/comic-books/models/net/old-load-comics-request';
 import {
   DELETE_SELECTED_COMIC_BOOKS_URL,
   DELETE_SINGLE_COMIC_BOOK_URL,
@@ -48,20 +46,6 @@ import { ComicBook } from '@app/comic-books/models/comic-book';
 })
 export class ComicBookService {
   constructor(private logger: LoggerService, private http: HttpClient) {}
-
-  /**
-   * Loads a batch of comics.
-   *
-   * @param args.maxRecords the max records to return
-   * @param args.lastId the last id received
-   */
-  loadBatch(args: { maxRecords: number; lastId: number }): Observable<any> {
-    this.logger.debug('Service: loading a batch of comics:', args);
-    return this.http.post(interpolate(OLD_LOAD_COMICS_URL), {
-      maxRecords: args.maxRecords,
-      lastId: args.lastId
-    } as OldLoadComicsRequest);
-  }
 
   /**
    * Loads a single comic.

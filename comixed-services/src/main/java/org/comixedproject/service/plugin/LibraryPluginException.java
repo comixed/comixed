@@ -24,10 +24,21 @@ package org.comixedproject.service.plugin;
  * @author Darryl L. Pierce
  */
 public class LibraryPluginException extends Exception {
+  /**
+   * Creates an instance with a message.
+   *
+   * @param message the message
+   */
   public LibraryPluginException(final String message) {
     super(message);
   }
 
+  /**
+   * Creates an instance with a message and cause.
+   *
+   * @param message the message
+   * @param cause the cause
+   */
   public LibraryPluginException(final String message, final Exception cause) {
     super(message, cause);
   }

@@ -237,6 +237,7 @@ public class MetadataSourceService {
    * Deletes the source with the given record id.
    *
    * @param id the record id
+   * @return the metadata sources
    * @throws MetadataSourceException if an error occurs
    */
   @Transactional

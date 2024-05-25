@@ -272,67 +272,88 @@ public class ComicBookController {
   @PreAuthorize("hasRole('READER')")
   @JsonView(ComicDetailsView.class)
   public LoadComicDetailsResponse loadComicDetailList(
-      final Principal principal, @RequestBody() final LoadComicDetailsRequest request)
-      throws LastReadException {
+      final HttpSession session,
+      final Principal principal,
+      @RequestBody() final LoadComicDetailsRequest request)
+      throws LastReadException, ComicBookSelectionException {
     log.debug("Loading comics: {}", request);
-    final List<ComicDetail> comicDetails =
-        this.comicDetailService.loadComicDetailList(
-            request.getPageSize(),
-            request.getPageIndex(),
-            request.getCoverYear(),
-            request.getCoverMonth(),
-            request.getArchiveType(),
-            request.getComicType(),
-            request.getComicState(),
-            request.getUnscrapedState(),
-            request.getSearchText(),
-            request.getPublisher(),
-            request.getSeries(),
-            request.getVolume(),
-            request.getSortBy(),
-            request.getSortDirection());
-    final List<Integer> coverYears =
-        this.comicDetailService.getCoverYears(
-            request.getCoverYear(),
-            request.getCoverMonth(),
-            request.getArchiveType(),
-            request.getComicType(),
-            request.getComicState(),
-            request.getUnscrapedState(),
-            request.getSearchText(),
-            request.getPublisher(),
-            request.getSeries(),
-            request.getVolume());
-    final List<Integer> coverMonths =
-        this.comicDetailService.getCoverMonths(
-            request.getCoverYear(),
-            request.getCoverMonth(),
-            request.getArchiveType(),
-            request.getComicType(),
-            request.getComicState(),
-            request.getUnscrapedState(),
-            request.getSearchText(),
-            request.getPublisher(),
-            request.getSeries(),
-            request.getVolume());
-    final long filterCount =
-        this.comicDetailService.getFilterCount(
-            request.getCoverYear(),
-            request.getCoverMonth(),
-            request.getArchiveType(),
-            request.getComicType(),
-            request.getComicState(),
-            request.getUnscrapedState(),
-            request.getSearchText(),
-            request.getPublisher(),
-            request.getSeries(),
-            request.getVolume());
+    List<ComicDetail> comicDetails;
+    List<Integer> coverYears;
+    List<Integer> coverMonths;
+    long totalCount = 0L;
+    long filterCount = 0L;
+    if (request.getSelected()) {
+      final List selectedIds =
+          this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+      comicDetails =
+          this.comicDetailService.loadComicDetailList(
+              request.getPageSize(),
+              request.getPageIndex(),
+              request.getSortBy(),
+              request.getSortDirection(),
+              selectedIds);
+      coverYears = Collections.emptyList();
+      coverMonths = Collections.emptyList();
+      filterCount = comicDetails.size();
+      totalCount = selectedIds.size();
+    } else {
+      log.debug("Loading comics: {}", request);
+      comicDetails =
+          this.comicDetailService.loadComicDetailList(
+              request.getPageSize(),
+              request.getPageIndex(),
+              request.getCoverYear(),
+              request.getCoverMonth(),
+              request.getArchiveType(),
+              request.getComicType(),
+              request.getComicState(),
+              request.getUnscrapedState(),
+              request.getSearchText(),
+              request.getPublisher(),
+              request.getSeries(),
+              request.getVolume(),
+              request.getSortBy(),
+              request.getSortDirection());
+      coverYears =
+          this.comicDetailService.getCoverYears(
+              request.getCoverYear(),
+              request.getCoverMonth(),
+              request.getArchiveType(),
+              request.getComicType(),
+              request.getComicState(),
+              request.getUnscrapedState(),
+              request.getSearchText(),
+              request.getPublisher(),
+              request.getSeries(),
+              request.getVolume());
+      coverMonths =
+          this.comicDetailService.getCoverMonths(
+              request.getCoverYear(),
+              request.getCoverMonth(),
+              request.getArchiveType(),
+              request.getComicType(),
+              request.getComicState(),
+              request.getUnscrapedState(),
+              request.getSearchText(),
+              request.getPublisher(),
+              request.getSeries(),
+              request.getVolume());
+      filterCount =
+          this.comicDetailService.getFilterCount(
+              request.getCoverYear(),
+              request.getCoverMonth(),
+              request.getArchiveType(),
+              request.getComicType(),
+              request.getComicState(),
+              request.getUnscrapedState(),
+              request.getSearchText(),
+              request.getPublisher(),
+              request.getSeries(),
+              request.getVolume());
+      totalCount = this.comicBookService.getComicBookCount();
+    }
     return new LoadComicDetailsResponse(
-        comicDetails,
-        coverYears,
-        coverMonths,
-        this.comicBookService.getComicBookCount(),
-        filterCount);
+        comicDetails, coverYears, coverMonths, totalCount, filterCount);
   }
 
   /**

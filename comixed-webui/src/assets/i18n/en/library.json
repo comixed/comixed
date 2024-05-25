@@ -176,6 +176,7 @@
       "all": "All Comics{filtered, select, true{ [Filtered]} other{}}",
       "changed-only": "Changed Comics{filtered, select, true{ [Filtered]} other{}}",
       "deleted-only": "Marked For Removal{filtered, select, true{ [Filtered]} other{}}",
+      "selected-only": "Selected Comics{filtered, select, true{ [Filtered]} other{}}",
       "unprocessed-only": "Unprocessed Comics{filtered, select, true{ [Filtered]} other{}}",
       "unread-only": "Unread Comics{filtered, select, true{ [Filtered]} other{}}",
       "unscraped-only": "Unscraped Comics{filtered, select, true{ [Filtered]} other{}}"

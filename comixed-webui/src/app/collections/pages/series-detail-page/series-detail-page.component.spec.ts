@@ -28,7 +28,6 @@ import {
   initialState as initialSeriesState,
   SERIES_FEATURE_KEY
 } from '@app/collections/reducers/series.reducer';
-import { initialState as initialComicBookListState } from '@app/comic-books/reducers/comic-book-list.reducer';
 import {
   initialState as initialUserState,
   USER_FEATURE_KEY
@@ -54,6 +53,10 @@ import {
   COMIC_DETAILS_LIST_FEATURE_KEY,
   initialState as initialComicDetailsListState
 } from '@app/comic-books/reducers/comic-details-list.reducer';
+import {
+  initialState as initialLibraryState,
+  LIBRARY_FEATURE_KEY
+} from '@app/library/reducers/library.reducer';
 
 describe('SeriesDetailPageComponent', () => {
   const PUBLISHER = 'The Publisher';
@@ -74,8 +77,10 @@ describe('SeriesDetailPageComponent', () => {
     volume: COMIC_BOOK.volume,
     issue: COMIC_BOOK.issueNumber
   };
+  const ISSUES = [ISSUE];
   const initialState = {
     [SERIES_FEATURE_KEY]: initialSeriesState,
+    [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [COMIC_DETAILS_LIST_FEATURE_KEY]: initialComicDetailsListState,
     [USER_FEATURE_KEY]: initialUserState
   };
@@ -212,14 +217,15 @@ describe('SeriesDetailPageComponent', () => {
       component.percentageComplete = 0;
       component.inLibrary = 0;
       component.totalIssues = 0;
+      component.dataSource.data = [ISSUE];
       store.setState({
         ...initialState,
-        [SERIES_FEATURE_KEY]: { ...initialSeriesState, detail: [ISSUE] },
         [COMIC_DETAILS_LIST_FEATURE_KEY]: {
-          ...initialComicBookListState,
-          comicBooks: COMIC_DETAILS,
+          ...initialComicDetailsListState,
+          comicDetails: COMIC_DETAILS,
           filteredCount: COMIC_DETAILS.length
-        }
+        },
+        [SERIES_FEATURE_KEY]: { ...initialSeriesState, issues: [ISSUE] }
       });
     });
 

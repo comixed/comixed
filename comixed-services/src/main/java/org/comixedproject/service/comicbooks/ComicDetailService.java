@@ -53,19 +53,6 @@ public class ComicDetailService {
   private ObjectFactory<ComicDetailExampleBuilder> comicDetailExampleBuilderObjectFactory;
 
   /**
-   * Loads a set of comic details with ids greater than the last id.
-   *
-   * @param lastId the last id
-   * @param maximum the maximum record
-   * @return the list of comic details
-   */
-  @Transactional
-  public List<ComicDetail> loadById(final long lastId, final int maximum) {
-    log.debug("Loading comic detail records: last id={} maximum={}", lastId, maximum);
-    return this.comicDetailRepository.getWithIdGreaterThan(lastId, PageRequest.of(0, maximum));
-  }
-
-  /**
    * Returns the set of all publishers. Filters out comics read by the user if the flag is set.
    *
    * @param email the user's email
@@ -363,7 +350,8 @@ public class ComicDetailService {
   }
 
   /**
-   * Returns the page of comics for the given index and filters.
+   * Returns the page of comics for the given index and filters. If the selected flag is set then
+   * only returns those comics which are also in the selected id list.
    *
    * @param pageSize the page size
    * @param pageIndex the page index
@@ -477,6 +465,7 @@ public class ComicDetailService {
    * @param tagValue the tag value
    * @return the total comic count
    */
+  @Transactional
   public long getFilterCount(final ComicTagType tagType, final String tagValue) {
     log.debug("Loading filtered comic count for tag: type={} value={}", tagType, tagValue);
     return this.comicDetailRepository.getFilterCount(tagType, tagValue);
@@ -562,6 +551,7 @@ public class ComicDetailService {
    * @param tagValue the tag value
    * @return the years
    */
+  @Transactional
   public List<Integer> getCoverYears(final ComicTagType tagType, final String tagValue) {
     log.debug("Getting cover years for tag: type={} value={}", tagType, tagValue);
     return this.comicDetailRepository.getCoverYears(tagType, tagValue);
@@ -637,6 +627,7 @@ public class ComicDetailService {
    * @param tagValue the tag value
    * @return the months
    */
+  @Transactional
   public List<Integer> getCoverMonths(final ComicTagType tagType, final String tagValue) {
     log.debug("Loading cover months for tag: type={} value={}", tagType, tagValue);
     return this.comicDetailRepository.getCoverMonths(tagType, tagValue);
@@ -664,6 +655,7 @@ public class ComicDetailService {
    * @param sortDirection the sort direction
    * @return the comics
    */
+  @Transactional
   public List<ComicDetail> loadComicDetailListForTagType(
       final int pageSize,
       final int pageIndex,
@@ -688,6 +680,7 @@ public class ComicDetailService {
    * @param sortDirection the sort direction
    * @return the collection entries
    */
+  @Transactional
   public List<CollectionEntry> loadCollectionEntries(
       final ComicTagType tagType,
       final int pageSize,
@@ -784,5 +777,26 @@ public class ComicDetailService {
     } catch (ReadingListException error) {
       throw new ComicDetailException("Failed to load entries for reading list", error);
     }
+  }
+
+  /**
+   * Loads comics that were selected.
+   *
+   * @param pageSize the page size
+   * @param pageIndex the page index
+   * @param sortBy the sort field
+   * @param sortDirection the sort direction
+   * @param selectedIds the selected comic book ids
+   * @return the comic detail list
+   */
+  @Transactional
+  public List<ComicDetail> loadComicDetailList(
+      final Integer pageSize,
+      final Integer pageIndex,
+      final String sortBy,
+      final String sortDirection,
+      final List selectedIds) {
+    return this.comicDetailRepository.findSelectedComicBooks(
+        selectedIds, PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
   }
 }

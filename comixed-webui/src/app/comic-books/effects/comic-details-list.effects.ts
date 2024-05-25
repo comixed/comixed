@@ -51,6 +51,7 @@ export class ComicDetailsListEffects {
             archiveType: action.archiveType,
             comicType: action.comicType,
             comicState: action.comicState,
+            selected: action.selected,
             unscrapedState: action.unscrapedState,
             searchText: action.searchText,
             publisher: action.publisher,

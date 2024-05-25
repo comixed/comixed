@@ -58,8 +58,6 @@ import { saveUserPreference } from '@app/user/actions/user.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
 import * as _ from 'lodash';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
-import { selectComicBookList } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { PAGE_SIZE_OPTIONS } from '@app/core';
 
@@ -85,8 +83,6 @@ export class DuplicatePageListPageComponent
   allSelected = false;
   anySelected = false;
   userSubscription: Subscription;
-  comicsSubscription: Subscription;
-  comics: ComicDetail[] = [];
   readonly displayColumns = [
     'selection',
     'thumbnail',
@@ -95,6 +91,7 @@ export class DuplicatePageListPageComponent
     'blocked',
     'actions'
   ];
+  protected readonly PAGE_SIZE_OPTIONS = PAGE_SIZE_OPTIONS;
 
   constructor(
     private logger: LoggerService,
@@ -146,9 +143,6 @@ export class DuplicatePageListPageComponent
           );
         }
       });
-    this.comicsSubscription = this.store
-      .select(selectComicBookList)
-      .subscribe(comics => (this.comics = comics));
   }
 
   get selectedCount(): number {
@@ -209,7 +203,6 @@ export class DuplicatePageListPageComponent
       this.pageUpdatesSubscription.unsubscribe();
       this.pageUpdatesSubscription = null;
     }
-    this.comicsSubscription.unsubscribe();
   }
 
   onShowComicBooksWithPage(row: SelectableListItem<DuplicatePage>): void {
@@ -370,6 +363,4 @@ export class DuplicatePageListPageComponent
     );
     this.dataSource.data.forEach(item => (item.selected = false));
   }
-
-  protected readonly PAGE_SIZE_OPTIONS = PAGE_SIZE_OPTIONS;
 }

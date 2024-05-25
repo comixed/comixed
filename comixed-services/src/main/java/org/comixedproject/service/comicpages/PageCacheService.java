@@ -35,6 +35,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * <code>PageCacheService</code> provides methods for working with the page cache.
+ *
+ * @author Darryl L. Pierce
+ */
 @Service
 @Log4j2
 public class PageCacheService {
@@ -133,6 +138,7 @@ public class PageCacheService {
     }
   }
 
+  /** Prepares pages that do not have cache entries. */
   @Transactional
   public void prepareCoverPagesWithoutCacheEntries() {
     log.debug("Processing pages without image cache entries");

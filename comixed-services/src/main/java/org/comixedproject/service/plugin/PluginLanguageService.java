@@ -25,6 +25,11 @@ import org.comixedproject.plugins.PluginRuntimeRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * <code>PluginLanguageService</code> provides a service for working with plugin languages.
+ *
+ * @author Darryl L. Pierce
+ */
 @Service
 @Log4j2
 public class PluginLanguageService {

@@ -59,10 +59,6 @@ import {
 } from '@app/app.constants';
 import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  COMIC_BOOK_LIST_FEATURE_KEY,
-  initialState as initialComicBookListState
-} from '@app/comic-books/reducers/comic-book-list.reducer';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SideNavigationComponent } from '@app/components/side-navigation/side-navigation.component';
 import { FooterComponent } from '@app/components/footer/footer.component';
@@ -106,7 +102,6 @@ describe('AppComponent', () => {
     [BUSY_FEATURE_KEY]: initialBusyState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
     [IMPORT_COMIC_BOOKS_FEATURE_KEY]: initialImportCountState,
-    [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState,

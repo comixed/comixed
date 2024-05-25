@@ -25,10 +25,21 @@ package org.comixedproject.service.lists;
  * @author Darryl L. Pierce
  */
 public class ReadingListException extends Exception {
+  /**
+   * Creates an instance with the given message.
+   *
+   * @param message the message
+   */
   public ReadingListException(String message) {
     super(message);
   }
 
+  /**
+   * Creates an instance with the given message and cause.
+   *
+   * @param message the message
+   * @param cause the cause
+   */
   public ReadingListException(String message, Exception cause) {
     super(message, cause);
   }

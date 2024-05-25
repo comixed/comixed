@@ -134,7 +134,7 @@ public class BlockedHashService {
     return updatedPage;
   }
 
-  public BlockedHash doBlockPageHash(
+  private BlockedHash doBlockPageHash(
       final String hash, final BlockedHash source, final String thumbnail) {
     log.trace("Looking for existing blocked page record");
     BlockedHash pageRecord = this.blockedHashRepository.findByHash(hash);
@@ -256,17 +256,11 @@ public class BlockedHashService {
             var blockedPage = this.blockedHashRepository.findByHash(hash);
             if (blockedPage == null) {
               log.debug("Creating new blocked page record");
-              this.doSaveRecord(label, hash, thumbnail);
+              this.blockedHashRepository.save(new BlockedHash(label, hash, thumbnail));
             }
           }
         });
     return this.blockedHashRepository.findAll();
-  }
-
-  @Transactional
-  public void doSaveRecord(final String label, final String hash, final String thumbnail) {
-    final var blockedPage = new BlockedHash(label, hash, thumbnail);
-    this.blockedHashRepository.save(blockedPage);
   }
 
   /**
@@ -314,6 +308,7 @@ public class BlockedHashService {
    *
    * @param hash the page hash
    * @return the thumbnail content
+   * @throws BlockedHashException if an error occurs
    */
   @Transactional
   public byte[] getThumbnail(final String hash) throws BlockedHashException {

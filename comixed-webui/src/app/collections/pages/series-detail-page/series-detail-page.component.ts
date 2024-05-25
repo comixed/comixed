@@ -70,6 +70,7 @@ export class SeriesDetailPageComponent
   totalComics = 0;
   pageChangedSubscription: Subscription;
   userSubscription: Subscription;
+  librarySubscription: Subscription;
   langChangeSubscription: Subscription;
 
   dataSource = new MatTableDataSource<Issue>([]);
@@ -144,6 +145,7 @@ export class SeriesDetailPageComponent
             archiveType: null,
             comicType: null,
             comicState: null,
+            selected: false,
             unscrapedState: false,
             searchText: null,
             publisher: this.publisher,
@@ -220,13 +222,13 @@ export class SeriesDetailPageComponent
   private calculatePercentageComplete(): void {
     this.inLibrary = this.totalComics;
     this.totalIssues = this.dataSource.data.length;
+    this.logger.debug(
+      `Calculating percentage completed: ${this.inLibrary} / ${this.totalComics} * 100 = ${this.percentageComplete}`
+    );
     if (this.totalIssues > 0 && this.inLibrary > 0) {
       this.percentageComplete = (this.inLibrary / this.totalIssues) * 100;
     } else {
       this.percentageComplete = 0;
     }
-    this.logger.debug(
-      `Calculating percentage completed: ${this.inLibrary} / ${this.totalComics} * 100 = ${this.percentageComplete}`
-    );
   }
 }

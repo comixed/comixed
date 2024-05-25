@@ -50,8 +50,6 @@ import org.springframework.data.domain.Pageable;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComicDetailServiceTest {
-  private static final long TEST_LAST_ID = 71765L;
-  private static final int TEST_MAXIMUM = 1000;
   private static final String TEST_EMAIL = "reader@comixedproject.org";
   private static final String TEST_PUBLISHER = "THe Publisher Name";
   private static final String TEST_SERIES = "The Series Name";
@@ -90,6 +88,7 @@ public class ComicDetailServiceTest {
   @Mock private Page<ComicDetail> comicDetailListPage;
   @Mock private Stream<ComicDetail> comicDetailListStream;
   @Mock private Set<Long> comicBookIdSet;
+  @Mock private List<Long> comicBookIdList;
   @Mock private ComicDetail comicDetail;
   @Mock private Example<ComicDetail> example;
   @Mock private List<Integer> coverYearList;
@@ -134,27 +133,6 @@ public class ComicDetailServiceTest {
 
     Mockito.when(comicDetail.getYearPublished()).thenReturn(TEST_COVER_YEAR);
     Mockito.when(comicDetail.getMonthPublished()).thenReturn(TEST_COVER_MONTH);
-  }
-
-  @Test
-  public void testLoadById() {
-    Mockito.when(
-            comicDetailRepository.getWithIdGreaterThan(
-                Mockito.anyLong(), pageableArgumentCaptor.capture()))
-        .thenReturn(comicDetailList);
-
-    final List<ComicDetail> result = service.loadById(TEST_LAST_ID, TEST_MAXIMUM);
-
-    assertNotNull(result);
-    assertSame(comicDetailList, result);
-
-    final Pageable pageable = pageableArgumentCaptor.getValue();
-    assertNotNull(pageable);
-    assertEquals(TEST_MAXIMUM, pageable.getPageSize());
-    assertEquals(0, pageable.getPageNumber());
-
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
-        .getWithIdGreaterThan(TEST_LAST_ID, pageable);
   }
 
   @Test
@@ -550,14 +528,14 @@ public class ComicDetailServiceTest {
           assertNotNull(result);
           assertSame(comicDetailList, result);
 
-          final Example<ComicDetail> example = exampleArgumentCaptor.getValue();
+          final Example<ComicDetail> workingExample = exampleArgumentCaptor.getValue();
           final Pageable sort = sortArgumentCaptor.getValue();
 
           assertTrue(sort.getSort().stream().toList().get(0).isDescending());
           assertEquals(TEST_PAGE_SIZE, sort.getPageSize());
           assertEquals(TEST_PAGE_INDEX, sort.getPageNumber());
 
-          Mockito.verify(comicDetailRepository, Mockito.times(1)).findAll(example, sort);
+          Mockito.verify(comicDetailRepository, Mockito.times(1)).findAll(workingExample, sort);
           Mockito.reset(comicDetailRepository);
         });
 
@@ -593,14 +571,14 @@ public class ComicDetailServiceTest {
           assertNotNull(result);
           assertSame(comicDetailList, result);
 
-          final Example<ComicDetail> example = exampleArgumentCaptor.getValue();
+          final Example<ComicDetail> workingExample = exampleArgumentCaptor.getValue();
           final Pageable sort = sortArgumentCaptor.getValue();
 
           assertTrue(sort.getSort().stream().toList().get(0).isAscending());
           assertEquals(TEST_PAGE_SIZE, sort.getPageSize());
           assertEquals(TEST_PAGE_INDEX, sort.getPageNumber());
 
-          Mockito.verify(comicDetailRepository, Mockito.times(1)).findAll(example, sort);
+          Mockito.verify(comicDetailRepository, Mockito.times(1)).findAll(workingExample, sort);
           Mockito.reset(comicDetailRepository);
         });
 
@@ -632,9 +610,9 @@ public class ComicDetailServiceTest {
           assertNotNull(result);
           assertTrue(result.contains(TEST_COVER_YEAR));
 
-          final Example<ComicDetail> example = exampleArgumentCaptor.getValue();
+          final Example<ComicDetail> workingExample = exampleArgumentCaptor.getValue();
 
-          Mockito.verify(comicDetailRepository, Mockito.times(1)).findAll(example);
+          Mockito.verify(comicDetailRepository, Mockito.times(1)).findAll(workingExample);
           Mockito.reset(comicDetailRepository);
         });
 
@@ -701,9 +679,9 @@ public class ComicDetailServiceTest {
           assertNotNull(result);
           assertTrue(result.contains(TEST_COVER_MONTH));
 
-          final Example<ComicDetail> example = exampleArgumentCaptor.getValue();
+          final Example<ComicDetail> workingExample = exampleArgumentCaptor.getValue();
 
-          Mockito.verify(comicDetailRepository, Mockito.times(1)).findAll(example);
+          Mockito.verify(comicDetailRepository, Mockito.times(1)).findAll(workingExample);
           Mockito.reset(comicDetailRepository);
         });
 
@@ -765,7 +743,9 @@ public class ComicDetailServiceTest {
 
     assertEquals(TEST_FILTER_COUNT, result);
 
-    final Example<ComicDetail> example = exampleArgumentCaptor.getValue();
+    final Example<ComicDetail> workingExample = exampleArgumentCaptor.getValue();
+
+    assertNotNull(workingExample);
 
     Mockito.verify(exampleBuilder, Mockito.times(1)).build();
     Mockito.verify(comicDetailRepository, Mockito.times(1)).count(comicDetailExample);
@@ -943,5 +923,28 @@ public class ComicDetailServiceTest {
 
     Mockito.verify(readingListService, Mockito.times(1))
         .loadReadingListForUser(TEST_EMAIL, TEST_READING_LIST_ID);
+  }
+
+  @Test
+  public void testLoadComicDetailsBySelectedId() {
+    Mockito.when(
+            comicDetailRepository.findSelectedComicBooks(
+                Mockito.anyList(), pageableArgumentCaptor.capture()))
+        .thenReturn(comicDetailList);
+
+    final List<ComicDetail> result =
+        service.loadComicDetailList(
+            TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION, comicBookIdList);
+
+    assertNotNull(result);
+    assertSame(comicDetailList, result);
+
+    final Pageable pageable = pageableArgumentCaptor.getValue();
+    assertNotNull(result);
+    assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
+    assertEquals(TEST_PAGE_INDEX, pageable.getPageNumber());
+
+    Mockito.verify(comicDetailRepository, Mockito.times(1))
+        .findSelectedComicBooks(comicBookIdList, pageable);
   }
 }

@@ -49,10 +49,6 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
 import { MatSortModule } from '@angular/material/sort';
-import {
-  COMIC_BOOK_LIST_FEATURE_KEY,
-  initialState as initialComicBookListState
-} from '@app/comic-books/reducers/comic-book-list.reducer';
 import { ComicDetailListViewComponent } from '@app/comic-books/components/comic-detail-list-view/comic-detail-list-view.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -65,10 +61,6 @@ describe('ComicDetailListDialogComponent', () => {
   const COMICS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
   const HASH = PAGE_1.hash;
   const initialState = {
-    [COMIC_BOOK_LIST_FEATURE_KEY]: {
-      ...initialComicBookListState,
-      comicBooks: COMICS
-    },
     [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState
   };
 

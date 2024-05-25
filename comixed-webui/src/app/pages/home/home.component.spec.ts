@@ -24,10 +24,6 @@ import { TitleService } from '@app/core/services/title.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
-  COMIC_BOOK_LIST_FEATURE_KEY,
-  initialState as initialComicBookListState
-} from '@app/comic-books/reducers/comic-book-list.reducer';
-import {
   COMIC_DETAIL_1,
   COMIC_DETAIL_3,
   COMIC_DETAIL_5
@@ -55,7 +51,6 @@ import {
 xdescribe('HomeComponent', () => {
   const COMIC_BOOKS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
   const initialState = {
-    [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState
   };
@@ -112,25 +107,6 @@ xdescribe('HomeComponent', () => {
 
     it('updates the page title', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
-    });
-  });
-
-  describe('when comics are finished loading', () => {
-    beforeEach(() => {
-      component.comicBooks = [];
-      store.setState({
-        ...initialState,
-        [COMIC_BOOK_LIST_FEATURE_KEY]: {
-          ...initialComicBookListState,
-          loading: false,
-          lastPayload: true,
-          comicBooks: COMIC_BOOKS
-        }
-      });
-    });
-
-    it('sets the comics', () => {
-      expect(component.comicBooks).toEqual(COMIC_BOOKS);
     });
   });
 });

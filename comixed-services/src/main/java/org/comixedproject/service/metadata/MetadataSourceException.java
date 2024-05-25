@@ -27,10 +27,21 @@ import org.comixedproject.model.metadata.MetadataSource;
  * @author Darryl L. Pierce
  */
 public class MetadataSourceException extends Exception {
+  /**
+   * Creates an instance with a message.
+   *
+   * @param message the message
+   */
   public MetadataSourceException(final String message) {
     super(message);
   }
 
+  /**
+   * Creates an instance with a message and cause.
+   *
+   * @param message the message
+   * @param cause the cause
+   */
   public MetadataSourceException(final String message, final Exception cause) {
     super(message, cause);
   }

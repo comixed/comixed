@@ -49,6 +49,7 @@ export class SideNavigationComponent implements OnDestroy {
   libraryState: LibraryState;
   lastReadUnreadCountSubscription$: Subscription;
   totalComicBooks$ = new BehaviorSubject<number>(0);
+  selectedComicBooks$ = new BehaviorSubject<number>(0);
   unprocessedComicBooks$ = new BehaviorSubject<number>(0);
   unreadComicBooks$ = new BehaviorSubject<number>(0);
   unscrapedComicBooks$ = new BehaviorSubject<number>(0);

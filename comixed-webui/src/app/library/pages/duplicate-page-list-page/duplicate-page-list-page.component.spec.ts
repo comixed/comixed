@@ -72,10 +72,6 @@ import {
 import { USER_ADMIN } from '@app/user/user.fixtures';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import {
-  COMIC_BOOK_LIST_FEATURE_KEY,
-  initialState as initialComicBookListState
-} from '@app/comic-books/reducers/comic-book-list.reducer';
-import {
   COMIC_DETAIL_1,
   COMIC_DETAIL_2,
   COMIC_DETAIL_3,
@@ -102,8 +98,7 @@ describe('DuplicatePageListPageComponent', () => {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER_ADMIN },
     [DUPLICATE_PAGE_LIST_FEATURE_KEY]: initialDuplicatePageListState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
-    [BLOCKED_HASH_LIST_FEATURE_KEY]: initialBlockedPageListState,
-    [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState
+    [BLOCKED_HASH_LIST_FEATURE_KEY]: initialBlockedPageListState
   };
 
   let component: DuplicatePageListPageComponent;
@@ -319,7 +314,6 @@ describe('DuplicatePageListPageComponent', () => {
     } as SelectableListItem<DuplicatePage>;
 
     beforeEach(() => {
-      component.comics = COMICS;
       component.onShowComicBooksWithPage(ENTRY);
     });
 

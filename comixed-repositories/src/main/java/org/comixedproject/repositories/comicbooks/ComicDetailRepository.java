@@ -40,16 +40,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> {
   /**
-   * Returns a set of records with an id greater than the one provided.
-   *
-   * @param lastId the last id
-   * @param pageRequest the page parameter
-   * @return the records
-   */
-  @Query("SELECT d FROM ComicDetail d WHERE d.id > :lastId ORDER BY d.id")
-  List<ComicDetail> getWithIdGreaterThan(@Param("lastId") Long lastId, Pageable pageRequest);
-
-  /**
    * Returns the set of all publishers with comics that have not been read by the specified user.
    *
    * @param email the user's email
@@ -386,4 +376,8 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
       "SELECT d FROM ComicDetail d WHERE d IN (SELECT l.entries FROM ReadingList  l WHERE l.id = :readingListId)")
   List<ComicDetail> loadComicDetailsForReadingList(
       @Param("readingListId") long readingListId, Pageable pageable);
+
+  @Query("SELECT d FROM ComicDetail d WHERE d.comicBook.id IN :selectedIds")
+  List<ComicDetail> findSelectedComicBooks(
+      @Param("selectedIds") List selectedIds, Pageable pageable);
 }

@@ -27,6 +27,11 @@ import org.comixedproject.model.comicpages.BlockedHash;
  * @author Darryl L. Pierce
  */
 public class BlockedHashException extends Exception {
+  /**
+   * Creates an instance with the given message.
+   *
+   * @param message the message
+   */
   public BlockedHashException(final String message) {
     super(message);
   }
