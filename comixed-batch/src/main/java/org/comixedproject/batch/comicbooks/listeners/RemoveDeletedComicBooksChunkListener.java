@@ -21,11 +21,8 @@ package org.comixedproject.batch.comicbooks.listeners;
 import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.REMOVE_DELETED_COMIC_BOOKS_STEP;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
 import org.comixedproject.model.comicbooks.ComicState;
-import org.springframework.batch.core.ChunkListener;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -37,29 +34,25 @@ import org.springframework.stereotype.Component;
 @Component
 @StepScope
 @Log4j2
-public class RemoveDeletedComicBooksChunkListener extends AbstractBatchProcessListener
-    implements ChunkListener {
+public class RemoveDeletedComicBooksChunkListener extends AbstractBatchProcessChunkListener {
   @Override
-  public void beforeChunk(final ChunkContext context) {
-    this.doPublishChunkState(context);
+  protected String getStepName() {
+    return REMOVE_DELETED_COMIC_BOOKS_STEP;
   }
 
   @Override
-  public void afterChunk(final ChunkContext context) {
-    this.doPublishChunkState(context);
+  protected boolean isActive() {
+    return this.comicBookService.getCountForState(ComicState.DELETED) > 0L;
   }
 
   @Override
-  public void afterChunkError(final ChunkContext context) {
-    this.doPublishChunkState(context);
+  protected long getProcessedElements() {
+    return this.comicBookService.getComicBookCount()
+        - this.comicBookService.getCountForState(ComicState.DELETED);
   }
 
-  private void doPublishChunkState(ChunkContext context) {
-    this.doPublishBatchProcessDetail(
-        this.getBatchDetails(context.getStepContext().getStepExecution().getJobExecution()));
-    final long unprocessed = this.comicBookService.getCountForState(ComicState.DELETED);
-    final long comicBooks = this.comicBookService.getComicBookCount();
-    this.doPublishProcessComicBookStatus(
-        unprocessed > 0, REMOVE_DELETED_COMIC_BOOKS_STEP, comicBooks, comicBooks - unprocessed);
+  @Override
+  protected long getTotalElements() {
+    return this.comicBookService.getComicBookCount();
   }
 }

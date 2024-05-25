@@ -29,10 +29,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.batch.core.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class OrganizeLibraryListenerTest {
+public class OrganizeLibraryJobListenerTest {
   private static final String TEST_JOB_NAME = "The job name";
 
-  @InjectMocks private OrganizeLibraryListener listener;
+  @InjectMocks private OrganizeLibraryJobListener listener;
   @Mock private JobInstance jobInstance;
   @Mock private JobExecution jobExecution;
   @Mock private PublishBatchProcessDetailUpdateAction publishBatchProcessDetailUpdateAction;

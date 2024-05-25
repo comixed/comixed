@@ -21,7 +21,7 @@ package org.comixedproject.batch.comicbooks;
 import java.io.File;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.comicbooks.listeners.MoveComicFilesChunkListener;
-import org.comixedproject.batch.comicbooks.listeners.OrganizeLibraryListener;
+import org.comixedproject.batch.comicbooks.listeners.OrganizeLibraryJobListener;
 import org.comixedproject.batch.comicbooks.listeners.RemoveDeletedComicBooksChunkListener;
 import org.comixedproject.batch.comicbooks.processors.DeleteEmptyDirectoriesProcessor;
 import org.comixedproject.batch.comicbooks.processors.MoveComicFilesProcessor;
@@ -76,7 +76,7 @@ public class LibraryOrganizationConfiguration {
   @Bean(name = ORGANIZE_LIBRARY_JOB)
   public Job organizeLibraryJob(
       final JobRepository jobRepository,
-      final OrganizeLibraryListener listener,
+      final OrganizeLibraryJobListener listener,
       @Qualifier("removeDeletedComicBooksStep") final Step removeDeletedComicBooksStep,
       @Qualifier("moveComicFilesStep") final Step moveComicFilesStep,
       @Qualifier("deleteEmptyDirectoriesStep") final Step deleteEmptyDirectoriesStep) {

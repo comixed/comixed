@@ -21,10 +21,7 @@ package org.comixedproject.batch.comicbooks.listeners;
 import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.DELETE_DESCRIPTORS_STEP;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
-import org.springframework.batch.core.ChunkListener;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -36,29 +33,25 @@ import org.springframework.stereotype.Component;
 @Component
 @StepScope
 @Log4j2
-public class DeleteImportedDescriptorsListener extends AbstractBatchProcessListener
-    implements ChunkListener {
+public class DeleteImportedDescriptorsListener extends AbstractBatchProcessChunkListener {
   @Override
-  public void beforeChunk(final ChunkContext context) {
-    this.doPublishChunkState(context);
+  protected String getStepName() {
+    return DELETE_DESCRIPTORS_STEP;
   }
 
   @Override
-  public void afterChunk(final ChunkContext context) {
-    this.doPublishChunkState(context);
+  protected boolean isActive() {
+    return this.comicFileService.getUnimportedComicFileDescriptorCount() > 0;
   }
 
   @Override
-  public void afterChunkError(final ChunkContext context) {
-    this.doPublishChunkState(context);
+  protected long getProcessedElements() {
+    return this.comicBookService.getComicBookCount();
   }
 
-  private void doPublishChunkState(ChunkContext context) {
-    this.doPublishBatchProcessDetail(
-        this.getBatchDetails(context.getStepContext().getStepExecution().getJobExecution()));
-    final long comicFiles = this.comicFileService.getUnimportedComicFileDescriptorCount();
-    final long comicBooks = this.comicBookService.getComicBookCount();
-    this.doPublishProcessComicBookStatus(
-        comicFiles > 0, DELETE_DESCRIPTORS_STEP, comicBooks + comicFiles, comicBooks);
+  @Override
+  protected long getTotalElements() {
+    return this.comicFileService.getUnimportedComicFileDescriptorCount()
+        + this.comicBookService.getComicBookCount();
   }
 }

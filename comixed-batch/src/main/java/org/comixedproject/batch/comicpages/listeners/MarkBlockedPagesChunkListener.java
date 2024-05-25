@@ -21,12 +21,7 @@ package org.comixedproject.batch.comicpages.listeners;
 import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.MARK_BLOCKED_PAGE_STEP;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
-import org.comixedproject.model.batch.BatchProcessDetail;
-import org.comixedproject.service.comicpages.ComicPageService;
-import org.springframework.batch.core.ChunkListener;
-import org.springframework.batch.core.scope.context.ChunkContext;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.comixedproject.batch.comicbooks.listeners.AbstractBatchProcessChunkListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -37,32 +32,25 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class MarkBlockedPagesChunkListener extends AbstractBatchProcessListener
-    implements ChunkListener {
-  @Autowired private ComicPageService comicPageService;
-
+public class MarkBlockedPagesChunkListener extends AbstractBatchProcessChunkListener {
   @Override
-  public void beforeChunk(final ChunkContext context) {
-    this.doPublishChunkState(context);
+  protected String getStepName() {
+    return MARK_BLOCKED_PAGE_STEP;
   }
 
   @Override
-  public void afterChunk(final ChunkContext context) {
-    this.doPublishChunkState(context);
+  protected boolean isActive() {
+    return this.comicPageService.getUnmarkedWithBlockedHashCount() > 0L;
   }
 
   @Override
-  public void afterChunkError(final ChunkContext context) {
-    this.doPublishChunkState(context);
+  protected long getProcessedElements() {
+    return this.comicPageService.getCount()
+        - this.comicPageService.getUnmarkedWithBlockedHashCount();
   }
 
-  private void doPublishChunkState(ChunkContext chunkContext) {
-    this.doPublishBatchProcessDetail(
-        BatchProcessDetail.from(
-            chunkContext.getStepContext().getStepExecution().getJobExecution()));
-    final long total = this.comicPageService.getCount();
-    final long unprocessed = this.comicPageService.getUnmarkedWithBlockedHashCount();
-    this.doPublishProcessComicBookStatus(
-        unprocessed > 0, MARK_BLOCKED_PAGE_STEP, total, total - unprocessed);
+  @Override
+  protected long getTotalElements() {
+    return this.comicPageService.getCount();
   }
 }
