@@ -19,6 +19,25 @@
 import { createAction, props } from '@ngrx/store';
 import { LastRead } from '@app/comic-books/models/last-read';
 
+export const resetLastReadList = createAction(
+  '[Last Read List] Resets the last read list'
+);
+
+export const loadLastReadEntries = createAction(
+  '[Last Read List] Load the set of last read entries'
+);
+
+export const loadLastReadEntriesSuccess = createAction(
+  '[Last Read List] The last read entries were loaded',
+  props<{
+    entries: LastRead[];
+  }>()
+);
+
+export const loadLastReadEntriesFailure = createAction(
+  '[Last Read List] Failed to load the last read entries'
+);
+
 export const loadUnreadComicBookCount = createAction(
   '[Last Read List] Load the last read count'
 );
@@ -38,10 +57,6 @@ export const loadUnreadComicBookCountFailure = createAction(
 export const setLastReadList = createAction(
   '[Last Read List] Sets the current list of last read dates',
   props<{ entries: LastRead[] }>()
-);
-
-export const resetLastReadList = createAction(
-  '[Last Read List] Resets the last read list'
 );
 
 export const lastReadDateUpdated = createAction(

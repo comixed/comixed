@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
   comicDetailsLoaded,
   loadComicDetails,
@@ -34,7 +34,6 @@ import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { LoadComicDetailsResponse } from '@app/comic-books/models/net/load-comic-details-response';
-import { setLastReadList } from '@app/comic-books/actions/last-read-list.actions';
 
 @Injectable()
 export class ComicDetailsListEffects {
@@ -62,8 +61,14 @@ export class ComicDetailsListEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            mergeMap((response: LoadComicDetailsResponse) =>
-              this.doComicDetailsLoaded(response)
+            map((response: LoadComicDetailsResponse) =>
+              comicDetailsLoaded({
+                comicDetails: response.comicDetails,
+                coverYears: response.coverYears,
+                coverMonths: response.coverMonths,
+                totalCount: response.totalCount,
+                filteredCount: response.filteredCount
+              })
             ),
             catchError(error => this.doServiceFailure(error))
           )
@@ -83,8 +88,14 @@ export class ComicDetailsListEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            mergeMap((response: LoadComicDetailsResponse) =>
-              this.doComicDetailsLoaded(response)
+            map((response: LoadComicDetailsResponse) =>
+              comicDetailsLoaded({
+                comicDetails: response.comicDetails,
+                coverYears: response.coverYears,
+                coverMonths: response.coverMonths,
+                totalCount: response.totalCount,
+                filteredCount: response.filteredCount
+              })
             ),
             catchError(error => this.doServiceFailure(error))
           )
@@ -111,8 +122,14 @@ export class ComicDetailsListEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            mergeMap((response: LoadComicDetailsResponse) =>
-              this.doComicDetailsLoaded(response)
+            map((response: LoadComicDetailsResponse) =>
+              comicDetailsLoaded({
+                comicDetails: response.comicDetails,
+                coverYears: response.coverYears,
+                coverMonths: response.coverMonths,
+                totalCount: response.totalCount,
+                filteredCount: response.filteredCount
+              })
             ),
             catchError(error => this.doServiceFailure(error))
           )
@@ -135,8 +152,14 @@ export class ComicDetailsListEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            mergeMap((response: LoadComicDetailsResponse) =>
-              this.doComicDetailsLoaded(response)
+            map((response: LoadComicDetailsResponse) =>
+              comicDetailsLoaded({
+                comicDetails: response.comicDetails,
+                coverYears: response.coverYears,
+                coverMonths: response.coverMonths,
+                totalCount: response.totalCount,
+                filteredCount: response.filteredCount
+              })
             ),
             catchError(error => this.doServiceFailure(error))
           )
@@ -162,8 +185,14 @@ export class ComicDetailsListEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            mergeMap((response: LoadComicDetailsResponse) =>
-              this.doComicDetailsLoaded(response)
+            map((response: LoadComicDetailsResponse) =>
+              comicDetailsLoaded({
+                comicDetails: response.comicDetails,
+                coverYears: response.coverYears,
+                coverMonths: response.coverMonths,
+                totalCount: response.totalCount,
+                filteredCount: response.filteredCount
+              })
             ),
             catchError(error => this.doServiceFailure(error))
           )
@@ -179,19 +208,6 @@ export class ComicDetailsListEffects {
     private alertService: AlertService,
     private translateService: TranslateService
   ) {}
-
-  private doComicDetailsLoaded(response: LoadComicDetailsResponse) {
-    return [
-      comicDetailsLoaded({
-        comicDetails: response.comicDetails,
-        coverYears: response.coverYears,
-        coverMonths: response.coverMonths,
-        totalCount: response.totalCount,
-        filteredCount: response.filteredCount
-      }),
-      setLastReadList({ entries: response.lastReadEntries })
-    ];
-  }
 
   private doServiceFailure(error: any) {
     this.logger.debug('Service failure:', error);

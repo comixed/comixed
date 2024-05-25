@@ -24,6 +24,7 @@ import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LI
 import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.List;
+import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.net.comicbooks.LoadUnreadComicBookCountResponse;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;
 import org.comixedproject.service.comicbooks.ComicBookSelectionService;
@@ -52,6 +53,7 @@ public class LastReadControllerTest {
   @Mock private HttpSession session;
   @Mock private Principal principal;
   @Mock private List<Long> selectedIds;
+  @Mock private List<LastRead> lastReadList;
 
   @Before
   public void setUp() throws ComicBookSelectionException {
@@ -61,6 +63,18 @@ public class LastReadControllerTest {
     Mockito.when(comicBookSelectionService.encodeSelections(selectedIds))
         .thenReturn(TEST_REENCODED_SELECTION_IDS);
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
+  }
+
+  @Test
+  public void testGetLastReadEntries() throws LastReadException {
+    Mockito.when(lastReadService.getLastReadEntries(Mockito.anyString())).thenReturn(lastReadList);
+
+    final List<LastRead> result = controller.getLastReadEntries(principal);
+
+    assertNotNull(result);
+    assertSame(lastReadList, result);
+
+    Mockito.verify(lastReadService, Mockito.times(1)).getLastReadEntries(TEST_EMAIL);
   }
 
   @Test(expected = LastReadException.class)

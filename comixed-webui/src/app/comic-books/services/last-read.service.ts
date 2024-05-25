@@ -26,6 +26,7 @@ import { selectMessagingState } from '@app/messaging/selectors/messaging.selecto
 import {
   lastReadDateRemoved,
   lastReadDateUpdated,
+  loadLastReadEntries,
   loadUnreadComicBookCount
 } from '@app/comic-books/actions/last-read-list.actions';
 import { WebSocketService } from '@app/messaging';
@@ -33,6 +34,7 @@ import { LastRead } from '@app/comic-books/models/last-read';
 import {
   LAST_READ_REMOVED_TOPIC,
   LAST_READ_UPDATED_TOPIC,
+  LOAD_LAST_READ_ENTRIES_URL,
   LOAD_UNREAD_COMIC_BOOK_COUNT_URL,
   SET_COMIC_BOOK_READ_STATE_URL,
   SET_SELECTED_COMIC_BOOKS_READ_STATE_URL
@@ -64,6 +66,7 @@ export class LastReadService {
             }
           );
           this.store.dispatch(loadUnreadComicBookCount());
+          this.store.dispatch(loadLastReadEntries());
         }
         if (!this.removeSubscription) {
           this.removeSubscription = this.webSocketService.subscribe<LastRead>(
@@ -91,6 +94,11 @@ export class LastReadService {
         }
       }
     });
+  }
+
+  loadLastReadEntries(): Observable<any> {
+    this.logger.debug('Loading last read entries');
+    return this.http.get(interpolate(LOAD_LAST_READ_ENTRIES_URL));
   }
 
   loadUnreadComicBookCount(): Observable<any> {

@@ -1,7 +1,7 @@
 {
   "last-read-list": {
     "load-entries": {
-      "effect-failure": "Failed to load last read entries."
+      "effect-failure": "Failed to load last read entries..."
     }
   },
   "selected-comic-books-read-state": {

@@ -274,7 +274,6 @@ public class ComicBookController {
   public LoadComicDetailsResponse loadComicDetailList(
       final Principal principal, @RequestBody() final LoadComicDetailsRequest request)
       throws LastReadException {
-    final String email = principal.getName();
     log.debug("Loading comics: {}", request);
     final List<ComicDetail> comicDetails =
         this.comicDetailService.loadComicDetailList(
@@ -333,8 +332,7 @@ public class ComicBookController {
         coverYears,
         coverMonths,
         this.comicBookService.getComicBookCount(),
-        filterCount,
-        this.lastReadService.loadForComicDetails(email, comicDetails));
+        filterCount);
   }
 
   /**
@@ -353,19 +351,13 @@ public class ComicBookController {
   public LoadComicDetailsResponse loadComicDetailListById(
       final Principal principal, @RequestBody() final LoadComicDetailsByIdRequest request)
       throws LastReadException {
-    final String email = principal.getName();
     final Set<Long> ids = request.getComicBookIds();
     log.debug("Loading comics by ids: {}", ids);
     final List<ComicDetail> comicDetails = this.comicDetailService.loadComicDetailListById(ids);
     final List<Integer> coverYears = this.comicDetailService.getCoverYears(ids);
     final List<Integer> coverMonths = this.comicDetailService.getCoverMonths(ids);
     return new LoadComicDetailsResponse(
-        comicDetails,
-        coverYears,
-        coverMonths,
-        ids.size(),
-        ids.size(),
-        this.lastReadService.loadForComicDetails(email, comicDetails));
+        comicDetails, coverYears, coverMonths, ids.size(), ids.size());
   }
 
   /**
@@ -384,7 +376,6 @@ public class ComicBookController {
   public LoadComicDetailsResponse loadComicDetailListForTag(
       final Principal principal, @RequestBody() final LoadComicDetailsForTagRequest request)
       throws LastReadException {
-    final String email = principal.getName();
     final int pageSize = request.getPageSize();
     final int pageIndex = request.getPageIndex();
     final ComicTagType tagType = ComicTagType.forValue(request.getTagType());
@@ -407,8 +398,7 @@ public class ComicBookController {
         this.comicDetailService.getCoverYears(tagType, tagValue),
         this.comicDetailService.getCoverMonths(tagType, tagValue),
         this.comicBookService.getComicBookCount(),
-        this.comicDetailService.getFilterCount(tagType, tagValue),
-        this.lastReadService.loadForComicDetails(email, comicDetails));
+        this.comicDetailService.getFilterCount(tagType, tagValue));
   }
 
   /**
@@ -448,8 +438,7 @@ public class ComicBookController {
         Collections.emptyList(),
         Collections.emptyList(),
         this.comicBookService.getComicBookCount(),
-        this.lastReadService.getUnreadCountForUser(email),
-        this.lastReadService.loadForComicDetails(email, comicDetails));
+        this.lastReadService.getUnreadCountForUser(email));
   }
 
   /**
@@ -497,7 +486,6 @@ public class ComicBookController {
         Collections.emptyList(),
         Collections.emptyList(),
         this.readingListService.getEntryCount(readingListId),
-        this.readingListService.getEntryCount(readingListId),
-        this.lastReadService.loadForComicDetails(email, comicDetails));
+        this.readingListService.getEntryCount(readingListId));
   }
 }

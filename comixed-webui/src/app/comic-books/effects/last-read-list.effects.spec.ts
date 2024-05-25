@@ -26,6 +26,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AlertService } from '@app/core/services/alert.service';
 import {
+  loadLastReadEntries,
+  loadLastReadEntriesFailure,
+  loadLastReadEntriesSuccess,
   loadUnreadComicBookCount,
   loadUnreadComicBookCountFailure,
   loadUnreadComicBookCountSuccess
@@ -33,10 +36,24 @@ import {
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LoadUnreadComicBookCountResponse } from '@app/comic-books/models/net/load-unread-comic-book-count-response';
+import {
+  LAST_READ_1,
+  LAST_READ_2,
+  LAST_READ_3,
+  LAST_READ_4,
+  LAST_READ_5
+} from '@app/comic-books/comic-books.fixtures';
 
 describe('LastReadListEffects', () => {
   const READ_COUNT = 129;
   const UNREAD_COUNT = 717;
+  const ENTRIES = [
+    LAST_READ_1,
+    LAST_READ_2,
+    LAST_READ_3,
+    LAST_READ_4,
+    LAST_READ_5
+  ];
 
   let actions$: Observable<any>;
   let effects: LastReadListEffects;
@@ -56,6 +73,9 @@ describe('LastReadListEffects', () => {
         {
           provide: LastReadService,
           useValue: {
+            loadLastReadEntries: jasmine.createSpy(
+              'LastReadService.loadLastReadEntries()'
+            ),
             loadUnreadComicBookCount: jasmine.createSpy(
               'LastReadService.loadUnreadComicBookCount()'
             )
@@ -75,6 +95,51 @@ describe('LastReadListEffects', () => {
 
   it('should be created', () => {
     expect(effects).toBeTruthy();
+  });
+
+  describe('loading the last read list', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = ENTRIES;
+      const action = loadLastReadEntries();
+      const outcome = loadLastReadEntriesSuccess({
+        entries: ENTRIES
+      });
+
+      actions$ = hot('-a', { a: action });
+      lastReadService.loadLastReadEntries
+        .withArgs()
+        .and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.loadLastReadEntries$).toBeObservable(expected);
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = loadLastReadEntries();
+      const outcome = loadLastReadEntriesFailure();
+
+      actions$ = hot('-a', { a: action });
+      lastReadService.loadLastReadEntries
+        .withArgs()
+        .and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.loadLastReadEntries$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = loadLastReadEntries();
+      const outcome = loadLastReadEntriesFailure();
+
+      actions$ = hot('-a', { a: action });
+      lastReadService.loadLastReadEntries.withArgs().and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.loadLastReadEntries$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
   });
 
   describe('loading the unread comic book count', () => {

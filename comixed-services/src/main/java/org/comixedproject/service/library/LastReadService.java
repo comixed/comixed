@@ -28,7 +28,6 @@ import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.library.PublishLastReadRemovedAction;
 import org.comixedproject.messaging.library.PublishLastReadUpdatedAction;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.net.user.ComicsReadStatistic;
@@ -96,6 +95,19 @@ public class LastReadService implements InitializingBean, ComicStateChangeListen
       log.trace("Marking comicBook as read");
       this.markComicAsUnread(comicBook, user);
     }
+  }
+
+  /**
+   * Returns the list of last read entries for a given user.
+   *
+   * @param email the user's email
+   * @return the last read entries
+   */
+  @Transactional
+  public List<LastRead> getLastReadEntries(final String email) throws LastReadException {
+    final ComiXedUser user = this.doFindUser(email);
+    log.debug("Loading last read entries for user: id={} email={}", user.getId(), email);
+    return this.lastReadRepository.loadEntriesForUser(user);
   }
 
   /**
@@ -245,11 +257,6 @@ public class LastReadService implements InitializingBean, ComicStateChangeListen
     log.debug("Getting the unread comic book count for user: {}", email);
     return this.comicBookService.getComicBookCount()
         - this.lastReadRepository.loadCountForUser(this.doFindUser(email));
-  }
-
-  public List<LastRead> loadForComicDetails(
-      final String email, final List<ComicDetail> comicDetails) throws LastReadException {
-    return this.lastReadRepository.loadByComicBookIds(this.doFindUser(email), comicDetails);
   }
 
   /**

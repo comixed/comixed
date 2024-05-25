@@ -20,16 +20,19 @@ package org.comixedproject.rest.library;
 
 import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.net.comicbooks.LoadUnreadComicBookCountResponse;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;
 import org.comixedproject.service.comicbooks.ComicBookSelectionService;
 import org.comixedproject.service.library.LastReadException;
 import org.comixedproject.service.library.LastReadService;
+import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -48,6 +51,22 @@ public class LastReadController {
   @Autowired private ComicBookSelectionService comicBookSelectionService;
 
   /**
+   * Retrieves the last read list for a given user.
+   *
+   * @return the entries
+   * @throws LastReadException if an error occurs
+   */
+  @GetMapping(value = "/api/library/read/all", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.last-read.list")
+  @PreAuthorize("hasRole('READER')")
+  @JsonView(View.LastReadList.class)
+  public List<LastRead> getLastReadEntries(final Principal principal) throws LastReadException {
+    final String email = principal.getName();
+    log.info("Loading last read entries for {}", email);
+    return this.lastReadService.getLastReadEntries(email);
+  }
+
+  /**
    * Loads the read and unread comic book count for a user.
    *
    * @param principal the user principal
@@ -56,6 +75,7 @@ public class LastReadController {
    */
   @GetMapping(value = "/api/library/unread", produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.last-read.get-all")
+  @PreAuthorize("hasRole('READER')")
   public LoadUnreadComicBookCountResponse getUnreadComicBookCount(final Principal principal)
       throws LastReadException {
     final String email = principal.getName();
