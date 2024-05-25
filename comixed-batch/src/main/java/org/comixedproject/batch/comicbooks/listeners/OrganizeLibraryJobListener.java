@@ -27,14 +27,15 @@ import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>OrganizeLibraryListener</code> provides a simple listener for the organizing library job.
+ * <code>OrganizeLibraryJobListener</code> provides a simple listener for the organizing library
+ * job.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @JobScope
 @Log4j2
-public class OrganizeLibraryListener extends AbstractBatchProcessListener
+public class OrganizeLibraryJobListener extends AbstractBatchProcessListener
     implements JobExecutionListener {
   @Override
   public void beforeJob(final JobExecution jobExecution) {

@@ -21,12 +21,7 @@ package org.comixedproject.batch.comicbooks.listeners;
 import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
-import org.comixedproject.model.batch.BatchProcessDetail;
-import org.springframework.batch.core.ChunkListener;
-import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -37,29 +32,25 @@ import org.springframework.stereotype.Component;
 @Component
 @StepScope
 @Log4j2
-public class LoadFileContentsChunkListener extends AbstractBatchProcessListener
-    implements ChunkListener {
+public class LoadFileContentsChunkListener extends AbstractBatchProcessChunkListener {
   @Override
-  public void beforeChunk(final ChunkContext context) {
-    this.doPublishChunkState(context);
+  protected String getStepName() {
+    return LOAD_FILE_CONTENTS_STEP;
   }
 
   @Override
-  public void afterChunk(final ChunkContext context) {
-    this.doPublishChunkState(context);
+  protected boolean isActive() {
+    return this.comicBookService.getComicsWithoutContentCount() > 0L;
   }
 
   @Override
-  public void afterChunkError(final ChunkContext context) {
-    this.doPublishChunkState(context);
+  protected long getProcessedElements() {
+    return this.comicBookService.getComicBookCount()
+        - this.comicBookService.getComicsWithoutContentCount();
   }
 
-  private void doPublishChunkState(ChunkContext chunkContext) {
-    final StepExecution stepExecution = chunkContext.getStepContext().getStepExecution();
-    this.doPublishBatchProcessDetail(BatchProcessDetail.from(stepExecution.getJobExecution()));
-    final long total = this.comicBookService.getComicBookCount();
-    final long unprocessed = this.comicBookService.getComicsWithoutContentCount();
-    this.doPublishProcessComicBookStatus(
-        unprocessed > 0, LOAD_FILE_CONTENTS_STEP, total, total - unprocessed);
+  @Override
+  protected long getTotalElements() {
+    return this.comicBookService.getComicBookCount();
   }
 }
