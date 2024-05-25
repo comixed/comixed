@@ -21,7 +21,11 @@ import { TestBed } from '@angular/core/testing';
 import { LastReadService } from './last-read.service';
 import {
   COMIC_DETAIL_4,
-  LAST_READ_4
+  LAST_READ_1,
+  LAST_READ_2,
+  LAST_READ_3,
+  LAST_READ_4,
+  LAST_READ_5
 } from '@app/comic-books/comic-books.fixtures';
 import {
   HttpClientTestingModule,
@@ -31,6 +35,7 @@ import { interpolate } from '@app/core';
 import {
   LAST_READ_REMOVED_TOPIC,
   LAST_READ_UPDATED_TOPIC,
+  LOAD_LAST_READ_ENTRIES_URL,
   LOAD_UNREAD_COMIC_BOOK_COUNT_URL,
   SET_COMIC_BOOK_READ_STATE_URL,
   SET_SELECTED_COMIC_BOOKS_READ_STATE_URL
@@ -58,6 +63,13 @@ describe('LastReadService', () => {
   const COMIC = COMIC_DETAIL_4;
   const READ_COUNT = Math.floor(Math.random() * 30000);
   const UNREAD_COUNT = Math.floor(Math.random() * 30000);
+  const ENTRIES = [
+    LAST_READ_1,
+    LAST_READ_2,
+    LAST_READ_3,
+    LAST_READ_4,
+    LAST_READ_5
+  ];
   const initialState = {
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadListState
@@ -93,6 +105,16 @@ describe('LastReadService', () => {
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  it('loads the list of last read entries', () => {
+    service
+      .loadLastReadEntries()
+      .subscribe(response => expect(response).toEqual(ENTRIES));
+
+    const req = httpMock.expectOne(interpolate(LOAD_LAST_READ_ENTRIES_URL));
+    expect(req.request.method).toEqual('GET');
+    req.flush(ENTRIES);
   });
 
   it('loads the unread comic book count', () => {

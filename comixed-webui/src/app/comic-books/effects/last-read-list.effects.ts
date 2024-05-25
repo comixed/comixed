@@ -23,6 +23,9 @@ import { LastReadService } from '@app/comic-books/services/last-read.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import {
+  loadLastReadEntries,
+  loadLastReadEntriesFailure,
+  loadLastReadEntriesSuccess,
   loadUnreadComicBookCount,
   loadUnreadComicBookCountFailure,
   loadUnreadComicBookCountSuccess
@@ -30,9 +33,45 @@ import {
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { LoadUnreadComicBookCountResponse } from '@app/comic-books/models/net/load-unread-comic-book-count-response';
+import { LastRead } from '@app/comic-books/models/last-read';
 
 @Injectable()
 export class LastReadListEffects {
+  loadLastReadEntries$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(loadLastReadEntries),
+      tap(action =>
+        this.logger.debug('Effect: loading last read list:', action)
+      ),
+      switchMap(action =>
+        this.lastReadService.loadLastReadEntries().pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          map((response: LastRead[]) =>
+            loadLastReadEntriesSuccess({
+              entries: response
+            })
+          ),
+          catchError(error => {
+            this.logger.error('Service failure:', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'last-read-list.load-entries.effect-failure'
+              )
+            );
+            return of(loadLastReadEntriesFailure());
+          })
+        )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(loadLastReadEntriesFailure());
+      })
+    );
+  });
+
   loadUnreadComicBookCount$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadUnreadComicBookCount),

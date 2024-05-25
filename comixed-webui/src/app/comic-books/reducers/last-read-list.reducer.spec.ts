@@ -30,11 +30,13 @@ import {
 import {
   lastReadDateRemoved,
   lastReadDateUpdated,
+  loadLastReadEntries,
+  loadLastReadEntriesFailure,
+  loadLastReadEntriesSuccess,
   loadUnreadComicBookCount,
   loadUnreadComicBookCountFailure,
   loadUnreadComicBookCountSuccess,
-  resetLastReadList,
-  setLastReadList
+  resetLastReadList
 } from '@app/comic-books/actions/last-read-list.actions';
 
 describe('LastReadList Reducer', () => {
@@ -88,6 +90,53 @@ describe('LastReadList Reducer', () => {
     });
   });
 
+  describe('loading the last read list', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: false, entries: ENTRIES },
+        loadLastReadEntries()
+      );
+    });
+
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
+    });
+
+    it('clears the current entries', () => {
+      expect(state.entries).toEqual([]);
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: true, entries: [] },
+          loadLastReadEntriesSuccess({ entries: ENTRIES })
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+
+      it('stores the last read list', () => {
+        expect(state.entries).toEqual(ENTRIES);
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: true, entries: [] },
+          loadLastReadEntriesFailure()
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+    });
+  });
+
   describe('loading the unread comic book count', () => {
     beforeEach(() => {
       state = reducer({ ...state, busy: false }, loadUnreadComicBookCount());
@@ -132,19 +181,6 @@ describe('LastReadList Reducer', () => {
       it('clears the busy flag', () => {
         expect(state.busy).toBeFalse();
       });
-    });
-  });
-
-  describe('setting the last read list', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, entries: [] },
-        setLastReadList({ entries: ENTRIES })
-      );
-    });
-
-    it('replaces the entries', () => {
-      expect(state.entries).toEqual(ENTRIES);
     });
   });
 

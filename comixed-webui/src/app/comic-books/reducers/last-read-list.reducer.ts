@@ -20,11 +20,13 @@ import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   lastReadDateRemoved,
   lastReadDateUpdated,
+  loadLastReadEntries,
+  loadLastReadEntriesFailure,
+  loadLastReadEntriesSuccess,
   loadUnreadComicBookCount,
   loadUnreadComicBookCountFailure,
   loadUnreadComicBookCountSuccess,
-  resetLastReadList,
-  setLastReadList
+  resetLastReadList
 } from '../actions/last-read-list.actions';
 import { LastRead } from '@app/comic-books/models/last-read';
 
@@ -47,6 +49,17 @@ export const initialState: LastReadListState = {
 export const reducer = createReducer(
   initialState,
 
+  on(resetLastReadList, state => ({
+    ...state,
+    entries: []
+  })),
+  on(loadLastReadEntries, state => ({ ...state, busy: true, entries: [] })),
+  on(loadLastReadEntriesSuccess, (state, action) => ({
+    ...state,
+    busy: false,
+    entries: action.entries
+  })),
+  on(loadLastReadEntriesFailure, state => ({ ...state, busy: false })),
   on(loadUnreadComicBookCount, state => ({ ...state, busy: true })),
   on(loadUnreadComicBookCountSuccess, (state, action) => ({
     ...state,
@@ -55,14 +68,6 @@ export const reducer = createReducer(
     unreadCount: action.unreadCount
   })),
   on(loadUnreadComicBookCountFailure, state => ({ ...state, busy: false })),
-  on(resetLastReadList, state => ({
-    ...state,
-    entries: []
-  })),
-  on(setLastReadList, (state, action) => ({
-    ...state,
-    entries: action.entries
-  })),
   on(lastReadDateUpdated, (state, action) => {
     const entries = state.entries
       .filter(entry => entry.comicDetail.id !== action.entry.comicDetail.id)

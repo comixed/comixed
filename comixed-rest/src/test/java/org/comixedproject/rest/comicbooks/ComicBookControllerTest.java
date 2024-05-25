@@ -402,8 +402,6 @@ public class ComicBookControllerTest {
                 TEST_SERIES,
                 TEST_VOLUME))
         .thenReturn(TEST_TOTAL_COMIC_COUNT);
-    Mockito.when(lastReadService.loadForComicDetails(Mockito.anyString(), Mockito.anyList()))
-        .thenReturn(lastReadEntryList);
 
     final LoadComicDetailsResponse result =
         controller.loadComicDetailList(
@@ -430,7 +428,6 @@ public class ComicBookControllerTest {
     assertSame(coverMonthList, result.getCoverMonths());
     assertEquals(TEST_COMIC_BOOK_COUNT, result.getTotalCount());
     assertEquals(TEST_TOTAL_COMIC_COUNT, result.getFilteredCount());
-    assertSame(lastReadEntryList, result.getLastReadEntries());
   }
 
   @Test
@@ -439,8 +436,6 @@ public class ComicBookControllerTest {
         .thenReturn(comicDetailList);
     Mockito.when(comicDetailService.getCoverYears(Mockito.anySet())).thenReturn(coverYearList);
     Mockito.when(comicDetailService.getCoverMonths(Mockito.anySet())).thenReturn(coverMonthList);
-    Mockito.when(lastReadService.loadForComicDetails(Mockito.anyString(), Mockito.anyList()))
-        .thenReturn(lastReadEntryList);
 
     final LoadComicDetailsResponse result =
         controller.loadComicDetailListById(
@@ -452,7 +447,6 @@ public class ComicBookControllerTest {
     assertSame(coverMonthList, result.getCoverMonths());
     assertEquals(comicBookIdSet.size(), result.getTotalCount());
     assertEquals(comicBookIdSet.size(), result.getFilteredCount());
-    assertSame(lastReadEntryList, result.getLastReadEntries());
 
     Mockito.verify(comicDetailService, Mockito.times(1)).loadComicDetailListById(comicBookIdSet);
   }
@@ -477,8 +471,6 @@ public class ComicBookControllerTest {
     Mockito.when(
             comicDetailService.getFilterCount(Mockito.any(ComicTagType.class), Mockito.anyString()))
         .thenReturn(TEST_FILTER_COUNT);
-    Mockito.when(lastReadService.loadForComicDetails(Mockito.anyString(), Mockito.anyList()))
-        .thenReturn(lastReadEntryList);
 
     final LoadComicDetailsResponse result =
         controller.loadComicDetailListForTag(
@@ -497,7 +489,6 @@ public class ComicBookControllerTest {
     assertSame(coverMonthList, result.getCoverMonths());
     assertEquals(TEST_COMIC_BOOK_COUNT, result.getTotalCount());
     assertEquals(TEST_FILTER_COUNT, result.getFilteredCount());
-    assertSame(lastReadEntryList, result.getLastReadEntries());
 
     Mockito.verify(comicDetailService, Mockito.times(1))
         .loadComicDetailListForTagType(
@@ -527,8 +518,6 @@ public class ComicBookControllerTest {
         .thenReturn(comicDetailList);
     Mockito.when(lastReadService.getUnreadCountForUser(Mockito.anyString()))
         .thenReturn(TEST_UNREAD_COMIC_COUNT);
-    Mockito.when(lastReadService.loadForComicDetails(Mockito.anyString(), Mockito.anyList()))
-        .thenReturn(lastReadEntryList);
 
     final LoadComicDetailsResponse result =
         controller.loadUnreadComicDetailList(
@@ -542,7 +531,6 @@ public class ComicBookControllerTest {
     assertTrue(result.getCoverMonths().isEmpty());
     assertEquals(TEST_COMIC_BOOK_COUNT, result.getTotalCount());
     assertEquals(TEST_UNREAD_COMIC_COUNT, result.getFilteredCount());
-    assertSame(lastReadEntryList, result.getLastReadEntries());
 
     Mockito.verify(comicDetailService, Mockito.times(1))
         .loadUnreadComicDetails(
@@ -564,8 +552,6 @@ public class ComicBookControllerTest {
                 Mockito.anyString(),
                 Mockito.anyString()))
         .thenReturn(comicDetailList);
-    Mockito.when(lastReadService.loadForComicDetails(Mockito.anyString(), Mockito.anyList()))
-        .thenReturn(lastReadEntryList);
 
     final LoadComicDetailsResponse result =
         controller.loadComicDetailsForReadingList(
@@ -580,7 +566,6 @@ public class ComicBookControllerTest {
     assertTrue(result.getCoverMonths().isEmpty());
     assertEquals(TEST_COMIC_BOOK_COUNT, result.getTotalCount());
     assertEquals(TEST_COMIC_BOOK_COUNT, result.getFilteredCount());
-    assertSame(lastReadEntryList, result.getLastReadEntries());
 
     Mockito.verify(comicDetailService, Mockito.times(1))
         .loadComicDetailsForReadingList(
@@ -591,7 +576,5 @@ public class ComicBookControllerTest {
             TEST_SORT_FIELD,
             TEST_SORT_DIRECTION);
     Mockito.verify(readingListService, Mockito.times(2)).getEntryCount(TEST_READING_LIST_ID);
-    Mockito.verify(lastReadService, Mockito.times(1))
-        .loadForComicDetails(TEST_EMAIL, comicDetailList);
   }
 }

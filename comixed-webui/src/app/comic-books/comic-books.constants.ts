@@ -47,6 +47,7 @@ export const PAGE_URL_FROM_HASH = `${API_ROOT_URL}/pages/hashes/\${hash}/content
 export const MARK_PAGES_DELETED_URL = `${API_ROOT_URL}/pages/deleted`;
 export const MARK_PAGES_UNDELETED_URL = `${API_ROOT_URL}/pages/undeleted`;
 
+export const LOAD_LAST_READ_ENTRIES_URL = `${API_ROOT_URL}/library/read/all`;
 export const LOAD_UNREAD_COMIC_BOOK_COUNT_URL = `${API_ROOT_URL}/library/unread`;
 export const SET_COMIC_BOOK_READ_STATE_URL = `${API_ROOT_URL}/library/read/\${comicBookId}`;
 export const SET_SELECTED_COMIC_BOOKS_READ_STATE_URL = `${API_ROOT_URL}/library/read/selected`;

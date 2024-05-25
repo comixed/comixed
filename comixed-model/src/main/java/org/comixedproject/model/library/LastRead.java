@@ -48,7 +48,7 @@ public class LastRead {
   @ManyToOne
   @JoinColumn(name = "comic_detail_id", insertable = true, updatable = false, nullable = false)
   @JsonProperty("comicDetail")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicDetailsView.class, View.LastReadList.class})
   @Getter
   @Setter
   @NonNull
