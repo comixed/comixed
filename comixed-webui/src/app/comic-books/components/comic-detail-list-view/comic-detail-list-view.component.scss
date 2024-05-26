@@ -5,6 +5,16 @@ mat-row {
   max-height: $cx-row-height !important;
 }
 
+.cx-missing-comic-file {
+  color: #fefefe;
+  background-color: #cd5c5c;
+}
+
+.cx-selected-comic-book {
+  color: #0e0e0e;
+  background-color: #b6cd5c;
+}
+
 .mat-column-selection {
   width: $cx-column-smallish;
   max-width: $cx-column-smallish;

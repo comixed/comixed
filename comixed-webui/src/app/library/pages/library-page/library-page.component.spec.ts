@@ -322,31 +322,37 @@ describe('LibraryPageComponent', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
 
-    it('updates the page title for unprocessed comic', () => {
+    it('updates the page title for selected comics', () => {
+      component.selectedOnly = true;
+      translateService.use('fr');
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('updates the page title for unprocessed comics', () => {
       component.unprocessedOnly = true;
       translateService.use('fr');
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
 
-    it('updates the page title for unread comic', () => {
+    it('updates the page title for unread comics', () => {
       component.unreadOnly = true;
       translateService.use('fr');
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
 
-    it('updates the page title for unscraped comic', () => {
+    it('updates the page title for unscraped comics', () => {
       component.unscrapedOnly = true;
       translateService.use('fr');
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
 
-    it('updates the page title for changed comic', () => {
+    it('updates the page title for changed comics', () => {
       component.changedOnly = true;
       translateService.use('fr');
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
 
-    it('updates the page title for deleted comic', () => {
+    it('updates the page title for deleted comics', () => {
       component.deletedOnly = true;
       translateService.use('fr');
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));

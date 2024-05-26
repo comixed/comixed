@@ -281,7 +281,11 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   private loadTranslations(): void {
     this.logger.debug('Setting page title');
-    if (this.unprocessedOnly) {
+    if (this.selectedOnly) {
+      this.titleService.setTitle(
+        this.translateService.instant('library.all-comics.tab-title-selected')
+      );
+    } else if (this.unprocessedOnly) {
       this.titleService.setTitle(
         this.translateService.instant(
           'library.all-comics.tab-title-unprocessed'
