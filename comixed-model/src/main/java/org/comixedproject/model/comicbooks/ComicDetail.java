@@ -341,6 +341,19 @@ public class ComicDetail {
   }
 
   /**
+   * Returns if the comic file is missing.
+   *
+   * @return true if the file was not found
+   */
+  @Transient
+  @JsonProperty("missing")
+  @JsonView({View.ComicDetailsView.class})
+  public boolean isMissing() {
+    final File file = this.getFile();
+    return !(file.exists() && file.isFile());
+  }
+
+  /**
    * Sets the issue number for the comic.
    *
    * @param issueNumber the issue number

@@ -26,6 +26,7 @@ export interface ComicDetail {
   comicId: number;
   filename: string;
   baseFilename: string;
+  missing: boolean;
   archiveType: ArchiveType;
   comicState: ComicState;
   comicType: ComicType;

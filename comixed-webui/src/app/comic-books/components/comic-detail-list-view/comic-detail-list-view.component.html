@@ -266,6 +266,8 @@
   <mat-row
     *matRowDef="let row; columns: displayedColumns"
     [class.cx-selected-row]="selectedIds.includes(row.id)"
+    [class.cx-missing-comic-file]="row.item.missing"
+    [class.cx-selected-comic-book]="!row.item.missing && row.selected"
     (click)="onRowSelected(row)"
   ></mat-row>
   <tr class="mat-row" *matNoDataRow>
