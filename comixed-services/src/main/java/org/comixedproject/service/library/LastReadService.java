@@ -187,6 +187,7 @@ public class LastReadService implements InitializingBean, ComicStateChangeListen
    * @param ids the set of comic ids
    * @throws LastReadException if the user was not found
    */
+  @Transactional
   public void markComicBooksAsUnread(final String email, final List<Long> ids)
       throws LastReadException {
     final ComiXedUser user = this.doFindUser(email);

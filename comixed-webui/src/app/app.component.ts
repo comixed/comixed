@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ApplicationRef, Component, OnInit } from '@angular/core';
+import { ApplicationRef, Component, HostBinding, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LoggerLevel, LoggerService } from '@angular-ru/cdk/logger';
 import { selectUser } from '@app/user/selectors/user.selectors';
@@ -53,6 +53,9 @@ import { resetLastReadList } from '@app/comic-books/actions/last-read-list.actio
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  @HostBinding('class') currentTheme: 'lite-theme' | 'dark-theme' =
+    'lite-theme';
+
   user: User = null;
   busy = false;
   sessionActive = false;
@@ -144,13 +147,10 @@ export class AppComponent implements OnInit {
     });
     this.store.select(selectDarkThemeActive).subscribe(toggle => {
       this.darkMode = toggle;
-      const element = window.document.body;
       if (this.darkMode) {
-        element.classList.add('dark-theme');
-        element.classList.remove('lite-theme');
+        this.currentTheme = 'dark-theme';
       } else {
-        element.classList.add('lite-theme');
-        element.classList.remove('dark-theme');
+        this.currentTheme = 'lite-theme';
       }
     });
   }

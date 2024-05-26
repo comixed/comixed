@@ -1,5 +1,4 @@
 <cx-navigation-bar
-  id="cx-navigation-bar"
   [user]="user"
   [sidebarOpened]="sidenav.opened"
   (toggleSidebar)="sidenav.toggle($event)"
@@ -12,7 +11,10 @@
   </div>
 </div>
 
-<mat-sidenav-container class="cx-width-100 cx-height-100">
+<mat-sidenav-container
+  id="app-primary-space"
+  class="cx-width-100 cx-height-100"
+>
   <mat-sidenav #sidenav mode="over" (click)="sidenav.close()">
     <cx-side-navigation [user]="user"></cx-side-navigation>
   </mat-sidenav>
@@ -35,10 +37,7 @@
     <div class="cx-width-100 cx-overflow-y-scroll cx-footer-margin">
       <router-outlet></router-outlet>
     </div>
-    <cx-footer
-      id="cx-footer"
-      class="cx-padding-left-5"
-      [user]="user"
-    ></cx-footer>
   </mat-sidenav-content>
 </mat-sidenav-container>
+
+<cx-footer [user]="user"></cx-footer>

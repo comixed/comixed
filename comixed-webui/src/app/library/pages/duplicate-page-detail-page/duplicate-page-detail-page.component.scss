@@ -1,12 +1,12 @@
 @import 'styles';
 
 .mat-column-publisher {
-}
-
-.mat-column-series-name {
   width: $cx-column-large;
   max-width: $cx-column-large;
   resize: none;
+}
+
+.mat-column-series-name {
 }
 
 .mat-column-volume {

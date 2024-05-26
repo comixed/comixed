@@ -20,23 +20,31 @@
 </div>
 
 <div class="cx-horizontal-container">
-  <div class="cx-grow-0">
+  <div class="cx-grow-0 cx-width-25">
     <cx-comic-page [imageUrl]="hash | pageHashUrl"></cx-comic-page>
   </div>
   <div class="cx-grow-1 cx-padding-5">
     <h2>
       {{ "duplicate-page-detail.page-title" | translate: { hash: hash } }}
     </h2>
-    <mat-table [dataSource]="dataSource">
+    <mat-table
+      [dataSource]="dataSource"
+      matSort
+      [matSortActive]="queryParameterService.sortBy$ | async"
+      [matSortDirection]="queryParameterService.sortDirection$ | async"
+      (matSortChange)="
+        queryParameterService.onSortChange($event.active, $event.direction)
+      "
+    >
       <ng-container matColumnDef="publisher">
-        <mat-header-cell *matHeaderCellDef>
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
           {{ "comic-book.label.publisher" | translate }}
         </mat-header-cell>
         <mat-cell *matCellDef="let entry">{{ entry.publisher }}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="series">
-        <mat-header-cell *matHeaderCellDef>
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
           {{ "comic-book.label.series" | translate }}
         </mat-header-cell>
         <mat-cell *matCellDef="let entry">{{ entry.series }}</mat-cell>
@@ -50,14 +58,14 @@
       </ng-container>
 
       <ng-container matColumnDef="issue-number">
-        <mat-header-cell *matHeaderCellDef>
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
           {{ "comic-book.label.issue-number" | translate }}
         </mat-header-cell>
         <mat-cell *matCellDef="let entry">{{ entry.issueNumber }}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="cover-date">
-        <mat-header-cell *matHeaderCellDef>
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
           {{ "comic-book.label.cover-date" | translate }}
         </mat-header-cell>
         <mat-cell *matCellDef="let entry">

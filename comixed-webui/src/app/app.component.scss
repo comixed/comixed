@@ -1,23 +1,17 @@
-#cx-navigation-bar {
-  left: 0;
-  top: 0;
-  position: sticky;
-  z-index: 100;
-  width: 100%;
+@use '@angular/material' as mat;
+
+@mixin app-theme($theme) {
+  .container-home {
+    background-color: mat.get-theme-color($theme, background, background);
+  }
+}
+
+#app-primary-space {
+  margin-top: 50px;
 }
 
 mat-sidenav {
   width: 33%;
   min-width: 225px;
   max-width: 275px;
-}
-
-#cx-footer {
-  left: 0;
-  bottom: 0;
-  position: fixed;
-  width: 100%;
-  z-index: 100;
-  background-color: var(--primary-color);
-  color: var(--text-primary-color);
 }

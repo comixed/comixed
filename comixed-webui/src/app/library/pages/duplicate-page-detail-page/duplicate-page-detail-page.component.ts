@@ -16,7 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
@@ -37,6 +43,8 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
 import { selectBlockedPageList } from '@app/comic-pages/selectors/blocked-hash-list.selectors';
 import { loadBlockedHashList } from '@app/comic-pages/actions/blocked-hash-list.actions';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { MatSort } from '@angular/material/sort';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
 
 @Component({
   selector: 'cx-duplicate-page-detail-page',
@@ -46,6 +54,8 @@ import { ComicDetail } from '@app/comic-books/models/comic-detail';
 export class DuplicatePageDetailPageComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
+  @ViewChild(MatSort) sort: MatSort;
+
   paramSubscription: Subscription;
   duplicatePageStateSubscription: Subscription;
   duplicatePageSubscription: Subscription;
@@ -71,7 +81,8 @@ export class DuplicatePageDetailPageComponent
     private store: Store<any>,
     private titleService: TitleService,
     private translateService: TranslateService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    public queryParameterService: QueryParameterService
   ) {
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.hash = params.hash;
@@ -127,6 +138,21 @@ export class DuplicatePageDetailPageComponent
   }
 
   ngAfterViewInit(): void {
+    this.logger.trace('Setting up table sorting');
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
+      switch (sortHeaderId) {
+        case 'publisher':
+          return data.publisher;
+        case 'series':
+          return data.series;
+        case 'issue-number':
+          return data.issueNumber;
+        case 'cover-date':
+        default:
+          return data.coverDate;
+      }
+    };
     this.loadTranslation();
   }
 

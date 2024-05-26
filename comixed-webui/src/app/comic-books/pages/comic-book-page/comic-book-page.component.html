@@ -10,6 +10,7 @@
       id="previous-comic-button"
       class="cx-toolbar-button"
       mat-fab
+      color="accent"
       [matTooltip]="'comic-book.tooltip.go-to-previous-comic' | translate"
       [disabled]="!comicBook.previousIssueId"
       [routerLink]="['/comics', comicBook.previousIssueId]"
@@ -21,6 +22,7 @@
       id="next-comic-button"
       class="cx-toolbar-button"
       mat-fab
+      color="accent"
       [disabled]="!comicBook.nextIssueId"
       [matTooltip]="'comic-book.tooltip.go-to-next-comic' | translate"
       [routerLink]="['/comics', comicBook.nextIssueId]"
@@ -32,6 +34,7 @@
       id="toggle-page-view-button"
       class="cx-toolbar-button"
       mat-fab
+      color="primary"
       [matTooltip]="'comic-book.tooltip.toggle-page-view' | translate"
       (click)="queryParameterService.onTogglePagesAsGrid()"
     >
@@ -48,6 +51,7 @@
       id="save-page-order-button"
       class="cx-toolbar-button"
       mat-fab
+      color="warn"
       [matTooltip]="'comic-book.tooltip.save-page-order' | translate"
       (click)="onSavePageOrder()"
     >
@@ -58,6 +62,7 @@
       id="update-comic-info-button"
       class="cx-toolbar-button"
       mat-fab
+      color="warn"
       [matTooltip]="'comic-book.tooltip.update-comic-info' | translate"
       [disabled]="!isAdmin || !hasChangedState"
       (click)="onUpdateMetadata()"
@@ -69,6 +74,7 @@
       id="download-comic-button"
       class="cx-toolbar-button"
       mat-fab
+      color="accent"
       [matTooltip]="'comic-book.tooltip.download-comic' | translate"
       (click)="onDownloadComicFile()"
     >
@@ -80,6 +86,7 @@
       id="mark-as-read-button"
       class="cx-toolbar-button"
       mat-fab
+      color="warn"
       [matTooltip]="'comic-book.tooltip.mark-read' | translate"
       (click)="setReadState(true)"
     >
@@ -91,6 +98,7 @@
       id="mark-as-unread-button"
       class="cx-toolbar-button"
       mat-fab
+      color="warn"
       [matTooltip]="'comic-book.tooltip.mark-unread' | translate"
       (click)="setReadState(false)"
     >
@@ -102,6 +110,7 @@
       id="delete-button"
       class="cx-toolbar-button"
       mat-fab
+      color="warn"
       [matTooltip]="'comic-book.tooltip.delete-comic' | translate"
       (click)="onDeleteComicBook(true)"
     >
@@ -113,6 +122,7 @@
       id="undelete-button"
       class="cx-toolbar-button"
       mat-fab
+      color="warn"
       [matTooltip]="'comic-book.tooltip.undelete-comic' | translate"
       (click)="onDeleteComicBook(false)"
     >

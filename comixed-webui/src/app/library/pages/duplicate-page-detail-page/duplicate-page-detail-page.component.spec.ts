@@ -55,15 +55,20 @@ import {
   initialState as initialBlockedHashesState
 } from '@app/comic-pages/reducers/blocked-hash-list.reducer';
 import { BLOCKED_HASH_1 } from '@app/comic-pages/comic-pages.fixtures';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { MatSortModule } from '@angular/material/sort';
+import { COMIC_DETAIL_1 } from '@app/comic-books/comic-books.fixtures';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('DuplicatePageDetailPageComponent', () => {
-  const DETAIL = DUPLICATE_PAGE_1;
+  const DUPLICATE_PAGE = DUPLICATE_PAGE_1;
+  const COMIC_DETAIL = COMIC_DETAIL_1;
   const BLOCKED_HASH = BLOCKED_HASH_1;
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER_ADMIN },
     [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: {
       ...initialDuplicatePageDetailState,
-      detail: DETAIL
+      detail: DUPLICATE_PAGE
     },
     [BLOCKED_HASH_LIST_FEATURE_KEY]: initialBlockedHashesState
   };
@@ -86,6 +91,7 @@ describe('DuplicatePageDetailPageComponent', () => {
           PageHashUrlPipe
         ],
         imports: [
+          NoopAnimationsModule,
           RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
           LoggerModule.forRoot(),
           TranslateModule.forRoot(),
@@ -95,7 +101,8 @@ describe('DuplicatePageDetailPageComponent', () => {
           MatCardModule,
           MatDialogModule,
           MatTooltipModule,
-          MatButtonModule
+          MatButtonModule,
+          MatSortModule
         ],
         providers: [
           provideMockStore({ initialState }),
@@ -105,7 +112,11 @@ describe('DuplicatePageDetailPageComponent', () => {
               params: new BehaviorSubject<{}>({})
             }
           },
-          ConfirmationService
+          ConfirmationService,
+          {
+            provide: QueryParameterService,
+            useValue: {}
+          }
         ]
       }).compileComponents();
 
@@ -145,13 +156,13 @@ describe('DuplicatePageDetailPageComponent', () => {
   describe('loading the duplicate page detail', () => {
     beforeEach(() => {
       (activatedRoute.params as BehaviorSubject<{}>).next({
-        hash: DETAIL.hash
+        hash: DUPLICATE_PAGE.hash
       });
     });
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        loadDuplicatePageDetail({ hash: DETAIL.hash })
+        loadDuplicatePageDetail({ hash: DUPLICATE_PAGE.hash })
       );
     });
 
@@ -180,20 +191,20 @@ describe('DuplicatePageDetailPageComponent', () => {
           ...initialState,
           [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: {
             ...initialDuplicatePageDetailState,
-            detail: DETAIL
+            detail: DUPLICATE_PAGE
           }
         });
       });
 
       it('sets the detail reference', () => {
-        expect(component.detail).toEqual(DETAIL);
+        expect(component.detail).toEqual(DUPLICATE_PAGE);
       });
     });
   });
 
   describe('setting the blocked state for a page', () => {
     beforeEach(() => {
-      component.hash = DETAIL.hash;
+      component.hash = DUPLICATE_PAGE.hash;
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
@@ -210,7 +221,7 @@ describe('DuplicatePageDetailPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setBlockedState({ hashes: [DETAIL.hash], blocked: true })
+          setBlockedState({ hashes: [DUPLICATE_PAGE.hash], blocked: true })
         );
       });
     });
@@ -226,7 +237,7 @@ describe('DuplicatePageDetailPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setBlockedState({ hashes: [DETAIL.hash], blocked: false })
+          setBlockedState({ hashes: [DUPLICATE_PAGE.hash], blocked: false })
         );
       });
     });
@@ -246,6 +257,32 @@ describe('DuplicatePageDetailPageComponent', () => {
 
     it('updates the blocked hashes', () => {
       expect(component.blockedHashes).toEqual([BLOCKED_HASH.hash]);
+    });
+  });
+
+  describe('sorting', () => {
+    it('can sort by publisher', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(COMIC_DETAIL, 'publisher')
+      ).toEqual(COMIC_DETAIL.publisher);
+    });
+
+    it('can sort by series', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(COMIC_DETAIL, 'series')
+      ).toEqual(COMIC_DETAIL.series);
+    });
+
+    it('can sort by issue number', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(COMIC_DETAIL, 'issue-number')
+      ).toEqual(COMIC_DETAIL.issueNumber);
+    });
+
+    it('can sort by cover date', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(COMIC_DETAIL, 'cover-date')
+      ).toEqual(COMIC_DETAIL.coverDate);
     });
   });
 });

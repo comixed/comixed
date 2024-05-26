@@ -5,23 +5,22 @@
 
 <h1>{{ "home.title.comic-statistics" | translate }}</h1>
 
-<div *ngIf="!!libraryState" class="cx-width-100 cx-centered-horiz">
-  <div class="cx-width-90 cx-border-primary-1 cx-padding-5">
-    <cx-collections-chart [libraryState]="libraryState"></cx-collections-chart>
-  </div>
-</div>
-
-<div *ngIf="!!libraryState" class="cx-width-100 cx-centered-horiz">
-  <div class="cx-width-90 cx-border-primary-1 cx-padding-5">
+<div
+  *ngIf="!!libraryState"
+  class="cx-width-100 cx-centered-horiz cx-vertical-container"
+>
+  <div class="cx-width-90 cx-padding-5 cx-horizontal-container">
+    <cx-collections-chart
+      class="cx-width-50"
+      [libraryState]="libraryState"
+    ></cx-collections-chart>
     <cx-comic-state-chart
-      class="cx-width-100 cx-height-100"
+      class="cx-width-50"
       [libraryState]="libraryState"
     ></cx-comic-state-chart>
   </div>
-</div>
 
-<div *ngIf="!!libraryState" class="cx-width-100 cx-centered-horiz">
-  <div class="cx-width-90 cx-border-primary-1 cx-padding-5">
+  <div class="cx-width-90 cx-padding-5">
     <cx-comics-by-year-chart
       class="cx-width-100 cx-height-100"
       [libraryState]="libraryState"

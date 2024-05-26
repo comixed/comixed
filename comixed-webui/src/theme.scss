@@ -1,37 +1,50 @@
-@use "@angular/material" as mat;
+@use '@angular/material' as mat;
+@use 'lite-theme' as liteTheme;
+@use 'dark-theme' as darkTheme;
+@use 'sass:map';
+@use './app/app.component' as appComponent;
 
 @include mat.core();
 
-$cx-light-primary: mat.define-palette(mat.$blue-palette);
-$cx-light-accent: mat.define-palette(mat.$cyan-palette, A200, A100, A400);
-$cx-light-warn: mat.define-palette(mat.$red-palette);
-$cx-light-theme: mat.define-light-theme(
-  (
-    color: (
-      primary: $cx-light-primary,
-      accent: $cx-light-accent,
-      warn: $cx-light-warn
+@mixin create-dark-theme() {
+  $theme: map.deep-merge(
+    darkTheme.$dark-theme,
+    (
+      color: (
+        background: (
+          background: #1f1a24
+        )
+      )
     )
-  )
-);
+  );
 
-$cx-dark-primary: mat.define-palette(mat.$gray-palette);
-$cx-dark-accent: mat.define-palette(mat.$blue-gray-palette, A200, A100, A400);
-$cx-dark-warn: mat.define-palette(mat.$red-palette);
-$cx-dark-theme: mat.define-dark-theme(
-  (
-    color: (
-      primary: $cx-dark-primary,
-      accent: $cx-dark-accent,
-      warn: $cx-dark-warn
-    )
-  )
-);
+  mat-card-content,
+  mat-card-title {
+    color: #f0f0f0;
+  }
 
-.lite-theme {
-  @include mat.all-component-themes($cx-light-theme);
+  @include mat.all-component-themes($theme);
+  @include appComponent.app-theme($theme);
+  @include mat.strong-focus-indicators-theme($theme);
+  @include mat.strong-focus-indicators();
+  @include mat.strong-focus-indicators-theme(liteTheme.$lite-theme);
 }
 
-.dark-theme {
-  @include mat.all-component-themes($cx-dark-theme);
+@mixin create-light-theme() {
+  $theme: map.deep-merge(
+    liteTheme.$lite-theme,
+    (
+      color: (
+        background: (
+          background: #f0f0f0
+        )
+      )
+    )
+  );
+
+  @include mat.all-component-themes($theme);
+  @include appComponent.app-theme($theme);
+  @include mat.strong-focus-indicators-theme($theme);
+  @include mat.strong-focus-indicators();
+  @include mat.strong-focus-indicators-theme(darkTheme.$dark-theme);
 }
