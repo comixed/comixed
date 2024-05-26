@@ -19,6 +19,8 @@
   </button>
 </div>
 
+<h2>{{ "batch-processes.batch-process-list.page-title" | translate }}</h2>
+
 <mat-paginator
   class="cx-height-100"
   showFirstLastButtons="true"
@@ -33,8 +35,6 @@
     )
   "
 ></mat-paginator>
-
-<h2>{{ "batch-processes.batch-process-list.page-title" | translate }}</h2>
 
 <mat-table
   [dataSource]="dataSource"

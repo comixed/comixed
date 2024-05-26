@@ -1,4 +1,19 @@
-@import './theme.scss';
+@use "./theme" as theme;
+
+// theming
+
+.dark-theme {
+  @include theme.create-dark-theme();
+}
+
+.lite-theme {
+  @include theme.create-light-theme();
+}
+
+.cx-primary-container {
+  color: var(--mat-badge-text-color);
+  background-color: var(--mat-badge-background-color);
+}
 
 html,
 body {
@@ -8,6 +23,7 @@ body {
 body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-size: 1em;
 }
 
 // fonts

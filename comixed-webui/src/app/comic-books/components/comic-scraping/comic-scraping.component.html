@@ -77,7 +77,7 @@
   </button>
 </mat-toolbar>
 <form *ngIf="!!comic" [formGroup]="comicForm">
-  <mat-form-field class="cx-width-50">
+  <mat-form-field class="cx-width-50" appearance="fill">
     <mat-label>{{ "comic-book.label.metadata-source" | translate }}</mat-label>
     <mat-select
       [value]="metadataSource?.id || preferredMetadataSource?.id"
@@ -92,7 +92,7 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field class="cx-width-50">
+  <mat-form-field class="cx-width-50" appearance="fill">
     <mat-label>
       {{ "comic-book.label.metadata-load-limit" | translate }}
     </mat-label>
