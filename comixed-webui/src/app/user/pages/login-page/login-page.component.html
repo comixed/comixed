@@ -61,9 +61,10 @@
       <button
         id="cx-login-submit-button"
         mat-raised-button
-        (click)="onSubmitLogin()"
-        [disabled]="!loginForm.valid || busy"
+        color="primary"
         [class.cx-spinner]="busy"
+        [disabled]="!loginForm.valid || busy"
+        (click)="onSubmitLogin()"
       >
         <mat-label>{{ "button.login" | translate }}</mat-label>
         <mat-icon>login</mat-icon>
