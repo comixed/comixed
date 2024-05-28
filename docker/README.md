@@ -29,7 +29,7 @@ To create the Docker image using the above directories, we'll use the following 
       -it -p 7171:7171/tcp \
       -v /Users/reader/comixed/library:/library \
       -v /Users/reader/comixed/imports:/imports \
-      -v /Users/reader/comixed/database:/root/.comixed \
+      -v /Users/reader/comixed/config:/root/.comixed \
       comixed/comixed:latest
 ```
 
@@ -40,38 +40,37 @@ This command line:
 1. uses /Users/reader/comixed/imports when it looks for new comics to import, and
 1. uses /Users/reader/comixed/database for storing the database.
 
-## Using A Different Database
+## Database Setup
 
-By default, ComiXed uses an embedded [H2](https://www.h2database.com/html/main.html) database. But it can also be told
-to work with other databases, such as MySQL, PostgreSQL and HyperSQL.
+By default, ComiXed uses an embedded [H2](https://www.h2database.com/html/main.html) database.
+However, this is not a supported database for long term
+us. It's highly recommended to use an external database.
 
-To use a different database, you need to provide the container the **JDBC URL**, **username** and **password** to log
-into that database via the command line:
-
-```
- $ docker create --name comixed [all other args the same as above] -e DBURL=$URL -e DBUSERNAME=$USERNAME -e DBPASSWORD=$PASSWORD comixed/comixed:latest
-```
-
-where **$URL** is the JDBC URL to connect to the database, and **$USERNAME** and **$PASSWORD** as the credentials used
-to log into the database and access the schema to be used by the application.
-
-**NOTE:** The schema must also be created beforehand.
+To use a different database, you need to setup an external
+configuration file that can be edited to provide the container
+with the **JDBC URL**, **username** and **password** to log
+into that database.
 
 Currently, ComiXed ships with support for the following databases:
 
-| Database   | Notes                       | More Information           |
-|------------|-----------------------------|----------------------------|
-| H2         | The default database        | https://www.h2database.com |
-| MySQL      | v8 is the tested version    | https://www.mysql.com/     |
-| PostgreSQl | v42is the tested version    | https://www.postgresql.org |
+| Database   | Notes                                        | More Information           |
+|------------|----------------------------------------------|----------------------------|
+| H2         | For evaluation purposes only.                | https://www.h2database.com |
+| MySQL      | MySQL v8 is the tested version.              | https://www.mysql.com/     |
+| PostgreSQl | PostgreSQL v16 is the latest tested version. | https://www.postgresql.org |
 
-For example, to create a container that uses a schema named cxschema, a user named cxuser with a password of cxpassword
-on MySQL, the following command line would be used:
+To do this, after creating your container, execute the following command:
 
+``` docker cp containername:/app/comixed-release-2.1-SNAPSHOT/config/appplication.properties-example /Users/reader/comixed/config```
 
-```
- $ docker create --name comixed  -e DBURL=jdbc:mysql://mysqldb:3306/cxschema -e DBUSERNAME=cxuser -e DBPASSWORD=cxpassword comixed/comixed:latest
-```
+**NOTE:** Replace **containername** with the name of your container, and
+**/Users/reader/comixed/config** with the path you used when creating
+your container.
+
+Now rename the file to ```application.properties```, and you can then follow
+[the configuration documentation](../CONFIGURATION.md) to
+customize your container.
+
 
 
 ## Starting Your Container
