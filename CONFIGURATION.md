@@ -40,7 +40,7 @@ read more about it
 
 ### Path Values
 
-THis is an absolute path or filename.
+This is an absolute path or filename.
 
 
 # Image Caching

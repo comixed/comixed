@@ -2,7 +2,6 @@ FROM openjdk:17-jdk-slim
 
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
-       openjdk-11-jre \
        unzip \
        wget \
        bash \
@@ -28,7 +27,6 @@ RUN rm -r /ul
 ENV PATH="$JAVA_HOME/bin:${PATH}"
 
 EXPOSE 7171
-VOLUME /comic_data
 VOLUME /library
 VOLUME /imports
 
