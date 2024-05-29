@@ -67,6 +67,7 @@ public class ComicBookAdaptorTest {
   private static final String TEST_NEW_PAGE_FILENAME = "new page filename";
   private static final String TEST_MISSING_FILE = "farkle.png";
   private static final String TEST_EXISTING_FILE = "ComicInfo.xml";
+  private static final String TEST_SUBDIR_NAME = "subdir/";
 
   @InjectMocks private ComicBookAdaptor adaptor;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
@@ -79,6 +80,7 @@ public class ComicBookAdaptorTest {
   @Mock private ArchiveWriteHandle writeHandle;
   @Mock private ContentAdaptor contentAdaptor;
   @Mock private ComicArchiveEntry archiveEntry;
+  @Mock private ComicArchiveEntry archiveSubdirEntry;
   @Mock private ComicFileAdaptor comicFileAdaptor;
   @Mock private ComicPageAdaptor comicPageAdaptor;
   @Mock private ComicMetadataContentAdaptor comicMetadataContentAdaptor;
@@ -110,6 +112,8 @@ public class ComicBookAdaptorTest {
     Mockito.when(fileTypeAdaptor.getContentAdaptorFor(Mockito.any(byte[].class)))
         .thenReturn(contentAdaptor);
     Mockito.when(archiveEntry.getFilename()).thenReturn(TEST_ENTRY_FILENAME);
+    Mockito.when(archiveEntry.getSize()).thenReturn((long) TEST_ARCHIVE_ENTRY_CONTENT.length);
+    Mockito.when(archiveSubdirEntry.getSize()).thenReturn(0L);
 
     Mockito.when(fileTypeAdaptor.getArchiveAdaptorFor(Mockito.anyString()))
         .thenReturn(readableArchiveAdaptor);
@@ -319,6 +323,30 @@ public class ComicBookAdaptorTest {
           ArchiveAdaptorException,
           ContentAdaptorException,
           InterruptedException {
+    archiveEntryList.add(archiveEntry);
+
+    adaptor.load(comicBook, contentAdaptorRules);
+
+    Mockito.verify(readableArchiveAdaptor, Mockito.times(1))
+        .openArchiveForRead(TEST_COMIC_FILENAME);
+    Mockito.verify(readableArchiveAdaptor, Mockito.times(1)).getEntries(readHandle);
+    Mockito.verify(readableArchiveAdaptor, Mockito.times(1))
+        .readEntry(readHandle, TEST_ENTRY_FILENAME);
+    Mockito.verify(fileTypeAdaptor, Mockito.times(1))
+        .getContentAdaptorFor(TEST_ARCHIVE_ENTRY_CONTENT);
+    Mockito.verify(contentAdaptor, Mockito.times(1))
+        .loadContent(
+            comicBook, TEST_ENTRY_FILENAME, TEST_ARCHIVE_ENTRY_CONTENT, contentAdaptorRules);
+    Mockito.verify(readableArchiveAdaptor, Mockito.times(1)).closeArchiveForRead(readHandle);
+  }
+
+  @Test
+  public void testLoadComicWithSubdirs()
+      throws AdaptorException,
+          ArchiveAdaptorException,
+          ContentAdaptorException,
+          InterruptedException {
+    archiveEntryList.add(archiveSubdirEntry);
     archiveEntryList.add(archiveEntry);
 
     adaptor.load(comicBook, contentAdaptorRules);
