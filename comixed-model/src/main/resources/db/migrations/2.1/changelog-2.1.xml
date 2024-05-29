@@ -11,5 +11,6 @@
     <include file="/db/migrations/2.1/003_1970_add_unique_comic_detail_filename.xml"/>
     <include file="/db/migrations/2.1/004_2006_fixed_stories_table.xml"/>
     <include file="/db/migrations/2.1/005_2003_add_index_comic_page_comic_book.xml"/>
+    <include file="/db/migrations/2.1/006_2008_added_indices_for_comic_loading.xml"/>
 
 </databaseChangeLog>
