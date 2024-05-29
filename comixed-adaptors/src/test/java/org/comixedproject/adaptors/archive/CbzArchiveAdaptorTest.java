@@ -22,7 +22,6 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.AdaptorTestContext;
@@ -40,12 +39,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(classes = AdaptorTestContext.class)
 public class CbzArchiveAdaptorTest {
   private static final String TEST_ZIP_FILENAME = "src/test/resources/example.cbz";
+  private static final String TEST_ZIP_FILENAME_WITH_SUBDIRS =
+      "src/test/resources/example-with-subdirs.cbz";
   private static final String TEST_SAVE_FILENAME = "target/test-classes/save-example.cbz";
 
   @Autowired private CbzArchiveAdaptor adaptor;
 
   @Before
-  public void setUp() throws IOException {
+  public void setUp() {
     FileUtils.deleteQuietly(new File(TEST_SAVE_FILENAME));
   }
 
@@ -75,11 +76,41 @@ public class CbzArchiveAdaptorTest {
     assertEquals(58656, entries.get(4).getSize());
   }
 
+  @Test
+  public void testGetEntriesInSubdirs() throws ArchiveAdaptorException {
+    final CbzArchiveReadHandle archiveHandle =
+        adaptor.openArchiveForRead(TEST_ZIP_FILENAME_WITH_SUBDIRS);
+    final List<ComicArchiveEntry> entries = adaptor.getEntries(archiveHandle);
+    adaptor.closeArchiveForRead(archiveHandle);
+
+    for (int index = 0; index < entries.size(); index++) {
+      assertEquals(index, entries.get(index).getIndex());
+    }
+    assertEquals("contents/", entries.get(0).getFilename());
+    assertEquals("octet-stream", entries.get(0).getMimetype());
+    assertEquals(0, entries.get(0).getSize());
+    assertEquals("contents/ComicInfo.xml", entries.get(1).getFilename());
+    assertEquals("xml", entries.get(1).getMimetype());
+    assertEquals(2881, entries.get(1).getSize());
+    assertEquals("contents/example.jpeg", entries.get(2).getFilename());
+    assertEquals("jpeg", entries.get(2).getMimetype());
+    assertEquals(7449985, entries.get(2).getSize());
+    assertEquals("contents/exampleCBR.jpg", entries.get(3).getFilename());
+    assertEquals("jpeg", entries.get(3).getMimetype());
+    assertEquals(58656, entries.get(3).getSize());
+    assertEquals("contents/example.jpg", entries.get(4).getFilename());
+    assertEquals("jpeg", entries.get(4).getMimetype());
+    assertEquals(7443280, entries.get(4).getSize());
+    assertEquals("contents/example.png", entries.get(5).getFilename());
+    assertEquals("png", entries.get(5).getMimetype());
+    assertEquals(17303073, entries.get(5).getSize());
+  }
+
   @Test(expected = ArchiveAdaptorException.class)
-  public void testGetEntryNotFound() throws IOException, ArchiveAdaptorException {
+  public void testGetEntryNotFound() throws ArchiveAdaptorException {
     final CbzArchiveReadHandle archiveHandle = adaptor.openArchiveForRead(TEST_ZIP_FILENAME);
     try {
-      final byte[] result = adaptor.readEntry(archiveHandle, "exampleCBR.gif");
+      adaptor.readEntry(archiveHandle, "exampleCBR.gif");
     } finally {
       adaptor.closeArchiveForRead(archiveHandle);
     }

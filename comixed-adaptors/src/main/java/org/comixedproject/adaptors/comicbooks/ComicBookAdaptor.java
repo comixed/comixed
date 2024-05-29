@@ -109,17 +109,21 @@ public class ComicBookAdaptor {
         final List<ComicArchiveEntry> entries = archiveAdaptor.getEntries(readHandle);
         for (int index = 0; index < entries.size(); index++) {
           final ComicArchiveEntry entry = entries.get(index);
-          log.trace("Loading entry content: {}", entry.getFilename());
-          final byte[] content = archiveAdaptor.readEntry(readHandle, entry.getFilename());
-          if (content.length > 0) {
-            log.trace("Getting content adaptor for entry: {}", entry.getFilename());
-            final ContentAdaptor adaptor = this.fileTypeAdaptor.getContentAdaptorFor(content);
-            if (adaptor != null) {
-              log.trace("Invoking content adaptor");
-              adaptor.loadContent(comicBook, entry.getFilename(), content, rules);
+          if (entry.getSize() > 0) {
+            log.trace("Loading entry content: {}", entry.getFilename());
+            final byte[] content = archiveAdaptor.readEntry(readHandle, entry.getFilename());
+            if (content.length > 0) {
+              log.trace("Getting content adaptor for entry: {}", entry.getFilename());
+              final ContentAdaptor adaptor = this.fileTypeAdaptor.getContentAdaptorFor(content);
+              if (adaptor != null) {
+                log.trace("Invoking content adaptor");
+                adaptor.loadContent(comicBook, entry.getFilename(), content, rules);
+              }
+            } else {
+              log.trace("Content contains no data");
             }
           } else {
-            log.trace("Content contains no data");
+            log.trace("Entry contains no data");
           }
         }
         log.trace("Closing comic book file");
