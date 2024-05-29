@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="006_2008_added_indices_for_comic_loading.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="comic_details" indexName="comic_details_load_comic_detail_list_idx"/>
+                <indexExists tableName="comic_details" indexName="comic_details_publisher_cover_date_idx"/>
+                <indexExists tableName="comic_details" indexName="comic_details_publisher_series_idx"/>
+                <indexExists tableName="comic_details" indexName="comic_details_publisher_series_volume_idx"/>
+                <indexExists tableName="comic_details" indexName="comic_details_publisher_series_volume_issue_cover_date_idx"/>
+                <indexExists tableName="comic_pages" indexName="comic_pages_file_hash_idx"/>
+                <indexExists tableName="comic_books" indexName="comic_books_metadata_update_idx"/>
+                <indexExists tableName="comic_tags" indexName="comic_tags_tag_type_idx"/>
+                <indexExists tableName="comic_metadata_sources" indexName="comic_metadata_sources_comic_book_idx"/>
+            </not>
+        </preConditions>
+
+        <createIndex tableName="comic_details" indexName="comic_details_load_comic_detail_list_idx">
+            <column name="cover_date"/>
+            <column name="archive_type"/>
+            <column name="comic_type"/>
+            <column name="comic_state"/>
+            <column name="comic_book_id"/>
+            <column name="publisher"/>
+            <column name="series"/>
+            <column name="volume"/>
+        </createIndex>
+
+        <createIndex tableName="comic_details" indexName="comic_details_publisher_cover_date_idx">
+            <column name="publisher"/>
+            <column name="cover_date"/>
+        </createIndex>
+
+        <createIndex tableName="comic_details" indexName="comic_details_publisher_series_idx">
+            <column name="publisher"/>
+            <column name="series"/>
+        </createIndex>
+
+        <createIndex tableName="comic_details" indexName="comic_details_publisher_series_volume_idx">
+            <column name="publisher"/>
+            <column name="series"/>
+            <column name="volume"/>
+        </createIndex>
+
+        <createIndex tableName="comic_details" indexName="comic_details_publisher_series_volume_issue_cover_date_idx">
+            <column name="publisher"/>
+            <column name="series"/>
+            <column name="volume"/>
+            <column name="issue_number"/>
+            <column name="cover_date"/>
+        </createIndex>
+
+        <createIndex tableName="comic_pages" indexName="comic_pages_file_hash_idx">
+            <column name="file_hash"/>
+        </createIndex>
+
+        <createIndex tableName="comic_books" indexName="comic_books_metadata_update_idx">
+            <column name="batch_metadata_update"/>
+        </createIndex>
+
+        <createIndex tableName="comic_tags" indexName="comic_tags_tag_type_idx">
+            <column name="tag_type"/>
+        </createIndex>
+
+        <createIndex tableName="comic_metadata_sources" indexName="comic_metadata_sources_comic_book_idx">
+            <column name="comic_book_id"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>
