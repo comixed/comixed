@@ -15,13 +15,18 @@
   id="app-primary-space"
   class="cx-width-100 cx-height-100"
 >
-  <mat-sidenav #sidenav mode="over" (click)="sidenav.close()">
+  <mat-sidenav
+    #sidenav
+    class="cx-padding-top-50 cx-padding-bottom-25"
+    mode="over"
+    (click)="sidenav.close()"
+  >
     <cx-side-navigation [user]="user"></cx-side-navigation>
   </mat-sidenav>
 
   <mat-sidenav
     #accountBar
-    class="cx-width-50 cx-min-width-50 cx-padding-5"
+    class="cx-width-50 cx-min-width-50 cx-padding-top-50 cx-padding-bottom-25"
     mode="over"
     position="end"
   >

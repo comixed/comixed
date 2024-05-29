@@ -88,6 +88,7 @@ public class StoryService implements InitializingBean, StoryStateChangeListener 
    *
    * @return the set of stories
    */
+  @Transactional
   public Set<String> loadAll() {
     final Set<String> result = new HashSet<>();
     this.storyRepository
