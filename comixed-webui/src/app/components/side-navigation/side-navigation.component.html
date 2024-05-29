@@ -10,7 +10,9 @@
   routerLinkActive="active"
 >
   <mat-icon>home</mat-icon>
-  {{ "navigation.option.home" | translate }}
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.home" | translate }}
+  </mat-label>
 </button>
 
 <mat-divider *ngIf="!!user"></mat-divider>
@@ -23,7 +25,7 @@
   routerLinkActive="active"
 >
   <mat-icon>local_library</mat-icon>
-  <mat-label>
+  <mat-label class="cx-text-nowrap">
     <span class="cx-align-left">
       {{ "navigation.option.all-comics" | translate }}
     </span>
@@ -41,7 +43,7 @@
   routerLinkActive="active"
 >
   <mat-icon>check_circle</mat-icon>
-  <mat-label>
+  <mat-label class="cx-text-nowrap">
     <span class="cx-align-left">
       {{ "navigation.option.selected-comics" | translate }}
     </span>
@@ -60,11 +62,9 @@
   routerLinkActive="active"
 >
   <mat-icon>incomplete_circle</mat-icon>
-  <mat-label>
+  <mat-label class="cx-text-nowrap">
     {{ "navigation.option.unprocessed-comics" | translate }}
-    <span class="cx-align-right">
-      ({{ unprocessedComicBooks$ | async | number }})
-    </span>
+    ({{ unprocessedComicBooks$ | async | number }})
   </mat-label>
 </button>
 
@@ -76,11 +76,9 @@
   routerLinkActive="active"
 >
   <mat-icon>read_more</mat-icon>
-  <mat-label>
+  <mat-label class="cx-text-nowrap">
     {{ "navigation.option.unread-comics" | translate }}
-    <span class="cx-align-right">
-      ({{ unreadComicBooks$ | async | number }})
-    </span>
+    ({{ unreadComicBooks$ | async | number }})
   </mat-label>
 </button>
 
@@ -92,11 +90,9 @@
   routerLinkActive="active"
 >
   <mat-icon>cloud_download</mat-icon>
-  <mat-label>
+  <mat-label class="cx-text-nowrap">
     {{ "navigation.option.unscraped-comics" | translate }}
-    <span class="cx-align-right">
-      ({{ unscrapedComicBooks$ | async | number }})
-    </span>
+    ({{ unscrapedComicBooks$ | async | number }})
   </mat-label>
 </button>
 
@@ -108,11 +104,9 @@
   routerLinkActive="active"
 >
   <mat-icon>cloud_download</mat-icon>
-  <mat-label>
+  <mat-label class="cx-text-nowrap">
     {{ "navigation.option.changed-comics" | translate }}
-    <span class="cx-align-right">
-      ({{ changedComicBooks$ | async | number }})
-    </span>
+    ({{ changedComicBooks$ | async | number }})
   </mat-label>
 </button>
 
@@ -124,11 +118,9 @@
   routerLinkActive="active"
 >
   <mat-icon>delete_sweep</mat-icon>
-  <mat-label class="cx-width-100">
+  <mat-label class="cx-text-nowrap">
     {{ "navigation.option.deleted-comics" | translate }}
-    <span class="cx-align-right">
-      ({{ deletedComicBooks$ | async | number }})
-    </span>
+    ({{ deletedComicBooks$ | async | number }})
   </mat-label>
 </button>
 
@@ -140,7 +132,9 @@
   routerLinkActive="active"
 >
   <mat-icon>publish</mat-icon>
-  <span>{{ "navigation.option.import-comic-books" | translate }}</span>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.import-comic-books" | translate }}
+  </mat-label>
 </button>
 
 <button
@@ -151,7 +145,9 @@
   routerLinkActive="active"
 >
   <mat-icon>publish</mat-icon>
-  <span>{{ "navigation.option.processing-comic-books" | translate }}</span>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.processing-comic-books" | translate }}
+  </mat-label>
 </button>
 
 <button
@@ -162,7 +158,9 @@
   routerLinkActive="active"
 >
   <mat-icon>data_object</mat-icon>
-  <span>{{ "navigation.option.metadata-scraping" | translate }}</span>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.metadata-scraping" | translate }}
+  </mat-label>
 </button>
 
 <button
@@ -173,7 +171,9 @@
   routerLinkActive="active"
 >
   <mat-icon>batch_prediction</mat-icon>
-  <span>{{ "navigation.option.metadata-batch-process" | translate }}</span>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.metadata-batch-process" | translate }}
+  </mat-label>
 </button>
 
 <button
@@ -184,7 +184,9 @@
   routerLinkActive="active"
 >
   <mat-icon>control_point_duplicate</mat-icon>
-  <span>{{ "navigation.option.duplicate-pages" | translate }}</span>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.duplicate-pages" | translate }}
+  </mat-label>
 </button>
 
 <button
@@ -195,7 +197,9 @@
   routerLinkActive="active"
 >
   <mat-icon>block</mat-icon>
-  <span>{{ "navigation.option.blocked-hashes" | translate }}</span>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.blocked-hashes" | translate }}
+  </mat-label>
 </button>
 
 <button
@@ -206,7 +210,9 @@
   routerLinkActive="active"
 >
   <mat-icon>delete_sweep</mat-icon>
-  <span>{{ "navigation.option.deleted-pages" | translate }}</span>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.deleted-pages" | translate }}
+  </mat-label>
 </button>
 
 <mat-divider *ngIf="!!user"></mat-divider>
@@ -223,7 +229,9 @@
   routerLinkActive="active"
 >
   <mat-icon>business</mat-icon>
-  <span>{{ "navigation.option.publisher-collection" | translate }}</span>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.publisher-collection" | translate }}
+  </mat-label>
 </button>
 
 <button
@@ -234,7 +242,9 @@
   routerLinkActive="active"
 >
   <mat-icon>auto_stories</mat-icon>
-  <span>{{ "navigation.option.series-collection" | translate }}</span>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.series-collection" | translate }}
+  </mat-label>
 </button>
 
 <button
@@ -245,7 +255,9 @@
   routerLinkActive="active"
 >
   <mat-icon>person_outline</mat-icon>
-  <span>{{ "navigation.option.character-collection" | translate }}</span>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.character-collection" | translate }}
+  </mat-label>
 </button>
 
 <button
@@ -256,7 +268,9 @@
   routerLinkActive="active"
 >
   <mat-icon>people</mat-icon>
-  <span>{{ "navigation.option.team-collection" | translate }}</span>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.team-collection" | translate }}
+  </mat-label>
 </button>
 
 <button
@@ -267,7 +281,9 @@
   routerLinkActive="active"
 >
   <mat-icon>place</mat-icon>
-  <span>{{ "navigation.option.location-collection" | translate }}</span>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.location-collection" | translate }}
+  </mat-label>
 </button>
 
 <button
@@ -278,7 +294,9 @@
   routerLinkActive="active"
 >
   <mat-icon>layers</mat-icon>
-  <span>{{ "navigation.option.story-collection" | translate }}</span>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.story-collection" | translate }}
+  </mat-label>
 </button>
 
 <mat-divider *ngIf="!!user"></mat-divider>
@@ -295,9 +313,9 @@
   routerLinkActive="active"
 >
   <mat-icon>library_add</mat-icon>
-  <span>
+  <mat-label class="cx-text-nowrap">
     {{ "navigation.heading.reading-lists" | translate }}
-  </span>
+  </mat-label>
 </button>
 
 <button
@@ -308,7 +326,9 @@
   routerLinkActive="active"
 >
   <mat-icon>auto_stories</mat-icon>
-  <span>{{ "navigation.option.story-names" | translate }}</span>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.story-names" | translate }}
+  </mat-label>
 </button>
 
 <button
@@ -319,7 +339,9 @@
   routerLinkActive="active"
 >
   <mat-icon>format_list_numbered_rtl</mat-icon>
-  <span class="cx-text-nowrap">{{ list.name }}</span>
+  <mat-label class="cx-text-nowrap">
+    {{ list.name }}
+  </mat-label>
 </button>
 
 <mat-divider *ngIf="isAdmin"></mat-divider>
@@ -336,7 +358,9 @@
   routerLinkActive="active"
 >
   <mat-icon>settings</mat-icon>
-  <span>{{ "navigation.option.configuration" | translate }}</span>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.configuration" | translate }}
+  </mat-label>
 </button>
 
 <button
@@ -347,7 +371,9 @@
   routerLinkActive="active"
 >
   <mat-icon>batch_prediction</mat-icon>
-  <span>{{ "navigation.option.batch-processes" | translate }}</span>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.batch-processes" | translate }}
+  </mat-label>
 </button>
 
 <mat-divider *ngIf="!!user"></mat-divider>
@@ -363,5 +389,7 @@
   routerLinkActive="active"
 >
   <mat-icon>list</mat-icon>
-  <span>{{ "navigation.option.build-details" | translate }}</span>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.build-details" | translate }}
+  </mat-label>
 </button>

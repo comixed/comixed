@@ -33,7 +33,7 @@ public enum ComicTagType {
   CHARACTER("characters", "CHARACTER"),
   TEAM("teams", "TEAM"),
   LOCATION("locations", "LOCATION"),
-  STORY("stories", "STORIE"),
+  STORY("stories", "STORY"),
   WRITER("writers", "WRITER"),
   EDITOR("editors", "EDITOR"),
   PENCILLER("pencillers", "PENCILLER"),
