@@ -129,6 +129,8 @@ public class ComicDetailServiceTest {
     sortFieldNames.add("issue-number");
     sortFieldNames.add("added-date");
     sortFieldNames.add("cover-date");
+    sortFieldNames.add("tag-value");
+    sortFieldNames.add("page-count");
     sortFieldNames.add("id");
 
     Mockito.when(comicDetail.getYearPublished()).thenReturn(TEST_COVER_YEAR);

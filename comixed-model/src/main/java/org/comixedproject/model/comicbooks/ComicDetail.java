@@ -204,6 +204,14 @@ public class ComicDetail {
   @Getter
   private String sortableIssueNumber;
 
+  @JsonProperty("pageCount")
+  @JsonView({
+    View.ComicListView.class,
+  })
+  @Formula("(SELECT COUNT(*) FROM comic_pages p WHERE p.comic_book_id = comic_book_id)")
+  @Getter
+  private Integer pageCount;
+
   @Column(name = "sort_name", length = 128)
   @JsonProperty("sortName")
   @JsonView({View.ComicListView.class})

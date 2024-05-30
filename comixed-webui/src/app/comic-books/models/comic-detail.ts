@@ -39,6 +39,7 @@ export interface ComicDetail {
   sortableIssueNumber: string;
   sortName: string;
   title: string;
+  pageCount: number;
   notes: string;
   description: string;
   tags: ComicTag[];

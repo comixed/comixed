@@ -218,6 +218,17 @@
     </mat-cell>
   </ng-container>
 
+  <ng-container matColumnDef="page-count">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "comic-detail-list-view.label.page-count" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap cx-padding-5">
+        {{ entry.item.pageCount }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
   <ng-container matColumnDef="cover-date">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "comic-detail-list-view.label.cover-date" | translate }}
