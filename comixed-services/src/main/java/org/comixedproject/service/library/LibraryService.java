@@ -21,7 +21,6 @@ package org.comixedproject.service.library;
 import java.io.IOException;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang.StringUtils;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.comicbooks.ComicBookException;
@@ -83,26 +82,15 @@ public class LibraryService {
    * Updates all comics in preparation for library organization.
    *
    * @param ids the comic book ids
-   * @param targetDirectory the target directory
-   * @throws LibraryException if an error occurs
    */
-  public void prepareForOrganization(final List<Long> ids, final String targetDirectory)
-      throws LibraryException {
-    if (StringUtils.isEmpty(targetDirectory)) {
-      throw new LibraryException("Target directory is not configured");
-    }
+  public void prepareForOrganization(final List<Long> ids) {
     log.trace("Marking comics to be organized");
     this.comicBookService.prepareForOrganization(ids);
   }
 
-  /**
-   * Updates the entire library for organization.
-   *
-   * @param targetDirectory the target directory
-   * @throws LibraryException if an error occurs
-   */
-  public void prepareForOrganization(final String targetDirectory) throws LibraryException {
-    this.prepareForOrganization(this.comicBookService.getAllIds(), targetDirectory);
+  /** Updates the entire library for organization. */
+  public void prepareForOrganization() {
+    this.prepareForOrganization(this.comicBookService.getAllIds());
   }
 
   /**

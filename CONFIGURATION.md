@@ -12,6 +12,7 @@ needs of the server administrator.
 | comixed.batch.process-comic-books.period        | Check for unprocessed comics                | delay     |
 | comixed.batch.load-page-hashes.period           | Check for unprocessed comic pages           | delay     | 
 | comixed.batch.mark-blocked-pages.period         | Check for unmarked blocked pages            | delay     | 
+| comixed.batch.organize-library.period           | Check for comics marked for organization    | delay     | 
 | comixed.batch.add-cover-to-image-cache.schedule | Update the image cache                      | scheduled |
 | comixed.images.cache.location                   | The location of the image cache             | path      |
 

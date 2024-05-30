@@ -73,6 +73,7 @@ public class BatchProcessesController {
   /**
    * Deletes batch jobs by job id.
    *
+   * @param request the request body
    * @return the remaining batch jobs
    */
   @PostMapping(
