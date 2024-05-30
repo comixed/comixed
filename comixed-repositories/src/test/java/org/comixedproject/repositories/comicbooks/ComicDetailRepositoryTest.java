@@ -93,6 +93,7 @@ public class ComicDetailRepositoryTest {
     List<ComicDetail> result = repository.findAll();
 
     assertFalse(result.stream().filter(entry -> entry.getUnscraped()).toList().isEmpty());
+    assertTrue(result.stream().anyMatch(comicDetail -> comicDetail.getPageCount() > 0));
   }
 
   @Test

@@ -725,6 +725,7 @@ public class ComicDetailService {
       case "cover-date" -> fieldName = "coverDate";
       case "comic-count" -> fieldName = "comicCount";
       case "tag-value" -> fieldName = "tagValue";
+      case "page-count" -> fieldName = "pageCount";
       default -> fieldName = "id";
     }
 

@@ -111,6 +111,7 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
   @Input() showIssueNumber = true;
   @Input() showCoverDate = true;
   @Input() showStoreDate = true;
+  @Input() showPageCount = false;
   @Input() showLastReadDate = false;
   @Input() showAddedDate = true;
   @Input() totalComics = 0;
@@ -168,6 +169,7 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
       this.showSeries ? 'series' : null,
       this.showVolume ? 'volume' : null,
       this.showIssueNumber ? 'issue-number' : null,
+      this.showPageCount ? 'page-count' : null,
       this.showCoverDate ? 'cover-date' : null,
       this.showStoreDate ? 'store-date' : null,
       this.showLastReadDate ? 'last-read-date' : null,
