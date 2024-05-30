@@ -61,8 +61,8 @@ import org.springframework.web.bind.annotation.*;
 public class ComicBookController {
   public static final String MISSING_COMIC_COVER_FILENAME = "/images/missing-comic.png";
 
+  /** The missing comic cover filename */
   public static final String MISSING_COMIC_COVER = "missing-comic-cover";
-  public static final String ATTACHMENT_FILENAME_FORMAT = "attachment; filename=\"%s\"";
 
   @Autowired private ComicBookService comicBookService;
   @Autowired private ComicDetailService comicDetailService;
@@ -261,6 +261,8 @@ public class ComicBookController {
   /**
    * Loads one display page's worth of comic details.
    *
+   * @param principal the user principal
+   * @param session the http session
    * @param request the request body
    * @return the response body
    */
@@ -359,6 +361,7 @@ public class ComicBookController {
   /**
    * Loads comics based on a set of ids received.
    *
+   * @param principal the user principal
    * @param request the request body
    * @return the response body
    */
@@ -384,6 +387,7 @@ public class ComicBookController {
   /**
    * Loads comics based on a tag type and value
    *
+   * @param principal the user principal
    * @param request the request body
    * @return the response body
    */

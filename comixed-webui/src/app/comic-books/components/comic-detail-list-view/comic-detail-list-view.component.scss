@@ -78,6 +78,12 @@ mat-row {
   resize: none;
 }
 
+.mat-column-page-count {
+  width: $cx-column-smallish;
+  max-width: $cx-column-smallish;
+  resize: none;
+}
+
 .mat-column-cover-date {
   width: $cx-column-medium;
   max-width: $cx-column-medium;
