@@ -18,10 +18,6 @@
 
 package org.comixedproject.rest.library;
 
-import static org.comixedproject.batch.comicbooks.LibraryOrganizationConfiguration.JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES;
-import static org.comixedproject.batch.comicbooks.LibraryOrganizationConfiguration.JOB_ORGANIZATION_RENAMING_RULE;
-import static org.comixedproject.batch.comicbooks.LibraryOrganizationConfiguration.JOB_ORGANIZATION_TARGET_DIRECTORY;
-import static org.comixedproject.batch.comicbooks.LibraryOrganizationConfiguration.JOB_ORGANIZATION_TIME_STARTED;
 import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.JOB_PURGE_LIBRARY_START;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_RECREATE_COMICS_STARTED;
@@ -41,7 +37,6 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.net.admin.ClearImageCacheResponse;
 import org.comixedproject.model.net.comicbooks.ConvertComicsRequest;
 import org.comixedproject.model.net.comicbooks.EditMultipleComicsRequest;
-import org.comixedproject.model.net.library.OrganizeLibraryRequest;
 import org.comixedproject.model.net.library.PurgeLibraryRequest;
 import org.comixedproject.model.net.library.RemoteLibraryState;
 import org.comixedproject.service.admin.ConfigurationService;
@@ -75,7 +70,6 @@ public class LibraryController {
   @Autowired private LibraryService libraryService;
   @Autowired private RemoteLibraryStateService remoteLibraryStateService;
   @Autowired private ComicBookService comicBookService;
-  @Autowired private ComicDetailService comicDetailService;
   @Autowired private ConfigurationService configurationService;
   @Autowired private ComicBookSelectionService comicBookSelectionService;
 
@@ -86,10 +80,6 @@ public class LibraryController {
   @Autowired
   @Qualifier("updateMetadataJob")
   private Job updateMetadataJob;
-
-  @Autowired
-  @Qualifier("organizeLibraryJob")
-  private Job organizeLibraryJob;
 
   @Autowired
   @Qualifier("recreateComicFilesJob")
@@ -227,7 +217,6 @@ public class LibraryController {
    * Initiates the library organization process.
    *
    * @param session the session
-   * @param request the request body
    * @throws Exception if an error occurs
    */
   @PostMapping(
@@ -235,34 +224,11 @@ public class LibraryController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.library.organize")
-  public void organizeLibrary(
-      final HttpSession session, @RequestBody() OrganizeLibraryRequest request) throws Exception {
-    final boolean deleteRemovedComicFiles = request.getDeletePhysicalFiles();
+  public void organizeLibrary(final HttpSession session) throws Exception {
     final List<Long> selectedIds =
         this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
-    log.info(
-        "Organizing library: count={} delete physic files={}",
-        selectedIds.size(),
-        deleteRemovedComicFiles);
-    log.trace("Loading target directory");
-    final String targetDirectory =
-        this.configurationService.getOptionValue(ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY);
-    log.trace("Loading renaming rule");
-    final String renamingRule =
-        this.configurationService.getOptionValue(
-            ConfigurationService.CFG_LIBRARY_COMIC_RENAMING_RULE);
-    this.libraryService.prepareForOrganization(selectedIds, targetDirectory);
-    log.trace("Launch organization batch process");
-    this.jobLauncher.run(
-        this.organizeLibraryJob,
-        new JobParametersBuilder()
-            .addLong(JOB_ORGANIZATION_TIME_STARTED, System.currentTimeMillis())
-            .addString(
-                JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES,
-                String.valueOf(deleteRemovedComicFiles))
-            .addString(JOB_ORGANIZATION_TARGET_DIRECTORY, targetDirectory)
-            .addString(JOB_ORGANIZATION_RENAMING_RULE, renamingRule)
-            .toJobParameters());
+    log.info("Organizing library: count={}", selectedIds.size());
+    this.libraryService.prepareForOrganization(selectedIds);
     log.debug("Clearing comic book selections");
     this.comicBookSelectionService.clearSelectedComicBooks(selectedIds);
     log.debug("Deleting selections from session");
@@ -270,40 +236,15 @@ public class LibraryController {
         LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selectedIds));
   }
 
-  /**
-   * Initiates the library organization process for all comics.
-   *
-   * @param request the request body
-   * @throws Exception if an error occurs
-   */
+  /** Initiates the library organization process for all comics. */
   @PostMapping(
       value = "/api/library/organize/all",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.library.organize")
-  public void organizeEntireLibrary(@RequestBody() OrganizeLibraryRequest request)
-      throws Exception {
-    log.info("Preapring to organize entire library");
-    final boolean deleteRemovedComicFiles = request.getDeletePhysicalFiles();
-    log.trace("Loading target directory");
-    final String targetDirectory =
-        this.configurationService.getOptionValue(ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY);
-    log.trace("Loading renaming rule");
-    final String renamingRule =
-        this.configurationService.getOptionValue(
-            ConfigurationService.CFG_LIBRARY_COMIC_RENAMING_RULE);
-    this.libraryService.prepareForOrganization(targetDirectory);
-    log.trace("Launch organization batch process");
-    this.jobLauncher.run(
-        this.organizeLibraryJob,
-        new JobParametersBuilder()
-            .addLong(JOB_ORGANIZATION_TIME_STARTED, System.currentTimeMillis())
-            .addString(
-                JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES,
-                String.valueOf(deleteRemovedComicFiles))
-            .addString(JOB_ORGANIZATION_TARGET_DIRECTORY, targetDirectory)
-            .addString(JOB_ORGANIZATION_RENAMING_RULE, renamingRule)
-            .toJobParameters());
+  public void organizeEntireLibrary() {
+    log.info("Preparing to organize entire library");
+    this.libraryService.prepareForOrganization();
   }
 
   /**

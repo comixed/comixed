@@ -18,8 +18,8 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
-import static org.comixedproject.batch.comicbooks.LibraryOrganizationConfiguration.JOB_ORGANIZATION_RENAMING_RULE;
-import static org.comixedproject.batch.comicbooks.LibraryOrganizationConfiguration.JOB_ORGANIZATION_TARGET_DIRECTORY;
+import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.JOB_ORGANIZATION_RENAMING_RULE;
+import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.JOB_ORGANIZATION_TARGET_DIRECTORY;
 
 import java.io.File;
 import lombok.extern.log4j.Log4j2;

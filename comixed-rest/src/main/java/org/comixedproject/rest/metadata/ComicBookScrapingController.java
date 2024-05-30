@@ -266,6 +266,16 @@ public class ComicBookScrapingController {
     }
   }
 
+  /**
+   * Scrapes the specified comic.
+   *
+   * @param session the user session
+   * @param request the request body
+   * @param metadataSourceId the metadata source id
+   * @param comicBookId the comic book id
+   * @return the response body
+   * @throws MetadataException if an error occurs
+   */
   @PostMapping(
       value = "/api/metadata/sources/{metadataSourceId}/comics/multi/{comicBookId}",
       consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -296,6 +306,14 @@ public class ComicBookScrapingController {
     }
   }
 
+  /**
+   * Removes a comic book from the scraping list.
+   *
+   * @param session the http session
+   * @param comicBookId the comic book id
+   * @return the response body
+   * @throws MetadataException
+   */
   @DeleteMapping(
       value = "/api/metadata/scraping/{comicBookId}",
       produces = MediaType.APPLICATION_JSON_VALUE)

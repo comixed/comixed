@@ -42,6 +42,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Log4j2
 public class ComicBookSelectionController {
+  /** The comic book selections session property name. */
   public static final String LIBRARY_SELECTIONS = "library.selections";
 
   @Autowired private ComicBookSelectionService comicBookSelectionService;

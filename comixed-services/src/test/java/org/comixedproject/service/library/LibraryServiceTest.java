@@ -38,7 +38,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class LibraryServiceTest {
   private static final String TEST_IMAGE_CACHE_DIRECTORY =
       "/home/ComiXedReader/.comixed/image-cache";
-  private static final String TEST_TARGET_DIRECTORY = "/home/comixed/Documents/comics";
   private static final long TEST_COMIC_COUNT = 717L;
   private static final long TEST_COMIC_BOOK_ID = 129L;
 
@@ -115,16 +114,11 @@ public class LibraryServiceTest {
         .fireEvent(comicBook, ComicEvent.updateMetadata);
   }
 
-  @Test(expected = LibraryException.class)
-  public void testPrepareForOrganizationNoTargetDirectory() throws LibraryException {
-    service.prepareForOrganization(comicIdList, "");
-  }
-
   @Test
   public void testPrepareForOrganization() throws LibraryException {
     for (int index = 0; index < 25; index++) comicBookList.add(comicBook);
 
-    service.prepareForOrganization(comicIdList, TEST_TARGET_DIRECTORY);
+    service.prepareForOrganization(comicIdList);
 
     Mockito.verify(comicBookService, Mockito.times(1)).prepareForOrganization(comicIdList);
   }
@@ -134,7 +128,7 @@ public class LibraryServiceTest {
     Mockito.when(comicBookService.getAllIds()).thenReturn(comicIdList);
     for (int index = 0; index < 25; index++) comicIdList.add((long) index);
 
-    service.prepareForOrganization(TEST_TARGET_DIRECTORY);
+    service.prepareForOrganization();
 
     Mockito.verify(comicBookService, Mockito.times(1)).prepareForOrganization(comicIdList);
   }

@@ -834,6 +834,11 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     return this.comicBookRepository.getComicBooksWithoutDetails(batchChunkSize);
   }
 
+  /**
+   * Marks comics for organization. Uses a set of ids to determine which comics to mark.
+   *
+   * @param ids the comic ids
+   */
   @Transactional
   public void prepareForOrganization(final List<Long> ids) {
     this.comicBookRepository.markForOrganizationById(ids);

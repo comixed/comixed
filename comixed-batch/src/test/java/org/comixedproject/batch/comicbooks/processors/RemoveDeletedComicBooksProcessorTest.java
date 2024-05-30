@@ -19,7 +19,7 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import static junit.framework.TestCase.*;
-import static org.comixedproject.batch.comicbooks.LibraryOrganizationConfiguration.JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES;
+import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES;
 
 import java.io.File;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;

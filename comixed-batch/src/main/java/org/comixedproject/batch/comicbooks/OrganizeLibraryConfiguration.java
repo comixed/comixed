@@ -46,20 +46,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * <code>LibraryOrganizationConfiguration</code> defines the organization batch process.
+ * <code>OrganizeLibraryConfiguration</code> defines the organization batch process.
  *
  * @author Darryl L. Pierce
  */
 @Configuration
 @Log4j2
-public class LibraryOrganizationConfiguration {
+public class OrganizeLibraryConfiguration {
+  public static final String ORGANIZE_LIBRARY_JOB = "organizeLibraryJob";
   public static final String JOB_ORGANIZATION_TIME_STARTED = "job.organization.time-started";
   public static final String JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES =
       "job.organization.delete-removed-comic-files";
   public static final String JOB_ORGANIZATION_TARGET_DIRECTORY =
       "job.organization.target-directory";
   public static final String JOB_ORGANIZATION_RENAMING_RULE = "job.organization.renaming-rule";
-  public static final String ORGANIZE_LIBRARY_JOB = "organizeLibraryJob";
 
   @Value("${comixed.batch.chunk-size}")
   private int batchChunkSize = 10;
