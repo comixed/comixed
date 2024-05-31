@@ -89,7 +89,7 @@ SHIFT
 GOTO process_command_line
 
 :set_debug_option
-SET JVMOPTIONS=%JVMOPTIONS% -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=%ARG%
+SET JVMOPTIONS=%JVMOPTIONS% -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:%ARG%
 SHIFT
 SHIFT
 GOTO process_command_line
