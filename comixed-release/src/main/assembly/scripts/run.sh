@@ -78,7 +78,7 @@ while getopts "j:u:p:i:l:P:H:SX:dDMCvL:" option; do
   P) PLGDIR="${OPTARG}" ;;
   H) JVMOPTIONS="${JVMOPTIONS} -Xmx${OPTARG}m" ;;
   S) ENABLE_SSL="ON" ;;
-  X) JVMOPTIONS="${JVMOPTIONS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=${OPTARG}" ;;
+  X) JVMOPTIONS="${JVMOPTIONS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${OPTARG}" ;;
   d) DEBUG=true ;;
   D) FULL_DEBUG=true ;;
   M) METADATA_DEBUG=true ;;
