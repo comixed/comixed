@@ -16,6 +16,9 @@
   background-color: var(--mat-badge-background-color);
 }
 
+$cx-accent-background-color: var(--mat-badge-background-color) !important;
+$cx-accent-color: var(--mat-badge-text-color) !important;
+
 html,
 body {
   height: 100%;
