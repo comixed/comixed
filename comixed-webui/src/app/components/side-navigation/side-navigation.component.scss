@@ -1,3 +1,10 @@
+@import 'styles';
+
+.active-nav-button {
+  background-color: $cx-accent-background-color;
+  color: $cx-accent-color;
+}
+
 .section-title {
   width: 100%;
   padding-left: 8px;
