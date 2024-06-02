@@ -864,7 +864,7 @@ public class ComicDetailServiceTest {
 
     final List<ComicDetail> result =
         service.loadUnreadComicDetails(
-            TEST_EMAIL, TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION);
+            TEST_EMAIL, true, TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION);
 
     assertNotNull(result);
     assertSame(comicDetailList, result);
@@ -875,6 +875,28 @@ public class ComicDetailServiceTest {
 
     Mockito.verify(comicDetailRepository, Mockito.times(1))
         .loadUnreadComicDetails(TEST_EMAIL, pageable);
+  }
+
+  @Test
+  public void testLoadReadComicDetails() {
+    Mockito.when(
+            comicDetailRepository.loadReadComicDetails(
+                Mockito.anyString(), pageableArgumentCaptor.capture()))
+        .thenReturn(comicDetailList);
+
+    final List<ComicDetail> result =
+        service.loadUnreadComicDetails(
+            TEST_EMAIL, false, TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION);
+
+    assertNotNull(result);
+    assertSame(comicDetailList, result);
+
+    final Pageable pageable = pageableArgumentCaptor.getValue();
+    assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
+    assertEquals(TEST_PAGE_INDEX, pageable.getPageNumber());
+
+    Mockito.verify(comicDetailRepository, Mockito.times(1))
+        .loadReadComicDetails(TEST_EMAIL, pageable);
   }
 
   @Test(expected = ComicDetailException.class)

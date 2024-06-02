@@ -177,6 +177,7 @@
       "all": "All Comics{filtered, select, true{ [Filtered]} other{}}",
       "changed-only": "Changed Comics{filtered, select, true{ [Filtered]} other{}}",
       "deleted-only": "Marked For Removal{filtered, select, true{ [Filtered]} other{}}",
+      "read-only": "Read Comics{filtered, select, true{ [Filtered]} other{}}",
       "selected-only": "Selected Comics{filtered, select, true{ [Filtered]} other{}}",
       "unprocessed-only": "Unprocessed Comics{filtered, select, true{ [Filtered]} other{}}",
       "unread-only": "Unread Comics{filtered, select, true{ [Filtered]} other{}}",
@@ -205,6 +206,9 @@
     "set-read": {
       "effect-failure": "Failed to mark comics as {read, select, true{read} other{unread}}.",
       "effect-success": "Marked {count, plural, =1{one comic} other{# comics}} as {read, select, true{read} other{unread}}."
+    },
+    "tooltip": {
+      "toggle-unread-comics": "Toggle between read and unread comics..."
     },
     "update-metadata": {
       "confirmation-message": "Are you sure you want to update the metadata on {count, plural, =1{one comic} other{# comics}}?",

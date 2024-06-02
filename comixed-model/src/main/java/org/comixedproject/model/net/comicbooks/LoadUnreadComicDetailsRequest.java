@@ -33,6 +33,10 @@ import org.comixedproject.model.comicbooks.ComicDetail;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoadUnreadComicDetailsRequest {
+  @JsonProperty("unreadOnly")
+  @Getter
+  private boolean unreadOnly;
+
   @JsonProperty("pageSize")
   @Getter
   private int pageSize;

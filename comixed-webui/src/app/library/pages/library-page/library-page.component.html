@@ -2,6 +2,20 @@
   {{ "library.page-title." + pageContent | translate: { filtered: filtered } }}
 </h2>
 
+<div class="cx-fab-container-bottom-left">
+  <button
+    *ngIf="unreadOnly"
+    id="toggle-unread-only-flag"
+    mat-fab
+    color="primary"
+    [matTooltip]="'library.tooltip.toggle-unread-comics' | translate"
+    (click)="onToggleUnreadOnly()"
+  >
+    <mat-icon *ngIf="showReadOnly">mark_chat_read</mat-icon>
+    <mat-icon *ngIf="!showReadOnly">mark_chat_unread</mat-icon>
+  </button>
+</div>
+
 <cx-comic-detail-list-view
   [isAdmin]="isAdmin"
   [comics]="comicDetails"

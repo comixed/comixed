@@ -30,6 +30,7 @@ import {
   loadComicDetailsFailed,
   loadComicDetailsForCollection,
   loadComicDetailsForReadingList,
+  loadReadComicDetails,
   loadUnreadComicDetails
 } from '@app/comic-books/actions/comic-details-list.actions';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
@@ -180,6 +181,24 @@ describe('ComicDetailsList Reducer', () => {
       state = reducer(
         { ...state, loading: false },
         loadUnreadComicDetails({
+          pageSize: PAGE_SIZE,
+          pageIndex: PAGE_INDEX,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
+      );
+    });
+
+    it('sets the loading flag', () => {
+      expect(state.loading).toBeTrue();
+    });
+  });
+
+  describe('loading comic details that are read', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, loading: false },
+        loadReadComicDetails({
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
           sortBy: SORT_BY,
