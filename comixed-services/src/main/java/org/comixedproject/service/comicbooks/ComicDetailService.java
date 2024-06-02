@@ -736,16 +736,25 @@ public class ComicDetailService {
     return Sort.by(direction, fieldName);
   }
 
+  @Transactional
   public List<ComicDetail> loadUnreadComicDetails(
       final String email,
+      final boolean unreadOnly,
       final int pageSize,
       final int pageIndex,
       final String sortBy,
       final String sortDirection) {
-    log.debug(
-        "Loading unread comics for user: email={} page={} size={}", email, pageIndex, pageSize);
-    return this.comicDetailRepository.loadUnreadComicDetails(
-        email, PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
+    if (unreadOnly) {
+      log.debug(
+          "Loading unread comics for user: email={} page={} size={}", email, pageIndex, pageSize);
+      return this.comicDetailRepository.loadUnreadComicDetails(
+          email, PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
+    } else {
+      log.debug(
+          "Loading read comics for user: email={} page={} size={}", email, pageIndex, pageSize);
+      return this.comicDetailRepository.loadReadComicDetails(
+          email, PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
+    }
   }
 
   /**

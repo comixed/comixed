@@ -447,23 +447,27 @@ public class ComicBookController {
     final String email = principal.getName();
     final int pageSize = request.getPageSize();
     final int pageIndex = request.getPageIndex();
+    final boolean unreadOnly = request.isUnreadOnly();
     final String sortBy = request.getSortBy();
     final String sortDirection = request.getSortDirection();
     log.debug(
-        "Loading unread comics: size={} index={} sort by ={} [{}]",
+        "Loading {}} comics: size={} index={} sort by ={} [{}]",
+        unreadOnly ? "unread" : "read",
         pageSize,
         pageIndex,
         sortBy,
         sortDirection);
     final List<ComicDetail> comicDetails =
         this.comicDetailService.loadUnreadComicDetails(
-            email, pageSize, pageIndex, sortBy, sortDirection);
+            email, unreadOnly, pageSize, pageIndex, sortBy, sortDirection);
+    final long comicBookCount = this.comicBookService.getComicBookCount();
+    final long filteredCount = this.lastReadService.getUnreadCountForUser(email);
     return new LoadComicDetailsResponse(
         comicDetails,
         Collections.emptyList(),
         Collections.emptyList(),
-        this.comicBookService.getComicBookCount(),
-        this.lastReadService.getUnreadCountForUser(email));
+        comicBookCount,
+        unreadOnly ? comicBookCount - filteredCount : filteredCount);
   }
 
   /**

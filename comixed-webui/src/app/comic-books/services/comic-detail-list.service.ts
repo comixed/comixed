@@ -164,13 +164,15 @@ export class ComicDetailListService {
   }
 
   loadUnreadComicDetails(args: {
+    unreadOnly: boolean;
     pageSize: number;
     pageIndex: number;
     sortBy: string;
     sortDirection: string;
   }): Observable<any> {
-    this.logger.debug('Loading unread comic details:', args);
+    this.logger.debug('Loading read/unread comic details:', args);
     return this.http.post(interpolate(LOAD_UNREAD_COMIC_DETAILS_URL), {
+      unreadOnly: args.unreadOnly,
       pageSize: args.pageSize,
       pageIndex: args.pageIndex,
       sortBy: args.sortBy,

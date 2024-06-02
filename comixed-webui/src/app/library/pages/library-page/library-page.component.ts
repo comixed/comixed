@@ -35,7 +35,7 @@ import { LastRead } from '@app/comic-books/models/last-read';
 import { selectComicBookLastReadEntries } from '@app/comic-books/selectors/last-read-list.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
-import { PAGE_SIZE_DEFAULT } from '@app/core';
+import { PAGE_SIZE_DEFAULT, QUERY_PARAM_UNREAD_ONLY } from '@app/core';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
@@ -43,6 +43,7 @@ import { ComicType } from '@app/comic-books/models/comic-type';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import {
   loadComicDetails,
+  loadReadComicDetails,
   loadUnreadComicDetails
 } from '@app/comic-books/actions/comic-details-list.actions';
 import { ComicState } from '@app/comic-books/models/comic-state';
@@ -87,6 +88,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   dataSubscription: Subscription;
   selectedOnly = false;
   unreadOnly = false;
+  showReadOnly = true;
   unscrapedOnly = false;
   changedOnly = false;
   deletedOnly = false;
@@ -198,16 +200,34 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       () => this.loadTranslations()
     );
     this.pageChangedSubscription = this.activatedRoute.queryParams.subscribe(
-      () => {
+      params => {
         if (this.unreadOnly) {
-          this.store.dispatch(
-            loadUnreadComicDetails({
-              pageSize: this.queryParameterService.pageSize$.value,
-              pageIndex: this.queryParameterService.pageIndex$.value,
-              sortBy: this.queryParameterService.sortBy$.value,
-              sortDirection: this.queryParameterService.sortDirection$.value
-            })
-          );
+          this.showReadOnly =
+            !params[QUERY_PARAM_UNREAD_ONLY] ||
+            params[QUERY_PARAM_UNREAD_ONLY] === `${true}`;
+          if (this.showReadOnly) {
+            this.logger.debug('Loading read comics');
+            this.pageContent = 'read-only';
+            this.store.dispatch(
+              loadReadComicDetails({
+                pageSize: this.queryParameterService.pageSize$.value,
+                pageIndex: this.queryParameterService.pageIndex$.value,
+                sortBy: this.queryParameterService.sortBy$.value,
+                sortDirection: this.queryParameterService.sortDirection$.value
+              })
+            );
+          } else {
+            this.logger.debug('Loading unread comics');
+            this.pageContent = 'unread-only';
+            this.store.dispatch(
+              loadUnreadComicDetails({
+                pageSize: this.queryParameterService.pageSize$.value,
+                pageIndex: this.queryParameterService.pageIndex$.value,
+                sortBy: this.queryParameterService.sortBy$.value,
+                sortDirection: this.queryParameterService.sortDirection$.value
+              })
+            );
+          }
         } else {
           this.store.dispatch(
             loadComicDetails({
@@ -277,6 +297,16 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         selected
       })
     );
+  }
+
+  onToggleUnreadOnly(): void {
+    this.logger.debug('Toggling showing unread comics');
+    this.queryParameterService.updateQueryParam([
+      {
+        name: QUERY_PARAM_UNREAD_ONLY,
+        value: `${!this.showReadOnly}`
+      }
+    ]);
   }
 
   private loadTranslations(): void {
