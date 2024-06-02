@@ -1,8 +1,8 @@
-<mat-toolbar>
-  <div class="cx-spacer"></div>
+<div class="cx-fab-container-bottom-left">
   <button
     id="refresh-button"
-    mat-icon-button
+    mat-fab
+    color="primary"
     [disabled]="shuttingDown"
     [matTooltip]="'server-runtime.tooltip.refresh' | translate"
     (click)="onRefresh()"
@@ -11,14 +11,15 @@
   </button>
   <button
     id="shutdown-button"
-    mat-icon-button
+    mat-fab
+    color="warn"
     [disabled]="shuttingDown"
     [matTooltip]="'server-runtime.tooltip.shutdown' | translate"
     (click)="onShutdown()"
   >
     <mat-icon>power_settings_new</mat-icon>
   </button>
-</mat-toolbar>
+</div>
 
 <div *ngIf="!!health" class="cx-detail-card-container">
   <div id="server-status-card" class="cx-grow-1">
