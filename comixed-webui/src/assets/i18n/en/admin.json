@@ -54,16 +54,15 @@
     "label": {
       "blocked-pages-enabled": "Manage blocked pages",
       "comic-renaming-rule": "Comic Renaming Rule",
-      "comic-renaming-variables": "Comic Renaming Variables",
-      "comic-variable-description": "Description",
-      "comic-variable-name": "Variable",
+      "comic-variable-description": "Description Of File Renaming Variable",
+      "comic-variable-name": "Variable Name",
       "create-external-metadata-files": "Create external metadata files for each comic.",
       "delete-empty-directories": "Delete empty directories after library organization.",
+      "file-options": "Comic File Options",
       "no-recreate-comics": "Do not recreate comic files",
       "page-renaming-rule": "Page Renaming Rule",
-      "page-renaming-variables": "Page Renaming Variables",
       "root-directory": "Library Root Directory",
-      "page-variable-description": "Description Of The Output",
+      "page-variable-description": "Description Of Page Renaming Variable",
       "page-variable-name": "Variable Name",
       "skip-internal-metadata-files": "Do not create or update internal metadata files."
     },
@@ -95,9 +94,8 @@
       "comic-renaming-rule-series": "The name of the series",
       "comic-renaming-rule-title": "The title of the issue",
       "comic-renaming-rule-volume": "The volume",
-      "comic-variable-caption": "These are the available variables that can be used for renaming comics.",
-      "page-renaming-rule-index": "The page index (1-based)",
-      "page-variable-caption": "These are the available variables that can be used for renaming pages."
+      "library-configuration": "In this section you configure the comic file and page renaming rules, as well as turn on or off variable features related to the physical comic files.",
+      "page-renaming-rule-index": "The page index (1-based)"
     },
     "tooltip": {
       "purge-library": "Remove comics marked for deletion...",

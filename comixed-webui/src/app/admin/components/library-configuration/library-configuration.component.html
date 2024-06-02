@@ -1,97 +1,39 @@
-<mat-toolbar color="accent">
+<div class="cx-fab-container-bottom-left">
   <div class="cx-spacer"></div>
   <button
-    mat-icon-button
     id="purge-library-button"
+    mat-fab
+    color="warn"
     [matTooltip]="'configuration.tooltip.purge-library' | translate"
     (click)="onPurge()"
   >
     <mat-icon>delete_sweep</mat-icon>
   </button>
   <button
-    mat-icon-button
+    id="save-library-config-button"
+    mat-fab
+    color="primary"
     [matTooltip]="'configuration.tooltip.save' | translate"
     [disabled]="!libraryConfigurationForm.valid"
     (click)="onSave()"
   >
     <mat-icon>save</mat-icon>
   </button>
-</mat-toolbar>
+</div>
+
+<div class="cx-centered-horiz">
+  <p>{{ "configuration.text.library-configuration" | translate }}</p>
+</div>
 
 <form [formGroup]="libraryConfigurationForm">
-  <mat-form-field class="cx-width-20">
-    <mat-checkbox
-      id="delete-empty-directories-checkbox"
-      formControlName="deleteEmptyDirectories"
-    >
-      {{ "configuration.label.delete-empty-directories" | translate }}
-    </mat-checkbox>
-    <input hidden matInput />
-  </mat-form-field>
-  <mat-form-field class="cx-width-20">
-    <mat-checkbox
-      id="create-external-metadata-file-checkbox"
-      formControlName="createExternalMetadataFile"
-    >
-      {{ "configuration.label.create-external-metadata-files" | translate }}
-    </mat-checkbox>
-    <input hidden matInput />
-  </mat-form-field>
-  <mat-form-field class="cx-width-20">
-    <mat-checkbox
-      id="skip-internal-metadata-file-checkbox"
-      formControlName="skipInternalMetadataFile"
-    >
-      {{ "configuration.label.skip-internal-metadata-files" | translate }}
-    </mat-checkbox>
-    <input hidden matInput />
-  </mat-form-field>
-  <mat-form-field class="cx-width-20">
-    <mat-checkbox
-      id="no-recreate-comics-checkbox"
-      formControlName="noRecreateComics"
-    >
-      {{ "configuration.label.no-recreate-comics" | translate }}
-    </mat-checkbox>
-    <input hidden matInput />
-  </mat-form-field>
-  <mat-form-field class="cx-width-20">
-    <mat-checkbox
-      id="blocked-pages-enabled-checkbox"
-      formControlName="blockedPagesEnabled"
-    >
-      {{ "configuration.label.blocked-pages-enabled" | translate }}
-    </mat-checkbox>
-    <input hidden matInput />
-  </mat-form-field>
-  <mat-form-field class="cx-width-100">
-    <mat-label>
-      {{ "configuration.label.root-directory" | translate }}
-    </mat-label>
-    <input
-      id="root-directory-input"
-      matInput
-      formControlName="rootDirectory"
-      required
-    />
-  </mat-form-field>
-  <div class="cx-width-100">
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          {{ "configuration.label.comic-renaming-variables" | translate }}
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-
-      <table class="cx-width-100 cx-border-primary-1 cx-padding-5">
-        <caption>
-          {{ "configuration.text.comic-variable-caption" | translate }}
-        </caption>
+  <div class="cx-width-100 cx-horizontal-container">
+    <div class="cx-width-50 cx-margin-10 cx-border-primary-1">
+      <table class="cx-width-100">
         <colgroup>
           <col class="cx-table-column-medium" />
           <col />
         </colgroup>
-        <thead>
+        <thead id="file-renaming-header">
           <th scope="col">
             {{ "configuration.label.comic-variable-name" | translate }}
           </th>
@@ -99,46 +41,13 @@
             {{ "configuration.label.comic-variable-description" | translate }}
           </th>
         </thead>
-        <tbody>
+        <tbody id="file-renaming-details">
           <tr *ngFor="let option of comicVariableOptions">
             <td>{{ option.label }}</td>
             <td>{{ option.value | translate }}</td>
           </tr>
         </tbody>
-      </table>
-    </mat-expansion-panel>
-  </div>
-  <mat-form-field class="cx-width-100">
-    <mat-label>
-      {{ "configuration.label.comic-renaming-rule" | translate }}
-    </mat-label>
-    <input
-      id="comic-renaming-rule-input"
-      matInput
-      formControlName="comicRenamingRule"
-    />
-    <mat-error>
-      {{ "validation.field-required" | translate }}
-    </mat-error>
-  </mat-form-field>
-
-  <div class="cx-width-100">
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          {{ "configuration.label.page-renaming-variables" | translate }}
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-
-      <table class="cx-width-100 cx-border-primary-1 cx-padding-5">
-        <caption>
-          {{ "configuration.text.page-variable-caption" | translate }}
-        </caption>
-        <colgroup>
-          <col class="cx-table-column-medium" />
-          <col />
-        </colgroup>
-        <thead>
+        <thead id="page-renaming-header">
           <th scope="col">
             {{ "configuration.label.page-variable-name" | translate }}
           </th>
@@ -146,22 +55,80 @@
             {{ "configuration.label.page-variable-description" | translate }}
           </th>
         </thead>
-        <tbody>
+        <tbody id="page-renaming-details">
           <tr *ngFor="let option of pageVariableOptions">
             <td>{{ option.label }}</td>
             <td>{{ option.value | translate }}</td>
           </tr>
         </tbody>
       </table>
-    </mat-expansion-panel>
+    </div>
+    <div class="cx-width-50 cx-margin-10 cx-border-primary-1">
+      <h3>{{ "configuration.label.file-options" | translate }}</h3>
+      <mat-checkbox
+        id="delete-empty-directories-checkbox"
+        formControlName="deleteEmptyDirectories"
+      >
+        {{ "configuration.label.delete-empty-directories" | translate }}
+      </mat-checkbox>
+      <br />
+      <mat-checkbox
+        id="create-external-metadata-file-checkbox"
+        formControlName="createExternalMetadataFile"
+      >
+        {{ "configuration.label.create-external-metadata-files" | translate }}
+      </mat-checkbox>
+      <br />
+      <mat-checkbox
+        id="skip-internal-metadata-file-checkbox"
+        formControlName="skipInternalMetadataFile"
+      >
+        {{ "configuration.label.skip-internal-metadata-files" | translate }}
+      </mat-checkbox>
+      <br />
+      <mat-checkbox
+        id="no-recreate-comics-checkbox"
+        formControlName="noRecreateComics"
+      >
+        {{ "configuration.label.no-recreate-comics" | translate }}
+      </mat-checkbox>
+      <br />
+      <mat-checkbox
+        id="blocked-pages-enabled-checkbox"
+        formControlName="blockedPagesEnabled"
+      >
+        {{ "configuration.label.blocked-pages-enabled" | translate }}
+      </mat-checkbox>
+    </div>
   </div>
+
   <mat-form-field class="cx-width-100">
-    <mat-label>
-      {{ "configuration.label.page-renaming-rule" | translate }}
-    </mat-label>
+    <input
+      id="root-directory-input"
+      matInput
+      [placeholder]="'configuration.label.root-directory' | translate"
+      formControlName="rootDirectory"
+      required
+    />
+  </mat-form-field>
+
+  <mat-form-field class="cx-width-100">
+    <input
+      id="comic-renaming-rule-input"
+      matInput
+      [placeholder]="'configuration.label.comic-renaming-rule' | translate"
+      formControlName="comicRenamingRule"
+    />
+    <mat-error>
+      {{ "validation.field-required" | translate }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="cx-width-100">
     <input
       id="page-renaming-rule-input"
       matInput
+      [placeholder]="'configuration.label.page-renaming-rule' | translate"
       formControlName="pageRenamingRule"
     />
     <mat-error>

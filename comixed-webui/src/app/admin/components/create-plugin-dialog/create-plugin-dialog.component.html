@@ -34,13 +34,14 @@
 
     <mat-card-actions>
       <button
-        mat-icon-button
         id="install-plugin-button"
+        mat-raised-button
         color="primary"
         [disabled]="!pluginForm.valid"
         (click)="onCreatePlugin()"
       >
         <mat-icon>save</mat-icon>
+        <mat-label>{{ "button.save" | translate }}</mat-label>
       </button>
     </mat-card-actions>
   </mat-card>

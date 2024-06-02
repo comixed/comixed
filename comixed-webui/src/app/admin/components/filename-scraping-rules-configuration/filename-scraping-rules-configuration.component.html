@@ -1,9 +1,13 @@
-<mat-toolbar>
-  <div class="cx-spacer"></div>
-  <button id="save-rules-button" mat-icon-button (click)="onSaveRules()">
+<div class="cx-fab-container-bottom-left">
+  <button
+    id="save-rules-button"
+    mat-fab
+    color="primary"
+    (click)="onSaveRules()"
+  >
     <mat-icon>save</mat-icon>
   </button>
-</mat-toolbar>
+</div>
 
 <mat-table
   cdkDropList
