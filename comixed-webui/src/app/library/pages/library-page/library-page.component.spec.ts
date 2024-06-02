@@ -85,6 +85,7 @@ import {
 import { ComicType } from '@app/comic-books/models/comic-type';
 import {
   loadComicDetails,
+  loadReadComicDetails,
   loadUnreadComicDetails
 } from '@app/comic-books/actions/comic-details-list.actions';
 import { ComicState } from '@app/comic-books/models/comic-state';
@@ -97,6 +98,7 @@ import {
   initialState as initialLibraryPluginState,
   LIBRARY_PLUGIN_FEATURE_KEY
 } from '@app/library-plugins/reducers/library-plugin.reducer';
+import { QUERY_PARAM_UNREAD_ONLY } from '@app/core';
 
 describe('LibraryPageComponent', () => {
   const ONE_DAY = 24 * 60 * 60 * 100;
@@ -205,7 +207,10 @@ describe('LibraryPageComponent', () => {
               filterText$: new BehaviorSubject<string>(null),
               comicType$: new BehaviorSubject<ComicType>(null),
               sortBy$: new BehaviorSubject<ComicType>(null),
-              sortDirection$: new BehaviorSubject<ComicType>(null)
+              sortDirection$: new BehaviorSubject<ComicType>(null),
+              updateQueryParam: jasmine.createSpy(
+                'QueryParameterService.updateQueryParam()'
+              )
             }
           },
           ConfirmationService
@@ -262,7 +267,7 @@ describe('LibraryPageComponent', () => {
         });
       });
 
-      it('sets the unread only flag', () => {
+      it('sets the unprocessed only flag', () => {
         expect(component.unprocessedOnly).toBeTrue();
       });
     });
@@ -457,13 +462,33 @@ describe('LibraryPageComponent', () => {
       beforeEach(() => {
         component.unreadOnly = true;
         (activatedRoute.queryParams as BehaviorSubject<{}>).next({
-          foo: 'bar'
+          [QUERY_PARAM_UNREAD_ONLY]: `${false}`
         });
       });
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           loadUnreadComicDetails({
+            pageSize: 10,
+            pageIndex: 0,
+            sortBy: null,
+            sortDirection: null
+          })
+        );
+      });
+    });
+
+    describe('for read comics', () => {
+      beforeEach(() => {
+        component.unreadOnly = true;
+        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+          [QUERY_PARAM_UNREAD_ONLY]: `${true}`
+        });
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          loadReadComicDetails({
             pageSize: 10,
             pageIndex: 0,
             sortBy: null,
@@ -524,6 +549,24 @@ describe('LibraryPageComponent', () => {
           selected: SELECTED
         })
       );
+    });
+  });
+
+  describe('toggling the read/unread state', () => {
+    const TOGGLE = Math.random() > 0.5;
+
+    beforeEach(() => {
+      component.showReadOnly = TOGGLE;
+      component.onToggleUnreadOnly();
+    });
+
+    it('updates the url', () => {
+      expect(queryParameterService.updateQueryParam).toHaveBeenCalledWith([
+        {
+          name: QUERY_PARAM_UNREAD_ONLY,
+          value: `${!TOGGLE}`
+        }
+      ]);
     });
   });
 });

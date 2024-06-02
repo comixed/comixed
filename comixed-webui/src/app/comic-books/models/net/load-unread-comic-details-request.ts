@@ -19,6 +19,7 @@
 export interface LoadUnreadComicDetailsRequest {
   pageSize: number;
   pageIndex: number;
+  unreadOnly: boolean;
   sortBy: string;
   sortDirection: string;
 }

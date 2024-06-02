@@ -334,6 +334,7 @@ describe('ComicDetailListService', () => {
     } as LoadComicDetailsResponse;
     service
       .loadUnreadComicDetails({
+        unreadOnly: true,
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         sortBy: SORT_BY,
@@ -344,6 +345,35 @@ describe('ComicDetailListService', () => {
     const req = httpMock.expectOne(interpolate(LOAD_UNREAD_COMIC_DETAILS_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
+      unreadOnly: true,
+      pageSize: PAGE_SIZE,
+      pageIndex: PAGE_INDEX,
+      sortBy: SORT_BY,
+      sortDirection: SORT_DIRECTION
+    } as LoadUnreadComicDetailsRequest);
+    req.flush(serviceResponse);
+  });
+
+  it('can load read comic details', () => {
+    const serviceResponse = {
+      comicDetails: COMIC_DETAILS,
+      totalCount: TOTAL_COUNT,
+      filteredCount: FILTERED_COUNT
+    } as LoadComicDetailsResponse;
+    service
+      .loadUnreadComicDetails({
+        unreadOnly: false,
+        pageSize: PAGE_SIZE,
+        pageIndex: PAGE_INDEX,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      })
+      .subscribe(response => expect(response).toEqual(serviceResponse));
+
+    const req = httpMock.expectOne(interpolate(LOAD_UNREAD_COMIC_DETAILS_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      unreadOnly: false,
       pageSize: PAGE_SIZE,
       pageIndex: PAGE_INDEX,
       sortBy: SORT_BY,
