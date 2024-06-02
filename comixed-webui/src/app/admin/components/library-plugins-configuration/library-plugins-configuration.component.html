@@ -2,9 +2,8 @@
   <button
     id="create-plugin-button"
     mat-fab
-    [matTooltip]="
-      'library-plugin-list.tooltip.create-plugin-dialog' | translate
-    "
+    color="accent"
+    [matTooltip]="'library-plugin-list.tooltip.create-plugin' | translate"
     (click)="onShowCreatePluginForm()"
   >
     <mat-icon>add</mat-icon>
@@ -62,6 +61,7 @@
   <mat-row
     *matRowDef="let row; columns: displayedColumns"
     (click)="onSelectPlugin(row)"
+    (keydown)="onSelectPlugin(row)"
   ></mat-row>
   <tr class="mat-row" *matNoDataRow>
     <td class="mat-cell" colspan="4">
