@@ -105,19 +105,11 @@
       {{ "metadata-source-list.label.version" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <span class="cx-width-100 cx-text-nowrap">
+      <span *ngIf="entry.available" class="cx-width-100 cx-text-nowrap">
         {{ entry.version }}
       </span>
-    </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="available">
-    <mat-header-cell mat-sort-header *matHeaderCellDef>
-      {{ "metadata-source-list.label.available" | translate }}
-    </mat-header-cell>
-    <mat-cell *matCellDef="let entry">
-      <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.available | yesNo | translate }}
+      <span *ngIf="!entry.available" class="cx-width-100 cx-text-nowrap">
+        {{ "metadata-source-list.text.not-installed" | translate }}
       </span>
     </mat-cell>
   </ng-container>

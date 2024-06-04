@@ -64,7 +64,6 @@ export class MetadataSourceListComponent
     'actions',
     'name',
     'version',
-    'available',
     'property-count',
     'homepage'
   ];
