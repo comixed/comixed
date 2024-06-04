@@ -54,8 +54,7 @@ public class RecreateComicFileReaderTest {
     assertFalse(comicBookList.isEmpty());
     assertEquals(MAX_RECORDS - 1, comicBookList.size());
 
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .findComicsToRecreate(reader.getBatchChunkSize());
+    Mockito.verify(comicBookService, Mockito.times(1)).findComicsToRecreate(reader.getChunkSize());
   }
 
   @Test
@@ -69,8 +68,7 @@ public class RecreateComicFileReaderTest {
     assertNull(result);
     assertNull(reader.comicBookList);
 
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .findComicsToRecreate(reader.getBatchChunkSize());
+    Mockito.verify(comicBookService, Mockito.times(1)).findComicsToRecreate(reader.getChunkSize());
   }
 
   @Test
@@ -82,7 +80,6 @@ public class RecreateComicFileReaderTest {
     assertNull(result);
     assertNull(reader.comicBookList);
 
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .findComicsToRecreate(reader.getBatchChunkSize());
+    Mockito.verify(comicBookService, Mockito.times(1)).findComicsToRecreate(reader.getChunkSize());
   }
 }

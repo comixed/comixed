@@ -57,7 +57,7 @@ public class ScrapeComicBookReaderTest {
     assertEquals(MAX_RECORDS - 1, comicBookList.size());
 
     Mockito.verify(comicBookService, Mockito.times(1))
-        .findComicsForBatchMetadataUpdate(reader.getBatchChunkSize());
+        .findComicsForBatchMetadataUpdate(reader.getChunkSize());
   }
 
   @Test
@@ -73,7 +73,7 @@ public class ScrapeComicBookReaderTest {
     assertNull(reader.getComicBookList());
 
     Mockito.verify(comicBookService, Mockito.times(1))
-        .findComicsForBatchMetadataUpdate(reader.getBatchChunkSize());
+        .findComicsForBatchMetadataUpdate(reader.getChunkSize());
   }
 
   @Test
@@ -87,6 +87,6 @@ public class ScrapeComicBookReaderTest {
     assertNull(reader.getComicBookList());
 
     Mockito.verify(comicBookService, Mockito.times(1))
-        .findComicsForBatchMetadataUpdate(reader.getBatchChunkSize());
+        .findComicsForBatchMetadataUpdate(reader.getChunkSize());
   }
 }

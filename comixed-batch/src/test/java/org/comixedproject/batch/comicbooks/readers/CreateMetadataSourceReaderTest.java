@@ -60,7 +60,7 @@ public class CreateMetadataSourceReaderTest {
     assertEquals(MAX_RECORDS - 1, comicBookList.size());
 
     Mockito.verify(comicBookService, Mockito.times(1))
-        .findComicsWithCreateMetadataFlagSet(reader.getBatchChunkSize());
+        .findComicsWithCreateMetadataFlagSet(reader.getChunkSize());
   }
 
   @Test
@@ -76,7 +76,7 @@ public class CreateMetadataSourceReaderTest {
     assertNull(reader.comicBookList);
 
     Mockito.verify(comicBookService, Mockito.times(1))
-        .findComicsWithCreateMetadataFlagSet(reader.getBatchChunkSize());
+        .findComicsWithCreateMetadataFlagSet(reader.getChunkSize());
   }
 
   @Test
@@ -90,6 +90,6 @@ public class CreateMetadataSourceReaderTest {
     assertNull(reader.comicBookList);
 
     Mockito.verify(comicBookService, Mockito.times(1))
-        .findComicsWithCreateMetadataFlagSet(reader.getBatchChunkSize());
+        .findComicsWithCreateMetadataFlagSet(reader.getChunkSize());
   }
 }

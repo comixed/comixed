@@ -22,6 +22,7 @@ import groovy.util.logging.Log4j;
 import java.util.List;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -34,8 +35,11 @@ import org.springframework.stereotype.Component;
 @Log4j
 @StepScope
 public class MarkBlockedPagesReader extends AbstractPageReader {
+  @Value("${comixed.batch.mark-blocked-pages.chunk-size}")
+  private int chunkSize;
+
   @Override
   protected List<ComicPage> doLoadPages() {
-    return this.comicPageService.getUnmarkedWithBlockedHash(this.getBatchChunkSize());
+    return this.comicPageService.getUnmarkedWithBlockedHash(this.chunkSize);
   }
 }

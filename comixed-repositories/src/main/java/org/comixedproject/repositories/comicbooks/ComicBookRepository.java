@@ -560,11 +560,11 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   /**
    * Returns a set of comic books without an associated comic detail record.
    *
-   * @param batchChunkSize the batch chunk size
+   * @param chunkSize the batch chunk size
    * @return the list of comic books
    */
   @Query("SELECT c FROM ComicBook c WHERE c.id NOT IN (SELECT d.comicBook.id FROM ComicDetail d)")
-  List<ComicBook> getComicBooksWithoutDetails(int batchChunkSize);
+  List<ComicBook> getComicBooksWithoutDetails(int chunkSize);
 
   @Modifying
   @Query("UPDATE ComicBook c SET c.organizing = true WHERE c.id IN (:ids) AND c.organizing = FALSE")

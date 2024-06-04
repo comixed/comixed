@@ -52,8 +52,8 @@ public class UpdateComicBooksConfiguration {
   public static final String JOB_UPDATE_COMICBOOKS_IMPRINT = "job.update-comic.imprint";
   public static final String JOB_UPDATE_COMICBOOKS_COMIC_TYPE = "job.update-comic.comic-type";
 
-  @Value("${comixed.batch.chunk-size}")
-  private int batchChunkSize = 10;
+  @Value("${comixed.batch.update-comic-metadata.chunk-size}")
+  private int chunkSize = 10;
 
   @Bean(name = "updateComicBooksJob")
   public Job updateComicBooksJob(
@@ -73,7 +73,7 @@ public class UpdateComicBooksConfiguration {
       final UpdateComicBooksProcessor processor,
       final UpdateComicBooksWriter writer) {
     return new StepBuilder("updateComicBooksStep", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
+        .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

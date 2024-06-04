@@ -56,7 +56,7 @@ public class LoadFileContentsReaderTest {
     assertEquals(MAX_RECORDS - 1, comicBookList.size());
 
     Mockito.verify(comicBookService, Mockito.times(1))
-        .findComicsWithContentToLoad(reader.getBatchChunkSize());
+        .findComicsWithContentToLoad(reader.getChunkSize());
   }
 
   @Test
@@ -72,7 +72,7 @@ public class LoadFileContentsReaderTest {
     assertNull(reader.comicBookList);
 
     Mockito.verify(comicBookService, Mockito.times(1))
-        .findComicsWithContentToLoad(reader.getBatchChunkSize());
+        .findComicsWithContentToLoad(reader.getChunkSize());
   }
 
   @Test
@@ -86,6 +86,6 @@ public class LoadFileContentsReaderTest {
     assertNull(reader.comicBookList);
 
     Mockito.verify(comicBookService, Mockito.times(1))
-        .findComicsWithContentToLoad(reader.getBatchChunkSize());
+        .findComicsWithContentToLoad(reader.getChunkSize());
   }
 }

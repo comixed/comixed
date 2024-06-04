@@ -52,7 +52,7 @@ public class CreateComicBookReaderTest {
     assertSame(descriptor, result);
 
     Mockito.verify(comicFileService, Mockito.times(1))
-        .findUnprocessedComicFileDescriptors(reader.getBatchChunkSize());
+        .findUnprocessedComicFileDescriptors(reader.getChunkSize());
   }
 
   @Test
@@ -65,6 +65,6 @@ public class CreateComicBookReaderTest {
     assertNull(result);
 
     Mockito.verify(comicFileService, Mockito.times(1))
-        .findUnprocessedComicFileDescriptors(reader.getBatchChunkSize());
+        .findUnprocessedComicFileDescriptors(reader.getChunkSize());
   }
 }

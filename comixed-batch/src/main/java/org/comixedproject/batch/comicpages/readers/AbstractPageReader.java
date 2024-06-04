@@ -37,9 +37,9 @@ import org.springframework.beans.factory.annotation.Value;
 public abstract class AbstractPageReader implements ItemReader<ComicPage> {
   @Autowired protected ComicPageService comicPageService;
 
-  @Value("${comixed.batch.chunk-size}")
+  @Value("${comixed.batch.page-reader.chunk-size}")
   @Getter
-  private int batchChunkSize;
+  private int chunkSize;
 
   List<ComicPage> pageList = null;
 

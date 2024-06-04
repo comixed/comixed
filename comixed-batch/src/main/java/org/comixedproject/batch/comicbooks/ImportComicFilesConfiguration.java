@@ -59,8 +59,8 @@ public class ImportComicFilesConfiguration {
   public static final String IMPORT_COMIC_FILES_JOB_STARTED = "job.import-comic-files.started";
   public static final String PARAM_SKIP_METADATA = "job.import-comic-files.skip-metadata";
 
-  @Value("${comixed.batch.chunk-size}")
-  private int batchChunkSize = 10;
+  @Value("${comixed.batch.import-comic-files.chunk-size}")
+  private int chunkSize = 10;
 
   /**
    * Returns the add comics batch job.
@@ -106,7 +106,7 @@ public class ImportComicFilesConfiguration {
       final CreateComicBookWriter writer,
       final CreateComicBookChunkListener chunkListener) {
     return new StepBuilder("createComicBookStep", jobRepository)
-        .<ComicFileDescriptor, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
+        .<ComicFileDescriptor, ComicBook>chunk(this.chunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
@@ -134,8 +134,7 @@ public class ImportComicFilesConfiguration {
       final DeleteImportedDescriptorsWriter writer,
       final DeleteImportedDescriptorsListener chunkListener) {
     return new StepBuilder("deleteImportedDescriptorsStep", jobRepository)
-        .<ComicFileDescriptor, ComicFileDescriptor>chunk(
-            this.batchChunkSize, platformTransactionManager)
+        .<ComicFileDescriptor, ComicFileDescriptor>chunk(this.chunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
@@ -163,7 +162,7 @@ public class ImportComicFilesConfiguration {
       final RecordInsertedWriter writer,
       final RecordInsertedChunkListener chunkListener) {
     return new StepBuilder("recordInsertedStep", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
+        .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

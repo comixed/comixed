@@ -43,7 +43,7 @@ public class CreateImageCacheEntriesReader implements ItemReader<ComicPage> {
 
   @Value("${comixed.batch.add-cover-to-image-cache.chunk-size}")
   @Getter
-  private int batchChunkSize = 10;
+  private int chunkSize = 10;
 
   public List<ComicPage> pageList;
 
@@ -51,7 +51,7 @@ public class CreateImageCacheEntriesReader implements ItemReader<ComicPage> {
   public ComicPage read() {
     if (this.pageList == null || this.pageList.isEmpty()) {
       log.debug("Loading pages without thumbnails");
-      this.pageList = this.comicPageService.loadPagesNeedingCacheEntries(this.batchChunkSize);
+      this.pageList = this.comicPageService.loadPagesNeedingCacheEntries(this.chunkSize);
     }
 
     if (this.pageList.isEmpty()) {

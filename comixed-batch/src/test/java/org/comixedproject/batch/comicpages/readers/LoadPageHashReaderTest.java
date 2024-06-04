@@ -60,8 +60,7 @@ public class LoadPageHashReaderTest {
     assertFalse(pageList.isEmpty());
     assertEquals(MAX_RECORDS - 1, pageList.size());
 
-    Mockito.verify(comicPageService, Mockito.times(1))
-        .getPagesWithoutHash(reader.getBatchChunkSize());
+    Mockito.verify(comicPageService, Mockito.times(1)).getPagesWithoutHash(reader.getChunkSize());
   }
 
   @Test
@@ -79,8 +78,7 @@ public class LoadPageHashReaderTest {
     assertFalse(pageList.isEmpty());
     assertEquals(MAX_RECORDS - 1, pageList.size());
 
-    Mockito.verify(comicPageService, Mockito.times(1))
-        .getPagesWithoutHash(reader.getBatchChunkSize());
+    Mockito.verify(comicPageService, Mockito.times(1)).getPagesWithoutHash(reader.getChunkSize());
   }
 
   @Test
@@ -108,7 +106,6 @@ public class LoadPageHashReaderTest {
     assertNull(result);
     assertNull(reader.pageList);
 
-    Mockito.verify(comicPageService, Mockito.times(1))
-        .getPagesWithoutHash(reader.getBatchChunkSize());
+    Mockito.verify(comicPageService, Mockito.times(1)).getPagesWithoutHash(reader.getChunkSize());
   }
 }

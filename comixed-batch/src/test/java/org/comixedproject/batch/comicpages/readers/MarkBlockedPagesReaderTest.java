@@ -62,7 +62,7 @@ public class MarkBlockedPagesReaderTest {
     assertEquals(MAX_RECORDS - 1, pageList.size());
 
     Mockito.verify(comicPageService, Mockito.times(1))
-        .getUnmarkedWithBlockedHash(reader.getBatchChunkSize());
+        .getUnmarkedWithBlockedHash(reader.getChunkSize());
   }
 
   @Test
@@ -82,7 +82,7 @@ public class MarkBlockedPagesReaderTest {
     assertEquals(MAX_RECORDS - 1, pageList.size());
 
     Mockito.verify(comicPageService, Mockito.times(1))
-        .getUnmarkedWithBlockedHash(reader.getBatchChunkSize());
+        .getUnmarkedWithBlockedHash(reader.getChunkSize());
   }
 
   @Test
@@ -112,6 +112,6 @@ public class MarkBlockedPagesReaderTest {
     assertNull(reader.pageList);
 
     Mockito.verify(comicPageService, Mockito.times(1))
-        .getUnmarkedWithBlockedHash(reader.getBatchChunkSize());
+        .getUnmarkedWithBlockedHash(reader.getChunkSize());
   }
 }

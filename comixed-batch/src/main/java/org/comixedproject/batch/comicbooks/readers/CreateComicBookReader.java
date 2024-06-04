@@ -40,9 +40,9 @@ import org.springframework.stereotype.Component;
 public class CreateComicBookReader implements ItemReader<ComicFileDescriptor> {
   @Autowired private ComicFileService comicFileService;
 
-  @Value("${comixed.batch.chunk-size}")
+  @Value("${comixed.batch.import-comic-files.chunk-size}")
   @Getter
-  private int batchChunkSize = 10;
+  private int chunkSize = 10;
 
   private List<ComicFileDescriptor> comicFileDescriptorList = null;
 
@@ -51,7 +51,7 @@ public class CreateComicBookReader implements ItemReader<ComicFileDescriptor> {
     if (this.comicFileDescriptorList == null || this.comicFileDescriptorList.isEmpty()) {
       log.trace("Load more descriptors to process");
       this.comicFileDescriptorList =
-          this.comicFileService.findUnprocessedComicFileDescriptors(this.batchChunkSize);
+          this.comicFileService.findUnprocessedComicFileDescriptors(this.chunkSize);
     }
 
     if (this.comicFileDescriptorList.isEmpty()) {

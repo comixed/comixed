@@ -49,8 +49,8 @@ public class MarkBlockedPagesConfiguration {
   public static final String MARK_BLOCKED_PAGES_JOB = "markBlockedPagesJob";
   public static final String JOB_MARK_BLOCKED_PAGES_STARTED = "job.mark-blocked-pages.started";
 
-  @Value("${comixed.batch.chunk-size}")
-  private int batchChunkSize = 1;
+  @Value("${comixed.batch.mark-blocked-pages.chunk-size}")
+  private int chunkSize = 1;
 
   /**
    * Returns the mark blocked pages job.
@@ -92,7 +92,7 @@ public class MarkBlockedPagesConfiguration {
       final MarkBlockedPagesWriter writer,
       final MarkBlockedPagesChunkListener chunkListener) {
     return new StepBuilder("markBlockedPagesStep", jobRepository)
-        .<ComicPage, ComicPage>chunk(this.batchChunkSize, platformTransactionManager)
+        .<ComicPage, ComicPage>chunk(this.chunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

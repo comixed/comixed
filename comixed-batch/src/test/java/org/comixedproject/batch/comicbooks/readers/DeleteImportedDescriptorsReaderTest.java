@@ -54,7 +54,7 @@ public class DeleteImportedDescriptorsReaderTest {
     assertSame(descriptor, result);
 
     Mockito.verify(comicFileService, Mockito.times(1))
-        .getImportedFileDescriptors(reader.getBatchChunkSize());
+        .getImportedFileDescriptors(reader.getChunkSize());
   }
 
   @Test
@@ -67,6 +67,6 @@ public class DeleteImportedDescriptorsReaderTest {
     assertNull(result);
 
     Mockito.verify(comicFileService, Mockito.times(1))
-        .getImportedFileDescriptors(reader.getBatchChunkSize());
+        .getImportedFileDescriptors(reader.getChunkSize());
   }
 }

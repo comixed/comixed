@@ -41,9 +41,9 @@ import org.springframework.stereotype.Component;
 public class DeleteImportedDescriptorsReader implements ItemReader<ComicFileDescriptor> {
   @Autowired private ComicFileService comicFileService;
 
-  @Value("${comixed.batch.chunk-size}")
+  @Value("${comixed.batch.import-comic-files.chunk-size}")
   @Getter
-  private int batchChunkSize = 10;
+  private int chunkSize = 10;
 
   private List<ComicFileDescriptor> comicFileDescriptorList = null;
 
@@ -53,7 +53,7 @@ public class DeleteImportedDescriptorsReader implements ItemReader<ComicFileDesc
     if (this.comicFileDescriptorList == null || this.comicFileDescriptorList.isEmpty()) {
       log.trace("Load more descriptors to process");
       this.comicFileDescriptorList =
-          this.comicFileService.getImportedFileDescriptors(this.batchChunkSize);
+          this.comicFileService.getImportedFileDescriptors(this.chunkSize);
     }
 
     if (this.comicFileDescriptorList.isEmpty()) {
