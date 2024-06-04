@@ -36,6 +36,7 @@ import org.springframework.test.context.TestPropertySource;
 public class ImageContentAdaptorTest extends BaseContentAdaptorTest {
   private static final String TEST_JPEG_FILENAME = "src/test/resources/example.jpg";
   private static final String TEST_WEBP_FILENAME = "src/test/resources/example.webp";
+  private static final String TEST_GIF_FILENAME = "src/test/resources/example.gif";
 
   @InjectMocks private ImageContentAdaptor loader;
 
@@ -70,6 +71,16 @@ public class ImageContentAdaptorTest extends BaseContentAdaptorTest {
     byte[] content = loadFile(TEST_WEBP_FILENAME);
 
     loader.loadContent(comicBook, TEST_WEBP_FILENAME, content, contentAdaptorRules);
+
+    assertEquals(1, comicBook.getPageCount());
+    assertNotNull(comicBook.getPage(0));
+  }
+
+  @Test
+  public void testLoadGifImage() throws IOException {
+    byte[] content = loadFile(TEST_GIF_FILENAME);
+
+    loader.loadContent(comicBook, TEST_GIF_FILENAME, content, contentAdaptorRules);
 
     assertEquals(1, comicBook.getPageCount());
     assertNotNull(comicBook.getPage(0));
