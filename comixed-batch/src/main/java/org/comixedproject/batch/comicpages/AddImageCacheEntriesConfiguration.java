@@ -47,8 +47,8 @@ public class AddImageCacheEntriesConfiguration {
   public static final String PARAM_ADD_IMAGE_CACHE_ENTRIES_STARTED =
       "job.add-image-cache-entries.start";
 
-  @Value("${comixed.batch.chunk-size}")
-  private int batchChunkSize = 10;
+  @Value("${comixed.batch.add-image-cache-entries.chunk-size}")
+  private int chunkSize = 10;
 
   /**
    * Returns a job bean to added pages to the image cache.
@@ -86,7 +86,7 @@ public class AddImageCacheEntriesConfiguration {
       final CreateImageCacheEntriesProcessor processor,
       final CreateImageCacheEntriesWriter writer) {
     return new StepBuilder("createImageCacheEntriesStep", jobRepository)
-        .<ComicPage, String>chunk(this.batchChunkSize, platformTransactionManager)
+        .<ComicPage, String>chunk(this.chunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

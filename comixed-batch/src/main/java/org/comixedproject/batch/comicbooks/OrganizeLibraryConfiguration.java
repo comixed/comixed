@@ -61,8 +61,8 @@ public class OrganizeLibraryConfiguration {
       "job.organization.target-directory";
   public static final String JOB_ORGANIZATION_RENAMING_RULE = "job.organization.renaming-rule";
 
-  @Value("${comixed.batch.chunk-size}")
-  private int batchChunkSize = 10;
+  @Value("${comixed.batch.organize-library.chunk-size}")
+  private int chunkSize = 10;
 
   /**
    * Returns a library organization job bean.
@@ -108,7 +108,7 @@ public class OrganizeLibraryConfiguration {
       final RemoveDeletedComicBooksWriter writer,
       final RemoveDeletedComicBooksChunkListener listener) {
     return new StepBuilder("removeDeletedComicBooksStep", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
+        .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
@@ -135,7 +135,7 @@ public class OrganizeLibraryConfiguration {
       final MoveComicFilesWriter writer,
       final MoveComicFilesChunkListener listener) {
     return new StepBuilder("moveComicFilesStep", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
+        .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
@@ -161,7 +161,7 @@ public class OrganizeLibraryConfiguration {
       final DeleteEmptyDirectoriesProcessor processor,
       final NoopWriter<Void> writer) {
     return new StepBuilder("deleteEmptyDirectoriesStep", jobRepository)
-        .<File, Void>chunk(this.batchChunkSize, platformTransactionManager)
+        .<File, Void>chunk(this.chunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

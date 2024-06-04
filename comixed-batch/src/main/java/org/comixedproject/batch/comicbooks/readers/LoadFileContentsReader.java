@@ -19,11 +19,13 @@
 package org.comixedproject.batch.comicbooks.readers;
 
 import java.util.List;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -35,10 +37,14 @@ import org.springframework.stereotype.Component;
 @StepScope
 @Log4j2
 public class LoadFileContentsReader extends AbstractComicReader {
+  @Value("${comixed.batch.process-comic-books.chunk-size}")
+  @Getter
+  private int chunkSize;
+
   @Autowired private ComicBookService comicBookService;
 
   @Override
   protected List<ComicBook> doLoadComics() {
-    return this.comicBookService.findComicsWithContentToLoad(this.getBatchChunkSize());
+    return this.comicBookService.findComicsWithContentToLoad(this.chunkSize);
   }
 }

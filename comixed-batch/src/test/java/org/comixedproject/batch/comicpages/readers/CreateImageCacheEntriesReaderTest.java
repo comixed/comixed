@@ -63,7 +63,7 @@ public class CreateImageCacheEntriesReaderTest {
     assertEquals(MAX_RECORDS - 1, pageList.size());
 
     Mockito.verify(comicPageService, Mockito.times(1))
-        .loadPagesNeedingCacheEntries(reader.getBatchChunkSize());
+        .loadPagesNeedingCacheEntries(reader.getChunkSize());
   }
 
   @Test
@@ -83,7 +83,7 @@ public class CreateImageCacheEntriesReaderTest {
     assertEquals(MAX_RECORDS - 1, pageList.size());
 
     Mockito.verify(comicPageService, Mockito.times(1))
-        .loadPagesNeedingCacheEntries(reader.getBatchChunkSize());
+        .loadPagesNeedingCacheEntries(reader.getChunkSize());
   }
 
   @Test
@@ -114,6 +114,6 @@ public class CreateImageCacheEntriesReaderTest {
     assertNull(reader.pageList);
 
     Mockito.verify(comicPageService, Mockito.times(1))
-        .loadPagesNeedingCacheEntries(reader.getBatchChunkSize());
+        .loadPagesNeedingCacheEntries(reader.getChunkSize());
   }
 }

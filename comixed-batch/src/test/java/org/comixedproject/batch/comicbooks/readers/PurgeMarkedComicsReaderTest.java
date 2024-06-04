@@ -56,7 +56,7 @@ public class PurgeMarkedComicsReaderTest {
     assertEquals(MAX_RECORDS - 1, comicBookList.size());
 
     Mockito.verify(comicBookService, Mockito.times(1))
-        .findComicsMarkedForPurging(reader.getBatchChunkSize());
+        .findComicsMarkedForPurging(reader.getChunkSize());
   }
 
   @Test
@@ -72,7 +72,7 @@ public class PurgeMarkedComicsReaderTest {
     assertNull(reader.comicBookList);
 
     Mockito.verify(comicBookService, Mockito.times(1))
-        .findComicsMarkedForPurging(reader.getBatchChunkSize());
+        .findComicsMarkedForPurging(reader.getChunkSize());
   }
 
   @Test
@@ -86,6 +86,6 @@ public class PurgeMarkedComicsReaderTest {
     assertNull(reader.comicBookList);
 
     Mockito.verify(comicBookService, Mockito.times(1))
-        .findComicsMarkedForPurging(reader.getBatchChunkSize());
+        .findComicsMarkedForPurging(reader.getChunkSize());
   }
 }

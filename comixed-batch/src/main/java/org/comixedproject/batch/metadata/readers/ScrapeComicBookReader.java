@@ -19,11 +19,13 @@
 package org.comixedproject.batch.metadata.readers;
 
 import java.util.List;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.comicbooks.readers.AbstractComicReader;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -34,11 +36,15 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class ScrapeComicBookReader extends AbstractComicReader {
+  @Value("${comixed.batch.metadata-process.chunk-size}")
+  @Getter
+  private int chunkSize;
+
   @Autowired private ComicBookService comicBookService;
 
   @Override
   protected List<ComicBook> doLoadComics() {
     log.trace("Loading comics to have their metadata batch updated");
-    return this.comicBookService.findComicsForBatchMetadataUpdate(this.getBatchChunkSize());
+    return this.comicBookService.findComicsForBatchMetadataUpdate(this.chunkSize);
   }
 }

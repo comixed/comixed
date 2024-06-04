@@ -46,8 +46,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class UpdateMetadataConfiguration {
   public static final String JOB_UPDATE_METADATA_STARTED = "job.update-metadata.started";
 
-  @Value("${comixed.batch.chunk-size}")
-  private int batchChunkSize = 10;
+  @Value("${comixed.batch.update-comic-metadata.chunk-size}")
+  private int chunkSize = 10;
 
   /**
    * Returns the job bean to update comic metadata.
@@ -84,7 +84,7 @@ public class UpdateMetadataConfiguration {
       final UpdateMetadataProcessor processor,
       final UpdateMetadataWriter writer) {
     return new StepBuilder("updateMetadataStep", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
+        .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

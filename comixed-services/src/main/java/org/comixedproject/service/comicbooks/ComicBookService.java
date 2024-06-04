@@ -826,12 +826,12 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   /**
    * Returns a set of records without an associated {@link ComicDetail} record.
    *
-   * @param batchChunkSize the batch chunk size
+   * @param chunkSize the batch chunk size
    * @return the records
    */
-  public List<ComicBook> getComicBooksWithoutDetails(final int batchChunkSize) {
-    log.debug("Loading ComicBook records without a ComicDetail: chunk size={}", batchChunkSize);
-    return this.comicBookRepository.getComicBooksWithoutDetails(batchChunkSize);
+  public List<ComicBook> getComicBooksWithoutDetails(final int chunkSize) {
+    log.debug("Loading ComicBook records without a ComicDetail: chunk size={}", chunkSize);
+    return this.comicBookRepository.getComicBooksWithoutDetails(chunkSize);
   }
 
   /**

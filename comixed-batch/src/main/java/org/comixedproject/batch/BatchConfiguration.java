@@ -39,9 +39,6 @@ import org.springframework.core.task.TaskExecutor;
  */
 @Configuration
 public class BatchConfiguration {
-  @Value("${comixed.batch.chunk-size}")
-  private int batchChunkSize = 10;
-
   @Value("${comixed.batch.thread-pool-size}")
   private int batchThreadPoolSize = 10;
 

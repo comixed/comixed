@@ -49,8 +49,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class PurgeLibraryConfiguration {
   public static final String JOB_PURGE_LIBRARY_START = "job.purge-library.started";
 
-  @Value("${comixed.batch.chunk-size}")
-  private int batchChunkSize = 10;
+  @Value("${comixed.batch.purge-library.chunk-size}")
+  private int chunkSize = 10;
 
   /**
    * Returns the purge library job.
@@ -89,7 +89,7 @@ public class PurgeLibraryConfiguration {
       final RemoveComicBooksWithoutDetailsProcessor processor,
       final NoopWriter<ComicBook> writer) {
     return new StepBuilder("removeComicBooksWithoutDetailsStep", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
+        .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
@@ -114,7 +114,7 @@ public class PurgeLibraryConfiguration {
       final PurgeMarkedComicsProcessor processor,
       final RemoveDeletedComicBooksWriter writer) {
     return new StepBuilder("purgeMarkedComicsStep", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
+        .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

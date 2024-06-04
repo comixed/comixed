@@ -25,7 +25,6 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.item.ItemReader;
-import org.springframework.beans.factory.annotation.Value;
 
 /**
  * <code>AbstractComicReader</code> provides a foundation for building new {@link ItemReader}
@@ -35,10 +34,6 @@ import org.springframework.beans.factory.annotation.Value;
  */
 @Log4j2
 public abstract class AbstractComicReader implements ItemReader<ComicBook>, StepExecutionListener {
-  @Value("${comixed.batch.chunk-size}")
-  @Getter
-  private int batchChunkSize = 10;
-
   @Getter String batchName;
   @Getter @Setter List<ComicBook> comicBookList = null;
 
@@ -65,4 +60,11 @@ public abstract class AbstractComicReader implements ItemReader<ComicBook>, Step
    * @return the comics
    */
   protected abstract List<ComicBook> doLoadComics();
+
+  /**
+   * Returns the chunk size.
+   *
+   * @return the chunk size
+   */
+  protected abstract int getChunkSize();
 }

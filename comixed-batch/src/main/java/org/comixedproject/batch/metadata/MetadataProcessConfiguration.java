@@ -50,8 +50,8 @@ public class MetadataProcessConfiguration {
   public static final String PARAM_METADATA_UPDATE_TOTAL_COMICS =
       "job.metadata-process.total-comics";
 
-  @Value("${comixed.batch.chunk-size}")
-  private int batchChunkSize = 10;
+  @Value("${comixed.batch.metadata-process.chunk-size}")
+  private int chunkSize = 10;
 
   /**
    * Returns the job bean to perform the batch comic scraping process.
@@ -90,7 +90,7 @@ public class MetadataProcessConfiguration {
       final ScrapeComicBookProcessor processor,
       final ScrapeComicBookWriter writer) {
     return new StepBuilder("scrapeComicBook", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
+        .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

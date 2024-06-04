@@ -47,8 +47,8 @@ public class RecreateComicFilesConfiguration {
   public static final String JOB_TARGET_ARCHIVE = "job.recreate-comic.target-archive";
   public static final String JOB_DELETE_MARKED_PAGES = "job.recreate-comic.delete-blocked-pages";
 
-  @Value("${comixed.batch.chunk-size}")
-  private int batchChunkSize = 10;
+  @Value("${comixed.batch.recreate-comic-files.chunk-size}")
+  private int chunkSize = 10;
 
   @Bean(name = "recreateComicFilesJob")
   public Job recreateComicFilesJob(
@@ -70,7 +70,7 @@ public class RecreateComicFilesConfiguration {
       final RecreateComicFileProcessor processor,
       final RecreateComicFileWriter writer) {
     return new StepBuilder("recreateComicFileStep", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
+        .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

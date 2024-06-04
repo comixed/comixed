@@ -47,8 +47,8 @@ public class ProcessComicBooksConfiguration {
   public static final String PROCESS_COMIC_BOOKS_JOB = "processComicBooksJob";
   public static final String PROCESS_COMIC_BOOKS_STARTED_JOB = "job.process-comic-books.started";
 
-  @Value("${comixed.batch.chunk-size}")
-  private int batchChunkSize = 1;
+  @Value("${comixed.batch.process-comic-books.chunk-size}")
+  private int chunkSize = 1;
 
   /**
    * Returns the process comics job.
@@ -90,7 +90,7 @@ public class ProcessComicBooksConfiguration {
       final LoadFileContentsWriter writer,
       final LoadFileContentsChunkListener chunkListener) {
     return new StepBuilder("loadFileContentsStep", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.batchChunkSize, platformTransactionManager)
+        .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

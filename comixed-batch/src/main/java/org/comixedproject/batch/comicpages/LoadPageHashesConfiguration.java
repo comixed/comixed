@@ -49,8 +49,8 @@ public class LoadPageHashesConfiguration {
   public static final String JOB_LOAD_PAGE_HASHES_STARTED = "job.load-page-hashes.started";
   public static final String LOAD_PAGE_HASHES_JOB = "loadPageHashesJob";
 
-  @Value("${comixed.batch.chunk-size}")
-  private int batchChunkSize = 1;
+  @Value("${comixed.batch.load-page-hashes.chunk-size}")
+  private int chunkSize = 1;
 
   @Bean(name = LOAD_PAGE_HASHES_JOB)
   public Job loadPageHashesJob(
@@ -84,7 +84,7 @@ public class LoadPageHashesConfiguration {
       final LoadPageHashWriter writer,
       final LoadPageHashChunkListener chunkListener) {
     return new StepBuilder("loadPageHashStep", jobRepository)
-        .<ComicPage, ComicPage>chunk(this.batchChunkSize, platformTransactionManager)
+        .<ComicPage, ComicPage>chunk(this.chunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
