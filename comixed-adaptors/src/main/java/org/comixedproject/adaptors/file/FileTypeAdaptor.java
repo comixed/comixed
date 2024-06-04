@@ -71,11 +71,28 @@ public class FileTypeAdaptor {
     log.trace("Determining archive type for stream");
     try (InputStream input = new BufferedInputStream(new FileInputStream(filename))) {
       final String subtype = this.getSubtype(input);
+      Optional<ArchiveAdaptorDefinition> adaptorOption =
+          this.getArchiveAdaptors().stream()
+              .filter(entry -> StringUtils.equals(subtype, entry.getFormat()))
+              .findFirst();
+      if (adaptorOption.isPresent()) {
+        final ArchiveAdaptorDefinition entry = adaptorOption.get();
+        log.debug("Found archive adaptor for {} by mime type: {}", filename, entry.getName());
+        return this.applicationContext.getBean(entry.getName(), ArchiveAdaptor.class);
+      }
       final String extension = FilenameUtils.getExtension(filename);
-      return this.getArchiveAdaptor(
+      adaptorOption =
           this.archiveAdaptors.stream()
-              .filter(definition -> definition.isMatch(subtype, extension))
-              .findFirst());
+              .filter(
+                  definition -> StringUtils.equalsIgnoreCase(definition.getExtension(), extension))
+              .findFirst();
+      if (adaptorOption.isPresent()) {
+        final ArchiveAdaptorDefinition entry = adaptorOption.get();
+        log.debug("Found archive adaptor for {} by file extension: {}", filename, entry.getName());
+        return this.applicationContext.getBean(entry.getName(), ArchiveAdaptor.class);
+      }
+      log.info("No archive adaptor found for file: {}", filename);
+      return null;
     } catch (FileNotFoundException error) {
       throw new AdaptorException("Failed to determine subtype", error);
     } catch (IOException error) {
@@ -223,11 +240,6 @@ public class FileTypeAdaptor {
     @Getter @Setter @NonNull private ArchiveType archiveType;
     @Getter @Setter @NonNull private String extension;
     @Getter @Setter private ArchiveAdaptor bean = null;
-
-    public boolean isMatch(final String subtype, final String extension) {
-      return StringUtils.equals(this.format, subtype)
-          || StringUtils.equals(this.extension, extension);
-    }
   }
 
   @NoArgsConstructor
