@@ -85,18 +85,34 @@ public class FileTypeAdaptorTest {
 
   @Test(expected = AdaptorException.class)
   public void testGetArchiveAdaptorForFilenameSubtypeDetectFailedExtensionsDontMatch()
-      throws AdaptorException, IOException {
+      throws AdaptorException {
     adaptor.getArchiveAdaptorFor(TEST_ARCHIVE_FILENAME + "z");
   }
 
   @Test(expected = AdaptorException.class)
   public void testGetArchiveAdaptorForFilenameNoAdaptorFoundExtensionsDontMatch()
-      throws AdaptorException, IOException {
+      throws AdaptorException {
     adaptor.getArchiveAdaptorFor(TEST_ARCHIVE_FILENAME + "z");
   }
 
   @Test
-  public void testGetArchiveAdaptorForFilename() throws AdaptorException, IOException {
+  public void testGetArchiveAdaptorForFilenameSubtypeMatch() throws AdaptorException, IOException {
+    Mockito.when(detector.detect(Mockito.any(InputStream.class), Mockito.any(Metadata.class)))
+        .thenReturn(TEST_MEDIA_TYPE);
+    Mockito.when(applicationContext.getBean(TEST_BEAN_NAME, ArchiveAdaptor.class))
+        .thenReturn(archiveAdaptor);
+
+    final ArchiveAdaptor result = adaptor.getArchiveAdaptorFor(TEST_ARCHIVE_FILENAME);
+
+    assertNotNull(result);
+    assertSame(archiveAdaptor, result);
+  }
+
+  @Test
+  public void testGetArchiveAdaptorForFilenameFileExtensionMatch()
+      throws AdaptorException, IOException {
+    archiveAdaptorEntry.setFormat(TEST_FORMAT + "z");
+
     Mockito.when(detector.detect(Mockito.any(InputStream.class), Mockito.any(Metadata.class)))
         .thenReturn(TEST_MEDIA_TYPE);
     Mockito.when(applicationContext.getBean(TEST_BEAN_NAME, ArchiveAdaptor.class))
@@ -126,7 +142,7 @@ public class FileTypeAdaptorTest {
   }
 
   @Test
-  public void testGetArchiveEntryTypeSubtypeDetectFailed() throws IOException {
+  public void testGetArchiveEntryTypeSubtypeDetectFailed() {
     final ArchiveEntryType result =
         adaptor.getArchiveEntryType(TEST_MEDIA_TYPE.getSubtype().substring(1));
 
@@ -134,7 +150,7 @@ public class FileTypeAdaptorTest {
   }
 
   @Test
-  public void testGetArchiveEntryType() throws IOException {
+  public void testGetArchiveEntryType() {
     final ArchiveEntryType result = adaptor.getArchiveEntryType(TEST_MEDIA_TYPE.getSubtype());
 
     assertNotNull(result);
@@ -211,20 +227,5 @@ public class FileTypeAdaptorTest {
 
     Mockito.verify(detector, Mockito.times(1))
         .detect(argumentCaptorInputStream.getValue(), metadata);
-  }
-
-  @Test
-  public void testIsMatchNeitherMatch() {
-    assertFalse(definition.isMatch(TEST_FORMAT.substring(1), TEST_EXTENSION.substring(1)));
-  }
-
-  @Test
-  public void testIsMatchOnlyFormat() {
-    assertTrue(definition.isMatch(TEST_FORMAT, TEST_EXTENSION.substring(1)));
-  }
-
-  @Test
-  public void testIsMatchOnlyExtension() {
-    assertTrue(definition.isMatch(TEST_FORMAT.substring(1), TEST_EXTENSION));
   }
 }
