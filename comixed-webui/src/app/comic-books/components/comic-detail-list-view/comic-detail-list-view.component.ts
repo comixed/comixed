@@ -258,12 +258,6 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  onRowSelected(row: SelectableListItem<ComicDetail>): void {
-    if (this.followClick) {
-      this.router.navigate(['/comics', row.item.comicId]);
-    }
-  }
-
   onShowPopup(show: boolean, comic: ComicDetail): void {
     this.logger.debug('Setting show popup:', show, this.usePopups);
     this.showComicDetailPopup = show && this.usePopups;
