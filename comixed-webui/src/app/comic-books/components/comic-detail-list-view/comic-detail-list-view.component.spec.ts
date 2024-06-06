@@ -255,38 +255,6 @@ describe('ComicDetailListViewComponent', () => {
     });
   });
 
-  describe('when a row is selected', () => {
-    const ENTRY = {
-      item: COMIC_DETAIL_1,
-      selected: Math.random() > 0.5
-    } as SelectableListItem<ComicDetail>;
-
-    describe('when following a link is disabled', () => {
-      beforeEach(() => {
-        component.followClick = false;
-        component.onRowSelected(ENTRY);
-      });
-
-      it('does nothing', () => {
-        expect(router.navigate).not.toHaveBeenCalled();
-      });
-    });
-
-    describe('when following a link is enabled', () => {
-      beforeEach(() => {
-        component.followClick = true;
-        component.onRowSelected(ENTRY);
-      });
-
-      it('does nothing', () => {
-        expect(router.navigate).toHaveBeenCalledWith([
-          '/comics',
-          ENTRY.item.comicId
-        ]);
-      });
-    });
-  });
-
   describe('the comic cover overlay', () => {
     describe('showing the cover overlay', () => {
       beforeEach(() => {

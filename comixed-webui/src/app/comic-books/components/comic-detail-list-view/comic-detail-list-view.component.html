@@ -180,7 +180,15 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap cx-padding-5">
-        {{ entry.item.publisher }}
+        <a
+          [routerLink]="[
+            '/library/collections/publishers',
+            entry.item.publisher
+          ]"
+          (click)="$event.stopImmediatePropagation()"
+        >
+          {{ entry.item.publisher }}
+        </a>
       </span>
     </mat-cell>
   </ng-container>
@@ -202,7 +210,19 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap cx-padding-5">
-        {{ entry.item.volume }}
+        <a
+          [routerLink]="[
+            '/library/collections/publishers',
+            entry.item.publisher,
+            'series',
+            entry.item.series,
+            'volumes',
+            entry.item.volume
+          ]"
+          (click)="$event.stopImmediatePropagation()"
+        >
+          {{ entry.item.volume }}
+        </a>
       </span>
     </mat-cell>
   </ng-container>
@@ -213,7 +233,12 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap cx-padding-5">
-        {{ entry.item.issueNumber }}
+        <a
+          [routerLink]="['/comics', entry.item.comicId]"
+          (click)="$event.stopImmediatePropagation()"
+        >
+          {{ entry.item.issueNumber }}
+        </a>
       </span>
     </mat-cell>
   </ng-container>
@@ -279,7 +304,7 @@
     [class.cx-selected-row]="selectedIds.includes(row.id)"
     [class.cx-missing-comic-file]="row.item.missing"
     [class.cx-selected-comic-book]="!row.item.missing && row.selected"
-    (click)="onRowSelected(row)"
+    [routerLink]="['/comics', row.item.comicId]"
   ></mat-row>
   <tr class="mat-row" *matNoDataRow>
     <td class="mat-cell" colspan="4">
