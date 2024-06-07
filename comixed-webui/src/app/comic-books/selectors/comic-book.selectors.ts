@@ -30,8 +30,3 @@ export const selectComicBook = createSelector(
   selectComicBookState,
   state => state.comicBook
 );
-
-export const selectComicBookBusy = createSelector(
-  selectComicBookState,
-  state => state.loading || state.saving
-);
