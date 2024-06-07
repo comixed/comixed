@@ -111,6 +111,7 @@
     "tooltip": {
       "blocked-hash": "Pages like this are blocked.",
       "cancel-scraping": "Stop scraping this comic.",
+      "copy-filename-to-clipboard": "Copy filename to the clipboard.",
       "delete-comic": "Mark comics as deleted.",
       "deleted-page": "Page is marked for deletion.",
       "download-comic": "Download this comic...",
