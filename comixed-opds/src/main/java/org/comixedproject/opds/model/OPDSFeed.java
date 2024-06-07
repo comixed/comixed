@@ -54,7 +54,7 @@ public abstract class OPDSFeed<E extends OPDSFeedEntry> {
   @JacksonXmlProperty(localName = "icon")
   @Getter
   @NonNull
-  private String icon = "/favicon.ico";
+  private String icon = "/favicon.png";
 
   @JacksonXmlProperty(localName = "author")
   @Getter

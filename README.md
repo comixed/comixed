@@ -91,3 +91,4 @@ Please read the [this](./CONTRIBUTING.md) for guidelines on contributing to the 
 * JWT authentication code based on https://www.devglan.com/spring-security/angular-jwt-authentication
 * credit.png, character.png, team.png, location.png, story.png - https://www.kindpng.com/
 * book.png, loading.png, searching.png, working.png - https://icons8.com/
+* favicon.png - https://icons8.com/icons
