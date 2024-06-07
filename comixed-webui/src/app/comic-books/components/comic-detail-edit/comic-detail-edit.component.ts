@@ -39,6 +39,7 @@ import { loadImprints } from '@app/comic-books/actions/imprint-list.actions';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { COMIC_TYPE_SELECTION_OPTIONS } from '@app/comic-books/comic-books.constants';
 import { ComicMetadataSource } from '@app/comic-books/models/comic-metadata-source';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'cx-comic-detail-edit',
@@ -61,7 +62,8 @@ export class ComicDetailEditComponent implements OnInit, OnDestroy {
     private formBuilder: UntypedFormBuilder,
     private store: Store<any>,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private clipboard: Clipboard
   ) {
     this.logger.trace('Building comic book details form');
     this.comicBookForm = this.formBuilder.group({
@@ -77,6 +79,7 @@ export class ComicDetailEditComponent implements OnInit, OnDestroy {
       storeDate: [''],
       comicState: [''],
       filename: [''],
+      archiveType: [''],
       fileSize: [''],
       addedToLibrary: [''],
       notes: ['']
@@ -152,6 +155,7 @@ export class ComicDetailEditComponent implements OnInit, OnDestroy {
     }
     this.comicBookForm.controls.comicState.setValue(comic.detail.comicState);
     this.comicBookForm.controls.filename.setValue(comic.detail.filename);
+    this.comicBookForm.controls.archiveType.setValue(comic.detail.archiveType);
     this.comicBookForm.controls.fileSize.setValue(0);
     this.comicBookForm.controls.notes.setValue(comic.detail.notes);
     this.comicBookForm.markAsUntouched();
@@ -215,5 +219,9 @@ export class ComicDetailEditComponent implements OnInit, OnDestroy {
   onComicTypeSelected(comicType: ComicType) {
     this.logger.trace('Setting comic type:', comicType);
     this.comicBookForm.controls.comicType.setValue(comicType);
+  }
+
+  onCopyFilenameToClipboard(): void {
+    this.clipboard.copy(this.comicBook.detail.filename);
   }
 }
