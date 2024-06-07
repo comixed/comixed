@@ -122,6 +122,7 @@ public class LibraryService {
   }
 
   /** Begins the process of purging comics from the library. */
+  @Transactional
   public void prepareForPurging() {
     final int count = (int) this.comicBookService.getComicBookCount();
     if (count > 0) {
