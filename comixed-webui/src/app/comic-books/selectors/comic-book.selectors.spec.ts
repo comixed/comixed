@@ -20,11 +20,7 @@ import {
   COMIC_BOOK_FEATURE_KEY,
   ComicBookState
 } from '../reducers/comic-book.reducer';
-import {
-  selectComicBook,
-  selectComicBookBusy,
-  selectComicBookState
-} from './comic-book.selectors';
+import { selectComicBook, selectComicBookState } from './comic-book.selectors';
 import { COMIC_BOOK_3 } from '@app/comic-books/comic-books.fixtures';
 
 describe('ComicBook Selectors', () => {
@@ -50,12 +46,6 @@ describe('ComicBook Selectors', () => {
   it('should select the current comic', () => {
     expect(selectComicBook({ [COMIC_BOOK_FEATURE_KEY]: state })).toEqual(
       state.comicBook
-    );
-  });
-
-  it('should select the busy state', () => {
-    expect(selectComicBookBusy({ [COMIC_BOOK_FEATURE_KEY]: state })).toEqual(
-      state.loading || state.saving
     );
   });
 });

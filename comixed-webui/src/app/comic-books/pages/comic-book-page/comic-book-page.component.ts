@@ -22,11 +22,7 @@ import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
-import {
-  BusyIcon,
-  setBusyState,
-  setBusyStateWithIcon
-} from '@app/core/actions/busy.actions';
+import { BusyIcon, setBusyStateWithIcon } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import {
   getPageSize,
@@ -57,10 +53,7 @@ import {
   loadComicBook,
   savePageOrder
 } from '@app/comic-books/actions/comic-book.actions';
-import {
-  selectComicBook,
-  selectComicBookBusy
-} from '@app/comic-books/selectors/comic-book.selectors';
+import { selectComicBook } from '@app/comic-books/selectors/comic-book.selectors';
 import { selectComicBookLastReadEntries } from '@app/comic-books/selectors/last-read-list.selectors';
 import { LastRead } from '@app/comic-books/models/last-read';
 import { TitleService } from '@app/core/services/title.service';
@@ -109,7 +102,6 @@ export class ComicBookPageComponent
   scrapingVolume = '';
   scrapingIssueNumber = '';
   langChangeSubscription: Subscription;
-  comicBusySubscription: Subscription;
   lastReadSubscription: Subscription;
   lastReadDates: LastRead[] = [];
   isRead = false;
@@ -161,9 +153,6 @@ export class ComicBookPageComponent
         this.loadPageTitle();
         this.subscribeToUpdates();
       });
-    this.comicBusySubscription = this.store
-      .select(selectComicBookBusy)
-      .subscribe(busy => this.store.dispatch(setBusyState({ enabled: busy })));
     this.metadataSourceSubscription = this.store
       .select(selectChosenMetadataSource)
       .subscribe(metadataSource => (this.metadataSource = metadataSource));
@@ -229,7 +218,6 @@ export class ComicBookPageComponent
     this.paramSubscription.unsubscribe();
     this.scrapingStateSubscription.unsubscribe();
     this.comicSubscription.unsubscribe();
-    this.comicBusySubscription.unsubscribe();
     this.metadataSourceSubscription.unsubscribe();
     this.userSubscription.unsubscribe();
     this.volumesSubscription.unsubscribe();
