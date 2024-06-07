@@ -124,9 +124,22 @@
     <input matInput formControlName="fileSize" readonly />
   </mat-form-field>
 
+  <mat-form-field class="cx-width-25">
+    <mat-label>{{ "comic-book.label.archive-type" | translate }}</mat-label>
+    <input matInput formControlName="archiveType" readonly />
+  </mat-form-field>
+
   <mat-form-field class="cx-width-100">
     <mat-label>{{ "comic-book.label.filename" | translate }}</mat-label>
     <input matInput formControlName="filename" readonly />
+    <button
+      mat-icon-button
+      matSuffix
+      [matTooltip]="'comic-book.tooltip.copy-filename-to-clipboard' | translate"
+      (click)="onCopyFilenameToClipboard()"
+    >
+      <mat-icon>content_copy</mat-icon>
+    </button>
   </mat-form-field>
 
   <mat-form-field class="cx-width-100">

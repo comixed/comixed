@@ -51,6 +51,7 @@ import {
 } from '@app/comic-books/reducers/imprint-list.reducer';
 import { MatSelectModule } from '@angular/material/select';
 import { ComicType } from '@app/comic-books/models/comic-type';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 describe('ComicDetailEditComponent', () => {
   const COMIC = COMIC_BOOK_1;
@@ -63,6 +64,7 @@ describe('ComicDetailEditComponent', () => {
   let fixture: ComponentFixture<ComicDetailEditComponent>;
   let store: MockStore<any>;
   let confirmationService: ConfirmationService;
+  let clipboard: Clipboard;
 
   beforeEach(
     waitForAsync(() => {
@@ -90,7 +92,11 @@ describe('ComicDetailEditComponent', () => {
           MatTooltipModule,
           MatSelectModule
         ],
-        providers: [provideMockStore({ initialState }), ConfirmationService]
+        providers: [
+          provideMockStore({ initialState }),
+          ConfirmationService,
+          Clipboard
+        ]
       }).compileComponents();
 
       fixture = TestBed.createComponent(ComicDetailEditComponent);
@@ -99,6 +105,8 @@ describe('ComicDetailEditComponent', () => {
       store = TestBed.inject(MockStore);
       spyOn(store, 'dispatch');
       confirmationService = TestBed.inject(ConfirmationService);
+      clipboard = TestBed.inject(Clipboard);
+      spyOn(clipboard, 'copy');
       fixture.detectChanges();
     })
   );
@@ -338,6 +346,16 @@ describe('ComicDetailEditComponent', () => {
       expect(component.comicBookForm.controls.comicType.value).toEqual(
         COMIC_TYPE
       );
+    });
+  });
+
+  describe('copying the filename to the clipboard', () => {
+    beforeEach(() => {
+      component.onCopyFilenameToClipboard();
+    });
+
+    it('copies the filename', () => {
+      expect(clipboard.copy).toHaveBeenCalledWith(COMIC.detail.filename);
     });
   });
 });
