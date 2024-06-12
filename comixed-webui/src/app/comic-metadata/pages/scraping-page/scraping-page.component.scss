@@ -1,5 +1,10 @@
 @import 'styles';
 
+mat-row {
+  height: $cx-row-height !important;
+  max-height: $cx-row-height !important;
+}
+
 .mat-column-thumbnail {
   width: $cx-column-medium;
   max-width: $cx-column-medium;

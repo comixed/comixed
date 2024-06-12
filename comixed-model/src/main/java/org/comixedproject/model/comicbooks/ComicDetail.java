@@ -333,7 +333,7 @@ public class ComicDetail {
    * @return the filename
    */
   @JsonProperty("baseFilename")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicListView.class})
   public String getBaseFilename() {
     return FilenameUtils.getName(this.filename);
   }
