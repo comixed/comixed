@@ -861,6 +861,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     this.comicStateHandler.fireEvent(comicBook, ComicEvent.updateMetadata);
   }
 
+  @Transactional
   public List<ComicBook> loadByComicDetailId(final List comicDetailIds) {
     return this.comicBookRepository.loadByComicDetailId(comicDetailIds);
   }

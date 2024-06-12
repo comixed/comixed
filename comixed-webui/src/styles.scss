@@ -323,8 +323,8 @@ th {
 }
 
 .cx-selected-row {
-  background-color: var(--accent-lighter-color);
-  color: var(--text-accent-lighter-color);
+  background-color: var(--accent-lighter-color) !important;
+  color: var(--text-accent-lighter-color) !important;
 }
 
 // text layout
