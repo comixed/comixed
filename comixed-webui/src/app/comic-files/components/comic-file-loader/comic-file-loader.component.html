@@ -36,7 +36,6 @@
       <button
         id="find-files-button"
         class="cx-action-button"
-        matSuffix
         mat-flat-button
         color="primary"
         [disabled]="!loadFilesForm.valid"
@@ -47,6 +46,19 @@
           {{ "comic-files.button.find-files" | translate }}
         </mat-label>
         <mat-icon>search</mat-icon>
+      </button>
+      <button
+        id="close-form-button"
+        class="cx-action-button"
+        mat-flat-button
+        color="warn"
+        [matTooltip]="'comic-files.tooltip.close-form' | translate"
+        (click)="onCloseForm()"
+      >
+        <mat-label>
+          {{ "comic-files.button.close-form" | translate }}
+        </mat-label>
+        <mat-icon>close</mat-icon>
       </button>
     </mat-card-actions>
   </mat-card>

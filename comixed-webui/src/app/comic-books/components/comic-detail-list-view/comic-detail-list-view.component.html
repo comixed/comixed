@@ -92,14 +92,16 @@
           selectedIds.length === dataSource.data.length
         "
         (change)="selectAll.emit($event.checked)"
+        (keyup)="selectAll.emit($event.checked)"
         (click)="$event.stopPropagation()"
       ></mat-checkbox>
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <mat-checkbox
         [checked]="entry.selected"
-        (click)="$event.stopImmediatePropagation()"
         (change)="onSetSelectedState(entry, $event.checked)"
+        (keyup)="onSetSelectedState(entry, $event.checked)"
+        (click)="$event.stopImmediatePropagation()"
       ></mat-checkbox>
     </mat-cell>
   </ng-container>

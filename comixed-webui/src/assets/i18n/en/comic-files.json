@@ -2,6 +2,7 @@
   "comic-files": {
     "busy-title": "There Are Comics Importing Now",
     "button": {
+      "close-form": "Close",
       "find-files": "Find Files"
     },
     "confirm-start-title": "Import Comic Files?",
@@ -74,6 +75,7 @@
       "selected-for-import": "This file will be imported."
     },
     "tooltip": {
+      "close-form": "Close the find files form...",
       "deselect-all": "Clear the comic file selections (shift+ctrl+a).",
       "find-files": "Load files under this directory (shift+ctrl+f).",
       "select-all": "Select all comic files for import (ctrl+a).",
