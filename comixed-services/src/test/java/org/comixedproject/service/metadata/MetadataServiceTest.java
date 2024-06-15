@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.metadata.MetadataAdaptorRegistry;
 import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.adaptors.MetadataAdaptor;
@@ -39,6 +40,8 @@ import org.comixedproject.metadata.model.VolumeMetadata;
 import org.comixedproject.model.collections.Issue;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.ComicMetadataSource;
+import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.collections.IssueService;
@@ -100,12 +103,18 @@ public class MetadataServiceTest {
   @Mock private ImprintService imprintService;
   @Mock private MetadataSource metadataSource;
   @Mock private List<Issue> issueList;
+  @Mock private ComicMetadataSource comicMetadataSource;
 
   @Captor private ArgumentCaptor<List<Issue>> issueListArgumentCaptor;
 
   private List<String> cachedEntryList = new ArrayList<>();
   private List<VolumeMetadata> fetchedVolumeList = new ArrayList<>();
   private List<IssueDetailsMetadata> issueDetailsMetadataList = new ArrayList<>();
+  private List<IssueDetailsMetadata.CreditEntry> creditList = new ArrayList<>();
+  private List<String> characterList = new ArrayList<>();
+  private List<String> teamList = new ArrayList<>();
+  private List<String> locationList = new ArrayList<>();
+  private List<String> storyList = new ArrayList<>();
 
   @Before
   public void setUp() throws MetadataSourceException, MetadataException {
@@ -130,6 +139,21 @@ public class MetadataServiceTest {
     Mockito.when(issueDetailsMetadata.getTitle()).thenReturn(TEST_TITLE);
     Mockito.when(issueDetailsMetadata.getDescription()).thenReturn(TEST_DESCRIPTION);
     Mockito.when(issueDetailsMetadata.getSourceId()).thenReturn(TEST_SOURCE_ID);
+    for (int index = 0; index < 5; index++) {
+      characterList.add("CHARACTER" + index);
+      teamList.add("TEST" + index);
+      locationList.add("LOCATION" + index);
+      storyList.add("STORY" + index);
+      creditList.add(
+          new IssueDetailsMetadata.CreditEntry(
+              ComicTagType.values()[RandomUtils.nextInt(ComicTagType.values().length)].getValue(),
+              "Person Name " + index));
+    }
+    Mockito.when(issueDetailsMetadata.getCharacters()).thenReturn(characterList);
+    Mockito.when(issueDetailsMetadata.getTeams()).thenReturn(teamList);
+    Mockito.when(issueDetailsMetadata.getLocations()).thenReturn(locationList);
+    Mockito.when(issueDetailsMetadata.getStories()).thenReturn(storyList);
+    Mockito.when(issueDetailsMetadata.getCredits()).thenReturn(creditList);
 
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
     Mockito.when(metadataSource.getAdaptorName()).thenReturn(TEST_METADATA_SOURCE_NAME);
@@ -602,6 +626,45 @@ public class MetadataServiceTest {
         .getFromCache(Mockito.anyString(), Mockito.anyString());
     Mockito.verify(comicStateHandler, Mockito.times(1))
         .fireEvent(loadedComicBook, ComicEvent.scraped);
+
+    verifyComicScraping(loadedComicBook);
+  }
+
+  @Test
+  public void testScrapeComicWithPreviousMetadataSource()
+      throws MetadataException, ComicBookException, JsonProcessingException {
+    Mockito.when(loadedComicBook.getMetadata()).thenReturn(comicMetadataSource);
+    Mockito.when(comicBookService.getComic(Mockito.anyLong()))
+        .thenReturn(loadedComicBook, savedComicBook);
+    Mockito.when(
+            metadataAdaptor.getIssueDetails(Mockito.anyString(), Mockito.any(MetadataSource.class)))
+        .thenReturn(issueDetailsMetadata);
+    Mockito.when(objectMapper.writeValueAsString(Mockito.any(IssueDetailsMetadata.class)))
+        .thenReturn(TEST_ENCODED_VALUE);
+    Mockito.doNothing()
+        .when(metadataCacheService)
+        .saveToCache(Mockito.anyString(), Mockito.anyString(), cacheEntryList.capture());
+
+    final ComicBook result =
+        metadataService.scrapeComic(TEST_METADATA_SOURCE_ID, TEST_COMIC_ID, TEST_ISSUE_ID, true);
+
+    assertNotNull(result);
+    assertSame(savedComicBook, result);
+    assertNotNull(cacheEntryList.getValue());
+    assertFalse(cacheEntryList.getValue().isEmpty());
+    assertEquals(TEST_ENCODED_VALUE, cacheEntryList.getValue().get(0));
+
+    Mockito.verify(comicBookService, Mockito.times(2)).getComic(TEST_COMIC_ID);
+    Mockito.verify(metadataAdaptor, Mockito.times(1))
+        .getIssueDetails(TEST_ISSUE_ID, metadataSource);
+    Mockito.verify(metadataCacheService, Mockito.times(1))
+        .saveToCache(TEST_CACHE_SOURCE, TEST_ISSUE_DETAILS_KEY, cacheEntryList.getValue());
+    Mockito.verify(metadataCacheService, Mockito.never())
+        .getFromCache(Mockito.anyString(), Mockito.anyString());
+    Mockito.verify(comicStateHandler, Mockito.times(1))
+        .fireEvent(loadedComicBook, ComicEvent.scraped);
+    Mockito.verify(comicMetadataSource, Mockito.times(1)).setMetadataSource(metadataSource);
+    Mockito.verify(comicMetadataSource, Mockito.times(1)).setReferenceId(TEST_SOURCE_ID);
 
     verifyComicScraping(loadedComicBook);
   }

@@ -26,6 +26,7 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.metadata.MetadataAdaptorRegistry;
 import org.comixedproject.metadata.MetadataException;
@@ -332,8 +333,13 @@ public class MetadataService {
                           new ComicTag(
                               detail, ComicTagType.forValue(entry.getRole()), entry.getName())));
       log.trace("Creating comicBook metadata record");
-      comicBook.setMetadata(
-          new ComicMetadataSource(comicBook, metadataSource, issueDetails.getSourceId()));
+      if (Objects.isNull(comicBook.getMetadata())) {
+        comicBook.setMetadata(
+            new ComicMetadataSource(comicBook, metadataSource, issueDetails.getSourceId()));
+      } else {
+        comicBook.getMetadata().setMetadataSource(metadataSource);
+        comicBook.getMetadata().setReferenceId(issueDetails.getSourceId());
+      }
       comicBook
           .getComicDetail()
           .setNotes(

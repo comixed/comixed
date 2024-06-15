@@ -49,7 +49,7 @@ public class ComicMetadataSource {
   private ComicBook comicBook;
 
   @ManyToOne
-  @JoinColumn(name = "metadata_source_id", nullable = false, updatable = false)
+  @JoinColumn(name = "metadata_source_id", nullable = false, updatable = true)
   @JsonProperty("metadataSource")
   @JsonView({View.ComicDetailsView.class})
   @Getter
