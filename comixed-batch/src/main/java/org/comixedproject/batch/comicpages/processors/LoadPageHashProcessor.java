@@ -20,10 +20,8 @@ package org.comixedproject.batch.comicpages.processors;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import javax.imageio.ImageIO;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.comicpages.ComicPage;
@@ -54,7 +52,7 @@ public class LoadPageHashProcessor implements ItemProcessor<ComicPage, ComicPage
       final BufferedImage image = ImageIO.read(new ByteArrayInputStream(content));
       page.setWidth(image.getWidth());
       page.setHeight(image.getHeight());
-    } catch (AdaptorException | IOException error) {
+    } catch (Exception error) {
       log.error("Failed to set page details", error);
     }
 
