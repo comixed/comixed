@@ -28,7 +28,7 @@ import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
 import { filter } from 'rxjs/operators';
-import { PAGE_SIZE_DEFAULT, PAGE_SIZE_PREFERENCE } from '@app/core';
+import { PAGE_SIZE_DEFAULT } from '@app/core';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import {
@@ -38,6 +38,7 @@ import {
 } from '@app/comic-books/selectors/load-comic-details-list.selectors';
 import { loadComicBookSelections } from '@app/comic-books/actions/comic-book-selection.actions';
 import { loadComicDetailsById } from '@app/comic-books/actions/comic-details-list.actions';
+import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
 
 @Component({
   selector: 'cx-metadata-process-page',
@@ -110,7 +111,7 @@ export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
         this.pageSize = parseInt(
           getUserPreference(
             user.preferences,
-            PAGE_SIZE_PREFERENCE,
+            PREFERENCE_PAGE_SIZE,
             `${PAGE_SIZE_DEFAULT}`
           ),
           10

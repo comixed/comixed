@@ -24,7 +24,8 @@ import {
   ValidationErrors,
   ValidatorFn
 } from '@angular/forms';
-import { PAGE_SIZE_DEFAULT, PAGE_SIZE_PREFERENCE } from '@app/core';
+import { PAGE_SIZE_DEFAULT } from '@app/core';
+import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
 
 /** Find a specific user preference. */
 export function getUserPreference(
@@ -55,7 +56,7 @@ export function getPageSize(user: User): number {
     return PAGE_SIZE_DEFAULT;
   }
   const preference = user.preferences.find(
-    entry => entry.name === PAGE_SIZE_PREFERENCE
+    entry => entry.name === PREFERENCE_PAGE_SIZE
   );
   if (!!preference) {
     return parseInt(preference.value, 10);

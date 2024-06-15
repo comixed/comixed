@@ -38,7 +38,7 @@ import {
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
-import { PAGE_SIZE_DEFAULT, PAGE_SIZE_PREFERENCE } from '@app/core';
+import { PAGE_SIZE_DEFAULT } from '@app/core';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { loadComicBook } from '@app/comic-books/actions/comic-book.actions';
 import { ComicBook } from '@app/comic-books/models/comic-book';
@@ -57,6 +57,7 @@ import {
 import { MultiBookScrapingState } from '@app/comic-metadata/reducers/multi-book-scraping.reducer';
 import { selectMetadataSourceListState } from '@app/comic-metadata/selectors/metadata-source-list.selectors';
 import { MatTableDataSource } from '@angular/material/table';
+import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
 
 @Component({
   selector: 'cx-scraping-page',
@@ -127,7 +128,7 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
       this.pageSize = parseInt(
         getUserPreference(
           user.preferences,
-          PAGE_SIZE_PREFERENCE,
+          PREFERENCE_PAGE_SIZE,
           `${this.pageSize}`
         ),
         10

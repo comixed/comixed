@@ -22,6 +22,6 @@ export const LOAD_COMIC_FILES_URL = `${API_ROOT_URL}/files/contents`;
 export const SEND_COMIC_FILES_URL = `${API_ROOT_URL}/files/import`;
 export const SCRAPE_FILENAME_URL = `${API_ROOT_URL}/files/metadata`;
 
-export const SKIP_METADATA_USER_PREFERENCE = 'preference.skip-metadata';
-export const SKIP_BLOCKING_PAGES_USER_PREFERENCE =
-  'preference.skip-blocking-pages';
+export const PREFERENCE_SKIP_METADATA = 'preference.skip-metadata';
+export const PREFERENCE_SKIP_BLOCKING_PAGES = 'preference.skip-blocking-pages';
+export const PREFERENCE_PAGE_SIZE = 'preference.page-size';

@@ -81,6 +81,8 @@ import {
   runLibraryPluginOnOneComicBook,
   runLibraryPluginOnSelectedComicBooks
 } from '@app/library-plugins/actions/run-library-plugin.actions';
+import { saveUserPreference } from '@app/user/actions/user.actions';
+import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
 
 @Component({
   selector: 'cx-comic-detail-list-view',
@@ -591,6 +593,13 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
         this.store.dispatch(startEntireLibraryOrganization());
       }
     });
+  }
+
+  onPageChange(pageSize: number): void {
+    this.logger.debug('Setting user preference comic page size:', pageSize);
+    this.store.dispatch(
+      saveUserPreference({ name: PREFERENCE_PAGE_SIZE, value: `${pageSize}` })
+    );
   }
 
   private doAddToReadingList(

@@ -97,6 +97,8 @@ import {
   runLibraryPluginOnOneComicBook,
   runLibraryPluginOnSelectedComicBooks
 } from '@app/library-plugins/actions/run-library-plugin.actions';
+import { saveUserPreference } from '@app/user/actions/user.actions';
+import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
 
 describe('ComicDetailListViewComponent', () => {
   const COMIC_DETAILS = [
@@ -357,6 +359,11 @@ describe('ComicDetailListViewComponent', () => {
     it('can show the issue number column', () => {
       component.showIssueNumber = true;
       expect(component.displayedColumns).toContain('issue-number');
+    });
+
+    it('can show the page count column', () => {
+      component.showPageCount = true;
+      expect(component.displayedColumns).toContain('page-count');
     });
 
     it('can show the cover date column', () => {
@@ -866,6 +873,23 @@ describe('ComicDetailListViewComponent', () => {
           })
         );
       });
+    });
+  });
+
+  describe('when the page size is changed', () => {
+    const PAGE_SIZE = 50;
+
+    beforeEach(() => {
+      component.onPageChange(PAGE_SIZE);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        saveUserPreference({
+          name: PREFERENCE_PAGE_SIZE,
+          value: `${PAGE_SIZE}`
+        })
+      );
     });
   });
 });
