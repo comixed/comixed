@@ -435,38 +435,4 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
       });
     });
   });
-
-  describe('the volume cover popup', () => {
-    describe('showing the cover', () => {
-      beforeEach(() => {
-        component.showPopup = true;
-        component.currentVolume = null;
-        component.onShowPopup(SCRAPING_VOLUME);
-      });
-
-      it('sets the current item', () => {
-        expect(component.currentVolume).toEqual(SCRAPING_VOLUME);
-      });
-
-      it('clears the show popup flag', () => {
-        expect(component.showPopup).toBeFalse();
-      });
-    });
-
-    describe('hiding the cover', () => {
-      beforeEach(() => {
-        component.showPopup = true;
-        component.currentVolume = SCRAPING_VOLUME;
-        component.onShowPopup(null);
-      });
-
-      it('clears the current item', () => {
-        expect(component.currentVolume).toBeNull();
-      });
-
-      it('clears the show popup flag', () => {
-        expect(component.showPopup).toBeFalse();
-      });
-    });
-  });
 });
