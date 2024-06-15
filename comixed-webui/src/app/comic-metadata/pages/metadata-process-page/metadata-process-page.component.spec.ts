@@ -34,7 +34,7 @@ import {
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { USER_ADMIN } from '@app/user/user.fixtures';
-import { PAGE_SIZE_DEFAULT, PAGE_SIZE_PREFERENCE } from '@app/core';
+import { PAGE_SIZE_DEFAULT } from '@app/core';
 import { ComicDetailListViewComponent } from '@app/comic-books/components/comic-detail-list-view/comic-detail-list-view.component';
 import { MetadataProcessToolbarComponent } from '@app/comic-metadata/components/metadata-process-toolbar/metadata-process-toolbar.component';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -59,6 +59,7 @@ import {
   COMIC_DETAILS_LIST_FEATURE_KEY,
   initialState as initialLoadComicDetailsState
 } from '@app/comic-books/reducers/comic-details-list.reducer';
+import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
 
 describe('MetadataProcessPageComponent', () => {
   const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
@@ -157,7 +158,7 @@ describe('MetadataProcessPageComponent', () => {
           user: {
             ...USER_ADMIN,
             preferences: [
-              { name: PAGE_SIZE_PREFERENCE, value: `${PAGE_SIZE}` },
+              { name: PREFERENCE_PAGE_SIZE, value: `${PAGE_SIZE}` },
               { name: SHOW_COMIC_COVERS_PREFERENCE, value: `${SHOW_COVERS}` }
             ]
           }

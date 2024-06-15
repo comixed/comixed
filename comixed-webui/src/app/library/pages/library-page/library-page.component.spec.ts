@@ -98,11 +98,16 @@ import {
   initialState as initialLibraryPluginState,
   LIBRARY_PLUGIN_FEATURE_KEY
 } from '@app/library-plugins/reducers/library-plugin.reducer';
-import { QUERY_PARAM_UNREAD_ONLY } from '@app/core';
+import { PAGE_SIZE_DEFAULT, QUERY_PARAM_UNREAD_ONLY } from '@app/core';
+import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
 
 describe('LibraryPageComponent', () => {
   const ONE_DAY = 24 * 60 * 60 * 100;
-  const USER = USER_READER;
+  const PAGE_SIZE = PAGE_SIZE_DEFAULT * 2;
+  const USER = {
+    ...USER_READER,
+    preferences: [{ name: PREFERENCE_PAGE_SIZE, value: `${PAGE_SIZE}` }]
+  };
   const PAGE_INDEX = 23;
   const DATE = new Date();
   const COMIC_DETAILS = [
@@ -376,7 +381,7 @@ describe('LibraryPageComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           loadComicDetails({
-            pageSize: 10,
+            pageSize: PAGE_SIZE,
             pageIndex: 0,
             coverYear: null,
             coverMonth: null,
@@ -407,7 +412,7 @@ describe('LibraryPageComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           loadComicDetails({
-            pageSize: 10,
+            pageSize: PAGE_SIZE,
             pageIndex: 0,
             coverYear: null,
             coverMonth: null,
@@ -438,7 +443,7 @@ describe('LibraryPageComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           loadComicDetails({
-            pageSize: 10,
+            pageSize: PAGE_SIZE,
             pageIndex: 0,
             coverYear: null,
             coverMonth: null,
@@ -469,7 +474,7 @@ describe('LibraryPageComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           loadUnreadComicDetails({
-            pageSize: 10,
+            pageSize: PAGE_SIZE,
             pageIndex: 0,
             sortBy: null,
             sortDirection: null
@@ -489,7 +494,7 @@ describe('LibraryPageComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           loadReadComicDetails({
-            pageSize: 10,
+            pageSize: PAGE_SIZE,
             pageIndex: 0,
             sortBy: null,
             sortDirection: null
@@ -508,7 +513,7 @@ describe('LibraryPageComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           loadComicDetails({
-            pageSize: 10,
+            pageSize: PAGE_SIZE,
             pageIndex: 0,
             coverYear: null,
             coverMonth: null,

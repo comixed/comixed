@@ -58,8 +58,8 @@ import {
 import { Router } from '@angular/router';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import {
-  SKIP_BLOCKING_PAGES_USER_PREFERENCE,
-  SKIP_METADATA_USER_PREFERENCE
+  PREFERENCE_SKIP_BLOCKING_PAGES,
+  PREFERENCE_SKIP_METADATA
 } from '@app/comic-files/comic-file.constants';
 import { selectFeatureEnabledState } from '@app/admin/selectors/feature-enabled.selectors';
 import { hasFeature, isFeatureEnabled } from '@app/admin';
@@ -129,13 +129,13 @@ export class ImportComicsPageComponent
         this.skipMetadata =
           getUserPreference(
             user.preferences,
-            SKIP_METADATA_USER_PREFERENCE,
+            PREFERENCE_SKIP_METADATA,
             `${false}`
           ) === `${true}`;
         this.skipBlockingPages =
           getUserPreference(
             user.preferences,
-            SKIP_BLOCKING_PAGES_USER_PREFERENCE,
+            PREFERENCE_SKIP_BLOCKING_PAGES,
             `${false}`
           ) === `${true}`;
       });
@@ -278,7 +278,7 @@ export class ImportComicsPageComponent
     this.logger.debug('Setting skip metadata:', skipMetadata);
     this.store.dispatch(
       saveUserPreference({
-        name: SKIP_METADATA_USER_PREFERENCE,
+        name: PREFERENCE_SKIP_METADATA,
         value: `${skipMetadata}`
       })
     );
@@ -300,7 +300,7 @@ export class ImportComicsPageComponent
     this.logger.debug('Setting skip skipBlockingPages:', skipBlockingPages);
     this.store.dispatch(
       saveUserPreference({
-        name: SKIP_BLOCKING_PAGES_USER_PREFERENCE,
+        name: PREFERENCE_SKIP_BLOCKING_PAGES,
         value: `${skipBlockingPages}`
       })
     );

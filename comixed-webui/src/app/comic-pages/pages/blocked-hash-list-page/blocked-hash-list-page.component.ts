@@ -49,12 +49,9 @@ import { MatSort } from '@angular/material/sort';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
 import { MatPaginator } from '@angular/material/paginator';
-import {
-  PAGE_SIZE_DEFAULT,
-  PAGE_SIZE_OPTIONS,
-  PAGE_SIZE_PREFERENCE
-} from '@app/core';
+import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@app/core';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
 
 @Component({
   selector: 'cx-blocked-hash-list',
@@ -110,7 +107,7 @@ export class BlockedHashListPageComponent
       this.pageSize = parseInt(
         getUserPreference(
           user.preferences,
-          PAGE_SIZE_PREFERENCE,
+          PREFERENCE_PAGE_SIZE,
           `${PAGE_SIZE_DEFAULT}`
         ),
         10
