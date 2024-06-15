@@ -81,7 +81,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   isAdmin = false;
   filtered = false;
   showing = 0;
-  pageSize = PAGE_SIZE_DEFAULT;
   showUpdateMetadata = false;
   showOrganize = false;
   showPurge = false;
@@ -180,7 +179,12 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       this.logger.debug('Setting admin flag');
       this.isAdmin = isAdmin(user);
       this.logger.debug('Getting page size');
-      this.pageSize = getPageSize(user);
+      const usersPreferredPageSize = getPageSize(user);
+      if (this.queryParameterService.pageSize$.value === PAGE_SIZE_DEFAULT) {
+        if (usersPreferredPageSize !== PAGE_SIZE_DEFAULT) {
+          this.queryParameterService.pageSize$.next(usersPreferredPageSize);
+        }
+      }
       this.showCovers =
         getUserPreference(
           user.preferences,

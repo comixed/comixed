@@ -71,8 +71,8 @@ import { ComicFileLoaderComponent } from '@app/comic-files/components/comic-file
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatSortModule } from '@angular/material/sort';
 import {
-  SKIP_BLOCKING_PAGES_USER_PREFERENCE,
-  SKIP_METADATA_USER_PREFERENCE
+  PREFERENCE_SKIP_BLOCKING_PAGES,
+  PREFERENCE_SKIP_METADATA
 } from '@app/comic-files/comic-file.constants';
 import { Router } from '@angular/router';
 import { ComicFile } from '@app/comic-files/models/comic-file';
@@ -190,11 +190,11 @@ describe('ImportComicsPageComponent', () => {
         ...USER_ADMIN,
         preferences: [
           {
-            name: SKIP_METADATA_USER_PREFERENCE,
+            name: PREFERENCE_SKIP_METADATA,
             value: `${SKIP_METADATA}`
           },
           {
-            name: SKIP_BLOCKING_PAGES_USER_PREFERENCE,
+            name: PREFERENCE_SKIP_BLOCKING_PAGES,
             value: `${SKIP_BLOCKING_PAGES}`
           }
         ]
@@ -467,7 +467,7 @@ describe('ImportComicsPageComponent', () => {
     it('saves the user preference', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         saveUserPreference({
-          name: SKIP_METADATA_USER_PREFERENCE,
+          name: PREFERENCE_SKIP_METADATA,
           value: `${SKIP_METADATA}`
         })
       );
@@ -482,7 +482,7 @@ describe('ImportComicsPageComponent', () => {
     it('saves the user preference', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         saveUserPreference({
-          name: SKIP_BLOCKING_PAGES_USER_PREFERENCE,
+          name: PREFERENCE_SKIP_BLOCKING_PAGES,
           value: `${SKIP_BLOCKING_PAGES}`
         })
       );

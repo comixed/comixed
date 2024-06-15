@@ -46,6 +46,7 @@
   [pageSize]="queryParameterService.pageSize$ | async"
   [pageSizeOptions]="queryParameterService.pageSizeOptions"
   (page)="
+    onPageChange($event.pageSize);
     queryParameterService.onPageChange(
       $event.pageSize,
       $event.pageIndex,
