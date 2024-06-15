@@ -19,10 +19,8 @@
 import {
   AfterViewInit,
   Component,
-  EventEmitter,
   Input,
   OnDestroy,
-  Output,
   ViewChild
 } from '@angular/core';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
@@ -81,8 +79,6 @@ export class ComicScrapingVolumeSelectionComponent
   @Input() pageSize: number;
   @Input() multimode = false;
 
-  @Output() volumeSelected = new EventEmitter<VolumeMetadata>();
-
   issueSubscription: Subscription;
   scrapingStateSubscription: Subscription;
   selectedVolume: VolumeMetadata;
@@ -97,7 +93,6 @@ export class ComicScrapingVolumeSelectionComponent
   ];
   confirmBeforeScraping = true;
   autoSelectExactMatch = false;
-  showPopup = false;
   currentVolume: VolumeMetadata | null;
 
   constructor(
@@ -108,10 +103,7 @@ export class ComicScrapingVolumeSelectionComponent
   ) {
     this.issueSubscription = this.store
       .select(selectScrapingIssueMetadata)
-      .subscribe(issue => {
-        this.issue = issue;
-        this.showPopup = !!issue;
-      });
+      .subscribe(issue => (this.issue = issue));
     this.scrapingStateSubscription = this.store
       .select(selectSingleBookScrapingState)
       .subscribe(state => {
@@ -278,21 +270,5 @@ export class ComicScrapingVolumeSelectionComponent
       (value || '').toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !==
       -1
     );
-  }
-
-  onShowPopup(volume: VolumeMetadata): void {
-    this.currentVolume = volume;
-    this.issue = null;
-    if (!!this.currentVolume) {
-      this.store.dispatch(
-        loadIssueMetadata({
-          metadataSource: this.metadataSource,
-          volumeId: this.currentVolume.id,
-          issueNumber: this.comicIssueNumber,
-          skipCache: this.skipCache
-        })
-      );
-    }
-    this.showPopup = false;
   }
 }

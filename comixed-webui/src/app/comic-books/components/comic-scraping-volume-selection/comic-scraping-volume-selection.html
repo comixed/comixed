@@ -27,136 +27,141 @@
   </button>
 </mat-toolbar>
 
-<div
-  *ngIf="showPopup && !!issue"
-  class="cx-hover cx-centered cx-width-25 cx-border-primary-1"
->
-  <mat-card appearance="outlined">
-    <mat-card-content class="cx-padding-5">
-      <h2 class="cx-width-100 cx-align-content-center">
-        <strong>{{ issue | issueMetadataTitle }}</strong>
-      </h2>
-      <h3 class="cx-width-100 cx-align-content-center">
-        {{ issue.coverDate | date: "MMM YYYY" }}
-      </h3>
-      <img
-        loading="lazy"
-        [src]="issue.coverUrl"
-        width="100%"
-        height="auto"
-        [alt]="issue | issueMetadataTitle"
-      />
-    </mat-card-content>
-    <mat-card-actions>
-      <button
-        mat-icon-button
-        color="primary"
-        (click)="onDecision(true, selectedVolume)"
-      >
-        <mat-icon>check</mat-icon>
-      </button>
-      <button mat-icon-button color="warn" (click)="showPopup = false">
-        <mat-icon>close</mat-icon>
-      </button>
-    </mat-card-actions>
-  </mat-card>
-</div>
-
 <div class="cx-width-100 cx-detail-card-container">
-  <mat-table
-    aria-label="ComicBook files available for import"
-    class="cx-width-100 cx-padding-2"
-    [dataSource]="dataSource"
-    matSort
-    matSortActive="sortOrder"
-    matSortDirection="desc"
-    matSortDisableClear="false"
-  >
-    <ng-container matColumnDef="matchability">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>
-        <mat-icon>thumbs_up_down</mat-icon>
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <button
-          id="accept-button"
-          mat-icon-button
-          [matTooltip]="'scraping.tooltip.select-scraping-issue' | translate"
-          (click)="onDecision(true, entry.item)"
-        >
-          <mat-icon *ngIf="entry.sortOrder === 2">thumb_up</mat-icon>
-          <mat-icon *ngIf="entry.sortOrder === 1">thumbs_up_down</mat-icon>
-          <mat-icon *ngIf="entry.sortOrder === 0">thumb_down</mat-icon>
-        </button>
-      </mat-cell>
-    </ng-container>
+  <div [class.cx-width-100]="!issue" [class.cx-width-75]="!!issue">
+    <mat-table
+      aria-label="ComicBook files available for import"
+      class="cx-width-100 cx-padding-2"
+      [dataSource]="dataSource"
+      matSort
+      matSortActive="sortOrder"
+      matSortDirection="desc"
+      matSortDisableClear="false"
+    >
+      <ng-container matColumnDef="matchability">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <mat-icon>thumbs_up_down</mat-icon>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <button
+            id="accept-button"
+            mat-icon-button
+            [matTooltip]="'scraping.tooltip.select-scraping-issue' | translate"
+            (click)="onDecision(true, entry.item)"
+          >
+            <mat-icon *ngIf="entry.sortOrder === 2">thumb_up</mat-icon>
+            <mat-icon *ngIf="entry.sortOrder === 1">thumbs_up_down</mat-icon>
+            <mat-icon *ngIf="entry.sortOrder === 0">thumb_down</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
 
-    <ng-container matColumnDef="thumbnail">
-      <mat-header-cell *matHeaderCellDef>
-        {{ "scraping.label.thumbnail" | translate }}
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
+      <ng-container matColumnDef="thumbnail">
+        <mat-header-cell *matHeaderCellDef>
+          {{ "scraping.label.thumbnail" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span
+            class="cx-width-100 cx-text-nowrap cx-padding-2 cx-overflow-y-clip"
+          >
+            <img
+              loading="lazy"
+              [src]="entry.item.imageUrl"
+              [alt]="entry.item | volumeMetadataTitle"
+              width="100%"
+              height="auto"
+            />
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="publisher">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ "scraping.label.publisher" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <div class="cx-width-100 cx-text-nowrap">
+            {{ entry.item.publisher }}
+          </div>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ "scraping.label.series-name" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <div class="cx-width-100 cx-text-nowrap">{{ entry.item.name }}</div>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="start-year">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ "scraping.label.start-year" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <div class="cx-width-100 cx-text-nowrap">
+            {{ entry.item.startYear }}
+          </div>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="issue-count">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ "scraping.label.issue-count" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <div class="cx-width-100 cx-text-nowrap">
+            {{ entry.item.issueCount }}
+          </div>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        [style.background]="
+          selectedVolume?.id === row.item.id ? 'lightblue' : ''
+        "
+        (click)="onVolumeSelected(row.item)"
+        (keyup)="onVolumeSelected(row.item)"
+      ></mat-row>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">
+          {{ "comic-book.text.no-matching-volumes" | translate }}
+        </td>
+      </tr>
+    </mat-table>
+  </div>
+
+  <div *ngIf="!!issue" class="cx-width-25">
+    <mat-card class="cx-width-100" appearance="outlined">
+      <mat-card-content class="cx-padding-5">
+        <h2 class="cx-width-100 cx-align-content-center">
+          <strong>{{ issue | issueMetadataTitle }}</strong>
+        </h2>
+        <h3 class="cx-width-100 cx-align-content-center">
+          {{ issue.coverDate | date: "MMM YYYY" }}
+        </h3>
         <img
           loading="lazy"
-          [src]="entry.item.imageUrl"
-          [alt]="entry.item | volumeMetadataTitle"
-          [style.width]="'100%'"
-          [style.height]="'auto'"
+          [src]="issue.coverUrl"
+          width="100%"
+          height="auto"
+          [alt]="issue | issueMetadataTitle"
         />
-      </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="publisher">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>
-        {{ "scraping.label.publisher" | translate }}
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <div class="cx-width-100 cx-text-nowrap">
-          {{ entry.item.publisher }}
-        </div>
-      </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="name">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>
-        {{ "scraping.label.series-name" | translate }}
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <div class="cx-width-100 cx-text-nowrap">{{ entry.item.name }}</div>
-      </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="start-year">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>
-        {{ "scraping.label.start-year" | translate }}
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <div class="cx-width-100 cx-text-nowrap">
-          {{ entry.item.startYear }}
-        </div>
-      </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="issue-count">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>
-        {{ "scraping.label.issue-count" | translate }}
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <div class="cx-width-100 cx-text-nowrap">
-          {{ entry.item.issueCount }}
-        </div>
-      </mat-cell>
-    </ng-container>
-
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row
-      *matRowDef="let row; columns: displayedColumns"
-      [style.background]="selectedVolume?.id === row.item.id ? 'lightblue' : ''"
-      (click)="onVolumeSelected(row.item)"
-    ></mat-row>
-    <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" colspan="4">
-        {{ "comic-book.text.no-matching-volumes" | translate }}
-      </td>
-    </tr>
-  </mat-table>
+      </mat-card-content>
+      <mat-card-actions>
+        <button
+          mat-icon-button
+          color="primary"
+          [matTooltip]="'scraping.tooltip.select-scraping-issue' | translate"
+          (click)="onDecision(true, selectedVolume)"
+          (keyup)="onDecision(true, selectedVolume)"
+        >
+          <mat-icon>thumb_up</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
 </div>
