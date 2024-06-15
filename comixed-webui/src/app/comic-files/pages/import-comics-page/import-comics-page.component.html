@@ -95,6 +95,7 @@
   *ngIf="showFinderForm"
   class="cx-centered cx-position-absolute cx-width-50 cx-border-primary-1"
   [user]="user"
+  (closeForm)="showFinderForm = false"
 ></cx-comic-file-loader>
 
 <h2>
@@ -135,6 +136,7 @@
         [disabled]="!dataSource.data.length"
         [checked]="allSelected"
         (change)="onToggleAllSelected($event.checked)"
+        (keyup)="onToggleAllSelected($event.checked)"
         (click)="$event.stopPropagation()"
       ></mat-checkbox>
     </mat-header-cell>
@@ -143,6 +145,7 @@
         <mat-checkbox
           [checked]="entry.selected"
           (change)="onSelectEntry(entry.item, $event.checked)"
+          (keyup)="onSelectEntry(entry.item, $event.checked)"
           (click)="$event.stopPropagation()"
         ></mat-checkbox>
       </span>

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User } from '@app/user/models/user';
@@ -36,6 +36,8 @@ import { Store } from '@ngrx/store';
   styleUrls: ['./comic-file-loader.component.scss']
 })
 export class ComicFileLoaderComponent {
+  @Output() closeForm = new EventEmitter<void>();
+
   loadFilesForm: FormGroup;
   readonly maximumOptions = [
     { label: 'comic-files.label.maximum-all-files', value: 0 },
@@ -84,5 +86,9 @@ export class ComicFileLoaderComponent {
         maximum: this.loadFilesForm.controls.maximum.value
       })
     );
+  }
+
+  onCloseForm(): void {
+    this.closeForm.emit();
   }
 }

@@ -85,4 +85,15 @@ describe('ComicFileLoaderComponent', () => {
       );
     });
   });
+
+  describe('closing the form', () => {
+    beforeEach(() => {
+      spyOn(component.closeForm, 'emit');
+      component.onCloseForm();
+    });
+
+    it('emits an event', () => {
+      expect(component.closeForm.emit).toHaveBeenCalled();
+    });
+  });
 });
