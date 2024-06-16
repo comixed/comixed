@@ -43,7 +43,6 @@ public class ComicStateMachineConfiguration
   @Autowired private PrepareComicForProcessingAction prepareComicForProcessingAction;
   @Autowired private FileContentsLoadedAction fileContentsLoadedAction;
   @Autowired private ComicContentsProcessedGuard comicContentsProcessedGuard;
-  @Autowired private UpdateMetadataAction updateMetadataAction;
   @Autowired private MetadataUpdatedAction metadataUpdatedAction;
   @Autowired private ComicOrganizedAction comicOrganizedAction;
   @Autowired private UpdateComicBookDetailsAction updateComicBookDetailsAction;
@@ -183,20 +182,13 @@ public class ComicStateMachineConfiguration
         .source(ComicState.CHANGED)
         .target(ComicState.CHANGED)
         .event(ComicEvent.metadataCleared)
-        // start updating the metadata
+        // the metadata was updated
         .and()
         .withExternal()
         .source(ComicState.STABLE)
-        .target(ComicState.CHANGED)
-        .event(ComicEvent.updateMetadata)
-        .action(updateMetadataAction)
-        .and()
-        .withExternal()
-        .source(ComicState.CHANGED)
-        .target(ComicState.CHANGED)
-        .event(ComicEvent.updateMetadata)
-        .action(updateMetadataAction)
-        // the metadata was updated
+        .target(ComicState.STABLE)
+        .event(ComicEvent.metadataUpdated)
+        .action(metadataUpdatedAction)
         .and()
         .withExternal()
         .source(ComicState.CHANGED)

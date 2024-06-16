@@ -5,16 +5,29 @@
 Below is a list of configurable properties that can be altered to suit the
 needs of the server administrator.
 
-| PROPERTY                                        | USAGE                                       | FORMAT    |
-|-------------------------------------------------|---------------------------------------------|-----------|
-| comixed.batch.thread-pool                       | The number of threads to use for batch jobs | count     |
-| comixed.batch.import-comic-files.period         | Check for importable comics                 | delay     |
-| comixed.batch.process-comic-books.period        | Check for unprocessed comics                | delay     |
-| comixed.batch.load-page-hashes.period           | Check for unprocessed comic pages           | delay     | 
-| comixed.batch.mark-blocked-pages.period         | Check for unmarked blocked pages            | delay     | 
-| comixed.batch.organize-library.period           | Check for comics marked for organization    | delay     | 
-| comixed.batch.add-cover-to-image-cache.schedule | Update the image cache                      | scheduled |
-| comixed.images.cache.location                   | The location of the image cache             | path      |
+| PROPERTY                                          | USAGE                                           | FORMAT   |
+|---------------------------------------------------|-------------------------------------------------|----------|
+| comixed.batch.thread-pool-size                    | The number of threads used for batch processing | Count    |
+| comixed.batch.page-reader.chunk-size              | The number of pages to process at a time        | Count    |
+| comixed.batch.add-image-cache-entries.chunk-size  | The number of pages to process at a time        | Count    |
+| comixed.batch.metadata-process.chunk-size         | The number of comics to process at a time       | Count    |
+| comixed.batch.purge-library.chunk-size            | The number of comics to process at a time       | Count    |
+| comixed.batch.recreate-comic-files.chunk-size     | The number of comics to process at a time       | Count    |
+| comixed.batch.update-comic-metadata.chunk-size    | The number of comics to process at a time       | Count    |
+| comixed.batch.add-cover-to-image-cache.schedule   | The schedule for caching cover images           | Schedule |
+| comixed.batch.add-cover-to-image-cache.chunk-size | The number of pages to process at a time        | Count    |
+| comixed.batch.import-comic-files.period           | The time between checking for comics to import  | Delay    |
+| comixed.batch.import-comic-files.chunk-size       | The number of comics to process at a time       | Count    |
+| comixed.batch.process-comic-books.period          | The time between checking for comics to process | Delay    |
+| comixed.batch.process-comic-books.chunk-size      | The number of comics to process at a time       | Count    |
+| comixed.batch.load-page-hashes.period             | The time between checking for comics to process | Delay    |
+| comixed.batch.load-page-hashes.chunk-size         | The number of comics to process at a time       | Count    |
+| comixed.batch.mark-blocked-pages.period           | The time between checking for pages to process  | Delay    |
+| comixed.batch.mark-blocked-pages.chunk-size       | The number of comics to process at a time       | Count    |
+| comixed.batch.organize-library.period             | The time between checking for comics to process | Delay    |
+| comixed.batch.organize-library.chunk-size         | The number of comics to process at a time       | Count    |
+| comixed.batch.update-metadata.period              | The time between checking for comics to process | Delay    |
+| comixed.batch.update-metadata.chunk-size          | The number of comics to process at a time       | Count    |
 
 ### Count Values
 
