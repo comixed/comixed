@@ -41,6 +41,7 @@ public class ProcessComicBooksStatus {
   public static final String MARK_BLOCKED_PAGE_STEP = "mark-blocked-page-step";
   public static final String REMOVE_DELETED_COMIC_BOOKS_STEP = "remove-deleted-comic-books-step";
   public static final String MOVE_COMIC_FILES_STEP = "move-comic-files-step";
+  public static final String UPDATE_METADATA_STEP = "update-metadata-step";
 
   @JsonProperty("active")
   @JsonView(View.GenericObjectView.class)

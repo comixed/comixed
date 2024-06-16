@@ -131,6 +131,8 @@ public class ComicBookServiceTest {
   @Mock private List<PublisherAndYearSegment> byPublisherAndYearList;
   @Mock private List<Publisher> publisherWithSeriesCountList;
   @Mock private List<Series> publisherDetail;
+  @Mock private List<Series> seriesList;
+
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
   @Captor private ArgumentCaptor<PageRequest> pageRequestCaptor;
 
@@ -1196,6 +1198,17 @@ public class ComicBookServiceTest {
   }
 
   @Test
+  public void testGetAllSeriesAndVolumes() {
+    Mockito.when(comicBookRepository.getAllSeriesAndVolumes()).thenReturn(seriesList);
+
+    final List<Series> result = service.getAllSeriesAndVolumes();
+
+    assertSame(seriesList, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getAllSeriesAndVolumes();
+  }
+
+  @Test
   public void testFindDuplicateComics() {
     Mockito.when(comicBookRepository.getAllWithDuplicatePages()).thenReturn(comicDetailList);
 
@@ -1232,26 +1245,11 @@ public class ComicBookServiceTest {
         .getComicBooksWithoutDetails(TEST_BATCH_CHUNK_SIZE);
   }
 
-  @Test(expected = ComicBookException.class)
-  public void testPrepareForMetadataUpdateInvalidComicBookId() throws ComicBookException {
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
-
-    try {
-      service.prepareForMetadataUpdate(TEST_COMIC_BOOK_ID);
-    } finally {
-      Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
-    }
-  }
-
   @Test
-  public void testPrepareForMetadataUpdate() throws ComicBookException {
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+  public void testPrepareForMetadataUpdate() {
+    service.prepareForMetadataUpdate(idList);
 
-    service.prepareForMetadataUpdate(TEST_COMIC_BOOK_ID);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.updateMetadata);
+    Mockito.verify(comicBookRepository, Mockito.times(1)).prepareForMetadataUpdate(idList);
   }
 
   @Test
@@ -1304,5 +1302,16 @@ public class ComicBookServiceTest {
     assertTrue(result.contains(TEST_COMIC_BOOK_ID));
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).findAll();
+  }
+
+  @Test
+  public void testGetUpdateMetatdataCount() {
+    Mockito.when(comicBookRepository.getUpdateMetadataCount()).thenReturn(TEST_COMIC_COUNT);
+
+    final long result = service.getUpdateMetadataCount();
+
+    assertEquals(TEST_COMIC_COUNT, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getUpdateMetadataCount();
   }
 }

@@ -28,10 +28,10 @@ import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LI
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicbooks.UpdateMetadataConfiguration;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.net.admin.ClearImageCacheResponse;
@@ -76,10 +76,6 @@ public class LibraryController {
   @Autowired
   @Qualifier("batchJobLauncher")
   private JobLauncher jobLauncher;
-
-  @Autowired
-  @Qualifier("updateMetadataJob")
-  private Job updateMetadataJob;
 
   @Autowired
   @Qualifier("recreateComicFilesJob")
@@ -315,14 +311,7 @@ public class LibraryController {
   public void updateSingleComicBookMetadata(@PathVariable("comicBookId") final long comicBookId)
       throws Exception {
     log.info("Updating the metadata a single comic book: id={}", comicBookId);
-    this.comicBookService.prepareForMetadataUpdate(comicBookId);
-    log.trace("Launching rescan batch process");
-    this.jobLauncher.run(
-        this.updateMetadataJob,
-        new JobParametersBuilder()
-            .addLong(
-                UpdateMetadataConfiguration.JOB_UPDATE_METADATA_STARTED, System.currentTimeMillis())
-            .toJobParameters());
+    this.comicBookService.prepareForMetadataUpdate(new ArrayList<>(Arrays.asList(comicBookId)));
   }
 
   /**
@@ -345,13 +334,6 @@ public class LibraryController {
     this.comicBookSelectionService.clearSelectedComicBooks(selectedComicBookIds);
     session.setAttribute(
         LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selectedComicBookIds));
-    log.trace("Launching batch process");
-    this.jobLauncher.run(
-        this.updateMetadataJob,
-        new JobParametersBuilder()
-            .addLong(
-                UpdateMetadataConfiguration.JOB_UPDATE_METADATA_STARTED, System.currentTimeMillis())
-            .toJobParameters());
   }
 
   /**

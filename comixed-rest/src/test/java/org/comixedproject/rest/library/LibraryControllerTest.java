@@ -27,6 +27,8 @@ import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.
 import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
 
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import org.comixedproject.model.archives.ArchiveType;
@@ -78,10 +80,6 @@ public class LibraryControllerTest {
   @Mock private RemoteLibraryState remoteLibraryState;
   @Mock private List selectedIds;
   @Mock private HttpSession httpSession;
-
-  @Mock
-  @Qualifier("updateMetadataJob")
-  private Job updateMetadataJob;
 
   @Mock
   @Qualifier("recreateComicFilesJob")
@@ -276,32 +274,17 @@ public class LibraryControllerTest {
 
   @Test
   public void testUpdateSingleComicBookMetadata() throws Exception {
-    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
-        .thenReturn(jobExecution);
-
     controller.updateSingleComicBookMetadata(TEST_COMIC_BOOK_ID);
 
-    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
-
-    assertNotNull(jobParameters);
-
-    Mockito.verify(comicBookService, Mockito.times(1)).prepareForMetadataUpdate(TEST_COMIC_BOOK_ID);
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(updateMetadataJob, jobParameters);
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .prepareForMetadataUpdate(new ArrayList<>(Arrays.asList(TEST_COMIC_BOOK_ID)));
   }
 
   @Test
   public void testUpdateSelectedComicBooksMetadata() throws Exception {
-    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
-        .thenReturn(jobExecution);
-
     controller.updateSelectedComicBooksMetadata(httpSession);
 
-    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
-
-    assertNotNull(jobParameters);
-
     Mockito.verify(libraryService, Mockito.times(1)).updateMetadata(selectedIds);
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(updateMetadataJob, jobParameters);
   }
 
   @Test

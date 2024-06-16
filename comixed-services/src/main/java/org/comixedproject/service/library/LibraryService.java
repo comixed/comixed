@@ -65,17 +65,10 @@ public class LibraryService {
    *
    * @param ids the comics
    */
+  @Transactional
   public void updateMetadata(final List<Long> ids) {
-    ids.forEach(
-        id -> {
-          try {
-            final ComicBook comicBook = this.comicBookService.getComic(id);
-            log.trace("Firing action to update metadata: id={}", id);
-            this.comicStateHandler.fireEvent(comicBook, ComicEvent.updateMetadata);
-          } catch (ComicBookException error) {
-            log.error("Failed to update comic", error);
-          }
-        });
+    log.debug("Preparing {} comic book(s) for metadata update", ids.size());
+    this.comicBookService.prepareForMetadataUpdate(ids);
   }
 
   /**
