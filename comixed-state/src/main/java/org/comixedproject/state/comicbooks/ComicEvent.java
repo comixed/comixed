@@ -32,8 +32,6 @@ public enum ComicEvent {
   fileContentsLoaded,
   // rescan a comic,
   rescanComic,
-  // prepare to update the metadata within the physical comic file
-  updateMetadata,
   // the metadata within the physical comic file has been updated
   metadataUpdated,
   // the comic has been organized

@@ -850,15 +850,13 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   }
 
   /**
-   * Marks a comic book for updating metadat.
+   * Marks a set of comic books for metadata updating.
    *
-   * @param comicBookId the comic book id
-   * @throws ComicBookException if the id is invalid
+   * @param ids the comic book ids
    */
   @Transactional
-  public void prepareForMetadataUpdate(final long comicBookId) throws ComicBookException {
-    final ComicBook comicBook = this.doGetComic(comicBookId);
-    this.comicStateHandler.fireEvent(comicBook, ComicEvent.updateMetadata);
+  public void prepareForMetadataUpdate(final List<Long> ids) {
+    this.comicBookRepository.prepareForMetadataUpdate(ids);
   }
 
   @Transactional
@@ -888,5 +886,16 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     return this.comicBookRepository.findAll().stream()
         .map(ComicBook::getId)
         .collect(Collectors.toList());
+  }
+
+  /**
+   * Returns the number of comic books to have their metadata updated.
+   *
+   * @return the count
+   */
+  @Transactional
+  public long getUpdateMetadataCount() {
+    log.debug("Getting the update metadata count");
+    return this.comicBookRepository.getUpdateMetadataCount();
   }
 }

@@ -19,6 +19,8 @@
 package org.comixedproject.batch.comicbooks;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.batch.comicbooks.listeners.UpdateMetadataChunkListener;
+import org.comixedproject.batch.comicbooks.listeners.UpdateMetadataJobListener;
 import org.comixedproject.batch.comicbooks.processors.UpdateMetadataProcessor;
 import org.comixedproject.batch.comicbooks.readers.UpdateMetadataReader;
 import org.comixedproject.batch.comicbooks.writers.UpdateMetadataWriter;
@@ -45,8 +47,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Log4j2
 public class UpdateMetadataConfiguration {
   public static final String JOB_UPDATE_METADATA_STARTED = "job.update-metadata.started";
+  public static final String UPDATE_METADATA_JOB = "updateMetadataJob";
 
-  @Value("${comixed.batch.update-comic-metadata.chunk-size}")
+  @Value("${comixed.batch.update-metadata.chunk-size}")
   private int chunkSize = 10;
 
   /**
@@ -56,12 +59,14 @@ public class UpdateMetadataConfiguration {
    * @param updateMetadataStep the update metadata step
    * @return the job
    */
-  @Bean(name = "updateMetadataJob")
+  @Bean(name = UPDATE_METADATA_JOB)
   public Job updateMetadataJob(
       final JobRepository jobRepository,
+      final UpdateMetadataJobListener listener,
       @Qualifier("updateMetadataStep") final Step updateMetadataStep) {
-    return new JobBuilder("updateMetadataJob", jobRepository)
+    return new JobBuilder(UPDATE_METADATA_JOB, jobRepository)
         .incrementer(new RunIdIncrementer())
+        .listener(listener)
         .start(updateMetadataStep)
         .build();
   }
@@ -82,12 +87,14 @@ public class UpdateMetadataConfiguration {
       final PlatformTransactionManager platformTransactionManager,
       final UpdateMetadataReader reader,
       final UpdateMetadataProcessor processor,
-      final UpdateMetadataWriter writer) {
-    return new StepBuilder("updateMetadataStep", jobRepository)
+      final UpdateMetadataWriter writer,
+      final UpdateMetadataChunkListener listener) {
+    return new StepBuilder(UPDATE_METADATA_JOB, jobRepository)
         .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
+        .listener(listener)
         .build();
   }
 }

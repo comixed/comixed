@@ -141,7 +141,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the count
    */
   @Query(
-      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' OR c.fileContentsLoaded = false")
+      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' OR c.fileContentsLoaded IS FALSE")
   int findUnprocessedComicsWithoutContentCount();
 
   /**
@@ -159,8 +159,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param pageable the page request
    * @return the list of comics
    */
-  @Query(
-      "SELECT c FROM ComicBook c WHERE c.comicDetail.comicState = 'CHANGED' AND c.updateMetadata = true")
+  @Query("SELECT c FROM ComicBook c WHERE c.updateMetadata = true")
   List<ComicBook> findComicsWithMetadataToUpdate(Pageable pageable);
 
   /**
@@ -567,11 +566,13 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   List<ComicBook> getComicBooksWithoutDetails(int chunkSize);
 
   @Modifying
-  @Query("UPDATE ComicBook c SET c.organizing = true WHERE c.id IN (:ids) AND c.organizing = FALSE")
+  @Query(
+      "UPDATE ComicBook c SET c.organizing = true WHERE c.id IN (:ids) AND c.organizing IS FALSE")
   void markForOrganizationById(@Param("ids") List<Long> ids);
 
   @Modifying
-  @Query("UPDATE ComicBook c SET c.recreating = true WHERE c.id IN (:ids) AND c.recreating = FALSE")
+  @Query(
+      "UPDATE ComicBook c SET c.recreating = true WHERE c.id IN (:ids) AND c.recreating IS FALSE")
   void markForRecreationById(@Param("ids") List<Long> ids);
 
   @Query("SELECT b FROM ComicBook b WHERE b.comicDetail.id IN (:comicDetailIds)")
@@ -585,4 +586,12 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   @Query(
       "SELECT b FROM ComicBook b WHERE b.id IN (select d.comicBook.id FROM ComicDetail d WHERE d.comicState = 'UNPROCESSED')")
   List<ComicBook> getComicBooksForProcessing();
+
+  @Modifying
+  @Query(
+      "UPDATE ComicBook c SET c.updateMetadata = true WHERE c.id IN (:ids) AND c.updateMetadata IS FALSE")
+  void prepareForMetadataUpdate(@Param("ids") List<Long> ids);
+
+  @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.updateMetadata IS TRUE")
+  long getUpdateMetadataCount();
 }
