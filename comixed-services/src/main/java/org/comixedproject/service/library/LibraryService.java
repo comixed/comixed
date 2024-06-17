@@ -22,8 +22,6 @@ import java.io.IOException;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.file.FileAdaptor;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.state.comicbooks.ComicEvent;
@@ -87,31 +85,16 @@ public class LibraryService {
   }
 
   /**
-   * Prepares comics to be recreated.
-   *
-   * @param id the comic ids
-   * @throws LibraryException if an error occurs
-   */
-  @Transactional
-  public void prepareToRecreateComicBook(final long id) throws LibraryException {
-    try {
-      log.debug("Setting recreating flag on comic book: id={}", id);
-      final ComicBook comicBook = this.comicBookService.getComic(id);
-      comicBook.setRecreating(true);
-      this.comicBookService.save(comicBook);
-    } catch (ComicBookException error) {
-      throw new LibraryException("Failed to prepare comic book for recreation", error);
-    }
-  }
-
-  /**
    * Prepares comics to have their files recreated.
    *
    * @param ids the comic ids
    */
-  public void prepareToRecreateComicBooks(final List<Long> ids) {
-    log.debug("Preparing to recreate comic book files");
+  public void prepareToRecreate(final List<Long> ids) {
+    final long started = System.currentTimeMillis();
+    log.debug("Preparing to recreate {} comic book file(s)", ids.size());
     this.comicBookService.prepareForRecreation(ids);
+    log.debug(
+        "Comic book files prepared for recreation: {}ms", System.currentTimeMillis() - started);
   }
 
   /** Begins the process of purging comics from the library. */

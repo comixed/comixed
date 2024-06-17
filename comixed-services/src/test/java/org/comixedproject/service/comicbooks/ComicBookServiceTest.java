@@ -1313,4 +1313,15 @@ public class ComicBookServiceTest {
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).getUpdateMetadataCount();
   }
+
+  @Test
+  public void testGetRecreatingCount() {
+    Mockito.when(comicBookRepository.getRecreatingCount()).thenReturn(TEST_COMIC_COUNT);
+
+    final long result = service.getRecreatingCount();
+
+    assertEquals(TEST_COMIC_COUNT, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getRecreatingCount();
+  }
 }

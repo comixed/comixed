@@ -28,7 +28,6 @@ import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -48,13 +47,10 @@ public class LibraryServiceTest {
   @Mock private PageCacheService pageCacheService;
   @Mock private ComicStateHandler comicStateHandler;
 
+  @Captor private ArgumentCaptor<List<Long>> idListArgumentCaptor;
+
   private List<ComicBook> comicBookList = new ArrayList<>();
   private List<Long> comicIdList = new ArrayList<>();
-
-  @Before
-  public void setUp() throws ComicBookException {
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
-  }
 
   @Test
   public void testClearImageCache() throws LibraryException, IOException {
@@ -110,29 +106,9 @@ public class LibraryServiceTest {
     Mockito.verify(comicBookService, Mockito.times(1)).prepareForOrganization(comicIdList);
   }
 
-  @Test(expected = LibraryException.class)
-  public void testPrepareToRecreateComicBookInvalidComicBook()
-      throws ComicBookException, LibraryException {
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicBookException.class);
-
-    try {
-      service.prepareToRecreateComicBook(TEST_COMIC_BOOK_ID);
-    } finally {
-      Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_BOOK_ID);
-    }
-  }
-
   @Test
-  public void testPrepareToRecreateComicBook() throws ComicBookException, LibraryException {
-    service.prepareToRecreateComicBook(TEST_COMIC_BOOK_ID);
-
-    Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_BOOK_ID);
-    Mockito.verify(comicBook, Mockito.times(1)).setRecreating(true);
-  }
-
-  @Test
-  public void testPrepareToRecreateComicBooks() throws ComicBookException {
-    service.prepareToRecreateComicBooks(comicIdList);
+  public void testPrepareToRecreate() {
+    service.prepareToRecreate(comicIdList);
 
     Mockito.verify(comicBookService, Mockito.times(1)).prepareForRecreation(comicIdList);
   }
