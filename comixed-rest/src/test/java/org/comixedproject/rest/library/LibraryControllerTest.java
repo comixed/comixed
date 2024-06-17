@@ -19,7 +19,6 @@
 package org.comixedproject.rest.library;
 
 import static junit.framework.TestCase.*;
-import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.*;
 import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.JOB_PURGE_LIBRARY_START;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_TARGET_ARCHIVE;
@@ -128,28 +127,7 @@ public class LibraryControllerTest {
           new ConvertComicsRequest(TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_MARKED_PAGES),
           TEST_COMIC_BOOK_ID);
     } finally {
-      Mockito.verify(libraryService, Mockito.never()).prepareToRecreateComicBook(Mockito.anyLong());
-      Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(), Mockito.any());
-    }
-  }
-
-  @Test(expected = LibraryException.class)
-  public void testConvertSingleComicBookLibraryException() throws Exception {
-    Mockito.when(
-            configurationService.isFeatureEnabled(
-                ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS))
-        .thenReturn(false);
-    Mockito.doThrow(LibraryException.class)
-        .when(libraryService)
-        .prepareToRecreateComicBook(Mockito.anyLong());
-
-    try {
-      controller.convertSingleComicBooks(
-          new ConvertComicsRequest(TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_MARKED_PAGES),
-          TEST_COMIC_BOOK_ID);
-    } finally {
-      Mockito.verify(libraryService, Mockito.times(1))
-          .prepareToRecreateComicBook(TEST_COMIC_BOOK_ID);
+      Mockito.verify(libraryService, Mockito.never()).prepareToRecreate(Mockito.anyList());
       Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(), Mockito.any());
     }
   }
@@ -174,7 +152,8 @@ public class LibraryControllerTest {
     assertEquals(
         String.valueOf(TEST_DELETE_MARKED_PAGES), jobParameters.getString(JOB_DELETE_MARKED_PAGES));
 
-    Mockito.verify(libraryService, Mockito.times(1)).prepareToRecreateComicBook(TEST_COMIC_BOOK_ID);
+    Mockito.verify(libraryService, Mockito.times(1))
+        .prepareToRecreate(new ArrayList<>(Arrays.asList(TEST_COMIC_BOOK_ID)));
     Mockito.verify(jobLauncher, Mockito.times(1)).run(recreateComicFilesJob, jobParameters);
   }
 
@@ -190,8 +169,7 @@ public class LibraryControllerTest {
           httpSession,
           new ConvertComicsRequest(TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_MARKED_PAGES));
     } finally {
-      Mockito.verify(libraryService, Mockito.never())
-          .prepareToRecreateComicBooks(Mockito.anyList());
+      Mockito.verify(libraryService, Mockito.never()).prepareToRecreate(Mockito.anyList());
       Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(), Mockito.any());
     }
   }
@@ -216,7 +194,7 @@ public class LibraryControllerTest {
     assertEquals(
         String.valueOf(TEST_DELETE_MARKED_PAGES), jobParameters.getString(JOB_DELETE_MARKED_PAGES));
 
-    Mockito.verify(libraryService, Mockito.times(1)).prepareToRecreateComicBooks(selectedIds);
+    Mockito.verify(libraryService, Mockito.times(1)).prepareToRecreate(selectedIds);
     Mockito.verify(jobLauncher, Mockito.times(1)).run(recreateComicFilesJob, jobParameters);
   }
 
