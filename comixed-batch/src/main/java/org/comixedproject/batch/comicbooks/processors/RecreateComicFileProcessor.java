@@ -59,15 +59,20 @@ public class RecreateComicFileProcessor
         ArchiveType.forValue(this.jobParameters.getString(JOB_TARGET_ARCHIVE));
     final boolean removeDeletedPages =
         Boolean.parseBoolean(this.jobParameters.getString(JOB_DELETE_MARKED_PAGES));
-    try {
-      log.trace("Recreating comicBook files");
-      this.comicBookAdaptor.save(
-          comicBook,
-          archiveType,
-          removeDeletedPages,
-          this.configurationService.getOptionValue(CFG_LIBRARY_PAGE_RENAMING_RULE, ""));
-    } catch (AdaptorException error) {
-      log.error("Failed to recreate comic book file", error);
+    if (comicBook.getComicDetail().getFile().exists()
+        && comicBook.getComicDetail().getFile().isFile()) {
+      try {
+        log.trace("Recreating comicBook files");
+        this.comicBookAdaptor.save(
+            comicBook,
+            archiveType,
+            removeDeletedPages,
+            this.configurationService.getOptionValue(CFG_LIBRARY_PAGE_RENAMING_RULE, ""));
+      } catch (AdaptorException error) {
+        log.error("Failed to recreate comic book file", error);
+      }
+    } else {
+      log.error("Can't recreate file: {}", comicBook.getComicDetail().getFile().getAbsoluteFile());
     }
     return comicBook;
   }

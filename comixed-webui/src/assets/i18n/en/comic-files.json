@@ -63,6 +63,7 @@
       "load-page-hash-step": "Loading Page Hashes",
       "mark-blocked-page-step": "Marking Pages With Blocked Hash",
       "move-comic-files-step": "Moving Comic Files",
+      "recreating-comic-file-step": "Recreating Comic Files",
       "remove-deleted-comic-books-step": "Removing Deleted Comic Books",
       "subtitle": "Processed {processed} Of {total} Comics ({percentage}%)",
       "update-metadata-step": "Update Comic Book Metadata",

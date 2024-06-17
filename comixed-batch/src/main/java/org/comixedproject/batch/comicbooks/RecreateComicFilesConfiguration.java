@@ -19,6 +19,8 @@
 package org.comixedproject.batch.comicbooks;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.batch.comicbooks.listeners.RecreateComicFileChunkListener;
+import org.comixedproject.batch.comicbooks.listeners.RecreatingComicFilesJobListener;
 import org.comixedproject.batch.comicbooks.processors.RecreateComicFileProcessor;
 import org.comixedproject.batch.comicbooks.readers.RecreateComicFileReader;
 import org.comixedproject.batch.comicbooks.writers.RecreateComicFileWriter;
@@ -53,10 +55,12 @@ public class RecreateComicFilesConfiguration {
   @Bean(name = "recreateComicFilesJob")
   public Job recreateComicFilesJob(
       final JobRepository jobRepository,
+      final RecreatingComicFilesJobListener listener,
       @Qualifier("recreateComicFileStep") final Step recreateComicFileStep,
       @Qualifier("processComicBooksJobStep") final Step processComicBooksJobStep) {
     return new JobBuilder("recreateComicFilesJob", jobRepository)
         .incrementer(new RunIdIncrementer())
+        .listener(listener)
         .start(recreateComicFileStep)
         .next(processComicBooksJobStep)
         .build();
@@ -68,12 +72,14 @@ public class RecreateComicFilesConfiguration {
       final PlatformTransactionManager platformTransactionManager,
       final RecreateComicFileReader reader,
       final RecreateComicFileProcessor processor,
-      final RecreateComicFileWriter writer) {
+      final RecreateComicFileWriter writer,
+      final RecreateComicFileChunkListener listener) {
     return new StepBuilder("recreateComicFileStep", jobRepository)
         .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
+        .listener(listener)
         .build();
   }
 }

@@ -298,6 +298,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     } else {
       comic.getComicDetail().setComicState(state.getId());
       comic.setLastModifiedOn(new Date());
+      comic.updatePageNumbers();
       final ComicBook updated = ComicBookService.this.save(comic);
       log.trace("Publishing comic  update");
       try {
@@ -844,6 +845,11 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     this.comicBookRepository.markForOrganizationById(ids);
   }
 
+  /**
+   * Marks the specified comics for recreation.
+   *
+   * @param ids the comic ids
+   */
   @Transactional
   public void prepareForRecreation(final List<Long> ids) {
     this.comicBookRepository.markForRecreationById(ids);
@@ -897,5 +903,11 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   public long getUpdateMetadataCount() {
     log.debug("Getting the update metadata count");
     return this.comicBookRepository.getUpdateMetadataCount();
+  }
+
+  @Transactional
+  public long getRecreatingCount() {
+    log.debug("Getting the recreating count");
+    return this.comicBookRepository.getRecreatingCount();
   }
 }

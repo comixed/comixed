@@ -228,6 +228,10 @@ public class ComicBook {
 
   public void sortPages() {
     this.pages.sort((ComicPage p1, ComicPage p2) -> p1.getFilename().compareTo(p2.getFilename()));
+    this.updatePageNumbers();
+  }
+
+  public void updatePageNumbers() {
     for (int index = 0; index < this.pages.size(); index++) {
       this.pages.get(index).setPageNumber(index);
     }

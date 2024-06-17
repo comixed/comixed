@@ -135,7 +135,7 @@ public class LibraryController {
         deletePages);
 
     log.trace("Preparing to recreate comic book file");
-    this.libraryService.prepareToRecreateComicBook(comicBookId);
+    this.libraryService.prepareToRecreate(new ArrayList<>(Arrays.asList(comicBookId)));
 
     this.doStartConversionBatchProcess(archiveType, deletePages);
   }
@@ -176,7 +176,7 @@ public class LibraryController {
           deletePages);
 
       log.trace("Preparing to recreate comic files");
-      this.libraryService.prepareToRecreateComicBooks(idList);
+      this.libraryService.prepareToRecreate(idList);
 
       this.doStartConversionBatchProcess(archiveType, deletePages);
 

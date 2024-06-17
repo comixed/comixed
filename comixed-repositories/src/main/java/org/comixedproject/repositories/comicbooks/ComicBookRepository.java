@@ -594,4 +594,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
 
   @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.updateMetadata IS TRUE")
   long getUpdateMetadataCount();
+
+  @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.recreating IS TRUE")
+  long getRecreatingCount();
 }

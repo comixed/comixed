@@ -22,11 +22,13 @@ import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertSame;
 
+import java.io.File;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,10 +51,16 @@ public class RecreateComicFileProcessorTest {
   @Mock private StepExecution stepExecution;
   @Mock private JobParameters jobParameters;
   @Mock private ComicBookAdaptor comicBookAdaptor;
+  @Mock private File comicFile;
+  @Mock private ComicDetail comicDetail;
   @Mock private ComicBook comicBook;
 
   @Before
-  public void setUp() throws AdaptorException {
+  public void setUp() {
+    Mockito.when(comicFile.exists()).thenReturn(true);
+    Mockito.when(comicFile.isFile()).thenReturn(true);
+    Mockito.when(comicDetail.getFile()).thenReturn(comicFile);
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(stepExecution.getJobParameters()).thenReturn(jobParameters);
     Mockito.when(jobParameters.getString(RecreateComicFilesConfiguration.JOB_TARGET_ARCHIVE))
         .thenReturn(TEST_TARGET_ARCHIVE_NAME);
@@ -97,6 +105,34 @@ public class RecreateComicFileProcessorTest {
     Mockito.verify(comicBook, Mockito.never()).removeDeletedPages();
     Mockito.verify(comicBookAdaptor, Mockito.times(1))
         .save(comicBook, TEST_TARGET_ARCHIVE, false, TEST_PAGE_RENAMING_RULE);
+  }
+
+  @Test
+  public void testProcessSourceNotFound() throws Exception {
+    Mockito.when(comicFile.exists()).thenReturn(false);
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+
+    Mockito.verify(comicBook, Mockito.never()).removeDeletedPages();
+    Mockito.verify(comicBookAdaptor, Mockito.never())
+        .save(Mockito.any(), Mockito.any(), Mockito.anyBoolean(), Mockito.anyString());
+  }
+
+  @Test
+  public void testProcessSourceNotFile() throws Exception {
+    Mockito.when(comicFile.isFile()).thenReturn(false);
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+
+    Mockito.verify(comicBook, Mockito.never()).removeDeletedPages();
+    Mockito.verify(comicBookAdaptor, Mockito.never())
+        .save(Mockito.any(), Mockito.any(), Mockito.anyBoolean(), Mockito.anyString());
   }
 
   @Test
