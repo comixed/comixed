@@ -99,7 +99,7 @@
     "uuid": "^9.0.1",
     "webpack": "5.76.0",
     "webpack-subresource-integrity": "^1.5.1",
-    "ws": "^7.4.6",
+    "ws": "^7.5.10",
     "xmlhttprequest-ssl": "^1.6.1",
     "zone.js": "~0.14.6"
   },
