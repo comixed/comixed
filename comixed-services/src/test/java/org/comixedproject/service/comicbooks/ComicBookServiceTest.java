@@ -1280,15 +1280,14 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetComicBooksForProcessing() {
-    Mockito.when(comicBookRepository.getComicBooksForProcessing()).thenReturn(comicBookList);
+  public void testGetUnprocessedComicBookCount() {
+    Mockito.when(comicBookRepository.getUnprocessedComicBookCount()).thenReturn(TEST_COMIC_COUNT);
 
-    final List<ComicBook> result = service.getComicBooksForProcessing();
+    final long result = service.getUnprocessedComicBookCount();
 
-    assertNotNull(result);
-    assertSame(comicBookList, result);
+    assertEquals(TEST_COMIC_COUNT, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).getComicBooksForProcessing();
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getUnprocessedComicBookCount();
   }
 
   @Test

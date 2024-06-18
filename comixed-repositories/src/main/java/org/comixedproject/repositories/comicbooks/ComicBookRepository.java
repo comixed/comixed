@@ -579,13 +579,13 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   List<ComicBook> loadByComicDetailId(@Param("comicDetailIds") List comicDetailIds);
 
   /**
-   * Returns the list of all comic book records that are for unprocessed comics not in a batch.
+   * Returns the number of unprocessed comic books.
    *
    * @return the list of comic books
    */
   @Query(
-      "SELECT b FROM ComicBook b WHERE b.id IN (select d.comicBook.id FROM ComicDetail d WHERE d.comicState = 'UNPROCESSED')")
-  List<ComicBook> getComicBooksForProcessing();
+      "SELECT COUNT(b) FROM ComicBook b WHERE b.id IN (select d.comicBook.id FROM ComicDetail d WHERE d.comicState = 'UNPROCESSED')")
+  long getUnprocessedComicBookCount();
 
   @Modifying
   @Query(

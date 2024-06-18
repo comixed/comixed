@@ -18,9 +18,7 @@
 
 import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.*;
 
-import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.Job;
@@ -59,8 +57,8 @@ public class ProcessComicBooksInitiator {
   @Scheduled(fixedDelayString = "${comixed.batch.process-comic-books.period}")
   public void execute() {
     log.debug("Looking for unprocessed comic books");
-    final List<ComicBook> comicBooks = this.comicBookService.getComicBooksForProcessing();
-    if (comicBooks.isEmpty()) {
+    final long unprocessedComicBookCount = this.comicBookService.getUnprocessedComicBookCount();
+    if (unprocessedComicBookCount == 0L) {
       log.debug("No comic books to be processed");
       return;
     }
