@@ -69,7 +69,7 @@ public class ProcessComicBooksInitiatorTest {
     for (int index = 0; index < 100; index++) comicBookList.add(Mockito.mock(ComicBook.class));
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
-    Mockito.when(comicBookService.getComicBooksForProcessing()).thenReturn(comicBookList);
+    Mockito.when(comicBookService.getUnprocessedComicBookCount()).thenReturn(1L);
   }
 
   @Test
@@ -78,7 +78,7 @@ public class ProcessComicBooksInitiatorTest {
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
           JobRestartException {
-    Mockito.when(comicBookService.getComicBooksForProcessing()).thenReturn(comicBookList);
+    Mockito.when(comicBookService.getUnprocessedComicBookCount()).thenReturn(1L);
 
     initiator.execute();
 
@@ -86,7 +86,7 @@ public class ProcessComicBooksInitiatorTest {
     assertNotNull(jobParameters);
     assertNotNull(jobParameters.getLong(PROCESS_COMIC_BOOKS_STARTED_JOB));
 
-    Mockito.verify(comicBookService, Mockito.times(1)).getComicBooksForProcessing();
+    Mockito.verify(comicBookService, Mockito.times(1)).getUnprocessedComicBookCount();
     Mockito.verify(jobLauncher, Mockito.times(1)).run(addPageToImageCacheJob, jobParameters);
   }
 
@@ -129,7 +129,7 @@ public class ProcessComicBooksInitiatorTest {
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
           JobRestartException {
-    comicBookList.clear();
+    Mockito.when(comicBookService.getUnprocessedComicBookCount()).thenReturn(0L);
 
     initiator.execute();
 
@@ -142,7 +142,7 @@ public class ProcessComicBooksInitiatorTest {
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
           JobRestartException {
-    Mockito.when(comicBookService.getComicBooksForProcessing()).thenReturn(comicBookList);
+    Mockito.when(comicBookService.getUnprocessedComicBookCount()).thenReturn(1L);
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenThrow(JobExecutionAlreadyRunningException.class);
 

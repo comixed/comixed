@@ -865,14 +865,14 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   }
 
   /**
-   * Returns all comic books that are unprocessed.
+   * Returns the number of unprocessed comic books.
    *
    * @return the comic books
    */
   @Transactional
-  public List<ComicBook> getComicBooksForProcessing() {
+  public long getUnprocessedComicBookCount() {
     log.debug("Loading unprocessed comic books");
-    return this.comicBookRepository.getComicBooksForProcessing();
+    return this.comicBookRepository.getUnprocessedComicBookCount();
   }
 
   /**
