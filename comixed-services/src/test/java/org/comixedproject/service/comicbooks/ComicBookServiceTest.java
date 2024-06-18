@@ -575,7 +575,7 @@ public class ComicBookServiceTest {
 
   @Test
   public void testFindComicsWithContentToLoad() {
-    Mockito.when(comicBookRepository.findUnprocessedComics(pageableCaptor.capture()))
+    Mockito.when(comicBookRepository.findComicsWithContentToLoad(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
     final List<ComicBook> result = service.findComicsWithContentToLoad(TEST_MAXIMUM_COMICS);
@@ -588,7 +588,7 @@ public class ComicBookServiceTest {
     assertEquals(0, pageable.getPageNumber());
     assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findUnprocessedComics(pageable);
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsWithContentToLoad(pageable);
   }
 
   @Test
