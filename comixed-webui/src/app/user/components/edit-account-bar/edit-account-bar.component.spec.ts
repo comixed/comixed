@@ -39,7 +39,6 @@ import {
   initialState as initialUserState,
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
-import { LIBRARY_LOAD_MAX_RECORDS } from '@app/comic-books/comic-books.constants';
 
 describe('EditAccountBarComponent', () => {
   const USER = USER_READER;
@@ -133,34 +132,6 @@ describe('EditAccountBarComponent', () => {
       it('clears password comparison validation', () => {
         expect(component.userForm.setValidators).toHaveBeenCalledWith(null);
       });
-    });
-  });
-
-  describe('when a password is entered', () => {
-    beforeEach(() => {
-      spyOn(component.userForm.controls.password, 'setValidators');
-      spyOn(component.userForm.controls.passwordVerify, 'setValidators');
-      spyOn(component.userForm, 'setValidators');
-      component.userForm.controls.password.setValue('1234');
-      component.onPasswordChanged();
-    });
-
-    it('enables password validation', () => {
-      expect(
-        component.userForm.controls.password.setValidators
-      ).toHaveBeenCalled();
-    });
-
-    it('enables password verify validation', () => {
-      expect(
-        component.userForm.controls.passwordVerify.setValidators
-      ).toHaveBeenCalled();
-    });
-
-    it('enables password comparison validation', () => {
-      expect(component.userForm.setValidators).toHaveBeenCalledWith(
-        passwordVerifyValidator
-      );
     });
   });
 
@@ -296,17 +267,6 @@ describe('EditAccountBarComponent', () => {
     });
   });
 
-  describe('when the component size changes', () => {
-    beforeEach(() => {
-      component.avatarWidth$.next(undefined);
-      component.onWindowResized({} as any);
-    });
-
-    it('sets the avatar width', () => {
-      expect(component.avatarWidth$.value).not.toBeNull();
-    });
-  });
-
   describe('deleting a user preference', () => {
     beforeEach(() => {
       spyOn(confirmationService, 'confirm').and.callFake(
@@ -337,23 +297,6 @@ describe('EditAccountBarComponent', () => {
       expect(
         component.dataSource.sortingDataAccessor(PREFERENCE, 'value')
       ).toEqual(PREFERENCE.value);
-    });
-  });
-
-  describe('changing the maximum records to load', () => {
-    const MAX_RECORDS = '5000';
-
-    beforeEach(() => {
-      component.onSaveMaxRecords(MAX_RECORDS);
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        saveUserPreference({
-          name: LIBRARY_LOAD_MAX_RECORDS,
-          value: MAX_RECORDS
-        })
-      );
     });
   });
 });

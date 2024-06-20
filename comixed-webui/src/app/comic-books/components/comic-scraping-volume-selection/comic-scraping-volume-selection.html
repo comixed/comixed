@@ -153,13 +153,14 @@
       </mat-card-content>
       <mat-card-actions>
         <button
-          mat-icon-button
-          color="primary"
+          mat-raised-button
+          color="accent"
           [matTooltip]="'scraping.tooltip.select-scraping-issue' | translate"
           (click)="onDecision(true, selectedVolume)"
           (keyup)="onDecision(true, selectedVolume)"
         >
           <mat-icon>thumb_up</mat-icon>
+          <mat-label>{{ "button.scrape" | translate }}</mat-label>
         </button>
       </mat-card-actions>
     </mat-card>

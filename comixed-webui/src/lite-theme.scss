@@ -3,8 +3,8 @@
 $lite-theme: mat.define-light-theme(
   (
     color: (
-      primary: mat.define-palette(mat.$deep-purple-palette),
-      accent: mat.define-palette(mat.$light-green-palette)
+      primary: mat.define-palette(mat.$blue-palette),
+      accent: mat.define-palette(mat.$yellow-palette)
     ),
     typography: mat.define-typography-config(),
     density: 0

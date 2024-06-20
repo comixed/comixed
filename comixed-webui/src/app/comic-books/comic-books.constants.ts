@@ -62,7 +62,6 @@ export const COMIC_BOOK_SELECTION_UPDATE_TOPIC =
 export const MISSING_VOLUME_PLACEHOLDER = '----';
 
 // user preferences
-export const LIBRARY_LOAD_MAX_RECORDS = 'library.load.max-records';
 export const DEFAULT_LIBRARY_LOAD_MAX_RECORDS = 1000;
 
 export const COMIC_TYPE_SELECTION_OPTIONS: SelectionOption<ComicType>[] = [
