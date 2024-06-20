@@ -1,4 +1,4 @@
-<mat-toolbar id="app-navigation-bar" class="cx-width-100" color="primary">
+<mat-toolbar id="app-navigation-bar" color="primary">
   <button
     id="toggle-sidebar-button"
     mat-icon-button
@@ -30,15 +30,6 @@
 
   <div class="cx-spacer"></div>
 
-  <a
-    *ngIf="!!user"
-    class="cx-toolbar-link cx-padding-right-5"
-    routerLinkActive="cx-toolbar-link-active"
-    (click)="onToggleAccountBar()"
-  >
-    {{ user.email }}
-  </a>
-  &nbsp;
   <button
     *ngIf="!!user"
     class="cx-toolbar-button cx-padding-5"
@@ -48,6 +39,15 @@
   >
     <img loading="lazy" ngxGravatar [alt]="user.email" [email]="user.email" />
   </button>
+  &nbsp;
+  <a
+    *ngIf="!!user"
+    class="cx-toolbar-link cx-padding-right-5"
+    routerLinkActive="cx-toolbar-link-active"
+    (click)="onToggleAccountBar()"
+  >
+    {{ user.email }}
+  </a>
 
   <button
     id="wiki-page-button"

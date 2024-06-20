@@ -1,11 +1,13 @@
 <cx-navigation-bar
+  class="cx-width-100"
   [user]="user"
   [sidebarOpened]="sidenav.opened"
+  [accountBarOpened]="accountBar.opened"
   (toggleSidebar)="sidenav.toggle($event)"
   (toggleAccountBar)="accountBar.toggle($event)"
 ></cx-navigation-bar>
 
-<div *ngIf="busy" class="cx-overlay cx-width-100 cx-height-100">
+<div *ngIf="busy" id="cx-busy-overlay">
   <div class="cx-centered cx-position-absolute">
     <img [src]="busyIconURL" alt="Busy, please wait..." />
   </div>
@@ -16,23 +18,23 @@
   class="cx-width-100 cx-height-100"
 >
   <mat-sidenav
+    id="app-sidenav-container"
     #sidenav
-    class="cx-padding-top-50 cx-padding-bottom-25"
     mode="over"
     (click)="sidenav.close()"
+    position="start"
   >
     <cx-side-navigation [user]="user"></cx-side-navigation>
   </mat-sidenav>
 
   <mat-sidenav
+    id="app-account-bar-container"
     #accountBar
-    class="cx-width-50 cx-min-width-50 cx-padding-top-50 cx-padding-bottom-25"
     mode="over"
     position="end"
   >
     <cx-edit-account-bar
       *ngIf="!!user"
-      class="cx-padding-5"
       [user]="user"
       (closeSidebar)="accountBar.close()"
     ></cx-edit-account-bar>

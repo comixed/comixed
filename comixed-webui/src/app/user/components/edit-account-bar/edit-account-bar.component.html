@@ -1,34 +1,33 @@
-<div *ngIf="!!user" #avatarContainer class="cx-width-100">
-  <div class="cx-width-100 cx-padding-left-15">
-    <img
-      id="cx-user-avatar"
-      loading="lazy"
-      class="cx-float-left cx-margin-left-5"
-      ngxGravatar
-      [size]="avatarWidth$ | async"
-      [alt]="user.email"
-      [email]="user.email"
-      [round]="true"
-    />
-    <div>
-      <h2>{{ user?.email }}</h2>
-      <h3>
-        {{
-          "user.edit-current-user.label.member-since"
-            | translate: { date: user?.first_login_date | date: "mediumDate" }
-        }}
-      </h3>
-      <h3>
-        {{
-          "user.edit-current-user.label.last-logged-in"
-            | translate: { date: user?.last_login_date | date: "medium" }
-        }}
-      </h3>
-    </div>
-  </div>
+<img
+  id="cx-user-avatar"
+  loading="lazy"
+  class="cx-float-left cx-margin-left-5"
+  ngxGravatar
+  [size]="avatarWidth$ | async"
+  [alt]="user?.email"
+  [email]="user?.email"
+  [round]="true"
+/>
+<div>
+  <h2>{{ user?.email }}</h2>
+  <h3>
+    {{
+      "user.edit-current-user.label.member-since"
+        | translate: { date: user?.first_login_date | date: "mediumDate" }
+    }}
+  </h3>
+  <h3>
+    {{
+      "user.edit-current-user.label.last-logged-in"
+        | translate: { date: user?.last_login_date | date: "medium" }
+    }}
+  </h3>
+</div>
+<!-- /div -->
 
-  <div class="cx-width-100 cx-padding-left-15">
-    <form [formGroup]="userForm">
+<form [formGroup]="userForm">
+  <mat-card>
+    <mat-card-content>
       <mat-form-field class="cx-width-100 cx-padding-5">
         <mat-label>
           {{ "user.edit-current-user.label.email" | translate }}
@@ -100,26 +99,13 @@
           </span>
         </mat-error>
       </mat-form-field>
-      <mat-form-field class="cx-width-100 cx-padding-5">
-        <mat-label>
-          {{ "user.preference.label.max-records" | translate }}
-        </mat-label>
-        <mat-select
-          id="library-load-max-records-options"
-          formControlName="libraryLoadMaxRecords"
-          (selectionChange)="onSaveMaxRecords($event.value)"
-        >
-          <mat-option *ngFor="let option of maxRecordsOptions" [value]="option">
-            {{ option }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </form>
-    <div class="cx-action-button-container-horizontal">
+    </mat-card-content>
+    <mat-card-actions>
       <button
-        mat-flat-button
         id="edit-user-save-button"
+        mat-raised-button
         class="cx-action-button"
+        color="accent"
         [disabled]="!userForm.valid || busy"
         [class.cx-spinner]="busy"
         (click)="onSaveChanges()"
@@ -128,9 +114,10 @@
         <mat-label>{{ "button.save" | translate }}</mat-label>
       </button>
       <button
-        mat-flat-button
         id="edit-user-reset-button"
+        mat-raised-button
         class="cx-action-button"
+        color="primary"
         [disabled]="!userForm.dirty"
         (click)="onResetChanges()"
       >
@@ -138,53 +125,54 @@
         <mat-label>{{ "button.reset" | translate }}</mat-label>
       </button>
       <button
-        mat-flat-button
         id="edit-user-close-button"
+        mat-raised-button
         class="cx-action-button"
+        color="warn"
         (click)="onCloseForm()"
       >
         <mat-icon>close</mat-icon>
         <mat-label>{{ "button.close" | translate }}</mat-label>
       </button>
-    </div>
-  </div>
+    </mat-card-actions>
+  </mat-card>
+</form>
 
-  <mat-table [dataSource]="dataSource" matSort>
-    <ng-container matColumnDef="name">
-      <mat-header-cell mat-sort-header *matHeaderCellDef>
-        {{ "user.user-preferences.label.preference-name" | translate }}
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <span class="cx-width-100 cx-text-nowrap">{{ entry.name }}</span>
-      </mat-cell>
-    </ng-container>
+<mat-table [dataSource]="dataSource" matSort>
+  <ng-container matColumnDef="name">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "user.user-preferences.label.preference-name" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">{{ entry.name }}</span>
+    </mat-cell>
+  </ng-container>
 
-    <ng-container matColumnDef="value">
-      <mat-header-cell mat-sort-header *matHeaderCellDef>
-        {{ "user.user-preferences.label.preference-value" | translate }}
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <span class="cx-width-100 cx-text-nowrap">{{ entry.value }}</span>
-      </mat-cell>
-    </ng-container>
+  <ng-container matColumnDef="value">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "user.user-preferences.label.preference-value" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">{{ entry.value }}</span>
+    </mat-cell>
+  </ng-container>
 
-    <ng-container matColumnDef="actions">
-      <mat-header-cell mat-sort-header *matHeaderCellDef></mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <button
-          id="'delete-preference-value-' + entry.name + '-button'"
-          mat-icon-button
-          [matTooltip]="
-            'user.user-preferences.tooltip.delete-preference' | translate
-          "
-          (click)="onDeletePreference(entry.name)"
-        >
-          <mat-icon>delete</mat-icon>
-        </button>
-      </mat-cell>
-    </ng-container>
+  <ng-container matColumnDef="actions">
+    <mat-header-cell mat-sort-header *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <button
+        id="'delete-preference-value-' + entry.name + '-button'"
+        mat-icon-button
+        [matTooltip]="
+          'user.user-preferences.tooltip.delete-preference' | translate
+        "
+        (click)="onDeletePreference(entry.name)"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
 
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-  </mat-table>
-</div>
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+</mat-table>

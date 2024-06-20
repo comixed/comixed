@@ -51,9 +51,7 @@
       "effect-success": "You've been logged out."
     },
     "preference": {
-      "label": {
-        "max-records": "Max. Records Per Load Request"
-      }
+      "label": {}
     },
     "reset-user-changes": {
       "confirmation-message": "Discard changes to your account?",
