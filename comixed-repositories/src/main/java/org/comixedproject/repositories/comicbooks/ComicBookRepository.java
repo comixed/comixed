@@ -597,4 +597,8 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
 
   @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.recreating IS TRUE")
   long getRecreatingCount();
+
+  @Query(
+      "SELECT CASE WHEN (COUNT(c) > 0) THEN true ELSE FALSE END FROM ComicBook c WHERE c.comicDetail.filename = :filename")
+  boolean filenameFound(@Param("filename") String filename);
 }

@@ -55,7 +55,7 @@ public class ComicStateMachineConfiguration
       throws Exception {
     states
         .withStates()
-        .initial(ComicState.ADDED)
+        .initial(ComicState.CREATED)
         .end(ComicState.REMOVED)
         .states(EnumSet.allOf(ComicState.class));
   }
@@ -64,17 +64,11 @@ public class ComicStateMachineConfiguration
   public void configure(final StateMachineTransitionConfigurer<ComicState, ComicEvent> transitions)
       throws Exception {
     transitions
+        // created
         .withExternal()
-        .source(ComicState.ADDED)
+        .source(ComicState.CREATED)
         .target(ComicState.UNPROCESSED)
-        .event(ComicEvent.recordInserted)
-        // newly added comic is reading to be imported
-        .and()
-        .withExternal()
-        .source(ComicState.ADDED)
-        .target(ComicState.UNPROCESSED)
-        .event(ComicEvent.readyForProcessing)
-        .action(prepareComicForProcessingAction)
+        .event(ComicEvent.readygForProcessing)
         // rescan a stable comic
         .and()
         .withExternal()
@@ -234,12 +228,6 @@ public class ComicStateMachineConfiguration
         .and()
         .withExternal()
         .source(ComicState.UNPROCESSED)
-        .target(ComicState.DELETED)
-        .event(ComicEvent.deleteComic)
-        // the comic was marked for deletion
-        .and()
-        .withExternal()
-        .source(ComicState.ADDED)
         .target(ComicState.DELETED)
         .event(ComicEvent.deleteComic)
         // the comic was marked for deletion
