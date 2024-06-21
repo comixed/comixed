@@ -1,4 +1,10 @@
-@import 'styles';
+@use 'variables' as *;
+
+#comic-detail-filter {
+  width: calc(100% - calc(2 * $cx-margin-width));
+  margin: $cx-margin-width;
+  border: 1px solid var(--mat-app-text-color);
+}
 
 mat-row {
   height: $cx-row-height !important;
@@ -8,11 +14,6 @@ mat-row {
 .cx-missing-comic-file {
   color: #fefefe;
   background-color: #cd5c5c;
-}
-
-.cx-selected-comic-book {
-  color: #0e0e0e;
-  background-color: #b6cd5c;
 }
 
 .mat-column-selection {

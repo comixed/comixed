@@ -1,4 +1,6 @@
-@import 'styles';
+@use "variables" as *;
+
+@use 'variables' as *;
 
 .mat-column-name {
   width: $cx-column-large;

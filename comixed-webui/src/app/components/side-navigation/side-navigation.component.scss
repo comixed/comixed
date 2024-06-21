@@ -1,4 +1,4 @@
-@import 'styles';
+@use 'variables' as *;
 
 .active-nav-button {
   background-color: $cx-accent-background-color;
