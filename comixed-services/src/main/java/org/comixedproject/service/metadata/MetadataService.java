@@ -23,11 +23,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.metadata.MetadataAdaptorProvider;
 import org.comixedproject.metadata.MetadataAdaptorRegistry;
 import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.adaptors.MetadataAdaptor;
@@ -432,5 +430,24 @@ public class MetadataService {
     }
     log.trace("No cached entries found");
     return null;
+  }
+
+  /**
+   * Returns the metadata provider that supports that uses the provided web address.
+   *
+   * @param webAddress the web address
+   * @return the provider
+   */
+  public MetadataAdaptorProvider findForWebAddress(final String webAddress) {
+    final Optional<MetadataAdaptorProvider> result =
+        this.metadataAdaptorRegistry.getAdaptors().stream()
+            .filter(adaptor -> adaptor.supportedReference(webAddress))
+            .findFirst();
+    if (result.isEmpty()) {
+      log.debug("Web address not supported by any adaptor");
+      return null;
+    }
+    log.debug("Found supporting metadata adaptor");
+    return result.get();
   }
 }

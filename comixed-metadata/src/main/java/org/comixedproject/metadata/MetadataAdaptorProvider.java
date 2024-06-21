@@ -62,4 +62,11 @@ public interface MetadataAdaptorProvider {
    * @return the properties list
    */
   Set<String> getProperties();
+
+  /**
+   * Returns if the adaptor supports reading data from the given web address.
+   *
+   * @return true if the address is supported
+   */
+  boolean supportedReference(String webAddress);
 }

@@ -14,5 +14,6 @@
     <include file="/db/migrations/2.1/006_2008_added_indices_for_comic_loading.xml"/>
     <include file="/db/migrations/2.1/007_2061_add_index_to_comic_books_recreating.xml"/>
     <include file="/db/migrations/2.1/008_2034_removed_comic_file_descriptors.xml"/>
+    <include file="/db/migrations/2.1/010_2068_added_comic_details_web_address.xml"/>
 
 </databaseChangeLog>

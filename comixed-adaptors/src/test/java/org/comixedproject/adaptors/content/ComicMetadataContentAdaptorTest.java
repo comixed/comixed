@@ -22,7 +22,6 @@ import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKN
 import static junit.framework.TestCase.*;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -51,6 +50,7 @@ public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
   private static final String TEST_VOLUME_NAME = "2011";
   private static final String TEST_ISSUE_NUMBER = "24";
   private static final String TEST_TITLE = "Test Title";
+  private static final String TEST_WEB_ADDRESS = "http://comicvine.gamespot.com/foo/71765-12971/";
   private static final String TEST_DESCRIPTION = "Test summary <em>inner tag</em>";
   private static final String TEST_METADATA_SOURCE_NAME = "ComicVine";
   private static final String TEST_METADATA_REFERENCE_ID = "12971";
@@ -91,6 +91,7 @@ public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
     assertEquals(comicBook.getComicDetail().getVolume(), TEST_VOLUME_NAME);
     assertEquals(comicBook.getComicDetail().getIssueNumber(), TEST_ISSUE_NUMBER);
     assertEquals(comicBook.getComicDetail().getTitle(), TEST_TITLE);
+    assertEquals(comicBook.getComicDetail().getWebAddress(), TEST_WEB_ADDRESS);
     assertEquals(comicBook.getComicDetail().getDescription(), TEST_DESCRIPTION);
 
     assertEquals(TEST_METADATA_SOURCE_NAME, comicBook.getMetadataSourceName());
@@ -119,12 +120,6 @@ public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
 
   @Test
   public void testCreateContent() throws ContentAdaptorException, IOException {
-    final ComicInfo expected =
-        adaptor
-            .xmlConverter
-            .getObjectMapper()
-            .readValue(new FileInputStream(TEST_COMICINFO_FILE_COMPLETE), ComicInfo.class);
-
     adaptor.loadContent(
         comicBook,
         TEST_COMICINFO_FILE_COMPLETE,
