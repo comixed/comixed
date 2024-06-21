@@ -95,6 +95,7 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor
         comicBook.setMetadataReferenceId(comicInfo.getMetadata().getReferenceId());
       }
       final ComicDetail detail = comicBook.getComicDetail();
+      detail.setWebAddress(comicInfo.getWeb());
       log.debug("Clearing comic tags");
       detail.getTags().clear();
       this.commandSeparatedList(comicInfo.getCharacters())

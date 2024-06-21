@@ -226,6 +226,13 @@ public class ComicDetail {
   @Setter
   private String title;
 
+  @Column(name = "web_address", length = 256)
+  @JsonProperty("webAddress")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  @Setter
+  private String webAddress;
+
   @Column(name = "notes", length = 128, nullable = true, updatable = true)
   @Lob
   @JsonProperty("notes")
