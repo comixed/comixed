@@ -1,6 +1,6 @@
+@use "./variables" as *;
 @use "./theme" as theme;
 @use "@angular/material/prebuilt-themes/deeppurple-amber.css";
-@use "./variables";
 
 // theming
 
@@ -11,9 +11,6 @@
 .lite-theme {
   @include theme.create-light-theme();
 }
-
-$cx-accent-background-color: var(--mat-badge-background-color) !important;
-$cx-accent-color: var(--mat-badge-text-color) !important;
 
 html,
 body {
@@ -59,9 +56,6 @@ h4 {
 }
 
 // component sizes
-
-$cx-min-image-width: 450px;
-$cx-max-image-width: 600px;
 
 .cx-width-5 {
   width: 5% !important;
@@ -303,12 +297,6 @@ $cx-max-image-width: 600px;
 
 // table column widths
 
-$cx-column-small: 50px;
-$cx-column-smallish: 100px;
-$cx-column-medium: 150px;
-$cx-column-large: 325px;
-$cx-row-height: 50px;
-
 .cx-table-column-medium {
   width: $cx-column-medium;
   max-width: $cx-column-medium;
@@ -322,9 +310,21 @@ th {
   font-weight: bolder;
 }
 
-.cx-selected-row {
-  background-color: var(--accent-lighter-color) !important;
-  color: var(--text-accent-lighter-color) !important;
+.mat-mdc-row:nth-child(odd) {
+  color: var(--mat-table-row-item-label-text-color);
+  background-color: var(--mat-table-background-color);
+}
+
+.mat-mdc-row:nth-child(even) {
+  filter: brightness(98%);
+}
+
+.mat-mdc-row.cx-selected-row {
+  filter: brightness(90%);
+}
+
+.mat-mdc-row:hover {
+  border: solid var(--mat-table-row-item-outline-color);
 }
 
 // text layout

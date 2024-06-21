@@ -1,6 +1,8 @@
+@use "variables" as *;
+
 @use '@angular/material' as mat;
 
-$cx-bottom-margin: 2rem;
+@use 'variables' as *;
 
 #cx-busy-overlay {
   top: 0;
@@ -23,11 +25,16 @@ $cx-bottom-margin: 2rem;
 }
 
 #app-sidenav-container {
-  width: min(50vw, max(20vw, 300px));
+  width: min(50vw, max(20vw, $cx-smallest-width));
   margin-bottom: $cx-bottom-margin;
 }
 
 #app-account-bar-container {
   width: min(100vw, max(25vw, 500px));
   margin-bottom: $cx-bottom-margin;
+}
+
+#app-content-container {
+  width: calc(100% - calc(2 * $cx-margin-width));
+  margin: $cx-margin-width;
 }

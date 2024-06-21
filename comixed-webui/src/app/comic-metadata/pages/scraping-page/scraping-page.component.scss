@@ -1,4 +1,4 @@
-@import 'styles';
+@use 'variables' as *;
 
 mat-row {
   height: $cx-row-height !important;

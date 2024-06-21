@@ -1,4 +1,4 @@
-@import 'styles';
+@use 'variables' as *;
 
 .mat-column-step-name {
   width: $cx-column-large;

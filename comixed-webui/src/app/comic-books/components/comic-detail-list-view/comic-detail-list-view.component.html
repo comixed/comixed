@@ -26,10 +26,7 @@
   </mat-card>
 </div>
 
-<div
-  *ngIf="showComicFilterPopup"
-  class="cx-hover cx-centered cx-width-25 cx-border-primary-1"
->
+<div id="comic-detail-filter" *ngIf="showComicFilterPopup">
   <cx-comic-detail-filter
     [comicDetails]="comics"
     [coverYears]="coverYears"
@@ -88,6 +85,7 @@
   <ng-container matColumnDef="selection">
     <mat-header-cell *matHeaderCellDef>
       <mat-checkbox
+        color="primary"
         [checked]="
           selectedIds.length > 0 &&
           selectedIds.length === dataSource.data.length
@@ -99,6 +97,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <mat-checkbox
+        color="primary"
         [checked]="entry.selected"
         (change)="onSetSelectedState(entry, $event.checked)"
         (keyup)="onSetSelectedState(entry, $event.checked)"
@@ -304,9 +303,8 @@
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row
     *matRowDef="let row; columns: displayedColumns"
-    [class.cx-selected-row]="selectedIds.includes(row.id)"
+    [class.cx-selected-row]="selectedIds.includes(row.id) || row.selected"
     [class.cx-missing-comic-file]="row.item.missing"
-    [class.cx-selected-comic-book]="!row.item.missing && row.selected"
     [routerLink]="['/comics', row.item.comicId]"
   ></mat-row>
   <tr class="mat-row" *matNoDataRow>

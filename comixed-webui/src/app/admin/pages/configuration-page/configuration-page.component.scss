@@ -1,4 +1,4 @@
-@import 'styles';
+@use 'variables' as *;
 
 .mat-column-created-on {
   width: $cx-column-medium;
