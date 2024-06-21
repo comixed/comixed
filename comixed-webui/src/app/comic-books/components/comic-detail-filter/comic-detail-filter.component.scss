@@ -1,0 +1,5 @@
+@use "variables" as *;
+
+.cx-filter-field-input {
+  width: min(100%, max(25%, $cx-smallest-width));
+}

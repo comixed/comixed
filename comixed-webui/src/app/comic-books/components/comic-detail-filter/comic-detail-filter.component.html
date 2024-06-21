@@ -1,6 +1,8 @@
 <form [formGroup]="filterForm">
   <mat-card>
     <mat-card-content>
+      <h3>{{ "comic-detail-filter.text.form-title" | translate }}</h3>
+
       <mat-form-field class="cx-width-100">
         <input
           matInput
@@ -13,12 +15,7 @@
         />
       </mat-form-field>
 
-      <span class="cx-width-100 cx-centered-horiz cx-larg">
-        <strong>{{ "comic-detail-filter.text.form-title" | translate }}</strong>
-      </span>
-      <br />
-
-      <mat-form-field class="cx-width-50">
+      <mat-form-field class="cx-filter-field-input">
         <mat-label>{{ "filtering.label.year" | translate }}</mat-label>
         <mat-select
           (selectionChange)="
@@ -35,7 +32,7 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-form-field class="cx-width-50">
+      <mat-form-field class="cx-filter-field-input">
         <mat-label>{{ "filtering.label.month" | translate }}</mat-label>
         <mat-select
           (selectionChange)="
@@ -52,7 +49,7 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-form-field class="cx-width-50">
+      <mat-form-field class="cx-filter-field-input">
         <mat-label>{{ "filtering.label.archive-type" | translate }}</mat-label>
         <mat-select
           (selectionChange)="
@@ -69,7 +66,7 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-form-field class="cx-width-50">
+      <mat-form-field class="cx-filter-field-input">
         <mat-label>{{ "filtering.label.comic-type" | translate }}</mat-label>
         <mat-select
           (selectionChange)="

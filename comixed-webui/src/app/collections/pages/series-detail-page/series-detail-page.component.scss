@@ -1,4 +1,4 @@
-@import 'styles';
+@use 'variables' as *;
 
 .mat-column-publisher {
   width: $cx-column-medium;

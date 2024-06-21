@@ -1,4 +1,4 @@
-@import 'styles';
+@use 'variables' as *;
 
 thead {
   background-color: $cx-accent-background-color;
