@@ -335,17 +335,6 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   }
 
   /**
-   * Retrieves inserted comics that have not been processed.
-   *
-   * @param count the number of comics to return
-   * @return the comics
-   */
-  public List<ComicBook> findInsertedComics(final int count) {
-    log.trace("Loading newly inserted comics");
-    return this.comicBookRepository.findForState(ComicState.ADDED, PageRequest.of(0, count));
-  }
-
-  /**
    * Retrieves the number of unprocessed comics that are waiting to have their contents loaded.
    *
    * @return the count
@@ -909,5 +898,10 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   public long getRecreatingCount() {
     log.debug("Getting the recreating count");
     return this.comicBookRepository.getRecreatingCount();
+  }
+
+  @Transactional
+  public boolean filenameFound(final String filename) {
+    return this.comicBookRepository.filenameFound(filename);
   }
 }

@@ -24,10 +24,8 @@ package org.comixedproject.state.comicbooks;
  * @author Darryl L. Pierce
  */
 public enum ComicEvent {
-  // the record has been inserted into the database
-  recordInserted,
-  // the record is ready for processing
-  readyForProcessing,
+  // the comic book was created
+  readygForProcessing,
   // the file entries have been loaded
   fileContentsLoaded,
   // rescan a comic,

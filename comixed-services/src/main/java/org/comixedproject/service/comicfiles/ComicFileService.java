@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
@@ -31,14 +30,15 @@ import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicfiles.ComicFile;
-import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.comixedproject.model.comicfiles.ComicFileGroup;
-import org.comixedproject.repositories.comicfiles.ComicFileDescriptorRepository;
+import org.comixedproject.model.metadata.FilenameMetadata;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.metadata.FilenameScrapingRuleService;
+import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -52,8 +52,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ComicFileService {
   @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private ComicBookService comicBookService;
-  @Autowired private ComicFileDescriptorRepository comicFileDescriptorRepository;
+  @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private ComicFileAdaptor comicFileAdaptor;
+  @Autowired private FilenameScrapingRuleService filenameScrapingRuleService;
 
   public byte[] getImportFileCover(final String comicArchive) throws AdaptorException {
     log.debug("Getting first image from archive: {}", comicArchive);
@@ -136,15 +137,14 @@ public class ComicFileService {
   }
 
   private boolean canBeImported(final File file) throws IOException {
-    boolean isComic = this.comicFileAdaptor.isComicFile(file);
+    if (!this.comicFileAdaptor.isComicFile(file)) {
+      log.debug("Not a comic file: }", file.getAbsolutePath());
+      return false;
+    }
 
-    final String filePath = file.getCanonicalPath().replace("\\", "/");
+    final String filename = file.getCanonicalPath().replace("\\", "/");
     log.debug("Checking if comicBook file is already in the database");
-    final ComicBook comicBook = this.comicBookService.findByFilename(filePath);
-    final ComicFileDescriptor comicDescriptor =
-        this.comicFileDescriptorRepository.findByFilename(filePath);
-
-    return isComic && Objects.isNull(comicBook) && Objects.isNull(comicDescriptor);
+    return this.comicBookService.filenameFound(filename) == false;
   }
 
   /**
@@ -152,66 +152,32 @@ public class ComicFileService {
    *
    * @param filenames the comic filenames
    */
+  @Async
   @Transactional
   public void importComicFiles(final List<String> filenames) {
     for (int index = 0; index < filenames.size(); index++) {
       final String filename = filenames.get(index);
-      if (Objects.isNull(this.comicFileDescriptorRepository.findByFilename(filename))) {
-        log.debug("Saving file descriptor: {}", filename);
-        this.comicFileDescriptorRepository.save(new ComicFileDescriptor(filename));
+      if (this.comicBookService.filenameFound(filename) == false) {
+        try {
+          log.debug("Creating comicBook: filename={}", filename);
+          final ComicBook comicBook = this.comicBookAdaptor.createComic(filename);
+          log.trace("Scraping comicBook filename");
+          final FilenameMetadata metadata =
+              this.filenameScrapingRuleService.loadFilenameMetadata(
+                  comicBook.getComicDetail().getBaseFilename());
+          if (metadata.isFound()) {
+            log.trace("Scraping rule applied");
+            comicBook.getComicDetail().setSeries(metadata.getSeries());
+            comicBook.getComicDetail().setVolume(metadata.getVolume());
+            comicBook.getComicDetail().setIssueNumber(metadata.getIssueNumber());
+            comicBook.getComicDetail().setCoverDate(metadata.getCoverDate());
+          }
+          log.debug("Firing new comic book event: {}", filename);
+          this.comicStateHandler.fireEvent(comicBook, ComicEvent.readygForProcessing);
+        } catch (AdaptorException error) {
+          log.error("Failed to create comic for file: " + filename, error);
+        }
       }
     }
-  }
-
-  /**
-   * Returns the number of comic file descriptors.
-   *
-   * @return the count
-   */
-  @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-  public long getUnimportedComicFileDescriptorCount() {
-    log.debug("Getting unimported comic file descriptor count");
-    return this.comicFileDescriptorRepository.getUnimportedComicFileDescriptorCount();
-  }
-
-  /**
-   * Returns all comic file descriptor records.
-   *
-   * @param pageSize the number of descriptors to return
-   * @return the descriptors
-   */
-  @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-  public List<ComicFileDescriptor> findUnprocessedComicFileDescriptors(final int pageSize) {
-    log.debug("Loading all comic file descriptors");
-    return this.comicFileDescriptorRepository.findUnprocessedDescriptors(
-        PageRequest.of(0, pageSize));
-  }
-
-  /**
-   * Deletes the descriptor for the specified filename.
-   *
-   * @param descriptor the descriptor
-   */
-  @Transactional
-  public void deleteComicFileDescriptor(final ComicFileDescriptor descriptor) {
-    log.debug("Deleting comic file descriptor: {}", descriptor);
-    this.comicFileDescriptorRepository.delete(descriptor);
-  }
-
-  /**
-   * Returns a batch of imported file descriptors.
-   *
-   * @param batchSize the batch size
-   * @return the descriptor list
-   */
-  @Transactional
-  public List<ComicFileDescriptor> getImportedFileDescriptors(final int batchSize) {
-    return this.comicFileDescriptorRepository.getImportedFileDescriptors(
-        PageRequest.of(0, batchSize));
-  }
-
-  @Transactional
-  public void delete(final ComicFileDescriptor descriptor) {
-    this.comicFileDescriptorRepository.delete(descriptor);
   }
 }

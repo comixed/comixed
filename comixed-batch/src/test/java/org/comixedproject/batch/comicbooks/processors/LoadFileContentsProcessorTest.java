@@ -20,10 +20,8 @@ package org.comixedproject.batch.comicbooks.processors;
 
 import static junit.framework.TestCase.*;
 import static junit.framework.TestCase.assertFalse;
-import static org.comixedproject.batch.comicbooks.ImportComicFilesConfiguration.PARAM_SKIP_METADATA;
 
 import java.util.List;
-import java.util.Map;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.content.ComicMetadataContentAdaptor;
@@ -36,10 +34,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobParameter;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.StepExecution;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoadFileContentsProcessorTest {
@@ -50,10 +44,6 @@ public class LoadFileContentsProcessorTest {
   @Mock private ComicMetadataContentAdaptor comicMetadataContentAdaptor;
   @Mock private ComicBook comicBook;
   @Mock private List<ComicPage> pageList;
-  @Mock private Map<String, JobParameter<?>> parameters;
-  @Mock private JobParameters jobParameters;
-  @Mock private JobExecution jobExecution;
-  @Mock private StepExecution stepExecution;
 
   @Captor private ArgumentCaptor<byte[]> contentArgumentAdaptorArgumentCaptor;
   @Captor private ArgumentCaptor<ContentAdaptorRules> comicBookContentAdaptorRulesArgumentCaptor;
@@ -74,13 +64,6 @@ public class LoadFileContentsProcessorTest {
     Mockito.doNothing()
         .when(comicBookAdaptor)
         .load(Mockito.any(ComicBook.class), comicBookContentAdaptorRulesArgumentCaptor.capture());
-
-    Mockito.when(parameters.containsKey(PARAM_SKIP_METADATA)).thenReturn(true);
-    Mockito.when(jobParameters.getParameters()).thenReturn(parameters);
-    Mockito.when(jobParameters.getString(PARAM_SKIP_METADATA)).thenReturn(Boolean.FALSE.toString());
-    Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
-    Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
-    processor.beforeStep(stepExecution);
   }
 
   @Test
@@ -127,7 +110,6 @@ public class LoadFileContentsProcessorTest {
 
   @Test
   public void testProcessSkippingMetadataNotProvided() throws Exception {
-    Mockito.when(parameters.containsKey(PARAM_SKIP_METADATA)).thenReturn(false);
     Mockito.when(comicBook.getPages()).thenReturn(pageList);
 
     final ComicBook result = processor.process(comicBook);
@@ -151,27 +133,6 @@ public class LoadFileContentsProcessorTest {
     Mockito.verify(pageList, Mockito.times(1)).sort(Mockito.any());
     Mockito.verify(comicMetadataContentAdaptor, Mockito.times(1))
         .loadContent(comicBook, "", content, contentRules);
-  }
-
-  @Test
-  public void testProcessSkippingMetadata() throws Exception {
-    Mockito.when(jobParameters.getString(PARAM_SKIP_METADATA)).thenReturn(Boolean.TRUE.toString());
-    Mockito.when(comicBook.getPages()).thenReturn(pageList);
-
-    final ComicBook result = processor.process(comicBook);
-
-    assertNotNull(result);
-    assertSame(comicBook, result);
-
-    final ContentAdaptorRules comicBookRules =
-        comicBookContentAdaptorRulesArgumentCaptor.getValue();
-    assertNotNull(comicBookRules);
-    assertTrue(comicBookRules.isSkipMetadata());
-
-    Mockito.verify(comicBookAdaptor, Mockito.times(1)).load(comicBook, comicBookRules);
-    Mockito.verify(pageList, Mockito.times(1)).sort(Mockito.any());
-    Mockito.verify(comicMetadataContentAdaptor, Mockito.never())
-        .loadContent(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
   }
 
   @Test
@@ -239,10 +200,5 @@ public class LoadFileContentsProcessorTest {
     assertFalse(comicRookRules.isSkipMetadata());
 
     Mockito.verify(comicBookAdaptor, Mockito.times(1)).load(comicBook, comicRookRules);
-  }
-
-  @Test
-  public void testAfterStep() {
-    assertNull(processor.afterStep(stepExecution));
   }
 }

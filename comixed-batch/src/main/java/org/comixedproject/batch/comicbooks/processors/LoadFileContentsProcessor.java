@@ -18,8 +18,6 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
-import static org.comixedproject.batch.comicbooks.ImportComicFilesConfiguration.PARAM_SKIP_METADATA;
-
 import java.io.File;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
@@ -27,10 +25,6 @@ import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.content.ComicMetadataContentAdaptor;
 import org.comixedproject.adaptors.content.ContentAdaptorRules;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.springframework.batch.core.ExitStatus;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +38,9 @@ import org.springframework.stereotype.Component;
 @Component
 @StepScope
 @Log4j2
-public class LoadFileContentsProcessor
-    implements ItemProcessor<ComicBook, ComicBook>, StepExecutionListener {
+public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, ComicBook> {
   @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private ComicMetadataContentAdaptor comicMetadataContentAdaptor;
-
-  private JobParameters jobParameters;
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
@@ -58,10 +49,6 @@ public class LoadFileContentsProcessor
       return comicBook;
     }
     final ContentAdaptorRules rules = new ContentAdaptorRules();
-    rules.setSkipMetadata(
-        (this.jobParameters.getParameters().containsKey(PARAM_SKIP_METADATA)
-                && Boolean.valueOf(this.jobParameters.getString(PARAM_SKIP_METADATA)))
-            || false);
     log.debug("Loading comicBook file contents: id={} rules={}", comicBook.getId(), rules);
     try {
       this.comicBookAdaptor.load(comicBook, rules);
@@ -81,15 +68,5 @@ public class LoadFileContentsProcessor
       log.error("Error loading comic file content", error);
       return comicBook;
     }
-  }
-
-  @Override
-  public void beforeStep(final StepExecution stepExecution) {
-    this.jobParameters = stepExecution.getJobExecution().getJobParameters();
-  }
-
-  @Override
-  public ExitStatus afterStep(final StepExecution stepExecution) {
-    return null;
   }
 }

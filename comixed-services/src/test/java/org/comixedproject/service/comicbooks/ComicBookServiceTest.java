@@ -520,26 +520,6 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFindInsertedComics() {
-    Mockito.when(
-            comicBookRepository.findForState(
-                Mockito.any(ComicState.class), pageableCaptor.capture()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result = service.findInsertedComics(TEST_MAXIMUM_COMICS);
-
-    assertNotNull(result);
-    assertSame(comicBookList, result);
-
-    final Pageable pageable = pageableCaptor.getValue();
-    assertNotNull(pageable);
-    assertEquals(0, pageable.getPageNumber());
-    assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findForState(ComicState.ADDED, pageable);
-  }
-
-  @Test
   public void testGetComicsWithoutContentCount() {
     Mockito.when(comicBookRepository.findUnprocessedComicsWithoutContentCount())
         .thenReturn(TEST_MAXIMUM_COMICS);
