@@ -27,8 +27,15 @@ import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.content.ComicMetadataContentAdaptor;
 import org.comixedproject.adaptors.content.ContentAdaptorException;
 import org.comixedproject.adaptors.content.ContentAdaptorRules;
+import org.comixedproject.metadata.MetadataAdaptorProvider;
+import org.comixedproject.metadata.adaptors.MetadataAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.ComicMetadataSource;
 import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.model.metadata.MetadataSource;
+import org.comixedproject.service.metadata.MetadataService;
+import org.comixedproject.service.metadata.MetadataSourceService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,19 +45,32 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class LoadFileContentsProcessorTest {
   private static final String TEST_METADATA_FILENAME = "src/test/resources/example-metadata.xml";
+  private static final String TEST_PROVIDER_NAME = "Provider Name";
+  private static final String TEST_WEB_ADDRESS = "The metadata web reference";
+  private static final String TEST_REFERENCE_ID = "The reference id";
 
   @InjectMocks private LoadFileContentsProcessor processor;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private ComicMetadataContentAdaptor comicMetadataContentAdaptor;
+  @Mock private MetadataService metadataService;
+  @Mock private MetadataSourceService metadataSourceService;
+  @Mock private MetadataAdaptor metadataAdaptor;
+  @Mock private MetadataAdaptorProvider metadataAdaptorProvider;
+  @Mock private MetadataSource metadataSource;
+  @Mock private ComicDetail comicDetail;
+  @Mock private ComicMetadataSource comicMetadata;
   @Mock private ComicBook comicBook;
   @Mock private List<ComicPage> pageList;
 
   @Captor private ArgumentCaptor<byte[]> contentArgumentAdaptorArgumentCaptor;
   @Captor private ArgumentCaptor<ContentAdaptorRules> comicBookContentAdaptorRulesArgumentCaptor;
   @Captor private ArgumentCaptor<ContentAdaptorRules> contentAdaptorRulesArgumentCaptor;
+  @Captor private ArgumentCaptor<ComicMetadataSource> comicMetadataSourceArgumentCaptor;
 
   @Before
   public void setUp() throws ContentAdaptorException, AdaptorException, InterruptedException {
+    Mockito.doNothing().when(comicBook).setMetadata(comicMetadataSourceArgumentCaptor.capture());
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(false);
     Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.any(ComicBook.class)))
         .thenReturn(TEST_METADATA_FILENAME);
@@ -64,6 +84,8 @@ public class LoadFileContentsProcessorTest {
     Mockito.doNothing()
         .when(comicBookAdaptor)
         .load(Mockito.any(ComicBook.class), comicBookContentAdaptorRulesArgumentCaptor.capture());
+    Mockito.when(metadataAdaptorProvider.create()).thenReturn(metadataAdaptor);
+    Mockito.when(metadataAdaptor.getReferenceId(Mockito.anyString())).thenReturn(TEST_REFERENCE_ID);
   }
 
   @Test
@@ -92,6 +114,50 @@ public class LoadFileContentsProcessorTest {
     Mockito.verify(pageList, Mockito.times(1)).sort(Mockito.any());
     Mockito.verify(comicMetadataContentAdaptor, Mockito.times(1))
         .loadContent(comicBook, "", content, contentRules);
+  }
+
+  @Test
+  public void testProcessMetadataSourceFound() throws Exception {
+    Mockito.when(comicDetail.getWebAddress()).thenReturn(TEST_WEB_ADDRESS);
+    Mockito.when(metadataService.findForWebAddress(Mockito.anyString()))
+        .thenReturn(metadataAdaptorProvider);
+    Mockito.when(metadataAdaptorProvider.getName()).thenReturn(TEST_PROVIDER_NAME);
+    Mockito.when(metadataSourceService.getByAdaptorName(Mockito.anyString()))
+        .thenReturn(metadataSource);
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+
+    final ComicMetadataSource comicMetadataSource = comicMetadataSourceArgumentCaptor.getValue();
+    assertNotNull(comicMetadataSource);
+    assertSame(metadataSource, comicMetadataSource.getMetadataSource());
+    assertEquals(TEST_REFERENCE_ID, comicMetadataSource.getReferenceId());
+
+    Mockito.verify(comicBookAdaptor, Mockito.times(1))
+        .load(comicBook, comicBookContentAdaptorRulesArgumentCaptor.getValue());
+  }
+
+  @Test
+  public void testProcessHasMetadataSourceAndMetadataSourceFound() throws Exception {
+    Mockito.when(comicBook.getMetadata()).thenReturn(comicMetadata);
+    Mockito.when(comicDetail.getWebAddress()).thenReturn(TEST_WEB_ADDRESS);
+    Mockito.when(metadataService.findForWebAddress(Mockito.anyString()))
+        .thenReturn(metadataAdaptorProvider);
+    Mockito.when(metadataAdaptorProvider.getName()).thenReturn(TEST_PROVIDER_NAME);
+    Mockito.when(metadataSourceService.getByAdaptorName(Mockito.anyString()))
+        .thenReturn(metadataSource);
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+
+    Mockito.verify(comicBookAdaptor, Mockito.times(1))
+        .load(comicBook, comicBookContentAdaptorRulesArgumentCaptor.getValue());
+    Mockito.verify(comicMetadata, Mockito.times(1)).setMetadataSource(metadataSource);
+    Mockito.verify(comicMetadata, Mockito.times(1)).setReferenceId(TEST_REFERENCE_ID);
   }
 
   @Test

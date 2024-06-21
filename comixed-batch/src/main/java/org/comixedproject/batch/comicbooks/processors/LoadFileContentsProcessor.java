@@ -19,16 +19,24 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import java.io.File;
+import java.util.Objects;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.content.ComicMetadataContentAdaptor;
 import org.comixedproject.adaptors.content.ContentAdaptorRules;
+import org.comixedproject.metadata.MetadataAdaptorProvider;
+import org.comixedproject.metadata.adaptors.MetadataAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicMetadataSource;
+import org.comixedproject.model.metadata.MetadataSource;
+import org.comixedproject.service.metadata.MetadataService;
+import org.comixedproject.service.metadata.MetadataSourceService;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 /**
  * <code>LoadFileContentsProcessor</code> loads metadata for a comic.
@@ -41,6 +49,8 @@ import org.springframework.stereotype.Component;
 public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, ComicBook> {
   @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private ComicMetadataContentAdaptor comicMetadataContentAdaptor;
+  @Autowired private MetadataService metadataService;
+  @Autowired private MetadataSourceService metadataSourceService;
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
@@ -60,6 +70,28 @@ public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, Comic
           log.trace("Loading external metadata file: {}", metadataFile.getAbsolutePath());
           this.comicMetadataContentAdaptor.loadContent(
               comicBook, "", FileUtils.readFileToByteArray(metadataFile), rules);
+        }
+      }
+      final String metadataWebAddress = comicBook.getComicDetail().getWebAddress();
+      if (StringUtils.hasLength(metadataWebAddress)) {
+        log.debug("Processing metadata web address: {}", metadataWebAddress);
+        final MetadataAdaptorProvider provider =
+            this.metadataService.findForWebAddress(metadataWebAddress);
+        if (Objects.isNull(provider) == false) {
+          final MetadataAdaptor adaptor = provider.create();
+          final MetadataSource source =
+              this.metadataSourceService.getByAdaptorName(provider.getName());
+          final String referenceId = adaptor.getReferenceId(metadataWebAddress);
+          log.debug(
+              "Setting metadata source: source={} reference id={}",
+              source.getAdaptorName(),
+              referenceId);
+          if (Objects.isNull(comicBook.getMetadata())) {
+            comicBook.setMetadata(new ComicMetadataSource(comicBook, source, referenceId));
+          } else {
+            comicBook.getMetadata().setMetadataSource(source);
+            comicBook.getMetadata().setReferenceId(referenceId);
+          }
         }
       }
       log.trace("Returning updated comicBook");

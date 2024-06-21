@@ -112,5 +112,20 @@ public interface MetadataAdaptor {
    */
   String getVolumeKey(String seriesName);
 
+  /**
+   * Generates a consistent key for storing and fetching issue data.
+   *
+   * @param volume the volume name
+   * @param issueNumber the issue number
+   * @return the key value
+   */
   String getIssueKey(String volume, String issueNumber);
+
+  /**
+   * Returns the reference id from the given web address.
+   *
+   * @param webAddress the web address
+   * @return the reference id
+   */
+  String getReferenceId(String webAddress);
 }
