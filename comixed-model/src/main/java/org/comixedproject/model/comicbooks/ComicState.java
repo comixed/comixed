@@ -24,8 +24,8 @@ package org.comixedproject.model.comicbooks;
  * @author Darryl L. Pierce
  */
 public enum ComicState {
-  // the comic has been added to the database but has not been processed
-  ADDED,
+  // the comic book object was created
+  CREATED,
   // the comic is unprocessed and needs to be loaded
   UNPROCESSED,
   // the comic has been processed and its contents match the database

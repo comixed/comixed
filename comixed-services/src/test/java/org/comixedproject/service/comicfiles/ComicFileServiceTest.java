@@ -23,21 +23,25 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicfiles.ComicFileDescriptor;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicfiles.ComicFileGroup;
-import org.comixedproject.repositories.comicfiles.ComicFileDescriptorRepository;
+import org.comixedproject.model.metadata.FilenameMetadata;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.metadata.FilenameScrapingRuleService;
+import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicStateHandler;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Pageable;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
@@ -46,23 +50,42 @@ public class ComicFileServiceTest {
   private static final byte[] TEST_COVER_CONTENT = "this is image data".getBytes();
   private static final String TEST_ROOT_DIRECTORY = "src/test/resources";
   private static final String TEST_COMIC_ARCHIVE =
-      TEST_ROOT_DIRECTORY + "/" + TEST_ARCHIVE_FILENAME;
+      new File(TEST_ROOT_DIRECTORY + "/" + TEST_ARCHIVE_FILENAME).getAbsolutePath();
   private static final int TEST_LIMIT = 2;
   private static final int TEST_NO_LIMIT = -1;
-  private static final long TEST_DESCRIPTOR_COUNT = 93L;
-  private static final int TEST_PAGE_SIZE = 10;
+  private static final String TEST_SERIES_NAME = "The Series Name";
+  private static final String TEST_VOLUME = "2024";
+  private static final String TEST_ISSUE_NUMBER = "717";
+  private static final Date TEST_COVER_DATE = new Date();
 
   @InjectMocks private ComicFileService service;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private ComicFileAdaptor comicFileAdaptor;
   @Mock private ComicBookService comicBookService;
-  @Mock private ComicFileDescriptorRepository comicFileDescriptorRepository;
+  @Mock private ComicStateHandler comicStateHandler;
+  @Mock private FilenameScrapingRuleService filenameScrapingRuleService;
+  @Mock private ComicDetail comicDetail;
   @Mock private ComicBook comicBook;
-  @Mock private ComicFileDescriptor savedComicFileDescriptor;
-  @Mock private ComicFileDescriptor comicFileDescriptor;
-  @Mock private List<ComicFileDescriptor> unprocessedComicFileDescriptors;
+  @Mock private FilenameMetadata metadata;
 
-  @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
+  @Captor private ArgumentCaptor<ComicBook> comicBookArgumentCaptor;
+
+  private List<String> filenameList = new ArrayList<>();
+
+  @Before
+  public void setUp() throws AdaptorException {
+    filenameList.add(TEST_COMIC_ARCHIVE);
+
+    Mockito.doNothing()
+        .when(comicStateHandler)
+        .fireEvent(comicBookArgumentCaptor.capture(), Mockito.any(ComicEvent.class));
+    Mockito.when(comicDetail.getBaseFilename()).thenReturn(TEST_ARCHIVE_FILENAME);
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(comicBookAdaptor.createComic(Mockito.anyString())).thenReturn(comicBook);
+    Mockito.when(metadata.isFound()).thenReturn(false);
+    Mockito.when(filenameScrapingRuleService.loadFilenameMetadata(Mockito.anyString()))
+        .thenReturn(metadata);
+  }
 
   @Test
   public void testGetImportFileCoverWithNoCover() throws AdaptorException {
@@ -105,7 +128,7 @@ public class ComicFileServiceTest {
   @Test
   public void testGetAllComicsAlreadyImported() throws IOException {
     Mockito.when(comicFileAdaptor.isComicFile(Mockito.any(File.class))).thenReturn(true);
-    Mockito.when(comicBookService.findByFilename(Mockito.anyString())).thenReturn(comicBook);
+    Mockito.when(comicBookService.filenameFound(Mockito.anyString())).thenReturn(true);
 
     final List<ComicFileGroup> result = service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_LIMIT);
 
@@ -113,7 +136,7 @@ public class ComicFileServiceTest {
     assertTrue(result.isEmpty());
 
     Mockito.verify(comicBookService, Mockito.times(1))
-        .findByFilename(new File(TEST_COMIC_ARCHIVE).getCanonicalPath().replace("\\", "/"));
+        .filenameFound(new File(TEST_COMIC_ARCHIVE).getCanonicalPath().replace("\\", "/"));
   }
 
   @Test
@@ -147,24 +170,8 @@ public class ComicFileServiceTest {
   }
 
   @Test
-  public void testGetAllComicsUnderWithExistingDescriptor() throws IOException {
-    Mockito.when(comicFileDescriptorRepository.findByFilename(Mockito.anyString()))
-        .thenReturn(comicFileDescriptor);
-    Mockito.when(comicFileAdaptor.isComicFile(Mockito.any(File.class))).thenCallRealMethod();
-
-    final List<ComicFileGroup> result =
-        service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_NO_LIMIT);
-
-    assertNotNull(result);
-    assertTrue(result.isEmpty());
-
-    Mockito.verify(comicFileDescriptorRepository, Mockito.atLeast(1))
-        .findByFilename(Mockito.anyString());
-  }
-
-  @Test
   public void testGetAllComicsUnderWithExistingComicBook() throws IOException {
-    Mockito.when(comicBookService.findByFilename(Mockito.anyString())).thenReturn(comicBook);
+    Mockito.when(comicBookService.filenameFound(Mockito.anyString())).thenReturn(true);
     Mockito.when(comicFileAdaptor.isComicFile(Mockito.any(File.class))).thenCallRealMethod();
 
     final List<ComicFileGroup> result =
@@ -173,117 +180,71 @@ public class ComicFileServiceTest {
     assertNotNull(result);
     assertTrue(result.isEmpty());
 
-    Mockito.verify(comicBookService, Mockito.atLeast(1)).findByFilename(Mockito.anyString());
+    Mockito.verify(comicBookService, Mockito.atLeast(1)).filenameFound(Mockito.anyString());
   }
 
   @Test
-  public void testImportComicFiles() {
-    final List<String> filenameList = new ArrayList<>();
-    for (int index = 0; index < 25; index++) {
-      filenameList.add(String.format("comicBook-file-%d.cbz", index));
-    }
-    Mockito.when(comicFileDescriptorRepository.findByFilename(Mockito.anyString()))
-        .thenReturn(null);
-
-    Mockito.when(comicFileDescriptorRepository.save(Mockito.any(ComicFileDescriptor.class)))
-        .thenReturn(savedComicFileDescriptor);
+  public void testImporComicFilesAlreadyFound() {
+    Mockito.when(comicBookService.filenameFound(Mockito.anyString())).thenReturn(true);
 
     service.importComicFiles(filenameList);
 
-    filenameList.forEach(
-        filename -> {
-          Mockito.verify(comicFileDescriptorRepository, Mockito.times(1))
-              .save(new ComicFileDescriptor(filename));
-          Mockito.verify(comicFileDescriptorRepository, Mockito.times(1)).findByFilename(filename);
-        });
+    Mockito.verify(comicBookService, Mockito.times(1)).filenameFound(TEST_COMIC_ARCHIVE);
+    Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
   }
 
   @Test
-  public void testImportComicFilesAlreadyImported() {
-    final List<String> filenameList = new ArrayList<>();
-    for (int index = 0; index < 25; index++) {
-      filenameList.add(String.format("comicBook-file-%d.cbz", index));
-    }
-    Mockito.when(comicFileDescriptorRepository.findByFilename(Mockito.anyString()))
-        .thenReturn(savedComicFileDescriptor);
+  public void testImporComicFiles() throws AdaptorException {
+    Mockito.when(comicBookService.filenameFound(Mockito.anyString())).thenReturn(false);
 
     service.importComicFiles(filenameList);
 
-    filenameList.forEach(
-        filename -> {
-          Mockito.verify(comicFileDescriptorRepository, Mockito.never())
-              .save(new ComicFileDescriptor(filename));
-          Mockito.verify(comicFileDescriptorRepository, Mockito.times(1)).findByFilename(filename);
-        });
+    Mockito.verify(comicBookService, Mockito.times(1)).filenameFound(TEST_COMIC_ARCHIVE);
+    Mockito.verify(comicBookAdaptor, Mockito.times(filenameList.size()))
+        .createComic(TEST_COMIC_ARCHIVE);
+    Mockito.verify(filenameScrapingRuleService, Mockito.times(filenameList.size()))
+        .loadFilenameMetadata(TEST_ARCHIVE_FILENAME);
+    Mockito.verify(comicStateHandler, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.readygForProcessing);
   }
 
   @Test
-  public void testGetUnimportedComicFileDescriptorCount() {
-    Mockito.when(comicFileDescriptorRepository.getUnimportedComicFileDescriptorCount())
-        .thenReturn(TEST_DESCRIPTOR_COUNT);
+  public void testImporComicFilesComicBookAdaptorException() throws AdaptorException {
+    Mockito.when(comicBookService.filenameFound(Mockito.anyString())).thenReturn(false);
+    Mockito.when(comicBookAdaptor.createComic(Mockito.anyString()))
+        .thenThrow(AdaptorException.class);
 
-    final long result = service.getUnimportedComicFileDescriptorCount();
+    service.importComicFiles(filenameList);
 
-    assertEquals(TEST_DESCRIPTOR_COUNT, result);
-
-    Mockito.verify(comicFileDescriptorRepository, Mockito.times(1))
-        .getUnimportedComicFileDescriptorCount();
+    Mockito.verify(comicBookService, Mockito.times(1)).filenameFound(TEST_COMIC_ARCHIVE);
+    Mockito.verify(comicBookAdaptor, Mockito.times(filenameList.size()))
+        .createComic(TEST_COMIC_ARCHIVE);
+    Mockito.verify(filenameScrapingRuleService, Mockito.never())
+        .loadFilenameMetadata(Mockito.anyString());
+    Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
   }
 
   @Test
-  public void testFindUnprocessedComicFileDescriptors() {
-    Mockito.when(
-            comicFileDescriptorRepository.findUnprocessedDescriptors(
-                pageableArgumentCaptor.capture()))
-        .thenReturn(unprocessedComicFileDescriptors);
+  public void testImporComicFilesWithFilenameMetadata() throws AdaptorException {
+    Mockito.when(metadata.isFound()).thenReturn(true);
+    Mockito.when(metadata.getSeries()).thenReturn(TEST_SERIES_NAME);
+    Mockito.when(metadata.getVolume()).thenReturn(TEST_VOLUME);
+    Mockito.when(metadata.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
+    Mockito.when(metadata.getCoverDate()).thenReturn(TEST_COVER_DATE);
+    Mockito.when(comicBookService.filenameFound(Mockito.anyString())).thenReturn(false);
 
-    final List<ComicFileDescriptor> result =
-        service.findUnprocessedComicFileDescriptors(TEST_PAGE_SIZE);
+    service.importComicFiles(filenameList);
 
-    assertNotNull(result);
-    assertSame(unprocessedComicFileDescriptors, result);
-
-    final Pageable pageable = pageableArgumentCaptor.getValue();
-    assertNotNull(pageable);
-    assertEquals(0, pageable.getPageNumber());
-    assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
-
-    Mockito.verify(comicFileDescriptorRepository, Mockito.times(1))
-        .findUnprocessedDescriptors(pageable);
-  }
-
-  @Test
-  public void testDeleteComicFileDescriptor() {
-    service.deleteComicFileDescriptor(comicFileDescriptor);
-
-    Mockito.verify(comicFileDescriptorRepository, Mockito.times(1)).delete(comicFileDescriptor);
-  }
-
-  @Test
-  public void testGetImportedFileDescriptors() {
-    Mockito.when(
-            comicFileDescriptorRepository.getImportedFileDescriptors(
-                pageableArgumentCaptor.capture()))
-        .thenReturn(unprocessedComicFileDescriptors);
-
-    final List<ComicFileDescriptor> result = service.getImportedFileDescriptors(TEST_PAGE_SIZE);
-
-    assertNotNull(result);
-    assertSame(unprocessedComicFileDescriptors, result);
-
-    final Pageable pageable = pageableArgumentCaptor.getValue();
-    assertNotNull(pageable);
-    assertEquals(0, pageable.getPageNumber());
-    assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
-
-    Mockito.verify(comicFileDescriptorRepository, Mockito.times(1))
-        .getImportedFileDescriptors(pageable);
-  }
-
-  @Test
-  public void testDelete() {
-    service.delete(comicFileDescriptor);
-
-    Mockito.verify(comicFileDescriptorRepository, Mockito.times(1)).delete(comicFileDescriptor);
+    Mockito.verify(comicBookService, Mockito.times(1)).filenameFound(TEST_COMIC_ARCHIVE);
+    Mockito.verify(comicBookAdaptor, Mockito.times(filenameList.size()))
+        .createComic(TEST_COMIC_ARCHIVE);
+    Mockito.verify(filenameScrapingRuleService, Mockito.times(filenameList.size()))
+        .loadFilenameMetadata(TEST_ARCHIVE_FILENAME);
+    Mockito.verify(comicDetail, Mockito.times(1)).setSeries(TEST_SERIES_NAME);
+    Mockito.verify(comicDetail, Mockito.times(1)).setVolume(TEST_VOLUME);
+    Mockito.verify(comicDetail, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
+    Mockito.verify(comicDetail, Mockito.times(1)).setCoverDate(TEST_COVER_DATE);
+    Mockito.verify(comicStateHandler, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.readygForProcessing);
   }
 }

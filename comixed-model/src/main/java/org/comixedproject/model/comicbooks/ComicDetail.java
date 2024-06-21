@@ -125,7 +125,7 @@ public class ComicDetail {
   })
   @Getter
   @Setter
-  private ComicState comicState = ComicState.ADDED;
+  private ComicState comicState = ComicState.CREATED;
 
   @Column(name = "comic_type", nullable = false, updatable = true)
   @Enumerated(EnumType.STRING)

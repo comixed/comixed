@@ -48,9 +48,6 @@
       "root-directory": "Root Directory To Search..."
     },
     "processing-comics": {
-      "comic-marked-as-added-step": "Mark Comics As Added",
-      "create-insert-step": "Creating Comic Records",
-      "delete-descriptors-step": "Cleaning Up Import Descriptors",
       "header": {
         "processed": "Processed",
         "progress": "Progress",
@@ -58,7 +55,6 @@
         "step-name": "Current Step",
         "total": "Total"
       },
-      "import-comic-files-step": "Importing Comic Files",
       "load-file-contents-step": "Loading File Contents",
       "load-page-hash-step": "Loading Page Hashes",
       "mark-blocked-page-step": "Marking Pages With Blocked Hash",
