@@ -267,43 +267,46 @@ public class MetadataService {
               ConfigurationService.CFG_METADATA_IGNORE_EMPTY_VALUES);
       // have to use a final reference here due to the lambdas later in this block
       final ComicBook comicBook = result;
+      final ComicDetail detail = comicBook.getComicDetail();
       log.debug("Updating comicBook with scraped data");
       if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getPublisher())) {
-        comicBook.getComicDetail().setPublisher(issueDetails.getPublisher());
+        detail.setPublisher(issueDetails.getPublisher());
       }
       if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getPublisher())) {
-        comicBook.getComicDetail().setImprint(issueDetails.getPublisher());
+        detail.setImprint(issueDetails.getPublisher());
       }
       if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getSeries())) {
-        comicBook.getComicDetail().setSeries(issueDetails.getSeries());
+        detail.setSeries(issueDetails.getSeries());
       }
       if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getVolume())) {
-        comicBook.getComicDetail().setVolume(issueDetails.getVolume());
+        detail.setVolume(issueDetails.getVolume());
       }
       if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getIssueNumber())) {
-        comicBook.getComicDetail().setIssueNumber(issueDetails.getIssueNumber());
+        detail.setIssueNumber(issueDetails.getIssueNumber());
       }
       if (issueDetails.getCoverDate() != null) {
         comicBook
             .getComicDetail()
             .setCoverDate(this.adjustForTimezone(issueDetails.getCoverDate()));
       } else {
-        comicBook.getComicDetail().setCoverDate(null);
+        detail.setCoverDate(null);
       }
       if (issueDetails.getStoreDate() != null) {
         comicBook
             .getComicDetail()
             .setStoreDate(this.adjustForTimezone(issueDetails.getStoreDate()));
       } else {
-        comicBook.getComicDetail().setStoreDate(null);
+        detail.setStoreDate(null);
       }
       if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getTitle())) {
-        comicBook.getComicDetail().setTitle(issueDetails.getTitle());
+        detail.setTitle(issueDetails.getTitle());
       }
       if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getDescription())) {
-        comicBook.getComicDetail().setDescription(issueDetails.getDescription());
+        detail.setDescription(issueDetails.getDescription());
       }
-      final ComicDetail detail = comicBook.getComicDetail();
+      if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getWebAddress())) {
+        detail.setWebAddress(issueDetails.getWebAddress());
+      }
       detail.getTags().clear();
       issueDetails
           .getCharacters()

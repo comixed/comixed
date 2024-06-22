@@ -42,6 +42,7 @@ export interface ComicDetail {
   pageCount: number;
   notes: string;
   description: string;
+  webAddress: string;
   tags: ComicTag[];
   coverDate: number;
   publishedYear: number;
