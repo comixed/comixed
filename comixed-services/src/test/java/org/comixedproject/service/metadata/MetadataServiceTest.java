@@ -142,6 +142,7 @@ public class MetadataServiceTest {
     Mockito.when(issueDetailsMetadata.getStoreDate()).thenReturn(TEST_STORE_DATE);
     Mockito.when(issueDetailsMetadata.getTitle()).thenReturn(TEST_TITLE);
     Mockito.when(issueDetailsMetadata.getDescription()).thenReturn(TEST_DESCRIPTION);
+    Mockito.when(issueDetailsMetadata.getWebAddress()).thenReturn(TEST_WEB_ADDRESS);
     Mockito.when(issueDetailsMetadata.getSourceId()).thenReturn(TEST_SOURCE_ID);
     for (int index = 0; index < 5; index++) {
       characterList.add("CHARACTER" + index);
@@ -836,6 +837,7 @@ public class MetadataServiceTest {
         .setStoreDate(service.adjustForTimezone(TEST_STORE_DATE));
     Mockito.verify(loadedComicDetail, Mockito.times(1)).setTitle(TEST_TITLE);
     Mockito.verify(loadedComicDetail, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
+    Mockito.verify(loadedComicDetail, Mockito.times(1)).setWebAddress(TEST_WEB_ADDRESS);
     Mockito.verify(imprintService, Mockito.times(1)).update(comicBook);
   }
 
