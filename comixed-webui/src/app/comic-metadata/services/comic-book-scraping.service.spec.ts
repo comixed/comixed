@@ -184,7 +184,7 @@ describe('ComicBookScrapingService', () => {
         comicBook: COMIC_BOOK,
         skipCache: SKIP_CACHE
       })
-      .subscribe(response => expect(response).toEqual(COMIC_BOOK));
+      .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
       interpolate(SCRAPE_SINGLE_BOOK_COMIC_URL, {
@@ -197,7 +197,7 @@ describe('ComicBookScrapingService', () => {
       issueId: SCRAPING_ISSUE.id,
       skipCache: SKIP_CACHE
     } as ScrapeSingleBookComicRequest);
-    req.flush(COMIC_BOOK);
+    req.flush(new HttpResponse({ status: 200 }));
   });
 
   it('can start multi-book scraping', () => {

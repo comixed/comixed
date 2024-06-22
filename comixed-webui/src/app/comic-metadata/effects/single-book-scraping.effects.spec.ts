@@ -25,15 +25,15 @@ import { COMIC_BOOK_4 } from '@app/comic-books/comic-books.fixtures';
 import {
   clearMetadataCache,
   clearMetadataCacheFailure,
-  scrapeSingleComicBookSuccess,
+  clearMetadataCacheSuccess,
   issueMetadataLoaded,
   loadIssueMetadata,
   loadIssueMetadataFailed,
   loadVolumeMetadata,
   loadVolumeMetadataFailed,
-  clearMetadataCacheSuccess,
   scrapeSingleComicBook,
   scrapeSingleComicBookFailure,
+  scrapeSingleComicBookSuccess,
   startMetadataUpdateProcess,
   startMetadataUpdateProcessFailure,
   startMetadataUpdateProcessSuccess,
@@ -45,7 +45,6 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { comicBookLoaded } from '@app/comic-books/actions/comic-book.actions';
 import {
   METADATA_SOURCE_1,
   SCRAPING_ISSUE_1,
@@ -235,7 +234,7 @@ describe('SingleBookScrapingEffects', () => {
 
   describe('scraping a single comic book', () => {
     it('fires an action on success', () => {
-      const serviceResponse = COMIC_BOOK;
+      const serviceResponse = new HttpResponse({});
       const action = scrapeSingleComicBook({
         metadataSource: METADATA_SOURCE,
         issueId: SCRAPING_ISSUE.id,
@@ -243,8 +242,7 @@ describe('SingleBookScrapingEffects', () => {
         skipCache: SKIP_CACHE
       });
       const outcome1 = scrapeSingleComicBookSuccess();
-      const outcome2 = comicBookLoaded({ comicBook: COMIC_BOOK });
-      const outcome3 = removeSingleComicBookSelection({
+      const outcome2 = removeSingleComicBookSelection({
         comicBookId: COMIC_BOOK.id
       });
 
@@ -253,7 +251,7 @@ describe('SingleBookScrapingEffects', () => {
         of(serviceResponse)
       );
 
-      const expected = hot('-(bcd)', { b: outcome1, c: outcome2, d: outcome3 });
+      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
       expect(effects.scrapeSingleComicBook$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
