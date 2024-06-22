@@ -69,6 +69,7 @@ export const COMIC_DETAIL_1: ComicDetail = {
   title: 'First ComicBook Title',
   pageCount: 22,
   description: 'The description of this comic',
+  webAddress: 'http://www.comixedproject.org/detail/1',
   notes: '',
   tags: [
     { type: ComicTagType.WRITER, value: 'Chris Claremont' },
@@ -103,6 +104,7 @@ export const COMIC_DETAIL_2: ComicDetail = {
   title: 'First ComicBook Title',
   pageCount: 22,
   description: 'The description of this comic',
+  webAddress: 'http://www.comixedproject.org/detail/2',
   notes: '',
   tags: [],
   coverDate: new Date().getTime(),
@@ -131,6 +133,7 @@ export const COMIC_DETAIL_3: ComicDetail = {
   title: 'First ComicBook Title',
   pageCount: 22,
   description: 'The description of this comic',
+  webAddress: 'http://www.comixedproject.org/detail/3',
   notes: '',
   tags: [],
   coverDate: new Date().getTime(),
@@ -159,6 +162,7 @@ export const COMIC_DETAIL_4: ComicDetail = {
   title: 'First ComicBook Title',
   pageCount: 22,
   description: 'The description of this comic',
+  webAddress: 'http://www.comixedproject.org/detail/4',
   notes: '',
   tags: [],
   coverDate: new Date().getTime(),
@@ -188,6 +192,7 @@ export const COMIC_DETAIL_5: ComicDetail = {
   pageCount: 22,
   notes: '',
   description: 'The description of this comic',
+  webAddress: 'http://www.comixedproject.org/detail/5',
   tags: [],
   coverDate: new Date(
     new Date().getTime() - 366 * 24 * 60 * 60 * 1000

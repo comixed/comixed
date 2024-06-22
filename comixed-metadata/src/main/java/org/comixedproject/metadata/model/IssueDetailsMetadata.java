@@ -82,6 +82,11 @@ public class IssueDetailsMetadata {
   @Setter
   private String description;
 
+  @JsonProperty("webAddress")
+  @Getter
+  @Setter
+  private String webAddress;
+
   @JsonProperty("character_credits")
   @Getter
   @Setter
