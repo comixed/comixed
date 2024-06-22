@@ -1,7 +1,7 @@
 @use 'variables' as *;
 
 #comic-detail-filter {
-  width: calc(100% - calc(2 * $cx-margin-width));
+  width: calc(100% - $cx-margin-space);
   margin: $cx-margin-width;
   border: 1px solid var(--mat-app-text-color);
 }

@@ -1,11 +1,19 @@
 @use 'variables' as *;
 
+#comic-detail-container {
+  display: flex;
+  flex-flow: row wrap;
+  width: calc(100% - $cx-margin-space);
+  margin: $cx-margin-width;
+}
+
 #comic-cover-container {
-  flex: 1 1 0;
-  min-width: $cx-min-image-width;
-  max-width: $cx-max-image-width;
+  flex-grow: 0;
+  width: calc(max(25%, min(100%, $cx-max-image-width)) - $cx-margin-space);
+  max-width: calc($cx-max-image-width + $cx-margin-space);
 }
 
 #comic-tab-container {
-  flex: 2 1 0;
+  flex: 1;
+  min-width: $cx-max-image-width;
 }
