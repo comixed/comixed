@@ -1,4 +1,4 @@
-<mat-toolbar>
+<mat-toolbar color="accent">
   <button
     id="scrape-filename"
     class="cx-toolbar-button cx-margin-left-5"
@@ -110,7 +110,7 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field class="cx-width-100">
+  <mat-form-field class="cx-width-25">
     <mat-label>{{ "comic-book.label.publisher" | translate }}</mat-label>
     <input
       id="publisher-input"
@@ -119,7 +119,7 @@
       [placeholder]="'comic-book.placeholder.publisher' | translate"
     />
   </mat-form-field>
-  <mat-form-field class="cx-width-100">
+  <mat-form-field class="cx-width-50">
     <mat-label>{{ "comic-book.label.series" | translate }}</mat-label>
     <input
       id="series-input"
@@ -135,7 +135,7 @@
       {{ "validation.field-required" | translate }}
     </mat-error>
   </mat-form-field>
-  <mat-form-field class="cx-width-33">
+  <mat-form-field class="cx-width-25">
     <mat-label>{{ "comic-book.label.volume" | translate }}</mat-label>
     <input
       id="volume-input"
@@ -147,7 +147,11 @@
       {{ "comic-book.hint.required-for-scraping" | translate }}
     </mat-hint>
   </mat-form-field>
-  <mat-form-field class="cx-width-33">
+  <mat-form-field class="cx-width-25">
+    <mat-label>{{ "comic-book.label.imprint" | translate }}</mat-label>
+    <input matInput id="imprint-input" formControlName="imprint" readonly />
+  </mat-form-field>
+  <mat-form-field class="cx-width-25">
     <mat-label>{{ "comic-book.label.issue-number" | translate }}</mat-label>
     <input
       id="issue-number-input"
@@ -163,7 +167,7 @@
       {{ "validation.field-required" | translate }}
     </mat-error>
   </mat-form-field>
-  <mat-form-field class="cx-width-34">
+  <mat-form-field class="cx-width-50">
     <mat-label>
       {{ "comic-book.label.metadata-source-id" | translate }}
     </mat-label>
@@ -192,9 +196,5 @@
     <mat-hint>
       {{ "comic-book.hint.useful-for-scraping" | translate }}
     </mat-hint>
-  </mat-form-field>
-  <mat-form-field class="cx-width-50">
-    <mat-label>{{ "comic-book.label.imprint" | translate }}</mat-label>
-    <input matInput id="imprint-input" formControlName="imprint" readonly />
   </mat-form-field>
 </form>

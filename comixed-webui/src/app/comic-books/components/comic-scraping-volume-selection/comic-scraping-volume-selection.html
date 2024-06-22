@@ -1,34 +1,33 @@
-<mat-toolbar>
-  <mat-paginator
-    class="cx-height-100"
-    *ngIf="!!comicBook"
-    [pageSizeOptions]="pageSizeOptions"
-    showFirstLastButtons="true"
-  ></mat-paginator>
-  <div class="cx-spacer"></div>
-  <mat-form-field class="cx-width-50" appearance="outline">
-    <input
-      #filterInput
-      id="filter-input"
-      matInput
-      [placeholder]="'comic-book.placeholder.scraping-filter' | translate"
-      (keyup)="dataSource.filter = filterInput.value"
-    />
-    <mat-icon matPrefix>search</mat-icon>
-  </mat-form-field>
-  <button
-    id="cancel-scraping-button"
-    class="cx-toolbar-button"
-    mat-icon-button
-    [matTooltip]="'comic-book.tooltip.cancel-scraping' | translate"
-    (click)="onCancelScraping()"
-  >
-    <mat-icon>cancel</mat-icon>
-  </button>
-</mat-toolbar>
+<div id="scraping-volume-container">
+  <div id="scraping-volume-table-container">
+    <mat-toolbar>
+      <mat-form-field class="cx-width-100" appearance="fill">
+        <input
+          #filterInput
+          id="filter-input"
+          matInput
+          [placeholder]="'comic-book.placeholder.scraping-filter' | translate"
+          (keyup)="dataSource.filter = filterInput.value"
+        />
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+      <button
+        id="cancel-scraping-button"
+        class="cx-toolbar-button"
+        mat-icon-button
+        [matTooltip]="'comic-book.tooltip.cancel-scraping' | translate"
+        (click)="onCancelScraping()"
+      >
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-toolbar>
 
-<div class="cx-width-100 cx-detail-card-container">
-  <div [class.cx-width-100]="!issue" [class.cx-width-75]="!!issue">
+    <mat-paginator
+      *ngIf="dataSource.data?.length > 0"
+      [pageSizeOptions]="pageSizeOptions"
+      showFirstLastButtons="true"
+    ></mat-paginator>
+
     <mat-table
       aria-label="ComicBook files available for import"
       class="cx-width-100 cx-padding-2"
@@ -134,7 +133,7 @@
     </mat-table>
   </div>
 
-  <div *ngIf="!!issue" class="cx-width-25">
+  <div id="scraping-volume-cover-container" *ngIf="!!issue">
     <mat-card class="cx-width-100" appearance="outlined">
       <mat-card-content class="cx-padding-5">
         <h2 class="cx-width-100 cx-align-content-center">
