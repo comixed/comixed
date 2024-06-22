@@ -1,5 +1,8 @@
-<div id="cx-all-pages" *ngIf="showPagesAsGrid" class="cx-detail-card-container">
-  <div *ngFor="let page of comic.pages; let i = index" class="cx-grow-20p">
+<div id="all-comic-book-pages" *ngIf="showPagesAsGrid">
+  <div
+    *ngFor="let page of comic.pages; let i = index"
+    class="single-comic-book-page"
+  >
     <cx-comic-page
       class="mat-elevation-z4"
       [page]="page"

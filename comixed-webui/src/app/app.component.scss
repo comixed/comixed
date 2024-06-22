@@ -35,6 +35,6 @@
 }
 
 #app-content-container {
-  width: calc(100% - calc(2 * $cx-margin-width));
+  width: calc(100% - $cx-margin-space);
   margin: $cx-margin-width;
 }

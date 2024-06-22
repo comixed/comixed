@@ -131,54 +131,65 @@
   </div>
 </div>
 
-<div *ngIf="!!comicBook" class="cx-width-100">
-  <h1>
-    {{ comicBook.detail | comicTitle }}
-  </h1>
-</div>
+<h1 *ngIf="!!comicBook">
+  {{ comicBook?.detail | comicTitle }}
+</h1>
 
-<div *ngIf="!!comicBook" class="cx-horizontal-container">
-  <div id="comic-cover-container" class="cx-grow-25p cx-padding-left-5">
-    <div class="cx-width-100 cx-align-content-center">
-      <button
-        mat-icon-button
-        (click)="pageIndex = pageIndex - 1"
-        [disabled]="pageIndex === 0"
-        [matTooltip]="'comic-book.tooltip.show-previous-comic-page' | translate"
-      >
-        <mat-icon>navigate_before</mat-icon>
-      </button>
-      {{
-        "comic-book.label.page-title"
-          | translate: { which: pageIndex + 1, count: comicBook.pages.length }
-      }}
-      <button
-        mat-icon-button
-        (click)="pageIndex = pageIndex + 1"
-        [disabled]="pageIndex === comicBook.pages.length - 1"
-        [matTooltip]="'comic-book.tooltip.show-next-comic-page' | translate"
-      >
-        <mat-icon>navigate_next</mat-icon>
-      </button>
-    </div>
+<div *ngIf="!!comicBook" id="comic-detail-container">
+  <div id="comic-cover-container">
     <mat-card appearance="outlined" class="cx-padding-0">
       <mat-card-title
-        class="cx-text-nowrap"
+        class="cx-text-nowrap cx-align-content-center"
         [matTooltip]="comicBook.detail.title"
       >
         {{ comicBook.detail.title }}
       </mat-card-title>
+      <mat-card-subtitle
+        *ngIf="!!comicBook?.detail?.coverDate"
+        class="cx-align-content-center"
+      >
+        {{ comicBook.detail.coverDate | date: "MMM YYYY" }}
+      </mat-card-subtitle>
       <mat-card-content>
         <cx-comic-page
           [imageUrl]="comicBook.pages[pageIndex] | comicPageUrl"
         ></cx-comic-page>
       </mat-card-content>
+      <mat-card-footer class="cx-align-content-center">
+        <div>
+          <button
+            id="previous-page-button"
+            mat-icon-button
+            (click)="pageIndex = pageIndex - 1"
+            [disabled]="pageIndex === 0"
+            [matTooltip]="
+              'comic-book.tooltip.show-previous-comic-page' | translate
+            "
+          >
+            <mat-icon>navigate_before</mat-icon>
+          </button>
+          {{
+            "comic-book.label.page-title"
+              | translate
+                : { which: pageIndex + 1, count: comicBook.pages.length }
+          }}
+          <button
+            id="next-page-button"
+            mat-icon-button
+            (click)="pageIndex = pageIndex + 1"
+            [disabled]="pageIndex === comicBook.pages.length - 1"
+            [matTooltip]="'comic-book.tooltip.show-next-comic-page' | translate"
+          >
+            <mat-icon>navigate_next</mat-icon>
+          </button>
+        </div>
+      </mat-card-footer>
     </mat-card>
   </div>
-  <div id="comic-tab-container" class="cx-grow-75p cx-padding-left-5">
+  <div id="comic-tab-container">
     <mat-tab-group
-      class="cx-width-100"
       animationDuration="0ms"
+      color="primary"
       [selectedIndex]="queryParameterService.currentTab$ | async"
       (selectedTabChange)="queryParameterService.onTabChange($event.index)"
     >

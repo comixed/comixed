@@ -1,5 +1,19 @@
 @use 'variables' as *;
 
+#all-comic-book-pages {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: start;
+  width: calc(100% - $cx-margin-space);
+  margin: $cx-margin-width;
+}
+
+.single-comic-book-page {
+  flex-grow: 1;
+  width: min(100%, max(10%, $cx-min-image-width));
+  min-width: $cx-min-image-width;
+}
+
 .mat-column-position {
   width: $cx-column-small;
   max-width: $cx-column-small;

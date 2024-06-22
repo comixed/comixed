@@ -1,4 +1,4 @@
-<mat-toolbar *ngIf="isAdmin">
+<mat-toolbar *ngIf="isAdmin" color="accent">
   <button
     id="save-comic-changes"
     class="cx-toolbar-button cx-margin-left-5"
@@ -21,23 +21,33 @@
   </button>
 </mat-toolbar>
 
-<form class="cx-width-100" [formGroup]="comicBookForm">
-  <mat-form-field class="cx-width-100" required>
+<form [formGroup]="comicBookForm">
+  <mat-form-field appearance="fill" class="cx-width-25" required>
     <mat-label>{{ "comic-book.label.publisher" | translate }}</mat-label>
     <input matInput formControlName="publisher" [readonly]="!isAdmin" />
   </mat-form-field>
 
-  <mat-form-field class="cx-width-50" required>
+  <mat-form-field
+    appearance="fill"
+    class="cx-width-50"
+    appearance="fill"
+    required
+  >
     <mat-label>{{ "comic-book.label.series" | translate }}</mat-label>
     <input matInput formControlName="series" [readonly]="!isAdmin" />
   </mat-form-field>
 
-  <mat-form-field class="cx-width-25" required>
+  <mat-form-field appearance="fill" class="cx-width-25" required>
     <mat-label>{{ "comic-book.label.volume" | translate }}</mat-label>
     <input matInput formControlName="volume" [readonly]="!isAdmin" />
   </mat-form-field>
 
-  <mat-form-field class="cx-width-25" required>
+  <mat-form-field appearance="fill" class="cx-width-50" required>
+    <mat-label>{{ "comic-book.label.title" | translate }}</mat-label>
+    <input matInput formControlName="title" [readonly]="!isAdmin" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="cx-width-25" required>
     <mat-label>{{ "comic-book.label.comic-type" | translate }}</mat-label>
     <mat-select
       id="comic-type-select"
@@ -53,12 +63,7 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field class="cx-width-100" required>
-    <mat-label>{{ "comic-book.label.title" | translate }}</mat-label>
-    <input matInput formControlName="title" [readonly]="!isAdmin" />
-  </mat-form-field>
-
-  <mat-form-field class="cx-width-50" required>
+  <mat-form-field appearance="fill" class="cx-width-25" required>
     <mat-label>{{ "comic-book.label.imprint" | translate }}</mat-label>
     <mat-select
       id="imprint-select"
@@ -74,22 +79,22 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field class="cx-width-50" required>
+  <mat-form-field appearance="fill" class="cx-width-50" required>
     <mat-label>{{ "comic-book.label.sort-name" | translate }}</mat-label>
     <input matInput formControlName="sortName" [readonly]="!isAdmin" />
   </mat-form-field>
 
-  <mat-form-field class="cx-width-25" required>
+  <mat-form-field appearance="fill" class="cx-width-25" required>
     <mat-label>{{ "comic-book.label.issue-number" | translate }}</mat-label>
     <input matInput formControlName="issueNumber" [readonly]="!isAdmin" />
   </mat-form-field>
 
-  <mat-form-field class="cx-width-25">
+  <mat-form-field appearance="fill" class="cx-width-25">
     <mat-label>{{ "comic-book.label.comic-state" | translate }}</mat-label>
     <input matInput formControlName="comicState" readonly />
   </mat-form-field>
 
-  <mat-form-field class="cx-width-25">
+  <mat-form-field appearance="fill" class="cx-width-25">
     <mat-label>{{ "comic-book.label.cover-date" | translate }}</mat-label>
     <input
       matInput
@@ -104,7 +109,7 @@
     <mat-datepicker #coverDatePicker></mat-datepicker>
   </mat-form-field>
 
-  <mat-form-field class="cx-width-25">
+  <mat-form-field appearance="fill" class="cx-width-25">
     <mat-label>{{ "comic-book.label.store-date" | translate }}</mat-label>
     <input
       matInput
@@ -119,17 +124,17 @@
     <mat-datepicker #storeDatePicker></mat-datepicker>
   </mat-form-field>
 
-  <mat-form-field class="cx-width-25">
+  <mat-form-field appearance="fill" class="cx-width-25">
     <mat-label>{{ "comic-book.label.filesize" | translate }}</mat-label>
     <input matInput formControlName="fileSize" readonly />
   </mat-form-field>
 
-  <mat-form-field class="cx-width-25">
+  <mat-form-field appearance="fill" class="cx-width-25">
     <mat-label>{{ "comic-book.label.archive-type" | translate }}</mat-label>
     <input matInput formControlName="archiveType" readonly />
   </mat-form-field>
 
-  <mat-form-field class="cx-width-100">
+  <mat-form-field appearance="fill" class="cx-width-100">
     <mat-label>{{ "comic-book.label.filename" | translate }}</mat-label>
     <input matInput formControlName="filename" readonly />
     <button
@@ -142,7 +147,7 @@
     </button>
   </mat-form-field>
 
-  <mat-form-field class="cx-width-100">
+  <mat-form-field appearance="fill" class="cx-width-100">
     <mat-label>{{ "comic-book.label.scraping-notes" | translate }}</mat-label>
     <textarea
       matInput
