@@ -152,7 +152,7 @@
     },
     "page-title": "Library Scraping",
     "scrape-comic": {
-      "effect-success": "Comic successfully scraped!",
+      "effect-success": "Comic scraping started!",
       "effect-failure": "Failed to scrape comic."
     },
     "scrape-comic-confirmation-title": "Replace Comic Data",

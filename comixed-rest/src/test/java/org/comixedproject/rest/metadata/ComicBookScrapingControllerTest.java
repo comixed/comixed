@@ -199,10 +199,10 @@ public class ComicBookScrapingControllerTest {
 
   @Test(expected = MetadataException.class)
   public void testScrapeComicScrapingAdaptorRaisesException() throws MetadataException {
-    Mockito.when(
-            metadataService.scrapeComic(
-                Mockito.anyLong(), Mockito.anyLong(), Mockito.anyString(), Mockito.anyBoolean()))
-        .thenThrow(MetadataException.class);
+    Mockito.doThrow(MetadataException.class)
+        .when(metadataService)
+        .asyncScrapeComic(
+            Mockito.anyLong(), Mockito.anyLong(), Mockito.anyString(), Mockito.anyBoolean());
 
     try {
       controller.scrapeComic(
@@ -211,28 +211,19 @@ public class ComicBookScrapingControllerTest {
           new ScrapeComicRequest(TEST_ISSUE_ID, TEST_SKIP_CACHE));
     } finally {
       Mockito.verify(metadataService, Mockito.times(1))
-          .scrapeComic(TEST_METADATA_SOURCE_ID, TEST_COMIC_ID, TEST_ISSUE_ID, TEST_SKIP_CACHE);
+          .asyncScrapeComic(TEST_METADATA_SOURCE_ID, TEST_COMIC_ID, TEST_ISSUE_ID, TEST_SKIP_CACHE);
     }
   }
 
   @Test
   public void testScrapeComic() throws MetadataException {
-    Mockito.when(
-            metadataService.scrapeComic(
-                Mockito.anyLong(), Mockito.anyLong(), Mockito.anyString(), Mockito.anyBoolean()))
-        .thenReturn(comicBook);
-
-    ComicBook response =
-        controller.scrapeComic(
-            TEST_METADATA_SOURCE_ID,
-            TEST_COMIC_ID,
-            new ScrapeComicRequest(TEST_ISSUE_ID, TEST_SKIP_CACHE));
-
-    assertNotNull(response);
-    assertSame(comicBook, response);
+    controller.scrapeComic(
+        TEST_METADATA_SOURCE_ID,
+        TEST_COMIC_ID,
+        new ScrapeComicRequest(TEST_ISSUE_ID, TEST_SKIP_CACHE));
 
     Mockito.verify(metadataService, Mockito.times(1))
-        .scrapeComic(TEST_METADATA_SOURCE_ID, TEST_COMIC_ID, TEST_ISSUE_ID, TEST_SKIP_CACHE);
+        .asyncScrapeComic(TEST_METADATA_SOURCE_ID, TEST_COMIC_ID, TEST_ISSUE_ID, TEST_SKIP_CACHE);
   }
 
   @Test(expected = ComicBookException.class)
