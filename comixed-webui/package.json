@@ -55,7 +55,7 @@
     "@stomp/rx-stomp": "^2.0.0",
     "@stomp/stompjs": "^7.0.0",
     "@swimlane/ngx-charts": "^20.5.0",
-    "@tragically-slick/confirmation": "^15",
+    "@tragically-slick/confirmation": "^17.1.1",
     "@types/file-saver": "^2.0.0",
     "ansi-html": "^0.0.8",
     "ansi-regex": "^4.1.1",

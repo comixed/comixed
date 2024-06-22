@@ -528,7 +528,8 @@ th {
   color: var(--text-accent-color) !important;
 }
 
-.cx-action-button {
+.cx-action-button,
+tsm-confirmation button {
   min-width: 100px !important;
   padding-bottom: 5px !important;
   margin-left: 5px !important;
