@@ -136,7 +136,6 @@ public class ComicBookScrapingController {
    * @param sourceId the metadata source id
    * @param comicId the comic id
    * @param request the request body
-   * @return the scraped and updated {@link ComicBook}
    * @throws MetadataException if an error occurs
    */
   @PutMapping(
@@ -145,8 +144,7 @@ public class ComicBookScrapingController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.metadata.scrape-comic")
-  @JsonView(View.ComicDetailsView.class)
-  public ComicBook scrapeComic(
+  public void scrapeComic(
       @PathVariable("sourceId") final Long sourceId,
       @PathVariable("comicId") final Long comicId,
       @RequestBody() final ScrapeComicRequest request)
@@ -154,7 +152,7 @@ public class ComicBookScrapingController {
     boolean skipCache = request.getSkipCache();
     String issueId = request.getIssueId();
     log.info("Scraping comic");
-    return this.metadataService.scrapeComic(sourceId, comicId, issueId, skipCache);
+    this.metadataService.asyncScrapeComic(sourceId, comicId, issueId, skipCache);
   }
 
   /**

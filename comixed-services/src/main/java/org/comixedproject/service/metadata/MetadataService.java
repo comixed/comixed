@@ -47,6 +47,7 @@ import org.comixedproject.service.comicbooks.ImprintService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -209,8 +210,6 @@ public class MetadataService {
   /**
    * Scrapes a single comic and updates the comic in the database.
    *
-   * <p>* @param comicId the comic id
-   *
    * @param metadataSourceId the metadata source id
    * @param comicId the comic id
    * @param issueId the issue id
@@ -219,6 +218,39 @@ public class MetadataService {
    * @throws MetadataException if an error occurs
    */
   public ComicBook scrapeComic(
+      final Long metadataSourceId,
+      final Long comicId,
+      final String issueId,
+      final boolean skipCache)
+      throws MetadataException {
+    this.doScrapeComic(metadataSourceId, comicId, issueId, skipCache);
+    try {
+      return this.comicBookService.getComic(comicId);
+    } catch (ComicBookException error) {
+      throw new MetadataException("failed to load comic", error);
+    }
+  }
+
+  /**
+   * Asynchronously scrapes a single comic and updates the comic in the database.
+   *
+   * @param metadataSourceId the metadata source id
+   * @param comicId the comic id
+   * @param issueId the issue id
+   * @param skipCache the skip cache flag
+   * @throws MetadataException if an error occurs
+   */
+  @Async
+  public void asyncScrapeComic(
+      final Long metadataSourceId,
+      final Long comicId,
+      final String issueId,
+      final boolean skipCache)
+      throws MetadataException {
+    this.doScrapeComic(metadataSourceId, comicId, issueId, skipCache);
+  }
+
+  private void doScrapeComic(
       final Long metadataSourceId,
       final Long comicId,
       final String issueId,
@@ -350,11 +382,6 @@ public class MetadataService {
       this.imprintService.update(comicBook);
       log.trace("Updating comicBook state: scraped");
       this.comicStateHandler.fireEvent(comicBook, ComicEvent.scraped);
-    }
-    try {
-      return this.comicBookService.getComic(comicId);
-    } catch (ComicBookException error) {
-      throw new MetadataException("failed to load comic", error);
     }
   }
 
