@@ -1,7 +1,5 @@
 @use "variables" as *;
-
 @use '@angular/material' as mat;
-
 @use 'variables' as *;
 
 #cx-busy-overlay {
@@ -25,7 +23,7 @@
 }
 
 #app-sidenav-container {
-  width: min(50vw, max(20vw, $cx-smallest-width));
+  inline-size: max-content;
   margin-bottom: $cx-bottom-margin;
 }
 
