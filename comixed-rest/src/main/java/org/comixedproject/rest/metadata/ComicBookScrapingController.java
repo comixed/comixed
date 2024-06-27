@@ -294,7 +294,7 @@ public class ComicBookScrapingController {
         metadataSourceId,
         issueId,
         skipCache);
-    this.metadataService.scrapeComic(metadataSourceId, comicBookId, issueId, skipCache);
+    this.metadataService.asyncScrapeComic(metadataSourceId, comicBookId, issueId, skipCache);
 
     try {
       log.debug("Removing comic book from multi-book state");
