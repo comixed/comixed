@@ -18,6 +18,7 @@
 
 package org.comixedproject;
 
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -35,5 +36,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableScheduling
 @EnableWebSecurity
 @EnableAsync
+@EnableCaching
 @EnableMethodSecurity(prePostEnabled = true)
 public class ComiXedConfiguration {}
