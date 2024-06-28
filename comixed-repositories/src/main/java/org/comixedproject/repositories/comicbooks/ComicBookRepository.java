@@ -571,6 +571,10 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   void markForOrganizationById(@Param("ids") List<Long> ids);
 
   @Modifying
+  @Query("UPDATE ComicBook c SET c.organizing = true")
+  void markAllForOrganization();
+
+  @Modifying
   @Query(
       "UPDATE ComicBook c SET c.recreating = true WHERE c.id IN (:ids) AND c.recreating IS FALSE")
   void markForRecreationById(@Param("ids") List<Long> ids);

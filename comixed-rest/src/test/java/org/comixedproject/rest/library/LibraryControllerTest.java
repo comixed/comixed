@@ -215,7 +215,7 @@ public class LibraryControllerTest {
   public void testOrganizeEntireLibrary() throws Exception {
     controller.organizeEntireLibrary();
 
-    Mockito.verify(libraryService, Mockito.times(1)).prepareForOrganization();
+    Mockito.verify(libraryService, Mockito.times(1)).prepareAllForOrganization();
   }
 
   @Test
