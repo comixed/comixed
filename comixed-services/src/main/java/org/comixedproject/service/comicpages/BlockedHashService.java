@@ -18,6 +18,8 @@
 
 package org.comixedproject.service.comicpages;
 
+import static org.comixedproject.service.comicbooks.ComicBookService.COMICBOOK_CACHE;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.repositories.comicpages.BlockedHashRepository;
 import org.comixedproject.service.library.DuplicatePageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -156,6 +159,7 @@ public class BlockedHashService {
    * @param hashes the page hashes
    */
   @Transactional
+  @CacheEvict(cacheNames = COMICBOOK_CACHE, allEntries = true)
   public void blockPages(final List<String> hashes) {
     for (int index = 0; index < hashes.size(); index++) {
       try {
@@ -180,6 +184,7 @@ public class BlockedHashService {
    * @param hashes the hash list
    */
   @Transactional
+  @CacheEvict(cacheNames = COMICBOOK_CACHE, allEntries = true)
   public void unblockPages(final List<String> hashes) {
     for (int index = 0; index < hashes.size(); index++) {
       final String hash = hashes.get(index);
