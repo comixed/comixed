@@ -1240,6 +1240,13 @@ public class ComicBookServiceTest {
   }
 
   @Test
+  public void testPrepareAllForOrganization() {
+    service.prepareAllForOrganization();
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).markAllForOrganization();
+  }
+
+  @Test
   public void testPrepareForRecreation() {
     service.prepareForRecreation(idList);
 

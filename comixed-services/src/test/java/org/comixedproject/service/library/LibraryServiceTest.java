@@ -97,13 +97,10 @@ public class LibraryServiceTest {
   }
 
   @Test
-  public void testPrepareEntireLibraryForOrganization() throws LibraryException {
-    Mockito.when(comicBookService.getAllIds()).thenReturn(comicIdList);
-    for (int index = 0; index < 25; index++) comicIdList.add((long) index);
+  public void testPrepareAllForOrganization() {
+    service.prepareAllForOrganization();
 
-    service.prepareForOrganization();
-
-    Mockito.verify(comicBookService, Mockito.times(1)).prepareForOrganization(comicIdList);
+    Mockito.verify(comicBookService, Mockito.times(1)).prepareAllForOrganization();
   }
 
   @Test
