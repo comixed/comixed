@@ -261,7 +261,6 @@ public class ComicBookController {
   /**
    * Loads one display page's worth of comic details.
    *
-   * @param principal the user principal
    * @param session the http session
    * @param request the request body
    * @return the response body
@@ -274,9 +273,7 @@ public class ComicBookController {
   @PreAuthorize("hasRole('READER')")
   @JsonView(ComicDetailsView.class)
   public LoadComicDetailsResponse loadComicDetailList(
-      final HttpSession session,
-      final Principal principal,
-      @RequestBody() final LoadComicDetailsRequest request)
+      final HttpSession session, @RequestBody() final LoadComicDetailsRequest request)
       throws LastReadException, ComicBookSelectionException {
     log.debug("Loading comics: {}", request);
     List<ComicDetail> comicDetails;
