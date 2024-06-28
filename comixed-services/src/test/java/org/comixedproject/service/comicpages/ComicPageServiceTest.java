@@ -18,7 +18,6 @@
 
 package org.comixedproject.service.comicpages;
 
-import static org.comixedproject.state.comicpages.ComicPageStateHandler.HEADER_PAGE;
 import static org.junit.Assert.*;
 
 import java.io.File;
@@ -26,7 +25,6 @@ import java.io.IOException;
 import java.util.*;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
-import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.comicpages.ComicPageState;
@@ -42,18 +40,14 @@ import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHeaders;
-import org.springframework.statemachine.state.State;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 public class ComicPageServiceTest {
-  private static final long TEST_PAGE_ID = 129;
+  private static final long TEST_PAGE_ID = 129L;
   private static final long TEST_COMIC_ID = 1002L;
   private static final int TEST_PAGE_INDEX = 7;
   private static final String TEST_PAGE_HASH = "1234567890ABCDEF";
-  private static final ComicPageState TEST_STATE = ComicPageState.STABLE;
   private static final long TEST_MAX_ENTRIES = 10L;
   private static final String TEST_PAGE_FILENAME = "src/test/resources/example.jpg";
   private static final int TEST_BATCH_SIZE = 129;
@@ -67,9 +61,6 @@ public class ComicPageServiceTest {
   @Mock private ComicPage savedPage;
   @Mock private ComicPage pageRecord;
   @Mock private ComicBook comicBook;
-  @Mock private State<ComicPageState, ComicPageEvent> state;
-  @Mock private Message<ComicPageEvent> message;
-  @Mock private MessageHeaders messageHeaders;
 
   @Captor private ArgumentCaptor<Pageable> argumentCaptorPageable;
 
@@ -81,28 +72,7 @@ public class ComicPageServiceTest {
 
   @Before
   public void setUp() throws IOException {
-    Mockito.when(message.getHeaders()).thenReturn(messageHeaders);
-    Mockito.when(messageHeaders.get(HEADER_PAGE, ComicPage.class)).thenReturn(page);
-    Mockito.when(state.getId()).thenReturn(TEST_STATE);
-
     pageContent = FileUtils.readFileToByteArray(new File(TEST_PAGE_FILENAME));
-  }
-
-  @Test
-  public void testAfterPropertiesSet() throws Exception {
-    service.afterPropertiesSet();
-
-    Mockito.verify(comicPageStateHandler, Mockito.times(1)).addListener(service);
-  }
-
-  @Test
-  public void testOnPageStateChange() throws PublishingException {
-    Mockito.when(comicPageRepository.save(Mockito.any(ComicPage.class))).thenReturn(savedPage);
-
-    service.onPageStateChange(state, message);
-
-    Mockito.verify(page, Mockito.times(1)).setPageState(TEST_STATE);
-    Mockito.verify(comicPageRepository, Mockito.times(1)).save(page);
   }
 
   @Test
@@ -197,17 +167,15 @@ public class ComicPageServiceTest {
   @Test
   public void testSave() throws ComicPageException {
     Mockito.when(page.getId()).thenReturn(TEST_PAGE_ID);
-    Mockito.when(comicPageRepository.findById(Mockito.anyLong()))
-        .thenReturn(Optional.of(pageRecord));
+    Mockito.when(comicPageRepository.saveAndFlush(Mockito.any(ComicPage.class)))
+        .thenReturn(pageRecord);
 
     final ComicPage result = service.save(page);
 
     assertNotNull(result);
     assertSame(pageRecord, result);
 
-    Mockito.verify(comicPageStateHandler, Mockito.times(1))
-        .fireEvent(page, ComicPageEvent.savePage);
-    Mockito.verify(comicPageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
+    Mockito.verify(comicPageRepository, Mockito.times(1)).saveAndFlush(page);
   }
 
   @Test
@@ -255,7 +223,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testMarkPagesUndeleted() {
+  public void testUpdatePageDeletionUnmark() {
     idList.add(TEST_PAGE_ID);
 
     Mockito.when(comicPageRepository.getById(Mockito.anyLong())).thenReturn(page);

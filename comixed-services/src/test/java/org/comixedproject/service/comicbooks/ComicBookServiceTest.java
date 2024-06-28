@@ -29,9 +29,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
-import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.messaging.comicbooks.PublishComicBookRemovalAction;
-import org.comixedproject.messaging.comicbooks.PublishComicBookUpdateAction;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.collections.Publisher;
 import org.comixedproject.model.collections.Series;
@@ -60,9 +57,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHeaders;
-import org.springframework.statemachine.state.State;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
@@ -111,8 +105,6 @@ public class ComicBookServiceTest {
   @InjectMocks private ComicBookService service;
   @Mock private ComicStateHandler comicStateHandler;
   @Mock private ComicBookRepository comicBookRepository;
-  @Mock private PublishComicBookUpdateAction comicUpdatePublishAction;
-  @Mock private PublishComicBookRemovalAction comicRemovalPublishAction;
   @Mock private ComicBookMetadataAdaptor comicBookMetadataAdaptor;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
   @Mock private ComicBook comicBook;
@@ -120,9 +112,6 @@ public class ComicBookServiceTest {
   @Mock private ComicBook incomingComicBook;
   @Mock private ComicDetail incomingComicDetail;
   @Mock private ComicBook comicBookRecord;
-  @Mock private State<ComicState, ComicEvent> state;
-  @Mock private Message<ComicEvent> message;
-  @Mock private MessageHeaders messageHeaders;
   @Mock private ImprintService imprintService;
   @Mock private List<String> collectionList;
   @Mock private List<String> publisherList;
@@ -185,77 +174,6 @@ public class ComicBookServiceTest {
     calendar.setTime(now);
 
     lastReadList.add(lastRead);
-  }
-
-  @Test
-  public void testAfterPropertiesSet() throws Exception {
-    service.afterPropertiesSet();
-
-    Mockito.verify(comicStateHandler, Mockito.times(1)).addListener(service);
-  }
-
-  @Test
-  public void testOnComicStateChangePurgeEvent() throws PublishingException {
-    Mockito.when(message.getHeaders()).thenReturn(messageHeaders);
-    Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
-        .thenReturn(comicBook);
-    Mockito.when(state.getId()).thenReturn(ComicState.REMOVED);
-
-    service.onComicStateChange(state, message);
-
-    Mockito.verify(comicRemovalPublishAction, Mockito.times(1)).publish(comicBook);
-  }
-
-  @Test
-  public void testOnComicStateChangePurgeEventPublishingException() throws PublishingException {
-    Mockito.when(message.getHeaders()).thenReturn(messageHeaders);
-    Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
-        .thenReturn(comicBook);
-    Mockito.when(state.getId()).thenReturn(ComicState.REMOVED);
-    Mockito.doThrow(PublishingException.class)
-        .when(comicRemovalPublishAction)
-        .publish(Mockito.any(ComicBook.class));
-
-    service.onComicStateChange(state, message);
-
-    Mockito.verify(comicRemovalPublishAction, Mockito.times(1)).publish(comicBook);
-  }
-
-  @Test
-  public void testOnComicStateChange() throws PublishingException {
-    Mockito.when(message.getHeaders()).thenReturn(messageHeaders);
-    Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
-        .thenReturn(comicBook);
-    Mockito.when(state.getId()).thenReturn(TEST_STATE);
-    Mockito.when(comicBookRepository.saveAndFlush(Mockito.any(ComicBook.class)))
-        .thenReturn(comicBookRecord);
-
-    service.onComicStateChange(state, message);
-
-    Mockito.verify(comicDetail, Mockito.times(1)).setComicState(TEST_STATE);
-    Mockito.verify(comicBook, Mockito.times(1)).setLastModifiedOn(Mockito.any(Date.class));
-    Mockito.verify(comicBookRepository, Mockito.times(1)).saveAndFlush(comicBook);
-    Mockito.verify(comicUpdatePublishAction, Mockito.times(1)).publish(comicBookRecord);
-  }
-
-  @Test
-  public void testOnComicStateChangePublishError() throws PublishingException {
-    Mockito.when(message.getHeaders()).thenReturn(messageHeaders);
-    Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
-        .thenReturn(comicBook);
-    Mockito.when(state.getId()).thenReturn(TEST_STATE);
-    Mockito.when(comicBookRepository.saveAndFlush(Mockito.any(ComicBook.class)))
-        .thenReturn(comicBookRecord);
-    Mockito.doThrow(PublishingException.class)
-        .when(comicUpdatePublishAction)
-        .publish(Mockito.any(ComicBook.class));
-
-    service.onComicStateChange(state, message);
-
-    Mockito.verify(comicDetail, Mockito.times(1)).setComicState(TEST_STATE);
-    Mockito.verify(comicBook, Mockito.times(1)).setLastModifiedOn(Mockito.any(Date.class));
-    Mockito.verify(comicBookRepository, Mockito.times(1)).saveAndFlush(comicBook);
-    Mockito.verify(comicUpdatePublishAction, Mockito.times(1)).publish(comicBookRecord);
   }
 
   @Test

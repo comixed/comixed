@@ -24,9 +24,9 @@ import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.comicpages.ComicPageState;
 import org.comixedproject.model.comicpages.DeletedPageAndComic;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -36,7 +36,7 @@ import org.springframework.stereotype.Repository;
  * @author Darryl L. Pierce
  */
 @Repository
-public interface ComicPageRepository extends CrudRepository<ComicPage, Long> {
+public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
   /**
    * Fetches a single page by record id.
    *
