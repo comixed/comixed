@@ -79,9 +79,10 @@ public class LibraryService {
     this.comicBookService.prepareForOrganization(ids);
   }
 
+  /** Marks the entire library for organization. */
   /** Updates the entire library for organization. */
-  public void prepareForOrganization() {
-    this.prepareForOrganization(this.comicBookService.getAllIds());
+  public void prepareAllForOrganization() {
+    this.comicBookService.prepareAllForOrganization();
   }
 
   /**

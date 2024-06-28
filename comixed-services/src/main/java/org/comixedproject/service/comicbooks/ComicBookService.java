@@ -847,6 +847,11 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     this.comicBookRepository.markForOrganizationById(ids);
   }
 
+  @Transactional
+  public void prepareAllForOrganization() {
+    this.comicBookRepository.markAllForOrganization();
+  }
+
   /**
    * Marks the specified comics for recreation.
    *

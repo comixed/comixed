@@ -240,7 +240,7 @@ public class LibraryController {
   @Timed(value = "comixed.library.organize")
   public void organizeEntireLibrary() {
     log.info("Preparing to organize entire library");
-    this.libraryService.prepareForOrganization();
+    this.libraryService.prepareAllForOrganization();
   }
 
   /**
