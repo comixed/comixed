@@ -52,6 +52,8 @@ export class ComicStoryComponent {
   }
 
   private getTags(tags: ComicTag[], allowed: ComicTagType[]): ComicTag[] {
-    return tags.filter(tag => allowed.includes(tag.type));
+    return tags
+      .filter(tag => allowed.includes(tag.type))
+      .sort((left, right) => left.type.localeCompare(right.type));
   }
 }
