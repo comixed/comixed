@@ -73,6 +73,8 @@ export const COMIC_DETAIL_1: ComicDetail = {
   notes: '',
   tags: [
     { type: ComicTagType.WRITER, value: 'Chris Claremont' },
+    { type: ComicTagType.WRITER, value: 'John Burn' },
+    { type: ComicTagType.PENCILLER, value: 'John Burn' },
     { type: ComicTagType.CHARACTER, value: 'Captain America' },
     { type: ComicTagType.TEAM, value: 'The Avengers' },
     { type: ComicTagType.LOCATION, value: 'Brooklyn' },

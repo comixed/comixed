@@ -17,8 +17,8 @@
         {{ "comic-book.label.credits" | translate: { count: credits.length } }}
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <div class="cx-detail-card-container cx-width-100">
-      <div *ngFor="let credit of credits" class="cx-grow-20p">
+    <div class="comic-story-cards cx-width-100">
+      <div *ngFor="let credit of credits" class="comic-story-card">
         <cx-comic-detail-card
           [comic]="comic.detail"
           [title]="credit.value"
@@ -37,8 +37,8 @@
         }}
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <div class="cx-detail-card-container cx-width-100">
-      <div *ngFor="let character of characters" class="cx-grow-20p">
+    <div class="comic-story-cards cx-width-100">
+      <div *ngFor="let character of characters" class="comic-story-card">
         <cx-comic-detail-card
           [comic]="comic.detail"
           [title]="character.value"
@@ -59,8 +59,8 @@
         {{ "comic-book.label.teams" | translate: { count: teams.length } }}
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <div class="cx-detail-card-container cx-width-100">
-      <div *ngFor="let team of teams" class="cx-grow-20p">
+    <div class="comic-story-cards cx-width-100">
+      <div *ngFor="let team of teams" class="comic-story-card">
         <cx-comic-detail-card
           [comic]="comic.detail"
           [title]="team.value"
@@ -78,8 +78,8 @@
         }}
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <div class="cx-detail-card-container cx-width-100">
-      <div *ngFor="let location of locations" class="cx-grow-20p">
+    <div class="comic-story-cards cx-width-100">
+      <div *ngFor="let location of locations" class="comic-story-card">
         <cx-comic-detail-card
           [comic]="comic.detail"
           [title]="location.value"
@@ -100,8 +100,8 @@
         {{ "comic-book.label.stories" | translate: { count: stories.length } }}
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <div class="cx-detail-card-container cx-width-100">
-      <div *ngFor="let story of stories" class="cx-grow-20p">
+    <div class="comic-story-cards cx-width-100">
+      <div *ngFor="let story of stories" class="comic-story-card">
         <cx-comic-detail-card
           [comic]="comic.detail"
           [title]="story.value"

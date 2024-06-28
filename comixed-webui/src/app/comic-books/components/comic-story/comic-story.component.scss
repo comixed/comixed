@@ -1,0 +1,16 @@
+@use "variables" as *;
+
+.comic-story-cards {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: start;
+  width: calc(100% - $cx-margin-space);
+  margin: $cx-margin-width;
+}
+
+.comic-story-card {
+  flex-grow: 1;
+  width: min(100%, max(10%, $cx-min-image-width));
+  min-width: $cx-min-image-width;
+  max-width: $cx-max-image-width;
+}
