@@ -18,13 +18,10 @@
 
 package org.comixedproject.service.comicbooks;
 
-import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,9 +30,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
-import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.messaging.comicbooks.PublishComicBookRemovalAction;
-import org.comixedproject.messaging.comicbooks.PublishComicBookUpdateAction;
 import org.comixedproject.model.collections.Publisher;
 import org.comixedproject.model.collections.Series;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -48,17 +42,13 @@ import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.comixedproject.repositories.comicbooks.ComicBookRepository;
 import org.comixedproject.state.comicbooks.ComicEvent;
-import org.comixedproject.state.comicbooks.ComicStateChangeListener;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.messaging.Message;
-import org.springframework.statemachine.state.State;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,12 +60,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Log4j2
 @CacheConfig(cacheNames = {"comicbooks"})
-public class ComicBookService implements InitializingBean, ComicStateChangeListener {
+public class ComicBookService {
   @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private ComicBookRepository comicBookRepository;
   @Autowired private ComicBookMetadataAdaptor comicBookMetadataAdaptor;
-  @Autowired private PublishComicBookUpdateAction publishComicBookUpdateAction;
-  @Autowired private PublishComicBookRemovalAction publishComicBookRemovalAction;
   @Autowired private ImprintService imprintService;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
 
@@ -87,7 +75,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    * @throws ComicBookException if the comic does not exist
    */
   @Transactional
-  @Cacheable
+  @Cacheable(key = "#id")
   public ComicBook getComic(final long id) throws ComicBookException {
     log.debug("Getting comic: id={}", id);
 
@@ -161,7 +149,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    * @throws ComicBookException if the comic id is invalid
    */
   @Transactional
-  @CacheEvict
+  @CacheEvict(key = "#result.id")
   public ComicBook deleteComicBook(final long id) throws ComicBookException {
     log.debug("Marking comic for deletion: id={}", id);
     final var comic = this.doGetComic(id);
@@ -178,7 +166,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    * @throws ComicBookException if the id is invalid
    */
   @Transactional
-  @CachePut
+  @CachePut(key = "#result.id")
   public ComicBook updateComic(final long id, final ComicBook update) throws ComicBookException {
     log.debug("Updating comic: id={}", id);
     final var comic = this.doGetComic(id);
@@ -211,7 +199,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    * @return the saved comicBook
    */
   @Transactional
-  @CachePut
+  @CachePut(key = "#result.id")
   public ComicBook save(final ComicBook comicBook) {
     log.debug("Saving comicBook: filename={}", comicBook.getComicDetail().getFilename());
 
@@ -251,7 +239,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    * @throws ComicBookException if the comic id is invalid
    */
   @Transactional
-  @CachePut
+  @CachePut(key = "#result.id")
   public ComicBook undeleteComicBook(final long id) throws ComicBookException {
     log.debug("Restoring comic: id={}", id);
     final var comic = this.doGetComic(id);
@@ -288,42 +276,9 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    * @return the comic
    */
   @Transactional
-  @CachePut
+  @CachePut(key = "#result.id")
   public ComicBook findByFilename(final String filename) {
     return this.comicBookRepository.findByFilename(filename);
-  }
-
-  @Override
-  public void onComicStateChange(
-      final State<ComicState, ComicEvent> state, final Message<ComicEvent> message) {
-    final var comic = message.getHeaders().get(HEADER_COMIC, ComicBook.class);
-    if (comic == null) return;
-    log.debug("Processing comic state change: [{}] =>  {}", comic.getId(), state.getId());
-    if (state.getId() == ComicState.REMOVED) {
-      log.trace("Publishing comic removal");
-      try {
-        this.publishComicBookRemovalAction.publish(comic);
-      } catch (PublishingException error) {
-        log.error("Failed to publish comic removal", error);
-      }
-    } else {
-      comic.getComicDetail().setComicState(state.getId());
-      comic.setLastModifiedOn(new Date());
-      comic.updatePageNumbers();
-      final ComicBook updated = ComicBookService.this.save(comic);
-      log.trace("Publishing comic  update");
-      try {
-        this.publishComicBookUpdateAction.publish(updated);
-      } catch (PublishingException error) {
-        log.error("Failed to publish comic update", error);
-      }
-    }
-  }
-
-  @Override
-  public void afterPropertiesSet() throws Exception {
-    log.trace("Subscribing to comic state changes");
-    this.comicStateHandler.addListener(this);
   }
 
   /**
@@ -334,7 +289,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    * @throws ComicBookException if the comic id is invalid
    */
   @Transactional
-  @CachePut
+  @CachePut(key = "#result.id")
   public ComicBook deleteMetadata(final long comicId) throws ComicBookException {
     log.debug("Loading comic: id={}", comicId);
     final var comic = this.doGetComic(comicId);
@@ -532,7 +487,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    * @param issueNumber the issue number
    * @return the comic
    */
-  @CachePut
+  @CachePut(key = "#result.id")
   public ComicBook findComic(
       final String publisher, final String series, final String volume, final String issueNumber) {
     log.trace(

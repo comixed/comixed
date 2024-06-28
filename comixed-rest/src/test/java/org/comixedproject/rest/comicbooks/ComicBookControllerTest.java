@@ -406,7 +406,6 @@ public class ComicBookControllerTest {
     final LoadComicDetailsResponse result =
         controller.loadComicDetailList(
             httpSession,
-            principal,
             new LoadComicDetailsRequest(
                 TEST_PAGE_SIZE,
                 TEST_PAGE_INDEX,
@@ -447,7 +446,6 @@ public class ComicBookControllerTest {
     final LoadComicDetailsResponse result =
         controller.loadComicDetailList(
             httpSession,
-            principal,
             new LoadComicDetailsRequest(
                 TEST_PAGE_SIZE,
                 TEST_PAGE_INDEX,
