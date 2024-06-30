@@ -28,6 +28,7 @@ import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
+import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -70,20 +71,22 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   ComicBook getById(@Param("id") long id);
 
   @Query(
-      "SELECT c FROM ComicBook c WHERE c.comicDetail.series = :series AND c.comicDetail.volume = :volume AND c.comicDetail.issueNumber <> :issueNumber AND c.comicDetail.coverDate <= :coverDate ORDER BY c.comicDetail.coverDate, c.comicDetail.issueNumber DESC")
-  List<ComicBook> findIssuesBeforeComic(
+      "SELECT c.id FROM ComicBook c WHERE c.comicDetail.series = :series AND c.comicDetail.volume = :volume AND c.comicDetail.issueNumber <> :issueNumber AND c.comicDetail.coverDate <= :coverDate ORDER BY c.comicDetail.coverDate, c.comicDetail.issueNumber DESC")
+  Long findPreviousComicBookIdInSeries(
       @Param("series") final String series,
       @Param("volume") final String volume,
       @Param("issueNumber") final String issueNumber,
-      @Param("coverDate") final Date coverDate);
+      @Param("coverDate") final Date coverDate,
+      final Limit limit);
 
   @Query(
-      "SELECT c FROM ComicBook c WHERE c.comicDetail.series = :series AND c.comicDetail.volume = :volume AND c.comicDetail.issueNumber <> :issueNumber AND c.comicDetail.coverDate >= :coverDate ORDER BY c.comicDetail.coverDate, c.comicDetail.issueNumber ASC")
-  List<ComicBook> findIssuesAfterComic(
+      "SELECT c.id FROM ComicBook c WHERE c.comicDetail.series = :series AND c.comicDetail.volume = :volume AND c.comicDetail.issueNumber <> :issueNumber AND c.comicDetail.coverDate >= :coverDate ORDER BY c.comicDetail.coverDate, c.comicDetail.issueNumber ASC")
+  Long findNextComicBookIdInSeries(
       @Param("series") String series,
       @Param("volume") String volume,
       @Param("issueNumber") String issueNumber,
-      @Param("coverDate") Date coverDate);
+      @Param("coverDate") Date coverDate,
+      final Limit limit);
 
   @Query("SELECT c FROM ComicBook c ORDER BY c.id")
   List<ComicBook> findComicsToMove(Pageable pageable);

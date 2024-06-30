@@ -55,6 +55,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -71,9 +72,9 @@ public class ComicBookServiceTest {
   private static final String TEST_ISSUE_NUMBER = "237";
   private static final int TEST_MAXIMUM_COMICS = 100;
   private static final String TEST_BEFORE_PREVIOUS_ISSUE_NUMBER = "5";
-  private static final String TEST_PREVIOUS_ISSUE_NUMBER = "5";
+  private static final Long TEST_PREVIOUS_ISSUE_NUMBER = 5L;
   private static final String TEST_CURRENT_ISSUE_NUMBER = "7";
-  private static final String TEST_NEXT_ISSUE_NUMBER = "10";
+  private static final Long TEST_NEXT_ISSUE_NUMBER = 10L;
   private static final String TEST_AFTER_NEXT_ISSUE_NUMBER = "11";
   private static final String TEST_SORTABLE_NAME = "Sortable Name";
   private static final String TEST_IMPRINT = "Incredible Imprints";
@@ -124,6 +125,8 @@ public class ComicBookServiceTest {
 
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
   @Captor private ArgumentCaptor<PageRequest> pageRequestCaptor;
+  @Captor private ArgumentCaptor<Limit> previousComicBookLimitArgumentCaptor;
+  @Captor private ArgumentCaptor<Limit> nextComicBookLimitArgumentCaptor;
 
   @Before
   public void setUp() {
@@ -133,7 +136,7 @@ public class ComicBookServiceTest {
 
     previousComicBook.setComicDetail(
         new ComicDetail(previousComicBook, TEST_COMIC_FILENAME, ArchiveType.CBZ));
-    previousComicBook.getComicDetail().setIssueNumber(TEST_PREVIOUS_ISSUE_NUMBER);
+    previousComicBook.getComicDetail().setIssueNumber(TEST_PREVIOUS_ISSUE_NUMBER.toString());
     previousComicBook
         .getComicDetail()
         .setCoverDate(new Date(System.currentTimeMillis() - 24L * 60L * 60L * 1000L));
@@ -155,7 +158,7 @@ public class ComicBookServiceTest {
 
     nextComicBook.setComicDetail(
         new ComicDetail(nextComicBook, TEST_COMIC_FILENAME, ArchiveType.CBZ));
-    nextComicBook.getComicDetail().setIssueNumber(TEST_NEXT_ISSUE_NUMBER);
+    nextComicBook.getComicDetail().setIssueNumber(TEST_NEXT_ISSUE_NUMBER.toString());
     nextComicBook
         .getComicDetail()
         .setCoverDate(new Date(System.currentTimeMillis() + 24L * 60L * 60L * 1000L));
@@ -188,33 +191,49 @@ public class ComicBookServiceTest {
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(currentComicBook);
 
     Mockito.when(
-            comicBookRepository.findIssuesBeforeComic(
+            comicBookRepository.findPreviousComicBookIdInSeries(
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.any(Date.class)))
-        .thenReturn(previousComicBooks);
+                Mockito.any(Date.class),
+                previousComicBookLimitArgumentCaptor.capture()))
+        .thenReturn(TEST_PREVIOUS_ISSUE_NUMBER);
     Mockito.when(
-            comicBookRepository.findIssuesAfterComic(
+            comicBookRepository.findNextComicBookIdInSeries(
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.any(Date.class)))
-        .thenReturn(nextComicBooks);
+                Mockito.any(Date.class),
+                nextComicBookLimitArgumentCaptor.capture()))
+        .thenReturn(TEST_NEXT_ISSUE_NUMBER);
 
     final ComicBook result = service.getComic(TEST_COMIC_BOOK_ID);
 
     assertNotNull(result);
     assertSame(currentComicBook, result);
-    assertEquals(previousComicBook.getId(), result.getPreviousIssueId());
-    assertEquals(nextComicBook.getId(), result.getNextIssueId());
+    assertEquals(TEST_PREVIOUS_ISSUE_NUMBER, result.getPreviousIssueId());
+    assertEquals(TEST_NEXT_ISSUE_NUMBER, result.getNextIssueId());
+
+    final Limit previousComicBookLimit = previousComicBookLimitArgumentCaptor.getValue();
+    assertEquals(1, previousComicBookLimit.max());
+    final Limit nextComicBookLimit = previousComicBookLimitArgumentCaptor.getValue();
+    assertEquals(1, nextComicBookLimit.max());
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
     Mockito.verify(comicBookRepository, Mockito.times(1))
-        .findIssuesBeforeComic(
-            TEST_SERIES, TEST_VOLUME, TEST_CURRENT_ISSUE_NUMBER, TEST_COVER_DATE);
+        .findPreviousComicBookIdInSeries(
+            TEST_SERIES,
+            TEST_VOLUME,
+            TEST_CURRENT_ISSUE_NUMBER,
+            TEST_COVER_DATE,
+            previousComicBookLimit);
     Mockito.verify(comicBookRepository, Mockito.times(1))
-        .findIssuesAfterComic(TEST_SERIES, TEST_VOLUME, TEST_CURRENT_ISSUE_NUMBER, TEST_COVER_DATE);
+        .findNextComicBookIdInSeries(
+            TEST_SERIES,
+            TEST_VOLUME,
+            TEST_CURRENT_ISSUE_NUMBER,
+            TEST_COVER_DATE,
+            nextComicBookLimit);
   }
 
   @Test(expected = ComicBookException.class)

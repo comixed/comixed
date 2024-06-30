@@ -42,6 +42,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Limit;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -69,17 +70,18 @@ public class ComicBookRepositoryTest {
   private static final String TEST_SERIES = "Steve Rogers: Captain America";
   private static final String TEST_VOLUME = "2017";
   private static final String TEST_ISSUE_WITH_NO_NEXT = "514";
-  private static final String TEST_ISSUE_WITH_NEXT = "512";
+  private static final Long TEST_ISSUE_WITH_NEXT = 512L;
   private static final String TEST_ISSUE_WITH_NO_PREV = "249";
-  private static final String TEST_ISSUE_WITH_PREV = "513";
+  private static final Long TEST_ISSUE_WITH_PREV = 513L;
   private static final Date TEST_COVER_DATE_NO_NEXT = new Date(1490932800000L);
   private static final Date TEST_COVER_DATE_WITH_NEXT = new Date(1485838800000L);
   private static final Date TEST_COVER_DATE_NO_PREV = new Date(1425099600000L);
   private static final Date TEST_COVER_DATE_WITH_PREV = new Date(1488258000000L);
   private static final String TEST_HASH_WITH_NO_COMICS = "FEDCBA9876543210FEDCBA9876543210";
   private static final String TEST_HASH_WITH_COMICS = "0123456789ABCDEF0123456789ABCDEF";
-  private static final int TEST_BATCH_SIZE = 1;
   private static final String TEST_COMICBOOK_FILENAME = "src/test/resources/comicbook.cbz";
+  private static final Long TEST_NEXT_ISSUE_ID = 1001L;
+  private static final Long TEST_PREVIOUS_ISSUE_ID = 1006L;
 
   @Autowired private ComicBookRepository repository;
 
@@ -139,46 +141,56 @@ public class ComicBookRepositoryTest {
 
   @Test
   public void testGetIssuesAfterComicWithNone() {
-    final List<ComicBook> result =
-        this.repository.findIssuesAfterComic(
-            TEST_SERIES, TEST_VOLUME, TEST_ISSUE_WITH_NO_NEXT, TEST_COVER_DATE_NO_NEXT);
+    final Long result =
+        this.repository.findNextComicBookIdInSeries(
+            TEST_SERIES,
+            TEST_VOLUME,
+            TEST_ISSUE_WITH_NO_NEXT,
+            TEST_COVER_DATE_NO_NEXT,
+            Limit.of(1));
 
-    assertTrue(result.isEmpty());
+    assertNull(result);
   }
 
   @Test
   public void testGetIssuesAfterComic() {
-    final List<ComicBook> result =
-        this.repository.findIssuesAfterComic(
-            TEST_SERIES, TEST_VOLUME, TEST_ISSUE_WITH_NEXT, TEST_COVER_DATE_WITH_NEXT);
+    final Long result =
+        this.repository.findNextComicBookIdInSeries(
+            TEST_SERIES,
+            TEST_VOLUME,
+            TEST_ISSUE_WITH_NEXT.toString(),
+            TEST_COVER_DATE_WITH_NEXT,
+            Limit.of(1));
 
-    assertFalse(result.isEmpty());
-    for (int index = 0; index < result.size(); index++) {
-      assertTrue(
-          result.get(index).getComicDetail().getIssueNumber().compareTo(TEST_ISSUE_WITH_NEXT) > 0);
-    }
+    assertNotNull(result);
+    assertEquals(TEST_NEXT_ISSUE_ID, result);
   }
 
   @Test
-  public void testGetIssuesBeforeComicNone() {
-    final List<ComicBook> result =
-        this.repository.findIssuesBeforeComic(
-            TEST_SERIES, TEST_VOLUME, TEST_ISSUE_WITH_NO_PREV, TEST_COVER_DATE_NO_PREV);
+  public void testFindPreviousCoicBookIdInSeriesNone() {
+    final Long result =
+        this.repository.findPreviousComicBookIdInSeries(
+            TEST_SERIES,
+            TEST_VOLUME,
+            TEST_ISSUE_WITH_NO_PREV,
+            TEST_COVER_DATE_NO_PREV,
+            Limit.of(1));
 
-    assertTrue(result.isEmpty());
+    assertNull(result);
   }
 
   @Test
   public void testGetIssuesBeforeComic() {
-    final List<ComicBook> result =
-        this.repository.findIssuesBeforeComic(
-            TEST_SERIES, TEST_VOLUME, TEST_ISSUE_WITH_PREV, TEST_COVER_DATE_WITH_PREV);
+    final Long result =
+        this.repository.findPreviousComicBookIdInSeries(
+            TEST_SERIES,
+            TEST_VOLUME,
+            TEST_ISSUE_WITH_PREV.toString(),
+            TEST_COVER_DATE_WITH_PREV,
+            Limit.of(1));
 
-    assertFalse(result.isEmpty());
-    for (int index = 0; index < result.size(); index++) {
-      assertTrue(
-          result.get(index).getComicDetail().getIssueNumber().compareTo(TEST_ISSUE_WITH_PREV) < 0);
-    }
+    assertNotNull(result);
+    assertEquals(TEST_PREVIOUS_ISSUE_ID, result);
   }
 
   @Test
