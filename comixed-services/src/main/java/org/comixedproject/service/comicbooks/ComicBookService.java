@@ -48,6 +48,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,51 +83,20 @@ public class ComicBookService {
     log.debug("Getting comic: id={}", id);
 
     final var result = this.doGetComic(id);
-    final Optional<ComicBook> nextComic =
-        this.comicBookRepository
-            .findIssuesAfterComic(
-                result.getComicDetail().getSeries(),
-                result.getComicDetail().getVolume(),
-                result.getComicDetail().getIssueNumber(),
-                result.getComicDetail().getCoverDate())
-            .stream()
-            .filter(
-                comic ->
-                    comic
-                            .getComicDetail()
-                            .getCoverDate()
-                            .compareTo(result.getComicDetail().getCoverDate())
-                        >= 0)
-            .sorted(
-                (o1, o2) ->
-                    o1.getComicDetail()
-                        .getCoverDate()
-                        .compareTo(o2.getComicDetail().getCoverDate()))
-            .findFirst();
-    if (nextComic.isPresent()) result.setNextIssueId(nextComic.get().getId());
-
-    final Optional<ComicBook> prevComic =
-        this.comicBookRepository
-            .findIssuesBeforeComic(
-                result.getComicDetail().getSeries(),
-                result.getComicDetail().getVolume(),
-                result.getComicDetail().getIssueNumber(),
-                result.getComicDetail().getCoverDate())
-            .stream()
-            .filter(
-                comic ->
-                    comic
-                            .getComicDetail()
-                            .getCoverDate()
-                            .compareTo(result.getComicDetail().getCoverDate())
-                        <= 0)
-            .sorted(
-                (o1, o2) ->
-                    o2.getComicDetail()
-                        .getCoverDate()
-                        .compareTo(o1.getComicDetail().getCoverDate()))
-            .findFirst();
-    if (prevComic.isPresent()) result.setPreviousIssueId(prevComic.get().getId());
+    result.setNextIssueId(
+        this.comicBookRepository.findNextComicBookIdInSeries(
+            result.getComicDetail().getSeries(),
+            result.getComicDetail().getVolume(),
+            result.getComicDetail().getIssueNumber(),
+            result.getComicDetail().getCoverDate(),
+            Limit.of(1)));
+    result.setPreviousIssueId(
+        this.comicBookRepository.findPreviousComicBookIdInSeries(
+            result.getComicDetail().getSeries(),
+            result.getComicDetail().getVolume(),
+            result.getComicDetail().getIssueNumber(),
+            result.getComicDetail().getCoverDate(),
+            Limit.of(1)));
 
     log.debug("Returning comic: id={}", result.getId());
     return result;
