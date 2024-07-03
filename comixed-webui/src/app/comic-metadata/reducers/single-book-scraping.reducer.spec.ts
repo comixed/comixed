@@ -166,7 +166,12 @@ describe('SingleBookScraping Reducer', () => {
   describe('loading a set of scraping volumes', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, loadingRecords: false },
+        {
+          ...state,
+          loadingRecords: false,
+          volumes: VOLUMES,
+          scrapingIssue: SCRAPING_ISSUE
+        },
         loadVolumeMetadata({
           metadataSource: METADATA_SOURCE,
           series: SERIES,
@@ -178,6 +183,14 @@ describe('SingleBookScraping Reducer', () => {
 
     it('sets the loading records flag', () => {
       expect(state.loadingRecords).toBeTrue();
+    });
+
+    it('clears the loaded volumes', () => {
+      expect(state.volumes).toEqual([]);
+    });
+
+    it('clears the current issue', () => {
+      expect(state.scrapingIssue).toBeNull();
     });
   });
 

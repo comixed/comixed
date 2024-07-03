@@ -20,12 +20,12 @@ import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   clearMetadataCache,
   clearMetadataCacheFailure,
+  clearMetadataCacheSuccess,
   issueMetadataLoaded,
   loadIssueMetadata,
   loadIssueMetadataFailed,
   loadVolumeMetadata,
   loadVolumeMetadataFailed,
-  clearMetadataCacheSuccess,
   resetMetadataState,
   scrapeSingleComicBook,
   scrapeSingleComicBookFailure,
@@ -83,7 +83,12 @@ export const reducer = createReducer(
     ...state,
     autoSelectExactMatch: action.autoSelectExactMatch
   })),
-  on(loadVolumeMetadata, state => ({ ...state, loadingRecords: true })),
+  on(loadVolumeMetadata, state => ({
+    ...state,
+    loadingRecords: true,
+    volumes: [],
+    scrapingIssue: null
+  })),
   on(volumeMetadataLoaded, (state, action) => ({
     ...state,
     loadingRecords: false,
