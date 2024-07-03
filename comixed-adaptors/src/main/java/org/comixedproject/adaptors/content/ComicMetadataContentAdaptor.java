@@ -152,18 +152,20 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor
   public byte[] createContent(ComicBook comicBook) throws ContentAdaptorException {
     log.trace("Mapping comic metadata to ComicInfo");
     final ComicInfo comicInfo = new ComicInfo();
-    comicInfo.setPublisher(comicBook.getComicDetail().getPublisher());
-    comicInfo.setSeries(comicBook.getComicDetail().getSeries());
-    comicInfo.setVolume(comicBook.getComicDetail().getVolume());
-    comicInfo.setIssueNumber(comicBook.getComicDetail().getIssueNumber());
-    if (comicBook.getComicDetail().getCoverDate() != null) {
+    var comicDetail = comicBook.getComicDetail();
+    comicInfo.setWeb(comicDetail.getWebAddress());
+    comicInfo.setPublisher(comicDetail.getPublisher());
+    comicInfo.setSeries(comicDetail.getSeries());
+    comicInfo.setVolume(comicDetail.getVolume());
+    comicInfo.setIssueNumber(comicDetail.getIssueNumber());
+    if (comicDetail.getCoverDate() != null) {
       final GregorianCalendar calendar = new GregorianCalendar();
-      calendar.setTime(comicBook.getComicDetail().getCoverDate());
+      calendar.setTime(comicDetail.getCoverDate());
       comicInfo.setYear(calendar.get(Calendar.YEAR));
       comicInfo.setMonth(calendar.get(Calendar.MONTH) + 1);
     }
-    comicInfo.setTitle(comicBook.getComicDetail().getTitle());
-    final ComicDetail detail = comicBook.getComicDetail();
+    comicInfo.setTitle(comicDetail.getTitle());
+    final ComicDetail detail = comicDetail;
     comicInfo.setCharacters(
         String.join(
             ",",
@@ -241,8 +243,8 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor
                 .filter(tag -> tag.getType() == ComicTagType.COVER)
                 .map(ComicTag::getValue)
                 .collect(Collectors.toList())));
-    comicInfo.setNotes(comicBook.getComicDetail().getNotes());
-    comicInfo.setSummary(comicBook.getComicDetail().getDescription());
+    comicInfo.setNotes(comicDetail.getNotes());
+    comicInfo.setSummary(comicDetail.getDescription());
     final ComicMetadataSource metadata = comicBook.getMetadata();
     if (metadata != null
         && StringUtils.hasLength(metadata.getMetadataSource().getAdaptorName())

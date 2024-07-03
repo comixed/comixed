@@ -50,6 +50,7 @@ public class ComicBookMetadataAdaptor {
   public void clear(ComicBook comicBook) {
     comicBook.setMetadata(null);
     final ComicDetail detail = comicBook.getComicDetail();
+    detail.setWebAddress("");
     detail.setPublisher("");
     detail.setImprint("");
     detail.setSeries("");
