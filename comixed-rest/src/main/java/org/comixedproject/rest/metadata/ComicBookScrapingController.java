@@ -236,12 +236,13 @@ public class ComicBookScrapingController {
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.metadata.multi-book-start")
   @JsonView(View.ComicListView.class)
-  public StartMultiBookScrapingResponse startMultiBookScraping(final HttpSession session)
+  public StartMultiBookScrapingResponse startMultiBookScraping(
+      final HttpSession session, @RequestBody final StartMultiBookScrapingRequest request)
       throws MetadataException {
     try {
-      final List selectedIds =
+      final List<Long> selectedIds =
           this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
-      final List comicDetailIds =
+      final List<Long> comicDetailIds =
           this.comicBookSelectionService.decodeSelections(
               session.getAttribute(MULTI_BOOK_SCRAPING_SELECTIONS));
 
@@ -257,11 +258,49 @@ public class ComicBookScrapingController {
           MULTI_BOOK_SCRAPING_SELECTIONS,
           this.comicBookSelectionService.encodeSelections(comicDetailIds));
 
-      return new StartMultiBookScrapingResponse(
-          this.comicBookService.loadByComicDetailId(comicDetailIds));
+      final int pageSize = request.getPageSize();
+      final List<ComicBook> comicBooks =
+          this.comicBookService.loadByComicBookId(comicDetailIds, pageSize, 0);
+
+      return new StartMultiBookScrapingResponse(pageSize, 0, comicDetailIds.size(), comicBooks);
     } catch (ComicBookSelectionException error) {
       throw new MetadataException("Failed to start multi-book scraping", error);
     }
+  }
+
+  /**
+   * Loads a page of multi-scraping comic books.
+   *
+   * @param session the user session
+   * @param request the request body
+   * @return the resonse body
+   */
+  @PostMapping(
+      value = "/api/metadata/scraping/load",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.metadata.multi-book-load")
+  @JsonView(View.ComicListView.class)
+  public LoadMultiBookScrapingResponse loadMultiBookScrapingPage(
+      final HttpSession session, @RequestBody() final LoadMultiBookScrapingRequest request)
+      throws ComicBookSelectionException {
+    final int pageSize = request.getPageSize();
+    final int pageNumber = request.getPageNumber();
+
+    log.info(
+        "Loading a page of multi-scraping comic books: page size={} page number={}",
+        pageSize,
+        pageNumber);
+
+    final List<Long> comicBookIds =
+        this.comicBookSelectionService.decodeSelections(
+            session.getAttribute(MULTI_BOOK_SCRAPING_SELECTIONS));
+
+    final List<ComicBook> comicBooks =
+        this.comicBookService.loadByComicBookId(comicBookIds, pageSize, pageNumber);
+
+    return new LoadMultiBookScrapingResponse(pageSize, pageNumber, comicBookIds.size(), comicBooks);
   }
 
   /**
@@ -298,7 +337,8 @@ public class ComicBookScrapingController {
 
     try {
       log.debug("Removing comic book from multi-book state");
-      return this.doRemoveComicBook(session, comicBookId);
+      return this.doRemoveComicBook(
+          session, comicBookId, request.getPageSize(), request.getPageNumber());
     } catch (ComicBookSelectionException error) {
       throw new MetadataException("Failed to remove comic from multi-book state", error);
     }
@@ -319,22 +359,25 @@ public class ComicBookScrapingController {
   @Timed(value = "comixed.metadata.multi-book-remove")
   @JsonView(View.ComicListView.class)
   public StartMultiBookScrapingResponse removeMultiBookComic(
-      final HttpSession session, @PathVariable("comicBookId") final long comicBookId)
+      final HttpSession session,
+      @PathVariable("comicBookId") final long comicBookId,
+      @RequestParam(name = "pageSize", required = true) final int pageSize)
       throws MetadataException {
     try {
-      return this.doRemoveComicBook(session, comicBookId);
+      return this.doRemoveComicBook(session, comicBookId, pageSize, 0);
     } catch (ComicBookSelectionException error) {
       throw new MetadataException("Failed to remove comic book from multi-book scraping", error);
     }
   }
 
   private StartMultiBookScrapingResponse doRemoveComicBook(
-      final HttpSession session, final long comicBookId) throws ComicBookSelectionException {
-    final List comicDetailIds =
+      final HttpSession session, final long comicBookId, final int pageSize, final int pageNumber)
+      throws ComicBookSelectionException {
+    final List<Long> comicDetailIds =
         this.comicBookSelectionService.decodeSelections(
             session.getAttribute(MULTI_BOOK_SCRAPING_SELECTIONS));
     final List<ComicBook> comicBooks =
-        this.comicBookService.loadByComicDetailId(comicDetailIds).stream()
+        this.comicBookService.loadByComicBookId(comicDetailIds, pageSize, pageNumber).stream()
             .filter(comicBook -> !comicBook.getId().equals(comicBookId))
             .toList();
     session.setAttribute(
@@ -342,6 +385,7 @@ public class ComicBookScrapingController {
         this.comicBookSelectionService.encodeSelections(
             comicBooks.stream().map(comicBook -> comicBook.getComicDetail().getId()).toList()));
 
-    return new StartMultiBookScrapingResponse(comicBooks);
+    return new StartMultiBookScrapingResponse(
+        pageSize, pageNumber, comicDetailIds.size(), comicBooks);
   }
 }

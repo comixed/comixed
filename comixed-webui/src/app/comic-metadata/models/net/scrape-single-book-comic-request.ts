@@ -19,4 +19,5 @@
 export interface ScrapeSingleBookComicRequest {
   issueId: string;
   skipCache: boolean;
+  pageSize: number;
 }

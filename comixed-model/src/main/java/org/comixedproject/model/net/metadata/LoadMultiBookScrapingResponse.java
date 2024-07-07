@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2023, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,27 +27,27 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.views.View;
 
 /**
- * <code>StartMultiBookScrapingResponse</code> represents the payload for the response when starting
- * multi-book comic scraping.
+ * <code>LoadMultiBookScrapingResponse</code> represents the payload when a page of scraping comics
+ * has been loaded.
  *
  * @author Darryl L. Pierce
  */
 @AllArgsConstructor
-public class StartMultiBookScrapingResponse {
+public class LoadMultiBookScrapingResponse {
   @JsonProperty("pageSize")
   @JsonView(View.ComicListView.class)
   @Getter
-  private final int pageSize;
+  private int pageSize;
 
   @JsonProperty("pageNumber")
   @JsonView(View.ComicListView.class)
   @Getter
-  private final int pageNumber;
+  private int pageNumber;
 
   @JsonProperty("totalComics")
   @JsonView(View.ComicListView.class)
   @Getter
-  private final int totalComics;
+  private long totalComics;
 
   @JsonProperty("comicBooks")
   @JsonView(View.ComicListView.class)

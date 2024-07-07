@@ -41,4 +41,14 @@ public class ScrapeComicRequest {
   @Getter
   @Setter
   private Boolean skipCache;
+
+  @JsonProperty("pageSize")
+  @Getter
+  @Setter
+  private int pageSize;
+
+  @JsonProperty("pageNumber")
+  @Getter
+  @Setter
+  private int pageNumber;
 }

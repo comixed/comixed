@@ -33,6 +33,7 @@ import {
   COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
 import { MultiBookScrapingProcessStatus } from '@app/comic-metadata/models/multi-book-scraping-process-status';
+import { PAGE_SIZE_DEFAULT } from '@app/core';
 
 describe('MultiBookScraping Selectors', () => {
   const COMIC_BOOKS = [
@@ -51,6 +52,9 @@ describe('MultiBookScraping Selectors', () => {
     state = {
       busy: Math.random() > 0.5,
       status: MultiBookScrapingProcessStatus.ERROR,
+      pageSize: PAGE_SIZE_DEFAULT,
+      pageNumber: Math.floor(Math.random() * 10),
+      totalComics: Math.floor(Math.random() * 100),
       comicBooks: COMIC_BOOKS,
       currentComicBook: CURRENT_COMIC_BOOK
     };

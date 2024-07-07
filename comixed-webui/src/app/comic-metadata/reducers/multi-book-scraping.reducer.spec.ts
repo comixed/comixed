@@ -29,6 +29,9 @@ import {
   COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
 import {
+  loadMultiBookScrapingPage,
+  loadMultiBookScrapingPageFailure,
+  loadMultiBookScrapingPageSuccess,
   multiBookScrapeComic,
   multiBookScrapeComicFailure,
   multiBookScrapeComicSuccess,
@@ -43,6 +46,7 @@ import {
 import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
 import { ISSUE_1 } from '@app/collections/collections.fixtures';
 import { MultiBookScrapingProcessStatus } from '@app/comic-metadata/models/multi-book-scraping-process-status';
+import { PAGE_SIZE_DEFAULT } from '@app/core';
 
 describe('MultiBookScraping Reducer', () => {
   const COMIC_BOOKS = [
@@ -57,6 +61,9 @@ describe('MultiBookScraping Reducer', () => {
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const ISSUE_ID = ISSUE_1.issueNumber;
   const SKIP_CACHE = Math.random() > 0.5;
+  const PAGE_NUMBER = 3;
+  const PAGE_SIZE = 25;
+  const TOTAL_COMICS = 495;
 
   let state: MultiBookScrapingState;
 
@@ -77,6 +84,18 @@ describe('MultiBookScraping Reducer', () => {
       expect(state.status).toEqual(MultiBookScrapingProcessStatus.SETUP);
     });
 
+    it('has a default page size', () => {
+      expect(state.pageSize).toEqual(PAGE_SIZE_DEFAULT);
+    });
+
+    it('has the default page number', () => {
+      expect(state.pageNumber).toEqual(0);
+    });
+
+    it('has the default total comics', () => {
+      expect(state.totalComics).toEqual(0);
+    });
+
     it('has no list of comic books', () => {
       expect(state.comicBooks).toEqual([]);
     });
@@ -88,7 +107,10 @@ describe('MultiBookScraping Reducer', () => {
 
   describe('starting the multi-book scraping process', () => {
     beforeEach(() => {
-      state = reducer({ ...state, busy: false }, startMultiBookScraping());
+      state = reducer(
+        { ...state, busy: false },
+        startMultiBookScraping({ pageSize: PAGE_SIZE })
+      );
     });
 
     it('sets the busy flag', () => {
@@ -101,10 +123,18 @@ describe('MultiBookScraping Reducer', () => {
           {
             ...state,
             status: MultiBookScrapingProcessStatus.SETUP,
+            pageSize: 0,
+            pageNumber: 0,
+            totalComics: 0,
             comicBooks: [],
             currentComicBook: null
           },
-          startMultiBookScrapingSuccess({ comicBooks: COMIC_BOOKS })
+          startMultiBookScrapingSuccess({
+            comicBooks: COMIC_BOOKS,
+            pageSize: PAGE_SIZE,
+            pageNumber: PAGE_NUMBER,
+            totalComics: TOTAL_COMICS
+          })
         );
       });
 
@@ -114,6 +144,18 @@ describe('MultiBookScraping Reducer', () => {
 
       it('sets the status to started', () => {
         expect(state.status).toEqual(MultiBookScrapingProcessStatus.STARTED);
+      });
+
+      it('updates the page size', () => {
+        expect(state.pageSize).toEqual(PAGE_SIZE);
+      });
+
+      it('updates the page number', () => {
+        expect(state.pageNumber).toEqual(PAGE_NUMBER);
+      });
+
+      it('updates the total comics', () => {
+        expect(state.totalComics).toEqual(TOTAL_COMICS);
       });
 
       it('sets the list of comic details', () => {
@@ -127,13 +169,36 @@ describe('MultiBookScraping Reducer', () => {
       describe('when there are no comic books', () => {
         beforeEach(() => {
           state = reducer(
-            { ...state, status: MultiBookScrapingProcessStatus.STARTED },
-            startMultiBookScrapingSuccess({ comicBooks: [] })
+            {
+              ...state,
+              status: MultiBookScrapingProcessStatus.STARTED,
+              pageSize: 0,
+              pageNumber: 1,
+              totalComics: 1
+            },
+            startMultiBookScrapingSuccess({
+              comicBooks: [],
+              pageSize: PAGE_SIZE,
+              pageNumber: 0,
+              totalComics: 0
+            })
           );
         });
 
         it('sets the status to finished', () => {
           expect(state.status).toBe(MultiBookScrapingProcessStatus.FINISHED);
+        });
+
+        it('updates the page size', () => {
+          expect(state.pageSize).toEqual(PAGE_SIZE);
+        });
+
+        it('updates the page number', () => {
+          expect(state.pageNumber).toEqual(0);
+        });
+
+        it('updates the total comics', () => {
+          expect(state.totalComics).toEqual(0);
         });
       });
     });
@@ -152,6 +217,79 @@ describe('MultiBookScraping Reducer', () => {
 
       it('sets the status to erro', () => {
         expect(state.status).toEqual(MultiBookScrapingProcessStatus.ERROR);
+      });
+    });
+  });
+
+  describe('loading multi-book scraping comics', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...initialState, busy: false },
+        loadMultiBookScrapingPage({
+          pageSize: PAGE_SIZE,
+          pageNumber: PAGE_NUMBER
+        })
+      );
+    });
+
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          {
+            ...state,
+            busy: true,
+            pageSize: 0,
+            pageNumber: 0,
+            totalComics: 0,
+            comicBooks: []
+          },
+          loadMultiBookScrapingPageSuccess({
+            pageSize: PAGE_SIZE,
+            pageNumber: PAGE_NUMBER,
+            totalComics: TOTAL_COMICS,
+            comicBooks: COMIC_BOOKS
+          })
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+
+      it('sets the page size', () => {
+        expect(state.pageSize).toEqual(PAGE_SIZE);
+      });
+
+      it('sets the page number', () => {
+        expect(state.pageNumber).toEqual(PAGE_NUMBER);
+      });
+
+      it('sets the total number of comics', () => {
+        expect(state.totalComics).toEqual(TOTAL_COMICS);
+      });
+
+      it('sets the comic books', () => {
+        expect(state.comicBooks).toBe(COMIC_BOOKS);
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          {
+            ...state,
+            busy: true
+          },
+          loadMultiBookScrapingPageFailure()
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
       });
     });
   });
@@ -180,7 +318,10 @@ describe('MultiBookScraping Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: false },
-        multiBookScrapingRemoveBook({ comicBook: CURRENT_COMIC_BOOK })
+        multiBookScrapingRemoveBook({
+          comicBook: CURRENT_COMIC_BOOK,
+          pageSize: PAGE_SIZE
+        })
       );
     });
 
@@ -193,17 +334,35 @@ describe('MultiBookScraping Reducer', () => {
         state = reducer(
           {
             ...state,
+            pageSize: 0,
+            pageNumber: 0,
+            totalComics: 0,
             comicBooks: COMIC_BOOKS,
             currentComicBook: null
           },
           multiBookScrapingRemoveBookSuccess({
-            comicBooks: UPDATED_COMIC_DETAILS
+            comicBooks: UPDATED_COMIC_DETAILS,
+            pageSize: PAGE_SIZE,
+            pageNumber: PAGE_NUMBER,
+            totalComics: TOTAL_COMICS
           })
         );
       });
 
       it('clears the busy flag', () => {
         expect(state.busy).toBeFalse();
+      });
+
+      it('updates the page size', () => {
+        expect(state.pageSize).toEqual(PAGE_SIZE);
+      });
+
+      it('updates the page number', () => {
+        expect(state.pageNumber).toEqual(PAGE_NUMBER);
+      });
+
+      it('updates the total comics', () => {
+        expect(state.totalComics).toEqual(TOTAL_COMICS);
       });
 
       it('updates the list of comic details', () => {
@@ -217,13 +376,36 @@ describe('MultiBookScraping Reducer', () => {
       describe('when it was the last comic book', () => {
         beforeEach(() => {
           state = reducer(
-            { ...state, status: MultiBookScrapingProcessStatus.STARTED },
-            multiBookScrapeComicSuccess({ comicBooks: [] })
+            {
+              ...state,
+              status: MultiBookScrapingProcessStatus.STARTED,
+              pageSize: 0,
+              pageNumber: 1,
+              totalComics: 1
+            },
+            multiBookScrapeComicSuccess({
+              comicBooks: [],
+              pageSize: PAGE_SIZE,
+              pageNumber: 0,
+              totalComics: 0
+            })
           );
         });
 
         it('sets the status to finished', () => {
           expect(state.status).toBe(MultiBookScrapingProcessStatus.FINISHED);
+        });
+
+        it('updates the page size', () => {
+          expect(state.pageSize).toEqual(PAGE_SIZE);
+        });
+
+        it('updates the page number', () => {
+          expect(state.pageNumber).toEqual(0);
+        });
+
+        it('updates the total comics', () => {
+          expect(state.totalComics).toEqual(0);
         });
       });
     });
@@ -251,7 +433,8 @@ describe('MultiBookScraping Reducer', () => {
           metadataSource: METADATA_SOURCE,
           comicBook: CURRENT_COMIC_BOOK,
           issueId: ISSUE_ID,
-          skipCache: SKIP_CACHE
+          skipCache: SKIP_CACHE,
+          pageSize: PAGE_SIZE
         })
       );
     });
@@ -265,17 +448,35 @@ describe('MultiBookScraping Reducer', () => {
         state = reducer(
           {
             ...state,
+            pageSize: 0,
+            pageNumber: 0,
+            totalComics: 0,
             comicBooks: COMIC_BOOKS,
             currentComicBook: null
           },
           multiBookScrapeComicSuccess({
-            comicBooks: UPDATED_COMIC_BOOKS
+            comicBooks: UPDATED_COMIC_BOOKS,
+            pageNumber: PAGE_NUMBER,
+            pageSize: PAGE_SIZE,
+            totalComics: TOTAL_COMICS
           })
         );
       });
 
       it('clears the busy flag', () => {
         expect(state.busy).toBeFalse();
+      });
+
+      it('updates the page size', () => {
+        expect(state.pageSize).toEqual(PAGE_SIZE);
+      });
+
+      it('updates the page number', () => {
+        expect(state.pageNumber).toEqual(PAGE_NUMBER);
+      });
+
+      it('updates the total comics', () => {
+        expect(state.totalComics).toEqual(TOTAL_COMICS);
       });
 
       it('updates the list of comic details', () => {
@@ -289,13 +490,36 @@ describe('MultiBookScraping Reducer', () => {
       describe('when it was the last comic book', () => {
         beforeEach(() => {
           state = reducer(
-            { ...state, status: MultiBookScrapingProcessStatus.STARTED },
-            multiBookScrapingRemoveBookSuccess({ comicBooks: [] })
+            {
+              ...state,
+              status: MultiBookScrapingProcessStatus.STARTED,
+              pageSize: 0,
+              pageNumber: 1,
+              totalComics: 1
+            },
+            multiBookScrapingRemoveBookSuccess({
+              comicBooks: [],
+              pageSize: PAGE_SIZE,
+              pageNumber: 0,
+              totalComics: 0
+            })
           );
         });
 
         it('sets the status to finished', () => {
           expect(state.status).toBe(MultiBookScrapingProcessStatus.FINISHED);
+        });
+
+        it('updates the page size', () => {
+          expect(state.pageSize).toEqual(PAGE_SIZE);
+        });
+
+        it('updates the page number', () => {
+          expect(state.pageNumber).toEqual(0);
+        });
+
+        it('updates the total comics', () => {
+          expect(state.totalComics).toEqual(0);
         });
       });
     });

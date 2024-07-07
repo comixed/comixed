@@ -21,13 +21,17 @@ import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 
 export const startMultiBookScraping = createAction(
-  '[Multi-Book Scraping] Starts the process of scraping multiple book'
+  '[Multi-Book Scraping] Starts the process of scraping multiple book',
+  props<{ pageSize: number }>()
 );
 
 export const startMultiBookScrapingSuccess = createAction(
   '[Multi-Book Scraping] Started the multi-book scraping process',
   props<{
     comicBooks: ComicBook[];
+    pageSize: number;
+    pageNumber: number;
+    totalComics: number;
   }>()
 );
 
@@ -35,14 +39,39 @@ export const startMultiBookScrapingFailure = createAction(
   '[Multi-Book Scraping] Failed to start multi-book scraping'
 );
 
+export const loadMultiBookScrapingPage = createAction(
+  '[Multi-Book Scraping] Load a page of scraping targets',
+  props<{
+    pageSize: number;
+    pageNumber: number;
+  }>()
+);
+
+export const loadMultiBookScrapingPageSuccess = createAction(
+  '[Multi-Book Scraping] Loaded a page of scraping targets',
+  props<{
+    pageSize: number;
+    pageNumber: number;
+    totalComics: number;
+    comicBooks: ComicBook[];
+  }>()
+);
+
+export const loadMultiBookScrapingPageFailure = createAction(
+  '[Multi-Book Scraping] Failed to load a page of scraping targets'
+);
+
 export const multiBookScrapingSetCurrentBook = createAction(
   '[Multi-Book Scraping] Set the current comic book',
-  props<{ comicBook: ComicBook }>()
+  props<{
+    comicBook: ComicBook;
+  }>()
 );
 
 export const multiBookScrapingRemoveBook = createAction(
   '[Multi-Book Scraping] Remove a comic book from the process',
   props<{
+    pageSize: number;
     comicBook: ComicBook;
   }>()
 );
@@ -51,6 +80,9 @@ export const multiBookScrapingRemoveBookSuccess = createAction(
   '[Multi-Book Scraping] Successfully removeped a comic book',
   props<{
     comicBooks: ComicBook[];
+    pageSize: number;
+    pageNumber: number;
+    totalComics: number;
   }>()
 );
 export const multiBookScrapingRemoveBookFailure = createAction(
@@ -64,6 +96,7 @@ export const multiBookScrapeComic = createAction(
     issueId: string;
     comicBook: ComicBook;
     skipCache: boolean;
+    pageSize: number;
   }>()
 );
 
@@ -71,6 +104,9 @@ export const multiBookScrapeComicSuccess = createAction(
   '[Multi-Book Scraping] Successfully scraped a comic book',
   props<{
     comicBooks: ComicBook[];
+    pageSize: number;
+    pageNumber: number;
+    totalComics: number;
   }>()
 );
 

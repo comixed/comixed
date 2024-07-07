@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2023, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ComicBook } from '@app/comic-books/models/comic-book';
+package org.comixedproject.model.net.metadata;
 
-export interface StartMultiBookScrapingResponse {
-  pageSize: number;
-  pageNumber: number;
-  totalComics: number;
-  comicBooks: ComicBook[];
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+/**
+ * <code>LoadMultiBookScrapingRequest</code> represents the payload when requesting a page of comic
+ * books.
+ *
+ * @author Darryl L. Pierce
+ */
+@NoArgsConstructor
+@AllArgsConstructor
+public class LoadMultiBookScrapingRequest {
+  @JsonProperty("pageSize")
+  @Getter
+  private int pageSize;
+
+  @JsonProperty("pageNumber")
+  @Getter
+  private int pageNumber;
 }

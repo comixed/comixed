@@ -21,6 +21,9 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import {
+  loadMultiBookScrapingPage,
+  loadMultiBookScrapingPageFailure,
+  loadMultiBookScrapingPageSuccess,
   multiBookScrapeComic,
   multiBookScrapeComicFailure,
   multiBookScrapeComicSuccess,
@@ -37,6 +40,7 @@ import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { StartMultiBookScrapingResponse } from '@app/comic-metadata/models/net/start-multi-book-scraping-response';
 import { RemoveMultiBookComicResponse } from '@app/comic-metadata/models/net/remove-multi-book-comic-response';
+import { LoadMultiBookScrapingResponse } from '@app/comic-metadata/models/net/load-multi-book-scraping-page-response';
 
 @Injectable()
 export class MultiBookScrapingEffects {
@@ -44,24 +48,29 @@ export class MultiBookScrapingEffects {
     return this.actions$.pipe(
       ofType(startMultiBookScraping),
       tap(() => this.logger.debug('Starting multi-book comic scraping')),
-      switchMap(() =>
-        this.comicBookScrapingService.startMultiBookScraping().pipe(
-          tap(response => this.logger.debug('Response received:', response)),
-          map((response: StartMultiBookScrapingResponse) =>
-            startMultiBookScrapingSuccess({
-              comicBooks: response.comicBooks
+      switchMap(action =>
+        this.comicBookScrapingService
+          .startMultiBookScraping({ pageSize: action.pageSize })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map((response: StartMultiBookScrapingResponse) =>
+              startMultiBookScrapingSuccess({
+                pageSize: response.pageSize,
+                pageNumber: response.pageNumber,
+                totalComics: response.totalComics,
+                comicBooks: response.comicBooks
+              })
+            ),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'multi-book-scraping.start-process.effect-failure'
+                )
+              );
+              return of(startMultiBookScrapingFailure());
             })
-          ),
-          catchError(error => {
-            this.logger.error('Service failure:', error);
-            this.alertService.error(
-              this.translateService.instant(
-                'multi-book-scraping.start-process.effect-failure'
-              )
-            );
-            return of(startMultiBookScrapingFailure());
-          })
-        )
+          )
       ),
       catchError(error => {
         this.logger.error('General failure:', error);
@@ -69,6 +78,52 @@ export class MultiBookScrapingEffects {
           this.translateService.instant('app.general-effect-failure')
         );
         return of(startMultiBookScrapingFailure());
+      })
+    );
+  });
+
+  loadMultiBookScrapingPage$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(loadMultiBookScrapingPage),
+      tap(action =>
+        this.logger.debug(
+          'Loading a page of multi-book scraping comics:',
+          action
+        )
+      ),
+      switchMap(action =>
+        this.comicBookScrapingService
+          .loadMultiBookScrapingPage({
+            pageSize: action.pageSize,
+            pageNumber: action.pageNumber
+          })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map((response: LoadMultiBookScrapingResponse) =>
+              loadMultiBookScrapingPageSuccess({
+                pageSize: response.pageSize,
+                pageNumber: response.pageNumber,
+                totalComics: response.totalComics,
+                comicBooks: response.comicBooks
+              })
+            ),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'multi-book-scraping.load-scraping-page.effect-failure'
+                )
+              );
+              return of(loadMultiBookScrapingPageFailure());
+            })
+          )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(loadMultiBookScrapingPageFailure());
       })
     );
   });
@@ -84,7 +139,10 @@ export class MultiBookScrapingEffects {
       ),
       switchMap(action =>
         this.comicBookScrapingService
-          .removeMultiBookComic({ comicBook: action.comicBook })
+          .removeMultiBookComic({
+            comicBook: action.comicBook,
+            pageSize: action.pageSize
+          })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
             tap(() =>
@@ -96,6 +154,9 @@ export class MultiBookScrapingEffects {
             ),
             map((response: RemoveMultiBookComicResponse) =>
               multiBookScrapingRemoveBookSuccess({
+                pageSize: response.pageSize,
+                pageNumber: response.pageNumber,
+                totalComics: response.totalComics,
                 comicBooks: response.comicBooks
               })
             ),
@@ -130,7 +191,8 @@ export class MultiBookScrapingEffects {
             metadataSource: action.metadataSource,
             issueId: action.issueId,
             comicBook: action.comicBook,
-            skipCache: action.skipCache
+            skipCache: action.skipCache,
+            pageSize: action.pageSize
           })
           .pipe(
             tap(response => this.logger.debug('Response received;', response)),
@@ -143,6 +205,9 @@ export class MultiBookScrapingEffects {
             ),
             map((response: StartMultiBookScrapingResponse) =>
               multiBookScrapeComicSuccess({
+                pageSize: response.pageSize,
+                pageNumber: response.pageNumber,
+                totalComics: response.totalComics,
                 comicBooks: response.comicBooks
               })
             ),

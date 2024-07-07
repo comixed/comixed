@@ -249,7 +249,8 @@ export class ComicScrapingVolumeSelectionComponent
           comicBook: this.comicBook,
           metadataSource: this.metadataSource,
           issueId: this.issue.id,
-          skipCache: this.skipCache
+          skipCache: this.skipCache,
+          pageSize: this.pageSize
         })
       );
     } else {

@@ -19,5 +19,8 @@
 import { ComicBook } from '@app/comic-books/models/comic-book';
 
 export interface ScrapeMultiBookComicResponse {
+  pageSize: number;
+  pageNumber: number;
+  totalComics: number;
   comicBooks: ComicBook[];
 }
