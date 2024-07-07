@@ -22,7 +22,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishComicBookSelectionStateAction;
@@ -153,18 +155,16 @@ public class ComicBookSelectionService {
    * @return the decoded selections
    * @throws ComicBookSelectionException if an error occurs
    */
-  public List decodeSelections(final Object storeSelections) throws ComicBookSelectionException {
+  public List<Long> decodeSelections(final Object storeSelections)
+      throws ComicBookSelectionException {
     if (storeSelections == null) {
       log.debug("Creating new selection set");
       return new ArrayList();
     } else {
       try {
-        final List result = this.objectMapper.readValue(storeSelections.toString(), List.class);
-        // Jackson unmarshalls the elements as Integer, so we need to adjust them
-        return (List)
-            result.stream()
-                .map(entry -> ((Integer) entry).longValue())
-                .collect(Collectors.toList());
+        final ListOfIds result =
+            this.objectMapper.readValue(storeSelections.toString(), ListOfIds.class);
+        return result.getIds();
       } catch (JsonProcessingException error) {
         throw new ComicBookSelectionException("failed to load selections from session", error);
       }
@@ -181,7 +181,7 @@ public class ComicBookSelectionService {
   public String encodeSelections(final List<Long> selections) throws ComicBookSelectionException {
     log.debug("Storing selection set");
     try {
-      return this.objectMapper.writeValueAsString(selections);
+      return this.objectMapper.writeValueAsString(new ListOfIds(selections));
     } catch (JsonProcessingException error) {
       throw new ComicBookSelectionException("failed to save selections to session", error);
     }
@@ -239,5 +239,11 @@ public class ComicBookSelectionService {
         this.comicDetailService.getAllComicsForTag(tagType, tagValue, null, false).stream()
             .map(ComicDetail::getComicId)
             .toList());
+  }
+
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class ListOfIds {
+    @Getter private List<Long> ids;
   }
 }

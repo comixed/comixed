@@ -115,6 +115,9 @@
     "tab-title": "Update Metadata Process"
   },
   "multi-book-scraping": {
+    "load-scraping-page": {
+      "effect-failure": "Failed to load comic books to be scraped..."
+    },
     "remove-book": {
       "effect-failure": "Failed to remove comic from multi-book metadata update...",
       "effect-success": "Removed comic from multi-book metadata update..."

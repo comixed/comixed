@@ -43,7 +43,7 @@ public class ComicBookSelectionServiceTest {
   private static final ComicTagType TEST_TAG_TYPE = ComicTagType.STORY;
   private static final String TEST_TAG_VALUE = "Age Of Ultron";
 
-  private final List selectedIds = new ArrayList();
+  private final List<Long> selectedIds = new ArrayList();
   private final List<ComicDetail> comicDetailList = new ArrayList<>();
 
   @InjectMocks private ComicBookSelectionService service;
@@ -54,6 +54,8 @@ public class ComicBookSelectionServiceTest {
   @Mock private ObjectFactory<ComicDetailExampleBuilder> exampleBuilderObjectFactory;
   @Mock private PublishComicBookSelectionStateAction publishComicBookSelectionStateAction;
   @Mock private ComicDetail comicDetail;
+
+  @Captor private ArgumentCaptor<ComicBookSelectionService.ListOfIds> idsArgumentCaptor;
 
   @Before
   public void setUp() {
@@ -187,30 +189,32 @@ public class ComicBookSelectionServiceTest {
       service.decodeSelections(TEST_ENCODED_SELECTIONS);
     } finally {
       Mockito.verify(objectMapper, Mockito.times(1))
-          .readValue(TEST_ENCODED_SELECTIONS.toString(), List.class);
+          .readValue(TEST_ENCODED_SELECTIONS.toString(), ComicBookSelectionService.ListOfIds.class);
     }
   }
 
   @Test
   public void testDecodeSelections() throws ComicBookSelectionException, JsonProcessingException {
-    selectedIds.add(TEST_COMIC_BOOK_ID.intValue());
+    final ComicBookSelectionService.ListOfIds encodedIds =
+        new ComicBookSelectionService.ListOfIds(selectedIds);
+    selectedIds.add(TEST_COMIC_BOOK_ID);
 
     Mockito.when(objectMapper.readValue(Mockito.anyString(), Mockito.any(Class.class)))
-        .thenReturn(selectedIds);
+        .thenReturn(encodedIds);
 
-    final List result = service.decodeSelections(TEST_ENCODED_SELECTIONS);
+    final List<Long> result = service.decodeSelections(TEST_ENCODED_SELECTIONS);
 
     assertNotNull(result);
     assertEquals(selectedIds.size(), result.size());
     assertEquals(TEST_COMIC_BOOK_ID, result.get(0));
 
     Mockito.verify(objectMapper, Mockito.times(1))
-        .readValue(TEST_ENCODED_SELECTIONS.toString(), List.class);
+        .readValue(TEST_ENCODED_SELECTIONS.toString(), ComicBookSelectionService.ListOfIds.class);
   }
 
   @Test
   public void testEncodeSelections() throws JsonProcessingException, ComicBookSelectionException {
-    Mockito.when(objectMapper.writeValueAsString(Mockito.any()))
+    Mockito.when(objectMapper.writeValueAsString(idsArgumentCaptor.capture()))
         .thenReturn(TEST_ENCODED_SELECTIONS.toString());
 
     final String result = service.encodeSelections(selectedIds);
@@ -218,19 +222,28 @@ public class ComicBookSelectionServiceTest {
     assertNotNull(result);
     assertEquals(TEST_ENCODED_SELECTIONS.toString(), result);
 
-    Mockito.verify(objectMapper, Mockito.times(1)).writeValueAsString(selectedIds);
+    final ComicBookSelectionService.ListOfIds ids = idsArgumentCaptor.getValue();
+    assertNotNull(ids);
+    assertSame(selectedIds, ids.getIds());
+
+    Mockito.verify(objectMapper, Mockito.times(1)).writeValueAsString(ids);
   }
 
   @Test(expected = ComicBookSelectionException.class)
   public void testEncodeSelectionsWithJsonProcessException()
       throws JsonProcessingException, ComicBookSelectionException {
-    Mockito.when(objectMapper.writeValueAsString(Mockito.anyList()))
+    Mockito.when(objectMapper.writeValueAsString(idsArgumentCaptor.capture()))
         .thenThrow(JsonProcessingException.class);
 
     try {
       service.encodeSelections(selectedIds);
     } finally {
-      Mockito.verify(objectMapper, Mockito.times(1)).writeValueAsString(selectedIds);
+      final ComicBookSelectionService.ListOfIds ids = idsArgumentCaptor.getValue();
+
+      assertNotNull(ids);
+      assertSame(selectedIds, ids.getIds());
+
+      Mockito.verify(objectMapper, Mockito.times(1)).writeValueAsString(ids);
     }
   }
 

@@ -72,6 +72,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
   const ISSUE_NUMBER = '27';
   const COMIC_BOOK = COMIC_BOOK_4;
   const METADATA_SOURCE = METADATA_SOURCE_1;
+  const PAGE_SIZE = 25;
   const initialState = {
     [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: { ...initialScrapingState }
   };
@@ -404,6 +405,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
       beforeEach(() => {
         component.comicVolume = SCRAPING_VOLUME.startYear;
         component.volumes = VOLUMES;
+        component.pageSize = PAGE_SIZE;
         component.autoSelectExactMatch = true;
         spyOnStoreDispatch.calls.reset();
         component.issue = SCRAPING_ISSUE;
@@ -415,7 +417,8 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
             comicBook: COMIC_BOOK,
             metadataSource: METADATA_SOURCE,
             issueId: SCRAPING_ISSUE.id,
-            skipCache: SKIP_CACHE
+            skipCache: SKIP_CACHE,
+            pageSize: PAGE_SIZE
           })
         );
       });

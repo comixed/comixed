@@ -799,11 +799,6 @@ public class ComicBookService {
     this.comicBookRepository.prepareForMetadataUpdate(ids);
   }
 
-  @Transactional
-  public List<ComicBook> loadByComicDetailId(final List comicDetailIds) {
-    return this.comicBookRepository.loadByComicDetailId(comicDetailIds);
-  }
-
   /**
    * Returns the number of unprocessed comic books.
    *
@@ -848,5 +843,21 @@ public class ComicBookService {
   @Transactional
   public boolean filenameFound(final String filename) {
     return this.comicBookRepository.filenameFound(filename);
+  }
+
+  @Transactional
+  public List<ComicBook> loadByComicBookId(
+      final List<Long> comicDetailIds, final int pageSize, final int pageNumber) {
+    final int offset = pageSize * pageNumber;
+    if (offset > comicDetailIds.size()) {
+      return this.comicBookRepository.loadByComicDetailId(comicDetailIds);
+    }
+
+    int endOffset = offset + pageSize;
+    if (endOffset > comicDetailIds.size()) {
+      endOffset = comicDetailIds.size();
+    }
+
+    return this.comicBookRepository.loadByComicDetailId(comicDetailIds.subList(offset, endOffset));
   }
 }

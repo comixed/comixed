@@ -23,6 +23,7 @@ import { HttpClient } from '@angular/common/http';
 import { interpolate } from '@app/core';
 import {
   CLEAR_METADATA_CACHE_URL,
+  LOAD_MULTIBOOK_SCRAPING_URL,
   LOAD_SCRAPING_ISSUE_URL,
   LOAD_SCRAPING_VOLUMES_URL,
   REMOVE_MULTI_BOOK_COMIC_URL,
@@ -48,6 +49,8 @@ import { MetadataUpdateProcessUpdate } from '@app/comic-metadata/models/net/meta
 import { metadataUpdateProcessStatusUpdated } from '@app/comic-metadata/actions/metadata-update-process.actions';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import { FetchIssuesForSeriesRequest } from '@app/comic-metadata/models/net/fetch-issues-for-series-request';
+import { ScrapeMultiBookComicRequest } from '@app/comic-metadata/models/net/scrape-multi-book-comic-request';
+import { LoadMultiBookScrapingRequest } from '@app/comic-metadata/models/net/load-multi-book-scraping-request';
 
 /**
  * Interacts with the REST APIs during scraping.
@@ -175,16 +178,34 @@ export class ComicBookScrapingService {
     );
   }
 
-  startMultiBookScraping(): Observable<any> {
+  startMultiBookScraping(args: { pageSize: number }): Observable<any> {
     this.logger.debug('Starting multi-book comic scraping');
-    return this.http.put(interpolate(START_MULTI_BOOK_SCRAPING_URL), {});
+    return this.http.put(interpolate(START_MULTI_BOOK_SCRAPING_URL), {
+      pageSize: args.pageSize,
+      pageNumber: 0
+    } as ScrapeMultiBookComicRequest);
   }
 
-  removeMultiBookComic(args: { comicBook: ComicBook }): Observable<any> {
+  loadMultiBookScrapingPage(args: {
+    pageSize: number;
+    pageNumber: number;
+  }): Observable<any> {
+    this.logger.debug('Loading multi-books scraping page:', args);
+    return this.http.post(interpolate(LOAD_MULTIBOOK_SCRAPING_URL), {
+      pageSize: args.pageSize,
+      pageNumber: args.pageNumber
+    } as LoadMultiBookScrapingRequest);
+  }
+
+  removeMultiBookComic(args: {
+    comicBook: ComicBook;
+    pageSize: number;
+  }): Observable<any> {
     this.logger.debug('Removing comic from multi-books scraping:', args);
     return this.http.delete(
       interpolate(REMOVE_MULTI_BOOK_COMIC_URL, {
-        comicBookId: args.comicBook.id
+        comicBookId: args.comicBook.id,
+        pageSize: args.pageSize
       })
     );
   }
@@ -194,6 +215,7 @@ export class ComicBookScrapingService {
     issueId: string;
     comicBook: ComicBook;
     skipCache: boolean;
+    pageSize: number;
   }): Observable<any> {
     this.logger.debug('Scrape comic:', args);
     return this.http.post(
@@ -203,7 +225,8 @@ export class ComicBookScrapingService {
       }),
       {
         issueId: args.issueId,
-        skipCache: args.skipCache
+        skipCache: args.skipCache,
+        pageSize: args.pageSize
       } as ScrapeSingleBookComicRequest
     );
   }

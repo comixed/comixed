@@ -69,6 +69,10 @@ import {
   multiBookScrapingRemoveBook,
   multiBookScrapingSetCurrentBook
 } from '@app/comic-metadata/actions/multi-book-scraping.actions';
+import { RouterModule } from '@angular/router';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { BehaviorSubject } from 'rxjs';
+import { PAGE_SIZE_DEFAULT } from '@app/core';
 
 describe('ScrapingPageComponent', () => {
   const USER = USER_READER;
@@ -83,6 +87,8 @@ describe('ScrapingPageComponent', () => {
   const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
   const METADATA_SOURCE = METADATA_SOURCE_1;
+  const PAGE_SIZE = 25;
+  const PAGE_NUMBER = 3;
   const initialState = {
     [LIBRARY_FEATURE_KEY]: { ...initialLibraryState },
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
@@ -100,6 +106,7 @@ describe('ScrapingPageComponent', () => {
   let translateService: TranslateService;
   let titleService: TitleService;
   let store: MockStore<any>;
+  let queryParameterService: jasmine.SpyObj<QueryParameterService>;
 
   beforeEach(
     waitForAsync(() => {
@@ -110,6 +117,7 @@ describe('ScrapingPageComponent', () => {
           ComicScrapingComponent
         ],
         imports: [
+          RouterModule.forRoot([{ path: '**', redirectTo: '' }]),
           FormsModule,
           ReactiveFormsModule,
           LoggerModule.forRoot(),
@@ -120,7 +128,16 @@ describe('ScrapingPageComponent', () => {
           MatIconModule,
           MatSelectModule
         ],
-        providers: [provideMockStore({ initialState })]
+        providers: [
+          provideMockStore({ initialState }),
+          {
+            provide: QueryParameterService,
+            useValue: {
+              pageSize$: new BehaviorSubject(PAGE_SIZE),
+              pageIndex$: new BehaviorSubject(PAGE_NUMBER)
+            }
+          }
+        ]
       }).compileComponents();
 
       fixture = TestBed.createComponent(ScrapingPageComponent);
@@ -130,6 +147,9 @@ describe('ScrapingPageComponent', () => {
       spyOn(titleService, 'setTitle');
       store = TestBed.inject(MockStore);
       spyOn(store, 'dispatch');
+      queryParameterService = TestBed.inject(
+        QueryParameterService
+      ) as jasmine.SpyObj<QueryParameterService>;
       fixture.detectChanges();
     })
   );
@@ -212,7 +232,10 @@ describe('ScrapingPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        multiBookScrapingRemoveBook({ comicBook: COMIC_BOOK })
+        multiBookScrapingRemoveBook({
+          comicBook: COMIC_BOOK,
+          pageSize: PAGE_SIZE
+        })
       );
     });
   });

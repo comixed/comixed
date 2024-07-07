@@ -38,7 +38,6 @@ import {
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
-import { PAGE_SIZE_DEFAULT } from '@app/core';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { loadComicBook } from '@app/comic-books/actions/comic-book.actions';
 import { ComicBook } from '@app/comic-books/models/comic-book';
@@ -50,6 +49,7 @@ import {
 } from '@app/comic-metadata/selectors/multi-book-scraping.selectors';
 import { MultiBookScrapingProcessStatus } from '@app/comic-metadata/models/multi-book-scraping-process-status';
 import {
+  loadMultiBookScrapingPage,
   multiBookScrapingRemoveBook,
   multiBookScrapingSetCurrentBook,
   startMultiBookScraping
@@ -57,7 +57,8 @@ import {
 import { MultiBookScrapingState } from '@app/comic-metadata/reducers/multi-book-scraping.reducer';
 import { selectMetadataSourceListState } from '@app/comic-metadata/selectors/metadata-source-list.selectors';
 import { MatTableDataSource } from '@angular/material/table';
-import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'cx-scraping-page',
@@ -86,6 +87,7 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
   metadataSourceSubscription: Subscription;
   metadataSource: MetadataSource;
   comicBookSubscription: Subscription;
+  pageChangedSubscription: Subscription;
   currentSeries = '';
   currentVolume = '';
   currentIssueNumber = '';
@@ -94,7 +96,6 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
   scrapingStateSubscription: Subscription;
   scrapingVolumeSubscription: Subscription;
   scrapingVolumes: VolumeMetadata[] = [];
-  pageSize = PAGE_SIZE_DEFAULT;
   selectedIds: number[] = [];
   showPopup = false;
   popupComicDetail: ComicDetail = null;
@@ -105,7 +106,9 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
     private logger: LoggerService,
     private store: Store<any>,
     private titleService: TitleService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private activatedRoute: ActivatedRoute,
+    public queryParameterService: QueryParameterService
   ) {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -125,14 +128,6 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
         ),
         10
       );
-      this.pageSize = parseInt(
-        getUserPreference(
-          user.preferences,
-          PREFERENCE_PAGE_SIZE,
-          `${this.pageSize}`
-        ),
-        10
-      );
     });
     this.multiBookScrapingStateSubscription = this.store
       .select(selectMultiBookScrapingState)
@@ -144,7 +139,11 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
           !this.multiBookScrapingState.busy
         ) {
           this.logger.debug('Starting multi-book comic scraping');
-          this.store.dispatch(startMultiBookScraping());
+          this.store.dispatch(
+            startMultiBookScraping({
+              pageSize: this.queryParameterService.pageSize$.value
+            })
+          );
         }
         this.store.dispatch(
           setBusyState({ enabled: this.multiBookScrapingState.busy })
@@ -179,6 +178,16 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
     this.comicBookSubscription = this.store
       .select(selectComicBook)
       .subscribe(comicBook => (this.currentComicBook = comicBook));
+    this.pageChangedSubscription = this.activatedRoute.queryParams.subscribe(
+      params => {
+        this.store.dispatch(
+          loadMultiBookScrapingPage({
+            pageSize: this.queryParameterService.pageSize$.value,
+            pageNumber: this.queryParameterService.pageIndex$.value
+          })
+        );
+      }
+    );
   }
 
   get started(): boolean {
@@ -189,7 +198,11 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.store.dispatch(startMultiBookScraping());
+    this.store.dispatch(
+      startMultiBookScraping({
+        pageSize: this.queryParameterService.pageSize$.value
+      })
+    );
     this.loadTranslations();
   }
 
@@ -201,6 +214,7 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
     this.metadataSourceSubscription.unsubscribe();
     this.scrapingVolumeSubscription.unsubscribe();
     this.comicBookSubscription.unsubscribe();
+    this.pageChangedSubscription.unsubscribe();
   }
 
   onSelectionChanged(comicBook: ComicDetail): void {
@@ -235,7 +249,8 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
       multiBookScrapingRemoveBook({
         comicBook: this.comicBooks.find(
           entry => entry.id === comicDetail.comicId
-        )
+        ),
+        pageSize: this.queryParameterService.pageSize$.value
       })
     );
   }

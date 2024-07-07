@@ -34,6 +34,7 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/core';
 import {
   CLEAR_METADATA_CACHE_URL,
+  LOAD_MULTIBOOK_SCRAPING_URL,
   LOAD_SCRAPING_ISSUE_URL,
   LOAD_SCRAPING_VOLUMES_URL,
   REMOVE_MULTI_BOOK_COMIC_URL,
@@ -71,6 +72,8 @@ import { LoadVolumeMetadataRequest } from '@app/comic-metadata/models/net/load-v
 import { ScrapeMultiBookComicResponse } from '@app/comic-metadata/models/net/scrape-multi-book-comic-response';
 import { StartMultiBookScrapingResponse } from '@app/comic-metadata/models/net/start-multi-book-scraping-response';
 import { RemoveMultiBookComicResponse } from '@app/comic-metadata/models/net/remove-multi-book-comic-response';
+import { LoadMultiBookScrapingRequest } from '@app/comic-metadata/models/net/load-multi-book-scraping-request';
+import { LoadMultiBookScrapingResponse } from '@app/comic-metadata/models/net/load-multi-book-scraping-page-response';
 
 describe('ComicBookScrapingService', () => {
   const SERIES = 'The Series';
@@ -96,6 +99,9 @@ describe('ComicBookScrapingService', () => {
     totalComics: 7171,
     completedComics: 233
   } as MetadataUpdateProcessUpdate;
+  const PAGE_SIZE = 25;
+  const PAGE_NUMBER = 4;
+
   const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
 
   let service: ComicBookScrapingService;
@@ -205,11 +211,32 @@ describe('ComicBookScrapingService', () => {
       comicBooks: COMIC_BOOKS
     } as StartMultiBookScrapingResponse;
     service
-      .startMultiBookScraping()
+      .startMultiBookScraping({ pageSize: PAGE_SIZE })
       .subscribe(response => expect(response).toEqual(serverResponse));
 
     const req = httpMock.expectOne(interpolate(START_MULTI_BOOK_SCRAPING_URL));
     expect(req.request.method).toEqual('PUT');
+    req.flush(serverResponse);
+  });
+
+  it('can load a page of multi-book comics', () => {
+    const serverResponse = {
+      pageSize: PAGE_SIZE,
+      pageNumber: PAGE_NUMBER
+    } as LoadMultiBookScrapingResponse;
+
+    service
+      .loadMultiBookScrapingPage({
+        pageSize: PAGE_SIZE,
+        pageNumber: PAGE_NUMBER
+      })
+      .subscribe(response => expect(response).toEqual(serverResponse));
+    const req = httpMock.expectOne(interpolate(LOAD_MULTIBOOK_SCRAPING_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      pageSize: PAGE_SIZE,
+      pageNumber: PAGE_NUMBER
+    } as LoadMultiBookScrapingRequest);
     req.flush(serverResponse);
   });
 
@@ -218,12 +245,13 @@ describe('ComicBookScrapingService', () => {
       comicBooks: COMIC_BOOKS
     } as RemoveMultiBookComicResponse;
     service
-      .removeMultiBookComic({ comicBook: COMIC_BOOK })
+      .removeMultiBookComic({ comicBook: COMIC_BOOK, pageSize: PAGE_SIZE })
       .subscribe(response => expect(response).toEqual(serverResponse));
 
     const req = httpMock.expectOne(
       interpolate(REMOVE_MULTI_BOOK_COMIC_URL, {
-        comicBookId: COMIC_BOOK.id
+        comicBookId: COMIC_BOOK.id,
+        pageSize: PAGE_SIZE
       })
     );
     expect(req.request.method).toEqual('DELETE');
@@ -239,7 +267,8 @@ describe('ComicBookScrapingService', () => {
         metadataSource: METADATA_SOURCE,
         issueId: SCRAPING_ISSUE.id,
         comicBook: COMIC_BOOK,
-        skipCache: SKIP_CACHE
+        skipCache: SKIP_CACHE,
+        pageSize: PAGE_SIZE
       })
       .subscribe(response => expect(response).toEqual(serverResponse));
 
@@ -252,7 +281,8 @@ describe('ComicBookScrapingService', () => {
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
       issueId: SCRAPING_ISSUE.id,
-      skipCache: SKIP_CACHE
+      skipCache: SKIP_CACHE,
+      pageSize: PAGE_SIZE
     } as ScrapeSingleBookComicRequest);
     req.flush(serverResponse);
   });

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2023, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 import { ComicBook } from '@app/comic-books/models/comic-book';
 
-export interface StartMultiBookScrapingResponse {
+export interface LoadMultiBookScrapingResponse {
   pageSize: number;
   pageNumber: number;
   totalComics: number;

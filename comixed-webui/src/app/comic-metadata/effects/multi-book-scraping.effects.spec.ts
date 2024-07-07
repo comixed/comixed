@@ -37,6 +37,9 @@ import {
 } from '@app/comic-books/comic-books.fixtures';
 import { ScrapeMultiBookComicResponse } from '@app/comic-metadata/models/net/scrape-multi-book-comic-response';
 import {
+  loadMultiBookScrapingPage,
+  loadMultiBookScrapingPageFailure,
+  loadMultiBookScrapingPageSuccess,
   multiBookScrapeComic,
   multiBookScrapeComicFailure,
   multiBookScrapeComicSuccess,
@@ -55,6 +58,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { StartMultiBookScrapingResponse } from '@app/comic-metadata/models/net/start-multi-book-scraping-response';
 import { RemoveMultiBookComicResponse } from '@app/comic-metadata/models/net/remove-multi-book-comic-response';
+import { LoadMultiBookScrapingResponse } from '@app/comic-metadata/models/net/load-multi-book-scraping-page-response';
 
 describe('MultiBookScrapingEffects', () => {
   const SERIES = 'The Series';
@@ -71,6 +75,9 @@ describe('MultiBookScrapingEffects', () => {
     COMIC_BOOK_4,
     COMIC_BOOK_5
   ];
+  const PAGE_SIZE = 25;
+  const PAGE_NUMBER = 3;
+  const TOTAL_COMICS = 100;
   const COMIC_BOOK = COMIC_BOOK_4;
   const METADATA_SOURCE = METADATA_SOURCE_1;
 
@@ -94,6 +101,9 @@ describe('MultiBookScrapingEffects', () => {
           useValue: {
             startMultiBookScraping: jasmine.createSpy(
               'ComicBookScrapingService.startMultiBookScraping()'
+            ),
+            loadMultiBookScrapingPage: jasmine.createSpy(
+              'ComicBookScrapingService.loadMultiBookScrapingPage()'
             ),
             removeMultiBookComic: jasmine.createSpy(
               'ComicBookScrapingService.removeMultiBookComic()'
@@ -123,16 +133,22 @@ describe('MultiBookScrapingEffects', () => {
   describe('starting multi-book scraping', () => {
     it('fires an action on success', () => {
       const serviceResponse = {
+        pageSize: PAGE_SIZE,
+        pageNumber: PAGE_NUMBER,
+        totalComics: TOTAL_COMICS,
         comicBooks: COMIC_BOOKS
       } as StartMultiBookScrapingResponse;
-      const action = startMultiBookScraping();
+      const action = startMultiBookScraping({ pageSize: PAGE_SIZE });
       const outcome = startMultiBookScrapingSuccess({
+        pageSize: PAGE_SIZE,
+        pageNumber: PAGE_NUMBER,
+        totalComics: TOTAL_COMICS,
         comicBooks: COMIC_BOOKS
       });
 
       actions$ = hot('-a', { a: action });
       comicBookScrapingService.startMultiBookScraping
-        .withArgs()
+        .withArgs({ pageSize: PAGE_SIZE })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -141,12 +157,12 @@ describe('MultiBookScrapingEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = startMultiBookScraping();
+      const action = startMultiBookScraping({ pageSize: PAGE_SIZE });
       const outcome = startMultiBookScrapingFailure();
 
       actions$ = hot('-a', { a: action });
       comicBookScrapingService.startMultiBookScraping
-        .withArgs()
+        .withArgs({ pageSize: PAGE_SIZE })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -155,12 +171,12 @@ describe('MultiBookScrapingEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = startMultiBookScraping();
+      const action = startMultiBookScraping({ pageSize: PAGE_SIZE });
       const outcome = startMultiBookScrapingFailure();
 
       actions$ = hot('-a', { a: action });
       comicBookScrapingService.startMultiBookScraping
-        .withArgs()
+        .withArgs({ pageSize: PAGE_SIZE })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
@@ -169,19 +185,101 @@ describe('MultiBookScrapingEffects', () => {
     });
   });
 
+  describe('loading a page of multi-book scraping comics', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = {
+        pageSize: PAGE_SIZE,
+        pageNumber: PAGE_NUMBER,
+        totalComics: TOTAL_COMICS,
+        comicBooks: COMIC_BOOKS
+      } as LoadMultiBookScrapingResponse;
+      const action = loadMultiBookScrapingPage({
+        pageSize: PAGE_SIZE,
+        pageNumber: PAGE_NUMBER
+      });
+      const outcome = loadMultiBookScrapingPageSuccess({
+        pageSize: PAGE_SIZE,
+        pageNumber: PAGE_NUMBER,
+        totalComics: TOTAL_COMICS,
+        comicBooks: COMIC_BOOKS
+      });
+
+      actions$ = hot('-a', { a: action });
+      comicBookScrapingService.loadMultiBookScrapingPage
+        .withArgs({
+          pageSize: PAGE_SIZE,
+          pageNumber: PAGE_NUMBER
+        })
+        .and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.loadMultiBookScrapingPage$).toBeObservable(expected);
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = loadMultiBookScrapingPage({
+        pageSize: PAGE_SIZE,
+        pageNumber: PAGE_NUMBER
+      });
+      const outcome = loadMultiBookScrapingPageFailure();
+
+      actions$ = hot('-a', { a: action });
+      comicBookScrapingService.loadMultiBookScrapingPage
+        .withArgs({
+          pageSize: PAGE_SIZE,
+          pageNumber: PAGE_NUMBER
+        })
+        .and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.loadMultiBookScrapingPage$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = loadMultiBookScrapingPage({
+        pageSize: PAGE_SIZE,
+        pageNumber: PAGE_NUMBER
+      });
+      const outcome = loadMultiBookScrapingPageFailure();
+
+      actions$ = hot('-a', { a: action });
+      comicBookScrapingService.loadMultiBookScrapingPage
+        .withArgs({
+          pageSize: PAGE_SIZE,
+          pageNumber: PAGE_NUMBER
+        })
+        .and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.loadMultiBookScrapingPage$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
   describe('removing multi-book comic', () => {
     it('fires an action on success', () => {
       const serviceResponse = {
+        pageSize: PAGE_SIZE,
+        pageNumber: PAGE_NUMBER,
+        totalComics: TOTAL_COMICS,
         comicBooks: COMIC_BOOKS
       } as RemoveMultiBookComicResponse;
-      const action = multiBookScrapingRemoveBook({ comicBook: COMIC_BOOK });
+      const action = multiBookScrapingRemoveBook({
+        comicBook: COMIC_BOOK,
+        pageSize: PAGE_SIZE
+      });
       const outcome = multiBookScrapingRemoveBookSuccess({
+        pageSize: PAGE_SIZE,
+        pageNumber: PAGE_NUMBER,
+        totalComics: TOTAL_COMICS,
         comicBooks: COMIC_BOOKS
       });
 
       actions$ = hot('-a', { a: action });
       comicBookScrapingService.removeMultiBookComic
-        .withArgs({ comicBook: COMIC_BOOK })
+        .withArgs({ comicBook: COMIC_BOOK, pageSize: PAGE_SIZE })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -191,12 +289,15 @@ describe('MultiBookScrapingEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = multiBookScrapingRemoveBook({ comicBook: COMIC_BOOK });
+      const action = multiBookScrapingRemoveBook({
+        comicBook: COMIC_BOOK,
+        pageSize: PAGE_SIZE
+      });
       const outcome = multiBookScrapingRemoveBookFailure();
 
       actions$ = hot('-a', { a: action });
       comicBookScrapingService.removeMultiBookComic
-        .withArgs({ comicBook: COMIC_BOOK })
+        .withArgs({ comicBook: COMIC_BOOK, pageSize: PAGE_SIZE })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -205,12 +306,15 @@ describe('MultiBookScrapingEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = multiBookScrapingRemoveBook({ comicBook: COMIC_BOOK });
+      const action = multiBookScrapingRemoveBook({
+        comicBook: COMIC_BOOK,
+        pageSize: PAGE_SIZE
+      });
       const outcome = multiBookScrapingRemoveBookFailure();
 
       actions$ = hot('-a', { a: action });
       comicBookScrapingService.removeMultiBookComic
-        .withArgs({ comicBook: COMIC_BOOK })
+        .withArgs({ comicBook: COMIC_BOOK, pageSize: PAGE_SIZE })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
@@ -222,15 +326,22 @@ describe('MultiBookScrapingEffects', () => {
   describe('scraping a multi-book comic entry', () => {
     it('fires an action on success', () => {
       const serviceResponse = {
+        pageSize: PAGE_SIZE,
+        pageNumber: PAGE_NUMBER,
+        totalComics: TOTAL_COMICS,
         comicBooks: COMIC_BOOKS
       } as ScrapeMultiBookComicResponse;
       const action = multiBookScrapeComic({
         metadataSource: METADATA_SOURCE,
         issueId: ISSUE_NUMBER,
         comicBook: COMIC_BOOK,
-        skipCache: SKIP_CACHE
+        skipCache: SKIP_CACHE,
+        pageSize: PAGE_SIZE
       });
       const outcome = multiBookScrapeComicSuccess({
+        pageSize: PAGE_SIZE,
+        pageNumber: PAGE_NUMBER,
+        totalComics: TOTAL_COMICS,
         comicBooks: COMIC_BOOKS
       });
 
@@ -240,7 +351,8 @@ describe('MultiBookScrapingEffects', () => {
           metadataSource: METADATA_SOURCE,
           issueId: ISSUE_NUMBER,
           comicBook: COMIC_BOOK,
-          skipCache: SKIP_CACHE
+          skipCache: SKIP_CACHE,
+          pageSize: PAGE_SIZE
         })
         .and.returnValue(of(serviceResponse));
 
@@ -255,7 +367,8 @@ describe('MultiBookScrapingEffects', () => {
         metadataSource: METADATA_SOURCE,
         issueId: ISSUE_NUMBER,
         comicBook: COMIC_BOOK,
-        skipCache: SKIP_CACHE
+        skipCache: SKIP_CACHE,
+        pageSize: PAGE_SIZE
       });
       const outcome = multiBookScrapeComicFailure();
 
@@ -265,7 +378,8 @@ describe('MultiBookScrapingEffects', () => {
           metadataSource: METADATA_SOURCE,
           issueId: ISSUE_NUMBER,
           comicBook: COMIC_BOOK,
-          skipCache: SKIP_CACHE
+          skipCache: SKIP_CACHE,
+          pageSize: PAGE_SIZE
         })
         .and.returnValue(throwError(serviceResponse));
 
@@ -279,7 +393,8 @@ describe('MultiBookScrapingEffects', () => {
         metadataSource: METADATA_SOURCE,
         issueId: ISSUE_NUMBER,
         comicBook: COMIC_BOOK,
-        skipCache: SKIP_CACHE
+        skipCache: SKIP_CACHE,
+        pageSize: PAGE_SIZE
       });
       const outcome = multiBookScrapeComicFailure();
 
@@ -289,7 +404,8 @@ describe('MultiBookScrapingEffects', () => {
           metadataSource: METADATA_SOURCE,
           issueId: ISSUE_NUMBER,
           comicBook: COMIC_BOOK,
-          skipCache: SKIP_CACHE
+          skipCache: SKIP_CACHE,
+          pageSize: PAGE_SIZE
         })
         .and.throwError('expected');
 

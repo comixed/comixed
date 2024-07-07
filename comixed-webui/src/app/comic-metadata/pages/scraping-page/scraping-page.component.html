@@ -84,6 +84,20 @@
     ></cx-comic-scraping>
 
     <h4>{{ "scraping.comic-book-queue.title" | translate }}</h4>
+    <mat-paginator
+      showFirstLastButtons="true"
+      [length]="multiBookScrapingState.totalComics"
+      [pageIndex]="queryParameterService.pageIndex$ | async"
+      [pageSize]="queryParameterService.pageSize$ | async"
+      [pageSizeOptions]="queryParameterService.pageSizeOptions"
+      (page)="
+        queryParameterService.onPageChange(
+          $event.pageSize,
+          $event.pageIndex,
+          $event.previousPageIndex
+        )
+      "
+    ></mat-paginator>
     <mat-table class="cx-width-100" [dataSource]="dataSource">
       <ng-container matColumnDef="thumbnail">
         <mat-header-cell *matHeaderCellDef>
@@ -165,7 +179,7 @@
       [comicVolume]="currentVolume"
       [comicIssueNumber]="this.currentIssueNumber"
       [skipCache]="skipCache"
-      [pageSize]="pageSize"
+      [pageSize]="queryParameterService.pageSize$ | async"
       [multimode]="true"
       [volumes]="scrapingVolumes"
     ></cx-scraping-volume-selection>
