@@ -23,7 +23,8 @@ import java.util.Objects;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.adaptors.content.ComicMetadataContentAdaptor;
+import org.comixedproject.adaptors.content.ContentAdaptor;
+import org.comixedproject.adaptors.content.ContentAdaptorRegistry;
 import org.comixedproject.adaptors.content.ContentAdaptorRules;
 import org.comixedproject.metadata.MetadataAdaptorProvider;
 import org.comixedproject.metadata.adaptors.MetadataAdaptor;
@@ -48,7 +49,7 @@ import org.springframework.util.StringUtils;
 @Log4j2
 public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, ComicBook> {
   @Autowired private ComicBookAdaptor comicBookAdaptor;
-  @Autowired private ComicMetadataContentAdaptor comicMetadataContentAdaptor;
+  @Autowired private ContentAdaptorRegistry contentAdaptorRegistry;
   @Autowired private MetadataService metadataService;
   @Autowired private MetadataSourceService metadataSourceService;
 
@@ -67,9 +68,14 @@ public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, Comic
       if (!rules.isSkipMetadata()) {
         final File metadataFile = new File(this.comicBookAdaptor.getMetadataFilename(comicBook));
         if (metadataFile.exists()) {
-          log.trace("Loading external metadata file: {}", metadataFile.getAbsolutePath());
-          this.comicMetadataContentAdaptor.loadContent(
-              comicBook, "", FileUtils.readFileToByteArray(metadataFile), rules);
+          final ContentAdaptor contentAdaptor =
+              this.contentAdaptorRegistry.getContentAdaptorForFilename(
+                  metadataFile.getAbsolutePath());
+          if (contentAdaptor != null) {
+            log.trace("Loading external metadata file: {}", metadataFile.getAbsolutePath());
+            contentAdaptor.loadContent(
+                comicBook, "", FileUtils.readFileToByteArray(metadataFile), rules);
+          }
         }
       }
       final String metadataWebAddress = comicBook.getComicDetail().getWebAddress();

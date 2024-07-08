@@ -18,6 +18,7 @@
 
 package org.comixedproject.adaptors.content;
 
+import org.comixedproject.adaptors.archive.model.ArchiveEntryType;
 import org.comixedproject.model.comicbooks.ComicBook;
 
 /**
@@ -38,4 +39,11 @@ public interface ContentAdaptor {
    */
   void loadContent(ComicBook comicBook, String filename, byte[] content, ContentAdaptorRules rules)
       throws ContentAdaptorException;
+
+  /**
+   * Returns the archive entry type for supported content.
+   *
+   * @return the entry type
+   */
+  ArchiveEntryType getArchiveEntryType();
 }

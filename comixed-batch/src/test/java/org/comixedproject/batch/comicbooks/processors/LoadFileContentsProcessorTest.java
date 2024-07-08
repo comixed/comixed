@@ -24,9 +24,7 @@ import static junit.framework.TestCase.assertFalse;
 import java.util.List;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.adaptors.content.ComicMetadataContentAdaptor;
-import org.comixedproject.adaptors.content.ContentAdaptorException;
-import org.comixedproject.adaptors.content.ContentAdaptorRules;
+import org.comixedproject.adaptors.content.*;
 import org.comixedproject.metadata.MetadataAdaptorProvider;
 import org.comixedproject.metadata.adaptors.MetadataAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -51,7 +49,8 @@ public class LoadFileContentsProcessorTest {
 
   @InjectMocks private LoadFileContentsProcessor processor;
   @Mock private ComicBookAdaptor comicBookAdaptor;
-  @Mock private ComicMetadataContentAdaptor comicMetadataContentAdaptor;
+  @Mock private ContentAdaptorRegistry contentAdaptorRegistry;
+  @Mock private ComicInfoXmlFilenameContentAdaptor comicInfoXmlFilenameContentAdaptor;
   @Mock private MetadataService metadataService;
   @Mock private MetadataSourceService metadataSourceService;
   @Mock private MetadataAdaptor metadataAdaptor;
@@ -74,8 +73,10 @@ public class LoadFileContentsProcessorTest {
     Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(false);
     Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.any(ComicBook.class)))
         .thenReturn(TEST_METADATA_FILENAME);
+    Mockito.when(contentAdaptorRegistry.getContentAdaptorForFilename(Mockito.anyString()))
+        .thenReturn(comicInfoXmlFilenameContentAdaptor);
     Mockito.doNothing()
-        .when(comicMetadataContentAdaptor)
+        .when(comicInfoXmlFilenameContentAdaptor)
         .loadContent(
             Mockito.any(ComicBook.class),
             Mockito.anyString(),
@@ -112,7 +113,7 @@ public class LoadFileContentsProcessorTest {
     Mockito.verify(comicBookAdaptor, Mockito.times(1))
         .load(comicBook, comicBookContentAdaptorRulesArgumentCaptor.getValue());
     Mockito.verify(pageList, Mockito.times(1)).sort(Mockito.any());
-    Mockito.verify(comicMetadataContentAdaptor, Mockito.times(1))
+    Mockito.verify(comicInfoXmlFilenameContentAdaptor, Mockito.times(1))
         .loadContent(comicBook, "", content, contentRules);
   }
 
@@ -170,7 +171,7 @@ public class LoadFileContentsProcessorTest {
     assertSame(comicBook, result);
 
     Mockito.verify(comicBookAdaptor, Mockito.never()).load(Mockito.any(), Mockito.any());
-    Mockito.verify(comicMetadataContentAdaptor, Mockito.never())
+    Mockito.verify(comicInfoXmlFilenameContentAdaptor, Mockito.never())
         .loadContent(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
   }
 
@@ -197,7 +198,7 @@ public class LoadFileContentsProcessorTest {
 
     Mockito.verify(comicBookAdaptor, Mockito.times(1)).load(comicBook, comicBookRules);
     Mockito.verify(pageList, Mockito.times(1)).sort(Mockito.any());
-    Mockito.verify(comicMetadataContentAdaptor, Mockito.times(1))
+    Mockito.verify(comicInfoXmlFilenameContentAdaptor, Mockito.times(1))
         .loadContent(comicBook, "", content, contentRules);
   }
 
@@ -219,7 +220,7 @@ public class LoadFileContentsProcessorTest {
 
     Mockito.verify(comicBookAdaptor, Mockito.times(1)).load(comicBook, comicBookRules);
     Mockito.verify(pageList, Mockito.times(1)).sort(Mockito.any());
-    Mockito.verify(comicMetadataContentAdaptor, Mockito.never())
+    Mockito.verify(comicInfoXmlFilenameContentAdaptor, Mockito.never())
         .loadContent(
             Mockito.any(ComicBook.class),
             Mockito.anyString(),

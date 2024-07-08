@@ -19,9 +19,22 @@
 package org.comixedproject.adaptors.content;
 
 /**
- * <code>FilenameContentAdaptor</code> defines a type of {@link ContentAdaptor} that applies to *
- * files that have a particular filename.
- *
- * @author Darryl L. Pierce
+ * <code>FilenameContentAdaptorProvider</code> defines a provider for registering instances of *
+ * {@link FilenameContentAdaptor}.
  */
-public interface FilenameContentAdaptor extends ContentAdaptor {}
+public interface FilenameContentAdaptorProvider {
+  /**
+   * Creates a new instance of the adaptor.
+   *
+   * @return the adaptor
+   */
+  FilenameContentAdaptor create();
+
+  /**
+   * Returns if the filename is supported.
+   *
+   * @param filename the filename
+   * @return true if the filename is supported
+   */
+  boolean supports(String filename);
+}

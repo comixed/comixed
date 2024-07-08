@@ -1,0 +1,139 @@
+/*
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2024, The ComiXed Project
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses>
+ */
+
+package org.comixedproject.adaptors.content;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.*;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptors.archive.model.ArchiveEntryType;
+import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.ComicTag;
+import org.comixedproject.model.comicbooks.ComicTagType;
+import org.comixedproject.model.metadata.ComicInfo;
+import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
+import org.springframework.util.StringUtils;
+
+/**
+ * <code>ComicInfoXmlFilenameContentAdaptor</code> provides an implementation of {@link
+ * FilenameContentAdaptor} that loads files named <code>ComicInfo.xml</code>.
+ *
+ * @author Darryl L. Pierce
+ */
+@Log4j2
+public class ComicInfoXmlFilenameContentAdaptor implements FilenameContentAdaptor {
+  @Getter private ArchiveEntryType archiveEntryType = ArchiveEntryType.FILE;
+
+  private MappingJackson2XmlHttpMessageConverter xmlConverter;
+
+  public ComicInfoXmlFilenameContentAdaptor() {
+    this.xmlConverter = new MappingJackson2XmlHttpMessageConverter();
+    this.xmlConverter
+        .getObjectMapper()
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+  }
+
+  @Override
+  public void loadContent(
+      final ComicBook comicBook,
+      final String filename,
+      final byte[] content,
+      final ContentAdaptorRules rules)
+      throws ContentAdaptorException {
+    if (rules.isSkipMetadata()) {
+      log.info("Skipping metadata import due to rule");
+      return;
+    }
+    log.trace("Reading ComicInfo.xml content");
+    final ComicInfo comicInfo;
+    try {
+      comicInfo =
+          this.xmlConverter
+              .getObjectMapper()
+              .readValue(new ByteArrayInputStream(content), ComicInfo.class);
+      log.trace("Setting comic metadata");
+      comicBook.getComicDetail().setPublisher(comicInfo.getPublisher());
+      comicBook.getComicDetail().setSeries(comicInfo.getSeries());
+      comicBook.getComicDetail().setVolume(comicInfo.getVolume());
+      comicBook.getComicDetail().setIssueNumber(comicInfo.getIssueNumber());
+      if (comicInfo.getYear() != null && comicInfo.getMonth() != null) {
+        GregorianCalendar gc =
+            new GregorianCalendar(comicInfo.getYear(), comicInfo.getMonth() - 1, 1);
+        comicBook.getComicDetail().setCoverDate(gc.getTime());
+      }
+      comicBook.getComicDetail().setTitle(comicInfo.getTitle());
+      comicBook.getComicDetail().setDescription(comicInfo.getSummary());
+      comicBook.getComicDetail().setNotes(comicInfo.getNotes());
+      if (comicInfo.getMetadata() != null
+          && StringUtils.hasLength(comicInfo.getMetadata().getName())
+          && StringUtils.hasLength(comicInfo.getMetadata().getReferenceId())) {
+        log.debug("Loading comic metadata source details");
+        comicBook.setMetadataSourceName(comicInfo.getMetadata().getName());
+        comicBook.setMetadataReferenceId(comicInfo.getMetadata().getReferenceId());
+      }
+      final ComicDetail detail = comicBook.getComicDetail();
+      detail.setWebAddress(comicInfo.getWeb());
+      log.debug("Clearing comic tags");
+      detail.getTags().clear();
+      this.commandSeparatedList(comicInfo.getCharacters())
+          .forEach(
+              name -> detail.getTags().add(new ComicTag(detail, ComicTagType.CHARACTER, name)));
+      this.commandSeparatedList(comicInfo.getTeams())
+          .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.TEAM, name)));
+      this.commandSeparatedList(comicInfo.getLocations())
+          .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.LOCATION, name)));
+      this.commandSeparatedList(comicInfo.getAlternateSeries())
+          .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.STORY, name)));
+      this.commandSeparatedList(comicInfo.getWriter())
+          .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.WRITER, name)));
+      this.commandSeparatedList(comicInfo.getEditor())
+          .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.EDITOR, name)));
+      this.commandSeparatedList(comicInfo.getPenciller())
+          .forEach(
+              name -> detail.getTags().add(new ComicTag(detail, ComicTagType.PENCILLER, name)));
+      this.commandSeparatedList(comicInfo.getInker())
+          .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.INKER, name)));
+      this.commandSeparatedList(comicInfo.getColorist())
+          .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.COLORIST, name)));
+      this.commandSeparatedList(comicInfo.getLetterer())
+          .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.LETTERER, name)));
+      this.commandSeparatedList(comicInfo.getCoverArtist())
+          .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.COVER, name)));
+    } catch (IOException error) {
+      throw new ContentAdaptorException("Failed to load ComicInfo.xml", error);
+    }
+  }
+
+  private List<String> commandSeparatedList(String text) {
+    if (!StringUtils.hasLength(text)) {
+      return Collections.emptyList();
+    }
+    List<String> result = new ArrayList<>();
+    var tokens = new StringTokenizer(text, ",");
+
+    while (tokens.hasMoreTokens()) {
+      result.add(tokens.nextToken().trim());
+    }
+
+    return result;
+  }
+}

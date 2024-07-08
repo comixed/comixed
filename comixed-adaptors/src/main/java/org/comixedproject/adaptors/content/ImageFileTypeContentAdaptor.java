@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2017, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,19 +18,30 @@
 
 package org.comixedproject.adaptors.content;
 
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptors.archive.model.ArchiveEntryType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.ComicPage;
-import org.springframework.stereotype.Component;
 
 /**
- * <code>ImageContentAdaptor</code> loads an image and makes it a {@link ComicPage} for a comic.
+ * <code>ImageFileTypeContentAdaptor</code> provides an implementation of {@link
+ * FileTypeContentAdaptor} that loads an image file into a {@link ComicPage} in the provided comic.
  *
  * @author Darryl L. Pierce
  */
-@Component
 @Log4j2
-public class ImageContentAdaptor extends AbstractContentAdaptor {
+public class ImageFileTypeContentAdaptor implements FileTypeContentAdaptor {
+  @Getter private ArchiveEntryType archiveEntryType = ArchiveEntryType.IMAGE;
+
+  /**
+   * Loads the image content.
+   *
+   * @param comicBook the comicBook
+   * @param filename the content's filename
+   * @param content the content
+   * @param rules content rules
+   */
   @Override
   public void loadContent(
       final ComicBook comicBook,

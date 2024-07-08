@@ -18,10 +18,26 @@
 
 package org.comixedproject.adaptors.content;
 
+import java.util.regex.Pattern;
+import lombok.extern.log4j.Log4j2;
+
 /**
- * <code>FilenameContentAdaptor</code> defines a type of {@link ContentAdaptor} that applies to *
- * files that have a particular filename.
+ * <code>ComicInfoXmlFilenameContentAdaptorProvider</code> provides a {@link
+ * FilenameContentAdaptorProvider} for {@link ComicInfoXmlFilenameContentAdaptor}.
  *
  * @author Darryl L. Pierce
  */
-public interface FilenameContentAdaptor extends ContentAdaptor {}
+@Log4j2
+public class ComicInfoXmlFilenameContentAdaptorProvider implements FilenameContentAdaptorProvider {
+  private Pattern pattern = Pattern.compile(".*ComicInfo.xml", Pattern.CASE_INSENSITIVE);
+
+  @Override
+  public FilenameContentAdaptor create() {
+    return new ComicInfoXmlFilenameContentAdaptor();
+  }
+
+  @Override
+  public boolean supports(final String filename) {
+    return pattern.matcher(filename).matches();
+  }
+}

@@ -18,10 +18,30 @@
 
 package org.comixedproject.adaptors.content;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import lombok.extern.log4j.Log4j2;
+
 /**
- * <code>FilenameContentAdaptor</code> defines a type of {@link ContentAdaptor} that applies to *
- * files that have a particular filename.
+ * <code>ImageFileTypeContentAdaptorProvider</code> provides an implementation of {@link
+ * FileTypeContentAdaptorProvider} for {@link ImageFileTypeContentAdaptor}.
  *
  * @author Darryl L. Pierce
  */
-public interface FilenameContentAdaptor extends ContentAdaptor {}
+@Log4j2
+public class ImageFileTypeContentAdaptorProvider implements FileTypeContentAdaptorProvider {
+  private ImageFileTypeContentAdaptor adaptor = new ImageFileTypeContentAdaptor();
+  private List<String> supportedContentTypes =
+      new ArrayList<>(Arrays.asList("jpeg", "png", "gif", "webp"));
+
+  @Override
+  public FileTypeContentAdaptor create() {
+    return adaptor;
+  }
+
+  @Override
+  public boolean supports(final String contentType) {
+    return this.supportedContentTypes.contains(contentType);
+  }
+}

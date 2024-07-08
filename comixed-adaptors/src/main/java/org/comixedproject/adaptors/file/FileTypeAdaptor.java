@@ -33,6 +33,7 @@ import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.model.ArchiveEntryType;
 import org.comixedproject.adaptors.content.ContentAdaptor;
+import org.comixedproject.adaptors.content.ContentAdaptorRegistry;
 import org.comixedproject.model.archives.ArchiveType;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,11 +55,11 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class FileTypeAdaptor {
   @Autowired private ApplicationContext applicationContext;
+  @Autowired private ContentAdaptorRegistry contentAdaptorRegistry;
   @Autowired private Tika tika;
   @Autowired private Metadata metadata;
 
   @Getter private List<ArchiveAdaptorDefinition> archiveAdaptors = new ArrayList<>();
-  @Getter private List<EntryTypeDefinition> entryTypeLoaders = new ArrayList<>();
 
   /**
    * Returns the registered archive adaptor for the type of file specified.
@@ -130,31 +131,18 @@ public class FileTypeAdaptor {
   }
 
   /**
-   * Returns the content adaptor for the given content type.
+   * Returns the content adaptor for the given filename or content type.
    *
+   * @param filename the filename
    * @param content the content
    * @return the content adaptor
    * @throws AdaptorException if no entry loader was found
    */
-  public ContentAdaptor getContentAdaptorFor(@NonNull final byte[] content)
-      throws AdaptorException {
+  public ContentAdaptor getContentAdaptorFor(
+      @NonNull final String filename, @NonNull final byte[] content) throws AdaptorException {
     log.trace("Determining entry loader for content");
-    final String subtype = this.getSubtype(new ByteArrayInputStream(content));
-    final Optional<EntryTypeDefinition> loader =
-        this.entryTypeLoaders.stream()
-            .filter(definition -> definition.type.equals(subtype))
-            .findFirst();
-    if (loader.isPresent()) {
-      final EntryTypeDefinition definition = loader.get();
-      if (definition.bean == null) {
-        log.trace("Loading bean: {}", definition.name);
-        definition.bean = this.getBean(definition.name, ContentAdaptor.class);
-      }
-      log.trace("Returning filetype adaptor: {}", definition.name);
-      return definition.bean;
-    }
-    log.error("No loader found for type: {}", subtype);
-    return null;
+    final String contentType = this.getSubtype(new ByteArrayInputStream(content));
+    return this.contentAdaptorRegistry.getContentAdaptor(filename, contentType);
   }
 
   <T> T getBean(final String name, final Class<T> clazz) throws AdaptorException {
@@ -213,14 +201,14 @@ public class FileTypeAdaptor {
    *
    * @param mimeType the mime type
    * @return the loader
-   * @see #entryTypeLoaders
    */
   public ArchiveEntryType getArchiveEntryType(final String mimeType) {
-    final Optional<EntryTypeDefinition> loader =
-        this.entryTypeLoaders.stream()
-            .filter(entryTypeDefinition -> entryTypeDefinition.type.equals(mimeType))
-            .findFirst();
-    return loader.isPresent() ? loader.get().archiveEntryType : null;
+    final ContentAdaptor contentAdaptor =
+        this.contentAdaptorRegistry.getContentAdaptorForContentType(mimeType);
+    if (contentAdaptor != null) {
+      return contentAdaptor.getArchiveEntryType();
+    }
+    return null;
   }
 
   public String getMimeTypeFor(final InputStream input) {
@@ -240,14 +228,5 @@ public class FileTypeAdaptor {
     @Getter @Setter @NonNull private ArchiveType archiveType;
     @Getter @Setter @NonNull private String extension;
     @Getter @Setter private ArchiveAdaptor bean = null;
-  }
-
-  @NoArgsConstructor
-  @RequiredArgsConstructor
-  static class EntryTypeDefinition {
-    @Getter @Setter @NonNull private String type;
-    @Getter @Setter @NonNull private String name;
-    @Getter @Setter @NonNull private ArchiveEntryType archiveEntryType;
-    @Getter @Setter private ContentAdaptor bean = null;
   }
 }
