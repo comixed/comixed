@@ -88,7 +88,7 @@ public class ComicPageService {
     if (comicBook != null) {
       if (pageIndex < comicBook.getPageCount()) {
         log.debug("Returning page");
-        return comicBook.getPage(pageIndex);
+        return comicBook.getPages().get(pageIndex);
       } else {
         log.warn("Index out of range");
       }

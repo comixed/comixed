@@ -31,6 +31,7 @@ import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.model.ArchiveEntryType;
 import org.comixedproject.adaptors.content.ContentAdaptor;
+import org.comixedproject.adaptors.content.ContentAdaptorRegistry;
 import org.comixedproject.model.archives.ArchiveType;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,6 +50,7 @@ public class FileTypeAdaptorTest {
   private static final byte[] TEST_CONTENT = "Some file content".getBytes();
   private static final String TEST_EXTENSION = "cbz";
   private static final String TEST_FORMAT = "zip";
+  private static final String TEST_ENTRY_FILENAME = "filename.ext";
 
   @InjectMocks private FileTypeAdaptor adaptor;
   @Mock private ApplicationContext applicationContext;
@@ -56,16 +58,14 @@ public class FileTypeAdaptorTest {
   @Mock private Metadata metadata;
   @Mock private Detector detector;
   @Mock private ArchiveAdaptor archiveAdaptor;
-  @Mock private ContentAdaptor contentLoader;
+  @Mock private ContentAdaptorRegistry contentAdaptorRegistry;
+  @Mock private ContentAdaptor contentAdaptor;
 
   @Captor private ArgumentCaptor<? extends InputStream> argumentCaptorInputStream;
 
   private FileTypeAdaptor.ArchiveAdaptorDefinition archiveAdaptorEntry =
       new FileTypeAdaptor.ArchiveAdaptorDefinition(
           TEST_MEDIA_TYPE.getSubtype(), TEST_BEAN_NAME, TEST_ARCHIVE_TYPE, TEST_EXTENSION);
-  private FileTypeAdaptor.EntryTypeDefinition entryLoader =
-      new FileTypeAdaptor.EntryTypeDefinition(
-          TEST_MEDIA_TYPE.getSubtype(), TEST_BEAN_NAME, TEST_ARCHIVE_ENTRY_TYPE);
   private ByteArrayInputStream inputStream = new ByteArrayInputStream(TEST_CONTENT);
   private FileTypeAdaptor.ArchiveAdaptorDefinition definition =
       new FileTypeAdaptor.ArchiveAdaptorDefinition(
@@ -75,7 +75,7 @@ public class FileTypeAdaptorTest {
   public void setUp() {
     Mockito.when(tika.getDetector()).thenReturn(detector);
     adaptor.getArchiveAdaptors().add(archiveAdaptorEntry);
-    adaptor.getEntryTypeLoaders().add(entryLoader);
+    Mockito.when(contentAdaptor.getArchiveEntryType()).thenReturn(TEST_ARCHIVE_ENTRY_TYPE);
   }
 
   @Test(expected = AdaptorException.class)
@@ -151,10 +151,16 @@ public class FileTypeAdaptorTest {
 
   @Test
   public void testGetArchiveEntryType() {
+    Mockito.when(contentAdaptorRegistry.getContentAdaptorForContentType(Mockito.anyString()))
+        .thenReturn(contentAdaptor);
+
     final ArchiveEntryType result = adaptor.getArchiveEntryType(TEST_MEDIA_TYPE.getSubtype());
 
     assertNotNull(result);
     assertSame(TEST_ARCHIVE_ENTRY_TYPE, result);
+
+    Mockito.verify(contentAdaptorRegistry, Mockito.times(1))
+        .getContentAdaptorForContentType(TEST_MEDIA_TYPE.getSubtype());
   }
 
   @Test
@@ -208,7 +214,7 @@ public class FileTypeAdaptorTest {
     Mockito.when(detector.detect(Mockito.any(InputStream.class), Mockito.any(Metadata.class)))
         .thenThrow(IOException.class);
 
-    final ContentAdaptor result = adaptor.getContentAdaptorFor(TEST_CONTENT);
+    final ContentAdaptor result = adaptor.getContentAdaptorFor(TEST_ENTRY_FILENAME, TEST_CONTENT);
 
     assertNull(result);
   }
@@ -217,15 +223,17 @@ public class FileTypeAdaptorTest {
   public void testGetContentAdaptorFor() throws IOException, AdaptorException {
     Mockito.when(detector.detect(argumentCaptorInputStream.capture(), Mockito.any(Metadata.class)))
         .thenReturn(TEST_MEDIA_TYPE);
-    Mockito.when(applicationContext.getBean(TEST_BEAN_NAME, ContentAdaptor.class))
-        .thenReturn(contentLoader);
+    Mockito.when(contentAdaptorRegistry.getContentAdaptor(Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(contentAdaptor);
 
-    final ContentAdaptor result = adaptor.getContentAdaptorFor(TEST_CONTENT);
+    final ContentAdaptor result = adaptor.getContentAdaptorFor(TEST_ENTRY_FILENAME, TEST_CONTENT);
 
     assertNotNull(result);
-    assertSame(contentLoader, result);
+    assertSame(contentAdaptor, result);
 
     Mockito.verify(detector, Mockito.times(1))
         .detect(argumentCaptorInputStream.getValue(), metadata);
+    Mockito.verify(contentAdaptorRegistry, Mockito.times(1))
+        .getContentAdaptor(TEST_ENTRY_FILENAME, TEST_MEDIA_TYPE.getSubtype());
   }
 }

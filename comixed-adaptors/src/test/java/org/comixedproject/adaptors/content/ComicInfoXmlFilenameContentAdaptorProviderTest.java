@@ -18,10 +18,34 @@
 
 package org.comixedproject.adaptors.content;
 
-/**
- * <code>FilenameContentAdaptor</code> defines a type of {@link ContentAdaptor} that applies to *
- * files that have a particular filename.
- *
- * @author Darryl L. Pierce
- */
-public interface FilenameContentAdaptor extends ContentAdaptor {}
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.MockitoJUnitRunner;
+
+@RunWith(MockitoJUnitRunner.class)
+public class ComicInfoXmlFilenameContentAdaptorProviderTest {
+  @InjectMocks private ComicInfoXmlFilenameContentAdaptorProvider provider;
+
+  @Test
+  public void testCreate() {
+    assertNotNull(provider.create());
+  }
+
+  @Test
+  public void testSupportsWithSimpleFilename() {
+    assertTrue(provider.supports("ComicInfo.xml"));
+  }
+
+  @Test
+  public void testSupportsIgnorsCase() {
+    assertTrue(provider.supports("comicinfo.XML"));
+  }
+
+  @Test
+  public void testSupportsWithSubdirectory() {
+    assertTrue(provider.supports("subdir/ComicInfo.XML"));
+  }
+}

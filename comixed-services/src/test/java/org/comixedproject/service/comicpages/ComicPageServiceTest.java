@@ -127,9 +127,14 @@ public class ComicPageServiceTest {
 
   @Test
   public void testGetImageInComicByIndex() throws ComicBookException {
+    final List<ComicPage> pages = new ArrayList<>();
+    for (int index = 0; index < TEST_PAGE_INDEX * 2; index++) {
+      pages.add(page);
+    }
+
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicBook.getPageCount()).thenReturn(TEST_PAGE_INDEX + 1);
-    Mockito.when(comicBook.getPage(Mockito.anyInt())).thenReturn(page);
+    Mockito.when(comicBook.getPages()).thenReturn(pages);
 
     ComicPage result = service.getPageInComicByIndex(TEST_COMIC_ID, TEST_PAGE_INDEX);
 
@@ -138,7 +143,7 @@ public class ComicPageServiceTest {
 
     Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
     Mockito.verify(comicBook, Mockito.atLeast(1)).getPageCount();
-    Mockito.verify(comicBook, Mockito.times(1)).getPage(TEST_PAGE_INDEX);
+    Mockito.verify(comicBook, Mockito.times(1)).getPages();
   }
 
   @Test(expected = ComicPageException.class)

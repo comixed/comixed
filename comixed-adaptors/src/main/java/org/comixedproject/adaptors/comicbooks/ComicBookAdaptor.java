@@ -34,10 +34,7 @@ import org.comixedproject.adaptors.archive.model.ArchiveEntryType;
 import org.comixedproject.adaptors.archive.model.ArchiveReadHandle;
 import org.comixedproject.adaptors.archive.model.ArchiveWriteHandle;
 import org.comixedproject.adaptors.archive.model.ComicArchiveEntry;
-import org.comixedproject.adaptors.content.ComicMetadataContentAdaptor;
-import org.comixedproject.adaptors.content.ContentAdaptor;
-import org.comixedproject.adaptors.content.ContentAdaptorException;
-import org.comixedproject.adaptors.content.ContentAdaptorRules;
+import org.comixedproject.adaptors.content.*;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
@@ -58,7 +55,7 @@ public class ComicBookAdaptor {
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
   @Autowired private ComicFileAdaptor comicFileAdaptor;
   @Autowired private ComicPageAdaptor comicPageAdaptor;
-  @Autowired private ComicMetadataContentAdaptor comicMetadataContentAdaptor;
+  @Autowired private ComicMetadataWriter comicMetadataWriter;
   @Autowired private FileAdaptor fileAdaptor;
 
   /**
@@ -105,7 +102,8 @@ public class ComicBookAdaptor {
           final byte[] content = archiveAdaptor.readEntry(readHandle, entry.getFilename());
           if (content.length > 0) {
             log.trace("Getting content adaptor for entry: {}", entry.getFilename());
-            final ContentAdaptor adaptor = this.fileTypeAdaptor.getContentAdaptorFor(content);
+            final ContentAdaptor adaptor =
+                this.fileTypeAdaptor.getContentAdaptorFor(entry.getFilename(), content);
             if (adaptor != null) {
               log.trace("Invoking content adaptor");
               adaptor.loadContent(comicBook, entry.getFilename(), content, rules);
@@ -171,7 +169,7 @@ public class ComicBookAdaptor {
 
       log.trace("Writing comic book metadata");
       destinationArchive.writeEntry(
-          writeHandle, "ComicInfo.xml", this.comicMetadataContentAdaptor.createContent(comicBook));
+          writeHandle, "ComicInfo.xml", this.comicMetadataWriter.createContent(comicBook));
 
       log.trace("Writing comic book pages");
       final int length = String.valueOf(comicBook.getPages().size()).length();
@@ -241,7 +239,7 @@ public class ComicBookAdaptor {
         filename);
     try (OutputStream outstream = new FileOutputStream(new File(filename), false)) {
       log.trace("Writing metadata content");
-      outstream.write(this.comicMetadataContentAdaptor.createContent(comicBook));
+      outstream.write(this.comicMetadataWriter.createContent(comicBook));
     } catch (IOException | ContentAdaptorException error) {
       throw new AdaptorException("failed to write metadata file: " + filename, error);
     }

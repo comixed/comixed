@@ -19,9 +19,9 @@
 package org.comixedproject.adaptors.content;
 
 /**
- * <code>FilenameContentAdaptor</code> defines a type of {@link ContentAdaptor} that applies to *
- * files that have a particular filename.
+ * <code>FileTypeContentAdaptor</code> defines a type of {@link ContentAdaptor} that applies to
+ * files that have a particular content type.
  *
  * @author Darryl L. Pierce
  */
-public interface FilenameContentAdaptor extends ContentAdaptor {}
+public interface FileTypeContentAdaptor extends ContentAdaptor {}

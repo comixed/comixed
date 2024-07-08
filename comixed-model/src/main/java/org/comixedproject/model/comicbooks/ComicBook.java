@@ -176,19 +176,6 @@ public class ComicBook {
   }
 
   /**
-   * Returns the offset at the given index.
-   *
-   * @param index the offset index
-   * @return the offset
-   * @deprecated use #getPages() instead
-   */
-  @Deprecated
-  public ComicPage getPage(int index) {
-    log.trace("Returning offset: index=" + index);
-    return this.pages.get(index);
-  }
-
-  /**
    * Returns the number of pages associated with this comic.
    *
    * @return the offset count
