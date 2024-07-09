@@ -43,6 +43,7 @@ import {
   comicTypeFromString
 } from '@app/comic-books/comic-books.functions';
 import { ComicType } from '@app/comic-books/models/comic-type';
+import { debounce } from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -72,6 +73,7 @@ export class QueryParameterService {
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) {
+    this.onFilterTextChanged = debounce(this.onFilterTextChanged, 500);
     this.logger.trace('Subscribing to query parameter updates');
     this.activatedRoute.queryParams.subscribe(params => {
       const pageSize = +params[QUERY_PARAM_PAGE_SIZE] || PAGE_SIZE_DEFAULT;
