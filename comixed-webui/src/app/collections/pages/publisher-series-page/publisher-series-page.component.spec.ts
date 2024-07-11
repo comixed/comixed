@@ -17,7 +17,7 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PublisherDetailPageComponent } from './publisher-detail-page.component';
+import { PublisherSeriesPageComponent } from './publisher-series-page.component';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -46,15 +46,15 @@ describe('PublisherDetailPageComponent', () => {
   const PUBLISHER = PUBLISHER_3;
   const DETAIL = [SERIES_1, SERIES_3, SERIES_5];
 
-  let component: PublisherDetailPageComponent;
-  let fixture: ComponentFixture<PublisherDetailPageComponent>;
+  let component: PublisherSeriesPageComponent;
+  let fixture: ComponentFixture<PublisherSeriesPageComponent>;
   let titleService: TitleService;
   let translateService: TranslateService;
   let store: MockStore<any>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PublisherDetailPageComponent],
+      declarations: [PublisherSeriesPageComponent],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
@@ -70,7 +70,7 @@ describe('PublisherDetailPageComponent', () => {
       providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PublisherDetailPageComponent);
+    fixture = TestBed.createComponent(PublisherSeriesPageComponent);
     component = fixture.componentInstance;
     titleService = TestBed.inject(TitleService);
     spyOn(titleService, 'setTitle');

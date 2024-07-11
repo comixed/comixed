@@ -250,7 +250,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the publisher list
    */
   @Query(
-      "SELECT new org.comixedproject.model.collections.Publisher(c.comicDetail.publisher, count(c)) FROM ComicBook c WHERE LENGTH(c.comicDetail.publisher) > 0 GROUP BY c.comicDetail.publisher")
+      "SELECT new org.comixedproject.model.collections.Publisher(d.publisher, count(c), count(DISTINCT d.series, d.volume)) FROM ComicDetail d, ComicBook c WHERE LENGTH(c.comicDetail.publisher) > 0 AND d.publisher = c.comicDetail.publisher AND c.id = d.comicBook.id GROUP BY d.publisher")
   List<Publisher> getAllPublishersWithSeriesCount();
 
   /**

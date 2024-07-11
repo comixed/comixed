@@ -24,7 +24,8 @@ import { CollectionDetailComponent } from '@app/collections/pages/collection-det
 import { SeriesListPageComponent } from '@app/collections/pages/series-list-page/series-list-page.component';
 import { SeriesDetailPageComponent } from '@app/collections/pages/series-detail-page/series-detail-page.component';
 import { PublisherListPageComponent } from '@app/collections/pages/publisher-list-page/publisher-list-page.component';
-import { PublisherDetailPageComponent } from '@app/collections/pages/publisher-detail-page/publisher-detail-page.component';
+import { PublisherSeriesPageComponent } from '@app/collections/pages/publisher-series-page/publisher-series-page.component';
+import { PublisherIssuesPageComponent } from '@app/collections/pages/publisher-issues-page/publisher-issues-page.component';
 
 const routes: Routes = [
   {
@@ -33,8 +34,13 @@ const routes: Routes = [
     canActivate: [ReaderGuard]
   },
   {
-    path: 'library/collections/publishers/:name',
-    component: PublisherDetailPageComponent,
+    path: 'library/collections/publishers/:name/series',
+    component: PublisherSeriesPageComponent,
+    canActivate: [ReaderGuard]
+  },
+  {
+    path: 'library/collections/publishers/:name/issues',
+    component: PublisherIssuesPageComponent,
     canActivate: [ReaderGuard]
   },
   {

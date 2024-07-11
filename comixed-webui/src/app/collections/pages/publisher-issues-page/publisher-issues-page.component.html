@@ -1,0 +1,9 @@
+<h2>
+  {{ "collections.publisher-issues.page-title" | translate: { name: name } }}
+</h2>
+
+<cx-comic-detail-list-view
+  [comics]="comicDetails"
+  [totalComics]="totalComics"
+  [showFilter]="false"
+></cx-comic-detail-list-view>

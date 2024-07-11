@@ -21,11 +21,23 @@ import { Issue } from '@app/collections/models/issue';
 import { Publisher } from '@app/collections/models/publisher';
 import { CollectionEntry } from '@app/collections/models/collection-entry';
 
-export const PUBLISHER_1: Publisher = { name: 'Publisher 1', issueCount: 717 };
+export const PUBLISHER_1: Publisher = {
+  name: 'Publisher 1',
+  issueCount: 717,
+  seriesCount: 17
+};
 
-export const PUBLISHER_2: Publisher = { name: 'Publisher 2', issueCount: 129 };
+export const PUBLISHER_2: Publisher = {
+  name: 'Publisher 2',
+  issueCount: 129,
+  seriesCount: 29
+};
 
-export const PUBLISHER_3: Publisher = { name: 'Publisher 3', issueCount: 320 };
+export const PUBLISHER_3: Publisher = {
+  name: 'Publisher 3',
+  issueCount: 320,
+  seriesCount: 20
+};
 
 export const SERIES_1: Series = {
   publisher: 'Publisher 1',

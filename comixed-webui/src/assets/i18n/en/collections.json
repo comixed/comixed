@@ -3,14 +3,15 @@
     "publishers": {
       "label": {
         "name": "Name",
-        "in-library": "# Of Comics",
+        "issue-count": "# Of Comics",
+        "series-count": "# Of Series",
         "series-name": "Series Name",
         "total-issues": "# Of Issues",
         "volume": "Volume"
       },
       "list-publishers": {
         "page-title": "All Publishers",
-        "tab-title": "Collections|All Publishers"
+        "tab-title": "All Publishers"
       },
       "load-publisher-detail": {
         "effect-failure": "Failed to load details for {name}."
@@ -32,14 +33,17 @@
         "total-issues": "# Of Issues",
         "volume": "Volume"
       },
-      "page-title": "Publisher|{name}",
+      "page-title": "Publisher: {name}",
       "placeholder": {
         "filter-series": "Enter text to filter the series displayed."
       },
-      "tab-title": "Collections|Publisher|{name}",
+      "tab-title": "Publisher: {name}",
       "text": {
         "no-detail-found": "No series were found."
       }
+    },
+    "publisher-issues": {
+      "page-title": "Issues For Publisher: {name}"
     },
     "series": {
       "label": {

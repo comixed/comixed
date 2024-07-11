@@ -41,11 +41,13 @@ import { SeriesDetailPageComponent } from './pages/series-detail-page/series-det
 import { PublisherListPageComponent } from './pages/publisher-list-page/publisher-list-page.component';
 import { publisherFeature } from '@app/collections/reducers/publisher.reducer';
 import { PublisherEffects } from '@app/collections/effects/publisher.effects';
-import { PublisherDetailPageComponent } from './pages/publisher-detail-page/publisher-detail-page.component';
+import { PublisherSeriesPageComponent } from '@app/collections/pages/publisher-series-page/publisher-series-page.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { SeriesDetailNamePipe } from './pipes/series-detail-name.pipe';
 import { collectionListFeature } from '@app/collections/reducers/collection-list.reducer';
 import { CollectionListEffects } from '@app/collections/effects/collection-list.effects';
+import { MatTab, MatTabGroup } from '@angular/material/tabs';
+import { PublisherIssuesPageComponent } from '@app/collections/pages/publisher-issues-page/publisher-issues-page.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +56,8 @@ import { CollectionListEffects } from '@app/collections/effects/collection-list.
     SeriesListPageComponent,
     SeriesDetailPageComponent,
     PublisherListPageComponent,
-    PublisherDetailPageComponent,
+    PublisherSeriesPageComponent,
+    PublisherIssuesPageComponent,
     SeriesDetailNamePipe
   ],
   imports: [
@@ -79,7 +82,9 @@ import { CollectionListEffects } from '@app/collections/effects/collection-list.
     MatSelectModule,
     MatToolbarModule,
     MatInputModule,
-    MatDividerModule
+    MatDividerModule,
+    MatTab,
+    MatTabGroup
   ],
   exports: [CommonModule]
 })
