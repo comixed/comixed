@@ -1,32 +1,3 @@
-<mat-toolbar class="cx-width-100">
-  <mat-form-field class="cx-width-50">
-    <input
-      matInput
-      #filterInput
-      id="volume-search-text-input"
-      [placeholder]="
-        'collections.publisher-detail.placeholder.filter-series' | translate
-      "
-      (keyup)="dataSource.filter = filterInput.value"
-    />
-  </mat-form-field>
-  <div class="cx-spacer"></div>
-  <mat-paginator
-    showFirstLastButtons="true"
-    class="cx-height-100"
-    [pageSize]="pageSize"
-    [pageIndex]="pageIndex"
-    [pageSizeOptions]="pageOptions"
-    (page)="
-      queryParameterService.onPageChange(
-        $event.pageSize,
-        $event.pageIndex,
-        $event.previousPageIndex
-      )
-    "
-  ></mat-paginator>
-</mat-toolbar>
-
 <h2>
   {{
     "collections.publisher-detail.page-title"
@@ -36,6 +7,20 @@
           }
   }}
 </h2>
+
+<mat-paginator
+  showFirstLastButtons="true"
+  [pageSize]="pageSize"
+  [pageIndex]="pageIndex"
+  [pageSizeOptions]="pageOptions"
+  (page)="
+    queryParameterService.onPageChange(
+      $event.pageSize,
+      $event.pageIndex,
+      $event.previousPageIndex
+    )
+  "
+></mat-paginator>
 
 <mat-table
   [dataSource]="dataSource"
@@ -69,7 +54,9 @@
       {{ "collections.publisher-detail.label.total-issues" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <span class="cx-width-100 cx-text-nowrap">{{ entry.totalIssues }}</span>
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.totalIssues }}
+      </span>
     </mat-cell>
   </ng-container>
 

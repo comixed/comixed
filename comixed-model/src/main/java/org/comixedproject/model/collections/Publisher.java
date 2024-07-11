@@ -41,6 +41,11 @@ public class Publisher {
   @Getter
   private Long issueCount;
 
+  @JsonProperty("seriesCount")
+  @NonNull
+  @Getter
+  private Long seriesCount;
+
   @Override
   public boolean equals(final Object o) {
     if (this == o) return true;

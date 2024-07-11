@@ -43,11 +43,11 @@ import { QueryParameterService } from '@app/core/services/query-parameter.servic
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@app/core';
 
 @Component({
-  selector: 'cx-publisher-detail-page',
-  templateUrl: './publisher-detail-page.component.html',
-  styleUrls: ['./publisher-detail-page.component.scss']
+  selector: 'cx-publisher-series-page',
+  templateUrl: './publisher-series-page.component.html',
+  styleUrls: ['./publisher-series-page.component.scss']
 })
-export class PublisherDetailPageComponent
+export class PublisherSeriesPageComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
   @ViewChild(MatSort) sort: MatSort;

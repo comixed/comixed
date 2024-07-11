@@ -54,7 +54,7 @@ export class PublisherListPageComponent
 {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  readonly displayedColumns = ['name', 'issue-count'];
+  readonly displayedColumns = ['name', 'issue-count', 'series-count'];
   readonly pageOptions = PAGE_SIZE_OPTIONS;
 
   langChangeSubscription: Subscription;
