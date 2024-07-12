@@ -28,8 +28,30 @@ It also ships with support for the embedded H2 database. However, it is
 long term data management. It is included to make it easier to evaluate
 the ComiXed project and is **not** a supported feature.
 
-See the section below on configuration for how to enable support for one
-of the external database systems.
+To configure the database being used, edit the following section in the
+file ```application.properties```:
+
+```properties
+spring.datasource.url=jdbc:h2:file:~/.comixed/comixed
+spring.datasource.username=sa
+
+# MySQL configuration
+# spring.datasource.url=jdbc:mysql://hostname:3306/comixed
+# spring.datasource.username=cxuser
+# spring.datasource.password=cxpassword
+
+# Postgres configuration
+# spring.datasource.url=jdbc:postgresql://hostname:5432/comixed
+# spring.datasource.username=cxuser
+# spring.datasource.password=cxpassword
+```
+
+This example has the previously mentioned H2 database enabled, which is
+the default. To enable a different database, such as MySQL, you would need
+to uncomment the lines for that server type and comment out the others. Then
+restart the server to have it pick up those changes.
+
+
 
 # Installing The Server
 
