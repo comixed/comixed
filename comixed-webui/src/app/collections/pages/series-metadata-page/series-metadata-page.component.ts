@@ -45,11 +45,11 @@ import {
 import { loadComicDetails } from '@app/comic-books/actions/comic-details-list.actions';
 
 @Component({
-  selector: 'cx-series-detail-page',
-  templateUrl: './series-detail-page.component.html',
-  styleUrls: ['./series-detail-page.component.scss']
+  selector: 'cx-series-metadata-page',
+  templateUrl: './series-metadata-page.component.html',
+  styleUrls: ['./series-metadata-page.component.scss']
 })
-export class SeriesDetailPageComponent
+export class SeriesMetadataPageComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
   @ViewChild(MatSort) sort: MatSort;

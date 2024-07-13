@@ -17,7 +17,7 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SeriesDetailPageComponent } from './series-detail-page.component';
+import { SeriesMetadataPageComponent } from './series-metadata-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
@@ -58,7 +58,7 @@ import {
   LIBRARY_FEATURE_KEY
 } from '@app/library/reducers/library.reducer';
 
-describe('SeriesDetailPageComponent', () => {
+describe('SeriesMetadataPageComponent', () => {
   const PUBLISHER = 'The Publisher';
   const SERIES = 'The Series';
   const VOLUME = '2022';
@@ -85,15 +85,15 @@ describe('SeriesDetailPageComponent', () => {
     [USER_FEATURE_KEY]: initialUserState
   };
 
-  let component: SeriesDetailPageComponent;
-  let fixture: ComponentFixture<SeriesDetailPageComponent>;
+  let component: SeriesMetadataPageComponent;
+  let fixture: ComponentFixture<SeriesMetadataPageComponent>;
   let titleService: TitleService;
   let translateService: TranslateService;
   let store: MockStore<any>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SeriesDetailPageComponent, SeriesDetailNamePipe],
+      declarations: [SeriesMetadataPageComponent, SeriesDetailNamePipe],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
@@ -124,7 +124,7 @@ describe('SeriesDetailPageComponent', () => {
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SeriesDetailPageComponent);
+    fixture = TestBed.createComponent(SeriesMetadataPageComponent);
     component = fixture.componentInstance;
     titleService = TestBed.inject(TitleService);
     translateService = TestBed.inject(TranslateService);

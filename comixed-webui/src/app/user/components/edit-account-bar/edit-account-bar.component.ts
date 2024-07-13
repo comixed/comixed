@@ -63,7 +63,6 @@ export class EditAccountBarComponent implements OnDestroy, AfterViewInit {
   userForm: UntypedFormGroup;
   userStateSubscription: Subscription;
   userSubscription: Subscription;
-  avatarWidth$ = new BehaviorSubject<number>(40);
   busy = false;
 
   readonly displayedColumns = ['name', 'value', 'actions'];

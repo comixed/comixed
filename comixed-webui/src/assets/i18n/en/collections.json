@@ -26,7 +26,10 @@
         "no-publishers-found": "No publishers were found."
       }
     },
-    "publisher-detail": {
+    "publisher-issues": {
+      "page-title": "Issues For Publisher: {name}"
+    },
+    "publisher-series": {
       "label": {
         "in-library": "# In Library",
         "series-name": "Series Name",
@@ -42,9 +45,6 @@
         "no-detail-found": "No series were found."
       }
     },
-    "publisher-issues": {
-      "page-title": "Issues For Publisher: {name}"
-    },
     "series": {
       "label": {
         "cover-date": "Cover Date",
@@ -56,12 +56,13 @@
         "publisher": "Publisher",
         "store-date": "Store Date",
         "title": "Title",
-        "total-issues": "# Issues",
+        "total-comics": "# Of Comics",
+        "total-issues": "Total",
         "volume": "Volume"
       },
       "list-page": {
         "page-title": "All Series",
-        "tab-title": "Collections|All Series"
+        "tab-title": "All Series"
       },
       "load-series": {
         "effect-failure": "Failed to load series."
@@ -78,12 +79,12 @@
     },
     "series-detail": {
       "load-effect-failure": "Failed to load details for series.",
-      "page-title": "{publisher} | {name} V{volume}",
+      "page-title": "{name} V{volume} ({publisher})",
       "page-title-percentage": "{percentage}% Complete ({inLibrary} Of {totalIssues, plural, =1{# Comic} other{# Comics}})",
       "placeholder": {
         "filter-issues": "Enter text to filter the issues displayed."
       },
-      "tab-title": "Collections|{publisher}|{name} V{volume}",
+      "tab-title": "Series: {name} V{volume}",
       "text": {
         "found-in-library": "This issue {exists, select, true{is} other{is not}} found in the library."
       },
@@ -91,6 +92,10 @@
         "scrape-metadata": "Scrape the series metadata...",
         "show-publisher": "View more from titles from {publisher}..."
       }
+    },
+    "series-issues": {
+      "page-title": "{seriesName} V{volume} ({publisherName})",
+      "tab-title": "Issues: {name} V{volume}"
     }
   },
   "collection-detail": {

@@ -62,8 +62,8 @@ export class PublisherSeriesPageComponent
   readonly displayedColumns = [
     'series',
     'volume',
-    'total-issues',
-    'in-library'
+    'in-library',
+    'total-issues'
   ];
   readonly pageOptions = PAGE_SIZE_OPTIONS;
   pageIndex = 0;
@@ -132,7 +132,7 @@ export class PublisherSeriesPageComponent
 
   private loadTranslations(): void {
     this.titleService.setTitle(
-      this.translateService.instant('collections.publisher-detail.tab-title', {
+      this.translateService.instant('collections.publisher-series.tab-title', {
         name: this.name
       })
     );

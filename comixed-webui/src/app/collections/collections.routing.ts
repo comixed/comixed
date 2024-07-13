@@ -22,10 +22,11 @@ import { CollectionListComponent } from '@app/collections/pages/collection-list/
 import { ReaderGuard } from '@app/user';
 import { CollectionDetailComponent } from '@app/collections/pages/collection-detail/collection-detail.component';
 import { SeriesListPageComponent } from '@app/collections/pages/series-list-page/series-list-page.component';
-import { SeriesDetailPageComponent } from '@app/collections/pages/series-detail-page/series-detail-page.component';
 import { PublisherListPageComponent } from '@app/collections/pages/publisher-list-page/publisher-list-page.component';
 import { PublisherSeriesPageComponent } from '@app/collections/pages/publisher-series-page/publisher-series-page.component';
 import { PublisherIssuesPageComponent } from '@app/collections/pages/publisher-issues-page/publisher-issues-page.component';
+import { SeriesMetadataPageComponent } from '@app/collections/pages/series-metadata-page/series-metadata-page.component';
+import { SeriesIssuePageComponent } from '@app/collections/pages/series-issue-page/series-issue-page.component';
 
 const routes: Routes = [
   {
@@ -50,7 +51,17 @@ const routes: Routes = [
   },
   {
     path: 'library/collections/publishers/:publisher/series/:name/volumes/:volume',
-    component: SeriesDetailPageComponent,
+    redirectTo:
+      'library/collections/publishers/:publisher/series/:name/volumes/:volume/issues'
+  },
+  {
+    path: 'library/collections/publishers/:publisher/series/:name/volumes/:volume/issues',
+    component: SeriesIssuePageComponent,
+    canActivate: [ReaderGuard]
+  },
+  {
+    path: 'library/collections/publishers/:publisher/series/:name/volumes/:volume/metadata',
+    component: SeriesMetadataPageComponent,
     canActivate: [ReaderGuard]
   },
   {
