@@ -1,30 +1,3 @@
-<mat-toolbar class="cx-width-100">
-  <mat-form-field class="cx-width-50">
-    <input
-      matInput
-      #filterInput
-      id="volume-search-text-input"
-      [placeholder]="'collections.series.placeholder.filter-series' | translate"
-      (keyup)="dataSource.filter = filterInput.value"
-    />
-  </mat-form-field>
-  <div class="cx-spacer"></div>
-  <mat-paginator
-    showFirstLastButtons="true"
-    class="cx-height-100"
-    [pageSize]="queryParameterService.pageSize$ | async"
-    [pageIndex]="queryParameterService.pageIndex$ | async"
-    [pageSizeOptions]="pageOptions"
-    (page)="
-      queryParameterService.onPageChange(
-        $event.pageSize,
-        $event.pageIndex,
-        $event.previousPageIndex
-      )
-    "
-  ></mat-paginator>
-</mat-toolbar>
-
 <h2>
   {{
     "collections.series.list-page.page-title"
@@ -34,6 +7,21 @@
           }
   }}
 </h2>
+
+<mat-paginator
+  showFirstLastButtons="true"
+  class="cx-height-100"
+  [pageSize]="queryParameterService.pageSize$ | async"
+  [pageIndex]="queryParameterService.pageIndex$ | async"
+  [pageSizeOptions]="pageOptions"
+  (page)="
+    queryParameterService.onPageChange(
+      $event.pageSize,
+      $event.pageIndex,
+      $event.previousPageIndex
+    )
+  "
+></mat-paginator>
 
 <mat-table
   matSort
@@ -76,59 +64,49 @@
     </mat-cell>
   </ng-container>
 
+  <ng-container matColumnDef="total-comics">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "collections.series.label.total-comics" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <a
+        [routerLink]="[
+          '/library/collections/publishers',
+          entry.publisher,
+          'series',
+          entry.name,
+          'volumes',
+          entry.volume
+        ]"
+      >
+        {{ entry.inLibrary }}
+      </a>
+    </mat-cell>
+  </ng-container>
+
   <ng-container matColumnDef="total-issues">
     <mat-header-cell *matHeaderCellDef>
       {{ "collections.series.label.total-issues" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <span class="cx-width-100 cx-text-nowrap">{{ entry.totalIssues }}</span>
-    </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="in-library">
-    <mat-header-cell *matHeaderCellDef>
-      {{ "collections.series.label.in-library" | translate }}
-    </mat-header-cell>
-    <mat-cell *matCellDef="let entry">
-      <span class="cx-width-100 cx-text-nowrap">{{ entry.inLibrary }}</span>
-    </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="actions">
-    <mat-header-cell *matHeaderCellDef></mat-header-cell>
-    <mat-cell *matCellDef="let entry">
-      <button
-        *ngIf="isAdmin"
-        mat-icon-button
-        id="load-series-button"
-        [matTooltip]="'collections.series.tooltip.scrape-series' | translate"
+      <a
         [routerLink]="[
-          '/metadata/publishers',
+          '/library/collections/publishers',
           entry.publisher,
           'series',
           entry.name,
           'volumes',
           entry.volume,
-          'issues'
+          'metadata'
         ]"
       >
-        <mat-icon>cloud_download</mat-icon>
-      </button>
+        {{ entry.totalIssues }}
+      </a>
     </mat-cell>
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row
-    *matRowDef="let row; columns: displayedColumns"
-    [routerLink]="[
-      '/library/collections/publishers',
-      row.publisher,
-      'series',
-      row.name,
-      'volumes',
-      row.volume
-    ]"
-  ></mat-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
   <tr class="mat-row" *matNoDataRow>
     <td class="mat-cell" colspan="4">
       {{ "collections.series.text.no-series-found" | translate }}

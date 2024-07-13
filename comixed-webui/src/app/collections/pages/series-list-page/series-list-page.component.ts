@@ -62,9 +62,8 @@ export class SeriesListPageComponent
     'publisher',
     'name',
     'volume',
-    'total-issues',
-    'in-library',
-    'actions'
+    'total-comics',
+    'total-issues'
   ];
 
   langChangeSubscription: Subscription;

@@ -39,6 +39,12 @@ import {
   initialState as initialUserState,
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { GravatarModule } from 'ngx-gravatar';
 
 describe('EditAccountBarComponent', () => {
   const USER = USER_READER;
@@ -57,13 +63,19 @@ describe('EditAccountBarComponent', () => {
       TestBed.configureTestingModule({
         declarations: [EditAccountBarComponent],
         imports: [
+          NoopAnimationsModule,
           FormsModule,
           ReactiveFormsModule,
           LoggerModule.forRoot(),
           TranslateModule.forRoot(),
+          GravatarModule,
           MatDialogModule,
           MatIconModule,
-          MatToolbarModule
+          MatToolbarModule,
+          MatCardModule,
+          MatFormFieldModule,
+          MatInputModule,
+          MatTableModule
         ],
         providers: [provideMockStore({ initialState }), ConfirmationService]
       }).compileComponents();

@@ -6,7 +6,7 @@
       'collections.series-detail.tooltip.show-publisher'
         | translate: { publisher: publisher }
     "
-    [routerLink]="['/library/collections/publishers', publisher]"
+    [routerLink]="['/library/collections/publishers', publisher, 'series']"
   >
     <mat-icon>book_online</mat-icon>
   </button>
@@ -137,15 +137,6 @@
         "
       >
         check
-      </mat-icon>
-      <mat-icon
-        *ngIf="!entry.found"
-        [matTooltip]="
-          'collections.series-detail.text.found-in-library'
-            | translate: { exists: false }
-        "
-      >
-        not_interested
       </mat-icon>
     </mat-cell>
   </ng-container>

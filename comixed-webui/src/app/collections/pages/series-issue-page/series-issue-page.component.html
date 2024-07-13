@@ -1,0 +1,17 @@
+<h2>
+  {{
+    "collections.series-issues.page-title"
+      | translate
+        : {
+            publisherName: publisherName,
+            seriesName: seriesName,
+            volume: volume
+          }
+  }}
+</h2>
+
+<cx-comic-detail-list-view
+  [comics]="comicDetails"
+  [totalComics]="totalComics"
+  [showFilter]="false"
+></cx-comic-detail-list-view>

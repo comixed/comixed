@@ -1,6 +1,6 @@
 <h2>
   {{
-    "collections.publisher-detail.page-title"
+    "collections.publisher-series.page-title"
       | translate
         : {
             name: name
@@ -33,7 +33,7 @@
 >
   <ng-container matColumnDef="series">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
-      {{ "collections.publisher-detail.label.series-name" | translate }}
+      {{ "collections.publisher-series.label.series-name" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">{{ entry.name }}</span>
@@ -42,31 +42,31 @@
 
   <ng-container matColumnDef="volume">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
-      {{ "collections.publisher-detail.label.volume" | translate }}
+      {{ "collections.publisher-series.label.volume" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">{{ entry.volume }}</span>
     </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="total-issues">
-    <mat-header-cell mat-sort-header *matHeaderCellDef>
-      {{ "collections.publisher-detail.label.total-issues" | translate }}
-    </mat-header-cell>
-    <mat-cell *matCellDef="let entry">
-      <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.totalIssues }}
-      </span>
-    </mat-cell>
-  </ng-container>
-
   <ng-container matColumnDef="in-library">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
-      {{ "collections.publisher-detail.label.in-library" | translate }}
+      {{ "collections.publisher-series.label.in-library" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
         {{ entry.inLibrary }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="total-issues">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "collections.publisher-series.label.total-issues" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.totalIssues }}
       </span>
     </mat-cell>
   </ng-container>
@@ -85,7 +85,7 @@
   ></mat-row>
   <tr class="mat-row" *matNoDataRow>
     <td class="mat-cell" colspan="4">
-      {{ "collections.publisher-detail.text.no-detail-found" | translate }}
+      {{ "collections.publisher-series.text.no-detail-found" | translate }}
     </td>
   </tr>
 </mat-table>
