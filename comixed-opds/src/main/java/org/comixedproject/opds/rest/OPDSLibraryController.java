@@ -45,7 +45,7 @@ public class OPDSLibraryController {
    *
    * @return the feed
    */
-  @GetMapping(value = "/opds", produces = MediaType.APPLICATION_XML_VALUE)
+  @GetMapping(value = "/opds/root.xml", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.opds.library.get-root")
   @ResponseBody

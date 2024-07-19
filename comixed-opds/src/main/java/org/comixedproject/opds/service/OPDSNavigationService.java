@@ -56,8 +56,10 @@ public class OPDSNavigationService {
   public static final String UNNAMED = "UNNAMED";
   public static final String SUBSECTION = "subsection";
   public static final String SELF = "self";
-  public static final String ROOT_ID = "1";
-  public static final String LIBRARY_ID = "10";
+  public static final String ROOT_ID = "root.xml";
+  public static final String LIBRARY_ROOT_ID = "library";
+  private static final String READING_LIST_ROOT_ID = "reading-lists";
+  private static final String UNREAD_COMICS_ID = "unread-comics";
   public static final long PUBLISHERS_ID = 11L;
   public static final long SERIES_ID = 12L;
   public static final long CHARACTERS_ID = 13L;
@@ -84,40 +86,39 @@ public class OPDSNavigationService {
   public OPDSNavigationFeed getRootFeed() {
     log.info("Fetching root navigation feed");
     final OPDSNavigationFeed response = new OPDSNavigationFeed("Comixed Comics Catalog", ROOT_ID);
-    response.getLinks().add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, "/opds"));
+    response.getLinks().add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, ROOT_ID));
     log.trace("Adding library root feed");
     OPDSNavigationFeedEntry entry;
     // add the library link
-    entry = new OPDSNavigationFeedEntry("All Comics", "1");
+    entry = new OPDSNavigationFeedEntry("All Comics", LIBRARY_ROOT_ID);
     entry.setContent(new OPDSNavigationFeedContent("The library root"));
-    entry.getLinks().add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/library"));
+    entry
+        .getLinks()
+        .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "library?unread=false"));
     response.getEntries().add(entry);
     // add unread entries link
-    entry = new OPDSNavigationFeedEntry("Unread Comics", "2");
+    entry = new OPDSNavigationFeedEntry("Unread Comics", UNREAD_COMICS_ID);
     entry.setContent(new OPDSNavigationFeedContent("Unread comics only"));
     entry
         .getLinks()
-        .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/library?unread=true"));
+        .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "library?unread=true"));
     response.getEntries().add(entry);
     // add the reading lists link
-    entry = new OPDSNavigationFeedEntry("Reading Lists", "3");
+    entry = new OPDSNavigationFeedEntry("Reading Lists", READING_LIST_ROOT_ID);
     entry.setContent(new OPDSNavigationFeedContent("Your personal reading lists"));
-    entry.getLinks().add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/lists"));
+    entry.getLinks().add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "lists"));
     response.getEntries().add(entry);
     return response;
   }
 
   public OPDSNavigationFeed getLibraryFeed(final boolean unread) {
     log.info("Fetching the library root feed");
-    final OPDSNavigationFeed response = new OPDSNavigationFeed("Library", LIBRARY_ID);
-    String unreadStr = String.valueOf(unread);
+    final OPDSNavigationFeed response = new OPDSNavigationFeed("Library", LIBRARY_ROOT_ID);
     response
         .getLinks()
         .add(
             new OPDSLink(
-                NAVIGATION_FEED_LINK_TYPE,
-                SELF,
-                String.format("/opds/library?unread=%s", unreadStr)));
+                NAVIGATION_FEED_LINK_TYPE, SELF, String.format("library?unread=%s", unread)));
     OPDSNavigationFeedEntry entry;
     // add the cover date link
     log.trace("Adding cover dates link");
@@ -129,7 +130,7 @@ public class OPDSNavigationService {
             new OPDSLink(
                 ACQUISITION_FEED_LINK_TYPE,
                 SUBSECTION,
-                String.format("/opds/dates/released?unread=%s", unreadStr)));
+                String.format("dates/released?unread=%s", unread)));
     response.getEntries().add(entry);
     log.trace("Adding publishers link");
     entry = new OPDSNavigationFeedEntry("Publishers", String.valueOf(PUBLISHERS_ID));
@@ -140,7 +141,7 @@ public class OPDSNavigationService {
             new OPDSLink(
                 ACQUISITION_FEED_LINK_TYPE,
                 SUBSECTION,
-                String.format("/opds/collections/publishers?unread=%s", unreadStr)));
+                String.format("collections/publishers?unread=%s", unread)));
     response.getEntries().add(entry);
 
     log.trace("Adding series link");
@@ -152,7 +153,7 @@ public class OPDSNavigationService {
             new OPDSLink(
                 ACQUISITION_FEED_LINK_TYPE,
                 SUBSECTION,
-                String.format("/opds/collections/series?unread=%s", unreadStr)));
+                String.format("collections/series?unread=%s", unread)));
     response.getEntries().add(entry);
 
     log.trace("Adding characters link");
@@ -164,7 +165,7 @@ public class OPDSNavigationService {
             new OPDSLink(
                 ACQUISITION_FEED_LINK_TYPE,
                 SUBSECTION,
-                String.format("/opds/collections/characters?unread=%s", unreadStr)));
+                String.format("collections/characters?unread=%s", unread)));
     response.getEntries().add(entry);
 
     log.trace("Adding teams link");
@@ -176,7 +177,7 @@ public class OPDSNavigationService {
             new OPDSLink(
                 ACQUISITION_FEED_LINK_TYPE,
                 SUBSECTION,
-                String.format("/opds/collections/teams?unread=%s", unreadStr)));
+                String.format("collections/teams?unread=%s", unread)));
     response.getEntries().add(entry);
 
     log.trace("Adding locations link");
@@ -188,7 +189,7 @@ public class OPDSNavigationService {
             new OPDSLink(
                 ACQUISITION_FEED_LINK_TYPE,
                 SUBSECTION,
-                String.format("/opds/collections/locations?unread=%s", unreadStr)));
+                String.format("collections/locations?unread=%s", unread)));
     response.getEntries().add(entry);
 
     log.trace("Adding stories link");
@@ -200,7 +201,7 @@ public class OPDSNavigationService {
             new OPDSLink(
                 ACQUISITION_FEED_LINK_TYPE,
                 SUBSECTION,
-                String.format("/opds/collections/stories?unread=%s", unreadStr)));
+                String.format("collections/stories?unread=%s", unread)));
     response.getEntries().add(entry);
     return response;
   }
@@ -215,8 +216,11 @@ public class OPDSNavigationService {
    */
   public OPDSNavigationFeed getRootFeedForPublishers(final String email, final boolean unread) {
     log.trace("Getting root feed for publishers");
-    final OPDSNavigationFeed feed =
-        new OPDSNavigationFeed("Publishers", String.valueOf(PUBLISHERS_ID));
+    final OPDSNavigationFeed feed = new OPDSNavigationFeed("Publishers", "publishers");
+    feed.getLinks()
+        .add(
+            new OPDSLink(
+                NAVIGATION_FEED_LINK_TYPE, SELF, String.format("publishers?unread=%s", unread)));
     this.comicDetailService.getAllPublishers(email, unread).stream()
         .map(
             publisher ->
@@ -237,9 +241,8 @@ public class OPDSNavigationService {
                           ACQUISITION_FEED_LINK_TYPE,
                           SUBSECTION,
                           String.format(
-                              "/opds/collections/publishers/%s?unread=%s",
-                              this.opdsUtils.urlEncodeString(publisher.getName()),
-                              String.valueOf(unread))));
+                              "publishers/%s?unread=%s",
+                              this.opdsUtils.urlEncodeString(publisher.getName()), unread)));
               feed.getEntries().add(feedEntry);
             });
     return feed;
@@ -256,9 +259,11 @@ public class OPDSNavigationService {
    */
   public OPDSNavigationFeed getSeriesFeedForPublisher(
       final String publisher, final String email, final boolean unread) {
+    final String selfHref =
+        String.format("%s?unread=%s", this.opdsUtils.urlEncodeString(publisher), unread);
     OPDSNavigationFeed result =
-        new OPDSNavigationFeed(
-            String.format("Publisher: %s", publisher), String.valueOf(PUBLISHERS_ID));
+        new OPDSNavigationFeed(String.format("Publisher: %s", publisher), selfHref);
+    result.getLinks().add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, selfHref));
     this.comicDetailService.getAllSeriesForPublisher(publisher, email, unread).stream()
         .forEach(
             series -> {
@@ -272,10 +277,10 @@ public class OPDSNavigationService {
                           ACQUISITION_FEED_LINK_TYPE,
                           SUBSECTION,
                           String.format(
-                              "/opds/collections/publishers/%s/series/%s?unread=%s",
+                              "%s/series/%s?unread=%s",
                               this.opdsUtils.urlEncodeString(publisher),
                               this.opdsUtils.urlEncodeString(series),
-                              String.valueOf(unread))));
+                              unread)));
               result.getEntries().add(feedEntry);
             });
     return result;
@@ -293,8 +298,11 @@ public class OPDSNavigationService {
    */
   public OPDSNavigationFeed getVolumeFeedForPublisherAndSeries(
       final String publisher, final String series, final String email, final boolean unread) {
+    final String selfHref =
+        String.format("%s?unread=%s", this.opdsUtils.urlEncodeString(series), unread);
     OPDSNavigationFeed result =
-        new OPDSNavigationFeed(String.format("Series: %s", series), String.valueOf(SERIES_ID));
+        new OPDSNavigationFeed(String.format("Series: %s", series), selfHref);
+    result.getLinks().add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, selfHref));
     this.comicDetailService
         .getAllVolumesForPublisherAndSeries(publisher, series, email, unread)
         .stream()
@@ -312,11 +320,10 @@ public class OPDSNavigationService {
                           ACQUISITION_FEED_LINK_TYPE,
                           SUBSECTION,
                           String.format(
-                              "/opds/collections/publishers/%s/series/%s/volumes/%s?unread=%s",
-                              this.opdsUtils.urlEncodeString(publisher),
+                              "%s/volumes/%s?unread=%s",
                               this.opdsUtils.urlEncodeString(series),
                               this.opdsUtils.urlEncodeString(volume),
-                              String.valueOf(unread))));
+                              unread)));
               result.getEntries().add(feedEntry);
             });
     return result;
@@ -332,7 +339,9 @@ public class OPDSNavigationService {
    */
   public OPDSNavigationFeed getRootFeedForSeries(final String email, final boolean unread) {
     log.trace("Loading root feed for series");
-    final OPDSNavigationFeed feed = new OPDSNavigationFeed("Series", String.valueOf(SERIES_ID));
+    final String selfHref = String.format("series?unread=%s", unread);
+    final OPDSNavigationFeed feed = new OPDSNavigationFeed("Series", selfHref);
+    feed.getLinks().add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, selfHref));
     this.comicDetailService.getAllSeries(email, unread).stream()
         .map(
             series ->
@@ -355,16 +364,10 @@ public class OPDSNavigationService {
                           ACQUISITION_FEED_LINK_TYPE,
                           SUBSECTION,
                           String.format(
-                              "/opds/collections/series/%s?unread=%s",
-                              this.opdsUtils.urlEncodeString(name), String.valueOf(unread))));
+                              "series/%s?unread=%s",
+                              this.opdsUtils.urlEncodeString(name), unread)));
               feed.getEntries().add(feedEntry);
             });
-    feed.getLinks()
-        .add(
-            new OPDSLink(
-                NAVIGATION_FEED_LINK_TYPE,
-                SELF,
-                String.format("/opds/library?unread=%s", String.valueOf(unread))));
     return feed;
   }
 
@@ -380,8 +383,10 @@ public class OPDSNavigationService {
   public OPDSNavigationFeed getPublishersFeedForSeries(
       final String name, final String email, final boolean unread) {
     log.trace("Loading volumes feed for series: {}", name);
-    OPDSNavigationFeed result =
-        new OPDSNavigationFeed(String.format("Series: %s", name), String.valueOf(SERIES_ID));
+    final String selfHref =
+        String.format("%s?unread=%s", this.opdsUtils.urlEncodeString(name), unread);
+    OPDSNavigationFeed result = new OPDSNavigationFeed(String.format("Series: %s", name), selfHref);
+    result.getLinks().add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, selfHref));
     this.comicDetailService.getAllPublishersForSeries(name, email, unread).stream()
         .forEach(
             publisher -> {
@@ -398,10 +403,10 @@ public class OPDSNavigationService {
                           ACQUISITION_FEED_LINK_TYPE,
                           SUBSECTION,
                           String.format(
-                              "/opds/collections/publishers/%s/series/%s?unread=%s",
+                              "../publishers/%s/series/%s?unread=%s",
                               this.opdsUtils.urlEncodeString(publisher),
                               this.opdsUtils.urlEncodeString(name),
-                              String.valueOf(unread))));
+                              unread)));
               result.getEntries().add(feedEntry);
             });
     return result;
@@ -420,9 +425,13 @@ public class OPDSNavigationService {
       @NonNull final CollectionType collectionType, final String email, final boolean unread) {
     log.info("Fetching the feed root for a collection: {}", collectionType);
 
+    final OPDSNavigationFeed navigationFeed =
+        new OPDSNavigationFeed(
+            collectionType.getOpdsPathValue(), String.valueOf(collectionType.getOpdsIdValue()));
+
     return createCollectionFeed(
         collectionType,
-        new OPDSNavigationFeed("Characters", String.valueOf(collectionType.getOpdsIdValue())),
+        navigationFeed,
         collectionType.getOpdsIdKey(),
         this.comicDetailService
             .getAllValuesForTag(collectionType.getComicTagType(), email, unread)
@@ -449,7 +458,7 @@ public class OPDSNavigationService {
     try {
       final List<ReadingList> lists = this.readingListService.loadReadingListsForUser(email);
       final OPDSNavigationFeed response = new OPDSNavigationFeed("Reading lists", READING_LISTS_ID);
-      response.getLinks().add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, "/opds/lists"));
+      response.getLinks().add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, "lists"));
       lists.forEach(
           readingList -> {
             log.trace("Adding reading list: {}", readingList.getName());
@@ -465,7 +474,7 @@ public class OPDSNavigationService {
                     new OPDSLink(
                         ACQUISITION_FEED_LINK_TYPE,
                         SUBSECTION,
-                        String.format("/opds/lists/%d", readingList.getId())));
+                        String.format("lists/%d", readingList.getId())));
             response.getEntries().add(entry);
           });
       return response;
@@ -499,8 +508,7 @@ public class OPDSNavigationService {
                       new OPDSLink(
                           ACQUISITION_FEED_LINK_TYPE,
                           SUBSECTION,
-                          String.format(
-                              "/opds/dates/released/years/%d/weeks?unread=%s", year, unread)));
+                          String.format("dates/released/years/%d/weeks?unread=%s", year, unread)));
               response.getEntries().add(entry);
             });
     return response;
@@ -545,8 +553,8 @@ public class OPDSNavigationService {
                           ACQUISITION_FEED_LINK_TYPE,
                           SUBSECTION,
                           String.format(
-                              "/opds/dates/released/years/%d/weeks/%d?unread=%s",
-                              year, weekNumber, String.valueOf(unread))));
+                              "dates/released/years/%d/weeks/%d?unread=%s",
+                              year, weekNumber, unread)));
               response.getEntries().add(entry);
             });
     return response;
@@ -575,10 +583,10 @@ public class OPDSNavigationService {
                       ACQUISITION_FEED_LINK_TYPE,
                       SUBSECTION,
                       String.format(
-                          "/opds/collections/%s/%s?unread=%s",
+                          "%s/%s?unread=%s",
                           collectionType.getOpdsPathValue(),
                           this.opdsUtils.urlEncodeString(name),
-                          String.valueOf(unread))));
+                          unread)));
           feed.getEntries().add(feedEntry);
         });
     feed.getLinks()
@@ -586,8 +594,7 @@ public class OPDSNavigationService {
             new OPDSLink(
                 NAVIGATION_FEED_LINK_TYPE,
                 SELF,
-                String.format(
-                    "/opds/collections/%s?unread=%s", feed.getTitle(), String.valueOf(unread))));
+                String.format("%s?unread=%s", feed.getTitle(), unread)));
     return feed;
   }
 

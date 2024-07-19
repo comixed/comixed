@@ -26,7 +26,7 @@ import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import com.fasterxml.jackson.dataformat.xml.util.StaxUtil;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import javax.xml.stream.XMLStreamException;
@@ -50,11 +50,13 @@ public class OPDSXMLOutputConfiguration {
   public MappingJackson2XmlHttpMessageConverter mappingJackson2XmlHttpMessageConverter(
       Jackson2ObjectMapperBuilder builder) {
 
-    String defaultNamespace = "http://www.w3.org/2005/Atom";
-    Map<String, String> otherNamespaces =
-        Collections.singletonMap("pse", "http://vaemendis.net/opds-pse/ns");
+    final String defaultNamespace = "http://www.w3.org/2005/Atom";
+    final Map<String, String> otherNamespaces = new HashMap<>();
+    otherNamespaces.put("opds", "http://opds-spec.org/2010/catalog");
+    otherNamespaces.put("opensearch", "http://a9.com/-/spec/opensearch/1.1/");
 
-    XmlMapper xmlMapper = new XmlMapper(new NamespaceXmlFactory(defaultNamespace, otherNamespaces));
+    final XmlMapper xmlMapper =
+        new XmlMapper(new NamespaceXmlFactory(defaultNamespace, otherNamespaces));
     xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
     xmlMapper.enable(ToXmlGenerator.Feature.WRITE_XML_DECLARATION);
 

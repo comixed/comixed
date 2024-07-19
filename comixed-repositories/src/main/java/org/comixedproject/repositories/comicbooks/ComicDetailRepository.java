@@ -46,7 +46,7 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @return the publishers
    */
   @Query(
-      "SELECT DISTINCT d.publisher FROM ComicDetail d WHERE d.publisher IS NOT NULL AND d NOT IN (SELECT r.comicDetail FROM LastRead r WHERE r.user.email = :email)")
+      "SELECT DISTINCT d.publisher FROM ComicDetail d WHERE d.publisher IS NOT NULL AND LENGTH(d.publisher) > 0 AND d NOT IN (SELECT r.comicDetail FROM LastRead r WHERE r.user.email = :email)")
   Set<String> getAllUnreadPublishers(@Param("email") String email);
 
   /**
@@ -54,7 +54,8 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    *
    * @return the publishers
    */
-  @Query("SELECT DISTINCT d.publisher FROM ComicDetail d WHERE d.publisher IS NOT NULL")
+  @Query(
+      "SELECT DISTINCT d.publisher FROM ComicDetail d WHERE d.publisher IS NOT NULL AND LENGTH(d.publisher) > 0")
   Set<String> getAllPublishers();
 
   /**
@@ -115,7 +116,7 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @return the series
    */
   @Query(
-      "SELECT DISTINCT d.series FROM ComicDetail d WHERE d.series IS NOT NULL AND d NOT IN (SELECT r.comicDetail FROM LastRead r WHERE r.user.email = :email)")
+      "SELECT DISTINCT d.series FROM ComicDetail d WHERE d.series IS NOT NULL AND LENGTH(d.series) > 0 AND d NOT IN (SELECT r.comicDetail FROM LastRead r WHERE r.user.email = :email)")
   Set<String> getAllUnreadSeries(@Param("email") String email);
 
   /**
@@ -123,7 +124,8 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    *
    * @return the series
    */
-  @Query("SELECT DISTINCT d.series FROM ComicDetail d WHERE d.series IS NOT NULL")
+  @Query(
+      "SELECT DISTINCT d.series FROM ComicDetail d WHERE d.series IS NOT NULL AND LENGTH(d.series) > 0")
   Set<String> getAllSeries();
 
   /**
