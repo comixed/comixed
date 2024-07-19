@@ -19,9 +19,7 @@
 package org.comixedproject.opds.model;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 /**
  * <code>OPDSLink</code> represents a link in an {@link OPDSFeedEntry}.
@@ -29,6 +27,7 @@ import lombok.RequiredArgsConstructor;
  * @author Darryl L. Pierce
  */
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class OPDSLink {
   @JacksonXmlProperty(localName = "type", isAttribute = true)
   @Getter
@@ -44,4 +43,9 @@ public class OPDSLink {
   @Getter
   @NonNull
   private String reference;
+
+  @JacksonXmlProperty(localName = "title", isAttribute = true)
+  @Getter
+  @Setter
+  private String title;
 }

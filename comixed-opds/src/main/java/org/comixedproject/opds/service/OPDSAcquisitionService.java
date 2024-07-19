@@ -81,11 +81,12 @@ public class OPDSAcquisitionService {
                 collectionName),
             String.valueOf(collectionType.getOpdsIdKey())),
         this.comicDetailService.getAllComicsForTag(
-            collectionType.getComicTagType(), collectionName, email, unread));
+            collectionType.getComicTagType(), collectionName, email, unread),
+        unread);
   }
 
   private OPDSAcquisitionFeed createCollectionEntriesFeed(
-      final OPDSAcquisitionFeed feed, final List<ComicDetail> entries) {
+      final OPDSAcquisitionFeed feed, final List<ComicDetail> entries, final boolean unread) {
     entries.forEach(
         comic -> {
           log.trace("Adding comic to collection entries: {}", comic.getId());
@@ -98,7 +99,7 @@ public class OPDSAcquisitionService {
             new OPDSLink(
                 NAVIGATION_FEED_LINK_TYPE,
                 SELF,
-                String.format("/opds/collections/%s/%s", type, name)));
+                String.format("%s/%s?unread=%s", type, name, unread)));
     return feed;
   }
 
@@ -133,6 +134,13 @@ public class OPDSAcquisitionService {
             String.valueOf(
                 this.opdsUtils.createIdForEntry(
                     "PUBLISHER:SERIES:VOLUME", publisher + ":" + series + ":" + volume)));
+    result
+        .getLinks()
+        .add(
+            new OPDSLink(
+                NAVIGATION_FEED_LINK_TYPE,
+                SELF,
+                String.format("%s?unread=%s", this.opdsUtils.urlEncodeString(volume), unread)));
     this.comicDetailService
         .getAllComicBooksForPublisherAndSeriesAndVolume(publisher, series, volume, email, unread)
         .forEach(
@@ -140,18 +148,6 @@ public class OPDSAcquisitionService {
               log.trace("Adding comic book to feed");
               result.getEntries().add(this.opdsUtils.createComicEntry(comicBook));
             });
-    result
-        .getLinks()
-        .add(
-            new OPDSLink(
-                NAVIGATION_FEED_LINK_TYPE,
-                SELF,
-                String.format(
-                    "/opds/collections/publishers/%s/series/%s/volumes/%s?unread=%s",
-                    this.opdsUtils.urlEncodeString(publisher),
-                    this.opdsUtils.urlEncodeString(series),
-                    this.opdsUtils.urlEncodeString(volume),
-                    String.valueOf(unread))));
     return result;
   }
 
@@ -173,7 +169,7 @@ public class OPDSAcquisitionService {
               String.valueOf(READING_LIST_FACTOR_ID + list.getId()));
       response
           .getLinks()
-          .add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, String.format("/opds/lists/%d", id)));
+          .add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, String.format("lists/%d", id)));
       list.getEntries().stream()
           .forEach(
               comic -> {
@@ -222,8 +218,7 @@ public class OPDSAcquisitionService {
             new OPDSLink(
                 NAVIGATION_FEED_LINK_TYPE,
                 SELF,
-                String.format(
-                    "/opds/dates/released/years/%d/weeks/%d?unread=%s", year, week, unread)));
+                String.format("dates/released/years/%d/weeks/%d?unread=%s", year, week, unread)));
     return response;
   }
 
@@ -253,9 +248,7 @@ public class OPDSAcquisitionService {
             });
     response
         .getLinks()
-        .add(
-            new OPDSLink(
-                NAVIGATION_FEED_LINK_TYPE, SELF, String.format("/opds/search?terms=%s", term)));
+        .add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, String.format("search?terms=%s", term)));
     return response;
   }
 }

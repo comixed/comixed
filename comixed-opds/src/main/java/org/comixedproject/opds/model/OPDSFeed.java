@@ -20,6 +20,7 @@ package org.comixedproject.opds.model;
 
 import static org.comixedproject.opds.model.OPDSNavigationFeed.NAVIGATION_FEED_LINK_TYPE;
 import static org.comixedproject.opds.model.OPDSNavigationFeed.SEARCH_LINK_TYPE;
+import static org.comixedproject.opds.service.OPDSNavigationService.ROOT_ID;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -41,7 +42,7 @@ import lombok.RequiredArgsConstructor;
 @JacksonXmlRootElement(localName = "feed", namespace = "http://www.w3.org/2005/Atom")
 @RequiredArgsConstructor
 public abstract class OPDSFeed<E extends OPDSFeedEntry> {
-  @JacksonXmlProperty(localName = "title")
+  @JacksonXmlProperty(localName = "title", namespace = "http://www.w3.org/2005/Atom")
   @Getter
   @NonNull
   private String title;
@@ -58,7 +59,7 @@ public abstract class OPDSFeed<E extends OPDSFeedEntry> {
 
   @JacksonXmlProperty(localName = "author")
   @Getter
-  private OPDSAuthor author = new OPDSAuthor("ComiXed", "0");
+  private OPDSAuthor author = new OPDSAuthor("ComiXed", "http://www.comixedproject.org/");
 
   @JacksonXmlProperty(localName = "updated")
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
@@ -71,13 +72,13 @@ public abstract class OPDSFeed<E extends OPDSFeedEntry> {
   private List<OPDSLink> links =
       new ArrayList<>() {
         {
-          add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, "start", "/opds"));
-          add(new OPDSLink(SEARCH_LINK_TYPE, "search", "/opds/search.xml"));
+          add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, "start", ROOT_ID));
+          add(new OPDSLink(SEARCH_LINK_TYPE, "search", "search.xml", title = "Search the library"));
         }
       };
 
   @JacksonXmlElementWrapper(useWrapping = false)
-  @JacksonXmlProperty(localName = "entry")
+  @JacksonXmlProperty(localName = "entry", namespace = "http://www.w3.org/2005/Atom")
   @Getter
   private List<E> entries = new ArrayList<>();
 }

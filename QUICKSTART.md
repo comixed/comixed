@@ -285,7 +285,7 @@ To allow your reader to access the library, you will need either the hostname
 or IP address for the computer running ComiXed. So, for example, if that
 computers IP address is **192.168.1.29** then you would tell the reader:
 
-    Hostname: https://192.168.1.29:7171/opds
+    Hostname: https://192.168.1.29:7171/opds/root.xml
     Username: [your login email address]
     Password: [your login password]
 

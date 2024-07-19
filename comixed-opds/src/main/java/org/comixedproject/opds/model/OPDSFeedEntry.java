@@ -38,7 +38,7 @@ import lombok.Setter;
  */
 @RequiredArgsConstructor
 public abstract class OPDSFeedEntry<C extends OPDSFeedContent> {
-  @JacksonXmlProperty(localName = "title")
+  @JacksonXmlProperty(localName = "title", namespace = "http://www.w3.org/2005/Atom")
   @Getter
   @NonNull
   private String title;
@@ -78,7 +78,7 @@ public abstract class OPDSFeedEntry<C extends OPDSFeedContent> {
   private C content;
 
   @JacksonXmlElementWrapper(useWrapping = false)
-  @JacksonXmlProperty(localName = "link")
+  @JacksonXmlProperty(localName = "link", namespace = "http://www.w3.org/2005/Atom")
   @Getter
   private List<OPDSLink> links = new ArrayList<>();
 }
