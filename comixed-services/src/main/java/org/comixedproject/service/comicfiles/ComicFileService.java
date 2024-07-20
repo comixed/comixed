@@ -28,6 +28,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
+import org.comixedproject.model.batch.ProcessComicBooksEvent;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicfiles.ComicFile;
 import org.comixedproject.model.comicfiles.ComicFileGroup;
@@ -37,6 +38,7 @@ import org.comixedproject.service.metadata.FilenameScrapingRuleService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +57,7 @@ public class ComicFileService {
   @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private ComicFileAdaptor comicFileAdaptor;
   @Autowired private FilenameScrapingRuleService filenameScrapingRuleService;
+  @Autowired private ApplicationEventPublisher applicationEventPublisher;
 
   public byte[] getImportFileCover(final String comicArchive) throws AdaptorException {
     log.debug("Getting first image from archive: {}", comicArchive);
@@ -173,11 +176,13 @@ public class ComicFileService {
             comicBook.getComicDetail().setCoverDate(metadata.getCoverDate());
           }
           log.debug("Firing new comic book event: {}", filename);
-          this.comicStateHandler.fireEvent(comicBook, ComicEvent.readygForProcessing);
+          this.comicStateHandler.fireEvent(comicBook, ComicEvent.readyForProcessing);
         } catch (AdaptorException error) {
           log.error("Failed to create comic for file: " + filename, error);
         }
       }
     }
+    log.debug("Initiating processing");
+    this.applicationEventPublisher.publishEvent(ProcessComicBooksEvent.instance);
   }
 }

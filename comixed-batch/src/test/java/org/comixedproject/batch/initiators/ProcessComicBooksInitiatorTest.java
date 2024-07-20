@@ -24,6 +24,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.comixedproject.model.batch.ProcessComicBooksEvent;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicbooks.ComicBookService;
@@ -81,6 +82,24 @@ public class ProcessComicBooksInitiatorTest {
     Mockito.when(comicBookService.getUnprocessedComicBookCount()).thenReturn(1L);
 
     initiator.execute();
+
+    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
+    assertNotNull(jobParameters);
+    assertNotNull(jobParameters.getLong(PROCESS_COMIC_BOOKS_STARTED_JOB));
+
+    Mockito.verify(comicBookService, Mockito.times(1)).getUnprocessedComicBookCount();
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(addPageToImageCacheJob, jobParameters);
+  }
+
+  @Test
+  public void testExecuteWithComicsFromListener()
+      throws JobInstanceAlreadyCompleteException,
+          JobExecutionAlreadyRunningException,
+          JobParametersInvalidException,
+          JobRestartException {
+    Mockito.when(comicBookService.getUnprocessedComicBookCount()).thenReturn(1L);
+
+    initiator.execute(ProcessComicBooksEvent.instance);
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
     assertNotNull(jobParameters);

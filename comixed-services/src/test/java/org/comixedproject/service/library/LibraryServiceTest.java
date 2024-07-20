@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.adaptors.file.FileAdaptor;
+import org.comixedproject.model.batch.UpdateMetadataEvent;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
@@ -32,6 +33,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.context.ApplicationEventPublisher;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LibraryServiceTest {
@@ -46,6 +48,7 @@ public class LibraryServiceTest {
   @Mock private FileAdaptor fileAdaptor;
   @Mock private PageCacheService pageCacheService;
   @Mock private ComicStateHandler comicStateHandler;
+  @Mock private ApplicationEventPublisher applicationEventPublisher;
 
   @Captor private ArgumentCaptor<List<Long>> idListArgumentCaptor;
 
@@ -85,6 +88,8 @@ public class LibraryServiceTest {
     service.updateMetadata(comicIdList);
 
     Mockito.verify(comicBookService, Mockito.times(1)).prepareForMetadataUpdate(comicIdList);
+    Mockito.verify(applicationEventPublisher, Mockito.times(1))
+        .publishEvent(UpdateMetadataEvent.instance);
   }
 
   @Test

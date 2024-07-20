@@ -86,9 +86,10 @@
     <mat-header-cell *matHeaderCellDef>
       <mat-checkbox
         color="primary"
+        [disabled]="dataSource.data.length === 0"
         [checked]="
           selectedIds.length > 0 &&
-          selectedIds.length === dataSource.data.length
+          selectedIds.length === totalComics
         "
         (change)="selectAll.emit($event.checked)"
         (keyup)="selectAll.emit($event.checked)"

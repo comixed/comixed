@@ -25,7 +25,7 @@ package org.comixedproject.state.comicbooks;
  */
 public enum ComicEvent {
   // the comic book was created
-  readygForProcessing,
+  readyForProcessing,
   // the file entries have been loaded
   fileContentsLoaded,
   // rescan a comic,

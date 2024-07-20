@@ -24,6 +24,7 @@ import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY;
 import static org.junit.Assert.*;
 
+import org.comixedproject.model.batch.OrganizingLibraryEvent;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicbooks.ComicBookService;
@@ -109,12 +110,29 @@ public class OrganizeLibraryInitiatorTest {
   }
 
   @Test
-  public void testExecute()
+  public void testExecuteFromScheduler()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
           JobRestartException {
     initiator.execute();
+
+    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
+
+    assertNotNull(jobParameters.getLong(JOB_ORGANIZATION_TIME_STARTED));
+    assertEquals(TEST_ROOT_DIRECTORY, jobParameters.getString(JOB_ORGANIZATION_TARGET_DIRECTORY));
+    assertEquals(TEST_RENAMING_RULE, jobParameters.getString(JOB_ORGANIZATION_RENAMING_RULE));
+
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(loadPageHashesJob, jobParameters);
+  }
+
+  @Test
+  public void testExecuteFromListener()
+      throws JobInstanceAlreadyCompleteException,
+          JobExecutionAlreadyRunningException,
+          JobParametersInvalidException,
+          JobRestartException {
+    initiator.execute(OrganizingLibraryEvent.instance);
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 

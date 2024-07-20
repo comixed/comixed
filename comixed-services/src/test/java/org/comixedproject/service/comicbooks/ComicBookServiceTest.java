@@ -30,6 +30,8 @@ import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
+import org.comixedproject.model.batch.OrganizingLibraryEvent;
+import org.comixedproject.model.batch.UpdateMetadataEvent;
 import org.comixedproject.model.collections.Publisher;
 import org.comixedproject.model.collections.Series;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -55,6 +57,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -110,6 +113,7 @@ public class ComicBookServiceTest {
   @Mock private ComicStateHandler comicStateHandler;
   @Mock private ComicBookRepository comicBookRepository;
   @Mock private ComicBookMetadataAdaptor comicBookMetadataAdaptor;
+  @Mock private ApplicationEventPublisher applicationEventPublisher;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
   @Mock private ComicBook comicBook;
   @Mock private ComicDetail comicDetail;
@@ -1059,6 +1063,8 @@ public class ComicBookServiceTest {
     Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
     Mockito.verify(comicBook, Mockito.times(1)).setBatchMetadataUpdate(true);
     Mockito.verify(comicBookRepository, Mockito.times(1)).save(comicBook);
+    Mockito.verify(applicationEventPublisher, Mockito.times(1))
+        .publishEvent(UpdateMetadataEvent.instance);
   }
 
   @Test
@@ -1177,6 +1183,8 @@ public class ComicBookServiceTest {
     service.prepareForOrganization(idList);
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).markForOrganizationById(idList);
+    Mockito.verify(applicationEventPublisher, Mockito.times(1))
+        .publishEvent(OrganizingLibraryEvent.instance);
   }
 
   @Test
@@ -1184,6 +1192,8 @@ public class ComicBookServiceTest {
     service.prepareAllForOrganization();
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).markAllForOrganization();
+    Mockito.verify(applicationEventPublisher, Mockito.times(1))
+        .publishEvent(OrganizingLibraryEvent.instance);
   }
 
   @Test

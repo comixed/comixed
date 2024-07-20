@@ -22,6 +22,7 @@ import static org.comixedproject.batch.comicbooks.UpdateMetadataConfiguration.JO
 import static org.comixedproject.batch.comicbooks.UpdateMetadataConfiguration.UPDATE_METADATA_JOB;
 import static org.junit.Assert.*;
 
+import org.comixedproject.model.batch.UpdateMetadataEvent;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.junit.Before;
@@ -99,12 +100,27 @@ public class UpdateMetadataInitiatorTest {
   }
 
   @Test
-  public void testExecute()
+  public void testExecuteFromScheduler()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
           JobRestartException {
     initiator.execute();
+
+    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
+
+    assertNotNull(jobParameters.getLong(JOB_UPDATE_METADATA_STARTED));
+
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(updateMetadataJob, jobParameters);
+  }
+
+  @Test
+  public void testExecuteFromListener()
+      throws JobInstanceAlreadyCompleteException,
+          JobExecutionAlreadyRunningException,
+          JobParametersInvalidException,
+          JobRestartException {
+    initiator.execute(UpdateMetadataEvent.instance);
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 

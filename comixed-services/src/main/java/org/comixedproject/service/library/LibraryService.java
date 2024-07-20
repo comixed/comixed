@@ -22,11 +22,13 @@ import java.io.IOException;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.file.FileAdaptor;
+import org.comixedproject.model.batch.UpdateMetadataEvent;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +44,7 @@ public class LibraryService {
   @Autowired private FileAdaptor fileAdaptor;
   @Autowired private PageCacheService pageCacheService;
   @Autowired private ComicStateHandler comicStateHandler;
+  @Autowired private ApplicationEventPublisher applicationEventPublisher;
 
   /**
    * Removes all files in the image cache directory.
@@ -67,6 +70,8 @@ public class LibraryService {
   public void updateMetadata(final List<Long> ids) {
     log.debug("Preparing {} comic book(s) for metadata update", ids.size());
     this.comicBookService.prepareForMetadataUpdate(ids);
+    log.debug("Initiating update batch process");
+    this.applicationEventPublisher.publishEvent(UpdateMetadataEvent.instance);
   }
 
   /**

@@ -68,7 +68,7 @@ public class ComicStateMachineConfiguration
         .withExternal()
         .source(ComicState.CREATED)
         .target(ComicState.UNPROCESSED)
-        .event(ComicEvent.readygForProcessing)
+        .event(ComicEvent.readyForProcessing)
         // rescan a stable comic
         .and()
         .withExternal()
