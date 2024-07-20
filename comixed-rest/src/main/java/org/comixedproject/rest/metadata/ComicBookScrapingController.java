@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.metadata.MetadataProcessConfiguration;
@@ -373,18 +374,22 @@ public class ComicBookScrapingController {
   private StartMultiBookScrapingResponse doRemoveComicBook(
       final HttpSession session, final long comicBookId, final int pageSize, final int pageNumber)
       throws ComicBookSelectionException {
+    log.debug(
+        "Removing scraped comic book id from multi-book scraping selections: id={}", comicBookId);
     final List<Long> comicDetailIds =
-        this.comicBookSelectionService.decodeSelections(
-            session.getAttribute(MULTI_BOOK_SCRAPING_SELECTIONS));
-    final List<ComicBook> comicBooks =
-        this.comicBookService.loadByComicBookId(comicDetailIds, pageSize, pageNumber).stream()
-            .filter(comicBook -> !comicBook.getId().equals(comicBookId))
-            .toList();
+        this.comicBookSelectionService
+            .decodeSelections(session.getAttribute(MULTI_BOOK_SCRAPING_SELECTIONS))
+            .stream()
+            .filter(id -> id != comicBookId)
+            .collect(Collectors.toList());
+    log.debug("Updating multi-book scraping selections");
     session.setAttribute(
         MULTI_BOOK_SCRAPING_SELECTIONS,
-        this.comicBookSelectionService.encodeSelections(
-            comicBooks.stream().map(comicBook -> comicBook.getComicDetail().getId()).toList()));
+        this.comicBookSelectionService.encodeSelections(comicDetailIds));
 
+    log.debug("Loading page of comic books still to be scraped");
+    final List<ComicBook> comicBooks =
+        this.comicBookService.loadByComicBookId(comicDetailIds, pageSize, pageNumber);
     return new StartMultiBookScrapingResponse(
         pageSize, pageNumber, comicDetailIds.size(), comicBooks);
   }

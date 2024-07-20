@@ -23,7 +23,9 @@ import static junit.framework.TestCase.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishComicBookSelectionStateAction;
 import org.comixedproject.model.comicbooks.ComicDetail;
@@ -43,7 +45,8 @@ public class ComicBookSelectionServiceTest {
   private static final ComicTagType TEST_TAG_TYPE = ComicTagType.STORY;
   private static final String TEST_TAG_VALUE = "Age Of Ultron";
 
-  private final List<Long> selectedIds = new ArrayList();
+  private final List<Long> selectedIds = new ArrayList<>();
+  private final Set<Long> storedSelectedIds = new HashSet<>();
   private final List<ComicDetail> comicDetailList = new ArrayList<>();
 
   @InjectMocks private ComicBookSelectionService service;
@@ -196,8 +199,8 @@ public class ComicBookSelectionServiceTest {
   @Test
   public void testDecodeSelections() throws ComicBookSelectionException, JsonProcessingException {
     final ComicBookSelectionService.ListOfIds encodedIds =
-        new ComicBookSelectionService.ListOfIds(selectedIds);
-    selectedIds.add(TEST_COMIC_BOOK_ID);
+        new ComicBookSelectionService.ListOfIds(storedSelectedIds);
+    storedSelectedIds.add(TEST_COMIC_BOOK_ID);
 
     Mockito.when(objectMapper.readValue(Mockito.anyString(), Mockito.any(Class.class)))
         .thenReturn(encodedIds);
@@ -205,7 +208,7 @@ public class ComicBookSelectionServiceTest {
     final List<Long> result = service.decodeSelections(TEST_ENCODED_SELECTIONS);
 
     assertNotNull(result);
-    assertEquals(selectedIds.size(), result.size());
+    assertEquals(storedSelectedIds.size(), result.size());
     assertEquals(TEST_COMIC_BOOK_ID, result.get(0));
 
     Mockito.verify(objectMapper, Mockito.times(1))
@@ -224,7 +227,7 @@ public class ComicBookSelectionServiceTest {
 
     final ComicBookSelectionService.ListOfIds ids = idsArgumentCaptor.getValue();
     assertNotNull(ids);
-    assertSame(selectedIds, ids.getIds());
+    assertEquals(selectedIds, ids.getIds().stream().toList());
 
     Mockito.verify(objectMapper, Mockito.times(1)).writeValueAsString(ids);
   }
@@ -241,7 +244,7 @@ public class ComicBookSelectionServiceTest {
       final ComicBookSelectionService.ListOfIds ids = idsArgumentCaptor.getValue();
 
       assertNotNull(ids);
-      assertSame(selectedIds, ids.getIds());
+      assertEquals(selectedIds, ids.getIds().stream().toList());
 
       Mockito.verify(objectMapper, Mockito.times(1)).writeValueAsString(ids);
     }
