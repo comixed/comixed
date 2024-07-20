@@ -19,6 +19,7 @@
 import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.*;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.batch.ProcessComicBooksEvent;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.Job;
@@ -30,6 +31,8 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -56,6 +59,21 @@ public class ProcessComicBooksInitiator {
   /** Checks for unprocessed comics not in a group and kicks off a new batch job to process them. */
   @Scheduled(fixedDelayString = "${comixed.batch.process-comic-books.period}")
   public void execute() {
+    this.doExecute();
+  }
+
+  /**
+   * Initiates the processing from an event.
+   *
+   * @param event the event
+   */
+  @EventListener()
+  @Async
+  public void execute(ProcessComicBooksEvent event) {
+    this.doExecute();
+  }
+
+  private void doExecute() {
     log.debug("Looking for unprocessed comic books");
     final long unprocessedComicBookCount = this.comicBookService.getUnprocessedComicBookCount();
     if (unprocessedComicBookCount == 0L) {

@@ -23,6 +23,7 @@ import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.batch.OrganizingLibraryEvent;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicbooks.ComicBookService;
@@ -35,6 +36,8 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -62,6 +65,16 @@ public class OrganizeLibraryInitiator {
 
   @Scheduled(fixedDelayString = "${comixed.batch.organize-library.period}")
   public void execute() {
+    this.doExecute();
+  }
+
+  @EventListener
+  @Async
+  public void execute(final OrganizingLibraryEvent event) {
+    this.doExecute();
+  }
+
+  private void doExecute() {
     log.trace("Checking for comic files to be organized");
     if (this.comicBookService.findComicsToBeMovedCount() > 0
         && !this.batchProcessesService.hasActiveExecutions(ORGANIZE_LIBRARY_JOB)) {

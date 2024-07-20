@@ -30,6 +30,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
+import org.comixedproject.model.batch.OrganizingLibraryEvent;
+import org.comixedproject.model.batch.UpdateMetadataEvent;
 import org.comixedproject.model.collections.Publisher;
 import org.comixedproject.model.collections.Series;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -48,6 +50,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -69,6 +72,7 @@ public class ComicBookService {
   @Autowired private ComicBookMetadataAdaptor comicBookMetadataAdaptor;
   @Autowired private ImprintService imprintService;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
+  @Autowired private ApplicationEventPublisher applicationEventPublisher;
 
   /**
    * Retrieves a single comic by id. It is expected that this comic exists.
@@ -692,6 +696,7 @@ public class ComicBookService {
       comicBook.setBatchMetadataUpdate(true);
       this.comicBookRepository.save(comicBook);
     }
+    this.applicationEventPublisher.publishEvent(UpdateMetadataEvent.instance);
   }
 
   /**
@@ -771,12 +776,18 @@ public class ComicBookService {
    */
   @Transactional
   public void prepareForOrganization(final List<Long> ids) {
+    log.trace("Marking comics for organization");
     this.comicBookRepository.markForOrganizationById(ids);
+    log.trace("Initiating batch process");
+    this.applicationEventPublisher.publishEvent(OrganizingLibraryEvent.instance);
   }
 
   @Transactional
   public void prepareAllForOrganization() {
+    log.trace("Marking all comics for organization");
     this.comicBookRepository.markAllForOrganization();
+    log.trace("Initiating batch process");
+    this.applicationEventPublisher.publishEvent(OrganizingLibraryEvent.instance);
   }
 
   /**

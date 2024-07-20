@@ -22,6 +22,7 @@ import static org.comixedproject.batch.comicbooks.UpdateMetadataConfiguration.JO
 import static org.comixedproject.batch.comicbooks.UpdateMetadataConfiguration.UPDATE_METADATA_JOB;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.batch.UpdateMetadataEvent;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.Job;
@@ -33,6 +34,8 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -58,6 +61,16 @@ public class UpdateMetadataInitiator {
 
   @Scheduled(fixedDelayString = "${comixed.batch.update-metadata.period}")
   public void execute() {
+    this.doExecute();
+  }
+
+  @EventListener
+  @Async
+  public void execute(UpdateMetadataEvent event) {
+    this.doExecute();
+  }
+
+  private void doExecute() {
     log.trace("Checking for comic files to import");
     if (this.comicBookService.getUpdateMetadataCount() > 0
         && !this.batchProcessesService.hasActiveExecutions(UPDATE_METADATA_JOB)) {
