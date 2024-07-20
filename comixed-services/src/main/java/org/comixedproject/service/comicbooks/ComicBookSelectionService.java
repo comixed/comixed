@@ -21,7 +21,10 @@ package org.comixedproject.service.comicbooks;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -62,7 +65,7 @@ public class ComicBookSelectionService {
    * @param comicBookId the incoming comic book id
    */
   @Transactional
-  public void addComicSelectionForUser(final List selections, final Long comicBookId) {
+  public void addComicSelectionForUser(final List<Long> selections, final Long comicBookId) {
     if (!selections.contains(comicBookId)) {
       log.debug("Adding comic book to selections: {}", comicBookId);
       selections.add(comicBookId);
@@ -141,7 +144,7 @@ public class ComicBookSelectionService {
    *
    * @param selections the selected comic book ids
    */
-  public void clearSelectedComicBooks(final List selections) {
+  public void clearSelectedComicBooks(final List<Long> selections) {
     log.debug("Clearing the selected ids");
     selections.clear();
     log.debug("Publishing cleared out selection update");
@@ -164,7 +167,7 @@ public class ComicBookSelectionService {
       try {
         final ListOfIds result =
             this.objectMapper.readValue(storeSelections.toString(), ListOfIds.class);
-        return result.getIds();
+        return result.getIds().stream().collect(Collectors.toList());
       } catch (JsonProcessingException error) {
         throw new ComicBookSelectionException("failed to load selections from session", error);
       }
@@ -181,7 +184,7 @@ public class ComicBookSelectionService {
   public String encodeSelections(final List<Long> selections) throws ComicBookSelectionException {
     log.debug("Storing selection set");
     try {
-      return this.objectMapper.writeValueAsString(new ListOfIds(selections));
+      return this.objectMapper.writeValueAsString(new ListOfIds(new HashSet<>(selections)));
     } catch (JsonProcessingException error) {
       throw new ComicBookSelectionException("failed to save selections to session", error);
     }
@@ -244,6 +247,6 @@ public class ComicBookSelectionService {
   @NoArgsConstructor
   @AllArgsConstructor
   public static class ListOfIds {
-    @Getter private List<Long> ids;
+    @Getter private Set<Long> ids;
   }
 }
