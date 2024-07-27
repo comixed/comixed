@@ -25,9 +25,11 @@ import { ActivatedRoute } from '@angular/router';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import {
   selectLoadComicDetailsFilteredComics,
-  selectLoadComicDetailsList
+  selectLoadComicDetailsList,
+  selectLoadComicDetailsListState
 } from '@app/comic-books/selectors/load-comic-details-list.selectors';
 import { loadComicDetails } from '@app/comic-books/actions/comic-details-list.actions';
+import { setBusyState } from '@app/core/actions/busy.actions';
 
 @Component({
   selector: 'cx-series-issue-page',
@@ -38,6 +40,7 @@ export class SeriesIssuePageComponent implements OnDestroy {
   paramSubscription: Subscription;
   pageChangedSubscription: Subscription;
   comicDetailslistSubscription: Subscription;
+  comicDetailslistStateSubscription: Subscription;
   comicDetailsTotalSubscription: Subscription;
 
   publisherName = '';
@@ -63,6 +66,12 @@ export class SeriesIssuePageComponent implements OnDestroy {
     this.pageChangedSubscription = this.activatedRoute.queryParams.subscribe(
       params => this.doLoadComicDetails()
     );
+    this.logger.trace('Subscribing to comic detail list state updates');
+    this.comicDetailslistStateSubscription = this.store
+      .select(selectLoadComicDetailsListState)
+      .subscribe(state => {
+        this.store.dispatch(setBusyState({ enabled: state.loading }));
+      });
     this.logger.trace('Subscribing to comic details updates');
     this.comicDetailslistSubscription = this.store
       .select(selectLoadComicDetailsList)
@@ -78,6 +87,8 @@ export class SeriesIssuePageComponent implements OnDestroy {
     this.paramSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from page change updates');
     this.pageChangedSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from comic detail list state updates');
+    this.comicDetailslistStateSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from comic detail list updates');
     this.comicDetailslistSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from comic detail total updates');

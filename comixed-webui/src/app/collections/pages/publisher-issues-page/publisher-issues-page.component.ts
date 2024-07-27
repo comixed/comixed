@@ -26,8 +26,10 @@ import { Subscription } from 'rxjs';
 import { loadComicDetails } from '@app/comic-books/actions/comic-details-list.actions';
 import {
   selectLoadComicDetailsFilteredComics,
-  selectLoadComicDetailsList
+  selectLoadComicDetailsList,
+  selectLoadComicDetailsListState
 } from '@app/comic-books/selectors/load-comic-details-list.selectors';
+import { setBusyState } from '@app/core/actions/busy.actions';
 
 @Component({
   selector: 'cx-publisher-issues-page',
@@ -36,6 +38,7 @@ import {
 })
 export class PublisherIssuesPageComponent implements OnDestroy {
   paramSubscription: Subscription;
+  comicDetailListStateSubscription: Subscription;
   pageChangedSubscription: Subscription;
   comicDetailslistSubscription: Subscription;
   comicDetailsTotalSubscription: Subscription;
@@ -50,6 +53,12 @@ export class PublisherIssuesPageComponent implements OnDestroy {
     private activatedRoute: ActivatedRoute,
     public queryParameterService: QueryParameterService
   ) {
+    this.logger.trace('Subscribing to comic detail list state updates');
+    this.comicDetailListStateSubscription = this.store
+      .select(selectLoadComicDetailsListState)
+      .subscribe(state => {
+        this.store.dispatch(setBusyState({ enabled: state.loading }));
+      });
     this.logger.trace('Subscribing to parameter updates');
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.name = params['name'];
@@ -70,6 +79,8 @@ export class PublisherIssuesPageComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.logger.trace('Unsubscribing from comic detail list state updates');
+    this.comicDetailListStateSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from param updates');
     this.paramSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from page change updates');
