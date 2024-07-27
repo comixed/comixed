@@ -10,6 +10,7 @@
 
 <mat-paginator
   showFirstLastButtons="true"
+  [length]="dataSource.data.length"
   [pageSize]="pageSize"
   [pageIndex]="pageIndex"
   [pageSizeOptions]="pageOptions"
