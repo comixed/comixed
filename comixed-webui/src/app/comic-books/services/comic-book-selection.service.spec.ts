@@ -34,6 +34,8 @@ import {
   REMOVE_SINGLE_COMIC_SELECTION_URL,
   SET_SELECTED_COMIC_BOOKS_BY_FILTER_URL,
   SET_SELECTED_COMIC_BOOKS_BY_ID_URL,
+  SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_SERIES_VOLUME_URL,
+  SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_URL,
   SET_SELECTED_COMIC_BOOKS_BY_TAG_TYPE_AND_VALUE_URL
 } from '@app/comic-books/comic-books.constants';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
@@ -53,6 +55,9 @@ import {
 } from '@app/comic-books/actions/comic-book-selection.actions';
 import { TagType } from '@app/collections/models/comic-collection.enum';
 import { SetSelectedByIdRequest } from '@app/comic-books/models/net/set-selected-by-id-request';
+import { SetSelectedByPublisherRequest } from '@app/comic-books/models/net/set-selected-by-publisher-request';
+import { PUBLISHER_1, SERIES_1 } from '@app/collections/collections.fixtures';
+import { SetSelectedByPublisherSeriesVolumeRequest } from '@app/comic-books/models/net/set-selected-by-publisher-series-volume-request';
 
 describe('ComicBookSelectionService', () => {
   const COVER_YEAR = Math.random() * 100 + 1900;
@@ -65,6 +70,9 @@ describe('ComicBookSelectionService', () => {
   const ID = 65;
   const TAG_TYPE = TagType.TEAMS;
   const TAG_VALUE = 'Some team';
+  const PUBLISHER = PUBLISHER_1.name;
+  const SERIES = SERIES_1.name;
+  const VOLUME = '2024';
   const SELECTED = Math.random() > 0.5;
   const COMIC_BOOK_IDS = [3.2, 96, 9, 21, 98];
   const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
@@ -238,6 +246,52 @@ describe('ComicBookSelectionService', () => {
       comicBookIds: COMIC_BOOK_IDS,
       selected: SELECTED
     } as SetSelectedByIdRequest);
+    req.flush(serverResponse);
+  });
+
+  it('can select comic books by publisher', () => {
+    const serverResponse = new HttpResponse({});
+
+    service
+      .setSelectedByPublisher({
+        publisher: PUBLISHER,
+        selected: SELECTED
+      })
+      .subscribe(response => expect(response).toEqual(serverResponse));
+
+    const req = httpMock.expectOne(
+      interpolate(SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_URL)
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      publisher: PUBLISHER,
+      selected: SELECTED
+    } as SetSelectedByPublisherRequest);
+    req.flush(serverResponse);
+  });
+
+  it('can select comic books by publisher, series, and volume', () => {
+    const serverResponse = new HttpResponse({});
+
+    service
+      .setSelectedByPublisherSeriesAndVolume({
+        publisher: PUBLISHER,
+        series: SERIES,
+        volume: VOLUME,
+        selected: SELECTED
+      })
+      .subscribe(response => expect(response).toEqual(serverResponse));
+
+    const req = httpMock.expectOne(
+      interpolate(SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_SERIES_VOLUME_URL)
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      publisher: PUBLISHER,
+      series: SERIES,
+      volume: VOLUME,
+      selected: SELECTED
+    } as SetSelectedByPublisherSeriesVolumeRequest);
     req.flush(serverResponse);
   });
 

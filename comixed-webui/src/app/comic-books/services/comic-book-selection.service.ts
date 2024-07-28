@@ -29,6 +29,8 @@ import {
   REMOVE_SINGLE_COMIC_SELECTION_URL,
   SET_SELECTED_COMIC_BOOKS_BY_FILTER_URL,
   SET_SELECTED_COMIC_BOOKS_BY_ID_URL,
+  SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_SERIES_VOLUME_URL,
+  SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_URL,
   SET_SELECTED_COMIC_BOOKS_BY_TAG_TYPE_AND_VALUE_URL
 } from '@app/comic-books/comic-books.constants';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
@@ -44,6 +46,8 @@ import {
 } from '@app/comic-books/actions/comic-book-selection.actions';
 import { TagType } from '@app/collections/models/comic-collection.enum';
 import { SetSelectedByIdRequest } from '@app/comic-books/models/net/set-selected-by-id-request';
+import { SetSelectedByPublisherRequest } from '@app/comic-books/models/net/set-selected-by-publisher-request';
+import { SetSelectedByPublisherSeriesVolumeRequest } from '@app/comic-books/models/net/set-selected-by-publisher-series-volume-request';
 
 @Injectable({
   providedIn: 'root'
@@ -159,11 +163,46 @@ export class ComicBookSelectionService {
     comicBookIds: number[];
     selected: boolean;
   }): Observable<any> {
-    this.logger.debug('Selected comic books by id:', args);
+    this.logger.debug('Selecting comic books by id:', args);
     return this.http.post(interpolate(SET_SELECTED_COMIC_BOOKS_BY_ID_URL), {
       comicBookIds: args.comicBookIds,
       selected: args.selected
     } as SetSelectedByIdRequest);
+  }
+
+  setSelectedByPublisher(args: {
+    publisher: string;
+    selected: boolean;
+  }): Observable<any> {
+    this.logger.debug('Selecting comic books by publisher:', args);
+    return this.http.post(
+      interpolate(SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_URL),
+      {
+        publisher: args.publisher,
+        selected: args.selected
+      } as SetSelectedByPublisherRequest
+    );
+  }
+
+  setSelectedByPublisherSeriesAndVolume(args: {
+    publisher: string;
+    series: string;
+    volume: string;
+    selected: boolean;
+  }): Observable<any> {
+    this.logger.debug(
+      'Selecting comic books by publisher, series, and volume:',
+      args
+    );
+    return this.http.post(
+      interpolate(SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_SERIES_VOLUME_URL),
+      {
+        publisher: args.publisher,
+        series: args.series,
+        volume: args.volume,
+        selected: args.selected
+      } as SetSelectedByPublisherSeriesVolumeRequest
+    );
   }
 
   clearSelections(): Observable<any> {

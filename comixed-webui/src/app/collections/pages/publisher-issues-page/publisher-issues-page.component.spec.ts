@@ -22,7 +22,7 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ComicDetailListViewComponent } from '@app/comic-books/components/comic-detail-list-view/comic-detail-list-view.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatMenuModule } from '@angular/material/menu';
@@ -41,11 +41,23 @@ import { QueryParameterService } from '@app/core/services/query-parameter.servic
 import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
+import {
+  COMIC_BOOK_SELECTION_FEATURE_KEY,
+  initialState as initialComicBookSelectionState
+} from '@app/comic-books/reducers/comic-book-selection.reducer';
+import { setMultipleComicBookByPublisherSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import { TitleService } from '@app/core/services/title.service';
+import {
+  initialState as initialUserState,
+  USER_FEATURE_KEY
+} from '@app/user/reducers/user.reducer';
 
 describe('PublisherIssuesComponent', () => {
   const PUBLISHER_NAME = 'The Publisher';
   const initialState = {
-    [COMIC_DETAILS_LIST_FEATURE_KEY]: initialComicDetailListState
+    [COMIC_DETAILS_LIST_FEATURE_KEY]: initialComicDetailListState,
+    [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
+    [USER_FEATURE_KEY]: initialUserState
   };
 
   let component: PublisherIssuesPageComponent;
@@ -54,6 +66,8 @@ describe('PublisherIssuesComponent', () => {
   let storeDispatchSpy: jasmine.Spy;
   let queryParameterService: QueryParameterService;
   let activatedRoute: ActivatedRoute;
+  let titleService: TitleService;
+  let translateService: TranslateService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -99,7 +113,8 @@ describe('PublisherIssuesComponent', () => {
             params: new BehaviorSubject<{}>({ name: PUBLISHER_NAME }),
             queryParams: new BehaviorSubject<{}>({})
           }
-        }
+        },
+        TitleService
       ]
     }).compileComponents();
 
@@ -109,6 +124,9 @@ describe('PublisherIssuesComponent', () => {
     storeDispatchSpy = spyOn(store, 'dispatch');
     queryParameterService = TestBed.inject(QueryParameterService);
     activatedRoute = TestBed.inject(ActivatedRoute);
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
+    translateService = TestBed.inject(TranslateService);
     fixture.detectChanges();
   });
 
@@ -149,6 +167,52 @@ describe('PublisherIssuesComponent', () => {
           volume: null
         })
       );
+    });
+  });
+
+  describe('selecting all comics', () => {
+    beforeEach(() => {
+      component.name = PUBLISHER_NAME;
+    });
+
+    describe('selecting all', () => {
+      beforeEach(() => {
+        component.onSelectAll(true);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setMultipleComicBookByPublisherSelectionState({
+            publisher: PUBLISHER_NAME,
+            selected: true
+          })
+        );
+      });
+    });
+
+    describe('deselecting all', () => {
+      beforeEach(() => {
+        component.onSelectAll(false);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setMultipleComicBookByPublisherSelectionState({
+            publisher: PUBLISHER_NAME,
+            selected: false
+          })
+        );
+      });
+    });
+  });
+
+  describe('when the language changes', () => {
+    beforeEach(() => {
+      translateService.use('fr');
+    });
+
+    it('updates the tab title', () => {
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
 });

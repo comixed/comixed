@@ -24,10 +24,13 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.net.comicbooks.AddComicBookSelectionsByIdRequest;
+import org.comixedproject.model.net.comicbooks.AddComicBookSelectionsByPublisherRequest;
+import org.comixedproject.model.net.comicbooks.AddComicBookSelectionsByPublisherSeriesVolumeRequest;
 import org.comixedproject.model.net.comicbooks.MultipleComicBooksSelectionRequest;
 import org.comixedproject.opds.OPDSUtils;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;
 import org.comixedproject.service.comicbooks.ComicBookSelectionService;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,6 +50,7 @@ public class ComicBookSelectionController {
 
   @Autowired private ComicBookSelectionService comicBookSelectionService;
   @Autowired private OPDSUtils opdsUtils;
+  @Autowired private ComicBookService comicBookService;
 
   /**
    * Loads the user's comic book selections.
@@ -205,7 +209,7 @@ public class ComicBookSelectionController {
   }
 
   /**
-   * Removes selections using filters.
+   * Updates selections using filters.
    *
    * @param session the session
    * @param request the request body
@@ -226,6 +230,81 @@ public class ComicBookSelectionController {
     } else {
       log.info("Removing ids from comic book selections");
       selections.removeAll(request.getComicBookIds());
+    }
+
+    this.comicBookSelectionService.publisherSelections(selections);
+    session.setAttribute(
+        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
+  }
+
+  /**
+   * Updates selections by publisher.
+   *
+   * @param session the session
+   * @param request the request body
+   * @throws ComicBookSelectionException if an error occurs
+   */
+  @PostMapping(value = "/api/comics/selections/publisher")
+  @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.comic-book.selections.add-or-remove-by-id")
+  public void addComicBookSelectionsByPublisher(
+      final HttpSession session,
+      @RequestBody() final AddComicBookSelectionsByPublisherRequest request)
+      throws ComicBookSelectionException {
+    final String publisher = request.getPublisher();
+    final boolean selected = request.isSelected();
+    log.info("Setting selections by publisher name: publisher={} selected={}", publisher, selected);
+    final List<Long> selections =
+        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+
+    if (selected) {
+      log.info("Adding ids from comic book selections");
+      selections.addAll(comicBookService.getIdsByPublisher(publisher));
+    } else {
+      log.info("Removing ids from comic book selections");
+      selections.removeAll(comicBookService.getIdsByPublisher(publisher));
+    }
+
+    this.comicBookSelectionService.publisherSelections(selections);
+    session.setAttribute(
+        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
+  }
+
+  /**
+   * Updates selections by publisher, series, and volume.
+   *
+   * @param session the session
+   * @param request the request body
+   * @throws ComicBookSelectionException if an error occurs
+   */
+  @PostMapping(value = "/api/comics/selections/series")
+  @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.comic-book.selections.add-or-remove-by-id")
+  public void addComicBookSelectionsByPublisherSeriesVolume(
+      final HttpSession session,
+      @RequestBody() final AddComicBookSelectionsByPublisherSeriesVolumeRequest request)
+      throws ComicBookSelectionException {
+    final String publisher = request.getPublisher();
+    final String series = request.getSeries();
+    final String volume = request.getVolume();
+    final boolean selected = request.isSelected();
+    log.info(
+        "Setting selections by publisher name: publisher={} series={} volume={} selected={}",
+        publisher,
+        series,
+        volume,
+        selected);
+    final List<Long> selections =
+        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+
+    if (selected) {
+      log.info("Adding ids from comic book selections");
+      selections.addAll(
+          comicBookService.getIdsByPublisherSeriesAndVolume(publisher, series, volume));
+    } else {
+      log.info("Removing ids from comic book selections");
+      selections.removeAll(
+          comicBookService.getIdsByPublisherSeriesAndVolume(publisher, series, volume));
     }
 
     this.comicBookSelectionService.publisherSelections(selections);

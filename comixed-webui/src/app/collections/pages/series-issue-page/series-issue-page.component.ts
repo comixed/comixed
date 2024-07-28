@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -30,29 +30,42 @@ import {
 } from '@app/comic-books/selectors/load-comic-details-list.selectors';
 import { loadComicDetails } from '@app/comic-books/actions/comic-details-list.actions';
 import { setBusyState } from '@app/core/actions/busy.actions';
+import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import { setMultipleComicBookByPublisherSeriesAndVolumeSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import { TitleService } from '@app/core/services/title.service';
+import { TranslateService } from '@ngx-translate/core';
+import { selectUser } from '@app/user/selectors/user.selectors';
+import { isAdmin } from '@app/user/user.functions';
 
 @Component({
   selector: 'cx-series-issue-page',
   templateUrl: './series-issue-page.component.html',
   styleUrl: './series-issue-page.component.scss'
 })
-export class SeriesIssuePageComponent implements OnDestroy {
+export class SeriesIssuePageComponent implements OnInit, OnDestroy {
   paramSubscription: Subscription;
+  langChangeSubscription: Subscription;
   pageChangedSubscription: Subscription;
   comicDetailslistSubscription: Subscription;
   comicDetailslistStateSubscription: Subscription;
   comicDetailsTotalSubscription: Subscription;
+  selectedIdsSubscription: Subscription;
+  currentUserSubscription: Subscription;
 
   publisherName = '';
   seriesName = '';
   volume = '';
+  isAdmin = false;
   comicDetails: ComicDetail[] = [];
+  selectedIds: number[] = [];
   totalComics = 0;
 
   constructor(
     private logger: LoggerService,
     private store: Store,
     private activatedRoute: ActivatedRoute,
+    private translateService: TranslateService,
+    private titleService: TitleService,
     public queryParameterService: QueryParameterService
   ) {
     this.logger.trace('Subscribing to parameter updates');
@@ -62,6 +75,10 @@ export class SeriesIssuePageComponent implements OnDestroy {
       this.volume = params['volume'];
       this.doLoadComicDetails();
     });
+    this.logger.trace('Subscribing to language change updates');
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
     this.logger.trace('Subscribing to page change updates');
     this.pageChangedSubscription = this.activatedRoute.queryParams.subscribe(
       params => this.doLoadComicDetails()
@@ -80,11 +97,25 @@ export class SeriesIssuePageComponent implements OnDestroy {
     this.comicDetailsTotalSubscription = this.store
       .select(selectLoadComicDetailsFilteredComics)
       .subscribe(totalComics => (this.totalComics = totalComics));
+    this.logger.trace('Subscribing to comic selection updates');
+    this.selectedIdsSubscription = this.store
+      .select(selectComicBookSelectionIds)
+      .subscribe(selectedIds => (this.selectedIds = selectedIds));
+    this.logger.trace('Subscribing to user updates');
+    this.currentUserSubscription = this.store
+      .select(selectUser)
+      .subscribe(user => (this.isAdmin = isAdmin(user)));
+  }
+
+  ngOnInit(): void {
+    this.loadTranslations();
   }
 
   ngOnDestroy(): void {
     this.logger.trace('Unsubscribing from param updates');
     this.paramSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from language updates');
+    this.langChangeSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from page change updates');
     this.pageChangedSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from comic detail list state updates');
@@ -93,6 +124,21 @@ export class SeriesIssuePageComponent implements OnDestroy {
     this.comicDetailslistSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from comic detail total updates');
     this.comicDetailsTotalSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from comic selection updates');
+    this.selectedIdsSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from user updates');
+    this.currentUserSubscription.unsubscribe();
+  }
+
+  onSelectAll(selected: boolean): void {
+    this.store.dispatch(
+      setMultipleComicBookByPublisherSeriesAndVolumeSelectionState({
+        publisher: this.publisherName,
+        series: this.seriesName,
+        volume: this.volume,
+        selected
+      })
+    );
   }
 
   private doLoadComicDetails() {
@@ -114,6 +160,19 @@ export class SeriesIssuePageComponent implements OnDestroy {
         series: this.seriesName,
         volume: this.volume
       })
+    );
+  }
+
+  private loadTranslations(): void {
+    this.titleService.setTitle(
+      this.translateService.instant(
+        'collections.series.list-issues-page.tab-title',
+        {
+          publisher: this.publisherName,
+          series: this.seriesName,
+          volume: this.volume
+        }
+      )
     );
   }
 }

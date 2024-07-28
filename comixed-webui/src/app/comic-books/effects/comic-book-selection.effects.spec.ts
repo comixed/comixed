@@ -36,9 +36,11 @@ import {
   removeSingleComicBookSelection,
   setMultipleComicBookByFilterSelectionState,
   setMultipleComicBookByIdSelectionState,
+  setMultipleComicBookByPublisherSelectionState,
   setMultipleComicBooksByTagTypeAndValueSelectionState,
   setMultipleComicBookSelectionStateFailure,
   setMultipleComicBookSelectionStateSuccess,
+  setMultipleComicBookByPublisherSeriesAndVolumeSelectionState,
   singleComicBookSelectionFailed,
   singleComicBookSelectionUpdated
 } from '@app/comic-books/actions/comic-book-selection.actions';
@@ -48,6 +50,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AlertService } from '@app/core/services/alert.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { TagType } from '@app/collections/models/comic-collection.enum';
+import { PUBLISHER_1, SERIES_1 } from '@app/collections/collections.fixtures';
 
 describe('ComicBookSelectionEffects', () => {
   const COVER_YEAR = Math.random() * 100 + 1900;
@@ -58,6 +61,9 @@ describe('ComicBookSelectionEffects', () => {
   const UNSCRAPED_STATE = Math.random() > 0.5;
   const SEARCH_TEXT = 'This is some text';
   const COMIC_BOOK_ID = 65;
+  const PUBLISHER = PUBLISHER_1.name;
+  const SERIES = SERIES_1.name;
+  const VOLUME = '2024';
   const SELECTED = Math.random() > 0.5;
   const TAG_TYPE = TagType.TEAMS;
   const TAG_VALUE = 'Some team';
@@ -93,6 +99,12 @@ describe('ComicBookSelectionEffects', () => {
             ),
             setSelectedById: jasmine.createSpy(
               'ComicBookSelectionService.setSelectedById()'
+            ),
+            setSelectedByPublisher: jasmine.createSpy(
+              'ComicBookSelectionService.setSelectedByPublisher()'
+            ),
+            setSelectedByPublisherSeriesAndVolume: jasmine.createSpy(
+              'ComicBookSelectionService.setSelectedByPublisherSeriesAndVolume()'
             ),
             clearSelections: jasmine.createSpy(
               'ComicBookSelectionService.clearSelections()'
@@ -500,6 +512,144 @@ describe('ComicBookSelectionEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.setSelectedById$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('selecting comic books by publisher name', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = new HttpResponse({});
+      const action = setMultipleComicBookByPublisherSelectionState({
+        publisher: PUBLISHER,
+        selected: SELECTED
+      });
+      const outcome = setMultipleComicBookSelectionStateSuccess();
+
+      actions$ = hot('-a', { a: action });
+      comicBookSelectionService.setSelectedByPublisher
+        .withArgs({ publisher: PUBLISHER, selected: SELECTED })
+        .and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.setSelectedByPublisher$).toBeObservable(expected);
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = setMultipleComicBookByPublisherSelectionState({
+        publisher: PUBLISHER,
+        selected: SELECTED
+      });
+      const outcome = setMultipleComicBookSelectionStateFailure();
+
+      actions$ = hot('-a', { a: action });
+      comicBookSelectionService.setSelectedByPublisher
+        .withArgs({ publisher: PUBLISHER, selected: SELECTED })
+        .and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.setSelectedByPublisher$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = setMultipleComicBookByPublisherSelectionState({
+        publisher: PUBLISHER,
+        selected: SELECTED
+      });
+      const outcome = setMultipleComicBookSelectionStateFailure();
+
+      actions$ = hot('-a', { a: action });
+      comicBookSelectionService.setSelectedByPublisher
+        .withArgs({ publisher: PUBLISHER, selected: SELECTED })
+        .and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.setSelectedByPublisher$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('selecting comic books by publisher, series, and volume', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = new HttpResponse({});
+      const action =
+        setMultipleComicBookByPublisherSeriesAndVolumeSelectionState({
+          publisher: PUBLISHER,
+          series: SERIES,
+          volume: VOLUME,
+          selected: SELECTED
+        });
+      const outcome = setMultipleComicBookSelectionStateSuccess();
+
+      actions$ = hot('-a', { a: action });
+      comicBookSelectionService.setSelectedByPublisherSeriesAndVolume
+        .withArgs({
+          publisher: PUBLISHER,
+          series: SERIES,
+          volume: VOLUME,
+          selected: SELECTED
+        })
+        .and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.setSelectedByPublisherSeriesAndVolume$).toBeObservable(
+        expected
+      );
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action =
+        setMultipleComicBookByPublisherSeriesAndVolumeSelectionState({
+          publisher: PUBLISHER,
+          series: SERIES,
+          volume: VOLUME,
+          selected: SELECTED
+        });
+      const outcome = setMultipleComicBookSelectionStateFailure();
+
+      actions$ = hot('-a', { a: action });
+      comicBookSelectionService.setSelectedByPublisherSeriesAndVolume
+        .withArgs({
+          publisher: PUBLISHER,
+          series: SERIES,
+          volume: VOLUME,
+          selected: SELECTED
+        })
+        .and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.setSelectedByPublisherSeriesAndVolume$).toBeObservable(
+        expected
+      );
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action =
+        setMultipleComicBookByPublisherSeriesAndVolumeSelectionState({
+          publisher: PUBLISHER,
+          series: SERIES,
+          volume: VOLUME,
+          selected: SELECTED
+        });
+      const outcome = setMultipleComicBookSelectionStateFailure();
+
+      actions$ = hot('-a', { a: action });
+      comicBookSelectionService.setSelectedByPublisherSeriesAndVolume
+        .withArgs({
+          publisher: PUBLISHER,
+          series: SERIES,
+          volume: VOLUME,
+          selected: SELECTED
+        })
+        .and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.setSelectedByPublisherSeriesAndVolume$).toBeObservable(
+        expected
+      );
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

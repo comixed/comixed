@@ -33,6 +33,8 @@ import {
   removeSingleComicBookSelection,
   setMultipleComicBookByFilterSelectionState,
   setMultipleComicBookByIdSelectionState,
+  setMultipleComicBookByPublisherSelectionState,
+  setMultipleComicBookByPublisherSeriesAndVolumeSelectionState,
   setMultipleComicBooksByTagTypeAndValueSelectionState,
   setMultipleComicBookSelectionStateFailure,
   setMultipleComicBookSelectionStateSuccess,
@@ -50,6 +52,7 @@ import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { TagType } from '@app/collections/models/comic-collection.enum';
+import { PUBLISHER_1, SERIES_1 } from '@app/collections/collections.fixtures';
 
 describe('ComicBookSelection Reducer', () => {
   const COVER_YEAR = Math.random() * 100 + 1900;
@@ -69,6 +72,9 @@ describe('ComicBookSelection Reducer', () => {
   const TAG_TYPE = TagType.TEAMS;
   const TAG_VALUE = 'Some team';
   const IDS = COMIC_BOOKS.map(comicBook => comicBook.id);
+  const PUBLISHER = PUBLISHER_1.name;
+  const SERIES = SERIES_1.name;
+  const VOLUME = '2024';
   const SELECTED = Math.random() > 0.5;
 
   let state: ComicBookSelectionState;
@@ -299,6 +305,40 @@ describe('ComicBookSelection Reducer', () => {
         setMultipleComicBookByIdSelectionState({
           selected: SELECTED,
           comicBookIds: IDS
+        })
+      );
+    });
+
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
+    });
+  });
+
+  describe('set the selection state for comic books by publisher name', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: false },
+        setMultipleComicBookByPublisherSelectionState({
+          selected: SELECTED,
+          publisher: PUBLISHER
+        })
+      );
+    });
+
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
+    });
+  });
+
+  describe('set the selection state for comic books by publisher, series, and volume', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: false },
+        setMultipleComicBookByPublisherSeriesAndVolumeSelectionState({
+          selected: SELECTED,
+          publisher: PUBLISHER,
+          series: SERIES,
+          volume: VOLUME
         })
       );
     });

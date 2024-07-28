@@ -106,6 +106,22 @@ export const setMultipleComicBookByIdSelectionState = createAction(
   }>()
 );
 
+export const setMultipleComicBookByPublisherSelectionState = createAction(
+  '[Comic Book Selection] Set the selected state for multiple comic books by publisher name',
+  props<{ publisher: string; selected: boolean }>()
+);
+
+export const setMultipleComicBookByPublisherSeriesAndVolumeSelectionState =
+  createAction(
+    '[Comic Book Selection] Set the selected state for multiple comic books by publisher, series, and volume',
+    props<{
+      publisher: string;
+      series: string;
+      volume: string;
+      selected: boolean;
+    }>()
+  );
+
 export const setMultipleComicBookSelectionStateSuccess = createAction(
   '[Comic Book Selection] The selected state for multiple comic books was set'
 );
