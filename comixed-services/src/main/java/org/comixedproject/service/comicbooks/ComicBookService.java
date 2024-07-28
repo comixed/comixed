@@ -21,9 +21,7 @@ package org.comixedproject.service.comicbooks;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
@@ -870,5 +868,32 @@ public class ComicBookService {
     }
 
     return this.comicBookRepository.loadByComicDetailId(comicDetailIds.subList(offset, endOffset));
+  }
+
+  /**
+   * Returns the set of comic book ids for the given publisher.
+   *
+   * @param publisher the publisher
+   * @return the ids
+   */
+  @Transactional
+  public List<Long> getIdsByPublisher(final String publisher) {
+    log.debug("Loading all ids: publisher={}", publisher);
+    return this.comicBookRepository.getAllIdsByPublisher(publisher);
+  }
+
+  /**
+   * Returns the set of comic book ids for the given publisher, series, and volume.
+   *
+   * @param publisher the publisher
+   * @param series the series
+   * @param volume the volume
+   * @return the ids
+   */
+  @Transactional
+  public List<Long> getIdsByPublisherSeriesAndVolume(
+      final String publisher, final String series, final String volume) {
+    log.debug("Loading all ids: publisher={} series={} volume={}", publisher, series, volume);
+    return this.comicBookRepository.getAllIdsByPublisherSeriesAndVolume(publisher, series, volume);
   }
 }

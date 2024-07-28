@@ -1,9 +1,15 @@
 <h2>
-  {{ "collections.publisher-issues.page-title" | translate: { name: name } }}
+  {{
+    "collections.publishers.list-issues-page.page-title"
+      | translate: { publisher: name }
+  }}
 </h2>
 
 <cx-comic-detail-list-view
+  [isAdmin]="isAdmin"
   [comics]="comicDetails"
+  [selectedIds]="selectedIds"
   [totalComics]="totalComics"
   [showFilter]="false"
+  (selectAll)="onSelectAll($event)"
 ></cx-comic-detail-list-view>

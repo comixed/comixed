@@ -1,17 +1,20 @@
 <h2>
   {{
-    "collections.series-issues.page-title"
+    "collections.series.list-issues-page.page-title"
       | translate
         : {
-            publisherName: publisherName,
-            seriesName: seriesName,
+            publisher: publisherName,
+            series: seriesName,
             volume: volume
           }
   }}
 </h2>
 
 <cx-comic-detail-list-view
+  [isAdmin]="isAdmin"
   [comics]="comicDetails"
+  [selectedIds]="selectedIds"
   [totalComics]="totalComics"
   [showFilter]="false"
+  (selectAll)="onSelectAll($event)"
 ></cx-comic-detail-list-view>

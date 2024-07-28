@@ -30,6 +30,8 @@ import {
   removeSingleComicBookSelection,
   setMultipleComicBookByFilterSelectionState,
   setMultipleComicBookByIdSelectionState,
+  setMultipleComicBookByPublisherSelectionState,
+  setMultipleComicBookByPublisherSeriesAndVolumeSelectionState,
   setMultipleComicBooksByTagTypeAndValueSelectionState,
   setMultipleComicBookSelectionStateFailure,
   setMultipleComicBookSelectionStateSuccess,
@@ -205,6 +207,58 @@ export class ComicBookSelectionEffects {
         this.comicBookSelectionService
           .setSelectedById({
             comicBookIds: action.comicBookIds,
+            selected: action.selected
+          })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map(() => setMultipleComicBookSelectionStateSuccess()),
+            catchError(error => this.doMultipleSelectedServiceFailure(error))
+          )
+      ),
+      catchError(error => this.doMultipleSelectedGeneralFailure(error))
+    );
+  });
+
+  setSelectedByPublisher$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(setMultipleComicBookByPublisherSelectionState),
+      tap(action =>
+        this.logger.debug(
+          'Selecting multiple comic books by publisher:',
+          action
+        )
+      ),
+      switchMap(action =>
+        this.comicBookSelectionService
+          .setSelectedByPublisher({
+            publisher: action.publisher,
+            selected: action.selected
+          })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map(() => setMultipleComicBookSelectionStateSuccess()),
+            catchError(error => this.doMultipleSelectedServiceFailure(error))
+          )
+      ),
+      catchError(error => this.doMultipleSelectedGeneralFailure(error))
+    );
+  });
+
+  setSelectedByPublisherSeriesAndVolume$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(setMultipleComicBookByPublisherSeriesAndVolumeSelectionState),
+      tap(action =>
+        this.logger.debug(
+          'Selecting multiple comic books by publisher, series, and volume:',
+          action
+        )
+      ),
+      switchMap(action =>
+        this.comicBookSelectionService
+          .setSelectedByPublisherSeriesAndVolume({
+            publisher: action.publisher,
+            series: action.series,
+            volume: action.volume,
             selected: action.selected
           })
           .pipe(

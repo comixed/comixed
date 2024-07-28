@@ -608,4 +608,28 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   @Query(
       "SELECT CASE WHEN (COUNT(c) > 0) THEN true ELSE FALSE END FROM ComicBook c WHERE c.comicDetail.filename = :filename")
   boolean filenameFound(@Param("filename") String filename);
+
+  /**
+   * Returns all comic book ids for the given publisher.
+   *
+   * @param publisher the publisher
+   * @return the ids
+   */
+  @Query("SELECT c.id FROM ComicBook c WHERE c.comicDetail.publisher = :publisher")
+  List<Long> getAllIdsByPublisher(@Param("publisher") String publisher);
+
+  /**
+   * Returns all comic book ids for the given publisher, series, and volume.
+   *
+   * @param publisher the publisher
+   * @param series the series
+   * @param volume the volume
+   * @return the ids
+   */
+  @Query(
+      "SELECT c.id FROM ComicBook c WHERE c.comicDetail.publisher = :publisher AND c.comicDetail.series = :series AND c.comicDetail.volume = :volume")
+  List<Long> getAllIdsByPublisherSeriesAndVolume(
+      @Param("publisher") String publisher,
+      @Param("series") String series,
+      @Param("volume") String volume);
 }

@@ -9,6 +9,10 @@
         "total-issues": "# Of Issues",
         "volume": "Volume"
       },
+      "list-issues-page": {
+        "page-title": "Issues For {publisher}",
+        "tab-title": "Issues For {publisher}"
+      },
       "list-publishers": {
         "page-title": "All Publishers",
         "tab-title": "All Publishers"
@@ -26,9 +30,6 @@
         "no-publishers-found": "No publishers were found."
       }
     },
-    "publisher-issues": {
-      "page-title": "Issues For Publisher: {name}"
-    },
     "publisher-series": {
       "label": {
         "in-library": "# In Library",
@@ -36,11 +37,11 @@
         "total-issues": "# Of Issues",
         "volume": "Volume"
       },
-      "page-title": "Publisher: {name}",
+      "page-title": "Series By Publisher: {name}",
       "placeholder": {
         "filter-series": "Enter text to filter the series displayed."
       },
-      "tab-title": "Publisher: {name}",
+      "tab-title": "Series By Publisher: {name}",
       "text": {
         "no-detail-found": "No series were found."
       }
@@ -59,6 +60,10 @@
         "total-comics": "# Of Comics",
         "total-issues": "Total",
         "volume": "Volume"
+      },
+      "list-issues-page": {
+        "page-title": "{publisher}: {series} V{volume}",
+        "tab-title": "{publisher}: {series} V{volume}"
       },
       "list-page": {
         "page-title": "All Series",

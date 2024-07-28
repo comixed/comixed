@@ -18,7 +18,7 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SeriesIssuePageComponent } from './series-issue-page.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { LoggerModule } from '@angular-ru/cdk/logger';
@@ -41,13 +41,25 @@ import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { PAGE_SIZE_DEFAULT, QUERY_PARAM_PAGE_INDEX } from '@app/core';
 import { loadComicDetails } from '@app/comic-books/actions/comic-details-list.actions';
+import {
+  COMIC_BOOK_SELECTION_FEATURE_KEY,
+  initialState as initialComicBookSelectionState
+} from '@app/comic-books/reducers/comic-book-selection.reducer';
+import { setMultipleComicBookByPublisherSeriesAndVolumeSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import { TitleService } from '@app/core/services/title.service';
+import {
+  initialState as initialUserState,
+  USER_FEATURE_KEY
+} from '@app/user/reducers/user.reducer';
 
 describe('SeriesIssuePageComponent', () => {
   const PUBLISHER_NAME = 'The Publisher';
   const SERIES_NAME = 'The Series';
   const VOLUME = '2024';
   const initialState = {
-    [COMIC_DETAILS_LIST_FEATURE_KEY]: initialComicDetailListState
+    [COMIC_DETAILS_LIST_FEATURE_KEY]: initialComicDetailListState,
+    [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
+    [USER_FEATURE_KEY]: initialUserState
   };
 
   let component: SeriesIssuePageComponent;
@@ -56,6 +68,8 @@ describe('SeriesIssuePageComponent', () => {
   let storeDispatchSpy: jasmine.Spy;
   let queryParameterService: QueryParameterService;
   let activatedRoute: ActivatedRoute;
+  let titleService: TitleService;
+  let translateService: TranslateService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -102,7 +116,8 @@ describe('SeriesIssuePageComponent', () => {
             }),
             queryParams: new BehaviorSubject<{}>({})
           }
-        }
+        },
+        TitleService
       ]
     }).compileComponents();
 
@@ -112,6 +127,9 @@ describe('SeriesIssuePageComponent', () => {
     storeDispatchSpy = spyOn(store, 'dispatch');
     queryParameterService = TestBed.inject(QueryParameterService);
     activatedRoute = TestBed.inject(ActivatedRoute);
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
+    translateService = TestBed.inject(TranslateService);
     fixture.detectChanges();
   });
 
@@ -152,6 +170,58 @@ describe('SeriesIssuePageComponent', () => {
           volume: VOLUME
         })
       );
+    });
+  });
+
+  describe('selecting all comics', () => {
+    beforeEach(() => {
+      component.publisherName = PUBLISHER_NAME;
+      component.seriesName = SERIES_NAME;
+      component.volume = VOLUME;
+    });
+
+    describe('selecting all', () => {
+      beforeEach(() => {
+        component.onSelectAll(true);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setMultipleComicBookByPublisherSeriesAndVolumeSelectionState({
+            publisher: PUBLISHER_NAME,
+            series: SERIES_NAME,
+            volume: VOLUME,
+            selected: true
+          })
+        );
+      });
+    });
+
+    describe('deselecting all', () => {
+      beforeEach(() => {
+        component.onSelectAll(false);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setMultipleComicBookByPublisherSeriesAndVolumeSelectionState({
+            publisher: PUBLISHER_NAME,
+            series: SERIES_NAME,
+            volume: VOLUME,
+            selected: false
+          })
+        );
+      });
+    });
+  });
+
+  describe('when the language changes', () => {
+    beforeEach(() => {
+      translateService.use('fr');
+    });
+
+    it('updates the tab title', () => {
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
 });
