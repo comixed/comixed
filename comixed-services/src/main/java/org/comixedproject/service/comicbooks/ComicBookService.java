@@ -27,6 +27,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
+import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.batch.OrganizingLibraryEvent;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
@@ -68,6 +69,7 @@ public class ComicBookService {
   @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private ComicBookRepository comicBookRepository;
   @Autowired private ComicBookMetadataAdaptor comicBookMetadataAdaptor;
+  @Autowired private ComicFileAdaptor comicFileAdaptor;
   @Autowired private ImprintService imprintService;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
   @Autowired private ApplicationEventPublisher applicationEventPublisher;
@@ -177,7 +179,11 @@ public class ComicBookService {
   public ComicBook save(final ComicBook comicBook) {
     log.debug("Saving comicBook: filename={}", comicBook.getComicDetail().getFilename());
 
+    log.trace("Updating the imprint");
     this.imprintService.update(comicBook);
+
+    log.trace("Standardizing the comic filename");
+    this.comicFileAdaptor.standardizeFilename(comicBook);
 
     return this.comicBookRepository.saveAndFlush(comicBook);
   }

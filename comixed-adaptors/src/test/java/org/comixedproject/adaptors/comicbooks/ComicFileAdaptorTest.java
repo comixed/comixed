@@ -18,8 +18,7 @@
 
 package org.comixedproject.adaptors.comicbooks;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.*;
 import static org.comixedproject.adaptors.comicbooks.ComicFileAdaptor.NO_COVER_DATE;
 import static org.comixedproject.adaptors.comicbooks.ComicFileAdaptor.UNKNOWN_VALUE;
 
@@ -34,9 +33,7 @@ import org.comixedproject.model.comicbooks.ComicDetail;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -87,10 +84,13 @@ public class ComicFileAdaptorTest {
   @Mock private ComicBook comicBook;
   @Mock private ComicDetail comicDetail;
 
+  @Captor private ArgumentCaptor<String> filenameArgumentCaptor;
+
   @Before
   public void setUp() {
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicDetail.getFilename()).thenReturn(TEST_FULL_COMIC_FILENAME);
+    Mockito.doNothing().when(comicDetail).setFilename(filenameArgumentCaptor.capture());
     Mockito.when(comicDetail.getPublisher()).thenReturn(TEST_PUBLISHER);
     Mockito.when(comicDetail.getImprint()).thenReturn(TEST_IMPRINT);
     Mockito.when(comicDetail.getSeries()).thenReturn(TEST_SERIES);
@@ -471,5 +471,25 @@ public class ComicFileAdaptorTest {
             TEST_EXISTING_FILENAME, "src/test/resources/example", 0, "cbz");
 
     assertEquals("src/test/resources/example.cbz", result);
+  }
+
+  @Test
+  public void testStandardizeFilenameNonWindows() {
+    adaptor.standardizeFilename(comicBook);
+
+    final String result = filenameArgumentCaptor.getValue();
+    assertNotNull(result);
+    assertEquals(TEST_FULL_COMIC_FILENAME, result);
+  }
+
+  @Test
+  public void testStandardizeFilenameWindows() {
+    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_FULL_COMIC_FILENAME.replace("/", "\\"));
+
+    adaptor.standardizeFilename(comicBook);
+
+    final String result = filenameArgumentCaptor.getValue();
+    assertNotNull(result);
+    assertEquals(TEST_FULL_COMIC_FILENAME, result);
   }
 }
