@@ -28,6 +28,7 @@ import java.util.Optional;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
+import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.collections.Publisher;
@@ -107,6 +108,7 @@ public class ComicBookServiceTest {
   @Mock private ComicStateHandler comicStateHandler;
   @Mock private ComicBookRepository comicBookRepository;
   @Mock private ComicBookMetadataAdaptor comicBookMetadataAdaptor;
+  @Mock private ComicFileAdaptor comicFileAdaptor;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
   @Mock private ComicBook comicBook;
   @Mock private ComicDetail comicDetail;
@@ -122,6 +124,7 @@ public class ComicBookServiceTest {
   @Mock private List<Publisher> publisherWithSeriesCountList;
   @Mock private List<Series> publisherDetail;
   @Mock private List<Series> seriesList;
+  @Mock private ComicBook savedComicBook;
 
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
   @Captor private ArgumentCaptor<PageRequest> pageRequestCaptor;
@@ -379,13 +382,14 @@ public class ComicBookServiceTest {
   @Test
   public void testSave() {
     Mockito.when(comicBookRepository.saveAndFlush(Mockito.any(ComicBook.class)))
-        .thenReturn(comicBook);
+        .thenReturn(savedComicBook);
 
     final ComicBook result = this.service.save(comicBook);
 
     assertNotNull(result);
-    assertSame(comicBook, result);
+    assertSame(savedComicBook, result);
 
+    Mockito.verify(comicFileAdaptor, Mockito.times(1)).standardizeFilename(comicBook);
     Mockito.verify(comicBookRepository, Mockito.times(1)).saveAndFlush(comicBook);
   }
 
