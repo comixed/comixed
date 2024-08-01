@@ -86,6 +86,7 @@ public class MoveComicFilesProcessorTest {
             comicFileAdaptor.findAvailableFilename(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyString()))
         .thenReturn(TEST_REBUILT_FILENAME);
+    Mockito.doNothing().when(comicFileAdaptor).standardizeFilename(Mockito.any(ComicBook.class));
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(
             comicFileAdaptor.createFilenameFromRule(
@@ -129,6 +130,7 @@ public class MoveComicFilesProcessorTest {
     assertEquals(TEST_REBUILT_FILENAME, rebuiltComicBookFile.getAbsolutePath());
 
     Mockito.verify(fileAdaptor, Mockito.times(1)).moveFile(comicDetailFile, rebuiltComicBookFile);
+    Mockito.verify(comicFileAdaptor, Mockito.times(1)).standardizeFilename(comicBook);
   }
 
   @Test
@@ -163,6 +165,7 @@ public class MoveComicFilesProcessorTest {
     assertNull(metadataFileSource.getAbsolutePath());
 
     Mockito.verify(fileAdaptor, Mockito.times(1)).moveFile(metadataFileSource, metadataFileTarget);
+    Mockito.verify(comicFileAdaptor, Mockito.never()).standardizeFilename(Mockito.any());
     Mockito.verify(comicDetail, Mockito.never()).setFilename(Mockito.anyString());
   }
 
@@ -188,6 +191,7 @@ public class MoveComicFilesProcessorTest {
     assertEquals(TEST_TARGET_METADATA_FILENAME, metadataFileTarget.getAbsolutePath());
 
     Mockito.verify(fileAdaptor, Mockito.times(1)).moveFile(metadataFileSource, metadataFileTarget);
+    Mockito.verify(comicFileAdaptor, Mockito.never()).standardizeFilename(Mockito.any());
   }
 
   @Test
