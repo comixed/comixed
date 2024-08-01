@@ -220,4 +220,14 @@ public class ComicFileAdaptor {
     log.trace("Pre-sanitized text: {}", text);
     return text.replaceAll(forbidden, "_");
   }
+
+  /**
+   * Standardizes the filename for the comic book file.
+   *
+   * @param comicBook the comic book
+   */
+  public void standardizeFilename(final ComicBook comicBook) {
+    final String filename = comicBook.getComicDetail().getFilename().replace("\\", "/");
+    comicBook.getComicDetail().setFilename(filename);
+  }
 }
