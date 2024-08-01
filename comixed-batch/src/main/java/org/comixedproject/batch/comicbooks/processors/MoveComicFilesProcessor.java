@@ -91,6 +91,7 @@ public class MoveComicFilesProcessor
         this.fileAdaptor.moveFile(comicDetailFile, rebuiltFile);
         log.trace("Updating comicBook filename: {}", rebuiltFile.getAbsoluteFile());
         comicBook.getComicDetail().setFilename(rebuiltFile.getAbsolutePath());
+        this.comicFileAdaptor.standardizeFilename(comicBook);
       } else {
         log.debug("Not moving file: already at destination");
       }
