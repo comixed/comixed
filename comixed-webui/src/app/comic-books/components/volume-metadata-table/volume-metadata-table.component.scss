@@ -1,8 +1,8 @@
 @use 'variables' as *;
 
 .mat-column-matchability {
-  width: $cx-column-small;
-  max-width: $cx-column-small;
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
   resize: none;
 }
 
@@ -54,11 +54,5 @@
 .mat-column-issueCount {
   width: $cx-column-medium;
   max-width: $cx-column-medium;
-  resize: none;
-}
-
-.mat-column-action {
-  width: $cx-column-small;
-  max-width: $cx-column-small;
   resize: none;
 }

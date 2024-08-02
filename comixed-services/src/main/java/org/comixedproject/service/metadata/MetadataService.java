@@ -386,13 +386,23 @@ public class MetadataService {
   }
 
   /**
-   * Fetches the issues for a given volume from the specified metadata source.
+   * Fetches the issues for a given volume from the specified metadata source. It uses the original
+   * publisher, series, and volume to find the existing comic books to be updated.
    *
+   * @param originalPublisher the original publisher value
+   * @param originalSeries the original series value
+   * @param originalVolume the original volume value
    * @param metadataSourceId the metadata source id
    * @param volumeId the volume id
    * @throws MetadataException if an error occurs
    */
-  public void fetchIssuesForSeries(final Long metadataSourceId, final String volumeId)
+  @Async
+  public void scrapeSeries(
+      final String originalPublisher,
+      final String originalSeries,
+      final String originalVolume,
+      final Long metadataSourceId,
+      final String volumeId)
       throws MetadataException {
     log.debug(
         "Fetching issues for series: metadata source id={} volume id={}",
@@ -439,6 +449,41 @@ public class MetadataService {
                   return result;
                 })
             .toList());
+
+    log.debug("Creating comic metadata sources");
+    for (int index = 0; index < issues.size(); index++) {
+      final IssueDetailsMetadata issue = issues.get(index);
+      log.debug(
+          "Processing comic {} of {}: issue number={}",
+          index + 1,
+          issues.size(),
+          issue.getIssueNumber());
+      final List<ComicBook> comicBooks =
+          this.comicBookService.findComic(
+              originalPublisher, originalSeries, originalVolume, issue.getIssueNumber());
+      if (!comicBooks.isEmpty()) {
+        comicBooks.forEach(
+            comicBook -> {
+              log.trace("Updating comic details");
+              comicBook.getComicDetail().setPublisher(issue.getPublisher());
+              comicBook.getComicDetail().setSeries(issue.getSeries());
+              comicBook.getComicDetail().setVolume(issue.getVolume());
+              if (comicBook.getMetadata() != null) {
+                log.trace("Updating existing comic metadata source");
+                comicBook.getMetadata().setMetadataSource(metadataSource);
+                comicBook.getMetadata().setReferenceId(issue.getSourceId());
+              } else {
+                log.trace("Creating comic metadata source", comicBook.getId());
+                comicBook.setMetadata(
+                    new ComicMetadataSource(comicBook, metadataSource, issue.getSourceId()));
+              }
+              log.debug("Firing comic book event: id={}", comicBook.getId());
+              this.comicStateHandler.fireEvent(comicBook, ComicEvent.detailsUpdated);
+            });
+      } else {
+        log.trace("No comic books found");
+      }
+    }
   }
 
   Date adjustForTimezone(final Date date) {

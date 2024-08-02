@@ -42,13 +42,13 @@ import { Store } from '@ngrx/store';
 import { WebSocketService } from '@app/messaging';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import {
-  FETCH_ISSUES_FOR_VOLUME,
-  METADATA_UPDATE_PROCESS_UPDATE_TOPIC
+  METADATA_UPDATE_PROCESS_UPDATE_TOPIC,
+  SCRAPE_SERIES_URL
 } from '@app/comic-metadata/comic-metadata.constants';
 import { MetadataUpdateProcessUpdate } from '@app/comic-metadata/models/net/metadata-update-process-update';
 import { metadataUpdateProcessStatusUpdated } from '@app/comic-metadata/actions/metadata-update-process.actions';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
-import { FetchIssuesForSeriesRequest } from '@app/comic-metadata/models/net/fetch-issues-for-series-request';
+import { ScrapeSeriesRequest } from '@app/comic-metadata/models/net/scrape-series-request';
 import { ScrapeMultiBookComicRequest } from '@app/comic-metadata/models/net/scrape-multi-book-comic-request';
 import { LoadMultiBookScrapingRequest } from '@app/comic-metadata/models/net/load-multi-book-scraping-request';
 
@@ -243,14 +243,22 @@ export class ComicBookScrapingService {
     return this.http.delete(interpolate(CLEAR_METADATA_CACHE_URL));
   }
 
-  fetchIssuesForSeries(args: {
+  scrapeSeries(args: {
+    originalPublisher: string;
+    originalSeries: string;
+    originalVolume: string;
     source: MetadataSource;
     volume: VolumeMetadata;
   }): Observable<any> {
     this.logger.debug('Fetching issues for series:', args);
     return this.http.post(
-      interpolate(FETCH_ISSUES_FOR_VOLUME, { id: args.source.id }),
-      { volumeId: args.volume.id } as FetchIssuesForSeriesRequest
+      interpolate(SCRAPE_SERIES_URL, { id: args.source.id }),
+      {
+        originalPublisher: args.originalPublisher,
+        originalSeries: args.originalSeries,
+        originalVolume: args.originalVolume,
+        volumeId: args.volume.id
+      } as ScrapeSeriesRequest
     );
   }
 }

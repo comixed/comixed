@@ -459,16 +459,16 @@ public class ComicBookService {
   }
 
   /**
-   * Looks for the first existing comic that matches the given criteria.
+   * Looks for the all comics that matches the given criteria.
    *
    * @param publisher the publisher
    * @param series the series
    * @param volume the volume
    * @param issueNumber the issue number
-   * @return the comic
+   * @return the list of comics
    */
-  @CachePut(key = "#result.id")
-  public ComicBook findComic(
+  @Transactional
+  public List<ComicBook> findComic(
       final String publisher, final String series, final String volume, final String issueNumber) {
     log.trace(
         "Finding comic: publisher={} series={} volume={} issue #={}",

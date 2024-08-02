@@ -17,25 +17,29 @@
  */
 
 import {
-  FetchIssuesForSeriesState,
   initialState,
-  reducer
-} from './fetch-issues-for-series.reducer';
+  reducer,
+  SeriesScrapingState
+} from './series-scraping.reducer';
 import {
-  fetchIssuesForSeriesFailed,
-  fetchIssuesForSeries,
-  issuesForSeriesFetched
-} from '@app/comic-metadata/actions/fetch-issues-for-series.actions';
+  scrapeSeriesMetadata,
+  scrapeSeriesMetadataFailure,
+  scrapeSeriesMetadataSuccess
+} from '@app/comic-metadata/actions/series-scraping.actions';
 import {
   METADATA_SOURCE_1,
   SCRAPING_VOLUME_1
 } from '@app/comic-metadata/comic-metadata.fixtures';
+import { PUBLISHER_1, SERIES_1 } from '@app/collections/collections.fixtures';
 
-describe('FetchIssuesForSeries Reducer', () => {
+describe('SeriesScraping Reducer', () => {
+  const ORIGINAL_PUBLISHER = PUBLISHER_1.name;
+  const ORIGINAL_SERIES = SERIES_1.name;
+  const ORIGINAL_VOLUME = SERIES_1.volume;
   const SOURCE = METADATA_SOURCE_1;
   const VOLUME = SCRAPING_VOLUME_1;
 
-  let state: FetchIssuesForSeriesState;
+  let state: SeriesScrapingState;
 
   beforeEach(() => {
     state = { ...initialState };
@@ -51,42 +55,48 @@ describe('FetchIssuesForSeries Reducer', () => {
     });
   });
 
-  describe('fetching the issues for a series', () => {
+  describe('scraping a series', () => {
     beforeEach(() => {
       state = reducer(
         { ...initialState, busy: false },
-        fetchIssuesForSeries({ source: SOURCE, volume: VOLUME })
+        scrapeSeriesMetadata({
+          originalPublisher: ORIGINAL_PUBLISHER,
+          originalSeries: ORIGINAL_SERIES,
+          originalVolume: ORIGINAL_VOLUME,
+          source: SOURCE,
+          volume: VOLUME
+        })
       );
     });
 
     it('sets the busy flag', () => {
       expect(state.busy).toBeTrue();
     });
-  });
 
-  describe('success fetching issues for a series', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...initialState, busy: true },
-        issuesForSeriesFetched()
-      );
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...initialState, busy: true },
+          scrapeSeriesMetadataSuccess()
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
     });
 
-    it('clears the busy flag', () => {
-      expect(state.busy).toBeFalse();
-    });
-  });
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...initialState, busy: true },
+          scrapeSeriesMetadataFailure()
+        );
+      });
 
-  describe('failure fetching the issues for a series', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...initialState, busy: true },
-        fetchIssuesForSeriesFailed()
-      );
-    });
-
-    it('clears the busy flag', () => {
-      expect(state.busy).toBeFalse();
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
     });
   });
 });

@@ -16,19 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createAction, props } from '@ngrx/store';
-import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
-import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
+import { createFeatureSelector } from '@ngrx/store';
+import {
+  SERIES_SCRAPING_FEATURE_KEY,
+  SeriesScrapingState
+} from '../reducers/series-scraping.reducer';
 
-export const fetchIssuesForSeries = createAction(
-  '[Fetch Issues For Series] Fetch the issues for a series',
-  props<{ source: MetadataSource; volume: VolumeMetadata }>()
-);
-
-export const issuesForSeriesFetched = createAction(
-  '[Fetch Issues For Series] Issues for series fetched'
-);
-
-export const fetchIssuesForSeriesFailed = createAction(
-  '[Fetch Issues For Series] Failed to fetch issues for series'
-);
+export const selectSeriesScrapingState =
+  createFeatureSelector<SeriesScrapingState>(SERIES_SCRAPING_FEATURE_KEY);

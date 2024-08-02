@@ -59,7 +59,7 @@
       <mat-checkbox
         [checked]="allSelected"
         (change)="onSelectAll($event.checked)"
-        (keypress)="$event.stopPropagation()"
+        (keyup)="$event.stopPropagation()"
         (click)="$event.stopPropagation()"
       ></mat-checkbox>
     </mat-header-cell>
@@ -67,7 +67,7 @@
       <mat-checkbox
         [checked]="row.selected"
         (change)="onSelectOne(row, $event.checked)"
-        (keypress)="$event.stopPropagation()"
+        (keyup)="$event.stopPropagation()"
         (click)="$event.stopPropagation()"
       ></mat-checkbox>
     </mat-cell>

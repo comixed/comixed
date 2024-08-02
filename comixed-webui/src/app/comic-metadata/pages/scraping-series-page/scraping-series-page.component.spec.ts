@@ -17,13 +17,12 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FetchIssuesPageComponent } from './fetch-issues-page.component';
+import { ScrapingSeriesPageComponent } from './scraping-series-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { VolumeMetadataTableComponent } from '@app/comic-books/components/volume-metadata-table/volume-metadata-table.component';
@@ -53,21 +52,32 @@ import {
   SCRAPING_VOLUME_1
 } from '@app/comic-metadata/comic-metadata.fixtures';
 import { TitleService } from '@app/core/services/title.service';
-import { SKIP_CACHE_PREFERENCE } from '@app/library/library.constants';
+import {
+  MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
+  SKIP_CACHE_PREFERENCE
+} from '@app/library/library.constants';
 import { Preference } from '@app/user/models/preference';
 import { loadVolumeMetadata } from '@app/comic-metadata/actions/single-book-scraping.actions';
 import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
-import { fetchIssuesForSeries } from '@app/comic-metadata/actions/fetch-issues-for-series.actions';
+import { scrapeSeriesMetadata } from '@app/comic-metadata/actions/series-scraping.actions';
 import {
-  FETCH_ISSUES_FOR_SERIES_FEATURE_KEY,
-  initialState as initialFetchIssuesForSeriesState
-} from '@app/comic-metadata/reducers/fetch-issues-for-series.reducer';
+  initialState as initialFetchIssuesForSeriesState,
+  SERIES_SCRAPING_FEATURE_KEY
+} from '@app/comic-metadata/reducers/series-scraping.reducer';
+import { saveUserPreference } from '@app/user/actions/user.actions';
+import { RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { PUBLISHER_1, SERIES_1 } from '@app/collections/collections.fixtures';
 
-describe('FetchIssuesPageComponent', () => {
-  const SERIES = 'The Series';
+describe('ScrapingSeriesPageComponent', () => {
+  const ORIGINAL_PUBLISHER = PUBLISHER_1.name;
+  const ORIGINAL_SERIES = SERIES_1.name;
+  const EDITED_SERIES = SERIES_1.name.substring(1);
+  const ORIGINAL_VOLUME = SERIES_1.volume;
   const SCRAPING_VOLUME = SCRAPING_VOLUME_1;
   const METADATA_SOURCE = METADATA_SOURCE_2;
   const initialState = {
@@ -77,26 +87,27 @@ describe('FetchIssuesPageComponent', () => {
       sources: [{ ...METADATA_SOURCE_1, preferred: true }, METADATA_SOURCE_2]
     },
     [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: { ...initialMetadataState },
-    [FETCH_ISSUES_FOR_SERIES_FEATURE_KEY]: {
+    [SERIES_SCRAPING_FEATURE_KEY]: {
       ...initialFetchIssuesForSeriesState
     }
   };
 
-  let component: FetchIssuesPageComponent;
-  let fixture: ComponentFixture<FetchIssuesPageComponent>;
+  let component: ScrapingSeriesPageComponent;
+  let fixture: ComponentFixture<ScrapingSeriesPageComponent>;
   let store: MockStore<any>;
   let translateService: TranslateService;
   let titleService: TitleService;
   let confirmationService: ConfirmationService;
+  let dialog: MatDialog;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [FetchIssuesPageComponent, VolumeMetadataTableComponent],
+      declarations: [ScrapingSeriesPageComponent, VolumeMetadataTableComponent],
       imports: [
         NoopAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
-        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
+        RouterModule.forRoot([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatDialogModule,
@@ -107,7 +118,9 @@ describe('FetchIssuesPageComponent', () => {
         MatPaginatorModule,
         MatTableModule,
         MatCheckboxModule,
-        MatInputModule
+        MatInputModule,
+        MatTooltipModule,
+        MatButtonModule
       ],
       providers: [
         provideMockStore({ initialState }),
@@ -116,13 +129,15 @@ describe('FetchIssuesPageComponent', () => {
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(FetchIssuesPageComponent);
+    fixture = TestBed.createComponent(ScrapingSeriesPageComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
     translateService = TestBed.inject(TranslateService);
     titleService = TestBed.inject(TitleService);
     confirmationService = TestBed.inject(ConfirmationService);
+    dialog = TestBed.inject(MatDialog);
+    spyOn(dialog, 'open');
     fixture.detectChanges();
   });
 
@@ -207,15 +222,15 @@ describe('FetchIssuesPageComponent', () => {
   describe('fetching issues', () => {
     beforeEach(() => {
       component.metadataSource = METADATA_SOURCE_2;
-      component.series = SERIES;
-      component.onFetchIssues();
+      component.scrapeSeriesForm.controls['series'].setValue(EDITED_SERIES);
+      component.onFetchVolumeCandidates();
     });
 
     it('dispatches an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         loadVolumeMetadata({
           metadataSource: METADATA_SOURCE_2,
-          series: SERIES,
+          series: EDITED_SERIES,
           skipCache: false,
           maximumRecords: 0
         })
@@ -236,6 +251,9 @@ describe('FetchIssuesPageComponent', () => {
 
   describe('choosing a volume', () => {
     beforeEach(() => {
+      component.originalPublisher = ORIGINAL_PUBLISHER;
+      component.originalSeries = ORIGINAL_SERIES;
+      component.originalVolume = ORIGINAL_VOLUME;
       component.metadataSource = METADATA_SOURCE;
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
@@ -249,11 +267,42 @@ describe('FetchIssuesPageComponent', () => {
 
     it('dispatches an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        fetchIssuesForSeries({
+        scrapeSeriesMetadata({
+          originalPublisher: ORIGINAL_PUBLISHER,
+          originalSeries: ORIGINAL_SERIES,
+          originalVolume: ORIGINAL_VOLUME,
           source: METADATA_SOURCE,
           volume: SCRAPING_VOLUME
         })
       );
+    });
+  });
+
+  describe('setting the maximum number of records', () => {
+    const MAX_RECORDS = 1000;
+
+    beforeEach(() => {
+      component.maximumRecords = 0;
+      component.onMaximumRecordsChanged(MAX_RECORDS);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        saveUserPreference({
+          name: MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
+          value: `${MAX_RECORDS}`
+        })
+      );
+    });
+  });
+
+  describe('showing the warning dialog', () => {
+    beforeEach(() => {
+      component.onShowNotice({});
+    });
+
+    it('opens a dialog', () => {
+      expect(dialog.open).toHaveBeenCalled();
     });
   });
 });

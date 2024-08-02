@@ -490,7 +490,7 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
       ),
       confirm: () => {
         this.logger.debug('Scraping comics:', ids);
-        this.router.navigateByUrl('/metadata/scraping');
+        this.router.navigateByUrl('/metadata/scraping/issues');
       }
     });
   }

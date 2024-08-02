@@ -204,24 +204,34 @@ public class ComicBookScrapingController {
   }
 
   /**
-   * Fetches the issues for a given series from a given metadata source.
+   * Scrapes the metadata for a series.
    *
    * @param sourceId the metadata source id
    * @param request the request body
    * @throws MetadataException if an error occurs
    */
   @PostMapping(
-      value = "/api/metadata/sources/{sourceId}/series/issues",
+      value = "/api/metadata/sources/{sourceId}/series",
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.metadata.fetch-issues")
-  public void fetchIssuesForSeries(
+  public void scrapeSeries(
       @PathVariable("sourceId") final Long sourceId,
-      @RequestBody() final FetchIssuesForSeriesRequest request)
+      @RequestBody() final ScrapeSeriesRequest request)
       throws MetadataException {
+    final String originalPublisher = request.getOriginalPublisher();
+    final String originalSeries = request.getOriginalSeries();
+    final String originalVolume = request.getOriginalVolume();
     final String volumeId = request.getVolumeId();
-    log.info("Fetching issues for series: metadata source={} volume={}", sourceId, volumeId);
-    this.metadataService.fetchIssuesForSeries(sourceId, volumeId);
+    log.info(
+        "Scraping series: original publisher={} origial series={} original volume={} metadata source={} volume={}",
+        originalPublisher,
+        originalSeries,
+        originalVolume,
+        sourceId,
+        volumeId);
+    this.metadataService.scrapeSeries(
+        originalPublisher, originalSeries, originalVolume, sourceId, volumeId);
   }
 
   /**

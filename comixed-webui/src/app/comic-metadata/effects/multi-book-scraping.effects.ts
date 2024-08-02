@@ -111,7 +111,7 @@ export class MultiBookScrapingEffects {
               this.logger.error('Service failure:', error);
               this.alertService.error(
                 this.translateService.instant(
-                  'multi-book-scraping.load-scraping-page.effect-failure'
+                  'multi-book-scraping.load-scraping-issues-page.effect-failure'
                 )
               );
               return of(loadMultiBookScrapingPageFailure());

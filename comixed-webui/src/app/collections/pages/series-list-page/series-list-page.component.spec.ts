@@ -22,12 +22,11 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { provideMockStore } from '@ngrx/store/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSortModule } from '@angular/material/sort';
 import {
@@ -49,6 +48,7 @@ import { TitleService } from '@app/core/services/title.service';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { Series } from '@app/collections/models/series';
 import { SERIES_1 } from '@app/collections/collections.fixtures';
+import { RouterModule } from '@angular/router';
 
 describe('SeriesListPageComponent', () => {
   const initialState = {
@@ -68,7 +68,7 @@ describe('SeriesListPageComponent', () => {
       declarations: [SeriesListPageComponent],
       imports: [
         NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+        RouterModule.forRoot([]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatDialogModule,

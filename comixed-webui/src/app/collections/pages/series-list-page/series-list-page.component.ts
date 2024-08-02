@@ -27,20 +27,22 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Series } from '@app/collections/models/series';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { User } from '@app/user/models/user';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { MatSort } from '@angular/material/sort';
 import { loadSeriesList } from '@app/collections/actions/series.actions';
-import { selectSeriesList } from '@app/collections/selectors/series.selectors';
+import {
+  selectSeriesList,
+  selectSeriesState
+} from '@app/collections/selectors/series.selectors';
 import { MatPaginator } from '@angular/material/paginator';
-import { ConfirmationService } from '@tragically-slick/confirmation';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { isAdmin } from '@app/user/user.functions';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { PAGE_SIZE_OPTIONS } from '@app/core';
+import { setBusyState } from '@app/core/actions/busy.actions';
 
 @Component({
   selector: 'cx-series-list-page',
@@ -55,6 +57,7 @@ export class SeriesListPageComponent
 
   dataSource = new MatTableDataSource<Series>([]);
   seriesListSubscription: Subscription;
+  seriesStateSubscription: Subscription;
 
   readonly pageOptions = PAGE_SIZE_OPTIONS;
 
@@ -63,7 +66,7 @@ export class SeriesListPageComponent
     'name',
     'volume',
     'total-comics',
-    'total-issues'
+    'in-library'
   ];
 
   langChangeSubscription: Subscription;
@@ -76,11 +79,8 @@ export class SeriesListPageComponent
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
-    private confirmationSeries: ConfirmationService,
     private titleService: TitleService,
     private translateService: TranslateService,
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
     public queryParameterService: QueryParameterService
   ) {
     this.logger.trace('Subscribing to language change updates');
@@ -93,6 +93,12 @@ export class SeriesListPageComponent
       this.logger.trace('Loading user page size preference');
       this.isAdmin = isAdmin(user);
     });
+    this.logger.trace('Subscribing to series state updates');
+    this.seriesStateSubscription = this.store
+      .select(selectSeriesState)
+      .subscribe(state =>
+        this.store.dispatch(setBusyState({ enabled: state.busy }))
+      );
     this.seriesListSubscription = this.store
       .select(selectSeriesList)
       .subscribe(series => {
@@ -114,6 +120,8 @@ export class SeriesListPageComponent
   ngOnDestroy(): void {
     this.logger.trace('Unsubscribing from user updates');
     this.userSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from series state updates');
+    this.seriesStateSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from series list updates');
     this.seriesListSubscription.unsubscribe();
   }

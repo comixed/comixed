@@ -24,14 +24,26 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * <code>FetchIssuesForSeriesRequest</code> represents the payload when the list of known issues for
- * a series are fetched.
+ * <code>ScrapeSeriesRequest</code> represents the payload when the list of known issues for a
+ * series are fetched.
  *
  * @author Darryl L. Pierce
  */
 @NoArgsConstructor
 @AllArgsConstructor
-public class FetchIssuesForSeriesRequest {
+public class ScrapeSeriesRequest {
+  @JsonProperty("originalPublisher")
+  @Getter
+  private String originalPublisher;
+
+  @JsonProperty("originalSeries")
+  @Getter
+  private String originalSeries;
+
+  @JsonProperty("originalVolume")
+  @Getter
+  private String originalVolume;
+
   @JsonProperty("volumeId")
   @Getter
   private String volumeId;

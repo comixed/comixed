@@ -28,6 +28,7 @@ import static junit.framework.TestCase.assertTrue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang.math.RandomUtils;
@@ -106,9 +107,12 @@ public class MetadataServiceTest {
   @Mock private List<Issue> issueList;
   @Mock private ComicMetadataSource comicMetadataSource;
   @Mock private MetadataAdaptorProvider metadataAdaptorProvider;
+  @Mock private ComicDetail comicDetail;
+  @Mock private ComicBook comicBook;
 
   @Captor private ArgumentCaptor<List<String>> cacheEntryList;
   @Captor private ArgumentCaptor<List<Issue>> issueListArgumentCaptor;
+  @Captor private ArgumentCaptor<ComicMetadataSource> comicMetadataSourceArgumentCaptor;
 
   private List<String> cachedEntryList = new ArrayList<>();
   private List<VolumeMetadata> fetchedVolumeList = new ArrayList<>();
@@ -119,6 +123,7 @@ public class MetadataServiceTest {
   private List<String> locationList = new ArrayList<>();
   private List<String> storyList = new ArrayList<>();
   private List<MetadataAdaptorProvider> metadataAdaptorProviderList = new ArrayList<>();
+  private List<ComicBook> comicBookList = new ArrayList<>();
 
   @Before
   public void setUp() throws MetadataSourceException, MetadataException {
@@ -164,6 +169,10 @@ public class MetadataServiceTest {
     Mockito.when(metadataSource.getAdaptorName()).thenReturn(TEST_METADATA_SOURCE_NAME);
 
     metadataAdaptorProviderList.add(metadataAdaptorProvider);
+
+    Mockito.doNothing().when(comicBook).setMetadata(comicMetadataSourceArgumentCaptor.capture());
+    Mockito.when(comicBook.getMetadata()).thenReturn(comicMetadataSource);
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
   }
 
   @Test(expected = MetadataException.class)
@@ -874,26 +883,27 @@ public class MetadataServiceTest {
   }
 
   @Test(expected = MetadataException.class)
-  public void testFetchIssuesForSeriesInvalidSourceId()
-      throws MetadataSourceException, MetadataException {
+  public void testScrapeSeries_InvalidSourceId() throws MetadataSourceException, MetadataException {
     Mockito.when(metadataSourceService.getById(Mockito.anyLong()))
         .thenThrow(MetadataSourceException.class);
 
     try {
-      service.fetchIssuesForSeries(TEST_METADATA_SOURCE_ID, TEST_VOLUME_ID);
+      service.scrapeSeries(
+          TEST_PUBLISHER, TEST_SERIES_NAME, TEST_VOLUME, TEST_METADATA_SOURCE_ID, TEST_VOLUME_ID);
     } finally {
       Mockito.verify(metadataSourceService, Mockito.times(1)).getById(TEST_METADATA_SOURCE_ID);
     }
   }
 
   @Test(expected = MetadataException.class)
-  public void testFetchIssuesForSeriesAdaptorException() throws MetadataException {
+  public void testScrapeSeries_AdaptorException() throws MetadataException {
     Mockito.when(
             metadataAdaptor.getAllIssues(Mockito.anyString(), Mockito.any(MetadataSource.class)))
         .thenThrow(MetadataException.class);
 
     try {
-      service.fetchIssuesForSeries(TEST_METADATA_SOURCE_ID, TEST_VOLUME_ID);
+      service.scrapeSeries(
+          TEST_PUBLISHER, TEST_SERIES_NAME, TEST_VOLUME, TEST_METADATA_SOURCE_ID, TEST_VOLUME_ID);
     } finally {
       Mockito.verify(metadataAdaptor, Mockito.times(1))
           .getAllIssues(TEST_VOLUME_ID, metadataSource);
@@ -901,27 +911,33 @@ public class MetadataServiceTest {
   }
 
   @Test
-  public void testFetchIssuesForSeriesNoneFound() throws MetadataException {
+  public void testScrapeSeries_NoneFound() throws MetadataException {
     Mockito.when(
             metadataAdaptor.getAllIssues(Mockito.anyString(), Mockito.any(MetadataSource.class)))
         .thenReturn(new ArrayList<>());
 
-    service.fetchIssuesForSeries(TEST_METADATA_SOURCE_ID, TEST_VOLUME_ID);
+    service.scrapeSeries(
+        TEST_PUBLISHER, TEST_SERIES_NAME, TEST_VOLUME, TEST_METADATA_SOURCE_ID, TEST_VOLUME_ID);
 
     Mockito.verify(metadataAdaptor, Mockito.times(1)).getAllIssues(TEST_VOLUME_ID, metadataSource);
     Mockito.verify(issueService, Mockito.never()).saveAll(Mockito.anyList());
   }
 
   @Test
-  public void testFetchIssuesForSeries() throws MetadataException {
+  public void testScrapeSeries_IssueNotFound() throws MetadataException {
     issueDetailsMetadataList.add(issueDetailsMetadata);
 
     Mockito.when(
             metadataAdaptor.getAllIssues(Mockito.anyString(), Mockito.any(MetadataSource.class)))
         .thenReturn(issueDetailsMetadataList);
     Mockito.when(issueService.saveAll(issueListArgumentCaptor.capture())).thenReturn(issueList);
+    Mockito.when(
+            comicBookService.findComic(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(Collections.emptyList());
 
-    service.fetchIssuesForSeries(TEST_METADATA_SOURCE_ID, TEST_VOLUME_ID);
+    service.scrapeSeries(
+        TEST_PUBLISHER, TEST_SERIES_NAME, TEST_VOLUME, TEST_METADATA_SOURCE_ID, TEST_VOLUME_ID);
 
     final List<Issue> issues = issueListArgumentCaptor.getValue();
     assertNotNull(issues);
@@ -932,6 +948,90 @@ public class MetadataServiceTest {
     assertEquals(TEST_COVER_DATE, issues.get(0).getCoverDate());
 
     Mockito.verify(issueService, Mockito.times(1)).saveAll(issues);
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .findComic(TEST_PUBLISHER, TEST_SERIES_NAME, TEST_VOLUME, TEST_ISSUE_NUMBER);
+    Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
+  }
+
+  @Test
+  public void testScrapeSeries_ExistingMetadataSource() throws MetadataException {
+    comicBookList.add(comicBook);
+
+    issueDetailsMetadataList.add(issueDetailsMetadata);
+
+    Mockito.when(
+            metadataAdaptor.getAllIssues(Mockito.anyString(), Mockito.any(MetadataSource.class)))
+        .thenReturn(issueDetailsMetadataList);
+    Mockito.when(issueService.saveAll(issueListArgumentCaptor.capture())).thenReturn(issueList);
+    Mockito.when(
+            comicBookService.findComic(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(comicBookList);
+
+    service.scrapeSeries(
+        TEST_PUBLISHER, TEST_SERIES_NAME, TEST_VOLUME, TEST_METADATA_SOURCE_ID, TEST_VOLUME_ID);
+
+    final List<Issue> issues = issueListArgumentCaptor.getValue();
+    assertNotNull(issues);
+    assertFalse(issues.isEmpty());
+    assertEquals(TEST_PUBLISHER, issues.get(0).getPublisher());
+    assertEquals(TEST_SERIES_NAME, issues.get(0).getSeries());
+    assertEquals(TEST_VOLUME, issues.get(0).getVolume());
+    assertEquals(TEST_COVER_DATE, issues.get(0).getCoverDate());
+
+    Mockito.verify(issueService, Mockito.times(1)).saveAll(issues);
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .findComic(TEST_PUBLISHER, TEST_SERIES_NAME, TEST_VOLUME, TEST_ISSUE_NUMBER);
+    Mockito.verify(comicDetail, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
+    Mockito.verify(comicDetail, Mockito.times(1)).setSeries(TEST_SERIES_NAME);
+    Mockito.verify(comicDetail, Mockito.times(1)).setVolume(TEST_VOLUME);
+    Mockito.verify(comicMetadataSource, Mockito.times(1)).setMetadataSource(metadataSource);
+    Mockito.verify(comicMetadataSource, Mockito.times(1)).setReferenceId(TEST_SOURCE_ID);
+    Mockito.verify(comicStateHandler, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.detailsUpdated);
+  }
+
+  @Test
+  public void testScrapeSeries() throws MetadataException {
+    comicBookList.add(comicBook);
+
+    issueDetailsMetadataList.add(issueDetailsMetadata);
+
+    Mockito.when(
+            metadataAdaptor.getAllIssues(Mockito.anyString(), Mockito.any(MetadataSource.class)))
+        .thenReturn(issueDetailsMetadataList);
+    Mockito.when(issueService.saveAll(issueListArgumentCaptor.capture())).thenReturn(issueList);
+    Mockito.when(
+            comicBookService.findComic(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(comicBookList);
+    Mockito.when(comicBook.getMetadata()).thenReturn(null);
+
+    service.scrapeSeries(
+        TEST_PUBLISHER, TEST_SERIES_NAME, TEST_VOLUME, TEST_METADATA_SOURCE_ID, TEST_VOLUME_ID);
+
+    final List<Issue> issues = issueListArgumentCaptor.getValue();
+    assertNotNull(issues);
+    assertFalse(issues.isEmpty());
+    assertEquals(TEST_PUBLISHER, issues.get(0).getPublisher());
+    assertEquals(TEST_SERIES_NAME, issues.get(0).getSeries());
+    assertEquals(TEST_VOLUME, issues.get(0).getVolume());
+    assertEquals(TEST_COVER_DATE, issues.get(0).getCoverDate());
+
+    final ComicMetadataSource metadata = comicMetadataSourceArgumentCaptor.getValue();
+    assertNotNull(metadata);
+    assertSame(comicBook, metadata.getComicBook());
+    assertSame(metadataSource, metadata.getMetadataSource());
+    assertEquals(TEST_SOURCE_ID, metadata.getReferenceId());
+
+    Mockito.verify(issueService, Mockito.times(1)).saveAll(issues);
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .findComic(TEST_PUBLISHER, TEST_SERIES_NAME, TEST_VOLUME, TEST_ISSUE_NUMBER);
+    Mockito.verify(comicDetail, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
+    Mockito.verify(comicDetail, Mockito.times(1)).setSeries(TEST_SERIES_NAME);
+    Mockito.verify(comicDetail, Mockito.times(1)).setVolume(TEST_VOLUME);
+    Mockito.verify(comicStateHandler, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.detailsUpdated);
   }
 
   @Test

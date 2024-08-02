@@ -18,31 +18,30 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  fetchIssuesForSeries,
-  fetchIssuesForSeriesFailed,
-  issuesForSeriesFetched
-} from '../actions/fetch-issues-for-series.actions';
+  scrapeSeriesMetadata,
+  scrapeSeriesMetadataFailure,
+  scrapeSeriesMetadataSuccess
+} from '../actions/series-scraping.actions';
 
-export const FETCH_ISSUES_FOR_SERIES_FEATURE_KEY =
-  'fetch_issues_for_series_state';
+export const SERIES_SCRAPING_FEATURE_KEY = 'series_scraping_state';
 
-export interface FetchIssuesForSeriesState {
+export interface SeriesScrapingState {
   busy: boolean;
 }
 
-export const initialState: FetchIssuesForSeriesState = {
+export const initialState: SeriesScrapingState = {
   busy: false
 };
 
 export const reducer = createReducer(
   initialState,
 
-  on(fetchIssuesForSeries, state => ({ ...state, busy: true })),
-  on(issuesForSeriesFetched, state => ({ ...state, busy: false })),
-  on(fetchIssuesForSeriesFailed, state => ({ ...state, busy: false }))
+  on(scrapeSeriesMetadata, state => ({ ...state, busy: true })),
+  on(scrapeSeriesMetadataSuccess, state => ({ ...state, busy: false })),
+  on(scrapeSeriesMetadataFailure, state => ({ ...state, busy: false }))
 );
 
-export const fetchIssuesForSeriesFeature = createFeature({
-  name: FETCH_ISSUES_FOR_SERIES_FEATURE_KEY,
+export const seriesScrapingFeature = createFeature({
+  name: SERIES_SCRAPING_FEATURE_KEY,
   reducer
 });

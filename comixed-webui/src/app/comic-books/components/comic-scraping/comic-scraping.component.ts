@@ -60,6 +60,7 @@ import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { selectMetadataSourceList } from '@app/comic-metadata/selectors/metadata-source-list.selectors';
 import { loadMetadataSources } from '@app/comic-metadata/actions/metadata-source-list.actions';
 import { selectSingleBookScrapingState } from '@app/comic-metadata/selectors/single-book-scraping.selectors';
+import { METADATA_RECORD_LIMITS } from '@app/comic-metadata/comic-metadata.constants';
 
 @Component({
   selector: 'cx-comic-scraping',
@@ -74,11 +75,7 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
 
   @Output() scrape = new EventEmitter<MetadataEvent>();
 
-  readonly maximumRecordsOptions = [
-    { value: 0, label: 'scraping.label.all-records' },
-    { value: 100, label: 'scraping.label.100-records' },
-    { value: 1000, label: 'scraping.label.1000-records' }
-  ];
+  readonly maximumRecordsOptions = METADATA_RECORD_LIMITS;
 
   comicForm: UntypedFormGroup;
   scrapedMetadataSubscription: Subscription;

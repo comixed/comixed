@@ -24,10 +24,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.comixedproject.adaptors.csv.CsvAdaptor;
 import org.comixedproject.adaptors.csv.CsvRowDecoder;
@@ -104,6 +101,7 @@ public class ReadingListServiceTest {
 
   private List<Long> idList = new ArrayList<>();
   private List<ComicDetail> comicDetailList = new ArrayList<>();
+  private List<ComicBook> comicBookList = new ArrayList<>();
 
   @Before
   public void setUp() throws ComiXedUserException {
@@ -225,7 +223,7 @@ public class ReadingListServiceTest {
   }
 
   @Test(expected = ReadingListException.class)
-  public void testUpdateReadingListInvalidId() throws ReadingListException, ComiXedUserException {
+  public void testUpdateReadingListInvalidId() throws ReadingListException {
     Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     try {
@@ -237,7 +235,7 @@ public class ReadingListServiceTest {
   }
 
   @Test
-  public void testUpdateReadingList() throws ReadingListException, ComiXedUserException {
+  public void testUpdateReadingList() throws ReadingListException {
     Mockito.when(readingListRepository.getById(Mockito.anyLong()))
         .thenReturn(readingList, loadedReadingList);
 
@@ -259,7 +257,7 @@ public class ReadingListServiceTest {
   }
 
   @Test(expected = ReadingListException.class)
-  public void testLoadReadingListForOtherUser() throws ReadingListException, ComiXedUserException {
+  public void testLoadReadingListForOtherUser() throws ReadingListException {
     Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(readingList);
 
     try {
@@ -270,7 +268,7 @@ public class ReadingListServiceTest {
   }
 
   @Test
-  public void testLoadReadingListForUser() throws ReadingListException, ComiXedUserException {
+  public void testLoadReadingListForUser() throws ReadingListException {
     Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(readingList);
 
     final ReadingList result =
@@ -339,6 +337,9 @@ public class ReadingListServiceTest {
 
     ReadingList result = service.addComicsToList(TEST_OWNER_EMAIL, TEST_READING_LIST_ID, idList);
 
+    assertNotNull(result);
+    assertSame(loadedReadingList, result);
+
     final Map<String, ?> headers = headersArgumentCaptor.getValue();
     assertNotNull(headers);
     assertSame(comicBook, headers.get(HEADER_COMIC));
@@ -372,8 +373,7 @@ public class ReadingListServiceTest {
   }
 
   @Test
-  public void testRemoveComicsFromListComicNotFound()
-      throws ComicBookException, ReadingListException {
+  public void testRemoveComicsFromListComicNotFound() throws ReadingListException {
     idList.add(TEST_COMIC_ID);
 
     Mockito.when(readingListRepository.getById(Mockito.anyLong()))
@@ -389,7 +389,7 @@ public class ReadingListServiceTest {
   }
 
   @Test
-  public void testRemoveComicsFromList() throws ComicBookException, ReadingListException {
+  public void testRemoveComicsFromList() throws ReadingListException {
     idList.add(TEST_COMIC_ID);
 
     Mockito.when(readingListRepository.getById(Mockito.anyLong()))
@@ -551,7 +551,7 @@ public class ReadingListServiceTest {
 
   @Test
   public void testDecodeAndCreateReadingListComicNotFound()
-      throws ComiXedUserException, ComicBookException, ReadingListException, IOException {
+      throws ComiXedUserException, ReadingListException, IOException {
     final List<String> decodingRow = new ArrayList<>();
     decodingRow.add(TEST_POSITION);
     decodingRow.add(TEST_PUBLISHER);
@@ -573,7 +573,7 @@ public class ReadingListServiceTest {
     Mockito.when(
             comicBookService.findComic(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(null);
+        .thenReturn(Collections.emptyList());
 
     service.decodeAndCreateReadingList(TEST_OWNER_EMAIL, TEST_READING_LIST_NAME, inputStream);
 
@@ -593,13 +593,15 @@ public class ReadingListServiceTest {
 
   @Test
   public void testDecodeAndCreateReadingList()
-      throws ComiXedUserException, ComicBookException, ReadingListException, IOException {
+      throws ComiXedUserException, ReadingListException, IOException {
     final List<String> decodingRow = new ArrayList<>();
     decodingRow.add(TEST_POSITION);
     decodingRow.add(TEST_PUBLISHER);
     decodingRow.add(TEST_SERIES);
     decodingRow.add(TEST_VOLUME);
     decodingRow.add(TEST_ISSUE_NUMBER);
+
+    comicBookList.add(comicBook);
 
     Mockito.when(
             readingListRepository.checkForExistingReadingList(
@@ -614,7 +616,7 @@ public class ReadingListServiceTest {
     Mockito.when(
             comicBookService.findComic(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(comicBook);
+        .thenReturn(comicBookList);
     Mockito.when(savedReadingList.getId()).thenReturn(TEST_READING_LIST_ID);
     Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(readingList);
     Mockito.doNothing()
@@ -645,8 +647,7 @@ public class ReadingListServiceTest {
   }
 
   @Test
-  public void testDeleteReadingListsInvalidReadingList()
-      throws ReadingListException, ComiXedUserException {
+  public void testDeleteReadingListsInvalidReadingList() throws ReadingListException {
     idList.add(TEST_READING_LIST_ID);
 
     Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(null);
@@ -658,7 +659,7 @@ public class ReadingListServiceTest {
   }
 
   @Test
-  public void testDeleteReadingListsNotOwner() throws ReadingListException, ComiXedUserException {
+  public void testDeleteReadingListsNotOwner() throws ReadingListException {
     idList.add(TEST_READING_LIST_ID);
 
     Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(readingList);
@@ -671,7 +672,7 @@ public class ReadingListServiceTest {
 
   @Test
   public void testDeleteReadingListsPublishException()
-      throws ReadingListException, ComiXedUserException, PublishingException {
+      throws ReadingListException, PublishingException {
     idList.add(TEST_READING_LIST_ID);
 
     Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(readingList);
@@ -687,8 +688,7 @@ public class ReadingListServiceTest {
   }
 
   @Test
-  public void testDeleteReadingLists()
-      throws ReadingListException, ComiXedUserException, PublishingException {
+  public void testDeleteReadingLists() throws ReadingListException, PublishingException {
     idList.add(TEST_READING_LIST_ID);
 
     Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(readingList);

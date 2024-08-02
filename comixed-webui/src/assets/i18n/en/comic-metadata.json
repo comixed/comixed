@@ -1,31 +1,4 @@
 {
-  "metadata": {
-    "fetch-issues": {
-      "button": {
-        "fetch-issues": "Fetch Issues",
-        "select-volume": "Select Volume"
-      },
-      "confirmation-message": "Are you sure you want to fetch all current issues for \"{series} v{volume}\", published by {publisher}?",
-      "confirmation-title": "Fetch Issues For Series",
-      "effect-failure": "Failed to fetch issues for \"{series} v{volume}\".",
-      "effect-success": "Fetched the list of issues for \"{series}\" v{volume}.",
-      "label": {
-        "publisher": "Publisher Name",
-        "series": "Series Name",
-        "volume": "Volume",
-        "metadata-source": "Metadata Source To Use",
-        "skip-cache": "Skip the cache when fetching issues."
-      },
-      "page-title-with-form": "Fetch Issues For Series",
-      "page-title-with-volumes": "Fetch Issues For Series ({count, plural, =1{One Volume} other{# Volumes}})",
-      "tab-title": "Fetch Issues: {publisher}/{series} v{volume}"
-    },
-    "volume-metadata-table": {
-      "placeholder": {
-        "volume-filter": "Enter text to filter the volumes displayed."
-      }
-    }
-  },
   "metadata-cache": {
     "clear-cache": {
       "confirmation-message": "Are you sure you want to clear out the metadata cache?",
@@ -114,6 +87,20 @@
     },
     "tab-title": "Update Metadata Process"
   },
+  "metadata-update": {
+    "page-title": "Metadata Processing: ({count, plural, =1{One Comic} other{# Comics}} Selected)",
+    "start-process": {
+      "confirm-message": "Are you sure you want to start a batch process to update the metadata in {count, plural, =1{one comic} other{# comics}}?",
+      "confirm-title": "Start Metadata Update Process",
+      "effect-failure": "Failed to start metadata update process.",
+      "effect-success": "Metadata update process started."
+    },
+    "tooltip": {
+      "skip-cache": "Toggle skipping the metadata cache (currently {skip, select, true{on} other{off}}).",
+      "start-process": "Start batch updating the selected comics."
+    },
+    "tab-title": "Update Metadata Process"
+  },
   "multi-book-scraping": {
     "load-scraping-page": {
       "effect-failure": "Failed to load comic books to be scraped..."
@@ -142,8 +129,9 @@
       "1000-records": "1000 Records",
       "all-records": "All Records",
       "issue-count": "# Issues",
+      "matchability": "Match",
       "publisher": "Publisher",
-      "series-name": "Series",
+      "series": "Series",
       "start-year": "Start Year",
       "thumbnail": "Thumbnail"
     },
@@ -153,7 +141,9 @@
     "load-scraping-issue": {
       "effect-failure": "No such issue found..."
     },
-    "page-title": "Library Scraping",
+    "placeholder": {
+      "volume-filter": "Enter text to filter the volumes displayed."
+    },
     "scrape-comic": {
       "effect-success": "Comic scraping started!",
       "effect-failure": "Failed to scrape comic."
@@ -174,6 +164,7 @@
       "auto-select-exact-match": "If enabled, a single exact match will be automatically selected (shift+ctrl+x).",
       "cancel-scraping": "Stop scraping comics.",
       "confirm-each-scrape": "If enabled, admins will confirm each issue selected (shift+ctrl+o).",
+      "fetch-volumes": "Load volume candidates from metadata source.",
       "reject-scraping-issue": "Reject this issue.",
       "select-scraping-issue": "Select this metadata source.",
       "show-comic-details": "Show Details",
@@ -187,18 +178,30 @@
       "start-year-header": "Start Year"
     }
   },
-  "metadata-update": {
-    "page-title": "Metadata Processing: ({count, plural, =1{One Comic} other{# Comics}} Selected)",
-    "start-process": {
-      "confirm-message": "Are you sure you want to start a batch process to update the metadata in {count, plural, =1{one comic} other{# comics}}?",
-      "confirm-title": "Start Metadata Update Process",
-      "effect-failure": "Failed to start metadata update process.",
-      "effect-success": "Metadata update process started."
-    },
-    "tooltip": {
-      "skip-cache": "Toggle skipping the metadata cache (currently {skip, select, true{on} other{off}}).",
-      "start-process": "Start batch updating the selected comics."
-    },
-    "tab-title": "Update Metadata Process"
+  "scraping-issues-page": {
+    "page-title": "Comic Issue Scraping",
+    "tab-title": "Comic Issue Scraping"
+  },
+  "scrape-series": {
+    "confirmation-message": "Are you sure you want to fetch the metadata for \"{series} v{volume}\", published by {publisher}?",
+    "confirmation-title": "Fetch Series Metadata",
+    "effect-failure": "Failed to fetch metadata for \"{series} v{volume}\".",
+    "effect-success": "Fetched the metadata for \"{series}\" v{volume}.",
+    "label": {
+      "publisher": "Publisher Name",
+      "series": "Series Name",
+      "volume": "Volume",
+      "metadata-source": "Metadata Source To Use",
+      "skip-cache": "Skip the cache when fetching metadata."
+    }
+  },
+  "scraping-series-page": {
+    "page-title-with-form": "Comic Series Scraping",
+    "page-title-with-volumes": "Comic Series Scraping ({count, plural, =1{One Volume} other{# Volumes}})",
+    "tab-title": "Comic Issue Scraping",
+    "text": {
+      "notice-of-limits": "When scraping a series, the publisher, series, volume, and individual issue reference are updated for each issue in the series. The full set of issue metadata is NOT retrieved.",
+      "notice-of-limits-title": "Scraping A Series"
+    }
   }
 }

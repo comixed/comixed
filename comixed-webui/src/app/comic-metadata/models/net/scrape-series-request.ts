@@ -16,13 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector } from '@ngrx/store';
-import {
-  FETCH_ISSUES_FOR_SERIES_FEATURE_KEY,
-  FetchIssuesForSeriesState
-} from '../reducers/fetch-issues-for-series.reducer';
-
-export const selectFetchIssuesForSeriesState =
-  createFeatureSelector<FetchIssuesForSeriesState>(
-    FETCH_ISSUES_FOR_SERIES_FEATURE_KEY
-  );
+export interface ScrapeSeriesRequest {
+  originalPublisher: string;
+  originalSeries: string;
+  originalVolume: string;
+  volumeId: string;
+  maximumRecords: number;
+  skipCache: boolean;
+}

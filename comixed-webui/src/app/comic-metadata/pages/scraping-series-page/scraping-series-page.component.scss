@@ -1,0 +1,25 @@
+@use 'variables' as *;
+
+#scraping-volumes-form-container {
+  width: calc(100% - $cx-margin-space);
+  margin: $cx-margin-width;
+  padding: 5px;
+}
+
+#scraping-volumes-container {
+  display: flex;
+  flex-flow: row wrap;
+  width: calc(100% - $cx-margin-space);
+  margin: $cx-margin-width;
+}
+
+#scraping-volumes-table-container {
+  flex: 1;
+  min-width: $cx-max-image-width;
+}
+
+#scraping-volumes-cover-container {
+  flex-grow: 0;
+  width: calc(max(25%, min(100%, $cx-max-image-width)) - $cx-margin-space);
+  max-width: calc($cx-max-image-width + $cx-margin-space);
+}

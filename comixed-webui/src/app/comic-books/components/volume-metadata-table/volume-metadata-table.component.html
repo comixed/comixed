@@ -4,9 +4,7 @@
       matInput
       #filterInput
       id="volume-search-text-input"
-      [placeholder]="
-        'metadata.volume-metadata-table.placeholder.volume-filter' | translate
-      "
+      [placeholder]="'scraping.placeholder.volume-filter' | translate"
       (keyup)="dataSource.filter = filterInput.value"
     />
   </mat-form-field>
@@ -72,7 +70,7 @@
 
   <ng-container matColumnDef="name">
     <mat-header-cell *matHeaderCellDef mat-sort-header>
-      {{ "scraping.label.series-name" | translate }}
+      {{ "scraping.label.series" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
       <span class="cx-text-nowrap">{{ element.item.name }}</span>
@@ -101,25 +99,12 @@
     </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="action">
-    <mat-header-cell *matHeaderCellDef></mat-header-cell>
-    <mat-cell *matCellDef="let element">
-      <button
-        id="accept-button"
-        mat-icon-button
-        [matTooltip]="'scraping.tooltip.select-scraping-issue' | translate"
-        (click)="onVolumeChosen(element.item)"
-      >
-        <mat-icon>check_box</mat-icon>
-      </button>
-    </mat-cell>
-  </ng-container>
-
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row
     *matRowDef="let row; columns: displayedColumns"
     [class.cx-selected-row]="row.item.id === selectedVolume?.id"
     (click)="onVolumeSelected(row.item)"
+    (keyup)="onVolumeSelected(row.item)"
   ></mat-row>
   <tr class="mat-row" *matNoDataRow>
     <td class="mat-cell" colspan="4">

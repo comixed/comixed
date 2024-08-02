@@ -24,12 +24,12 @@
   </mat-card>
 </div>
 
-<h2>{{ "scraping-page.page-title" | translate }}</h2>
+<h2>{{ "scraping-issues-page.page-title" | translate }}</h2>
 
 <h3 *ngIf="!!currentComicBook">{{ currentComicBook?.detail.baseFilename }}</h3>
 
 <div *ngIf="!started" class="cx-width-100 cx-align-content-center">
-  <p>{{ "scraping-page.inactive.page-content" | translate }}</p>
+  <p>{{ "scraping.inactive.page-content" | translate }}</p>
 
   <button
     id="cx-show-all-comics-button"
@@ -40,7 +40,7 @@
   >
     <mat-icon>library_books</mat-icon>
     <mat-label>
-      {{ "scraping-page.button.show-all-comics" | translate }}
+      {{ "scraping.button.show-all-comics" | translate }}
     </mat-label>
   </button>
 </div>

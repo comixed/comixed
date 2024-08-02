@@ -212,8 +212,8 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the comic
    */
   @Query(
-      "SELECT c FROM ComicBook c WHERE c.comicDetail.publisher = :publisher AND c.comicDetail.series = :series AND c.comicDetail.volume = :volume and c.comicDetail.issueNumber = :issueNumber")
-  ComicBook findComic(
+      "SELECT d.comicBook FROM ComicDetail d WHERE d.publisher = :publisher AND d.series = :series AND d.volume = :volume and d.issueNumber = :issueNumber")
+  List<ComicBook> findComic(
       @Param("publisher") String publisher,
       @Param("series") String series,
       @Param("volume") String volume,

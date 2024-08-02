@@ -59,14 +59,12 @@ export class VolumeMetadataTableComponent implements AfterViewInit {
     'publisher',
     'name',
     'start-year',
-    'issue-count',
-    'action'
+    'issue-count'
   ];
   readonly pageOptions = PAGE_SIZE_OPTIONS;
   @Input() pageSize = PAGE_SIZE_DEFAULT;
   selectedVolume: VolumeMetadata;
   @Output() volumeSelected = new EventEmitter<VolumeMetadata>();
-  @Output() volumeChosen = new EventEmitter<VolumeMetadata>();
 
   constructor(private logger: LoggerService) {}
 
@@ -96,10 +94,14 @@ export class VolumeMetadataTableComponent implements AfterViewInit {
           return element.sortOrder;
         case 'start-year':
           return element.item.startYear;
+        case 'publisher':
+          return element.item.publisher;
+        case 'name':
+          return element.item.name;
         case 'issue-count':
           return element.item.issueCount;
         default:
-          return element.item[property];
+          return element.sortOrder;
       }
     };
     this.dataSource.paginator = this.paginator;
@@ -115,11 +117,6 @@ export class VolumeMetadataTableComponent implements AfterViewInit {
     this.logger.debug('Selected volume:', volume);
     this.selectedVolume = volume;
     this.volumeSelected.emit(volume);
-  }
-
-  onVolumeChosen(volume: VolumeMetadata): void {
-    this.logger.debug('Volume chosen:', volume);
-    this.volumeChosen.emit(volume);
   }
 
   private isMatch(text, filter: string) {

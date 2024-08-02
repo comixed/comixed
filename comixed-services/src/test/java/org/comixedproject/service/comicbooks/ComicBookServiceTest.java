@@ -20,11 +20,7 @@ package org.comixedproject.service.comicbooks;
 
 import static junit.framework.TestCase.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
@@ -745,12 +741,13 @@ public class ComicBookServiceTest {
     Mockito.when(
             comicBookRepository.findComic(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(null);
+        .thenReturn(Collections.emptyList());
 
-    final ComicBook result =
+    final List<ComicBook> result =
         service.findComic(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
 
-    assertNull(result);
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
 
     Mockito.verify(comicBookRepository, Mockito.times(1))
         .findComic(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
@@ -758,16 +755,18 @@ public class ComicBookServiceTest {
 
   @Test
   public void testFindComic() {
+    comicBookList.add(comicBook);
+
     Mockito.when(
             comicBookRepository.findComic(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(comicBook);
+        .thenReturn(comicBookList);
 
-    final ComicBook result =
+    final List<ComicBook> result =
         service.findComic(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
 
     assertNotNull(result);
-    assertSame(comicBook, result);
+    assertSame(comicBookList, result);
 
     Mockito.verify(comicBookRepository, Mockito.times(1))
         .findComic(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);

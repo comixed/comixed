@@ -57,6 +57,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class ComicBookScrapingControllerTest {
   private static final Long TEST_METADATA_SOURCE_ID = 73L;
+  private static final String TEST_PUBLISHER = "Powerful Publisher";
   private static final String TEST_SERIES_NAME = "Awesome ComicBook";
   private static final Integer TEST_MAX_RECORDS = 37;
   private static final String TEST_VOLUME = "2018";
@@ -274,27 +275,46 @@ public class ComicBookScrapingControllerTest {
   }
 
   @Test(expected = MetadataException.class)
-  public void testFetchIssuesForSeriesServiceException() throws MetadataException {
+  public void testScrapeSeriesServiceException() throws MetadataException {
     Mockito.doThrow(MetadataException.class)
         .when(metadataService)
-        .fetchIssuesForSeries(Mockito.anyLong(), Mockito.anyString());
+        .scrapeSeries(
+            Mockito.anyString(),
+            Mockito.anyString(),
+            Mockito.anyString(),
+            Mockito.anyLong(),
+            Mockito.anyString());
 
     try {
-      controller.fetchIssuesForSeries(
-          TEST_METADATA_SOURCE_ID, new FetchIssuesForSeriesRequest(String.valueOf(TEST_VOLUME)));
+      controller.scrapeSeries(
+          TEST_METADATA_SOURCE_ID,
+          new ScrapeSeriesRequest(
+              TEST_PUBLISHER, TEST_SERIES_NAME, TEST_VOLUME, String.valueOf(TEST_VOLUME)));
     } finally {
       Mockito.verify(metadataService, Mockito.times(1))
-          .fetchIssuesForSeries(TEST_METADATA_SOURCE_ID, String.valueOf(TEST_VOLUME));
+          .scrapeSeries(
+              TEST_PUBLISHER,
+              TEST_SERIES_NAME,
+              TEST_VOLUME,
+              TEST_METADATA_SOURCE_ID,
+              String.valueOf(TEST_VOLUME));
     }
   }
 
   @Test
-  public void testFetchIssuesForSeries() throws MetadataException {
-    controller.fetchIssuesForSeries(
-        TEST_METADATA_SOURCE_ID, new FetchIssuesForSeriesRequest(String.valueOf(TEST_VOLUME)));
+  public void testScrapeSeries() throws MetadataException {
+    controller.scrapeSeries(
+        TEST_METADATA_SOURCE_ID,
+        new ScrapeSeriesRequest(
+            TEST_PUBLISHER, TEST_SERIES_NAME, TEST_VOLUME, String.valueOf(TEST_VOLUME)));
 
     Mockito.verify(metadataService, Mockito.times(1))
-        .fetchIssuesForSeries(TEST_METADATA_SOURCE_ID, String.valueOf(TEST_VOLUME));
+        .scrapeSeries(
+            TEST_PUBLISHER,
+            TEST_SERIES_NAME,
+            TEST_VOLUME,
+            TEST_METADATA_SOURCE_ID,
+            String.valueOf(TEST_VOLUME));
   }
 
   @Test(expected = MetadataException.class)
