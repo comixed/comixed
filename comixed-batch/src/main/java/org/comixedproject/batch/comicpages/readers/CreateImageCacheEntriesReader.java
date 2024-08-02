@@ -41,9 +41,9 @@ import org.springframework.stereotype.Component;
 public class CreateImageCacheEntriesReader implements ItemReader<ComicPage> {
   @Autowired private ComicPageService comicPageService;
 
-  @Value("${comixed.batch.add-cover-to-image-cache.chunk-size}")
+  @Value("${comixed.batch.add-cover-to-image-cache.chunk-size:1}")
   @Getter
-  private int chunkSize = 10;
+  private int chunkSize;
 
   public List<ComicPage> pageList;
 

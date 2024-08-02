@@ -39,8 +39,8 @@ import org.springframework.core.task.TaskExecutor;
  */
 @Configuration
 public class BatchConfiguration {
-  @Value("${comixed.batch.thread-pool-size}")
-  private int batchThreadPoolSize = 10;
+  @Value("${comixed.batch.thread-pool-size:-1}")
+  private int batchThreadPoolSize;
 
   /**
    * Returns the task executor for jobs.

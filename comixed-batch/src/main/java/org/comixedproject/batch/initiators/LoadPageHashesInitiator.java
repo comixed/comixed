@@ -57,7 +57,7 @@ public class LoadPageHashesInitiator {
   @Qualifier("batchJobLauncher")
   private JobLauncher jobLauncher;
 
-  @Scheduled(fixedDelayString = "${comixed.batch.load-page-hashes.period}")
+  @Scheduled(fixedDelayString = "${comixed.batch.load-page-hashes.period:60000}")
   public void execute() {
     log.trace("Checking for pages without hashes");
     if (this.comicPageService.hasPagesWithoutHash()

@@ -49,8 +49,8 @@ public class MarkBlockedPagesConfiguration {
   public static final String MARK_BLOCKED_PAGES_JOB = "markBlockedPagesJob";
   public static final String JOB_MARK_BLOCKED_PAGES_STARTED = "job.mark-blocked-pages.started";
 
-  @Value("${comixed.batch.mark-blocked-pages.chunk-size}")
-  private int chunkSize = 1;
+  @Value("${comixed.batch.mark-blocked-pages.chunk-size:1}")
+  private int chunkSize;
 
   /**
    * Returns the mark blocked pages job.

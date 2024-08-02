@@ -35,7 +35,7 @@ import org.springframework.stereotype.Component;
 @Log4j
 @StepScope
 public class MarkBlockedPagesReader extends AbstractPageReader {
-  @Value("${comixed.batch.mark-blocked-pages.chunk-size}")
+  @Value("${comixed.batch.mark-blocked-pages.chunk-size:1}")
   private int chunkSize;
 
   @Override

@@ -47,8 +47,8 @@ public class ProcessComicBooksConfiguration {
   public static final String PROCESS_COMIC_BOOKS_JOB = "processComicBooksJob";
   public static final String PROCESS_COMIC_BOOKS_STARTED_JOB = "job.process-comic-books.started";
 
-  @Value("${comixed.batch.process-comic-books.chunk-size}")
-  private int chunkSize = 1;
+  @Value("${comixed.batch.process-comic-books.chunk-size:10}")
+  private int chunkSize;
 
   /**
    * Returns the process comics job.

@@ -49,8 +49,8 @@ public class UpdateMetadataConfiguration {
   public static final String JOB_UPDATE_METADATA_STARTED = "job.update-metadata.started";
   public static final String UPDATE_METADATA_JOB = "updateMetadataJob";
 
-  @Value("${comixed.batch.update-metadata.chunk-size}")
-  private int chunkSize = 10;
+  @Value("${comixed.batch.update-metadata.chunk-size:10}")
+  private int chunkSize;
 
   /**
    * Returns the job bean to update comic metadata.

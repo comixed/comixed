@@ -63,7 +63,7 @@ public class OrganizeLibraryInitiator {
   @Qualifier("batchJobLauncher")
   private JobLauncher jobLauncher;
 
-  @Scheduled(fixedDelayString = "${comixed.batch.organize-library.period}")
+  @Scheduled(fixedDelayString = "${comixed.batch.organize-library.period:60000}")
   public void execute() {
     this.doExecute();
   }

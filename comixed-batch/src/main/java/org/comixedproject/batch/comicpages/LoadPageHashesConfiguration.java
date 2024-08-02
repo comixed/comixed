@@ -49,8 +49,8 @@ public class LoadPageHashesConfiguration {
   public static final String JOB_LOAD_PAGE_HASHES_STARTED = "job.load-page-hashes.started";
   public static final String LOAD_PAGE_HASHES_JOB = "loadPageHashesJob";
 
-  @Value("${comixed.batch.load-page-hashes.chunk-size}")
-  private int chunkSize = 1;
+  @Value("${comixed.batch.load-page-hashes.chunk-size:10}")
+  private int chunkSize;
 
   @Bean(name = LOAD_PAGE_HASHES_JOB)
   public Job loadPageHashesJob(

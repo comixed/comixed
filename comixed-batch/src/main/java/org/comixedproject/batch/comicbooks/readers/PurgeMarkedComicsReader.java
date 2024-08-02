@@ -37,7 +37,7 @@ import org.springframework.stereotype.Component;
 @StepScope
 @Log4j2
 public class PurgeMarkedComicsReader extends AbstractComicReader {
-  @Value("${comixed.batch.purge-library.chunk-size}")
+  @Value("${comixed.batch.purge-library.chunk-size:1}")
   @Getter
   private int chunkSize;
 
