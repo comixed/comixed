@@ -57,7 +57,7 @@ public class ProcessComicBooksInitiator {
   private JobLauncher jobLauncher;
 
   /** Checks for unprocessed comics not in a group and kicks off a new batch job to process them. */
-  @Scheduled(fixedDelayString = "${comixed.batch.process-comic-books.period}")
+  @Scheduled(fixedDelayString = "${comixed.batch.process-comic-books.period:60000}")
   public void execute() {
     this.doExecute();
   }

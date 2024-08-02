@@ -58,7 +58,7 @@ public class MarkBlockedPagesInitiator {
   @Qualifier("batchJobLauncher")
   private JobLauncher jobLauncher;
 
-  @Scheduled(fixedDelayString = "${comixed.batch.mark-blocked-pages.period}")
+  @Scheduled(fixedDelayString = "${comixed.batch.mark-blocked-pages.period:60000}")
   public void execute() {
     if (!this.configurationService.isFeatureEnabled(
         ConfigurationService.CFG_MANAGE_BLOCKED_PAGES)) {

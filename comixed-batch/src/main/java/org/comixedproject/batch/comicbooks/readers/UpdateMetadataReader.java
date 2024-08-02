@@ -37,7 +37,7 @@ import org.springframework.stereotype.Component;
 @StepScope
 @Log4j2
 public class UpdateMetadataReader extends AbstractComicReader {
-  @Value("${comixed.batch.update-metadata.chunk-size}")
+  @Value("${comixed.batch.update-metadata.chunk-size:10}")
   @Getter
   private int chunkSize;
 

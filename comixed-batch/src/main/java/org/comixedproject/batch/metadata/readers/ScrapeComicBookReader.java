@@ -36,7 +36,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class ScrapeComicBookReader extends AbstractComicReader {
-  @Value("${comixed.batch.metadata-process.chunk-size}")
+  @Value("${comixed.batch.metadata-process.chunk-size:10}")
   @Getter
   private int chunkSize;
 

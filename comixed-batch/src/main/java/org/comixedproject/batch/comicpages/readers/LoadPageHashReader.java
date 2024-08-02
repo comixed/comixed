@@ -35,7 +35,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class LoadPageHashReader extends AbstractPageReader {
-  @Value("${comixed.batch.mark-blocked-pages.chunk-size}")
+  @Value("${comixed.batch.mark-blocked-pages.chunk-size:1}")
   @Getter
   private int chunkSize;
 

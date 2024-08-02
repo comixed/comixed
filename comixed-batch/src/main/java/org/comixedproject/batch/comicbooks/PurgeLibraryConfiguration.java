@@ -49,8 +49,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class PurgeLibraryConfiguration {
   public static final String JOB_PURGE_LIBRARY_START = "job.purge-library.started";
 
-  @Value("${comixed.batch.purge-library.chunk-size}")
-  private int chunkSize = 10;
+  @Value("${comixed.batch.purge-library.chunk-size:1}")
+  private int chunkSize;
 
   /**
    * Returns the purge library job.
