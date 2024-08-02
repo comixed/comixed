@@ -53,7 +53,7 @@ public class CreateCoverPageImageCacheEntriesInitiator {
   private JobLauncher jobLauncher;
 
   /** Starts a batch process to add pages to the image cache. */
-  @Scheduled(cron = "${comixed.batch.add-cover-to-image-cache.schedule:'0 0 * * * *'}")
+  @Scheduled(cron = "${comixed.batch.add-cover-to-image-cache.schedule:0 0 * * * *}")
   public void execute() {
     log.info("Starting process: add pages to image cache");
     try {

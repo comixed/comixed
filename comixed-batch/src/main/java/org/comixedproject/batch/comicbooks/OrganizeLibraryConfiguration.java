@@ -61,8 +61,8 @@ public class OrganizeLibraryConfiguration {
       "job.organization.target-directory";
   public static final String JOB_ORGANIZATION_RENAMING_RULE = "job.organization.renaming-rule";
 
-  @Value("${comixed.batch.organize-library.chunk-size}")
-  private int chunkSize = 10;
+  @Value("${comixed.batch.organize-library.chunk-size:1}")
+  private int chunkSize;
 
   /**
    * Returns a library organization job bean.

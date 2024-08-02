@@ -54,7 +54,7 @@ public class ProcessComicBooksInitiator {
   private JobLauncher jobLauncher;
 
   /** Checks for unprocessed comics not in a group and kicks off a new batch job to process them. */
-  @Scheduled(fixedDelayString = "${comixed.batch.process-comic-books.period}")
+  @Scheduled(fixedDelayString = "${comixed.batch.process-comic-books.period:60000}")
   public void execute() {
     log.debug("Looking for unprocessed comic books");
     final long unprocessedComicBookCount = this.comicBookService.getUnprocessedComicBookCount();

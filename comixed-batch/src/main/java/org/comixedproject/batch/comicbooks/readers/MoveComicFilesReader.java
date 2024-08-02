@@ -37,7 +37,7 @@ import org.springframework.stereotype.Component;
 @StepScope
 @Log4j2
 public class MoveComicFilesReader extends AbstractComicReader {
-  @Value("${comixed.batch.organize-library.chunk-size}")
+  @Value("${comixed.batch.organize-library.chunk-size:1}")
   @Getter
   private int chunkSize;
 

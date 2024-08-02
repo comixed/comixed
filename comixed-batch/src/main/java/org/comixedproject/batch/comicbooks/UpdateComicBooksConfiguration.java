@@ -52,8 +52,8 @@ public class UpdateComicBooksConfiguration {
   public static final String JOB_UPDATE_COMICBOOKS_IMPRINT = "job.update-comic.imprint";
   public static final String JOB_UPDATE_COMICBOOKS_COMIC_TYPE = "job.update-comic.comic-type";
 
-  @Value("${comixed.batch.update-comic-metadata.chunk-size}")
-  private int chunkSize = 10;
+  @Value("${comixed.batch.update-comic-metadata.chunk-size:1}")
+  private int chunkSize;
 
   @Bean(name = "updateComicBooksJob")
   public Job updateComicBooksJob(

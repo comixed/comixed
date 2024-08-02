@@ -60,7 +60,7 @@ public class OrganizeLibraryInitiator {
   @Qualifier("batchJobLauncher")
   private JobLauncher jobLauncher;
 
-  @Scheduled(fixedDelayString = "${comixed.batch.organize-library.period}")
+  @Scheduled(fixedDelayString = "${comixed.batch.organize-library.period:60000}")
   public void execute() {
     log.trace("Checking for comic files to be organized");
     if (this.comicBookService.findComicsToBeMovedCount() > 0
