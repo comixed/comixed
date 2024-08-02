@@ -69,27 +69,12 @@
       {{ "collections.series.label.total-comics" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <a
-        [routerLink]="[
-          '/library/collections/publishers',
-          entry.publisher,
-          'series',
-          entry.name,
-          'volumes',
-          entry.volume
-        ]"
-      >
-        {{ entry.inLibrary }}
-      </a>
-    </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="total-issues">
-    <mat-header-cell *matHeaderCellDef>
-      {{ "collections.series.label.total-issues" | translate }}
-    </mat-header-cell>
-    <mat-cell *matCellDef="let entry">
-      <a
+      <button
+        mat-raised-button
+        color="primary"
+        [matTooltip]="
+          'collections.series.tooltip.view-series-metadata' | translate
+        "
         [routerLink]="[
           '/library/collections/publishers',
           entry.publisher,
@@ -100,13 +85,52 @@
           'metadata'
         ]"
       >
-        {{ entry.totalIssues }}
-      </a>
+        <mat-label>
+          {{ entry.inLibrary }}
+        </mat-label>
+        <mat-icon>info</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="in-library">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "collections.series.label.in-library" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <button
+        mat-raised-button
+        color="primary"
+        [matTooltip]="'collections.series.tooltip.scrape-series' | translate"
+        [routerLink]="[
+          '/metadata/scraping/publishers',
+          entry.publisher,
+          'series',
+          entry.name,
+          'volumes',
+          entry.volume,
+          'issues'
+        ]"
+        (click)="$event.stopPropagation()"
+      >
+        <mat-label>{{ entry.inLibrary }}</mat-label>
+        <mat-icon>cloud_download</mat-icon>
+      </button>
     </mat-cell>
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  <mat-row
+    *matRowDef="let row; columns: displayedColumns"
+    [routerLink]="[
+      '/library/collections/publishers',
+      row.publisher,
+      'series',
+      row.name,
+      'volumes',
+      row.volume
+    ]"
+  ></mat-row>
   <tr class="mat-row" *matNoDataRow>
     <td class="mat-cell" colspan="4">
       {{ "collections.series.text.no-series-found" | translate }}

@@ -58,7 +58,6 @@
         "store-date": "Store Date",
         "title": "Title",
         "total-comics": "# Of Comics",
-        "total-issues": "Total",
         "volume": "Volume"
       },
       "list-issues-page": {
@@ -79,7 +78,8 @@
         "no-series-found": "No series were found."
       },
       "tooltip": {
-        "scrape-series": "Fetch the list of issues for his series..."
+        "scrape-series": "Scrape the metadata for the issues in this series...",
+        "view-series-metadata": "View series metadata for this series..."
       }
     },
     "series-detail": {

@@ -16,24 +16,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  FETCH_ISSUES_FOR_SERIES_FEATURE_KEY,
-  FetchIssuesForSeriesState
-} from '../reducers/fetch-issues-for-series.reducer';
-import { selectFetchIssuesForSeriesState } from './fetch-issues-for-series.selectors';
+import { createAction, props } from '@ngrx/store';
+import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
+import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 
-describe('FetchIssuesForSeries Selectors', () => {
-  let state: FetchIssuesForSeriesState;
+export const scrapeSeriesMetadata = createAction(
+  '[Series Scraping] Scrape series metadata',
+  props<{
+    originalPublisher: string;
+    originalSeries: string;
+    originalVolume: string;
+    source: MetadataSource;
+    volume: VolumeMetadata;
+  }>()
+);
 
-  beforeEach(() => {
-    state = { busy: Math.random() > 0.5 };
-  });
+export const scrapeSeriesMetadataSuccess = createAction(
+  '[Series Scraping] Successfully scraped series metadata'
+);
 
-  it('should select the feature state', () => {
-    expect(
-      selectFetchIssuesForSeriesState({
-        [FETCH_ISSUES_FOR_SERIES_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
-  });
-});
+export const scrapeSeriesMetadataFailure = createAction(
+  '[Series Scraping] Failed to scrape series metadata'
+);

@@ -94,6 +94,12 @@ describe('VolumeMetadataTableComponent', () => {
       item: VOLUMES[0]
     } as SortableListItem<VolumeMetadata>;
 
+    it('sorts by matchability by default', () => {
+      expect(component.dataSource.sortingDataAccessor(ENTRY, '')).toEqual(
+        ENTRY.sortOrder
+      );
+    });
+
     it('sorts by matchability', () => {
       expect(
         component.dataSource.sortingDataAccessor(ENTRY, 'matchability')
@@ -170,17 +176,6 @@ describe('VolumeMetadataTableComponent', () => {
 
     it('emits an event', () => {
       expect(component.volumeSelected.emit).toHaveBeenCalledWith(VOLUMES[0]);
-    });
-  });
-
-  describe('when a volume is chosen ', () => {
-    beforeEach(() => {
-      spyOn(component.volumeChosen, 'emit');
-      component.onVolumeChosen(VOLUMES[1]);
-    });
-
-    it('emits an event', () => {
-      expect(component.volumeChosen.emit).toHaveBeenCalledWith(VOLUMES[1]);
     });
   });
 });

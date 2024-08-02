@@ -62,18 +62,19 @@ import {
 } from '@app/messaging/reducers/messaging.reducer';
 import { Subscription } from 'rxjs';
 import {
-  FETCH_ISSUES_FOR_VOLUME,
-  METADATA_UPDATE_PROCESS_UPDATE_TOPIC
+  METADATA_UPDATE_PROCESS_UPDATE_TOPIC,
+  SCRAPE_SERIES_URL
 } from '@app/comic-metadata/comic-metadata.constants';
 import { metadataUpdateProcessStatusUpdated } from '@app/comic-metadata/actions/metadata-update-process.actions';
 import { MetadataUpdateProcessUpdate } from '@app/comic-metadata/models/net/metadata-update-process-update';
-import { FetchIssuesForSeriesRequest } from '@app/comic-metadata/models/net/fetch-issues-for-series-request';
+import { ScrapeSeriesRequest } from '@app/comic-metadata/models/net/scrape-series-request';
 import { LoadVolumeMetadataRequest } from '@app/comic-metadata/models/net/load-volume-metadata-request';
 import { ScrapeMultiBookComicResponse } from '@app/comic-metadata/models/net/scrape-multi-book-comic-response';
 import { StartMultiBookScrapingResponse } from '@app/comic-metadata/models/net/start-multi-book-scraping-response';
 import { RemoveMultiBookComicResponse } from '@app/comic-metadata/models/net/remove-multi-book-comic-response';
 import { LoadMultiBookScrapingRequest } from '@app/comic-metadata/models/net/load-multi-book-scraping-request';
 import { LoadMultiBookScrapingResponse } from '@app/comic-metadata/models/net/load-multi-book-scraping-page-response';
+import { PUBLISHER_1, SERIES_1 } from '@app/collections/collections.fixtures';
 
 describe('ComicBookScrapingService', () => {
   const SERIES = 'The Series';
@@ -101,6 +102,9 @@ describe('ComicBookScrapingService', () => {
   } as MetadataUpdateProcessUpdate;
   const PAGE_SIZE = 25;
   const PAGE_NUMBER = 4;
+  const ORIGINAL_PUBLISHER = PUBLISHER_1.name;
+  const ORIGINAL_SERIES = SERIES_1.name;
+  const ORIGINAL_VOLUME = SERIES_1.volume;
 
   const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
 
@@ -370,22 +374,28 @@ describe('ComicBookScrapingService', () => {
     });
   });
 
-  it('can fetch issues for a series', () => {
+  it('can scrape a series', () => {
     const serviceResponse = new HttpResponse({ status: 200 });
     service
-      .fetchIssuesForSeries({
+      .scrapeSeries({
+        originalPublisher: ORIGINAL_PUBLISHER,
+        originalSeries: ORIGINAL_SERIES,
+        originalVolume: ORIGINAL_VOLUME,
         source: METADATA_SOURCE,
         volume: SCRAPING_VOLUME
       })
       .subscribe(response => expect(response).toEqual(serviceResponse));
 
     const req = httpMock.expectOne(
-      interpolate(FETCH_ISSUES_FOR_VOLUME, { id: METADATA_SOURCE.id })
+      interpolate(SCRAPE_SERIES_URL, { id: METADATA_SOURCE.id })
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
+      originalPublisher: ORIGINAL_PUBLISHER,
+      originalSeries: ORIGINAL_SERIES,
+      originalVolume: ORIGINAL_VOLUME,
       volumeId: SCRAPING_VOLUME.id
-    } as FetchIssuesForSeriesRequest);
+    } as ScrapeSeriesRequest);
     req.flush(serviceResponse);
   });
 });

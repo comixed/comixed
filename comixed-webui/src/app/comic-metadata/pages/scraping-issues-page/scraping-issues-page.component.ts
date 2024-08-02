@@ -61,11 +61,11 @@ import { QueryParameterService } from '@app/core/services/query-parameter.servic
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'cx-scraping-page',
-  templateUrl: './scraping-page.component.html',
-  styleUrls: ['./scraping-page.component.scss']
+  selector: 'cx-scraping-issues-page',
+  templateUrl: './scraping-issues-page.component.html',
+  styleUrls: ['./scraping-issues-page.component.scss']
 })
-export class ScrapingPageComponent implements OnInit, OnDestroy {
+export class ScrapingIssuesPageComponent implements OnInit, OnDestroy {
   readonly displayColumns = [
     'thumbnail',
     'publisher',
@@ -266,7 +266,7 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
   private loadTranslations(): void {
     this.logger.trace('Loading translations');
     this.titleService.setTitle(
-      this.translateService.instant('scraping.page-title')
+      this.translateService.instant('scraping-issues-page.tab-title')
     );
   }
 }

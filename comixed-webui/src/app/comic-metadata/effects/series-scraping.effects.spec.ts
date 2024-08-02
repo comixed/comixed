@@ -19,13 +19,13 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
-import { FetchIssuesForSeriesEffects } from './fetch-issues-for-series.effects';
+import { SeriesScrapingEffects } from './series-scraping.effects';
 import { ComicBookScrapingService } from '@app/comic-metadata/services/comic-book-scraping.service';
 import {
-  fetchIssuesForSeries,
-  fetchIssuesForSeriesFailed,
-  issuesForSeriesFetched
-} from '@app/comic-metadata/actions/fetch-issues-for-series.actions';
+  scrapeSeriesMetadata,
+  scrapeSeriesMetadataFailure,
+  scrapeSeriesMetadataSuccess
+} from '@app/comic-metadata/actions/series-scraping.actions';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { hot } from 'jasmine-marbles';
 import {
@@ -36,13 +36,17 @@ import { AlertService } from '@app/core/services/alert.service';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { PUBLISHER_1, SERIES_1 } from '@app/collections/collections.fixtures';
 
-describe('FetchIssuesForSeriesEffects', () => {
+describe('SeriesScrapingEffects', () => {
+  const ORIGINAL_PUBLISHER = PUBLISHER_1.name;
+  const ORIGINAL_SERIES = SERIES_1.name;
+  const ORIGINAL_VOLUME = SERIES_1.volume;
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const SCRAPING_VOLUME = SCRAPING_VOLUME_1;
 
   let actions$: Observable<any>;
-  let effects: FetchIssuesForSeriesEffects;
+  let effects: SeriesScrapingEffects;
   let metadataService: jasmine.SpyObj<ComicBookScrapingService>;
   let alertService: AlertService;
 
@@ -54,13 +58,13 @@ describe('FetchIssuesForSeriesEffects', () => {
         MatSnackBarModule
       ],
       providers: [
-        FetchIssuesForSeriesEffects,
+        SeriesScrapingEffects,
         provideMockActions(() => actions$),
         {
           provide: ComicBookScrapingService,
           useValue: {
-            fetchIssuesForSeries: jasmine.createSpy(
-              'ComicBookScrapingService.fetchIssuesForSeries()'
+            scrapeSeries: jasmine.createSpy(
+              'ComicBookScrapingService.scrapeSeries()'
             )
           }
         },
@@ -68,7 +72,7 @@ describe('FetchIssuesForSeriesEffects', () => {
       ]
     });
 
-    effects = TestBed.inject(FetchIssuesForSeriesEffects);
+    effects = TestBed.inject(SeriesScrapingEffects);
     metadataService = TestBed.inject(
       ComicBookScrapingService
     ) as jasmine.SpyObj<ComicBookScrapingService>;
@@ -84,63 +88,81 @@ describe('FetchIssuesForSeriesEffects', () => {
   describe('fetching issues for a series', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
-      const action = fetchIssuesForSeries({
+      const action = scrapeSeriesMetadata({
+        originalPublisher: ORIGINAL_PUBLISHER,
+        originalSeries: ORIGINAL_SERIES,
+        originalVolume: ORIGINAL_VOLUME,
         source: METADATA_SOURCE,
         volume: SCRAPING_VOLUME
       });
-      const outcome = issuesForSeriesFetched();
+      const outcome = scrapeSeriesMetadataSuccess();
 
       actions$ = hot('-a', { a: action });
-      metadataService.fetchIssuesForSeries
+      metadataService.scrapeSeries
         .withArgs({
+          originalPublisher: ORIGINAL_PUBLISHER,
+          originalSeries: ORIGINAL_SERIES,
+          originalVolume: ORIGINAL_VOLUME,
           source: METADATA_SOURCE,
           volume: SCRAPING_VOLUME
         })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.fetchIssuesForSeries$).toBeObservable(expected);
+      expect(effects.scrapeSeries$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = fetchIssuesForSeries({
+      const action = scrapeSeriesMetadata({
+        originalPublisher: ORIGINAL_PUBLISHER,
+        originalSeries: ORIGINAL_SERIES,
+        originalVolume: ORIGINAL_VOLUME,
         source: METADATA_SOURCE,
         volume: SCRAPING_VOLUME
       });
-      const outcome = fetchIssuesForSeriesFailed();
+      const outcome = scrapeSeriesMetadataFailure();
 
       actions$ = hot('-a', { a: action });
-      metadataService.fetchIssuesForSeries
+      metadataService.scrapeSeries
         .withArgs({
+          originalPublisher: ORIGINAL_PUBLISHER,
+          originalSeries: ORIGINAL_SERIES,
+          originalVolume: ORIGINAL_VOLUME,
           source: METADATA_SOURCE,
           volume: SCRAPING_VOLUME
         })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.fetchIssuesForSeries$).toBeObservable(expected);
+      expect(effects.scrapeSeries$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = fetchIssuesForSeries({
+      const action = scrapeSeriesMetadata({
+        originalPublisher: ORIGINAL_PUBLISHER,
+        originalSeries: ORIGINAL_SERIES,
+        originalVolume: ORIGINAL_VOLUME,
         source: METADATA_SOURCE,
         volume: SCRAPING_VOLUME
       });
-      const outcome = fetchIssuesForSeriesFailed();
+      const outcome = scrapeSeriesMetadataFailure();
 
       actions$ = hot('-a', { a: action });
-      metadataService.fetchIssuesForSeries
+      metadataService.scrapeSeries
         .withArgs({
+          originalPublisher: ORIGINAL_PUBLISHER,
+          originalSeries: ORIGINAL_SERIES,
+          originalVolume: ORIGINAL_VOLUME,
           source: METADATA_SOURCE,
           volume: SCRAPING_VOLUME
         })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.fetchIssuesForSeries$).toBeObservable(expected);
+      expect(effects.scrapeSeries$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

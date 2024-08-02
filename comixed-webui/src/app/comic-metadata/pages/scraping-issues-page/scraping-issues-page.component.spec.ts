@@ -17,7 +17,7 @@
  */
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ScrapingPageComponent } from './scraping-page.component';
+import { ScrapingIssuesPageComponent } from './scraping-issues-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -74,7 +74,7 @@ import { QueryParameterService } from '@app/core/services/query-parameter.servic
 import { BehaviorSubject } from 'rxjs';
 import { PAGE_SIZE_DEFAULT } from '@app/core';
 
-describe('ScrapingPageComponent', () => {
+describe('ScrapingIssuesPageComponent', () => {
   const USER = USER_READER;
   const COMIC_BOOK = COMIC_BOOK_3;
   const COMIC_BOOKS = [
@@ -101,8 +101,8 @@ describe('ScrapingPageComponent', () => {
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState
   };
 
-  let component: ScrapingPageComponent;
-  let fixture: ComponentFixture<ScrapingPageComponent>;
+  let component: ScrapingIssuesPageComponent;
+  let fixture: ComponentFixture<ScrapingIssuesPageComponent>;
   let translateService: TranslateService;
   let titleService: TitleService;
   let store: MockStore<any>;
@@ -112,7 +112,7 @@ describe('ScrapingPageComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [
-          ScrapingPageComponent,
+          ScrapingIssuesPageComponent,
           SelectedComicsComponent,
           ComicScrapingComponent
         ],
@@ -140,7 +140,7 @@ describe('ScrapingPageComponent', () => {
         ]
       }).compileComponents();
 
-      fixture = TestBed.createComponent(ScrapingPageComponent);
+      fixture = TestBed.createComponent(ScrapingIssuesPageComponent);
       component = fixture.componentInstance;
       translateService = TestBed.inject(TranslateService);
       titleService = TestBed.inject(TitleService);

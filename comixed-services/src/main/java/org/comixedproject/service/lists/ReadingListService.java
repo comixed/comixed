@@ -364,14 +364,17 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
         (index, row) -> {
           if (index > 0) {
             log.trace("Looking for comicBook");
-            final ComicBook comicBook =
+            final List<ComicBook> comicBooks =
                 this.comicBookService.findComic(row.get(1), row.get(2), row.get(3), row.get(4));
-            if (comicBook != null) {
-              final ReadingList list = this.readingListRepository.getById(readingListId);
-              log.trace("Adding comicBook to reading list");
-              Map<String, Object> headers = new HashMap<>();
-              headers.put(HEADER_COMIC, comicBook);
-              this.readingListStateHandler.fireEvent(list, ReadingListEvent.comicAdded, headers);
+            if (!comicBooks.isEmpty()) {
+              for (int which = 0; which < comicBooks.size(); which++) {
+                final ComicBook comicBook = comicBooks.get(which);
+                final ReadingList list = this.readingListRepository.getById(readingListId);
+                log.trace("Adding comicBook to reading list");
+                Map<String, Object> headers = new HashMap<>();
+                headers.put(HEADER_COMIC, comicBook);
+                this.readingListStateHandler.fireEvent(list, ReadingListEvent.comicAdded, headers);
+              }
             }
           }
         });

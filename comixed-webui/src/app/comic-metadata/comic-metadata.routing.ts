@@ -20,13 +20,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminGuard } from '../user';
 import { NgModule } from '@angular/core';
 import { MetadataProcessPageComponent } from '@app/comic-metadata/pages/metadata-process-page/metadata-process-page.component';
-import { FetchIssuesPageComponent } from '@app/comic-metadata/pages/fetch-issues-page/fetch-issues-page.component';
-import { ScrapingPageComponent } from '@app/comic-metadata/pages/scraping-page/scraping-page.component';
+import { ScrapingSeriesPageComponent } from '@app/comic-metadata/pages/scraping-series-page/scraping-series-page.component';
+import { ScrapingIssuesPageComponent } from '@app/comic-metadata/pages/scraping-issues-page/scraping-issues-page.component';
 
 const routes: Routes = [
   {
-    path: 'metadata/scraping',
-    component: ScrapingPageComponent,
+    path: 'metadata/scraping/issues',
+    component: ScrapingIssuesPageComponent,
     canActivate: [AdminGuard]
   },
   {
@@ -35,8 +35,8 @@ const routes: Routes = [
     canActivate: [AdminGuard]
   },
   {
-    path: 'metadata/publishers/:publisher/series/:series/volumes/:volume/issues',
-    component: FetchIssuesPageComponent,
+    path: 'metadata/scraping/publishers/:publisher/series/:series/volumes/:volume/issues',
+    component: ScrapingSeriesPageComponent,
     canActivate: [AdminGuard]
   }
 ];

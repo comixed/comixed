@@ -16,6 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export interface FetchIssuesForSeriesRequest {
-  volumeId: string;
-}
+import {
+  SERIES_SCRAPING_FEATURE_KEY,
+  SeriesScrapingState
+} from '../reducers/series-scraping.reducer';
+import { selectSeriesScrapingState } from './series-scraping.selectors';
+
+describe('SeriesScraping Selectors', () => {
+  let state: SeriesScrapingState;
+
+  beforeEach(() => {
+    state = { busy: Math.random() > 0.5 };
+  });
+
+  it('should select the feature state', () => {
+    expect(
+      selectSeriesScrapingState({
+        [SERIES_SCRAPING_FEATURE_KEY]: state
+      })
+    ).toEqual(state);
+  });
+});

@@ -35,7 +35,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MetadataProcessStatusComponent } from './components/metadata-process-status/metadata-process-status.component';
 import { metadataUpdateProcessFeature } from '@app/comic-metadata/reducers/metadata-update-process.reducer';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { FetchIssuesPageComponent } from './pages/fetch-issues-page/fetch-issues-page.component';
+import { ScrapingSeriesPageComponent } from '@app/comic-metadata/pages/scraping-series-page/scraping-series-page.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -44,22 +44,23 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCardModule } from '@angular/material/card';
-import { fetchIssuesForSeriesFeature } from '@app/comic-metadata/reducers/fetch-issues-for-series.reducer';
-import { FetchIssuesForSeriesEffects } from '@app/comic-metadata/effects/fetch-issues-for-series.effects';
+import { seriesScrapingFeature } from '@app/comic-metadata/reducers/series-scraping.reducer';
+import { SeriesScrapingEffects } from '@app/comic-metadata/effects/series-scraping.effects';
 import { singleBookScrapingFeature } from '@app/comic-metadata/reducers/single-book-scraping.reducer';
 import { SingleBookScrapingEffects } from '@app/comic-metadata/effects/single-book-scraping.effects';
 import { ComicBooksModule } from '@app/comic-books/comic-books.module';
 import { multiBookScrapingFeature } from '@app/comic-metadata/reducers/multi-book-scraping.reducer';
 import { MultiBookScrapingEffects } from '@app/comic-metadata/effects/multi-book-scraping.effects';
-import { ScrapingPageComponent } from '@app/comic-metadata/pages/scraping-page/scraping-page.component';
+import { ScrapingIssuesPageComponent } from '@app/comic-metadata/pages/scraping-issues-page/scraping-issues-page.component';
+import { MatDialogContainer, MatDialogContent } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
-    ScrapingPageComponent,
+    ScrapingIssuesPageComponent,
     MetadataProcessPageComponent,
     MetadataProcessToolbarComponent,
     MetadataProcessStatusComponent,
-    FetchIssuesPageComponent
+    ScrapingSeriesPageComponent
   ],
   imports: [
     CommonModule,
@@ -69,13 +70,13 @@ import { ScrapingPageComponent } from '@app/comic-metadata/pages/scraping-page/s
     StoreModule.forFeature(metadataSourceListFeature),
     StoreModule.forFeature(metadataSourceFeature),
     StoreModule.forFeature(metadataUpdateProcessFeature),
-    StoreModule.forFeature(fetchIssuesForSeriesFeature),
+    StoreModule.forFeature(seriesScrapingFeature),
     StoreModule.forFeature(multiBookScrapingFeature),
     EffectsModule.forFeature([
       SingleBookScrapingEffects,
       MetadataSourceListEffects,
       MetadataSourceEffects,
-      FetchIssuesForSeriesEffects,
+      SeriesScrapingEffects,
       MultiBookScrapingEffects
     ]),
     MatToolbarModule,
@@ -91,7 +92,9 @@ import { ScrapingPageComponent } from '@app/comic-metadata/pages/scraping-page/s
     MatCheckboxModule,
     MatPaginatorModule,
     MatCardModule,
-    ComicBooksModule
+    ComicBooksModule,
+    MatDialogContent,
+    MatDialogContainer
   ],
   exports: [CommonModule]
 })

@@ -20,10 +20,10 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
-  fetchIssuesForSeries,
-  fetchIssuesForSeriesFailed,
-  issuesForSeriesFetched
-} from '../actions/fetch-issues-for-series.actions';
+  scrapeSeriesMetadata,
+  scrapeSeriesMetadataFailure,
+  scrapeSeriesMetadataSuccess
+} from '../actions/series-scraping.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicBookScrapingService } from '@app/comic-metadata/services/comic-book-scraping.service';
 import { AlertService } from '@app/core/services/alert.service';
@@ -31,14 +31,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
 @Injectable()
-export class FetchIssuesForSeriesEffects {
-  fetchIssuesForSeries$ = createEffect(() => {
+export class SeriesScrapingEffects {
+  scrapeSeries$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(fetchIssuesForSeries),
+      ofType(scrapeSeriesMetadata),
       tap(action => this.logger.debug('Fetching issues for series:', action)),
       switchMap(action =>
         this.metadataService
-          .fetchIssuesForSeries({
+          .scrapeSeries({
+            originalPublisher: action.originalPublisher,
+            originalSeries: action.originalSeries,
+            originalVolume: action.originalVolume,
             source: action.source,
             volume: action.volume
           })
@@ -46,28 +49,22 @@ export class FetchIssuesForSeriesEffects {
             tap(response => this.logger.debug('Response received:', response)),
             tap(() =>
               this.alertService.info(
-                this.translateService.instant(
-                  'metadata.fetch-issues.effect-success',
-                  {
-                    series: action.volume.name,
-                    volume: action.volume.startYear
-                  }
-                )
+                this.translateService.instant('scrape-series.effect-success', {
+                  series: action.volume.name,
+                  volume: action.volume.startYear
+                })
               )
             ),
-            map(() => issuesForSeriesFetched()),
+            map(() => scrapeSeriesMetadataSuccess()),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(
-                this.translateService.instant(
-                  'metadata.fetch-issues.effect-failure',
-                  {
-                    series: action.volume.name,
-                    volume: action.volume.startYear
-                  }
-                )
+                this.translateService.instant('scrape-series.effect-failure', {
+                  series: action.volume.name,
+                  volume: action.volume.startYear
+                })
               );
-              return of(fetchIssuesForSeriesFailed());
+              return of(scrapeSeriesMetadataFailure());
             })
           )
       ),
@@ -76,7 +73,7 @@ export class FetchIssuesForSeriesEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(fetchIssuesForSeriesFailed());
+        return of(scrapeSeriesMetadataFailure());
       })
     );
   });

@@ -61,7 +61,7 @@ export const SCRAPING_VOLUME_2: VolumeMetadata = {
 };
 export const SCRAPING_VOLUME_3: VolumeMetadata = {
   id: '39823',
-  name: 'Scraping Series 3',
+  name: 'Scraping Series 1',
   publisher: 'Publisher 1',
   startYear: '2020',
   imageUrl: 'http://sitecom/what',

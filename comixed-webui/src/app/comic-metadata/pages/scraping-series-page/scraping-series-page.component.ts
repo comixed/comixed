@@ -39,29 +39,37 @@ import { MetadataSourceListState } from '@app/comic-metadata/reducers/metadata-s
 import { loadVolumeMetadata } from '@app/comic-metadata/actions/single-book-scraping.actions';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import {
-  selectSingleBookScrapingState,
-  selectScrapingVolumeMetadata
+  selectScrapingVolumeMetadata,
+  selectSingleBookScrapingState
 } from '@app/comic-metadata/selectors/single-book-scraping.selectors';
 import { SingleBookScrapingState } from '@app/comic-metadata/reducers/single-book-scraping.reducer';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
-import { SKIP_CACHE_PREFERENCE } from '@app/library/library.constants';
+import {
+  MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
+  SKIP_CACHE_PREFERENCE
+} from '@app/library/library.constants';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { fetchIssuesForSeries } from '@app/comic-metadata/actions/fetch-issues-for-series.actions';
-import { FetchIssuesForSeriesState } from '@app/comic-metadata/reducers/fetch-issues-for-series.reducer';
-import { selectFetchIssuesForSeriesState } from '@app/comic-metadata/selectors/fetch-issues-for-series.selectors';
+import { scrapeSeriesMetadata } from '@app/comic-metadata/actions/series-scraping.actions';
+import { SeriesScrapingState } from '@app/comic-metadata/reducers/series-scraping.reducer';
+import { selectSeriesScrapingState } from '@app/comic-metadata/selectors/series-scraping.selectors';
+import { METADATA_RECORD_LIMITS } from '@app/comic-metadata/comic-metadata.constants';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'cx-fetch-issues-page',
-  templateUrl: './fetch-issues-page.component.html',
-  styleUrls: ['./fetch-issues-page.component.scss']
+  selector: 'cx-scraping-series-page',
+  templateUrl: './scraping-series-page.component.html',
+  styleUrls: ['./scraping-series-page.component.scss']
 })
-export class FetchIssuesPageComponent implements OnInit, OnDestroy {
-  fetchIssuesForm: UntypedFormGroup;
-  publisher = '';
-  series = '';
-  volume = '';
+export class ScrapingSeriesPageComponent implements OnInit, OnDestroy {
+  readonly maximumRecordsOptions = METADATA_RECORD_LIMITS;
+  maximumRecords = 0;
+
+  scrapeSeriesForm: UntypedFormGroup;
+  originalPublisher = '';
+  originalSeries = '';
+  originalVolume = '';
 
   userSubscription: Subscription;
   paramSubscription: Subscription;
@@ -70,7 +78,7 @@ export class FetchIssuesPageComponent implements OnInit, OnDestroy {
   metadataSourceListState: MetadataSourceListState;
   scrapingVolumeSubscription: Subscription;
   fetchIssuesForSeriesStateSubscription: Subscription;
-  fetchIssuesForSeriesState: FetchIssuesForSeriesState;
+  fetchIssuesForSeriesState: SeriesScrapingState;
   scrapingVolumes: VolumeMetadata[] = [];
   pageSize = 10;
   metadataStateSubscription: Subscription;
@@ -87,26 +95,27 @@ export class FetchIssuesPageComponent implements OnInit, OnDestroy {
     private formBuilder: UntypedFormBuilder,
     private translateService: TranslateService,
     private titleService: TitleService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private dialog: MatDialog
   ) {
     this.logger.trace('Loading page parameters');
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.logger.debug('Route parameters:', params);
-      this.publisher = params.publisher;
-      this.series = params.series;
-      this.volume = params.volume;
+      this.originalPublisher = params.publisher;
+      this.originalSeries = params.series;
+      this.originalVolume = params.volume;
     });
     this.logger.trace('Building the issue form');
-    this.fetchIssuesForm = this.formBuilder.group({
-      publisher: [this.publisher],
-      series: [this.series],
-      volume: [this.volume],
+    this.scrapeSeriesForm = this.formBuilder.group({
+      publisher: [this.originalPublisher],
+      series: [this.originalSeries],
+      volume: [this.originalVolume],
       metadataSource: ['', Validators.required],
       skipCache: ['']
     });
     this.logger.trace('Subscribing to user updates');
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
-      this.fetchIssuesForm.controls.skipCache.setValue(
+      this.scrapeSeriesForm.controls.skipCache.setValue(
         getUserPreference(
           user.preferences,
           SKIP_CACHE_PREFERENCE,
@@ -143,7 +152,7 @@ export class FetchIssuesPageComponent implements OnInit, OnDestroy {
       'Subscribing to fetching issues for series state updates'
     );
     this.fetchIssuesForSeriesStateSubscription = this.store
-      .select(selectFetchIssuesForSeriesState)
+      .select(selectSeriesScrapingState)
       .subscribe(state => {
         this.fetchIssuesForSeriesState = state;
         this.updateBusyState();
@@ -157,8 +166,20 @@ export class FetchIssuesPageComponent implements OnInit, OnDestroy {
     this.loadTranslations();
   }
 
+  get publisher(): string {
+    return this.scrapeSeriesForm.controls['publisher'].value;
+  }
+
+  get series(): string {
+    return this.scrapeSeriesForm.controls['series'].value;
+  }
+
+  get volume(): string {
+    return this.scrapeSeriesForm.controls['volume'].value;
+  }
+
   get skipCache(): boolean {
-    return this.fetchIssuesForm.controls.skipCache.value;
+    return this.scrapeSeriesForm.controls.skipCache.value;
   }
 
   set skipCache(skipCache: boolean) {
@@ -169,13 +190,14 @@ export class FetchIssuesPageComponent implements OnInit, OnDestroy {
 
   get metadataSource(): MetadataSource {
     return this.metadataSourceList.find(
-      source => source.id === this.fetchIssuesForm.controls.metadataSource.value
+      source =>
+        source.id === this.scrapeSeriesForm.controls.metadataSource.value
     );
   }
 
   set metadataSource(metadataSource: MetadataSource) {
     this.logger.debug(`Selected metadata source: ${metadataSource?.name}`);
-    this.fetchIssuesForm.controls.metadataSource.setValue(metadataSource?.id);
+    this.scrapeSeriesForm.controls.metadataSource.setValue(metadataSource?.id);
   }
 
   ngOnInit(): void {
@@ -207,15 +229,16 @@ export class FetchIssuesPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  onFetchIssues(): void {
+  onFetchVolumeCandidates(): void {
+    const series = this.scrapeSeriesForm.controls['series'].value;
     this.logger.debug(
-      `Fetching issues for series: publisher=${this.publisher} series=${this.series} volume=${this.volume} source=${this.metadataSource}`
+      `Fetching candidates for series: series=${series} source=${this.metadataSource}`
     );
     this.store.dispatch(
       loadVolumeMetadata({
         metadataSource: this.metadataSource,
-        series: this.series,
-        maximumRecords: 0,
+        series,
+        maximumRecords: this.maximumRecords,
         skipCache: this.skipCache
       })
     );
@@ -223,10 +246,10 @@ export class FetchIssuesPageComponent implements OnInit, OnDestroy {
 
   loadTranslations(): void {
     this.titleService.setTitle(
-      this.translateService.instant('metadata.fetch-issues.tab-title', {
-        publisher: this.publisher,
-        series: this.series,
-        volume: this.volume
+      this.translateService.instant('scraping-series-page.tab-title', {
+        publisher: this.originalPublisher,
+        series: this.originalSeries,
+        volume: this.originalVolume
       })
     );
   }
@@ -248,11 +271,9 @@ export class FetchIssuesPageComponent implements OnInit, OnDestroy {
   onVolumeChosen(volume: VolumeMetadata): void {
     this.logger.debug('Volume chosen:', volume);
     this.confirmationService.confirm({
-      title: this.translateService.instant(
-        'metadata.fetch-issues.confirmation-title'
-      ),
+      title: this.translateService.instant('scrape-series.confirmation-title'),
       message: this.translateService.instant(
-        'metadata.fetch-issues.confirmation-message',
+        'scrape-series.confirmation-message',
         {
           publisher: volume.publisher,
           series: volume.name,
@@ -262,12 +283,29 @@ export class FetchIssuesPageComponent implements OnInit, OnDestroy {
       confirm: () => {
         this.logger.debug('Fetching issues for series');
         this.store.dispatch(
-          fetchIssuesForSeries({
+          scrapeSeriesMetadata({
+            originalPublisher: this.originalPublisher,
+            originalSeries: this.originalSeries,
+            originalVolume: this.originalVolume,
             source: this.metadataSource,
             volume
           })
         );
       }
     });
+  }
+
+  onMaximumRecordsChanged(maximumRecords: number): void {
+    this.logger.debug('Changed maximum records');
+    this.store.dispatch(
+      saveUserPreference({
+        name: MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
+        value: `${maximumRecords}`
+      })
+    );
+  }
+
+  onShowNotice(dialogTemplate: any): void {
+    this.dialog.open(dialogTemplate, { width: '600px' });
   }
 }
