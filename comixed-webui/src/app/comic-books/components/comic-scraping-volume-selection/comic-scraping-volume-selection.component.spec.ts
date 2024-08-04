@@ -203,6 +203,44 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
         ).toBeTrue();
       });
     });
+
+    describe('when an exact match is received with a differently cased series name', () => {
+      beforeEach(() => {
+        component.comicSeriesName.toUpperCase();
+        component.comicVolume = SCRAPING_VOLUME.startYear;
+        component.volumes = VOLUMES;
+      });
+
+      it('loads the datasource', () => {
+        expect(component.dataSource.data).not.toEqual([]);
+      });
+
+      it('preselects a volume', () => {
+        expect(component.selectedVolume).not.toBeNull();
+      });
+
+      it('contains an exact match', () => {
+        expect(
+          component.dataSource.data.some(
+            entry => entry.sortOrder === EXACT_MATCH
+          )
+        ).toBeTrue();
+      });
+
+      it('contains a near match', () => {
+        expect(
+          component.dataSource.data.some(
+            entry => entry.sortOrder === NEAR_MATCH
+          )
+        ).toBeTrue();
+      });
+
+      it('contains non-matches', () => {
+        expect(
+          component.dataSource.data.some(entry => entry.sortOrder === NO_MATCH)
+        ).toBeTrue();
+      });
+    });
   });
 
   describe('sorting scraping volumes', () => {
