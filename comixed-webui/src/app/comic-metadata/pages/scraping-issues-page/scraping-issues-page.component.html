@@ -26,10 +26,8 @@
 
 <h2>{{ "scraping-issues-page.page-title" | translate }}</h2>
 
-<h3 *ngIf="!!currentComicBook">{{ currentComicBook?.detail.baseFilename }}</h3>
-
 <div *ngIf="!started" class="cx-width-100 cx-align-content-center">
-  <p>{{ "scraping.inactive.page-content" | translate }}</p>
+  <p>{{ "scraping-page.inactive.page-content" | translate }}</p>
 
   <button
     id="cx-show-all-comics-button"
@@ -55,11 +53,17 @@
     </h3>
     <mat-card>
       <mat-card-title
-        class="cx-text-nowrap"
+        class="cx-text-nowrap cx-align-content-center"
         [matTooltip]="currentComicBook?.detail | comicTitle"
       >
         {{ currentComicBook?.detail | comicTitle }}
       </mat-card-title>
+      <mat-card-subtitle
+        class="cx-text-nowrap cx-align-content-center"
+        [matTooltip]="currentComicBook?.detail.baseFilename"
+      >
+        {{ currentComicBook?.detail.baseFilename }}
+      </mat-card-subtitle>
       <mat-card-content>
         <img
           [style.width]="'100%'"
