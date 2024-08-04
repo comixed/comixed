@@ -72,7 +72,7 @@ export class VolumeMetadataTableComponent implements AfterViewInit {
     this.dataSource.data = volumes.map(volume => {
       const sortOrder =
         (!this.publisher || this.publisher == volume.publisher) &&
-        volume.name === this.series &&
+        volume.name.toUpperCase() === this.series.toUpperCase() &&
         volume.startYear === this.volume
           ? EXACT_MATCH
           : (!this.publisher || this.publisher === volume.publisher) &&

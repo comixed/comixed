@@ -140,10 +140,10 @@ export class ComicScrapingVolumeSelectionComponent
     this.logger.trace('Received scraping volumes');
     this.dataSource.data = volumes.map(volume => {
       const sortOrder =
-        volume.name === this.comicSeriesName &&
+        volume.name.toUpperCase() === this.comicSeriesName.toUpperCase() &&
         volume.startYear === this.comicVolume
           ? EXACT_MATCH
-          : volume.name === this.comicSeriesName
+          : volume.name.toUpperCase() === this.comicSeriesName.toUpperCase()
           ? NEAR_MATCH
           : NO_MATCH;
       return {
