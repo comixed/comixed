@@ -26,6 +26,7 @@ import {
   loadComicDetailsFailed,
   loadComicDetailsForCollection,
   loadComicDetailsForReadingList,
+  loadDuplicateComicsDetails,
   loadReadComicDetails,
   loadUnreadComicDetails
 } from '../actions/comic-details-list.actions';
@@ -60,6 +61,7 @@ export const reducer = createReducer(
   on(loadUnreadComicDetails, state => ({ ...state, loading: true })),
   on(loadReadComicDetails, state => ({ ...state, loading: true })),
   on(loadComicDetailsForReadingList, state => ({ ...state, loading: true })),
+  on(loadDuplicateComicsDetails, state => ({ ...state, loading: true })),
   on(comicDetailsLoaded, (state, action) => ({
     ...state,
     loading: false,

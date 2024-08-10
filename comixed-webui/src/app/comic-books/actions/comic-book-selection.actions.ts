@@ -122,6 +122,13 @@ export const setMultipleComicBookByPublisherSeriesAndVolumeSelectionState =
     }>()
   );
 
+export const setDuplicateComicBooksSelectionState = createAction(
+  '[Comic Book Selection] Set the selected state for all duplicate comic books',
+  props<{
+    selected: boolean;
+  }>()
+);
+
 export const setMultipleComicBookSelectionStateSuccess = createAction(
   '[Comic Book Selection] The selected state for multiple comic books was set'
 );

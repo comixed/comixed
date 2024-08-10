@@ -386,4 +386,12 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
   @Query("SELECT d FROM ComicDetail d WHERE d.comicBook.id IN :selectedIds")
   List<ComicDetail> findSelectedComicBooks(
       @Param("selectedIds") List selectedIds, Pageable pageable);
+
+  @Query(
+      "SELECT sum(total) FROM (SELECT count(*) AS total FROM ComicDetail d GROUP BY d.publisher, d.series, d.volume, d.issueNumber HAVING count(*) > 1)")
+  long getDuplicateComicBookCount();
+
+  @Query(
+      "SELECT d FROM ComicDetail d JOIN (SELECT c.publisher AS publisher, c.series AS series, c.volume AS volume, c.issueNumber AS issueNumber FROM ComicDetail c GROUP BY c.publisher, c.series, c.volume, c.issueNumber HAVING count(*) > 1) g ON g.publisher = d.publisher AND g.series = d.series AND g.volume = d.volume AND g.issueNumber = d.issueNumber")
+  List<ComicDetail> getDuplicateComicBooks(Pageable pageable);
 }

@@ -25,10 +25,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.comicbooks.ComicTagType;
-import org.comixedproject.model.net.comicbooks.AddComicBookSelectionsByIdRequest;
-import org.comixedproject.model.net.comicbooks.AddComicBookSelectionsByPublisherRequest;
-import org.comixedproject.model.net.comicbooks.AddComicBookSelectionsByPublisherSeriesVolumeRequest;
-import org.comixedproject.model.net.comicbooks.MultipleComicBooksSelectionRequest;
+import org.comixedproject.model.net.comicbooks.*;
 import org.comixedproject.opds.OPDSUtils;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;
 import org.comixedproject.service.comicbooks.ComicBookSelectionService;
@@ -259,6 +256,36 @@ public class ComicBookSelectionControllerTest {
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
     Mockito.verify(comicBookService, Mockito.times(1))
         .getIdsByPublisherSeriesAndVolume(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
+    Mockito.verify(selectionIdList, Mockito.times(1)).removeAll(selectionIdList);
+    Mockito.verify(comicBookSelectionService, Mockito.times(1)).encodeSelections(selectionIdList);
+    Mockito.verify(httpSession, Mockito.times(1))
+        .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
+  }
+
+  @Test
+  public void testAddDuplicateComicBooksToSelections() throws ComicBookSelectionException {
+    Mockito.when(comicBookService.getDuplicateComicIds()).thenReturn(selectionIdList);
+
+    controller.addDuplicateComicBooksSelection(
+        httpSession, new DuplicateComicBooksSelectionRequest(true));
+
+    Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
+    Mockito.verify(comicBookService, Mockito.times(1)).getDuplicateComicIds();
+    Mockito.verify(selectionIdList, Mockito.times(1)).addAll(selectionIdList);
+    Mockito.verify(comicBookSelectionService, Mockito.times(1)).encodeSelections(selectionIdList);
+    Mockito.verify(httpSession, Mockito.times(1))
+        .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
+  }
+
+  @Test
+  public void testRemoveDuplicateComicBooksToSelections() throws ComicBookSelectionException {
+    Mockito.when(comicBookService.getDuplicateComicIds()).thenReturn(selectionIdList);
+
+    controller.addDuplicateComicBooksSelection(
+        httpSession, new DuplicateComicBooksSelectionRequest(false));
+
+    Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
+    Mockito.verify(comicBookService, Mockito.times(1)).getDuplicateComicIds();
     Mockito.verify(selectionIdList, Mockito.times(1)).removeAll(selectionIdList);
     Mockito.verify(comicBookSelectionService, Mockito.times(1)).encodeSelections(selectionIdList);
     Mockito.verify(httpSession, Mockito.times(1))

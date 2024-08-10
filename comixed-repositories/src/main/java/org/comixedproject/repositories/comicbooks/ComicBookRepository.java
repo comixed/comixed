@@ -632,4 +632,8 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
       @Param("publisher") String publisher,
       @Param("series") String series,
       @Param("volume") String volume);
+
+  @Query(
+      "SELECT d.comicBook.id FROM ComicDetail d JOIN (SELECT c.publisher AS publisher, c.series AS series, c.volume AS volume, c.issueNumber AS issueNumber FROM ComicDetail c GROUP BY c.publisher, c.series, c.volume, c.issueNumber HAVING count(*) > 1) g ON g.publisher = d.publisher AND g.series = d.series AND g.volume = d.volume AND g.issueNumber = d.issueNumber")
+  List<Long> getDuplicateComicIds();
 }

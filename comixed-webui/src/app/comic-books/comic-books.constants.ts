@@ -26,6 +26,7 @@ export const LOAD_COMIC_DETAILS_BY_ID_URL = `${API_ROOT_URL}/comics/details/load
 export const LOAD_COMIC_DETAILS_FOR_COLLECTION_URL = `${API_ROOT_URL}/comics/details/load/tag`;
 export const LOAD_UNREAD_COMIC_DETAILS_URL = `${API_ROOT_URL}/comics/details/load/unread`;
 export const LOAD_COMIC_DETAILS_FOR_READING_LIST_URL = `${API_ROOT_URL}/comics/details/load/readinglist/\${readingListId}`;
+export const LOAD_DUPLICATE_COMIC_BOOK_DETAILS_URL = `${API_ROOT_URL}/comics/details/load/duplicates`;
 
 export const LOAD_COMIC_BOOK_SELECTIONS_URL = `${API_ROOT_URL}/comics/selections`;
 export const ADD_SINGLE_COMIC_SELECTION_URL = `${API_ROOT_URL}/comics/selections/\${comicBookId}`;
@@ -35,6 +36,7 @@ export const SET_SELECTED_COMIC_BOOKS_BY_TAG_TYPE_AND_VALUE_URL = `${API_ROOT_UR
 export const SET_SELECTED_COMIC_BOOKS_BY_ID_URL = `${API_ROOT_URL}/comics/selections/ids`;
 export const SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_URL = `${API_ROOT_URL}/comics/selections/publisher`;
 export const SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_SERIES_VOLUME_URL = `${API_ROOT_URL}/comics/selections/series`;
+export const SET_SELECTED_DUPLICATE_COMIC_BOOKS_URL = `${API_ROOT_URL}/comics/selections/duplicates`;
 export const CLEAR_COMIC_BOOK_SELECTION_STATE_URL = `${API_ROOT_URL}/comics/selections/clear`;
 
 export const DELETE_SINGLE_COMIC_BOOK_URL = `${API_ROOT_URL}/comics/\${comicBookId}`;

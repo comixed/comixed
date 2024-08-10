@@ -809,4 +809,41 @@ public class ComicDetailService {
     return this.comicDetailRepository.findSelectedComicBooks(
         selectedIds, PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
   }
+
+  /**
+   * Returns the number of duplicate comic book entries.
+   *
+   * @return the count
+   */
+  @Transactional
+  public long getDuplicateComicBookCount() {
+    log.debug("Load the duplicate comic detail count");
+    return this.comicDetailRepository.getDuplicateComicBookCount();
+  }
+
+  /**
+   * Returns a set of duplicate comics.
+   *
+   * @param pageSize the page size
+   * @param pageIndex the page index
+   * @param sortBy the sort field
+   * @param sortDirection the sort direction
+   * @return the comic detail list
+   */
+  @Transactional
+  public List<ComicDetail> loadDuplicateComicBookDetails(
+      final int pageSize, final int pageIndex, final String sortBy, final String sortDirection) {
+    log.debug(
+        "Loading a page of duplicate comics: index={} size={} sort by={} direction={}",
+        pageIndex,
+        pageSize,
+        sortBy,
+        sortDirection);
+    String sorting = sortBy;
+    if (StringUtils.hasLength(sortBy)) {
+      sorting = "d." + sortBy;
+    }
+    return this.comicDetailRepository.getDuplicateComicBooks(
+        PageRequest.of(pageIndex, pageSize, this.doCreateSort(sorting, sortDirection)));
+  }
 }

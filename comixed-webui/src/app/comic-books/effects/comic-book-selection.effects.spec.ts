@@ -34,13 +34,14 @@ import {
   loadComicBookSelections,
   loadComicBookSelectionsFailed,
   removeSingleComicBookSelection,
+  setDuplicateComicBooksSelectionState,
   setMultipleComicBookByFilterSelectionState,
   setMultipleComicBookByIdSelectionState,
   setMultipleComicBookByPublisherSelectionState,
+  setMultipleComicBookByPublisherSeriesAndVolumeSelectionState,
   setMultipleComicBooksByTagTypeAndValueSelectionState,
   setMultipleComicBookSelectionStateFailure,
   setMultipleComicBookSelectionStateSuccess,
-  setMultipleComicBookByPublisherSeriesAndVolumeSelectionState,
   singleComicBookSelectionFailed,
   singleComicBookSelectionUpdated
 } from '@app/comic-books/actions/comic-book-selection.actions';
@@ -105,6 +106,9 @@ describe('ComicBookSelectionEffects', () => {
             ),
             setSelectedByPublisherSeriesAndVolume: jasmine.createSpy(
               'ComicBookSelectionService.setSelectedByPublisherSeriesAndVolume()'
+            ),
+            setDuplicateComicBooksSelectionState: jasmine.createSpy(
+              'ComicBookSelectionService.setDuplicateComicBooksSelectionState()'
             ),
             clearSelections: jasmine.createSpy(
               'ComicBookSelectionService.clearSelections()'
@@ -648,6 +652,63 @@ describe('ComicBookSelectionEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.setSelectedByPublisherSeriesAndVolume$).toBeObservable(
+        expected
+      );
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('selecting all duplicate comic books', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = new HttpResponse({});
+      const action = setDuplicateComicBooksSelectionState({
+        selected: SELECTED
+      });
+      const outcome = setMultipleComicBookSelectionStateSuccess();
+
+      actions$ = hot('-a', { a: action });
+      comicBookSelectionService.setDuplicateComicBooksSelectionState
+        .withArgs({ selected: SELECTED })
+        .and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.setDuplicateComicBooksSelectionState$).toBeObservable(
+        expected
+      );
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = setDuplicateComicBooksSelectionState({
+        selected: SELECTED
+      });
+      const outcome = setMultipleComicBookSelectionStateFailure();
+
+      actions$ = hot('-a', { a: action });
+      comicBookSelectionService.setDuplicateComicBooksSelectionState
+        .withArgs({ selected: SELECTED })
+        .and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.setDuplicateComicBooksSelectionState$).toBeObservable(
+        expected
+      );
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = setDuplicateComicBooksSelectionState({
+        selected: SELECTED
+      });
+      const outcome = setMultipleComicBookSelectionStateFailure();
+
+      actions$ = hot('-a', { a: action });
+      comicBookSelectionService.setDuplicateComicBooksSelectionState
+        .withArgs({ selected: SELECTED })
+        .and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.setDuplicateComicBooksSelectionState$).toBeObservable(
         expected
       );
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));

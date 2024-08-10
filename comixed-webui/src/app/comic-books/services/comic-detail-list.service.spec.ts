@@ -54,6 +54,7 @@ import {
   LOAD_COMIC_DETAILS_FOR_COLLECTION_URL,
   LOAD_COMIC_DETAILS_FOR_READING_LIST_URL,
   LOAD_COMIC_DETAILS_URL,
+  LOAD_DUPLICATE_COMIC_BOOK_DETAILS_URL,
   LOAD_UNREAD_COMIC_DETAILS_URL
 } from '@app/comic-books/comic-books.constants';
 import { LoadComicDetailsResponse } from '@app/comic-books/models/net/load-comic-details-response';
@@ -67,6 +68,7 @@ import { LoadComicDetailsForCollectionRequest } from '@app/comic-books/models/ne
 import { LoadUnreadComicDetailsRequest } from '@app/comic-books/models/net/load-unread-comic-details-request';
 import { READING_LIST_3 } from '@app/lists/lists.fixtures';
 import { LoadComicDetailsForReadingListRequest } from '@app/comic-books/models/net/load-comic-details-for-reading-list-request';
+import { LoadDuplicateComicDetailsRequest } from '@app/comic-books/models/net/load-duplicate-comic-details-request';
 
 describe('ComicDetailListService', () => {
   const PAGE_SIZE = 25;
@@ -410,6 +412,34 @@ describe('ComicDetailListService', () => {
       sortBy: SORT_BY,
       sortDirection: SORT_DIRECTION
     } as LoadComicDetailsForReadingListRequest);
+    req.flush(serviceResponse);
+  });
+
+  it('can load duplicate comic details', () => {
+    const serviceResponse = {
+      comicDetails: COMIC_DETAILS,
+      totalCount: TOTAL_COUNT,
+      filteredCount: FILTERED_COUNT
+    } as LoadComicDetailsResponse;
+    service
+      .loadDuplicateComicsDetails({
+        pageSize: PAGE_SIZE,
+        pageIndex: PAGE_INDEX,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      })
+      .subscribe(response => expect(response).toEqual(serviceResponse));
+
+    const req = httpMock.expectOne(
+      interpolate(LOAD_DUPLICATE_COMIC_BOOK_DETAILS_URL)
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      pageSize: PAGE_SIZE,
+      pageIndex: PAGE_INDEX,
+      sortBy: SORT_BY,
+      sortDirection: SORT_DIRECTION
+    } as LoadDuplicateComicDetailsRequest);
     req.flush(serviceResponse);
   });
 });

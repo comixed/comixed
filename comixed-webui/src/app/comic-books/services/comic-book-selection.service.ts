@@ -31,7 +31,8 @@ import {
   SET_SELECTED_COMIC_BOOKS_BY_ID_URL,
   SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_SERIES_VOLUME_URL,
   SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_URL,
-  SET_SELECTED_COMIC_BOOKS_BY_TAG_TYPE_AND_VALUE_URL
+  SET_SELECTED_COMIC_BOOKS_BY_TAG_TYPE_AND_VALUE_URL,
+  SET_SELECTED_DUPLICATE_COMIC_BOOKS_URL
 } from '@app/comic-books/comic-books.constants';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
@@ -48,6 +49,7 @@ import { TagType } from '@app/collections/models/comic-collection.enum';
 import { SetSelectedByIdRequest } from '@app/comic-books/models/net/set-selected-by-id-request';
 import { SetSelectedByPublisherRequest } from '@app/comic-books/models/net/set-selected-by-publisher-request';
 import { SetSelectedByPublisherSeriesVolumeRequest } from '@app/comic-books/models/net/set-selected-by-publisher-series-volume-request';
+import { DuplicateComicBooksSelectionRequest } from '@app/comic-books/models/net/duplicate-comic-books-selection-request';
 
 @Injectable({
   providedIn: 'root'
@@ -203,6 +205,15 @@ export class ComicBookSelectionService {
         selected: args.selected
       } as SetSelectedByPublisherSeriesVolumeRequest
     );
+  }
+
+  setDuplicateComicBooksSelectionState(args: {
+    selected: boolean;
+  }): Observable<any> {
+    this.logger.debug('Selecting duplicate comic books:', args);
+    return this.http.post(interpolate(SET_SELECTED_DUPLICATE_COMIC_BOOKS_URL), {
+      selected: args.selected
+    } as DuplicateComicBooksSelectionRequest);
   }
 
   clearSelections(): Observable<any> {

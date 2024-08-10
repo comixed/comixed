@@ -902,4 +902,10 @@ public class ComicBookService {
     log.debug("Loading all ids: publisher={} series={} volume={}", publisher, series, volume);
     return this.comicBookRepository.getAllIdsByPublisherSeriesAndVolume(publisher, series, volume);
   }
+
+  @Transactional
+  public List<Long> getDuplicateComicIds() {
+    log.debug("Loading all ids for duplicate comic books");
+    return this.comicBookRepository.getDuplicateComicIds();
+  }
 }

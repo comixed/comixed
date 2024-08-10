@@ -85,6 +85,7 @@ import {
 import { ComicType } from '@app/comic-books/models/comic-type';
 import {
   loadComicDetails,
+  loadDuplicateComicsDetails,
   loadReadComicDetails,
   loadUnreadComicDetails
 } from '@app/comic-books/actions/comic-details-list.actions';
@@ -93,7 +94,10 @@ import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialComicBooksSelectionState
 } from '@app/comic-books/reducers/comic-book-selection.reducer';
-import { setMultipleComicBookByFilterSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import {
+  setDuplicateComicBooksSelectionState,
+  setMultipleComicBookByFilterSelectionState
+} from '@app/comic-books/actions/comic-book-selection.actions';
 import {
   initialState as initialLibraryPluginState,
   LIBRARY_PLUGIN_FEATURE_KEY
@@ -316,6 +320,16 @@ describe('LibraryPageComponent', () => {
         expect(component.deletedOnly).toBeTrue();
       });
     });
+
+    describe('when showing duplicate comics', () => {
+      beforeEach(() => {
+        (activatedRoute.data as BehaviorSubject<{}>).next({ duplicates: true });
+      });
+
+      it('sets the duplicate only flag', () => {
+        expect(component.duplicatesOnly).toBeTrue();
+      });
+    });
   });
 
   describe('when the language changes', () => {
@@ -364,6 +378,12 @@ describe('LibraryPageComponent', () => {
 
     it('updates the page title for deleted comics', () => {
       component.deletedOnly = true;
+      translateService.use('fr');
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('updates the page title for duplicate comics', () => {
+      component.duplicatesOnly = true;
       translateService.use('fr');
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
@@ -425,6 +445,26 @@ describe('LibraryPageComponent', () => {
             publisher: null,
             series: null,
             volume: null,
+            sortBy: null,
+            sortDirection: null
+          })
+        );
+      });
+    });
+
+    describe('for duplicate comics', () => {
+      beforeEach(() => {
+        component.duplicatesOnly = true;
+        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+          foo: 'bar'
+        });
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          loadDuplicateComicsDetails({
+            pageSize: PAGE_SIZE,
+            pageIndex: 0,
             sortBy: null,
             sortDirection: null
           })
@@ -537,23 +577,40 @@ describe('LibraryPageComponent', () => {
   describe('selecting all displayable comics', () => {
     const SELECTED = Math.random() > 0.5;
 
-    beforeEach(() => {
-      component.onSetAllComicsSelectedState(SELECTED);
+    describe('for duplicate comic books', () => {
+      beforeEach(() => {
+        component.duplicatesOnly = true;
+        component.onSetAllComicsSelectedState(SELECTED);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setDuplicateComicBooksSelectionState({
+            selected: SELECTED
+          })
+        );
+      });
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        setMultipleComicBookByFilterSelectionState({
-          coverYear: null,
-          coverMonth: null,
-          archiveType: null,
-          comicType: null,
-          comicState: null,
-          unscrapedState: false,
-          searchText: null,
-          selected: SELECTED
-        })
-      );
+    describe('for all comic books', () => {
+      beforeEach(() => {
+        component.onSetAllComicsSelectedState(SELECTED);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setMultipleComicBookByFilterSelectionState({
+            coverYear: null,
+            coverMonth: null,
+            archiveType: null,
+            comicType: null,
+            comicState: null,
+            unscrapedState: false,
+            searchText: null,
+            selected: SELECTED
+          })
+        );
+      });
     });
   });
 
