@@ -31,6 +31,7 @@ import {
   loadComicBookSelections,
   loadComicBookSelectionsFailed,
   removeSingleComicBookSelection,
+  setDuplicateComicBooksSelectionState,
   setMultipleComicBookByFilterSelectionState,
   setMultipleComicBookByIdSelectionState,
   setMultipleComicBookByPublisherSelectionState,
@@ -339,6 +340,21 @@ describe('ComicBookSelection Reducer', () => {
           publisher: PUBLISHER,
           series: SERIES,
           volume: VOLUME
+        })
+      );
+    });
+
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
+    });
+  });
+
+  describe('set the selection state for all duplicate comic books', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: false },
+        setDuplicateComicBooksSelectionState({
+          selected: SELECTED
         })
       );
     });

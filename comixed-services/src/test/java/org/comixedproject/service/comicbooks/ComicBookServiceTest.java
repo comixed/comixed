@@ -1338,4 +1338,16 @@ public class ComicBookServiceTest {
     Mockito.verify(comicBookRepository, Mockito.times(1))
         .getAllIdsByPublisherSeriesAndVolume(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
   }
+
+  @Test
+  public void testGetDuplicateComicBookIds() {
+    Mockito.when(comicBookRepository.getDuplicateComicIds()).thenReturn(idList);
+
+    final List<Long> result = service.getDuplicateComicIds();
+
+    assertNotNull(result);
+    assertSame(idList, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getDuplicateComicIds();
+  }
 }

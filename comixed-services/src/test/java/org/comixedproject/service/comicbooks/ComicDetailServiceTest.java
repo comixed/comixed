@@ -971,4 +971,36 @@ public class ComicDetailServiceTest {
     Mockito.verify(comicDetailRepository, Mockito.times(1))
         .findSelectedComicBooks(comicBookIdList, pageable);
   }
+
+  @Test
+  public void testGetDuplicateComicBookCount() {
+    Mockito.when(comicDetailRepository.getDuplicateComicBookCount())
+        .thenReturn(TEST_TOTAL_COMIC_COUNT);
+
+    final long result = service.getDuplicateComicBookCount();
+
+    assertEquals(TEST_TOTAL_COMIC_COUNT, result);
+
+    Mockito.verify(comicDetailRepository, Mockito.times(1)).getDuplicateComicBookCount();
+  }
+
+  @Test
+  public void testLoadDuplicateComicBookDetails() {
+    Mockito.when(comicDetailRepository.getDuplicateComicBooks(pageableArgumentCaptor.capture()))
+        .thenReturn(comicDetailList);
+
+    final List<ComicDetail> result =
+        service.loadDuplicateComicBookDetails(
+            TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION);
+
+    assertNotNull(result);
+    assertSame(comicDetailList, result);
+
+    final Pageable pageable = pageableArgumentCaptor.getValue();
+    assertNotNull(result);
+    assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
+    assertEquals(TEST_PAGE_INDEX, pageable.getPageNumber());
+
+    Mockito.verify(comicDetailRepository, Mockito.times(1)).getDuplicateComicBooks(pageable);
+  }
 }

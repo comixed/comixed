@@ -180,7 +180,20 @@
   *ngIf="isAdmin"
   mat-button
   class="menu-button"
-  routerLink="/library/pages/duplicates"
+  routerLink="/library/duplicates/comics"
+  routerLinkActive="active-nav-button"
+>
+  <mat-icon>dynamic_feed</mat-icon>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.duplicate-comics" | translate }}
+  </mat-label>
+</button>
+
+<button
+  *ngIf="isAdmin"
+  mat-button
+  class="menu-button"
+  routerLink="/library/duplicates/pages"
   routerLinkActive="active-nav-button"
 >
   <mat-icon>control_point_duplicate</mat-icon>

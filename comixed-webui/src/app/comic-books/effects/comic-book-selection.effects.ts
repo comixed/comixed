@@ -28,6 +28,7 @@ import {
   loadComicBookSelections,
   loadComicBookSelectionsFailed,
   removeSingleComicBookSelection,
+  setDuplicateComicBooksSelectionState,
   setMultipleComicBookByFilterSelectionState,
   setMultipleComicBookByIdSelectionState,
   setMultipleComicBookByPublisherSelectionState,
@@ -259,6 +260,27 @@ export class ComicBookSelectionEffects {
             publisher: action.publisher,
             series: action.series,
             volume: action.volume,
+            selected: action.selected
+          })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map(() => setMultipleComicBookSelectionStateSuccess()),
+            catchError(error => this.doMultipleSelectedServiceFailure(error))
+          )
+      ),
+      catchError(error => this.doMultipleSelectedGeneralFailure(error))
+    );
+  });
+
+  setDuplicateComicBooksSelectionState$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(setDuplicateComicBooksSelectionState),
+      tap(action =>
+        this.logger.debug('Selecting all duplicate comic books:', action)
+      ),
+      switchMap(action =>
+        this.comicBookSelectionService
+          .setDuplicateComicBooksSelectionState({
             selected: action.selected
           })
           .pipe(

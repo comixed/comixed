@@ -47,6 +47,7 @@ import {
   loadComicDetailsFailed,
   loadComicDetailsForCollection,
   loadComicDetailsForReadingList,
+  loadDuplicateComicsDetails,
   loadReadComicDetails,
   loadUnreadComicDetails
 } from '@app/comic-books/actions/comic-details-list.actions';
@@ -123,6 +124,9 @@ describe('ComicDetailsListEffects', () => {
             ),
             loadComicDetailsForReadingList: jasmine.createSpy(
               'ComicDetailListService.loadComicDetailsForReadingList()'
+            ),
+            loadDuplicateComicsDetails: jasmine.createSpy(
+              'ComicDetailListService.loadDuplicateComicsDetails()'
             )
           }
         }
@@ -730,6 +734,94 @@ describe('ComicDetailsListEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.loadComicDetailsForReadingList$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('loading duplicate comic book details for reading list', () => {
+    it('fires an action on success', () => {
+      const serverResponse = {
+        comicDetails: COMIC_DETAILS,
+        coverYears: COVER_YEARS,
+        coverMonths: COVER_MONTHS,
+        totalCount: TOTAL_COUNT,
+        filteredCount: FILTERED_COUNT,
+        lastReadEntries: LAST_READ_ENTRIES
+      } as LoadComicDetailsResponse;
+      const action = loadDuplicateComicsDetails({
+        pageSize: PAGE_SIZE,
+        pageIndex: PAGE_INDEX,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      });
+      const outcome = comicDetailsLoaded({
+        comicDetails: COMIC_DETAILS,
+        coverYears: COVER_YEARS,
+        coverMonths: COVER_MONTHS,
+        totalCount: TOTAL_COUNT,
+        filteredCount: FILTERED_COUNT
+      });
+
+      actions$ = hot('-a', { a: action });
+      comicDetailListService.loadDuplicateComicsDetails
+        .withArgs({
+          pageSize: PAGE_SIZE,
+          pageIndex: PAGE_INDEX,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
+        .and.returnValue(of(serverResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.loadDuplicateComicsDetails$).toBeObservable(expected);
+    });
+
+    it('fires an action on service failure', () => {
+      const serverResponse = new HttpErrorResponse({});
+      const action = loadDuplicateComicsDetails({
+        pageSize: PAGE_SIZE,
+        pageIndex: PAGE_INDEX,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      });
+      const outcome = loadComicDetailsFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicDetailListService.loadDuplicateComicsDetails
+        .withArgs({
+          pageSize: PAGE_SIZE,
+          pageIndex: PAGE_INDEX,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
+        .and.returnValue(throwError(serverResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.loadDuplicateComicsDetails$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = loadDuplicateComicsDetails({
+        pageSize: PAGE_SIZE,
+        pageIndex: PAGE_INDEX,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      });
+      const outcome = loadComicDetailsFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicDetailListService.loadDuplicateComicsDetails
+        .withArgs({
+          pageSize: PAGE_SIZE,
+          pageIndex: PAGE_INDEX,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
+        .and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.loadDuplicateComicsDetails$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

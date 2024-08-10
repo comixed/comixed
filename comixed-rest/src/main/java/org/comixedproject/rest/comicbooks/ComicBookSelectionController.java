@@ -23,10 +23,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicTagType;
-import org.comixedproject.model.net.comicbooks.AddComicBookSelectionsByIdRequest;
-import org.comixedproject.model.net.comicbooks.AddComicBookSelectionsByPublisherRequest;
-import org.comixedproject.model.net.comicbooks.AddComicBookSelectionsByPublisherSeriesVolumeRequest;
-import org.comixedproject.model.net.comicbooks.MultipleComicBooksSelectionRequest;
+import org.comixedproject.model.net.comicbooks.*;
 import org.comixedproject.opds.OPDSUtils;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;
 import org.comixedproject.service.comicbooks.ComicBookSelectionService;
@@ -305,6 +302,38 @@ public class ComicBookSelectionController {
       log.info("Removing ids from comic book selections");
       selections.removeAll(
           comicBookService.getIdsByPublisherSeriesAndVolume(publisher, series, volume));
+    }
+
+    this.comicBookSelectionService.publisherSelections(selections);
+    session.setAttribute(
+        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
+  }
+
+  /**
+   * Updates selections for all duplicate comic books.
+   *
+   * @param session the session
+   * @param request the request body
+   * @throws ComicBookSelectionException if an error occurs
+   */
+  @PostMapping(value = "/api/comics/selections/duplicates")
+  @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.comic-book.selections.add-or-remove-by-id")
+  public void addDuplicateComicBooksSelection(
+      final HttpSession session, @RequestBody() final DuplicateComicBooksSelectionRequest request)
+      throws ComicBookSelectionException {
+    final boolean selected = request.isSelected();
+    log.info("Setting selections for all duplicate comic books: selected={}", selected);
+    final List<Long> selections =
+        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+
+    final List<Long> idList = comicBookService.getDuplicateComicIds();
+    if (selected) {
+      log.info("Selecting ids for duplicate comic books");
+      selections.addAll(idList);
+    } else {
+      log.info("Deselecting ids for duplicate comic books");
+      selections.removeAll(idList);
     }
 
     this.comicBookSelectionService.publisherSelections(selections);

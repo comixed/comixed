@@ -26,6 +26,7 @@ import {
   loadComicDetailsFailed,
   loadComicDetailsForCollection,
   loadComicDetailsForReadingList,
+  loadDuplicateComicsDetails,
   loadReadComicDetails,
   loadUnreadComicDetails
 } from '../actions/comic-details-list.actions';
@@ -182,6 +183,32 @@ export class ComicDetailsListEffects {
         this.comicBookListService
           .loadComicDetailsForReadingList({
             readingListId: action.readingListId,
+            pageSize: action.pageSize,
+            pageIndex: action.pageIndex,
+            sortBy: action.sortBy,
+            sortDirection: action.sortDirection
+          })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map((response: LoadComicDetailsResponse) =>
+              this.doSuccess(response)
+            ),
+            catchError(error => this.doServiceFailure(error))
+          )
+      ),
+      catchError(error => this.doGeneralFailure(error))
+    );
+  });
+
+  loadDuplicateComicsDetails$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(loadDuplicateComicsDetails),
+      tap(action =>
+        this.logger.debug('Loading duplicate comic book details:', action)
+      ),
+      switchMap(action =>
+        this.comicBookListService
+          .loadDuplicateComicsDetails({
             pageSize: action.pageSize,
             pageIndex: action.pageIndex,
             sortBy: action.sortBy,

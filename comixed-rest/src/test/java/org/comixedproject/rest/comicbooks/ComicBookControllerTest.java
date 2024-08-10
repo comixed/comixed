@@ -664,4 +664,31 @@ public class ComicBookControllerTest {
             TEST_SORT_DIRECTION);
     Mockito.verify(readingListService, Mockito.times(2)).getEntryCount(TEST_READING_LIST_ID);
   }
+
+  @Test
+  public void testLoadDuplicateComicBooks()
+      throws ReadingListException, LastReadException, ComicDetailException {
+    Mockito.when(
+            comicDetailService.loadDuplicateComicBookDetails(
+                Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(comicDetailList);
+    Mockito.when(comicDetailService.getDuplicateComicBookCount()).thenReturn(TEST_COMIC_BOOK_COUNT);
+
+    final LoadComicDetailsResponse result =
+        controller.loadDuplicateComicBooks(
+            new LoadDuplicateComicBookDetailsRequest(
+                TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_FIELD, TEST_SORT_DIRECTION));
+
+    assertNotNull(result);
+    assertSame(comicDetailList, result.getComicDetails());
+    assertTrue(result.getCoverYears().isEmpty());
+    assertTrue(result.getCoverMonths().isEmpty());
+    assertEquals(TEST_COMIC_BOOK_COUNT, result.getTotalCount());
+    assertEquals(TEST_COMIC_BOOK_COUNT, result.getFilteredCount());
+
+    Mockito.verify(comicDetailService, Mockito.times(1))
+        .loadDuplicateComicBookDetails(
+            TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_FIELD, TEST_SORT_DIRECTION);
+    Mockito.verify(comicDetailService, Mockito.times(2)).getDuplicateComicBookCount();
+  }
 }

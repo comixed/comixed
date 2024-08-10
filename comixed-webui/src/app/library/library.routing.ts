@@ -66,7 +66,13 @@ const routes: Routes = [
     data: { deleted: true }
   },
   {
-    path: 'library/pages/duplicates',
+    path: 'library/duplicates/comics',
+    component: LibraryPageComponent,
+    canActivate: [AdminGuard],
+    data: { duplicates: true }
+  },
+  {
+    path: 'library/duplicates/pages',
     component: DuplicatePageListPageComponent,
     canActivate: [AdminGuard]
   },

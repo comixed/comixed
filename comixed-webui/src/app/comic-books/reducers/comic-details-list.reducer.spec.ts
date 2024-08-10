@@ -30,6 +30,7 @@ import {
   loadComicDetailsFailed,
   loadComicDetailsForCollection,
   loadComicDetailsForReadingList,
+  loadDuplicateComicsDetails,
   loadReadComicDetails,
   loadUnreadComicDetails
 } from '@app/comic-books/actions/comic-details-list.actions';
@@ -218,6 +219,24 @@ describe('ComicDetailsList Reducer', () => {
         { ...state, loading: false },
         loadComicDetailsForReadingList({
           readingListId: READING_LIST_ID,
+          pageSize: PAGE_SIZE,
+          pageIndex: PAGE_INDEX,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
+      );
+    });
+
+    it('sets the loading flag', () => {
+      expect(state.loading).toBeTrue();
+    });
+  });
+
+  describe('loading duplicate comic book details', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, loading: false },
+        loadDuplicateComicsDetails({
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
           sortBy: SORT_BY,

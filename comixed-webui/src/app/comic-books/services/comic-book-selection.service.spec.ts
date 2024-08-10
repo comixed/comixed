@@ -36,7 +36,8 @@ import {
   SET_SELECTED_COMIC_BOOKS_BY_ID_URL,
   SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_SERIES_VOLUME_URL,
   SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_URL,
-  SET_SELECTED_COMIC_BOOKS_BY_TAG_TYPE_AND_VALUE_URL
+  SET_SELECTED_COMIC_BOOKS_BY_TAG_TYPE_AND_VALUE_URL,
+  SET_SELECTED_DUPLICATE_COMIC_BOOKS_URL
 } from '@app/comic-books/comic-books.constants';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
@@ -58,6 +59,7 @@ import { SetSelectedByIdRequest } from '@app/comic-books/models/net/set-selected
 import { SetSelectedByPublisherRequest } from '@app/comic-books/models/net/set-selected-by-publisher-request';
 import { PUBLISHER_1, SERIES_1 } from '@app/collections/collections.fixtures';
 import { SetSelectedByPublisherSeriesVolumeRequest } from '@app/comic-books/models/net/set-selected-by-publisher-series-volume-request';
+import { DuplicateComicBooksSelectionRequest } from '@app/comic-books/models/net/duplicate-comic-books-selection-request';
 
 describe('ComicBookSelectionService', () => {
   const COVER_YEAR = Math.random() * 100 + 1900;
@@ -292,6 +294,25 @@ describe('ComicBookSelectionService', () => {
       volume: VOLUME,
       selected: SELECTED
     } as SetSelectedByPublisherSeriesVolumeRequest);
+    req.flush(serverResponse);
+  });
+
+  it('can select all duplicate comics', () => {
+    const serverResponse = new HttpResponse({});
+
+    service
+      .setDuplicateComicBooksSelectionState({
+        selected: SELECTED
+      })
+      .subscribe(response => expect(response).toEqual(serverResponse));
+
+    const req = httpMock.expectOne(
+      interpolate(SET_SELECTED_DUPLICATE_COMIC_BOOKS_URL)
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      selected: SELECTED
+    } as DuplicateComicBooksSelectionRequest);
     req.flush(serverResponse);
   });
 

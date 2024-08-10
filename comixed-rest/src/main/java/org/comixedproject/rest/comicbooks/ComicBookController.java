@@ -471,7 +471,7 @@ public class ComicBookController {
    * Loads comic details for a reading list.
    *
    * @param principal the user principal
-   * @param request the rquest body
+   * @param request the request body
    * @param readingListId the reading list id
    * @return the entries
    * @throws LastReadException if an error occurs
@@ -513,5 +513,47 @@ public class ComicBookController {
         Collections.emptyList(),
         this.readingListService.getEntryCount(readingListId),
         this.readingListService.getEntryCount(readingListId));
+  }
+
+  /**
+   * Loads comic details for duplicate comic books.
+   *
+   * @param request the request body
+   * @return the entries
+   * @throws LastReadException if an error occurs
+   * @throws ComicDetailException if an error occurs
+   * @throws ReadingListException if an error occurs
+   */
+  @PostMapping(
+      value = "/api/comics/details/load/duplicates",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.comic-book.load-duplicate-comics")
+  @PreAuthorize("hasRole('ADMIN')")
+  @JsonView(ComicDetailsView.class)
+  public LoadComicDetailsResponse loadDuplicateComicBooks(
+      @RequestBody() final LoadDuplicateComicBookDetailsRequest request)
+      throws LastReadException, ComicDetailException, ReadingListException {
+    final int pageSize = request.getPageSize();
+    final int pageIndex = request.getPageIndex();
+    final String sortBy = request.getSortBy();
+    final String sortDirection = request.getSortDirection();
+    log.debug(
+        "Loading duplicate comic book details: size={} index={} sort by ={} [{}]",
+        pageSize,
+        pageIndex,
+        sortBy,
+        sortDirection);
+
+    final List<ComicDetail> comicDetails =
+        this.comicDetailService.loadDuplicateComicBookDetails(
+            pageSize, pageIndex, sortBy, sortDirection);
+
+    return new LoadComicDetailsResponse(
+        comicDetails,
+        Collections.emptyList(),
+        Collections.emptyList(),
+        this.comicDetailService.getDuplicateComicBookCount(),
+        this.comicDetailService.getDuplicateComicBookCount());
   }
 }

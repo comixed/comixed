@@ -43,6 +43,7 @@ import { ComicType } from '@app/comic-books/models/comic-type';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import {
   loadComicDetails,
+  loadDuplicateComicsDetails,
   loadReadComicDetails,
   loadUnreadComicDetails
 } from '@app/comic-books/actions/comic-details-list.actions';
@@ -55,7 +56,10 @@ import {
   selectLoadComicDetailsTotalComics
 } from '@app/comic-books/selectors/load-comic-details-list.selectors';
 import { ComicDetailsListState } from '@app/comic-books/reducers/comic-details-list.reducer';
-import { setMultipleComicBookByFilterSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import {
+  setDuplicateComicBooksSelectionState,
+  setMultipleComicBookByFilterSelectionState
+} from '@app/comic-books/actions/comic-book-selection.actions';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
 
 @Component({
@@ -92,6 +96,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   changedOnly = false;
   deletedOnly = false;
   unprocessedOnly = false;
+  duplicatesOnly = false;
   lastReadDatesSubscription: Subscription;
   lastReadDates: LastRead[] = [];
   readingListsSubscription: Subscription;
@@ -130,6 +135,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       this.changedOnly = !!data.changed && data.changed === true;
       this.deletedOnly = !!data.deleted && data.deleted === true;
       this.unprocessedOnly = !!data.unprocessed && data.unprocessed === true;
+      this.duplicatesOnly = !!data.duplicates && data.duplicates === true;
       this.showUpdateMetadata = !this.unprocessedOnly && !this.deletedOnly;
       this.showOrganize =
         !this.unreadOnly && !this.unscrapedOnly && !this.deletedOnly;
@@ -152,6 +158,9 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       }
       if (this.unprocessedOnly) {
         this.pageContent = 'unprocessed-only';
+      }
+      if (this.duplicatesOnly) {
+        this.pageContent = 'duplicates-only';
       }
     });
     this.comicDetailListStateSubscription = this.store
@@ -232,6 +241,17 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
               })
             );
           }
+        } else if (this.duplicatesOnly) {
+          this.logger.debug('Loading duplicate comics');
+          this.pageContent = 'duplicates-only';
+          this.store.dispatch(
+            loadDuplicateComicsDetails({
+              pageSize: this.queryParameterService.pageSize$.value,
+              pageIndex: this.queryParameterService.pageIndex$.value,
+              sortBy: this.queryParameterService.sortBy$.value,
+              sortDirection: this.queryParameterService.sortDirection$.value
+            })
+          );
         } else {
           this.store.dispatch(
             loadComicDetails({
@@ -288,19 +308,27 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   onSetAllComicsSelectedState(selected: boolean) {
-    this.logger.debug('Setting all comic books selected state:', selected);
-    this.store.dispatch(
-      setMultipleComicBookByFilterSelectionState({
-        coverYear: this.queryParameterService.coverYear$?.value?.year,
-        coverMonth: this.queryParameterService.coverYear$?.value?.month,
-        archiveType: this.queryParameterService.archiveType$.value,
-        comicType: this.queryParameterService.comicType$.value,
-        comicState: this.targetComicState,
-        unscrapedState: this.unscrapedOnly,
-        searchText: this.queryParameterService.filterText$.value,
+    if (this.duplicatesOnly) {
+      this.logger.debug(
+        'Setting all duplicate comic books selected state:',
         selected
-      })
-    );
+      );
+      this.store.dispatch(setDuplicateComicBooksSelectionState({ selected }));
+    } else {
+      this.logger.debug('Setting all comic books selected state:', selected);
+      this.store.dispatch(
+        setMultipleComicBookByFilterSelectionState({
+          coverYear: this.queryParameterService.coverYear$?.value?.year,
+          coverMonth: this.queryParameterService.coverYear$?.value?.month,
+          archiveType: this.queryParameterService.archiveType$.value,
+          comicType: this.queryParameterService.comicType$.value,
+          comicState: this.targetComicState,
+          unscrapedState: this.unscrapedOnly,
+          searchText: this.queryParameterService.filterText$.value,
+          selected
+        })
+      );
+    }
   }
 
   onToggleUnreadOnly(): void {
@@ -340,6 +368,10 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     } else if (this.unreadOnly) {
       this.titleService.setTitle(
         this.translateService.instant('library.all-comics.tab-title-unread')
+      );
+    } else if (this.duplicatesOnly) {
+      this.titleService.setTitle(
+        this.translateService.instant('library.all-comics.tab-title-duplicates')
       );
     } else {
       this.titleService.setTitle(
