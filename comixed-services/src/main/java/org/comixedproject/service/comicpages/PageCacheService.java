@@ -165,8 +165,11 @@ public class PageCacheService {
    */
   public ResponseEntity<byte[]> getPageContent(final long id, final String missingFilename)
       throws ComicPageException {
-    final ComicPage page = this.comicPageService.getForId(id);
-    return this.doGetPageContent(page, missingFilename);
+    final String comicFilename = this.comicPageService.getComicFilenameForPage(id);
+    final String pageFilename = this.comicPageService.getPageFilename(id);
+    final String pageHash = this.comicPageService.getHashForPage(id);
+
+    return this.doGetPageContent(comicFilename, pageFilename, pageHash, missingFilename);
   }
 
   /**
@@ -206,6 +209,37 @@ public class PageCacheService {
       }
     }
 
+    return this.doProcessContent(content, page.getFilename(), missingFilename);
+  }
+
+  private ResponseEntity<byte[]> doGetPageContent(
+      final String comicFilename,
+      final String pageFilename,
+      final String pageHash,
+      final String missingFilename)
+      throws ComicPageException {
+    log.debug("Creating response entity for page");
+    byte[] content = this.findByHash(pageHash);
+
+    if (content == null) {
+      try {
+        log.debug("Fetching content for page");
+        content = this.comicBookAdaptor.loadPageContent(comicFilename, pageFilename);
+        if (!Objects.isNull(content) && Objects.isNull(pageHash)) {
+          log.debug("Caching image for hash: {} bytes hash={}", content.length, pageHash);
+          this.saveByHash(pageHash, content);
+        }
+      } catch (AdaptorException error) {
+        throw new ComicPageException("Failed to load page content", error);
+      }
+    }
+
+    return this.doProcessContent(content, pageFilename, missingFilename);
+  }
+
+  private ResponseEntity<byte[]> doProcessContent(
+      byte[] content, final String pageFilename, final String missingFilename)
+      throws ComicPageException {
     if (content == null) {
       content = this.doLoadMissingPageImage(missingFilename);
     }
@@ -218,7 +252,7 @@ public class PageCacheService {
 
     return ResponseEntity.ok()
         .contentLength(content != null ? content.length : 0)
-        .header("Content-Disposition", "attachment; filename=\"" + page.getFilename() + "\"")
+        .header("Content-Disposition", "attachment; filename=\"" + pageFilename + "\"")
         .contentType(MediaType.valueOf(type))
         .cacheControl(CacheControl.maxAge(24, TimeUnit.DAYS))
         .body(content);

@@ -230,12 +230,11 @@ public class ComicBookController {
   @GetMapping(value = "/api/comics/{id}/cover/content")
   @Timed(value = "comixed.comic-book.pages.get-cover")
   public ResponseEntity<byte[]> getCoverImage(@PathVariable("id") final long id)
-      throws ComicBookException {
+      throws ComicBookException, ComicPageException {
     log.debug("Getting cover for comicBook: id={}", id);
-    final ComicBook comicBook = this.comicBookService.getComic(id);
+    final Long pageId = this.comicPageService.getPageIdForComicBookCover(id);
     try {
-      return this.pageCacheService.getPageContent(
-          comicBook.getPages().get(0).getId(), MISSING_COMIC_COVER);
+      return this.pageCacheService.getPageContent(pageId, MISSING_COMIC_COVER);
     } catch (ComicPageException error) {
       throw new ComicBookException("Failed to load comic cover", error);
     }

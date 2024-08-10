@@ -328,4 +328,62 @@ public class ComicPageService {
                       this.comicPageStateHandler.fireEvent(page, ComicPageEvent.unmarkForDeletion));
         });
   }
+
+  @Transactional
+  public Long getPageIdForComicBookCover(final long comicBookId) throws ComicPageException {
+    log.debug("Retrieving first page id for comic book: id={}", comicBookId);
+    final Long result = this.comicPageRepository.getPageIdForComicBookCover(comicBookId);
+    if (result == null) {
+      throw new ComicPageException("Cannot find cover for comic: id=" + comicBookId);
+    }
+    return result;
+  }
+
+  /**
+   * Retrieves the filename for the comic that contains the page.
+   *
+   * @param pageId the page id
+   * @return the comic filename
+   * @throws ComicPageException if the page id is invalid
+   */
+  @Transactional
+  public String getComicFilenameForPage(final Long pageId) throws ComicPageException {
+    final String result = this.comicPageRepository.getComicFilenameForPage(pageId);
+    if (result == null) {
+      throw new ComicPageException("No such page: id=" + pageId);
+    }
+    return result;
+  }
+
+  /**
+   * Retrieves the filename for the given page within its parent comic.
+   *
+   * @param pageId the page id
+   * @return the page filename
+   * @throws ComicPageException if the page id is invalid
+   */
+  @Transactional
+  public String getPageFilename(final long pageId) throws ComicPageException {
+    final String result = this.comicPageRepository.getPageFilename(pageId);
+    if (result == null) {
+      throw new ComicPageException("No such page: id=" + pageId);
+    }
+    return result;
+  }
+
+  /**
+   * Returns the has for the given page.
+   *
+   * @param pageId the page id
+   * @return the hash
+   * @throws ComicPageException if the page id is invalid
+   */
+  @Transactional
+  public String getHashForPage(final long pageId) throws ComicPageException {
+    final String result = this.comicPageRepository.getHashForPage(pageId);
+    if (result == null) {
+      throw new ComicPageException("No such page: id=" + pageId);
+    }
+    return result;
+  }
 }

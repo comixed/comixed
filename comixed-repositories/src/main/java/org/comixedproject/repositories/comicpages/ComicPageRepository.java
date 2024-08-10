@@ -137,4 +137,22 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
 
   @Query("SELECT p FROM ComicPage p WHERE p.hash ilike :hash")
   List<ComicPage> getPagesWithHash(@Param("hash") String hash);
+
+  /**
+   * Returns the record id for page number 0 for for the given comic book.
+   *
+   * @param comicBookId the comic book id
+   * @return the page id
+   */
+  @Query("SELECT p.id FROM ComicPage p WHERE p.comicBook.id = :comicBookId AND p.pageNumber = 0")
+  Long getPageIdForComicBookCover(@Param("comicBookId") long comicBookId);
+
+  @Query("SELECT p.comicBook.comicDetail.filename FROM ComicPage p WHERE p.id = :pageId")
+  String getComicFilenameForPage(@Param("pageId") Long pageId);
+
+  @Query("SELECT p.filename FROM ComicPage p WHERE p.id = :pageId")
+  String getPageFilename(@Param("pageId") long pageId);
+
+  @Query("SELECT p.hash FROM ComicPage p WHERE p.id = :pageId")
+  String getHashForPage(@Param("pageId") long pageId);
 }
