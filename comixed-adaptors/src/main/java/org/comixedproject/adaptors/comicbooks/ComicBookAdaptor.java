@@ -273,16 +273,29 @@ public class ComicBookAdaptor {
    */
   public byte[] loadPageContent(final ComicBook comicBook, final int pageNumber)
       throws AdaptorException {
+    return this.loadPageContent(
+        comicBook.getComicDetail().getFilename(),
+        comicBook.getPages().get(pageNumber).getFilename());
+  }
+
+  /**
+   * Retrieves the content for the specified page.
+   *
+   * @param comicFilename the comic book filename
+   * @param pageFilename the page filename
+   * @return the page content
+   * @throws AdaptorException if an error occurs loading the page
+   */
+  public byte[] loadPageContent(final String comicFilename, final String pageFilename)
+      throws AdaptorException {
     try {
       log.trace("Getting archive adaptor for comic book file");
       final ArchiveAdaptor archiveAdaptor =
-          this.fileTypeAdaptor.getArchiveAdaptorFor(comicBook.getComicDetail().getFilename());
+          this.fileTypeAdaptor.getArchiveAdaptorFor(comicFilename);
       log.trace("Opening archive");
-      final ArchiveReadHandle readHandle =
-          archiveAdaptor.openArchiveForRead(comicBook.getComicDetail().getFilename());
+      final ArchiveReadHandle readHandle = archiveAdaptor.openArchiveForRead(comicFilename);
       log.trace("Loading page content");
-      final byte[] content =
-          archiveAdaptor.readEntry(readHandle, comicBook.getPages().get(pageNumber).getFilename());
+      final byte[] content = archiveAdaptor.readEntry(readHandle, pageFilename);
       log.trace("Closing archive");
       archiveAdaptor.closeArchiveForRead(readHandle);
       log.trace("Returning {} bytes", content.length);
