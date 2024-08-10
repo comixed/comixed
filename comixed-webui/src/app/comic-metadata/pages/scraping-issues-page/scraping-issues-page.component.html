@@ -103,6 +103,23 @@
       "
     ></mat-paginator>
     <mat-table class="cx-width-100" [dataSource]="dataSource">
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <button
+            mat-icon-button
+            [id]="'remove-multi-book-entry' + entry.id"
+            color="warn"
+            [matTooltip]="
+              'scraping.tooltip.remove-comic-from-queue' | translate
+            "
+            (click)="onRemoveComicBook(entry); $event.stopPropagation()"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
       <ng-container matColumnDef="thumbnail">
         <mat-header-cell *matHeaderCellDef>
           {{ "comic-book.label.thumbnail" | translate }}
@@ -150,20 +167,6 @@
           {{ "comic-book.label.issue-number" | translate }}
         </mat-header-cell>
         <mat-cell *matCellDef="let entry">{{ entry.issueNumber }}</mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="actions">
-        <mat-header-cell *matHeaderCellDef></mat-header-cell>
-        <mat-cell *matCellDef="let entry">
-          <button
-            mat-icon-button
-            [id]="'remove-multi-book-entry' + entry.id"
-            color="warn"
-            (click)="onRemoveComicBook(entry); $event.stopPropagation()"
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
-        </mat-cell>
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
