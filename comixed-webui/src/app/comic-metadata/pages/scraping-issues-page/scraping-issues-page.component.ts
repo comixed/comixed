@@ -67,12 +67,12 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ScrapingIssuesPageComponent implements OnInit, OnDestroy {
   readonly displayColumns = [
+    'actions',
     'thumbnail',
     'publisher',
     'series',
     'volume',
-    'issue-number',
-    'actions'
+    'issue-number'
   ];
 
   langChangeSubscription: Subscription;

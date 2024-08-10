@@ -5,6 +5,12 @@ mat-row {
   max-height: $cx-row-height !important;
 }
 
+.mat-column-actions {
+  width: $cx-column-smallish;
+  max-width: $cx-column-smallish;
+  resize: none;
+}
+
 .mat-column-thumbnail {
   width: $cx-column-medium;
   max-width: $cx-column-medium;
@@ -27,13 +33,7 @@ mat-row {
 }
 
 .mat-column-issue-number {
-  width: $cx-column-small;
-  max-width: $cx-column-small;
-  resize: none;
-}
-
-.mat-column-actions {
-  width: $cx-column-small;
-  max-width: $cx-column-small;
+  width: $cx-column-smallish;
+  max-width: $cx-column-smallish;
   resize: none;
 }
