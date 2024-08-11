@@ -42,6 +42,7 @@ describe('Library Reducer', () => {
   const TOTAL_COMICS = Math.abs(Math.random() * 100);
   const UNSCRAPED_COMICS = Math.abs(Math.random() * 100);
   const DELETED_COMICS = Math.abs(Math.random() * 100);
+  const DUPLICATE_COMICS = Math.abs(Math.random() * 100);
   const PUBLISHERS = [{ name: 'Publisher1', count: 1 }];
   const SERIES = [{ name: 'Series1', count: 1 }];
   const CHARACTERS = [{ name: 'Character1', count: 1 }];
@@ -120,6 +121,7 @@ describe('Library Reducer', () => {
           busy: true,
           totalComics: 0,
           deletedComics: 0,
+          duplicateComics: 0,
           publishers: [],
           series: [],
           characters: [],
@@ -133,6 +135,7 @@ describe('Library Reducer', () => {
             totalComics: TOTAL_COMICS,
             unscrapedComics: UNSCRAPED_COMICS,
             deletedComics: DELETED_COMICS,
+            duplicateComics: DUPLICATE_COMICS,
             publishers: PUBLISHERS,
             series: SERIES,
             characters: CHARACTERS,

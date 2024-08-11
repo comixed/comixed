@@ -35,6 +35,7 @@ export interface LibraryState {
   totalComics: number;
   unscrapedComics: number;
   deletedComics: number;
+  duplicateComics: number;
   publishers: RemoteLibrarySegmentState[];
   series: RemoteLibrarySegmentState[];
   characters: RemoteLibrarySegmentState[];
@@ -50,6 +51,7 @@ export const initialState: LibraryState = {
   totalComics: 0,
   unscrapedComics: 0,
   deletedComics: 0,
+  duplicateComics: 0,
   publishers: [],
   series: [],
   characters: [],
@@ -73,6 +75,7 @@ export const reducer = createReducer(
     totalComics: action.state.totalComics,
     unscrapedComics: action.state.unscrapedComics,
     deletedComics: action.state.deletedComics,
+    duplicateComics: action.state.duplicateComics,
     publishers: action.state.publishers,
     series: action.state.series,
     characters: action.state.characters,

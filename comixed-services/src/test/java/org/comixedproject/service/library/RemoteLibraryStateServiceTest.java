@@ -29,6 +29,7 @@ import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.comixedproject.model.net.library.RemoteLibraryState;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.junit.Before;
@@ -43,10 +44,12 @@ import org.springframework.statemachine.state.State;
 public class RemoteLibraryStateServiceTest {
   private static final long TEST_COMIC_COUNT = Math.abs(RandomUtils.nextLong());
   private static final long TEST_DELETED_COMIC_COUNT = Math.abs(RandomUtils.nextLong());
+  private static final long TEST_DUPLICATE_COMIC_COUNT = Math.abs(RandomUtils.nextLong());
 
   @InjectMocks private RemoteLibraryStateService service;
   @Mock private ComicStateHandler comicStateHandler;
   @Mock private ComicBookService comicBookService;
+  @Mock private ComicDetailService comicDetailService;
   @Mock private List<RemoteLibrarySegmentState> publisherState;
   @Mock private List<RemoteLibrarySegmentState> seriesState;
   @Mock private List<RemoteLibrarySegmentState> charactersState;
@@ -65,6 +68,8 @@ public class RemoteLibraryStateServiceTest {
   public void setUp() {
     Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_COMIC_COUNT);
     Mockito.when(comicBookService.getDeletedComicCount()).thenReturn(TEST_DELETED_COMIC_COUNT);
+    Mockito.when(comicDetailService.getDuplicateComicBookCount())
+        .thenReturn(TEST_DUPLICATE_COMIC_COUNT);
     Mockito.when(comicBookService.getPublishersState()).thenReturn(publisherState);
     Mockito.when(comicBookService.getSeriesState()).thenReturn(seriesState);
     Mockito.when(comicBookService.getCharactersState()).thenReturn(charactersState);
@@ -127,6 +132,7 @@ public class RemoteLibraryStateServiceTest {
     assertNotNull(result);
     assertEquals(TEST_COMIC_COUNT, result.getTotalComics());
     assertEquals(TEST_DELETED_COMIC_COUNT, result.getDeletedComics());
+    assertEquals(TEST_DUPLICATE_COMIC_COUNT, result.getDuplicateComics());
     assertSame(publisherState, result.getPublishers());
     assertSame(seriesState, result.getSeries());
     assertSame(charactersState, result.getCharacters());

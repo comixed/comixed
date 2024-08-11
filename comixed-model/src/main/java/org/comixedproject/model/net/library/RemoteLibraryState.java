@@ -48,6 +48,11 @@ public class RemoteLibraryState {
   @Getter
   private final long deletedComics;
 
+  @JsonProperty("duplicateComics")
+  @JsonView(View.RemoteLibraryState.class)
+  @Getter
+  private final long duplicateComics;
+
   @JsonProperty("publishers")
   @JsonView(View.RemoteLibraryState.class)
   @Getter
