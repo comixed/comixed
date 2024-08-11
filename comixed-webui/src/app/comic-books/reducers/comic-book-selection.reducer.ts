@@ -39,7 +39,7 @@ import {
   singleComicBookSelectionUpdated
 } from '../actions/comic-book-selection.actions';
 
-export const COMIC_BOOK_SELECTION_FEATURE_KEY = 'comic_book_selection';
+export const COMIC_BOOK_SELECTION_FEATURE_KEY = 'comic_book_selection_state';
 
 export interface ComicBookSelectionState {
   busy: boolean;
