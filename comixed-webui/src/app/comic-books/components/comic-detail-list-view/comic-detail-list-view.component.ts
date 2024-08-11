@@ -83,6 +83,8 @@ import {
 } from '@app/library-plugins/actions/run-library-plugin.actions';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
+import { selectComicBookSelectionState } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import { ComicBookSelectionState } from '@app/comic-books/reducers/comic-book-selection.reducer';
 
 @Component({
   selector: 'cx-comic-detail-list-view',
@@ -120,6 +122,8 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
   @Input() coverYears: number[] = [];
   @Input() coverMonths: number[] = [];
 
+  selectionStateSubscription: Subscription;
+  selectionState: ComicBookSelectionState;
   showComicDetailPopup = false;
   showComicFilterPopup = false;
   selectedComicDetail: ComicDetail;
@@ -142,6 +146,10 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
     this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
       () => this.applyFilters()
     );
+    this.logger.trace('Subscribing to selection state updates');
+    this.selectionStateSubscription = this.store
+      .select(selectComicBookSelectionState)
+      .subscribe(state => (this.selectionState = state));
     this.logger.trace('Subscribing to library plugin list updates');
     this.libraryPluginListSubscription = this.store
       .select(selectLibraryPluginList)
@@ -209,6 +217,8 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.logger.trace('Unsbuscribing from query param updates');
     this.queryParamsSubscription.unsubscribe();
+    this.logger.trace('Unsbuscribing from selection state updates');
+    this.selectionStateSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from library plugin list updates');
     this.libraryPluginListSubscription.unsubscribe();
   }

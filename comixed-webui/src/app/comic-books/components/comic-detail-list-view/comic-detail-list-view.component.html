@@ -86,7 +86,7 @@
     <mat-header-cell *matHeaderCellDef>
       <mat-checkbox
         color="primary"
-        [disabled]="dataSource.data.length === 0"
+        [disabled]="dataSource.data.length === 0 || selectionState.busy"
         [checked]="selectedIds.length > 0 && selectedIds.length === totalComics"
         (change)="selectAll.emit($event.checked)"
         (keyup)="selectAll.emit($event.checked)"
@@ -97,6 +97,7 @@
       <mat-checkbox
         color="primary"
         [checked]="entry.selected"
+        [disabled]="selectionState.busy"
         (change)="onSetSelectedState(entry, $event.checked)"
         (keyup)="onSetSelectedState(entry, $event.checked)"
         (click)="$event.stopImmediatePropagation()"
