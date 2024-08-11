@@ -388,10 +388,10 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
       @Param("selectedIds") List selectedIds, Pageable pageable);
 
   @Query(
-      "SELECT sum(total) FROM (SELECT count(*) AS total FROM ComicDetail d GROUP BY d.publisher, d.series, d.volume, d.issueNumber HAVING count(*) > 1)")
-  long getDuplicateComicBookCount();
+      "SELECT sum(total) FROM (SELECT count(*) AS total FROM ComicDetail d WHERE d.publisher IS NOT NULL AND LENGTH(d.publisher) > 0 AND d.series IS NOT NULL AND LENGTH(d.series) > 0 AND d.volume IS NOT NULL AND LENGTH(d.volume) > 0 AND d.issueNumber IS NOT NULL AND LENGTH(d.issueNumber) > 0 GROUP BY d.publisher, d.series, d.volume, d.issueNumber HAVING count(*) > 1)")
+  Long getDuplicateComicBookCount();
 
   @Query(
-      "SELECT d FROM ComicDetail d JOIN (SELECT c.publisher AS publisher, c.series AS series, c.volume AS volume, c.issueNumber AS issueNumber FROM ComicDetail c GROUP BY c.publisher, c.series, c.volume, c.issueNumber HAVING count(*) > 1) g ON g.publisher = d.publisher AND g.series = d.series AND g.volume = d.volume AND g.issueNumber = d.issueNumber")
+      "SELECT d FROM ComicDetail d JOIN (SELECT c.publisher AS publisher, c.series AS series, c.volume AS volume, c.issueNumber AS issueNumber FROM ComicDetail c WHERE c.publisher IS NOT NULL AND LENGTH(c.publisher) > 0 AND c.series IS NOT NULL AND LENGTH(c.series) > 0 AND c.volume IS NOT NULL AND LENGTH(c.volume) > 0 AND c.issueNumber IS NOT NULL AND LENGTH(c.issueNumber) > 0 GROUP BY c.publisher, c.series, c.volume, c.issueNumber HAVING count(*) > 1) g ON g.publisher = d.publisher AND g.series = d.series AND g.volume = d.volume AND g.issueNumber = d.issueNumber")
   List<ComicDetail> getDuplicateComicBooks(Pageable pageable);
 }

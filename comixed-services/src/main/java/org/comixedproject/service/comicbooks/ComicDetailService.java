@@ -818,7 +818,11 @@ public class ComicDetailService {
   @Transactional
   public long getDuplicateComicBookCount() {
     log.debug("Load the duplicate comic detail count");
-    return this.comicDetailRepository.getDuplicateComicBookCount();
+    Long result = this.comicDetailRepository.getDuplicateComicBookCount();
+    if (result == null) {
+      result = 0L;
+    }
+    return result;
   }
 
   /**
