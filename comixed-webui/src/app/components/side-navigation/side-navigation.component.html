@@ -128,6 +128,59 @@
   *ngIf="isAdmin"
   mat-button
   class="menu-button"
+  routerLink="/library/duplicates/comics"
+  routerLinkActive="active-nav-button"
+>
+  <mat-icon>dynamic_feed</mat-icon>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.duplicate-comics" | translate }}
+    ({{ duplicateComicBooks$ | async | number }})
+  </mat-label>
+</button>
+
+<button
+  *ngIf="isAdmin"
+  mat-button
+  class="menu-button"
+  routerLink="/library/duplicates/pages"
+  routerLinkActive="active-nav-button"
+>
+  <mat-icon>control_point_duplicate</mat-icon>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.duplicate-pages" | translate }}
+  </mat-label>
+</button>
+
+<button
+  *ngIf="isAdmin && blockedPagesEnabled"
+  mat-button
+  class="menu-button"
+  routerLink="/library/pages/blocked"
+  routerLinkActive="active-nav-button"
+>
+  <mat-icon>block</mat-icon>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.blocked-hashes" | translate }}
+  </mat-label>
+</button>
+
+<button
+  *ngIf="isAdmin"
+  mat-button
+  class="menu-button"
+  routerLink="/library/pages/deleted"
+  routerLinkActive="active-nav-button"
+>
+  <mat-icon>delete_sweep</mat-icon>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.deleted-pages" | translate }}
+  </mat-label>
+</button>
+
+<button
+  *ngIf="isAdmin"
+  mat-button
+  class="menu-button"
   routerLink="/library/import"
   routerLinkActive="active-nav-button"
 >
@@ -173,58 +226,6 @@
   <mat-icon>batch_prediction</mat-icon>
   <mat-label class="cx-text-nowrap">
     {{ "navigation.option.metadata-batch-process" | translate }}
-  </mat-label>
-</button>
-
-<button
-  *ngIf="isAdmin"
-  mat-button
-  class="menu-button"
-  routerLink="/library/duplicates/comics"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>dynamic_feed</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.duplicate-comics" | translate }}
-  </mat-label>
-</button>
-
-<button
-  *ngIf="isAdmin"
-  mat-button
-  class="menu-button"
-  routerLink="/library/duplicates/pages"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>control_point_duplicate</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.duplicate-pages" | translate }}
-  </mat-label>
-</button>
-
-<button
-  *ngIf="isAdmin && blockedPagesEnabled"
-  mat-button
-  class="menu-button"
-  routerLink="/library/pages/blocked"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>block</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.blocked-hashes" | translate }}
-  </mat-label>
-</button>
-
-<button
-  *ngIf="isAdmin"
-  mat-button
-  class="menu-button"
-  routerLink="/library/pages/deleted"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>delete_sweep</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.deleted-pages" | translate }}
   </mat-label>
 </button>
 

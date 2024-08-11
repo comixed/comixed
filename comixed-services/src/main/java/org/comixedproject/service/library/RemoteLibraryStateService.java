@@ -24,6 +24,7 @@ import org.comixedproject.messaging.library.PublishRemoteLibraryUpdateAction;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.net.library.RemoteLibraryState;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateChangeListener;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
@@ -44,6 +45,7 @@ import org.springframework.stereotype.Service;
 public class RemoteLibraryStateService implements InitializingBean, ComicStateChangeListener {
   @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicDetailService comicDetailService;
   @Autowired private PublishRemoteLibraryUpdateAction publishRemoteLibraryUpdateAction;
 
   @Override
@@ -74,7 +76,8 @@ public class RemoteLibraryStateService implements InitializingBean, ComicStateCh
         new RemoteLibraryState(
             this.comicBookService.getComicBookCount(),
             this.comicBookService.getUnscrapedComicCount(),
-            this.comicBookService.getDeletedComicCount());
+            this.comicBookService.getDeletedComicCount(),
+            this.comicDetailService.getDuplicateComicBookCount());
     result.setPublishers(this.comicBookService.getPublishersState());
     result.setSeries(this.comicBookService.getSeriesState());
     result.setCharacters(this.comicBookService.getCharactersState());
