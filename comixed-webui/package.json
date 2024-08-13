@@ -101,6 +101,7 @@
     "webpack": "5.76.0",
     "webpack-subresource-integrity": "^1.5.1",
     "ws": "^7.5.10",
+    "xml2js": "0.6.2",
     "xmlhttprequest-ssl": "^1.6.1",
     "zone.js": "~0.14.6"
   },
