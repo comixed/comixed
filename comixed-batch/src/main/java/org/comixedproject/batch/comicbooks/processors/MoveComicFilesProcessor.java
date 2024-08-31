@@ -20,13 +20,16 @@ package org.comixedproject.batch.comicbooks.processors;
 
 import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.JOB_ORGANIZATION_RENAMING_RULE;
 import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.JOB_ORGANIZATION_TARGET_DIRECTORY;
+import static org.comixedproject.service.admin.ConfigurationService.CFG_DONT_MOVE_UNSCRAPED_COMICS;
 
 import java.io.File;
+import java.util.Objects;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.service.admin.ConfigurationService;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.StepExecution;
@@ -47,6 +50,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class MoveComicFilesProcessor
     implements ItemProcessor<ComicBook, ComicBook>, StepExecutionListener {
+  @Autowired private ConfigurationService configurationService;
   @Autowired private FileAdaptor fileAdaptor;
   @Autowired private ComicFileAdaptor comicFileAdaptor;
   @Autowired private ComicBookAdaptor comicBookAdaptor;
@@ -57,6 +61,12 @@ public class MoveComicFilesProcessor
   public ComicBook process(final ComicBook comicBook) {
     if (!comicBook.getComicDetail().getFile().exists()) {
       log.error("Comic file not found: {}", comicBook.getComicDetail().getFilename());
+      return comicBook;
+    }
+
+    if (this.configurationService.isFeatureEnabled(CFG_DONT_MOVE_UNSCRAPED_COMICS)
+        && Objects.isNull(comicBook.getMetadata())) {
+      log.error("Comic book is not scraped: id={}", comicBook.getId());
       return comicBook;
     }
 

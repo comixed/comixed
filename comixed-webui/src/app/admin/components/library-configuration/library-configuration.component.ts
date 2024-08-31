@@ -30,6 +30,7 @@ import { ConfigurationOption } from '@app/admin/models/configuration-option';
 import { getConfigurationOption } from '@app/admin';
 import {
   BLOCKED_PAGES_ENABLED,
+  LIBRARY_DONT_MOVE_UNSCRAPED_COMICS,
   CREATE_EXTERNAL_METADATA_FILES,
   LIBRARY_COMIC_RENAMING_RULE,
   LIBRARY_DELETE_EMPTY_DIRECTORIES,
@@ -101,6 +102,7 @@ export class LibraryConfigurationComponent {
   ) {
     this.libraryConfigurationForm = this.formBuilder.group({
       deleteEmptyDirectories: ['', []],
+      dontMoveUnscrapedComics: ['', []],
       createExternalMetadataFile: ['', []],
       skipInternalMetadataFile: ['', []],
       blockedPagesEnabled: ['', []],
@@ -126,6 +128,13 @@ export class LibraryConfigurationComponent {
       getConfigurationOption(
         options,
         LIBRARY_DELETE_EMPTY_DIRECTORIES,
+        `${false}`
+      ) === `${true}`
+    );
+    this.libraryConfigurationForm.controls.dontMoveUnscrapedComics.setValue(
+      getConfigurationOption(
+        options,
+        LIBRARY_DONT_MOVE_UNSCRAPED_COMICS,
         `${false}`
       ) === `${true}`
     );
@@ -194,6 +203,10 @@ export class LibraryConfigurationComponent {
       {
         name: LIBRARY_DELETE_EMPTY_DIRECTORIES,
         value: `${this.libraryConfigurationForm.controls.deleteEmptyDirectories.value}`
+      },
+      {
+        name: LIBRARY_DONT_MOVE_UNSCRAPED_COMICS,
+        value: `${this.libraryConfigurationForm.controls.dontMoveUnscrapedComics.value}`
       },
       {
         name: CREATE_EXTERNAL_METADATA_FILES,
