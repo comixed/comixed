@@ -32,6 +32,7 @@ import {
   CREATE_EXTERNAL_METADATA_FILES,
   LIBRARY_COMIC_RENAMING_RULE,
   LIBRARY_DELETE_EMPTY_DIRECTORIES,
+  LIBRARY_DONT_MOVE_UNSCRAPED_COMICS,
   LIBRARY_NO_RECREATE_COMICS,
   LIBRARY_PAGE_RENAMING_RULE,
   LIBRARY_ROOT_DIRECTORY,
@@ -50,6 +51,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('LibraryConfigurationComponent', () => {
   const DELETE_EMPTY_DIRECTORIES = Math.random() > 0.5;
+  const DONT_MOVE_UNSCRAPED_COMICS = Math.random() > 0.5;
   const CREATE_EXTERNAL_METADATA = Math.random() > 0.5;
   const SKIP_INTERNAL_METADATA = Math.random() > 0.5;
   const LIBRARY_ROOT = 'The library root';
@@ -77,6 +79,10 @@ describe('LibraryConfigurationComponent', () => {
     {
       name: LIBRARY_DELETE_EMPTY_DIRECTORIES,
       value: `${DELETE_EMPTY_DIRECTORIES}`
+    },
+    {
+      name: LIBRARY_DONT_MOVE_UNSCRAPED_COMICS,
+      value: `${DONT_MOVE_UNSCRAPED_COMICS}`
     },
     {
       name: CREATE_EXTERNAL_METADATA_FILES,
@@ -145,6 +151,13 @@ describe('LibraryConfigurationComponent', () => {
       ).toEqual(DELETE_EMPTY_DIRECTORIES);
     });
 
+    it('sets the do not move unscraped comics value', () => {
+      expect(
+        component.libraryConfigurationForm.controls.dontMoveUnscrapedComics
+          .value
+      ).toEqual(DONT_MOVE_UNSCRAPED_COMICS);
+    });
+
     it('sets the library root value', () => {
       expect(
         component.libraryConfigurationForm.controls.rootDirectory.value
@@ -191,6 +204,10 @@ describe('LibraryConfigurationComponent', () => {
             {
               name: LIBRARY_DELETE_EMPTY_DIRECTORIES,
               value: `${DELETE_EMPTY_DIRECTORIES}`
+            },
+            {
+              name: LIBRARY_DONT_MOVE_UNSCRAPED_COMICS,
+              value: `${DONT_MOVE_UNSCRAPED_COMICS}`
             },
             {
               name: CREATE_EXTERNAL_METADATA_FILES,

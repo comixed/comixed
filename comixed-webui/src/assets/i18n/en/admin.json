@@ -58,6 +58,7 @@
       "comic-variable-name": "Variable Name",
       "create-external-metadata-files": "Create external metadata files for each comic.",
       "delete-empty-directories": "Delete empty directories after library organization.",
+      "dont-move-unscraped-comics": "Do not organize unscraped comics.",
       "file-options": "Comic File Options",
       "no-recreate-comics": "Do not recreate comic files",
       "page-renaming-rule": "Page Renaming Rule",
