@@ -18,7 +18,7 @@
 
 package org.comixedproject.rest.comicbooks;
 
-import static org.comixedproject.rest.comicbooks.ComicBookController.MISSING_COMIC_COVER;
+import static org.comixedproject.rest.comicbooks.ComicBookController.MISSING_COMIC_COVER_FILENAME;
 import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
 import static org.junit.Assert.*;
 
@@ -33,7 +33,6 @@ import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.comicbooks.*;
 import org.comixedproject.service.comicbooks.*;
 import org.comixedproject.service.comicpages.ComicPageException;
-import org.comixedproject.service.comicpages.ComicPageService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.service.library.LastReadException;
 import org.comixedproject.service.library.LastReadService;
@@ -77,12 +76,10 @@ public class ComicBookControllerTest {
   private static final String TEST_EMAIL = "comixedreader@localhost";
   private static final long TEST_UNREAD_COMIC_COUNT = 804L;
   private static final long TEST_READING_LIST_ID = 501L;
-  private static final Long TEST_PAGE_ID = 129L;
 
   @InjectMocks private ComicBookController controller;
   @Mock private ComicBookService comicBookService;
   @Mock private ComicDetailService comicDetailService;
-  @Mock private ComicPageService comicPageService;
   @Mock private PageCacheService pageCacheService;
   @Mock private ComicBookSelectionService comicBookSelectionService;
   @Mock private ReadingListService readingListService;
@@ -114,8 +111,6 @@ public class ComicBookControllerTest {
     for (long index = 0L; index < 100L; index++) {
       selectedIdList.add(index);
     }
-    Mockito.when(comicPageService.getPageIdForComicBookCover(Mockito.anyLong()))
-        .thenReturn(TEST_PAGE_ID);
   }
 
   @Test
@@ -249,36 +244,9 @@ public class ComicBookControllerTest {
     Mockito.verify(comicBookService, Mockito.times(1)).getComicContent(TEST_COMIC_ID);
   }
 
-  @Test(expected = ComicPageException.class)
-  public void testGetCachedCoverImageForInvalidComicBook()
-      throws ComicBookException, ComicPageException {
-    Mockito.when(comicPageService.getPageIdForComicBookCover(Mockito.anyLong()))
-        .thenThrow(ComicPageException.class);
-
-    try {
-      controller.getCoverImage(TEST_COMIC_ID);
-    } finally {
-      Mockito.verify(comicPageService, Mockito.times(1)).getPageIdForComicBookCover(TEST_COMIC_ID);
-    }
-  }
-
-  @Test(expected = ComicBookException.class)
-  public void testGetCachedCoverImageNoPageContent() throws ComicBookException, ComicPageException {
-    Mockito.when(pageCacheService.getPageContent(Mockito.anyLong(), Mockito.anyString()))
-        .thenThrow(ComicPageException.class);
-
-    try {
-      controller.getCoverImage(TEST_COMIC_ID);
-    } finally {
-      Mockito.verify(comicPageService, Mockito.times(1)).getPageIdForComicBookCover(TEST_COMIC_ID);
-      Mockito.verify(pageCacheService, Mockito.times(1))
-          .getPageContent(TEST_PAGE_ID, MISSING_COMIC_COVER);
-    }
-  }
-
   @Test
   public void testGetCachedCoverImage() throws ComicBookException, ComicPageException {
-    Mockito.when(pageCacheService.getPageContent(Mockito.anyLong(), Mockito.anyString()))
+    Mockito.when(pageCacheService.getCoverPageContent(Mockito.anyLong(), Mockito.anyString()))
         .thenReturn(responseEntity);
 
     final ResponseEntity<byte[]> result = controller.getCoverImage(TEST_COMIC_ID);
@@ -286,9 +254,8 @@ public class ComicBookControllerTest {
     assertNotNull(result);
     assertSame(responseEntity, result);
 
-    Mockito.verify(comicPageService, Mockito.times(1)).getPageIdForComicBookCover(TEST_COMIC_ID);
     Mockito.verify(pageCacheService, Mockito.times(1))
-        .getPageContent(TEST_PAGE_ID, MISSING_COMIC_COVER);
+        .getCoverPageContent(TEST_COMIC_ID, MISSING_COMIC_COVER_FILENAME);
   }
 
   @Test
@@ -477,8 +444,7 @@ public class ComicBookControllerTest {
     Mockito.when(comicDetailService.getCoverMonths(Mockito.anySet())).thenReturn(coverMonthList);
 
     final LoadComicDetailsResponse result =
-        controller.loadComicDetailListById(
-            principal, new LoadComicDetailsByIdRequest(comicBookIdSet));
+        controller.loadComicDetailListById(new LoadComicDetailsByIdRequest(comicBookIdSet));
 
     assertNotNull(result);
     assertSame(comicDetailList, result.getComicDetails());
@@ -513,7 +479,6 @@ public class ComicBookControllerTest {
 
     final LoadComicDetailsResponse result =
         controller.loadComicDetailListForTag(
-            principal,
             new LoadComicDetailsForTagRequest(
                 TEST_PAGE_SIZE,
                 TEST_PAGE_INDEX,
