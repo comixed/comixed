@@ -241,7 +241,7 @@ public class OPDSNavigationService {
                           ACQUISITION_FEED_LINK_TYPE,
                           SUBSECTION,
                           String.format(
-                              "publishers/%s?unread=%s",
+                              "/opds/collections/publishers/%s?unread=%s",
                               this.opdsUtils.urlEncodeString(publisher.getName()), unread)));
               feed.getEntries().add(feedEntry);
             });
@@ -277,7 +277,7 @@ public class OPDSNavigationService {
                           ACQUISITION_FEED_LINK_TYPE,
                           SUBSECTION,
                           String.format(
-                              "%s/series/%s?unread=%s",
+                              "/opds/collections/publishers/%s/series/%s?unread=%s",
                               this.opdsUtils.urlEncodeString(publisher),
                               this.opdsUtils.urlEncodeString(series),
                               unread)));
@@ -320,7 +320,8 @@ public class OPDSNavigationService {
                           ACQUISITION_FEED_LINK_TYPE,
                           SUBSECTION,
                           String.format(
-                              "%s/volumes/%s?unread=%s",
+                              "/opds/collections/publishers/%s/series/%s/volumes/%s?unread=%s",
+                              this.opdsUtils.urlDecodeString(publisher),
                               this.opdsUtils.urlEncodeString(series),
                               this.opdsUtils.urlEncodeString(volume),
                               unread)));
@@ -364,7 +365,7 @@ public class OPDSNavigationService {
                           ACQUISITION_FEED_LINK_TYPE,
                           SUBSECTION,
                           String.format(
-                              "series/%s?unread=%s",
+                              "/opds/collections/series/%s?unread=%s",
                               this.opdsUtils.urlEncodeString(name), unread)));
               feed.getEntries().add(feedEntry);
             });
@@ -403,7 +404,7 @@ public class OPDSNavigationService {
                           ACQUISITION_FEED_LINK_TYPE,
                           SUBSECTION,
                           String.format(
-                              "../publishers/%s/series/%s?unread=%s",
+                              "/opds/collections/publishers/%s/series/%s?unread=%s",
                               this.opdsUtils.urlEncodeString(publisher),
                               this.opdsUtils.urlEncodeString(name),
                               unread)));
@@ -583,7 +584,7 @@ public class OPDSNavigationService {
                       ACQUISITION_FEED_LINK_TYPE,
                       SUBSECTION,
                       String.format(
-                          "%s/%s?unread=%s",
+                          "/opds/collections/%s/%s?unread=%s",
                           collectionType.getOpdsPathValue(),
                           this.opdsUtils.urlEncodeString(name),
                           unread)));
