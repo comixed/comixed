@@ -24,9 +24,14 @@ import java.util.concurrent.TimeUnit;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.comixedproject.adaptors.AdaptorException;
+import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.service.comicbooks.ComicBookException;
+import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicfiles.ComicFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.CacheControl;
@@ -34,6 +39,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 /**
  * <code>PageCacheService</code> provides methods for working with the page cache.
@@ -44,8 +50,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class PageCacheService {
   @Autowired private ComicPageService comicPageService;
+  @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicFileService comicFileService;
   @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
+  @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
   @Value("${comixed.images.cache.location}")
   String cacheDirectory;
@@ -101,7 +110,10 @@ public class PageCacheService {
    * @param hash the page hash
    * @param content the page content
    */
-  public void saveByHash(final String hash, final byte[] content) {
+  public void saveByHash(String hash, final byte[] content) {
+    if (!StringUtils.hasLength(hash)) {
+      hash = this.genericUtilitiesAdaptor.createHash(content);
+    }
     try {
       log.debug("Saving image to cache: hash={}", hash);
       final File file = this.getFileForHash(hash);
@@ -153,21 +165,47 @@ public class PageCacheService {
             });
   }
 
+  public ResponseEntity<byte[]> getCoverPageContent(
+      final long comicBookId, final String missingFilename) throws ComicPageException {
+    final Long pageId = this.comicPageService.getPageIdForComicBookCover(comicBookId);
+    if (pageId != null) {
+      log.debug("Loading cover content by page id: id={}", pageId);
+      return this.getPageContent(pageId, missingFilename);
+    }
+
+    log.debug("Loading cover content from comic archive");
+    final ComicBook comicBook;
+    try {
+      comicBook = this.comicBookService.getComic(comicBookId);
+      final byte[] content =
+          this.comicFileService.getImportFileCover(comicBook.getComicDetail().getFilename());
+      if (content != null) {
+        return this.doProcessContent(content, "cover", missingFilename);
+      }
+
+      log.debug("Loading missing page for cover content: {}", missingFilename);
+      return this.doProcessContent(null, "", missingFilename);
+    } catch (ComicBookException | AdaptorException error) {
+      log.error("Failed to load comic cover content", error);
+      return this.doProcessContent(null, "", missingFilename);
+    }
+  }
+
   /**
    * Returns the content for a page, by record id, prepared for web display. If the content is not
    * found then loads the alternate file and returns that instead.
    *
-   * @param id the page id
+   * @param pageId the page id
    * @param missingFilename the alternate content file
    * @return the page content
    * @throws ComicPageException if the page is not found
    * @see #saveByHash(String, byte[])
    */
-  public ResponseEntity<byte[]> getPageContent(final long id, final String missingFilename)
+  public ResponseEntity<byte[]> getPageContent(final long pageId, final String missingFilename)
       throws ComicPageException {
-    final String comicFilename = this.comicPageService.getComicFilenameForPage(id);
-    final String pageFilename = this.comicPageService.getPageFilename(id);
-    final String pageHash = this.comicPageService.getHashForPage(id);
+    final String comicFilename = this.comicPageService.getComicFilenameForPage(pageId);
+    final String pageFilename = this.comicPageService.getPageFilename(pageId);
+    final String pageHash = this.comicPageService.getHashForPage(pageId);
 
     return this.doGetPageContent(comicFilename, pageFilename, pageHash, missingFilename);
   }

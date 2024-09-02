@@ -329,14 +329,16 @@ public class ComicPageService {
         });
   }
 
+  /**
+   * Returns the record id for the cover page for the specified comic book.
+   *
+   * @param comicBookId the comic book id
+   * @return the page id, or null if not found
+   */
   @Transactional
-  public Long getPageIdForComicBookCover(final long comicBookId) throws ComicPageException {
+  public Long getPageIdForComicBookCover(final long comicBookId) {
     log.debug("Retrieving first page id for comic book: id={}", comicBookId);
-    final Long result = this.comicPageRepository.getPageIdForComicBookCover(comicBookId);
-    if (result == null) {
-      throw new ComicPageException("Cannot find cover for comic: id=" + comicBookId);
-    }
-    return result;
+    return this.comicPageRepository.getPageIdForComicBookCover(comicBookId);
   }
 
   /**
@@ -375,15 +377,11 @@ public class ComicPageService {
    * Returns the has for the given page.
    *
    * @param pageId the page id
-   * @return the hash
-   * @throws ComicPageException if the page id is invalid
+   * @return the hash or null if not available
    */
   @Transactional
-  public String getHashForPage(final long pageId) throws ComicPageException {
-    final String result = this.comicPageRepository.getHashForPage(pageId);
-    if (result == null) {
-      throw new ComicPageException("No such page: id=" + pageId);
-    }
-    return result;
+  public String getHashForPage(final long pageId) {
+    log.debug("Loading hash for page: id={}", pageId);
+    return this.comicPageRepository.getHashForPage(pageId);
   }
 }
