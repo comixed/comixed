@@ -7,5 +7,6 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <include file="/db/migrations/2.2/001_2138_add_index_for_duplicate_comic_books.xml"/>
+    <include file="/db/migrations/2.2/002_2145_add_page_number_index.xml"/>
 
 </databaseChangeLog>

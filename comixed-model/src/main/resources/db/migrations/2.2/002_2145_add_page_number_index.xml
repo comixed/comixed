@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet id="002_2145_add_page_number_index.xml" author="mcpierce">
+
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <indexExists tableName="comic_pages_comic_book_and_page_number_idx" />
+      </not>
+    </preConditions>
+
+    <createIndex tableName="comic_pages" indexName="comic_pages_comic_book_and_page_number_idx">
+      <column name="comic_book_id"/>
+      <column name="page_number"/>
+    </createIndex>
+
+  </changeSet>
+</databaseChangeLog>
