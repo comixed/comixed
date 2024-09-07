@@ -77,7 +77,7 @@
   </button>
 </mat-toolbar>
 <form *ngIf="!!comic" [formGroup]="comicForm">
-  <mat-form-field class="cx-width-50" appearance="fill">
+  <mat-form-field class="cx-width-25" appearance="fill">
     <mat-label>{{ "comic-book.label.metadata-source" | translate }}</mat-label>
     <mat-select
       [value]="metadataSource?.id || preferredMetadataSource?.id"
@@ -91,6 +91,31 @@
         {{ source.label }}
       </mat-option>
     </mat-select>
+  </mat-form-field>
+  <mat-form-field class="cx-width-25">
+    <mat-label>
+      {{ "comic-book.label.metadata-source-id" | translate }}
+    </mat-label>
+    <input
+      id="metadata-source-id-input"
+      type="number"
+      matInput
+      formControlName="referenceId"
+      [placeholder]="'comic-book.placeholder.metadata-source-id' | translate"
+    />
+    <button
+      id="scrape-with-metadata-source-id-button"
+      mat-icon-button
+      matSuffix
+      [disabled]="!this.preferredMetadataSource"
+      [matTooltip]="'scraping.tooltip.use-metadata-source-id' | translate"
+      (click)="onScrapeWithReferenceId()"
+    >
+      <mat-icon>find_replace</mat-icon>
+    </button>
+    <mat-hint>
+      {{ "comic-book.hint.useful-for-scraping" | translate }}
+    </mat-hint>
   </mat-form-field>
   <mat-form-field class="cx-width-50" appearance="fill">
     <mat-label>
@@ -166,35 +191,5 @@
     <mat-error *ngIf="comicForm.controls.issueNumber.errors?.required">
       {{ "validation.field-required" | translate }}
     </mat-error>
-  </mat-form-field>
-  <mat-form-field class="cx-width-50">
-    <mat-label>
-      {{ "comic-book.label.metadata-source-id" | translate }}
-    </mat-label>
-    <input
-      id="metadata-source-id-input"
-      type="number"
-      matInput
-      readonly
-      formControlName="referenceId"
-      [placeholder]="'comic-book.placeholder.metadata-source-id' | translate"
-    />
-    <button
-      id="scrape-with-metadata-source-id-button"
-      mat-icon-button
-      matSuffix
-      [disabled]="
-        !this.metadataSource ||
-        (this.comicForm.controls.referenceId.value || '').length === 0 ||
-        !this.comicForm.controls.referenceId.valid
-      "
-      [matTooltip]="'scraping.tooltip.use-metadata-source-id' | translate"
-      (click)="onScrapeWithReferenceId()"
-    >
-      <mat-icon>find_replace</mat-icon>
-    </button>
-    <mat-hint>
-      {{ "comic-book.hint.useful-for-scraping" | translate }}
-    </mat-hint>
   </mat-form-field>
 </form>
