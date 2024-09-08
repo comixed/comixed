@@ -23,7 +23,10 @@ import {
   Input,
   ViewChild
 } from '@angular/core';
-import { ComicsByYearData } from '@app/models/ui/comics-by-year-data';
+import {
+  ComicsByYearData,
+  TotalComicsForPublisher
+} from '@app/models/ui/comics-by-year-data';
 import { BehaviorSubject } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { LibraryState } from '@app/library/reducers/library.reducer';
@@ -40,10 +43,13 @@ export class ComicsByYearChartComponent implements AfterViewInit {
   chartWidth$ = new BehaviorSubject<number>(0);
 
   allData: ComicsByYearData[] = [];
-  data: ComicsByYearData[] = [];
+  data$ = new BehaviorSubject<ComicsByYearData[]>([]);
+  totalComicsForPublisher: TotalComicsForPublisher[] = [];
   yearOptions = [];
+  publisherOptions = [];
   startYear = 0;
   endYear = 0;
+  publishersToShow = 5;
   protected readonly yearsPerRow = yearsPerRow;
 
   constructor(private logger: LoggerService) {}
@@ -51,7 +57,14 @@ export class ComicsByYearChartComponent implements AfterViewInit {
   @Input() set libraryState(libraryState: LibraryState) {
     this.logger.trace('Library state updated');
     const data = [];
+    this.totalComicsForPublisher = libraryState.publishers
+      .filter(entry => entry.name.length > 0)
+      .map(entry => {
+        return { name: entry.name, count: entry.count };
+      });
+    this.publisherOptions = [];
     libraryState.byPublisherAndYear.forEach(entry => {
+      this.publisherOptions = this.publisherOptions.concat(entry.publisher);
       let record = data.find(existing => existing.name === entry.year);
       /* istanbul ignore else */
       if (!record) {
@@ -67,9 +80,12 @@ export class ComicsByYearChartComponent implements AfterViewInit {
         value: entry.count
       });
     });
-    this.data = this.allData = data.sort((left, right) =>
-      left.name > right.name ? 1 : left.name < right.name ? -1 : 0
+    this.data$.next(
+      data.sort((left, right) =>
+        left.name > right.name ? 1 : left.name < right.name ? -1 : 0
+      )
     );
+    this.allData = this.data$.value;
     this.yearOptions = libraryState.byPublisherAndYear
       .map(entry => entry.year)
       .filter((value, index, array) => index === array.indexOf(value))
@@ -79,20 +95,53 @@ export class ComicsByYearChartComponent implements AfterViewInit {
       this.yearOptions.length > 0
         ? this.yearOptions[this.yearOptions.length - 1]
         : 0;
+    this.publisherOptions = this.publisherOptions.filter(
+      (publisher, index, entries) => index === entries.indexOf(publisher)
+    );
+    this.publishersToShow = this.publisherOptions.length;
+    this.doFilterData();
   }
 
   ngAfterViewInit(): void {
     this.loadComponentDimensions();
   }
 
-  onShowData(startYear: number, endYear: number): void {
+  onShowData(
+    startYear: number,
+    endYear: number,
+    publishersToShow: number
+  ): void {
     if (startYear <= endYear) {
       this.startYear = startYear;
       this.endYear = endYear;
-      this.data = this.allData
-        .filter(entry => parseInt(entry.name) >= this.startYear)
-        .filter(entry => parseInt(entry.name) <= this.endYear);
+      this.publishersToShow = publishersToShow;
+      this.doFilterData();
     }
+  }
+
+  private doFilterData(): void {
+    /* istanbul ignore next */
+    const publishersShown = this.totalComicsForPublisher
+      .sort((left, right) => left.count - right.count)
+      .reverse()
+      .slice(0, this.publishersToShow)
+      .map(entry => entry.name);
+    /* istanbul ignore next */
+    this.data$.next(
+      this.allData
+        .filter(entry => publishersShown.includes(entry.series[0].name))
+        .filter(entry => parseInt(entry.name) >= this.startYear)
+        .filter(entry => parseInt(entry.name) <= this.endYear)
+        .sort(
+          (left, right) =>
+            this.totalComicsForPublisher.find(
+              entry => entry.name === left.series[0].name
+            ).count -
+            this.totalComicsForPublisher.find(
+              entry => entry.name === right.series[0].name
+            ).count
+        )
+    );
   }
 
   private loadComponentDimensions(): void {
