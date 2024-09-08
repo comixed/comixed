@@ -17,17 +17,22 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ComicsByYearChartComponent } from './comics-by-year-chart.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { initialState as initialLibraryState } from '@app/library/reducers/library.reducer';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
-xdescribe('ComicsByYearChartComponent', () => {
+describe('ComicsByYearChartComponent', () => {
   const LIBRARY_STATE = {
     ...initialLibraryState,
+    publishers: [
+      { name: 'Publisher 1', count: 10 },
+      { name: 'Publisher 2', count: 100 }
+    ],
     byPublisherAndYear: [
       { publisher: 'Publisher 1', year: 2017, count: 23 },
       { publisher: 'Publisher 1', year: 2018, count: 27 },
@@ -45,7 +50,9 @@ xdescribe('ComicsByYearChartComponent', () => {
         NoopAnimationsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
-        NgxChartsModule
+        NgxChartsModule,
+        MatFormFieldModule,
+        MatSelectModule
       ]
     }).compileComponents();
 
@@ -60,12 +67,41 @@ xdescribe('ComicsByYearChartComponent', () => {
 
   describe('loading comics', () => {
     beforeEach(() => {
-      component.data = [];
+      component.data$.next([]);
+      component.allData = [];
+      component.totalComicsForPublisher = [];
       component.libraryState = LIBRARY_STATE;
     });
 
     it('reloads the chart data', () => {
-      expect(component.data).not.toEqual([]);
+      expect(component.allData).not.toEqual([]);
+    });
+
+    it('loads the comic count per publisher', () => {
+      expect(component.totalComicsForPublisher).not.toEqual([]);
+    });
+  });
+
+  describe('showing data', () => {
+    const START_YEAR = 1965;
+    const END_YEAR = 2024;
+    const PUBLISHERS_TO_SHOW = 15;
+
+    beforeEach(() => {
+      component.startYear = component.endYear = component.publishersToShow = 0;
+      component.onShowData(START_YEAR, END_YEAR, PUBLISHERS_TO_SHOW);
+    });
+
+    it('updates the start year', () => {
+      expect(component.startYear).toEqual(START_YEAR);
+    });
+
+    it('updates the end year', () => {
+      expect(component.endYear).toEqual(END_YEAR);
+    });
+
+    it('updates the publishers to show', () => {
+      expect(component.publishersToShow).toEqual(PUBLISHERS_TO_SHOW);
     });
   });
 });

@@ -1,37 +1,62 @@
-<div *ngIf="!!data" #container class="cx-width-100 cx-height-100 cx-padding-5">
+<div #container class="cx-width-100 cx-height-100 cx-padding-5">
   <h2>{{ "home.title.comics-by-year-and-publisher-chart" | translate }}</h2>
   <ngx-charts-heat-map
+    *ngIf="(data$ | async)?.value?.length > 0"
     [view]="[chartWidth$ | async, chartHeight$ | async]"
     scheme="vivid"
-    [results]="data"
+    [results]="data$ | async"
     [xAxis]="true"
     [yAxis]="true"
     [legend]="true"
   ></ngx-charts-heat-map>
   <div class="cx-horizontal-container">
-    <mat-form-field class="cx-width-10" appearance="fill">
-      <mat-label>{{ "text.start-year" | translate }}</mat-label>
+    <mat-form-field class="cx-grow-0" appearance="fill">
+      <mat-label>{{ "text.number-of-publishers" | translate }}</mat-label>
       <mat-select
-        id="start-year"
-        [disabled]="yearOptions.length === 0"
-        (selectionChange)="onShowData($event.value, endYear)"
+        id="number-of-publishers"
+        [value]="publishersToShow"
+        [disabled]="publisherOptions.length === 0"
+        (selectionChange)="onShowData(startYear, endYear, $event.value)"
       >
-        <mat-option *ngFor="let year of yearOptions" [value]="year">
-          {{ year }}
+        <mat-option
+          *ngFor="let publisher of publisherOptions; index as publisherIndex"
+          [value]="publisherIndex + 1"
+        >
+          {{ publisherIndex + 1 }}
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field class="cx-width-10" appearance="fill">
-      <mat-label>{{ "text.end-year" | translate }}</mat-label>
-      <mat-select
-        id="end-year"
-        [disabled]="yearOptions.length === 0"
-        (selectionChange)="onShowData(startYear, $event.value)"
-      >
-        <mat-option *ngFor="let year of yearOptions" [value]="year">
-          {{ year }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="cx-horizontal-container">
+      <mat-form-field class="cx-grow-0" appearance="fill">
+        <mat-label>{{ "text.start-year" | translate }}</mat-label>
+        <mat-select
+          id="start-year"
+          [value]="startYear"
+          [disabled]="yearOptions.length === 0"
+          (selectionChange)="
+            onShowData($event.value, endYear, publishersToShow)
+          "
+        >
+          <mat-option *ngFor="let year of yearOptions" [value]="year">
+            {{ year }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="cx-grow-0" appearance="fill">
+        <mat-label>{{ "text.end-year" | translate }}</mat-label>
+        <mat-select
+          id="end-year"
+          [value]="endYear"
+          [disabled]="yearOptions.length === 0"
+          (selectionChange)="
+            onShowData(startYear, $event.value, publishersToShow)
+          "
+        >
+          <mat-option *ngFor="let year of yearOptions" [value]="year">
+            {{ year }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
   </div>
 </div>

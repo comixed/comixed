@@ -24,4 +24,10 @@ export interface ComicsByYearSeriesData {
 export interface ComicsByYearData {
   name: string;
   series: ComicsByYearSeriesData[];
+  totalComics: number;
+}
+
+export interface TotalComicsForPublisher {
+  name: string;
+  count: number;
 }
