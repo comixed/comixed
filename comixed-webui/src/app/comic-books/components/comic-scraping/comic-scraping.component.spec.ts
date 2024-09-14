@@ -49,7 +49,10 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
-import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
+import {
+  METADATA_SOURCE_1,
+  METADATA_SOURCE_2
+} from '@app/comic-metadata/comic-metadata.fixtures';
 import {
   initialState as initialMetadataSourceListState,
   METADATA_SOURCE_LIST_FEATURE_KEY
@@ -65,8 +68,8 @@ describe('ComicScrapingComponent', () => {
   const COMIC = COMIC_BOOK_2;
   const SKIP_CACHE = Math.random() > 0.5;
   const MAXIMUM_RECORDS = 100;
-  const METADATA_SOURCE = METADATA_SOURCE_1;
-  const METADATA_SOURCES = [METADATA_SOURCE_1];
+  const METADATA_SOURCE = { ...METADATA_SOURCE_1, preferred: true };
+  const METADATA_SOURCES = [METADATA_SOURCE, METADATA_SOURCE_2];
   const REFERENCE_ID = `${new Date().getTime()}`;
 
   const initialState = {
@@ -138,12 +141,6 @@ describe('ComicScrapingComponent', () => {
         };
       });
 
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          setChosenMetadataSource({ metadataSource: METADATA_SOURCE })
-        );
-      });
-
       it('loads the reference id', () => {
         expect(component.comicForm.controls.referenceId.value).toEqual(
           REFERENCE_ID
@@ -154,7 +151,7 @@ describe('ComicScrapingComponent', () => {
 
   describe('loading the metadata sources', () => {
     beforeEach(() => {
-      component.metadataSource = null;
+      component._preferredMetadataSource = null;
       store.setState({
         ...initialState,
         [METADATA_SOURCE_LIST_FEATURE_KEY]: {
@@ -164,10 +161,8 @@ describe('ComicScrapingComponent', () => {
       });
     });
 
-    it('sets the initial source', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        setChosenMetadataSource({ metadataSource: METADATA_SOURCES[0] })
-      );
+    it('sets the selected source', () => {
+      expect(component._preferredMetadataSource).toBe(METADATA_SOURCE);
     });
   });
 
@@ -207,17 +202,16 @@ describe('ComicScrapingComponent', () => {
   });
 
   describe('fetching the scraping volumes', () => {
-    beforeEach(() => {
-      spyOn(component.scrape, 'emit');
-    });
-
     describe('from the button', () => {
       beforeEach(() => {
+        spyOn(component.scrape, 'emit');
+        component._preferredMetadataSource = METADATA_SOURCE;
         component.onFetchScrapingVolumes();
       });
 
       it('emits an event', () => {
         expect(component.scrape.emit).toHaveBeenCalledWith({
+          metadataSource: METADATA_SOURCE,
           series: COMIC.detail.series,
           volume: COMIC.detail.volume,
           issueNumber: COMIC.detail.issueNumber,
@@ -227,11 +221,13 @@ describe('ComicScrapingComponent', () => {
       });
     });
 
-    describe('from the button', () => {
+    describe('from the hot key', () => {
       const event = new KeyboardEvent('hotkey');
 
       beforeEach(() => {
+        spyOn(component.scrape, 'emit');
         spyOn(event, 'preventDefault');
+        component._preferredMetadataSource = METADATA_SOURCE;
         component.onHotKeyFetchScrapingVolumes(event);
       });
 
@@ -241,6 +237,7 @@ describe('ComicScrapingComponent', () => {
 
       it('emits an event', () => {
         expect(component.scrape.emit).toHaveBeenCalledWith({
+          metadataSource: METADATA_SOURCE,
           series: COMIC.detail.series,
           volume: COMIC.detail.volume,
           issueNumber: COMIC.detail.issueNumber,
@@ -435,13 +432,29 @@ describe('ComicScrapingComponent', () => {
 
   describe('checking if ready to scrape', () => {
     beforeEach(() => {
-      component.metadataSource = METADATA_SOURCE;
+      component._preferredMetadataSource = null;
+      component._previousMetadataSource = null;
+      component._selectedMetadataSource = null;
       component.comic = COMIC;
     });
 
     it('requires a metadata source', () => {
-      component.metadataSource = null;
       expect(component.readyToScrape).toBeFalse();
+    });
+
+    it('will use the preferred metadata source', () => {
+      component._preferredMetadataSource = METADATA_SOURCE;
+      expect(component.readyToScrape).toBeTrue();
+    });
+
+    it('will use the previous metadata source', () => {
+      component._previousMetadataSource = METADATA_SOURCE;
+      expect(component.readyToScrape).toBeTrue();
+    });
+
+    it('will use the selected metadata source', () => {
+      component._selectedMetadataSource = METADATA_SOURCE;
+      expect(component.readyToScrape).toBeTrue();
     });
 
     it('requires a valid form', () => {
@@ -461,7 +474,7 @@ describe('ComicScrapingComponent', () => {
 
     beforeEach(() => {
       component.comic = SCRAPING_COMIC;
-      component.metadataSource = METADATA_SOURCE;
+      component._previousMetadataSource = METADATA_SOURCE;
       storeDispatchSpy.calls.reset();
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
@@ -560,6 +573,50 @@ describe('ComicScrapingComponent', () => {
           setAutoSelectExactMatch({ autoSelectExactMatch: confirm })
         );
       });
+    });
+  });
+
+  describe('setting the previous metadata source', () => {
+    beforeEach(() => {
+      component.previousMetadataSource = METADATA_SOURCE;
+    });
+
+    it('stores the reference', () => {
+      expect(component._previousMetadataSource).toBe(METADATA_SOURCE);
+    });
+  });
+
+  describe('getting the metadata source', () => {
+    const PREFERRED_METADATA_SOURCE = { ...METADATA_SOURCE, id: 100 };
+    const PREVIOUS_METADATA_SOURCE = { ...METADATA_SOURCE, id: 200 };
+    const SELECTED_METADATA_SOURCE = { ...METADATA_SOURCE, id: 300 };
+
+    beforeEach(() => {
+      component._preferredMetadataSource = null;
+      component._previousMetadataSource = null;
+      component._selectedMetadataSource = null;
+    });
+
+    it('returns the preferred source', () => {
+      component._preferredMetadataSource = PREFERRED_METADATA_SOURCE;
+      expect(component.metadataSource).toBe(PREFERRED_METADATA_SOURCE);
+    });
+
+    it('returns the previous source', () => {
+      component._previousMetadataSource = PREVIOUS_METADATA_SOURCE;
+      expect(component.metadataSource).toBe(PREVIOUS_METADATA_SOURCE);
+    });
+
+    it('returns the selected source', () => {
+      component._selectedMetadataSource = SELECTED_METADATA_SOURCE;
+      expect(component.metadataSource).toBe(SELECTED_METADATA_SOURCE);
+    });
+
+    it('prefers the selected source', () => {
+      component._preferredMetadataSource = PREFERRED_METADATA_SOURCE;
+      component._selectedMetadataSource = SELECTED_METADATA_SOURCE;
+      component._selectedMetadataSource = SELECTED_METADATA_SOURCE;
+      expect(component.metadataSource).toBe(SELECTED_METADATA_SOURCE);
     });
   });
 });

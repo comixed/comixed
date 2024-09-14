@@ -16,7 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
+
 export interface MetadataEvent {
+  metadataSource: MetadataSource;
   series: string;
   volume: string;
   issueNumber: string;

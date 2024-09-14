@@ -231,7 +231,7 @@ export class ScrapingIssuesPageComponent implements OnInit, OnDestroy {
     this.logger.trace('Fetching scraping volumes:', event);
     this.store.dispatch(
       loadVolumeMetadata({
-        metadataSource: this.metadataSource,
+        metadataSource: event.metadataSource,
         series: event.series,
         maximumRecords: event.maximumRecords,
         skipCache: event.skipCache
