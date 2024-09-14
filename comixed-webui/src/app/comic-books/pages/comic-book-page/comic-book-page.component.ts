@@ -85,7 +85,7 @@ export class ComicBookPageComponent
   comicSubscription: Subscription;
   comicUpdateSubscription: MessagingSubscription;
   metadataSourceSubscription: Subscription;
-  metadataSource: MetadataSource;
+  metadataSource: MetadataSource | null;
   messagingSubscription: Subscription;
   comicId = -1;
   pageIndex = 0;
@@ -232,6 +232,7 @@ export class ComicBookPageComponent
   }
 
   onLoadScrapingVolumes(
+    metadataSource: MetadataSource,
     series: string,
     volume: string,
     issueNumber: string,
@@ -244,7 +245,7 @@ export class ComicBookPageComponent
     this.scrapingIssueNumber = issueNumber;
     this.store.dispatch(
       loadVolumeMetadata({
-        metadataSource: this.metadataSource,
+        metadataSource: metadataSource,
         series,
         maximumRecords,
         skipCache

@@ -80,7 +80,7 @@
   <mat-form-field class="cx-width-25" appearance="fill">
     <mat-label>{{ "comic-book.label.metadata-source" | translate }}</mat-label>
     <mat-select
-      [value]="metadataSource?.id || preferredMetadataSource?.id"
+      [value]="metadataSource?.id"
       (selectionChange)="onMetadataSourceChosen($event.value)"
       required
     >
