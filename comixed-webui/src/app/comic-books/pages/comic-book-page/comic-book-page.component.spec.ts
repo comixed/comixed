@@ -240,6 +240,7 @@ describe('ComicBookPageComponent', () => {
     beforeEach(() => {
       component.metadataSource = METADATA_SOURCE;
       component.onLoadScrapingVolumes(
+        METADATA_SOURCE,
         SERIES,
         VOLUME,
         ISSUE_NUMBER,

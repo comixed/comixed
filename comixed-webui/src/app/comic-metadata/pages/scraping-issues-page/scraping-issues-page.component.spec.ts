@@ -189,6 +189,7 @@ describe('ScrapingIssuesPageComponent', () => {
     beforeEach(() => {
       component.metadataSource = METADATA_SOURCE;
       component.onScrape({
+        metadataSource: METADATA_SOURCE,
         series: COMIC_BOOK.detail.series,
         maximumRecords: MAXIMUM_RECORDS,
         skipCache: SKIP_CACHE,

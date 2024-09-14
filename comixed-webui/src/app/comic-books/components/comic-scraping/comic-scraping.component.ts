@@ -70,9 +70,7 @@ import { METADATA_RECORD_LIMITS } from '@app/comic-metadata/comic-metadata.const
 export class ComicScrapingComponent implements OnInit, OnDestroy {
   @Input() skipCache = false;
   @Input() maximumRecords = 0;
-  @Input() metadataSource: MetadataSource = null;
   @Input() multimode = false;
-
   @Output() scrape = new EventEmitter<MetadataEvent>();
 
   readonly maximumRecordsOptions = METADATA_RECORD_LIMITS;
@@ -82,9 +80,10 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
   metadataSourceListSubscription: Subscription;
   metadataSourceList: ListItem<MetadataSource>[] = [];
   metadataSubscription: Subscription;
-  preferredMetadataSource: MetadataSource;
   confirmBeforeScraping = true;
   autoSelectExactMatch = false;
+  _preferredMetadataSource: MetadataSource | null = null;
+  _selectedMetadataSource: MetadataSource | null = null;
 
   constructor(
     private logger: LoggerService,
@@ -117,15 +116,10 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
     this.metadataSourceListSubscription = this.store
       .select(selectMetadataSourceList)
       .subscribe(sources => {
-        const preferred = sources.filter(source => source.preferred);
-        this.preferredMetadataSource =
-          preferred.length > 0 ? preferred[0] : null;
+        this._preferredMetadataSource = sources.find(entry => entry.preferred);
         this.metadataSourceList = sources.map(source => {
           return { label: source.name, value: source };
         });
-        this.store.dispatch(
-          setChosenMetadataSource({ metadataSource: sources[0] })
-        );
       });
     this.metadataSubscription = this.store
       .select(selectSingleBookScrapingState)
@@ -133,7 +127,23 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
         this.logger.debug('Metadata state changed');
         this.confirmBeforeScraping = state.confirmBeforeScraping;
         this.autoSelectExactMatch = state.autoSelectExactMatch;
+        this._selectedMetadataSource = state.metadataSource;
       });
+  }
+
+  _previousMetadataSource: MetadataSource | null = null;
+
+  @Input()
+  set previousMetadataSource(source: MetadataSource | null) {
+    this._previousMetadataSource = source;
+  }
+
+  get metadataSource(): MetadataSource | null {
+    return (
+      this._selectedMetadataSource ||
+      this._previousMetadataSource ||
+      this._preferredMetadataSource
+    );
   }
 
   private _comic: ComicBook;
@@ -146,13 +156,6 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
     this.logger.debug('Loading comic form:', comic);
     this._comic = comic;
     this.logger.debug('Loading form fields');
-    if (!!comic.metadata?.metadataSource) {
-      this.store.dispatch(
-        setChosenMetadataSource({
-          metadataSource: comic.metadata.metadataSource
-        })
-      );
-    }
     this.comicForm.controls.referenceId.setValue(comic.metadata?.referenceId);
     this.comicForm.controls.publisher.setValue(comic.detail.publisher);
     this.comicForm.controls.series.setValue(comic.detail.series);
@@ -207,6 +210,7 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
   onFetchScrapingVolumes(): void {
     this.logger.debug('Loading scraping volumes');
     this.scrape.emit({
+      metadataSource: this.metadataSource,
       series: this.comicForm.controls.series.value,
       volume: this.comicForm.controls.volume.value,
       issueNumber: this.comicForm.controls.issueNumber.value,

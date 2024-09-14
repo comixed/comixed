@@ -220,13 +220,12 @@
           *ngIf="!!comicBook && volumes.length === 0"
           class="cx-width-100"
           [comic]="comicBook"
-          [metadataSource]="
-            comicBook.metadata?.metadataSource || metadataSource
-          "
+          [previousMetadataSource]="comicBook.metadata?.metadataSource"
           [skipCache]="skipCache"
           [maximumRecords]="maximumRecords"
           (scrape)="
             onLoadScrapingVolumes(
+              $event.metadataSource,
               $event.series,
               $event.volume,
               $event.issueNumber,
