@@ -619,4 +619,15 @@ describe('ComicScrapingComponent', () => {
       expect(component.metadataSource).toBe(SELECTED_METADATA_SOURCE);
     });
   });
+
+  describe('setting the preferred metadata source', () => {
+    beforeEach(() => {
+      component._preferredMetadataSource = null;
+      component.metadataSource = METADATA_SOURCE;
+    });
+
+    it('stores the preferred source', () => {
+      expect(component.metadataSource).toBe(METADATA_SOURCE);
+    });
+  });
 });

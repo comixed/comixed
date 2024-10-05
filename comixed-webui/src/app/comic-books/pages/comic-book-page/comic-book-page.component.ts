@@ -243,6 +243,7 @@ export class ComicBookPageComponent
     this.scrapingSeriesName = series;
     this.scrapingVolume = volume;
     this.scrapingIssueNumber = issueNumber;
+    this.metadataSource = metadataSource;
     this.store.dispatch(
       loadVolumeMetadata({
         metadataSource: metadataSource,

@@ -10,7 +10,7 @@
   </button>
   <button
     id="save-comic-changes"
-    *ngIf="!multimode"
+    *ngIf="!multiMode"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
     [matTooltip]="'comic-book.tooltip.save-changes' | translate"
@@ -21,7 +21,7 @@
   </button>
   <button
     id="undo-comic-changes"
-    *ngIf="!multimode"
+    *ngIf="!multiMode"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
     [matTooltip]="'comic-book.tooltip.undo-changes' | translate"
@@ -32,7 +32,7 @@
   </button>
   <div class="cx-spacer"></div>
   <button
-    *ngIf="multimode"
+    *ngIf="multiMode"
     id="auto-select-exact-match-button"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
@@ -43,7 +43,7 @@
     <mat-icon *ngIf="!autoSelectExactMatch">radio_button_unchecked</mat-icon>
   </button>
   <button
-    *ngIf="multimode"
+    *ngIf="multiMode"
     id="confirm-before-scraping-button"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
@@ -70,7 +70,7 @@
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
     [matTooltip]="'comic-book.tooltip.scrape-comic' | translate"
-    [disabled]="!readyToScrape"
+    [disabled]="!readyToScrape || !metadataSource"
     (click)="onFetchScrapingVolumes()"
   >
     <mat-icon>find_replace</mat-icon>
