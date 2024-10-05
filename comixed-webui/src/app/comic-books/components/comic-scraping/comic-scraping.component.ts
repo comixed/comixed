@@ -70,7 +70,7 @@ import { METADATA_RECORD_LIMITS } from '@app/comic-metadata/comic-metadata.const
 export class ComicScrapingComponent implements OnInit, OnDestroy {
   @Input() skipCache = false;
   @Input() maximumRecords = 0;
-  @Input() multimode = false;
+  @Input() multiMode = false;
   @Output() scrape = new EventEmitter<MetadataEvent>();
 
   readonly maximumRecordsOptions = METADATA_RECORD_LIMITS;
@@ -144,6 +144,10 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
       this._previousMetadataSource ||
       this._preferredMetadataSource
     );
+  }
+
+  @Input() set metadataSource(source: MetadataSource | null) {
+    this._preferredMetadataSource = source;
   }
 
   private _comic: ComicBook;
