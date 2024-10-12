@@ -107,7 +107,7 @@
       id="scrape-with-metadata-source-id-button"
       mat-icon-button
       matSuffix
-      [disabled]="!this.preferredMetadataSource"
+      [disabled]="!this.metadataSource || !comic?.metadata?.referenceId"
       [matTooltip]="'scraping.tooltip.use-metadata-source-id' | translate"
       (click)="onScrapeWithReferenceId()"
     >
