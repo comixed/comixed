@@ -61,7 +61,7 @@ Currently, ComiXed ships with support for the following databases:
 
 To do this, after creating your container, execute the following command:
 
-``` docker cp containername:/app/comixed-release-2.2.0-1/config/appplication.properties-example /Users/reader/comixed/config```
+``` docker cp containername:/app/comixed-release-2.2.1-1/config/appplication.properties-example /Users/reader/comixed/config```
 
 **NOTE:** Replace **containername** with the name of your container, and
 **/Users/reader/comixed/config** with the path you used when creating
