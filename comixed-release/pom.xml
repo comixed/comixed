@@ -66,6 +66,7 @@
         <version>3.2.0</version>
         <configuration>
           <outputDirectory>..</outputDirectory>
+          <finalName>${project.name}</finalName>
           <descriptors>
             <descriptor>src/main/assembly/src.xml</descriptor>
           </descriptors>
