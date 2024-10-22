@@ -30,4 +30,4 @@ EXPOSE 7171
 VOLUME /library
 VOLUME /imports
 
-CMD ["bash", "/app/comixed-release-2.3-SNAPSHOT/bin/run.sh", "-L", "/library/comixed.log"]
+CMD ["bash", "/app/comixed-release/bin/run.sh", "-L", "/library/comixed.log"]
