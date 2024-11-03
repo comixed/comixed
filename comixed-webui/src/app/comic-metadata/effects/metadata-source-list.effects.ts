@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
 import * as MetadataSourceListActions from '../actions/metadata-source-list.actions';
 import {
   loadMetadataSourcesFailed,
@@ -30,6 +30,7 @@ import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { of } from 'rxjs';
+import { setChosenMetadataSource } from '@app/comic-metadata/actions/single-book-scraping.actions';
 
 @Injectable()
 export class MetadataSourceListEffects {
@@ -40,9 +41,12 @@ export class MetadataSourceListEffects {
       switchMap(() =>
         this.metadataSourceService.loadAll().pipe(
           tap(response => this.logger.debug('Response received:', response)),
-          map((response: MetadataSource[]) =>
-            metadataSourcesLoaded({ sources: response })
-          ),
+          mergeMap((response: MetadataSource[]) => [
+            metadataSourcesLoaded({ sources: response }),
+            setChosenMetadataSource({
+              metadataSource: response.find(entry => entry.preferred)
+            })
+          ]),
           catchError(error => {
             this.logger.error('Service failure:', error);
             this.alertService.error(
