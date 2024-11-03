@@ -21,7 +21,10 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { MetadataSourceListEffects } from './metadata-source-list.effects';
 import { MetadataSourceService } from '@app/comic-metadata/services/metadata-source.service';
-import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
+import {
+  METADATA_SOURCE_1,
+  METADATA_SOURCE_2
+} from '@app/comic-metadata/comic-metadata.fixtures';
 import {
   loadMetadataSources,
   loadMetadataSourcesFailed,
@@ -33,9 +36,12 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { setChosenMetadataSource } from '@app/comic-metadata/actions/single-book-scraping.actions';
 
 describe('MetadataSourceListEffects', () => {
-  const SOURCES = [METADATA_SOURCE_1];
+  const NOT_PREFERRED = { ...METADATA_SOURCE_1, preferred: false };
+  const PREFERRED = { ...METADATA_SOURCE_2, preferred: true };
+  const SOURCES = [NOT_PREFERRED, PREFERRED];
 
   let actions$: Observable<any>;
   let effects: MetadataSourceListEffects;
@@ -82,12 +88,15 @@ describe('MetadataSourceListEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = SOURCES;
       const action = loadMetadataSources();
-      const outcome = metadataSourcesLoaded({ sources: SOURCES });
+      const outcome1 = metadataSourcesLoaded({ sources: SOURCES });
+      const outcome2 = setChosenMetadataSource({
+        metadataSource: PREFERRED
+      });
 
       actions$ = hot('-a', { a: action });
       metadataSourceService.loadAll.and.returnValue(of(serviceResponse));
 
-      const expected = hot('-b', { b: outcome });
+      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
       expect(effects.loadMetadataSources$).toBeObservable(expected);
     });
 
