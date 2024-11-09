@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -152,7 +153,7 @@ public class ComicBookController {
       log.info("Deleting multiple comics: ids={}", ids.toArray());
       this.comicBookService.deleteComicBooksById(ids);
 
-      this.comicBookSelectionService.clearSelectedComicBooks(ids);
+      this.comicBookSelectionService.clearSelectedComicBooks(new ArrayList<>(ids));
       session.setAttribute(
           LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(ids));
     } catch (ComicBookSelectionException error) {
@@ -176,7 +177,7 @@ public class ComicBookController {
           this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
       log.info("Undeleting multiple comic: {}", ids.toArray());
-      this.comicBookService.undeleteComicBooksById(ids);
+      this.comicBookService.undeleteComicBooksById(new ArrayList<>(ids));
 
       this.comicBookSelectionService.clearSelectedComicBooks(ids);
       session.setAttribute(
