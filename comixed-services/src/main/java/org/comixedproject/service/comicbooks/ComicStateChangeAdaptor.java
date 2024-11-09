@@ -72,7 +72,6 @@ public class ComicStateChangeAdaptor implements InitializingBean, ComicStateChan
     } else {
       comic.getComicDetail().setComicState(state.getId());
       comic.setLastModifiedOn(new Date());
-      comic.updatePageNumbers();
       final ComicBook updated = this.comicBookService.save(comic);
       log.trace("Publishing comic  update");
       try {

@@ -112,22 +112,23 @@ export class ComicBookPageComponent
     private logger: LoggerService,
     private store: Store<any>,
     private activatedRoute: ActivatedRoute,
-    private queryParameterService: QueryParameterService,
     private titleService: TitleService,
     private translateService: TranslateService,
     private comicTitlePipe: ComicTitlePipe,
     private confirmationService: ConfirmationService,
-    private webSocketService: WebSocketService
+    private webSocketService: WebSocketService,
+    public queryParameterService: QueryParameterService
   ) {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
-      this.comicId = +params.comicId;
       this.unsubscribeFromUpdates();
+      this.comicId = +params.comicId;
       this.logger.trace('ComicBook id parameter:', params.comicId);
       this.store.dispatch(loadComicBook({ id: this.comicId }));
     });
+    this.subscribeToUpdates();
     this.scrapingStateSubscription = this.store
       .select(selectSingleBookScrapingState)
       .subscribe(state =>
@@ -151,7 +152,6 @@ export class ComicBookPageComponent
           );
         }
         this.loadPageTitle();
-        this.subscribeToUpdates();
       });
     this.metadataSourceSubscription = this.store
       .select(selectChosenMetadataSource)
@@ -362,9 +362,10 @@ export class ComicBookPageComponent
 
   private subscribeToUpdates(): void {
     if (!this.comicUpdateSubscription && this.messagingStarted) {
-      this.logger.trace('Subscribing to comic book updates');
+      const topic = interpolate(COMIC_BOOK_UPDATE_TOPIC, { id: this.comicId });
+      this.logger.trace('Subscribing to comic book updates:', topic);
       this.comicUpdateSubscription = this.webSocketService.subscribe<ComicBook>(
-        interpolate(COMIC_BOOK_UPDATE_TOPIC, { id: this.comicId }),
+        topic,
         comic => {
           this.logger.debug('ComicBook book update received:', comic);
           this.store.dispatch(comicBookLoaded({ comicBook: comic }));
