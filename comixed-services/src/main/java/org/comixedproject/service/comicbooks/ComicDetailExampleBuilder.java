@@ -64,23 +64,6 @@ public class ComicDetailExampleBuilder {
     detail.setComicType(null);
     detail.setUnscraped(null);
 
-    if (StringUtils.hasLength(searchText)) {
-      log.debug("Returning comics with filter text: {}", searchText);
-      detail.setPublisher(searchText);
-      detail.setSeries(searchText);
-      detail.setVolume(searchText);
-      detail.setTitle(searchText);
-      return Example.of(
-          detail,
-          ExampleMatcher.matchingAny()
-              .withMatcher(
-                  "publisher", ExampleMatcher.GenericPropertyMatchers.ignoreCase().contains())
-              .withMatcher("series", ExampleMatcher.GenericPropertyMatchers.ignoreCase().contains())
-              .withMatcher("volume", ExampleMatcher.GenericPropertyMatchers.ignoreCase().contains())
-              .withMatcher(
-                  "title", ExampleMatcher.GenericPropertyMatchers.ignoreCase().contains()));
-    }
-
     ExampleMatcher matcher = ExampleMatcher.matching();
 
     if (coverYear != null) {
@@ -115,7 +98,7 @@ public class ComicDetailExampleBuilder {
 
     if (unscrapedState) {
       log.debug("Enabling unscraped filter");
-      detail.setUnscraped(true);
+      detail.setUnscraped(Boolean.TRUE);
       matcher = matcher.withMatcher("unscraped", ExampleMatcher.GenericPropertyMatchers.exact());
     }
 
@@ -135,6 +118,14 @@ public class ComicDetailExampleBuilder {
       log.debug("Enabling volume filter");
       detail.setVolume(volume);
       matcher = matcher.withMatcher("volume", ExampleMatcher.GenericPropertyMatchers.exact());
+    }
+
+    if (StringUtils.hasLength(searchText)) {
+      log.debug("Returning comics with filter text: {}", searchText);
+      detail.setSeries(searchText);
+      matcher =
+          matcher.withMatcher(
+              "series", ExampleMatcher.GenericPropertyMatchers.ignoreCase().contains());
     }
 
     return Example.of(detail, matcher);
