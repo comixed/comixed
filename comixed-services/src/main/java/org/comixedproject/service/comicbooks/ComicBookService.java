@@ -52,6 +52,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -415,16 +416,14 @@ public class ComicBookService {
    *
    * @param ids the comic ids
    */
+  @Async
   public void deleteComicBooksById(final List<Long> ids) {
     ids.forEach(
         id -> {
-          final ComicBook comicBook;
           try {
-            comicBook = this.doGetComic(id);
-            if (comicBook != null) {
-              log.trace("Marking comicBook for deletion: id={}", comicBook.getId());
-              this.comicStateHandler.fireEvent(comicBook, ComicEvent.deleteComic);
-            }
+            final ComicBook comicBook = this.doGetComic(id);
+            log.trace("Marking comicBook for deletion: id={}", comicBook.getId());
+            this.comicStateHandler.fireEvent(comicBook, ComicEvent.deleteComic);
           } catch (ComicBookException error) {
             log.error("Failed to load comic", error);
           }
@@ -436,13 +435,16 @@ public class ComicBookService {
    *
    * @param ids the comic ids
    */
+  @Async
   public void undeleteComicBooksById(final List<Long> ids) {
     ids.forEach(
         id -> {
-          final ComicBook comicBook = this.comicBookRepository.getById(id.longValue());
-          if (comicBook != null) {
+          try {
+            final ComicBook comicBook = this.doGetComic(id);
             log.trace("Unmarking comicBook for deletion: id={}", comicBook.getId());
             this.comicStateHandler.fireEvent(comicBook, ComicEvent.undeleteComic);
+          } catch (ComicBookException error) {
+            log.error("Failed to load comic", error);
           }
         });
   }
