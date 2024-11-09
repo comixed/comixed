@@ -29,7 +29,6 @@ import { Store } from '@ngrx/store';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import { Page } from '@app/comic-books/models/page';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { TranslateService } from '@ngx-translate/core';
 import { updatePageDeletion } from '@app/comic-books/actions/comic-book.actions';
 import { MatTableDataSource } from '@angular/material/table';
@@ -53,8 +52,8 @@ export class ComicPagesComponent implements AfterViewInit {
   @Output() pagesChanged = new EventEmitter<Page[]>();
 
   readonly displayedColumns = [
+    'page-number',
     'thumbnail',
-    'position',
     'filename',
     'dimensions'
   ];
@@ -70,41 +69,31 @@ export class ComicPagesComponent implements AfterViewInit {
     private translateService: TranslateService
   ) {}
 
+  get pages(): Page[] {
+    return this.dataSource.data;
+  }
+
+  @Input()
+  set pages(pages: Page[]) {
+    this.dataSource.data = _.cloneDeep(pages).sort(
+      (left, right) => left.pageNumber - right.pageNumber
+    );
+    this.dataSource.data.forEach((entry, index) => (entry.index = index));
+    this.pagesChanged.emit(this.dataSource.data);
+  }
+
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
       switch (sortHeaderId) {
-        case 'position':
-          return data.index;
+        case 'page-number':
+          return data.pageNumber;
         case 'filename':
           return data.filename;
         default:
           return null;
       }
     };
-  }
-
-  private _pages: Page[] = [];
-
-  get pages(): Page[] {
-    return this._pages;
-  }
-
-  set pages(pages: Page[]) {
-    this._pages = pages;
-    this.pagesChanged.emit(pages);
-    this.dataSource.data = this.pages;
-  }
-
-  private _comic: ComicBook = null;
-
-  get comic(): ComicBook {
-    return this._comic;
-  }
-
-  @Input() set comic(comic: ComicBook) {
-    this._comic = comic;
-    this.pages = comic?.pages || [];
   }
 
   onShowContextMenu(page: Page, x: string, y: string): void {
@@ -147,7 +136,10 @@ export class ComicPagesComponent implements AfterViewInit {
       dragDropEvent.currentIndex
     );
     this.logger.trace('Updating page index');
-    pages.forEach((page, index) => (page.index = index));
+    pages.forEach((page, index) => {
+      page.pageNumber = index;
+      page.index = index;
+    });
     this.pages = pages;
   }
 }
