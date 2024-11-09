@@ -1,8 +1,5 @@
 <div id="all-comic-book-pages" *ngIf="showPagesAsGrid">
-  <div
-    *ngFor="let page of comic.pages; let i = index"
-    class="single-comic-book-page"
-  >
+  <div *ngFor="let page of pages; let i = index" class="single-comic-book-page">
     <cx-comic-page
       class="mat-elevation-z4"
       [page]="page"
@@ -18,14 +15,16 @@
   cdkDropList
   [cdkDropListData]="pages"
   [dataSource]="dataSource"
+  matSortActive="page-number"
+  matSortDirection="asc"
   (cdkDropListDropped)="onReorderPages($event)"
   matSort
 >
-  <ng-container matColumnDef="position">
+  <ng-container matColumnDef="page-number">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "comic-page.label.page-number" | translate }}
     </mat-header-cell>
-    <mat-cell *matCellDef="let page">{{ page.index }}</mat-cell>
+    <mat-cell *matCellDef="let page">{{ page.pageNumber + 1 }}</mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="thumbnail">

@@ -175,7 +175,7 @@ public class ComicBookService {
    * @return the saved comicBook
    */
   @Transactional
-  @CachePut(key = "#result.id")
+  @CacheEvict(cacheNames = COMICBOOK_CACHE, key = "#result.id")
   public ComicBook save(final ComicBook comicBook) {
     log.debug("Saving comicBook: filename={}", comicBook.getComicDetail().getFilename());
 

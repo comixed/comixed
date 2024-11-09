@@ -87,7 +87,7 @@ describe('ComicPagesComponent', () => {
 
       fixture = TestBed.createComponent(ComicPagesComponent);
       component = fixture.componentInstance;
-      component.comic = COMIC;
+      component.pages = COMIC.pages;
       store = TestBed.inject(MockStore);
       spyOn(store, 'dispatch');
       confirmationService = TestBed.inject(ConfirmationService);
@@ -104,7 +104,7 @@ describe('ComicPagesComponent', () => {
     const YPOS = '17';
 
     beforeEach(() => {
-      component.comic = null;
+      component.pages = [];
       spyOn(component.contextMenu, 'openMenu');
       component.onShowContextMenu(PAGE, XPOS, YPOS);
     });
@@ -164,7 +164,7 @@ describe('ComicPagesComponent', () => {
     const COPY = [].concat(COMIC.pages);
 
     beforeEach(() => {
-      component.comic = { ...COMIC, pages: COPY };
+      component.pages = COPY;
       component.showPagesAsGrid = false;
       component.onReorderPages({
         previousIndex: 0,
@@ -182,8 +182,8 @@ describe('ComicPagesComponent', () => {
   describe('sorting pages', () => {
     it('can sort by position', () => {
       expect(
-        component.dataSource.sortingDataAccessor(PAGE, 'position')
-      ).toEqual(PAGE.index);
+        component.dataSource.sortingDataAccessor(PAGE, 'page-number')
+      ).toEqual(PAGE.pageNumber);
     });
 
     it('can sort by filename', () => {

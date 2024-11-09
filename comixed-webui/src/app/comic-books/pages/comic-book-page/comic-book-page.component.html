@@ -206,7 +206,7 @@
       <mat-tab [label]="'comic-book.label.comic-pages' | translate">
         <cx-comic-pages
           class="cx-width-100"
-          [comic]="comicBook"
+          [pages]="comicBook?.pages"
           [showPagesAsGrid]="queryParameterService.pagesAsGrid$ | async"
           [isAdmin]="isAdmin"
           (pagesChanged)="onPagesChanged($event)"
