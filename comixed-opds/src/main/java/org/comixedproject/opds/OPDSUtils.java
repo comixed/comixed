@@ -67,7 +67,7 @@ public class OPDSUtils {
         OPDS_ACQUISITION_RELATION,
         String.format(
             COMIC_LINK_URL,
-            comicDetail.getId(),
+            comicDetail.getComicId(),
             this.urlEncodeString(comicDetail.getBaseFilename())));
   }
 
@@ -75,14 +75,14 @@ public class OPDSUtils {
     return new OPDSLink(
         MIME_TYPE_IMAGE,
         OPDS_IMAGE_RELATION,
-        String.format(COMIC_COVER_URL, comicDetail.getId(), 0, 160));
+        String.format(COMIC_COVER_URL, comicDetail.getComicId(), 0, 160));
   }
 
   public OPDSLink createComicThumbnailLink(final ComicDetail comicDetail) {
     return new OPDSLink(
         MIME_TYPE_IMAGE,
         OPDS_IMAGE_THUMBNAIL,
-        String.format(COMIC_COVER_URL, comicDetail.getId(), 0, 160));
+        String.format(COMIC_COVER_URL, comicDetail.getComicId(), 0, 160));
   }
 
   /**
