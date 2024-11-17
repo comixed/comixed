@@ -68,8 +68,9 @@ describe('ComicScrapingComponent', () => {
   const COMIC = COMIC_BOOK_2;
   const SKIP_CACHE = Math.random() > 0.5;
   const MAXIMUM_RECORDS = 100;
-  const METADATA_SOURCE = { ...METADATA_SOURCE_1, preferred: true };
-  const METADATA_SOURCES = [METADATA_SOURCE, METADATA_SOURCE_2];
+  const PREFERRED_METADATA_SOURCE = { ...METADATA_SOURCE_1, preferred: true };
+  const OTHER_METADATA_SOURCE = { ...METADATA_SOURCE_2, preferred: false };
+  const METADATA_SOURCES = [PREFERRED_METADATA_SOURCE, OTHER_METADATA_SOURCE];
   const REFERENCE_ID = `${new Date().getTime()}`;
 
   const initialState = {
@@ -135,7 +136,7 @@ describe('ComicScrapingComponent', () => {
         component.comic = {
           ...COMIC,
           metadata: {
-            metadataSource: METADATA_SOURCE,
+            metadataSource: PREFERRED_METADATA_SOURCE,
             referenceId: REFERENCE_ID
           }
         };
@@ -150,19 +151,57 @@ describe('ComicScrapingComponent', () => {
   });
 
   describe('loading the metadata sources', () => {
-    beforeEach(() => {
-      component._preferredMetadataSource = null;
-      store.setState({
-        ...initialState,
-        [METADATA_SOURCE_LIST_FEATURE_KEY]: {
-          ...initialMetadataSourceListState,
-          sources: METADATA_SOURCES
-        }
+    describe('receiving no sources', () => {
+      beforeEach(() => {
+        component._preferredMetadataSource = null;
+        store.setState({
+          ...initialState,
+          [METADATA_SOURCE_LIST_FEATURE_KEY]: {
+            ...initialMetadataSourceListState,
+            sources: []
+          }
+        });
+
+        it('leaves the selected source as null', () => {
+          expect(component._preferredMetadataSource).toBeNull();
+        });
       });
     });
 
-    it('sets the selected source', () => {
-      expect(component._preferredMetadataSource).toBe(METADATA_SOURCE);
+    describe('receiving a single source', () => {
+      beforeEach(() => {
+        component._preferredMetadataSource = null;
+        store.setState({
+          ...initialState,
+          [METADATA_SOURCE_LIST_FEATURE_KEY]: {
+            ...initialMetadataSourceListState,
+            sources: [OTHER_METADATA_SOURCE]
+          }
+        });
+      });
+
+      it('sets the selected source to the only one returned', () => {
+        expect(component._preferredMetadataSource).toBe(OTHER_METADATA_SOURCE);
+      });
+    });
+
+    describe('receiving multiple sources', () => {
+      beforeEach(() => {
+        component._preferredMetadataSource = null;
+        store.setState({
+          ...initialState,
+          [METADATA_SOURCE_LIST_FEATURE_KEY]: {
+            ...initialMetadataSourceListState,
+            sources: METADATA_SOURCES
+          }
+        });
+      });
+
+      it('sets the selected source to the preferred one', () => {
+        expect(component._preferredMetadataSource).toBe(
+          PREFERRED_METADATA_SOURCE
+        );
+      });
     });
   });
 
@@ -205,13 +244,13 @@ describe('ComicScrapingComponent', () => {
     describe('from the button', () => {
       beforeEach(() => {
         spyOn(component.scrape, 'emit');
-        component._preferredMetadataSource = METADATA_SOURCE;
+        component._preferredMetadataSource = OTHER_METADATA_SOURCE;
         component.onFetchScrapingVolumes();
       });
 
       it('emits an event', () => {
         expect(component.scrape.emit).toHaveBeenCalledWith({
-          metadataSource: METADATA_SOURCE,
+          metadataSource: OTHER_METADATA_SOURCE,
           series: COMIC.detail.series,
           volume: COMIC.detail.volume,
           issueNumber: COMIC.detail.issueNumber,
@@ -227,7 +266,7 @@ describe('ComicScrapingComponent', () => {
       beforeEach(() => {
         spyOn(component.scrape, 'emit');
         spyOn(event, 'preventDefault');
-        component._preferredMetadataSource = METADATA_SOURCE;
+        component._preferredMetadataSource = OTHER_METADATA_SOURCE;
         component.onHotKeyFetchScrapingVolumes(event);
       });
 
@@ -237,7 +276,7 @@ describe('ComicScrapingComponent', () => {
 
       it('emits an event', () => {
         expect(component.scrape.emit).toHaveBeenCalledWith({
-          metadataSource: METADATA_SOURCE,
+          metadataSource: OTHER_METADATA_SOURCE,
           series: COMIC.detail.series,
           volume: COMIC.detail.volume,
           issueNumber: COMIC.detail.issueNumber,
@@ -414,18 +453,18 @@ describe('ComicScrapingComponent', () => {
   describe('selecting a metadata source', () => {
     beforeEach(() => {
       component.metadataSourceList = [
-        { label: 'first', value: METADATA_SOURCE },
+        { label: 'first', value: OTHER_METADATA_SOURCE },
         {
           label: 'second',
-          value: { id: METADATA_SOURCE.id + 100 } as MetadataSource
+          value: { id: OTHER_METADATA_SOURCE.id + 100 } as MetadataSource
         }
       ];
-      component.onMetadataSourceChosen(METADATA_SOURCE.id);
+      component.onMetadataSourceChosen(OTHER_METADATA_SOURCE.id);
     });
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        setChosenMetadataSource({ metadataSource: METADATA_SOURCE })
+        setChosenMetadataSource({ metadataSource: OTHER_METADATA_SOURCE })
       );
     });
   });
@@ -443,17 +482,17 @@ describe('ComicScrapingComponent', () => {
     });
 
     it('will use the preferred metadata source', () => {
-      component._preferredMetadataSource = METADATA_SOURCE;
+      component._preferredMetadataSource = OTHER_METADATA_SOURCE;
       expect(component.readyToScrape).toBeTrue();
     });
 
     it('will use the previous metadata source', () => {
-      component._previousMetadataSource = METADATA_SOURCE;
+      component._previousMetadataSource = OTHER_METADATA_SOURCE;
       expect(component.readyToScrape).toBeTrue();
     });
 
     it('will use the selected metadata source', () => {
-      component._selectedMetadataSource = METADATA_SOURCE;
+      component._selectedMetadataSource = OTHER_METADATA_SOURCE;
       expect(component.readyToScrape).toBeTrue();
     });
 
@@ -467,14 +506,14 @@ describe('ComicScrapingComponent', () => {
     const SCRAPING_COMIC = {
       ...COMIC,
       metadata: {
-        metadataSource: METADATA_SOURCE,
+        metadataSource: OTHER_METADATA_SOURCE,
         referenceId: REFERENCE_ID
       }
     };
 
     beforeEach(() => {
       component.comic = SCRAPING_COMIC;
-      component._previousMetadataSource = METADATA_SOURCE;
+      component._previousMetadataSource = OTHER_METADATA_SOURCE;
       storeDispatchSpy.calls.reset();
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
@@ -489,7 +528,7 @@ describe('ComicScrapingComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         scrapeSingleComicBook({
-          metadataSource: METADATA_SOURCE,
+          metadataSource: OTHER_METADATA_SOURCE,
           issueId: REFERENCE_ID,
           comic: SCRAPING_COMIC,
           skipCache: SKIP_CACHE
@@ -578,18 +617,18 @@ describe('ComicScrapingComponent', () => {
 
   describe('setting the previous metadata source', () => {
     beforeEach(() => {
-      component.previousMetadataSource = METADATA_SOURCE;
+      component.previousMetadataSource = OTHER_METADATA_SOURCE;
     });
 
     it('stores the reference', () => {
-      expect(component._previousMetadataSource).toBe(METADATA_SOURCE);
+      expect(component._previousMetadataSource).toBe(OTHER_METADATA_SOURCE);
     });
   });
 
   describe('getting the metadata source', () => {
-    const PREFERRED_METADATA_SOURCE = { ...METADATA_SOURCE, id: 100 };
-    const PREVIOUS_METADATA_SOURCE = { ...METADATA_SOURCE, id: 200 };
-    const SELECTED_METADATA_SOURCE = { ...METADATA_SOURCE, id: 300 };
+    const PREFERRED_METADATA_SOURCE = { ...OTHER_METADATA_SOURCE, id: 100 };
+    const PREVIOUS_METADATA_SOURCE = { ...OTHER_METADATA_SOURCE, id: 200 };
+    const SELECTED_METADATA_SOURCE = { ...OTHER_METADATA_SOURCE, id: 300 };
 
     beforeEach(() => {
       component._preferredMetadataSource = null;
@@ -623,11 +662,11 @@ describe('ComicScrapingComponent', () => {
   describe('setting the preferred metadata source', () => {
     beforeEach(() => {
       component._preferredMetadataSource = null;
-      component.metadataSource = METADATA_SOURCE;
+      component.metadataSource = OTHER_METADATA_SOURCE;
     });
 
     it('stores the preferred source', () => {
-      expect(component.metadataSource).toBe(METADATA_SOURCE);
+      expect(component.metadataSource).toBe(OTHER_METADATA_SOURCE);
     });
   });
 });
