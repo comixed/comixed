@@ -116,7 +116,13 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
     this.metadataSourceListSubscription = this.store
       .select(selectMetadataSourceList)
       .subscribe(sources => {
-        this._preferredMetadataSource = sources.find(entry => entry.preferred);
+        if (sources.length === 1) {
+          this._preferredMetadataSource = sources[0];
+        } else {
+          this._preferredMetadataSource = sources.find(
+            entry => entry.preferred
+          );
+        }
         this.metadataSourceList = sources.map(source => {
           return { label: source.name, value: source };
         });
