@@ -27,11 +27,7 @@ import {
 } from '@angular/core';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { Store } from '@ngrx/store';
-import {
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators
-} from '@angular/forms';
+import { FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { TranslateService } from '@ngx-translate/core';
 import { MetadataEvent } from '@app/comic-metadata/models/event/metadata-event';
@@ -75,7 +71,7 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
 
   readonly maximumRecordsOptions = METADATA_RECORD_LIMITS;
 
-  comicForm: UntypedFormGroup;
+  comicForm: FormGroup;
   scrapedMetadataSubscription: Subscription;
   metadataSourceListSubscription: Subscription;
   metadataSourceList: ListItem<MetadataSource>[] = [];
