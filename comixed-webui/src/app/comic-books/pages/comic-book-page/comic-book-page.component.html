@@ -222,16 +222,19 @@
           [comic]="comicBook"
           [previousMetadataSource]="comicBook.metadata?.metadataSource"
           [skipCache]="skipCache"
+          [matchPublisher]="matchPublisher"
           [maximumRecords]="maximumRecords"
           (scrape)="
-            onLoadScrapingVolumes(
-              $event.metadataSource,
-              $event.series,
-              $event.volume,
-              $event.issueNumber,
-              $event.maximumRecords,
-              $event.skipCache
-            )
+            onLoadScrapingVolumes({
+              metadataSource: $event.metadataSource,
+              publisher: $event.publisher,
+              series: $event.series,
+              volume: $event.volume,
+              issueNumber: $event.issueNumber,
+              maximumRecords: $event.maximumRecords,
+              skipCache: $event.skipCache,
+              matchPublisher: $event.matchPublisher
+            })
           "
         ></cx-comic-scraping>
         <cx-scraping-volume-selection

@@ -66,6 +66,19 @@
     <mat-icon *ngIf="!skipCache">remove_circle_outline</mat-icon>
   </button>
   <button
+    id="match-publisher-button"
+    class="cx-toolbar-button cx-margin-left-5"
+    mat-icon-button
+    [matTooltip]="
+      'scraping.tooltip.match-publisher'
+        | translate: { enabled: matchPublisher }
+    "
+    (click)="onMatchPublisherToggle()"
+  >
+    <mat-icon *ngIf="matchPublisher">join_inner</mat-icon>
+    <mat-icon *ngIf="!matchPublisher">join_full</mat-icon>
+  </button>
+  <button
     id="scrape-comic-button"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button

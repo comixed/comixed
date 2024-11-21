@@ -52,9 +52,11 @@ import {
 } from '@app/comic-metadata/comic-metadata.fixtures';
 
 describe('SingleBookScraping Reducer', () => {
+  const PUBLISHER = 'The Publisher';
   const SERIES = 'The Series';
   const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
+  const MATCH_PUBLISHER = Math.random() > 0.5;
   const VOLUMES = [SCRAPING_VOLUME_1, SCRAPING_VOLUME_2, SCRAPING_VOLUME_3];
   const VOLUME_ID = SCRAPING_VOLUME_1.id;
   const ISSUE_NUMBER = '27';
@@ -174,9 +176,11 @@ describe('SingleBookScraping Reducer', () => {
         },
         loadVolumeMetadata({
           metadataSource: METADATA_SOURCE,
+          publisher: PUBLISHER,
           series: SERIES,
           maximumRecords: MAXIMUM_RECORDS,
-          skipCache: SKIP_CACHE
+          skipCache: SKIP_CACHE,
+          matchPublisher: MATCH_PUBLISHER
         })
       );
     });

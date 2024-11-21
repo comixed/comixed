@@ -67,6 +67,7 @@ export const IMPORT_MAXIMUM_RESULTS_PREFERENCE =
   'preference.import.maximum-results';
 export const IMPORT_MAXIMUM_RESULTS_DEFAULT = 0;
 export const SKIP_CACHE_PREFERENCE = 'preference.scraping.skip-cache';
+export const MATCH_PUBLISHER_PREFERENCE = 'preference.scraping.match-publisher';
 export const MAXIMUM_SCRAPING_RECORDS_PREFERENCE =
   'preference.scraping.maximum-records';
 

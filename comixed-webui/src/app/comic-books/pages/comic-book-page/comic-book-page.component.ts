@@ -31,6 +31,7 @@ import {
 } from '@app/user/user.functions';
 import { interpolate, PAGE_SIZE_DEFAULT } from '@app/core';
 import {
+  MATCH_PUBLISHER_PREFERENCE,
   MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
   SKIP_CACHE_PREFERENCE
 } from '@app/library/library.constants';
@@ -96,6 +97,7 @@ export class ComicBookPageComponent
   pageSize = PAGE_SIZE_DEFAULT;
   volumesSubscription: Subscription;
   skipCache = false;
+  matchPublisher = false;
   maximumRecords = 0;
   volumes: VolumeMetadata[] = [];
   scrapingSeriesName = '';
@@ -166,6 +168,12 @@ export class ComicBookPageComponent
           SKIP_CACHE_PREFERENCE,
           `${this.skipCache === true}`
         ) === `${true}`;
+      this.matchPublisher =
+        getUserPreference(
+          user.preferences,
+          MATCH_PUBLISHER_PREFERENCE,
+          `${this.matchPublisher === true}`
+        ) === `${true}`;
       this.maximumRecords = parseInt(
         getUserPreference(
           user.preferences,
@@ -231,25 +239,29 @@ export class ComicBookPageComponent
     this.store.dispatch(resetMetadataState());
   }
 
-  onLoadScrapingVolumes(
-    metadataSource: MetadataSource,
-    series: string,
-    volume: string,
-    issueNumber: string,
-    maximumRecords: number,
-    skipCache: boolean
-  ): void {
-    this.logger.trace('Loading scraping volumes');
-    this.scrapingSeriesName = series;
-    this.scrapingVolume = volume;
-    this.scrapingIssueNumber = issueNumber;
-    this.metadataSource = metadataSource;
+  onLoadScrapingVolumes(args: {
+    metadataSource: MetadataSource;
+    publisher: string;
+    series: string;
+    volume: string;
+    issueNumber: string;
+    maximumRecords: number;
+    skipCache: boolean;
+    matchPublisher: boolean;
+  }): void {
+    this.logger.trace('Loading scraping volumes:', args);
+    this.scrapingSeriesName = args.series;
+    this.scrapingVolume = args.volume;
+    this.scrapingIssueNumber = args.issueNumber;
+    this.metadataSource = args.metadataSource;
     this.store.dispatch(
       loadVolumeMetadata({
-        metadataSource: metadataSource,
-        series,
-        maximumRecords,
-        skipCache
+        metadataSource: args.metadataSource,
+        publisher: args.publisher,
+        series: args.series,
+        maximumRecords: args.maximumRecords,
+        skipCache: args.skipCache,
+        matchPublisher: args.matchPublisher
       })
     );
   }

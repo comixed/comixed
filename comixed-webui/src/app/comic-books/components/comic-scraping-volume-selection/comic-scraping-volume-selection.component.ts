@@ -72,6 +72,7 @@ export class ComicScrapingVolumeSelectionComponent
 
   @Input() comicBook: ComicBook = null;
   @Input() metadataSource: MetadataSource;
+  @Input() publisherName: string;
   @Input() comicSeriesName: string;
   @Input() comicVolume: string;
   @Input() comicIssueNumber: string;

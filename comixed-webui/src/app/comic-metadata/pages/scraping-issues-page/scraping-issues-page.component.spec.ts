@@ -86,6 +86,7 @@ describe('ScrapingIssuesPageComponent', () => {
   ];
   const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
+  const MATCH_PUBLISHER = Math.random() > 0.5;
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const PAGE_SIZE = 25;
   const PAGE_NUMBER = 3;
@@ -190,9 +191,11 @@ describe('ScrapingIssuesPageComponent', () => {
       component.metadataSource = METADATA_SOURCE;
       component.onScrape({
         metadataSource: METADATA_SOURCE,
+        publisher: COMIC_BOOK.detail.publisher,
         series: COMIC_BOOK.detail.series,
         maximumRecords: MAXIMUM_RECORDS,
         skipCache: SKIP_CACHE,
+        matchPublisher: MATCH_PUBLISHER,
         issueNumber: COMIC_BOOK.detail.issueNumber,
         volume: COMIC_BOOK.detail.volume
       });
@@ -202,9 +205,11 @@ describe('ScrapingIssuesPageComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         loadVolumeMetadata({
           metadataSource: METADATA_SOURCE,
+          publisher: COMIC_BOOK.detail.publisher,
           series: COMIC_BOOK.detail.series,
           maximumRecords: MAXIMUM_RECORDS,
-          skipCache: SKIP_CACHE
+          skipCache: SKIP_CACHE,
+          matchPublisher: MATCH_PUBLISHER
         })
       );
     });

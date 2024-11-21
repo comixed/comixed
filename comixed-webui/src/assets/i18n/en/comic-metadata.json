@@ -165,6 +165,7 @@
       "cancel-scraping": "Stop scraping comics.",
       "confirm-each-scrape": "If enabled, admins will confirm each issue selected (shift+ctrl+o).",
       "fetch-volumes": "Load volume candidates from metadata source.",
+      "match-publisher": "Scraping will include {enabled, select, true{only matching} other{all}} publishers (shift+ctrl+p).",
       "reject-scraping-issue": "Reject this issue.",
       "remove-comic-from-queue": "Remove this comic book from the scraping queue...",
       "select-scraping-issue": "Select this metadata source.",

@@ -33,6 +33,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MetadataEvent } from '@app/comic-metadata/models/event/metadata-event';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import {
+  MATCH_PUBLISHER_PREFERENCE,
   MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
   SKIP_CACHE_PREFERENCE
 } from '@app/library/library.constants';
@@ -65,6 +66,7 @@ import { METADATA_RECORD_LIMITS } from '@app/comic-metadata/comic-metadata.const
 })
 export class ComicScrapingComponent implements OnInit, OnDestroy {
   @Input() skipCache = false;
+  @Input() matchPublisher = false;
   @Input() maximumRecords = 0;
   @Input() multiMode = false;
   @Output() scrape = new EventEmitter<MetadataEvent>();
@@ -217,11 +219,13 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
     this.logger.debug('Loading scraping volumes');
     this.scrape.emit({
       metadataSource: this.metadataSource,
+      publisher: this.comicForm.controls.publisher.value,
       series: this.comicForm.controls.series.value,
       volume: this.comicForm.controls.volume.value,
       issueNumber: this.comicForm.controls.issueNumber.value,
       maximumRecords: this.maximumRecords,
-      skipCache: this.skipCache
+      skipCache: this.skipCache,
+      matchPublisher: this.matchPublisher
     });
   }
 
@@ -239,6 +243,24 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
       saveUserPreference({
         name: SKIP_CACHE_PREFERENCE,
         value: `${this.skipCache}`
+      })
+    );
+  }
+
+  @HostListener('window:keydown.shift.control.p', ['$event'])
+  onHotKeyMatchPublisherToggle(event: KeyboardEvent): void {
+    this.logger.debug('Toggling matching publisher from hotkey');
+    event.preventDefault();
+    this.onMatchPublisherToggle();
+  }
+
+  onMatchPublisherToggle(): void {
+    this.logger.debug('Toggling matching the publisher');
+    this.matchPublisher = this.matchPublisher === false;
+    this.store.dispatch(
+      saveUserPreference({
+        name: MATCH_PUBLISHER_PREFERENCE,
+        value: `${this.matchPublisher}`
       })
     );
   }
