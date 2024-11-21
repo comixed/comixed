@@ -45,9 +45,11 @@ export const loadVolumeMetadata = createAction(
   '[Metadata] Loads scraping volumes',
   props<{
     metadataSource: MetadataSource;
+    publisher: string;
     series: string;
     maximumRecords: number;
     skipCache: boolean;
+    matchPublisher: boolean;
   }>()
 );
 

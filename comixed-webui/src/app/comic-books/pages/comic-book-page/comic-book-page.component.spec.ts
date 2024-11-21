@@ -100,11 +100,13 @@ describe('ComicBookPageComponent', () => {
   const LAST_READ_ENTRY = LAST_READ_1;
   const OTHER_COMIC = COMIC_BOOK_2;
   const USER = USER_READER;
+  const PUBLISHER = 'The Publisher';
   const SERIES = 'The Series';
   const VOLUME = '2000';
   const ISSUE_NUMBER = '27';
   const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
+  const MATCH_PUBLISHER = Math.random() > 0.5;
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const REFERENCE_ID = `${new Date().getTime()}`;
   const initialState = {
@@ -239,14 +241,16 @@ describe('ComicBookPageComponent', () => {
   describe('loading the scraping volumes', () => {
     beforeEach(() => {
       component.metadataSource = METADATA_SOURCE;
-      component.onLoadScrapingVolumes(
-        METADATA_SOURCE,
-        SERIES,
-        VOLUME,
-        ISSUE_NUMBER,
-        MAXIMUM_RECORDS,
-        SKIP_CACHE
-      );
+      component.onLoadScrapingVolumes({
+        metadataSource: METADATA_SOURCE,
+        publisher: PUBLISHER,
+        series: SERIES,
+        volume: VOLUME,
+        issueNumber: ISSUE_NUMBER,
+        maximumRecords: MAXIMUM_RECORDS,
+        skipCache: SKIP_CACHE,
+        matchPublisher: MATCH_PUBLISHER
+      });
     });
 
     it('holds the series name', () => {
@@ -265,9 +269,11 @@ describe('ComicBookPageComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         loadVolumeMetadata({
           metadataSource: METADATA_SOURCE,
+          publisher: PUBLISHER,
           series: SERIES,
           maximumRecords: MAXIMUM_RECORDS,
-          skipCache: SKIP_CACHE
+          skipCache: SKIP_CACHE,
+          matchPublisher: MATCH_PUBLISHER
         })
       );
     });

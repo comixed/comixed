@@ -77,9 +77,11 @@ import { LoadMultiBookScrapingResponse } from '@app/comic-metadata/models/net/lo
 import { PUBLISHER_1, SERIES_1 } from '@app/collections/collections.fixtures';
 
 describe('ComicBookScrapingService', () => {
+  const PUBLISHER = 'The Series';
   const SERIES = 'The Series';
   const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
+  const MATCH_PUBLISHER = Math.random() > 0.5;
   const VOLUMES = [SCRAPING_VOLUME_1, SCRAPING_VOLUME_2, SCRAPING_VOLUME_3];
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
   const VOLUME_ID = SCRAPING_VOLUME_1.id;
@@ -145,9 +147,11 @@ describe('ComicBookScrapingService', () => {
     service
       .loadScrapingVolumes({
         metadataSource: METADATA_SOURCE,
+        publisher: PUBLISHER,
         series: SERIES,
         maximumRecords: MAXIMUM_RECORDS,
-        skipCache: SKIP_CACHE
+        skipCache: SKIP_CACHE,
+        matchPublisher: MATCH_PUBLISHER
       })
       .subscribe(response => expect(response).toEqual(VOLUMES));
 
@@ -156,9 +160,11 @@ describe('ComicBookScrapingService', () => {
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
+      publisher: PUBLISHER,
       series: SERIES,
       maxRecords: MAXIMUM_RECORDS,
-      skipCache: SKIP_CACHE
+      skipCache: SKIP_CACHE,
+      matchPublisher: MATCH_PUBLISHER
     } as LoadVolumeMetadataRequest);
   });
 

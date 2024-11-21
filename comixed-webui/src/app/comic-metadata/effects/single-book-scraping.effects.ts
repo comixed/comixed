@@ -21,15 +21,15 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   clearMetadataCache,
   clearMetadataCacheFailure,
-  scrapeSingleComicBookSuccess,
+  clearMetadataCacheSuccess,
   issueMetadataLoaded,
   loadIssueMetadata,
   loadIssueMetadataFailed,
   loadVolumeMetadata,
   loadVolumeMetadataFailed,
-  clearMetadataCacheSuccess,
   scrapeSingleComicBook,
   scrapeSingleComicBookFailure,
+  scrapeSingleComicBookSuccess,
   startMetadataUpdateProcess,
   startMetadataUpdateProcessFailure,
   startMetadataUpdateProcessSuccess,
@@ -43,8 +43,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from '@app/core/services/alert.service';
 import { of } from 'rxjs';
 import { IssueMetadata } from '@app/comic-metadata/models/issue-metadata';
-import { ComicBook } from '@app/comic-books/models/comic-book';
-import { comicBookLoaded } from '@app/comic-books/actions/comic-book.actions';
 import {
   clearComicBookSelectionState,
   removeSingleComicBookSelection
@@ -62,9 +60,11 @@ export class SingleBookScrapingEffects {
         this.metadataService
           .loadScrapingVolumes({
             metadataSource: action.metadataSource,
+            publisher: action.publisher,
             series: action.series,
             maximumRecords: action.maximumRecords,
-            skipCache: action.skipCache
+            skipCache: action.skipCache,
+            matchPublisher: action.matchPublisher
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),

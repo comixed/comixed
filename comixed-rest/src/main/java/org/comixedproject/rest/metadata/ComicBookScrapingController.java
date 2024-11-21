@@ -119,16 +119,20 @@ public class ComicBookScrapingController {
       throws MetadataException {
     String series = request.getSeries();
     final int maxRecords = request.getMaxRecords();
-    boolean skipCache = request.getSkipCache();
+    final String publisher = request.getPublisher().strip();
+    boolean skipCache = request.isSkipCache();
+    boolean matchPublisher = request.isMatchPublisher();
 
     log.info(
-        "Getting scraping volumes: sourceId={} series={} maxRecords={} skipCache={}",
+        "Getting scraping volumes: sourceId={} publisher={} series={} maxRecords={} skipCache={} matchPublisher={}",
         sourceId,
         series,
         maxRecords,
-        skipCache);
+        skipCache,
+        matchPublisher);
 
-    return this.metadataService.getVolumes(sourceId, series, maxRecords, skipCache);
+    return this.metadataService.getVolumes(
+        sourceId, publisher, series, maxRecords, skipCache, matchPublisher);
   }
 
   /**

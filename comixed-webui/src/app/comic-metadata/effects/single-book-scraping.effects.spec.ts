@@ -58,9 +58,11 @@ import {
 } from '@app/comic-books/actions/comic-book-selection.actions';
 
 describe('SingleBookScrapingEffects', () => {
+  const PUBLISHER = 'The Publisher';
   const SERIES = 'The Series';
   const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
+  const MATCH_PUBLISHER = Math.random() > 0.5;
   const VOLUMES = [SCRAPING_VOLUME_1, SCRAPING_VOLUME_2, SCRAPING_VOLUME_3];
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
   const VOLUME_ID = SCRAPING_VOLUME_1.id;
@@ -125,9 +127,11 @@ describe('SingleBookScrapingEffects', () => {
       const serviceResponse = VOLUMES;
       const action = loadVolumeMetadata({
         metadataSource: METADATA_SOURCE,
+        publisher: PUBLISHER,
         series: SERIES,
         maximumRecords: MAXIMUM_RECORDS,
-        skipCache: SKIP_CACHE
+        skipCache: SKIP_CACHE,
+        matchPublisher: MATCH_PUBLISHER
       });
       const outcome = volumeMetadataLoaded({ volumes: VOLUMES });
 
@@ -142,9 +146,11 @@ describe('SingleBookScrapingEffects', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = loadVolumeMetadata({
         metadataSource: METADATA_SOURCE,
+        publisher: PUBLISHER,
         series: SERIES,
         maximumRecords: MAXIMUM_RECORDS,
-        skipCache: SKIP_CACHE
+        skipCache: SKIP_CACHE,
+        matchPublisher: MATCH_PUBLISHER
       });
       const outcome = loadVolumeMetadataFailed();
 
@@ -161,9 +167,11 @@ describe('SingleBookScrapingEffects', () => {
     it('fires an action on general failure', () => {
       const action = loadVolumeMetadata({
         metadataSource: METADATA_SOURCE,
+        publisher: PUBLISHER,
         series: SERIES,
         maximumRecords: MAXIMUM_RECORDS,
-        skipCache: SKIP_CACHE
+        skipCache: SKIP_CACHE,
+        matchPublisher: MATCH_PUBLISHER
       });
       const outcome = loadVolumeMetadataFailed();
 

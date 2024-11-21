@@ -16,12 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators
-} from '@angular/forms';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
@@ -46,6 +42,7 @@ import { SingleBookScrapingState } from '@app/comic-metadata/reducers/single-boo
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
 import {
+  MATCH_PUBLISHER_PREFERENCE,
   MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
   SKIP_CACHE_PREFERENCE
 } from '@app/library/library.constants';
@@ -66,7 +63,7 @@ export class ScrapingSeriesPageComponent implements OnInit, OnDestroy {
   readonly maximumRecordsOptions = METADATA_RECORD_LIMITS;
   maximumRecords = 0;
 
-  scrapeSeriesForm: UntypedFormGroup;
+  scrapeSeriesForm: FormGroup;
   originalPublisher = '';
   originalSeries = '';
   originalVolume = '';
@@ -111,7 +108,8 @@ export class ScrapingSeriesPageComponent implements OnInit, OnDestroy {
       series: [this.originalSeries],
       volume: [this.originalVolume],
       metadataSource: ['', Validators.required],
-      skipCache: ['']
+      skipCache: [''],
+      matchPublisher: ['']
     });
     this.logger.trace('Subscribing to user updates');
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
@@ -119,6 +117,13 @@ export class ScrapingSeriesPageComponent implements OnInit, OnDestroy {
         getUserPreference(
           user.preferences,
           SKIP_CACHE_PREFERENCE,
+          `${false}`
+        ) === `${true}`
+      );
+      this.scrapeSeriesForm.controls.matchPublisher.setValue(
+        getUserPreference(
+          user.preferences,
+          MATCH_PUBLISHER_PREFERENCE,
           `${false}`
         ) === `${true}`
       );
@@ -188,6 +193,19 @@ export class ScrapingSeriesPageComponent implements OnInit, OnDestroy {
     );
   }
 
+  get matchPublisher(): boolean {
+    return this.scrapeSeriesForm.controls.matchPublisher.value;
+  }
+
+  set matchPublisher(matchPublisher: boolean) {
+    this.store.dispatch(
+      saveUserPreference({
+        name: MATCH_PUBLISHER_PREFERENCE,
+        value: `${matchPublisher}`
+      })
+    );
+  }
+
   get metadataSource(): MetadataSource {
     return this.metadataSourceList.find(
       source =>
@@ -231,15 +249,18 @@ export class ScrapingSeriesPageComponent implements OnInit, OnDestroy {
 
   onFetchVolumeCandidates(): void {
     const series = this.scrapeSeriesForm.controls['series'].value;
+    const publisher = this.scrapeSeriesForm.controls['publisher'].value;
     this.logger.debug(
       `Fetching candidates for series: series=${series} source=${this.metadataSource}`
     );
     this.store.dispatch(
       loadVolumeMetadata({
         metadataSource: this.metadataSource,
+        publisher,
         series,
         maximumRecords: this.maximumRecords,
-        skipCache: this.skipCache
+        skipCache: this.skipCache,
+        matchPublisher: this.matchPublisher
       })
     );
   }
@@ -307,5 +328,25 @@ export class ScrapingSeriesPageComponent implements OnInit, OnDestroy {
 
   onShowNotice(dialogTemplate: any): void {
     this.dialog.open(dialogTemplate, { width: '600px' });
+  }
+
+  @HostListener('window:keydown.shift.control.c', ['$event'])
+  onHotKeySkipCacheToggle(event: KeyboardEvent): void {
+    event.preventDefault();
+    this.onSkipCacheToggle();
+  }
+
+  onSkipCacheToggle(): void {
+    this.skipCache = this.skipCache === false;
+  }
+
+  @HostListener('window:keydown.shift.control.p', ['$event'])
+  onHotKeyMatchPublisherToggle(event: KeyboardEvent): void {
+    event.preventDefault();
+    this.onMatchPublisherToggle();
+  }
+
+  onMatchPublisherToggle(): void {
+    this.matchPublisher = this.matchPublisher === false;
   }
 }

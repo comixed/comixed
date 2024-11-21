@@ -102,15 +102,18 @@ export class ComicBookScrapingService {
    * Retrieves volumes that match the series name being scraped.
    *
    * @param args.metadataSource the metadata source
+   * @param args.publisher the publisher name
    * @param args.series the series name
    * @param args.maximumRecords the maximum records to return
    * @param args.skipCache the skip cache flag
    */
   loadScrapingVolumes(args: {
     metadataSource: MetadataSource;
+    publisher: string;
     series: string;
     maximumRecords: number;
     skipCache: boolean;
+    matchPublisher: boolean;
   }): Observable<any> {
     this.logger.debug('Loading scraping volumes:', args);
     return this.http.post(
@@ -118,9 +121,11 @@ export class ComicBookScrapingService {
         sourceId: args.metadataSource.id
       }),
       {
+        publisher: args.publisher,
         series: args.series,
         maxRecords: args.maximumRecords,
-        skipCache: args.skipCache
+        skipCache: args.skipCache,
+        matchPublisher: args.matchPublisher
       } as LoadVolumeMetadataRequest
     );
   }

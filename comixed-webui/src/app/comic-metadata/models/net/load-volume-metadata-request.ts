@@ -17,7 +17,9 @@
  */
 
 export interface LoadVolumeMetadataRequest {
+  publisher: string;
   series: string;
   maxRecords: number;
   skipCache: boolean;
+  matchPublisher: boolean;
 }

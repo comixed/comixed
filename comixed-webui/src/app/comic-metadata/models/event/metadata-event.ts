@@ -20,9 +20,11 @@ import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 
 export interface MetadataEvent {
   metadataSource: MetadataSource;
+  publisher: string;
   series: string;
   volume: string;
   issueNumber: string;
   maximumRecords: number;
   skipCache: boolean;
+  matchPublisher: boolean;
 }
