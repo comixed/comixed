@@ -32,6 +32,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoadVolumeMetadataRequest {
+  @JsonProperty("publisher")
+  @Getter
+  private String publisher;
+
   @JsonProperty("series")
   @Getter
   private String series;
@@ -42,5 +46,9 @@ public class LoadVolumeMetadataRequest {
 
   @JsonProperty("skipCache")
   @Getter
-  private Boolean skipCache;
+  private boolean skipCache;
+
+  @JsonProperty("matchPublisher")
+  @Getter
+  private boolean matchPublisher;
 }

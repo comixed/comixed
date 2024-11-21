@@ -22,6 +22,7 @@ import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import {
+  MATCH_PUBLISHER_PREFERENCE,
   MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
   SKIP_CACHE_PREFERENCE
 } from '@app/library/library.constants';
@@ -92,6 +93,7 @@ export class ScrapingIssuesPageComponent implements OnInit, OnDestroy {
   currentVolume = '';
   currentIssueNumber = '';
   skipCache = false;
+  matchPublisher = false;
   maximumRecords = 0;
   scrapingStateSubscription: Subscription;
   scrapingVolumeSubscription: Subscription;
@@ -118,6 +120,12 @@ export class ScrapingIssuesPageComponent implements OnInit, OnDestroy {
         getUserPreference(
           user.preferences,
           SKIP_CACHE_PREFERENCE,
+          `${false}`
+        ) === `${true}`;
+      this.matchPublisher =
+        getUserPreference(
+          user.preferences,
+          MATCH_PUBLISHER_PREFERENCE,
           `${false}`
         ) === `${true}`;
       this.maximumRecords = parseInt(
@@ -232,9 +240,11 @@ export class ScrapingIssuesPageComponent implements OnInit, OnDestroy {
     this.store.dispatch(
       loadVolumeMetadata({
         metadataSource: event.metadataSource,
+        publisher: event.publisher,
         series: event.series,
         maximumRecords: event.maximumRecords,
-        skipCache: event.skipCache
+        skipCache: event.skipCache,
+        matchPublisher: event.matchPublisher
       })
     );
   }

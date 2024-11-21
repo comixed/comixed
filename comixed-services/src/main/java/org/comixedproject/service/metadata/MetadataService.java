@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.metadata.MetadataAdaptorProvider;
 import org.comixedproject.metadata.MetadataAdaptorRegistry;
@@ -73,15 +74,25 @@ public class MetadataService {
   /**
    * Retrieves a list of volumes for the given series, up to the max records specified.
    *
+   * <p>If the match publisher flag is set and a publisher is provided, then only results where the
+   * publisher matches the one provided are returned.
+   *
    * @param sourceId the metadata source id
+   * @param publisher the publisher
    * @param series the series name
    * @param maxRecords the maximum records
    * @param skipCache the skip cache flag
+   * @param matchPublisher the match publisher flag
    * @return the volumes
    * @throws MetadataException if an error occurs
    */
   public List<VolumeMetadata> getVolumes(
-      final Long sourceId, final String series, final Integer maxRecords, final boolean skipCache)
+      final Long sourceId,
+      final String publisher,
+      final String series,
+      final Integer maxRecords,
+      final boolean skipCache,
+      final boolean matchPublisher)
       throws MetadataException {
     final MetadataSource metadataSource = this.doLoadMetadataSource(sourceId);
     final MetadataAdaptor metadataAdaptor = this.doLoadScrapingAdaptor(metadataSource);
@@ -98,8 +109,7 @@ public class MetadataService {
 
     if (result.isEmpty()) {
       log.debug("Fetching from scraping source");
-      final List<VolumeMetadata> fetched =
-          metadataAdaptor.getVolumes(series, maxRecords, metadataSource);
+      List<VolumeMetadata> fetched = metadataAdaptor.getVolumes(series, maxRecords, metadataSource);
 
       log.debug("Fetched {} volume{}", fetched.size(), fetched.size() == 1 ? "" : "s");
       if (fetched.isEmpty()) {
@@ -118,6 +128,16 @@ public class MetadataService {
         log.debug("Caching fetched entries: source={} key={}", source, key);
         this.metadataCacheService.saveToCache(source, key, cacheEntries);
       }
+    }
+
+    if (matchPublisher && StringUtils.hasLength(publisher)) {
+      log.debug("Filtering results by publisher: {}", publisher);
+      final String comparablePublisher = publisher.toUpperCase();
+      result =
+          result.stream()
+              .filter(entry -> StringUtils.hasLength(entry.getPublisher()))
+              .filter(entry -> entry.getPublisher().toUpperCase().contains(comparablePublisher))
+              .collect(Collectors.toList());
     }
 
     return result;

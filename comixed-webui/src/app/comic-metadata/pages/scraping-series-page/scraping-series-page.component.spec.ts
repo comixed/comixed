@@ -53,6 +53,7 @@ import {
 } from '@app/comic-metadata/comic-metadata.fixtures';
 import { TitleService } from '@app/core/services/title.service';
 import {
+  MATCH_PUBLISHER_PREFERENCE,
   MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
   SKIP_CACHE_PREFERENCE
 } from '@app/library/library.constants';
@@ -75,6 +76,7 @@ import { PUBLISHER_1, SERIES_1 } from '@app/collections/collections.fixtures';
 
 describe('ScrapingSeriesPageComponent', () => {
   const ORIGINAL_PUBLISHER = PUBLISHER_1.name;
+  const PUBLISHER = SERIES_1.publisher;
   const ORIGINAL_SERIES = SERIES_1.name;
   const EDITED_SERIES = SERIES_1.name.substring(1);
   const ORIGINAL_VOLUME = SERIES_1.volume;
@@ -91,10 +93,13 @@ describe('ScrapingSeriesPageComponent', () => {
       ...initialFetchIssuesForSeriesState
     }
   };
+  const SKIP_CACHE = Math.random() > 0.5;
+  const MATCH_PUBLISHER = Math.random() > 0.5;
 
   let component: ScrapingSeriesPageComponent;
   let fixture: ComponentFixture<ScrapingSeriesPageComponent>;
   let store: MockStore<any>;
+  let storeDispatchSpy: jasmine.Spy;
   let translateService: TranslateService;
   let titleService: TitleService;
   let confirmationService: ConfirmationService;
@@ -132,7 +137,7 @@ describe('ScrapingSeriesPageComponent', () => {
     fixture = TestBed.createComponent(ScrapingSeriesPageComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
+    storeDispatchSpy = spyOn(store, 'dispatch');
     translateService = TestBed.inject(TranslateService);
     titleService = TestBed.inject(TitleService);
     confirmationService = TestBed.inject(ConfirmationService);
@@ -187,6 +192,33 @@ describe('ScrapingSeriesPageComponent', () => {
     });
   });
 
+  describe('matching the publisher', () => {
+    const MATCH_PUBLISHER = Math.random() > 0.5;
+
+    beforeEach(() => {
+      component.matchPublisher = !MATCH_PUBLISHER;
+      store.setState({
+        ...initialState,
+        [USER_FEATURE_KEY]: {
+          ...initialUserState,
+          user: {
+            ...USER_ADMIN,
+            preferences: [
+              {
+                name: MATCH_PUBLISHER_PREFERENCE,
+                value: `${MATCH_PUBLISHER}`
+              } as Preference
+            ]
+          }
+        }
+      });
+    });
+
+    it('sets the match publisher property', () => {
+      expect(component.matchPublisher).toEqual(MATCH_PUBLISHER);
+    });
+  });
+
   describe('setting the metadata source', () => {
     describe('clearing the source', () => {
       beforeEach(() => {
@@ -222,6 +254,7 @@ describe('ScrapingSeriesPageComponent', () => {
   describe('fetching issues', () => {
     beforeEach(() => {
       component.metadataSource = METADATA_SOURCE_2;
+      component.scrapeSeriesForm.controls['publisher'].setValue(PUBLISHER);
       component.scrapeSeriesForm.controls['series'].setValue(EDITED_SERIES);
       component.onFetchVolumeCandidates();
     });
@@ -230,8 +263,10 @@ describe('ScrapingSeriesPageComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         loadVolumeMetadata({
           metadataSource: METADATA_SOURCE_2,
+          publisher: PUBLISHER,
           series: EDITED_SERIES,
           skipCache: false,
+          matchPublisher: false,
           maximumRecords: 0
         })
       );
@@ -303,6 +338,94 @@ describe('ScrapingSeriesPageComponent', () => {
 
     it('opens a dialog', () => {
       expect(dialog.open).toHaveBeenCalled();
+    });
+  });
+
+  describe('toggling skipping the cache', () => {
+    beforeEach(() => {
+      component.skipCache = SKIP_CACHE;
+      storeDispatchSpy.calls.reset();
+    });
+
+    describe('from the button', () => {
+      beforeEach(() => {
+        component.onSkipCacheToggle();
+      });
+
+      it('saves the skip cache flag', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          saveUserPreference({
+            name: SKIP_CACHE_PREFERENCE,
+            value: `${component.skipCache === false}`
+          })
+        );
+      });
+    });
+
+    describe('from the button', () => {
+      const event = new KeyboardEvent('hotkey');
+
+      beforeEach(() => {
+        spyOn(event, 'preventDefault');
+        component.onHotKeySkipCacheToggle(event);
+      });
+
+      it('prevents event propagation', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('saves the skip cache flag', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          saveUserPreference({
+            name: SKIP_CACHE_PREFERENCE,
+            value: `${component.skipCache === false}`
+          })
+        );
+      });
+    });
+  });
+
+  describe('toggling matching the publisher', () => {
+    beforeEach(() => {
+      component.matchPublisher = MATCH_PUBLISHER;
+      storeDispatchSpy.calls.reset();
+    });
+
+    describe('from the button', () => {
+      beforeEach(() => {
+        component.onMatchPublisherToggle();
+      });
+
+      it('saves the match publisher flag', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          saveUserPreference({
+            name: MATCH_PUBLISHER_PREFERENCE,
+            value: `${component.matchPublisher === false}`
+          })
+        );
+      });
+    });
+
+    describe('from the button', () => {
+      const event = new KeyboardEvent('hotkey');
+
+      beforeEach(() => {
+        spyOn(event, 'preventDefault');
+        component.onHotKeyMatchPublisherToggle(event);
+      });
+
+      it('prevents event propagation', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('saves the match publisher flag', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          saveUserPreference({
+            name: MATCH_PUBLISHER_PREFERENCE,
+            value: `${component.matchPublisher === false}`
+          })
+        );
+      });
     });
   });
 });

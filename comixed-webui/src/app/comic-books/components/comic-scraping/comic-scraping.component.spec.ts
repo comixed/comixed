@@ -67,6 +67,7 @@ import {
 describe('ComicScrapingComponent', () => {
   const COMIC = COMIC_BOOK_2;
   const SKIP_CACHE = Math.random() > 0.5;
+  const MATCH_PUBLISHER = Math.random() > 0.5;
   const MAXIMUM_RECORDS = 100;
   const PREFERRED_METADATA_SOURCE = { ...METADATA_SOURCE_1, preferred: true };
   const OTHER_METADATA_SOURCE = { ...METADATA_SOURCE_2, preferred: false };
@@ -110,6 +111,7 @@ describe('ComicScrapingComponent', () => {
       component = fixture.componentInstance;
       component.maximumRecords = MAXIMUM_RECORDS;
       component.skipCache = SKIP_CACHE;
+      component.matchPublisher = MATCH_PUBLISHER;
       component.comic = COMIC;
       store = TestBed.inject(MockStore);
       storeDispatchSpy = spyOn(store, 'dispatch');
@@ -251,11 +253,13 @@ describe('ComicScrapingComponent', () => {
       it('emits an event', () => {
         expect(component.scrape.emit).toHaveBeenCalledWith({
           metadataSource: OTHER_METADATA_SOURCE,
+          publisher: COMIC.detail.publisher,
           series: COMIC.detail.series,
           volume: COMIC.detail.volume,
           issueNumber: COMIC.detail.issueNumber,
           maximumRecords: MAXIMUM_RECORDS,
-          skipCache: SKIP_CACHE
+          skipCache: SKIP_CACHE,
+          matchPublisher: MATCH_PUBLISHER
         });
       });
     });
@@ -277,11 +281,13 @@ describe('ComicScrapingComponent', () => {
       it('emits an event', () => {
         expect(component.scrape.emit).toHaveBeenCalledWith({
           metadataSource: OTHER_METADATA_SOURCE,
+          publisher: COMIC.detail.publisher,
           series: COMIC.detail.series,
           volume: COMIC.detail.volume,
           issueNumber: COMIC.detail.issueNumber,
           maximumRecords: MAXIMUM_RECORDS,
-          skipCache: SKIP_CACHE
+          skipCache: SKIP_CACHE,
+          matchPublisher: MATCH_PUBLISHER
         });
       });
     });
@@ -312,6 +318,35 @@ describe('ComicScrapingComponent', () => {
 
       it('flips the skip cache flag', () => {
         expect(component.skipCache).toEqual(!SKIP_CACHE);
+      });
+    });
+  });
+
+  describe('toggling matching the publisher', () => {
+    describe('from the button', () => {
+      beforeEach(() => {
+        component.onMatchPublisherToggle();
+      });
+
+      it('flips the match publisher flag', () => {
+        expect(component.matchPublisher).toEqual(!MATCH_PUBLISHER);
+      });
+    });
+
+    describe('from the button', () => {
+      const event = new KeyboardEvent('hotkey');
+
+      beforeEach(() => {
+        spyOn(event, 'preventDefault');
+        component.onHotKeyMatchPublisherToggle(event);
+      });
+
+      it('prevents event propagation', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('flips the match publisher flag', () => {
+        expect(component.matchPublisher).toEqual(!MATCH_PUBLISHER);
       });
     });
   });
