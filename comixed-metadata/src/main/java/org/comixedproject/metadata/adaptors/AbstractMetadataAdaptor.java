@@ -79,7 +79,7 @@ public abstract class AbstractMetadataAdaptor implements MetadataAdaptor {
     String issue = issueNumber;
     while (!issue.isEmpty()
         && !issue.equals("0")
-        && "123456789%ABCDEFGHIJKLMNOPQRSTUVWXYZ".indexOf(issue.toUpperCase().substring(0, 1))
+        && "-123456789%ABCDEFGHIJKLMNOPQRSTUVWXYZ".indexOf(issue.toUpperCase().substring(0, 1))
             == -1) {
       issue = issue.substring(1);
     }

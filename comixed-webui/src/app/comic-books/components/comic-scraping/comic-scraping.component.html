@@ -111,6 +111,7 @@
     </mat-label>
     <input
       id="metadata-source-id-input"
+      #referenceId
       type="number"
       matInput
       formControlName="referenceId"
@@ -120,7 +121,7 @@
       id="scrape-with-metadata-source-id-button"
       mat-icon-button
       matSuffix
-      [disabled]="!this.metadataSource || !comic?.metadata?.referenceId"
+      [disabled]="!this.metadataSource || referenceId.size === 0"
       [matTooltip]="'scraping.tooltip.use-metadata-source-id' | translate"
       (click)="onScrapeWithReferenceId()"
     >
