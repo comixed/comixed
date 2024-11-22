@@ -69,6 +69,7 @@
       **/comixedproject/http/**,
       **/state/comicbooks/Comic*,
       **/state/lists/ReadingList*,
+      **/state/lists/Story*,
       **/*Configuration,
       **/*Event,
       **/*Exception,
@@ -300,7 +301,11 @@
             <exclude>**/*Exception*</exclude>
             <exclude>**/state/comicbooks/Comic*</exclude>
             <exclude>**/state/lists/ReadingList**</exclude>
+            <exclude>**/state/lists/Story**</exclude>
             <exclude>**/batch/comicbooks/*Configuration</exclude>
+            <exclude>**/*Event</exclude>
+            <exclude>**/*Exception</exclude>
+            <exclude>**/*StateHandler</exclude>
             <exclude>**/ComiXed*App</exclude>
           </excludes>
         </configuration>

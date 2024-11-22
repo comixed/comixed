@@ -1,6 +1,6 @@
 /*
- * ComiXed - A digital comicBook book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.state.comicbooks.guards;
+package org.comixedproject.state;
 
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertTrue;
+import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC;
+import static org.comixedproject.state.lists.ReadingListStateHandler.HEADER_READING_LIST;
+import static org.junit.Assert.*;
 
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicState;
-import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.model.lists.ReadingList;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,34 +35,36 @@ import org.springframework.messaging.MessageHeaders;
 import org.springframework.statemachine.StateContext;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ComicBookContentsProcessedGuardTest {
-  @InjectMocks private ComicContentsProcessedGuard guard;
-  @Mock private StateContext<ComicState, ComicEvent> context;
+public class StateContextAccessorTest {
+  @InjectMocks private StateContextAccessor accessor;
   @Mock private MessageHeaders messageHeaders;
+  @Mock private StateContext<?, ?> context;
   @Mock private ComicBook comicBook;
+  @Mock private ReadingList readingList;
 
   @Before
   public void setUp() {
     Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
-    Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
-        .thenReturn(comicBook);
   }
 
   @Test
-  public void testEvaluateFileContentsNotLoaded() {
-    Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(false);
+  public void testFetchComic() {
+    Mockito.when(messageHeaders.get(HEADER_COMIC, ComicBook.class)).thenReturn(comicBook);
 
-    final boolean result = guard.evaluate(context);
+    final ComicBook result = accessor.fetchComic(context);
 
-    assertFalse(result);
+    assertNotNull(result);
+    assertSame(comicBook, result);
   }
 
   @Test
-  public void testEvaluate() {
-    Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(true);
+  public void testFetchReadingLIst() {
+    Mockito.when(messageHeaders.get(HEADER_READING_LIST, ReadingList.class))
+        .thenReturn(readingList);
 
-    final boolean result = guard.evaluate(context);
+    final ReadingList result = accessor.fetchReadingList(context);
 
-    assertTrue(result);
+    assertNotNull(result);
+    assertSame(readingList, result);
   }
 }

@@ -33,14 +33,14 @@ import org.springframework.statemachine.config.builders.StateMachineStateConfigu
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 
 /**
- * <code>ReadingListStateMachineConfig</code> provides a state machine configuration to manage the
- * state for instances of {@link ReadingList}.
+ * <code>ReadingListStateMachineConfiguration</code> provides a state machine configuration to
+ * manage the state for instances of {@link ReadingList}.
  *
  * @author Darryl L. Pierce
  */
 @Configuration
 @EnableStateMachine(name = "readingListStateMachine")
-public class ReadingListStateMachineConfig
+public class ReadingListStateMachineConfiguration
     extends EnumStateMachineConfigurerAdapter<ReadingListState, ReadingListEvent> {
   @Autowired private ComicIsInReadingListGuard comicIsInReadingListGuard;
   @Autowired private RemoveComicFromReadingListAction removeComicFromReadingListAction;

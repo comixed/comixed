@@ -28,14 +28,14 @@ import org.springframework.statemachine.config.builders.StateMachineStateConfigu
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 
 /**
- * <code>StoryStateMachineConfig</code> provides a state machine configuration to manage a {@link
- * Story} throw its lifecycle.
+ * <code>StoryStateMachineConfiguration</code> provides a state machine configuration to manage a
+ * {@link Story} throw its lifecycle.
  *
  * @author Darryl L. Pierce
  */
 @Configuration
 @EnableStateMachine(name = "storyStateMachine")
-public class StoryStateMachineConfig
+public class StoryStateMachineConfiguration
     extends EnumStateMachineConfigurerAdapter<StoryState, StoryEvent> {
   @Override
   public void configure(final StateMachineStateConfigurer<StoryState, StoryEvent> states)

@@ -22,7 +22,6 @@ import java.util.EnumSet;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.comicbooks.actions.*;
-import org.comixedproject.state.comicbooks.guards.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachine;
@@ -37,12 +36,11 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
  * @author Darryl L. Pierce
  */
 @Configuration
-@EnableStateMachine(name = "comicStateMachine")
+@EnableStateMachine(name = "comixedStateMachine")
 public class ComicStateMachineConfiguration
     extends EnumStateMachineConfigurerAdapter<ComicState, ComicEvent> {
   @Autowired private PrepareComicForProcessingAction prepareComicForProcessingAction;
   @Autowired private FileContentsLoadedAction fileContentsLoadedAction;
-  @Autowired private ComicContentsProcessedGuard comicContentsProcessedGuard;
   @Autowired private MetadataUpdatedAction metadataUpdatedAction;
   @Autowired private ComicOrganizedAction comicOrganizedAction;
   @Autowired private UpdateComicBookDetailsAction updateComicBookDetailsAction;
