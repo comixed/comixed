@@ -19,10 +19,15 @@
 package org.comixedproject.service.metadata;
 
 import static junit.framework.TestCase.*;
+import static org.comixedproject.service.metadata.FilenameScrapingRuleService.*;
+import static org.junit.Assert.assertArrayEquals;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.adaptors.comicbooks.FilenameScraperAdaptor;
+import org.comixedproject.adaptors.csv.CsvAdaptor;
+import org.comixedproject.adaptors.csv.CsvRowEncoder;
 import org.comixedproject.model.metadata.FilenameMetadata;
 import org.comixedproject.model.metadata.FilenameScrapingRule;
 import org.comixedproject.repositories.metadata.FilenameScrapingRuleRepository;
@@ -43,15 +48,18 @@ public class FilenameScrapingRuleServiceTest {
   private static final Integer TEST_COVER_DATE_POSITION = 4;
   private static final String TEST_DATE_FORMAT = "The date format";
   private static final String TEST_FILENAME = "The filename";
+  private static final byte[] TEST_ENCODED_ROW = "The encoded row data".getBytes();
 
   @InjectMocks private FilenameScrapingRuleService service;
   @Mock private FilenameScrapingRuleRepository filenameScrapingRuleRepository;
   @Mock private FilenameScraperAdaptor filenameScraperAdaptor;
+  @Mock private CsvAdaptor csvAdaptor;
   @Mock private List<FilenameScrapingRule> savedRuleList;
   @Mock private FilenameScrapingRule filenameScrapingRule;
   @Mock private FilenameMetadata filenameMetadata;
 
   @Captor private ArgumentCaptor<List<FilenameScrapingRule>> ruleListArgumentCaptor;
+  @Captor private ArgumentCaptor<CsvRowEncoder> rowEncoderArgumentCaptor;
 
   private List<FilenameScrapingRule> filenameScrapingRuleList = new ArrayList<>();
 
@@ -68,6 +76,7 @@ public class FilenameScrapingRuleServiceTest {
         .thenReturn(TEST_ISSUE_NUMBER_POSITION);
     Mockito.when(filenameScrapingRule.getCoverDatePosition()).thenReturn(TEST_COVER_DATE_POSITION);
     Mockito.when(filenameScrapingRule.getDateFormat()).thenReturn(TEST_DATE_FORMAT);
+    Mockito.when(filenameScrapingRuleRepository.findAll()).thenReturn(filenameScrapingRuleList);
   }
 
   @Test
@@ -130,7 +139,7 @@ public class FilenameScrapingRuleServiceTest {
   }
 
   @Test
-  public void testLoadFilenameMetadataNotLoaded() {
+  public void testLoadFilenameMetadata_notLoaded() {
     Mockito.when(filenameScrapingRuleRepository.findAll()).thenReturn(filenameScrapingRuleList);
     Mockito.when(
             filenameScraperAdaptor.execute(
@@ -146,5 +155,232 @@ public class FilenameScrapingRuleServiceTest {
 
     Mockito.verify(filenameScraperAdaptor, Mockito.times(1))
         .execute(TEST_FILENAME, filenameScrapingRule);
+  }
+
+  @Test(expected = FilenameScrapingRuleException.class)
+  public void testGetFilenameRulesFile_encodeRecordThrowsException()
+      throws IOException, FilenameScrapingRuleException {
+    filenameScrapingRuleList.add(filenameScrapingRule);
+
+    Mockito.when(csvAdaptor.encodeRecords(Mockito.anyList(), rowEncoderArgumentCaptor.capture()))
+        .thenThrow(IOException.class);
+
+    try {
+      service.getFilenameScrapingRulesFile();
+    } finally {
+      Mockito.verify(filenameScrapingRuleRepository, Mockito.times(1)).findAll();
+    }
+  }
+
+  @Test
+  public void testGetFilenameRulesFile_noSeriesPosition()
+      throws IOException, FilenameScrapingRuleException {
+    Mockito.when(filenameScrapingRule.getSeriesPosition()).thenReturn(null);
+
+    filenameScrapingRuleList.add(filenameScrapingRule);
+
+    Mockito.when(csvAdaptor.encodeRecords(Mockito.anyList(), rowEncoderArgumentCaptor.capture()))
+        .thenReturn(TEST_ENCODED_ROW);
+
+    service.getFilenameScrapingRulesFile();
+
+    final CsvRowEncoder encoder = rowEncoderArgumentCaptor.getValue();
+    String[] row = encoder.createRow(0, filenameScrapingRule);
+    assertArrayEquals(
+        new String[] {
+          RULE_NUMBER_HEADER,
+          RULE_NAME_HEADER,
+          RULE_CONTENT_HEADER,
+          SERIES_POSITION_HEADER,
+          VOLUME_POSITION_HEADER,
+          ISSUE_NUMBER_POSITION_HEADER,
+          COVER_DATE_POSITION_HEADER,
+          COVER_DATE_FORMAT_HEADER
+        },
+        row);
+    row = encoder.createRow(1, filenameScrapingRule);
+    assertArrayEquals(
+        new String[] {
+          String.valueOf(TEST_PRIORITY),
+          TEST_NAME,
+          TEST_RULE,
+          "",
+          String.valueOf(TEST_VOLUME_POSITION),
+          String.valueOf(TEST_ISSUE_NUMBER_POSITION),
+          String.valueOf(TEST_COVER_DATE_POSITION),
+          TEST_DATE_FORMAT
+        },
+        row);
+
+    Mockito.verify(filenameScrapingRuleRepository, Mockito.times(1)).findAll();
+  }
+
+  @Test
+  public void testGetFilenameRulesFile_noVolumePosition()
+      throws IOException, FilenameScrapingRuleException {
+    Mockito.when(filenameScrapingRule.getVolumePosition()).thenReturn(null);
+
+    filenameScrapingRuleList.add(filenameScrapingRule);
+
+    Mockito.when(csvAdaptor.encodeRecords(Mockito.anyList(), rowEncoderArgumentCaptor.capture()))
+        .thenReturn(TEST_ENCODED_ROW);
+
+    service.getFilenameScrapingRulesFile();
+
+    final CsvRowEncoder encoder = rowEncoderArgumentCaptor.getValue();
+    String[] row = encoder.createRow(0, filenameScrapingRule);
+    assertArrayEquals(
+        new String[] {
+          RULE_NUMBER_HEADER,
+          RULE_NAME_HEADER,
+          RULE_CONTENT_HEADER,
+          SERIES_POSITION_HEADER,
+          VOLUME_POSITION_HEADER,
+          ISSUE_NUMBER_POSITION_HEADER,
+          COVER_DATE_POSITION_HEADER,
+          COVER_DATE_FORMAT_HEADER
+        },
+        row);
+    row = encoder.createRow(1, filenameScrapingRule);
+    assertArrayEquals(
+        new String[] {
+          String.valueOf(TEST_PRIORITY),
+          TEST_NAME,
+          TEST_RULE,
+          String.valueOf(TEST_SERIES_POSITION),
+          "",
+          String.valueOf(TEST_ISSUE_NUMBER_POSITION),
+          String.valueOf(TEST_COVER_DATE_POSITION),
+          TEST_DATE_FORMAT
+        },
+        row);
+
+    Mockito.verify(filenameScrapingRuleRepository, Mockito.times(1)).findAll();
+  }
+
+  @Test
+  public void testGetFilenameRulesFile_noIssueNumberPosition()
+      throws IOException, FilenameScrapingRuleException {
+    Mockito.when(filenameScrapingRule.getIssueNumberPosition()).thenReturn(null);
+
+    filenameScrapingRuleList.add(filenameScrapingRule);
+
+    Mockito.when(csvAdaptor.encodeRecords(Mockito.anyList(), rowEncoderArgumentCaptor.capture()))
+        .thenReturn(TEST_ENCODED_ROW);
+
+    service.getFilenameScrapingRulesFile();
+
+    final CsvRowEncoder encoder = rowEncoderArgumentCaptor.getValue();
+    String[] row = encoder.createRow(0, filenameScrapingRule);
+    assertArrayEquals(
+        new String[] {
+          RULE_NUMBER_HEADER,
+          RULE_NAME_HEADER,
+          RULE_CONTENT_HEADER,
+          SERIES_POSITION_HEADER,
+          VOLUME_POSITION_HEADER,
+          ISSUE_NUMBER_POSITION_HEADER,
+          COVER_DATE_POSITION_HEADER,
+          COVER_DATE_FORMAT_HEADER
+        },
+        row);
+    row = encoder.createRow(1, filenameScrapingRule);
+    assertArrayEquals(
+        new String[] {
+          String.valueOf(TEST_PRIORITY),
+          TEST_NAME,
+          TEST_RULE,
+          String.valueOf(TEST_SERIES_POSITION),
+          String.valueOf(TEST_VOLUME_POSITION),
+          "",
+          String.valueOf(TEST_COVER_DATE_POSITION),
+          TEST_DATE_FORMAT
+        },
+        row);
+
+    Mockito.verify(filenameScrapingRuleRepository, Mockito.times(1)).findAll();
+  }
+
+  @Test
+  public void testGetFilenameRulesFile_noCoverDatePosition()
+      throws IOException, FilenameScrapingRuleException {
+    Mockito.when(filenameScrapingRule.getCoverDatePosition()).thenReturn(null);
+
+    filenameScrapingRuleList.add(filenameScrapingRule);
+
+    Mockito.when(csvAdaptor.encodeRecords(Mockito.anyList(), rowEncoderArgumentCaptor.capture()))
+        .thenReturn(TEST_ENCODED_ROW);
+
+    service.getFilenameScrapingRulesFile();
+
+    final CsvRowEncoder encoder = rowEncoderArgumentCaptor.getValue();
+    String[] row = encoder.createRow(0, filenameScrapingRule);
+    assertArrayEquals(
+        new String[] {
+          RULE_NUMBER_HEADER,
+          RULE_NAME_HEADER,
+          RULE_CONTENT_HEADER,
+          SERIES_POSITION_HEADER,
+          VOLUME_POSITION_HEADER,
+          ISSUE_NUMBER_POSITION_HEADER,
+          COVER_DATE_POSITION_HEADER,
+          COVER_DATE_FORMAT_HEADER
+        },
+        row);
+    row = encoder.createRow(1, filenameScrapingRule);
+    assertArrayEquals(
+        new String[] {
+          String.valueOf(TEST_PRIORITY),
+          TEST_NAME,
+          TEST_RULE,
+          String.valueOf(TEST_SERIES_POSITION),
+          String.valueOf(TEST_VOLUME_POSITION),
+          String.valueOf(TEST_ISSUE_NUMBER_POSITION),
+          "",
+          TEST_DATE_FORMAT
+        },
+        row);
+
+    Mockito.verify(filenameScrapingRuleRepository, Mockito.times(1)).findAll();
+  }
+
+  @Test
+  public void testGetFilenameRulesFile() throws IOException, FilenameScrapingRuleException {
+    filenameScrapingRuleList.add(filenameScrapingRule);
+
+    Mockito.when(csvAdaptor.encodeRecords(Mockito.anyList(), rowEncoderArgumentCaptor.capture()))
+        .thenReturn(TEST_ENCODED_ROW);
+
+    service.getFilenameScrapingRulesFile();
+
+    final CsvRowEncoder encoder = rowEncoderArgumentCaptor.getValue();
+    String[] row = encoder.createRow(0, filenameScrapingRule);
+    assertArrayEquals(
+        new String[] {
+          RULE_NUMBER_HEADER,
+          RULE_NAME_HEADER,
+          RULE_CONTENT_HEADER,
+          SERIES_POSITION_HEADER,
+          VOLUME_POSITION_HEADER,
+          ISSUE_NUMBER_POSITION_HEADER,
+          COVER_DATE_POSITION_HEADER,
+          COVER_DATE_FORMAT_HEADER
+        },
+        row);
+    row = encoder.createRow(1, filenameScrapingRule);
+    assertArrayEquals(
+        new String[] {
+          String.valueOf(TEST_PRIORITY),
+          TEST_NAME,
+          TEST_RULE,
+          String.valueOf(TEST_SERIES_POSITION),
+          String.valueOf(TEST_VOLUME_POSITION),
+          String.valueOf(TEST_ISSUE_NUMBER_POSITION),
+          String.valueOf(TEST_COVER_DATE_POSITION),
+          TEST_DATE_FORMAT
+        },
+        row);
+
+    Mockito.verify(filenameScrapingRuleRepository, Mockito.times(1)).findAll();
   }
 }

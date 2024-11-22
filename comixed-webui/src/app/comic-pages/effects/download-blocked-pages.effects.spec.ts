@@ -81,7 +81,7 @@ describe('DownloadBlockedPagesEffects', () => {
 
   describe('downloading a blocked page file', () => {
     it('fires an action on success', () => {
-      const serviceResponse = BLOCKED_PAGE_FILE;
+      const serviceResponse = DOWNLOADED_FILE;
       const action = downloadBlockedPages();
       const outcome = blockedPagesDownloaded({ document: DOWNLOADED_FILE });
 

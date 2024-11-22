@@ -42,8 +42,8 @@ import { LibraryConfigurationComponent } from './components/library-configuratio
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FilenameScrapingRulesConfigurationComponent } from './components/filename-scraping-rules-configuration/filename-scraping-rules-configuration.component';
-import { filenameScrapingRulesFeature } from '@app/admin/reducers/filename-scraping-rule-list.reducer';
-import { FilenameScrapingRuleListEffects } from '@app/admin/effects/filename-scraping-rule-list.effects';
+import { filenameScrapingRulesFeature } from '@app/admin/reducers/filename-scraping-rules.reducer';
+import { FilenameScrapingRulesEffects } from '@app/admin/effects/filename-scraping-rules.effects';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ServerRuntimeComponent } from './components/server-runtime/server-runtime.component';
 import { serverRuntimeFeature } from '@app/admin/reducers/server-runtime.reducer';
@@ -104,7 +104,7 @@ import { BatchProcessDetailPageComponent } from '@app/admin/pages/batch-process-
     EffectsModule.forFeature([
       ConfigurationOptionListEffects,
       SaveConfigurationOptionsEffects,
-      FilenameScrapingRuleListEffects,
+      FilenameScrapingRulesEffects,
       ServerRuntimeEffects,
       MetricsEffects,
       BatchProcessesEffects,

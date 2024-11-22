@@ -20,22 +20,26 @@ import {
   FilenameScrapingRulesState,
   initialState,
   reducer
-} from './filename-scraping-rule-list.reducer';
+} from './filename-scraping-rules.reducer';
 import {
   FILENAME_SCRAPING_RULE_1,
   FILENAME_SCRAPING_RULE_2,
-  FILENAME_SCRAPING_RULE_3
+  FILENAME_SCRAPING_RULE_3,
+  FILENAME_SCRAPING_RULES_FILE
 } from '@app/admin/admin.fixtures';
 import {
+  downloadFilenameScrapingRules,
+  downloadFilenameScrapingRulesFailure,
+  downloadFilenameScrapingRulesSuccess,
   loadFilenameScrapingRules,
   loadFilenameScrapingRulesFailure,
   loadFilenameScrapingRulesSuccess,
   saveFilenameScrapingRules,
   saveFilenameScrapingRulesFailure,
   saveFilenameScrapingRulesSuccess
-} from '@app/admin/actions/filename-scraping-rule-list.actions';
+} from '@app/admin/actions/filename-scraping-rules.actions';
 
-describe('FilenameScrapingRuleList Reducer', () => {
+describe('FilenameScrapingRules Reducer', () => {
   const RULES = [
     FILENAME_SCRAPING_RULE_1,
     FILENAME_SCRAPING_RULE_2,
@@ -136,6 +140,47 @@ describe('FilenameScrapingRuleList Reducer', () => {
         state = reducer(
           { ...state, busy: true },
           saveFilenameScrapingRulesFailure()
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+    });
+  });
+
+  describe('downloading the rules', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: false },
+        downloadFilenameScrapingRules()
+      );
+    });
+
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: true },
+          downloadFilenameScrapingRulesSuccess({
+            document: FILENAME_SCRAPING_RULES_FILE
+          })
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: true },
+          downloadFilenameScrapingRulesFailure()
         );
       });
 

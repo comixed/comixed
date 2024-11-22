@@ -72,7 +72,7 @@ import {
 import {
   FILENAME_SCRAPING_RULES_FEATURE_KEY,
   initialState as initialFilenameScrapingRulesState
-} from '@app/admin/reducers/filename-scraping-rule-list.reducer';
+} from '@app/admin/reducers/filename-scraping-rules.reducer';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ServerMetricsComponent } from '@app/admin/components/server-metrics/server-metrics.component';
 import { MatSelectModule } from '@angular/material/select';

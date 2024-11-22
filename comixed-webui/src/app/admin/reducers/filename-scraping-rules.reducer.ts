@@ -18,13 +18,16 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
+  downloadFilenameScrapingRules,
+  downloadFilenameScrapingRulesFailure,
+  downloadFilenameScrapingRulesSuccess,
   loadFilenameScrapingRules,
   loadFilenameScrapingRulesFailure,
   loadFilenameScrapingRulesSuccess,
   saveFilenameScrapingRules,
   saveFilenameScrapingRulesFailure,
   saveFilenameScrapingRulesSuccess
-} from '../actions/filename-scraping-rule-list.actions';
+} from '../actions/filename-scraping-rules.actions';
 import { FilenameScrapingRule } from '@app/admin/models/filename-scraping-rule';
 
 export const FILENAME_SCRAPING_RULES_FEATURE_KEY =
@@ -56,7 +59,13 @@ export const reducer = createReducer(
     busy: false,
     rules: action.rules
   })),
-  on(saveFilenameScrapingRulesFailure, state => ({ ...state, busy: false }))
+  on(saveFilenameScrapingRulesFailure, state => ({ ...state, busy: false })),
+  on(downloadFilenameScrapingRules, state => ({ ...state, busy: true })),
+  on(downloadFilenameScrapingRulesSuccess, state => ({
+    ...state,
+    busy: false
+  })),
+  on(downloadFilenameScrapingRulesFailure, state => ({ ...state, busy: false }))
 );
 
 export const filenameScrapingRulesFeature = createFeature({

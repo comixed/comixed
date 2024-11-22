@@ -21,6 +21,7 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
+  DOWNLOAD_FILENAME_SCRAPING_RULES_FILE_URL,
   LOAD_FILENAME_SCRAPING_RULES_URL,
   SAVE_FILENAME_SCRAPING_RULES_URL
 } from '@app/admin/admin.constants';
@@ -30,7 +31,7 @@ import { FilenameScrapingRule } from '@app/admin/models/filename-scraping-rule';
 @Injectable({
   providedIn: 'root'
 })
-export class FilenameScrapingRuleService {
+export class FilenameScrapingRulesService {
   constructor(private logger: LoggerService, private http: HttpClient) {}
 
   load(): Observable<any> {
@@ -43,6 +44,13 @@ export class FilenameScrapingRuleService {
     return this.http.post(
       interpolate(SAVE_FILENAME_SCRAPING_RULES_URL),
       args.rules
+    );
+  }
+
+  downloadFilenameScrapingRules(): Observable<any> {
+    this.logger.trace('Downloading filename scraping fules file');
+    return this.http.get(
+      interpolate(DOWNLOAD_FILENAME_SCRAPING_RULES_FILE_URL)
     );
   }
 }

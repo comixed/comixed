@@ -20,39 +20,46 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 
-import { FilenameScrapingRuleListEffects } from './filename-scraping-rule-list.effects';
-import { FilenameScrapingRuleService } from '@app/admin/services/filename-scraping-rule.service';
+import { FilenameScrapingRulesEffects } from './filename-scraping-rules.effects';
+import { FilenameScrapingRulesService } from '@app/admin/services/filename-scraping-rules.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {
-  loadFilenameScrapingRulesSuccess,
-  saveFilenameScrapingRulesSuccess,
+  downloadFilenameScrapingRules,
+  downloadFilenameScrapingRulesFailure,
+  downloadFilenameScrapingRulesSuccess,
   loadFilenameScrapingRules,
   loadFilenameScrapingRulesFailure,
+  loadFilenameScrapingRulesSuccess,
   saveFilenameScrapingRules,
-  saveFilenameScrapingRulesFailure
-} from '@app/admin/actions/filename-scraping-rule-list.actions';
+  saveFilenameScrapingRulesFailure,
+  saveFilenameScrapingRulesSuccess
+} from '@app/admin/actions/filename-scraping-rules.actions';
 import { hot } from 'jasmine-marbles';
 import {
   FILENAME_SCRAPING_RULE_1,
   FILENAME_SCRAPING_RULE_2,
-  FILENAME_SCRAPING_RULE_3
+  FILENAME_SCRAPING_RULE_3,
+  FILENAME_SCRAPING_RULES_FILE
 } from '@app/admin/admin.fixtures';
 import { HttpErrorResponse } from '@angular/common/http';
+import { FileDownloadService } from '@app/core/services/file-download.service';
 
-describe('FilenameScrapingRuleListEffects', () => {
+describe('FilenameScrapingRulesEffects', () => {
   const RULES = [
     FILENAME_SCRAPING_RULE_1,
     FILENAME_SCRAPING_RULE_2,
     FILENAME_SCRAPING_RULE_3
   ];
+  const FILENAME_RULES_FILE = FILENAME_SCRAPING_RULES_FILE;
 
   let actions$: Observable<any>;
-  let effects: FilenameScrapingRuleListEffects;
-  let filenameScrapingRuleService: jasmine.SpyObj<FilenameScrapingRuleService>;
+  let effects: FilenameScrapingRulesEffects;
+  let filenameScrapingRuleService: jasmine.SpyObj<FilenameScrapingRulesService>;
   let alertService: AlertService;
+  let fileDownloadService: FileDownloadService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -62,26 +69,32 @@ describe('FilenameScrapingRuleListEffects', () => {
         MatSnackBarModule
       ],
       providers: [
-        FilenameScrapingRuleListEffects,
+        FilenameScrapingRulesEffects,
         provideMockActions(() => actions$),
         {
-          provide: FilenameScrapingRuleService,
+          provide: FilenameScrapingRulesService,
           useValue: {
-            load: jasmine.createSpy('FilenameScrapingRuleService.load()'),
-            save: jasmine.createSpy('FilenameScrapingRuleService.save()')
+            load: jasmine.createSpy('FilenameScrapingRulesService.load()'),
+            save: jasmine.createSpy('FilenameScrapingRulesService.save()'),
+            downloadFilenameScrapingRules: jasmine.createSpy(
+              'FilenameScrapingRulesService.downloadFilenameScrapingRules()'
+            )
           }
         },
-        AlertService
+        AlertService,
+        FileDownloadService
       ]
     });
 
-    effects = TestBed.inject(FilenameScrapingRuleListEffects);
+    effects = TestBed.inject(FilenameScrapingRulesEffects);
     filenameScrapingRuleService = TestBed.inject(
-      FilenameScrapingRuleService
-    ) as jasmine.SpyObj<FilenameScrapingRuleService>;
+      FilenameScrapingRulesService
+    ) as jasmine.SpyObj<FilenameScrapingRulesService>;
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'info');
     spyOn(alertService, 'error');
+    fileDownloadService = TestBed.inject(FileDownloadService);
+    spyOn(fileDownloadService, 'saveFile');
   });
 
   it('should be created', () => {
@@ -167,6 +180,56 @@ describe('FilenameScrapingRuleListEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.save$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('downloading filename scraping rules', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = FILENAME_RULES_FILE;
+      const action = downloadFilenameScrapingRules();
+      const outcome = downloadFilenameScrapingRulesSuccess({
+        document: FILENAME_RULES_FILE
+      });
+
+      actions$ = hot('-a', { a: action });
+      filenameScrapingRuleService.downloadFilenameScrapingRules.and.returnValue(
+        of(serviceResponse)
+      );
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.downloadFilenameScrapingRules$).toBeObservable(expected);
+      expect(fileDownloadService.saveFile).toHaveBeenCalledWith({
+        document: FILENAME_RULES_FILE
+      });
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = downloadFilenameScrapingRules();
+      const outcome = downloadFilenameScrapingRulesFailure();
+
+      actions$ = hot('-a', { a: action });
+      filenameScrapingRuleService.downloadFilenameScrapingRules.and.returnValue(
+        throwError(serviceResponse)
+      );
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.downloadFilenameScrapingRules$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = downloadFilenameScrapingRules();
+      const outcome = downloadFilenameScrapingRulesFailure();
+
+      actions$ = hot('-a', { a: action });
+      filenameScrapingRuleService.downloadFilenameScrapingRules.and.throwError(
+        'expected'
+      );
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.downloadFilenameScrapingRules$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

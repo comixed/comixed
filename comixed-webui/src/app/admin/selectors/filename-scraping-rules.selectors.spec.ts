@@ -19,18 +19,18 @@
 import {
   FILENAME_SCRAPING_RULES_FEATURE_KEY,
   FilenameScrapingRulesState
-} from '../reducers/filename-scraping-rule-list.reducer';
+} from '../reducers/filename-scraping-rules.reducer';
 import {
   selectFilenameScrapingRules,
   selectFilenameScrapingRulesState
-} from './filename-scraping-rule-list.selectors';
+} from './filename-scraping-rules.selectors';
 import {
   FILENAME_SCRAPING_RULE_1,
   FILENAME_SCRAPING_RULE_2,
   FILENAME_SCRAPING_RULE_3
 } from '@app/admin/admin.fixtures';
 
-describe('FilenameScrapingRuleList Selectors', () => {
+describe('FilenameScrapingRules Selectors', () => {
   const RULES = [
     FILENAME_SCRAPING_RULE_1,
     FILENAME_SCRAPING_RULE_2,

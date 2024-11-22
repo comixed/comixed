@@ -18,6 +18,7 @@
 
 import { createAction, props } from '@ngrx/store';
 import { FilenameScrapingRule } from '@app/admin/models/filename-scraping-rule';
+import { DownloadDocument } from '@app/core/models/download-document';
 
 export const loadFilenameScrapingRules = createAction(
   '[Filename Scraping Rules] Load filename scraping rules'
@@ -44,4 +45,17 @@ export const saveFilenameScrapingRulesSuccess = createAction(
 
 export const saveFilenameScrapingRulesFailure = createAction(
   '[Filename Scraping Rules] Failed to save filename scraping rules'
+);
+
+export const downloadFilenameScrapingRules = createAction(
+  '[Filename Scraping Rules] Download the current list of rules'
+);
+
+export const downloadFilenameScrapingRulesSuccess = createAction(
+  '[Filename Scraping Rules] Successfully downloaded the current list of rules',
+  props<{ document: DownloadDocument }>()
+);
+
+export const downloadFilenameScrapingRulesFailure = createAction(
+  '[Filename Scraping Rules] Failed to download the current list of rules'
 );

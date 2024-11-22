@@ -33,7 +33,7 @@ import {
   FILENAME_SCRAPING_RULES_FEATURE_KEY,
   FilenameScrapingRulesState,
   reducer as filenameScrapingRulesReducer
-} from './reducers/filename-scraping-rule-list.reducer';
+} from './reducers/filename-scraping-rules.reducer';
 import {
   reducer as serverRuntimeReducer,
   SERVER_RUNTIME_FEATURE_KEY,
