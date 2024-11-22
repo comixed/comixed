@@ -26,7 +26,7 @@ import {
 import {
   FILENAME_SCRAPING_RULES_FEATURE_KEY,
   initialState as initialFilenameScrapingRulesState
-} from '@app/admin/reducers/filename-scraping-rule-list.reducer';
+} from '@app/admin/reducers/filename-scraping-rules.reducer';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
@@ -39,7 +39,10 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { saveFilenameScrapingRules } from '@app/admin/actions/filename-scraping-rule-list.actions';
+import {
+  downloadFilenameScrapingRules,
+  saveFilenameScrapingRules
+} from '@app/admin/actions/filename-scraping-rules.actions';
 import { EditableListItem } from '@app/core/models/ui/editable-list-item';
 import { FilenameScrapingRule } from '@app/admin/models/filename-scraping-rule';
 import {
@@ -285,6 +288,18 @@ describe('FilenameScrapingRulesConfigurationComponent', () => {
       it('sets the edited flag', () => {
         expect(rule.edited).toBeTrue();
       });
+    });
+  });
+
+  describe('downloading the list of rules', () => {
+    beforeEach(() => {
+      component.onDownloadRules();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        downloadFilenameScrapingRules()
+      );
     });
   });
 });

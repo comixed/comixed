@@ -39,6 +39,7 @@ export const LOAD_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
 export const SAVE_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
 export const LOAD_FILENAME_SCRAPING_RULES_URL = `${API_ROOT_URL}/admin/scraping/rules`;
 export const SAVE_FILENAME_SCRAPING_RULES_URL = `${API_ROOT_URL}/admin/scraping/rules`;
+export const DOWNLOAD_FILENAME_SCRAPING_RULES_FILE_URL = `${API_ROOT_URL}/admin/scraping/rules/file`;
 export const GET_ALL_BATCH_PROCESSES_URL = `${API_ROOT_URL}/admin/processes`;
 export const DELETE_COMPLETED_JOBS_URL = `${API_ROOT_URL}/admin/processes/completed/delete`;
 export const DELETE_SELECTED_JOBS_URL = `${API_ROOT_URL}/admin/processes/selected/delete`;

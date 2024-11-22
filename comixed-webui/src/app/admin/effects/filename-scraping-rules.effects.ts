@@ -19,23 +19,28 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
-  loadFilenameScrapingRulesSuccess,
-  saveFilenameScrapingRulesSuccess,
+  downloadFilenameScrapingRules,
+  downloadFilenameScrapingRulesFailure,
+  downloadFilenameScrapingRulesSuccess,
   loadFilenameScrapingRules,
   loadFilenameScrapingRulesFailure,
+  loadFilenameScrapingRulesSuccess,
   saveFilenameScrapingRules,
-  saveFilenameScrapingRulesFailure
-} from '@app/admin/actions/filename-scraping-rule-list.actions';
-import { FilenameScrapingRuleService } from '@app/admin/services/filename-scraping-rule.service';
+  saveFilenameScrapingRulesFailure,
+  saveFilenameScrapingRulesSuccess
+} from '@app/admin/actions/filename-scraping-rules.actions';
+import { FilenameScrapingRulesService } from '@app/admin/services/filename-scraping-rules.service';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { FilenameScrapingRule } from '@app/admin/models/filename-scraping-rule';
 import { of } from 'rxjs';
+import { DownloadDocument } from '@app/core/models/download-document';
+import { FileDownloadService } from '@app/core/services/file-download.service';
 
 @Injectable()
-export class FilenameScrapingRuleListEffects {
+export class FilenameScrapingRulesEffects {
   load$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadFilenameScrapingRules),
@@ -109,11 +114,46 @@ export class FilenameScrapingRuleListEffects {
     );
   });
 
+  downloadFilenameScrapingRules$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(downloadFilenameScrapingRules),
+      tap(() => this.logger.trace('Downloading filename scraping rules file')),
+      switchMap(() =>
+        this.filenameScrapingRuleService.downloadFilenameScrapingRules().pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          tap((response: DownloadDocument) =>
+            this.fileDownloadService.saveFile({ document: response })
+          ),
+          map((response: DownloadDocument) =>
+            downloadFilenameScrapingRulesSuccess({ document: response })
+          ),
+          catchError(error => {
+            this.logger.error('Service failure:', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'filename-scraping-rules.download-file.effect-failure'
+              )
+            );
+            return of(downloadFilenameScrapingRulesFailure());
+          })
+        )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(downloadFilenameScrapingRulesFailure());
+      })
+    );
+  });
+
   constructor(
     private logger: LoggerService,
     private actions$: Actions,
-    private filenameScrapingRuleService: FilenameScrapingRuleService,
+    private filenameScrapingRuleService: FilenameScrapingRulesService,
     private alertService: AlertService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private fileDownloadService: FileDownloadService
   ) {}
 }

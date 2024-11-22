@@ -25,13 +25,14 @@ import { TitleService } from '@app/core/services/title.service';
 import {
   selectFilenameScrapingRules,
   selectFilenameScrapingRulesState
-} from '@app/admin/selectors/filename-scraping-rule-list.selectors';
+} from '@app/admin/selectors/filename-scraping-rules.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { FilenameScrapingRule } from '@app/admin/models/filename-scraping-rule';
 import {
+  downloadFilenameScrapingRules,
   loadFilenameScrapingRules,
   saveFilenameScrapingRules
-} from '@app/admin/actions/filename-scraping-rule-list.actions';
+} from '@app/admin/actions/filename-scraping-rules.actions';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { EditableListItem } from '@app/core/models/ui/editable-list-item';
 import { MatTableDataSource } from '@angular/material/table';
@@ -201,6 +202,11 @@ export class FilenameScrapingRulesConfigurationComponent
         this.store.dispatch(saveFilenameScrapingRules({ rules: this.rules }));
       }
     });
+  }
+
+  onDownloadRules(): void {
+    this.logger.info('Downloading filename scraping rules');
+    this.store.dispatch(downloadFilenameScrapingRules());
   }
 
   private loadTranslations(): void {

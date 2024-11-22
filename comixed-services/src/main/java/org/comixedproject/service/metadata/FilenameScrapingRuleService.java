@@ -18,12 +18,17 @@
 
 package org.comixedproject.service.metadata;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.comixedproject.adaptors.comicbooks.FilenameScraperAdaptor;
+import org.comixedproject.adaptors.csv.CsvAdaptor;
 import org.comixedproject.model.metadata.FilenameMetadata;
 import org.comixedproject.model.metadata.FilenameScrapingRule;
+import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.repositories.metadata.FilenameScrapingRuleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,8 +43,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Log4j2
 public class FilenameScrapingRuleService {
+  static final String RULE_NUMBER_HEADER = "#";
+  static final String RULE_NAME_HEADER = "Name";
+  static final String RULE_CONTENT_HEADER = "Rule";
+  static final String SERIES_POSITION_HEADER = "Series Position";
+  static final String VOLUME_POSITION_HEADER = "Volume Position";
+  static final String ISSUE_NUMBER_POSITION_HEADER = "Issue # Position";
+  static final String COVER_DATE_POSITION_HEADER = "Cover Date Position";
+  static final String COVER_DATE_FORMAT_HEADER = "Cover Date Format";
+
   @Autowired private FilenameScrapingRuleRepository filenameScrapingRuleRepository;
   @Autowired private FilenameScraperAdaptor filenameScraperAdaptor;
+  @Autowired private CsvAdaptor csvAdaptor;
 
   /**
    * Returns all rules, sorted by priority.
@@ -101,5 +116,62 @@ public class FilenameScrapingRuleService {
     }
     log.trace("No applicable rule found");
     return new FilenameMetadata();
+  }
+
+  /**
+   * Encodes the filename scraping rules as a CSV stream.
+   *
+   * @return the document
+   * @throws FilenameScrapingRuleException if an error occurs
+   */
+  public DownloadDocument getFilenameScrapingRulesFile() throws FilenameScrapingRuleException {
+    log.debug("Retrieving blocked pages");
+    final List<FilenameScrapingRule> entries = this.filenameScrapingRuleRepository.findAll();
+    try {
+      final byte[] content =
+          this.csvAdaptor.encodeRecords(
+              entries,
+              (index, model) -> {
+                if (index == 0) {
+                  return new String[] {
+                    RULE_NUMBER_HEADER,
+                    RULE_NAME_HEADER,
+                    RULE_CONTENT_HEADER,
+                    SERIES_POSITION_HEADER,
+                    VOLUME_POSITION_HEADER,
+                    ISSUE_NUMBER_POSITION_HEADER,
+                    COVER_DATE_POSITION_HEADER,
+                    COVER_DATE_FORMAT_HEADER
+                  };
+                } else {
+                  return new String[] {
+                    String.valueOf(model.getPriority()),
+                    model.getName(),
+                    model.getRule(),
+                    model.getSeriesPosition() != null
+                        ? String.valueOf(model.getSeriesPosition())
+                        : "",
+                    model.getVolumePosition() != null
+                        ? String.valueOf(model.getVolumePosition())
+                        : "",
+                    model.getIssueNumberPosition() != null
+                        ? String.valueOf(model.getIssueNumberPosition())
+                        : "",
+                    model.getCoverDatePosition() != null
+                        ? String.valueOf(model.getCoverDatePosition())
+                        : "",
+                    model.getDateFormat()
+                  };
+                }
+              });
+      return new DownloadDocument(
+          String.format(
+              "ComiXed Filename Scraping Rules As Of %s.csv",
+              DateFormatUtils.format(new Date(), "yyyy-MM-dd")),
+          "text/csv",
+          content);
+    } catch (IOException error) {
+      throw new FilenameScrapingRuleException("Failed to encoding filename rules file", error);
+    }
   }
 }

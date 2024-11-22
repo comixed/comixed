@@ -107,6 +107,9 @@
     "effect-failure": "Failed to load feature state: {name}"
   },
   "filename-scraping-rules": {
+    "download-file": {
+      "effect-failure": "Failed to download the filename scraping rules file."
+    },
     "label": {
       "cover-date-format": "Cover Date Format",
       "cover-date-position": "Cover Date Position",

@@ -23,6 +23,8 @@ import static junit.framework.TestCase.assertSame;
 
 import java.util.List;
 import org.comixedproject.model.metadata.FilenameScrapingRule;
+import org.comixedproject.model.net.DownloadDocument;
+import org.comixedproject.service.metadata.FilenameScrapingRuleException;
 import org.comixedproject.service.metadata.FilenameScrapingRuleService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,6 +39,7 @@ public class FilenameScrapingRuleControllerTest {
   @Mock private FilenameScrapingRuleService filenameScrapingRuleService;
   @Mock private List<FilenameScrapingRule> ruleList;
   @Mock private List<FilenameScrapingRule> savedRuleList;
+  @Mock private DownloadDocument filenameScrapingRulesFile;
 
   @Test
   public void testLoadRules() {
@@ -61,5 +64,18 @@ public class FilenameScrapingRuleControllerTest {
     assertSame(savedRuleList, result);
 
     Mockito.verify(filenameScrapingRuleService, Mockito.times(1)).saveRules(ruleList);
+  }
+
+  @Test
+  public void testGetFilenameRulesFile() throws FilenameScrapingRuleException {
+    Mockito.when(filenameScrapingRuleService.getFilenameScrapingRulesFile())
+        .thenReturn(filenameScrapingRulesFile);
+
+    final DownloadDocument result = controller.getFilenameScrapingRulesFile();
+
+    assertNotNull(result);
+    assertSame(filenameScrapingRulesFile, result);
+
+    Mockito.verify(filenameScrapingRuleService, Mockito.times(1)).getFilenameScrapingRulesFile();
   }
 }

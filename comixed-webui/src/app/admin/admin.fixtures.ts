@@ -23,6 +23,7 @@ import { ServerStatus } from '@app/admin/models/server-status.enum';
 import { MetricList } from '@app/admin/models/metric-list';
 import { MetricDetail } from '@app/admin/models/metric-detail';
 import { BatchProcessDetail } from '@app/admin/models/batch-process-detail';
+import { DownloadDocument } from '@app/core/models/download-document';
 
 export const CONFIGURATION_OPTION_1: ConfigurationOption = {
   name: 'OPTION1',
@@ -47,6 +48,12 @@ export const CONFIGURATION_OPTION_4: ConfigurationOption = {
 export const CONFIGURATION_OPTION_5: ConfigurationOption = {
   name: 'OPTION5',
   value: 'VALUE5'
+};
+
+export const FILENAME_SCRAPING_RULES_FILE: DownloadDocument = {
+  filename: 'Scraping Rules.csv',
+  mediaType: 'text/csv',
+  content: 'blahblahblahblahblahblahblahblahblah'
 };
 
 export const FILENAME_SCRAPING_RULE_1: FilenameScrapingRule = {

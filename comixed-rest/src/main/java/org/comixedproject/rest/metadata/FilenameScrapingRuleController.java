@@ -23,6 +23,8 @@ import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.metadata.FilenameScrapingRule;
+import org.comixedproject.model.net.DownloadDocument;
+import org.comixedproject.service.metadata.FilenameScrapingRuleException;
 import org.comixedproject.service.metadata.FilenameScrapingRuleService;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,5 +77,18 @@ public class FilenameScrapingRuleController {
       @RequestBody() final List<FilenameScrapingRule> rules) {
     log.info("Saving filename scraping rules");
     return this.filenameScrapingRuleService.saveRules(rules);
+  }
+
+  /**
+   * Downloads the filename scraping rules as a CSV file.
+   *
+   * @return the file content
+   * @throws FilenameScrapingRuleException if an error occurs
+   */
+  @GetMapping(value = "/api/admin/scraping/rules/file", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  public DownloadDocument getFilenameScrapingRulesFile() throws FilenameScrapingRuleException {
+    log.info("Downloading filename scraping rules file");
+    return this.filenameScrapingRuleService.getFilenameScrapingRulesFile();
   }
 }

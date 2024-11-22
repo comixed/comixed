@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,18 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-import {
-  FILENAME_SCRAPING_RULES_FEATURE_KEY,
-  FilenameScrapingRulesState
-} from '../reducers/filename-scraping-rule-list.reducer';
+package org.comixedproject.service.metadata;
 
-export const selectFilenameScrapingRulesState =
-  createFeatureSelector<FilenameScrapingRulesState>(
-    FILENAME_SCRAPING_RULES_FEATURE_KEY
-  );
-
-export const selectFilenameScrapingRules = createSelector(
-  selectFilenameScrapingRulesState,
-  state => state.rules
-);
+/**
+ * <code>FilenameScrapingRuleException</code> is thrown when an error occurs while working with a
+ * filename scraping rule.
+ *
+ * @author Darryl L. Pierce
+ */
+public class FilenameScrapingRuleException extends Exception {
+  public FilenameScrapingRuleException(final String message, final Exception cause) {
+    super(message, cause);
+  }
+}

@@ -18,11 +18,12 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { FilenameScrapingRuleService } from './filename-scraping-rule.service';
+import { FilenameScrapingRulesService } from './filename-scraping-rules.service';
 import {
   FILENAME_SCRAPING_RULE_1,
   FILENAME_SCRAPING_RULE_2,
-  FILENAME_SCRAPING_RULE_3
+  FILENAME_SCRAPING_RULE_3,
+  FILENAME_SCRAPING_RULES_FILE
 } from '@app/admin/admin.fixtures';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
@@ -31,25 +32,27 @@ import {
 } from '@angular/common/http/testing';
 import { interpolate } from '@app/core';
 import {
+  DOWNLOAD_FILENAME_SCRAPING_RULES_FILE_URL,
   LOAD_FILENAME_SCRAPING_RULES_URL,
   SAVE_FILENAME_SCRAPING_RULES_URL
 } from '@app/admin/admin.constants';
 
-describe('FilenameScrapingRuleService', () => {
+describe('FilenameScrapingRulesService', () => {
   const RULES = [
     FILENAME_SCRAPING_RULE_1,
     FILENAME_SCRAPING_RULE_2,
     FILENAME_SCRAPING_RULE_3
   ];
+  const FILENAME_RULES_FILE = FILENAME_SCRAPING_RULES_FILE;
 
-  let service: FilenameScrapingRuleService;
+  let service: FilenameScrapingRulesService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, LoggerModule.forRoot()]
     });
-    service = TestBed.inject(FilenameScrapingRuleService);
+    service = TestBed.inject(FilenameScrapingRulesService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
@@ -78,5 +81,17 @@ describe('FilenameScrapingRuleService', () => {
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual(RULES);
     req.flush(RULES);
+  });
+
+  it('can download the filename scraping rules', () => {
+    service
+      .downloadFilenameScrapingRules()
+      .subscribe(response => expect(response).toBe(FILENAME_RULES_FILE));
+
+    const req = httpMock.expectOne(
+      interpolate(DOWNLOAD_FILENAME_SCRAPING_RULES_FILE_URL)
+    );
+    expect(req.request.method).toEqual('GET');
+    req.flush(FILENAME_RULES_FILE);
   });
 });
