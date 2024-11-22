@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import lombok.Synchronized;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.comicpages.ComicPageState;
@@ -97,12 +98,12 @@ public class ComicPageStateHandler extends LifecycleObjectSupport {
    * @param event the event
    * @param headers the message headers
    */
+  @Synchronized
   public void fireEvent(
       final ComicPage page, final ComicPageEvent event, final Map<String, String> headers) {
     log.debug("Firing page event: {} => {}", page.getId(), event);
     final Message<ComicPageEvent> message =
         MessageBuilder.withPayload(event).copyHeaders(headers).setHeader(HEADER_PAGE, page).build();
-    this.stateMachine.stop();
     this.stateMachine
         .getStateMachineAccessor()
         .doWithAllRegions(

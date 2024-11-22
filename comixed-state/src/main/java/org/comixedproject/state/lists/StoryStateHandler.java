@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import lombok.Synchronized;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.lists.Story;
 import org.comixedproject.model.lists.StoryState;
@@ -98,6 +99,7 @@ public class StoryStateHandler extends LifecycleObjectSupport {
    * @param event the event
    * @param headers the event headers
    */
+  @Synchronized
   public void fireEvent(final Story story, final StoryEvent event, Map<String, ?> headers) {
     log.debug("Firing story event: {} => {}", story.getId(), event);
     final Message<StoryEvent> message =
@@ -105,7 +107,6 @@ public class StoryStateHandler extends LifecycleObjectSupport {
             .copyHeaders(headers)
             .setHeader(HEADER_STORY, story)
             .build();
-    this.stateMachine.stop();
     this.stateMachine
         .getStateMachineAccessor()
         .doWithAllRegions(

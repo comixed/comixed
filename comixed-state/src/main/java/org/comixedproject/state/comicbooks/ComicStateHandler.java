@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import lombok.Synchronized;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
@@ -46,9 +47,6 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class ComicStateHandler extends LifecycleObjectSupport {
   public static final String HEADER_COMIC = "header.comic";
-  public static final String HEADER_DELETE_REMOVED_COMIC_FILE = "header.remove-comic-file";
-  public static final String HEADER_TARGET_DIRECTORY = "header.target-directory";
-  public static final String HEADER_RENAMING_RULE = "header.renaming-rule";
   public static final String HEADER_USER = "header.user";
 
   @Autowired private StateMachine<ComicState, ComicEvent> stateMachine;
@@ -102,6 +100,7 @@ public class ComicStateHandler extends LifecycleObjectSupport {
    * @param event the event
    * @param headers the message headers
    */
+  @Synchronized
   public void fireEvent(
       final ComicBook comicBook, final ComicEvent event, final Map<String, Object> headers) {
     log.debug("Firing comicBook event: {} => {}", comicBook.getId(), event);
@@ -110,7 +109,6 @@ public class ComicStateHandler extends LifecycleObjectSupport {
             .copyHeaders(headers)
             .setHeader(HEADER_COMIC, comicBook)
             .build();
-    this.stateMachine.stop();
     this.stateMachine
         .getStateMachineAccessor()
         .doWithAllRegions(
