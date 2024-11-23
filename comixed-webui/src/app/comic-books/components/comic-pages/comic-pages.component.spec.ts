@@ -30,7 +30,6 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
 import { MatMenuModule } from '@angular/material/menu';
-import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
 import { updatePageDeletion } from '@app/comic-books/actions/comic-book.actions';
@@ -43,6 +42,7 @@ import {
   ConfirmationService
 } from '@tragically-slick/confirmation';
 import { MatSortModule } from '@angular/material/sort';
+import { setBlockedStateForHash } from '@app/comic-pages/actions/blocked-hashes.actions';
 
 describe('ComicPagesComponent', () => {
   const COMIC = COMIC_BOOK_1;
@@ -135,7 +135,7 @@ describe('ComicPagesComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        setBlockedState({ hashes: [PAGE.hash], blocked: BLOCKED })
+        setBlockedStateForHash({ hashes: [PAGE.hash], blocked: BLOCKED })
       );
     });
   });

@@ -17,9 +17,9 @@
       "label": "Hash Label"
     },
     "load-by-hash-effect-error": "Failed to load blocked page for hash: {hash}",
-    "page-title": "Blocked Page Details: {hash}",
+    "page-title": "Blocked Hash Details: {hash}",
     "placeholder": {
-      "blocked-hash-label": "A description of the hash to be blocked"
+      "blocked-hash-label": "A description of the hash..."
     },
     "remove-page-hash": {
       "confirmation-message": "Are you sure you want to unblock ll pages with the hash \"{hash}\"?",
@@ -67,9 +67,9 @@
     },
     "upload-file": {
       "confirmation-message": "Are you sure you want to upload \"{filename}\"?",
-      "confirmation-title": "Upload Blocked Pages File",
-      "effect-failure": "Failed to upload blocked page file.",
-      "effect-success": "Blocked pages now contains {count, plural, =1{one entry} other{# entries}}."
+      "confirmation-title": "Upload Blocked Hashes File",
+      "effect-failure": "Failed to upload blocked hashes file.",
+      "effect-success": "Blocked hashes now contains {count, plural, =1{one entry} other{# entries}}."
     }
   },
   "deleted-page-list": {

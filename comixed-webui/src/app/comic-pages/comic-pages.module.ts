@@ -19,47 +19,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
-import {
-  BLOCKED_HASH_LIST_FEATURE_KEY,
-  reducer as blockedPageListReducer
-} from './reducers/blocked-hash-list.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { TranslateModule } from '@ngx-translate/core';
 import { BlockedHashListPageComponent } from './pages/blocked-hash-list-page/blocked-hash-list-page.component';
 import { ComicPagesRouting } from './comic-pages.routing';
-import { BlockedHashListEffects } from '@app/comic-pages/effects/blocked-hash-list.effects';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { BlockedHashDetailPageComponent } from './pages/blocked-hash-detail-page/blocked-hash-detail-page.component';
 import { MatCardModule } from '@angular/material/card';
-import {
-  BLOCKED_PAGE_DETAIL_FEATURE_KEY,
-  reducer as blockedPageDetailReducer
-} from '@app/comic-pages/reducers/blocked-page-detail.reducer';
-import { BlockedPageDetailEffects } from '@app/comic-pages/effects/blocked-page-detail.effects';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import {
-  BLOCK_PAGE_FEATURE_KEY,
-  reducer as blockPageReducer
-} from '@app/comic-pages/reducers/block-page.reducer';
-import { BlockPageEffects } from '@app/comic-pages/effects/block-page.effects';
-import {
-  DOWNLOAD_BLOCKED_PAGES_FEATURE_KEY,
-  reducer as downloadBlockedPagesReducer
-} from '@app/comic-pages/reducers/download-blocked-pages.reducer';
-import { DownloadBlockedPagesEffects } from '@app/comic-pages/effects/download-blocked-pages.effects';
+import { blockedHashesFeature } from '@app/comic-pages/reducers/blocked-hashes.reducer';
+import { BlockedHashesEffects } from '@app/comic-pages/effects/blocked-hashes.effects';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import {
-  reducer as uploadBlockedPagesReducer,
-  UPLOAD_BLOCKED_PAGES_FEATURE_KEY
-} from '@app/comic-pages/reducers/upload-blocked-pages.reducer';
-import { UploadBlockedPagesEffects } from '@app/comic-pages/effects/upload-blocked-pages.effects';
 import {
   DELETE_BLOCKED_PAGES_FEATURE_KEY,
   reducer as deleteBlockedPagesReducer
@@ -89,34 +66,14 @@ import { BlockedHashThumbnailUrlPipe } from './pipes/blocked-hash-thumbnail-url.
     CommonModule,
     ComicPagesRouting,
     TranslateModule.forRoot(),
-    StoreModule.forFeature(
-      BLOCKED_HASH_LIST_FEATURE_KEY,
-      blockedPageListReducer
-    ),
-    StoreModule.forFeature(
-      BLOCKED_PAGE_DETAIL_FEATURE_KEY,
-      blockedPageDetailReducer
-    ),
-    StoreModule.forFeature(BLOCK_PAGE_FEATURE_KEY, blockPageReducer),
-    StoreModule.forFeature(
-      DOWNLOAD_BLOCKED_PAGES_FEATURE_KEY,
-      downloadBlockedPagesReducer
-    ),
-    StoreModule.forFeature(
-      UPLOAD_BLOCKED_PAGES_FEATURE_KEY,
-      uploadBlockedPagesReducer
-    ),
+    StoreModule.forFeature(blockedHashesFeature),
     StoreModule.forFeature(
       DELETE_BLOCKED_PAGES_FEATURE_KEY,
       deleteBlockedPagesReducer
     ),
     StoreModule.forFeature(DELETED_PAGE_FEATURE_KEY, deletedPageReducer),
     EffectsModule.forFeature([
-      BlockedHashListEffects,
-      BlockedPageDetailEffects,
-      BlockPageEffects,
-      DownloadBlockedPagesEffects,
-      UploadBlockedPagesEffects,
+      BlockedHashesEffects,
       DeleteBlockedPagesEffects,
       DeletedPagesEffects
     ]),

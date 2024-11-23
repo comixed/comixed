@@ -44,7 +44,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { ComicDetailListDialogComponent } from '@app/library/components/comic-detail-list-dialog/comic-detail-list-dialog.component';
 import { MatSort } from '@angular/material/sort';
-import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
 import {
   DUPLICATE_PAGE_LIST_TOPIC,
@@ -52,7 +51,6 @@ import {
 } from '@app/library/library.constants';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
-import { selectBlockedPageList } from '@app/comic-pages/selectors/blocked-hash-list.selectors';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
@@ -60,6 +58,8 @@ import { getUserPreference } from '@app/user';
 import * as _ from 'lodash';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { PAGE_SIZE_OPTIONS } from '@app/core';
+import { selectBlockedHashesList } from '@app/comic-pages/selectors/blocked-hashes.selectors';
+import { setBlockedStateForHash } from '@app/comic-pages/actions/blocked-hashes.actions';
 
 @Component({
   selector: 'cx-duplicate-page-list-page',
@@ -123,7 +123,7 @@ export class DuplicatePageListPageComponent
       });
     this.logger.trace('Subscribing to blocked page list');
     this.blockedPageListSubscription = this.store
-      .select(selectBlockedPageList)
+      .select(selectBlockedHashesList)
       .subscribe(blockedPages => (this.blockedPages = blockedPages));
     this.logger.trace('Subscribing to language changes');
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
@@ -225,7 +225,9 @@ export class DuplicatePageListPageComponent
       ),
       confirm: () => {
         this.logger.trace('Blocking all pages with hash:', hash);
-        this.store.dispatch(setBlockedState({ hashes: [hash], blocked: true }));
+        this.store.dispatch(
+          setBlockedStateForHash({ hashes: [hash], blocked: true })
+        );
       }
     });
   }
@@ -244,7 +246,7 @@ export class DuplicatePageListPageComponent
       confirm: () => {
         this.logger.trace('Unblocking all pages with hash:', hash);
         this.store.dispatch(
-          setBlockedState({ hashes: [hash], blocked: false })
+          setBlockedStateForHash({ hashes: [hash], blocked: false })
         );
       }
     });
@@ -356,7 +358,7 @@ export class DuplicatePageListPageComponent
 
   private doSetBlockedState(hashes: string[], blocked: boolean): void {
     this.store.dispatch(
-      setBlockedState({
+      setBlockedStateForHash({
         hashes,
         blocked
       })

@@ -38,16 +38,16 @@ import {
   UNMARK_PAGES_WITH_HASH_URL,
   UPLOAD_BLOCKED_PAGE_FILE_URL
 } from '@app/comic-pages/comic-pages.constants';
-import {
-  blockedHashRemoved,
-  blockedHashUpdated,
-  loadBlockedHashList
-} from '@app/comic-pages/actions/blocked-hash-list.actions';
 import { interpolate } from '@app/core';
 import { DeleteBlockedPagesRequest } from '@app/comic-pages/models/net/delete-blocked-pages-request';
 import { SetBlockedStateRequest } from '@app/comic-pages/models/net/set-blocked-state-request';
 import { MarkPagesWithHashRequest } from '@app/comic-pages/models/net/mark-pages-with-hash-request';
 import { UnmarkPagesWithHashRequest } from '@app/comic-pages/models/net/unmark-pages-with-hash-request';
+import {
+  blockedHashRemoved,
+  blockedHashUpdated,
+  loadBlockedHashList
+} from '@app/comic-pages/actions/blocked-hashes.actions';
 
 @Injectable({
   providedIn: 'root'

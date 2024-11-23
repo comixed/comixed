@@ -20,10 +20,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { BlockedHashDetailPageComponent } from './blocked-hash-detail-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
-  BLOCKED_PAGE_DETAIL_FEATURE_KEY,
-  initialState as initialBlockedPageDetailState
-} from '@app/comic-pages/reducers/blocked-page-detail.reducer';
-import {
   initialState as initialUserState,
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
@@ -39,7 +35,6 @@ import {
   BLOCKED_HASH_5
 } from '@app/comic-pages/comic-pages.fixtures';
 import { Router } from '@angular/router';
-import { saveBlockedPage } from '@app/comic-pages/actions/blocked-page-detail.actions';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -50,13 +45,18 @@ import {
 } from '@tragically-slick/confirmation';
 import { MatIconModule } from '@angular/material/icon';
 import { BlockedHashThumbnailUrlPipe } from '@app/comic-pages/pipes/blocked-hash-thumbnail-url.pipe';
+import { saveBlockedHash } from '@app/comic-pages/actions/blocked-hashes.actions';
+import {
+  BLOCKED_HASHES_FEATURE_KEY,
+  initialState as initialBlockedHashesState
+} from '@app/comic-pages/reducers/blocked-hashes.reducer';
 
 describe('BlockedHashDetailPageComponent', () => {
   const ENTRIES = [BLOCKED_HASH_1, BLOCKED_HASH_3, BLOCKED_HASH_5];
   const ENTRY = BLOCKED_HASH_4;
   const initialState = {
-    [BLOCKED_PAGE_DETAIL_FEATURE_KEY]: {
-      ...initialBlockedPageDetailState,
+    [BLOCKED_HASHES_FEATURE_KEY]: {
+      ...initialBlockedHashesState,
       entry: ENTRY
     },
     [USER_FEATURE_KEY]: initialUserState
@@ -110,8 +110,8 @@ describe('BlockedHashDetailPageComponent', () => {
     beforeEach(() => {
       store.setState({
         ...initialState,
-        [BLOCKED_PAGE_DETAIL_FEATURE_KEY]: {
-          ...initialBlockedPageDetailState,
+        [BLOCKED_HASHES_FEATURE_KEY]: {
+          ...initialBlockedHashesState,
           loading: false,
           notFound: true
         }
@@ -140,8 +140,8 @@ describe('BlockedHashDetailPageComponent', () => {
       beforeEach(() => {
         store.setState({
           ...initialState,
-          [BLOCKED_PAGE_DETAIL_FEATURE_KEY]: {
-            ...initialBlockedPageDetailState,
+          [BLOCKED_HASHES_FEATURE_KEY]: {
+            ...initialBlockedHashesState,
             loading: false,
             notFound: false,
             entry: { ...ENTRY, label: null }
@@ -170,7 +170,7 @@ describe('BlockedHashDetailPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        saveBlockedPage({ entry: component.encodeForm() })
+        saveBlockedHash({ entry: component.encodeForm() })
       );
     });
   });

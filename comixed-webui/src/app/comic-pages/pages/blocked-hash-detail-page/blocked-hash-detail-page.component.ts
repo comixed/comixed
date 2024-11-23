@@ -22,14 +22,6 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  loadBlockedPageByHash,
-  saveBlockedPage
-} from '@app/comic-pages/actions/blocked-page-detail.actions';
-import {
-  selectBlockedPageDetail,
-  selectBlockedPageDetailState
-} from '@app/comic-pages/selectors/blocked-page-detail.selectors';
-import {
   UntypedFormBuilder,
   UntypedFormGroup,
   Validators
@@ -41,6 +33,14 @@ import { isAdmin } from '@app/user/user.functions';
 import { filter } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import {
+  loadBlockedHashDetail,
+  saveBlockedHash
+} from '@app/comic-pages/actions/blocked-hashes.actions';
+import {
+  selectBlockedHashesState,
+  selectBlockedHashDetail
+} from '@app/comic-pages/selectors/blocked-hashes.selectors';
 
 @Component({
   selector: 'cx-blocked-hash-detail-page',
@@ -69,23 +69,23 @@ export class BlockedHashDetailPageComponent implements OnDestroy {
     this.paramsSubscription = this.activatedRoute.params.subscribe(params => {
       this.hash = params.hash;
       this.logger.debug('Received blocked page hash:', this.hash);
-      this.store.dispatch(loadBlockedPageByHash({ hash: this.hash }));
+      this.store.dispatch(loadBlockedHashDetail({ hash: this.hash }));
     });
     this.blockedPageForm = this.formBuilder.group({
       label: ['', Validators.required],
       hash: ['']
     });
     this.blockedPageDetailStateSubscription = this.store
-      .select(selectBlockedPageDetailState)
+      .select(selectBlockedHashesState)
       .subscribe(state => {
-        this.store.dispatch(setBusyState({ enabled: state.loading }));
-        if (!state.loading && state.notFound) {
+        this.store.dispatch(setBusyState({ enabled: state.busy }));
+        if (!state.busy && state.notFound) {
           this.logger.debug('Blocked page not found');
           this.router.navigateByUrl('/library/pages/blocked');
         }
       });
     this.blockedPageSubscription = this.store
-      .select(selectBlockedPageDetail)
+      .select(selectBlockedHashDetail)
       .pipe(filter(entry => !!entry))
       .subscribe(entry => {
         this.blockedPage = entry;
@@ -124,7 +124,7 @@ export class BlockedHashDetailPageComponent implements OnDestroy {
       ),
       confirm: () => {
         this.logger.debug('Saving changes');
-        this.store.dispatch(saveBlockedPage({ entry: this.encodeForm() }));
+        this.store.dispatch(saveBlockedHash({ entry: this.encodeForm() }));
       }
     });
   }

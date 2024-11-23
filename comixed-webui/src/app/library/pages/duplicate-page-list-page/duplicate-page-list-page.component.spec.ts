@@ -46,11 +46,6 @@ import { TitleService } from '@app/core/services/title.service';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { DuplicatePage } from '@app/library/models/duplicate-page';
 import { ComicDetailListDialogComponent } from '@app/library/components/comic-detail-list-dialog/comic-detail-list-dialog.component';
-import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
-import {
-  BLOCKED_HASH_LIST_FEATURE_KEY,
-  initialState as initialBlockedPageListState
-} from '@app/comic-pages/reducers/blocked-hash-list.reducer';
 import { BLOCKED_HASH_1 } from '@app/comic-pages/comic-pages.fixtures';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -80,6 +75,11 @@ import {
 } from '@app/comic-books/comic-books.fixtures';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { MatSortModule } from '@angular/material/sort';
+import {
+  BLOCKED_HASHES_FEATURE_KEY,
+  initialState as initialBlockedHashesState
+} from '@app/comic-pages/reducers/blocked-hashes.reducer';
+import { setBlockedStateForHash } from '@app/comic-pages/actions/blocked-hashes.actions';
 
 describe('DuplicatePageListPageComponent', () => {
   const COMICS = [
@@ -98,7 +98,7 @@ describe('DuplicatePageListPageComponent', () => {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER_ADMIN },
     [DUPLICATE_PAGE_LIST_FEATURE_KEY]: initialDuplicatePageListState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
-    [BLOCKED_HASH_LIST_FEATURE_KEY]: initialBlockedPageListState
+    [BLOCKED_HASHES_FEATURE_KEY]: initialBlockedHashesState
   };
 
   let component: DuplicatePageListPageComponent;
@@ -275,8 +275,8 @@ describe('DuplicatePageListPageComponent', () => {
     beforeEach(() => {
       store.setState({
         ...initialState,
-        [BLOCKED_HASH_LIST_FEATURE_KEY]: {
-          ...initialBlockedPageListState,
+        [BLOCKED_HASHES_FEATURE_KEY]: {
+          ...initialBlockedHashesState,
           entries: [{ ...BLOCKED_HASH_1, hash: DUPLICATE_PAGES[0].hash }]
         }
       });
@@ -343,7 +343,7 @@ describe('DuplicatePageListPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        setBlockedState({ hashes: [ENTRY.item.hash], blocked: true })
+        setBlockedStateForHash({ hashes: [ENTRY.item.hash], blocked: true })
       );
     });
   });
@@ -367,7 +367,7 @@ describe('DuplicatePageListPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        setBlockedState({ hashes: [ENTRY.item.hash], blocked: false })
+        setBlockedStateForHash({ hashes: [ENTRY.item.hash], blocked: false })
       );
     });
   });
@@ -496,7 +496,7 @@ describe('DuplicatePageListPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setBlockedState({
+          setBlockedStateForHash({
             hashes: [DUPLICATE_PAGES[0].hash],
             blocked: true
           })
@@ -515,7 +515,7 @@ describe('DuplicatePageListPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setBlockedState({
+          setBlockedStateForHash({
             hashes: [DUPLICATE_PAGES[0].hash],
             blocked: false
           })

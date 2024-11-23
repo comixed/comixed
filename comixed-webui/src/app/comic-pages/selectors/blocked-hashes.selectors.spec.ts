@@ -17,42 +17,57 @@
  */
 
 import {
-  BLOCKED_PAGE_DETAIL_FEATURE_KEY,
-  BlockedPageDetailState
-} from '../reducers/blocked-page-detail.reducer';
+  BLOCKED_HASHES_FEATURE_KEY,
+  BlockedHashesState
+} from '../reducers/blocked-hashes.reducer';
 import {
-  selectBlockedPageDetail,
-  selectBlockedPageDetailState
-} from './blocked-page-detail.selectors';
-import { BLOCKED_HASH_4 } from '@app/comic-pages/comic-pages.fixtures';
+  selectBlockedHashDetail,
+  selectBlockedHashesList,
+  selectBlockedHashesState
+} from './blocked-hashes.selectors';
+import {
+  BLOCKED_HASH_1,
+  BLOCKED_HASH_3,
+  BLOCKED_HASH_4,
+  BLOCKED_HASH_5
+} from '@app/comic-pages/comic-pages.fixtures';
 
-describe('BlockedHash Selectors', () => {
+describe('BlockedHashes Selectors', () => {
+  const ENTRIES = [BLOCKED_HASH_1, BLOCKED_HASH_3, BLOCKED_HASH_5];
   const ENTRY = BLOCKED_HASH_4;
 
-  let state: BlockedPageDetailState;
+  let state: BlockedHashesState;
 
   beforeEach(() => {
     state = {
-      loading: Math.random() > 0.5,
+      busy: Math.random() > 0.5,
+      entries: ENTRIES,
       notFound: Math.random() > 0.5,
       entry: ENTRY,
-      saving: Math.random() > 0.5,
       saved: Math.random() > 0.5
     };
   });
 
   it('should select the feature state', () => {
     expect(
-      selectBlockedPageDetailState({
-        [BLOCKED_PAGE_DETAIL_FEATURE_KEY]: state
+      selectBlockedHashesState({
+        [BLOCKED_HASHES_FEATURE_KEY]: state
       })
     ).toEqual(state);
   });
 
-  it('should select the blocked page detail', () => {
+  it('should select the list of blocked hashes', () => {
     expect(
-      selectBlockedPageDetail({
-        [BLOCKED_PAGE_DETAIL_FEATURE_KEY]: state
+      selectBlockedHashesList({
+        [BLOCKED_HASHES_FEATURE_KEY]: state
+      })
+    ).toEqual(state.entries);
+  });
+
+  it('should select the blocked hash detail', () => {
+    expect(
+      selectBlockedHashDetail({
+        [BLOCKED_HASHES_FEATURE_KEY]: state
       })
     ).toEqual(state.entry);
   });
