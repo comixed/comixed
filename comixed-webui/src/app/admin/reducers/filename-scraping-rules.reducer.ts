@@ -26,7 +26,10 @@ import {
   loadFilenameScrapingRulesSuccess,
   saveFilenameScrapingRules,
   saveFilenameScrapingRulesFailure,
-  saveFilenameScrapingRulesSuccess
+  saveFilenameScrapingRulesSuccess,
+  uploadFilenameScrapingRules,
+  uploadFilenameScrapingRulesFailure,
+  uploadFilenameScrapingRulesSuccess
 } from '../actions/filename-scraping-rules.actions';
 import { FilenameScrapingRule } from '@app/admin/models/filename-scraping-rule';
 
@@ -65,7 +68,17 @@ export const reducer = createReducer(
     ...state,
     busy: false
   })),
-  on(downloadFilenameScrapingRulesFailure, state => ({ ...state, busy: false }))
+  on(downloadFilenameScrapingRulesFailure, state => ({
+    ...state,
+    busy: false
+  })),
+  on(uploadFilenameScrapingRules, state => ({ ...state, busy: true })),
+  on(uploadFilenameScrapingRulesSuccess, (state, action) => ({
+    ...state,
+    busy: false,
+    rules: action.rules
+  })),
+  on(uploadFilenameScrapingRulesFailure, state => ({ ...state, busy: false }))
 );
 
 export const filenameScrapingRulesFeature = createFeature({

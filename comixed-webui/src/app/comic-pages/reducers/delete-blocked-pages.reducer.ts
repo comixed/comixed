@@ -21,7 +21,7 @@ import {
   blockedPagesDeleted,
   deleteBlockedPages,
   deleteBlockedPagesFailed
-} from '../actions/delete-blocked-pages.actions';
+} from '@app/comic-pages/actions/delete-blocked-pages.actions';
 
 export const DELETE_BLOCKED_PAGES_FEATURE_KEY = 'delete_blocked_pages_state';
 

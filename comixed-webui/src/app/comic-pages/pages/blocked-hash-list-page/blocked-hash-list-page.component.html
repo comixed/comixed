@@ -1,11 +1,60 @@
-<cx-blocked-hash-toolbar
-  [hasSelections]="hasSelections"
-  (markSelected)="onMarkSelectedForDeletion()"
-  (clearSelected)="onClearSelectedForDeletion()"
-  (deleteSelected)="onDeleteEntries()"
-  (uploadFile)="onFileSelected($event)"
-  (downloadFile)="onDownloadFile()"
-></cx-blocked-hash-toolbar>
+<div class="cx-fab-container-bottom-left">
+  <input
+    type="file"
+    class="cx-file-input"
+    (change)="onFileSelected($event.target.files[0])"
+    #fileUpload
+  />
+
+  <button
+    id="set-deleted-button"
+    mat-fab
+    color="primary"
+    [matTooltip]="'blocked-hash-list.tooltip.set-deleted' | translate"
+    [disabled]="!hasSelections"
+    (click)="onMarkSelectedForDeletion()"
+  >
+    <mat-icon>flag</mat-icon>
+  </button>
+  <button
+    id="clear-deleted-button"
+    mat-fab
+    color="primary"
+    [matTooltip]="'blocked-hash-list.tooltip.clear-deleted' | translate"
+    [disabled]="!hasSelections"
+    (click)="onClearSelectedForDeletion()"
+  >
+    <mat-icon>outlined_flag</mat-icon>
+  </button>
+  <button
+    id="upload-button"
+    mat-fab
+    color="accent"
+    [matTooltip]="'blocked-hash-list.tooltip.upload-file' | translate"
+    (click)="fileUpload.click()"
+  >
+    <mat-icon>upload</mat-icon>
+  </button>
+  <button
+    id="download-button"
+    mat-fab
+    color="accent"
+    [matTooltip]="'blocked-hash-list.tooltip.download-file' | translate"
+    (click)="onDownloadFile()"
+  >
+    <mat-icon>download</mat-icon>
+  </button>
+  <button
+    id="delete-entries"
+    mat-fab
+    color="warn"
+    [matTooltip]="'blocked-hash-list.tooltip.delete-entries' | translate"
+    [disabled]="!hasSelections"
+    (click)="onDeleteEntries()"
+  >
+    <mat-icon>delete</mat-icon>
+  </button>
+</div>
 
 <h2>
   {{

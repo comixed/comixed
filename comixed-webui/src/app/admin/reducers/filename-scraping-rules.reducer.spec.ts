@@ -36,7 +36,10 @@ import {
   loadFilenameScrapingRulesSuccess,
   saveFilenameScrapingRules,
   saveFilenameScrapingRulesFailure,
-  saveFilenameScrapingRulesSuccess
+  saveFilenameScrapingRulesSuccess,
+  uploadFilenameScrapingRules,
+  uploadFilenameScrapingRulesFailure,
+  uploadFilenameScrapingRulesSuccess
 } from '@app/admin/actions/filename-scraping-rules.actions';
 
 describe('FilenameScrapingRules Reducer', () => {
@@ -45,6 +48,7 @@ describe('FilenameScrapingRules Reducer', () => {
     FILENAME_SCRAPING_RULE_2,
     FILENAME_SCRAPING_RULE_3
   ];
+  const FILE = {} as File;
 
   let state: FilenameScrapingRulesState;
 
@@ -181,6 +185,51 @@ describe('FilenameScrapingRules Reducer', () => {
         state = reducer(
           { ...state, busy: true },
           downloadFilenameScrapingRulesFailure()
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+    });
+  });
+
+  describe('downloading the rules', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: false },
+        uploadFilenameScrapingRules({ file: FILE })
+      );
+    });
+
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: true },
+          uploadFilenameScrapingRulesSuccess({
+            rules: RULES
+          })
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+
+      it('sets the rules list', () => {
+        expect(state.rules).toEqual(RULES);
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: true },
+          uploadFilenameScrapingRulesFailure()
         );
       });
 

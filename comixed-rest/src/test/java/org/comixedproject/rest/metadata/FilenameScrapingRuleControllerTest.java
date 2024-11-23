@@ -67,11 +67,11 @@ public class FilenameScrapingRuleControllerTest {
   }
 
   @Test
-  public void testGetFilenameRulesFile() throws FilenameScrapingRuleException {
+  public void testDownloadFiles() throws FilenameScrapingRuleException {
     Mockito.when(filenameScrapingRuleService.getFilenameScrapingRulesFile())
         .thenReturn(filenameScrapingRulesFile);
 
-    final DownloadDocument result = controller.getFilenameScrapingRulesFile();
+    final DownloadDocument result = controller.downloadFile();
 
     assertNotNull(result);
     assertSame(filenameScrapingRulesFile, result);

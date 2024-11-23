@@ -19,9 +19,9 @@
 package org.comixedproject.service.metadata;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.io.InputStream;
+import java.util.*;
+import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.comixedproject.adaptors.comicbooks.FilenameScraperAdaptor;
@@ -33,6 +33,7 @@ import org.comixedproject.repositories.metadata.FilenameScrapingRuleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 /**
  * <code>FilenameScrapingRuleService</code> provides business rules for working with instances of
@@ -43,7 +44,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Log4j2
 public class FilenameScrapingRuleService {
-  static final String RULE_NUMBER_HEADER = "#";
   static final String RULE_NAME_HEADER = "Name";
   static final String RULE_CONTENT_HEADER = "Rule";
   static final String SERIES_POSITION_HEADER = "Series Position";
@@ -74,27 +74,8 @@ public class FilenameScrapingRuleService {
    */
   @Transactional
   public List<FilenameScrapingRule> saveRules(final List<FilenameScrapingRule> incoming) {
-    log.trace("Deleting existing filename scraping rules");
-    this.filenameScrapingRuleRepository.deleteAll();
-    this.filenameScrapingRuleRepository.flush();
-    log.trace("Copying filename scraping rule values");
-    List<FilenameScrapingRule> rules = new ArrayList<>();
-    incoming.forEach(
-        filenameScrapingRule -> {
-          final FilenameScrapingRule rule =
-              new FilenameScrapingRule(
-                  filenameScrapingRule.getName(),
-                  filenameScrapingRule.getRule(),
-                  filenameScrapingRule.getPriority());
-          rule.setSeriesPosition(filenameScrapingRule.getSeriesPosition());
-          rule.setVolumePosition(filenameScrapingRule.getVolumePosition());
-          rule.setIssueNumberPosition(filenameScrapingRule.getIssueNumberPosition());
-          rule.setCoverDatePosition(filenameScrapingRule.getCoverDatePosition());
-          rule.setDateFormat(filenameScrapingRule.getDateFormat());
-          rules.add(rule);
-        });
-    log.trace("Saving new filename scrapign rules");
-    return this.filenameScrapingRuleRepository.saveAll(rules);
+    log.debug("Saving filename scraping rules");
+    return this.doSaveRules(incoming);
   }
 
   /**
@@ -134,7 +115,6 @@ public class FilenameScrapingRuleService {
               (index, model) -> {
                 if (index == 0) {
                   return new String[] {
-                    RULE_NUMBER_HEADER,
                     RULE_NAME_HEADER,
                     RULE_CONTENT_HEADER,
                     SERIES_POSITION_HEADER,
@@ -145,7 +125,6 @@ public class FilenameScrapingRuleService {
                   };
                 } else {
                   return new String[] {
-                    String.valueOf(model.getPriority()),
                     model.getName(),
                     model.getRule(),
                     model.getSeriesPosition() != null
@@ -173,5 +152,88 @@ public class FilenameScrapingRuleService {
     } catch (IOException error) {
       throw new FilenameScrapingRuleException("Failed to encoding filename rules file", error);
     }
+  }
+
+  @Transactional
+  public List<FilenameScrapingRule> uploadFile(final InputStream inputStream) throws IOException {
+    final List<FilenameScrapingRule> rules =
+        new ArrayList<>(this.filenameScrapingRuleRepository.findAll());
+
+    this.csvAdaptor.decodeRecords(
+        inputStream,
+        new String[] {
+          RULE_NAME_HEADER,
+          RULE_CONTENT_HEADER,
+          SERIES_POSITION_HEADER,
+          VOLUME_POSITION_HEADER,
+          ISSUE_NUMBER_POSITION_HEADER,
+          COVER_DATE_POSITION_HEADER,
+          COVER_DATE_FORMAT_HEADER
+        },
+        (index, row) -> {
+          if (index > 0) {
+            final String name = row.get(0);
+            final String content = row.get(1);
+
+            log.debug("Checking if filename scraping rule already exists: name={}", name);
+            Optional<FilenameScrapingRule> optionalRule =
+                rules.stream().filter(entry -> entry.getRule().equals(content)).findFirst();
+            var rule = optionalRule.isPresent() ? optionalRule.get() : null;
+            if (rule == null) {
+              log.debug("Creating new filename scraping rule record");
+              rule = new FilenameScrapingRule(name, content, rules.size() + 1);
+              rules.add(rule);
+            }
+            if (StringUtils.hasLength(row.get(2)))
+              rule.setSeriesPosition(Integer.valueOf(row.get(2)));
+            if (StringUtils.hasLength(row.get(3)))
+              rule.setVolumePosition(Integer.valueOf(row.get(3)));
+            if (StringUtils.hasLength(row.get(4)))
+              rule.setIssueNumberPosition(Integer.valueOf(row.get(4)));
+            if (StringUtils.hasLength(row.get(5)))
+              rule.setCoverDatePosition(Integer.valueOf(row.get(5)));
+            rule.setDateFormat(row.get(6));
+          }
+        });
+    return this.doSaveRules(rules);
+  }
+
+  private @NonNull String scrubRuleName(final String name, final List<FilenameScrapingRule> rules) {
+    final int nameCount =
+        rules.stream()
+            .map(entry -> entry.getName())
+            .filter(Objects::nonNull)
+            .filter(entry -> entry.startsWith(name))
+            .toList()
+            .size();
+    return nameCount == 0 ? name : String.format("%s (%d)", name, nameCount);
+  }
+
+  private List<FilenameScrapingRule> doSaveRules(final List<FilenameScrapingRule> rules) {
+    log.trace("Deleting existing filename scraping rules");
+    this.filenameScrapingRuleRepository.deleteAll();
+    this.filenameScrapingRuleRepository.flush();
+    log.trace("Copying filename scraping rule values");
+    List<FilenameScrapingRule> rulesToSave = new ArrayList<>();
+    rules.forEach(
+        filenameScrapingRule -> {
+          final FilenameScrapingRule rule =
+              new FilenameScrapingRule(
+                  this.scrubRuleName(filenameScrapingRule.getName(), rulesToSave),
+                  filenameScrapingRule.getRule(),
+                  rules.indexOf(filenameScrapingRule) + 1);
+          rule.setSeriesPosition(filenameScrapingRule.getSeriesPosition());
+          rule.setVolumePosition(filenameScrapingRule.getVolumePosition());
+          rule.setIssueNumberPosition(filenameScrapingRule.getIssueNumberPosition());
+          rule.setCoverDatePosition(filenameScrapingRule.getCoverDatePosition());
+          rule.setDateFormat(filenameScrapingRule.getDateFormat());
+          rulesToSave.add(rule);
+        });
+    log.trace("Normalizing rule priorities");
+    for (var priority = 0; priority < rulesToSave.size(); priority++) {
+      rulesToSave.get(priority).setPriority(priority + 1);
+    }
+    log.trace("Saving new filename scraping rules");
+    return this.filenameScrapingRuleRepository.saveAll(rulesToSave);
   }
 }

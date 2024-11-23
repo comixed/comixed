@@ -23,7 +23,8 @@ import { Observable } from 'rxjs';
 import {
   DOWNLOAD_FILENAME_SCRAPING_RULES_FILE_URL,
   LOAD_FILENAME_SCRAPING_RULES_URL,
-  SAVE_FILENAME_SCRAPING_RULES_URL
+  SAVE_FILENAME_SCRAPING_RULES_URL,
+  UPLOAD_FILENAME_SCRAPING_RULES_URL
 } from '@app/admin/admin.constants';
 import { interpolate } from '@app/core';
 import { FilenameScrapingRule } from '@app/admin/models/filename-scraping-rule';
@@ -47,10 +48,20 @@ export class FilenameScrapingRulesService {
     );
   }
 
-  downloadFilenameScrapingRules(): Observable<any> {
+  downloadFile(): Observable<any> {
     this.logger.trace('Downloading filename scraping fules file');
     return this.http.get(
       interpolate(DOWNLOAD_FILENAME_SCRAPING_RULES_FILE_URL)
+    );
+  }
+
+  uploadFile(args: { file: File }): Observable<any> {
+    this.logger.trace('Uploading filename scraping rules:', args);
+    const formData = new FormData();
+    formData.append('file', args.file);
+    return this.http.post(
+      interpolate(UPLOAD_FILENAME_SCRAPING_RULES_URL),
+      formData
     );
   }
 }

@@ -22,6 +22,7 @@ import java.util.List;
 import org.comixedproject.model.metadata.FilenameScrapingRule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -40,4 +41,13 @@ public interface FilenameScrapingRuleRepository extends JpaRepository<FilenameSc
    */
   @Query("SELECT r FROM FilenameScrapingRule r ORDER BY r.priority")
   List<FilenameScrapingRule> findAll();
+
+  /**
+   * Returns the rule with the given name
+   *
+   * @param name the rule name
+   * @return the rule if it exists
+   */
+  @Query("SELECT r FROM FilenameScrapingRule  r WHERE r.name = :name")
+  FilenameScrapingRule findByName(@Param("name") String name);
 }

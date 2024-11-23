@@ -35,7 +35,10 @@ import {
   loadFilenameScrapingRulesSuccess,
   saveFilenameScrapingRules,
   saveFilenameScrapingRulesFailure,
-  saveFilenameScrapingRulesSuccess
+  saveFilenameScrapingRulesSuccess,
+  uploadFilenameScrapingRules,
+  uploadFilenameScrapingRulesFailure,
+  uploadFilenameScrapingRulesSuccess
 } from '@app/admin/actions/filename-scraping-rules.actions';
 import { hot } from 'jasmine-marbles';
 import {
@@ -54,6 +57,7 @@ describe('FilenameScrapingRulesEffects', () => {
     FILENAME_SCRAPING_RULE_3
   ];
   const FILENAME_RULES_FILE = FILENAME_SCRAPING_RULES_FILE;
+  const FILE = {} as File;
 
   let actions$: Observable<any>;
   let effects: FilenameScrapingRulesEffects;
@@ -76,8 +80,11 @@ describe('FilenameScrapingRulesEffects', () => {
           useValue: {
             load: jasmine.createSpy('FilenameScrapingRulesService.load()'),
             save: jasmine.createSpy('FilenameScrapingRulesService.save()'),
-            downloadFilenameScrapingRules: jasmine.createSpy(
-              'FilenameScrapingRulesService.downloadFilenameScrapingRules()'
+            downloadFile: jasmine.createSpy(
+              'FilenameScrapingRulesService.downloadFile()'
+            ),
+            uploadFile: jasmine.createSpy(
+              'FilenameScrapingRulesService.uploadFile()'
             )
           }
         },
@@ -193,12 +200,12 @@ describe('FilenameScrapingRulesEffects', () => {
       });
 
       actions$ = hot('-a', { a: action });
-      filenameScrapingRuleService.downloadFilenameScrapingRules.and.returnValue(
+      filenameScrapingRuleService.downloadFile.and.returnValue(
         of(serviceResponse)
       );
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.downloadFilenameScrapingRules$).toBeObservable(expected);
+      expect(effects.downloadFile$).toBeObservable(expected);
       expect(fileDownloadService.saveFile).toHaveBeenCalledWith({
         document: FILENAME_RULES_FILE
       });
@@ -210,12 +217,12 @@ describe('FilenameScrapingRulesEffects', () => {
       const outcome = downloadFilenameScrapingRulesFailure();
 
       actions$ = hot('-a', { a: action });
-      filenameScrapingRuleService.downloadFilenameScrapingRules.and.returnValue(
+      filenameScrapingRuleService.downloadFile.and.returnValue(
         throwError(serviceResponse)
       );
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.downloadFilenameScrapingRules$).toBeObservable(expected);
+      expect(effects.downloadFile$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
@@ -224,12 +231,58 @@ describe('FilenameScrapingRulesEffects', () => {
       const outcome = downloadFilenameScrapingRulesFailure();
 
       actions$ = hot('-a', { a: action });
-      filenameScrapingRuleService.downloadFilenameScrapingRules.and.throwError(
-        'expected'
-      );
+      filenameScrapingRuleService.downloadFile.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.downloadFilenameScrapingRules$).toBeObservable(expected);
+      expect(effects.downloadFile$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('uploading filename scraping rules', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = RULES;
+      const action = uploadFilenameScrapingRules({ file: FILE });
+      const outcome = uploadFilenameScrapingRulesSuccess({
+        rules: RULES
+      });
+
+      actions$ = hot('-a', { a: action });
+      filenameScrapingRuleService.uploadFile
+        .withArgs({ file: FILE })
+        .and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.uploadFile$).toBeObservable(expected);
+      expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = uploadFilenameScrapingRules({ file: FILE });
+      const outcome = uploadFilenameScrapingRulesFailure();
+
+      actions$ = hot('-a', { a: action });
+      filenameScrapingRuleService.uploadFile
+        .withArgs({ file: FILE })
+        .and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.uploadFile$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = uploadFilenameScrapingRules({ file: FILE });
+      const outcome = uploadFilenameScrapingRulesFailure();
+
+      actions$ = hot('-a', { a: action });
+      filenameScrapingRuleService.uploadFile
+        .withArgs({ file: FILE })
+        .and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.uploadFile$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

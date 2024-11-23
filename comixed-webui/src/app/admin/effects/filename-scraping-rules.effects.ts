@@ -27,7 +27,10 @@ import {
   loadFilenameScrapingRulesSuccess,
   saveFilenameScrapingRules,
   saveFilenameScrapingRulesFailure,
-  saveFilenameScrapingRulesSuccess
+  saveFilenameScrapingRulesSuccess,
+  uploadFilenameScrapingRules,
+  uploadFilenameScrapingRulesFailure,
+  uploadFilenameScrapingRulesSuccess
 } from '@app/admin/actions/filename-scraping-rules.actions';
 import { FilenameScrapingRulesService } from '@app/admin/services/filename-scraping-rules.service';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -114,12 +117,12 @@ export class FilenameScrapingRulesEffects {
     );
   });
 
-  downloadFilenameScrapingRules$ = createEffect(() => {
+  downloadFile$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(downloadFilenameScrapingRules),
       tap(() => this.logger.trace('Downloading filename scraping rules file')),
       switchMap(() =>
-        this.filenameScrapingRuleService.downloadFilenameScrapingRules().pipe(
+        this.filenameScrapingRuleService.downloadFile().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           tap((response: DownloadDocument) =>
             this.fileDownloadService.saveFile({ document: response })
@@ -144,6 +147,46 @@ export class FilenameScrapingRulesEffects {
           this.translateService.instant('app.general-effect-failure')
         );
         return of(downloadFilenameScrapingRulesFailure());
+      })
+    );
+  });
+
+  uploadFile$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(uploadFilenameScrapingRules),
+      tap(action =>
+        this.logger.debug('Uploading filename scraping rules file:', action)
+      ),
+      switchMap(action =>
+        this.filenameScrapingRuleService.uploadFile({ file: action.file }).pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          tap(() =>
+            this.alertService.info(
+              this.translateService.instant(
+                'filename-scraping-rules.upload-file.effect-success'
+              )
+            )
+          ),
+          map((response: FilenameScrapingRule[]) =>
+            uploadFilenameScrapingRulesSuccess({ rules: response })
+          ),
+          catchError(error => {
+            this.logger.error('Service failure:', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'filename-scraping-rules.upload-file.effect-failure'
+              )
+            );
+            return of(uploadFilenameScrapingRulesFailure());
+          })
+        )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(uploadFilenameScrapingRulesFailure());
       })
     );
   });
