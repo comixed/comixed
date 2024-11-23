@@ -31,7 +31,8 @@ import { FilenameScrapingRule } from '@app/admin/models/filename-scraping-rule';
 import {
   downloadFilenameScrapingRules,
   loadFilenameScrapingRules,
-  saveFilenameScrapingRules
+  saveFilenameScrapingRules,
+  uploadFilenameScrapingRules
 } from '@app/admin/actions/filename-scraping-rules.actions';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { EditableListItem } from '@app/core/models/ui/editable-list-item';
@@ -207,6 +208,22 @@ export class FilenameScrapingRulesConfigurationComponent
   onDownloadRules(): void {
     this.logger.info('Downloading filename scraping rules');
     this.store.dispatch(downloadFilenameScrapingRules());
+  }
+
+  onFileSelected(file: File) {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'filename-scraping-rules.upload-file.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'filename-scraping-rules.upload-file.confirmation-message',
+        { filename: file.name }
+      ),
+      confirm: () => {
+        this.logger.debug('Uploading filename scraping rules file:', file);
+        this.store.dispatch(uploadFilenameScrapingRules({ file }));
+      }
+    });
   }
 
   private loadTranslations(): void {

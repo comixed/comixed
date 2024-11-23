@@ -51,7 +51,6 @@ import {
 } from '@tragically-slick/confirmation';
 import { MatSortModule } from '@angular/material/sort';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { BlockedHashToolbarComponent } from '@app/comic-pages/components/blocked-hash-toolbar/blocked-hash-toolbar.component';
 import { MatDividerModule } from '@angular/material/divider';
 import {
   initialState as initialUserState,
@@ -84,7 +83,6 @@ describe('BlockedHashListPageComponent', () => {
       TestBed.configureTestingModule({
         declarations: [
           BlockedHashListPageComponent,
-          BlockedHashToolbarComponent,
           BlockedHashThumbnailUrlPipe
         ],
         imports: [

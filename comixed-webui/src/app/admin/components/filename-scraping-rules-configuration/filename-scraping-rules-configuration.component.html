@@ -1,4 +1,11 @@
 <div class="cx-fab-container-bottom-left">
+  <input
+    type="file"
+    class="cx-file-input"
+    (change)="onFileSelected($event.target.files[0])"
+    #fileUpload
+  />
+
   <button
     id="save-rules-button"
     mat-fab
@@ -6,6 +13,15 @@
     (click)="onSaveRules()"
   >
     <mat-icon>save</mat-icon>
+  </button>
+  <button
+    id="upload-button"
+    mat-fab
+    color="accent"
+    [matTooltip]="'blocked-hash-list.tooltip.upload-file' | translate"
+    (click)="fileUpload.click()"
+  >
+    <mat-icon>upload</mat-icon>
   </button>
   <button
     id="download-rules-button"

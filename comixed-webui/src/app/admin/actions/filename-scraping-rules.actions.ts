@@ -59,3 +59,21 @@ export const downloadFilenameScrapingRulesSuccess = createAction(
 export const downloadFilenameScrapingRulesFailure = createAction(
   '[Filename Scraping Rules] Failed to download the current list of rules'
 );
+
+export const uploadFilenameScrapingRules = createAction(
+  '[Filename Scraping Rules] Upload filename scraping rules file',
+  props<{
+    file: File;
+  }>()
+);
+
+export const uploadFilenameScrapingRulesSuccess = createAction(
+  '[Filename Scraping Rules] Successfully uploaded filename scraping rules file',
+  props<{
+    rules: FilenameScrapingRule[];
+  }>()
+);
+
+export const uploadFilenameScrapingRulesFailure = createAction(
+  '[Filename Scraping Rules] Failed to uploading filename scraping rules file'
+);

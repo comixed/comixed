@@ -34,8 +34,10 @@ import { interpolate } from '@app/core';
 import {
   DOWNLOAD_FILENAME_SCRAPING_RULES_FILE_URL,
   LOAD_FILENAME_SCRAPING_RULES_URL,
-  SAVE_FILENAME_SCRAPING_RULES_URL
+  SAVE_FILENAME_SCRAPING_RULES_URL,
+  UPLOAD_FILENAME_SCRAPING_RULES_URL
 } from '@app/admin/admin.constants';
+import { HttpResponse } from '@angular/common/http';
 
 describe('FilenameScrapingRulesService', () => {
   const RULES = [
@@ -44,6 +46,7 @@ describe('FilenameScrapingRulesService', () => {
     FILENAME_SCRAPING_RULE_3
   ];
   const FILENAME_RULES_FILE = FILENAME_SCRAPING_RULES_FILE;
+  const UPLOADED_FILE = new File([], 'testing');
 
   let service: FilenameScrapingRulesService;
   let httpMock: HttpTestingController;
@@ -85,7 +88,7 @@ describe('FilenameScrapingRulesService', () => {
 
   it('can download the filename scraping rules', () => {
     service
-      .downloadFilenameScrapingRules()
+      .downloadFile()
       .subscribe(response => expect(response).toBe(FILENAME_RULES_FILE));
 
     const req = httpMock.expectOne(
@@ -93,5 +96,18 @@ describe('FilenameScrapingRulesService', () => {
     );
     expect(req.request.method).toEqual('GET');
     req.flush(FILENAME_RULES_FILE);
+  });
+
+  it('can upload a filename scraping rules file', () => {
+    service
+      .uploadFile({ file: UPLOADED_FILE })
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(
+      interpolate(UPLOAD_FILENAME_SCRAPING_RULES_URL)
+    );
+    expect(req.request.method).toEqual('POST');
+    expect((req.request.body as FormData).get('file')).toEqual(UPLOADED_FILE);
+    req.flush(new HttpResponse({ status: 200 }));
   });
 });

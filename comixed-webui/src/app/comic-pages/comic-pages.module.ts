@@ -46,7 +46,6 @@ import { DeletedPageListPageComponent } from './pages/deleted-page-list-page/del
 import { ComicBooksModule } from '@app/comic-books/comic-books.module';
 import { MatSortModule } from '@angular/material/sort';
 import { MatDividerModule } from '@angular/material/divider';
-import { BlockedHashToolbarComponent } from './components/blocked-hash-toolbar/blocked-hash-toolbar.component';
 import {
   DELETED_PAGE_FEATURE_KEY,
   reducer as deletedPageReducer
@@ -59,7 +58,6 @@ import { BlockedHashThumbnailUrlPipe } from './pipes/blocked-hash-thumbnail-url.
     BlockedHashListPageComponent,
     BlockedHashDetailPageComponent,
     DeletedPageListPageComponent,
-    BlockedHashToolbarComponent,
     BlockedHashThumbnailUrlPipe
   ],
   imports: [

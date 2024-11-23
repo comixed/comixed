@@ -20,6 +20,7 @@ package org.comixedproject.rest.metadata;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
+import java.io.IOException;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.metadata.FilenameScrapingRule;
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <code>FilenameScrapingRuleController</code> provides REST APIs for working with instances of
@@ -87,8 +89,26 @@ public class FilenameScrapingRuleController {
    */
   @GetMapping(value = "/api/admin/scraping/rules/file", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  public DownloadDocument getFilenameScrapingRulesFile() throws FilenameScrapingRuleException {
+  public DownloadDocument downloadFile() throws FilenameScrapingRuleException {
     log.info("Downloading filename scraping rules file");
     return this.filenameScrapingRuleService.getFilenameScrapingRulesFile();
+  }
+
+  /**
+   * Processes an uploaded filename scraping rules file.
+   *
+   * @param file the uploaded file
+   * @return the updated filename scraping rules list
+   * @throws IOException if a file exception occurs
+   */
+  @PostMapping(
+      value = "/api/admin/scraping/rules/file",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @JsonView(View.FilenameScrapingRuleList.class)
+  @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.blocked-hash.upload")
+  public List<FilenameScrapingRule> uploadFile(final MultipartFile file) throws IOException {
+    log.info("Received uploaded filename scraping rules file: {}", file.getOriginalFilename());
+    return this.filenameScrapingRuleService.uploadFile(file.getInputStream());
   }
 }

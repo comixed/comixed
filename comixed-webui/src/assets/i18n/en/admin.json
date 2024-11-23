@@ -129,7 +129,13 @@
       "effect-failure": "Failed to save filename scraping rules.",
       "effect-success": "Filename scraping rules saved."
     },
-    "tab-title": "Filename Scraping Rules"
+    "tab-title": "Filename Scraping Rules",
+    "upload-file": {
+      "confirmation-message": "Are you sure you want to upload \"{filename}\"?",
+      "confirmation-title": "Upload Filename Scraping Rules File",
+      "effect-failure": "Failed to upload filename scraping rules file.",
+      "effect-success": "Filename scraping rules file uploaded successfully."
+    }
   },
   "metrics": {
     "metric-details": {
