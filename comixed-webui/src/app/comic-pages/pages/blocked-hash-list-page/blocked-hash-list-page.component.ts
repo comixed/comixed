@@ -23,22 +23,18 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import {
-  loadBlockedHashList,
-  markPagesWithHash
-} from '@app/comic-pages/actions/blocked-hash-list.actions';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
-import {
-  selectBlockedPageList,
-  selectBlockedPageListState
-} from '@app/comic-pages/selectors/blocked-hash-list.selectors';
 import { Router } from '@angular/router';
-import { downloadBlockedPages } from '@app/comic-pages/actions/download-blocked-pages.actions';
+import {
+  downloadBlockedHashesFile,
+  loadBlockedHashList,
+  markPagesWithHash,
+  uploadBlockedHashesFile
+} from '@app/comic-pages/actions/blocked-hashes.actions';
 import { TranslateService } from '@ngx-translate/core';
-import { uploadBlockedPages } from '@app/comic-pages/actions/upload-blocked-pages.actions';
 import { deleteBlockedPages } from '@app/comic-pages/actions/delete-blocked-pages.actions';
 import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
@@ -52,6 +48,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@app/core';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
+import {
+  selectBlockedHashesState,
+  selectBlockedHashesList
+} from '@app/comic-pages/selectors/blocked-hashes.selectors';
 
 @Component({
   selector: 'cx-blocked-hash-list',
@@ -93,12 +93,12 @@ export class BlockedHashListPageComponent
     private titleService: TitleService
   ) {
     this.hashStateSubscription = this.store
-      .select(selectBlockedPageListState)
+      .select(selectBlockedHashesState)
       .subscribe(state => {
         this.store.dispatch(setBusyState({ enabled: state.busy }));
       });
     this.pageSubscription = this.store
-      .select(selectBlockedPageList)
+      .select(selectBlockedHashesList)
       .subscribe(entries => (this.entries = entries));
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -179,7 +179,7 @@ export class BlockedHashListPageComponent
 
   onDownloadFile(): void {
     this.logger.debug('Download blocked pages file');
-    this.store.dispatch(downloadBlockedPages());
+    this.store.dispatch(downloadBlockedHashesFile());
   }
 
   onFileSelected(file: File): void {
@@ -193,7 +193,7 @@ export class BlockedHashListPageComponent
       ),
       confirm: () => {
         this.logger.debug('Uploading blocked pages file:', file);
-        this.store.dispatch(uploadBlockedPages({ file }));
+        this.store.dispatch(uploadBlockedHashesFile({ file }));
       }
     });
   }

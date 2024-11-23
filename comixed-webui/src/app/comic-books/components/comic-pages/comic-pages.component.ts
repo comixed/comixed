@@ -27,7 +27,6 @@ import {
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import { Page } from '@app/comic-books/models/page';
 import { TranslateService } from '@ngx-translate/core';
 import { updatePageDeletion } from '@app/comic-books/actions/comic-book.actions';
@@ -36,6 +35,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import * as _ from 'lodash';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { MatSort } from '@angular/material/sort';
+import { setBlockedStateForHash } from '@app/comic-pages/actions/blocked-hashes.actions';
 
 @Component({
   selector: 'cx-comic-pages',
@@ -106,7 +106,9 @@ export class ComicPagesComponent implements AfterViewInit {
 
   onSetPageBlocked(page: Page, blocked: boolean): void {
     this.logger.debug('Updating page blocked state:', page, blocked);
-    this.store.dispatch(setBlockedState({ hashes: [page.hash], blocked }));
+    this.store.dispatch(
+      setBlockedStateForHash({ hashes: [page.hash], blocked })
+    );
   }
 
   onSetPageDeleted(page: Page, deleted: boolean): void {

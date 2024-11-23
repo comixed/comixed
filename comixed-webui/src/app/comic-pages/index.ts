@@ -35,10 +35,10 @@ import {
   reducer as blockPageReducer
 } from '@app/comic-pages/reducers/block-page.reducer';
 import {
-  DOWNLOAD_BLOCKED_PAGES_FEATURE_KEY,
-  DownloadBlockedPagesState,
+  BLOCKED_HASHES_FEATURE_KEY,
+  BlockedHashesState,
   reducer as downloadBlockedPagesReducer
-} from '@app/comic-pages/reducers/download-blocked-pages.reducer';
+} from '@app/comic-pages/reducers/blocked-hashes.reducer';
 import {
   reducer as uploadBlockedPagesReducer,
   UPLOAD_BLOCKED_PAGES_FEATURE_KEY,
@@ -66,7 +66,7 @@ export interface BlockedPagesModuleState {
   [BLOCKED_HASH_LIST_FEATURE_KEY]: BlockedHashListState;
   [BLOCKED_PAGE_DETAIL_FEATURE_KEY]: BlockedPageDetailState;
   [BLOCK_PAGE_FEATURE_KEY]: BlockPageState;
-  [DOWNLOAD_BLOCKED_PAGES_FEATURE_KEY]: DownloadBlockedPagesState;
+  [BLOCKED_HASHES_FEATURE_KEY]: BlockedHashesState;
   [UPLOAD_BLOCKED_PAGES_FEATURE_KEY]: UploadedBlockedPagesState;
   [DELETE_BLOCKED_PAGES_FEATURE_KEY]: DeleteBlockedPagesState;
   [DELETED_PAGE_FEATURE_KEY]: DeletedPagesState;
@@ -79,7 +79,7 @@ export const reducers: ActionReducerMap<BlockedPagesModuleState> = {
   [BLOCKED_HASH_LIST_FEATURE_KEY]: blockedHashListReducer,
   [BLOCKED_PAGE_DETAIL_FEATURE_KEY]: blockedPageDetailReducer,
   [BLOCK_PAGE_FEATURE_KEY]: blockPageReducer,
-  [DOWNLOAD_BLOCKED_PAGES_FEATURE_KEY]: downloadBlockedPagesReducer,
+  [BLOCKED_HASHES_FEATURE_KEY]: downloadBlockedPagesReducer,
   [UPLOAD_BLOCKED_PAGES_FEATURE_KEY]: uploadBlockedPagesReducer,
   [DELETE_BLOCKED_PAGES_FEATURE_KEY]: deleteBlockedPagesReducer,
   [DELETED_PAGE_FEATURE_KEY]: deletedPageReducer

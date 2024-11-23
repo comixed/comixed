@@ -38,13 +38,15 @@ import { setBusyState } from '@app/core/actions/busy.actions';
 import { MatTableDataSource } from '@angular/material/table';
 import { DuplicatePage } from '@app/library/models/duplicate-page';
 import { filter } from 'rxjs/operators';
-import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { selectBlockedPageList } from '@app/comic-pages/selectors/blocked-hash-list.selectors';
-import { loadBlockedHashList } from '@app/comic-pages/actions/blocked-hash-list.actions';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { MatSort } from '@angular/material/sort';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import {
+  loadBlockedHashList,
+  setBlockedStateForHash
+} from '@app/comic-pages/actions/blocked-hashes.actions';
+import { selectBlockedHashesList } from '@app/comic-pages/selectors/blocked-hashes.selectors';
 
 @Component({
   selector: 'cx-duplicate-page-detail-page',
@@ -109,7 +111,7 @@ export class DuplicatePageDetailPageComponent
       .pipe(filter(detail => !!detail))
       .subscribe(detail => (this.detail = detail));
     this.blockedHashesSubscription = this.store
-      .select(selectBlockedPageList)
+      .select(selectBlockedHashesList)
       .subscribe(
         blockedHashes =>
           (this.blockedHashes = blockedHashes.map(hash => hash.hash))
@@ -176,7 +178,7 @@ export class DuplicatePageDetailPageComponent
       confirm: () => {
         this.logger.trace('Dispatching action to block page');
         this.store.dispatch(
-          setBlockedState({ hashes: [this.hash], blocked: true })
+          setBlockedStateForHash({ hashes: [this.hash], blocked: true })
         );
       }
     });
@@ -194,7 +196,7 @@ export class DuplicatePageDetailPageComponent
       confirm: () => {
         this.logger.trace('Dispatching action to unblock page');
         this.store.dispatch(
-          setBlockedState({ hashes: [this.hash], blocked: false })
+          setBlockedStateForHash({ hashes: [this.hash], blocked: false })
         );
       }
     });

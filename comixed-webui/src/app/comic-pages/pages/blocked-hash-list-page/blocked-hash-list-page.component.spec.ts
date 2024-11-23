@@ -19,10 +19,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { BlockedHashListPageComponent } from './blocked-hash-list-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import {
-  BLOCKED_HASH_LIST_FEATURE_KEY,
-  initialState as initialBlockedPageListState
-} from '@app/comic-pages/reducers/blocked-hash-list.reducer';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
@@ -38,14 +34,16 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { downloadBlockedPages } from '@app/comic-pages/actions/download-blocked-pages.actions';
+import {
+  downloadBlockedHashesFile,
+  markPagesWithHash,
+  uploadBlockedHashesFile
+} from '@app/comic-pages/actions/blocked-hashes.actions';
 import { MatDialogModule } from '@angular/material/dialog';
-import { uploadBlockedPages } from '@app/comic-pages/actions/upload-blocked-pages.actions';
 import { deleteBlockedPages } from '@app/comic-pages/actions/delete-blocked-pages.actions';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { markPagesWithHash } from '@app/comic-pages/actions/blocked-hash-list.actions';
 import { TitleService } from '@app/core/services/title.service';
 import {
   Confirmation,
@@ -61,12 +59,16 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
 import { BlockedHashThumbnailUrlPipe } from '@app/comic-pages/pipes/blocked-hash-thumbnail-url.pipe';
+import {
+  BLOCKED_HASHES_FEATURE_KEY,
+  initialState as initialBlockedHashesState
+} from '@app/comic-pages/reducers/blocked-hashes.reducer';
 
 describe('BlockedHashListPageComponent', () => {
   const ENTRIES = [BLOCKED_HASH_1, BLOCKED_HASH_3, BLOCKED_HASH_5];
   const ENTRY = BLOCKED_HASH_2;
   const initialState = {
-    [BLOCKED_HASH_LIST_FEATURE_KEY]: initialBlockedPageListState,
+    [BLOCKED_HASHES_FEATURE_KEY]: initialBlockedHashesState,
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER_READER }
   };
   let component: BlockedHashListPageComponent;
@@ -139,16 +141,16 @@ describe('BlockedHashListPageComponent', () => {
     beforeEach(() => {
       store.setState({
         ...initialState,
-        [BLOCKED_HASH_LIST_FEATURE_KEY]: {
-          ...initialBlockedPageListState,
+        [BLOCKED_HASHES_FEATURE_KEY]: {
+          ...initialBlockedHashesState,
           entries: ENTRIES
         }
       });
       component.dataSource.data.forEach(entry => (entry.selected = true));
       store.setState({
         ...initialState,
-        [BLOCKED_HASH_LIST_FEATURE_KEY]: {
-          ...initialBlockedPageListState,
+        [BLOCKED_HASHES_FEATURE_KEY]: {
+          ...initialBlockedHashesState,
           entries: ENTRIES.concat(ENTRY)
         }
       });
@@ -175,8 +177,8 @@ describe('BlockedHashListPageComponent', () => {
     beforeEach(() => {
       store.setState({
         ...initialState,
-        [BLOCKED_HASH_LIST_FEATURE_KEY]: {
-          ...initialBlockedPageListState,
+        [BLOCKED_HASHES_FEATURE_KEY]: {
+          ...initialBlockedHashesState,
           entries: ENTRIES
         }
       });
@@ -249,7 +251,7 @@ describe('BlockedHashListPageComponent', () => {
     });
 
     it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(downloadBlockedPages());
+      expect(store.dispatch).toHaveBeenCalledWith(downloadBlockedHashesFile());
     });
   });
 
@@ -269,7 +271,7 @@ describe('BlockedHashListPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        uploadBlockedPages({ file: FILE })
+        uploadBlockedHashesFile({ file: FILE })
       );
     });
   });
@@ -278,8 +280,8 @@ describe('BlockedHashListPageComponent', () => {
     beforeEach(() => {
       store.setState({
         ...initialState,
-        [BLOCKED_HASH_LIST_FEATURE_KEY]: {
-          ...initialBlockedPageListState,
+        [BLOCKED_HASHES_FEATURE_KEY]: {
+          ...initialBlockedHashesState,
           entries: ENTRIES
         }
       });

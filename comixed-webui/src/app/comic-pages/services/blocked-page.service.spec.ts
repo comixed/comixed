@@ -54,16 +54,16 @@ import {
   UPLOAD_BLOCKED_PAGE_FILE_URL
 } from '@app/comic-pages/comic-pages.constants';
 import { interpolate } from '@app/core';
-import {
-  blockedHashRemoved,
-  blockedHashUpdated
-} from '@app/comic-pages/actions/blocked-hash-list.actions';
 import { Subscription } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 import { DeleteBlockedPagesRequest } from '@app/comic-pages/models/net/delete-blocked-pages-request';
 import { SetBlockedStateRequest } from '@app/comic-pages/models/net/set-blocked-state-request';
 import { MarkPagesWithHashRequest } from '@app/comic-pages/models/net/mark-pages-with-hash-request';
 import { UnmarkPagesWithHashRequest } from '@app/comic-pages/models/net/unmark-pages-with-hash-request';
+import {
+  blockedHashRemoved,
+  blockedHashUpdated
+} from '@app/comic-pages/actions/blocked-hashes.actions';
 
 describe('BlockedPageService', () => {
   const ENTRIES = [BLOCKED_HASH_1, BLOCKED_HASH_3, BLOCKED_HASH_5];

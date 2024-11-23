@@ -16,18 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createAction, props } from '@ngrx/store';
-import { DownloadDocument } from '@app/core/models/download-document';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import {
+  BLOCKED_HASHES_FEATURE_KEY,
+  BlockedHashesState
+} from '../reducers/blocked-hashes.reducer';
 
-export const downloadBlockedPages = createAction(
-  '[Download Blocked Pages] Downloads the blocked page list'
+export const selectBlockedHashesState =
+  createFeatureSelector<BlockedHashesState>(BLOCKED_HASHES_FEATURE_KEY);
+
+export const selectBlockedHashesList = createSelector(
+  selectBlockedHashesState,
+  state => state.entries
 );
 
-export const blockedPagesDownloaded = createAction(
-  '[Download Blocked Pages] Blocked pages downloaded',
-  props<{ document: DownloadDocument }>()
-);
-
-export const downloadBlockedPagesFailed = createAction(
-  '[Download Blocked Pages] Failed to download blocked pages'
+export const selectBlockedHashDetail = createSelector(
+  selectBlockedHashesState,
+  state => state.entry
 );
