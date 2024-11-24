@@ -86,10 +86,23 @@ import {
   BLOCKED_HASHES_FEATURE_KEY,
   initialState as initialBlockedHashesState
 } from '@app/comic-pages/reducers/blocked-hashes.reducer';
-import { setBlockedStateForHash } from '@app/comic-pages/actions/blocked-hashes.actions';
+import {
+  setBlockedStateForHash,
+  setBlockedStateForSelectedHashes
+} from '@app/comic-pages/actions/blocked-hashes.actions';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PAGE_SIZE_DEFAULT } from '@app/core';
 import { DuplicatePageUpdate } from '@app/library/models/net/duplicate-page-update';
+import {
+  HASH_SELECTION_FEATURE_KEY,
+  initialState as initialHashSelectionState
+} from '@app/comic-pages/reducers/hash-selection.reducer';
+import {
+  addAllHashesToSelection,
+  addHashSelection,
+  clearHashSelections,
+  removeHashSelection
+} from '@app/comic-pages/actions/hash-selection.actions';
 
 describe('DuplicatePageListPageComponent', () => {
   const COMICS = [
@@ -121,7 +134,8 @@ describe('DuplicatePageListPageComponent', () => {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER_ADMIN },
     [DUPLICATE_PAGE_LIST_FEATURE_KEY]: initialDuplicatePageListState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
-    [BLOCKED_HASHES_FEATURE_KEY]: initialBlockedHashesState
+    [BLOCKED_HASHES_FEATURE_KEY]: initialBlockedHashesState,
+    [HASH_SELECTION_FEATURE_KEY]: initialHashSelectionState
   };
 
   let component: DuplicatePageListPageComponent;
@@ -312,34 +326,6 @@ describe('DuplicatePageListPageComponent', () => {
     });
   });
 
-  describe('loading duplicate pages', () => {
-    beforeEach(() => {
-      component.dataSource.data = [
-        { selected: true, item: DUPLICATE_PAGES[0] }
-      ];
-      component.duplicatePages = DUPLICATE_PAGES;
-    });
-
-    it('maintains existing selectsion', () => {
-      expect(component.dataSource.data[0].selected).toBeTrue();
-    });
-
-    describe('filtering for unblocked only', () => {
-      beforeEach(() => {
-        component.blockedHashList = [
-          { ...BLOCKED_HASH_1, hash: DUPLICATE_PAGES[0].hash }
-        ];
-        component.unblockedOnly = true;
-      });
-
-      it('does not show blocked pages', () => {
-        expect(
-          component.dataSource.data.map(entry => entry.item)
-        ).not.toContain(DUPLICATE_PAGES[0]);
-      });
-    });
-  });
-
   describe('blocking a duplicate page', () => {
     const ENTRY = {
       item: DUPLICATE_PAGES[0],
@@ -389,154 +375,99 @@ describe('DuplicatePageListPageComponent', () => {
   });
 
   describe('selections', () => {
+    const PAGE = DUPLICATE_PAGES[0];
+
     beforeEach(() => {
+      component.selectedHashes = [DUPLICATE_PAGES[0].hash];
       component.duplicatePages = DUPLICATE_PAGES;
     });
 
     describe('selecting an element', () => {
       beforeEach(() => {
-        component.anySelected = false;
-        component.dataSource.data[0].selected = false;
-        component.onSelectOne(component.dataSource.data[0], true);
+        component.onSelectOne(
+          { item: PAGE } as SelectableListItem<DuplicatePage>,
+          true
+        );
       });
 
-      it('sets the selection state', () => {
-        expect(component.dataSource.data[0].selected).toBeTrue();
-      });
-
-      it('sets the any selected flag', () => {
-        expect(component.anySelected).toBeTrue();
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          addHashSelection({ hash: PAGE.hash })
+        );
       });
     });
 
     describe('deselecting an element', () => {
       beforeEach(() => {
-        component.anySelected = true;
-        component.dataSource.data[0].selected = true;
-        component.onSelectOne(component.dataSource.data[0], false);
+        component.onSelectOne(
+          { item: PAGE } as SelectableListItem<DuplicatePage>,
+          false
+        );
       });
 
-      it('clears the selection state', () => {
-        expect(component.dataSource.data[0].selected).toBeFalse();
-      });
-
-      it('clears the any selected flag', () => {
-        expect(component.anySelected).toBeFalse();
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          removeHashSelection({ hash: PAGE.hash })
+        );
       });
     });
 
     describe('selecting all elements', () => {
       beforeEach(() => {
-        component.anySelected = false;
-        component.anySelected = false;
-        component.dataSource.data.forEach(entry => (entry.selected = false));
         component.onSelectAll(true);
       });
 
-      it('marks all as selected', () => {
-        expect(
-          component.dataSource.data.every(entry => entry.selected)
-        ).toBeTrue();
-      });
-
-      it('sets the any selected flag', () => {
-        expect(component.anySelected).toBeTrue();
-      });
-
-      it('sets the any selected flag', () => {
-        expect(component.allSelected).toBeTrue();
-      });
-
-      describe('deselecting one item', () => {
-        beforeEach(() => {
-          component.onSelectOne(component.dataSource.data[0], false);
-        });
-
-        it('marks the element as unselected', () => {
-          expect(component.dataSource.data[0].selected).toBeFalse();
-        });
-
-        it('clears the any selected flag', () => {
-          expect(component.allSelected).toBeFalse();
-        });
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(addAllHashesToSelection());
       });
     });
 
     describe('deselecting all elements', () => {
       beforeEach(() => {
-        component.anySelected = true;
-        component.anySelected = true;
-        component.dataSource.data.forEach(entry => (entry.selected = true));
         component.onSelectAll(false);
       });
 
-      it('unmarks all as selected', () => {
-        expect(
-          component.dataSource.data.every(entry => entry.selected)
-        ).toBeFalse();
-      });
-
-      it('clears the any selected flag', () => {
-        expect(component.anySelected).toBeFalse();
-      });
-
-      it('clears the any selected flag', () => {
-        expect(component.allSelected).toBeFalse();
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(clearHashSelections());
       });
     });
   });
 
-  describe('processing all selected items', () => {
+  describe('blocking selected hashes', () => {
     beforeEach(() => {
-      component.duplicatePages = DUPLICATE_PAGES;
-      component.dataSource.data[0].selected = true;
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
+      component.onBlockSelected();
     });
 
-    afterAll(() => {
-      expect(
-        component.dataSource.data.some(entry => entry.selected)
-      ).toBeFalse();
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
     });
 
-    describe('blocking selected items', () => {
-      beforeEach(() => {
-        component.onBlockSelected();
-      });
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        setBlockedStateForSelectedHashes({ blocked: true })
+      );
+    });
+  });
 
-      it('confirms with the user', () => {
-        expect(confirmationService.confirm).toHaveBeenCalled();
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          setBlockedStateForHash({
-            hashes: [DUPLICATE_PAGES[0].hash],
-            blocked: true
-          })
-        );
-      });
+  describe('blocking selected hashes', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.onUnblockSelected();
     });
 
-    describe('unblocking selected items', () => {
-      beforeEach(() => {
-        component.onUnblockSelected();
-      });
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
 
-      it('confirms with the user', () => {
-        expect(confirmationService.confirm).toHaveBeenCalled();
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          setBlockedStateForHash({
-            hashes: [DUPLICATE_PAGES[0].hash],
-            blocked: false
-          })
-        );
-      });
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        setBlockedStateForSelectedHashes({ blocked: false })
+      );
     });
   });
 
@@ -575,39 +506,65 @@ describe('DuplicatePageListPageComponent', () => {
     });
   });
 
-  describe('toggling the unblocked only flag', () => {
-    const UNBLOCKED_ONLY = Math.random() > 0.5;
-
+  describe('the unblocked only flag', () => {
     beforeEach(() => {
-      component.unblockedOnly = !UNBLOCKED_ONLY;
-      component.onToggleUnblockedOnly();
+      component.blockedHashList = BLOCKED_HASHES;
+      component.duplicatePages = DUPLICATE_PAGES;
     });
 
-    it('saves the user preference', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        saveUserPreference({
-          name: DUPLICATE_PAGES_UNBLOCKED_PAGES_ONLY,
-          value: `${UNBLOCKED_ONLY}`
-        })
-      );
+    describe('when unblocked only is off', () => {
+      beforeEach(() => {
+        component.unblockedOnly = false;
+      });
+
+      it('shows all entries', () => {
+        expect(
+          component.dataSource.data.every(entry =>
+            BLOCKED_HASHES.map(hash => hash.hash).includes(entry.item.hash)
+          )
+        ).not.toBeTrue();
+      });
+    });
+
+    describe('when unblocked only is on', () => {
+      beforeEach(() => {
+        component.unblockedOnly = true;
+      });
+
+      it('only shows unblocked entries', () => {
+        console.log('*** data:', component.dataSource.data);
+        console.log('*** hashes:', component.blockedHashList);
+        expect(
+          component.dataSource.data.some(entry =>
+            BLOCKED_HASHES.map(hash => hash.hash).includes(entry.item.hash)
+          )
+        ).not.toBeTrue();
+      });
+    });
+
+    describe('toggling the unblocked only flag on', () => {
+      beforeEach(() => {
+        component.onToggleUnblockedOnly();
+      });
+
+      it('saves the user preference', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          saveUserPreference({
+            name: DUPLICATE_PAGES_UNBLOCKED_PAGES_ONLY,
+            value: `${true}`
+          })
+        );
+      });
     });
   });
 
   describe('getting the selected count', () => {
     beforeEach(() => {
-      component.dataSource.data = [
-        { selected: true, item: DUPLICATE_PAGES[0] },
-        { selected: true, item: DUPLICATE_PAGES[0] },
-        { selected: true, item: DUPLICATE_PAGES[0] },
-        { selected: true, item: DUPLICATE_PAGES[0] },
-        { selected: false, item: DUPLICATE_PAGES[0] }
-      ];
+      component.selectedHashes = DUPLICATE_PAGES.map(entry => entry.hash);
     });
 
     it('returns the selected count', () => {
-      expect(component.selectedCount).toEqual(
-        component.dataSource.data.length - 1
-      );
+      expect(component.selectedCount).toEqual(DUPLICATE_PAGES.length);
     });
   });
 

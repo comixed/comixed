@@ -97,6 +97,7 @@
     <mat-header-cell *matHeaderCellDef>
       <mat-checkbox
         [checked]="allSelected"
+        [disabled]="hashSelectionBusy"
         (change)="onSelectAll($event.checked)"
         (keyup)="$event.stopPropagation()"
         (click)="$event.stopPropagation()"
@@ -105,6 +106,7 @@
     <mat-cell *matCellDef="let row">
       <mat-checkbox
         [checked]="row.selected"
+        [disabled]="hashSelectionBusy"
         (change)="onSelectOne(row, $event.checked)"
         (keyup)="$event.stopPropagation()"
         (click)="$event.stopPropagation()"

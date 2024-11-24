@@ -19,7 +19,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { BlockedPageService } from '@app/comic-pages/services/blocked-page.service';
+import { BlockedHashService } from '@app/comic-pages/services/blocked-hash.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -37,7 +37,7 @@ export class DeleteBlockedPagesEffects {
       ofType(deleteBlockedPages),
       tap(action => this.logger.debug('Effect: delete blocked pages:', action)),
       switchMap(action =>
-        this.blockedPageService.deleteEntries({ entries: action.entries }).pipe(
+        this.blockedHashService.deleteEntries({ entries: action.entries }).pipe(
           tap(response => this.logger.debug('Response received:', response)),
           tap(() =>
             this.alertService.info(
@@ -72,7 +72,7 @@ export class DeleteBlockedPagesEffects {
   constructor(
     private logger: LoggerService,
     private actions$: Actions,
-    private blockedPageService: BlockedPageService,
+    private blockedHashService: BlockedHashService,
     private alertService: AlertService,
     private translateService: TranslateService
   ) {}

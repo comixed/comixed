@@ -38,6 +38,7 @@ import {
   setBlockedStateForHash,
   setBlockedStateForHashFailue,
   setBlockedStateForHashSuccess,
+  setBlockedStateForSelectedHashes,
   uploadBlockedHashesFile,
   uploadBlockedHashesFileFailure,
   uploadBlockedHashesFileSuccess
@@ -123,6 +124,7 @@ export const reducer = createReducer(
   on(uploadBlockedHashesFile, state => ({ ...state, busy: true })),
   on(uploadBlockedHashesFileSuccess, state => ({ ...state, busy: false })),
   on(uploadBlockedHashesFileFailure, state => ({ ...state, busy: false })),
+  on(setBlockedStateForSelectedHashes, state => ({ ...state, busy: true })),
   on(setBlockedStateForHash, state => ({ ...state, busy: true })),
   on(setBlockedStateForHashSuccess, state => ({ ...state, busy: false })),
   on(setBlockedStateForHashFailue, state => ({ ...state, busy: false }))

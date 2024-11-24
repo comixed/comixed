@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { BlockedPageService } from '@app/comic-pages/services/blocked-page.service';
+import { BlockedHashService } from '@app/comic-pages/services/blocked-hash.service';
 import { TranslateService } from '@ngx-translate/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import {
@@ -40,6 +40,7 @@ import {
   setBlockedStateForHash,
   setBlockedStateForHashFailue,
   setBlockedStateForHashSuccess,
+  setBlockedStateForSelectedHashes,
   uploadBlockedHashesFile,
   uploadBlockedHashesFileFailure,
   uploadBlockedHashesFileSuccess
@@ -50,6 +51,7 @@ import { DownloadDocument } from '@app/core/models/download-document';
 import { AlertService } from '@app/core/services/alert.service';
 import { FileDownloadService } from '@app/core/services/file-download.service';
 import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
+import { loadHashSelectionsSuccess } from '@app/comic-pages/actions/hash-selection.actions';
 
 @Injectable()
 export class BlockedHashesEffects {
@@ -58,7 +60,7 @@ export class BlockedHashesEffects {
       ofType(loadBlockedHashList),
       tap(action => this.logger.trace('Loading blocked page list:', action)),
       switchMap(action =>
-        this.blockedPageService.loadAll().pipe(
+        this.blockedHashService.loadAll().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map((response: BlockedHash[]) =>
             loadBlockedHashListSuccess({ entries: response })
@@ -86,11 +88,9 @@ export class BlockedHashesEffects {
   loadByHash$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadBlockedHashDetail),
-      tap(action =>
-        this.logger.debug('Effect: loading blocked page by hash:', action)
-      ),
+      tap(action => this.logger.debug('loading blocked page by hash:', action)),
       switchMap(action =>
-        this.blockedPageService.loadByHash({ hash: action.hash }).pipe(
+        this.blockedHashService.loadByHash({ hash: action.hash }).pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map((response: BlockedHash) =>
             loadBlockedHashDetailSuccess({ entry: response })
@@ -120,9 +120,9 @@ export class BlockedHashesEffects {
   save$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(saveBlockedHash),
-      tap(action => this.logger.debug('Effect: save blocked page:', action)),
+      tap(action => this.logger.debug('save blocked page:', action)),
       switchMap(action =>
-        this.blockedPageService.save({ entry: action.entry }).pipe(
+        this.blockedHashService.save({ entry: action.entry }).pipe(
           tap(response => this.logger.debug('Response received:', response)),
           tap((response: BlockedHash) =>
             this.alertService.info(
@@ -162,7 +162,7 @@ export class BlockedHashesEffects {
         this.logger.trace('Set blocked page deletion flags:', action)
       ),
       switchMap(action =>
-        this.blockedPageService
+        this.blockedHashService
           .markPagesWithHash({
             hashes: action.hashes,
             deleted: action.deleted
@@ -203,11 +203,9 @@ export class BlockedHashesEffects {
   downloadFile$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(downloadBlockedHashesFile),
-      tap(action =>
-        this.logger.debug('Effect: download blocked pages file:', action)
-      ),
+      tap(action => this.logger.debug('download blocked pages file:', action)),
       switchMap(action =>
-        this.blockedPageService.downloadFile().pipe(
+        this.blockedHashService.downloadFile().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           tap((response: DownloadDocument) =>
             this.fileDownloadService.saveFile({ document: response })
@@ -239,11 +237,9 @@ export class BlockedHashesEffects {
   uploadFile$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(uploadBlockedHashesFile),
-      tap(action =>
-        this.logger.debug('Effect: upload blocked page file:', action)
-      ),
+      tap(action => this.logger.debug('upload blocked page file:', action)),
       switchMap(action =>
-        this.blockedPageService.uploadFile({ file: action.file }).pipe(
+        this.blockedHashService.uploadFile({ file: action.file }).pipe(
           tap(response => this.logger.debug('Response received:', response)),
           tap((response: BlockedHash[]) =>
             this.alertService.info(
@@ -278,12 +274,57 @@ export class BlockedHashesEffects {
     );
   });
 
+  setBlockedStateForSelections$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(setBlockedStateForSelectedHashes),
+      tap(action =>
+        this.logger.debug('Set blocked state for selected hashes:', action)
+      ),
+      switchMap(action =>
+        this.blockedHashService
+          .setBlockedStateForSelections({ blocked: action.blocked })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            tap(() =>
+              this.alertService.info(
+                this.translateService.instant(
+                  'blocked-hash.set-state.effect-success',
+                  { blocked: action.blocked }
+                )
+              )
+            ),
+            mergeMap(() => [
+              setBlockedStateForHashSuccess(),
+              loadHashSelectionsSuccess({ entries: [] })
+            ]),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'blocked-hash.set-state.effect-failure',
+                  { blocked: action.blocked }
+                )
+              );
+              return of(setBlockedStateForHashFailue());
+            })
+          )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(setBlockedStateForHashFailue());
+      })
+    );
+  });
+
   setBlockedState$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(setBlockedStateForHash),
-      tap(action => this.logger.debug('Effect: set blocked state:', action)),
+      tap(action => this.logger.debug('set blocked state:', action)),
       switchMap(action =>
-        this.blockedPageService
+        this.blockedHashService
           .setBlockedState({ hashes: action.hashes, blocked: action.blocked })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
@@ -321,7 +362,7 @@ export class BlockedHashesEffects {
   constructor(
     private logger: LoggerService,
     private actions$: Actions,
-    private blockedPageService: BlockedPageService,
+    private blockedHashService: BlockedHashService,
     private alertService: AlertService,
     private translateService: TranslateService,
     private fileDownloadService: FileDownloadService
