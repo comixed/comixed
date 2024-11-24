@@ -20,7 +20,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { BlockedHashesEffects } from './blocked-hashes.effects';
-import { BlockedPageService } from '@app/comic-pages/services/blocked-page.service';
+import { BlockedHashService } from '@app/comic-pages/services/blocked-hash.service';
 import { AlertService } from '@app/core/services/alert.service';
 import {
   BLOCKED_HASH_1,
@@ -49,6 +49,7 @@ import {
   setBlockedStateForHash,
   setBlockedStateForHashFailue,
   setBlockedStateForHashSuccess,
+  setBlockedStateForSelectedHashes,
   uploadBlockedHashesFile,
   uploadBlockedHashesFileFailure,
   uploadBlockedHashesFileSuccess
@@ -59,6 +60,7 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FileDownloadService } from '@app/core/services/file-download.service';
+import { loadHashSelectionsSuccess } from '@app/comic-pages/actions/hash-selection.actions';
 
 describe('BlockedHashesEffects', () => {
   const ENTRIES = [BLOCKED_HASH_1, BLOCKED_HASH_3, BLOCKED_HASH_5];
@@ -71,7 +73,7 @@ describe('BlockedHashesEffects', () => {
 
   let actions$: Observable<any>;
   let effects: BlockedHashesEffects;
-  let blockedPageService: jasmine.SpyObj<BlockedPageService>;
+  let blockedHashService: jasmine.SpyObj<BlockedHashService>;
   let alertService: AlertService;
   let fileDownloadService: FileDownloadService;
 
@@ -86,20 +88,23 @@ describe('BlockedHashesEffects', () => {
         BlockedHashesEffects,
         provideMockActions(() => actions$),
         {
-          provide: BlockedPageService,
+          provide: BlockedHashService,
           useValue: {
-            loadAll: jasmine.createSpy('BlockedPageService.loadAll()'),
-            loadByHash: jasmine.createSpy('BlockedPageService.loadByHash()'),
-            save: jasmine.createSpy('BlockedPageService.save()'),
+            loadAll: jasmine.createSpy('BlockedHashService.loadAll()'),
+            loadByHash: jasmine.createSpy('BlockedHashService.loadByHash()'),
+            save: jasmine.createSpy('BlockedHashService.save()'),
             markPagesWithHash: jasmine.createSpy(
-              'BlockedPageService.markPagesWithHash()'
+              'BlockedHashService.markPagesWithHash()'
             ),
             downloadFile: jasmine.createSpy(
-              'BlockedPageService.downloadFile()'
+              'BlockedHashService.downloadFile()'
             ),
-            uploadFile: jasmine.createSpy('BlockedPageService.uploadFile()'),
+            uploadFile: jasmine.createSpy('BlockedHashService.uploadFile()'),
+            setBlockedStateForSelections: jasmine.createSpy(
+              'BlockedHashService.setBlockedStateForSelections()'
+            ),
             setBlockedState: jasmine.createSpy(
-              'BlockedPageService.setBlockedState()'
+              'BlockedHashService.setBlockedState()'
             )
           }
         },
@@ -109,9 +114,9 @@ describe('BlockedHashesEffects', () => {
     });
 
     effects = TestBed.inject(BlockedHashesEffects);
-    blockedPageService = TestBed.inject(
-      BlockedPageService
-    ) as jasmine.SpyObj<BlockedPageService>;
+    blockedHashService = TestBed.inject(
+      BlockedHashService
+    ) as jasmine.SpyObj<BlockedHashService>;
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'info');
     spyOn(alertService, 'error');
@@ -130,7 +135,7 @@ describe('BlockedHashesEffects', () => {
       const outcome = loadBlockedHashListSuccess({ entries: ENTRIES });
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.loadAll.and.returnValue(of(serviceResponse));
+      blockedHashService.loadAll.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.loadAll$).toBeObservable(expected);
@@ -142,7 +147,9 @@ describe('BlockedHashesEffects', () => {
       const outcome = loadBlockedHashListFailure();
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.loadAll.and.returnValue(throwError(serviceResponse));
+      blockedHashService.loadAll.and.returnValue(
+        throwError(() => serviceResponse)
+      );
 
       const expected = hot('-b', { b: outcome });
       expect(effects.loadAll$).toBeObservable(expected);
@@ -154,7 +161,7 @@ describe('BlockedHashesEffects', () => {
       const outcome = loadBlockedHashListFailure();
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.loadAll.and.throwError('expected');
+      blockedHashService.loadAll.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.loadAll$).toBeObservable(expected);
@@ -169,7 +176,7 @@ describe('BlockedHashesEffects', () => {
       const outcome = loadBlockedHashDetailSuccess({ entry: ENTRY });
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.loadByHash.and.returnValue(of(serviceResponse));
+      blockedHashService.loadByHash.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.loadByHash$).toBeObservable(expected);
@@ -181,8 +188,8 @@ describe('BlockedHashesEffects', () => {
       const outcome = loadBlockedHashDetailFailure();
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.loadByHash.and.returnValue(
-        throwError(serviceResponse)
+      blockedHashService.loadByHash.and.returnValue(
+        throwError(() => serviceResponse)
       );
 
       const expected = hot('-b', { b: outcome });
@@ -195,7 +202,7 @@ describe('BlockedHashesEffects', () => {
       const outcome = loadBlockedHashDetailFailure();
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.loadByHash.and.throwError('expected');
+      blockedHashService.loadByHash.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.loadByHash$).toBeObservable(expected);
@@ -210,7 +217,7 @@ describe('BlockedHashesEffects', () => {
       const outcome = saveBlockedHashSuccess({ entry: ENTRY });
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.save.and.returnValue(of(serviceResponse));
+      blockedHashService.save.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.save$).toBeObservable(expected);
@@ -223,7 +230,9 @@ describe('BlockedHashesEffects', () => {
       const outcome = saveBlockedHashFailure();
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.save.and.returnValue(throwError(serviceResponse));
+      blockedHashService.save.and.returnValue(
+        throwError(() => serviceResponse)
+      );
 
       const expected = hot('-b', { b: outcome });
       expect(effects.save$).toBeObservable(expected);
@@ -235,7 +244,7 @@ describe('BlockedHashesEffects', () => {
       const outcome = saveBlockedHashFailure();
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.save.and.throwError('expected');
+      blockedHashService.save.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.save$).toBeObservable(expected);
@@ -253,7 +262,7 @@ describe('BlockedHashesEffects', () => {
       const outcome = markPagesWithHashSuccess();
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.markPagesWithHash
+      blockedHashService.markPagesWithHash
         .withArgs({ hashes: HASHES, deleted: DELETED })
         .and.returnValue(of(serviceResponse));
 
@@ -271,9 +280,9 @@ describe('BlockedHashesEffects', () => {
       const outcome = markPagesWithHashFailure();
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.markPagesWithHash
+      blockedHashService.markPagesWithHash
         .withArgs({ hashes: HASHES, deleted: DELETED })
-        .and.returnValue(throwError(serviceResponse));
+        .and.returnValue(throwError(() => serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.markPagesWithHash$).toBeObservable(expected);
@@ -288,7 +297,7 @@ describe('BlockedHashesEffects', () => {
       const outcome = markPagesWithHashFailure();
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.markPagesWithHash
+      blockedHashService.markPagesWithHash
         .withArgs({ hashes: HASHES, deleted: DELETED })
         .and.throwError('expected');
 
@@ -307,7 +316,7 @@ describe('BlockedHashesEffects', () => {
       });
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.downloadFile.and.returnValue(of(serviceResponse));
+      blockedHashService.downloadFile.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.downloadFile$).toBeObservable(expected);
@@ -322,8 +331,8 @@ describe('BlockedHashesEffects', () => {
       const outcome = downloadBlockedHashesFileFailure();
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.downloadFile.and.returnValue(
-        throwError(serviceResponse)
+      blockedHashService.downloadFile.and.returnValue(
+        throwError(() => serviceResponse)
       );
 
       const expected = hot('-b', { b: outcome });
@@ -336,7 +345,7 @@ describe('BlockedHashesEffects', () => {
       const outcome = downloadBlockedHashesFileFailure();
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.downloadFile.and.throwError('expected');
+      blockedHashService.downloadFile.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.downloadFile$).toBeObservable(expected);
@@ -352,7 +361,7 @@ describe('BlockedHashesEffects', () => {
       const outcome2 = loadBlockedHashListSuccess({ entries: ENTRIES });
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.uploadFile.and.returnValue(of(serviceResponse));
+      blockedHashService.uploadFile.and.returnValue(of(serviceResponse));
 
       const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
       expect(effects.uploadFile$).toBeObservable(expected);
@@ -365,8 +374,8 @@ describe('BlockedHashesEffects', () => {
       const outcome = uploadBlockedHashesFileFailure();
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.uploadFile.and.returnValue(
-        throwError(serviceResponse)
+      blockedHashService.uploadFile.and.returnValue(
+        throwError(() => serviceResponse)
       );
 
       const expected = hot('-b', { b: outcome });
@@ -379,10 +388,63 @@ describe('BlockedHashesEffects', () => {
       const outcome = uploadBlockedHashesFileFailure();
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.uploadFile.and.throwError('expected');
+      blockedHashService.uploadFile.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.uploadFile$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('setting the blocked state for selected hashes', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = new HttpResponse({ status: 200 });
+      const action = setBlockedStateForSelectedHashes({
+        blocked: Math.random() > 0.5
+      });
+      const outcome1 = setBlockedStateForHashSuccess();
+      const outcome2 = loadHashSelectionsSuccess({ entries: [] });
+
+      actions$ = hot('-a', { a: action });
+      blockedHashService.setBlockedStateForSelections.and.returnValue(
+        of(serviceResponse)
+      );
+
+      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
+      expect(effects.setBlockedStateForSelections$).toBeObservable(expected);
+      expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = setBlockedStateForSelectedHashes({
+        blocked: Math.random() > 0.5
+      });
+      const outcome = setBlockedStateForHashFailue();
+
+      actions$ = hot('-a', { a: action });
+      blockedHashService.setBlockedStateForSelections.and.returnValue(
+        throwError(() => serviceResponse)
+      );
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.setBlockedStateForSelections$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = setBlockedStateForSelectedHashes({
+        blocked: Math.random() > 0.5
+      });
+      const outcome = setBlockedStateForHashFailue();
+
+      actions$ = hot('-a', { a: action });
+      blockedHashService.setBlockedStateForSelections.and.throwError(
+        'expected'
+      );
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.setBlockedStateForSelections$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
@@ -397,7 +459,7 @@ describe('BlockedHashesEffects', () => {
       const outcome = setBlockedStateForHashSuccess();
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.setBlockedState.and.returnValue(of(serviceResponse));
+      blockedHashService.setBlockedState.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.setBlockedState$).toBeObservable(expected);
@@ -413,8 +475,8 @@ describe('BlockedHashesEffects', () => {
       const outcome = setBlockedStateForHashFailue();
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.setBlockedState.and.returnValue(
-        throwError(serviceResponse)
+      blockedHashService.setBlockedState.and.returnValue(
+        throwError(() => serviceResponse)
       );
 
       const expected = hot('-b', { b: outcome });
@@ -430,7 +492,7 @@ describe('BlockedHashesEffects', () => {
       const outcome = setBlockedStateForHashFailue();
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.setBlockedState.and.throwError('expected');
+      blockedHashService.setBlockedState.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.setBlockedState$).toBeObservable(expected);

@@ -33,8 +33,10 @@ import {
   LOAD_BLOCKED_PAGE_BY_HASH_URL,
   MARK_PAGES_WITH_HASH_URL,
   REMOVE_BLOCKED_STATE_URL,
+  REMOVE_SELECTED_HASHES_BLOCKED_STATE_URL,
   SAVE_BLOCKED_PAGE_URL,
   SET_BLOCKED_STATE_URL,
+  SET_SELECTED_HASHES_BLOCKED_STATE_URL,
   UNMARK_PAGES_WITH_HASH_URL,
   UPLOAD_BLOCKED_PAGE_FILE_URL
 } from '@app/comic-pages/comic-pages.constants';
@@ -52,7 +54,7 @@ import {
 @Injectable({
   providedIn: 'root'
 })
-export class BlockedPageService {
+export class BlockedHashService {
   updateSubscription: Subscription;
   removalSubscription: Subscription;
   entriesLoaded = false;
@@ -130,6 +132,22 @@ export class BlockedPageService {
       interpolate(SAVE_BLOCKED_PAGE_URL, { hash: args.entry.hash }),
       args.entry
     );
+  }
+
+  setBlockedStateForSelections(args: { blocked: boolean }): Observable<any> {
+    if (args.blocked) {
+      this.logger.trace('Blocking selected hashes');
+      return this.http.post(
+        interpolate(SET_SELECTED_HASHES_BLOCKED_STATE_URL),
+        {}
+      );
+    } else {
+      this.logger.trace('Unblocking selected hashes');
+      return this.http.post(
+        interpolate(REMOVE_SELECTED_HASHES_BLOCKED_STATE_URL),
+        {}
+      );
+    }
   }
 
   /**

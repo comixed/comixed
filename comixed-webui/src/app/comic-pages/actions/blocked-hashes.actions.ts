@@ -111,6 +111,11 @@ export const uploadBlockedHashesFileFailure = createAction(
   '[Blocked Hashes] Failed to upload blocked hashes file'
 );
 
+export const setBlockedStateForSelectedHashes = createAction(
+  '[Block Hashes] Sets the blocked state for all selected page hashes',
+  props<{ blocked: boolean }>()
+);
+
 export const setBlockedStateForHash = createAction(
   '[Block Hashes] Sets the blocked state for a page hash',
   props<{ hashes: string[]; blocked: boolean }>()

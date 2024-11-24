@@ -51,9 +51,23 @@ import * as _ from 'lodash';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { PAGE_SIZE_OPTIONS } from '@app/core';
 import { selectBlockedHashesList } from '@app/comic-pages/selectors/blocked-hashes.selectors';
-import { setBlockedStateForHash } from '@app/comic-pages/actions/blocked-hashes.actions';
+import {
+  setBlockedStateForHash,
+  setBlockedStateForSelectedHashes
+} from '@app/comic-pages/actions/blocked-hashes.actions';
 import { ActivatedRoute } from '@angular/router';
 import { DuplicatePageUpdate } from '@app/library/models/net/duplicate-page-update';
+import {
+  addAllHashesToSelection,
+  addHashSelection,
+  clearHashSelections,
+  loadHashSelections,
+  removeHashSelection
+} from '@app/comic-pages/actions/hash-selection.actions';
+import {
+  selectHashSelectionList,
+  selectHashSelectionState
+} from '@app/comic-pages/selectors/hash-selection.selectors';
 
 @Component({
   selector: 'cx-duplicate-page-list-page',
@@ -75,6 +89,10 @@ export class DuplicatePageListPageComponent
   blockedHashList: BlockedHash[] = [];
   messagingStateSubscription: Subscription;
   pageUpdatesSubscription: MessagingSubscription;
+  hashSelectionStateSubscription: Subscription;
+  selectedHashes: string[] = [];
+  hashSelectionBusy = false;
+  hashSelectionListSubscription: Subscription;
   allSelected = false;
   anySelected = false;
   userSubscription: Subscription;
@@ -136,6 +154,18 @@ export class DuplicatePageListPageComponent
     this.blockedHashListSubscription = this.store
       .select(selectBlockedHashesList)
       .subscribe(blockedPages => (this.blockedHashList = blockedPages));
+    this.logger.trace('Subscribing to hash selection state updates');
+    this.hashSelectionStateSubscription = this.store
+      .select(selectHashSelectionState)
+      .subscribe(state => (this.hashSelectionBusy = state.busy));
+    this.logger.trace('Subscribing to hash selection updates');
+    this.hashSelectionListSubscription = this.store
+      .select(selectHashSelectionList)
+      .subscribe(hashes => {
+        this.logger.debug('Updating selected hash state:', hashes);
+        this.selectedHashes = hashes;
+        this.updateSelectionState();
+      });
     this.logger.trace('Subscribing to language changes');
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -173,7 +203,7 @@ export class DuplicatePageListPageComponent
   }
 
   get selectedCount(): number {
-    return this.dataSource.data.filter(entry => entry.selected).length;
+    return this.selectedHashes.length;
   }
 
   private _unblockedOnly = false;
@@ -199,6 +229,7 @@ export class DuplicatePageListPageComponent
   }
 
   ngAfterViewInit(): void {
+    this.store.dispatch(loadHashSelections());
     this.loadTranslations();
   }
 
@@ -207,6 +238,8 @@ export class DuplicatePageListPageComponent
     this.duplicatePageCountSubscription.unsubscribe();
     this.duplicatePageStateSubscription.unsubscribe();
     this.blockedHashListSubscription.unsubscribe();
+    this.hashSelectionStateSubscription.unsubscribe();
+    this.hashSelectionListSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
     if (!!this.pageUpdatesSubscription) {
       this.logger.trace('Unsubscribing from duplicate page list updates');
@@ -256,35 +289,40 @@ export class DuplicatePageListPageComponent
   }
 
   onSelectAll(checked: boolean): void {
-    this.logger.trace('Selecting all duplicate pages');
-    this.dataSource.data.forEach(entry => (entry.selected = checked));
-    this.updateSelectionState();
+    if (checked) {
+      this.logger.trace('Selecting all duplicate pages');
+      this.store.dispatch(addAllHashesToSelection());
+    } else {
+      this.logger.trace('Clearing hash selection');
+      this.store.dispatch(clearHashSelections());
+    }
   }
 
   onSelectOne(row: SelectableListItem<DuplicatePage>, checked: boolean): void {
-    this.logger.trace('Toggling selected state for row:', row, checked);
-    row.selected = checked;
-    this.updateSelectionState();
+    this.logger.debug('Toggling selected state for row:', row, checked);
+    if (checked) {
+      this.store.dispatch(addHashSelection({ hash: row.item.hash }));
+    } else {
+      this.store.dispatch(removeHashSelection({ hash: row.item.hash }));
+    }
   }
 
   onBlockSelected(): void {
     this.logger.trace('Confirming blocking selected items');
-    const selection = this.dataSource.data
-      .filter(entry => entry.selected)
-      .map(entry => entry.item);
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'duplicate-pages.block-selection.confirmation-title'
       ),
       message: this.translateService.instant(
         'duplicate-pages.block-selection.confirmation-message',
-        { count: selection.length }
+        { count: this.selectedHashes.length }
       ),
       confirm: () => {
         this.logger.trace('Blocking selected page hashes');
-        this.doSetBlockedState(
-          selection.map(entry => entry.hash),
-          true
+        this.store.dispatch(
+          setBlockedStateForSelectedHashes({
+            blocked: true
+          })
         );
       }
     });
@@ -292,22 +330,20 @@ export class DuplicatePageListPageComponent
 
   onUnblockSelected(): void {
     this.logger.trace('Confirming unblocking selected items');
-    const selection = this.dataSource.data
-      .filter(entry => entry.selected)
-      .map(entry => entry.item);
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'duplicate-pages.unblock-selection.confirmation-title'
       ),
       message: this.translateService.instant(
         'duplicate-pages.unblock-selection.confirmation-message',
-        { count: selection.length }
+        { count: this.selectedHashes.length }
       ),
       confirm: () => {
         this.logger.trace('Unblocking selected page hashes');
-        this.doSetBlockedState(
-          selection.map(entry => entry.hash),
-          false
+        this.store.dispatch(
+          setBlockedStateForSelectedHashes({
+            blocked: false
+          })
         );
       }
     });
@@ -335,18 +371,13 @@ export class DuplicatePageListPageComponent
 
   private loadDataSource(): void {
     this.logger.info('Loading duplicate pages:', this.unblockedOnly);
-    const oldData = this.dataSource.data;
     const blockedHashes = this.blockedHashList.map(page => page.hash);
     this.dataSource.data = this.duplicatePages
       .filter(page => !this.unblockedOnly || !blockedHashes.includes(page.hash))
       .map(page => {
-        const existingPage = oldData.find(
-          oldPage => oldPage.item.hash === page.hash
-        );
-
         return {
           item: page,
-          selected: existingPage?.selected || false
+          selected: this.selectedHashes.includes(page.hash)
         };
       });
     this.updateSelectionState();
@@ -359,20 +390,13 @@ export class DuplicatePageListPageComponent
   }
 
   private updateSelectionState(): void {
-    this.allSelected =
-      this.dataSource.data.length > 0 &&
-      this.dataSource.data.every(entry => entry.selected);
-    this.anySelected =
-      this.allSelected || this.dataSource.data.some(entry => entry.selected);
-  }
-
-  private doSetBlockedState(hashes: string[], blocked: boolean): void {
-    this.store.dispatch(
-      setBlockedStateForHash({
-        hashes,
-        blocked
-      })
+    this.dataSource.data.forEach(
+      entry => (entry.selected = this.selectedHashes.includes(entry.item.hash))
     );
-    this.dataSource.data.forEach(item => (item.selected = false));
+    /* istanbul ignore next */
+    this.allSelected =
+      this.totalPages > 0 && this.totalPages === this.selectedCount;
+    /* istanbul ignore next */
+    this.anySelected = this.selectedCount > 0;
   }
 }

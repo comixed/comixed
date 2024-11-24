@@ -34,6 +34,11 @@ import {
   DeletedPagesState,
   reducer as deletedPageReducer
 } from '@app/comic-pages/reducers/deleted-pages.reducer';
+import {
+  HASH_SELECTION_FEATURE_KEY,
+  HashSelectionState,
+  reducer as hashSelectionReducer
+} from '@app/comic-pages/reducers/hash-selection.reducer';
 
 interface RouterStateUrl {
   url: string;
@@ -43,6 +48,7 @@ interface RouterStateUrl {
 
 export interface BlockedPagesModuleState {
   router: RouterReducerState<RouterStateUrl>;
+  [HASH_SELECTION_FEATURE_KEY]: HashSelectionState;
   [BLOCKED_HASHES_FEATURE_KEY]: BlockedHashesState;
   [DELETE_BLOCKED_PAGES_FEATURE_KEY]: DeleteBlockedPagesState;
   [DELETED_PAGE_FEATURE_KEY]: DeletedPagesState;
@@ -52,6 +58,7 @@ export type ModuleState = BlockedPagesModuleState;
 
 export const reducers: ActionReducerMap<BlockedPagesModuleState> = {
   router: routerReducer,
+  [HASH_SELECTION_FEATURE_KEY]: hashSelectionReducer,
   [BLOCKED_HASHES_FEATURE_KEY]: downloadBlockedPagesReducer,
   [DELETE_BLOCKED_PAGES_FEATURE_KEY]: deleteBlockedPagesReducer,
   [DELETED_PAGE_FEATURE_KEY]: deletedPageReducer

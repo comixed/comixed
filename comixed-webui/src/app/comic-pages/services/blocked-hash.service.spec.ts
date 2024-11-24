@@ -18,7 +18,7 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { BlockedPageService } from './blocked-page.service';
+import { BlockedHashService } from './blocked-hash.service';
 import {
   BLOCKED_HASH_1,
   BLOCKED_HASH_2,
@@ -48,8 +48,10 @@ import {
   LOAD_BLOCKED_PAGE_BY_HASH_URL,
   MARK_PAGES_WITH_HASH_URL,
   REMOVE_BLOCKED_STATE_URL,
+  REMOVE_SELECTED_HASHES_BLOCKED_STATE_URL,
   SAVE_BLOCKED_PAGE_URL,
   SET_BLOCKED_STATE_URL,
+  SET_SELECTED_HASHES_BLOCKED_STATE_URL,
   UNMARK_PAGES_WITH_HASH_URL,
   UPLOAD_BLOCKED_PAGE_FILE_URL
 } from '@app/comic-pages/comic-pages.constants';
@@ -65,7 +67,7 @@ import {
   blockedHashUpdated
 } from '@app/comic-pages/actions/blocked-hashes.actions';
 
-describe('BlockedPageService', () => {
+describe('BlockedHashService', () => {
   const ENTRIES = [BLOCKED_HASH_1, BLOCKED_HASH_3, BLOCKED_HASH_5];
   const ENTRY = BLOCKED_HASH_4;
   const UPDATED = BLOCKED_HASH_2;
@@ -79,7 +81,7 @@ describe('BlockedPageService', () => {
     [MESSAGING_FEATURE_KEY]: { ...initialMessagingState }
   };
 
-  let service: BlockedPageService;
+  let service: BlockedHashService;
   let httpMock: HttpTestingController;
   let webSocketService: jasmine.SpyObj<WebSocketService>;
   const updateSubscription = jasmine.createSpyObj(['unsubscribe']);
@@ -110,7 +112,7 @@ describe('BlockedPageService', () => {
       ]
     });
 
-    service = TestBed.inject(BlockedPageService);
+    service = TestBed.inject(BlockedHashService);
     httpMock = TestBed.inject(HttpTestingController);
     webSocketService = TestBed.inject(
       WebSocketService
@@ -255,6 +257,32 @@ describe('BlockedPageService', () => {
     expect(req.request.body).toEqual({
       hashes: [PAGE.hash]
     } as SetBlockedStateRequest);
+    req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('can block selected hashes', () => {
+    service
+      .setBlockedStateForSelections({ blocked: true })
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(
+      interpolate(SET_SELECTED_HASHES_BLOCKED_STATE_URL)
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({});
+    req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('can unblock selected hashes', () => {
+    service
+      .setBlockedStateForSelections({ blocked: false })
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(
+      interpolate(REMOVE_SELECTED_HASHES_BLOCKED_STATE_URL)
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({});
     req.flush(new HttpResponse({ status: 200 }));
   });
 

@@ -52,6 +52,8 @@ import {
 } from '@app/comic-pages/reducers/deleted-pages.reducer';
 import { DeletedPagesEffects } from '@app/comic-pages/effects/deleted-pages.effects';
 import { BlockedHashThumbnailUrlPipe } from './pipes/blocked-hash-thumbnail-url.pipe';
+import { hashSelectionFeature } from '@app/comic-pages/reducers/hash-selection.reducer';
+import { HashSelectionEffects } from '@app/comic-pages/effects/hash-selection.effects';
 
 @NgModule({
   declarations: [
@@ -64,6 +66,7 @@ import { BlockedHashThumbnailUrlPipe } from './pipes/blocked-hash-thumbnail-url.
     CommonModule,
     ComicPagesRouting,
     TranslateModule.forRoot(),
+    StoreModule.forFeature(hashSelectionFeature),
     StoreModule.forFeature(blockedHashesFeature),
     StoreModule.forFeature(
       DELETE_BLOCKED_PAGES_FEATURE_KEY,
@@ -71,6 +74,7 @@ import { BlockedHashThumbnailUrlPipe } from './pipes/blocked-hash-thumbnail-url.
     ),
     StoreModule.forFeature(DELETED_PAGE_FEATURE_KEY, deletedPageReducer),
     EffectsModule.forFeature([
+      HashSelectionEffects,
       BlockedHashesEffects,
       DeleteBlockedPagesEffects,
       DeletedPagesEffects

@@ -20,6 +20,7 @@ package org.comixedproject.rest.comicpages;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
+import jakarta.servlet.http.HttpSession;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
@@ -57,6 +58,7 @@ public class BlockedHashController {
   @Autowired private BlockedHashService blockedHashService;
   @Autowired private ComicPageService comicPageService;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
+  @Autowired private SelectedHashManager selectedHashManager;
 
   /**
    * Retrieves the list of all blocked pages.
@@ -244,5 +246,37 @@ public class BlockedHashController {
         .contentType(MediaType.valueOf(type))
         .cacheControl(CacheControl.maxAge(24, TimeUnit.DAYS))
         .body(content);
+  }
+
+  /**
+   * Marks the selected page hashes as blocked.
+   *
+   * @param session the session
+   */
+  @PostMapping(
+      value = "/api/pages/blocked/add/selected",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.blocked-hash.mark-selected-hashes")
+  public void blockSelectedHashes(final HttpSession session) {
+    log.info("Blocking selected hashes");
+    this.blockedHashService.blockPages(this.selectedHashManager.load(session).stream().toList());
+    this.selectedHashManager.clearSelections(session);
+  }
+
+  /**
+   * Unmarks the selected page hashes as blocked.
+   *
+   * @param session the session
+   */
+  @PostMapping(
+      value = "/api/pages/blocked/remove/selected",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.blocked-hash.mark-selected-hashes")
+  public void unblockSelectedHashes(final HttpSession session) {
+    log.info("Unblocking selected hashes");
+    this.blockedHashService.unblockPages(this.selectedHashManager.load(session).stream().toList());
+    this.selectedHashManager.clearSelections(session);
   }
 }

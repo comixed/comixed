@@ -1,4 +1,10 @@
 {
+  "add-all-hashes": {
+    "effect-failure": "Failed to select all duplicate hashes.."
+  },
+  "add-hash-selection": {
+    "effect-failure": "Failed to select hash..."
+  },
   "blocked-hash": {
     "add-page-hash": {
       "confirmation-message": "Are you sure you want to block all pages with the hash \"{hash}\"?",
@@ -72,6 +78,9 @@
       "effect-success": "Blocked hashes now contains {count, plural, =1{one entry} other{# entries}}."
     }
   },
+  "clear-hash-selections": {
+    "effect-failure": "Failed to clear hash selections..."
+  },
   "deleted-page-list": {
     "header": {
       "comic-count": "# of Comics",
@@ -83,5 +92,11 @@
     },
     "page-title": "Deleted Page List ({hashCount, plural, =1{One Hash} other{# Hashes}} In {comicCount, plural, =1{One Comic} other{# Comics}})",
     "tab-title": "Deleted Page List"
+  },
+  "load-hash-selections": {
+    "effect-failure": "Failed to load current hash selections..."
+  },
+  "remove-hash-selection": {
+    "effect-failure": "Failed to remove hash..."
   }
 }
