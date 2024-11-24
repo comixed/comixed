@@ -21,7 +21,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 
 import { DeleteBlockedPagesEffects } from './delete-blocked-pages.effects';
-import { BlockedPageService } from '@app/comic-pages/services/blocked-page.service';
+import { BlockedHashService } from '@app/comic-pages/services/blocked-hash.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
@@ -44,7 +44,7 @@ describe('DeleteBlockedPagesEffects', () => {
 
   let actions$: Observable<any>;
   let effects: DeleteBlockedPagesEffects;
-  let blockedPageService: jasmine.SpyObj<BlockedPageService>;
+  let blockedHashService: jasmine.SpyObj<BlockedHashService>;
   let alertService: AlertService;
 
   beforeEach(() => {
@@ -58,10 +58,10 @@ describe('DeleteBlockedPagesEffects', () => {
         DeleteBlockedPagesEffects,
         provideMockActions(() => actions$),
         {
-          provide: BlockedPageService,
+          provide: BlockedHashService,
           useValue: {
             deleteEntries: jasmine.createSpy(
-              'BlockedPageService.deleteEntries()'
+              'BlockedHashService.deleteEntries()'
             )
           }
         },
@@ -70,9 +70,9 @@ describe('DeleteBlockedPagesEffects', () => {
     });
 
     effects = TestBed.inject(DeleteBlockedPagesEffects);
-    blockedPageService = TestBed.inject(
-      BlockedPageService
-    ) as jasmine.SpyObj<BlockedPageService>;
+    blockedHashService = TestBed.inject(
+      BlockedHashService
+    ) as jasmine.SpyObj<BlockedHashService>;
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'info');
     spyOn(alertService, 'error');
@@ -89,7 +89,7 @@ describe('DeleteBlockedPagesEffects', () => {
       const outcome = blockedPagesDeleted();
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.deleteEntries.and.returnValue(of(serviceResponse));
+      blockedHashService.deleteEntries.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.deleteEntries$).toBeObservable(expected);
@@ -102,7 +102,7 @@ describe('DeleteBlockedPagesEffects', () => {
       const outcome = deleteBlockedPagesFailed();
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.deleteEntries.and.returnValue(
+      blockedHashService.deleteEntries.and.returnValue(
         throwError(serviceResponse)
       );
 
@@ -116,7 +116,7 @@ describe('DeleteBlockedPagesEffects', () => {
       const outcome = deleteBlockedPagesFailed();
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.deleteEntries.and.throwError('expected');
+      blockedHashService.deleteEntries.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.deleteEntries$).toBeObservable(expected);

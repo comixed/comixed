@@ -21,10 +21,13 @@ package org.comixedproject.rest.comicpages;
 import static junit.framework.TestCase.assertSame;
 import static org.junit.Assert.*;
 
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.comicpages.BlockedHash;
 import org.comixedproject.model.net.DownloadDocument;
@@ -53,6 +56,7 @@ public class BlockedHashControllerTest {
   @Mock private BlockedHashService blockedHashService;
   @Mock private ComicPageService comicPageService;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
+  @Mock private SelectedHashManager selectedHashManager;
   @Mock private List<BlockedHash> blockedHashList;
   @Mock private BlockedHash blockedHash;
   @Mock private BlockedHash blockedHashRecord;
@@ -62,11 +66,16 @@ public class BlockedHashControllerTest {
   @Mock private List<String> hashList;
   @Mock private List<String> updatedHashList;
   @Mock private List<BlockedHash> blockedHashes = new ArrayList<>();
+  @Mock private Set<String> selectedHashList;
+  @Mock private HttpSession session;
+  @Mock private Stream<String> selectedHashStream;
 
   @Before
   public void setUp() {
     blockedHashes.add(blockedHashRecord);
     Mockito.when(fileTypeAdaptor.getType(Mockito.any())).thenReturn("jpeg");
+    Mockito.when(selectedHashStream.toList()).thenReturn(hashList);
+    Mockito.when(selectedHashList.stream()).thenReturn(selectedHashStream);
   }
 
   @Test
@@ -82,7 +91,7 @@ public class BlockedHashControllerTest {
   }
 
   @Test(expected = BlockedHashException.class)
-  public void testGetOneServiceException() throws BlockedHashException {
+  public void testGetByHash_serviceException() throws BlockedHashException {
     Mockito.when(blockedHashService.getByHash(Mockito.anyString()))
         .thenThrow(BlockedHashException.class);
 
@@ -94,7 +103,7 @@ public class BlockedHashControllerTest {
   }
 
   @Test
-  public void testGetOne() throws BlockedHashException {
+  public void testGetByHash() throws BlockedHashException {
     Mockito.when(blockedHashService.getByHash(Mockito.anyString())).thenReturn(blockedHashRecord);
 
     final BlockedHash result = controller.getByHash(TEST_PAGE_HASH);
@@ -106,7 +115,7 @@ public class BlockedHashControllerTest {
   }
 
   @Test
-  public void testBlockPage() {
+  public void testBlockPageHashes() {
     final List<String> pageHashList = new ArrayList<>();
     pageHashList.add(TEST_PAGE_HASH);
 
@@ -174,7 +183,7 @@ public class BlockedHashControllerTest {
   }
 
   @Test(expected = IOException.class)
-  public void testUploadFileServiceException() throws BlockedHashException, IOException {
+  public void testUploadFile_serviceException() throws BlockedHashException, IOException {
     Mockito.when(uploadedFile.getInputStream()).thenReturn(inputStream);
     Mockito.when(blockedHashService.uploadFile(Mockito.any(InputStream.class)))
         .thenThrow(IOException.class);
@@ -215,7 +224,7 @@ public class BlockedHashControllerTest {
   }
 
   @Test(expected = BlockedHashException.class)
-  public void testGetBlockedHashThumbnailHashNotFound() throws BlockedHashException {
+  public void testGetThumbnail_thumbnailNotFound() throws BlockedHashException {
     Mockito.when(blockedHashService.getThumbnail(Mockito.anyString()))
         .thenThrow(BlockedHashException.class);
 
@@ -227,7 +236,7 @@ public class BlockedHashControllerTest {
   }
 
   @Test
-  public void testGetBlockedHashThumbnail() throws BlockedHashException {
+  public void testGetThumbnail() throws BlockedHashException {
     Mockito.when(blockedHashService.getThumbnail(Mockito.anyString()))
         .thenReturn(TEST_PAGE_CONTENT);
 
@@ -237,5 +246,29 @@ public class BlockedHashControllerTest {
     assertSame(TEST_PAGE_CONTENT, result.getBody());
 
     Mockito.verify(blockedHashService, Mockito.times(1)).getThumbnail(TEST_PAGE_HASH);
+  }
+
+  @Test
+  public void testBlockSelectedHash() {
+    Mockito.when(selectedHashManager.load(Mockito.any(HttpSession.class)))
+        .thenReturn(selectedHashList);
+
+    controller.blockSelectedHashes(session);
+
+    Mockito.verify(selectedHashManager, Mockito.times(1)).load(Mockito.any(HttpSession.class));
+    Mockito.verify(blockedHashService, Mockito.times(1)).blockPages(hashList);
+    Mockito.verify(selectedHashManager, Mockito.times(1)).clearSelections(session);
+  }
+
+  @Test
+  public void testUnblockSelectedHash() {
+    Mockito.when(selectedHashManager.load(Mockito.any(HttpSession.class)))
+        .thenReturn(selectedHashList);
+
+    controller.unblockSelectedHashes(session);
+
+    Mockito.verify(selectedHashManager, Mockito.times(1)).load(Mockito.any(HttpSession.class));
+    Mockito.verify(blockedHashService, Mockito.times(1)).unblockPages(hashList);
+    Mockito.verify(selectedHashManager, Mockito.times(1)).clearSelections(session);
   }
 }

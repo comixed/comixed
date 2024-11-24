@@ -384,4 +384,15 @@ public class ComicPageService {
     log.debug("Loading hash for page: id={}", pageId);
     return this.comicPageRepository.getHashForPage(pageId);
   }
+
+  /**
+   * Returns the list of all duplicate page hashes.
+   *
+   * @return the duplicate page hashes.
+   */
+  @Transactional
+  public List<String> getAllDuplicateHashes() {
+    log.debug("Loading all duplicate page hashes");
+    return this.comicPageRepository.getAllDuplicateHashes();
+  }
 }

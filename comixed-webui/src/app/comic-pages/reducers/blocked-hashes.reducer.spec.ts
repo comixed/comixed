@@ -42,6 +42,7 @@ import {
   setBlockedStateForHash,
   setBlockedStateForHashFailue,
   setBlockedStateForHashSuccess,
+  setBlockedStateForSelectedHashes,
   uploadBlockedHashesFile,
   uploadBlockedHashesFileFailure,
   uploadBlockedHashesFileSuccess
@@ -408,15 +409,30 @@ describe('BlockedHashes Reducer', () => {
   });
 
   describe('setting the blocked state', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, busy: false },
-        setBlockedStateForHash({ hashes: [PAGE.hash], blocked: true })
-      );
+    describe('for one hash', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: false },
+          setBlockedStateForHash({ hashes: [PAGE.hash], blocked: true })
+        );
+      });
+
+      it('sets the busy flag', () => {
+        expect(state.busy).toBeTrue();
+      });
     });
 
-    it('sets the busy flag', () => {
-      expect(state.busy).toBeTrue();
+    describe('for selected hashes', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: false },
+          setBlockedStateForSelectedHashes({ blocked: true })
+        );
+      });
+
+      it('sets the busy flag', () => {
+        expect(state.busy).toBeTrue();
+      });
     });
 
     describe('success', () => {

@@ -62,6 +62,7 @@ public class ComicPageServiceTest {
   @Mock private ComicPage savedPage;
   @Mock private ComicPage pageRecord;
   @Mock private ComicBook comicBook;
+  @Mock private List<String> duplicateHashList;
 
   @Captor private ArgumentCaptor<Pageable> argumentCaptorPageable;
 
@@ -509,5 +510,17 @@ public class ComicPageServiceTest {
     assertEquals(TEST_PAGE_HASH, result);
 
     Mockito.verify(comicPageRepository, Mockito.times(1)).getHashForPage(TEST_PAGE_ID);
+  }
+
+  @Test
+  public void testGetAllDuplicateHashes() {
+    Mockito.when(comicPageRepository.getAllDuplicateHashes()).thenReturn(duplicateHashList);
+
+    final List<String> result = service.getAllDuplicateHashes();
+
+    assertNotNull(result);
+    assertSame(duplicateHashList, result);
+
+    Mockito.verify(comicPageRepository, Mockito.times(1)).getAllDuplicateHashes();
   }
 }
