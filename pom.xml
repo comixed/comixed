@@ -466,30 +466,11 @@
         </execution>
       </executions>
     </plugin>
-      <!-- plugin>
-        <groupId>com.github.danielflower.mavenplugins</groupId>
-        <artifactId>gitlog-maven-plugin</artifactId>
-        <version>1.14.0</version>
-        <inherited>false</inherited>
-        <configuration>
-          <reportTitle>Changelog for ComiXed v2.3-SNAPSHOT</reportTitle>
-          <outputDirectory>${project.basedir}</outputDirectory>
-          <generateMarkdownChangeLog>true</generateMarkdownChangeLog>
-          <markdownChangeLogFilename>CHANGELOG.md</markdownChangeLogFilename>
-          <generateSimpleHTMLChangeLog>false</generateSimpleHTMLChangeLog>
-          <generatePlainTextChangeLog>false</generatePlainTextChangeLog>
-          <generateJSONChangeLog>false</generateJSONChangeLog>
-          <fullGitMessage>false</fullGitMessage>
-          <fullGitMessageReleaseNotes>true</fullGitMessageReleaseNotes>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin -->
+    <plugin>
+      <groupId>org.sonarsource.scanner.maven</groupId>
+      <artifactId>sonar-maven-plugin</artifactId>
+      <version>4.0.0.4121</version>
+    </plugin>
     </plugins>
   </build>
   <modules>
