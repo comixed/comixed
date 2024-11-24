@@ -18,32 +18,12 @@
 
 import { Params } from '@angular/router';
 import { routerReducer, RouterReducerState } from '@ngrx/router-store';
-import {
-  BLOCKED_HASH_LIST_FEATURE_KEY,
-  BlockedHashListState,
-  reducer as blockedHashListReducer
-} from './reducers/blocked-hash-list.reducer';
 import { ActionReducerMap } from '@ngrx/store';
-import {
-  BLOCKED_PAGE_DETAIL_FEATURE_KEY,
-  BlockedPageDetailState,
-  reducer as blockedPageDetailReducer
-} from '@app/comic-pages/reducers/blocked-page-detail.reducer';
-import {
-  BLOCK_PAGE_FEATURE_KEY,
-  BlockPageState,
-  reducer as blockPageReducer
-} from '@app/comic-pages/reducers/block-page.reducer';
 import {
   BLOCKED_HASHES_FEATURE_KEY,
   BlockedHashesState,
   reducer as downloadBlockedPagesReducer
 } from '@app/comic-pages/reducers/blocked-hashes.reducer';
-import {
-  reducer as uploadBlockedPagesReducer,
-  UPLOAD_BLOCKED_PAGES_FEATURE_KEY,
-  UploadedBlockedPagesState
-} from '@app/comic-pages/reducers/upload-blocked-pages.reducer';
 import {
   DELETE_BLOCKED_PAGES_FEATURE_KEY,
   DeleteBlockedPagesState,
@@ -63,11 +43,7 @@ interface RouterStateUrl {
 
 export interface BlockedPagesModuleState {
   router: RouterReducerState<RouterStateUrl>;
-  [BLOCKED_HASH_LIST_FEATURE_KEY]: BlockedHashListState;
-  [BLOCKED_PAGE_DETAIL_FEATURE_KEY]: BlockedPageDetailState;
-  [BLOCK_PAGE_FEATURE_KEY]: BlockPageState;
   [BLOCKED_HASHES_FEATURE_KEY]: BlockedHashesState;
-  [UPLOAD_BLOCKED_PAGES_FEATURE_KEY]: UploadedBlockedPagesState;
   [DELETE_BLOCKED_PAGES_FEATURE_KEY]: DeleteBlockedPagesState;
   [DELETED_PAGE_FEATURE_KEY]: DeletedPagesState;
 }
@@ -76,11 +52,7 @@ export type ModuleState = BlockedPagesModuleState;
 
 export const reducers: ActionReducerMap<BlockedPagesModuleState> = {
   router: routerReducer,
-  [BLOCKED_HASH_LIST_FEATURE_KEY]: blockedHashListReducer,
-  [BLOCKED_PAGE_DETAIL_FEATURE_KEY]: blockedPageDetailReducer,
-  [BLOCK_PAGE_FEATURE_KEY]: blockPageReducer,
   [BLOCKED_HASHES_FEATURE_KEY]: downloadBlockedPagesReducer,
-  [UPLOAD_BLOCKED_PAGES_FEATURE_KEY]: uploadBlockedPagesReducer,
   [DELETE_BLOCKED_PAGES_FEATURE_KEY]: deleteBlockedPagesReducer,
   [DELETED_PAGE_FEATURE_KEY]: deletedPageReducer
 };

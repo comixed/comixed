@@ -2,6 +2,7 @@
   <button
     id="unblocked-only"
     mat-fab
+    color="accent"
     [matTooltip]="'duplicate-pages.tooltip.unblocked-only' | translate"
     (click)="onToggleUnblockedOnly()"
   >
@@ -9,6 +10,7 @@
   </button>
   <button
     mat-fab
+    color="primary"
     [matTooltip]="'duplicate-pages.tooltip.block-selections' | translate"
     [disabled]="selectedCount === 0"
     (click)="onBlockSelected()"
@@ -17,6 +19,7 @@
   </button>
   <button
     mat-fab
+    color="warn"
     [matTooltip]="'duplicate-pages.tooltip.unblock-selections' | translate"
     [disabled]="selectedCount === 0"
     (click)="onUnblockSelected()"
