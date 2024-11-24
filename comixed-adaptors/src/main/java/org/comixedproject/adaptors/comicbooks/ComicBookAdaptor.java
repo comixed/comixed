@@ -175,15 +175,17 @@ public class ComicBookAdaptor {
       final int length = String.valueOf(comicBook.getPages().size()).length();
       for (int index = 0; index < comicBook.getPages().size(); index++) {
         final ComicPage page = comicBook.getPages().get(index);
-        log.trace("Reading comic book page content: {}", page.getFilename());
-        final byte[] content = sourceArchive.readEntry(readHandle, page.getFilename());
-        @NonNull String pageFilename = page.getFilename();
-        if (StringUtils.isNotEmpty(pageRenamingRule)) {
-          pageFilename =
-              this.comicPageAdaptor.createFilenameFromRule(page, pageRenamingRule, index, length);
+        if (page != null) {
+          log.trace("Reading comic book page content: {}", page.getFilename());
+          final byte[] content = sourceArchive.readEntry(readHandle, page.getFilename());
+          @NonNull String pageFilename = page.getFilename();
+          if (StringUtils.isNotEmpty(pageRenamingRule)) {
+            pageFilename =
+                this.comicPageAdaptor.createFilenameFromRule(page, pageRenamingRule, index, length);
+          }
+          log.trace("Writing comic book page content: {}", pageFilename);
+          destinationArchive.writeEntry(writeHandle, pageFilename, content);
         }
-        log.trace("Writing comic book page content: {}", pageFilename);
-        destinationArchive.writeEntry(writeHandle, pageFilename, content);
       }
 
       log.trace("Closing archives");
