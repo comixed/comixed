@@ -60,7 +60,7 @@ export class SingleBookScrapingEffects {
         this.metadataService
           .loadScrapingVolumes({
             metadataSource: action.metadataSource,
-            publisher: action.publisher,
+            publisher: action.publisher || '',
             series: action.series,
             maximumRecords: action.maximumRecords,
             skipCache: action.skipCache,
