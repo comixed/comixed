@@ -38,4 +38,8 @@ public class CreateAccountRequest {
   @JsonProperty("password")
   @Getter
   private String password;
+
+  @JsonProperty("admin")
+  @Getter
+  private boolean admin;
 }

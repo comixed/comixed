@@ -144,7 +144,7 @@ public class UserController {
    * @throws ComiXedUserException if an error occurs
    */
   @GetMapping(
-      value = "/api/user/statistics/comics/read",
+      value = "/api/users/statistics/comics/read",
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.user.comics-read-statistics")
   @JsonView(View.UserStatistics.class)
@@ -165,7 +165,7 @@ public class UserController {
    *
    * @return the response body
    */
-  @GetMapping(value = "/api/user/admins/existing", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/api/users/admins/existing", produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.user.existing-accounts")
   public checkForAdminAccountResponse checkForAdmin() {
     log.info("Checking if there are existing user accounts");
@@ -178,13 +178,91 @@ public class UserController {
    * @param request the request body
    * @throws ComiXedUserException if an error occurs
    */
-  @PostMapping(value = "/api/user/admins", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/api/users/admins", consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.user.create-admin-account")
-  public void createAdminAccount(@RequestBody final CreateAccountRequest request)
+  public void createAdminAccount(@RequestBody final CreateAdminAccountRequest request)
       throws ComiXedUserException {
     final String email = request.getEmail();
     final String password = request.getPassword();
     log.info("Creating initial admin account: {}", email);
     this.userService.createAdminAccount(email, password);
+  }
+
+  /**
+   * Returns the list of all user accounts.
+   *
+   * @return the user account list
+   */
+  @GetMapping(value = "/api/users/list", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.user.list-accounts")
+  @PreAuthorize("hasRole('ADMIN')")
+  @JsonView(View.UserList.class)
+  public List<ComiXedUser> getUserAccountList() {
+    log.info("Getting the user account list");
+    return this.userService.getUserAccountList();
+  }
+
+  /**
+   * Creates a user account.
+   *
+   * @param request the request body
+   * @return the list of users
+   * @throws ComiXedUserException if an error occurs
+   */
+  @PostMapping(
+      value = "/api/users/create",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.user.create-user")
+  @PreAuthorize("hasRole('ADMIN')")
+  @JsonView(View.UserList.class)
+  public List<ComiXedUser> createUserAccount(@RequestBody final CreateAccountRequest request)
+      throws ComiXedUserException {
+    final String email = request.getEmail();
+    final String password = request.getPassword();
+    final boolean admin = request.isAdmin();
+    log.info("Creating user account: {} is admin={}", email, admin);
+    return this.userService.createUserAccount(email, password, admin);
+  }
+
+  /**
+   * Updates a user account.
+   *
+   * @param request the request body
+   * @param userId the user id
+   * @return the list of users
+   * @throws ComiXedUserException if an error occurs
+   */
+  @PutMapping(
+      value = "/api/users/{userId}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.user.create-user")
+  @PreAuthorize("hasRole('ADMIN')")
+  @JsonView(View.UserList.class)
+  public List<ComiXedUser> updateUserAccount(
+      @RequestBody final CreateAccountRequest request, @PathVariable("userId") final long userId)
+      throws ComiXedUserException {
+    final String email = request.getEmail();
+    final String password = request.getPassword();
+    final boolean admin = request.isAdmin();
+    log.info("Updating user account: {} is admin={}", email, admin);
+    return this.userService.updateUserAccount(userId, email, password, admin);
+  }
+
+  /**
+   * Deletes a user account.
+   *
+   * @param userId the user id
+   * @throws ComiXedUserException if an error occurs
+   */
+  @DeleteMapping(value = "/api/users/{userId}")
+  @Timed(value = "comixed.user.create-user")
+  @PreAuthorize("hasRole('ADMIN')")
+  @JsonView(View.UserList.class)
+  public void deleteUserAccount(@PathVariable("userId") final long userId)
+      throws ComiXedUserException {
+    log.info("Deleting user account: {} is admin={}", userId);
+    this.userService.deleteUserAccount(userId);
   }
 }

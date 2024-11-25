@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +16,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Role } from '@app/user/models/role';
-import { Preference } from '@app/user/models/preference';
+package org.comixedproject.model.net.user;
 
-export interface User {
-  id: number;
-  email: string;
-  firstLoginDate: number;
-  lastLoginDate: number;
-  roles: Role[];
-  preferences: Preference[];
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+/**
+ * <code>CreateAdminAccountRequest</code> contains the request payload when creating a user account.
+ *
+ * @author Darryl L. Pierce
+ */
+@NoArgsConstructor
+@AllArgsConstructor
+public class CreateAdminAccountRequest {
+  @JsonProperty("email")
+  @Getter
+  private String email;
+
+  @JsonProperty("password")
+  @Getter
+  private String password;
 }

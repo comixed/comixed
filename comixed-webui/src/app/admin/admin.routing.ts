@@ -22,11 +22,17 @@ import { AdminGuard } from '@app/user';
 import { ConfigurationPageComponent } from '@app/admin/pages/configuration-page/configuration-page.component';
 import { BatchProcessListPageComponent } from '@app/admin/pages/batch-process-list-page/batch-process-list-page.component';
 import { BatchProcessDetailPageComponent } from '@app/admin/pages/batch-process-detail-page/batch-process-detail-page.component';
+import { UserAccountsPageComponent } from '@app/admin/pages/user-accounts-page/user-accounts-page.component';
 
 const routes: Routes = [
   {
     path: 'admin/configuration',
     component: ConfigurationPageComponent,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'admin/accounts',
+    component: UserAccountsPageComponent,
     canActivate: [AdminGuard]
   },
   {

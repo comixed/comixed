@@ -22,10 +22,11 @@ import static org.comixedproject.model.user.ComiXedRole.ADMIN_ROLE;
 import static org.comixedproject.model.user.ComiXedRole.READER_ROLE;
 
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.user.PublishCurrentUserAction;
@@ -226,5 +227,72 @@ public class UserService {
     user.getRoles().add(this.roleRepository.findByName(READER_ROLE));
     log.debug("Saving new user account: {}", user);
     this.userRepository.save(user);
+  }
+
+  /**
+   * Returns the list of all user accounts.
+   *
+   * @return the user account list
+   */
+  public List<ComiXedUser> getUserAccountList() {
+    log.debug("Loading user account list");
+    return this.userRepository.findAll();
+  }
+
+  @Transactional
+  public List<ComiXedUser> createUserAccount(
+      final String email, final String password, final boolean admin) throws ComiXedUserException {
+    if (this.userRepository.findByEmail(email) != null) {
+      throw new ComiXedUserException("Account already exists for email: " + email);
+    }
+    final ComiXedUser user = new ComiXedUser();
+    user.setEmail(email);
+    user.setPasswordHash(this.genericUtilitiesAdaptor.createHash(password.getBytes()));
+    user.getRoles().add(this.roleRepository.findByName(READER_ROLE));
+    if (admin) {
+      user.getRoles().add(this.roleRepository.findByName(ADMIN_ROLE));
+    }
+    this.userRepository.saveAndFlush(user);
+    return this.userRepository.findAll();
+  }
+
+  @Transactional
+  public List<ComiXedUser> updateUserAccount(
+      final long userId, final String email, final String password, final boolean admin)
+      throws ComiXedUserException {
+    log.debug("Updating user account: id={}", userId);
+    final ComiXedUser user = this.doGetById(userId);
+    user.setEmail(email);
+    if (!admin && this.isLastAdminAccount(user)) {
+      throw new ComiXedUserException(
+          "Unable to modify the access rights for the last administrator account");
+    } else {
+      user.getRoles().clear();
+      user.addRole(this.roleRepository.findByName(READER_ROLE));
+      if (admin) {
+        user.addRole(this.roleRepository.findByName(ADMIN_ROLE));
+      }
+    }
+    if (StringUtils.isNotEmpty(password)) {
+      log.debug("Updating password for {}", email);
+      user.setPasswordHash(this.genericUtilitiesAdaptor.createHash(password.getBytes()));
+    }
+    this.userRepository.saveAndFlush(user);
+    return this.userRepository.findAll();
+  }
+
+  @Transactional
+  public void deleteUserAccount(final long userId) throws ComiXedUserException {
+    log.debug("Deleting user account: id={}", userId);
+    final ComiXedUser user = this.doGetById(userId);
+    if (isLastAdminAccount(user)) {
+      throw new ComiXedUserException("Cannot delete the last administrator account");
+    }
+    this.userRepository.delete(user);
+  }
+
+  private boolean isLastAdminAccount(final ComiXedUser user) {
+    return user.isAdmin()
+        && this.userRepository.findAll().stream().filter(ComiXedUser::isAdmin).count() <= 1L;
   }
 }

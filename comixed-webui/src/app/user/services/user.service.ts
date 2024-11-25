@@ -24,12 +24,16 @@ import { interpolate } from '@app/core';
 import {
   CHECK_FOR_ADMIN_ACCOUNT_URL,
   CREATE_ADMIN_ACCOUNT_URL,
+  CREATE_USER_ACCOUNT_URL,
+  DELETE_USER_ACCOUNT_URL,
   DELETE_USER_PREFERENCE_URL,
   LOAD_COMICS_READ_STATISTICS_URL,
   LOAD_CURRENT_USER_URL,
+  LOAD_USER_LIST_URL,
   LOGIN_USER_URL,
   LOGOUT_USER_URL,
   SAVE_CURRENT_USER_URL,
+  SAVE_USER_ACCOUNT_URL,
   SAVE_USER_PREFERENCE_URL,
   USER_SELF_TOPIC
 } from '@app/user/user.constants';
@@ -41,6 +45,7 @@ import { User } from '@app/user/models/user';
 import { SaveCurrentUserRequest } from '@app/user/models/net/save-current-user-request';
 import { SaveUserPreferenceRequest } from '@app/user/models/net/save-user-preference-request';
 import { CreateAccountRequest } from '@app/user/models/net/create-account-request';
+import { CreateUserAccountRequest } from '@app/user/models/net/create-user-account-request';
 
 /**
  * Provides methods for interacting the backend REST APIs for working with users.
@@ -161,5 +166,43 @@ export class UserService {
   loadComicsReadStatistics(): Observable<any> {
     this.logger.debug('Loading comics read statistics');
     return this.http.get(interpolate(LOAD_COMICS_READ_STATISTICS_URL));
+  }
+
+  loadUserAccounts(): Observable<any> {
+    this.logger.debug('Loading user accounts');
+    return this.http.get(interpolate(LOAD_USER_LIST_URL));
+  }
+
+  saveUserAccount(args: {
+    id: number | null;
+    email: string;
+    password: string;
+    admin: boolean;
+  }): Observable<any> {
+    if (!!args.id) {
+      this.logger.debug('Saving user account:', args);
+      return this.http.put(
+        interpolate(SAVE_USER_ACCOUNT_URL, { userId: args.id }),
+        {
+          email: args.email,
+          password: args.password,
+          admin: args.admin
+        } as CreateUserAccountRequest
+      );
+    } else {
+      this.logger.debug('Creating user account:', args);
+      return this.http.post(interpolate(CREATE_USER_ACCOUNT_URL), {
+        email: args.email,
+        password: args.password,
+        admin: args.admin
+      } as CreateUserAccountRequest);
+    }
+  }
+
+  deleteUserAccount(args: { id: number }): Observable<any> {
+    this.logger.debug('Deleting user account:', args);
+    return this.http.delete(
+      interpolate(DELETE_USER_ACCOUNT_URL, { userId: args.id })
+    );
   }
 }

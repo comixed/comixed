@@ -71,6 +71,7 @@ import { LibraryPluginsModule } from '@app/library-plugins/library-plugins.modul
 import { featureEnabledFeature } from '@app/admin/reducers/feature-enabled.reducer';
 import { FeatureEnabledEffects } from '@app/admin/effects/feature-enabled.effects';
 import { BatchProcessDetailPageComponent } from '@app/admin/pages/batch-process-detail-page/batch-process-detail-page.component';
+import { UserAccountsPageComponent } from '@app/admin/pages/user-accounts-page/user-accounts-page.component';
 
 @NgModule({
   declarations: [
@@ -87,7 +88,8 @@ import { BatchProcessDetailPageComponent } from '@app/admin/pages/batch-process-
     LibraryPluginsConfigurationComponent,
     CreatePluginDialogComponent,
     LibraryPluginSetupComponent,
-    BatchProcessDetailPageComponent
+    BatchProcessDetailPageComponent,
+    UserAccountsPageComponent
   ],
   imports: [
     CommonModule,

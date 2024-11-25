@@ -13,13 +13,13 @@
   <h3>
     {{
       "user.edit-current-user.label.member-since"
-        | translate: { date: user?.first_login_date | date: "mediumDate" }
+        | translate: { date: user?.firstLoginDate | date: "mediumDate" }
     }}
   </h3>
   <h3>
     {{
       "user.edit-current-user.label.last-logged-in"
-        | translate: { date: user?.last_login_date | date: "medium" }
+        | translate: { date: user?.lastLoginDate | date: "medium" }
     }}
   </h3>
 </div>

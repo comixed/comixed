@@ -37,10 +37,10 @@ export const PREFERENCE_1: Preference = {
 export const USER_READER: User = {
   id: 1,
   email: 'comixedreader@localhost',
-  first_login_date: new Date(
+  firstLoginDate: new Date(
     new Date().getTime() - 31 * 24 * 60 * 60 * 1000
   ).getTime(),
-  last_login_date: new Date().getTime(),
+  lastLoginDate: new Date().getTime(),
   roles: [ROLE_READER],
   preferences: []
 };
@@ -48,10 +48,10 @@ export const USER_READER: User = {
 export const USER_ADMIN: User = {
   id: 2,
   email: 'comixedadmin@localhost',
-  first_login_date: new Date(
+  firstLoginDate: new Date(
     new Date().getTime() - 31 * 24 * 60 * 60 * 1000
   ).getTime(),
-  last_login_date: new Date().getTime(),
+  lastLoginDate: new Date().getTime(),
   roles: [ROLE_READER, ROLE_ADMIN],
   preferences: []
 };
@@ -59,10 +59,10 @@ export const USER_ADMIN: User = {
 export const USER_BLOCKED: User = {
   id: 3,
   email: 'comixedblocked@localhost',
-  first_login_date: new Date(
+  firstLoginDate: new Date(
     new Date().getTime() - 31 * 24 * 60 * 60 * 1000
   ).getTime(),
-  last_login_date: new Date().getTime(),
+  lastLoginDate: new Date().getTime(),
   roles: [],
   preferences: []
 };

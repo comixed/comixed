@@ -21,6 +21,19 @@
   "login": {
     "title": "Login"
   },
+  "manage-users": {
+    "delete-user-account": {
+      "effect-failure": "Failed to delete {email}.",
+      "effect-success": "Deleted the account: {email}."
+    },
+    "load-user-list": {
+      "effect-failure": "Failed to load the user account list."
+    },
+    "save-user-account": {
+      "effect-failure": "Failed to save changes for {email}.",
+      "effect-success": "Saved changes: {email}."
+    }
+  },
   "user": {
     "edit-current-user": {
       "label": {

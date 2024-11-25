@@ -31,6 +31,7 @@
     "cancel": "Cancel",
     "clear-log": "Clear Log",
     "close": "Close",
+    "delete": "Delete",
     "deselect": "Deselect",
     "deselect-all": "Deselect All",
     "download": "Download",
@@ -147,7 +148,8 @@
       "team-collection": "Teams",
       "unprocessed-comics": "Unprocessed",
       "unread-comics": "Unread Comics",
-      "unscraped-comics": "Unscraped Comics"
+      "unscraped-comics": "Unscraped Comics",
+      "user-accounts": "User Accounts"
     },
     "tooltip": {
       "account": "View account details.",
