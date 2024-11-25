@@ -45,6 +45,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { initialUserAccountFeature } from '@app/user/reducers/initial-user-account.reducer';
 import { InitialUserAccountEffects } from '@app/user/effects/initial-user-account.effects';
 import { CreateAdminPageComponent } from './pages/create-admin-page/create-admin-page.component';
+import { manageUsersFeature } from '@app/user/reducers/manage-users.reducer';
+import { ManageUsersEffects } from '@app/user/effects/manage-users.effects';
 
 @NgModule({
   declarations: [
@@ -62,7 +64,12 @@ import { CreateAdminPageComponent } from './pages/create-admin-page/create-admin
     TranslateModule.forRoot(),
     StoreModule.forFeature(initialUserAccountFeature),
     StoreModule.forFeature(userFeature),
-    EffectsModule.forFeature([InitialUserAccountEffects, UserEffects]),
+    StoreModule.forFeature(manageUsersFeature),
+    EffectsModule.forFeature([
+      InitialUserAccountEffects,
+      UserEffects,
+      ManageUsersEffects
+    ]),
     GravatarModule,
     MatCardModule,
     ReactiveFormsModule,

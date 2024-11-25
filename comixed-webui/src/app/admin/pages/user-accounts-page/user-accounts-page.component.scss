@@ -1,0 +1,22 @@
+@use 'variables' as *;
+
+.mat-column-email {
+}
+
+.mat-column-roles {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-first-login-date {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+  resize: none;
+}
+
+.mat-column-last-login-date {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+  resize: none;
+}

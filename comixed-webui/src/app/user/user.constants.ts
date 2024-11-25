@@ -24,8 +24,8 @@ export const MAX_PASSWORD_LENGTH = 128;
 export const ROLE_NAME_READER = 'READER';
 export const ROLE_NAME_ADMIN = 'ADMIN';
 
-export const CHECK_FOR_ADMIN_ACCOUNT_URL = `${API_ROOT_URL}/user/admins/existing`;
-export const CREATE_ADMIN_ACCOUNT_URL = `${API_ROOT_URL}/user/admins`;
+export const CHECK_FOR_ADMIN_ACCOUNT_URL = `${API_ROOT_URL}/users/admins/existing`;
+export const CREATE_ADMIN_ACCOUNT_URL = `${API_ROOT_URL}/users/admins`;
 export const LOAD_CURRENT_USER_URL = `${API_ROOT_URL}/user`;
 export const SAVE_CURRENT_USER_URL = `${API_ROOT_URL}/user/\${id}`;
 export const LOGIN_USER_URL = `${API_ROOT_URL}/token/generate`;
@@ -34,6 +34,11 @@ export const LOGOUT_USER_URL = `${API_ROOT_URL}/token/destroy`;
 export const SAVE_USER_PREFERENCE_URL = `${API_ROOT_URL}/user/preferences/\${name}`;
 export const DELETE_USER_PREFERENCE_URL = `${API_ROOT_URL}/user/preferences/\${name}`;
 
-export const LOAD_COMICS_READ_STATISTICS_URL = `${API_ROOT_URL}/user/statistics/comics/read`;
+export const LOAD_USER_LIST_URL = `${API_ROOT_URL}/users/list`;
+export const CREATE_USER_ACCOUNT_URL = `${API_ROOT_URL}/users/create`;
+export const SAVE_USER_ACCOUNT_URL = `${API_ROOT_URL}/users/\${userId}`;
+export const DELETE_USER_ACCOUNT_URL = `${API_ROOT_URL}/users/\${userId}`;
+
+export const LOAD_COMICS_READ_STATISTICS_URL = `${API_ROOT_URL}/users/statistics/comics/read`;
 
 export const USER_SELF_TOPIC = '/secured/user/topic/user/current';

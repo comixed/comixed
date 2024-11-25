@@ -1,0 +1,207 @@
+<div class="cx-fab-container-bottom-left">
+  <button
+    id="create-user-button"
+    mat-fab
+    color="primary"
+    [matTooltip]="'user-accounts.button.create-user' | translate"
+    [disabled]="showUserForm"
+    (click)="onShowUserForm(null)"
+  >
+    <mat-icon>person_add</mat-icon>
+  </button>
+</div>
+
+<div *ngIf="showUserForm">
+  <form [formGroup]="editUserForm">
+    <mat-card appearance="outlined">
+      <mat-card-content class="cx-padding-left-15 cx-padding-right-15">
+        <mat-form-field class="cx-width-100" required>
+          <input
+            id="cx-login-email"
+            matInput
+            type="email"
+            formControlName="email"
+            [placeholder]="'user-accounts.placeholder.email' | translate"
+          />
+          <mat-error>
+            <span *ngIf="controls.email.errors?.required">
+              {{ "validation.field-required" | translate }}
+            </span>
+            <span *ngIf="controls.email.errors?.email">
+              {{ "validation.email-required" | translate }}
+            </span>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="cx-width-100" required>
+          <mat-checkbox id="cx-admin" formControlName="admin">
+            {{ "user-accounts.label.admin" | translate }}
+          </mat-checkbox>
+          <input matInput hidden />
+        </mat-form-field>
+        <mat-form-field class="cx-width-100" required>
+          <input
+            id="cx-login-password"
+            matInput
+            type="password"
+            formControlName="password"
+            [placeholder]="'user-accounts.placeholder.password' | translate"
+            (keyup)="onPasswordChanged()"
+          />
+          <mat-error>
+            <span *ngIf="controls.password.errors?.required">
+              {{ "validation.field-required" | translate }}
+            </span>
+            <span *ngIf="!!controls.password.errors?.minlength">
+              {{
+                "validation.value-too-short"
+                  | translate
+                    : {
+                        length:
+                          controls.password.errors.minlength.requiredLength
+                      }
+              }}
+            </span>
+            <span *ngIf="!!controls.password.errors?.maxlength">
+              {{
+                "validation.value-too-long"
+                  | translate
+                    : {
+                        length:
+                          controls.password.errors.maxlength.requiredLength
+                      }
+              }}
+            </span>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="cx-width-100" required>
+          <input
+            id="cx-login-password-verification"
+            matInput
+            type="password"
+            formControlName="passwordVerify"
+            [placeholder]="
+              'user-accounts.placeholder.password-validation' | translate
+            "
+          />
+          <mat-error>
+            <span *ngIf="controls.passwordVerify.errors?.required">
+              {{ "validation.field-required" | translate }}
+            </span>
+            <span *ngIf="editUserForm.errors?.passwordsDontMatch">
+              {{ "validation.password-mismatch" | translate }}
+            </span>
+          </mat-error>
+        </mat-form-field>
+      </mat-card-content>
+      <mat-card-actions>
+        <button
+          id="cx-login-submit-button"
+          class="cx-toolbar-button cx-margin-left-5"
+          mat-raised-button
+          color="primary"
+          (click)="onSaveAccount()"
+          [disabled]="!editUserForm.valid"
+        >
+          <mat-label>{{ "button.save" | translate }}</mat-label>
+          <mat-icon>person</mat-icon>
+        </button>
+
+        <button
+          *ngIf="!!user?.id"
+          id="cx-delete-user-button"
+          class="cx-toolbar-button cx-margin-left-5"
+          mat-raised-button
+          color="warn"
+          [disabled]="users.length <= 1"
+          [matTooltip]="'user-accounts.button.delete-user' | translate"
+          (click)="onDeleteUser()"
+        >
+          <mat-label>{{ "button.delete" | translate }}</mat-label>
+          <mat-icon>person_remove</mat-icon>
+        </button>
+
+        <button
+          id="cx-close-user-form-button"
+          class="cx-toolbar-button cx-margin-left-5"
+          mat-raised-button
+          color="accent"
+          [matTooltip]="'user-accounts.button.close-user-form' | translate"
+          (click)="showUserForm = false"
+        >
+          <mat-label>{{ "button.close" | translate }}</mat-label>
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </form>
+</div>
+
+<h2>{{ "user-accounts.page-title" | translate }}</h2>
+
+<mat-table
+  [dataSource]="dataSource"
+  matSort
+  [matSortActive]="queryParameterService.sortBy$ | async"
+  [matSortDirection]="queryParameterService.sortDirection$ | async"
+  (matSortChange)="
+    queryParameterService.onSortChange($event.active, $event.direction)
+  "
+>
+  <ng-container matColumnDef="email">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "user-accounts.label.email" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">{{ entry.email }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="roles">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "user-accounts.label.roles" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <mat-icon
+        *ngIf="isAdmin(entry)"
+        [matTooltip]="'user-accounts.tooltip.admin' | translate"
+      >
+        supervisor_account
+      </mat-icon>
+      <mat-icon
+        *ngIf="isReader(entry)"
+        [matTooltip]="'user-accounts.tooltip.reader' | translate"
+      >
+        person
+      </mat-icon>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="first-login-date">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "user-accounts.label.first-login-date" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.firstLoginDate | date: "medium" }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="last-login-date">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "user-accounts.label.last-login-date" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.lastLoginDate | date: "medium" }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row
+    *matRowDef="let row; columns: displayedColumns"
+    (click)="onShowUserForm(row)"
+    (onKeyPress)="onShowUserForm(row)"
+  ></mat-row>
+</mat-table>

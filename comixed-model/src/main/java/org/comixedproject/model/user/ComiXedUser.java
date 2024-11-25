@@ -18,6 +18,7 @@
 
 package org.comixedproject.model.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -58,13 +59,15 @@ public class ComiXedUser {
   private String passwordHash;
 
   @Column(name = "created_on", nullable = false, updatable = false)
-  @JsonProperty("first_login_date")
+  @JsonProperty("firstLoginDate")
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   @JsonView(View.UserList.class)
   @Getter
   private Date firstLoginDate = new Date();
 
   @Column(name = "last_logged_on", nullable = false, updatable = true)
-  @JsonProperty("last_login_date")
+  @JsonProperty("lastLoginDate")
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   @JsonView(View.UserList.class)
   @Getter
   @Setter

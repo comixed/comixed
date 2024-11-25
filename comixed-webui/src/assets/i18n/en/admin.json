@@ -191,5 +191,38 @@
     "confirmation-title": "Shutdown ComiXed",
     "effect-failure": "Failed to shutdown server.",
     "effect-success": "Server shutting down."
+  },
+  "user-accounts": {
+    "button": {
+      "close-user-form": "Close the user form...",
+      "create-user": "Create a new user account...",
+      "delete-user": "Delete this user account..."
+    },
+    "delete-user-account": {
+      "confirmation-message": "Delete the account for {email}?",
+      "confirmation-title": "Delete Account Details"
+    },
+    "label": {
+      "admin": "Is this user an administrator?",
+      "email": "Email Address",
+      "first-login-date": "First Logged In",
+      "last-login-date": "Last Logged In",
+      "roles": "Roles"
+    },
+    "page-title": "Manage User Accounts",
+    "placeholder": {
+      "email": "The user's email account (must be unique)",
+      "password": "The user's password",
+      "password-validation": "Re-enter the user's password"
+    },
+    "save-user-account": {
+      "confirmation-message": "Save the account details for {email}?",
+      "confirmation-title": "Save Account Details"
+    },
+    "tab-title": "Manage User Accounts",
+    "tooltip": {
+      "admin": "Administrator access",
+      "reader": "Reader access"
+    }
   }
 }

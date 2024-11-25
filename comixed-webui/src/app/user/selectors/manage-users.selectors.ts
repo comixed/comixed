@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Role } from '@app/user/models/role';
-import { Preference } from '@app/user/models/preference';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import {
+  MANAGER_USERS_FEATURE_KEY,
+  ManagerUsersState
+} from '../reducers/manage-users.reducer';
 
-export interface User {
-  id: number;
-  email: string;
-  firstLoginDate: number;
-  lastLoginDate: number;
-  roles: Role[];
-  preferences: Preference[];
-}
+export const selectManageUsersState = createFeatureSelector<ManagerUsersState>(
+  MANAGER_USERS_FEATURE_KEY
+);
+
+export const selectManageUsersList = createSelector(
+  selectManageUsersState,
+  state => state.entries
+);
+
+export const selectManageUsersCurrent = createSelector(
+  selectManageUsersState,
+  state => state.current
+);

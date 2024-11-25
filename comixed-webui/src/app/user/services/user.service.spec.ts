@@ -18,7 +18,7 @@
 
 import { TestBed } from '@angular/core/testing';
 import { UserService } from './user.service';
-import { USER_READER } from '@app/user/user.fixtures';
+import { USER_ADMIN, USER_BLOCKED, USER_READER } from '@app/user/user.fixtures';
 import {
   HttpClientTestingModule,
   HttpTestingController
@@ -27,12 +27,16 @@ import { interpolate } from '@app/core';
 import {
   CHECK_FOR_ADMIN_ACCOUNT_URL,
   CREATE_ADMIN_ACCOUNT_URL,
+  CREATE_USER_ACCOUNT_URL,
+  DELETE_USER_ACCOUNT_URL,
   DELETE_USER_PREFERENCE_URL,
   LOAD_COMICS_READ_STATISTICS_URL,
   LOAD_CURRENT_USER_URL,
+  LOAD_USER_LIST_URL,
   LOGIN_USER_URL,
   LOGOUT_USER_URL,
   SAVE_CURRENT_USER_URL,
+  SAVE_USER_ACCOUNT_URL,
   SAVE_USER_PREFERENCE_URL,
   USER_SELF_TOPIC
 } from '@app/user/user.constants';
@@ -59,8 +63,10 @@ import {
 import { CheckForAdminResponse } from '@app/user/models/net/check-for-admin-response';
 import { HttpResponse } from '@angular/common/http';
 import { CreateAccountRequest } from '@app/user/models/net/create-account-request';
+import { CreateUserAccountRequest } from '@app/user/models/net/create-user-account-request';
 
 describe('UserService', () => {
+  const USERS = [USER_ADMIN, USER_BLOCKED, USER_READER];
   const USER = USER_READER;
   const EMAIL = USER.email;
   const PASSWORD = 'this!is!my!password';
@@ -312,5 +318,69 @@ describe('UserService', () => {
     );
     expect(req.request.method).toEqual('GET');
     req.flush(serverResponse);
+  });
+
+  it('can load the list of users', () => {
+    service
+      .loadUserAccounts()
+      .subscribe(response => expect(response).toBe(USERS));
+
+    const req = httpMock.expectOne(interpolate(LOAD_USER_LIST_URL));
+    expect(req.request.method).toEqual('GET');
+    req.flush(USERS);
+  });
+
+  it('can create a user', () => {
+    service
+      .saveUserAccount({
+        id: null,
+        email: USER.email,
+        password: PASSWORD,
+        admin: false
+      })
+      .subscribe(response => expect(response).toBe(USERS));
+
+    const req = httpMock.expectOne(interpolate(CREATE_USER_ACCOUNT_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      email: USER.email,
+      password: PASSWORD,
+      admin: false
+    } as CreateUserAccountRequest);
+    req.flush(USERS);
+  });
+
+  it('can save a user', () => {
+    service
+      .saveUserAccount({
+        id: USER.id,
+        email: USER.email,
+        password: PASSWORD,
+        admin: false
+      })
+      .subscribe(response => expect(response).toBe(USERS));
+
+    const req = httpMock.expectOne(
+      interpolate(SAVE_USER_ACCOUNT_URL, { userId: USER.id })
+    );
+    expect(req.request.method).toEqual('PUT');
+    expect(req.request.body).toEqual({
+      email: USER.email,
+      password: PASSWORD,
+      admin: false
+    } as CreateUserAccountRequest);
+    req.flush(USERS);
+  });
+
+  it('can delete a user', () => {
+    service
+      .deleteUserAccount({ id: USER.id })
+      .subscribe(response => expect(response).toBe(USERS));
+
+    const req = httpMock.expectOne(
+      interpolate(DELETE_USER_ACCOUNT_URL, { userId: USER.id })
+    );
+    expect(req.request.method).toEqual('DELETE');
+    req.flush(USERS);
   });
 });

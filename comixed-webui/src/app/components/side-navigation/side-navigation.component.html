@@ -368,6 +368,19 @@
   *ngIf="isAdmin"
   mat-button
   class="menu-button"
+  routerLink="/admin/accounts"
+  routerLinkActive="active-nav-button"
+>
+  <mat-icon>manage_accounts</mat-icon>
+  <mat-label class="cx-text-nowrap">
+    {{ "navigation.option.user-accounts" | translate }}
+  </mat-label>
+</button>
+
+<button
+  *ngIf="isAdmin"
+  mat-button
+  class="menu-button"
   routerLink="/admin/configuration"
   routerLinkActive="active-nav-button"
 >
