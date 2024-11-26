@@ -7,11 +7,15 @@
   />
 
   <button
-    id="save-rules-button"
+    id="cx-add-rule"
     mat-fab
     color="primary"
-    (click)="onSaveRules()"
+    [matTooltip]="'filename-scraping-rules.tooltip.add-rule' | translate"
+    (click)="onAddRule()"
   >
+    <mat-icon>add_circle_outline</mat-icon>
+  </button>
+  <button id="save-rules-button" mat-fab color="warn" (click)="onSaveRules()">
     <mat-icon>save</mat-icon>
   </button>
   <button
@@ -54,6 +58,19 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <mat-form-field class="cx-width-100">
+        <button
+          [id]="'cx-delete-rule-' + entry.item.id"
+          mat-icon-button
+          matPrefix
+          color="warn"
+          [matTooltip]="
+            'filename-scraping-rules.tooltip.delete-rule' | translate
+          "
+          (click)="onDeleteRule(entry.item)"
+        >
+          <mat-icon>remove_circle_outline</mat-icon>
+        </button>
+
         <input
           id="name-input"
           #nameInput

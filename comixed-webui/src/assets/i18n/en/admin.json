@@ -111,6 +111,7 @@
       "effect-failure": "Failed to download the filename scraping rules file."
     },
     "label": {
+      "actions": "Action",
       "cover-date-format": "Cover Date Format",
       "cover-date-position": "Cover Date Position",
       "issue-number-position": "Issue # Position",
@@ -130,6 +131,10 @@
       "effect-success": "Filename scraping rules saved."
     },
     "tab-title": "Filename Scraping Rules",
+    "tooltip": {
+      "add-rule": "Add a new rule...",
+      "delete-rule": "Delete the current rule..."
+    },
     "upload-file": {
       "confirmation-message": "Are you sure you want to upload \"{filename}\"?",
       "confirmation-title": "Upload Filename Scraping Rules File",

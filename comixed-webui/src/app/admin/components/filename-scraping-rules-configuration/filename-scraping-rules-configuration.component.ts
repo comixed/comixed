@@ -39,6 +39,7 @@ import { EditableListItem } from '@app/core/models/ui/editable-list-item';
 import { MatTableDataSource } from '@angular/material/table';
 import * as _ from 'lodash';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import { FILENAME_SCRAPING_RULE_TEMPLATE } from '@app/admin/admin.constants';
 
 @Component({
   selector: 'cx-scraping-rules-configuration',
@@ -93,13 +94,18 @@ export class FilenameScrapingRulesConfigurationComponent
   set rules(rules: FilenameScrapingRule[]) {
     this.logger.debug('Setting filename scraping rules:', rules);
     const oldRules = this.dataSource.data;
-    this.dataSource.data = rules.map(rule => {
+    this.dataSource.data = rules.map((rule, index) => {
       const oldRule = oldRules.find(entry => entry.item.id === rule.id);
 
       return {
-        item: rule,
+        item: { ...rule, priority: index + 1 },
         edited: oldRule?.edited || false,
-        editedValue: rule
+        editedValue: !!oldRule
+          ? { ...oldRule.editedValue, priority: index + 1 }
+          : {
+              ...rule,
+              priority: index + 1
+            }
       };
     });
   }
@@ -224,6 +230,16 @@ export class FilenameScrapingRulesConfigurationComponent
         this.store.dispatch(uploadFilenameScrapingRules({ file }));
       }
     });
+  }
+
+  onAddRule(): void {
+    this.logger.debug('Adding a new filename scraping rule');
+    this.rules = this.rules.concat([{ ...FILENAME_SCRAPING_RULE_TEMPLATE }]);
+  }
+
+  onDeleteRule(rule: FilenameScrapingRule): void {
+    this.logger.debug('Removing filename scraping rule:', rule);
+    this.rules = this.rules.filter(entry => entry.priority !== rule.priority);
   }
 
   private loadTranslations(): void {
