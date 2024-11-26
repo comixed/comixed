@@ -17,6 +17,19 @@
  */
 
 import { API_ROOT_URL } from '../core';
+import { FilenameScrapingRule } from '@app/admin/models/filename-scraping-rule';
+
+export const FILENAME_SCRAPING_RULE_TEMPLATE: FilenameScrapingRule = {
+  id: null,
+  priority: null,
+  name: 'New Rule',
+  rule: '',
+  seriesPosition: null,
+  volumePosition: null,
+  issueNumberPosition: null,
+  coverDatePosition: null,
+  dateFormat: ''
+};
 
 export const COMICVINE_API_KEY = 'comicvine.api-key';
 export const LIBRARY_ROOT_DIRECTORY = 'library.root-directory';

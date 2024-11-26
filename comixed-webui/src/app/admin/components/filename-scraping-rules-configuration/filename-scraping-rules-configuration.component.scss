@@ -1,14 +1,14 @@
 @use 'variables' as *;
 
 .mat-column-priority {
-  width: $cx-column-small;
-  max-width: $cx-column-small;
+  width: $cx-column-smallish;
+  max-width: $cx-column-smallish;
   resize: none;
 }
 
 .mat-column-name {
-  width: $cx-column-medium;
-  max-width: $cx-column-medium;
+  width: $cx-column-large;
+  max-width: $cx-column-large;
   resize: none;
 }
 

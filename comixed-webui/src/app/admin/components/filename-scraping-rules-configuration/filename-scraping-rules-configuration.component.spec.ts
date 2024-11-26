@@ -41,7 +41,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import {
   downloadFilenameScrapingRules,
-  saveFilenameScrapingRules
+  saveFilenameScrapingRules,
+  uploadFilenameScrapingRules
 } from '@app/admin/actions/filename-scraping-rules.actions';
 import { EditableListItem } from '@app/core/models/ui/editable-list-item';
 import { FilenameScrapingRule } from '@app/admin/models/filename-scraping-rule';
@@ -49,6 +50,8 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FILENAME_SCRAPING_RULE_TEMPLATE } from '@app/admin/admin.constants';
 
 describe('FilenameScrapingRulesConfigurationComponent', () => {
   const RULES = [
@@ -84,7 +87,8 @@ describe('FilenameScrapingRulesConfigurationComponent', () => {
           MatButtonModule,
           MatIconModule,
           MatToolbarModule,
-          MatDialogModule
+          MatDialogModule,
+          MatTooltipModule
         ],
         providers: [
           provideMockStore({ initialState }),
@@ -300,6 +304,52 @@ describe('FilenameScrapingRulesConfigurationComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         downloadFilenameScrapingRules()
       );
+    });
+  });
+
+  describe('uploading a list of rules', () => {
+    const FILE = new File([], 'test');
+
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.onFileSelected(FILE);
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        uploadFilenameScrapingRules({ file: FILE })
+      );
+    });
+  });
+
+  describe('adding a rule', () => {
+    beforeEach(() => {
+      component.rules = [];
+      component.onAddRule();
+    });
+
+    it('adds a new entry', () => {
+      expect(component.rules).toContain({
+        ...FILENAME_SCRAPING_RULE_TEMPLATE,
+        priority: 1
+      });
+    });
+  });
+
+  describe('deleting a rule', () => {
+    beforeEach(() => {
+      component.rules = RULES;
+      component.onDeleteRule(RULES[0]);
+    });
+
+    it('removes the specified rule', () => {
+      expect(component.rules).not.toContain(RULES[0]);
     });
   });
 });
