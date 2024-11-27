@@ -45,6 +45,7 @@ import org.comixedproject.service.collections.IssueService;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ImprintService;
+import org.comixedproject.service.metadata.action.ProcessComicDescriptionAction;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,7 @@ public class MetadataService {
   @Autowired private ImprintService imprintService;
   @Autowired private IssueService issueService;
   @Autowired private ConfigurationService configurationService;
+  @Autowired private ProcessComicDescriptionAction processComicDescriptionAction;
 
   /**
    * Retrieves a list of volumes for the given series, up to the max records specified.
@@ -354,7 +356,8 @@ public class MetadataService {
         detail.setTitle(issueDetails.getTitle());
       }
       if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getDescription())) {
-        detail.setDescription(issueDetails.getDescription());
+        detail.setDescription(
+            this.processComicDescriptionAction.execute(issueDetails.getDescription()));
       }
       if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getWebAddress())) {
         detail.setWebAddress(issueDetails.getWebAddress());
