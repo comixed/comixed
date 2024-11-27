@@ -37,8 +37,8 @@ public class ComicFileRecreatedAction extends AbstractComicAction {
   public void execute(final StateContext<ComicState, ComicEvent> context) {
     log.trace("Fetching comicBook");
     final ComicBook comicBook = this.fetchComic(context);
-    log.trace("Clearing recreating flag");
-    comicBook.setRecreating(false);
+    log.trace("Clearing target archive type");
+    comicBook.setTargetArchiveType(null);
     // prepare the comicBook for reprocessing
     log.trace("Clearing pages");
     comicBook.getPages().clear();

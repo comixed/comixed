@@ -45,20 +45,19 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 @Log4j2
 public class RecreateComicFilesConfiguration {
+  public static final String RECREATE_COMIC_FILES_JOB = "recreateComicFilesJob";
   public static final String JOB_RECREATE_COMICS_STARTED = "job.recreate-comic.started";
-  public static final String JOB_TARGET_ARCHIVE = "job.recreate-comic.target-archive";
-  public static final String JOB_DELETE_MARKED_PAGES = "job.recreate-comic.delete-blocked-pages";
 
   @Value("${comixed.batch.recreate-comic-files.chunk-size:1}")
   private int chunkSize;
 
-  @Bean(name = "recreateComicFilesJob")
+  @Bean(name = RECREATE_COMIC_FILES_JOB)
   public Job recreateComicFilesJob(
       final JobRepository jobRepository,
       final RecreatingComicFilesJobListener listener,
       @Qualifier("recreateComicFileStep") final Step recreateComicFileStep,
       @Qualifier("processComicBooksJobStep") final Step processComicBooksJobStep) {
-    return new JobBuilder("recreateComicFilesJob", jobRepository)
+    return new JobBuilder(RECREATE_COMIC_FILES_JOB, jobRepository)
         .incrementer(new RunIdIncrementer())
         .listener(listener)
         .start(recreateComicFileStep)

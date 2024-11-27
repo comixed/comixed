@@ -18,20 +18,14 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
-import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES;
-import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_TARGET_ARCHIVE;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_PAGE_RENAMING_RULE;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.admin.ConfigurationService;
-import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +39,7 @@ import org.springframework.stereotype.Component;
 @Component
 @StepScope
 @Log4j2
-public class RecreateComicFileProcessor
-    implements ItemProcessor<ComicBook, ComicBook>, StepExecutionListener {
+public class RecreateComicFileProcessor implements ItemProcessor<ComicBook, ComicBook> {
   @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private ConfigurationService configurationService;
 
@@ -55,18 +48,14 @@ public class RecreateComicFileProcessor
   @Override
   public ComicBook process(final ComicBook comicBook) throws Exception {
     log.debug("Getting target archive adaptor: id={}", comicBook.getId());
-    final ArchiveType archiveType =
-        ArchiveType.forValue(this.jobParameters.getString(JOB_TARGET_ARCHIVE));
-    final boolean removeDeletedPages =
-        Boolean.parseBoolean(this.jobParameters.getString(JOB_DELETE_MARKED_PAGES));
     if (comicBook.getComicDetail().getFile().exists()
         && comicBook.getComicDetail().getFile().isFile()) {
       try {
         log.trace("Recreating comicBook files");
         this.comicBookAdaptor.save(
             comicBook,
-            archiveType,
-            removeDeletedPages,
+            comicBook.getTargetArchiveType(),
+            comicBook.isDeletePages(),
             this.configurationService.getOptionValue(CFG_LIBRARY_PAGE_RENAMING_RULE, ""));
       } catch (AdaptorException error) {
         log.error("Failed to recreate comic book file", error);
@@ -75,16 +64,5 @@ public class RecreateComicFileProcessor
       log.error("Can't recreate file: {}", comicBook.getComicDetail().getFile().getAbsoluteFile());
     }
     return comicBook;
-  }
-
-  @Override
-  public void beforeStep(final StepExecution stepExecution) {
-    log.trace("Storing step execution reference");
-    this.jobParameters = stepExecution.getJobParameters();
-  }
-
-  @Override
-  public ExitStatus afterStep(final StepExecution stepExecution) {
-    return null;
   }
 }

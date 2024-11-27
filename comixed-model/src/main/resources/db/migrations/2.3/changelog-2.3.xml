@@ -7,5 +7,6 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <include file="/db/migrations/2.3/001_1793_uploading_filename_scraping_rules.xml"/>
+    <include file="/db/migrations/2.3/002_2061_added_target_archive_type_to_comic_books.xml"/>
 
 </databaseChangeLog>

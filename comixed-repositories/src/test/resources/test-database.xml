@@ -29,7 +29,8 @@
                  update_metadata="true"
                  batch_metadata_update="false"
                  organizing="false"
-                 recreating="true"
+                 rename_pages="false"
+                 delete_pages="true"
                  purge_comic="false"
                  edit_details="false"
                  last_modified_on="2020-01-09 06:25:00"/>
@@ -42,7 +43,8 @@
                  update_metadata="true"
                  batch_metadata_update="false"
                  organizing="false"
-                 recreating="true"
+                 rename_pages="false"
+                 delete_pages="true"
                  purge_comic="false"
                  edit_details="false"
                  last_modified_on="2020-01-09 06:27:00"/>
@@ -51,7 +53,8 @@
                  update_metadata="true"
                  batch_metadata_update="false"
                  organizing="false"
-                 recreating="true"
+                 rename_pages="false"
+                 delete_pages="true"
                  purge_comic="false"
                  edit_details="false"
                  last_modified_on="2020-01-09 06:26:00"/>
@@ -60,7 +63,8 @@
                  update_metadata="true"
                  batch_metadata_update="false"
                  organizing="false"
-                 recreating="true"
+                 rename_pages="false"
+                 delete_pages="true"
                  purge_comic="false"
                  edit_details="false"
                  last_modified_on="2020-01-09 06:25:00"/>
@@ -69,7 +73,8 @@
                  update_metadata="true"
                  batch_metadata_update="false"
                  organizing="false"
-                 recreating="true"
+                 rename_pages="false"
+                 delete_pages="true"
                  purge_comic="false"
                  edit_details="false"
                  last_modified_on="2020-01-09 06:27:11"/>
@@ -78,7 +83,8 @@
                  update_metadata="true"
                  batch_metadata_update="false"
                  organizing="false"
-                 recreating="true"
+                 rename_pages="false"
+                 delete_pages="true"
                  purge_comic="false"
                  edit_details="false"
                  last_modified_on="2020-01-09 06:27:02"/>
@@ -87,7 +93,8 @@
                  update_metadata="true"
                  batch_metadata_update="false"
                  organizing="false"
-                 recreating="true"
+                 rename_pages="false"
+                 delete_pages="true"
                  purge_comic="false"
                  edit_details="false"
                  last_modified_on="2020-01-09 06:27:30"/>
@@ -96,7 +103,8 @@
                  update_metadata="true"
                  batch_metadata_update="false"
                  organizing="false"
-                 recreating="true"
+                 rename_pages="false"
+                 delete_pages="true"
                  purge_comic="false"
                  edit_details="false"
                  last_modified_on="2020-01-09 06:27:30"/>
@@ -105,7 +113,8 @@
                  update_metadata="true"
                  batch_metadata_update="false"
                  organizing="false"
-                 recreating="true"
+                 rename_pages="false"
+                 delete_pages="true"
                  purge_comic="false"
                  edit_details="false"
                  last_modified_on="2019-04-24 09:35:00"/>
@@ -114,7 +123,8 @@
                  update_metadata="true"
                  batch_metadata_update="false"
                  organizing="false"
-                 recreating="true"
+                 rename_pages="false"
+                 delete_pages="true"
                  purge_comic="false"
                  edit_details="false"
                  last_modified_on="2019-04-24 09:36:00"/>
@@ -123,7 +133,8 @@
                  update_metadata="true"
                  batch_metadata_update="false"
                  organizing="false"
-                 recreating="true"
+                 rename_pages="false"
+                 delete_pages="true"
                  purge_comic="false"
                  edit_details="false"
                  last_modified_on="2019-04-24 09:36:00"/>
@@ -712,12 +723,12 @@
                      language="groovy"
                      version="1.2.3"
                      admin_only="true"
-                     filename="c:/Users/comixedreader/Binaries/comixed/plugins/test_plugin.groovy" />
+                     filename="c:/Users/comixedreader/Binaries/comixed/plugins/test_plugin.groovy"/>
     <library_plugin_properties id="2000"
                                library_plugin_id="1000"
                                property_name="test.property"
                                property_length="32"
                                property_required="true"
                                property_value="property-value"
-                               />
+    />
 </dataset>

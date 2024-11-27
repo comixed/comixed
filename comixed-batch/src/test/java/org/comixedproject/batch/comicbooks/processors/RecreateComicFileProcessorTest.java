@@ -19,13 +19,11 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertSame;
 
 import java.io.File;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
@@ -37,19 +35,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.StepExecution;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RecreateComicFileProcessorTest {
   private static final ArchiveType TEST_TARGET_ARCHIVE = ArchiveType.CBZ;
-  private static final String TEST_TARGET_ARCHIVE_NAME = TEST_TARGET_ARCHIVE.toString();
   private static final String TEST_PAGE_RENAMING_RULE = "The page renaming rule";
 
   @InjectMocks private RecreateComicFileProcessor processor;
   @Mock private ConfigurationService configurationService;
-  @Mock private StepExecution stepExecution;
-  @Mock private JobParameters jobParameters;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private File comicFile;
   @Mock private ComicDetail comicDetail;
@@ -61,12 +54,8 @@ public class RecreateComicFileProcessorTest {
     Mockito.when(comicFile.isFile()).thenReturn(true);
     Mockito.when(comicDetail.getFile()).thenReturn(comicFile);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
-    Mockito.when(stepExecution.getJobParameters()).thenReturn(jobParameters);
-    Mockito.when(jobParameters.getString(RecreateComicFilesConfiguration.JOB_TARGET_ARCHIVE))
-        .thenReturn(TEST_TARGET_ARCHIVE_NAME);
-    Mockito.when(jobParameters.getString(RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES))
-        .thenReturn(String.valueOf(false));
-    processor.beforeStep(stepExecution);
+    Mockito.when(comicBook.getTargetArchiveType()).thenReturn(TEST_TARGET_ARCHIVE);
+    Mockito.when(comicBook.isDeletePages()).thenReturn(false);
     Mockito.when(
             configurationService.getOptionValue(
                 ConfigurationService.CFG_LIBRARY_PAGE_RENAMING_RULE, ""))
@@ -75,8 +64,7 @@ public class RecreateComicFileProcessorTest {
 
   @Test
   public void testProcessDeleteMarkedPages() throws Exception {
-    Mockito.when(jobParameters.getString(RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES))
-        .thenReturn(String.valueOf(true));
+    Mockito.when(comicBook.isDeletePages()).thenReturn(true);
 
     final ComicBook result = processor.process(comicBook);
 
@@ -145,10 +133,5 @@ public class RecreateComicFileProcessorTest {
     Mockito.verify(comicBook, Mockito.never()).removeDeletedPages();
     Mockito.verify(comicBookAdaptor, Mockito.times(1))
         .save(comicBook, TEST_TARGET_ARCHIVE, false, TEST_PAGE_RENAMING_RULE);
-  }
-
-  @Test
-  public void testExitStatus() {
-    assertNull(processor.afterStep(stepExecution));
   }
 }

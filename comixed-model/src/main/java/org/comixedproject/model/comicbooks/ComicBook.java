@@ -30,6 +30,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.comicpages.ComicPageState;
 import org.comixedproject.views.View;
@@ -128,11 +129,24 @@ public class ComicBook {
   @Setter
   private boolean organizing = false;
 
-  @Column(name = "recreating", nullable = false, updatable = true)
+  @Column(name = "target_archive_type", nullable = true, updatable = true)
+  @Enumerated(EnumType.STRING)
   @JsonIgnore
   @Getter
   @Setter
-  private boolean recreating = false;
+  private ArchiveType targetArchiveType;
+
+  @Column(name = "rename_pages", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean renamePages = false;
+
+  @Column(name = "delete_pages", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean deletePages = false;
 
   @Column(name = "edit_details", nullable = false, updatable = true)
   @JsonIgnore
@@ -227,13 +241,15 @@ public class ComicBook {
   /** Removes pages that are marked for deletion. */
   public void removeDeletedPages() {
     List<ComicPage> pages = new ArrayList<>(this.pages);
-    pages.forEach(
-        page -> {
-          if (page.getPageState() == ComicPageState.DELETED) {
-            log.trace("Removing page: {}", page.getId());
-            this.pages.remove(page);
-          }
-        });
+    pages.stream()
+        .filter(Objects::nonNull)
+        .forEach(
+            page -> {
+              if (page.getPageState() == ComicPageState.DELETED) {
+                log.trace("Removing page: {}", page.getId());
+                this.pages.remove(page);
+              }
+            });
   }
 
   @Override

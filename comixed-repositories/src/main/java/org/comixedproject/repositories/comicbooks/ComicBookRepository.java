@@ -21,6 +21,7 @@ package org.comixedproject.repositories.comicbooks;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.collections.Publisher;
 import org.comixedproject.model.collections.Series;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -194,12 +195,21 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   long findComicsToBeMovedCount();
 
   /**
+   * Returns the number of comics with the recreating flag set.
+   *
+   * @return the record count
+   */
+  @Query(
+      "SELECT count(c) FROM ComicBook c WHERE c.targetArchiveType IS NOT NULL AND c.comicDetail.comicState != 'DELETED'")
+  long findComicsToBeRecreatedCount();
+
+  /**
    * Returns comics that are marked to be recreated.
    *
    * @param pageable the page request
    * @return the list of comics
    */
-  @Query("SELECT c FROM ComicBook c WHERE c.recreating = true")
+  @Query("SELECT c FROM ComicBook c WHERE c.targetArchiveType IS NOT NULL")
   List<ComicBook> findComicsToRecreate(Pageable pageable);
 
   /**
@@ -579,8 +589,12 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
 
   @Modifying
   @Query(
-      "UPDATE ComicBook c SET c.recreating = true WHERE c.id IN (:ids) AND c.recreating IS FALSE")
-  void markForRecreationById(@Param("ids") List<Long> ids);
+      "UPDATE ComicBook c SET c.targetArchiveType = :archiveType, c.renamePages = :renamePages, c.deletePages = :deletePages WHERE c.id IN (:ids)")
+  void markForRecreationById(
+      @Param("ids") List<Long> ids,
+      @Param("archiveType") final ArchiveType archiveType,
+      @Param("renamePages") final boolean renamePages,
+      @Param("deletePages") final boolean deletePages);
 
   @Query("SELECT b FROM ComicBook b WHERE  b.id IN :comicDetailIds")
   List<ComicBook> loadByComicDetailId(@Param("comicDetailIds") List<Long> comicDetailIds);
@@ -602,7 +616,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.updateMetadata IS TRUE")
   long getUpdateMetadataCount();
 
-  @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.recreating IS TRUE")
+  @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.targetArchiveType IS NOT NULL")
   long getRecreatingCount();
 
   @Query(

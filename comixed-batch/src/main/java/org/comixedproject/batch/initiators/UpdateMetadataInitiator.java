@@ -72,7 +72,7 @@ public class UpdateMetadataInitiator {
 
   private void doExecute() {
     log.trace("Checking for comic files to import");
-    if (this.comicBookService.getUpdateMetadataCount() > 0
+    if (this.comicBookService.getUpdateMetadataCount() > 0L
         && !this.batchProcessesService.hasActiveExecutions(UPDATE_METADATA_JOB)) {
       try {
         log.trace("Starting batch job: update metadata");

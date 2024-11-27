@@ -19,9 +19,7 @@
 package org.comixedproject.rest.library;
 
 import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.JOB_PURGE_LIBRARY_START;
-import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_RECREATE_COMICS_STARTED;
-import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_TARGET_ARCHIVE;
 import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.*;
 import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
 
@@ -135,9 +133,10 @@ public class LibraryController {
         deletePages);
 
     log.trace("Preparing to recreate comic book file");
-    this.libraryService.prepareToRecreate(new ArrayList<>(Arrays.asList(comicBookId)));
+    this.libraryService.prepareToRecreate(
+        new ArrayList<>(Arrays.asList(comicBookId)), archiveType, renamePages, deletePages);
 
-    this.doStartConversionBatchProcess(archiveType, deletePages);
+    this.doStartConversionBatchProcess();
   }
 
   /**
@@ -176,9 +175,9 @@ public class LibraryController {
           deletePages);
 
       log.trace("Preparing to recreate comic files");
-      this.libraryService.prepareToRecreate(idList);
+      this.libraryService.prepareToRecreate(idList, archiveType, renamePages, deletePages);
 
-      this.doStartConversionBatchProcess(archiveType, deletePages);
+      this.doStartConversionBatchProcess();
 
       log.trace("Clearing comic book selections");
       this.comicBookSelectionService.clearSelectedComicBooks(idList);
@@ -190,16 +189,13 @@ public class LibraryController {
     }
   }
 
-  private void doStartConversionBatchProcess(
-      final ArchiveType archiveType, final boolean deletePages) throws LibraryException {
+  private void doStartConversionBatchProcess() throws LibraryException {
     log.trace("Starting comic book conversion batch process");
     try {
       this.jobLauncher.run(
           recreateComicFilesJob,
           new JobParametersBuilder()
               .addLong(JOB_RECREATE_COMICS_STARTED, System.currentTimeMillis())
-              .addString(JOB_TARGET_ARCHIVE, archiveType.getName())
-              .addString(JOB_DELETE_MARKED_PAGES, String.valueOf(deletePages))
               .toJobParameters());
     } catch (JobExecutionAlreadyRunningException
         | JobRestartException

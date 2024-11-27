@@ -18,12 +18,11 @@
 
 package org.comixedproject.batch.initiators;
 
-import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.*;
-import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_COMIC_RENAMING_RULE;
-import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY;
+import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_RECREATE_COMICS_STARTED;
+import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.RECREATE_COMIC_FILES_JOB;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.batch.OrganizingLibraryEvent;
+import org.comixedproject.model.batch.RecreateComicFilesEvent;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicbooks.ComicBookService;
@@ -40,66 +39,49 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 /**
- * <code>OrganizeLibraryInitiator</code> decides when to start a batch process to organize the
- * library.
+ * <code>RecreateComicFilesInitiator</code> decides when to start a batch process to recreate comic
+ * book files.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class OrganizeLibraryInitiator {
+public class RecreateComicFilesInitiator {
   @Autowired private ComicBookService comicBookService;
   @Autowired private ConfigurationService configurationService;
   @Autowired private BatchProcessesService batchProcessesService;
 
   @Autowired
-  @Qualifier(value = ORGANIZE_LIBRARY_JOB)
-  private Job libraryOrganizationJob;
+  @Qualifier(value = RECREATE_COMIC_FILES_JOB)
+  private Job recreateComicFilesJob;
 
   @Autowired
   @Qualifier("batchJobLauncher")
   private JobLauncher jobLauncher;
 
-  @Scheduled(fixedDelayString = "${comixed.batch.organize-library.period:60000}")
+  @Scheduled(fixedDelayString = "${comixed.batch.recreate-comic-files.period:60000}")
   public void execute() {
     this.doExecute();
   }
 
   @EventListener
   @Async
-  public void execute(final OrganizingLibraryEvent event) {
+  public void execute(final RecreateComicFilesEvent event) {
     this.doExecute();
   }
 
   private void doExecute() {
-    log.trace("Checking for comic files to be organized");
-    if (this.comicBookService.findComicsToBeMovedCount() > 0L
-        && !this.batchProcessesService.hasActiveExecutions(ORGANIZE_LIBRARY_JOB)) {
-      log.trace("Loading configured root directory");
-      final String rootDirectory =
-          this.configurationService.getOptionValue(CFG_LIBRARY_ROOT_DIRECTORY);
-      if (!StringUtils.hasLength(rootDirectory)) {
-        log.error("Cannot organize comic files: no root directory defined");
-        return;
-      }
-      log.trace("Loading configured renaming rule");
-      final String renamingRule =
-          this.configurationService.getOptionValue(CFG_LIBRARY_COMIC_RENAMING_RULE);
-      if (!StringUtils.hasLength(renamingRule)) {
-        log.error("Cannot organize comic files: no renaming rule defined");
-        return;
-      }
+    log.trace("Checking for comic files to be recreated");
+    if (this.comicBookService.findComicsToRecreateCount() > 0L
+        && !this.batchProcessesService.hasActiveExecutions(RECREATE_COMIC_FILES_JOB)) {
       try {
         log.trace("Starting batch job: organize comic files");
         this.jobLauncher.run(
-            this.libraryOrganizationJob,
+            this.recreateComicFilesJob,
             new JobParametersBuilder()
-                .addLong(JOB_ORGANIZATION_TIME_STARTED, System.currentTimeMillis())
-                .addString(JOB_ORGANIZATION_TARGET_DIRECTORY, rootDirectory)
-                .addString(JOB_ORGANIZATION_RENAMING_RULE, renamingRule)
+                .addLong(JOB_RECREATE_COMICS_STARTED, System.currentTimeMillis())
                 .toJobParameters());
       } catch (JobExecutionAlreadyRunningException
           | JobRestartException
