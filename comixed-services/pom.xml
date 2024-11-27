@@ -53,6 +53,11 @@
       <artifactId>spring-batch-core</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.jsoup</groupId>
+      <artifactId>jsoup</artifactId>
+      <version>1.18.1</version>
+    </dependency>
+    <dependency>
       <groupId>com.rometools</groupId>
       <artifactId>rome</artifactId>
       <version>1.18.0</version>

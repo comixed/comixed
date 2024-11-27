@@ -65,7 +65,8 @@
       "root-directory": "Library Root Directory",
       "page-variable-description": "Description Of Page Renaming Variable",
       "page-variable-name": "Variable Name",
-      "skip-internal-metadata-files": "Do not create or update internal metadata files."
+      "skip-internal-metadata-files": "Do not create or update internal metadata files.",
+      "strip-html-from-metadata": "Strip HTML from metadata."
     },
     "load-all": {
       "effect-failure": "Failed to load configuration options."

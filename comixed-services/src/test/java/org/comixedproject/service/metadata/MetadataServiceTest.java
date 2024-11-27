@@ -50,6 +50,7 @@ import org.comixedproject.service.collections.IssueService;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ImprintService;
+import org.comixedproject.service.metadata.action.ProcessComicDescriptionAction;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.junit.Before;
@@ -93,6 +94,7 @@ public class MetadataServiceTest {
   @Mock private MetadataCacheService metadataCacheService;
   @Mock private IssueService issueService;
   @Mock private MetadataAdaptor metadataAdaptor;
+  @Mock private ProcessComicDescriptionAction processComicDescriptionAction;
   @Mock private ObjectMapper objectMapper;
   @Mock private VolumeMetadata volumeMetadata;
   @Mock private IssueMetadata issueMetadata;
@@ -173,6 +175,9 @@ public class MetadataServiceTest {
     Mockito.doNothing().when(comicBook).setMetadata(comicMetadataSourceArgumentCaptor.capture());
     Mockito.when(comicBook.getMetadata()).thenReturn(comicMetadataSource);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+
+    Mockito.when(processComicDescriptionAction.execute(Mockito.anyString()))
+        .thenAnswer(input -> input.getArguments()[0]);
   }
 
   @Test(expected = MetadataException.class)

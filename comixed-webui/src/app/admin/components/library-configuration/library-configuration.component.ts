@@ -37,7 +37,8 @@ import {
   LIBRARY_NO_RECREATE_COMICS,
   LIBRARY_PAGE_RENAMING_RULE,
   LIBRARY_ROOT_DIRECTORY,
-  SKIP_INTERNAL_METADATA_FILES
+  SKIP_INTERNAL_METADATA_FILES,
+  LIBRARY_STRIP_HTML_FROM_METADATA
 } from '@app/admin/admin.constants';
 import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
@@ -109,7 +110,8 @@ export class LibraryConfigurationComponent {
       rootDirectory: ['', [Validators.required]],
       comicRenamingRule: ['', []],
       noRecreateComics: ['', []],
-      pageRenamingRule: ['', []]
+      pageRenamingRule: ['', []],
+      stripHtmlFromMetadata: ['', []]
     });
   }
 
@@ -123,6 +125,9 @@ export class LibraryConfigurationComponent {
     );
     this.libraryConfigurationForm.controls.pageRenamingRule.setValue(
       getConfigurationOption(options, LIBRARY_PAGE_RENAMING_RULE, '')
+    );
+    this.libraryConfigurationForm.controls.stripHtmlFromMetadata.setValue(
+      getConfigurationOption(options, LIBRARY_STRIP_HTML_FROM_METADATA, '')
     );
     this.libraryConfigurationForm.controls.deleteEmptyDirectories.setValue(
       getConfigurationOption(
@@ -162,6 +167,13 @@ export class LibraryConfigurationComponent {
     this.libraryConfigurationForm.controls.blockedPagesEnabled.setValue(
       getConfigurationOption(options, BLOCKED_PAGES_ENABLED, `${false}`) ===
         `${true}`
+    );
+    this.libraryConfigurationForm.controls.stripHtmlFromMetadata.setValue(
+      getConfigurationOption(
+        options,
+        LIBRARY_STRIP_HTML_FROM_METADATA,
+        `${false}`
+      ) === `${true}`
     );
   }
 
@@ -235,6 +247,10 @@ export class LibraryConfigurationComponent {
       {
         name: BLOCKED_PAGES_ENABLED,
         value: `${this.libraryConfigurationForm.controls.blockedPagesEnabled.value}`
+      },
+      {
+        name: LIBRARY_STRIP_HTML_FROM_METADATA,
+        value: `${this.libraryConfigurationForm.controls.stripHtmlFromMetadata.value}`
       }
     ];
   }

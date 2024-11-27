@@ -36,6 +36,7 @@ import {
   LIBRARY_NO_RECREATE_COMICS,
   LIBRARY_PAGE_RENAMING_RULE,
   LIBRARY_ROOT_DIRECTORY,
+  LIBRARY_STRIP_HTML_FROM_METADATA,
   SKIP_INTERNAL_METADATA_FILES
 } from '@app/admin/admin.constants';
 import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
@@ -59,6 +60,7 @@ describe('LibraryConfigurationComponent', () => {
   const NO_RECREATE_COMICS = Math.random() > 0.5;
   const PAGE_RENAMING_RULE = 'The page renaming rule';
   const BLOCKED_PAGES_ENABLED_FEATURE_STATE = Math.random() > 0.5;
+  const LIBRARY_STRIP_HTML_FROM_METADATA_STATE = Math.random() > 0.5;
   const OPTIONS = [
     {
       name: LIBRARY_COMIC_RENAMING_RULE,
@@ -95,6 +97,10 @@ describe('LibraryConfigurationComponent', () => {
     {
       name: BLOCKED_PAGES_ENABLED,
       value: `${BLOCKED_PAGES_ENABLED_FEATURE_STATE}`
+    },
+    {
+      name: LIBRARY_STRIP_HTML_FROM_METADATA,
+      value: `${LIBRARY_STRIP_HTML_FROM_METADATA_STATE}`
     }
   ];
   const initialState = {};
@@ -227,6 +233,10 @@ describe('LibraryConfigurationComponent', () => {
             {
               name: BLOCKED_PAGES_ENABLED,
               value: `${BLOCKED_PAGES_ENABLED_FEATURE_STATE}`
+            },
+            {
+              name: LIBRARY_STRIP_HTML_FROM_METADATA,
+              value: `${LIBRARY_STRIP_HTML_FROM_METADATA_STATE}`
             }
           ]
         })
