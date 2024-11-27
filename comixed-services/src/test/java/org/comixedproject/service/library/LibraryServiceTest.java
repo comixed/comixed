@@ -21,7 +21,9 @@ package org.comixedproject.service.library;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.file.FileAdaptor;
+import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.comicbooks.ComicBookException;
@@ -40,10 +42,12 @@ public class LibraryServiceTest {
   private static final String TEST_IMAGE_CACHE_DIRECTORY =
       "/home/ComiXedReader/.comixed/image-cache";
   private static final long TEST_COMIC_COUNT = 717L;
-  private static final long TEST_COMIC_BOOK_ID = 129L;
+  private static final boolean TEST_RENAME_PAGES = RandomUtils.nextBoolean();
+  private static final boolean TEST_DELETE_PAGES = RandomUtils.nextBoolean();
 
   @InjectMocks private LibraryService service;
   @Mock private ComicBookService comicBookService;
+  @Mock private ArchiveType archiveType;
   @Mock private ComicBook comicBook;
   @Mock private FileAdaptor fileAdaptor;
   @Mock private PageCacheService pageCacheService;
@@ -110,9 +114,10 @@ public class LibraryServiceTest {
 
   @Test
   public void testPrepareToRecreate() {
-    service.prepareToRecreate(comicIdList);
+    service.prepareToRecreate(comicIdList, archiveType, TEST_RENAME_PAGES, TEST_DELETE_PAGES);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).prepareForRecreation(comicIdList);
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .prepareForRecreation(comicIdList, archiveType, TEST_RENAME_PAGES, TEST_DELETE_PAGES);
   }
 
   @Test

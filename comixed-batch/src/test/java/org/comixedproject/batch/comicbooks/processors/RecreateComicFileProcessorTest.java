@@ -25,7 +25,6 @@ import static junit.framework.TestCase.assertSame;
 import java.io.File;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
@@ -43,7 +42,6 @@ import org.springframework.batch.core.StepExecution;
 @RunWith(MockitoJUnitRunner.class)
 public class RecreateComicFileProcessorTest {
   private static final ArchiveType TEST_TARGET_ARCHIVE = ArchiveType.CBZ;
-  private static final String TEST_TARGET_ARCHIVE_NAME = TEST_TARGET_ARCHIVE.toString();
   private static final String TEST_PAGE_RENAMING_RULE = "The page renaming rule";
 
   @InjectMocks private RecreateComicFileProcessor processor;
@@ -62,10 +60,8 @@ public class RecreateComicFileProcessorTest {
     Mockito.when(comicDetail.getFile()).thenReturn(comicFile);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(stepExecution.getJobParameters()).thenReturn(jobParameters);
-    Mockito.when(jobParameters.getString(RecreateComicFilesConfiguration.JOB_TARGET_ARCHIVE))
-        .thenReturn(TEST_TARGET_ARCHIVE_NAME);
-    Mockito.when(jobParameters.getString(RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES))
-        .thenReturn(String.valueOf(false));
+    Mockito.when(comicBook.getTargetArchiveType()).thenReturn(TEST_TARGET_ARCHIVE);
+    Mockito.when(comicBook.isDeletePages()).thenReturn(false);
     processor.beforeStep(stepExecution);
     Mockito.when(
             configurationService.getOptionValue(
@@ -75,8 +71,7 @@ public class RecreateComicFileProcessorTest {
 
   @Test
   public void testProcessDeleteMarkedPages() throws Exception {
-    Mockito.when(jobParameters.getString(RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES))
-        .thenReturn(String.valueOf(true));
+    Mockito.when(comicBook.isDeletePages()).thenReturn(true);
 
     final ComicBook result = processor.process(comicBook);
 

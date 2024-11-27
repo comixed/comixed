@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.file.FileAdaptor;
+import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicpages.PageCacheService;
@@ -94,11 +95,18 @@ public class LibraryService {
    * Prepares comics to have their files recreated.
    *
    * @param ids the comic ids
+   * @param archiveType the target archive type
+   * @param renamePages the rename pages flag
+   * @param deletePages the delete pages flag
    */
-  public void prepareToRecreate(final List<Long> ids) {
+  public void prepareToRecreate(
+      final List<Long> ids,
+      final ArchiveType archiveType,
+      final boolean renamePages,
+      final boolean deletePages) {
     final long started = System.currentTimeMillis();
     log.debug("Preparing to recreate {} comic book file(s)", ids.size());
-    this.comicBookService.prepareForRecreation(ids);
+    this.comicBookService.prepareForRecreation(ids, archiveType, renamePages, deletePages);
     log.debug(
         "Comic book files prepared for recreation: {}ms", System.currentTimeMillis() - started);
   }

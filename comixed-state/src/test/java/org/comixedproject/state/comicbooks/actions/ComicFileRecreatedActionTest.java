@@ -18,6 +18,8 @@
 
 package org.comixedproject.state.comicbooks.actions;
 
+import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC;
+
 import java.util.List;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
@@ -44,8 +46,7 @@ public class ComicFileRecreatedActionTest {
   @Before
   public void setUp() {
     Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
-    Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
-        .thenReturn(comicBook);
+    Mockito.when(messageHeaders.get(HEADER_COMIC, ComicBook.class)).thenReturn(comicBook);
   }
 
   @Test
@@ -54,7 +55,7 @@ public class ComicFileRecreatedActionTest {
 
     action.execute(context);
 
-    Mockito.verify(comicBook, Mockito.times(1)).setRecreating(false);
+    Mockito.verify(comicBook, Mockito.times(1)).setTargetArchiveType(null);
     Mockito.verify(pageList, Mockito.times(1)).clear();
     Mockito.verify(comicBook, Mockito.times(1)).setFileContentsLoaded(false);
   }

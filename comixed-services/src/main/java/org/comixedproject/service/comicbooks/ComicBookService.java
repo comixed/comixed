@@ -29,7 +29,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
+import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.batch.OrganizingLibraryEvent;
+import org.comixedproject.model.batch.RecreateComicFilesEvent;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
 import org.comixedproject.model.collections.Publisher;
 import org.comixedproject.model.collections.Series;
@@ -397,8 +399,19 @@ public class ComicBookService {
    * @return the record count
    */
   public long findComicsToBeMovedCount() {
-    log.trace("Finding all comics to be moved");
+    log.trace("Finding the count of comics to be moved");
     return this.comicBookRepository.findComicsToBeMovedCount();
+  }
+
+  /**
+   * Returns the number of comics that are marked for recreation.
+   *
+   * @return the comic book count
+   */
+  @Transactional
+  public long findComicsToRecreateCount() {
+    log.trace("Finding the count of comics to be recreated");
+    return this.comicBookRepository.findComicsToBeRecreatedCount();
   }
 
   /**
@@ -797,13 +810,23 @@ public class ComicBookService {
   }
 
   /**
-   * Marks the specified comics for recreation.
+   * Marks the specified comics for recreation, optionally renaming pages and deleting pages.
    *
    * @param ids the comic ids
+   * @param archiveType the targe archive type
+   * @param renamePages the rename pages flag
+   * @param deletePages the delete pages flag
    */
   @Transactional
-  public void prepareForRecreation(final List<Long> ids) {
-    this.comicBookRepository.markForRecreationById(ids);
+  public void prepareForRecreation(
+      final List<Long> ids,
+      final ArchiveType archiveType,
+      final boolean renamePages,
+      final boolean deletePages) {
+    log.trace("Marking comics for recreation");
+    this.comicBookRepository.markForRecreationById(ids, archiveType, renamePages, deletePages);
+    log.trace("Initiating batch process");
+    this.applicationEventPublisher.publishEvent(RecreateComicFilesEvent.instance);
   }
 
   /**

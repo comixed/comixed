@@ -92,6 +92,8 @@ public class ComicBookServiceTest {
   private static final int TEST_BATCH_CHUNK_SIZE = 25;
   private static final int TEST_PAGE_SIZE = 25;
   private static final int TEST_PAGE_NUMBER = 3;
+  private static final boolean TEST_RENAME_PAGES = RandomUtils.nextBoolean();
+  private static final boolean TEST_DELETE_PAGES = RandomUtils.nextBoolean();
 
   private final List<ComicBook> comicBookList = new ArrayList<>();
   private final List<ComicDetail> comicDetailList = new ArrayList<>();
@@ -128,6 +130,7 @@ public class ComicBookServiceTest {
   @Mock private List<Series> publisherDetail;
   @Mock private List<Series> seriesList;
   @Mock private ComicBook savedComicBook;
+  @Mock private ArchiveType targetArchiveType;
 
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
   @Captor private ArgumentCaptor<PageRequest> pageRequestCaptor;
@@ -1201,9 +1204,10 @@ public class ComicBookServiceTest {
 
   @Test
   public void testPrepareForRecreation() {
-    service.prepareForRecreation(idList);
+    service.prepareForRecreation(idList, targetArchiveType, TEST_RENAME_PAGES, TEST_DELETE_PAGES);
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).markForRecreationById(idList);
+    Mockito.verify(comicBookRepository, Mockito.times(1))
+        .markForRecreationById(idList, targetArchiveType, TEST_RENAME_PAGES, TEST_DELETE_PAGES);
   }
 
   @Test

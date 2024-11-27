@@ -48,6 +48,7 @@ import org.springframework.stereotype.Component;
 public class ComicStateHandler extends LifecycleObjectSupport {
   public static final String HEADER_COMIC = "header.comic";
   public static final String HEADER_USER = "header.user";
+  public static final String HEADER_TARGET_ARCHIVE_TYPE = "header.target.archive-type";
 
   @Autowired private StateMachine<ComicState, ComicEvent> stateMachine;
 
