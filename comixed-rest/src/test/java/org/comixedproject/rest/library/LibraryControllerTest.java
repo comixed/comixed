@@ -19,7 +19,6 @@
 package org.comixedproject.rest.library;
 
 import static junit.framework.TestCase.*;
-import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.JOB_PURGE_LIBRARY_START;
 import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.*;
 import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
 
@@ -81,10 +80,6 @@ public class LibraryControllerTest {
   @Mock
   @Qualifier("recreateComicFilesJob")
   private Job recreateComicFilesJob;
-
-  @Mock
-  @Qualifier("purgeLibraryJob")
-  private Job purgeLibraryJob;
 
   @Mock
   @Qualifier("updateComicBooksJob")
@@ -273,18 +268,9 @@ public class LibraryControllerTest {
 
   @Test
   public void testPurge() throws Exception {
-    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
-        .thenReturn(jobExecution);
-
     controller.purgeLibrary(new PurgeLibraryRequest());
 
-    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
-
-    assertNotNull(jobParameters);
-    assertTrue(jobParameters.getParameters().containsKey(JOB_PURGE_LIBRARY_START));
-
     Mockito.verify(libraryService, Mockito.times(1)).prepareForPurging();
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(purgeLibraryJob, jobParameters);
   }
 
   @Test(expected = Exception.class)

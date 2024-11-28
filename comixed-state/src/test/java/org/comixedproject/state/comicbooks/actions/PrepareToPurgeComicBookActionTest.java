@@ -52,6 +52,6 @@ public class PrepareToPurgeComicBookActionTest {
   public void testEvaluate() {
     action.execute(context);
 
-    Mockito.verify(comicBook, Mockito.times(1)).setPurgeComic(true);
+    Mockito.verify(comicBook, Mockito.times(1)).setPurging(true);
   }
 }

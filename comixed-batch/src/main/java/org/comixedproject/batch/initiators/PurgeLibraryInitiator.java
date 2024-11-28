@@ -18,11 +18,11 @@
 
 package org.comixedproject.batch.initiators;
 
-import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_RECREATE_COMICS_STARTED;
-import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.RECREATE_COMIC_FILES_JOB;
+import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.JOB_PURGE_LIBRARY_START;
+import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.PURGE_LIBRARY_JOB;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.batch.RecreateComicFilesEvent;
+import org.comixedproject.model.batch.PurgeLibraryEvent;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.Job;
@@ -40,52 +40,52 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>RecreateComicFilesInitiator</code> decides when to start a batch process to recreate comic
- * book files.
+ * <code>PurgeLibraryInitiator</code> decides when to start a batch process to purge the library of
+ * comic books marked for removing.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class RecreateComicFilesInitiator {
+public class PurgeLibraryInitiator {
   @Autowired private ComicBookService comicBookService;
   @Autowired private BatchProcessesService batchProcessesService;
 
   @Autowired
-  @Qualifier(value = RECREATE_COMIC_FILES_JOB)
-  private Job recreateComicFilesJob;
+  @Qualifier(value = PURGE_LIBRARY_JOB)
+  private Job purgeLibraryJob;
 
   @Autowired
   @Qualifier("batchJobLauncher")
   private JobLauncher jobLauncher;
 
-  @Scheduled(fixedDelayString = "${comixed.batch.recreate-comic-files.period:60000}")
+  @Scheduled(fixedDelayString = "${comixed.batch.purge-library.period:60000}")
   public void execute() {
     this.doExecute();
   }
 
   @EventListener
   @Async
-  public void execute(final RecreateComicFilesEvent event) {
+  public void execute(final PurgeLibraryEvent event) {
     this.doExecute();
   }
 
   private void doExecute() {
-    log.trace("Checking for comic files to be recreated");
-    if (this.comicBookService.findComicsToRecreateCount() > 0L
-        && !this.batchProcessesService.hasActiveExecutions(RECREATE_COMIC_FILES_JOB)) {
+    log.trace("Checking for comic files to be purged");
+    if (this.comicBookService.findComicsToPurgeCount() > 0L
+        && !this.batchProcessesService.hasActiveExecutions(PURGE_LIBRARY_JOB)) {
       try {
-        log.trace("Starting batch job: organize comic files");
+        log.trace("Starting batch job: purge library");
         this.jobLauncher.run(
-            this.recreateComicFilesJob,
+            this.purgeLibraryJob,
             new JobParametersBuilder()
-                .addLong(JOB_RECREATE_COMICS_STARTED, System.currentTimeMillis())
+                .addLong(JOB_PURGE_LIBRARY_START, System.currentTimeMillis())
                 .toJobParameters());
       } catch (JobExecutionAlreadyRunningException
           | JobRestartException
           | JobInstanceAlreadyCompleteException
           | JobParametersInvalidException error) {
-        log.error("Failed to run import comic files job", error);
+        log.error("Failed to run purge comic files job", error);
       }
     }
   }

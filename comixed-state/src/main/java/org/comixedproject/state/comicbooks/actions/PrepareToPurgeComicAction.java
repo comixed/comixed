@@ -38,6 +38,6 @@ public class PrepareToPurgeComicAction extends AbstractComicAction {
     log.trace("Fetching comicBook");
     final ComicBook comicBook = this.fetchComic(stateContext);
     log.trace("Preparing comicBook for purging");
-    comicBook.setPurgeComic(true);
+    comicBook.setPurging(true);
   }
 }

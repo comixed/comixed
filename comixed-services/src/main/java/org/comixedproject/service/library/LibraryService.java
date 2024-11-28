@@ -23,6 +23,7 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
+import org.comixedproject.model.batch.PurgeLibraryEvent;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicpages.PageCacheService;
@@ -123,6 +124,8 @@ public class LibraryService {
                 log.trace("Firing action: purge comicBook id={}", comicBook.getId());
                 this.comicStateHandler.fireEvent(comicBook, ComicEvent.prepareToPurge);
               });
+      log.trace("Firing purge library event");
+      this.applicationEventPublisher.publishEvent(PurgeLibraryEvent.instance);
     } else {
       log.info("No comic books found to purge");
     }
