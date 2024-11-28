@@ -18,7 +18,6 @@
 
 package org.comixedproject.rest.library;
 
-import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.JOB_PURGE_LIBRARY_START;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_RECREATE_COMICS_STARTED;
 import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.*;
 import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
@@ -78,10 +77,6 @@ public class LibraryController {
   @Autowired
   @Qualifier("recreateComicFilesJob")
   private Job recreateComicFilesJob;
-
-  @Autowired
-  @Qualifier("purgeLibraryJob")
-  private Job purgeLibraryJob;
 
   @Autowired
   @Qualifier("updateComicBooksJob")
@@ -344,12 +339,6 @@ public class LibraryController {
   public void purgeLibrary(@RequestBody() final PurgeLibraryRequest request) throws Exception {
     log.info("Purging comics marked for deletion");
     this.libraryService.prepareForPurging();
-    log.trace("Launching batch process");
-    this.jobLauncher.run(
-        this.purgeLibraryJob,
-        new JobParametersBuilder()
-            .addLong(JOB_PURGE_LIBRARY_START, System.currentTimeMillis())
-            .toJobParameters());
   }
 
   /**

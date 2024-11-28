@@ -660,6 +660,39 @@ public class ComicBookServiceTest {
   }
 
   @Test
+  public void testFindComicsToBeMovedCount() {
+    Mockito.when(comicBookRepository.findComicsToBeMovedCount()).thenReturn(TEST_COMIC_COUNT);
+
+    final long result = service.findComicsToBeMovedCount();
+
+    assertEquals(TEST_COMIC_COUNT, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsToBeMovedCount();
+  }
+
+  @Test
+  public void testFindComicsToRecreateCount() {
+    Mockito.when(comicBookRepository.findComicsToBeRecreatedCount()).thenReturn(TEST_COMIC_COUNT);
+
+    final long result = service.findComicsToRecreateCount();
+
+    assertEquals(TEST_COMIC_COUNT, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsToBeRecreatedCount();
+  }
+
+  @Test
+  public void testFindComicsToPurgeCount() {
+    Mockito.when(comicBookRepository.findComicsToPurgeCount()).thenReturn(TEST_COMIC_COUNT);
+
+    final long result = service.findComicsToPurgeCount();
+
+    assertEquals(TEST_COMIC_COUNT, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsToPurgeCount();
+  }
+
+  @Test
   public void testFindAll() {
     Mockito.when(comicBookRepository.findAll()).thenReturn(comicBookList);
 

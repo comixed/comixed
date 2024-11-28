@@ -204,6 +204,14 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   long findComicsToBeRecreatedCount();
 
   /**
+   * Returns the number of comics with the purge comic flag set.
+   *
+   * @return the record count
+   */
+  @Query("SELECT count(c) FROM ComicBook c WHERE c.purging IS TRUE")
+  long findComicsToPurgeCount();
+
+  /**
    * Returns comics that are marked to be recreated.
    *
    * @param pageable the page request
@@ -380,7 +388,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param pageable the page request
    * @return the comics
    */
-  @Query("SELECT c FROM ComicBook c WHERE c.purgeComic = true")
+  @Query("SELECT c FROM ComicBook c WHERE c.purging = true")
   List<ComicBook> findComicsMarkedForPurging(Pageable pageable);
 
   /**

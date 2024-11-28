@@ -415,6 +415,17 @@ public class ComicBookService {
   }
 
   /**
+   * Returns the number of comics that are marked for recreation.
+   *
+   * @return the comic book count
+   */
+  @Transactional
+  public long findComicsToPurgeCount() {
+    log.trace("Finding the count of comics to be recreated");
+    return this.comicBookRepository.findComicsToPurgeCount();
+  }
+
+  /**
    * Returns all comics.
    *
    * @return the list of comics

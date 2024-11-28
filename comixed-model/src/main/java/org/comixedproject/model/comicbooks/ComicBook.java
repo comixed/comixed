@@ -154,11 +154,11 @@ public class ComicBook {
   @Setter
   private boolean editDetails = false;
 
-  @Column(name = "purge_comic", nullable = false, updatable = true)
+  @Column(name = "purging", nullable = false, updatable = true)
   @JsonIgnore
   @Getter
   @Setter
-  private boolean purgeComic;
+  private boolean purging;
 
   @Column(name = "last_modified_on", updatable = true, nullable = false)
   @JsonProperty("lastModifiedOn")

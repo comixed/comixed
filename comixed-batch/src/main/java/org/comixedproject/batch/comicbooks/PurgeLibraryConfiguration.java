@@ -47,6 +47,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 @Log4j2
 public class PurgeLibraryConfiguration {
+  public static final String PURGE_LIBRARY_JOB = "purgeLibraryJob";
   public static final String JOB_PURGE_LIBRARY_START = "job.purge-library.started";
 
   @Value("${comixed.batch.purge-library.chunk-size:1}")
@@ -59,12 +60,12 @@ public class PurgeLibraryConfiguration {
    * @param purgeMarkedComicsStep the purge library step
    * @return the job
    */
-  @Bean(name = "purgeLibraryJob")
+  @Bean(name = PURGE_LIBRARY_JOB)
   public Job purgeLibraryJob(
       final JobRepository jobRepository,
       @Qualifier("purgeMarkedComicsStep") final Step purgeMarkedComicsStep,
       @Qualifier("removeComicBooksWithoutDetailsStep") final Step removeMalformedComicBooksStep) {
-    return new JobBuilder("purgeLibraryJob", jobRepository)
+    return new JobBuilder(PURGE_LIBRARY_JOB, jobRepository)
         .incrementer(new RunIdIncrementer())
         .start(removeMalformedComicBooksStep)
         .next(purgeMarkedComicsStep)
