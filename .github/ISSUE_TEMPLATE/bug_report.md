@@ -31,15 +31,22 @@ Steps to reproduce the behavior. Please be as complete as possible and describe 
 **Expected Behavior**
 A clear and concise description of what you expected to happen.
 
-**ComiXed Runtime Environment**
+**Operating System**
+Where is ComiXed running?
 
  - [ ] Windows
  - [ ] Linux (any distro)
  - [ ] MacOS
- - [ ] Docker (if so, please select the host OS)
+ - [ ] Docker
+
+**Database**
+What database is ComiXed using?
+ - [ ] Postgres
+ - [ ] MySQL/MariahDB
+ - [ ] H2 (embedded, generally unsupported)
+ - [ ] Other (please provide the name in the bug description)
 
 **Browser (If A Web Issue)**
-
  - [ ] Chrome
  - [ ] Firefox
  - [ ] Safari
