@@ -18,7 +18,6 @@
 
 package org.comixedproject.rest.library;
 
-import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_RECREATE_COMICS_STARTED;
 import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.*;
 import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
 
@@ -44,11 +43,7 @@ import org.comixedproject.service.library.RemoteLibraryStateService;
 import org.comixedproject.views.View;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
@@ -73,10 +68,6 @@ public class LibraryController {
   @Autowired
   @Qualifier("batchJobLauncher")
   private JobLauncher jobLauncher;
-
-  @Autowired
-  @Qualifier("recreateComicFilesJob")
-  private Job recreateComicFilesJob;
 
   @Autowired
   @Qualifier("updateComicBooksJob")
@@ -130,8 +121,6 @@ public class LibraryController {
     log.trace("Preparing to recreate comic book file");
     this.libraryService.prepareToRecreate(
         new ArrayList<>(Arrays.asList(comicBookId)), archiveType, renamePages, deletePages);
-
-    this.doStartConversionBatchProcess();
   }
 
   /**
@@ -171,9 +160,6 @@ public class LibraryController {
 
       log.trace("Preparing to recreate comic files");
       this.libraryService.prepareToRecreate(idList, archiveType, renamePages, deletePages);
-
-      this.doStartConversionBatchProcess();
-
       log.trace("Clearing comic book selections");
       this.comicBookSelectionService.clearSelectedComicBooks(idList);
       log.trace("Saving comic book selections");
@@ -181,22 +167,6 @@ public class LibraryController {
           LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(idList));
     } catch (ComicBookSelectionException error) {
       throw new LibraryException("Failed to start converting selected comic books", error);
-    }
-  }
-
-  private void doStartConversionBatchProcess() throws LibraryException {
-    log.trace("Starting comic book conversion batch process");
-    try {
-      this.jobLauncher.run(
-          recreateComicFilesJob,
-          new JobParametersBuilder()
-              .addLong(JOB_RECREATE_COMICS_STARTED, System.currentTimeMillis())
-              .toJobParameters());
-    } catch (JobExecutionAlreadyRunningException
-        | JobRestartException
-        | JobInstanceAlreadyCompleteException
-        | JobParametersInvalidException error) {
-      throw new LibraryException("Failed to start comic conversion batch process", error);
     }
   }
 
