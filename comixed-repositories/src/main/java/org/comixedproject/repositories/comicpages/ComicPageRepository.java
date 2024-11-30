@@ -104,7 +104,8 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
    *
    * @return the hash list
    */
-  @Query("SELECT DISTINCT p.hash FROM ComicPage p WHERE p.pageNumber = 0")
+  @Query(
+      "SELECT DISTINCT p.hash FROM ComicPage p WHERE p.pageNumber = 0 AND p.hash IS NOT NULL AND length(p.hash) > 0")
   Set<String> findAllCoverPageHashes();
 
   /**
