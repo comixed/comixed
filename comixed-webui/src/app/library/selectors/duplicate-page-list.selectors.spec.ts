@@ -21,6 +21,7 @@ import {
   DuplicatePageListState
 } from '../reducers/duplicate-page-list.reducer';
 import {
+  selectDuplicatePageCount,
   selectDuplicatePageList,
   selectDuplicatePageListState
 } from './duplicate-page-list.selectors';
@@ -36,7 +37,7 @@ describe('DuplicatePageList Selectors', () => {
   let state: DuplicatePageListState;
 
   beforeEach(() => {
-    state = { loading: Math.random() > 0.5, pages: PAGES };
+    state = { loading: Math.random() > 0.5, total: PAGES.length, pages: PAGES };
   });
 
   it('should select the feature state', () => {
@@ -53,5 +54,13 @@ describe('DuplicatePageList Selectors', () => {
         [DUPLICATE_PAGE_LIST_FEATURE_KEY]: state
       })
     ).toEqual(state.pages);
+  });
+
+  it('should select the page count', () => {
+    expect(
+      selectDuplicatePageCount({
+        [DUPLICATE_PAGE_LIST_FEATURE_KEY]: state
+      })
+    ).toEqual(state.total);
   });
 });

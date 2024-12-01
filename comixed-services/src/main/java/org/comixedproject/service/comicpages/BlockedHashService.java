@@ -37,8 +37,11 @@ import org.comixedproject.messaging.comicpages.PublishBlockedPageUpdateAction;
 import org.comixedproject.messaging.library.PublishDuplicatePageListUpdateAction;
 import org.comixedproject.model.comicpages.BlockedHash;
 import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.model.net.DownloadDocument;
+import org.comixedproject.model.net.library.DuplicatePageUpdate;
 import org.comixedproject.repositories.comicpages.BlockedHashRepository;
+import org.comixedproject.service.library.DuplicatePageException;
 import org.comixedproject.service.library.DuplicatePageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -107,11 +110,13 @@ public class BlockedHashService {
     return this.blockedHashRepository.getHashes();
   }
 
-  private void doPublishDuplicatePageUpdates() {
+  private void doPublishDuplicatePageUpdates(
+      final DuplicatePage duplicatePage, final boolean removed) {
     try {
       log.trace("Publishing duplicate page list");
       this.publishDuplicatePageListUpdateAction.publish(
-          this.duplicatePageService.getDuplicatePages());
+          new DuplicatePageUpdate(
+              removed, this.duplicatePageService.getDuplicatePageCount(), duplicatePage));
     } catch (PublishingException error) {
       log.error("Failed to publish duplicate page list", error);
     }
@@ -125,7 +130,8 @@ public class BlockedHashService {
    * @return the updated record
    */
   @Transactional
-  public BlockedHash updateBlockedPage(final String hash, final BlockedHash blockedHash) {
+  public BlockedHash updateBlockedPage(final String hash, final BlockedHash blockedHash)
+      throws DuplicatePageException {
     final BlockedHash updatedPage =
         this.doBlockPageHash(hash, blockedHash, blockedHash.getThumbnail());
     try {
@@ -133,7 +139,7 @@ public class BlockedHashService {
     } catch (PublishingException error) {
       log.error("Failed to publish blocked page update", error);
     }
-    this.doPublishDuplicatePageUpdates();
+    this.doPublishDuplicatePageUpdates(this.duplicatePageService.getForHash(hash), false);
     return updatedPage;
   }
 
@@ -154,7 +160,7 @@ public class BlockedHashService {
   }
 
   /**
-   * Adds a page type to the blocked page lis.
+   * Adds a page type to the blocked page list.
    *
    * @param hashes the page hashes
    */
@@ -171,11 +177,11 @@ public class BlockedHashService {
 
         final BlockedHash blockedHashRecord = this.doBlockPageHash(hash, null, encodedPageContent);
         this.publishBlockedPageUpdateAction.publish(blockedHashRecord);
-      } catch (PublishingException | AdaptorException error) {
+        this.doPublishDuplicatePageUpdates(this.duplicatePageService.getForHash(hash), false);
+      } catch (PublishingException | AdaptorException | DuplicatePageException error) {
         log.error("Failed to publish blocked page update", error);
       }
     }
-    this.doPublishDuplicatePageUpdates();
   }
 
   /**
@@ -194,12 +200,12 @@ public class BlockedHashService {
         log.trace("Publishing blocked page removal");
         try {
           this.publishBlockedPageRemovalAction.publish(blockedHashRecord);
-        } catch (PublishingException error) {
+          this.doPublishDuplicatePageUpdates(this.duplicatePageService.getForHash(hash), true);
+        } catch (PublishingException | DuplicatePageException error) {
           log.error("Failed to publish blocked page remove", error);
         }
       }
     }
-    this.doPublishDuplicatePageUpdates();
   }
 
   public BlockedHash doUnblockPageHash(final String hash) {

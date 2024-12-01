@@ -18,18 +18,22 @@
 
 package org.comixedproject.service.library;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.library.DuplicatePage;
+import org.comixedproject.model.net.library.LoadDuplicatePageListResponse;
 import org.comixedproject.repositories.comicpages.ComicPageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 /**
  * <code>DuplicatePageService</code> provides rules for working with instances of {@link
@@ -48,24 +52,48 @@ public class DuplicatePageService {
    * @return the duplicate pages
    */
   @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-  public List<DuplicatePage> getDuplicatePages() {
+  public LoadDuplicatePageListResponse getDuplicatePages(
+      final int page, final int size, final String sortBy, final String sortDirection) {
     log.trace("Getting pages from repository");
-    final List<ComicPage> pages = this.comicPageRepository.getDuplicatePages();
+    final List<DuplicatePage> pages =
+        this.comicPageRepository.getDuplicatePages(
+            PageRequest.of(page, size, this.doCreateSort(sortBy, sortDirection)));
     log.trace("Build duplicate page list");
-    Map<String, DuplicatePage> mapped = new HashMap<>();
-    for (ComicPage page : pages) {
-      log.trace("Looking for existing entry");
-      DuplicatePage entry = mapped.get(page.getHash());
-      if (entry == null) {
-        log.trace("Creating new entry");
-        entry = new DuplicatePage(page.getHash());
-        mapped.put(entry.getHash(), entry);
-      }
-      log.trace("Loading comic into entry");
-      entry.getComics().add(page.getComicBook().getComicDetail());
+    for (DuplicatePage entry : pages) {
+      log.trace("Loading comics for hash: {}", entry.getHash());
+      final Set<ComicDetail> comics =
+          this.comicPageRepository.getPagesWithHash(entry.getHash()).stream()
+              .map(ComicPage::getComicBook)
+              .map(ComicBook::getComicDetail)
+              .collect(Collectors.toSet());
+      entry.setComics(comics);
     }
     log.trace("Returning duplicate page list");
-    return new ArrayList<>(mapped.values());
+    return new LoadDuplicatePageListResponse(this.getDuplicatePageCount(), pages);
+  }
+
+  @Transactional
+  public int getDuplicatePageCount() {
+    log.debug("Loading duplicate page count");
+    return this.comicPageRepository.getDuplicatePageCount();
+  }
+
+  private Sort doCreateSort(final String sortBy, final String sortDirection) {
+    if (!StringUtils.hasLength(sortBy) || !StringUtils.hasLength(sortDirection)) {
+      return Sort.unsorted();
+    }
+
+    String fieldName;
+    switch (sortBy) {
+      case "hash" -> fieldName = "hash";
+      default -> fieldName = "hash";
+    }
+
+    Sort.Direction direction = Sort.Direction.DESC;
+    if (sortDirection.equals("asc")) {
+      direction = Sort.Direction.ASC;
+    }
+    return Sort.by(direction, fieldName);
   }
 
   /**

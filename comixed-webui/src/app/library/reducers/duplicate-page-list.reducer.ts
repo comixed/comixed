@@ -18,9 +18,9 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  duplicatePagesLoaded,
-  loadDuplicatePages,
-  loadDuplicatePagesFailed,
+  loadDuplicatePageListSuccess,
+  loadDuplicatePageList,
+  loadDuplicatePageListFailure,
   resetDuplicatePages
 } from '@app/library/actions/duplicate-page-list.actions';
 import { DuplicatePage } from '@app/library/models/duplicate-page';
@@ -29,11 +29,13 @@ export const DUPLICATE_PAGE_LIST_FEATURE_KEY = 'duplicate_page_list_state';
 
 export interface DuplicatePageListState {
   loading: boolean;
+  total: number;
   pages: DuplicatePage[];
 }
 
 export const initialState: DuplicatePageListState = {
   loading: false,
+  total: 0,
   pages: []
 };
 
@@ -43,15 +45,17 @@ export const reducer = createReducer(
   on(resetDuplicatePages, state => ({
     ...state,
     loading: false,
+    total: 0,
     pages: []
   })),
-  on(loadDuplicatePages, state => ({ ...state, loading: true })),
-  on(duplicatePagesLoaded, (state, action) => ({
+  on(loadDuplicatePageList, state => ({ ...state, loading: true })),
+  on(loadDuplicatePageListSuccess, (state, action) => ({
     ...state,
     loading: false,
+    total: action.totalPages,
     pages: action.pages
   })),
-  on(loadDuplicatePagesFailed, state => ({
+  on(loadDuplicatePageListFailure, state => ({
     ...state,
     loading: false
   }))

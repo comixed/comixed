@@ -28,16 +28,52 @@
   </button>
 </div>
 
+<div
+  *ngIf="showPopup"
+  class="cx-hover cx-centered cx-width-25 cx-border-primary-1"
+>
+  <mat-card
+    appearance="outlined"
+    (click)="showPopup = false"
+    (keyup)="showPopup = false"
+  >
+    <mat-card-title class="cx-text-nowrap">
+      {{
+        "duplicate-pages.show-popup.title"
+          | translate: { hash: popupPage?.hash }
+      }}
+    </mat-card-title>
+    <mat-card-subtitle class="cx-text-nowrap">
+      {{
+        "duplicate-pages.show-popup.subtitle"
+          | translate: { count: popupPage?.comics?.length }
+      }}
+    </mat-card-subtitle>
+    <mat-card-content class="cx-padding-5">
+      <img
+        loading="lazy"
+        [src]="popupPage?.hash | pageHashUrl"
+        width="100%"
+        height="auto"
+        [alt]="popupPage"
+      />
+    </mat-card-content>
+  </mat-card>
+</div>
+
 <h2>
   {{
     "duplicate-pages.list-page.page-title"
-      | translate: {count: dataSource.data.length, selected: selectedCount, unblockedOnly}
+      | translate: {count: totalPages, selected: selectedCount, unblockedOnly}
   }}
 </h2>
 
 <mat-paginator
   class="cx-height-100"
+  showFirstLastButtons
   [pageSize]="queryParameterService.pageSize$ | async"
+  [pageIndex]="queryParameterService.pageIndex$ | async"
+  [length]="totalPages"
   [pageSizeOptions]="queryParameterService.pageSizeOptions"
   (page)="
     queryParameterService.onPageChange(
@@ -58,7 +94,7 @@
   "
 >
   <ng-container matColumnDef="selection">
-    <mat-header-cell mat-sort-header *matHeaderCellDef>
+    <mat-header-cell *matHeaderCellDef>
       <mat-checkbox
         [checked]="allSelected"
         (change)="onSelectAll($event.checked)"
@@ -88,7 +124,8 @@
           alt="thumbnail"
           width="100%"
           height="auto"
-          (click)="onShowComicBooksWithPage(row); $event.stopPropagation()"
+          (mouseenter)="onShowPagePopup(true, row.item)"
+          (mouseleave)="onShowPagePopup(false, null)"
         />
       </div>
     </mat-cell>
@@ -104,7 +141,7 @@
   </ng-container>
 
   <ng-container matColumnDef="comic-count">
-    <mat-header-cell mat-sort-header *matHeaderCellDef>
+    <mat-header-cell *matHeaderCellDef>
       {{ "duplicate-pages.header.comic-count" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let row">
@@ -113,7 +150,7 @@
   </ng-container>
 
   <ng-container matColumnDef="blocked">
-    <mat-header-cell mat-sort-header *matHeaderCellDef>
+    <mat-header-cell *matHeaderCellDef>
       {{ "duplicate-pages.header.blocked" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let row">
