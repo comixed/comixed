@@ -23,15 +23,37 @@ export const resetDuplicatePages = createAction(
   '[Duplicate Page List] Resets the feature state'
 );
 
-export const loadDuplicatePages = createAction(
-  '[Duplicate Page List] Load all duplicate pages'
+export const loadDuplicatePageList = createAction(
+  '[Duplicate Page List] Load a set of duplicate pages',
+  props<{
+    size: number;
+    page: number;
+    sortBy: string;
+    sortDirection: string;
+  }>()
 );
 
-export const duplicatePagesLoaded = createAction(
-  '[Duplicate Page List] Duplicate pages loaded',
-  props<{ pages: DuplicatePage[] }>()
+export const loadDuplicatePageListSuccess = createAction(
+  '[Duplicate Page List] Duplicate page set loaded',
+  props<{ totalPages: number; pages: DuplicatePage[] }>()
 );
 
-export const loadDuplicatePagesFailed = createAction(
-  '[Duplicate Page List] Failed to load all duplicate pages'
+export const loadDuplicatePageListFailure = createAction(
+  '[Duplicate Page List] Failed to load any duplicate pages'
+);
+
+export const duplicatePageUpdated = createAction(
+  '[Duplicate Page List] A duplicate page update was updated',
+  props<{
+    page: DuplicatePage;
+    total: number;
+  }>()
+);
+
+export const duplicatePageRemoved = createAction(
+  '[Duplicate Page List] A duplicate page update was removed',
+  props<{
+    page: DuplicatePage;
+    total: number;
+  }>()
 );

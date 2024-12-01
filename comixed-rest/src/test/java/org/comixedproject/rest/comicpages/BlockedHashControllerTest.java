@@ -35,6 +35,7 @@ import org.comixedproject.model.net.comicpages.SetBlockedPageRequest;
 import org.comixedproject.service.comicpages.BlockedHashException;
 import org.comixedproject.service.comicpages.BlockedHashService;
 import org.comixedproject.service.comicpages.ComicPageService;
+import org.comixedproject.service.library.DuplicatePageException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -145,7 +146,7 @@ public class BlockedHashControllerTest {
   }
 
   @Test
-  public void testUpdateBlockedPage() throws BlockedHashException {
+  public void testUpdateBlockedPage() throws  DuplicatePageException {
     Mockito.when(
             blockedHashService.updateBlockedPage(
                 Mockito.anyString(), Mockito.any(BlockedHash.class)))

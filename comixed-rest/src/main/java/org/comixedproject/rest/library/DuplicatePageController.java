@@ -20,9 +20,10 @@ package org.comixedproject.rest.library;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
-import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.library.DuplicatePage;
+import org.comixedproject.model.net.library.LoadDuplicatePageListRequest;
+import org.comixedproject.model.net.library.LoadDuplicatePageListResponse;
 import org.comixedproject.service.comicpages.ComicPageService;
 import org.comixedproject.service.library.DuplicatePageException;
 import org.comixedproject.service.library.DuplicatePageService;
@@ -30,9 +31,7 @@ import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <code>DuplicatePageController</code> provides endpoints for working with {@link DuplicatePage}
@@ -51,13 +50,27 @@ public class DuplicatePageController {
    *
    * @return the duplicate page list
    */
-  @GetMapping(value = "/api/library/pages/duplicates", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(
+      value = "/api/library/pages/duplicates",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.DuplicatePageList.class)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.duplicate-page.get-all")
-  public List<DuplicatePage> getDuplicatePageList() {
-    log.info("Getting list of duplicate pages");
-    return this.duplicatePageService.getDuplicatePages();
+  public LoadDuplicatePageListResponse getDuplicatePageList(
+      @RequestBody final LoadDuplicatePageListRequest request) {
+    final int page = request.getPage();
+    final int size = request.getSize();
+    final String sortBy = request.getSortBy();
+    final String sortDirection = request.getSortDirection();
+
+    log.info(
+        "Getting list of duplicate pages: page={} size={} sort={} direction={}",
+        page,
+        size,
+        sortBy,
+        sortDirection);
+    return this.duplicatePageService.getDuplicatePages(page, size, sortBy, sortDirection);
   }
 
   /**

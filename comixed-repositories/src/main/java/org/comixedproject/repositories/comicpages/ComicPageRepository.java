@@ -23,6 +23,7 @@ import java.util.Set;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.comicpages.ComicPageState;
 import org.comixedproject.model.comicpages.DeletedPageAndComic;
+import org.comixedproject.model.library.DuplicatePage;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -60,8 +61,12 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
    * @return a list of ComicPage objects with duplicate hashes
    */
   @Query(
-      "SELECT p FROM ComicPage p JOIN FETCH p.comicBook WHERE p.hash IN (SELECT d.hash FROM ComicPage d GROUP BY d.hash HAVING COUNT(*) > 1)")
-  List<ComicPage> getDuplicatePages();
+      "SELECT DISTINCT new org.comixedproject.model.library.DuplicatePage(p.hash) FROM ComicPage p WHERE p.hash IN (SELECT d.hash FROM ComicPage d GROUP BY d.hash HAVING COUNT(*) > 1)")
+  List<DuplicatePage> getDuplicatePages(Pageable pageable);
+
+  @Query(
+      "SELECT COUNT(DISTINCT p.hash) FROM ComicPage p WHERE p.hash in (SELECT d.hash FROM ComicPage d GROUP BY d.hash HAVING COUNT(*) > 1)")
+  int getDuplicatePageCount();
 
   /**
    * Returns the list of pages that have the given hash and state flag value.

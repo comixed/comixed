@@ -158,7 +158,8 @@ public class PageCacheService {
         .findAllCoverPageHashes()
         .forEach(
             hash -> {
-              if (!this.getFileForHash(hash).exists()) {
+              final File file = this.getFileForHash(hash);
+              if (Objects.nonNull(file) && !file.exists()) {
                 log.trace("Marking page to have image cache entry created: {}", hash);
                 this.comicPageService.markCoverPagesToHaveCacheEntryCreated(hash);
               }
