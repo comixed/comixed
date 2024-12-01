@@ -10,8 +10,9 @@
 
 <mat-paginator
   showFirstLastButtons="true"
-  [pageSize]="pageSize"
-  [pageIndex]="pageIndex"
+  [length]="totalPublishers"
+  [pageSize]="queryParameterService.pageSize$ | async"
+  [pageIndex]="queryParameterService.pageIndex$ | async"
   [pageSizeOptions]="pageOptions"
   (page)="
     queryParameterService.onPageChange(
@@ -42,7 +43,7 @@
   </ng-container>
 
   <ng-container matColumnDef="series-count">
-    <mat-header-cell mat-sort-header *matHeaderCellDef>
+    <mat-header-cell *matHeaderCellDef>
       {{ "collections.publishers.label.series-count" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">

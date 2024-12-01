@@ -38,6 +38,7 @@ import org.comixedproject.model.comicbooks.ComicType;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.net.DownloadDocument;
+import org.comixedproject.model.net.collections.LoadPublisherListResponse;
 import org.comixedproject.model.net.comicbooks.PageOrderEntry;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
@@ -84,7 +85,6 @@ public class ComicBookServiceTest {
   private static final Date TEST_STORE_DATE =
       new Date(System.currentTimeMillis() - 30L * 24L * 60L * 60L * 24L);
   private static final String TEST_NOTES = "These are the comic book's notes...";
-  private static final int TEST_PAGE = Math.abs(RandomUtils.nextInt());
   private static final ComicState TEST_STATE = ComicState.CHANGED;
   private static final String TEST_STORY_NAME = "The Story Name";
   private static final long TEST_COMIC_COUNT = 239L;
@@ -413,14 +413,14 @@ public class ComicBookServiceTest {
     Mockito.when(comicBookRepository.findComicsToMove(pageRequestCaptor.capture()))
         .thenReturn(comicBookList);
 
-    final List<ComicBook> result = service.findComicsToMove(TEST_PAGE, TEST_MAXIMUM_COMICS);
+    final List<ComicBook> result = service.findComicsToMove(TEST_PAGE_NUMBER, TEST_MAXIMUM_COMICS);
 
     assertNotNull(result);
     assertSame(comicBookList, result);
 
     assertNotNull(pageRequestCaptor.getValue());
     final PageRequest request = pageRequestCaptor.getValue();
-    assertEquals(TEST_PAGE, request.getPageNumber());
+    assertEquals(TEST_PAGE_NUMBER, request.getPageNumber());
     assertEquals(TEST_MAXIMUM_COMICS, request.getPageSize());
 
     Mockito.verify(comicBookRepository, Mockito.times(1))
@@ -1137,15 +1137,25 @@ public class ComicBookServiceTest {
 
   @Test
   public void testGetAllPublishers() {
-    Mockito.when(comicBookRepository.getAllPublishersWithSeriesCount())
+    Mockito.when(comicBookRepository.getAllPublishersWithNumberOfSeriesCount())
+        .thenReturn((int) TEST_COMIC_COUNT);
+    Mockito.when(comicBookRepository.getAllPublishersWithNumberOfSeries(pageableCaptor.capture()))
         .thenReturn(publisherWithSeriesCountList);
 
-    final List<Publisher> result = service.getAllPublishersWithSeries();
+    final LoadPublisherListResponse result =
+        service.getAllPublishersWithSeries(TEST_PAGE_NUMBER, TEST_PAGE_SIZE, "name", "asc");
 
     assertNotNull(result);
-    assertSame(publisherWithSeriesCountList, result);
+    assertEquals(TEST_COMIC_COUNT, result.getTotal());
+    assertSame(publisherWithSeriesCountList, result.getPublishers());
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).getAllPublishersWithSeriesCount();
+    final Pageable pageable = pageableCaptor.getValue();
+    assertEquals(TEST_PAGE_NUMBER, pageable.getPageNumber());
+    assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getAllPublishersWithNumberOfSeriesCount();
+    Mockito.verify(comicBookRepository, Mockito.times(1))
+        .getAllPublishersWithNumberOfSeries(pageable);
   }
 
   @Test

@@ -33,11 +33,11 @@ import {
 import { PublisherService } from '@app/collections/services/publisher.service';
 import {
   loadPublisherDetail,
-  loadPublisherDetailFailed,
-  loadPublishers,
-  loadPublishersFailed,
-  publisherDetailLoaded,
-  publishersLoaded
+  loadPublisherDetailFailure,
+  loadPublisherDetailSuccess,
+  loadPublisherList,
+  loadPublisherListFailure,
+  loadPublisherListSuccess
 } from '@app/collections/actions/publisher.actions';
 import { hot } from 'jasmine-marbles';
 import { AlertService } from '@app/core/services/alert.service';
@@ -45,8 +45,13 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { LoadPublisherListResponse } from '@app/collections/models/net/load-publisher-list-response';
 
 describe('PublisherEffects', () => {
+  const PAGE_NUMBER = 1;
+  const PAGE_SIZE = 25;
+  const SORT_BY = 'name';
+  const SORT_DIRECTION = 'asc';
   const PUBLISHERS = [PUBLISHER_1, PUBLISHER_2, PUBLISHER_3];
   const PUBLISHER = PUBLISHER_3;
   const DETAIL = [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5];
@@ -95,12 +100,30 @@ describe('PublisherEffects', () => {
 
   describe('loading all publishers', () => {
     it('fires an action on success', () => {
-      const serviceResponse = PUBLISHERS;
-      const action = loadPublishers();
-      const outcome = publishersLoaded({ publishers: PUBLISHERS });
+      const serviceResponse = {
+        total: PUBLISHERS.length,
+        publishers: PUBLISHERS
+      } as LoadPublisherListResponse;
+      const action = loadPublisherList({
+        page: PAGE_NUMBER,
+        size: PAGE_SIZE,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      });
+      const outcome = loadPublisherListSuccess({
+        total: PUBLISHERS.length,
+        publishers: PUBLISHERS
+      });
 
       actions$ = hot('-a', { a: action });
-      publisherService.loadPublishers.and.returnValue(of(serviceResponse));
+      publisherService.loadPublishers
+        .withArgs({
+          page: PAGE_NUMBER,
+          size: PAGE_SIZE,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
+        .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.loadPublishers$).toBeObservable(expected);
@@ -108,13 +131,23 @@ describe('PublisherEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = loadPublishers();
-      const outcome = loadPublishersFailed();
+      const action = loadPublisherList({
+        page: PAGE_NUMBER,
+        size: PAGE_SIZE,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      });
+      const outcome = loadPublisherListFailure();
 
       actions$ = hot('-a', { a: action });
-      publisherService.loadPublishers.and.returnValue(
-        throwError(serviceResponse)
-      );
+      publisherService.loadPublishers
+        .withArgs({
+          page: PAGE_NUMBER,
+          size: PAGE_SIZE,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
+        .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.loadPublishers$).toBeObservable(expected);
@@ -122,11 +155,23 @@ describe('PublisherEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = loadPublishers();
-      const outcome = loadPublishersFailed();
+      const action = loadPublisherList({
+        page: PAGE_NUMBER,
+        size: PAGE_SIZE,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      });
+      const outcome = loadPublisherListFailure();
 
       actions$ = hot('-a', { a: action });
-      publisherService.loadPublishers.and.throwError('expected');
+      publisherService.loadPublishers
+        .withArgs({
+          page: PAGE_NUMBER,
+          size: PAGE_SIZE,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
+        .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.loadPublishers$).toBeObservable(expected);
@@ -138,7 +183,7 @@ describe('PublisherEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = DETAIL;
       const action = loadPublisherDetail({ name: PUBLISHER.name });
-      const outcome = publisherDetailLoaded({ detail: DETAIL });
+      const outcome = loadPublisherDetailSuccess({ detail: DETAIL });
 
       actions$ = hot('-a', { a: action });
       publisherService.loadPublisherDetail
@@ -152,7 +197,7 @@ describe('PublisherEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = loadPublisherDetail({ name: PUBLISHER.name });
-      const outcome = loadPublisherDetailFailed();
+      const outcome = loadPublisherDetailFailure();
 
       actions$ = hot('-a', { a: action });
       publisherService.loadPublisherDetail
@@ -166,7 +211,7 @@ describe('PublisherEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = loadPublisherDetail({ name: PUBLISHER.name });
-      const outcome = loadPublisherDetailFailed();
+      const outcome = loadPublisherDetailFailure();
 
       actions$ = hot('-a', { a: action });
       publisherService.loadPublisherDetail

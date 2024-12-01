@@ -33,13 +33,13 @@ import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.batch.OrganizingLibraryEvent;
 import org.comixedproject.model.batch.RecreateComicFilesEvent;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
-import org.comixedproject.model.collections.Publisher;
 import org.comixedproject.model.collections.Series;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.net.DownloadDocument;
+import org.comixedproject.model.net.collections.LoadPublisherListResponse;
 import org.comixedproject.model.net.comicbooks.PageOrderEntry;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
@@ -54,9 +54,11 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 /**
  * <code>ComicBookService</code> provides business rules for instances of {@link ComicBook}.
@@ -752,13 +754,39 @@ public class ComicBookService {
   }
 
   /**
-   * Returns the list of all publishers in the library, along with the count of series for each.
+   * Returns a page of publishers in the library, along with the count of series for each.
    *
+   * @param page the page number
+   * @param size the page size
+   * @param sortBy the field to sort by
+   * @param sortDirection the sort direction
    * @return the publisher list
    */
-  public List<Publisher> getAllPublishersWithSeries() {
+  public LoadPublisherListResponse getAllPublishersWithSeries(
+      final int page, final int size, final String sortBy, final String sortDirection) {
     log.debug("Getting all publishers with their series counts");
-    return this.comicBookRepository.getAllPublishersWithSeriesCount();
+    return new LoadPublisherListResponse(
+        this.comicBookRepository.getAllPublishersWithNumberOfSeriesCount(),
+        this.comicBookRepository.getAllPublishersWithNumberOfSeries(
+            PageRequest.of(page, size, this.doCreateSort(sortBy, sortDirection))));
+  }
+
+  private Sort doCreateSort(final String sortBy, final String sortDirection) {
+    if (!StringUtils.hasLength(sortBy) || !StringUtils.hasLength(sortDirection)) {
+      return Sort.unsorted();
+    }
+
+    String fieldName;
+    switch (sortBy) {
+      case "comic-count" -> fieldName = "issueCount";
+      default -> fieldName = "publisher";
+    }
+
+    Sort.Direction direction = Sort.Direction.DESC;
+    if (sortDirection.equals("asc")) {
+      direction = Sort.Direction.ASC;
+    }
+    return Sort.by(direction, fieldName);
   }
 
   public List<Series> getPublisherDetail(final String name) {

@@ -39,11 +39,8 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { USER_ADMIN } from '@app/user/user.fixtures';
 import { TitleService } from '@app/core/services/title.service';
-import { PUBLISHER_3 } from '@app/collections/collections.fixtures';
 
 describe('PublisherListPageComponent', () => {
-  const ENTRY = PUBLISHER_3;
-
   const initialState = {
     [PUBLISHER_FEATURE_KEY]: initialPublisherState,
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER_ADMIN }
@@ -95,26 +92,6 @@ describe('PublisherListPageComponent', () => {
 
     it('updates the tab title', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
-    });
-  });
-
-  describe('sorting the table', () => {
-    it('can sort by publisher name', () => {
-      expect(component.dataSource.sortingDataAccessor(ENTRY, 'name')).toEqual(
-        ENTRY.name
-      );
-    });
-
-    it('can sort by issue count', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ENTRY, 'issue-count')
-      ).toEqual(ENTRY.issueCount);
-    });
-
-    it('ignores unknown sorts', () => {
-      expect(component.dataSource.sortingDataAccessor(ENTRY, 'count')).toEqual(
-        ''
-      );
     });
   });
 });

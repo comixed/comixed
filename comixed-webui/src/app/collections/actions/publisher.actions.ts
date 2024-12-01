@@ -20,14 +20,17 @@ import { createAction, props } from '@ngrx/store';
 import { Publisher } from '@app/collections/models/publisher';
 import { Series } from '@app/collections/models/series';
 
-export const loadPublishers = createAction('[Publishers] Load publishers');
-
-export const publishersLoaded = createAction(
-  '[Publishers] Publishers loaded',
-  props<{ publishers: Publisher[] }>()
+export const loadPublisherList = createAction(
+  '[Publishers] Load publishers',
+  props<{ size: number; page: number; sortBy: string; sortDirection: string }>()
 );
 
-export const loadPublishersFailed = createAction(
+export const loadPublisherListSuccess = createAction(
+  '[Publishers] Publishers loaded',
+  props<{ publishers: Publisher[]; total: number }>()
+);
+
+export const loadPublisherListFailure = createAction(
   '[Publishers] Load publishers failed'
 );
 
@@ -36,11 +39,11 @@ export const loadPublisherDetail = createAction(
   props<{ name: string }>()
 );
 
-export const publisherDetailLoaded = createAction(
+export const loadPublisherDetailSuccess = createAction(
   '[Publishers] Publisher detail loaded',
   props<{ detail: Series[] }>()
 );
 
-export const loadPublisherDetailFailed = createAction(
+export const loadPublisherDetailFailure = createAction(
   '[Publishers] Failed to load the details of a publisher'
 );
