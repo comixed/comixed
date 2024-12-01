@@ -19,9 +19,9 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
-  duplicatePagesLoaded,
-  loadDuplicatePages,
-  loadDuplicatePagesFailed
+  loadDuplicatePageList,
+  loadDuplicatePageListFailure,
+  loadDuplicatePageListSuccess
 } from '@app/library/actions/duplicate-page-list.actions';
 import { DuplicatePageService } from '@app/library/services/duplicate-page.service';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -29,13 +29,13 @@ import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { DuplicatePage } from '@app/library/models/duplicate-page';
+import { LoadDuplicatePageListResponse } from '@app/library/models/net/load-duplicate-page-list-response';
 
 @Injectable()
 export class DuplicatePageListEffects {
   loadComicsWithDuplicatePages$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadDuplicatePages),
+      ofType(loadDuplicatePageList),
       tap(action =>
         this.logger.trace(
           'Effect: loading all comics with duplicate pages:',
@@ -43,28 +43,38 @@ export class DuplicatePageListEffects {
         )
       ),
       switchMap(action =>
-        this.duplicatePageService.loadDuplicatePages().pipe(
-          tap(response => this.logger.trace('Response received:', response)),
-          map((response: DuplicatePage[]) =>
-            duplicatePagesLoaded({ pages: response })
-          ),
-          catchError(error => {
-            this.logger.error('Service failure:', error);
-            this.alertService.error(
-              this.translateService.instant(
-                'duplicate-pages.load-comics.effect-failure'
-              )
-            );
-            return of(loadDuplicatePagesFailed());
+        this.duplicatePageService
+          .loadDuplicatePages({
+            page: action.page,
+            size: action.size,
+            sortBy: action.sortBy,
+            sortDirection: action.sortDirection
           })
-        )
+          .pipe(
+            tap(response => this.logger.trace('Response received:', response)),
+            map((response: LoadDuplicatePageListResponse) =>
+              loadDuplicatePageListSuccess({
+                pages: response.pages,
+                totalPages: response.total
+              })
+            ),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'duplicate-pages.load-comics.effect-failure'
+                )
+              );
+              return of(loadDuplicatePageListFailure());
+            })
+          )
       ),
       catchError(error => {
         this.logger.error('General failure:', error);
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(loadDuplicatePagesFailed());
+        return of(loadDuplicatePageListFailure());
       })
     );
   });

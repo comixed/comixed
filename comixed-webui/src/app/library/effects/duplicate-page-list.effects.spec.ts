@@ -26,9 +26,9 @@ import { DuplicatePageService } from '@app/library/services/duplicate-page.servi
 import { AlertService } from '@app/core/services/alert.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {
-  duplicatePagesLoaded,
-  loadDuplicatePages,
-  loadDuplicatePagesFailed
+  loadDuplicatePageList,
+  loadDuplicatePageListFailure,
+  loadDuplicatePageListSuccess
 } from '@app/library/actions/duplicate-page-list.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -37,9 +37,15 @@ import {
   DUPLICATE_PAGE_2,
   DUPLICATE_PAGE_3
 } from '@app/library/library.fixtures';
+import { LoadDuplicatePageListResponse } from '@app/library/models/net/load-duplicate-page-list-response';
 
 describe('DuplicatePageListEffects', () => {
+  const PAGE_NUMBER = 7;
+  const PAGE_SIZE = 10;
+  const SORT_FIELD = 'hash';
+  const SORT_DIRECTION = 'desc';
   const PAGES = [DUPLICATE_PAGE_1, DUPLICATE_PAGE_2, DUPLICATE_PAGE_3];
+  const TOTAL_PAGES = PAGES.length;
 
   let actions$: Observable<any>;
   let effects: DuplicatePageListEffects;
@@ -81,14 +87,30 @@ describe('DuplicatePageListEffects', () => {
 
   describe('loading comics with duplicate pages', () => {
     it('fires an action on success', () => {
-      const serviceResponse = PAGES;
-      const action = loadDuplicatePages();
-      const outcome = duplicatePagesLoaded({ pages: PAGES });
+      const serviceResponse = {
+        total: TOTAL_PAGES,
+        pages: PAGES
+      } as LoadDuplicatePageListResponse;
+      const action = loadDuplicatePageList({
+        page: PAGE_NUMBER,
+        size: PAGE_SIZE,
+        sortBy: SORT_FIELD,
+        sortDirection: SORT_DIRECTION
+      });
+      const outcome = loadDuplicatePageListSuccess({
+        totalPages: TOTAL_PAGES,
+        pages: PAGES
+      });
 
       actions$ = hot('-a', { a: action });
-      duplicatePageService.loadDuplicatePages.and.returnValue(
-        of(serviceResponse)
-      );
+      duplicatePageService.loadDuplicatePages
+        .withArgs({
+          page: PAGE_NUMBER,
+          size: PAGE_SIZE,
+          sortBy: SORT_FIELD,
+          sortDirection: SORT_DIRECTION
+        })
+        .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.loadComicsWithDuplicatePages$).toBeObservable(expected);
@@ -96,13 +118,23 @@ describe('DuplicatePageListEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = loadDuplicatePages();
-      const outcome = loadDuplicatePagesFailed();
+      const action = loadDuplicatePageList({
+        page: PAGE_NUMBER,
+        size: PAGE_SIZE,
+        sortBy: SORT_FIELD,
+        sortDirection: SORT_DIRECTION
+      });
+      const outcome = loadDuplicatePageListFailure();
 
       actions$ = hot('-a', { a: action });
-      duplicatePageService.loadDuplicatePages.and.returnValue(
-        throwError(serviceResponse)
-      );
+      duplicatePageService.loadDuplicatePages
+        .withArgs({
+          page: PAGE_NUMBER,
+          size: PAGE_SIZE,
+          sortBy: SORT_FIELD,
+          sortDirection: SORT_DIRECTION
+        })
+        .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.loadComicsWithDuplicatePages$).toBeObservable(expected);
@@ -110,11 +142,23 @@ describe('DuplicatePageListEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = loadDuplicatePages();
-      const outcome = loadDuplicatePagesFailed();
+      const action = loadDuplicatePageList({
+        page: PAGE_NUMBER,
+        size: PAGE_SIZE,
+        sortBy: SORT_FIELD,
+        sortDirection: SORT_DIRECTION
+      });
+      const outcome = loadDuplicatePageListFailure();
 
       actions$ = hot('-a', { a: action });
-      duplicatePageService.loadDuplicatePages.and.throwError('expected');
+      duplicatePageService.loadDuplicatePages
+        .withArgs({
+          page: PAGE_NUMBER,
+          size: PAGE_SIZE,
+          sortBy: SORT_FIELD,
+          sortDirection: SORT_DIRECTION
+        })
+        .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.loadComicsWithDuplicatePages$).toBeObservable(expected);

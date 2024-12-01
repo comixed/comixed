@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,23 +16,35 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-import {
-  DUPLICATE_PAGE_LIST_FEATURE_KEY,
-  DuplicatePageListState
-} from '../reducers/duplicate-page-list.reducer';
+package org.comixedproject.model.net.library;
 
-export const selectDuplicatePageListState =
-  createFeatureSelector<DuplicatePageListState>(
-    DUPLICATE_PAGE_LIST_FEATURE_KEY
-  );
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-export const selectDuplicatePageList = createSelector(
-  selectDuplicatePageListState,
-  state => state.pages
-);
+/**
+ * <code>LoadDuplicatePageListRequest</code> represents the request body when loading a set of
+ * duplicate pages.
+ *
+ * @author Darryl L. Pierce
+ */
+@NoArgsConstructor
+@AllArgsConstructor
+public class LoadDuplicatePageListRequest {
+  @JsonProperty("page")
+  @Getter
+  private int page;
 
-export const selectDuplicatePageCount = createSelector(
-  selectDuplicatePageListState,
-  state => state.total
-);
+  @JsonProperty("size")
+  @Getter
+  private int size;
+
+  @JsonProperty("sortBy")
+  @Getter
+  private String sortBy;
+
+  @JsonProperty("sortDirection")
+  @Getter
+  private String sortDirection;
+}

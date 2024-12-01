@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.comicpages.ComicPageState;
 import org.comixedproject.model.comicpages.DeletedPageAndComic;
+import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.repositories.RepositoryContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -77,11 +78,11 @@ public class ComicPageRepositoryTest {
 
   @Test
   public void testGetDuplicatePages() {
-    List<ComicPage> result = repository.getDuplicatePages();
+    List<DuplicatePage> result = repository.getDuplicatePages(PageRequest.of(0, 10));
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertEquals(4, result.size());
+    assertEquals(2, result.size());
   }
 
   @Test
@@ -153,7 +154,7 @@ public class ComicPageRepositoryTest {
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertTrue(result.stream().allMatch(page -> page.getAddingToCache()));
+    assertTrue(result.stream().allMatch(ComicPage::getAddingToCache));
   }
 
   @Test

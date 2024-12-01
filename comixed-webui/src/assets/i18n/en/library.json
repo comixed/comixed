@@ -32,6 +32,10 @@
     "load-comics": {
       "effect-failure": "Failed to load comics with duplicate pages."
     },
+    "show-popup": {
+      "title": "{hash}",
+      "subtitle": "Found in {count, plural, =1{one comic book} other{# comic books}}..."
+    },
     "tooltip": {
       "block-page": "Block pages like this.",
       "block-selections": "Block selected page hashes",

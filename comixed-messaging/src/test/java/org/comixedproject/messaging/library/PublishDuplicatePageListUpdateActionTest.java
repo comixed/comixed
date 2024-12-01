@@ -21,11 +21,8 @@ package org.comixedproject.messaging.library;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import java.util.ArrayList;
-import java.util.List;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.library.DuplicatePage;
-import org.comixedproject.model.library.LastRead;
+import org.comixedproject.model.net.library.DuplicatePageUpdate;
 import org.comixedproject.views.View;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,9 +41,7 @@ public class PublishDuplicatePageListUpdateActionTest {
   @Mock private SimpMessagingTemplate messagingTemplate;
   @Mock private ObjectMapper objectMapper;
   @Mock private ObjectWriter objectWriter;
-  @Mock private LastRead lastRead;
-
-  private List<DuplicatePage> duplicatePageList = new ArrayList<>();
+  @Mock private DuplicatePageUpdate duplicatePageList;
 
   @Before
   public void setUp() throws JsonProcessingException {
@@ -64,7 +59,7 @@ public class PublishDuplicatePageListUpdateActionTest {
     Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(duplicatePageList);
     Mockito.verify(messagingTemplate, Mockito.times(1))
         .convertAndSend(
-            PublishDuplicatePageListUpdateAction.DUPLICATE_PAGE_LIST_TOPIC,
+            PublishDuplicatePageListUpdateAction.DUPLICATE_PAGE_LIST_UPDATE_TOPIC,
             TEST_DUPLICATE_PAGE_LIST_AS_JSON);
   }
 }

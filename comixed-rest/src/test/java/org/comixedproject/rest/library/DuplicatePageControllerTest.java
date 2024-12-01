@@ -21,9 +21,9 @@ package org.comixedproject.rest.library;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.comixedproject.model.library.DuplicatePage;
+import org.comixedproject.model.net.library.LoadDuplicatePageListRequest;
+import org.comixedproject.model.net.library.LoadDuplicatePageListResponse;
 import org.comixedproject.service.library.DuplicatePageException;
 import org.comixedproject.service.library.DuplicatePageService;
 import org.junit.Test;
@@ -36,23 +36,33 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class DuplicatePageControllerTest {
   private static final String TEST_PAGE_HASH = "0123456789ABCDEF0123456789ABCDEF";
+  private static final int TEST_PAGE_NUMBER = 74;
+  private static final int TEST_PAGE_SIZE = 25;
+  private static final String TEST_SORT_BY = "hash";
+  private static final String TEST_SORT_DIRECTION = "desc";
 
   @InjectMocks private DuplicatePageController controller;
   @Mock private DuplicatePageService duplicatePageService;
   @Mock private DuplicatePage duplicatePage;
-
-  private List<DuplicatePage> duplicatePageList = new ArrayList<>();
+  @Mock private LoadDuplicatePageListResponse duplicatePageListResponse;
 
   @Test
   public void testGetDuplicatePageList() {
-    Mockito.when(duplicatePageService.getDuplicatePages()).thenReturn(duplicatePageList);
+    Mockito.when(
+            duplicatePageService.getDuplicatePages(
+                Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(duplicatePageListResponse);
 
-    final List<DuplicatePage> result = controller.getDuplicatePageList();
+    final LoadDuplicatePageListResponse result =
+        controller.getDuplicatePageList(
+            new LoadDuplicatePageListRequest(
+                TEST_PAGE_NUMBER, TEST_PAGE_SIZE, TEST_SORT_BY, TEST_SORT_DIRECTION));
 
     assertNotNull(result);
-    assertSame(duplicatePageList, result);
+    assertSame(duplicatePageListResponse, result);
 
-    Mockito.verify(duplicatePageService, Mockito.times(1)).getDuplicatePages();
+    Mockito.verify(duplicatePageService, Mockito.times(1))
+        .getDuplicatePages(TEST_PAGE_NUMBER, TEST_PAGE_SIZE, TEST_SORT_BY, TEST_SORT_DIRECTION);
   }
 
   @Test(expected = DuplicatePageException.class)

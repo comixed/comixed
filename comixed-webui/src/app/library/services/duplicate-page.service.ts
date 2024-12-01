@@ -25,6 +25,7 @@ import {
   LOAD_COMICS_WITH_DUPLICATE_PAGES_URL,
   LOAD_DUPLICATE_PAGE_DETAIL_URL
 } from '@app/library/library.constants';
+import { LoadDuplicatePageListRequest } from '@app/library/models/net/load-duplicate-page-list-request';
 
 @Injectable({
   providedIn: 'root'
@@ -32,9 +33,19 @@ import {
 export class DuplicatePageService {
   constructor(private logger: LoggerService, private http: HttpClient) {}
 
-  loadDuplicatePages(): Observable<any> {
+  loadDuplicatePages(args: {
+    page: number;
+    size: number;
+    sortBy: string;
+    sortDirection: string;
+  }): Observable<any> {
     this.logger.trace('Service: Load duplicate pages');
-    return this.http.get(interpolate(LOAD_COMICS_WITH_DUPLICATE_PAGES_URL));
+    return this.http.post(interpolate(LOAD_COMICS_WITH_DUPLICATE_PAGES_URL), {
+      page: args.page,
+      size: args.size,
+      sortBy: args.sortBy,
+      sortDirection: args.sortDirection
+    } as LoadDuplicatePageListRequest);
   }
 
   loadDuplicatePageDetail(args: { hash: string }): Observable<any> {
