@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2022, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,27 +16,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-import {
-  PUBLISHER_FEATURE_KEY,
-  PublisherState
-} from '../reducers/publisher.reducer';
+package org.comixedproject.model.net.collections;
 
-export const selectPublisherState = createFeatureSelector<PublisherState>(
-  PUBLISHER_FEATURE_KEY
-);
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.comixedproject.model.collections.Publisher;
 
-export const selectPublisherList = createSelector(
-  selectPublisherState,
-  state => state.publishers
-);
+/**
+ * <code>LoadPublisherListResponse</code> represents the response body when loading a page of
+ * publishers.
+ *
+ * @author Darryl L. Pierce
+ */
+@AllArgsConstructor
+public class LoadPublisherListResponse {
+  @JsonProperty("total")
+  @Getter
+  private int total;
 
-export const selectPublisherCount = createSelector(
-  selectPublisherState,
-  state => state.total
-);
-
-export const selectPublisherDetail = createSelector(
-  selectPublisherState,
-  state => state.detail
-);
+  @JsonProperty("publishers")
+  @Getter
+  private List<Publisher> publishers;
+}

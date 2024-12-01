@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2022, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,27 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-import {
-  PUBLISHER_FEATURE_KEY,
-  PublisherState
-} from '../reducers/publisher.reducer';
-
-export const selectPublisherState = createFeatureSelector<PublisherState>(
-  PUBLISHER_FEATURE_KEY
-);
-
-export const selectPublisherList = createSelector(
-  selectPublisherState,
-  state => state.publishers
-);
-
-export const selectPublisherCount = createSelector(
-  selectPublisherState,
-  state => state.total
-);
-
-export const selectPublisherDetail = createSelector(
-  selectPublisherState,
-  state => state.detail
-);
+export interface LoadPublisherListRequest {
+  page: number;
+  size: number;
+  sortBy: string;
+  sortDirection: string;
+}

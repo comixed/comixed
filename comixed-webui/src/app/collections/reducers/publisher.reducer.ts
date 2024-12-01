@@ -19,11 +19,11 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   loadPublisherDetail,
-  loadPublisherDetailFailed,
-  loadPublishers,
-  loadPublishersFailed,
-  publisherDetailLoaded,
-  publishersLoaded
+  loadPublisherDetailFailure,
+  loadPublisherList,
+  loadPublisherListFailure,
+  loadPublisherDetailSuccess,
+  loadPublisherListSuccess
 } from '../actions/publisher.actions';
 import { Publisher } from '@app/collections/models/publisher';
 import { Series } from '@app/collections/models/series';
@@ -32,12 +32,14 @@ export const PUBLISHER_FEATURE_KEY = 'publisher_state';
 
 export interface PublisherState {
   busy: boolean;
+  total: number;
   publishers: Publisher[];
   detail: Series[];
 }
 
 export const initialState: PublisherState = {
   busy: false,
+  total: 0,
   publishers: [],
   detail: []
 };
@@ -45,20 +47,21 @@ export const initialState: PublisherState = {
 export const reducer = createReducer(
   initialState,
 
-  on(loadPublishers, state => ({ ...state, busy: true, publishers: [] })),
-  on(publishersLoaded, (state, action) => ({
+  on(loadPublisherList, state => ({ ...state, busy: true, publishers: [] })),
+  on(loadPublisherListSuccess, (state, action) => ({
     ...state,
     busy: false,
+    total: action.total,
     publishers: action.publishers
   })),
-  on(loadPublishersFailed, state => ({ ...state, busy: false })),
+  on(loadPublisherListFailure, state => ({ ...state, busy: false })),
   on(loadPublisherDetail, state => ({ ...state, busy: true, detail: [] })),
-  on(publisherDetailLoaded, (state, action) => ({
+  on(loadPublisherDetailSuccess, (state, action) => ({
     ...state,
     busy: false,
     detail: action.detail
   })),
-  on(loadPublisherDetailFailed, state => ({ ...state, busy: false }))
+  on(loadPublisherDetailFailure, state => ({ ...state, busy: false }))
 );
 
 export const publisherFeature = createFeature({

@@ -21,6 +21,7 @@ import {
   PublisherState
 } from '../reducers/publisher.reducer';
 import {
+  selectPublisherCount,
   selectPublisherDetail,
   selectPublisherList,
   selectPublisherState
@@ -45,6 +46,7 @@ describe('Publisher Selectors', () => {
   beforeEach(() => {
     state = {
       busy: Math.random() > 0.5,
+      total: PUBLISHERS.length,
       publishers: PUBLISHERS,
       detail: DETAIL
     };
@@ -64,6 +66,14 @@ describe('Publisher Selectors', () => {
         [PUBLISHER_FEATURE_KEY]: state
       })
     ).toEqual(state.publishers);
+  });
+
+  it('should select the publisher count', () => {
+    expect(
+      selectPublisherCount({
+        [PUBLISHER_FEATURE_KEY]: state
+      })
+    ).toEqual(state.total);
   });
 
   it('should select the publisher detail', () => {

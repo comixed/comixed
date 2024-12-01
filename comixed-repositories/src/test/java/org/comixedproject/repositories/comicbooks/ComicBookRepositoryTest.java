@@ -43,6 +43,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Limit;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -307,8 +308,16 @@ public class ComicBookRepositoryTest {
   }
 
   @Test
-  public void testGetAllPublishersWithSeriesCount() {
-    final List<Publisher> result = repository.getAllPublishersWithSeriesCount();
+  public void getAllPublishersWithNumberOfSeriesCount() {
+    final int result = repository.getAllPublishersWithNumberOfSeriesCount();
+
+    assertTrue(result > 0);
+  }
+
+  @Test
+  public void getAllPublishersWithNumberOfSeries() {
+    final List<Publisher> result =
+        repository.getAllPublishersWithNumberOfSeries(PageRequest.of(0, 10));
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
