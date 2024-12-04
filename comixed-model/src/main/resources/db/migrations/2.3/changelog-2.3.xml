@@ -11,5 +11,6 @@
     <include file="/db/migrations/2.3/003_2062_changed_comic_book_purge_comic_to_purging.xml"/>
     <include file="/db/migrations/2.3/004_2232_added_comic_detail_comic_book_idx.xml"/>
     <include file="/db/migrations/2.3/005_2233_added_reading_list_entry_comic_detail_idx.xml"/>
+    <include file="/db/migrations/2.3/006_2234_added_story_entry_comic_book_idx.xml"/>
 
 </databaseChangeLog>
