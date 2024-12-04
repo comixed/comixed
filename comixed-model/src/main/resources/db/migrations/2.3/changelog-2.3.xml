@@ -12,5 +12,6 @@
     <include file="/db/migrations/2.3/004_2232_added_comic_detail_comic_book_idx.xml"/>
     <include file="/db/migrations/2.3/005_2233_added_reading_list_entry_comic_detail_idx.xml"/>
     <include file="/db/migrations/2.3/006_2234_added_story_entry_comic_book_idx.xml"/>
+    <include file="/db/migrations/2.3/007_2235_fix_comic_details_psvino_index.xml"/>
 
 </databaseChangeLog>
