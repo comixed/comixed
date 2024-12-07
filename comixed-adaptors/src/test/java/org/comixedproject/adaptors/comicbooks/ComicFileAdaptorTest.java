@@ -102,7 +102,7 @@ public class ComicFileAdaptorTest {
   }
 
   @Test
-  public void testCreateFilenameOnWindows() {
+  public void testCreateFilenameFromRule_windows() {
     final String result =
         adaptor.createFilenameFromRule(
             comicBook, TEST_WINDOWS_RENAMING_RULE, TEST_TARGET_DIRECTORY);
@@ -123,7 +123,7 @@ public class ComicFileAdaptorTest {
   }
 
   @Test
-  public void testCreateFilenameFromRuleEmptyRule() {
+  public void testCreateFilenameFromRule_EmptyRule() {
     final String result = adaptor.createFilenameFromRule(comicBook, "", "");
 
     assertEquals(TEST_RELATIVE_NAME_WITHOUT_RULE, result);
@@ -150,7 +150,7 @@ public class ComicFileAdaptorTest {
   }
 
   @Test
-  public void testCreateFileFromRulePaddedIssue() {
+  public void testCreateFilenameFromRule_paddedIssue() {
     final String result =
         adaptor.createFilenameFromRule(
             comicBook, TEST_RENAMING_RULE_PADDED_ISSUE, TEST_TARGET_DIRECTORY);
@@ -171,7 +171,7 @@ public class ComicFileAdaptorTest {
   }
 
   @Test
-  public void testCreateFileFromRuleRenamingRuleHasUnsupportedCharacters() {
+  public void testCreateFilenameFromRule_renamingRuleHasUnsupportedCharacters() {
     final String result =
         adaptor.createFilenameFromRule(
             comicBook, TEST_RENAMING_RULE_WITH_UNSUPPORTED_CHARACTERS, TEST_TARGET_DIRECTORY);
@@ -193,7 +193,7 @@ public class ComicFileAdaptorTest {
   }
 
   @Test
-  public void testCreateFileFromRuleWithUnsupportedCharacters() {
+  public void testCreateFilenameFromRule_hasUnsupportedCharacters() {
     Mockito.when(comicDetail.getPublisher()).thenReturn(TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS);
     Mockito.when(comicDetail.getSeries()).thenReturn(TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS);
     Mockito.when(comicDetail.getIssueNumber()).thenReturn(TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS);
@@ -217,7 +217,7 @@ public class ComicFileAdaptorTest {
   }
 
   @Test
-  public void testCreateFileFromRuleNoPublisher() {
+  public void testCreateFilenameFromRule_noPublisher() {
     Mockito.when(comicDetail.getPublisher()).thenReturn(null);
 
     final String result =
@@ -239,7 +239,7 @@ public class ComicFileAdaptorTest {
   }
 
   @Test
-  public void testCreateFileFromRuleNoSeries() {
+  public void testCreateFilenameFromRule_noSeries() {
     Mockito.when(comicDetail.getSeries()).thenReturn(null);
 
     final String result =
@@ -261,7 +261,7 @@ public class ComicFileAdaptorTest {
   }
 
   @Test
-  public void testCreateFileFromRuleNoImprint() {
+  public void testCreateFilenameFromRule_noImprint() {
     Mockito.when(comicDetail.getImprint()).thenReturn(null);
 
     final String result =
@@ -283,7 +283,7 @@ public class ComicFileAdaptorTest {
   }
 
   @Test
-  public void testCreateFileFromRuleNoImprintOrPublisher() {
+  public void testCreateFilenameFromRule_noImprintOrPublisher() {
     Mockito.when(comicDetail.getPublisher()).thenReturn(null);
     Mockito.when(comicDetail.getImprint()).thenReturn(null);
 
@@ -306,7 +306,7 @@ public class ComicFileAdaptorTest {
   }
 
   @Test
-  public void testCreateFileFromRuleNoVolume() {
+  public void testCreateFilenameFromRule_noVolume() {
     Mockito.when(comicDetail.getVolume()).thenReturn(null);
 
     final String result =
@@ -328,7 +328,7 @@ public class ComicFileAdaptorTest {
   }
 
   @Test
-  public void testCreateFileFromRuleNoTitle() {
+  public void testCreateFilenameFromRule_noTitle() {
     Mockito.when(comicDetail.getTitle()).thenReturn(null);
 
     final String result =
@@ -378,7 +378,7 @@ public class ComicFileAdaptorTest {
   }
 
   @Test
-  public void testCreateFileFromRuleNoIssueNumber() {
+  public void testCreateFilenameFromRule_noIssueNumber() {
     Mockito.when(comicDetail.getIssueNumber()).thenReturn(null);
 
     final String result =
@@ -400,7 +400,7 @@ public class ComicFileAdaptorTest {
   }
 
   @Test
-  public void testCreateFileFromRuleNoCoverDate() {
+  public void testCreateFilenameFromRule_noCoverDate() {
     Mockito.when(comicDetail.getCoverDate()).thenReturn(null);
 
     final String result =
@@ -416,6 +416,116 @@ public class ComicFileAdaptorTest {
             TEST_ISSUE,
             TEST_TITLE,
             NO_COVER_DATE,
+            TEST_PUBLISHED_MONTH,
+            TEST_PUBLISHED_YEAR),
+        result);
+  }
+
+  @Test
+  public void testCreateFileFromRule_publisherEndsWithPeriod() {
+    Mockito.when(comicDetail.getPublisher()).thenReturn(TEST_PUBLISHER + ".");
+
+    final String result =
+        adaptor.createFilenameFromRule(comicBook, TEST_UNIX_RENAMING_RULE, TEST_TARGET_DIRECTORY);
+
+    assertEquals(
+        formattedName(
+            TEST_TARGET_DIRECTORY,
+            TEST_PUBLISHER + "_",
+            TEST_IMPRINT,
+            TEST_SERIES,
+            TEST_VOLUME,
+            TEST_ISSUE,
+            TEST_TITLE,
+            TEST_FORMATTED_COVER_DATE,
+            TEST_PUBLISHED_MONTH,
+            TEST_PUBLISHED_YEAR),
+        result);
+  }
+
+  @Test
+  public void testCreateFileFromRule_imprintEndsWithPeriod() {
+    Mockito.when(comicDetail.getImprint()).thenReturn(TEST_IMPRINT + ".");
+
+    final String result =
+        adaptor.createFilenameFromRule(comicBook, TEST_UNIX_RENAMING_RULE, TEST_TARGET_DIRECTORY);
+
+    assertEquals(
+        formattedName(
+            TEST_TARGET_DIRECTORY,
+            TEST_PUBLISHER,
+            TEST_IMPRINT + "_",
+            TEST_SERIES,
+            TEST_VOLUME,
+            TEST_ISSUE,
+            TEST_TITLE,
+            TEST_FORMATTED_COVER_DATE,
+            TEST_PUBLISHED_MONTH,
+            TEST_PUBLISHED_YEAR),
+        result);
+  }
+
+  @Test
+  public void testCreateFileFromRule_seriesEndsWithPeriod() {
+    Mockito.when(comicDetail.getSeries()).thenReturn(TEST_SERIES + ".");
+
+    final String result =
+        adaptor.createFilenameFromRule(comicBook, TEST_UNIX_RENAMING_RULE, TEST_TARGET_DIRECTORY);
+
+    assertEquals(
+        formattedName(
+            TEST_TARGET_DIRECTORY,
+            TEST_PUBLISHER,
+            TEST_IMPRINT,
+            TEST_SERIES + "_",
+            TEST_VOLUME,
+            TEST_ISSUE,
+            TEST_TITLE,
+            TEST_FORMATTED_COVER_DATE,
+            TEST_PUBLISHED_MONTH,
+            TEST_PUBLISHED_YEAR),
+        result);
+  }
+
+  @Test
+  public void testCreateFileFromRule_volumeEndsWithPeriod() {
+    Mockito.when(comicDetail.getVolume()).thenReturn(TEST_VOLUME + ".");
+
+    final String result =
+        adaptor.createFilenameFromRule(comicBook, TEST_UNIX_RENAMING_RULE, TEST_TARGET_DIRECTORY);
+
+    assertEquals(
+        formattedName(
+            TEST_TARGET_DIRECTORY,
+            TEST_PUBLISHER,
+            TEST_IMPRINT,
+            TEST_SERIES,
+            TEST_VOLUME + "_",
+            TEST_ISSUE,
+            TEST_TITLE,
+            TEST_FORMATTED_COVER_DATE,
+            TEST_PUBLISHED_MONTH,
+            TEST_PUBLISHED_YEAR),
+        result);
+  }
+
+  @Test
+  public void testCreateFileFromRule_issueNumberEndsWithPeriod() {
+    Mockito.when(comicDetail.getIssueNumber()).thenReturn(TEST_ISSUE + ".");
+
+    final String result =
+        adaptor.createFilenameFromRule(comicBook, TEST_UNIX_RENAMING_RULE, TEST_TARGET_DIRECTORY);
+
+    assertEquals(
+        formattedName(
+            TEST_TARGET_DIRECTORY,
+            TEST_PUBLISHER,
+            TEST_IMPRINT,
+            TEST_SERIES,
+            TEST_VOLUME,
+            TEST_ISSUE + "_",
+            TEST_TITLE,
+            TEST_FORMATTED_COVER_DATE,
             TEST_PUBLISHED_MONTH,
             TEST_PUBLISHED_YEAR),
         result);
