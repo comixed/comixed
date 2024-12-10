@@ -972,4 +972,43 @@ public class ComicBookService {
     log.debug("Loading all ids for duplicate comic books");
     return this.comicBookRepository.getDuplicateComicIds();
   }
+
+  /**
+   * Returns a subset of comic filenames based on whether they were previously marked as missing.
+   *
+   * @param missing the missing flag
+   * @return the filenames
+   */
+  @Transactional
+  public Set<String> getAllComicDetails(final boolean missing) {
+    return this.comicBookRepository.getComicFilenames(missing);
+  }
+
+  /**
+   * Marks a comic book as found.
+   *
+   * @param filename the comic filename
+   */
+  @Transactional
+  public void markComicAsFound(final String filename) {
+    final ComicBook comicBook = this.comicBookRepository.findByFilename(filename);
+    if (Objects.nonNull(comicBook)) {
+      log.debug("Marking comic book as found: id={}", comicBook.getId());
+      this.comicStateHandler.fireEvent(comicBook, ComicEvent.markAsFound);
+    }
+  }
+
+  /**
+   * Marks a comic book as missing.
+   *
+   * @param filename the filename
+   */
+  @Transactional
+  public void markComicAsMissing(final String filename) {
+    final ComicBook comicBook = this.comicBookRepository.findByFilename(filename);
+    if (Objects.nonNull(comicBook)) {
+      log.debug("Marking comic book as missing: id={}", comicBook.getId());
+      this.comicStateHandler.fireEvent(comicBook, ComicEvent.markAsMissing);
+    }
+  }
 }

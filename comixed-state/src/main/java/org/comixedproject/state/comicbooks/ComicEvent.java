@@ -50,7 +50,8 @@ public enum ComicEvent {
   // some detail of the comic was changed
   detailsUpdated,
   metadataCleared,
-  comicMoved,
+  markAsMissing,
+  markAsFound,
   markedForRemoval,
   unmarkedForRemoval,
   // prepares the comic for purging

@@ -99,6 +99,13 @@ public class ComicDetail {
   @NonNull
   private String filename;
 
+  @Column(name = "missing", nullable = false, updatable = true)
+  @JsonProperty("missing")
+  @JsonView({View.ComicDetailsView.class})
+  @Getter
+  @Setter
+  private boolean missing = false;
+
   @Column(name = "archive_type", nullable = false, updatable = true)
   @Enumerated(EnumType.STRING)
   @JsonProperty("archiveType")
@@ -353,19 +360,6 @@ public class ComicDetail {
   @Transient
   public File getFile() {
     return new File(this.filename);
-  }
-
-  /**
-   * Returns if the comic file is missing.
-   *
-   * @return true if the file was not found
-   */
-  @Transient
-  @JsonProperty("missing")
-  @JsonView({View.ComicDetailsView.class})
-  public boolean isMissing() {
-    final File file = this.getFile();
-    return !(file.exists() && file.isFile());
   }
 
   /**

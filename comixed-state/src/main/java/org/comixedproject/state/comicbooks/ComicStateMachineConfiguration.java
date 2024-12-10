@@ -22,6 +22,8 @@ import java.util.EnumSet;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.comicbooks.actions.*;
+import org.comixedproject.state.comicbooks.guards.MarkComicAsFoundGuard;
+import org.comixedproject.state.comicbooks.guards.MarkComicAsMissingGuard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachine;
@@ -47,6 +49,10 @@ public class ComicStateMachineConfiguration
   @Autowired private ComicBookDetailsUpdatedAction comicBookDetailsUpdatedAction;
   @Autowired private ComicFileRecreatedAction comicFileRecreatedAction;
   @Autowired private PrepareToPurgeComicAction prepareToPurgeComicAction;
+  @Autowired private MarkComicAsMissingGuard markComicAsMissingGuard;
+  @Autowired private MarkComicAsMissingAction markComicAsMissingAction;
+  @Autowired private MarkComicAsFoundGuard markComicAsFoundGuard;
+  @Autowired private MarkComicAsFoundAction markComicAsFoundAction;
 
   @Override
   public void configure(final StateMachineStateConfigurer<ComicState, ComicEvent> states)
@@ -222,6 +228,50 @@ public class ComicStateMachineConfiguration
         .source(ComicState.CHANGED)
         .target(ComicState.CHANGED)
         .event(ComicEvent.markAsUnread)
+        // the comic file was not found
+        .and()
+        .withExternal()
+        .source(ComicState.STABLE)
+        .target(ComicState.STABLE)
+        .event(ComicEvent.markAsMissing)
+        .guard(markComicAsMissingGuard)
+        .action(markComicAsMissingAction)
+        .and()
+        .withExternal()
+        .source(ComicState.CHANGED)
+        .target(ComicState.CHANGED)
+        .event(ComicEvent.markAsMissing)
+        .guard(markComicAsMissingGuard)
+        .action(markComicAsMissingAction)
+        .and()
+        .withExternal()
+        .source(ComicState.DELETED)
+        .target(ComicState.DELETED)
+        .event(ComicEvent.markAsMissing)
+        .guard(markComicAsMissingGuard)
+        .action(markComicAsMissingAction)
+        // the comic file was found
+        .and()
+        .withExternal()
+        .source(ComicState.STABLE)
+        .target(ComicState.STABLE)
+        .event(ComicEvent.markAsFound)
+        .guard(markComicAsFoundGuard)
+        .action(markComicAsFoundAction)
+        .and()
+        .withExternal()
+        .source(ComicState.CHANGED)
+        .target(ComicState.CHANGED)
+        .event(ComicEvent.markAsFound)
+        .guard(markComicAsFoundGuard)
+        .action(markComicAsFoundAction)
+        .and()
+        .withExternal()
+        .source(ComicState.DELETED)
+        .target(ComicState.DELETED)
+        .event(ComicEvent.markAsFound)
+        .guard(markComicAsFoundGuard)
+        .action(markComicAsFoundAction)
         // the comic was marked for deletion
         .and()
         .withExternal()

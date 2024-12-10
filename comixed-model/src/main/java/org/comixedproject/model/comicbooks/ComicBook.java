@@ -172,17 +172,6 @@ public class ComicBook {
   @Transient @Getter @Setter private String metadataSourceName;
   @Transient @Getter @Setter private String metadataReferenceId;
 
-  /**
-   * Reports if the underlying comic file is missing.
-   *
-   * @return <code>true</code> if the file is missing
-   */
-  @JsonProperty("missing")
-  @JsonView({View.ComicListView.class})
-  public boolean isMissing() {
-    return !this.getComicDetail().getFile().exists();
-  }
-
   public int getIndexFor(ComicPage page) {
     if (this.pages.contains(page)) return this.pages.indexOf(page);
 
