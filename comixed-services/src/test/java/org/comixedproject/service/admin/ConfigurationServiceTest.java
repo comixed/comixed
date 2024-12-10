@@ -41,6 +41,7 @@ public class ConfigurationServiceTest {
   @Mock private ConfigurationOption option;
   @Mock private ConfigurationOption existingOption;
   @Mock private ConfigurationOption savedOption;
+  @Mock private ConfigurationChangedListener configurationChangedListener;
 
   @Captor private ArgumentCaptor<ConfigurationOption> configurationOptionArgumentCaptor;
 
@@ -51,6 +52,8 @@ public class ConfigurationServiceTest {
     optionList.add(option);
     Mockito.when(option.getName()).thenReturn(TEST_OPTION_NAME);
     Mockito.when(option.getValue()).thenReturn(TEST_OPTION_VALUE);
+
+    service.addConfigurationChangedListener(configurationChangedListener);
   }
 
   @Test
@@ -102,6 +105,8 @@ public class ConfigurationServiceTest {
         .findByName(TEST_OPTION_NAME);
     Mockito.verify(existingOption, Mockito.times(optionList.size())).setValue(TEST_OPTION_VALUE);
     Mockito.verify(configurationRepository, Mockito.times(optionList.size())).save(existingOption);
+    Mockito.verify(configurationChangedListener, Mockito.times(1))
+        .optionChanged(TEST_OPTION_NAME, TEST_OPTION_VALUE);
   }
 
   @Test

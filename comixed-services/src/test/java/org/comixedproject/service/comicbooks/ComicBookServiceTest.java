@@ -136,6 +136,7 @@ public class ComicBookServiceTest {
   @Captor private ArgumentCaptor<PageRequest> pageRequestCaptor;
   @Captor private ArgumentCaptor<Limit> previousComicBookLimitArgumentCaptor;
   @Captor private ArgumentCaptor<Limit> nextComicBookLimitArgumentCaptor;
+  private Set<String> comicFilenameList = new HashSet<>();
 
   @Before
   public void setUp() {
@@ -1396,5 +1397,51 @@ public class ComicBookServiceTest {
     assertSame(idList, result);
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).getDuplicateComicIds();
+  }
+
+  @Test
+  public void testGetAllComicDetails_missingFiles() {
+    Mockito.when(comicBookRepository.getComicFilenames(true)).thenReturn(comicFilenameList);
+
+    final Set<String> result = service.getAllComicDetails(true);
+
+    assertNotNull(result);
+    assertSame(comicFilenameList, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getComicFilenames(true);
+  }
+
+  @Test
+  public void testGetAllComicDetails_notMissingFiles() {
+    Mockito.when(comicBookRepository.getComicFilenames(false)).thenReturn(comicFilenameList);
+
+    final Set<String> result = service.getAllComicDetails(false);
+
+    assertNotNull(result);
+    assertSame(comicFilenameList, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getComicFilenames(false);
+  }
+
+  @Test
+  public void testMarkComicAsFound() {
+    Mockito.when(comicBookRepository.findByFilename(Mockito.anyString())).thenReturn(comicBook);
+
+    service.markComicAsFound(TEST_COMIC_FILENAME);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findByFilename(TEST_COMIC_FILENAME);
+    Mockito.verify(comicStateHandler, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.markAsFound);
+  }
+
+  @Test
+  public void testMarkComicAsMissing() {
+    Mockito.when(comicBookRepository.findByFilename(Mockito.anyString())).thenReturn(comicBook);
+
+    service.markComicAsMissing(TEST_COMIC_FILENAME);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findByFilename(TEST_COMIC_FILENAME);
+    Mockito.verify(comicStateHandler, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.markAsMissing);
   }
 }
