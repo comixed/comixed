@@ -19,6 +19,10 @@
 package org.comixedproject.service.metadata;
 
 import static junit.framework.TestCase.*;
+import static org.comixedproject.service.admin.ConfigurationService.CFG_METADATA_CACHE_EXPIRATION_DAYS;
+import static org.comixedproject.service.metadata.MetadataCacheService.MAX_EXPIRATION_DAYS;
+import static org.comixedproject.service.metadata.MetadataCacheService.MIN_EXPIRATION_DAYS;
+import static org.junit.Assert.assertNotEquals;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,6 +30,8 @@ import java.util.List;
 import org.comixedproject.model.metadata.MetadataCache;
 import org.comixedproject.model.metadata.MetadataCacheEntry;
 import org.comixedproject.repositories.metadata.MetadataCacheRepository;
+import org.comixedproject.service.admin.ConfigurationService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -35,14 +41,16 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class MetadataCacheServiceTest {
   private static final String TEST_SOURCE = "Source.Name";
   private static final String TEST_KEY = "Entry.Key";
+  private static final long TEST_EXPIRATION_DAYS = 14L;
   private static final Date TEST_EXPIRED_CREATED_ON_DATE =
-      new Date(System.currentTimeMillis() - 8L * 24L * 60L * 60L * 1000L);
+      new Date(System.currentTimeMillis() - TEST_EXPIRATION_DAYS * 24L * 60L * 60L * 1000L);
   private static final Date TEST_UNEXPECTED_CREATED_ON_DATE =
       new Date(System.currentTimeMillis() - 6L * 24L * 60L * 60L * 1000L);
   private static final String TEST_SCRAPING_CACHE_ENTRY = "This is the scraping cache entry value";
 
   @InjectMocks private MetadataCacheService service;
   @Mock private MetadataCacheRepository metadataCacheRepository;
+  @Mock private ConfigurationService configurationService;
   @Captor private ArgumentCaptor<MetadataCache> scrapingCacheArgumentCaptor;
   @Mock private MetadataCache existingScapingCache;
   @Mock private MetadataCache metadataCacheRecord;
@@ -50,6 +58,104 @@ public class MetadataCacheServiceTest {
 
   private List<String> valuesList = new ArrayList<>();
   private List<MetadataCacheEntry> scrapingCacheEntries = new ArrayList<>();
+
+  @Before
+  public void setUp() {
+    service.expirationDays = TEST_EXPIRATION_DAYS;
+  }
+
+  @Test
+  public void testAfterPropertiesSet_noPropertyFound() throws Exception {
+    Mockito.when(configurationService.getOptionValue(Mockito.anyString(), Mockito.anyString()))
+        .thenAnswer(input -> input.getArguments()[1]);
+
+    service.expirationDays = 0L;
+
+    service.afterPropertiesSet();
+
+    assertNotEquals(0L, service.expirationDays);
+
+    Mockito.verify(configurationService, Mockito.times(1)).addConfigurationChangedListener(service);
+  }
+
+  @Test
+  public void testAfterPropertiesSet_tooSmall() throws Exception {
+    Mockito.when(configurationService.getOptionValue(Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(String.valueOf(MIN_EXPIRATION_DAYS - 1));
+
+    service.expirationDays = 0L;
+
+    service.afterPropertiesSet();
+
+    assertEquals(MIN_EXPIRATION_DAYS, service.expirationDays);
+
+    Mockito.verify(configurationService, Mockito.times(1)).addConfigurationChangedListener(service);
+  }
+
+  @Test
+  public void testAfterPropertiesSet_tooLarge() throws Exception {
+    Mockito.when(configurationService.getOptionValue(Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(String.valueOf(MAX_EXPIRATION_DAYS + 1));
+
+    service.expirationDays = 0L;
+
+    service.afterPropertiesSet();
+
+    assertEquals(MAX_EXPIRATION_DAYS, service.expirationDays);
+
+    Mockito.verify(configurationService, Mockito.times(1)).addConfigurationChangedListener(service);
+  }
+
+  @Test
+  public void testAfterPropertiesSet() throws Exception {
+    Mockito.when(configurationService.getOptionValue(Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(String.valueOf(TEST_EXPIRATION_DAYS));
+
+    service.afterPropertiesSet();
+
+    assertEquals(TEST_EXPIRATION_DAYS, service.expirationDays);
+
+    Mockito.verify(configurationService, Mockito.times(1)).addConfigurationChangedListener(service);
+  }
+
+  @Test
+  public void testConfigurationChanged_unknownSetting() {
+    service.expirationDays = TEST_EXPIRATION_DAYS;
+
+    service.optionChanged("NOT-EXPIRATION-DAYS", String.valueOf(TEST_EXPIRATION_DAYS + 1));
+
+    assertEquals(TEST_EXPIRATION_DAYS, service.expirationDays);
+  }
+
+  @Test
+  public void testConfigurationChanged_valueTooLarge() {
+    service.expirationDays = TEST_EXPIRATION_DAYS;
+
+    service.optionChanged(
+        CFG_METADATA_CACHE_EXPIRATION_DAYS, String.valueOf(MAX_EXPIRATION_DAYS + 1));
+
+    assertEquals(MAX_EXPIRATION_DAYS, service.expirationDays);
+  }
+
+  @Test
+  public void testConfigurationChanged_valueTooSmall() {
+    service.expirationDays = TEST_EXPIRATION_DAYS;
+
+    service.optionChanged(
+        CFG_METADATA_CACHE_EXPIRATION_DAYS, String.valueOf(MIN_EXPIRATION_DAYS - 1));
+
+    assertEquals(MIN_EXPIRATION_DAYS, service.expirationDays);
+  }
+
+  @Test
+  public void testConfigurationChanged() {
+    service.expirationDays = TEST_EXPIRATION_DAYS;
+
+    service.optionChanged(
+        CFG_METADATA_CACHE_EXPIRATION_DAYS, String.valueOf(TEST_EXPIRATION_DAYS + 1));
+
+    assertEquals(TEST_EXPIRATION_DAYS + 1, service.expirationDays);
+  }
 
   @Test
   public void testSaveToCache() {
@@ -79,7 +185,7 @@ public class MetadataCacheServiceTest {
   }
 
   @Test
-  public void testSaveToCacheExistingEntry() {
+  public void testSaveToCache_existingEntry() {
     for (int index = 0; index < 100; index++)
       valuesList.add(String.valueOf(System.currentTimeMillis()));
 
@@ -107,7 +213,7 @@ public class MetadataCacheServiceTest {
   }
 
   @Test
-  public void testGetFromCacheNoExistingEntry() {
+  public void testGetFromCache_noExistingEntry() {
     Mockito.when(metadataCacheRepository.getFromCache(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(null);
 
@@ -119,7 +225,7 @@ public class MetadataCacheServiceTest {
   }
 
   @Test
-  public void testGetFromCacheExpiredEntry() {
+  public void testGetFromCache_expiredEntry() {
     Mockito.when(metadataCacheRepository.getFromCache(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(existingScapingCache);
     Mockito.when(existingScapingCache.getCreatedOn()).thenReturn(TEST_EXPIRED_CREATED_ON_DATE);

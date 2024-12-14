@@ -46,6 +46,8 @@ export const SKIP_INTERNAL_METADATA_FILES =
   'library.metadata.no-comicinfo-entry';
 export const METADATA_IGNORE_EMPTY_VALUES =
   'library.metadata.ignore-empty-values';
+export const METADATA_CACHE_EXPIRATION_DAYS =
+  'library.metadata.cache-expiration-days';
 export const BLOCKED_PAGES_ENABLED = 'library.blocked-pages-enabled';
 export const LIBRARY_STRIP_HTML_FROM_METADATA =
   'library.strip-html-from-metadata';

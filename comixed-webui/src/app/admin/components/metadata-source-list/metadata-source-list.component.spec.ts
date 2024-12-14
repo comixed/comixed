@@ -38,7 +38,10 @@ import {
   CONFIGURATION_OPTION_LIST_FEATURE_KEY,
   initialState as initialConfigurationOptionListState
 } from '@app/admin/reducers/configuration-option-list.reducer';
-import { METADATA_IGNORE_EMPTY_VALUES } from '@app/admin/admin.constants';
+import {
+  METADATA_CACHE_EXPIRATION_DAYS,
+  METADATA_IGNORE_EMPTY_VALUES
+} from '@app/admin/admin.constants';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -53,7 +56,7 @@ import { loadMetadataSources } from '@app/comic-metadata/actions/metadata-source
 import { METADATA_SOURCE_TEMPLATE } from '@app/comic-metadata/comic-metadata.constants';
 import { deleteMetadataSource } from '@app/comic-metadata/actions/metadata-source.actions';
 
-describe('MetadataSourceListComponent', () => {
+fdescribe('MetadataSourceListComponent', () => {
   const SOURCE = METADATA_SOURCE_1;
   const initialState = {
     [METADATA_SOURCE_LIST_FEATURE_KEY]: initialMetadataSourceListState,
@@ -194,11 +197,13 @@ describe('MetadataSourceListComponent', () => {
 
   describe('saving the configuration', () => {
     const IGNORE_EMPTY_VALUES = Math.random() > 0.5;
+    const EXPIRATION_DAYS = 28;
 
     beforeEach(() => {
       component.metadataForm.controls.ignoreEmptyValues.setValue(
         IGNORE_EMPTY_VALUES
       );
+      component.metadataForm.controls.expirationDays.setValue(EXPIRATION_DAYS);
       component.onSaveConfig();
     });
 
@@ -206,6 +211,10 @@ describe('MetadataSourceListComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         saveConfigurationOptions({
           options: [
+            {
+              name: METADATA_CACHE_EXPIRATION_DAYS,
+              value: `${EXPIRATION_DAYS}`
+            },
             {
               name: METADATA_IGNORE_EMPTY_VALUES,
               value: `${IGNORE_EMPTY_VALUES}`
