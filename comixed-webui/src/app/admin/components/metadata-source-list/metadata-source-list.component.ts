@@ -33,9 +33,12 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { TranslateService } from '@ngx-translate/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
-import { METADATA_IGNORE_EMPTY_VALUES } from '@app/admin/admin.constants';
+import {
+  METADATA_CACHE_EXPIRATION_DAYS,
+  METADATA_IGNORE_EMPTY_VALUES
+} from '@app/admin/admin.constants';
 import {
   selectConfigurationOptionListState,
   selectConfigurationOptions
@@ -86,7 +89,11 @@ export class MetadataSourceListComponent
       .subscribe(sources => (this.dataSource.data = sources));
     this.logger.debug('Creating metadata form');
     this.metadataForm = this.formBuilder.group({
-      ignoreEmptyValues: ['']
+      ignoreEmptyValues: [''],
+      expirationDays: [
+        '',
+        [Validators.required, Validators.min(7), Validators.max(28)]
+      ]
     });
     this.configurationStateSubscription = this.store
       .select(selectConfigurationOptionListState)
@@ -138,9 +145,14 @@ export class MetadataSourceListComponent
     this.logger.debug('Saving metadata configuration');
     const ignoreEmptyValues =
       this.metadataForm.controls.ignoreEmptyValues.value;
+    const expirationDays = this.metadataForm.controls.expirationDays.value;
     this.store.dispatch(
       saveConfigurationOptions({
         options: [
+          {
+            name: METADATA_CACHE_EXPIRATION_DAYS,
+            value: `${expirationDays}`
+          },
           {
             name: METADATA_IGNORE_EMPTY_VALUES,
             value: `${ignoreEmptyValues}`
@@ -189,6 +201,13 @@ export class MetadataSourceListComponent
   }
 
   private loadMetadataForm(): void {
+    this.metadataForm.controls.expirationDays.setValue(
+      getConfigurationOption(
+        this.configurationOptionList,
+        METADATA_CACHE_EXPIRATION_DAYS,
+        '7'
+      )
+    );
     this.metadataForm.controls.ignoreEmptyValues.setValue(
       getConfigurationOption(
         this.configurationOptionList,

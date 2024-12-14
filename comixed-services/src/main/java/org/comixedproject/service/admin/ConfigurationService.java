@@ -49,6 +49,8 @@ public class ConfigurationService {
   public static final String CFG_LIBRARY_NO_COMICINFO_ENTRY = "library.metadata.no-comicinfo-entry";
   public static final String CFG_METADATA_IGNORE_EMPTY_VALUES =
       "library.metadata.ignore-empty-values";
+  public static final String CFG_METADATA_CACHE_EXPIRATION_DAYS =
+      "library.metadata.cache-expiration-days";
   public static final String CREATE_EXTERNAL_METADATA_FILE =
       "library.metadata.create-external-files";
   public static final String CFG_MANAGE_BLOCKED_PAGES = "library.blocked-pages-enabled";
