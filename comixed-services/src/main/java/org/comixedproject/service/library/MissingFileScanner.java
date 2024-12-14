@@ -18,18 +18,23 @@
 
 package org.comixedproject.service.library;
 
+import static java.nio.file.StandardWatchEventKinds.*;
+
 import jakarta.annotation.PreDestroy;
 import java.io.File;
-import java.util.Set;
+import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FileUtils;
 import org.comixedproject.service.admin.ConfigurationChangedListener;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.devtools.filewatch.ChangedFiles;
-import org.springframework.boot.devtools.filewatch.FileChangeListener;
-import org.springframework.boot.devtools.filewatch.FileSystemWatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -40,30 +45,32 @@ import org.springframework.util.StringUtils;
  */
 @Component
 @Log4j2
-public class MissingFileScanner
-    implements InitializingBean, ConfigurationChangedListener, FileChangeListener {
+public class MissingFileScanner implements InitializingBean, ConfigurationChangedListener {
   @Autowired private ConfigurationService configurationService;
   @Autowired private ComicBookService comicBookService;
 
   private static final Object SEMAPHORE = new Object();
 
   boolean active = false;
-  FileSystemWatcher watcher;
+  WatchService watchService;
+  Map<WatchKey, Path> keyMap = new HashMap<>();
+
   String rootDirectory = "";
 
   @Override
   public void afterPropertiesSet() throws Exception {
     this.configurationService.addConfigurationChangedListener(this);
-    this.initialize(
+    this.watchDirectory(
         this.configurationService.getOptionValue(ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY));
   }
 
   @PreDestroy
-  public void stopWatching() {
-    if (this.watcher != null) {
+  public void stopWatching() throws IOException {
+    if (this.watchService != null) {
       log.trace("Shutting down watcher");
-      this.watcher.stop();
-      this.watcher = null;
+      this.active = false;
+      this.watchService.close();
+      this.watchService = null;
     }
   }
 
@@ -71,51 +78,109 @@ public class MissingFileScanner
   public void optionChanged(final String name, final String newValue) {
     if (name.equals(ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY)) {
       log.debug("Root directory changed");
-      this.initialize(newValue);
+      try {
+        this.watchDirectory(newValue);
+      } catch (IOException | InterruptedException error) {
+        log.error("Failed to change file scanning directory", error);
+        Thread.currentThread().interrupt();
+      }
     }
   }
 
-  @Override
-  public void onChange(final Set<ChangedFiles> changeSet) {
-    changeSet.forEach(
-        changeFiles -> {
-          changeFiles
-              .getFiles()
-              .forEach(
-                  changedFile -> {
-                    final String filename =
-                        new File(this.rootDirectory, changedFile.getRelativeName())
-                            .getAbsolutePath();
-                    if (this.comicBookService.filenameFound(filename)) {
-                      switch (changedFile.getType()) {
-                        case ADD -> this.comicBookService.markComicAsFound(filename);
-                        case MODIFY -> this.comicBookService.markComicAsFound(filename);
-                        case DELETE -> this.comicBookService.markComicAsMissing(filename);
-                      }
-                    }
-                  });
-        });
-  }
-
-  private void initialize(final String directory) {
+  public void watchDirectory(final String directory) throws IOException, InterruptedException {
     this.stopWatching();
 
-    log.debug("Performing initial missing file scan");
-    this.doExecute();
+    this.rootDirectory = null;
+
+    if (!StringUtils.hasLength(directory)) {
+      log.error("No directory set");
+      return;
+    }
+
+    final File root = new File(directory);
+    if (!FileUtils.isDirectory(root)) {
+      log.error("Not a directory: {}", root);
+      return;
+    }
 
     this.rootDirectory = directory;
 
-    if (StringUtils.hasLength(this.rootDirectory)) {
-      log.trace("Watching library directory: {}", directory);
-      this.watcher = new FileSystemWatcher();
-      this.watcher.addListener(this);
-      this.rootDirectory = directory;
-      this.watcher.addSourceDirectory(new File(directory));
-      this.watcher.start();
+    log.debug("Performing initial missing file scan");
+    this.scanLibrary();
+
+    this.watchService = FileSystems.getDefault().newWatchService();
+    this.keyMap.clear();
+    this.walkAndRegisterDirectories(Paths.get(this.rootDirectory));
+    final Thread processingThread =
+        new Thread() {
+          @Override
+          public void run() {
+            MissingFileScanner.this.processEvents();
+          }
+        };
+    processingThread.start();
+  }
+
+  private void walkAndRegisterDirectories(final Path start) throws IOException {
+    Files.walkFileTree(
+        start,
+        new SimpleFileVisitor<Path>() {
+          @Override
+          public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
+              throws IOException {
+            registerDirectory(dir);
+            return FileVisitResult.CONTINUE;
+          }
+        });
+  }
+
+  private void registerDirectory(Path dir) throws IOException {
+    log.trace("Monitoring directory: {}", dir);
+    WatchKey key = dir.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY, OVERFLOW);
+    this.keyMap.put(key, dir);
+  }
+
+  public void processEvents() {
+    this.active = true;
+    while (this.active) {
+      final WatchKey key;
+      key = this.watchService.poll();
+
+      if (Objects.nonNull(key)) {
+        for (WatchEvent<?> event : key.pollEvents()) {
+          this.processWatchEvent(key, event);
+          final boolean valid = key.reset();
+          if (!valid) {
+            this.keyMap.remove(key);
+            if (this.keyMap.isEmpty()) {
+              break;
+            }
+          }
+        }
+      }
     }
   }
 
-  private void doExecute() {
+  void processWatchEvent(final WatchKey key, final WatchEvent<?> event) {
+    final Path dir = (Path) key.watchable();
+    final Path name = Path.of(((WatchEvent<Path>) event).context().toString());
+    final String filename = dir.resolve(name).toString();
+    if (event.kind() != OVERFLOW) {
+      if (this.comicBookService.filenameFound(filename)) {
+        if (event.kind() == ENTRY_CREATE || event.kind() == ENTRY_MODIFY) {
+          log.trace("File found: {}", filename);
+          this.comicBookService.markComicAsFound(filename);
+        } else if (event.kind() == ENTRY_DELETE) {
+          log.trace("File deleted: {}", filename);
+          this.comicBookService.markComicAsMissing(filename);
+        } else {
+          log.trace("Not a library file: {}", filename);
+        }
+      }
+    }
+  }
+
+  private void scanLibrary() {
     synchronized (SEMAPHORE) {
       if (!this.active) {
         this.active = true;
