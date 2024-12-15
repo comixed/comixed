@@ -68,7 +68,7 @@ public class ComicFileAdaptorTest {
   private static final String TEST_PUBLISHED_YEAR = "2020";
   private static final String TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS = "\"?/:|'{}?%Publisher*'";
   private static final String TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED =
-      "__________Publisher__";
+      "________Publisher_";
   private static final String TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS = "<|{:}Series?>";
   private static final String TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED = "_____Series__";
   private static final String TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS = "\\/717:";

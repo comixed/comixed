@@ -43,8 +43,8 @@ import org.springframework.util.StringUtils;
 @Component
 @Log4j2
 public class ComicFileAdaptor {
-  private static final String FORBIDDEN_RULE_CHARACTERS = "[\"':*?|<>]";
-  private static final String FORBIDDEN_PROPERTY_CHARACTERS = "[\"':/*?|<>{}:%]";
+  private static final String FORBIDDEN_RULE_CHARACTERS = "[:*?|<>]";
+  private static final String FORBIDDEN_PROPERTY_CHARACTERS = "[:/*?|<>{}:%]";
   static final String UNKNOWN_VALUE = "Unknown";
   public static final String NO_COVER_DATE = "No Cover Date";
   public static final String PLACEHOLDER_PUBLISHER = "$PUBLISHER";
@@ -218,7 +218,10 @@ public class ComicFileAdaptor {
 
   private String scrub(final String text, final String forbidden) {
     log.trace("Pre-sanitized text: {}", text);
-    return text.replaceAll(forbidden, "_").replaceAll("\\.", "_");
+    return text.replaceAll(forbidden, "_")
+        .replaceAll("\\.", "_")
+        .replaceAll("\"", "")
+        .replaceAll("\'", "");
   }
 
   /**
