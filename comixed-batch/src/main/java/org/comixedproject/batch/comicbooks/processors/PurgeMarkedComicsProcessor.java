@@ -18,10 +18,14 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
+import static org.comixedproject.service.admin.ConfigurationService.CFG_DELETE_PURGED_COMIC_FILES;
+
+import java.io.File;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.library.LastReadService;
 import org.comixedproject.service.lists.ReadingListService;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
@@ -39,7 +43,8 @@ import org.springframework.stereotype.Component;
 public class PurgeMarkedComicsProcessor implements ItemProcessor<ComicBook, ComicBook> {
   @Autowired private ComicBookService comicBookService;
   @Autowired private ReadingListService readingListService;
-  @Autowired private LastReadService lastReadService;
+  @Autowired private ConfigurationService configurationService;
+  @Autowired private FileAdaptor fileAdaptor;
 
   @Override
   public ComicBook process(final ComicBook comicBook) throws Exception {
@@ -47,7 +52,12 @@ public class PurgeMarkedComicsProcessor implements ItemProcessor<ComicBook, Comi
       log.debug("Removing comic book from all reading lists: id={}", comicBook.getId());
       this.readingListService.deleteEntriesForComicBook(comicBook);
       log.debug("Purging comic book: id={}", comicBook.getId());
+      final File file = comicBook.getComicDetail().getFile();
       this.comicBookService.deleteComicBook(comicBook);
+      if (this.configurationService.isFeatureEnabled(CFG_DELETE_PURGED_COMIC_FILES)) {
+        log.debug("Deleting comic file:{}", file);
+        this.fileAdaptor.deleteFile(file);
+      }
     } catch (Exception error) {
       log.error("Failed to purge comic book", error);
     }

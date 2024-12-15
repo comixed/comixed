@@ -38,7 +38,8 @@ import {
   LIBRARY_PAGE_RENAMING_RULE,
   LIBRARY_ROOT_DIRECTORY,
   SKIP_INTERNAL_METADATA_FILES,
-  LIBRARY_STRIP_HTML_FROM_METADATA
+  LIBRARY_STRIP_HTML_FROM_METADATA,
+  LIBRARY_DELETE_PURGED_COMIC_FILES
 } from '@app/admin/admin.constants';
 import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
@@ -102,6 +103,7 @@ export class LibraryConfigurationComponent {
     private translateService: TranslateService
   ) {
     this.libraryConfigurationForm = this.formBuilder.group({
+      deletePurgedComicFilesDirectories: ['', []],
       deleteEmptyDirectories: ['', []],
       dontMoveUnscrapedComics: ['', []],
       createExternalMetadataFile: ['', []],
@@ -128,6 +130,13 @@ export class LibraryConfigurationComponent {
     );
     this.libraryConfigurationForm.controls.stripHtmlFromMetadata.setValue(
       getConfigurationOption(options, LIBRARY_STRIP_HTML_FROM_METADATA, '')
+    );
+    this.libraryConfigurationForm.controls.deletePurgedComicFilesDirectories.setValue(
+      getConfigurationOption(
+        options,
+        LIBRARY_DELETE_PURGED_COMIC_FILES,
+        `${false}`
+      ) === `${true}`
     );
     this.libraryConfigurationForm.controls.deleteEmptyDirectories.setValue(
       getConfigurationOption(
@@ -212,6 +221,10 @@ export class LibraryConfigurationComponent {
 
   private encodeOptions(): ConfigurationOption[] {
     return [
+      {
+        name: LIBRARY_DELETE_PURGED_COMIC_FILES,
+        value: `${this.libraryConfigurationForm.controls.deletePurgedComicFilesDirectories.value}`
+      },
       {
         name: LIBRARY_DELETE_EMPTY_DIRECTORIES,
         value: `${this.libraryConfigurationForm.controls.deleteEmptyDirectories.value}`

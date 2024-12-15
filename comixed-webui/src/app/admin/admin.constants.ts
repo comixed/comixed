@@ -38,6 +38,8 @@ export const LIBRARY_NO_RECREATE_COMICS = 'library.comic-book.no-recreate';
 export const LIBRARY_PAGE_RENAMING_RULE = 'library.comic-page.renaming-rule';
 export const LIBRARY_DELETE_EMPTY_DIRECTORIES =
   'library.directories.delete-empty';
+export const LIBRARY_DELETE_PURGED_COMIC_FILES =
+  'library.comic-book.delete-purged-comic-files';
 export const LIBRARY_DONT_MOVE_UNSCRAPED_COMICS =
   'library.comic-book.dont-move-unscraped';
 export const CREATE_EXTERNAL_METADATA_FILES =
