@@ -32,6 +32,7 @@ import {
   CREATE_EXTERNAL_METADATA_FILES,
   LIBRARY_COMIC_RENAMING_RULE,
   LIBRARY_DELETE_EMPTY_DIRECTORIES,
+  LIBRARY_DELETE_PURGED_COMIC_FILES,
   LIBRARY_DONT_MOVE_UNSCRAPED_COMICS,
   LIBRARY_NO_RECREATE_COMICS,
   LIBRARY_PAGE_RENAMING_RULE,
@@ -51,6 +52,7 @@ import { purgeLibrary } from '@app/library/actions/purge-library.actions';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('LibraryConfigurationComponent', () => {
+  const DELETE_PURGED_COMIC_FILES = Math.random() > 0.5;
   const DELETE_EMPTY_DIRECTORIES = Math.random() > 0.5;
   const DONT_MOVE_UNSCRAPED_COMICS = Math.random() > 0.5;
   const CREATE_EXTERNAL_METADATA = Math.random() > 0.5;
@@ -77,6 +79,10 @@ describe('LibraryConfigurationComponent', () => {
     {
       name: LIBRARY_PAGE_RENAMING_RULE,
       value: PAGE_RENAMING_RULE
+    },
+    {
+      name: LIBRARY_DELETE_PURGED_COMIC_FILES,
+      value: `${DELETE_PURGED_COMIC_FILES}`
     },
     {
       name: LIBRARY_DELETE_EMPTY_DIRECTORIES,
@@ -151,6 +157,13 @@ describe('LibraryConfigurationComponent', () => {
       component.options = OPTIONS;
     });
 
+    it('sets the delete purged comic files value', () => {
+      expect(
+        component.libraryConfigurationForm.controls
+          .deletePurgedComicFilesDirectories.value
+      ).toEqual(DELETE_PURGED_COMIC_FILES);
+    });
+
     it('sets the delete empty directories value', () => {
       expect(
         component.libraryConfigurationForm.controls.deleteEmptyDirectories.value
@@ -207,6 +220,10 @@ describe('LibraryConfigurationComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         saveConfigurationOptions({
           options: [
+            {
+              name: LIBRARY_DELETE_PURGED_COMIC_FILES,
+              value: `${DELETE_PURGED_COMIC_FILES}`
+            },
             {
               name: LIBRARY_DELETE_EMPTY_DIRECTORIES,
               value: `${DELETE_EMPTY_DIRECTORIES}`
