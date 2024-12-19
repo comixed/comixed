@@ -82,7 +82,7 @@ public class LastReadController {
     log.info("Loading unread comic book count for user: email={}", email);
     return new LoadUnreadComicBookCountResponse(
         this.lastReadService.getReadCountForUser(email),
-        this.lastReadService.getUnreadCountForUser(email));
+        this.lastReadService.getUnreadCountForUser(email, true));
   }
 
   /**
@@ -158,12 +158,10 @@ public class LastReadController {
           this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
       final String email = principal.getName();
       if (markAsRead) {
-        log.info(
-            "Marking {} comic{} as read for {}", ids.size(), ids.size() == 1 ? "" : "s", email);
+        log.info("Marking {} comic(s) as read for {}", ids.size(), email);
         this.lastReadService.markComicBooksAsRead(email, ids);
       } else {
-        log.info(
-            "Marking {} comic{} as unread for {}", ids.size(), ids.size() == 1 ? "" : "s", email);
+        log.info("Marking {} comic(s) as unread for {}", ids.size(), email);
         this.lastReadService.markComicBooksAsUnread(email, ids);
       }
       this.comicBookSelectionService.clearSelectedComicBooks(ids);

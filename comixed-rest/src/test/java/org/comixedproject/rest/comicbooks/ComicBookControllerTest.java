@@ -76,7 +76,7 @@ public class ComicBookControllerTest {
   private static final String TEST_EMAIL = "comixedreader@localhost";
   private static final long TEST_UNREAD_COMIC_COUNT = 804L;
   private static final long TEST_READING_LIST_ID = 501L;
-
+  private final Set<Long> comicBookIdSet = new HashSet<>();
   @InjectMocks private ComicBookController controller;
   @Mock private ComicBookService comicBookService;
   @Mock private ComicDetailService comicDetailService;
@@ -93,9 +93,7 @@ public class ComicBookControllerTest {
   @Mock private Principal principal;
   @Mock private DownloadDocument comicBookContent;
   @Mock private ResponseEntity<byte[]> responseEntity;
-
   private List<Long> selectedIdList = new ArrayList<>();
-  private final Set<Long> comicBookIdSet = new HashSet<>();
 
   @Before
   public void setUp() throws ComicBookSelectionException, ComicBookException, ComicPageException {
@@ -521,7 +519,7 @@ public class ComicBookControllerTest {
                 Mockito.anyString(),
                 Mockito.anyString()))
         .thenReturn(comicDetailList);
-    Mockito.when(lastReadService.getUnreadCountForUser(Mockito.anyString()))
+    Mockito.when(lastReadService.getUnreadCountForUser(Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(TEST_UNREAD_COMIC_COUNT);
 
     final LoadComicDetailsResponse result =
@@ -535,7 +533,7 @@ public class ComicBookControllerTest {
     assertTrue(result.getCoverYears().isEmpty());
     assertTrue(result.getCoverMonths().isEmpty());
     assertEquals(TEST_COMIC_BOOK_COUNT, result.getTotalCount());
-    assertEquals(TEST_COMIC_BOOK_COUNT - TEST_UNREAD_COMIC_COUNT, result.getFilteredCount());
+    assertEquals(TEST_UNREAD_COMIC_COUNT, result.getFilteredCount());
 
     Mockito.verify(comicDetailService, Mockito.times(1))
         .loadUnreadComicDetails(
@@ -545,7 +543,7 @@ public class ComicBookControllerTest {
             TEST_PAGE_INDEX,
             TEST_SORT_FIELD,
             TEST_SORT_DIRECTION);
-    Mockito.verify(lastReadService, Mockito.times(1)).getUnreadCountForUser(TEST_EMAIL);
+    Mockito.verify(lastReadService, Mockito.times(1)).getUnreadCountForUser(TEST_EMAIL, true);
   }
 
   @Test
@@ -560,7 +558,7 @@ public class ComicBookControllerTest {
                 Mockito.anyString()))
         .thenReturn(comicDetailList);
     Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_COMIC_BOOK_COUNT);
-    Mockito.when(lastReadService.getUnreadCountForUser(Mockito.anyString()))
+    Mockito.when(lastReadService.getUnreadCountForUser(Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(TEST_UNREAD_COMIC_COUNT);
 
     final LoadComicDetailsResponse result =
@@ -585,7 +583,7 @@ public class ComicBookControllerTest {
             TEST_SORT_FIELD,
             TEST_SORT_DIRECTION);
     Mockito.verify(comicBookService, Mockito.times(1)).getComicBookCount();
-    Mockito.verify(lastReadService, Mockito.times(1)).getUnreadCountForUser(TEST_EMAIL);
+    Mockito.verify(lastReadService, Mockito.times(1)).getUnreadCountForUser(TEST_EMAIL, false);
   }
 
   @Test

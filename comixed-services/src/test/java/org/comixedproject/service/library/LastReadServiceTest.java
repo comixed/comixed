@@ -337,7 +337,7 @@ public class LastReadServiceTest {
         .thenThrow(ComiXedUserException.class);
 
     try {
-      service.getUnreadCountForUser(TEST_EMAIL);
+      service.getUnreadCountForUser(TEST_EMAIL, true);
     } finally {
       Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
     }
@@ -349,7 +349,7 @@ public class LastReadServiceTest {
         .thenReturn(TEST_READ_COUNT);
     Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_COMIC_BOOK_COUNT);
 
-    final long result = service.getUnreadCountForUser(TEST_EMAIL);
+    final long result = service.getUnreadCountForUser(TEST_EMAIL, true);
 
     assertEquals(TEST_COMIC_BOOK_COUNT - TEST_READ_COUNT, result);
 
