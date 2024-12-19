@@ -78,7 +78,7 @@ public class LastReadControllerTest {
   }
 
   @Test(expected = LastReadException.class)
-  public void testGetUnreadCountLastReadExceptionForRead() throws LastReadException {
+  public void testGetUnreadBookCount_lastReadExceptionForRead() throws LastReadException {
     Mockito.when(lastReadService.getReadCountForUser(Mockito.anyString()))
         .thenThrow(LastReadException.class);
 
@@ -90,14 +90,14 @@ public class LastReadControllerTest {
   }
 
   @Test(expected = LastReadException.class)
-  public void testGetUnreadCountLastReadExceptionForUnread() throws LastReadException {
-    Mockito.when(lastReadService.getUnreadCountForUser(Mockito.anyString()))
+  public void testGetUnreadBookCount_lastReadExceptionForUnread() throws LastReadException {
+    Mockito.when(lastReadService.getUnreadCountForUser(Mockito.anyString(), Mockito.anyBoolean()))
         .thenThrow(LastReadException.class);
 
     try {
       controller.getUnreadComicBookCount(principal);
     } finally {
-      Mockito.verify(lastReadService, Mockito.times(1)).getUnreadCountForUser(TEST_EMAIL);
+      Mockito.verify(lastReadService, Mockito.times(1)).getUnreadCountForUser(TEST_EMAIL, true);
     }
   }
 
@@ -105,7 +105,7 @@ public class LastReadControllerTest {
   public void testGetUnreadCount() throws LastReadException {
     Mockito.when(lastReadService.getReadCountForUser(Mockito.anyString()))
         .thenReturn(TEST_READ_COUNT);
-    Mockito.when(lastReadService.getUnreadCountForUser(Mockito.anyString()))
+    Mockito.when(lastReadService.getUnreadCountForUser(Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(TEST_UNREAD_COUNT);
 
     final LoadUnreadComicBookCountResponse response = controller.getUnreadComicBookCount(principal);
@@ -113,11 +113,11 @@ public class LastReadControllerTest {
     assertEquals(TEST_READ_COUNT, response.getReadCount());
     assertEquals(TEST_UNREAD_COUNT, response.getUnreadCount());
 
-    Mockito.verify(lastReadService, Mockito.times(1)).getUnreadCountForUser(TEST_EMAIL);
+    Mockito.verify(lastReadService, Mockito.times(1)).getUnreadCountForUser(TEST_EMAIL, true);
   }
 
   @Test(expected = LastReadException.class)
-  public void testMarkSingleComicBookReadLastReadException() throws LastReadException {
+  public void testMarkSingleComicBookRead_lastReadException() throws LastReadException {
     Mockito.doThrow(LastReadException.class)
         .when(lastReadService)
         .markComicBookAsRead(Mockito.anyString(), Mockito.anyLong());
@@ -139,7 +139,7 @@ public class LastReadControllerTest {
   }
 
   @Test(expected = LastReadException.class)
-  public void testMarkSingleComicBookUnreadLastReadException() throws LastReadException {
+  public void testMarkSingleComicBookUnread_lastReadException() throws LastReadException {
     Mockito.doThrow(LastReadException.class)
         .when(lastReadService)
         .markComicBookAsUnread(Mockito.anyString(), Mockito.anyLong());
@@ -161,7 +161,7 @@ public class LastReadControllerTest {
   }
 
   @Test(expected = LastReadException.class)
-  public void testMarkSelectedComicBooksReadServiceException() throws LastReadException {
+  public void testMarkSelectedComicBooksRead_serviceException() throws LastReadException {
     Mockito.doThrow(LastReadException.class)
         .when(lastReadService)
         .markComicBooksAsRead(Mockito.anyString(), Mockito.anyList());
@@ -172,7 +172,7 @@ public class LastReadControllerTest {
   }
 
   @Test(expected = LastReadException.class)
-  public void testMarkSelectedComicBooksReadDecodingException()
+  public void testMarkSelectedComicBooksRead_decodingException()
       throws LastReadException, ComicBookSelectionException {
     Mockito.when(comicBookSelectionService.decodeSelections(TEST_ENCODED_SELECTION_IDS))
         .thenThrow(ComicBookSelectionException.class);
@@ -186,7 +186,7 @@ public class LastReadControllerTest {
   }
 
   @Test(expected = LastReadException.class)
-  public void testMarkSelectedComicBooksReadEncodingException()
+  public void testMarkSelectedComicBooksRead_encodingException()
       throws LastReadException, ComicBookSelectionException {
     Mockito.when(comicBookSelectionService.encodeSelections(selectedIds))
         .thenThrow(ComicBookSelectionException.class);
@@ -207,7 +207,7 @@ public class LastReadControllerTest {
   }
 
   @Test(expected = LastReadException.class)
-  public void testMarkSelectedComicBooksUnreadDecodingException()
+  public void testMarkSelectedComicBooksUnread_decodingException()
       throws LastReadException, ComicBookSelectionException {
     Mockito.when(comicBookSelectionService.decodeSelections(TEST_ENCODED_SELECTION_IDS))
         .thenThrow(ComicBookSelectionException.class);
@@ -221,7 +221,7 @@ public class LastReadControllerTest {
   }
 
   @Test(expected = LastReadException.class)
-  public void testMarkSelectedComicBooksUnreadEncodingException()
+  public void testMarkSelectedComicBooksUnread_encodingException()
       throws LastReadException, ComicBookSelectionException {
     Mockito.when(comicBookSelectionService.encodeSelections(selectedIds))
         .thenThrow(ComicBookSelectionException.class);

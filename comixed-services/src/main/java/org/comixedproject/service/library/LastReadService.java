@@ -263,16 +263,25 @@ public class LastReadService implements InitializingBean, ComicStateChangeListen
   }
 
   /**
-   * Returns the unread comic count for a user.
+   * Returns either the number of read or the number of unread comics based on the unread flag.
    *
    * @param email the user's email
+   * @param unreadOnly the unread flag
    * @return the count
    * @throws LastReadException if an error occurs
    */
-  public long getUnreadCountForUser(final String email) throws LastReadException {
+  public long getUnreadCountForUser(final String email, final boolean unreadOnly)
+      throws LastReadException {
     log.debug("Getting the unread comic book count for user: {}", email);
-    return this.comicBookService.getComicBookCount()
-        - this.lastReadRepository.loadCountForUser(this.doFindUser(email));
+    final long total = this.comicBookService.getComicBookCount();
+    final long read = this.lastReadRepository.loadCountForUser(this.doFindUser(email));
+    if (unreadOnly) {
+      final long unread = total - read;
+      log.debug("Returning the number of unread comics: {}", unread);
+      return unread;
+    }
+    log.debug("Returning the number of read comics: {}", read);
+    return read;
   }
 
   /**
