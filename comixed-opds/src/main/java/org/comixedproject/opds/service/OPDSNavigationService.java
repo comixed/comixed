@@ -321,7 +321,7 @@ public class OPDSNavigationService {
                           SUBSECTION,
                           String.format(
                               "/opds/collections/publishers/%s/series/%s/volumes/%s?unread=%s",
-                              this.opdsUtils.urlDecodeString(publisher),
+                              this.opdsUtils.urlEncodeString(publisher),
                               this.opdsUtils.urlEncodeString(series),
                               this.opdsUtils.urlEncodeString(volume),
                               unread)));
