@@ -18,11 +18,10 @@
 
 package org.comixedproject.messaging.library;
 
-import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.AbstractPublishAction;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.library.DuplicatePage;
+import org.comixedproject.model.net.library.DuplicatePageUpdate;
 import org.comixedproject.views.View;
 import org.springframework.stereotype.Component;
 
@@ -35,13 +34,13 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class PublishDuplicatePageListUpdateAction
-    extends AbstractPublishAction<List<DuplicatePage>> {
+    extends AbstractPublishAction<DuplicatePageUpdate> {
   /** Topic which receives notices when the duplicate page list is updated. */
-  public static final String DUPLICATE_PAGE_LIST_TOPIC = "/topic/duplicate-page-list.update";
+  public static final String DUPLICATE_PAGE_LIST_UPDATE_TOPIC = "/topic/duplicate-page-list.update";
 
   @Override
-  public void publish(final List<DuplicatePage> pages) throws PublishingException {
+  public void publish(final DuplicatePageUpdate update) throws PublishingException {
     log.trace("Publishing duplicate page list");
-    this.doPublish(DUPLICATE_PAGE_LIST_TOPIC, pages, View.DuplicatePageList.class);
+    this.doPublish(DUPLICATE_PAGE_LIST_UPDATE_TOPIC, update, View.DuplicatePageList.class);
   }
 }

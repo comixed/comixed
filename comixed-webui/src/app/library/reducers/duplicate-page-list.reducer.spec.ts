@@ -22,9 +22,9 @@ import {
   reducer
 } from './duplicate-page-list.reducer';
 import {
-  duplicatePagesLoaded,
-  loadDuplicatePages,
-  loadDuplicatePagesFailed,
+  loadDuplicatePageList,
+  loadDuplicatePageListFailure,
+  loadDuplicatePageListSuccess,
   resetDuplicatePages
 } from '@app/library/actions/duplicate-page-list.actions';
 import {
@@ -34,7 +34,12 @@ import {
 } from '@app/library/library.fixtures';
 
 describe('DuplicatePageList Reducer', () => {
+  const PAGE_NUMBER = 7;
+  const PAGE_SIZE = 10;
+  const SORT_FIELD = 'hash';
+  const SORT_DIRECTION = 'desc';
   const PAGES = [DUPLICATE_PAGE_1, DUPLICATE_PAGE_2, DUPLICATE_PAGE_3];
+  const TOTAL_PAGES = PAGES.length;
 
   let state: DuplicatePageListState;
 
@@ -51,6 +56,10 @@ describe('DuplicatePageList Reducer', () => {
       expect(state.loading).toBeFalse();
     });
 
+    it('has no total pages', () => {
+      expect(state.total).toEqual(0);
+    });
+
     it('has no pages', () => {
       expect(state.pages).toEqual([]);
     });
@@ -59,13 +68,17 @@ describe('DuplicatePageList Reducer', () => {
   describe('resetting the feature state', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, loading: true, pages: PAGES },
+        { ...state, loading: true, total: TOTAL_PAGES, pages: PAGES },
         resetDuplicatePages()
       );
     });
 
     it('clears the loading flag', () => {
       expect(state.loading).toBeFalse();
+    });
+
+    it('has no total pages', () => {
+      expect(state.total).toEqual(0);
     });
 
     it('clears the pages', () => {
@@ -75,38 +88,56 @@ describe('DuplicatePageList Reducer', () => {
 
   describe('loading the pages', () => {
     beforeEach(() => {
-      state = reducer({ ...state, loading: false }, loadDuplicatePages());
+      state = reducer(
+        { ...state, loading: false },
+        loadDuplicatePageList({
+          page: PAGE_NUMBER,
+          size: PAGE_SIZE,
+          sortBy: SORT_FIELD,
+          sortDirection: SORT_DIRECTION
+        })
+      );
     });
 
     it('sets the loading flag', () => {
       expect(state.loading).toBeTruthy();
     });
-  });
 
-  describe('success loading the pages', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, loading: true, pages: [] },
-        duplicatePagesLoaded({ pages: PAGES })
-      );
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, loading: true, total: 0, pages: [] },
+          loadDuplicatePageListSuccess({
+            pages: PAGES,
+            totalPages: TOTAL_PAGES
+          })
+        );
+      });
+
+      it('clears the loading flag', () => {
+        expect(state.loading).toBeFalse();
+      });
+
+      it('sets the total pages', () => {
+        expect(state.total).toEqual(TOTAL_PAGES);
+      });
+
+      it('loads the pages', () => {
+        expect(state.pages).toEqual(PAGES);
+      });
     });
 
-    it('clears the loading flag', () => {
-      expect(state.loading).toBeFalse();
-    });
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, loading: true },
+          loadDuplicatePageListFailure()
+        );
+      });
 
-    it('loads the pages', () => {
-      expect(state.pages).toEqual(PAGES);
-    });
-  });
-
-  describe('failure loading the pages', () => {
-    beforeEach(() => {
-      state = reducer({ ...state, loading: true }, loadDuplicatePagesFailed());
-    });
-
-    it('clears the loading flag', () => {
-      expect(state.loading).toBeFalse();
+      it('clears the loading flag', () => {
+        expect(state.loading).toBeFalse();
+      });
     });
   });
 });

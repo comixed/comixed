@@ -33,10 +33,17 @@ import {
   DUPLICATE_PAGE_2,
   DUPLICATE_PAGE_3
 } from '@app/library/library.fixtures';
+import { LoadDuplicatePageListRequest } from '@app/library/models/net/load-duplicate-page-list-request';
+import { LoadDuplicatePageListResponse } from '@app/library/models/net/load-duplicate-page-list-response';
 
 describe('DuplicatePageService', () => {
-  const PAGES = [DUPLICATE_PAGE_1, DUPLICATE_PAGE_2, DUPLICATE_PAGE_3];
   const DETAIL = DUPLICATE_PAGE_1;
+  const PAGE_NUMBER = 7;
+  const PAGE_SIZE = 10;
+  const SORT_FIELD = 'hash';
+  const SORT_DIRECTION = 'desc';
+  const PAGES = [DUPLICATE_PAGE_1, DUPLICATE_PAGE_2, DUPLICATE_PAGE_3];
+  const TOTAL_PAGES = PAGES.length;
 
   let service: DuplicatePageService;
   let httpMock: HttpTestingController;
@@ -55,15 +62,31 @@ describe('DuplicatePageService', () => {
   });
 
   it('can load duplicate pages', () => {
+    const serviceResponse = {
+      total: TOTAL_PAGES,
+      pages: PAGES
+    } as LoadDuplicatePageListResponse;
+
     service
-      .loadDuplicatePages()
-      .subscribe(response => expect(response).toEqual(PAGES));
+      .loadDuplicatePages({
+        page: PAGE_NUMBER,
+        size: PAGE_SIZE,
+        sortBy: SORT_FIELD,
+        sortDirection: SORT_DIRECTION
+      })
+      .subscribe(response => expect(response).toEqual(serviceResponse));
 
     const req = httpMock.expectOne(
       interpolate(LOAD_COMICS_WITH_DUPLICATE_PAGES_URL)
     );
-    expect(req.request.method).toEqual('GET');
-    req.flush(PAGES);
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      page: PAGE_NUMBER,
+      size: PAGE_SIZE,
+      sortBy: SORT_FIELD,
+      sortDirection: SORT_DIRECTION
+    } as LoadDuplicatePageListRequest);
+    req.flush(serviceResponse);
   });
 
   it('can load the detail for a single duplicate page', () => {

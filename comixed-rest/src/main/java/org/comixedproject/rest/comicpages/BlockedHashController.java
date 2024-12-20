@@ -35,6 +35,7 @@ import org.comixedproject.model.net.comicpages.SetBlockedPageRequest;
 import org.comixedproject.service.comicpages.BlockedHashException;
 import org.comixedproject.service.comicpages.BlockedHashService;
 import org.comixedproject.service.comicpages.ComicPageService;
+import org.comixedproject.service.library.DuplicatePageException;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
@@ -91,7 +92,7 @@ public class BlockedHashController {
    * @param hash the page hash
    * @param blockedHash the updated details
    * @return the updated record
-   * @throws BlockedHashException if an error occurs
+   * @throws DuplicatePageException if an error occurs
    */
   @PutMapping(value = "/api/pages/blocked/{hash}")
   @JsonView(View.BlockedHashDetail.class)
@@ -99,7 +100,7 @@ public class BlockedHashController {
   @PreAuthorize("hasRole('ADMIN')")
   public BlockedHash updateBlockedPage(
       @PathVariable("hash") final String hash, @RequestBody() final BlockedHash blockedHash)
-      throws BlockedHashException {
+      throws DuplicatePageException {
     log.info(
         "Updating blocked page: hash={} label={}", blockedHash.getHash(), blockedHash.getHash());
     return this.blockedHashService.updateBlockedPage(hash, blockedHash);

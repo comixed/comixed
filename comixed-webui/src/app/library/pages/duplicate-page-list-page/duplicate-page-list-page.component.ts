@@ -16,37 +16,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  AfterViewInit,
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
 import {
+  selectDuplicatePageCount,
   selectDuplicatePageList,
   selectDuplicatePageListState
 } from '@app/library/selectors/duplicate-page-list.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import {
-  duplicatePagesLoaded,
-  loadDuplicatePages
+  duplicatePageRemoved,
+  duplicatePageUpdated,
+  loadDuplicatePageList
 } from '@app/library/actions/duplicate-page-list.actions';
 import { DuplicatePage } from '@app/library/models/duplicate-page';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatDialog } from '@angular/material/dialog';
-import { ComicDetailListDialogComponent } from '@app/library/components/comic-detail-list-dialog/comic-detail-list-dialog.component';
-import { MatSort } from '@angular/material/sort';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
 import {
-  DUPLICATE_PAGE_LIST_TOPIC,
+  DUPLICATE_PAGE_LIST_UPDATE_TOPIC,
   DUPLICATE_PAGES_UNBLOCKED_PAGES_ONLY
 } from '@app/library/library.constants';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
@@ -60,6 +52,8 @@ import { QueryParameterService } from '@app/core/services/query-parameter.servic
 import { PAGE_SIZE_OPTIONS } from '@app/core';
 import { selectBlockedHashesList } from '@app/comic-pages/selectors/blocked-hashes.selectors';
 import { setBlockedStateForHash } from '@app/comic-pages/actions/blocked-hashes.actions';
+import { ActivatedRoute } from '@angular/router';
+import { DuplicatePageUpdate } from '@app/library/models/net/duplicate-page-update';
 
 @Component({
   selector: 'cx-duplicate-page-list-page',
@@ -67,22 +61,25 @@ import { setBlockedStateForHash } from '@app/comic-pages/actions/blocked-hashes.
   styleUrls: ['./duplicate-page-list-page.component.scss']
 })
 export class DuplicatePageListPageComponent
-  implements OnInit, OnDestroy, AfterViewInit
+  implements OnDestroy, AfterViewInit
 {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-
   dataSource = new MatTableDataSource<SelectableListItem<DuplicatePage>>([]);
+
   langChangeSubscription: Subscription;
-  duplicatePageSubscription: Subscription;
+  queryParamsSubscription: Subscription;
+  duplicatePageListSubscription: Subscription;
+  duplicatePageCountSubscription: Subscription;
+  totalPages = 0;
   duplicatePageStateSubscription: Subscription;
-  blockedPageListSubscription: Subscription;
-  blockedPages: BlockedHash[] = [];
+  blockedHashListSubscription: Subscription;
+  blockedHashList: BlockedHash[] = [];
   messagingStateSubscription: Subscription;
   pageUpdatesSubscription: MessagingSubscription;
   allSelected = false;
   anySelected = false;
   userSubscription: Subscription;
+  showPopup = false;
+  popupPage: DuplicatePage | null = null;
   readonly displayColumns = [
     'selection',
     'thumbnail',
@@ -95,14 +92,25 @@ export class DuplicatePageListPageComponent
 
   constructor(
     private logger: LoggerService,
+    private activatedRoute: ActivatedRoute,
     private store: Store<any>,
     private titleService: TitleService,
     private translateService: TranslateService,
-    private dialog: MatDialog,
     private confirmationService: ConfirmationService,
     private webSocketService: WebSocketService,
     public queryParameterService: QueryParameterService
   ) {
+    this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
+      params =>
+        this.store.dispatch(
+          loadDuplicatePageList({
+            page: this.queryParameterService.pageIndex$.value,
+            size: this.queryParameterService.pageSize$.value,
+            sortBy: this.queryParameterService.sortBy$.value,
+            sortDirection: this.queryParameterService.sortDirection$.value
+          })
+        )
+    );
     this.logger.trace('Subscribing to duplicate page list changes');
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
       this.unblockedOnly =
@@ -112,9 +120,12 @@ export class DuplicatePageListPageComponent
           `${false}`
         ) == `${true}`;
     });
-    this.duplicatePageSubscription = this.store
+    this.duplicatePageListSubscription = this.store
       .select(selectDuplicatePageList)
       .subscribe(pages => (this.duplicatePages = pages));
+    this.duplicatePageCountSubscription = this.store
+      .select(selectDuplicatePageCount)
+      .subscribe(count => (this.totalPages = count));
     this.logger.trace('Subscribing to duplicate page state changes');
     this.duplicatePageStateSubscription = this.store
       .select(selectDuplicatePageListState)
@@ -122,9 +133,9 @@ export class DuplicatePageListPageComponent
         this.store.dispatch(setBusyState({ enabled: state.loading }));
       });
     this.logger.trace('Subscribing to blocked page list');
-    this.blockedPageListSubscription = this.store
+    this.blockedHashListSubscription = this.store
       .select(selectBlockedHashesList)
-      .subscribe(blockedPages => (this.blockedPages = blockedPages));
+      .subscribe(blockedPages => (this.blockedHashList = blockedPages));
     this.logger.trace('Subscribing to language changes');
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -132,15 +143,31 @@ export class DuplicatePageListPageComponent
     this.messagingStateSubscription = this.store
       .select(selectMessagingState)
       .subscribe(state => {
-        if (state.started && !this.pageUpdatesSubscription) {
-          this.logger.trace('Subscribing to duplicate page list updates');
-          this.pageUpdatesSubscription = this.webSocketService.subscribe(
-            DUPLICATE_PAGE_LIST_TOPIC,
-            (pages: DuplicatePage[]) => {
-              this.logger.trace('Duplicate page update received:', pages);
-              this.store.dispatch(duplicatePagesLoaded({ pages }));
-            }
-          );
+        if (state.started) {
+          if (!this.pageUpdatesSubscription) {
+            this.logger.trace('Subscribing to duplicate page list updates');
+            this.pageUpdatesSubscription = this.webSocketService.subscribe(
+              DUPLICATE_PAGE_LIST_UPDATE_TOPIC,
+              (response: DuplicatePageUpdate) => {
+                this.logger.trace('Duplicate page update received:', response);
+                if (response.removed) {
+                  this.store.dispatch(
+                    duplicatePageRemoved({
+                      page: response.page,
+                      total: response.total
+                    })
+                  );
+                } else {
+                  this.store.dispatch(
+                    duplicatePageUpdated({
+                      page: response.page,
+                      total: response.total
+                    })
+                  );
+                }
+              }
+            );
+          }
         }
       });
   }
@@ -171,45 +198,21 @@ export class DuplicatePageListPageComponent
     this.loadDataSource();
   }
 
-  ngOnInit(): void {
-    this.store.dispatch(loadDuplicatePages());
-  }
-
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
-      switch (sortHeaderId) {
-        case 'selection':
-          return `${data.selected}`;
-        case 'hash':
-          return data.item.hash;
-        case 'comic-count':
-          return data.item.comics.length;
-        case 'blocked':
-          return `${this.isBlocked(data)}`;
-      }
-    };
     this.loadTranslations();
   }
 
   ngOnDestroy(): void {
-    this.duplicatePageSubscription.unsubscribe();
+    this.duplicatePageListSubscription.unsubscribe();
+    this.duplicatePageCountSubscription.unsubscribe();
     this.duplicatePageStateSubscription.unsubscribe();
-    this.blockedPageListSubscription.unsubscribe();
+    this.blockedHashListSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
     if (!!this.pageUpdatesSubscription) {
       this.logger.trace('Unsubscribing from duplicate page list updates');
       this.pageUpdatesSubscription.unsubscribe();
       this.pageUpdatesSubscription = null;
     }
-  }
-
-  onShowComicBooksWithPage(row: SelectableListItem<DuplicatePage>): void {
-    this.logger.trace('Displaying dialog of affected comics');
-    this.dialog.open(ComicDetailListDialogComponent, {
-      data: row.item.comics
-    });
   }
 
   onBlockPage(row: SelectableListItem<DuplicatePage>): void {
@@ -319,10 +322,21 @@ export class DuplicatePageListPageComponent
     );
   }
 
+  isBlocked(item: SelectableListItem<DuplicatePage>): boolean {
+    return this.blockedHashList
+      .map(entry => entry.hash)
+      .includes(item.item.hash);
+  }
+
+  onShowPagePopup(showPopup: boolean, page: DuplicatePage) {
+    this.popupPage = page;
+    this.showPopup = showPopup;
+  }
+
   private loadDataSource(): void {
     this.logger.info('Loading duplicate pages:', this.unblockedOnly);
     const oldData = this.dataSource.data;
-    const blockedHashes = this.blockedPages.map(page => page.hash);
+    const blockedHashes = this.blockedHashList.map(page => page.hash);
     this.dataSource.data = this.duplicatePages
       .filter(page => !this.unblockedOnly || !blockedHashes.includes(page.hash))
       .map(page => {
@@ -350,10 +364,6 @@ export class DuplicatePageListPageComponent
       this.dataSource.data.every(entry => entry.selected);
     this.anySelected =
       this.allSelected || this.dataSource.data.some(entry => entry.selected);
-  }
-
-  private isBlocked(item: SelectableListItem<DuplicatePage>): boolean {
-    return this.blockedPages.map(entry => entry.hash).includes(item.item.hash);
   }
 
   private doSetBlockedState(hashes: string[], blocked: boolean): void {

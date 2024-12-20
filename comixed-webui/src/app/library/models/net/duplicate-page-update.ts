@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,23 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-import {
-  DUPLICATE_PAGE_LIST_FEATURE_KEY,
-  DuplicatePageListState
-} from '../reducers/duplicate-page-list.reducer';
+import { DuplicatePage } from '@app/library/models/duplicate-page';
 
-export const selectDuplicatePageListState =
-  createFeatureSelector<DuplicatePageListState>(
-    DUPLICATE_PAGE_LIST_FEATURE_KEY
-  );
-
-export const selectDuplicatePageList = createSelector(
-  selectDuplicatePageListState,
-  state => state.pages
-);
-
-export const selectDuplicatePageCount = createSelector(
-  selectDuplicatePageListState,
-  state => state.total
-);
+export interface DuplicatePageUpdate {
+  removed: boolean;
+  total: number;
+  page: DuplicatePage;
+}

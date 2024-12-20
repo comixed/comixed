@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2019, The ComiXed Project
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,48 +16,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.library;
+package org.comixedproject.model.net.library;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.views.View;
 
 /**
- * <code>DuplicatePage</code> represents a page that appears in more than one comic.
+ * <code>LoadDuplicatePageListResponse</code> represents the response body when loading a set of
+ * duplicate pages.
  *
  * @author Darryl L. Pierce
  */
-@RequiredArgsConstructor
-public class DuplicatePage {
-  @JsonProperty("hash")
-  @JsonView(View.DuplicatePageList.class)
-  @NonNull
-  @Getter
-  private String hash;
-
-  @JsonProperty("comics")
+@AllArgsConstructor
+public class LoadDuplicatePageListResponse {
+  @JsonProperty("total")
   @JsonView(View.DuplicatePageList.class)
   @Getter
-  @Setter
-  private Set<ComicDetail> comics = new HashSet<>();
+  private int total;
 
-  @Override
-  public boolean equals(final Object o) {
-    if (o == null || getClass() != o.getClass()) return false;
-    final DuplicatePage that = (DuplicatePage) o;
-    return Objects.equals(getHash(), that.getHash());
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(getHash());
-  }
+  @JsonProperty("pages")
+  @JsonView(View.DuplicatePageList.class)
+  @Getter
+  private List<DuplicatePage> pages;
 }
