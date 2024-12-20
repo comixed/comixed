@@ -78,10 +78,6 @@ public class LibraryControllerTest {
   @Mock private HttpSession httpSession;
 
   @Mock
-  @Qualifier("recreateComicFilesJob")
-  private Job recreateComicFilesJob;
-
-  @Mock
   @Qualifier("updateComicBooksJob")
   private Job updateComicBooksJob;
 
@@ -136,14 +132,10 @@ public class LibraryControllerTest {
             configurationService.isFeatureEnabled(
                 ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS))
         .thenReturn(false);
-    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
-        .thenReturn(jobExecution);
 
     controller.convertSingleComicBooks(
         new ConvertComicsRequest(TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_MARKED_PAGES),
         TEST_COMIC_BOOK_ID);
-
-    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
     Mockito.verify(libraryService, Mockito.times(1))
         .prepareToRecreate(
@@ -151,7 +143,6 @@ public class LibraryControllerTest {
             TEST_ARCHIVE_TYPE,
             TEST_RENAME_PAGES,
             TEST_DELETE_MARKED_PAGES);
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(recreateComicFilesJob, jobParameters);
   }
 
   @Test(expected = LibraryException.class)
@@ -182,21 +173,14 @@ public class LibraryControllerTest {
             configurationService.isFeatureEnabled(
                 ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS))
         .thenReturn(false);
-    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
-        .thenReturn(jobExecution);
 
     controller.convertSelectedComicBooks(
         httpSession,
         new ConvertComicsRequest(TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_MARKED_PAGES));
 
-    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
-
-    assertNotNull(jobParameters);
-
     Mockito.verify(libraryService, Mockito.times(1))
         .prepareToRecreate(
             selectedIds, TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_MARKED_PAGES);
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(recreateComicFilesJob, jobParameters);
   }
 
   @Test
