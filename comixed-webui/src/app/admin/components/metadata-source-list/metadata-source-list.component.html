@@ -30,6 +30,18 @@
       </mat-card-title>
       <mat-card-content>
         <mat-form-field class="cx-width-100" appearance="fill">
+          <mat-label>
+            {{ "metadata-source.label.expiration-days" | translate }}
+          </mat-label>
+          <input
+            id="expiration-days-input"
+            matInput
+            type="number"
+            formControlName="expirationDays"
+          />
+        </mat-form-field>
+
+        <mat-form-field class="cx-width-100" appearance="fill">
           <mat-checkbox
             id="ignore-empty-values-input"
             formControlName="ignoreEmptyValues"
@@ -42,8 +54,10 @@
       <mat-card-actions class="cx-action-button-container-horizontal">
         <button
           id="save-metadata-source-configuration-button"
+          class="cx-action-button"
           mat-flat-button
           color="primary"
+          [disabled]="!metadataForm.valid"
           (click)="onSaveConfig()"
         >
           <mat-label>{{ "button.save" | translate }}</mat-label>
@@ -51,6 +65,7 @@
         </button>
         <button
           id="cancel-metadata-source-configuration-button"
+          class="cx-action-button"
           mat-flat-button
           color="warn"
           (click)="onCancelConfig()"

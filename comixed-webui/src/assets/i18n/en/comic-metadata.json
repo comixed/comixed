@@ -26,6 +26,7 @@
     },
     "detail-title": "Metadata Source Details",
     "label": {
+      "expiration-days": "Expiration days for metadata cache entries",
       "ignore-empty-values": "Do not overwrite properties using empty values.",
       "property-name": "Property Name",
       "property-value": "Property Value",

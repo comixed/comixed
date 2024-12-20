@@ -18,12 +18,17 @@
 
 package org.comixedproject.service.metadata;
 
+import static org.comixedproject.service.admin.ConfigurationService.CFG_METADATA_CACHE_EXPIRATION_DAYS;
+
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.metadata.MetadataCache;
 import org.comixedproject.model.metadata.MetadataCacheEntry;
 import org.comixedproject.repositories.metadata.MetadataCacheRepository;
+import org.comixedproject.service.admin.ConfigurationChangedListener;
+import org.comixedproject.service.admin.ConfigurationService;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,9 +40,38 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Log4j2
-public class MetadataCacheService {
-  private static final long SEVEN_DAYS = 7L * 24L * 60L * 60L * 1000L;
+public class MetadataCacheService implements InitializingBean, ConfigurationChangedListener {
+  static final long MIN_EXPIRATION_DAYS = 7L;
+  static final long MAX_EXPIRATION_DAYS = 28L;
+
   @Autowired private MetadataCacheRepository metadataCacheRepository;
+  @Autowired private ConfigurationService configurationService;
+
+  long expirationDays;
+
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    log.trace("Subscribing to configuration change updates");
+    this.configurationService.addConfigurationChangedListener(this);
+    this.expirationDays =
+        this.doConvertValue(
+            this.configurationService.getOptionValue(CFG_METADATA_CACHE_EXPIRATION_DAYS, "28"));
+  }
+
+  @Override
+  public void optionChanged(final String name, final String newValue) {
+    if (name.equals(CFG_METADATA_CACHE_EXPIRATION_DAYS)) {
+      log.debug("Expiration days updated to {}", newValue);
+      this.expirationDays = this.doConvertValue(newValue);
+    }
+  }
+
+  private long doConvertValue(final String value) {
+    final Long result = Long.valueOf(value);
+    if (result < MIN_EXPIRATION_DAYS) return MIN_EXPIRATION_DAYS;
+    if (result > MAX_EXPIRATION_DAYS) return MAX_EXPIRATION_DAYS;
+    return result;
+  }
 
   /**
    * Stores data in the cache.
@@ -94,7 +128,8 @@ public class MetadataCacheService {
       return null;
     }
 
-    final long expireThreshold = System.currentTimeMillis() - SEVEN_DAYS;
+    final long expireThreshold =
+        System.currentTimeMillis() - this.expirationDays * 24L * 60L * 60L * 1000L;
     if (cacheEntry.getCreatedOn().getTime() <= expireThreshold) {
       log.debug("Entry is expired");
       this.metadataCacheRepository.delete(cacheEntry);
