@@ -662,4 +662,13 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   @Query(
       "SELECT d.comicBook.id FROM ComicDetail d JOIN (SELECT c.publisher AS publisher, c.series AS series, c.volume AS volume, c.issueNumber AS issueNumber FROM ComicDetail c GROUP BY c.publisher, c.series, c.volume, c.issueNumber HAVING count(*) > 1) g ON g.publisher = d.publisher AND g.series = d.series AND g.volume = d.volume AND g.issueNumber = d.issueNumber")
   List<Long> getDuplicateComicIds();
+
+  /**
+   * Returns a subset of comic filenames based on the previously marked missing status.
+   *
+   * @param missing the missing flag
+   * @return the filenames
+   */
+  @Query("SELECT d.filename FROM ComicDetail d WHERE d.missing = :missing")
+  Set<String> getComicFilenames(@Param("missing") boolean missing);
 }

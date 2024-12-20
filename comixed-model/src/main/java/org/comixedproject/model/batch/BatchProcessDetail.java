@@ -26,6 +26,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,7 +38,7 @@ import org.springframework.batch.core.JobExecution;
  *
  * @author Darryl L. Pierce
  */
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BatchProcessDetail {
   @JsonProperty("jobName")
   @JsonView(View.GenericObjectView.class)

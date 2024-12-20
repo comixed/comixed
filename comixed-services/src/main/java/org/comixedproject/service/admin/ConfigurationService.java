@@ -19,7 +19,9 @@
 package org.comixedproject.service.admin;
 
 import jakarta.transaction.Transactional;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
 import org.comixedproject.model.admin.ConfigurationOption;
@@ -54,6 +56,12 @@ public class ConfigurationService {
 
   @Autowired private ConfigurationRepository configurationRepository;
 
+  private Set<ConfigurationChangedListener> listeners = new HashSet<>();
+
+  public void addConfigurationChangedListener(ConfigurationChangedListener listener) {
+    this.listeners.add(listener);
+  }
+
   /**
    * Returns all configuration options.
    *
@@ -87,6 +95,9 @@ public class ConfigurationService {
       entry.setValue(option.getValue().trim());
       log.trace("Updating existing record");
       this.configurationRepository.save(entry);
+      log.trace("Notifying listeners");
+      this.listeners.forEach(
+          listener -> listener.optionChanged(option.getName(), option.getValue()));
     }
 
     return this.getAll();
