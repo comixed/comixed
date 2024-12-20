@@ -443,13 +443,13 @@ public class ComicBookController {
         this.comicDetailService.loadUnreadComicDetails(
             email, unreadOnly, pageSize, pageIndex, sortBy, sortDirection);
     final long comicBookCount = this.comicBookService.getComicBookCount();
-    final long filteredCount = this.lastReadService.getUnreadCountForUser(email);
+    final long filteredCount = this.lastReadService.getUnreadCountForUser(email, unreadOnly);
     return new LoadComicDetailsResponse(
         comicDetails,
         Collections.emptyList(),
         Collections.emptyList(),
         comicBookCount,
-        unreadOnly ? comicBookCount - filteredCount : filteredCount);
+        filteredCount);
   }
 
   /**

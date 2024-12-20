@@ -363,10 +363,24 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
   @Query("SELECT COUNT(DISTINCT t.value) FROM ComicTag t WHERE t.type = :tagType")
   long getFilterCount(@Param("tagType") ComicTagType tag);
 
+  /**
+   * Loads comics that are not marked as read by the specified user.
+   *
+   * @param email the user's email
+   * @param pageable the page request
+   * @return the details
+   */
   @Query(
       "SELECT d FROM ComicDetail d WHERE d.id NOT IN (SELECT r.comicDetail.id FROM LastRead r WHERE r.user.email = :email)")
   List<ComicDetail> loadUnreadComicDetails(@Param("email") String email, Pageable pageable);
 
+  /**
+   * Loads comics that are marked as read by the specified user.
+   *
+   * @param email the user's email
+   * @param pageable the page request
+   * @return the details
+   */
   @Query(
       "SELECT d FROM ComicDetail d WHERE d.id IN (SELECT r.comicDetail.id FROM LastRead r WHERE r.user.email = :email)")
   List<ComicDetail> loadReadComicDetails(@Param("email") String email, Pageable pageable);
