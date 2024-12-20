@@ -8,7 +8,7 @@
                              volume_position="2"
                              issue_number_position="3"
                              cover_date_position="4"
-                             Date_format="YYYY-mm-dd"
+                             Date_format="yyyy-mm-dd"
                              last_modified_on="[now]"/>
     <metadata_sources id="1000"
                       adaptor_name="FarkleScrapingAdaptor"
