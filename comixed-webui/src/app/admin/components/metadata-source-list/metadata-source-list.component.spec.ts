@@ -56,7 +56,7 @@ import { loadMetadataSources } from '@app/comic-metadata/actions/metadata-source
 import { METADATA_SOURCE_TEMPLATE } from '@app/comic-metadata/comic-metadata.constants';
 import { deleteMetadataSource } from '@app/comic-metadata/actions/metadata-source.actions';
 
-fdescribe('MetadataSourceListComponent', () => {
+describe('MetadataSourceListComponent', () => {
   const SOURCE = METADATA_SOURCE_1;
   const initialState = {
     [METADATA_SOURCE_LIST_FEATURE_KEY]: initialMetadataSourceListState,

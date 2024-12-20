@@ -66,6 +66,14 @@
     <div class="cx-width-50 cx-margin-10 cx-border-primary-1">
       <h3>{{ "configuration.label.file-options" | translate }}</h3>
       <mat-checkbox
+        id="delete-purged-comic-files-checkbox"
+        formControlName="deletePurgedComicFilesDirectories"
+      >
+        {{ "configuration.label.delete-purged-comic-files" | translate }}
+        <mat-icon color="warn">warning_amber</mat-icon>
+      </mat-checkbox>
+      <br />
+      <mat-checkbox
         id="delete-empty-directories-checkbox"
         formControlName="deleteEmptyDirectories"
       >
