@@ -218,7 +218,7 @@ public class ComicFileAdaptor {
 
   private String scrub(final String text, final String forbidden) {
     log.trace("Pre-sanitized text: {}", text);
-    return text.replaceAll(forbidden, "_");
+    return text.replaceAll(forbidden, "_").replaceAll("\\.", "_");
   }
 
   /**
