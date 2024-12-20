@@ -21,49 +21,59 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
   loadPublisherDetail,
-  loadPublisherDetailFailed,
-  loadPublishers,
-  loadPublishersFailed,
-  publisherDetailLoaded,
-  publishersLoaded
+  loadPublisherDetailFailure,
+  loadPublisherDetailSuccess,
+  loadPublisherList,
+  loadPublisherListFailure,
+  loadPublisherListSuccess
 } from '../actions/publisher.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { PublisherService } from '@app/collections/services/publisher.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
-import { Publisher } from '@app/collections/models/publisher';
 import { of } from 'rxjs';
 import { Series } from '@app/collections/models/series';
+import { LoadPublisherListResponse } from '@app/collections/models/net/load-publisher-list-response';
 
 @Injectable()
 export class PublisherEffects {
   loadPublishers$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadPublishers),
-      tap(action => this.logger.debug('Loading publishers')),
-      switchMap(() =>
-        this.publisherService.loadPublishers().pipe(
-          tap(response => this.logger.debug('Response received:', response)),
-          map((response: Publisher[]) =>
-            publishersLoaded({ publishers: response })
-          ),
-          catchError(error => {
-            this.logger.error('Service failure:', error);
-            this.alertService.error(
-              this.translateService.instant(
-                'collections.publishers.load-publishers.effect-failure'
-              )
-            );
-            return of(loadPublishersFailed());
+      ofType(loadPublisherList),
+      tap(action => this.logger.debug('Loading publishers:', action)),
+      switchMap(action =>
+        this.publisherService
+          .loadPublishers({
+            page: action.page,
+            size: action.size,
+            sortBy: action.sortBy,
+            sortDirection: action.sortDirection
           })
-        )
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map((response: LoadPublisherListResponse) =>
+              loadPublisherListSuccess({
+                total: response.total,
+                publishers: response.publishers
+              })
+            ),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'collections.publishers.load-publishers.effect-failure'
+                )
+              );
+              return of(loadPublisherListFailure());
+            })
+          )
       ),
       catchError(error => {
         this.logger.error('General failure:', error);
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(loadPublishersFailed());
+        return of(loadPublisherListFailure());
       })
     );
   });
@@ -76,7 +86,7 @@ export class PublisherEffects {
         this.publisherService.loadPublisherDetail({ name: action.name }).pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map((response: Series[]) =>
-            publisherDetailLoaded({ detail: response })
+            loadPublisherDetailSuccess({ detail: response })
           ),
           catchError(error => {
             this.logger.error('Service failure:', error);
@@ -86,7 +96,7 @@ export class PublisherEffects {
                 { name: action.name }
               )
             );
-            return of(loadPublisherDetailFailed());
+            return of(loadPublisherDetailFailure());
           })
         )
       ),
@@ -95,7 +105,7 @@ export class PublisherEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(loadPublisherDetailFailed());
+        return of(loadPublisherDetailFailure());
       })
     );
   });

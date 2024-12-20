@@ -22,8 +22,9 @@ import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
 
 import java.util.List;
-import org.comixedproject.model.collections.Publisher;
 import org.comixedproject.model.collections.Series;
+import org.comixedproject.model.net.collections.LoadPublisherListRequest;
+import org.comixedproject.model.net.collections.LoadPublisherListResponse;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,22 +36,30 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class PublisherControllerTest {
   private static final String TEST_PUBLISHER_NAME = "The publisher name";
+  private static final int TEST_PAGE_NUMBER = 72;
+  private static final int TEST_PAGE_SIZE = 25;
 
   @InjectMocks private PublisherController controller;
   @Mock private ComicBookService comicBookService;
-  @Mock private List<Publisher> publisherList;
   @Mock private List<Series> seriesList;
+  @Mock private LoadPublisherListResponse loadPublisherResponse;
 
   @Test
-  public void testGetAllPublishers() {
-    Mockito.when(comicBookService.getAllPublishersWithSeries()).thenReturn(publisherList);
+  public void testLoadPublisherList() {
+    Mockito.when(
+            comicBookService.getAllPublishersWithSeries(
+                TEST_PAGE_NUMBER, TEST_PAGE_SIZE, "name", "asc"))
+        .thenReturn(loadPublisherResponse);
 
-    final List<Publisher> result = controller.getAllPublishers();
+    final LoadPublisherListResponse result =
+        controller.loadPublisherList(
+            new LoadPublisherListRequest(TEST_PAGE_NUMBER, TEST_PAGE_SIZE, "name", "asc"));
 
     assertNotNull(result);
-    assertSame(publisherList, result);
+    assertSame(loadPublisherResponse, result);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).getAllPublishersWithSeries();
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .getAllPublishersWithSeries(TEST_PAGE_NUMBER, TEST_PAGE_SIZE, "name", "asc");
   }
 
   @Test

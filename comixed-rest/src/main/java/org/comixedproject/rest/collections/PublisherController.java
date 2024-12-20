@@ -23,13 +23,12 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.collections.Publisher;
 import org.comixedproject.model.collections.Series;
+import org.comixedproject.model.net.collections.LoadPublisherListRequest;
+import org.comixedproject.model.net.collections.LoadPublisherListResponse;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <code>PublisherController</code> provides web endpoints for working with {@link Publisher}
@@ -43,16 +42,21 @@ public class PublisherController {
   @Autowired private ComicBookService comicBookService;
 
   /**
-   * Returns the list of all publishers.
+   * Returns a page worth of publishers to display.
    *
-   * @return the publishers
+   * @return the response body
    */
-  @GetMapping(value = "/api/collections/publishers")
+  @PostMapping(value = "/api/collections/publishers")
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.publishers.load-list")
-  public List<Publisher> getAllPublishers() {
+  public LoadPublisherListResponse loadPublisherList(
+      @RequestBody final LoadPublisherListRequest request) {
+    final int page = request.getPage();
+    final int size = request.getSize();
+    final String sortBy = request.getSortBy();
+    final String sortDirection = request.getSortDirection();
     log.info("Getting all publishers");
-    return this.comicBookService.getAllPublishersWithSeries();
+    return this.comicBookService.getAllPublishersWithSeries(page, size, sortBy, sortDirection);
   }
 
   /**

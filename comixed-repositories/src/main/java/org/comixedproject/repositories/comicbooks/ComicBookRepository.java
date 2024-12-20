@@ -262,6 +262,10 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   @Query("SELECT DISTINCT c.series FROM ComicDetail c WHERE c.series IS NOT NULL")
   List<String> findDistinctSeries();
 
+  @Query(
+      "SELECT COUNT(DISTINCT d.publisher) FROM ComicDetail d, ComicBook c WHERE LENGTH(c.comicDetail.publisher) > 0 AND d.publisher = c.comicDetail.publisher AND c.id = d.comicBook.id")
+  int getAllPublishersWithNumberOfSeriesCount();
+
   /**
    * Returns the list of all publishers with the count of series for each.
    *
@@ -269,7 +273,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    */
   @Query(
       "SELECT new org.comixedproject.model.collections.Publisher(d.publisher, count(c), count(DISTINCT d.series, d.volume)) FROM ComicDetail d, ComicBook c WHERE LENGTH(c.comicDetail.publisher) > 0 AND d.publisher = c.comicDetail.publisher AND c.id = d.comicBook.id GROUP BY d.publisher")
-  List<Publisher> getAllPublishersWithSeriesCount();
+  List<Publisher> getAllPublishersWithNumberOfSeries(Pageable pageable);
 
   /**
    * Returns the list of all series along with the count of comics, grouped by publisher, name, and
