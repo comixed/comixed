@@ -29,17 +29,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.comicbooks.*;
 import org.comixedproject.service.comicbooks.*;
-import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.service.comicpages.ComicPageException;
-import org.comixedproject.service.comicpages.ComicPageService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.service.library.LastReadException;
 import org.comixedproject.service.library.LastReadService;
@@ -69,12 +65,8 @@ public class ComicBookController {
   @Autowired private ComicBookService comicBookService;
   @Autowired private ComicDetailService comicDetailService;
   @Autowired private ComicBookSelectionService comicBookSelectionService;
-  @Autowired private ComicPageService comicPageService;
   @Autowired private PageCacheService pageCacheService;
-  @Autowired private ComicFileService comicFileService;
   @Autowired private ReadingListService readingListService;
-  @Autowired private FileTypeAdaptor fileTypeAdaptor;
-  @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private LastReadService lastReadService;
 
   /**
