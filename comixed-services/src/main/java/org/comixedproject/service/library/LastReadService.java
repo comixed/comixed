@@ -301,4 +301,22 @@ public class LastReadService implements InitializingBean, ComicStateChangeListen
       throw new LastReadException("Failed to load comics read statistics", error);
     }
   }
+
+  /**
+   * Loads the list of comic ids for a given user based on their read state.
+   *
+   * @param email the user's email
+   * @param unreadOnly the unread only flag
+   * @return the comic book id list
+   */
+  @Transactional
+  public List<Long> getComicBookIdsForUser(final String email, final boolean unreadOnly) {
+    if (unreadOnly) {
+      log.debug("Loading unread comic book ids for user: {}", email);
+      return this.lastReadRepository.loadUnreadComicBookIds(email);
+    } else {
+      log.debug("Loading read comic book ids for user: {}", email);
+      return this.lastReadRepository.loadReadComicBookIds(email);
+    }
+  }
 }

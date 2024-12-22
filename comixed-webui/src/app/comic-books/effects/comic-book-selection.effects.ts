@@ -28,6 +28,7 @@ import {
   loadComicBookSelections,
   loadComicBookSelectionsFailed,
   removeSingleComicBookSelection,
+  setComicBookSelectionByUnreadState,
   setDuplicateComicBooksSelectionState,
   setMultipleComicBookByFilterSelectionState,
   setMultipleComicBookByIdSelectionState,
@@ -282,6 +283,28 @@ export class ComicBookSelectionEffects {
         this.comicBookSelectionService
           .setDuplicateComicBooksSelectionState({
             selected: action.selected
+          })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map(() => setMultipleComicBookSelectionStateSuccess()),
+            catchError(error => this.doMultipleSelectedServiceFailure(error))
+          )
+      ),
+      catchError(error => this.doMultipleSelectedGeneralFailure(error))
+    );
+  });
+
+  setUnreadComicBooksSelectionState$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(setComicBookSelectionByUnreadState),
+      tap(action =>
+        this.logger.debug('Selecting comic books by unread state:', action)
+      ),
+      switchMap(action =>
+        this.comicBookSelectionService
+          .setUnreadComicBooksSelectionState({
+            selected: action.selected,
+            unreadOnly: action.unreadOnly
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),

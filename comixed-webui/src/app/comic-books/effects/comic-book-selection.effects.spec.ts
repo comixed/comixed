@@ -34,6 +34,7 @@ import {
   loadComicBookSelections,
   loadComicBookSelectionsFailed,
   removeSingleComicBookSelection,
+  setComicBookSelectionByUnreadState,
   setDuplicateComicBooksSelectionState,
   setMultipleComicBookByFilterSelectionState,
   setMultipleComicBookByIdSelectionState,
@@ -66,6 +67,7 @@ describe('ComicBookSelectionEffects', () => {
   const SERIES = SERIES_1.name;
   const VOLUME = '2024';
   const SELECTED = Math.random() > 0.5;
+  const UNREAD_ONLY = Math.random() > 0.5;
   const TAG_TYPE = TagType.TEAMS;
   const TAG_VALUE = 'Some team';
   const COMIC_BOOK_IDS = [7, 17, 65, 1, 29, 91];
@@ -109,6 +111,9 @@ describe('ComicBookSelectionEffects', () => {
             ),
             setDuplicateComicBooksSelectionState: jasmine.createSpy(
               'ComicBookSelectionService.setDuplicateComicBooksSelectionState()'
+            ),
+            setUnreadComicBooksSelectionState: jasmine.createSpy(
+              'ComicBookSelectionService.setUnreadComicBooksSelectionState()'
             ),
             clearSelections: jasmine.createSpy(
               'ComicBookSelectionService.clearSelections()'
@@ -709,6 +714,66 @@ describe('ComicBookSelectionEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.setDuplicateComicBooksSelectionState$).toBeObservable(
+        expected
+      );
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('selecting all comic books by read state', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = new HttpResponse({});
+      const action = setComicBookSelectionByUnreadState({
+        selected: SELECTED,
+        unreadOnly: UNREAD_ONLY
+      });
+      const outcome = setMultipleComicBookSelectionStateSuccess();
+
+      actions$ = hot('-a', { a: action });
+      comicBookSelectionService.setUnreadComicBooksSelectionState
+        .withArgs({ selected: SELECTED, unreadOnly: UNREAD_ONLY })
+        .and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.setUnreadComicBooksSelectionState$).toBeObservable(
+        expected
+      );
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = setComicBookSelectionByUnreadState({
+        selected: SELECTED,
+        unreadOnly: UNREAD_ONLY
+      });
+      const outcome = setMultipleComicBookSelectionStateFailure();
+
+      actions$ = hot('-a', { a: action });
+      comicBookSelectionService.setUnreadComicBooksSelectionState
+        .withArgs({ selected: SELECTED, unreadOnly: UNREAD_ONLY })
+        .and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.setUnreadComicBooksSelectionState$).toBeObservable(
+        expected
+      );
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = setComicBookSelectionByUnreadState({
+        selected: SELECTED,
+        unreadOnly: UNREAD_ONLY
+      });
+      const outcome = setMultipleComicBookSelectionStateFailure();
+
+      actions$ = hot('-a', { a: action });
+      comicBookSelectionService.setUnreadComicBooksSelectionState
+        .withArgs({ selected: SELECTED, unreadOnly: UNREAD_ONLY })
+        .and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.setUnreadComicBooksSelectionState$).toBeObservable(
         expected
       );
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));

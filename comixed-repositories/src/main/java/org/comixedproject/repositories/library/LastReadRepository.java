@@ -91,4 +91,23 @@ public interface LastReadRepository extends JpaRepository<LastRead, Long> {
   @Query(
       "SELECT new org.comixedproject.model.net.user.ComicsReadStatistic(d.publisher, COUNT(d)) FROM ComicDetail d WHERE d.publisher IS NOT NULL AND d IN (SELECT l.comicDetail FROM LastRead l WHERE l.user = :user) GROUP BY d.publisher")
   List<ComicsReadStatistic> loadComicsReadStatistics(@Param("user") ComiXedUser user);
+
+  /**
+   * Returns the list of read comic book ids for the specified user.
+   *
+   * @param email the user
+   * @return the comic book ids
+   */
+  @Query("SELECT l.comicDetail.id FROM LastRead l WHERE l.user.email = :email")
+  List<Long> loadReadComicBookIds(@Param("email") String email);
+
+  /**
+   * Returns the list of unread comic detail ids for the specified user.
+   *
+   * @param email the user
+   * @return the comic book ids
+   */
+  @Query(
+      "SELECT d.id FROM ComicDetail d WHERE d.id NOT IN (select l.comicDetail.id FROM LastRead l WHERE l.user.email = :email)")
+  List<Long> loadUnreadComicBookIds(@Param("email") String email);
 }

@@ -57,6 +57,7 @@ import {
 } from '@app/comic-books/selectors/load-comic-details-list.selectors';
 import { ComicDetailsListState } from '@app/comic-books/reducers/comic-details-list.reducer';
 import {
+  setComicBookSelectionByUnreadState,
   setDuplicateComicBooksSelectionState,
   setMultipleComicBookByFilterSelectionState
 } from '@app/comic-books/actions/comic-book-selection.actions';
@@ -314,6 +315,18 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         selected
       );
       this.store.dispatch(setDuplicateComicBooksSelectionState({ selected }));
+    } else if (this.unreadOnly) {
+      this.logger.debug(
+        'Setting all comic books selected state based on read state:',
+        selected,
+        this.showReadOnly
+      );
+      this.store.dispatch(
+        setComicBookSelectionByUnreadState({
+          selected,
+          unreadOnly: !this.showReadOnly
+        })
+      );
     } else {
       this.logger.debug('Setting all comic books selected state:', selected);
       this.store.dispatch(

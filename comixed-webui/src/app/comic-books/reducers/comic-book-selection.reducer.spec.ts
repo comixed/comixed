@@ -31,6 +31,7 @@ import {
   loadComicBookSelections,
   loadComicBookSelectionsFailed,
   removeSingleComicBookSelection,
+  setComicBookSelectionByUnreadState,
   setDuplicateComicBooksSelectionState,
   setMultipleComicBookByFilterSelectionState,
   setMultipleComicBookByIdSelectionState,
@@ -77,6 +78,7 @@ describe('ComicBookSelection Reducer', () => {
   const SERIES = SERIES_1.name;
   const VOLUME = '2024';
   const SELECTED = Math.random() > 0.5;
+  const UNREAD_STATE = Math.random() > 0.5;
 
   let state: ComicBookSelectionState;
 
@@ -364,7 +366,23 @@ describe('ComicBookSelection Reducer', () => {
     });
   });
 
-  describe('success', () => {
+  describe('set the selection state for all comic books by read state', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: false },
+        setComicBookSelectionByUnreadState({
+          selected: SELECTED,
+          unreadOnly: UNREAD_STATE
+        })
+      );
+    });
+
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
+    });
+  });
+
+  describe('success selecting comic books', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: true },
@@ -377,7 +395,7 @@ describe('ComicBookSelection Reducer', () => {
     });
   });
 
-  describe('failure', () => {
+  describe('failure selecting comic books', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: true },

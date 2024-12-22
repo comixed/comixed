@@ -20,6 +20,7 @@ package org.comixedproject.rest.comicbooks;
 
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicTagType;
@@ -28,6 +29,7 @@ import org.comixedproject.opds.OPDSUtils;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;
 import org.comixedproject.service.comicbooks.ComicBookSelectionService;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.library.LastReadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -46,6 +48,7 @@ public class ComicBookSelectionController {
   public static final String LIBRARY_SELECTIONS = "library.selections";
 
   @Autowired private ComicBookSelectionService comicBookSelectionService;
+  @Autowired private LastReadService lastReadService;
   @Autowired private OPDSUtils opdsUtils;
   @Autowired private ComicBookService comicBookService;
 
@@ -169,7 +172,7 @@ public class ComicBookSelectionController {
     final List selections =
         this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     this.comicBookSelectionService.addByTagTypeAndValue(selections, tagType, tagValue);
-    this.comicBookSelectionService.publisherSelections(selections);
+    this.comicBookSelectionService.publishSelections(selections);
     session.setAttribute(
         LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
   }
@@ -200,7 +203,7 @@ public class ComicBookSelectionController {
     final List selections =
         this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     this.comicBookSelectionService.removeByTagTypeAndValue(selections, tagType, tagValue);
-    this.comicBookSelectionService.publisherSelections(selections);
+    this.comicBookSelectionService.publishSelections(selections);
     session.setAttribute(
         LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
   }
@@ -229,7 +232,7 @@ public class ComicBookSelectionController {
       selections.removeAll(request.getComicBookIds());
     }
 
-    this.comicBookSelectionService.publisherSelections(selections);
+    this.comicBookSelectionService.publishSelections(selections);
     session.setAttribute(
         LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
   }
@@ -262,7 +265,7 @@ public class ComicBookSelectionController {
       selections.removeAll(comicBookService.getIdsByPublisher(publisher));
     }
 
-    this.comicBookSelectionService.publisherSelections(selections);
+    this.comicBookSelectionService.publishSelections(selections);
     session.setAttribute(
         LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
   }
@@ -304,7 +307,7 @@ public class ComicBookSelectionController {
           comicBookService.getIdsByPublisherSeriesAndVolume(publisher, series, volume));
     }
 
-    this.comicBookSelectionService.publisherSelections(selections);
+    this.comicBookSelectionService.publishSelections(selections);
     session.setAttribute(
         LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
   }
@@ -336,7 +339,44 @@ public class ComicBookSelectionController {
       selections.removeAll(idList);
     }
 
-    this.comicBookSelectionService.publisherSelections(selections);
+    this.comicBookSelectionService.publishSelections(selections);
+    session.setAttribute(
+        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
+  }
+
+  /**
+   * Sets the selected state on comic books based on their read state.
+   *
+   * @param session the user session
+   * @param principal the user principal
+   * @param request the request body
+   * @throws ComicBookSelectionException if an error occurs
+   */
+  @PostMapping(value = "/api/comics/selections/unread", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.comic-book.selections.add-by-unread-state")
+  public void addUnreadComicBooksSelection(
+      final HttpSession session,
+      final Principal principal,
+      @RequestBody() final UnreadComicBooksSelectionRequest request)
+      throws ComicBookSelectionException {
+    final String email = principal.getName();
+    final boolean selected = request.isSelected();
+    final boolean unread = request.isUnreadOnly();
+    log.info(
+        "Setting the selection state for comics based on their read state: email={} selected={} unread={}",
+        email,
+        selected,
+        unread);
+    final List<Long> selections =
+        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+
+    if (selected) {
+      selections.addAll(this.lastReadService.getComicBookIdsForUser(email, unread));
+    } else {
+      selections.removeAll(this.lastReadService.getComicBookIdsForUser(email, unread));
+    }
+    this.comicBookSelectionService.publishSelections(selections);
     session.setAttribute(
         LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
   }

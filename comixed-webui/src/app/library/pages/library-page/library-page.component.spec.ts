@@ -95,6 +95,7 @@ import {
   initialState as initialComicBooksSelectionState
 } from '@app/comic-books/reducers/comic-book-selection.reducer';
 import {
+  setComicBookSelectionByUnreadState,
   setDuplicateComicBooksSelectionState,
   setMultipleComicBookByFilterSelectionState
 } from '@app/comic-books/actions/comic-book-selection.actions';
@@ -587,6 +588,40 @@ describe('LibraryPageComponent', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           setDuplicateComicBooksSelectionState({
             selected: SELECTED
+          })
+        );
+      });
+    });
+
+    describe('for read comic books', () => {
+      beforeEach(() => {
+        component.unreadOnly = true;
+        component.showReadOnly = true;
+        component.onSetAllComicsSelectedState(SELECTED);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setComicBookSelectionByUnreadState({
+            selected: SELECTED,
+            unreadOnly: false
+          })
+        );
+      });
+    });
+
+    describe('for unread comic books', () => {
+      beforeEach(() => {
+        component.unreadOnly = true;
+        component.showReadOnly = false;
+        component.onSetAllComicsSelectedState(SELECTED);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setComicBookSelectionByUnreadState({
+            selected: SELECTED,
+            unreadOnly: true
           })
         );
       });
