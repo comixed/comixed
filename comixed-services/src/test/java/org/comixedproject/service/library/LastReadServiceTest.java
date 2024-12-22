@@ -382,4 +382,30 @@ public class LastReadServiceTest {
 
     Mockito.verify(lastReadRepository, Mockito.times(1)).loadComicsReadStatistics(user);
   }
+
+  @Test
+  public void testGetComicBookidsForUser_unreadOnly() {
+    Mockito.when(lastReadRepository.loadUnreadComicBookIds(Mockito.anyString()))
+        .thenReturn(comicIdList);
+
+    final List<Long> result = service.getComicBookIdsForUser(TEST_EMAIL, true);
+
+    assertNotNull(result);
+    assertSame(comicIdList, result);
+
+    Mockito.verify(lastReadRepository, Mockito.times(1)).loadUnreadComicBookIds(TEST_EMAIL);
+  }
+
+  @Test
+  public void testGetComicBookidsForUser_readOnly() {
+    Mockito.when(lastReadRepository.loadReadComicBookIds(Mockito.anyString()))
+        .thenReturn(comicIdList);
+
+    final List<Long> result = service.getComicBookIdsForUser(TEST_EMAIL, false);
+
+    assertNotNull(result);
+    assertSame(comicIdList, result);
+
+    Mockito.verify(lastReadRepository, Mockito.times(1)).loadReadComicBookIds(TEST_EMAIL);
+  }
 }

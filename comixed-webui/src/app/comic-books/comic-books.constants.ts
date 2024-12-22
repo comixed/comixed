@@ -37,6 +37,7 @@ export const SET_SELECTED_COMIC_BOOKS_BY_ID_URL = `${API_ROOT_URL}/comics/select
 export const SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_URL = `${API_ROOT_URL}/comics/selections/publisher`;
 export const SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_SERIES_VOLUME_URL = `${API_ROOT_URL}/comics/selections/series`;
 export const SET_SELECTED_DUPLICATE_COMIC_BOOKS_URL = `${API_ROOT_URL}/comics/selections/duplicates`;
+export const SET_SELECTED_BY_UNREAD_STATE_COMIC_BOOKS_URL = `${API_ROOT_URL}/comics/selections/unread`;
 export const CLEAR_COMIC_BOOK_SELECTION_STATE_URL = `${API_ROOT_URL}/comics/selections/clear`;
 
 export const DELETE_SINGLE_COMIC_BOOK_URL = `${API_ROOT_URL}/comics/\${comicBookId}`;
