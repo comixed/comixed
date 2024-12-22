@@ -27,6 +27,7 @@ import {
   COMIC_BOOK_SELECTION_UPDATE_TOPIC,
   LOAD_COMIC_BOOK_SELECTIONS_URL,
   REMOVE_SINGLE_COMIC_SELECTION_URL,
+  SET_SELECTED_BY_UNREAD_STATE_COMIC_BOOKS_URL,
   SET_SELECTED_COMIC_BOOKS_BY_FILTER_URL,
   SET_SELECTED_COMIC_BOOKS_BY_ID_URL,
   SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_SERIES_VOLUME_URL,
@@ -50,6 +51,7 @@ import { SetSelectedByIdRequest } from '@app/comic-books/models/net/set-selected
 import { SetSelectedByPublisherRequest } from '@app/comic-books/models/net/set-selected-by-publisher-request';
 import { SetSelectedByPublisherSeriesVolumeRequest } from '@app/comic-books/models/net/set-selected-by-publisher-series-volume-request';
 import { DuplicateComicBooksSelectionRequest } from '@app/comic-books/models/net/duplicate-comic-books-selection-request';
+import { UnreadComicBooksSelectionRequest } from '@app/comic-books/models/net/unread-comic-books-selection-request';
 
 @Injectable({
   providedIn: 'root'
@@ -214,6 +216,20 @@ export class ComicBookSelectionService {
     return this.http.post(interpolate(SET_SELECTED_DUPLICATE_COMIC_BOOKS_URL), {
       selected: args.selected
     } as DuplicateComicBooksSelectionRequest);
+  }
+
+  setUnreadComicBooksSelectionState(args: {
+    selected: boolean;
+    unreadOnly: boolean;
+  }): Observable<any> {
+    this.logger.debug('Selecting unread comic books:', args);
+    return this.http.post(
+      interpolate(SET_SELECTED_BY_UNREAD_STATE_COMIC_BOOKS_URL),
+      {
+        selected: args.selected,
+        unreadOnly: args.unreadOnly
+      } as UnreadComicBooksSelectionRequest
+    );
   }
 
   clearSelections(): Observable<any> {

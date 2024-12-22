@@ -129,6 +129,14 @@ export const setDuplicateComicBooksSelectionState = createAction(
   }>()
 );
 
+export const setComicBookSelectionByUnreadState = createAction(
+  '[Comic Book Selection] Setting the selected state for comic books based on their read state',
+  props<{
+    selected: boolean;
+    unreadOnly: boolean;
+  }>()
+);
+
 export const setMultipleComicBookSelectionStateSuccess = createAction(
   '[Comic Book Selection] The selected state for multiple comic books was set'
 );

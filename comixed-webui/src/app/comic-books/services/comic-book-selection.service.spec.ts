@@ -32,6 +32,7 @@ import {
   COMIC_BOOK_SELECTION_UPDATE_TOPIC,
   LOAD_COMIC_BOOK_SELECTIONS_URL,
   REMOVE_SINGLE_COMIC_SELECTION_URL,
+  SET_SELECTED_BY_UNREAD_STATE_COMIC_BOOKS_URL,
   SET_SELECTED_COMIC_BOOKS_BY_FILTER_URL,
   SET_SELECTED_COMIC_BOOKS_BY_ID_URL,
   SET_SELECTED_COMIC_BOOKS_BY_PUBLISHER_SERIES_VOLUME_URL,
@@ -60,6 +61,7 @@ import { SetSelectedByPublisherRequest } from '@app/comic-books/models/net/set-s
 import { PUBLISHER_1, SERIES_1 } from '@app/collections/collections.fixtures';
 import { SetSelectedByPublisherSeriesVolumeRequest } from '@app/comic-books/models/net/set-selected-by-publisher-series-volume-request';
 import { DuplicateComicBooksSelectionRequest } from '@app/comic-books/models/net/duplicate-comic-books-selection-request';
+import { UnreadComicBooksSelectionRequest } from '@app/comic-books/models/net/unread-comic-books-selection-request';
 
 describe('ComicBookSelectionService', () => {
   const COVER_YEAR = Math.random() * 100 + 1900;
@@ -76,6 +78,7 @@ describe('ComicBookSelectionService', () => {
   const SERIES = SERIES_1.name;
   const VOLUME = '2024';
   const SELECTED = Math.random() > 0.5;
+  const UNREAD_ONLY = Math.random() > 0.5;
   const COMIC_BOOK_IDS = [3.2, 96, 9, 21, 98];
   const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
 
@@ -313,6 +316,27 @@ describe('ComicBookSelectionService', () => {
     expect(req.request.body).toEqual({
       selected: SELECTED
     } as DuplicateComicBooksSelectionRequest);
+    req.flush(serverResponse);
+  });
+
+  it('can select comics based on their read state', () => {
+    const serverResponse = new HttpResponse({});
+
+    service
+      .setUnreadComicBooksSelectionState({
+        selected: SELECTED,
+        unreadOnly: UNREAD_ONLY
+      })
+      .subscribe(response => expect(response).toEqual(serverResponse));
+
+    const req = httpMock.expectOne(
+      interpolate(SET_SELECTED_BY_UNREAD_STATE_COMIC_BOOKS_URL)
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      selected: SELECTED,
+      unreadOnly: UNREAD_ONLY
+    } as UnreadComicBooksSelectionRequest);
     req.flush(serverResponse);
   });
 
