@@ -219,7 +219,7 @@ public class ComicBookScrapingController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.metadata.fetch-issues")
-  public void scrapeSeries(
+  public ScrapeSeriesResponse scrapeSeries(
       @PathVariable("sourceId") final Long sourceId,
       @RequestBody() final ScrapeSeriesRequest request)
       throws MetadataException {
@@ -234,7 +234,7 @@ public class ComicBookScrapingController {
         originalVolume,
         sourceId,
         volumeId);
-    this.metadataService.scrapeSeries(
+    return this.metadataService.scrapeSeries(
         originalPublisher, originalSeries, originalVolume, sourceId, volumeId);
   }
 
