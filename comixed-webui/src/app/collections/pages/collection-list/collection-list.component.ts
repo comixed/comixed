@@ -31,10 +31,12 @@ import { TitleService } from '@app/core/services/title.service';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import {
   selectCollectionListEntries,
+  selectCollectionListState,
   selectCollectionListTotalEntries
 } from '@app/collections/selectors/collection-list.selectors';
 import { CollectionEntry } from '@app/collections/models/collection-entry';
 import { loadCollectionList } from '@app/collections/actions/collection-list.actions';
+import { setBusyState } from '@app/core/actions/busy.actions';
 
 @Component({
   selector: 'cx-collection-list',
@@ -46,6 +48,7 @@ export class CollectionListComponent implements OnInit, OnDestroy {
   queryParamSubscription: Subscription;
   collectionType: TagType;
   routableTypeName: string;
+  collectionStateSubscription: Subscription;
   collectionEntrySubscription: Subscription;
   totalEntriesSubscription: Subscription;
   totalEntries = 0;
@@ -86,6 +89,11 @@ export class CollectionListComponent implements OnInit, OnDestroy {
         );
       }
     );
+    this.collectionStateSubscription = this.store
+      .select(selectCollectionListState)
+      .subscribe(state =>
+        this.store.dispatch(setBusyState({ enabled: state.busy }))
+      );
     this.collectionEntrySubscription = this.store
       .select(selectCollectionListEntries)
       .subscribe(entries => (this.entries = entries));
@@ -105,6 +113,7 @@ export class CollectionListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.paramSubscription.unsubscribe();
     this.queryParamSubscription.unsubscribe();
+    this.collectionStateSubscription.unsubscribe();
     this.collectionEntrySubscription.unsubscribe();
     this.totalEntriesSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
