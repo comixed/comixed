@@ -89,6 +89,7 @@ public class ComicBookScrapingControllerTest {
   @Mock private JobExecution jobExecution;
   @Mock private HttpSession session;
   @Mock private List<ComicBook> comicBookList;
+  @Mock private ScrapeSeriesResponse scrapeSeriesResponse;
 
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
@@ -341,10 +342,23 @@ public class ComicBookScrapingControllerTest {
 
   @Test
   public void testScrapeSeries() throws MetadataException {
-    controller.scrapeSeries(
-        TEST_METADATA_SOURCE_ID,
-        new ScrapeSeriesRequest(
-            TEST_PUBLISHER, TEST_SERIES_NAME, TEST_VOLUME, String.valueOf(TEST_VOLUME)));
+    Mockito.when(
+            metadataService.scrapeSeries(
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyLong(),
+                Mockito.anyString()))
+        .thenReturn(scrapeSeriesResponse);
+
+    final ScrapeSeriesResponse result =
+        controller.scrapeSeries(
+            TEST_METADATA_SOURCE_ID,
+            new ScrapeSeriesRequest(
+                TEST_PUBLISHER, TEST_SERIES_NAME, TEST_VOLUME, String.valueOf(TEST_VOLUME)));
+
+    assertNotNull(result);
+    assertSame(scrapeSeriesResponse, result);
 
     Mockito.verify(metadataService, Mockito.times(1))
         .scrapeSeries(
