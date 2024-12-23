@@ -26,7 +26,7 @@ import {
   scrapeSeriesMetadataFailure,
   scrapeSeriesMetadataSuccess
 } from '@app/comic-metadata/actions/series-scraping.actions';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { hot } from 'jasmine-marbles';
 import {
   METADATA_SOURCE_1,
@@ -37,6 +37,9 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { PUBLISHER_1, SERIES_1 } from '@app/collections/collections.fixtures';
+import { ScrapeSeriesResponse } from '@app/comic-metadata/models/net/scrape-series-response';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('SeriesScrapingEffects', () => {
   const ORIGINAL_PUBLISHER = PUBLISHER_1.name;
@@ -49,10 +52,12 @@ describe('SeriesScrapingEffects', () => {
   let effects: SeriesScrapingEffects;
   let metadataService: jasmine.SpyObj<ComicBookScrapingService>;
   let alertService: AlertService;
+  let router: Router;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
+        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatSnackBarModule
@@ -79,6 +84,8 @@ describe('SeriesScrapingEffects', () => {
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'info');
     spyOn(alertService, 'error');
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigate');
   });
 
   it('should be created', () => {
@@ -87,7 +94,11 @@ describe('SeriesScrapingEffects', () => {
 
   describe('fetching issues for a series', () => {
     it('fires an action on success', () => {
-      const serviceResponse = new HttpResponse({ status: 200 });
+      const serviceResponse = {
+        publisher: ORIGINAL_PUBLISHER,
+        series: ORIGINAL_SERIES,
+        volume: ORIGINAL_VOLUME
+      } as ScrapeSeriesResponse;
       const action = scrapeSeriesMetadata({
         originalPublisher: ORIGINAL_PUBLISHER,
         originalSeries: ORIGINAL_SERIES,
@@ -111,6 +122,7 @@ describe('SeriesScrapingEffects', () => {
       const expected = hot('-b', { b: outcome });
       expect(effects.scrapeSeries$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
+      expect(router.navigate).toHaveBeenCalled();
     });
 
     it('fires an action on service failure', () => {

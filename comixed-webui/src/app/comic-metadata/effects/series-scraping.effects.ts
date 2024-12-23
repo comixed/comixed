@@ -29,6 +29,8 @@ import { ComicBookScrapingService } from '@app/comic-metadata/services/comic-boo
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
+import { ScrapeSeriesResponse } from '@app/comic-metadata/models/net/scrape-series-response';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class SeriesScrapingEffects {
@@ -55,7 +57,19 @@ export class SeriesScrapingEffects {
                 })
               )
             ),
-            map(() => scrapeSeriesMetadataSuccess()),
+            map((response: ScrapeSeriesResponse) => {
+              this.logger.trace('Redirecting to series issues page');
+              this.router.navigate([
+                '/library/collections/publishers',
+                response.publisher,
+                'series',
+                response.series,
+                'volumes',
+                response.volume,
+                'issues'
+              ]);
+              return scrapeSeriesMetadataSuccess();
+            }),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(
@@ -81,6 +95,7 @@ export class SeriesScrapingEffects {
   constructor(
     private logger: LoggerService,
     private actions$: Actions,
+    private router: Router,
     private metadataService: ComicBookScrapingService,
     private alertService: AlertService,
     private translateService: TranslateService

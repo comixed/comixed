@@ -40,6 +40,7 @@ import org.comixedproject.model.comicbooks.ComicMetadataSource;
 import org.comixedproject.model.comicbooks.ComicTag;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.metadata.MetadataSource;
+import org.comixedproject.model.net.metadata.ScrapeSeriesResponse;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.collections.IssueService;
 import org.comixedproject.service.comicbooks.ComicBookException;
@@ -417,10 +418,11 @@ public class MetadataService {
    * @param originalVolume the original volume value
    * @param metadataSourceId the metadata source id
    * @param volumeId the volume id
+   * @return the response content
    * @throws MetadataException if an error occurs
    */
-  @Async
-  public void scrapeSeries(
+  //  @Async
+  public ScrapeSeriesResponse scrapeSeries(
       final String originalPublisher,
       final String originalSeries,
       final String originalVolume,
@@ -438,7 +440,7 @@ public class MetadataService {
         metadataAdaptor.getAllIssues(volumeId, metadataSource);
     if (issues.isEmpty()) {
       log.debug("No issues found");
-      return;
+      return new ScrapeSeriesResponse(originalPublisher, originalSeries, originalVolume);
     }
 
     log.debug("Deleting existing issues");
@@ -507,6 +509,9 @@ public class MetadataService {
         log.trace("No comic books found");
       }
     }
+    log.debug("Returning scraped series details");
+    return new ScrapeSeriesResponse(
+        issues.get(0).getPublisher(), issues.get(0).getSeries(), issues.get(0).getVolume());
   }
 
   Date adjustForTimezone(final Date date) {
