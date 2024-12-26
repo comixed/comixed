@@ -23,10 +23,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.comixedproject.views.View;
@@ -90,6 +87,13 @@ public class ComiXedUser {
   @JsonView(View.UserList.class)
   @Getter
   private List<ComiXedUserPreference> preferences = new ArrayList<>();
+
+  @ElementCollection
+  @CollectionTable(name = "read_comic_books", joinColumns = @JoinColumn(name = "comixed_user_id"))
+  @Column(name = "comic_detail_id")
+  @JsonView(View.UserList.class)
+  @Getter
+  private Set<Long> readComicBooks = new HashSet<>();
 
   @Transient
   @JsonView(View.UserList.class)

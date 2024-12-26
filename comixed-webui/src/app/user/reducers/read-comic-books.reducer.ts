@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,24 +16,32 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  COMIC_BOOKS_READ_FEATURE_KEY,
-  SetComicsReadState
-} from '../reducers/comic-books-read.reducer';
-import { selectComicBooksReadState } from './comic-books-read.selectors';
+  resetReadComicBooks,
+  setReadComicBooks
+} from '@app/user/actions/read-comic-books.actions';
 
-describe('ComicBooksRead Selectors', () => {
-  let state: SetComicsReadState;
+export const READ_COMIC_BOOKS_FEATURE_KEY = 'read_comic_books_state';
 
-  beforeEach(() => {
-    state = { updating: Math.random() > 0.5 };
-  });
+export interface ReadComicBooksState {
+  entries: number[];
+}
 
-  it('should select the feature state', () => {
-    expect(
-      selectComicBooksReadState({
-        [COMIC_BOOKS_READ_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
-  });
+export const initialState: ReadComicBooksState = {
+  entries: []
+};
+
+export const reducer = createReducer(
+  initialState,
+  on(setReadComicBooks, (state, action) => ({
+    ...state,
+    entries: action.entries
+  })),
+  on(resetReadComicBooks, state => ({ ...state, entries: [] }))
+);
+
+export const readComicBooksFeature = createFeature({
+  name: READ_COMIC_BOOKS_FEATURE_KEY,
+  reducer
 });

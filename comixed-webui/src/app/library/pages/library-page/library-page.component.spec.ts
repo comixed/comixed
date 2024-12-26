@@ -58,10 +58,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import {
-  initialState as initialLastReadListState,
-  LAST_READ_LIST_FEATURE_KEY
-} from '@app/comic-books/reducers/last-read-list.reducer';
-import {
   READING_LISTS_FEATURE_KEY,
   reducer as initialReadingListsState
 } from '@app/lists/reducers/reading-lists.reducer';
@@ -105,6 +101,10 @@ import {
 } from '@app/library-plugins/reducers/library-plugin.reducer';
 import { PAGE_SIZE_DEFAULT, QUERY_PARAM_UNREAD_ONLY } from '@app/core';
 import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
+import {
+  initialState as initialReadComicBooksState,
+  READ_COMIC_BOOKS_FEATURE_KEY
+} from '@app/user/reducers/read-comic-books.reducer';
 
 describe('LibraryPageComponent', () => {
   const ONE_DAY = 24 * 60 * 60 * 100;
@@ -143,9 +143,9 @@ describe('LibraryPageComponent', () => {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBooksSelectionState,
     [COMIC_DETAILS_LIST_FEATURE_KEY]: initialComicDetailListState,
-    [LAST_READ_LIST_FEATURE_KEY]: initialLastReadListState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
-    [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState
+    [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState,
+    [READ_COMIC_BOOKS_FEATURE_KEY]: initialReadComicBooksState
   };
 
   let component: LibraryPageComponent;

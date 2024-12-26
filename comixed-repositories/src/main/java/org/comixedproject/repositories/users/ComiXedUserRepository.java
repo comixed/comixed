@@ -18,6 +18,8 @@
 
 package org.comixedproject.repositories.users;
 
+import java.util.List;
+import org.comixedproject.model.net.user.ComicsReadStatistic;
 import org.comixedproject.model.user.ComiXedUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -46,4 +48,8 @@ public interface ComiXedUserRepository extends JpaRepository<ComiXedUser, Long> 
    */
   @Query("SELECT u FROM ComiXedUser u WHERE u.id = :id")
   ComiXedUser getById(@Param("id") long id);
+
+  @Query(
+      "SELECT new org.comixedproject.model.net.user.ComicsReadStatistic(d.publisher, COUNT(d)) FROM ComicDetail d WHERE d.publisher IS NOT NULL AND d.id IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb WHERE u.email = :email) GROUP BY d.publisher")
+  List<ComicsReadStatistic> loadComicsReadStatistics(@Param("email") String email);
 }

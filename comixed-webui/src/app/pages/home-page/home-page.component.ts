@@ -22,26 +22,26 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
 import { TitleService } from '@app/core/services/title.service';
 import { Store } from '@ngrx/store';
-import { LastRead } from '@app/comic-books/models/last-read';
-import { selectLastReadListState } from '@app/comic-books/selectors/last-read-list.selectors';
 import { selectLibraryState } from '@app/library/selectors/library.selectors';
 import { LibraryState } from '@app/library/reducers/library.reducer';
 import { filter } from 'rxjs/operators';
+import { User } from '@app/user/models/user';
+import { selectUser } from '@app/user/selectors/user.selectors';
 
 @Component({
   selector: 'cx-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  templateUrl: './home-page.component.html',
+  styleUrls: ['./home-page.component.scss']
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomePageComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
   loading = false;
-  taskCount = 0;
 
   libraryStateSubscription: Subscription;
   libraryState: LibraryState = null;
-  lastReadStateSubscription: Subscription;
-  lastRead: LastRead[] = [];
+  currentUserSubscription: Subscription;
+  user: User;
+  lastRead: number[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -59,10 +59,10 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.logger.debug('Library state updated:', state);
         this.libraryState = state;
       });
-    this.lastReadStateSubscription = this.store
-      .select(selectLastReadListState)
-      .subscribe(state => {
-        this.lastRead = state.entries;
+    this.currentUserSubscription = this.store
+      .select(selectUser)
+      .subscribe(user => {
+        this.lastRead = user?.readComicBooks || [];
       });
   }
 
@@ -73,8 +73,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.logger.trace('Unsubscribing from language changes');
     this.langChangeSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from last read updates');
-    this.lastReadStateSubscription.unsubscribe();
   }
 
   private loadTranslations(): void {

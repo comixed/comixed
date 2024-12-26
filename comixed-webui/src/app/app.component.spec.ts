@@ -68,10 +68,6 @@ import {
   READING_LISTS_FEATURE_KEY
 } from '@app/lists/reducers/reading-lists.reducer';
 import {
-  initialState as initialLastReadState,
-  LAST_READ_LIST_FEATURE_KEY
-} from '@app/comic-books/reducers/last-read-list.reducer';
-import {
   initialState as initialLibraryState,
   LIBRARY_FEATURE_KEY
 } from '@app/library/reducers/library.reducer';
@@ -88,6 +84,10 @@ import {
   initialState as initialFeatureEnabledState
 } from '@app/admin/reducers/feature-enabled.reducer';
 import { BusyIcon } from '@app/core/actions/busy.actions';
+import {
+  initialState as initialReadComicBooksState,
+  READ_COMIC_BOOKS_FEATURE_KEY
+} from '@app/user/reducers/read-comic-books.reducer';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -102,7 +102,7 @@ describe('AppComponent', () => {
     [BUSY_FEATURE_KEY]: initialBusyState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
     [IMPORT_COMIC_BOOKS_FEATURE_KEY]: initialImportCountState,
-    [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState,
+    [READ_COMIC_BOOKS_FEATURE_KEY]: initialReadComicBooksState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,

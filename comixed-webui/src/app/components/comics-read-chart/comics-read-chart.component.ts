@@ -40,7 +40,6 @@ export class ComicsReadChartComponent
 {
   @ViewChild('container') container: ElementRef;
 
-  comicsReadStatisticsStateSubscription: Subscription;
   comicsReadStatisticsDataSubscription: Subscription;
   comicsReadStatistics: { name: string; value: number }[] = [];
 

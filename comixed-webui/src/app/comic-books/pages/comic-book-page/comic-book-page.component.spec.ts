@@ -33,8 +33,7 @@ import {
 import { Router } from '@angular/router';
 import {
   COMIC_BOOK_1,
-  COMIC_BOOK_2,
-  LAST_READ_1
+  COMIC_BOOK_2
 } from '@app/comic-books/comic-books.fixtures';
 import { ComicDetailEditComponent } from '@app/comic-books/components/comic-detail-edit/comic-detail-edit.component';
 import { ComicStoryComponent } from '@app/comic-books/components/comic-story/comic-story.component';
@@ -47,7 +46,7 @@ import {
   initialState as initialScrapingState,
   SINGLE_BOOK_SCRAPING_FEATURE_KEY
 } from '@app/comic-metadata/reducers/single-book-scraping.reducer';
-import { USER_READER } from '@app/user/user.fixtures';
+import { READ_COMIC_BOOK_1, USER_READER } from '@app/user/user.fixtures';
 import {
   loadVolumeMetadata,
   setChosenMetadataSource
@@ -57,12 +56,7 @@ import {
   COMIC_BOOK_FEATURE_KEY,
   initialState as initialComicBookState
 } from '@app/comic-books/reducers/comic-book.reducer';
-import {
-  initialState as initialLastReadState,
-  LAST_READ_LIST_FEATURE_KEY
-} from '@app/comic-books/reducers/last-read-list.reducer';
 import { TitleService } from '@app/core/services/title.service';
-import { markSingleComicBookRead } from '@app/comic-books/actions/comic-books-read.actions';
 import { updateSingleComicBookMetadata } from '@app/library/actions/update-metadata.actions';
 import {
   deleteSingleComicBook,
@@ -93,11 +87,16 @@ import {
 } from '@tragically-slick/confirmation';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
+import { markSingleComicBookRead } from '@app/user/actions/read-comic-books.actions';
+import {
+  initialState as initialReadComicBooksState,
+  READ_COMIC_BOOKS_FEATURE_KEY
+} from '@app/user/reducers/read-comic-books.reducer';
 
 describe('ComicBookPageComponent', () => {
   const COMIC_BOOK = COMIC_BOOK_1;
   const IDS = [4, 17, 6];
-  const LAST_READ_ENTRY = LAST_READ_1;
+  const READ_COMIC_BOOK_ENTRY = READ_COMIC_BOOK_1;
   const OTHER_COMIC = COMIC_BOOK_2;
   const USER = USER_READER;
   const PUBLISHER = 'The Publisher';
@@ -114,8 +113,8 @@ describe('ComicBookPageComponent', () => {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: { ...initialScrapingState },
     [COMIC_BOOK_FEATURE_KEY]: { ...initialComicBookState },
-    [LAST_READ_LIST_FEATURE_KEY]: { ...initialLastReadState },
-    [MESSAGING_FEATURE_KEY]: { ...initialMessagingState }
+    [MESSAGING_FEATURE_KEY]: { ...initialMessagingState },
+    [READ_COMIC_BOOKS_FEATURE_KEY]: { ...initialReadComicBooksState }
   };
 
   let component: ComicBookPageComponent;
@@ -331,18 +330,18 @@ describe('ComicBookPageComponent', () => {
 
   describe('loading the last read state', () => {
     beforeEach(() => {
+      component.comicBook = COMIC_BOOK;
       component.comicId = COMIC_BOOK.id;
     });
 
     describe('when the comic is read', () => {
       beforeEach(() => {
         component.isRead = false;
-        component.lastRead = null;
         store.setState({
           ...initialState,
-          [LAST_READ_LIST_FEATURE_KEY]: {
-            ...initialLastReadState,
-            entries: [LAST_READ_ENTRY]
+          [READ_COMIC_BOOKS_FEATURE_KEY]: {
+            ...initialReadComicBooksState,
+            entries: [READ_COMIC_BOOK_ENTRY]
           }
         });
       });
@@ -350,20 +349,15 @@ describe('ComicBookPageComponent', () => {
       it('sets the read flag', () => {
         expect(component.isRead).toBeTrue();
       });
-
-      it('sets the last read reference', () => {
-        expect(component.lastRead).toEqual(LAST_READ_ENTRY);
-      });
     });
 
     describe('when the comic is not read', () => {
       beforeEach(() => {
         component.isRead = true;
-        component.lastRead = LAST_READ_ENTRY;
         store.setState({
           ...initialState,
-          [LAST_READ_LIST_FEATURE_KEY]: {
-            ...initialLastReadState,
+          [READ_COMIC_BOOKS_FEATURE_KEY]: {
+            ...initialReadComicBooksState,
             entries: []
           }
         });
@@ -371,10 +365,6 @@ describe('ComicBookPageComponent', () => {
 
       it('clears the read flag', () => {
         expect(component.isRead).toBeFalse();
-      });
-
-      it('clears the last read reference', () => {
-        expect(component.lastRead).toBeNull();
       });
     });
   });

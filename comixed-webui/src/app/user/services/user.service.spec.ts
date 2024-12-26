@@ -18,7 +18,16 @@
 
 import { TestBed } from '@angular/core/testing';
 import { UserService } from './user.service';
-import { USER_ADMIN, USER_BLOCKED, USER_READER } from '@app/user/user.fixtures';
+import {
+  READ_COMIC_BOOK_1,
+  READ_COMIC_BOOK_2,
+  READ_COMIC_BOOK_3,
+  READ_COMIC_BOOK_4,
+  READ_COMIC_BOOK_5,
+  USER_ADMIN,
+  USER_BLOCKED,
+  USER_READER
+} from '@app/user/user.fixtures';
 import {
   HttpClientTestingModule,
   HttpTestingController
@@ -64,10 +73,22 @@ import { CheckForAdminResponse } from '@app/user/models/net/check-for-admin-resp
 import { HttpResponse } from '@angular/common/http';
 import { CreateAccountRequest } from '@app/user/models/net/create-account-request';
 import { CreateUserAccountRequest } from '@app/user/models/net/create-user-account-request';
+import { setReadComicBooks } from '@app/user/actions/read-comic-books.actions';
+import {
+  initialState as initialUserState,
+  USER_FEATURE_KEY
+} from '@app/user/reducers/user.reducer';
 
 describe('UserService', () => {
   const USERS = [USER_ADMIN, USER_BLOCKED, USER_READER];
-  const USER = USER_READER;
+  const READ_COMIC_BOOKS = [
+    READ_COMIC_BOOK_1,
+    READ_COMIC_BOOK_2,
+    READ_COMIC_BOOK_3,
+    READ_COMIC_BOOK_4,
+    READ_COMIC_BOOK_5
+  ];
+  const USER = { ...USER_READER, readComicBooks: READ_COMIC_BOOKS };
   const EMAIL = USER.email;
   const PASSWORD = 'this!is!my!password';
   const PREFERENCE_NAME = 'user.preference';
@@ -79,7 +100,10 @@ describe('UserService', () => {
     COMICS_READ_STATISTICS_4,
     COMICS_READ_STATISTICS_5
   ];
-  const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
+  const initialState = {
+    [MESSAGING_FEATURE_KEY]: initialMessagingState,
+    [USER_FEATURE_KEY]: initialUserState
+  };
 
   let service: UserService;
   let httpMock: HttpTestingController;
@@ -239,7 +263,8 @@ describe('UserService', () => {
     let subscription: any;
 
     beforeEach(() => {
-      service.subscription = null;
+      service.email = USER.email;
+      service.userUpdateSubscriptions = null;
       webSocketService.subscribe.and.callFake((topicUsed, callback) => {
         topic = topicUsed;
         subscription = callback;
@@ -252,7 +277,9 @@ describe('UserService', () => {
     });
 
     it('subscribes to user updates', () => {
-      expect(topic).toEqual(USER_SELF_TOPIC);
+      expect(topic).toEqual(
+        interpolate(USER_SELF_TOPIC, { email: USER.email })
+      );
     });
 
     describe('when updates are received', () => {
@@ -260,9 +287,15 @@ describe('UserService', () => {
         subscription(USER);
       });
 
-      it('fires an action', () => {
+      it('sets the current user', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           loadCurrentUserSuccess({ user: USER })
+        );
+      });
+
+      it('sets the read comic books list', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setReadComicBooks({ entries: READ_COMIC_BOOKS })
         );
       });
     });
@@ -272,7 +305,7 @@ describe('UserService', () => {
     const subscription = jasmine.createSpyObj(['unsubscribe']);
 
     beforeEach(() => {
-      service.subscription = subscription;
+      service.userUpdateSubscriptions = subscription;
       store.setState({
         ...initialState,
         [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: false }
@@ -284,7 +317,7 @@ describe('UserService', () => {
     });
 
     it('clears the subscription reference', () => {
-      expect(service.subscription).toBeNull();
+      expect(service.userUpdateSubscriptions).toBeNull();
     });
   });
 

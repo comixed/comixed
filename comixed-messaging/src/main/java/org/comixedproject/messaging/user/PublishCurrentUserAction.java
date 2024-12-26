@@ -34,11 +34,11 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class PublishCurrentUserAction extends AbstractPublishAction<ComiXedUser> {
   /** Topic which receives updates on the current user." */
-  public static final String CURRENT_USER_UPDATE_TOPIC = "/topic/user/current";
+  public static final String CURRENT_USER_UPDATE_TOPIC = "/user/current";
 
   @Override
   public void publish(final ComiXedUser user) throws PublishingException {
     log.trace("Publishing current user update");
-    this.doPublish(CURRENT_USER_UPDATE_TOPIC, user, View.UserDetailsView.class);
+    this.doPublishToUser(user, CURRENT_USER_UPDATE_TOPIC, user, View.UserDetailsView.class);
   }
 }

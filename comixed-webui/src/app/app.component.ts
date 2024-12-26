@@ -45,7 +45,7 @@ import { toggleDarkThemeMode } from '@app/actions/dark-theme.actions';
 import { selectDarkThemeActive } from '@app/selectors/dark-theme.selectors';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { BusyIcon } from '@app/core/actions/busy.actions';
-import { resetLastReadList } from '@app/comic-books/actions/last-read-list.actions';
+import { resetReadComicBooks } from '@app/user/actions/read-comic-books.actions';
 
 @Component({
   selector: 'cx-root',
@@ -94,7 +94,6 @@ export class AppComponent implements OnInit {
         this.sessionActive = true;
         this.logger.trace('Starting messaging subsystem');
         this.store.dispatch(startMessaging());
-        this.store.dispatch(resetLastReadList());
       }
       if (!!this.user && !this.libraryStateSubscription) {
         this.logger.trace('Subscribing to library state');
@@ -109,6 +108,8 @@ export class AppComponent implements OnInit {
         this.sessionActive = false;
       }
       if (!this.user && this.libraryStateSubscription) {
+        this.logger.trace('Clearing read comic books list');
+        this.store.dispatch(resetReadComicBooks());
         this.logger.trace('Unsubscribing from library state changes');
         this.libraryStateSubscription.unsubscribe();
         this.libraryStateSubscription = null;

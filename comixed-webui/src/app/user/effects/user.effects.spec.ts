@@ -21,7 +21,12 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { UserEffects } from './user.effects';
 import { UserService } from '@app/user/services/user.service';
-import { USER_READER } from '@app/user/user.fixtures';
+import {
+  READ_COMIC_BOOK_1,
+  READ_COMIC_BOOK_2,
+  READ_COMIC_BOOK_3,
+  USER_READER
+} from '@app/user/user.fixtures';
 import {
   loadCurrentUser,
   loadCurrentUserFailure,
@@ -48,9 +53,15 @@ import { TokenService } from '@app/core/services/token.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
+import { setReadComicBooks } from '@app/user/actions/read-comic-books.actions';
 
 describe('UserEffects', () => {
-  const USER = USER_READER;
+  const LAST_READ_ENTRIES = [
+    READ_COMIC_BOOK_1,
+    READ_COMIC_BOOK_2,
+    READ_COMIC_BOOK_3
+  ];
+  const USER = { ...USER_READER, readComicBooks: LAST_READ_ENTRIES };
   const PASSWORD = 'this!is!my!password';
   const AUTH_TOKEN = 'my!token';
   const PREFERENCE_NAME = 'user.preference';
@@ -109,12 +120,13 @@ describe('UserEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = USER;
       const action = loadCurrentUser();
-      const outcome = loadCurrentUserSuccess({ user: USER });
+      const outcome1 = loadCurrentUserSuccess({ user: USER });
+      const outcome2 = setReadComicBooks({ entries: LAST_READ_ENTRIES });
 
       actions$ = hot('-a', { a: action });
       userService.loadCurrentUser.and.returnValue(of(serviceResponse));
 
-      const expected = hot('-b', { b: outcome });
+      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
       expect(effects.loadCurrentUser$).toBeObservable(expected);
     });
 

@@ -21,8 +21,10 @@ package org.comixedproject.service.user;
 import static org.comixedproject.model.user.ComiXedRole.ADMIN_ROLE;
 import static org.comixedproject.model.user.ComiXedRole.READER_ROLE;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
@@ -30,9 +32,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.user.PublishCurrentUserAction;
+import org.comixedproject.model.net.user.ComicsReadStatistic;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.users.ComiXedRoleRepository;
 import org.comixedproject.repositories.users.ComiXedUserRepository;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,6 +54,7 @@ public class UserService {
 
   @Autowired private ComiXedUserRepository userRepository;
   @Autowired private ComiXedRoleRepository roleRepository;
+  @Autowired private ComicBookService comicBookService;
   @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
   @Autowired private PublishCurrentUserAction publishCurrentUserAction;
 
@@ -294,5 +299,54 @@ public class UserService {
   private boolean isLastAdminAccount(final ComiXedUser user) {
     return user.isAdmin()
         && this.userRepository.findAll().stream().filter(ComiXedUser::isAdmin).count() <= 1L;
+  }
+
+  /**
+   * Saves the given user and publishes the update.
+   *
+   * @param user the user
+   */
+  @Transactional
+  public void save(final ComiXedUser user) {
+    log.debug("Saving user: {}", user.getEmail());
+    final ComiXedUser result = this.userRepository.save(user);
+    log.debug("Publishing updated user");
+    try {
+      this.publishCurrentUserAction.publish(result);
+    } catch (PublishingException error) {
+      log.error("Failed to publish updated user", error);
+    }
+  }
+
+  /**
+   * Returns the comics read statistics for the given user.
+   *
+   * @param email the user's email
+   * @return the statistics
+   */
+  @Transactional
+  public List<ComicsReadStatistic> loadComicsReadStatistics(final String email) {
+    return this.userRepository.loadComicsReadStatistics(email);
+  }
+
+  @Transactional
+  public Collection<Long> getComicBookIdsForUser(final String email, final boolean unread)
+      throws ComiXedUserException {
+    final ComiXedUser user = this.doGetByEmail(email);
+    if (!unread) {
+      log.debug("Returning comic ids read by {}", email);
+      return user.getReadComicBooks();
+    }
+
+    log.debug("Returning comic ids not read by {}", email);
+    final List<Long> idList = this.comicBookService.getAllIds();
+    idList.removeAll(user.getReadComicBooks());
+    return idList;
+  }
+
+  private ComiXedUser doGetByEmail(final String email) throws ComiXedUserException {
+    final ComiXedUser result = this.userRepository.findByEmail(email);
+    if (Objects.isNull(result)) throw new ComiXedUserException("No such user: email=" + email);
+    return result;
   }
 }

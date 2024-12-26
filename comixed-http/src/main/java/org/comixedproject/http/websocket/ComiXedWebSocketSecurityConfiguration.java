@@ -57,7 +57,7 @@ public class ComiXedWebSocketSecurityConfiguration
   @Override
   public void configureMessageBroker(final MessageBrokerRegistry registry) {
     log.trace("Configuring websocket message broker");
-    registry.enableSimpleBroker("/topic", "/queue");
+    registry.enableSimpleBroker("/topic", "/queue", "/secured/user");
     registry.setApplicationDestinationPrefixes("/comixed");
     registry.setUserDestinationPrefix("/secured/user");
   }

@@ -29,8 +29,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   COMIC_DETAIL_1,
-  COMIC_DETAIL_2,
-  LAST_READ_1
+  COMIC_DETAIL_2
 } from '@app/comic-books/comic-books.fixtures';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
@@ -52,10 +51,6 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
-import {
-  markSelectedComicBooksRead,
-  markSingleComicBookRead
-} from '@app/comic-books/actions/comic-books-read.actions';
 import {
   deleteSelectedComicBooks,
   deleteSingleComicBook,
@@ -99,6 +94,11 @@ import {
 } from '@app/library-plugins/actions/run-library-plugin.actions';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
+import { READ_COMIC_BOOK_1 } from '@app/user/user.fixtures';
+import {
+  markSelectedComicBooksRead,
+  markSingleComicBookRead
+} from '@app/user/actions/read-comic-books.actions';
 
 describe('ComicDetailListViewComponent', () => {
   const COMIC_DETAILS = [
@@ -118,7 +118,7 @@ describe('ComicDetailListViewComponent', () => {
     imprint: 'The Imprint',
     comicType: ComicType.TRADEPAPERBACK
   };
-  const LAST_READ_DATES = [LAST_READ_1];
+  const READ_COMIC_BOOKS = [READ_COMIC_BOOK_1];
   const COMIC_DETAIL = COMIC_DETAILS[0];
   const PLUGIN = LIBRARY_PLUGIN_4;
   const initialState = {
@@ -303,7 +303,6 @@ describe('ComicDetailListViewComponent', () => {
       component.showIssueNumber = false;
       component.showCoverDate = false;
       component.showStoreDate = false;
-      component.showLastReadDate = false;
       component.showAddedDate = false;
     });
 
@@ -376,11 +375,6 @@ describe('ComicDetailListViewComponent', () => {
       expect(component.displayedColumns).toContain('store-date');
     });
 
-    it('can show the last read date column', () => {
-      component.showLastReadDate = true;
-      expect(component.displayedColumns).toContain('last-read-date');
-    });
-
     it('can show the added date column', () => {
       component.showAddedDate = true;
       expect(component.displayedColumns).toContain('added-date');
@@ -389,7 +383,7 @@ describe('ComicDetailListViewComponent', () => {
 
   describe('checking if a comic is read', () => {
     beforeEach(() => {
-      component.lastReadDates = LAST_READ_DATES;
+      component.comicBooksRead = READ_COMIC_BOOKS;
     });
 
     it('returns false for unread comics', () => {

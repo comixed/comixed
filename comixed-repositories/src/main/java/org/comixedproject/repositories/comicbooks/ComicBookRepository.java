@@ -46,7 +46,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the list of comics
    */
   @Query(
-      "SELECT d FROM ComicDetail d WHERE d NOT IN (SELECT r.comicDetail FROM LastRead r WHERE r.user.id = :userId)")
+      "SELECT d FROM ComicDetail d WHERE d.id NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb)")
   List<ComicDetail> findAllUnreadByUser(@Param("userId") long userId);
 
   /**

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,22 +18,21 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { LoggerService } from '@angular-ru/cdk/logger';
-import { TranslateService } from '@ngx-translate/core';
-import { LastReadService } from '@app/comic-books/services/last-read.service';
 import {
   markSelectedComicBooksRead,
   markSelectedComicBooksReadFailed,
   markSelectedComicBooksReadSuccess,
   markSingleComicBookRead
-} from '@app/comic-books/actions/comic-books-read.actions';
-import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
-import { AlertService } from '@app/core/services/alert.service';
+} from '@app/user/actions/read-comic-books.actions';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { loadUnreadComicBookCount } from '@app/comic-books/actions/last-read-list.actions';
+import { LoggerService } from '@angular-ru/cdk/logger';
+import { ReadComicBooksService } from '@app/user/services/read-comic-books.service';
+import { AlertService } from '@app/core/services/alert.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
-export class ComicBooksReadEffects {
+export class ReadComicBooksEffects {
   setSingleComicBookReadState$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(markSingleComicBookRead),
@@ -44,7 +43,7 @@ export class ComicBooksReadEffects {
         )
       ),
       switchMap(action =>
-        this.lastReadService
+        this.readComicBooksService
           .setSingleReadState({
             comicBookId: action.comicBookId,
             read: action.read
@@ -59,7 +58,7 @@ export class ComicBooksReadEffects {
                 )
               )
             ),
-            mergeMap(() => this.doSuccess()),
+            map(() => markSelectedComicBooksReadSuccess()),
             catchError(error =>
               this.doServiceFailure(
                 error,
@@ -80,25 +79,27 @@ export class ComicBooksReadEffects {
         this.logger.debug('Effect: updating comic read status:', action)
       ),
       switchMap(action =>
-        this.lastReadService.setSelectedReadState({ read: action.read }).pipe(
-          tap(response => this.logger.debug('Response received:', response)),
-          tap(() =>
-            this.alertService.info(
-              this.translateService.instant(
-                'selected-comic-books-read-state.effect-success',
-                { status: action.read }
+        this.readComicBooksService
+          .setSelectedReadState({ read: action.read })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            tap(() =>
+              this.alertService.info(
+                this.translateService.instant(
+                  'selected-comic-books-read-state.effect-success',
+                  { status: action.read }
+                )
+              )
+            ),
+            map(() => markSelectedComicBooksReadSuccess()),
+            catchError(error =>
+              this.doServiceFailure(
+                error,
+                action.read,
+                'selected-comic-books-read-state.effect-failure'
               )
             )
-          ),
-          mergeMap(() => this.doSuccess()),
-          catchError(error =>
-            this.doServiceFailure(
-              error,
-              action.read,
-              'selected-comic-books-read-state.effect-failure'
-            )
           )
-        )
       ),
       catchError(error => this.doGeneralFailure(error))
     );
@@ -107,7 +108,7 @@ export class ComicBooksReadEffects {
   constructor(
     private logger: LoggerService,
     private actions$: Actions,
-    private lastReadService: LastReadService,
+    private readComicBooksService: ReadComicBooksService,
     private alertService: AlertService,
     private translateService: TranslateService
   ) {}
@@ -126,9 +127,5 @@ export class ComicBooksReadEffects {
       this.translateService.instant('app.general-effect-failure')
     );
     return of(markSelectedComicBooksReadFailed());
-  }
-
-  private doSuccess() {
-    return [markSelectedComicBooksReadSuccess(), loadUnreadComicBookCount()];
   }
 }
