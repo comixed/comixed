@@ -44,6 +44,7 @@ import { AlertService } from '@app/core/services/alert.service';
 import { TokenService } from '@app/core/services/token.service';
 import { User } from '@app/user/models/user';
 import { Router } from '@angular/router';
+import { setReadComicBooks } from '@app/user/actions/read-comic-books.actions';
 
 @Injectable()
 export class UserEffects {
@@ -54,7 +55,10 @@ export class UserEffects {
       switchMap(action =>
         this.userService.loadCurrentUser().pipe(
           tap(response => this.logger.debug('Received response:', response)),
-          map((response: User) => loadCurrentUserSuccess({ user: response })),
+          mergeMap((response: User) => [
+            loadCurrentUserSuccess({ user: response }),
+            setReadComicBooks({ entries: response.readComicBooks })
+          ]),
           catchError(error => {
             this.logger.error('Service failure:', error);
             return of(loadCurrentUserFailure());

@@ -18,7 +18,6 @@
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ComicBook } from '@app/comic-books/models/comic-book';
-import { LastRead } from '@app/comic-books/models/last-read';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import {
@@ -47,7 +46,6 @@ import { Clipboard } from '@angular/cdk/clipboard';
   styleUrls: ['./comic-detail-edit.component.scss']
 })
 export class ComicDetailEditComponent implements OnInit, OnDestroy {
-  @Input() lastRead: LastRead;
   @Input() isAdmin = false;
 
   comicBookForm: UntypedFormGroup;

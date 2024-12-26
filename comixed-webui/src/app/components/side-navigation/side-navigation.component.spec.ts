@@ -30,10 +30,6 @@ import {
   READING_LISTS_FEATURE_KEY
 } from '@app/lists/reducers/reading-lists.reducer';
 import {
-  initialState as initialLastReadState,
-  LAST_READ_LIST_FEATURE_KEY
-} from '@app/comic-books/reducers/last-read-list.reducer';
-import {
   initialState as initialLibraryState,
   LIBRARY_FEATURE_KEY
 } from '@app/library/reducers/library.reducer';
@@ -43,16 +39,24 @@ import {
 } from '@app/admin/reducers/feature-enabled.reducer';
 import { getFeatureEnabled } from '@app/admin/actions/feature-enabled.actions';
 import { BLOCKED_PAGES_ENABLED } from '@app/admin/admin.constants';
+import {
+  initialState as initialUserState,
+  USER_FEATURE_KEY
+} from '@app/user/reducers/user.reducer';
+import {
+  initialState as initialReadComicBooksState,
+  READ_COMIC_BOOKS_FEATURE_KEY
+} from '@app/user/reducers/read-comic-books.reducer';
 
 describe('SideNavigationComponent', () => {
   const BLOCKED_PAGES_ENABLED_FEATURE_ENABLED = Math.random() > 0.5;
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState,
+    [USER_FEATURE_KEY]: initialUserState,
+    [READ_COMIC_BOOKS_FEATURE_KEY]: initialReadComicBooksState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
     [FEATURE_ENABLED_FEATURE_KEY]: initialFeatureEnabledState
   };
-
   let component: SideNavigationComponent;
   let fixture: ComponentFixture<SideNavigationComponent>;
   let store: MockStore;

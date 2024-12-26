@@ -36,7 +36,6 @@ import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicType;
 import org.comixedproject.model.comicpages.ComicPage;
-import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.collections.LoadPublisherListResponse;
 import org.comixedproject.model.net.comicbooks.PageOrderEntry;
@@ -106,7 +105,6 @@ public class ComicBookServiceTest {
   private final List<Long> idList = new ArrayList<>();
   private final GregorianCalendar calendar = new GregorianCalendar();
   private final Date now = new Date();
-  private final List<LastRead> lastReadList = new ArrayList<>();
 
   @InjectMocks private ComicBookService service;
   @Mock private ComicStateHandler comicStateHandler;
@@ -123,7 +121,6 @@ public class ComicBookServiceTest {
   @Mock private ImprintService imprintService;
   @Mock private List<String> collectionList;
   @Mock private List<String> publisherList;
-  @Mock private LastRead lastRead;
   @Mock private List<RemoteLibrarySegmentState> librarySegmentList;
   @Mock private List<PublisherAndYearSegment> byPublisherAndYearList;
   @Mock private List<Publisher> publisherWithSeriesCountList;
@@ -185,8 +182,6 @@ public class ComicBookServiceTest {
     comicsBySeries.add(currentComicBook);
 
     calendar.setTime(now);
-
-    lastReadList.add(lastRead);
   }
 
   @Test

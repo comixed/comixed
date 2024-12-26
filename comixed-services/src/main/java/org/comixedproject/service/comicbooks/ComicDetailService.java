@@ -850,4 +850,12 @@ public class ComicDetailService {
     return this.comicDetailRepository.getDuplicateComicBooks(
         PageRequest.of(pageIndex, pageSize, this.doCreateSort(sorting, sortDirection)));
   }
+
+  @Transactional
+  public ComicDetail getByComicBookId(final Long comicBookId) throws ComicDetailException {
+    final ComicDetail result = this.comicDetailRepository.findByComicBookId(comicBookId);
+    if (result == null)
+      throw new ComicDetailException("Comic detail not found for comic book id: " + comicBookId);
+    return result;
+  }
 }

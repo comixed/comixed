@@ -29,12 +29,7 @@ import {
   COMIC_DETAIL_2,
   COMIC_DETAIL_3,
   COMIC_DETAIL_4,
-  COMIC_DETAIL_5,
-  LAST_READ_1,
-  LAST_READ_2,
-  LAST_READ_3,
-  LAST_READ_4,
-  LAST_READ_5
+  COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import { ComicDetailListService } from '@app/comic-books/services/comic-detail-list.service';
 import { LoggerModule } from '@angular-ru/cdk/logger';
@@ -57,6 +52,13 @@ import { AlertService } from '@app/core/services/alert.service';
 import { LoadComicDetailsResponse } from '@app/comic-books/models/net/load-comic-details-response';
 import { TagType } from '@app/collections/models/comic-collection.enum';
 import { READING_LIST_3 } from '@app/lists/lists.fixtures';
+import {
+  READ_COMIC_BOOK_1,
+  READ_COMIC_BOOK_2,
+  READ_COMIC_BOOK_3,
+  READ_COMIC_BOOK_4,
+  READ_COMIC_BOOK_5
+} from '@app/user/user.fixtures';
 
 describe('ComicDetailsListEffects', () => {
   const PAGE_SIZE = 25;
@@ -81,11 +83,11 @@ describe('ComicDetailsListEffects', () => {
     COMIC_DETAIL_5
   ];
   const LAST_READ_ENTRIES = [
-    LAST_READ_1,
-    LAST_READ_2,
-    LAST_READ_3,
-    LAST_READ_4,
-    LAST_READ_5
+    READ_COMIC_BOOK_1,
+    READ_COMIC_BOOK_2,
+    READ_COMIC_BOOK_3,
+    READ_COMIC_BOOK_4,
+    READ_COMIC_BOOK_5
   ];
   const PUBLISHER = COMIC_DETAILS[0].publisher;
   const SERIES = COMIC_DETAILS[0].series;

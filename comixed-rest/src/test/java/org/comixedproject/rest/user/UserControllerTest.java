@@ -25,8 +25,6 @@ import java.util.List;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.net.user.*;
 import org.comixedproject.model.user.ComiXedUser;
-import org.comixedproject.service.library.LastReadException;
-import org.comixedproject.service.library.LastReadService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.junit.Before;
@@ -51,7 +49,6 @@ public class UserControllerTest {
 
   @InjectMocks private UserController controller;
   @Mock private UserService userService;
-  @Mock private LastReadService lastReadService;
   @Mock private ComiXedUser user;
   @Mock private Principal principal;
   @Mock private List<ComicsReadStatistic> comicsReadStatisticsList;
@@ -221,22 +218,9 @@ public class UserControllerTest {
         .updateCurrentUser(TEST_USER_ID, TEST_EMAIL, TEST_PASSWORD);
   }
 
-  @Test(expected = ComiXedUserException.class)
-  public void testLoadComicsReadStatisticsLastReadException()
-      throws LastReadException, ComiXedUserException {
-    Mockito.when(lastReadService.loadComicsReadStatistics(Mockito.anyString()))
-        .thenThrow(LastReadException.class);
-
-    try {
-      controller.loadComicsReadStatistics(principal);
-    } finally {
-      Mockito.verify(lastReadService, Mockito.times(1)).loadComicsReadStatistics(TEST_EMAIL);
-    }
-  }
-
   @Test
-  public void testLoadComicsReadStatistics() throws LastReadException, ComiXedUserException {
-    Mockito.when(lastReadService.loadComicsReadStatistics(Mockito.anyString()))
+  public void testLoadComicsReadStatistics() throws ComiXedUserException {
+    Mockito.when(userService.loadComicsReadStatistics(Mockito.anyString()))
         .thenReturn(comicsReadStatisticsList);
 
     final List<ComicsReadStatistic> result = controller.loadComicsReadStatistics(principal);
@@ -244,7 +228,7 @@ public class UserControllerTest {
     assertNotNull(result);
     assertSame(comicsReadStatisticsList, result);
 
-    Mockito.verify(lastReadService, Mockito.times(1)).loadComicsReadStatistics(TEST_EMAIL);
+    Mockito.verify(userService, Mockito.times(1)).loadComicsReadStatistics(TEST_EMAIL);
   }
 
   @Test

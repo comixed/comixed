@@ -20,6 +20,13 @@ import { User } from './models/user';
 import { Role } from '@app/user/models/role';
 import { ROLE_NAME_ADMIN, ROLE_NAME_READER } from '@app/user/user.constants';
 import { Preference } from '@app/user/models/preference';
+import {
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_4,
+  COMIC_DETAIL_5
+} from '@app/comic-books/comic-books.fixtures';
 
 export const ROLE_READER: Role = {
   name: ROLE_NAME_READER
@@ -42,7 +49,8 @@ export const USER_READER: User = {
   ).getTime(),
   lastLoginDate: new Date().getTime(),
   roles: [ROLE_READER],
-  preferences: []
+  preferences: [],
+  readComicBooks: []
 };
 
 export const USER_ADMIN: User = {
@@ -53,7 +61,8 @@ export const USER_ADMIN: User = {
   ).getTime(),
   lastLoginDate: new Date().getTime(),
   roles: [ROLE_READER, ROLE_ADMIN],
-  preferences: []
+  preferences: [],
+  readComicBooks: []
 };
 
 export const USER_BLOCKED: User = {
@@ -64,5 +73,16 @@ export const USER_BLOCKED: User = {
   ).getTime(),
   lastLoginDate: new Date().getTime(),
   roles: [],
-  preferences: []
+  preferences: [],
+  readComicBooks: []
 };
+
+export const READ_COMIC_BOOK_1 = COMIC_DETAIL_1.id;
+
+export const READ_COMIC_BOOK_2 = COMIC_DETAIL_2.id;
+
+export const READ_COMIC_BOOK_3 = COMIC_DETAIL_3.id;
+
+export const READ_COMIC_BOOK_4 = COMIC_DETAIL_4.id;
+
+export const READ_COMIC_BOOK_5 = COMIC_DETAIL_5.id;

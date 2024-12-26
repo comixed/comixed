@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,17 @@
  */
 
 import { createAction, props } from '@ngrx/store';
+
+export const setReadComicBooks = createAction(
+  '[Read Comic Books] Set the list of read comic books',
+  props<{
+    entries: number[];
+  }>()
+);
+
+export const resetReadComicBooks = createAction(
+  '[Read Comic Books] Resets the list of read comic books'
+);
 
 export const markSingleComicBookRead = createAction(
   '[Comic Book Read State] Update the read state for a single comic book',

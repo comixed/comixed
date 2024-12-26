@@ -34,13 +34,14 @@ import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.comicbooks.*;
+import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.service.comicbooks.*;
 import org.comixedproject.service.comicpages.ComicPageException;
 import org.comixedproject.service.comicpages.PageCacheService;
-import org.comixedproject.service.library.LastReadException;
-import org.comixedproject.service.library.LastReadService;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
+import org.comixedproject.service.user.ComiXedUserException;
+import org.comixedproject.service.user.UserService;
 import org.comixedproject.views.View.ComicDetailsView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -63,11 +64,11 @@ public class ComicBookController {
   public static final String MISSING_COMIC_COVER = "missing-comic-cover";
 
   @Autowired private ComicBookService comicBookService;
+  @Autowired private UserService userService;
   @Autowired private ComicDetailService comicDetailService;
   @Autowired private ComicBookSelectionService comicBookSelectionService;
   @Autowired private PageCacheService pageCacheService;
   @Autowired private ReadingListService readingListService;
-  @Autowired private LastReadService lastReadService;
 
   /**
    * Retrieves a single comic for a user. The comic is populated with user-specific meta-data.
@@ -414,7 +415,6 @@ public class ComicBookController {
    * @param principal the user principal
    * @param request the request body
    * @return the comic detail list
-   * @throws LastReadException if an error occurs
    */
   @PostMapping(
       value = "/api/comics/details/load/unread",
@@ -425,7 +425,7 @@ public class ComicBookController {
   @JsonView(ComicDetailsView.class)
   public LoadComicDetailsResponse loadUnreadComicDetailList(
       final Principal principal, @RequestBody() final LoadUnreadComicDetailsRequest request)
-      throws LastReadException {
+      throws ComiXedUserException {
     final String email = principal.getName();
     final int pageSize = request.getPageSize();
     final int pageIndex = request.getPageIndex();
@@ -442,8 +442,9 @@ public class ComicBookController {
     final List<ComicDetail> comicDetails =
         this.comicDetailService.loadUnreadComicDetails(
             email, unreadOnly, pageSize, pageIndex, sortBy, sortDirection);
+    final ComiXedUser user = this.userService.findByEmail(email);
     final long comicBookCount = this.comicBookService.getComicBookCount();
-    final long filteredCount = this.lastReadService.getUnreadCountForUser(email, unreadOnly);
+    final long filteredCount = comicBookCount - user.getReadComicBooks().size();
     return new LoadComicDetailsResponse(
         comicDetails,
         Collections.emptyList(),
@@ -459,7 +460,6 @@ public class ComicBookController {
    * @param request the request body
    * @param readingListId the reading list id
    * @return the entries
-   * @throws LastReadException if an error occurs
    * @throws ComicDetailException if an error occurs
    * @throws ReadingListException if an error occurs
    */
@@ -474,7 +474,7 @@ public class ComicBookController {
       final Principal principal,
       @RequestBody() final LoadComicDetailsForReadingListRequest request,
       @PathVariable("readingListId") final long readingListId)
-      throws LastReadException, ComicDetailException, ReadingListException {
+      throws ComicDetailException, ReadingListException {
     final String email = principal.getName();
     final int pageSize = request.getPageSize();
     final int pageIndex = request.getPageIndex();
@@ -505,9 +505,6 @@ public class ComicBookController {
    *
    * @param request the request body
    * @return the entries
-   * @throws LastReadException if an error occurs
-   * @throws ComicDetailException if an error occurs
-   * @throws ReadingListException if an error occurs
    */
   @PostMapping(
       value = "/api/comics/details/load/duplicates",
@@ -517,8 +514,7 @@ public class ComicBookController {
   @PreAuthorize("hasRole('ADMIN')")
   @JsonView(ComicDetailsView.class)
   public LoadComicDetailsResponse loadDuplicateComicBooks(
-      @RequestBody() final LoadDuplicateComicBookDetailsRequest request)
-      throws LastReadException, ComicDetailException, ReadingListException {
+      @RequestBody() final LoadDuplicateComicBookDetailsRequest request) {
     final int pageSize = request.getPageSize();
     final int pageIndex = request.getPageIndex();
     final String sortBy = request.getSortBy();

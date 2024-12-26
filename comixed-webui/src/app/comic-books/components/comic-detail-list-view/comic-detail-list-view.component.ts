@@ -33,7 +33,6 @@ import { Store } from '@ngrx/store';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LastRead } from '@app/comic-books/models/last-read';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { TranslateService } from '@ngx-translate/core';
@@ -42,10 +41,6 @@ import {
   convertSingleComicBook
 } from '@app/library/actions/convert-comic-books.actions';
 import { addSelectedComicBooksToReadingList } from '@app/lists/actions/reading-list-entries.actions';
-import {
-  markSelectedComicBooksRead,
-  markSingleComicBookRead
-} from '@app/comic-books/actions/comic-books-read.actions';
 import {
   deleteSelectedComicBooks,
   deleteSingleComicBook,
@@ -85,6 +80,10 @@ import { saveUserPreference } from '@app/user/actions/user.actions';
 import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
 import { selectComicBookSelectionState } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { ComicBookSelectionState } from '@app/comic-books/reducers/comic-book-selection.reducer';
+import {
+  markSelectedComicBooksRead,
+  markSingleComicBookRead
+} from '@app/user/actions/read-comic-books.actions';
 
 @Component({
   selector: 'cx-comic-detail-list-view',
@@ -156,14 +155,15 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
       .subscribe(list => (this.libraryPluginlist = list));
   }
 
-  private _lastReadDates: LastRead[] = [];
+  private _comicBooksRead: number[] = [];
 
-  get lastReadDates(): LastRead[] {
-    return this._lastReadDates;
+  get comicBooksRead(): number[] {
+    return this._comicBooksRead;
   }
 
-  @Input() set lastReadDates(lastReadDates: LastRead[]) {
-    this._lastReadDates = lastReadDates;
+  @Input() set comicBooksRead(comicBooksRead: number[]) {
+    this.logger.debug('Setting comic books read:', comicBooksRead);
+    this._comicBooksRead = comicBooksRead;
     this.applyFilters();
   }
 
@@ -182,7 +182,6 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
       this.showPageCount ? 'page-count' : null,
       this.showCoverDate ? 'cover-date' : null,
       this.showStoreDate ? 'store-date' : null,
-      this.showLastReadDate ? 'last-read-date' : null,
       this.showAddedDate ? 'added-date' : null
     ].filter(entry => !!entry);
   }
@@ -277,13 +276,7 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
   }
 
   isRead(comic: ComicDetail): boolean {
-    return !!this.lastReadDate(comic);
-  }
-
-  lastReadDate(comicDetail: ComicDetail): number {
-    return this.lastReadDates.find(
-      entry => !!comicDetail && entry.comicDetail.id === comicDetail.id
-    )?.lastRead;
+    return !!comic && this.comicBooksRead.includes(comic.id);
   }
 
   onConvertSingleComicBook(archiveTypeString: string): void {

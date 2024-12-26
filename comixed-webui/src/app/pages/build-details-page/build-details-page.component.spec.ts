@@ -17,7 +17,7 @@
  */
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { BuildDetailsComponent } from './build-details.component';
+import { BuildDetailsPageComponent } from './build-details-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
   initialState as initialBuildState,
@@ -32,7 +32,7 @@ import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-describe('BuildDetailsComponent', () => {
+describe('BuildDetailsPageComponent', () => {
   const initialState = {
     [RELEASE_DETAILS_FEATURE_KEY]: {
       ...initialBuildState,
@@ -40,8 +40,8 @@ describe('BuildDetailsComponent', () => {
     }
   };
 
-  let component: BuildDetailsComponent;
-  let fixture: ComponentFixture<BuildDetailsComponent>;
+  let component: BuildDetailsPageComponent;
+  let fixture: ComponentFixture<BuildDetailsPageComponent>;
   let titleService: TitleService;
   let translateService: TranslateService;
   let clipboard: Clipboard;
@@ -49,7 +49,7 @@ describe('BuildDetailsComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [BuildDetailsComponent],
+        declarations: [BuildDetailsPageComponent],
         imports: [
           LoggerModule.forRoot(),
           TranslateModule.forRoot(),
@@ -61,7 +61,7 @@ describe('BuildDetailsComponent', () => {
         providers: [provideMockStore({ initialState }), TitleService]
       }).compileComponents();
 
-      fixture = TestBed.createComponent(BuildDetailsComponent);
+      fixture = TestBed.createComponent(BuildDetailsPageComponent);
       component = fixture.componentInstance;
       titleService = TestBed.inject(TitleService);
       spyOn(titleService, 'setTitle');

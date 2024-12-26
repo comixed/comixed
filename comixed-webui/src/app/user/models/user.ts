@@ -26,4 +26,5 @@ export interface User {
   lastLoginDate: number;
   roles: Role[];
   preferences: Preference[];
+  readComicBooks: number[];
 }

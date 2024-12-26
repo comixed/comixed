@@ -36,6 +36,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 @RunWith(MockitoJUnitRunner.class)
 public class PublishCurrentUserActionTest {
   private static final String TEST_USER_AS_JSON = "Object as JSON";
+  private static final String TEST_EMAIL = "reader@comixedproject.org";
 
   @InjectMocks private PublishCurrentUserAction action;
   @Mock private SimpMessagingTemplate messagingTemplate;
@@ -45,6 +46,7 @@ public class PublishCurrentUserActionTest {
 
   @Before
   public void setUp() throws JsonProcessingException {
+    Mockito.when(user.getEmail()).thenReturn(TEST_EMAIL);
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_USER_AS_JSON);
   }
@@ -71,6 +73,7 @@ public class PublishCurrentUserActionTest {
     Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.UserDetailsView.class);
     Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(user);
     Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(PublishCurrentUserAction.CURRENT_USER_UPDATE_TOPIC, TEST_USER_AS_JSON);
+        .convertAndSendToUser(
+            TEST_EMAIL, PublishCurrentUserAction.CURRENT_USER_UPDATE_TOPIC, TEST_USER_AS_JSON);
   }
 }

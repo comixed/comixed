@@ -18,19 +18,19 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from '@app/pages/home/home.component';
-import { BuildDetailsComponent } from '@app/pages/build-details/build-details.component';
+import { HomePageComponent } from '@app/pages/home-page/home-page.component';
+import { BuildDetailsPageComponent } from '@app/pages/build-details-page/build-details-page.component';
 import { ReaderGuard } from '@app/user';
 
 const routes: Routes = [
   {
     path: 'home',
-    component: HomeComponent,
+    component: HomePageComponent,
     canActivate: [ReaderGuard]
   },
   {
     path: 'build',
-    component: BuildDetailsComponent
+    component: BuildDetailsPageComponent
   },
   {
     path: '**',

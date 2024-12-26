@@ -74,10 +74,6 @@ import { ComicDetailsListEffects } from '@app/comic-books/effects/comic-details-
 import { comicDetailsListFeature } from '@app/comic-books/reducers/comic-details-list.reducer';
 import { comicBookSelectionFeature } from '@app/comic-books/reducers/comic-book-selection.reducer';
 import { ComicBookSelectionEffects } from '@app/comic-books/effects/comic-book-selection.effects';
-import { lastReadListFeature } from '@app/comic-books/reducers/last-read-list.reducer';
-import { comicBooksReadFeature } from '@app/comic-books/reducers/comic-books-read.reducer';
-import { LastReadListEffects } from '@app/comic-books/effects/last-read-list.effects';
-import { ComicBooksReadEffects } from '@app/comic-books/effects/comic-books-read.effects';
 import { VolumeMetadataTitlePipe } from './pipes/volume-metadata-title.pipe';
 
 @NgModule({
@@ -109,16 +105,12 @@ import { VolumeMetadataTitlePipe } from './pipes/volume-metadata-title.pipe';
     StoreModule.forFeature(markComicsDeletedFeature),
     StoreModule.forFeature(comicDetailsListFeature),
     StoreModule.forFeature(comicBookSelectionFeature),
-    StoreModule.forFeature(lastReadListFeature),
-    StoreModule.forFeature(comicBooksReadFeature),
     EffectsModule.forFeature([
       ComicBookEffects,
       ImprintListEffects,
       DeleteComicBooksEffects,
       ComicDetailsListEffects,
-      ComicBookSelectionEffects,
-      LastReadListEffects,
-      ComicBooksReadEffects
+      ComicBookSelectionEffects
     ]),
     TranslateModule.forRoot(),
     MatCardModule,

@@ -41,8 +41,6 @@ import org.comixedproject.opds.OPDSException;
 import org.comixedproject.opds.OPDSUtils;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.library.LastReadException;
-import org.comixedproject.service.library.LastReadService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,11 +61,9 @@ public class OPDSComicBookControllerTest {
   private static final String TEST_MIME_TYPE = "image";
   private static final String TEST_MIME_SUBTYPE = "png";
   private static final int TEST_PAGE_WIDTH = 1024;
-  private static final String TEST_EMAIL = "reader@comixedproject.org";
 
   @InjectMocks private OPDSComicBookController controller;
   @Mock private ComicBookService comicBookService;
-  @Mock private LastReadService lastReadService;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
   @Mock private OPDSUtils opdsUtils;
@@ -100,8 +96,6 @@ public class OPDSComicBookControllerTest {
     this.imageContent = IOUtils.readFully(new FileInputStream(imageFile), (int) imageFile.length());
 
     this.fileLength = comicFile.length();
-
-    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
   }
 
   @Test(expected = OPDSException.class)
@@ -117,7 +111,7 @@ public class OPDSComicBookControllerTest {
   }
 
   @Test
-  public void testDownloadComic() throws ComicBookException, OPDSException, LastReadException {
+  public void testDownloadComic() throws ComicBookException, OPDSException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicDetail.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
 
@@ -146,8 +140,6 @@ public class OPDSComicBookControllerTest {
             inputStreamResource,
             TEST_COMIC_FILENAME,
             MediaType.parseMediaType(TEST_ARCHIVE_TYPE.getMimeType()));
-    Mockito.verify(lastReadService, Mockito.times(1))
-        .markComicBookAsRead(TEST_EMAIL, TEST_COMIC_ID);
   }
 
   @Test(expected = OPDSException.class)
