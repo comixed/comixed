@@ -61,6 +61,32 @@ public abstract class AbstractPublishAction<T> implements PublishAction<T> {
   }
 
   /**
+   * Publishes a message to the given destination for the current user.
+   *
+   * @param user the user
+   * @param destination the destination
+   * @param subject the message subject
+   * @param viewClass the view class
+   * @throws PublishingException if an error occurs
+   */
+  protected void doPublishToUser(
+      final ComiXedUser user,
+      final String destination,
+      final Object subject,
+      final Class<?> viewClass)
+      throws PublishingException {
+    log.trace("Publishing object to {}", destination);
+    try {
+      final String payload =
+          this.objectMapper.writerWithView(viewClass).writeValueAsString(subject);
+      log.debug("Payload: {}", payload);
+      this.messagingTemplate.convertAndSendToUser(user.getEmail(), destination, payload);
+    } catch (JsonProcessingException error) {
+      throw new PublishingException(error);
+    }
+  }
+
+  /**
    * Publishes a message to a specific user.
    *
    * @param owner the user

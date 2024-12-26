@@ -29,7 +29,8 @@ import org.comixedproject.opds.OPDSUtils;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;
 import org.comixedproject.service.comicbooks.ComicBookSelectionService;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.library.LastReadService;
+import org.comixedproject.service.user.ComiXedUserException;
+import org.comixedproject.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -48,7 +49,7 @@ public class ComicBookSelectionController {
   public static final String LIBRARY_SELECTIONS = "library.selections";
 
   @Autowired private ComicBookSelectionService comicBookSelectionService;
-  @Autowired private LastReadService lastReadService;
+  @Autowired private UserService userService;
   @Autowired private OPDSUtils opdsUtils;
   @Autowired private ComicBookService comicBookService;
 
@@ -359,7 +360,7 @@ public class ComicBookSelectionController {
       final HttpSession session,
       final Principal principal,
       @RequestBody() final UnreadComicBooksSelectionRequest request)
-      throws ComicBookSelectionException {
+      throws ComicBookSelectionException, ComiXedUserException {
     final String email = principal.getName();
     final boolean selected = request.isSelected();
     final boolean unread = request.isUnreadOnly();
@@ -372,9 +373,9 @@ public class ComicBookSelectionController {
         this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
     if (selected) {
-      selections.addAll(this.lastReadService.getComicBookIdsForUser(email, unread));
+      selections.addAll(this.userService.getComicBookIdsForUser(email, unread));
     } else {
-      selections.removeAll(this.lastReadService.getComicBookIdsForUser(email, unread));
+      selections.removeAll(this.userService.getComicBookIdsForUser(email, unread));
     }
     this.comicBookSelectionService.publishSelections(selections);
     session.setAttribute(

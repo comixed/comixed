@@ -17,10 +17,9 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { LoggerModule } from '@angular-ru/cdk/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { User } from '@app/user/models/user';
-import { selectComicBookReadCount } from '@app/comic-books/selectors/last-read-list.selectors';
 import { selectLibraryState } from '@app/library/selectors/library.selectors';
 import { selectComicBookSelectionState } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { Subscription } from 'rxjs';
@@ -32,8 +31,7 @@ import { selectBatchProcessList } from '@app/admin/selectors/batch-processes.sel
   styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent {
-  stateSubscription: Subscription;
-  readSubscription: Subscription;
+  libraryStateSubscription: Subscription;
   selectionsSubscription: Subscription;
   jobsSubscription: Subscription;
   unscrapedCount = 0;
@@ -43,7 +41,7 @@ export class FooterComponent {
   deletedCount = 0;
   batchJobs = 0;
 
-  constructor(private logger: LoggerModule, private store: Store<any>) {}
+  constructor(private logger: LoggerService, private store: Store<any>) {}
 
   private _user: User = null;
 
@@ -55,16 +53,14 @@ export class FooterComponent {
     this._user = user;
 
     if (!!this._user) {
-      this.stateSubscription = this.store
+      this.logger.debug('User updated:', user);
+      this.libraryStateSubscription = this.store
         .select(selectLibraryState)
         .subscribe(state => {
           this.comicCount = state.totalComics;
           this.unscrapedCount = state.unscrapedComics;
           this.deletedCount = state.deletedComics;
         });
-      this.readSubscription = this.store
-        .select(selectComicBookReadCount)
-        .subscribe(readCount => (this.readCount = readCount));
       this.selectionsSubscription = this.store
         .select(selectComicBookSelectionState)
         .subscribe(state => (this.selectedCount = state.ids.length));
@@ -73,11 +69,12 @@ export class FooterComponent {
         .subscribe(
           list => (this.batchJobs = list.filter(job => job.running).length)
         );
+      this.readCount = this.user.readComicBooks.length;
     } else {
-      this.stateSubscription?.unsubscribe();
-      this.readSubscription?.unsubscribe();
+      this.libraryStateSubscription?.unsubscribe();
       this.selectionsSubscription?.unsubscribe();
       this.jobsSubscription?.unsubscribe();
+      this.readCount = 0;
     }
   }
 }

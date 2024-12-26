@@ -33,8 +33,6 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.opds.OPDSException;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.library.LastReadException;
-import org.comixedproject.service.library.LastReadService;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -54,7 +52,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 public class OPDSComicBookController {
   @Autowired private ComicBookService comicBookService;
-  @Autowired private LastReadService lastReadService;
   @Autowired private WebResponseEncoder webResponseEncoder;
   @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
@@ -79,15 +76,13 @@ public class OPDSComicBookController {
     try {
       log.info("Downloading comicBook: id={} filename={}", id, filename);
       ComicBook comicBook = this.comicBookService.getComic(id);
-      log.trace("Marking comic as read by user");
-      this.lastReadService.markComicBookAsRead(principal.getName(), id);
       log.trace("Returning encoded file: {}", comicBook.getComicDetail().getFilename());
       return this.webResponseEncoder.encode(
           (int) comicBook.getComicDetail().getFile().length(),
           new InputStreamResource(new FileInputStream(comicBook.getComicDetail().getFile())),
           comicBook.getComicDetail().getBaseFilename(),
           MediaType.parseMediaType(comicBook.getComicDetail().getArchiveType().getMimeType()));
-    } catch (ComicBookException | FileNotFoundException | LastReadException error) {
+    } catch (ComicBookException | FileNotFoundException error) {
       throw new OPDSException("Failed to download comic: id=" + id, error);
     }
   }

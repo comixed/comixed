@@ -17,7 +17,7 @@
  */
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { HomeComponent } from '@app/pages/home/home.component';
+import { HomePageComponent } from '@app/pages/home-page/home-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
@@ -37,26 +37,26 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ComicStateChartComponent } from '@app/components/comic-state-chart/comic-state-chart.component';
 import { ComicsByYearChartComponent } from '@app/components/comics-by-year-chart/comics-by-year-chart.component';
-import {
-  initialState as initialLastReadState,
-  LAST_READ_LIST_FEATURE_KEY
-} from '@app/comic-books/reducers/last-read-list.reducer';
 import { ComicsReadChartComponent } from '@app/components/comics-read-chart/comics-read-chart.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import {
   initialState as initialLibraryState,
   LIBRARY_FEATURE_KEY
 } from '@app/library/reducers/library.reducer';
+import {
+  initialState as initialUserState,
+  USER_FEATURE_KEY
+} from '@app/user/reducers/user.reducer';
 
-xdescribe('HomeComponent', () => {
+xdescribe('HomePageComponent', () => {
   const COMIC_BOOKS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
   const initialState = {
-    [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState,
+    [USER_FEATURE_KEY]: initialUserState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState
   };
 
-  let component: HomeComponent;
-  let fixture: ComponentFixture<HomeComponent>;
+  let component: HomePageComponent;
+  let fixture: ComponentFixture<HomePageComponent>;
   let translateService: TranslateService;
   let titleService: TitleService;
   let store: MockStore<any>;
@@ -65,7 +65,7 @@ xdescribe('HomeComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [
-          HomeComponent,
+          HomePageComponent,
           CollectionsChartComponent,
           ComicStateChartComponent,
           ComicsByYearChartComponent,
@@ -86,7 +86,7 @@ xdescribe('HomeComponent', () => {
         providers: [TitleService, provideMockStore({ initialState })]
       }).compileComponents();
 
-      fixture = TestBed.createComponent(HomeComponent);
+      fixture = TestBed.createComponent(HomePageComponent);
       component = fixture.componentInstance;
       translateService = TestBed.inject(TranslateService);
       titleService = TestBed.inject(TitleService);

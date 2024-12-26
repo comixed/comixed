@@ -46,6 +46,8 @@ import { SaveCurrentUserRequest } from '@app/user/models/net/save-current-user-r
 import { SaveUserPreferenceRequest } from '@app/user/models/net/save-user-preference-request';
 import { CreateAccountRequest } from '@app/user/models/net/create-account-request';
 import { CreateUserAccountRequest } from '@app/user/models/net/create-user-account-request';
+import { setReadComicBooks } from '@app/user/actions/read-comic-books.actions';
+import { selectUser } from '@app/user/selectors/user.selectors';
 
 /**
  * Provides methods for interacting the backend REST APIs for working with users.
@@ -54,7 +56,8 @@ import { CreateUserAccountRequest } from '@app/user/models/net/create-user-accou
   providedIn: 'root'
 })
 export class UserService {
-  subscription: Subscription;
+  userUpdateSubscriptions: Subscription;
+  email: string | null = null;
 
   constructor(
     private logger: LoggerService,
@@ -63,20 +66,17 @@ export class UserService {
     private http: HttpClient
   ) {
     this.store.select(selectMessagingState).subscribe(state => {
-      if (state.started && !this.subscription) {
-        this.logger.debug('Subscribing to self updates');
-        this.subscription = this.webSocketService.subscribe<User>(
-          USER_SELF_TOPIC,
-          user => {
-            this.logger.debug('Received user update:', user);
-            this.store.dispatch(loadCurrentUserSuccess({ user }));
-          }
-        );
+      if (state.started && !this.userUpdateSubscriptions) {
+        this.subscribeToUserUpdates();
       }
-      if (!state.started && !!this.subscription) {
+      this.store.select(selectUser).subscribe(user => {
+        this.email = user?.email;
+        this.subscribeToUserUpdates();
+      });
+      if (!state.started && !!this.userUpdateSubscriptions) {
         this.logger.debug('Stopping user subscription');
-        this.subscription.unsubscribe();
-        this.subscription = null;
+        this.userUpdateSubscriptions.unsubscribe();
+        this.userUpdateSubscriptions = null;
       }
     });
   }
@@ -204,5 +204,22 @@ export class UserService {
     return this.http.delete(
       interpolate(DELETE_USER_ACCOUNT_URL, { userId: args.id })
     );
+  }
+
+  private subscribeToUserUpdates(): void {
+    if (!!this.email) {
+      const topic = interpolate(USER_SELF_TOPIC, { email: this.email });
+      this.logger.debug('Subscribing to self updates:', topic);
+      this.userUpdateSubscriptions = this.webSocketService.subscribe<User>(
+        topic,
+        user => {
+          this.logger.debug('Received user update:', user);
+          this.store.dispatch(loadCurrentUserSuccess({ user }));
+          this.store.dispatch(
+            setReadComicBooks({ entries: user.readComicBooks })
+          );
+        }
+      );
+    }
   }
 }

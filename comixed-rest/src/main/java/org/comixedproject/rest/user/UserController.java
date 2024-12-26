@@ -25,8 +25,6 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.net.user.*;
 import org.comixedproject.model.user.ComiXedUser;
-import org.comixedproject.service.library.LastReadException;
-import org.comixedproject.service.library.LastReadService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.comixedproject.views.View;
@@ -44,7 +42,6 @@ import org.springframework.web.bind.annotation.*;
 @Log4j2
 public class UserController {
   @Autowired private UserService userService;
-  @Autowired private LastReadService lastReadService;
 
   /**
    * Loads the current user.
@@ -153,11 +150,7 @@ public class UserController {
       throws ComiXedUserException {
     final String email = principal.getName();
     log.info("Loading comics read statistics: {}", email);
-    try {
-      return this.lastReadService.loadComicsReadStatistics(email);
-    } catch (LastReadException error) {
-      throw new ComiXedUserException("Failed to load comics read statistics", error);
-    }
+    return this.userService.loadComicsReadStatistics(email);
   }
 
   /**

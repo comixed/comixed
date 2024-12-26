@@ -55,12 +55,9 @@ import {
   savePageOrder
 } from '@app/comic-books/actions/comic-book.actions';
 import { selectComicBook } from '@app/comic-books/selectors/comic-book.selectors';
-import { selectComicBookLastReadEntries } from '@app/comic-books/selectors/last-read-list.selectors';
-import { LastRead } from '@app/comic-books/models/last-read';
 import { TitleService } from '@app/core/services/title.service';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
-import { markSingleComicBookRead } from '@app/comic-books/actions/comic-books-read.actions';
 import { updateSingleComicBookMetadata } from '@app/library/actions/update-metadata.actions';
 import {
   deleteSingleComicBook,
@@ -72,6 +69,8 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { markSingleComicBookRead } from '@app/user/actions/read-comic-books.actions';
+import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.selectors';
 
 @Component({
   selector: 'cx-comic-book-page',
@@ -93,6 +92,7 @@ export class ComicBookPageComponent
   comicBook: ComicBook;
   pages: Page[];
   userSubscription: Subscription;
+  readComicBooksSubscription: Subscription;
   isAdmin = false;
   pageSize = PAGE_SIZE_DEFAULT;
   volumesSubscription: Subscription;
@@ -104,10 +104,8 @@ export class ComicBookPageComponent
   scrapingVolume = '';
   scrapingIssueNumber = '';
   langChangeSubscription: Subscription;
-  lastReadSubscription: Subscription;
-  lastReadDates: LastRead[] = [];
   isRead = false;
-  lastRead: LastRead = null;
+  readComicBookList: number[] = [];
   messagingStarted = false;
 
   constructor(
@@ -145,6 +143,7 @@ export class ComicBookPageComponent
       .select(selectComicBook)
       .subscribe(comic => {
         this.comicBook = comic;
+        this.doCheckIfRead();
         if (!!this.comicBook?.metadata) {
           this.logger.trace('Preselecting previous metadata source');
           this.store.dispatch(
@@ -183,19 +182,15 @@ export class ComicBookPageComponent
         10
       );
     });
+    this.readComicBooksSubscription = this.store
+      .select(selectReadComicBooksList)
+      .subscribe(readComicBookList => {
+        this.readComicBookList = readComicBookList;
+        this.doCheckIfRead();
+      });
     this.volumesSubscription = this.store
       .select(selectScrapingVolumeMetadata)
       .subscribe(volumes => (this.volumes = volumes));
-    this.lastReadSubscription = this.store
-      .select(selectComicBookLastReadEntries)
-      .subscribe(entries => {
-        this.isRead = entries
-          .map(entry => entry.comicDetail.comicId)
-          .includes(this.comicId);
-        this.lastRead =
-          entries.find(entry => entry.comicDetail.comicId === this.comicId) ||
-          null;
-      });
     this.messagingSubscription = this.store
       .select(selectMessagingState)
       .subscribe(state => {
@@ -228,8 +223,8 @@ export class ComicBookPageComponent
     this.comicSubscription.unsubscribe();
     this.metadataSourceSubscription.unsubscribe();
     this.userSubscription.unsubscribe();
+    this.readComicBooksSubscription.unsubscribe();
     this.volumesSubscription.unsubscribe();
-    this.lastReadSubscription.unsubscribe();
     if (!!this.comicUpdateSubscription) {
       this.comicUpdateSubscription.unsubscribe();
     }
@@ -384,5 +379,9 @@ export class ComicBookPageComponent
         }
       );
     }
+  }
+
+  private doCheckIfRead() {
+    this.isRead = this.readComicBookList.includes(this.comicBook?.detail?.id);
   }
 }

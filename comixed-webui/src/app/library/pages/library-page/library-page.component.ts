@@ -31,8 +31,6 @@ import {
 } from '@app/user/user.functions';
 import { ActivatedRoute } from '@angular/router';
 import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
-import { LastRead } from '@app/comic-books/models/last-read';
-import { selectComicBookLastReadEntries } from '@app/comic-books/selectors/last-read-list.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 import { PAGE_SIZE_DEFAULT, QUERY_PARAM_UNREAD_ONLY } from '@app/core';
@@ -62,6 +60,7 @@ import {
   setMultipleComicBookByFilterSelectionState
 } from '@app/comic-books/actions/comic-book-selection.actions';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.selectors';
 
 @Component({
   selector: 'cx-library-page',
@@ -99,7 +98,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   unprocessedOnly = false;
   duplicatesOnly = false;
   lastReadDatesSubscription: Subscription;
-  lastReadDates: LastRead[] = [];
+  comicBooksRead: number[] = [];
   readingListsSubscription: Subscription;
   pageChangedSubscription: Subscription;
   readingLists: ReadingList[] = [];
@@ -201,11 +200,12 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
           SHOW_COMIC_COVERS_PREFERENCE,
           `${true}`
         ) === `${true}`;
+      this.comicBooksRead = user.readComicBooks;
     });
     this.lastReadDatesSubscription = this.store
-      .select(selectComicBookLastReadEntries)
-      .subscribe(lastReadDates => {
-        this.lastReadDates = lastReadDates;
+      .select(selectReadComicBooksList)
+      .subscribe(comicBooksRead => {
+        this.comicBooksRead = comicBooksRead;
       });
     this.readingListsSubscription = this.store
       .select(selectUserReadingLists)

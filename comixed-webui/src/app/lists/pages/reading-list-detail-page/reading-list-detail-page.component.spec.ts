@@ -80,10 +80,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import {
-  initialState as initialLastReadListState,
-  LAST_READ_LIST_FEATURE_KEY
-} from '@app/comic-books/reducers/last-read-list.reducer';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
@@ -101,6 +97,14 @@ import {
   COMIC_DETAILS_LIST_FEATURE_KEY,
   initialState as initialComicDetailListState
 } from '@app/comic-books/reducers/comic-details-list.reducer';
+import {
+  initialState as initialUserState,
+  USER_FEATURE_KEY
+} from '@app/user/reducers/user.reducer';
+import {
+  initialState as initialReadComicBooksState,
+  READ_COMIC_BOOKS_FEATURE_KEY
+} from '@app/user/reducers/read-comic-books.reducer';
 
 describe('ReadingListDetailPageComponent', () => {
   const READING_LIST = {
@@ -113,9 +117,10 @@ describe('ReadingListDetailPageComponent', () => {
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
     [DOWNLOAD_READING_LIST_FEATURE_KEY]: initialDownloadReadingListState,
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
-    [LAST_READ_LIST_FEATURE_KEY]: initialLastReadListState,
+    [USER_FEATURE_KEY]: initialUserState,
     [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState,
-    [COMIC_DETAILS_LIST_FEATURE_KEY]: initialComicDetailListState
+    [COMIC_DETAILS_LIST_FEATURE_KEY]: initialComicDetailListState,
+    [READ_COMIC_BOOKS_FEATURE_KEY]: initialReadComicBooksState
   };
 
   let component: ReadingListDetailPageComponent;

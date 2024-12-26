@@ -58,13 +58,12 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
-import { LastRead } from '@app/comic-books/models/last-read';
-import { selectComicBookLastReadEntries } from '@app/comic-books/selectors/last-read-list.selectors';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { setMultipleComicBookByIdSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 import { selectLoadComicDetailsList } from '@app/comic-books/selectors/load-comic-details-list.selectors';
 import { loadComicDetailsForReadingList } from '@app/comic-books/actions/comic-details-list.actions';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.selectors';
 
 @Component({
   selector: 'cx-user-reading-list-page',
@@ -86,7 +85,7 @@ export class ReadingListDetailPageComponent implements OnDestroy {
   readingListForm: UntypedFormGroup;
   readingListId = -1;
   selectedIds: number[] = [];
-  lastReadDates: LastRead[] = [];
+  comicBooksRead: number[] = [];
   langChangeSubscription: Subscription;
   comicDetailListSubscription: Subscription;
   comicDetails: ComicDetail[] = [];
@@ -173,8 +172,8 @@ export class ReadingListDetailPageComponent implements OnDestroy {
       });
     this.logger.trace('Subscribing to last read updates');
     this.lastReadDataSubscription = this.store
-      .select(selectComicBookLastReadEntries)
-      .subscribe(lastReadDates => (this.lastReadDates = lastReadDates));
+      .select(selectReadComicBooksList)
+      .subscribe(comicBooksRead => (this.comicBooksRead = comicBooksRead));
     this.logger.trace('Subscribing to messaging updates');
     this.messagingSubscription = this.store
       .select(selectMessagingState)

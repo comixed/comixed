@@ -23,7 +23,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS, HttpBackend } from '@angular/common/http';
 import { HttpInterceptor } from '@app/interceptors/http.interceptor';
-import { HomeComponent } from './pages/home/home.component';
+import { HomePageComponent } from '@app/pages/home-page/home-page.component';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -50,7 +50,7 @@ import { APP_REDUCERS } from '@app/app.reducers';
 import { environment } from '../environments/environment';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { ReleaseEffects } from '@app/effects/release.effects';
-import { BuildDetailsComponent } from './pages/build-details/build-details.component';
+import { BuildDetailsPageComponent } from '@app/pages/build-details-page/build-details-page.component';
 import { MatCardModule } from '@angular/material/card';
 import { AdminModule } from '@app/admin/admin.module';
 import { MatDividerModule } from '@angular/material/divider';
@@ -83,9 +83,9 @@ import { LibraryPluginsModule } from '@app/library-plugins/library-plugins.modul
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
+    HomePageComponent,
     NavigationBarComponent,
-    BuildDetailsComponent,
+    BuildDetailsPageComponent,
     FooterComponent,
     SideNavigationComponent,
     CollectionsChartComponent,

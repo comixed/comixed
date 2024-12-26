@@ -278,17 +278,6 @@
     </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="last-read-date">
-    <mat-header-cell mat-sort-header *matHeaderCellDef>
-      {{ "comic-detail-list-view.label.last-read-date" | translate }}
-    </mat-header-cell>
-    <mat-cell *matCellDef="let entry">
-      <span class="cx-width-100 cx-text-nowrap cx-padding-5">
-        {{ lastReadDate(entry.item) | date: "mediumDate" }}
-      </span>
-    </mat-cell>
-  </ng-container>
-
   <ng-container matColumnDef="added-date">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "comic-detail-list-view.label.added-date" | translate }}

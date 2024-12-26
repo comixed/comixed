@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector } from '@ngrx/store';
-import {
-  COMIC_BOOKS_READ_FEATURE_KEY,
-  SetComicsReadState
-} from '../reducers/comic-books-read.reducer';
+package org.comixedproject.service.user;
 
-export const selectComicBooksReadState =
-  createFeatureSelector<SetComicsReadState>(COMIC_BOOKS_READ_FEATURE_KEY);
+/**
+ * <code>ReadComicBooksException</code> is thrown when an error occurs while working with read comic
+ * books.
+ *
+ * @author Darryl L. Pierce
+ */
+public class ReadComicBooksException extends Exception {
+  public ReadComicBooksException(final String message, final Exception cause) {
+    super(message, cause);
+  }
+}

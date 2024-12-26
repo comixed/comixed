@@ -30,7 +30,6 @@ import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishComicBookSelectionStateAction;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicTagType;
-import org.comixedproject.service.library.LastReadService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,7 +51,6 @@ public class ComicBookSelectionServiceTest {
 
   @InjectMocks private ComicBookSelectionService service;
   @Mock private ComicDetailService comicDetailService;
-  @Mock private LastReadService lastReadService;
   @Mock private ObjectMapper objectMapper;
   @Mock private Example<ComicDetail> example;
   @Mock private ComicDetailExampleBuilder exampleBuilder;

@@ -40,10 +40,6 @@ public enum ComicEvent {
   undeleteComic,
   // the comic file was recreated
   comicFileRecreated,
-  // the comic has been marked as read by a user
-  markAsRead,
-  // the comic has been marked as unread by a user
-  markAsUnread,
   scraped,
   // start the process of updating details for some comics
   updateDetails,

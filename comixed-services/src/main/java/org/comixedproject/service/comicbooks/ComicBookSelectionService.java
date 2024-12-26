@@ -36,7 +36,6 @@ import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.comicbooks.ComicType;
-import org.comixedproject.service.library.LastReadService;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -53,7 +52,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class ComicBookSelectionService {
   @Autowired private ComicDetailService comicDetailService;
-  @Autowired private LastReadService lastReadService;
   @Autowired private ObjectFactory<ComicDetailExampleBuilder> exampleBuilderObjectFactory;
   @Autowired private PublishComicBookSelectionStateAction publishComicBookSelectionStateAction;
   @Autowired private ObjectMapper objectMapper;

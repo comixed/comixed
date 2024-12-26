@@ -21,23 +21,7 @@ package org.comixedproject.model.comicbooks;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import java.io.File;
 import java.util.*;
 import lombok.Getter;
@@ -48,7 +32,6 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.library.LastRead;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
 import org.springframework.data.annotation.CreatedDate;
@@ -318,10 +301,6 @@ public class ComicDetail {
   @Getter
   @Setter
   private Date addedDate = new Date();
-
-  @OneToMany(mappedBy = "comicDetail", orphanRemoval = true)
-  @Getter
-  private final List<LastRead> lastReadList = new ArrayList<>();
 
   /**
    * Returns the id for the parent comic book.

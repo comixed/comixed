@@ -30,10 +30,10 @@ import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'cx-build-details',
-  templateUrl: './build-details.component.html',
-  styleUrls: ['./build-details.component.scss']
+  templateUrl: './build-details-page.component.html',
+  styleUrls: ['./build-details-page.component.scss']
 })
-export class BuildDetailsComponent implements OnInit, OnDestroy {
+export class BuildDetailsPageComponent implements OnInit, OnDestroy {
   detailsSubscription: Subscription;
   details: CurrentRelease;
   langChangeSubscription: Subscription;
