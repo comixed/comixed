@@ -145,25 +145,25 @@ public class MetadataServiceTest {
     Mockito.when(metadataAdaptorRegistry.getAdaptor(Mockito.anyString()))
         .thenReturn(metadataAdaptor);
 
-    Mockito.when(issueDetailsMetadata.getPublisher()).thenReturn(TEST_ISSUE_PUBLISHER);
-    Mockito.when(issueDetailsMetadata.getSeries()).thenReturn(TEST_ISSUE_SERIES_NAME);
-    Mockito.when(issueDetailsMetadata.getVolume()).thenReturn(TEST_ISSUE_VOLUME);
-    Mockito.when(issueDetailsMetadata.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
+    Mockito.when(issueDetailsMetadata.getPublisher()).thenReturn(addPadding(TEST_ISSUE_PUBLISHER));
+    Mockito.when(issueDetailsMetadata.getSeries()).thenReturn(addPadding(TEST_ISSUE_SERIES_NAME));
+    Mockito.when(issueDetailsMetadata.getVolume()).thenReturn(addPadding(TEST_ISSUE_VOLUME));
+    Mockito.when(issueDetailsMetadata.getIssueNumber()).thenReturn(addPadding(TEST_ISSUE_NUMBER));
     Mockito.when(issueDetailsMetadata.getCoverDate()).thenReturn(TEST_COVER_DATE);
     Mockito.when(issueDetailsMetadata.getStoreDate()).thenReturn(TEST_STORE_DATE);
-    Mockito.when(issueDetailsMetadata.getTitle()).thenReturn(TEST_TITLE);
-    Mockito.when(issueDetailsMetadata.getDescription()).thenReturn(TEST_DESCRIPTION);
+    Mockito.when(issueDetailsMetadata.getTitle()).thenReturn(addPadding(TEST_TITLE));
+    Mockito.when(issueDetailsMetadata.getDescription()).thenReturn(addPadding(TEST_DESCRIPTION));
     Mockito.when(issueDetailsMetadata.getWebAddress()).thenReturn(TEST_WEB_ADDRESS);
-    Mockito.when(issueDetailsMetadata.getSourceId()).thenReturn(TEST_SOURCE_ID);
+    Mockito.when(issueDetailsMetadata.getSourceId()).thenReturn(addPadding(TEST_SOURCE_ID));
     for (int index = 0; index < 5; index++) {
-      characterList.add("CHARACTER" + index);
-      teamList.add("TEST" + index);
-      locationList.add("LOCATION" + index);
-      storyList.add("STORY" + index);
+      characterList.add(addPadding("CHARACTER" + index));
+      teamList.add(addPadding("TEST" + index));
+      locationList.add(addPadding("LOCATION" + index));
+      storyList.add(addPadding("STORY" + index));
       creditList.add(
           new IssueDetailsMetadata.CreditEntry(
               ComicTagType.values()[RandomUtils.nextInt(ComicTagType.values().length)].getValue(),
-              "Person Name " + index));
+              addPadding("Person Name " + index)));
     }
     Mockito.when(issueDetailsMetadata.getCharacters()).thenReturn(characterList);
     Mockito.when(issueDetailsMetadata.getTeams()).thenReturn(teamList);
@@ -182,6 +182,10 @@ public class MetadataServiceTest {
 
     Mockito.when(processComicDescriptionAction.execute(Mockito.anyString()))
         .thenAnswer(input -> input.getArguments()[0]);
+  }
+
+  private String addPadding(final String value) {
+    return String.format(" %s ", value);
   }
 
   @Test(expected = MetadataException.class)
