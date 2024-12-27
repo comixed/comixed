@@ -1,31 +1,31 @@
 <?xml version="1.0"?>
 <ComicInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <Title>Test Title</Title>
-  <Series>Test Series</Series>
-  <AlternateSeries>Test Alternate Series</AlternateSeries>
-  <Number>24</Number>
-  <Volume>2011</Volume>
-  <Summary>Test summary &lt;em&gt;inner tag&lt;/em&gt;</Summary>
-  <Notes>Test notes</Notes>
+  <Title> Test Title </Title>
+  <Series> Test Series </Series>
+  <AlternateSeries> Test Alternate Series </AlternateSeries>
+  <Number> 24 </Number>
+  <Volume> 2011 </Volume>
+  <Summary> Test summary &lt;em&gt;inner tag&lt;/em&gt; </Summary>
+  <Notes> Test notes </Notes>
   <Year>2013</Year>
   <Month>12</Month>
-  <Writer>Test Writer1, Test Writer2</Writer>
-  <Penciller>Test Penciller1, Test Penciller2</Penciller>
-  <Inker>Test Inker1, Test Inker2</Inker>
-  <Colorist>Test Colorist1, Test Colorist2</Colorist>
-  <Letterer>Test Letterer1, Test Letterer2</Letterer>
-  <CoverArtist>Test CoverArtist1, Test CoverArtist2</CoverArtist>
-  <Editor>Test Editor1, Test Editor2</Editor>
-  <Publisher>Test Publisher</Publisher>
+  <Writer> Test Writer1 , Test Writer2 </Writer>
+  <Penciller> Test Penciller1 , Test Penciller2 </Penciller>
+  <Inker> Test Inker1 , Test Inker2 </Inker>
+  <Colorist> Test Colorist1 , Test Colorist2 </Colorist>
+  <Letterer> Test Letterer1 , Test Letterer2 </Letterer>
+  <CoverArtist> Test CoverArtist1 , Test CoverArtist2 </CoverArtist>
+  <Editor> Test Editor1 , Test Editor2 </Editor>
+  <Publisher> Test Publisher </Publisher>
   <Web>http://comicvine.gamespot.com/foo/71765-12971/</Web>
   <PageCount>20</PageCount>
-  <Characters>Chareacter1, Character2</Characters>
-  <Teams>Test Team 1, Test Team 2</Teams>
-  <Locations>Test Location 1, Test Location 2</Locations>
+  <Characters> Chareacter1 , Character2 </Characters>
+  <Teams> Test Team 1 , Test Team 2 </Teams>
+  <Locations> Test Location 1 , Test Location 2 </Locations>
   <MetadataSource>
     <Name>ComicVine</Name>
-    <ReferenceId>12971</ReferenceId>
+    <ReferenceId> 12971 </ReferenceId>
   </MetadataSource>
   <Pages>
     <Page Image="0" ImageSize="762694" ImageWidth="1440"

@@ -18,6 +18,8 @@
 
 package org.comixedproject.service.metadata;
 
+import static org.apache.commons.lang3.StringUtils.trim;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
@@ -325,19 +327,19 @@ public class MetadataService {
       final ComicDetail detail = comicBook.getComicDetail();
       log.debug("Updating comicBook with scraped data");
       if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getPublisher())) {
-        detail.setPublisher(issueDetails.getPublisher());
+        detail.setPublisher(trim(issueDetails.getPublisher()));
       }
       if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getPublisher())) {
-        detail.setImprint(issueDetails.getPublisher());
+        detail.setImprint(trim(issueDetails.getPublisher()));
       }
       if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getSeries())) {
-        detail.setSeries(issueDetails.getSeries());
+        detail.setSeries(trim(issueDetails.getSeries()));
       }
       if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getVolume())) {
-        detail.setVolume(issueDetails.getVolume());
+        detail.setVolume(trim(issueDetails.getVolume()));
       }
       if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getIssueNumber())) {
-        detail.setIssueNumber(issueDetails.getIssueNumber());
+        detail.setIssueNumber(trim(issueDetails.getIssueNumber()));
       }
       if (issueDetails.getCoverDate() != null) {
         comicBook
@@ -354,11 +356,11 @@ public class MetadataService {
         detail.setStoreDate(null);
       }
       if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getTitle())) {
-        detail.setTitle(issueDetails.getTitle());
+        detail.setTitle(trim(issueDetails.getTitle()));
       }
       if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getDescription())) {
         detail.setDescription(
-            this.processComicDescriptionAction.execute(issueDetails.getDescription()));
+            this.processComicDescriptionAction.execute(trim(issueDetails.getDescription())));
       }
       if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getWebAddress())) {
         detail.setWebAddress(issueDetails.getWebAddress());
@@ -368,18 +370,24 @@ public class MetadataService {
           .getCharacters()
           .forEach(
               character ->
-                  detail.getTags().add(new ComicTag(detail, ComicTagType.CHARACTER, character)));
+                  detail
+                      .getTags()
+                      .add(new ComicTag(detail, ComicTagType.CHARACTER, trim(character))));
       issueDetails
           .getTeams()
-          .forEach(team -> detail.getTags().add(new ComicTag(detail, ComicTagType.TEAM, team)));
+          .forEach(
+              team -> detail.getTags().add(new ComicTag(detail, ComicTagType.TEAM, trim(team))));
       issueDetails
           .getLocations()
           .forEach(
               location ->
-                  detail.getTags().add(new ComicTag(detail, ComicTagType.LOCATION, location)));
+                  detail
+                      .getTags()
+                      .add(new ComicTag(detail, ComicTagType.LOCATION, trim(location))));
       issueDetails
           .getStories()
-          .forEach(story -> detail.getTags().add(new ComicTag(detail, ComicTagType.STORY, story)));
+          .forEach(
+              story -> detail.getTags().add(new ComicTag(detail, ComicTagType.STORY, trim(story))));
       issueDetails.getCredits().stream()
           .filter(credit -> ComicTagType.forValue(credit.getRole()) != null)
           .forEach(
@@ -388,14 +396,16 @@ public class MetadataService {
                       .getTags()
                       .add(
                           new ComicTag(
-                              detail, ComicTagType.forValue(entry.getRole()), entry.getName())));
+                              detail,
+                              ComicTagType.forValue(entry.getRole()),
+                              trim(entry.getName()))));
       log.trace("Creating comicBook metadata record");
       if (Objects.isNull(comicBook.getMetadata())) {
         comicBook.setMetadata(
-            new ComicMetadataSource(comicBook, metadataSource, issueDetails.getSourceId()));
+            new ComicMetadataSource(comicBook, metadataSource, trim(issueDetails.getSourceId())));
       } else {
         comicBook.getMetadata().setMetadataSource(metadataSource);
-        comicBook.getMetadata().setReferenceId(issueDetails.getSourceId());
+        comicBook.getMetadata().setReferenceId(trim(issueDetails.getSourceId()));
       }
       comicBook
           .getComicDetail()
@@ -440,7 +450,8 @@ public class MetadataService {
         metadataAdaptor.getAllIssues(volumeId, metadataSource);
     if (issues.isEmpty()) {
       log.debug("No issues found");
-      return new ScrapeSeriesResponse(originalPublisher, originalSeries, originalVolume);
+      return new ScrapeSeriesResponse(
+          trim(originalPublisher), trim(originalSeries), trim(originalVolume));
     }
 
     log.debug("Deleting existing issues");
@@ -459,11 +470,11 @@ public class MetadataService {
                       metadata.getCoverDate());
                   final Issue result =
                       new Issue(
-                          metadata.getPublisher(),
-                          metadata.getSeries(),
-                          metadata.getVolume(),
-                          metadata.getIssueNumber());
-                  result.setTitle(metadata.getTitle());
+                          trim(metadata.getPublisher()),
+                          trim(metadata.getSeries()),
+                          trim(metadata.getVolume()),
+                          trim(metadata.getIssueNumber()));
+                  result.setTitle(trim(metadata.getTitle()));
 
                   if (metadata.getCoverDate() != null) {
                     result.setCoverDate(metadata.getCoverDate());
@@ -485,22 +496,22 @@ public class MetadataService {
           issue.getIssueNumber());
       final List<ComicBook> comicBooks =
           this.comicBookService.findComic(
-              originalPublisher, originalSeries, originalVolume, issue.getIssueNumber());
+              originalPublisher, originalSeries, originalVolume, trim(issue.getIssueNumber()));
       if (!comicBooks.isEmpty()) {
         comicBooks.forEach(
             comicBook -> {
               log.trace("Updating comic details");
-              comicBook.getComicDetail().setPublisher(issue.getPublisher());
-              comicBook.getComicDetail().setSeries(issue.getSeries());
-              comicBook.getComicDetail().setVolume(issue.getVolume());
+              comicBook.getComicDetail().setPublisher(trim(issue.getPublisher()));
+              comicBook.getComicDetail().setSeries(trim(issue.getSeries()));
+              comicBook.getComicDetail().setVolume(trim(issue.getVolume()));
               if (comicBook.getMetadata() != null) {
                 log.trace("Updating existing comic metadata source");
                 comicBook.getMetadata().setMetadataSource(metadataSource);
-                comicBook.getMetadata().setReferenceId(issue.getSourceId());
+                comicBook.getMetadata().setReferenceId(trim(issue.getSourceId()));
               } else {
                 log.trace("Creating comic metadata source", comicBook.getId());
                 comicBook.setMetadata(
-                    new ComicMetadataSource(comicBook, metadataSource, issue.getSourceId()));
+                    new ComicMetadataSource(comicBook, metadataSource, trim(issue.getSourceId())));
               }
               log.debug("Firing comic book event: id={}", comicBook.getId());
               this.comicStateHandler.fireEvent(comicBook, ComicEvent.detailsUpdated);
@@ -511,7 +522,9 @@ public class MetadataService {
     }
     log.debug("Returning scraped series details");
     return new ScrapeSeriesResponse(
-        issues.get(0).getPublisher(), issues.get(0).getSeries(), issues.get(0).getVolume());
+        trim(issues.get(0).getPublisher()),
+        trim(issues.get(0).getSeries()),
+        trim(issues.get(0).getVolume()));
   }
 
   Date adjustForTimezone(final Date date) {
