@@ -33,6 +33,7 @@ import org.apache.commons.io.FileUtils;
 import org.comixedproject.service.admin.ConfigurationChangedListener;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -48,6 +49,7 @@ import org.springframework.util.StringUtils;
 public class MissingFileScanner implements InitializingBean, ConfigurationChangedListener {
   @Autowired private ConfigurationService configurationService;
   @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicDetailService comicDetailService;
 
   private static final Object SEMAPHORE = new Object();
 
@@ -165,17 +167,15 @@ public class MissingFileScanner implements InitializingBean, ConfigurationChange
     final Path dir = (Path) key.watchable();
     final Path name = Path.of(((WatchEvent<Path>) event).context().toString());
     final String filename = dir.resolve(name).toString();
-    if (event.kind() != OVERFLOW) {
-      if (this.comicBookService.filenameFound(filename)) {
-        if (event.kind() == ENTRY_CREATE || event.kind() == ENTRY_MODIFY) {
-          log.trace("File found: {}", filename);
-          this.comicBookService.markComicAsFound(filename);
-        } else if (event.kind() == ENTRY_DELETE) {
-          log.trace("File deleted: {}", filename);
-          this.comicBookService.markComicAsMissing(filename);
-        } else {
-          log.trace("Not a library file: {}", filename);
-        }
+    if (event.kind() != OVERFLOW && this.comicDetailService.filenameFound(filename)) {
+      if (event.kind() == ENTRY_CREATE || event.kind() == ENTRY_MODIFY) {
+        log.trace("File found: {}", filename);
+        this.comicBookService.markComicAsFound(filename);
+      } else if (event.kind() == ENTRY_DELETE) {
+        log.trace("File deleted: {}", filename);
+        this.comicBookService.markComicAsMissing(filename);
+      } else {
+        log.trace("Not a library file: {}", filename);
       }
     }
   }

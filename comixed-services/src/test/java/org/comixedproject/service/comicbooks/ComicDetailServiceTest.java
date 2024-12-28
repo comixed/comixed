@@ -73,6 +73,7 @@ public class ComicDetailServiceTest {
   private static final String TEST_SORT_BY = "comic-count";
   private static final String TEST_SORT_DIRECTION = "asc";
   private static final long TEST_READING_LIST_ID = 901L;
+  private static final String TEST_COMIC_FILENAME = "src/test/resources/example.cbz";
 
   @InjectMocks private ComicDetailService service;
   @Mock private ComicDetailRepository comicDetailRepository;
@@ -135,6 +136,30 @@ public class ComicDetailServiceTest {
 
     Mockito.when(comicDetail.getYearPublished()).thenReturn(TEST_COVER_YEAR);
     Mockito.when(comicDetail.getMonthPublished()).thenReturn(TEST_COVER_MONTH);
+  }
+
+  @Test
+  public void testFilenameFound_caseInsensitive() {
+    service.caseSensitiveFilenames = false;
+
+    Mockito.when(comicDetailRepository.existsByFilenameIgnoreCase(Mockito.anyString()))
+        .thenReturn(true);
+
+    assertTrue(service.filenameFound(TEST_COMIC_FILENAME));
+
+    Mockito.verify(comicDetailRepository, Mockito.times(1))
+        .existsByFilenameIgnoreCase(TEST_COMIC_FILENAME);
+  }
+
+  @Test
+  public void testFilenameFound_caseSensitive() {
+    service.caseSensitiveFilenames = true;
+
+    Mockito.when(comicDetailRepository.existsByFilename(Mockito.anyString())).thenReturn(true);
+
+    assertTrue(service.filenameFound(TEST_COMIC_FILENAME));
+
+    Mockito.verify(comicDetailRepository, Mockito.times(1)).existsByFilename(TEST_COMIC_FILENAME);
   }
 
   @Test

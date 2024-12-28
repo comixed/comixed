@@ -1296,24 +1296,6 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFilenameFound() {
-    Mockito.when(comicBookRepository.filenameFound(Mockito.anyString())).thenReturn(true);
-
-    assertTrue(service.filenameFound(TEST_COMIC_FILENAME));
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).filenameFound(TEST_COMIC_FILENAME);
-  }
-
-  @Test
-  public void testFilenameNotFound() {
-    Mockito.when(comicBookRepository.filenameFound(Mockito.anyString())).thenReturn(false);
-
-    assertFalse(service.filenameFound(TEST_COMIC_FILENAME));
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).filenameFound(TEST_COMIC_FILENAME);
-  }
-
-  @Test
   public void testLoadByComicBookIdForPageAndSize() {
     Mockito.when(comicBookRepository.loadByComicDetailId(Mockito.anyList()))
         .thenReturn(comicBookList);

@@ -34,6 +34,7 @@ import org.comixedproject.model.comicfiles.ComicFile;
 import org.comixedproject.model.comicfiles.ComicFileGroup;
 import org.comixedproject.model.metadata.FilenameMetadata;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.service.metadata.FilenameScrapingRuleService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
@@ -54,6 +55,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ComicFileService {
   @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicDetailService comicDetailService;
   @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private ComicFileAdaptor comicFileAdaptor;
   @Autowired private FilenameScrapingRuleService filenameScrapingRuleService;
@@ -141,13 +143,13 @@ public class ComicFileService {
 
   private boolean canBeImported(final File file) throws IOException {
     if (!this.comicFileAdaptor.isComicFile(file)) {
-      log.debug("Not a comic file: }", file.getAbsolutePath());
+      log.debug("Not a comic file: {}", file.getAbsolutePath());
       return false;
     }
 
     final String filename = file.getCanonicalPath().replace("\\", "/");
-    log.debug("Checking if comicBook file is already in the database");
-    return this.comicBookService.filenameFound(filename) == false;
+    log.debug("Checking if comicBook file is already in the database: {}", filename);
+    return !this.comicDetailService.filenameFound(filename);
   }
 
   /**
@@ -160,7 +162,7 @@ public class ComicFileService {
   public void importComicFiles(final List<String> filenames) {
     for (int index = 0; index < filenames.size(); index++) {
       final String filename = filenames.get(index);
-      if (this.comicBookService.filenameFound(filename) == false) {
+      if (!this.comicDetailService.filenameFound(filename)) {
         try {
           log.debug("Creating comicBook: filename={}", filename);
           final ComicBook comicBook = this.comicBookAdaptor.createComic(filename);
