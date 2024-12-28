@@ -21,6 +21,7 @@ package org.comixedproject.service.comicbooks;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.SystemUtils;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.collections.CollectionEntry;
 import org.comixedproject.model.comicbooks.*;
@@ -51,6 +52,17 @@ public class ComicDetailService {
 
   @Autowired
   private ObjectFactory<ComicDetailExampleBuilder> comicDetailExampleBuilderObjectFactory;
+
+  boolean caseSensitiveFilenames = !SystemUtils.IS_OS_WINDOWS;
+
+  @Transactional
+  public boolean filenameFound(final String filename) {
+    if (caseSensitiveFilenames) {
+      return this.comicDetailRepository.existsByFilename(filename);
+    } else {
+      return this.comicDetailRepository.existsByFilenameIgnoreCase(filename);
+    }
+  }
 
   /**
    * Returns the set of all publishers. Filters out comics read by the user if the flag is set.

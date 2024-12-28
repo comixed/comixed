@@ -44,6 +44,7 @@ import org.comixedproject.model.net.comicbooks.PageOrderEntry;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.comixedproject.repositories.comicbooks.ComicBookRepository;
+import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +74,7 @@ public class ComicBookService {
 
   @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private ComicBookRepository comicBookRepository;
+  @Autowired private ComicDetailRepository comicDetailRepository;
   @Autowired private ComicBookMetadataAdaptor comicBookMetadataAdaptor;
   @Autowired private ComicFileAdaptor comicFileAdaptor;
   @Autowired private ImprintService imprintService;
@@ -917,11 +919,6 @@ public class ComicBookService {
   public long getRecreatingCount() {
     log.debug("Getting the recreating count");
     return this.comicBookRepository.getRecreatingCount();
-  }
-
-  @Transactional
-  public boolean filenameFound(final String filename) {
-    return this.comicBookRepository.filenameFound(filename);
   }
 
   @Transactional
