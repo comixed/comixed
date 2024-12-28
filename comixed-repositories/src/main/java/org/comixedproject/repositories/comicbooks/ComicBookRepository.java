@@ -631,10 +631,6 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.targetArchiveType IS NOT NULL")
   long getRecreatingCount();
 
-  @Query(
-      "SELECT CASE WHEN (COUNT(c) > 0) THEN true ELSE FALSE END FROM ComicBook c WHERE c.comicDetail.filename = :filename")
-  boolean filenameFound(@Param("filename") String filename);
-
   /**
    * Returns all comic book ids for the given publisher.
    *

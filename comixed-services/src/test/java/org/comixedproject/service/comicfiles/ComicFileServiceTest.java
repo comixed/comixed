@@ -34,6 +34,7 @@ import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicfiles.ComicFileGroup;
 import org.comixedproject.model.metadata.FilenameMetadata;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.service.metadata.FilenameScrapingRuleService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
@@ -64,6 +65,7 @@ public class ComicFileServiceTest {
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private ComicFileAdaptor comicFileAdaptor;
   @Mock private ComicBookService comicBookService;
+  @Mock private ComicDetailService comicDetailService;
   @Mock private ComicStateHandler comicStateHandler;
   @Mock private ApplicationEventPublisher applicationEventPublisher;
   @Mock private FilenameScrapingRuleService filenameScrapingRuleService;
@@ -131,14 +133,14 @@ public class ComicFileServiceTest {
   @Test
   public void testGetAllComicsAlreadyImported() throws IOException {
     Mockito.when(comicFileAdaptor.isComicFile(Mockito.any(File.class))).thenReturn(true);
-    Mockito.when(comicBookService.filenameFound(Mockito.anyString())).thenReturn(true);
+    Mockito.when(comicDetailService.filenameFound(Mockito.anyString())).thenReturn(true);
 
     final List<ComicFileGroup> result = service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_LIMIT);
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
 
-    Mockito.verify(comicBookService, Mockito.times(1))
+    Mockito.verify(comicDetailService, Mockito.times(1))
         .filenameFound(new File(TEST_COMIC_ARCHIVE).getCanonicalPath().replace("\\", "/"));
   }
 
@@ -174,7 +176,7 @@ public class ComicFileServiceTest {
 
   @Test
   public void testGetAllComicsUnderWithExistingComicBook() throws IOException {
-    Mockito.when(comicBookService.filenameFound(Mockito.anyString())).thenReturn(true);
+    Mockito.when(comicDetailService.filenameFound(Mockito.anyString())).thenReturn(true);
     Mockito.when(comicFileAdaptor.isComicFile(Mockito.any(File.class))).thenCallRealMethod();
 
     final List<ComicFileGroup> result =
@@ -183,16 +185,16 @@ public class ComicFileServiceTest {
     assertNotNull(result);
     assertTrue(result.isEmpty());
 
-    Mockito.verify(comicBookService, Mockito.atLeast(1)).filenameFound(Mockito.anyString());
+    Mockito.verify(comicDetailService, Mockito.atLeast(1)).filenameFound(Mockito.anyString());
   }
 
   @Test
   public void testImporComicFilesAlreadyFound() {
-    Mockito.when(comicBookService.filenameFound(Mockito.anyString())).thenReturn(true);
+    Mockito.when(comicDetailService.filenameFound(Mockito.anyString())).thenReturn(true);
 
     service.importComicFiles(filenameList);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).filenameFound(TEST_COMIC_ARCHIVE);
+    Mockito.verify(comicDetailService, Mockito.times(1)).filenameFound(TEST_COMIC_ARCHIVE);
     Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
     Mockito.verify(applicationEventPublisher, Mockito.times(1))
         .publishEvent(ProcessComicBooksEvent.instance);
@@ -200,11 +202,11 @@ public class ComicFileServiceTest {
 
   @Test
   public void testImporComicFiles() throws AdaptorException {
-    Mockito.when(comicBookService.filenameFound(Mockito.anyString())).thenReturn(false);
+    Mockito.when(comicDetailService.filenameFound(Mockito.anyString())).thenReturn(false);
 
     service.importComicFiles(filenameList);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).filenameFound(TEST_COMIC_ARCHIVE);
+    Mockito.verify(comicDetailService, Mockito.times(1)).filenameFound(TEST_COMIC_ARCHIVE);
     Mockito.verify(comicBookAdaptor, Mockito.times(filenameList.size()))
         .createComic(TEST_COMIC_ARCHIVE);
     Mockito.verify(filenameScrapingRuleService, Mockito.times(filenameList.size()))
@@ -217,13 +219,13 @@ public class ComicFileServiceTest {
 
   @Test
   public void testImporComicFilesComicBookAdaptorException() throws AdaptorException {
-    Mockito.when(comicBookService.filenameFound(Mockito.anyString())).thenReturn(false);
+    Mockito.when(comicDetailService.filenameFound(Mockito.anyString())).thenReturn(false);
     Mockito.when(comicBookAdaptor.createComic(Mockito.anyString()))
         .thenThrow(AdaptorException.class);
 
     service.importComicFiles(filenameList);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).filenameFound(TEST_COMIC_ARCHIVE);
+    Mockito.verify(comicDetailService, Mockito.times(1)).filenameFound(TEST_COMIC_ARCHIVE);
     Mockito.verify(comicBookAdaptor, Mockito.times(filenameList.size()))
         .createComic(TEST_COMIC_ARCHIVE);
     Mockito.verify(filenameScrapingRuleService, Mockito.never())
@@ -240,11 +242,11 @@ public class ComicFileServiceTest {
     Mockito.when(metadata.getVolume()).thenReturn(TEST_VOLUME);
     Mockito.when(metadata.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
     Mockito.when(metadata.getCoverDate()).thenReturn(TEST_COVER_DATE);
-    Mockito.when(comicBookService.filenameFound(Mockito.anyString())).thenReturn(false);
+    Mockito.when(comicDetailService.filenameFound(Mockito.anyString())).thenReturn(false);
 
     service.importComicFiles(filenameList);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).filenameFound(TEST_COMIC_ARCHIVE);
+    Mockito.verify(comicDetailService, Mockito.times(1)).filenameFound(TEST_COMIC_ARCHIVE);
     Mockito.verify(comicBookAdaptor, Mockito.times(filenameList.size()))
         .createComic(TEST_COMIC_ARCHIVE);
     Mockito.verify(filenameScrapingRuleService, Mockito.times(filenameList.size()))

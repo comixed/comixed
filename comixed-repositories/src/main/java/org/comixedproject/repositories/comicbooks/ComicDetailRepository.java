@@ -411,4 +411,22 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
 
   @Query("SELECT d FROM ComicDetail d WHERE d.comicBook.id = :comicBookId")
   ComicDetail findByComicBookId(@Param("comicBookId") Long comicBookId);
+
+  /**
+   * Checks if an existing entry has the provided filename.
+   *
+   * @param filename the filename
+   * @return true if an entry exists
+   * @see #existsByFilenameIgnoreCase(String)
+   */
+  boolean existsByFilename(@Param("filename") String filename);
+
+  /**
+   * Checks if an existing entry has the provided filename, ignorase casing.
+   *
+   * @param filename the filename
+   * @return true if an entry exists
+   * @see #existsByFilename(String)
+   */
+  boolean existsByFilenameIgnoreCase(@Param("filename") String filename);
 }
