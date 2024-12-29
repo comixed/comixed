@@ -54,12 +54,12 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Log4j2
 public class OrganizeLibraryConfiguration {
   public static final String ORGANIZE_LIBRARY_JOB = "organizeLibraryJob";
-  public static final String JOB_ORGANIZATION_TIME_STARTED = "job.organization.time-started";
-  public static final String JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES =
+  public static final String ORGANIZE_LIBRARY_JOB_TIME_STARTED = "job.organization.time-started";
+  public static final String ORGANIZE_LIBRARY_JOB_DELETE_REMOVED_COMIC_FILES =
       "job.organization.delete-removed-comic-files";
-  public static final String JOB_ORGANIZATION_TARGET_DIRECTORY =
+  public static final String ORGANIZE_LIBRARY_JOB_TARGET_DIRECTORY =
       "job.organization.target-directory";
-  public static final String JOB_ORGANIZATION_RENAMING_RULE = "job.organization.renaming-rule";
+  public static final String ORGANIZE_LIBRARY_JOB_RENAMING_RULE = "job.organization.renaming-rule";
 
   @Value("${comixed.batch.organize-library.chunk-size:1}")
   private int chunkSize;

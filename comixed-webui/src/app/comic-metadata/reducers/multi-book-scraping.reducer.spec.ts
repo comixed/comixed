@@ -29,6 +29,9 @@ import {
   COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
 import {
+  batchScrapeComicBooks,
+  batchScrapeComicBooksFailure,
+  batchScrapeComicBooksSuccess,
   loadMultiBookScrapingPage,
   loadMultiBookScrapingPageFailure,
   loadMultiBookScrapingPageSuccess,
@@ -527,6 +530,42 @@ describe('MultiBookScraping Reducer', () => {
     describe('failure', () => {
       beforeEach(() => {
         state = reducer({ ...state }, multiBookScrapeComicFailure());
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+    });
+  });
+
+  describe('batch scraping comic books', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, busy: false }, batchScrapeComicBooks());
+    });
+
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: true },
+          batchScrapeComicBooksSuccess()
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: true },
+          batchScrapeComicBooksFailure()
+        );
       });
 
       it('clears the busy flag', () => {

@@ -19,7 +19,7 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import static junit.framework.TestCase.*;
-import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES;
+import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.ORGANIZE_LIBRARY_JOB_DELETE_REMOVED_COMIC_FILES;
 
 import java.io.File;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
@@ -67,7 +67,7 @@ public class RemoveDeletedComicBooksProcessorTest {
   public void testProcessWithDeleteFile() {
     Mockito.when(
             executionContext.getString(
-                JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))
+                ORGANIZE_LIBRARY_JOB_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))
         .thenReturn(String.valueOf(true));
 
     final ComicBook result = processor.process(comicBook);
@@ -84,7 +84,7 @@ public class RemoveDeletedComicBooksProcessorTest {
   public void testProcess() {
     Mockito.when(
             executionContext.getString(
-                JOB_ORGANIZATION_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))
+                ORGANIZE_LIBRARY_JOB_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))
         .thenReturn(String.valueOf(false));
 
     final ComicBook result = processor.process(comicBook);

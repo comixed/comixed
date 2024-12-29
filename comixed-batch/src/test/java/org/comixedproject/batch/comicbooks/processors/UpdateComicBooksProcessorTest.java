@@ -61,13 +61,14 @@ public class UpdateComicBooksProcessorTest {
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
     processor.beforeStep(stepExecution);
 
-    Mockito.when(jobParameters.getString(JOB_UPDATE_COMICBOOKS_PUBLISHER))
+    Mockito.when(jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_PUBLISHER))
         .thenReturn(TEST_PUBLISHER);
-    Mockito.when(jobParameters.getString(JOB_UPDATE_COMICBOOKS_SERIES)).thenReturn(TEST_SERIES);
-    Mockito.when(jobParameters.getString(JOB_UPDATE_COMICBOOKS_VOLUME)).thenReturn(TEST_VOLUME);
-    Mockito.when(jobParameters.getString(JOB_UPDATE_COMICBOOKS_ISSUENO)).thenReturn(TEST_ISSUENO);
-    Mockito.when(jobParameters.getString(JOB_UPDATE_COMICBOOKS_IMPRINT)).thenReturn(TEST_IMPRINT);
-    Mockito.when(jobParameters.getString(JOB_UPDATE_COMICBOOKS_COMIC_TYPE))
+    Mockito.when(jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_SERIES)).thenReturn(TEST_SERIES);
+    Mockito.when(jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_VOLUME)).thenReturn(TEST_VOLUME);
+    Mockito.when(jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_ISSUE_NUMBER))
+        .thenReturn(TEST_ISSUENO);
+    Mockito.when(jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_IMPRINT)).thenReturn(TEST_IMPRINT);
+    Mockito.when(jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_COMIC_TYPE))
         .thenReturn(TEST_COMIC_TYPE);
   }
 
@@ -84,7 +85,7 @@ public class UpdateComicBooksProcessorTest {
 
   @Test
   public void testProcessNoPublisher() throws Exception {
-    Mockito.when(jobParameters.getString(JOB_UPDATE_COMICBOOKS_PUBLISHER)).thenReturn(null);
+    Mockito.when(jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_PUBLISHER)).thenReturn(null);
 
     processor.process(comicBook);
 
@@ -93,7 +94,7 @@ public class UpdateComicBooksProcessorTest {
 
   @Test
   public void testProcessNoSeries() throws Exception {
-    Mockito.when(jobParameters.getString(JOB_UPDATE_COMICBOOKS_SERIES)).thenReturn(null);
+    Mockito.when(jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_SERIES)).thenReturn(null);
 
     processor.process(comicBook);
 
@@ -102,7 +103,7 @@ public class UpdateComicBooksProcessorTest {
 
   @Test
   public void testProcessNoVolume() throws Exception {
-    Mockito.when(jobParameters.getString(JOB_UPDATE_COMICBOOKS_VOLUME)).thenReturn(null);
+    Mockito.when(jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_VOLUME)).thenReturn(null);
 
     processor.process(comicBook);
 
@@ -111,7 +112,7 @@ public class UpdateComicBooksProcessorTest {
 
   @Test
   public void testProcessNoIssueNumber() throws Exception {
-    Mockito.when(jobParameters.getString(JOB_UPDATE_COMICBOOKS_ISSUENO)).thenReturn(null);
+    Mockito.when(jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_ISSUE_NUMBER)).thenReturn(null);
 
     processor.process(comicBook);
 
@@ -120,7 +121,7 @@ public class UpdateComicBooksProcessorTest {
 
   @Test
   public void testProcessNoImprint() throws Exception {
-    Mockito.when(jobParameters.getString(JOB_UPDATE_COMICBOOKS_IMPRINT)).thenReturn(null);
+    Mockito.when(jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_IMPRINT)).thenReturn(null);
 
     processor.process(comicBook);
 
@@ -129,7 +130,7 @@ public class UpdateComicBooksProcessorTest {
 
   @Test
   public void testProcessNoComicType() throws Exception {
-    Mockito.when(jobParameters.getString(JOB_UPDATE_COMICBOOKS_COMIC_TYPE)).thenReturn(null);
+    Mockito.when(jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_COMIC_TYPE)).thenReturn(null);
 
     processor.process(comicBook);
 

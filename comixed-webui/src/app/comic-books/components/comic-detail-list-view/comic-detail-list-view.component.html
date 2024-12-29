@@ -481,6 +481,16 @@
   <button
     *ngIf="isAdmin"
     mat-menu-item
+    (click)="onBatchScrapeComics(selectedIds)"
+  >
+    <mat-label>
+      {{ "library.context-menu.batch-scrape-selected" | translate }}
+    </mat-label>
+  </button>
+
+  <button
+    *ngIf="isAdmin"
+    mat-menu-item
     (click)="onUpdateSelectedComicBooksMetadata()"
   >
     <mat-label>

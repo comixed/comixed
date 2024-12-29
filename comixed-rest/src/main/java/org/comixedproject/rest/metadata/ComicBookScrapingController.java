@@ -23,6 +23,7 @@ import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LI
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.NonNull;
@@ -70,6 +71,8 @@ public class ComicBookScrapingController {
   @Autowired
   @Qualifier("updateComicBookMetadata")
   private Job updateComicBookMetadata;
+
+  @Autowired private HttpSession httpSession;
 
   /**
    * Retrieves a single {@link IssueMetadata} for the specified issue of the given volume and issue
@@ -383,6 +386,26 @@ public class ComicBookScrapingController {
     } catch (ComicBookSelectionException error) {
       throw new MetadataException("Failed to remove comic book from multi-book scraping", error);
     }
+  }
+
+  /**
+   * Starts batch scraping comic books.
+   *
+   * @param session the user session
+   * @throws ComicBookSelectionException if an error occurs
+   */
+  @PostMapping(
+      value = "/api/metadata/scraping/selected/batch",
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.metadata.batch-scrape-selected")
+  public void batchScrapeSelected(final HttpSession session) throws ComicBookSelectionException {
+    log.info("Preparing to batch scrape selected comic books");
+    final List<Long> ids =
+        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+    this.metadataService.batchScrapeComicBooks(new ArrayList<>(ids));
+    this.comicBookSelectionService.clearSelectedComicBooks(ids);
+    session.setAttribute(LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(ids));
   }
 
   private StartMultiBookScrapingResponse doRemoveComicBook(

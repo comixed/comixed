@@ -35,6 +35,7 @@ import org.comixedproject.metadata.adaptors.MetadataAdaptor;
 import org.comixedproject.metadata.model.IssueDetailsMetadata;
 import org.comixedproject.metadata.model.IssueMetadata;
 import org.comixedproject.metadata.model.VolumeMetadata;
+import org.comixedproject.model.batch.ScrapeMetadataEvent;
 import org.comixedproject.model.collections.Issue;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
@@ -52,6 +53,7 @@ import org.comixedproject.service.metadata.action.ProcessComicDescriptionAction;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -75,6 +77,7 @@ public class MetadataService {
   @Autowired private IssueService issueService;
   @Autowired private ConfigurationService configurationService;
   @Autowired private ProcessComicDescriptionAction processComicDescriptionAction;
+  @Autowired private ApplicationEventPublisher applicationEventPublisher;
 
   /**
    * Retrieves a list of volumes for the given series, up to the max records specified.
@@ -565,5 +568,13 @@ public class MetadataService {
     }
     log.debug("Found supporting metadata adaptor");
     return result.get();
+  }
+
+  @Async
+  public void batchScrapeComicBooks(final List<Long> ids) {
+    log.debug("Marking comics for batch scraping");
+    this.comicBookService.markComicBooksForBatchScraping(ids);
+    log.debug("Starting batch scraping process");
+    this.applicationEventPublisher.publishEvent(ScrapeMetadataEvent.instance);
   }
 }

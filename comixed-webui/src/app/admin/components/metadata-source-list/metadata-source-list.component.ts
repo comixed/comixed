@@ -37,7 +37,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
 import {
   METADATA_CACHE_EXPIRATION_DAYS,
-  METADATA_IGNORE_EMPTY_VALUES
+  METADATA_IGNORE_EMPTY_VALUES,
+  METADATA_SCRAPING_ERROR_THRESHOLD
 } from '@app/admin/admin.constants';
 import {
   selectConfigurationOptionListState,
@@ -93,6 +94,10 @@ export class MetadataSourceListComponent
       expirationDays: [
         '',
         [Validators.required, Validators.min(7), Validators.max(28)]
+      ],
+      scrapingErrorThreshold: [
+        '',
+        [Validators.required, Validators.min(1), Validators.max(10)]
       ]
     });
     this.configurationStateSubscription = this.store
@@ -206,6 +211,13 @@ export class MetadataSourceListComponent
         this.configurationOptionList,
         METADATA_CACHE_EXPIRATION_DAYS,
         '7'
+      )
+    );
+    this.metadataForm.controls.scrapingErrorThreshold.setValue(
+      getConfigurationOption(
+        this.configurationOptionList,
+        METADATA_SCRAPING_ERROR_THRESHOLD,
+        '10'
       )
     );
     this.metadataForm.controls.ignoreEmptyValues.setValue(

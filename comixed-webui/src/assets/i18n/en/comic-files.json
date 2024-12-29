@@ -61,6 +61,7 @@
       "move-comic-files-step": "Moving Comic Files",
       "recreating-comic-file-step": "Recreating Comic Files",
       "remove-deleted-comic-books-step": "Removing Deleted Comic Books",
+      "scrape-metadata-step": "Batch scrape metadata",
       "subtitle": "Processed {processed} Of {total} Comics ({percentage}%)",
       "update-metadata-step": "Update Comic Book Metadata",
       "text": {

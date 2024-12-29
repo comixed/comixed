@@ -18,12 +18,11 @@
 
 package org.comixedproject.batch.initiators;
 
-import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.*;
-import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_COMIC_RENAMING_RULE;
-import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY;
+import static org.comixedproject.batch.comicbooks.ScrapeMetadataConfiguration.*;
+import static org.comixedproject.service.admin.ConfigurationService.CFG_METADATA_SCRAPING_ERROR_THRESHOLD;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.batch.OrganizingLibraryEvent;
+import org.comixedproject.model.batch.ScrapeMetadataEvent;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicbooks.ComicBookService;
@@ -38,74 +37,58 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 /**
- * <code>OrganizeLibraryInitiator</code> decides when to start a batch process to organize the
- * library.
+ * <code>ScrapeComicBookInitiator</code> starts the process of scraping comic books in a batch.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class OrganizeLibraryInitiator {
+public class ScrapeComicBookInitiator {
+  public static final long DEFAULT_ERROR_THRESHOLD = 10L;
+
   @Autowired private ComicBookService comicBookService;
-  @Autowired private ConfigurationService configurationService;
   @Autowired private BatchProcessesService batchProcessesService;
+  @Autowired private ConfigurationService configurationService;
 
   @Autowired
-  @Qualifier(value = ORGANIZE_LIBRARY_JOB)
-  private Job libraryOrganizationJob;
+  @Qualifier(SCRAPE_METADATA_JOB)
+  private Job batchScrapingJob;
 
   @Autowired
   @Qualifier("batchJobLauncher")
   private JobLauncher jobLauncher;
 
-  @Scheduled(fixedDelayString = "${comixed.batch.organize-library.period:60000}")
-  public void execute() {
-    this.doExecute();
-  }
-
   @EventListener
   @Async
-  public void execute(final OrganizingLibraryEvent event) {
+  public void execute(ScrapeMetadataEvent event) {
     this.doExecute();
   }
 
   private void doExecute() {
-    log.trace("Checking for comic files to be organized");
-    if (this.comicBookService.findComicsToBeMovedCount() > 0L
-        && !this.batchProcessesService.hasActiveExecutions(ORGANIZE_LIBRARY_JOB)) {
-      log.trace("Loading configured root directory");
-      final String rootDirectory =
-          this.configurationService.getOptionValue(CFG_LIBRARY_ROOT_DIRECTORY);
-      if (!StringUtils.hasLength(rootDirectory)) {
-        log.error("Cannot organize comic files: no root directory defined");
-        return;
-      }
-      log.trace("Loading configured renaming rule");
-      final String renamingRule =
-          this.configurationService.getOptionValue(CFG_LIBRARY_COMIC_RENAMING_RULE);
-      if (!StringUtils.hasLength(renamingRule)) {
-        log.error("Cannot organize comic files: no renaming rule defined");
-        return;
-      }
+    log.trace("Checking for comic files to import");
+    if (this.comicBookService.getBatchScrapingCount() > 0L
+        && !this.batchProcessesService.hasActiveExecutions(SCRAPE_METADATA_JOB)) {
       try {
-        log.trace("Starting batch job: organize comic files");
+        final Long errorThreshold =
+            Long.parseLong(
+                this.configurationService.getOptionValue(
+                    CFG_METADATA_SCRAPING_ERROR_THRESHOLD,
+                    String.valueOf(DEFAULT_ERROR_THRESHOLD)));
+        log.trace("Starting batch job: batch scraping");
         this.jobLauncher.run(
-            this.libraryOrganizationJob,
+            this.batchScrapingJob,
             new JobParametersBuilder()
-                .addLong(ORGANIZE_LIBRARY_JOB_TIME_STARTED, System.currentTimeMillis())
-                .addString(ORGANIZE_LIBRARY_JOB_TARGET_DIRECTORY, rootDirectory)
-                .addString(ORGANIZE_LIBRARY_JOB_RENAMING_RULE, renamingRule)
+                .addLong(SCRAPE_METADATA_JOB_TIME_STARTED, System.currentTimeMillis())
+                .addLong(SCRAPE_METADATA_JOB_ERROR_THRESHOLD, errorThreshold)
                 .toJobParameters());
       } catch (JobExecutionAlreadyRunningException
           | JobRestartException
           | JobInstanceAlreadyCompleteException
           | JobParametersInvalidException error) {
-        log.error("Failed to run import comic files job", error);
+        log.error("Failed to run batch scraping job", error);
       }
     }
   }

@@ -70,7 +70,7 @@ public class LibraryController {
   private JobLauncher jobLauncher;
 
   @Autowired
-  @Qualifier("updateComicBooksJob")
+  @Qualifier(UPDATE_COMIC_BOOKS_JOB)
   private Job updateComicBooksJob;
 
   /**
@@ -329,14 +329,14 @@ public class LibraryController {
     this.jobLauncher.run(
         this.updateComicBooksJob,
         new JobParametersBuilder()
-            .addLong(JOB_UPDATE_COMICBOOKS_STARTED, System.currentTimeMillis())
-            .addString(JOB_UPDATE_COMICBOOKS_PUBLISHER, request.getPublisher())
-            .addString(JOB_UPDATE_COMICBOOKS_SERIES, request.getSeries())
-            .addString(JOB_UPDATE_COMICBOOKS_VOLUME, request.getVolume())
-            .addString(JOB_UPDATE_COMICBOOKS_ISSUENO, request.getIssueNumber())
-            .addString(JOB_UPDATE_COMICBOOKS_IMPRINT, request.getImprint())
+            .addLong(UPDATE_COMIC_BOOKS_JOB_TIME_STARTED, System.currentTimeMillis())
+            .addString(UPDATE_COMIC_BOOKS_JOB_PUBLISHER, request.getPublisher())
+            .addString(UPDATE_COMIC_BOOKS_JOB_SERIES, request.getSeries())
+            .addString(UPDATE_COMIC_BOOKS_JOB_VOLUME, request.getVolume())
+            .addString(UPDATE_COMIC_BOOKS_JOB_ISSUE_NUMBER, request.getIssueNumber())
+            .addString(UPDATE_COMIC_BOOKS_JOB_IMPRINT, request.getImprint())
             .addString(
-                JOB_UPDATE_COMICBOOKS_COMIC_TYPE,
+                UPDATE_COMIC_BOOKS_JOB_COMIC_TYPE,
                 request.getComicType() != null ? request.getComicType().name() : "")
             .toJobParameters());
   }

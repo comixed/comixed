@@ -78,7 +78,7 @@ public class LibraryControllerTest {
   @Mock private HttpSession httpSession;
 
   @Mock
-  @Qualifier("updateComicBooksJob")
+  @Qualifier(UPDATE_COMIC_BOOKS_JOB)
   private Job updateComicBooksJob;
 
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
@@ -290,11 +290,11 @@ public class LibraryControllerTest {
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
     assertNotNull(jobParameters);
-    assertTrue(jobParameters.getParameters().containsKey(JOB_UPDATE_COMICBOOKS_PUBLISHER));
-    assertTrue(jobParameters.getParameters().containsKey(JOB_UPDATE_COMICBOOKS_SERIES));
-    assertTrue(jobParameters.getParameters().containsKey(JOB_UPDATE_COMICBOOKS_VOLUME));
-    assertTrue(jobParameters.getParameters().containsKey(JOB_UPDATE_COMICBOOKS_ISSUENO));
-    assertTrue(jobParameters.getParameters().containsKey(JOB_UPDATE_COMICBOOKS_IMPRINT));
+    assertTrue(jobParameters.getParameters().containsKey(UPDATE_COMIC_BOOKS_JOB_PUBLISHER));
+    assertTrue(jobParameters.getParameters().containsKey(UPDATE_COMIC_BOOKS_JOB_SERIES));
+    assertTrue(jobParameters.getParameters().containsKey(UPDATE_COMIC_BOOKS_JOB_VOLUME));
+    assertTrue(jobParameters.getParameters().containsKey(UPDATE_COMIC_BOOKS_JOB_ISSUE_NUMBER));
+    assertTrue(jobParameters.getParameters().containsKey(UPDATE_COMIC_BOOKS_JOB_IMPRINT));
 
     Mockito.verify(comicBookService, Mockito.times(1)).updateMultipleComics(idList);
     Mockito.verify(jobLauncher, Mockito.times(1)).run(updateComicBooksJob, jobParameters);

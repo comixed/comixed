@@ -21,6 +21,7 @@ package org.comixedproject.batch.comicbooks.listeners;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
+import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.ORGANIZE_LIBRARY_JOB;
 import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.REMOVE_DELETED_COMIC_BOOKS_STEP;
 
 import org.comixedproject.messaging.PublishingException;
@@ -43,7 +44,6 @@ import org.springframework.batch.core.scope.context.StepContext;
 public class RemoveDeletedComicBooksChunkListenerTest {
   private static final long TEST_TOTAL_COMICS = 717L;
   private static final long TEST_REMAINING_COMICS = 129L;
-  private static final String TEST_JOB_NAME = "The job name";
 
   @InjectMocks private RemoveDeletedComicBooksChunkListener listener;
   @Mock private ComicBookService comicBookService;
@@ -62,7 +62,7 @@ public class RemoveDeletedComicBooksChunkListenerTest {
   @Before
   public void setUp() throws PublishingException {
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
-    Mockito.when(jobInstance.getJobName()).thenReturn(TEST_JOB_NAME);
+    Mockito.when(jobInstance.getJobName()).thenReturn(ORGANIZE_LIBRARY_JOB);
     Mockito.when(jobExecution.getJobInstance()).thenReturn(jobInstance);
     Mockito.when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);

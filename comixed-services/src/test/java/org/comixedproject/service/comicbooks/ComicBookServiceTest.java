@@ -1421,4 +1421,33 @@ public class ComicBookServiceTest {
     Mockito.verify(comicStateHandler, Mockito.times(1))
         .fireEvent(comicBook, ComicEvent.markAsMissing);
   }
+
+  @Test
+  public void testGetBatchScrapingCount() {
+    Mockito.when(comicBookRepository.getBatchScrapingCount()).thenReturn(TEST_COMIC_COUNT);
+
+    final long result = service.getBatchScrapingCount();
+
+    assertEquals(TEST_COMIC_COUNT, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getBatchScrapingCount();
+  }
+
+  @Test
+  public void testFindBatchScrapingComics() {
+    Mockito.when(comicBookRepository.findBatchScrapingComics(pageableCaptor.capture()))
+        .thenReturn(comicBookList);
+
+    final List<ComicBook> result = service.findBatchScrapingComics(TEST_MAXIMUM_COMICS);
+
+    assertNotNull(result);
+    assertSame(comicBookList, result);
+
+    final Pageable pageable = pageableCaptor.getValue();
+    assertNotNull(pageable);
+    assertEquals(0, pageable.getPageNumber());
+    assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findBatchScrapingComics(pageable);
+  }
 }

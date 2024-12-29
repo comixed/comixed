@@ -1008,4 +1008,30 @@ public class ComicBookService {
       this.comicStateHandler.fireEvent(comicBook, ComicEvent.markAsMissing);
     }
   }
+
+  /**
+   * Returns the number of comic books that are being batch scraped.
+   *
+   * @return the count
+   */
+  @Transactional
+  public long getBatchScrapingCount() {
+    return this.comicBookRepository.getBatchScrapingCount();
+  }
+
+  /**
+   * Returns a set of comic books marked for batch scraping.
+   *
+   * @param chunkSize the chunk size
+   * @return the comic book
+   */
+  @Transactional
+  public List<ComicBook> findBatchScrapingComics(final int chunkSize) {
+    return this.comicBookRepository.findBatchScrapingComics(PageRequest.of(0, chunkSize));
+  }
+
+  @Transactional
+  public void markComicBooksForBatchScraping(final List<Long> ids) {
+    this.comicBookRepository.prepareForBatchScraping(ids);
+  }
 }

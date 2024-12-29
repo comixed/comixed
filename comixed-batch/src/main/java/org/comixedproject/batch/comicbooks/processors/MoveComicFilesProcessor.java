@@ -18,8 +18,8 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
-import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.JOB_ORGANIZATION_RENAMING_RULE;
-import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.JOB_ORGANIZATION_TARGET_DIRECTORY;
+import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.ORGANIZE_LIBRARY_JOB_RENAMING_RULE;
+import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.ORGANIZE_LIBRARY_JOB_TARGET_DIRECTORY;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_DONT_MOVE_UNSCRAPED_COMICS;
 
 import java.io.File;
@@ -72,9 +72,9 @@ public class MoveComicFilesProcessor
 
     log.debug("Getting target directory: id={}", comicBook.getId());
     final File targetDirectory =
-        new File(this.jobParameters.getString(JOB_ORGANIZATION_TARGET_DIRECTORY));
+        new File(this.jobParameters.getString(ORGANIZE_LIBRARY_JOB_TARGET_DIRECTORY));
     log.trace("Getting renaming rule");
-    final String renamingRule = this.jobParameters.getString(JOB_ORGANIZATION_RENAMING_RULE);
+    final String renamingRule = this.jobParameters.getString(ORGANIZE_LIBRARY_JOB_RENAMING_RULE);
 
     try {
       log.trace("Creating target directory (if needed)");
