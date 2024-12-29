@@ -19,6 +19,7 @@
 package org.comixedproject.batch.comicbooks.listeners;
 
 import static junit.framework.TestCase.*;
+import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.PROCESS_COMIC_BOOKS_JOB;
 import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
 
 import org.comixedproject.messaging.PublishingException;
@@ -33,8 +34,6 @@ import org.springframework.batch.core.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProcessComicBooksJobListenerTest {
-  private static final String TEST_JOB_NAME = "The job name";
-
   @InjectMocks private ProcessComicBooksJobListener listener;
   @Mock private JobInstance jobInstance;
   @Mock private JobExecution jobExecution;
@@ -46,7 +45,7 @@ public class ProcessComicBooksJobListenerTest {
   @Before
   public void setUp() throws PublishingException {
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
-    Mockito.when(jobInstance.getJobName()).thenReturn(TEST_JOB_NAME);
+    Mockito.when(jobInstance.getJobName()).thenReturn(PROCESS_COMIC_BOOKS_JOB);
     Mockito.when(jobExecution.getJobInstance()).thenReturn(jobInstance);
     Mockito.when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);

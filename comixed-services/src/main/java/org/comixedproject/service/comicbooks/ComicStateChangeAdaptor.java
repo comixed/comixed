@@ -18,6 +18,7 @@
 
 package org.comixedproject.service.comicbooks;
 
+import static org.comixedproject.service.comicbooks.ComicBookService.COMICBOOK_CACHE;
 import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC;
 
 import java.util.Date;
@@ -32,6 +33,7 @@ import org.comixedproject.state.comicbooks.ComicStateChangeListener;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.messaging.Message;
 import org.springframework.statemachine.state.State;
 import org.springframework.stereotype.Component;
@@ -57,6 +59,7 @@ public class ComicStateChangeAdaptor implements InitializingBean, ComicStateChan
   }
 
   @Override
+  @CacheEvict(cacheNames = COMICBOOK_CACHE, allEntries = true)
   public void onComicStateChange(
       final State<ComicState, ComicEvent> state, final Message<ComicEvent> message) {
     final var comic = message.getHeaders().get(HEADER_COMIC, ComicBook.class);

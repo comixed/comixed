@@ -18,8 +18,6 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
-import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
-
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
 import org.comixedproject.model.batch.BatchProcessDetail;
@@ -29,25 +27,23 @@ import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ImportComicFilesJobListener</code> provides a {@link JobExecutionListener} for the overall
- * process of adding comics to the library.
+ * <code>ScrapeMetadataJobListener</code> defines a listener that publishes status updates while
+ * running the scrape metadata batch process.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @JobScope
 @Log4j2
-public class ImportComicFilesJobListener extends AbstractBatchProcessListener
+public class ScrapeMetadataJobListener extends AbstractBatchProcessListener
     implements JobExecutionListener {
   @Override
   public void beforeJob(final JobExecution jobExecution) {
-    log.trace("Publishing status before job");
     this.doPublishBatchProcessDetail(BatchProcessDetail.from(jobExecution));
   }
 
   @Override
   public void afterJob(final JobExecution jobExecution) {
-    log.trace("Publishing status after job");
     this.doPublishBatchProcessDetail(BatchProcessDetail.from(jobExecution));
   }
 }

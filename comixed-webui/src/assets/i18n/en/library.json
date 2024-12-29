@@ -86,12 +86,15 @@
       "tab-title-unprocessed": "Unprocessed Comics",
       "tab-title-unscraped": "Unscraped Comics"
     },
+    "batch-scrape-comics": {
+      "confirmation-message": "Are you sure you want to start batch scraping the selected comic books? Only comics that were previously scraped will be processed.",
+      "confirmation-title": "Batch Scrape Comic Metadata"
+    },
     "comic-group": {
       "invalid-grouping": "The group \"{name}\" is not valid."
     },
     "context-menu": {
-      "organize-entire-library": "Organize entire library...",
-      "organize-selected": "Organize comics...",
+      "batch-scrape-selected": "Batch scrape...",
       "convert": "Recreate Archive",
       "convert-one-to-cb7": "Convert to CB7",
       "convert-one-to-cbz": "Convert to CBZ",
@@ -106,6 +109,8 @@
       "mark-as-unread": "Mark as unread",
       "multiple-comics-menu": "Selected Comics",
       "multiple-comics-plugin-menu": "Plugins",
+      "organize-entire-library": "Organize entire library...",
+      "organize-selected": "Organize comics...",
       "plugin-menu": "Plugins",
       "reading-lists": "Add to list...",
       "rescan-one": "Rescan comic...",

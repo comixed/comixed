@@ -123,6 +123,12 @@ public class ComicBook {
   @Setter
   private boolean batchMetadataUpdate = false;
 
+  @Column(name = "batch_scraping", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean batchScraping = false;
+
   @Column(name = "organizing", nullable = false, updatable = true)
   @JsonIgnore
   @Getter

@@ -18,8 +18,8 @@
 
 package org.comixedproject.batch.initiators;
 
-import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.JOB_PURGE_LIBRARY_START;
 import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.PURGE_LIBRARY_JOB;
+import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.PURGE_LIBRARY_JOB_TIME_STARTED;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.batch.PurgeLibraryEvent;
@@ -79,7 +79,7 @@ public class PurgeLibraryInitiator {
         this.jobLauncher.run(
             this.purgeLibraryJob,
             new JobParametersBuilder()
-                .addLong(JOB_PURGE_LIBRARY_START, System.currentTimeMillis())
+                .addLong(PURGE_LIBRARY_JOB_TIME_STARTED, System.currentTimeMillis())
                 .toJobParameters());
       } catch (JobExecutionAlreadyRunningException
           | JobRestartException

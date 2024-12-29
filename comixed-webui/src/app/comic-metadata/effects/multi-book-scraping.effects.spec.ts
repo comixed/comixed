@@ -37,6 +37,9 @@ import {
 } from '@app/comic-books/comic-books.fixtures';
 import { ScrapeMultiBookComicResponse } from '@app/comic-metadata/models/net/scrape-multi-book-comic-response';
 import {
+  batchScrapeComicBooks,
+  batchScrapeComicBooksFailure,
+  batchScrapeComicBooksSuccess,
   loadMultiBookScrapingPage,
   loadMultiBookScrapingPageFailure,
   loadMultiBookScrapingPageSuccess,
@@ -52,7 +55,7 @@ import {
 } from '@app/comic-metadata/actions/multi-book-scraping.actions';
 import { hot } from 'jasmine-marbles';
 import { AlertService } from '@app/core/services/alert.service';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -110,6 +113,9 @@ describe('MultiBookScrapingEffects', () => {
             ),
             scrapeMultiBookComic: jasmine.createSpy(
               'ComicBookScrapingService.scrapeMultiBookComic()'
+            ),
+            batchScrapeComicBooks: jasmine.createSpy(
+              'ComicBookScrapingService.batchScrapeComicBooks()'
             )
           }
         },
@@ -411,6 +417,50 @@ describe('MultiBookScrapingEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.multiBookScrapeComic$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('batch scraping comic books', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = new HttpResponse({ status: 200 });
+      const action = batchScrapeComicBooks();
+      const outcome = batchScrapeComicBooksSuccess();
+
+      actions$ = hot('-a', { a: action });
+      comicBookScrapingService.batchScrapeComicBooks.and.returnValue(
+        of(serviceResponse)
+      );
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.batchScrapeComicBooks$).toBeObservable(expected);
+      expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = batchScrapeComicBooks();
+      const outcome = batchScrapeComicBooksFailure();
+
+      actions$ = hot('-a', { a: action });
+      comicBookScrapingService.batchScrapeComicBooks.and.returnValue(
+        throwError(serviceResponse)
+      );
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.batchScrapeComicBooks$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = batchScrapeComicBooks();
+      const outcome = batchScrapeComicBooksFailure();
+
+      actions$ = hot('-a', { a: action });
+      comicBookScrapingService.batchScrapeComicBooks.and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.batchScrapeComicBooks$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

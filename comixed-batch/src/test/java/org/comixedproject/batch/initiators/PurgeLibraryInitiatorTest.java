@@ -1,7 +1,7 @@
 package org.comixedproject.batch.initiators;
 
-import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.JOB_PURGE_LIBRARY_START;
 import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.PURGE_LIBRARY_JOB;
+import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.PURGE_LIBRARY_JOB_TIME_STARTED;
 import static org.junit.Assert.*;
 
 import org.comixedproject.model.batch.PurgeLibraryEvent;
@@ -91,7 +91,7 @@ public class PurgeLibraryInitiatorTest {
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
-    assertNotNull(jobParameters.getLong(JOB_PURGE_LIBRARY_START));
+    assertNotNull(jobParameters.getLong(PURGE_LIBRARY_JOB_TIME_STARTED));
 
     Mockito.verify(jobLauncher, Mockito.times(1)).run(purgeLibraryJob, jobParameters);
   }
@@ -106,7 +106,7 @@ public class PurgeLibraryInitiatorTest {
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
-    assertNotNull(jobParameters.getLong(JOB_PURGE_LIBRARY_START));
+    assertNotNull(jobParameters.getLong(PURGE_LIBRARY_JOB_TIME_STARTED));
 
     Mockito.verify(jobLauncher, Mockito.times(1)).run(purgeLibraryJob, jobParameters);
   }
@@ -124,7 +124,7 @@ public class PurgeLibraryInitiatorTest {
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
-    assertNotNull(jobParameters.getLong(JOB_PURGE_LIBRARY_START));
+    assertNotNull(jobParameters.getLong(PURGE_LIBRARY_JOB_TIME_STARTED));
 
     Mockito.verify(jobLauncher, Mockito.times(1)).run(purgeLibraryJob, jobParameters);
   }

@@ -119,9 +119,10 @@ public class OrganizeLibraryInitiatorTest {
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
-    assertNotNull(jobParameters.getLong(JOB_ORGANIZATION_TIME_STARTED));
-    assertEquals(TEST_ROOT_DIRECTORY, jobParameters.getString(JOB_ORGANIZATION_TARGET_DIRECTORY));
-    assertEquals(TEST_RENAMING_RULE, jobParameters.getString(JOB_ORGANIZATION_RENAMING_RULE));
+    assertNotNull(jobParameters.getLong(ORGANIZE_LIBRARY_JOB_TIME_STARTED));
+    assertEquals(
+        TEST_ROOT_DIRECTORY, jobParameters.getString(ORGANIZE_LIBRARY_JOB_TARGET_DIRECTORY));
+    assertEquals(TEST_RENAMING_RULE, jobParameters.getString(ORGANIZE_LIBRARY_JOB_RENAMING_RULE));
 
     Mockito.verify(jobLauncher, Mockito.times(1)).run(loadPageHashesJob, jobParameters);
   }
@@ -136,9 +137,10 @@ public class OrganizeLibraryInitiatorTest {
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
-    assertNotNull(jobParameters.getLong(JOB_ORGANIZATION_TIME_STARTED));
-    assertEquals(TEST_ROOT_DIRECTORY, jobParameters.getString(JOB_ORGANIZATION_TARGET_DIRECTORY));
-    assertEquals(TEST_RENAMING_RULE, jobParameters.getString(JOB_ORGANIZATION_RENAMING_RULE));
+    assertNotNull(jobParameters.getLong(ORGANIZE_LIBRARY_JOB_TIME_STARTED));
+    assertEquals(
+        TEST_ROOT_DIRECTORY, jobParameters.getString(ORGANIZE_LIBRARY_JOB_TARGET_DIRECTORY));
+    assertEquals(TEST_RENAMING_RULE, jobParameters.getString(ORGANIZE_LIBRARY_JOB_RENAMING_RULE));
 
     Mockito.verify(jobLauncher, Mockito.times(1)).run(loadPageHashesJob, jobParameters);
   }
@@ -183,9 +185,10 @@ public class OrganizeLibraryInitiatorTest {
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
-    assertNotNull(jobParameters.getLong(JOB_ORGANIZATION_TIME_STARTED));
-    assertEquals(TEST_ROOT_DIRECTORY, jobParameters.getString(JOB_ORGANIZATION_TARGET_DIRECTORY));
-    assertEquals(TEST_RENAMING_RULE, jobParameters.getString(JOB_ORGANIZATION_RENAMING_RULE));
+    assertNotNull(jobParameters.getLong(ORGANIZE_LIBRARY_JOB_TIME_STARTED));
+    assertEquals(
+        TEST_ROOT_DIRECTORY, jobParameters.getString(ORGANIZE_LIBRARY_JOB_TARGET_DIRECTORY));
+    assertEquals(TEST_RENAMING_RULE, jobParameters.getString(ORGANIZE_LIBRARY_JOB_RENAMING_RULE));
 
     Mockito.verify(jobLauncher, Mockito.times(1)).run(loadPageHashesJob, jobParameters);
   }

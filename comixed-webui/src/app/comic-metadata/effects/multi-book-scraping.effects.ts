@@ -21,6 +21,9 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import {
+  batchScrapeComicBooks,
+  batchScrapeComicBooksFailure,
+  batchScrapeComicBooksSuccess,
   loadMultiBookScrapingPage,
   loadMultiBookScrapingPageFailure,
   loadMultiBookScrapingPageSuccess,
@@ -228,6 +231,42 @@ export class MultiBookScrapingEffects {
           this.translateService.instant('app.general-effect-failure')
         );
         return of(multiBookScrapeComicFailure());
+      })
+    );
+  });
+
+  batchScrapeComicBooks$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(batchScrapeComicBooks),
+      tap(action => this.logger.debug('Batch scraping comic books:', action)),
+      switchMap(action =>
+        this.comicBookScrapingService.batchScrapeComicBooks().pipe(
+          tap(response => this.logger.debug('Response received;', response)),
+          tap(() =>
+            this.alertService.info(
+              this.translateService.instant(
+                'multi-book-scraping.batch-scraping.effect-success'
+              )
+            )
+          ),
+          map(() => batchScrapeComicBooksSuccess()),
+          catchError(error => {
+            this.logger.error('Service failure:', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'multi-book-scraping.batch-scraping.effect-failure'
+              )
+            );
+            return of(batchScrapeComicBooksFailure());
+          })
+        )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(batchScrapeComicBooksFailure());
       })
     );
   });

@@ -21,6 +21,7 @@ package org.comixedproject.batch.comicbooks.listeners;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
+import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.RECREATE_COMIC_FILES_JOB;
 import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.RECREATE_COMIC_FILE_STEP;
 
 import org.comixedproject.messaging.PublishingException;
@@ -42,7 +43,6 @@ import org.springframework.batch.core.scope.context.StepContext;
 public class RecreateComicFileChunkListenerTest {
   private static final long TEST_TOTAL_COMICS = 77L;
   private static final long TEST_PROCESSED_COMICS = 15L;
-  private static final String TEST_JOB_NAME = "The job name";
 
   @InjectMocks private RecreateComicFileChunkListener listener;
   @Mock private ComicBookService comicBookService;
@@ -61,7 +61,7 @@ public class RecreateComicFileChunkListenerTest {
   @Before
   public void setUp() throws PublishingException {
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
-    Mockito.when(jobInstance.getJobName()).thenReturn(TEST_JOB_NAME);
+    Mockito.when(jobInstance.getJobName()).thenReturn(RECREATE_COMIC_FILES_JOB);
     Mockito.when(jobExecution.getJobInstance()).thenReturn(jobInstance);
     Mockito.when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);

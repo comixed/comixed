@@ -45,7 +45,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Log4j2
 public class ProcessComicBooksConfiguration {
   public static final String PROCESS_COMIC_BOOKS_JOB = "processComicBooksJob";
-  public static final String PROCESS_COMIC_BOOKS_STARTED_JOB = "job.process-comic-books.started";
+  public static final String PROCESS_COMIC_BOOKS_STARTED_JOB =
+      "job.process-comic-books.time-started";
 
   @Value("${comixed.batch.process-comic-books.chunk-size:10}")
   private int chunkSize;

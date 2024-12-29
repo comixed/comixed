@@ -22,6 +22,7 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
 import { interpolate } from '@app/core';
 import {
+  BATCH_SCRAPE_SELECTED_COMICS_URL,
   CLEAR_METADATA_CACHE_URL,
   LOAD_MULTIBOOK_SCRAPING_URL,
   LOAD_SCRAPING_ISSUE_URL,
@@ -234,6 +235,11 @@ export class ComicBookScrapingService {
         pageSize: args.pageSize
       } as ScrapeSingleBookComicRequest
     );
+  }
+
+  batchScrapeComicBooks(): Observable<any> {
+    this.logger.debug('Batch scraping selected comic books');
+    return this.http.post(interpolate(BATCH_SCRAPE_SELECTED_COMICS_URL), {});
   }
 
   startMetadataUpdateProcess(args: { skipCache: boolean }): Observable<any> {

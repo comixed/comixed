@@ -18,6 +18,8 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
+import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.RECREATE_COMIC_FILES_JOB;
+
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
 import org.comixedproject.model.batch.BatchProcessDetail;
@@ -30,8 +32,6 @@ import org.springframework.batch.core.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RecreatingComicFilesJobListenerTest {
-  private static final String TEST_JOB_NAME = "The job name";
-
   @InjectMocks private RecreatingComicFilesJobListener listener;
   @Mock private JobInstance jobInstance;
   @Mock private JobExecution jobExecution;
@@ -43,7 +43,7 @@ public class RecreatingComicFilesJobListenerTest {
   @Before
   public void setUp() throws PublishingException {
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
-    Mockito.when(jobInstance.getJobName()).thenReturn(TEST_JOB_NAME);
+    Mockito.when(jobInstance.getJobName()).thenReturn(RECREATE_COMIC_FILES_JOB);
     Mockito.when(jobExecution.getJobInstance()).thenReturn(jobInstance);
     Mockito.when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);

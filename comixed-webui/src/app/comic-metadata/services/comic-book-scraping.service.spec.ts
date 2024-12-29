@@ -33,6 +33,7 @@ import {
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/core';
 import {
+  BATCH_SCRAPE_SELECTED_COMICS_URL,
   CLEAR_METADATA_CACHE_URL,
   LOAD_MULTIBOOK_SCRAPING_URL,
   LOAD_SCRAPING_ISSUE_URL,
@@ -294,6 +295,20 @@ describe('ComicBookScrapingService', () => {
       skipCache: SKIP_CACHE,
       pageSize: PAGE_SIZE
     } as ScrapeSingleBookComicRequest);
+    req.flush(serverResponse);
+  });
+
+  it('can batch scrape selected comic books', () => {
+    const serverResponse = new HttpResponse({ status: 200 });
+    service
+      .batchScrapeComicBooks()
+      .subscribe(response => expect(response).toEqual(serverResponse));
+
+    const req = httpMock.expectOne(
+      interpolate(BATCH_SCRAPE_SELECTED_COMICS_URL)
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({});
     req.flush(serverResponse);
   });
 

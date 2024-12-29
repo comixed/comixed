@@ -53,6 +53,8 @@ public class ConfigurationService {
       "library.metadata.ignore-empty-values";
   public static final String CFG_METADATA_CACHE_EXPIRATION_DAYS =
       "library.metadata.cache-expiration-days";
+  public static final String CFG_METADATA_SCRAPING_ERROR_THRESHOLD =
+      "library.metadata.scraping-error-threshold";
   public static final String CREATE_EXTERNAL_METADATA_FILE =
       "library.metadata.create-external-files";
   public static final String CFG_MANAGE_BLOCKED_PAGES = "library.blocked-pages-enabled";

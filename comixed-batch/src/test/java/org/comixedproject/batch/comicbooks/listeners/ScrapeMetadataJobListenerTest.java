@@ -18,6 +18,8 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
+import static org.comixedproject.batch.comicbooks.ScrapeMetadataConfiguration.SCRAPE_METADATA_JOB;
+
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
 import org.comixedproject.model.batch.BatchProcessDetail;
@@ -29,10 +31,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.batch.core.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ImportComicFilesJobListenerTest {
-  private static final String TEST_JOB_NAME = "The job name";
-
-  @InjectMocks private ImportComicFilesJobListener listener;
+public class ScrapeMetadataJobListenerTest {
+  @InjectMocks private ScrapeMetadataJobListener listener;
   @Mock private JobInstance jobInstance;
   @Mock private JobExecution jobExecution;
   @Mock private PublishBatchProcessDetailUpdateAction publishBatchProcessDetailUpdateAction;
@@ -43,12 +43,11 @@ public class ImportComicFilesJobListenerTest {
   @Before
   public void setUp() throws PublishingException {
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
-    Mockito.when(jobInstance.getJobName()).thenReturn(TEST_JOB_NAME);
+    Mockito.when(jobInstance.getJobName()).thenReturn(SCRAPE_METADATA_JOB);
     Mockito.when(jobExecution.getJobInstance()).thenReturn(jobInstance);
     Mockito.when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);
 
-    Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
     Mockito.doNothing()
         .when(publishBatchProcessDetailUpdateAction)
         .publish(batchProcessDetailArgumentCaptor.capture());
@@ -65,15 +64,6 @@ public class ImportComicFilesJobListenerTest {
 
   @Test
   public void testAfterJob() throws PublishingException {
-    listener.afterJob(jobExecution);
-
-    final BatchProcessDetail detail = batchProcessDetailArgumentCaptor.getValue();
-
-    Mockito.verify(publishBatchProcessDetailUpdateAction, Mockito.times(1)).publish(detail);
-  }
-
-  @Test
-  public void testAfterJobPublishingException() throws PublishingException {
     listener.afterJob(jobExecution);
 
     final BatchProcessDetail detail = batchProcessDetailArgumentCaptor.getValue();

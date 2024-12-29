@@ -48,7 +48,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Log4j2
 public class PurgeLibraryConfiguration {
   public static final String PURGE_LIBRARY_JOB = "purgeLibraryJob";
-  public static final String JOB_PURGE_LIBRARY_START = "job.purge-library.started";
+  public static final String PURGE_LIBRARY_JOB_TIME_STARTED = "job.purge-library.time-started";
 
   @Value("${comixed.batch.purge-library.chunk-size:1}")
   private int chunkSize;

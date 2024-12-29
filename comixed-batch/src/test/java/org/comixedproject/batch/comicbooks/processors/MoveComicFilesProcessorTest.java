@@ -19,8 +19,8 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import static junit.framework.TestCase.*;
-import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.JOB_ORGANIZATION_RENAMING_RULE;
-import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.JOB_ORGANIZATION_TARGET_DIRECTORY;
+import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.ORGANIZE_LIBRARY_JOB_RENAMING_RULE;
+import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.ORGANIZE_LIBRARY_JOB_TARGET_DIRECTORY;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_DONT_MOVE_UNSCRAPED_COMICS;
 
 import java.io.File;
@@ -81,9 +81,9 @@ public class MoveComicFilesProcessorTest {
   public void setUp() throws IOException {
     Mockito.when(configurationService.isFeatureEnabled(CFG_DONT_MOVE_UNSCRAPED_COMICS))
         .thenReturn(false);
-    Mockito.when(jobParameters.getString(JOB_ORGANIZATION_TARGET_DIRECTORY))
+    Mockito.when(jobParameters.getString(ORGANIZE_LIBRARY_JOB_TARGET_DIRECTORY))
         .thenReturn(TEST_TARGET_DIRECTORY);
-    Mockito.when(jobParameters.getString(JOB_ORGANIZATION_RENAMING_RULE))
+    Mockito.when(jobParameters.getString(ORGANIZE_LIBRARY_JOB_RENAMING_RULE))
         .thenReturn(TEST_RENAMING_RULE);
     Mockito.when(comicDetail.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
     Mockito.when(comicDetailFile.exists()).thenReturn(true);

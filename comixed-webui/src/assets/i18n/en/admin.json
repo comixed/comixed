@@ -45,9 +45,10 @@
       "created": "The job was created {created}.",
       "duration": "The job ran from {started} until {ended}.",
       "error-header": "Errors Reported During Job Run",
+      "exit-code": "The job's exit code was {status}.",
       "last-updated": "The job was last updated {updated}.",
       "running-now": "This job was started {started} and is running now.",
-      "status": "The job's exit status is {status}."
+      "status": "The job's exit status was {status}."
     }
   },
   "configuration": {
