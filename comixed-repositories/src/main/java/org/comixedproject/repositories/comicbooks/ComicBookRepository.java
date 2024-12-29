@@ -631,6 +631,11 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.targetArchiveType IS NOT NULL")
   long getRecreatingCount();
 
+  @Modifying
+  @Query(
+      "UPDATE ComicBook c SET c.batchScraping = true WHERE c.id IN (:ids) AND c.batchScraping IS FALSE AND c.metadata IS NOT NULL")
+  void prepareForBatchScraping(@Param("ids") List<Long> ids);
+
   /**
    * Returns all comic book ids for the given publisher.
    *
@@ -667,4 +672,23 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    */
   @Query("SELECT d.filename FROM ComicDetail d WHERE d.missing = :missing")
   Set<String> getComicFilenames(@Param("missing") boolean missing);
+
+  /**
+   * Returns the number of comic books that are marked for an can be batch scraped.
+   *
+   * @return the count
+   */
+  @Query(
+      "SELECT COUNT(c) FROM ComicBook c WHERE c.batchScraping IS TRUE AND c.metadata IS NOT NULL")
+  long getBatchScrapingCount();
+
+  /**
+   * Returns a subset of comic books marked for batch scraping. Only comic books with the batch
+   * scraping flag set and which have a metadata source are returned.
+   *
+   * @param pageable the page request
+   * @return the comic books
+   */
+  @Query("SELECT c FROM ComicBook c WHERE c.batchScraping IS TRUE AND c.metadata IS NOT NULL")
+  List<ComicBook> findBatchScrapingComics(Pageable pageable);
 }

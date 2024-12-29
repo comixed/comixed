@@ -18,6 +18,9 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
+  batchScrapeComicBooks,
+  batchScrapeComicBooksFailure,
+  batchScrapeComicBooksSuccess,
   loadMultiBookScrapingPage,
   loadMultiBookScrapingPageFailure,
   loadMultiBookScrapingPageSuccess,
@@ -128,7 +131,10 @@ export const reducer = createReducer(
     currentComicBook: getCurrentComicBook(action.comicBooks),
     status: updateStatus(action.comicBooks)
   })),
-  on(multiBookScrapeComicFailure, state => ({ ...state, busy: false }))
+  on(multiBookScrapeComicFailure, state => ({ ...state, busy: false })),
+  on(batchScrapeComicBooks, state => ({ ...state, busy: true })),
+  on(batchScrapeComicBooksSuccess, state => ({ ...state, busy: false })),
+  on(batchScrapeComicBooksFailure, state => ({ ...state, busy: false }))
 );
 
 export const multiBookScrapingFeature = createFeature({

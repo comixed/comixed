@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,11 +19,11 @@
 package org.comixedproject.batch.comicbooks;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicbooks.listeners.UpdateMetadataChunkListener;
-import org.comixedproject.batch.comicbooks.listeners.UpdateMetadataJobListener;
-import org.comixedproject.batch.comicbooks.processors.UpdateMetadataProcessor;
-import org.comixedproject.batch.comicbooks.readers.UpdateMetadataReader;
-import org.comixedproject.batch.comicbooks.writers.UpdateMetadataWriter;
+import org.comixedproject.batch.comicbooks.listeners.ScrapeMetadataChunkListener;
+import org.comixedproject.batch.comicbooks.listeners.ScrapeMetadataJobListener;
+import org.comixedproject.batch.comicbooks.processors.ScrapeMetadataProcessor;
+import org.comixedproject.batch.comicbooks.readers.ScrapeMetadataReader;
+import org.comixedproject.batch.writers.NoopWriter;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -38,63 +38,68 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * <code>UpdateMetadataConfiguration</code> defines a batch process that updates the metadata within
- * comics.
+ * <code>ScrapeMetadataConfiguration</code> defines a batch process that scrapes comic book metadata
+ * in the background.
  *
- * @author Darryl L Pierce
+ * @author Darryl L. Pierce
  */
 @Configuration
 @Log4j2
-public class UpdateMetadataConfiguration {
-  public static final String UPDATE_METADATA_JOB = "updateMetadataJob";
-  public static final String UPDATE_METADATA_JOB_TIME_STARTED = "job.update-metadata.time-started";
+public class ScrapeMetadataConfiguration {
+  public static final String SCRAPE_METADATA_JOB = "scrapeMetadataJob";
+  public static final String SCRAPE_METADATA_JOB_TIME_STARTED = "job.scrape-metadata.time-started";
+  public static final String SCRAPE_METADATA_JOB_ERROR_THRESHOLD =
+      "job.scrape-metadata.error-threshold";
+  public static final String SCRAPE_METADATA_STEP = "scrape-metadata-step";
 
-  @Value("${comixed.batch.update-metadata.chunk-size:10}")
+  @Value("${comixed.batch.scrape-metadata.chunk-size:10}")
   private int chunkSize;
 
   /**
-   * Returns the job bean to update comic metadata.
+   * Returns the scrape metadata job.
    *
    * @param jobRepository the job repository
-   * @param updateMetadataStep the update metadata step
+   * @param jobListener the job listener
+   * @param scrapeMetadataStep the scrape metadata step
    * @return the job
    */
-  @Bean(name = UPDATE_METADATA_JOB)
-  public Job updateMetadataJob(
+  @Bean(name = SCRAPE_METADATA_JOB)
+  public Job scrapeMetadataJob(
       final JobRepository jobRepository,
-      final UpdateMetadataJobListener listener,
-      @Qualifier("updateMetadataStep") final Step updateMetadataStep) {
-    return new JobBuilder(UPDATE_METADATA_JOB, jobRepository)
+      final ScrapeMetadataJobListener jobListener,
+      @Qualifier("scrapeMetadataStep") final Step scrapeMetadataStep) {
+    return new JobBuilder(SCRAPE_METADATA_JOB, jobRepository)
         .incrementer(new RunIdIncrementer())
-        .listener(listener)
-        .start(updateMetadataStep)
+        .listener(jobListener)
+        .start(scrapeMetadataStep)
         .build();
   }
 
   /**
-   * The update metadata step.
+   * Returns the scrape metadata step.
    *
-   * @param jobRepository the job repository
+   * @param jobRepository the step factory
    * @param platformTransactionManager the transaction manager
    * @param reader the reader
    * @param processor the processor
    * @param writer the writer
+   * @param chunkListener the chunk listener
    * @return the step
    */
-  @Bean(name = "updateMetadataStep")
-  public Step updateMetadataStep(
+  @Bean(name = "scrapeMetadataStep")
+  public Step scrapeMetadataStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
-      final UpdateMetadataReader reader,
-      final UpdateMetadataProcessor processor,
-      final UpdateMetadataWriter writer,
-      final UpdateMetadataChunkListener listener) {
-    return new StepBuilder(UPDATE_METADATA_JOB, jobRepository)
+      final ScrapeMetadataReader reader,
+      final ScrapeMetadataProcessor processor,
+      final NoopWriter<ComicBook> writer,
+      final ScrapeMetadataChunkListener chunkListener) {
+    return new StepBuilder("scrapeMetadataStep", jobRepository)
         .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
-        .listener(listener)
+        .listener(chunkListener)
         .build();
   }
 }

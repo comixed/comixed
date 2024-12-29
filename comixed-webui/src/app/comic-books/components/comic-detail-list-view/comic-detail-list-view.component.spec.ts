@@ -99,6 +99,7 @@ import {
   markSelectedComicBooksRead,
   markSingleComicBookRead
 } from '@app/user/actions/read-comic-books.actions';
+import { batchScrapeComicBooks } from '@app/comic-metadata/actions/multi-book-scraping.actions';
 
 describe('ComicDetailListViewComponent', () => {
   const COMIC_DETAILS = [
@@ -794,6 +795,23 @@ describe('ComicDetailListViewComponent', () => {
       expect(router.navigateByUrl).toHaveBeenCalledWith(
         '/metadata/scraping/issues'
       );
+    });
+  });
+
+  describe('batch scraping comics', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(confirmation =>
+        confirmation.confirm()
+      );
+      component.onBatchScrapeComics();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(batchScrapeComicBooks());
     });
   });
 

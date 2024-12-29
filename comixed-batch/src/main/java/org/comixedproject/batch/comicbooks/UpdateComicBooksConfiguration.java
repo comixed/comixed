@@ -44,22 +44,23 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 @Log4j2
 public class UpdateComicBooksConfiguration {
-  public static final String JOB_UPDATE_COMICBOOKS_STARTED = "job.update-comic.started";
-  public static final String JOB_UPDATE_COMICBOOKS_PUBLISHER = "job.update-comic.publisher";
-  public static final String JOB_UPDATE_COMICBOOKS_SERIES = "job.update-comic.series";
-  public static final String JOB_UPDATE_COMICBOOKS_VOLUME = "job.update-comic.volume";
-  public static final String JOB_UPDATE_COMICBOOKS_ISSUENO = "job.update-comic.issue-number";
-  public static final String JOB_UPDATE_COMICBOOKS_IMPRINT = "job.update-comic.imprint";
-  public static final String JOB_UPDATE_COMICBOOKS_COMIC_TYPE = "job.update-comic.comic-type";
+  public static final String UPDATE_COMIC_BOOKS_JOB = "updateComicBooksJob";
+  public static final String UPDATE_COMIC_BOOKS_JOB_TIME_STARTED = "job.update-comic.time-started";
+  public static final String UPDATE_COMIC_BOOKS_JOB_PUBLISHER = "job.update-comic.publisher";
+  public static final String UPDATE_COMIC_BOOKS_JOB_SERIES = "job.update-comic.series";
+  public static final String UPDATE_COMIC_BOOKS_JOB_VOLUME = "job.update-comic.volume";
+  public static final String UPDATE_COMIC_BOOKS_JOB_ISSUE_NUMBER = "job.update-comic.issue-number";
+  public static final String UPDATE_COMIC_BOOKS_JOB_IMPRINT = "job.update-comic.imprint";
+  public static final String UPDATE_COMIC_BOOKS_JOB_COMIC_TYPE = "job.update-comic.comic-type";
 
   @Value("${comixed.batch.update-comic-metadata.chunk-size:1}")
   private int chunkSize;
 
-  @Bean(name = "updateComicBooksJob")
+  @Bean(name = UPDATE_COMIC_BOOKS_JOB)
   public Job updateComicBooksJob(
       final JobRepository jobRepository,
       @Qualifier("updateComicBooksStep") final Step updateComicBooksStep) {
-    return new JobBuilder("updateComicBooksJob", jobRepository)
+    return new JobBuilder(UPDATE_COMIC_BOOKS_JOB, jobRepository)
         .incrementer(new RunIdIncrementer())
         .start(updateComicBooksStep)
         .build();

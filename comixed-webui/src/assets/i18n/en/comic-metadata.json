@@ -30,6 +30,7 @@
       "ignore-empty-values": "Do not overwrite properties using empty values.",
       "property-name": "Property Name",
       "property-value": "Property Value",
+      "scraping-error-threshold": "Max. Batch Scraping Errors (1-10)",
       "source-name": "Source Name"
     },
     "load-source": {
@@ -103,6 +104,10 @@
     "tab-title": "Update Metadata Process"
   },
   "multi-book-scraping": {
+    "batch-scraping": {
+      "effect-failure": "Failed to start batch scraping selected comic books...",
+      "effect-success": "Batch scraping selected comic books started..."
+    },
     "load-scraping-page": {
       "effect-failure": "Failed to load comic books to be scraped..."
     },

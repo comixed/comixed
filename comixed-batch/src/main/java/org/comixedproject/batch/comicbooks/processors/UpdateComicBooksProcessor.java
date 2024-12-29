@@ -47,12 +47,12 @@ public class UpdateComicBooksProcessor
   @Override
   public ComicBook process(final ComicBook comicBook) throws Exception {
     log.trace("Loading job parameters");
-    final String publisher = this.jobParameters.getString(JOB_UPDATE_COMICBOOKS_PUBLISHER);
-    final String series = this.jobParameters.getString(JOB_UPDATE_COMICBOOKS_SERIES);
-    final String volume = this.jobParameters.getString(JOB_UPDATE_COMICBOOKS_VOLUME);
-    final String issueNumber = this.jobParameters.getString(JOB_UPDATE_COMICBOOKS_ISSUENO);
-    final String imprint = this.jobParameters.getString(JOB_UPDATE_COMICBOOKS_IMPRINT);
-    final String comicType = this.jobParameters.getString(JOB_UPDATE_COMICBOOKS_COMIC_TYPE);
+    final String publisher = this.jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_PUBLISHER);
+    final String series = this.jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_SERIES);
+    final String volume = this.jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_VOLUME);
+    final String issueNumber = this.jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_ISSUE_NUMBER);
+    final String imprint = this.jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_IMPRINT);
+    final String comicType = this.jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_COMIC_TYPE);
 
     if (StringUtils.hasLength(publisher)) {
       log.debug("Setting publisher to {}", publisher);

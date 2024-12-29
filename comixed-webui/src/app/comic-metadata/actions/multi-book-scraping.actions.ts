@@ -113,3 +113,15 @@ export const multiBookScrapeComicSuccess = createAction(
 export const multiBookScrapeComicFailure = createAction(
   '[Multi-Book Scraping] Failed to scrape a comic book'
 );
+
+export const batchScrapeComicBooks = createAction(
+  '[Multi-Book Scraping] Batch scrape selected comic books'
+);
+
+export const batchScrapeComicBooksSuccess = createAction(
+  '[Multi-Book Scraping] Batch scraping selected comic books started'
+);
+
+export const batchScrapeComicBooksFailure = createAction(
+  '[Multi-Book Scraping] Failed to start batch scraping selected comic books'
+);

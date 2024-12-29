@@ -38,6 +38,13 @@
         }}
       </li>
 
+      <li *ngIf="!detail?.running">
+        {{
+          "batch-processes.text.exit-code"
+            | translate: { status: detail?.exitStatus }
+        }}
+      </li>
+
       <li>
         {{
           "batch-processes.text.created"

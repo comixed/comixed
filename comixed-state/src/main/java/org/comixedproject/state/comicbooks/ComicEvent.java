@@ -40,6 +40,7 @@ public enum ComicEvent {
   undeleteComic,
   // the comic file was recreated
   comicFileRecreated,
+  // the comic's metadata was updated
   scraped,
   // start the process of updating details for some comics
   updateDetails,

@@ -18,11 +18,12 @@
 
 package org.comixedproject.batch.initiators;
 
-import static org.comixedproject.batch.comicbooks.UpdateMetadataConfiguration.UPDATE_METADATA_JOB;
-import static org.comixedproject.batch.comicbooks.UpdateMetadataConfiguration.UPDATE_METADATA_JOB_TIME_STARTED;
+import static org.comixedproject.batch.comicbooks.ScrapeMetadataConfiguration.*;
+import static org.comixedproject.batch.initiators.ScrapeComicBookInitiator.DEFAULT_ERROR_THRESHOLD;
 import static org.junit.Assert.*;
 
-import org.comixedproject.model.batch.UpdateMetadataEvent;
+import org.comixedproject.model.batch.ScrapeMetadataEvent;
+import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.junit.Before;
@@ -41,16 +42,18 @@ import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UpdateMetadataInitiatorTest {
-  private static final Long TEST_UNPROCESSED_COMIC_COUNT = 717L;
+public class ScrapeComicBookInitiatorTest {
+  private static final long TEST_BATCH_SCRAPING_COUNT = 717L;
+  private static final long TEST_CONFIGURED_ERROR_THRESHOLD = 100L;
 
-  @InjectMocks private UpdateMetadataInitiator initiator;
+  @InjectMocks private ScrapeComicBookInitiator initiator;
   @Mock private ComicBookService comicBookService;
   @Mock private BatchProcessesService batchProcessesService;
+  @Mock private ConfigurationService configurationService;
 
   @Mock
-  @Qualifier(value = UPDATE_METADATA_JOB)
-  private Job updateMetadataJob;
+  @Qualifier(value = SCRAPE_METADATA_JOB)
+  private Job scrapeMetadataJob;
 
   @Mock
   @Qualifier("batchJobLauncher")
@@ -66,52 +69,15 @@ public class UpdateMetadataInitiatorTest {
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
           JobRestartException {
-    Mockito.when(comicBookService.getUpdateMetadataCount())
-        .thenReturn(TEST_UNPROCESSED_COMIC_COUNT);
+    Mockito.when(comicBookService.getBatchScrapingCount()).thenReturn(TEST_BATCH_SCRAPING_COUNT);
     Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(false);
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
-  }
-
-  @Test
-  public void testExecuteNoComicsToMove()
-      throws JobInstanceAlreadyCompleteException,
-          JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
-          JobRestartException {
-    Mockito.when(comicBookService.getUpdateMetadataCount()).thenReturn(0L);
-
-    initiator.execute();
-
-    Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(), Mockito.any());
-  }
-
-  @Test
-  public void testExecuteHasRunningJobs()
-      throws JobInstanceAlreadyCompleteException,
-          JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
-          JobRestartException {
-    Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(true);
-
-    initiator.execute();
-
-    Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(), Mockito.any());
-  }
-
-  @Test
-  public void testExecuteFromScheduler()
-      throws JobInstanceAlreadyCompleteException,
-          JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
-          JobRestartException {
-    initiator.execute();
-
-    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
-
-    assertNotNull(jobParameters.getLong(UPDATE_METADATA_JOB_TIME_STARTED));
-
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(updateMetadataJob, jobParameters);
+    Mockito.when(
+            configurationService.getOptionValue(
+                ConfigurationService.CFG_METADATA_SCRAPING_ERROR_THRESHOLD,
+                String.valueOf(DEFAULT_ERROR_THRESHOLD)))
+        .thenReturn(String.valueOf(TEST_CONFIGURED_ERROR_THRESHOLD));
   }
 
   @Test
@@ -120,13 +86,38 @@ public class UpdateMetadataInitiatorTest {
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
           JobRestartException {
-    initiator.execute(UpdateMetadataEvent.instance);
+    initiator.execute(ScrapeMetadataEvent.instance);
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
-    assertNotNull(jobParameters.getLong(UPDATE_METADATA_JOB_TIME_STARTED));
+    assertNotNull(jobParameters.getLong(SCRAPE_METADATA_JOB_TIME_STARTED));
+    assertEquals(
+        TEST_CONFIGURED_ERROR_THRESHOLD,
+        jobParameters.getLong(SCRAPE_METADATA_JOB_ERROR_THRESHOLD).longValue());
 
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(updateMetadataJob, jobParameters);
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(scrapeMetadataJob, jobParameters);
+  }
+
+  @Test
+  public void testExecuteFromListener_noErrorThresholdConfigured()
+      throws JobInstanceAlreadyCompleteException,
+          JobExecutionAlreadyRunningException,
+          JobParametersInvalidException,
+          JobRestartException {
+    Mockito.when(
+            configurationService.getOptionValue(
+                ConfigurationService.CFG_METADATA_SCRAPING_ERROR_THRESHOLD,
+                String.valueOf(DEFAULT_ERROR_THRESHOLD)))
+        .thenReturn(String.valueOf(DEFAULT_ERROR_THRESHOLD));
+
+    initiator.execute(ScrapeMetadataEvent.instance);
+
+    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
+
+    assertNotNull(jobParameters.getLong(SCRAPE_METADATA_JOB_TIME_STARTED));
+    assertEquals(10L, jobParameters.getLong(SCRAPE_METADATA_JOB_ERROR_THRESHOLD).longValue());
+
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(scrapeMetadataJob, jobParameters);
   }
 
   @Test
@@ -138,12 +129,15 @@ public class UpdateMetadataInitiatorTest {
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenThrow(JobParametersInvalidException.class);
 
-    initiator.execute();
+    initiator.execute(ScrapeMetadataEvent.instance);
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
-    assertNotNull(jobParameters.getLong(UPDATE_METADATA_JOB_TIME_STARTED));
+    assertNotNull(jobParameters.getLong(SCRAPE_METADATA_JOB_TIME_STARTED));
+    assertEquals(
+        TEST_CONFIGURED_ERROR_THRESHOLD,
+        jobParameters.getLong(SCRAPE_METADATA_JOB_ERROR_THRESHOLD).longValue());
 
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(updateMetadataJob, jobParameters);
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(scrapeMetadataJob, jobParameters);
   }
 }

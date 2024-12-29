@@ -1,7 +1,7 @@
 package org.comixedproject.batch.initiators;
 
-import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_RECREATE_COMICS_STARTED;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.RECREATE_COMIC_FILES_JOB;
+import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.RECREATE_COMIC_FILES_JOB_TIME_STARTED;
 import static org.junit.Assert.*;
 
 import org.comixedproject.model.batch.RecreateComicFilesEvent;
@@ -91,7 +91,7 @@ public class RecreateComicFilesInitiatorTest {
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
-    assertNotNull(jobParameters.getLong(JOB_RECREATE_COMICS_STARTED));
+    assertNotNull(jobParameters.getLong(RECREATE_COMIC_FILES_JOB_TIME_STARTED));
 
     Mockito.verify(jobLauncher, Mockito.times(1)).run(loadPageHashesJob, jobParameters);
   }
@@ -106,7 +106,7 @@ public class RecreateComicFilesInitiatorTest {
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
-    assertNotNull(jobParameters.getLong(JOB_RECREATE_COMICS_STARTED));
+    assertNotNull(jobParameters.getLong(RECREATE_COMIC_FILES_JOB_TIME_STARTED));
 
     Mockito.verify(jobLauncher, Mockito.times(1)).run(loadPageHashesJob, jobParameters);
   }
@@ -124,7 +124,7 @@ public class RecreateComicFilesInitiatorTest {
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
-    assertNotNull(jobParameters.getLong(JOB_RECREATE_COMICS_STARTED));
+    assertNotNull(jobParameters.getLong(RECREATE_COMIC_FILES_JOB_TIME_STARTED));
 
     Mockito.verify(jobLauncher, Mockito.times(1)).run(loadPageHashesJob, jobParameters);
   }

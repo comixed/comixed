@@ -46,7 +46,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Log4j2
 public class RecreateComicFilesConfiguration {
   public static final String RECREATE_COMIC_FILES_JOB = "recreateComicFilesJob";
-  public static final String JOB_RECREATE_COMICS_STARTED = "job.recreate-comic.started";
+  public static final String RECREATE_COMIC_FILES_JOB_TIME_STARTED =
+      "job.recreate-comic.time-started";
 
   @Value("${comixed.batch.recreate-comic-files.chunk-size:1}")
   private int chunkSize;

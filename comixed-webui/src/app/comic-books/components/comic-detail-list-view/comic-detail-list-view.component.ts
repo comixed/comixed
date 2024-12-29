@@ -84,6 +84,7 @@ import {
   markSelectedComicBooksRead,
   markSingleComicBookRead
 } from '@app/user/actions/read-comic-books.actions';
+import { batchScrapeComicBooks } from '@app/comic-metadata/actions/multi-book-scraping.actions';
 
 @Component({
   selector: 'cx-comic-detail-list-view',
@@ -494,6 +495,21 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
       confirm: () => {
         this.logger.debug('Scraping comics:', ids);
         this.router.navigateByUrl('/metadata/scraping/issues');
+      }
+    });
+  }
+
+  onBatchScrapeComics(): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library.batch-scrape-comics.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'library.batch-scrape-comics.confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.debug('Starting batch scraping comics');
+        this.store.dispatch(batchScrapeComicBooks());
       }
     });
   }

@@ -18,6 +18,7 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
+import static org.comixedproject.batch.comicbooks.UpdateMetadataConfiguration.UPDATE_METADATA_JOB;
 import static org.junit.Assert.*;
 
 import org.comixedproject.messaging.PublishingException;
@@ -32,8 +33,6 @@ import org.springframework.batch.core.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UpdateMetadataJobListenerTest {
-  private static final String TEST_JOB_NAME = "The job name";
-
   @InjectMocks private UpdateMetadataJobListener listener;
   @Mock private JobInstance jobInstance;
   @Mock private JobExecution jobExecution;
@@ -45,7 +44,7 @@ public class UpdateMetadataJobListenerTest {
   @Before
   public void setUp() throws PublishingException {
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
-    Mockito.when(jobInstance.getJobName()).thenReturn(TEST_JOB_NAME);
+    Mockito.when(jobInstance.getJobName()).thenReturn(UPDATE_METADATA_JOB);
     Mockito.when(jobExecution.getJobInstance()).thenReturn(jobInstance);
     Mockito.when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);
