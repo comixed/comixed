@@ -703,10 +703,15 @@ public class ComicDetailService {
 
     return this.comicDetailRepository
         .loadCollectionEntries(
-            tagType, PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)))
+            tagType,
+            PageRequest.of(pageIndex, pageSize, this.doCreateCollectionSort(sortBy, sortDirection)))
         .stream()
-        .map(comicTag -> new CollectionEntry(comicTag.getValue(), comicTag.getComicCount()))
-        .collect(Collectors.toList());
+        .map(
+            tagValue ->
+                new CollectionEntry(
+                    tagValue,
+                    this.comicDetailRepository.getComicCountForTagTypeAndValue(tagType, tagValue)))
+        .toList();
   }
 
   /**
@@ -721,7 +726,6 @@ public class ComicDetailService {
   }
 
   private Sort doCreateSort(final String sortBy, final String sortDirection) {
-
     if (!StringUtils.hasLength(sortBy) || !StringUtils.hasLength(sortDirection)) {
       return Sort.unsorted();
     }
@@ -736,9 +740,27 @@ public class ComicDetailService {
       case "added-date" -> fieldName = "addedDate";
       case "cover-date" -> fieldName = "coverDate";
       case "comic-count" -> fieldName = "comicCount";
-      case "tag-value" -> fieldName = "tagValue";
+      case "tag-value" -> fieldName = "value";
       case "page-count" -> fieldName = "pageCount";
       default -> fieldName = "id";
+    }
+
+    Sort.Direction direction = Sort.Direction.DESC;
+    if (sortDirection.equals("asc")) {
+      direction = Sort.Direction.ASC;
+    }
+    return Sort.by(direction, fieldName);
+  }
+
+  private Sort doCreateCollectionSort(final String sortBy, final String sortDirection) {
+    if (!StringUtils.hasLength(sortBy) || !StringUtils.hasLength(sortDirection)) {
+      return Sort.unsorted();
+    }
+
+    String fieldName;
+    switch (sortBy) {
+      case "tag-value" -> fieldName = "value";
+      default -> fieldName = "value";
     }
 
     Sort.Direction direction = Sort.Direction.DESC;

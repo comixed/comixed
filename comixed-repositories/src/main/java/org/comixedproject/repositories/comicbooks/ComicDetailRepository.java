@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Set;
 import org.comixedproject.model.collections.CollectionEntry;
 import org.comixedproject.model.comicbooks.ComicDetail;
-import org.comixedproject.model.comicbooks.ComicTag;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -351,14 +350,14 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
   long getFilterCount(ComicTagType tagType, String tagValue);
 
   /**
-   * Returns a display page of {@link CollectionEntry} objects.
+   * Returns a display page of {@link CollectionEntry} values.
    *
    * @param tagType the tag type
    * @param pageable the page request
-   * @return the entries
+   * @return the values
    */
-  @Query("SELECT DISTINCT t FROM ComicTag t WHERE t.type = :tagType")
-  List<ComicTag> loadCollectionEntries(@Param("tagType") ComicTagType tagType, Pageable pageable);
+  @Query("SELECT DISTINCT t.value FROM ComicTag t WHERE t.type = :tagType")
+  List<String> loadCollectionEntries(@Param("tagType") ComicTagType tagType, Pageable pageable);
 
   @Query("SELECT COUNT(DISTINCT t.value) FROM ComicTag t WHERE t.type = :tagType")
   long getFilterCount(@Param("tagType") ComicTagType tag);
@@ -429,4 +428,8 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @see #existsByFilename(String)
    */
   boolean existsByFilenameIgnoreCase(@Param("filename") String filename);
+
+  @Query("SELECT COUNT(t) FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue")
+  long getComicCountForTagTypeAndValue(
+      @Param("tagType") ComicTagType tagType, @Param("tagValue") String tagValue);
 }
