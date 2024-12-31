@@ -35,7 +35,7 @@ jobs:
           prerelease: true
           title: Changes For 2.3-SNAPSHOT
           files: |
-            comixed-release-2.3-SNAPSHOT-GA.zip
+            comixed-release-2.3-SNAPSHOT.zip
 
   build-windows-installer:
     name: Build Windows installer
