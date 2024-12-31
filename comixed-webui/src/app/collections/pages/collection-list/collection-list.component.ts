@@ -54,7 +54,7 @@ export class CollectionListComponent implements OnInit, OnDestroy {
   totalEntries = 0;
   dataSource = new MatTableDataSource<CollectionEntry>([]);
 
-  readonly displayedColumns = ['name', 'comic-count'];
+  readonly displayedColumns = ['tag-value', 'comic-count'];
   langChangeSubscription: Subscription;
 
   constructor(
