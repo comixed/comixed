@@ -350,6 +350,7 @@ public class ComicDetailService {
    * @param unread the unread flag
    * @return the matching comics
    */
+  @Transactional
   public List<ComicDetail> getAllComicsForTag(
       final ComicTagType tagType, final String tagValue, final String email, final boolean unread) {
     if (unread) {
