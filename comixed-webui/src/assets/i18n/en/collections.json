@@ -2,10 +2,10 @@
   "collections": {
     "publishers": {
       "label": {
-        "name": "Name",
         "issue-count": "# Of Comics",
         "series-count": "# Of Series",
         "series-name": "Series Name",
+        "tag-value": "Name",
         "total-issues": "# Of Issues",
         "volume": "Volume"
       },
@@ -118,7 +118,7 @@
   "collection-list": {
     "label": {
       "comic-count": "# Comics",
-      "name": "Collection Name"
+      "tag-value": "Collection"
     },
     "page-title": "All {collection, select, characters{Characters} teams{Teams} locations{Locations} stories{Stories} publishers{Publishers} series{Series} other{Unknown}}",
     "placeholder": {

@@ -81,7 +81,7 @@ public class ComicDetailServiceTest {
   @Mock private Set<String> publisherList;
   @Mock private Set<String> seriesList;
   @Mock private Set<String> volumeList;
-  @Mock private Set<String> tagList;
+  @Mock private Set<String> tagSet;
   @Mock private Set<Integer> yearsList;
   @Mock private ObjectFactory<ComicDetailExampleBuilder> exampleBuilderObjectFactory;
   @Mock private ComicDetailExampleBuilder exampleBuilder;
@@ -94,10 +94,6 @@ public class ComicDetailServiceTest {
   @Mock private Example<ComicDetail> example;
   @Mock private List<Integer> coverYearList;
   @Mock private List<Integer> coverMonthList;
-  @Mock private Stream<ComicTag> comicTagListStream;
-  @Mock private Stream<Object> collectionEntryMap;
-  @Mock private List<CollectionEntry> collectionEntryList;
-  @Mock private List<ComicTag> comicTagList;
   @Mock private ReadingList readingList;
 
   @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
@@ -109,6 +105,7 @@ public class ComicDetailServiceTest {
   private final Set<Date> weeksList = new HashSet<>();
   private final List<String> sortFieldNames = new ArrayList<>();
   private final List<ComicDetail> comicDetailList = new ArrayList<>();
+  private List<String> tagValueList = new ArrayList<>();
 
   @Before
   public void setUp() {
@@ -116,9 +113,6 @@ public class ComicDetailServiceTest {
     Mockito.when(exampleBuilderObjectFactory.getObject()).thenReturn(exampleBuilder);
     Mockito.when(exampleBuilder.build()).thenReturn(comicDetailExample);
     Mockito.when(comicDetailListStream.toList()).thenReturn(comicDetailList);
-    Mockito.when(comicTagList.stream()).thenReturn(comicTagListStream);
-    Mockito.when(comicTagListStream.map(Mockito.any())).thenReturn(collectionEntryMap);
-    Mockito.when(collectionEntryMap.collect(Mockito.any())).thenReturn(collectionEntryList);
     Mockito.when(comicDetailListPage.stream()).thenReturn(comicDetailListStream);
 
     sortFieldNames.add("archive-type");
@@ -359,12 +353,12 @@ public class ComicDetailServiceTest {
     Mockito.when(
             comicDetailRepository.getAllUnreadValuesForTagType(
                 Mockito.any(ComicTagType.class), Mockito.anyString()))
-        .thenReturn(tagList);
+        .thenReturn(tagSet);
 
     final Set<String> result = service.getAllValuesForTag(TEST_TAG_TYPE, TEST_EMAIL, true);
 
     assertNotNull(result);
-    assertSame(tagList, result);
+    assertSame(tagSet, result);
 
     Mockito.verify(comicDetailRepository, Mockito.times(1))
         .getAllUnreadValuesForTagType(TEST_TAG_TYPE, TEST_EMAIL);
@@ -373,12 +367,12 @@ public class ComicDetailServiceTest {
   @Test
   public void testGetAllValuesForTags() {
     Mockito.when(comicDetailRepository.getAllValuesForTagType(Mockito.any(ComicTagType.class)))
-        .thenReturn(tagList);
+        .thenReturn(tagSet);
 
     final Set<String> result = service.getAllValuesForTag(TEST_TAG_TYPE, TEST_EMAIL, false);
 
     assertNotNull(result);
-    assertSame(tagList, result);
+    assertSame(tagSet, result);
 
     Mockito.verify(comicDetailRepository, Mockito.times(1)).getAllValuesForTagType(TEST_TAG_TYPE);
   }
@@ -847,10 +841,16 @@ public class ComicDetailServiceTest {
 
   @Test
   public void testLoadCollectionEntries() {
+    tagValueList.add(TEST_TAG_VALUE);
+
     Mockito.when(
             comicDetailRepository.loadCollectionEntries(
                 Mockito.any(ComicTagType.class), pageableArgumentCaptor.capture()))
-        .thenReturn(comicTagList);
+        .thenReturn(tagValueList);
+    Mockito.when(
+            comicDetailRepository.getComicCountForTagTypeAndValue(
+                Mockito.any(ComicTagType.class), Mockito.anyString()))
+        .thenReturn(TEST_TOTAL_COMIC_COUNT);
 
     final List<CollectionEntry> result =
         service.loadCollectionEntries(
