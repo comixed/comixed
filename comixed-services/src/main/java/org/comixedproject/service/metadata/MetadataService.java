@@ -361,7 +361,8 @@ public class MetadataService {
       if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getTitle())) {
         detail.setTitle(trim(issueDetails.getTitle()));
       }
-      if (!ignoreEmptyValues || StringUtils.hasLength(issueDetails.getDescription())) {
+      if (!ignoreEmptyValues && !Objects.isNull(issueDetails.getDescription())
+          || StringUtils.hasLength(issueDetails.getDescription())) {
         detail.setDescription(
             this.processComicDescriptionAction.execute(trim(issueDetails.getDescription())));
       }
