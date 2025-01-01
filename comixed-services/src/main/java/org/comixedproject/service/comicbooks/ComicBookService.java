@@ -22,7 +22,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -899,9 +898,7 @@ public class ComicBookService {
   @Transactional
   public List<Long> getAllIds() {
     log.debug("Getting the list of all comic book ids");
-    return this.comicBookRepository.findAll().stream()
-        .map(ComicBook::getId)
-        .collect(Collectors.toList());
+    return this.comicBookRepository.getAllIds();
   }
 
   /**

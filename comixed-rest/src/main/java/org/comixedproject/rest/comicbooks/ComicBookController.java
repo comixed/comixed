@@ -444,7 +444,10 @@ public class ComicBookController {
             email, unreadOnly, pageSize, pageIndex, sortBy, sortDirection);
     final ComiXedUser user = this.userService.findByEmail(email);
     final long comicBookCount = this.comicBookService.getComicBookCount();
-    final long filteredCount = comicBookCount - user.getReadComicBooks().size();
+    final long filteredCount =
+        unreadOnly
+            ? comicBookCount - user.getReadComicBooks().size()
+            : user.getReadComicBooks().size();
     return new LoadComicDetailsResponse(
         comicDetails,
         Collections.emptyList(),
