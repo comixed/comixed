@@ -48,7 +48,6 @@ public class ComicStateMachineConfiguration
   @Autowired private UpdateComicBookDetailsAction updateComicBookDetailsAction;
   @Autowired private ComicBookDetailsUpdatedAction comicBookDetailsUpdatedAction;
   @Autowired private ComicFileRecreatedAction comicFileRecreatedAction;
-  @Autowired private PrepareToPurgeComicAction prepareToPurgeComicAction;
   @Autowired private MarkComicAsMissingGuard markComicAsMissingGuard;
   @Autowired private MarkComicAsMissingAction markComicAsMissingAction;
   @Autowired private MarkComicAsFoundGuard markComicAsFoundGuard;
@@ -274,13 +273,6 @@ public class ComicStateMachineConfiguration
         .source(ComicState.DELETED)
         .target(ComicState.CHANGED)
         .event(ComicEvent.undeleteComic)
-        // the comic is being purged from the library
-        .and()
-        .withExternal()
-        .source(ComicState.DELETED)
-        .target(ComicState.DELETED)
-        .event(ComicEvent.prepareToPurge)
-        .action(prepareToPurgeComicAction)
         // the comic record was actually deleted
         .and()
         .withExternal()

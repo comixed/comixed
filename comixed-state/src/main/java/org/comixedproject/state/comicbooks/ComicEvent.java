@@ -51,8 +51,6 @@ public enum ComicEvent {
   markAsFound,
   markedForRemoval,
   unmarkedForRemoval,
-  // prepares the comic for purging
-  prepareToPurge,
   // the comic has been purged from the library
   comicPurged;
 }

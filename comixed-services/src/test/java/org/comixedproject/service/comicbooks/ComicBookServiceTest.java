@@ -624,24 +624,21 @@ public class ComicBookServiceTest {
   }
 
   @Test
+  public void testGetComicBooksToBePurgedCount() {
+    Mockito.when(comicBookRepository.findComicsToPurgeCount()).thenReturn(TEST_COMIC_COUNT);
+
+    final long result = service.findComicsToPurgeCount();
+
+    assertEquals(TEST_COMIC_COUNT, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsToPurgeCount();
+  }
+
+  @Test
   public void testFindAllComicsMarkedForDeletion() {
-    Mockito.when(
-            comicBookRepository.findForState(
-                Mockito.any(ComicState.class), pageableCaptor.capture()))
-        .thenReturn(comicBookList);
+    service.prepareComicBooksForDeleting();
 
-    final List<ComicBook> result = service.findComicsMarkedForDeletion(TEST_MAXIMUM_COMICS);
-
-    assertNotNull(result);
-    assertSame(comicBookList, result);
-
-    final Pageable pageable = pageableCaptor.getValue();
-    assertNotNull(pageable);
-    assertEquals(0, pageable.getPageNumber());
-    assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
-
-    Mockito.verify(comicBookRepository, Mockito.times(1))
-        .findForState(ComicState.DELETED, pageable);
+    Mockito.verify(comicBookRepository, Mockito.times(1)).prepareComicBooksForDeleting();
   }
 
   @Test
@@ -1456,5 +1453,12 @@ public class ComicBookServiceTest {
     assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).findBatchScrapingComics(pageable);
+  }
+
+  @Test
+  public void testMarkComicBooksForBatchScraping() {
+    service.markComicBooksForBatchScraping(idList);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).prepareForBatchScraping(idList);
   }
 }
