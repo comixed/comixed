@@ -39,10 +39,12 @@ import {
   selectLoadComicDetailsCoverMonths,
   selectLoadComicDetailsCoverYears,
   selectLoadComicDetailsFilteredComics,
-  selectLoadComicDetailsList
+  selectLoadComicDetailsList,
+  selectLoadComicDetailsListState
 } from '@app/comic-books/selectors/load-comic-details-list.selectors';
 import { loadComicDetailsForCollection } from '@app/comic-books/actions/comic-details-list.actions';
 import { setMultipleComicBooksByTagTypeAndValueSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
+import { setBusyState } from '@app/core/actions/busy.actions';
 
 @Component({
   selector: 'cx-collection-detail',
@@ -57,6 +59,7 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
 
   paramsSubscription: Subscription;
   queryParamsSubscription: Subscription;
+  comicDetailListStateSubscription: Subscription;
   comicDetailListSubscription: Subscription;
   totalComicsSubscription: Subscription;
   coverYearSubscription: Subscription;
@@ -96,6 +99,11 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
       } else {
         this.loadTranslations();
         this.doLoadComicDetails();
+        this.comicDetailListStateSubscription = this.store
+          .select(selectLoadComicDetailsListState)
+          .subscribe(state =>
+            this.store.dispatch(setBusyState({ enabled: state.loading }))
+          );
         this.comicDetailListSubscription = this.store
           .select(selectLoadComicDetailsList)
           .subscribe(entries => (this.comicBooks = entries));
@@ -140,7 +148,9 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
     this.queryParamsSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from parameter events');
     this.paramsSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from comic updates');
+    this.logger.trace('Unsubscribing from comic list state updates');
+    this.comicDetailListStateSubscription?.unsubscribe();
+    this.logger.trace('Unsubscribing from comic list updates');
     this.comicDetailListSubscription?.unsubscribe();
     this.logger.trace('Unsubscribing from total comics updates');
     this.totalComicsSubscription?.unsubscribe();
