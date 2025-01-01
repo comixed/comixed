@@ -21,7 +21,6 @@ package org.comixedproject.batch.comicbooks.listeners;
 import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.REMOVE_DELETED_COMIC_BOOKS_STEP;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicState;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.stereotype.Component;
 
@@ -42,13 +41,13 @@ public class RemoveDeletedComicBooksChunkListener extends AbstractBatchProcessCh
 
   @Override
   protected boolean isActive() {
-    return this.comicBookService.getCountForState(ComicState.DELETED) > 0L;
+    return this.comicBookService.findComicsToPurgeCount() > 0L;
   }
 
   @Override
   protected long getProcessedElements() {
     return this.comicBookService.getComicBookCount()
-        - this.comicBookService.getCountForState(ComicState.DELETED);
+        - this.comicBookService.findComicsToPurgeCount();
   }
 
   @Override

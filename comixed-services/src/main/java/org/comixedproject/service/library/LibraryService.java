@@ -27,7 +27,6 @@ import org.comixedproject.model.batch.PurgeLibraryEvent;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicpages.PageCacheService;
-import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -115,19 +114,7 @@ public class LibraryService {
   /** Begins the process of purging comics from the library. */
   @Transactional
   public void prepareForPurging() {
-    final int count = (int) this.comicBookService.getComicBookCount();
-    if (count > 0) {
-      this.comicBookService
-          .findComicsMarkedForDeletion(count)
-          .forEach(
-              comicBook -> {
-                log.trace("Firing action: purge comicBook id={}", comicBook.getId());
-                this.comicStateHandler.fireEvent(comicBook, ComicEvent.prepareToPurge);
-              });
-      log.trace("Firing purge library event");
-      this.applicationEventPublisher.publishEvent(PurgeLibraryEvent.instance);
-    } else {
-      log.info("No comic books found to purge");
-    }
+    this.comicBookService.prepareComicBooksForDeleting();
+    this.applicationEventPublisher.publishEvent(PurgeLibraryEvent.instance);
   }
 }

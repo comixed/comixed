@@ -26,11 +26,8 @@ import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicpages.PageCacheService;
-import org.comixedproject.state.comicbooks.ComicEvent;
-import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -41,7 +38,6 @@ import org.springframework.context.ApplicationEventPublisher;
 public class LibraryServiceTest {
   private static final String TEST_IMAGE_CACHE_DIRECTORY =
       "/home/ComiXedReader/.comixed/image-cache";
-  private static final long TEST_COMIC_COUNT = 717L;
   private static final boolean TEST_RENAME_PAGES = RandomUtils.nextBoolean();
   private static final boolean TEST_DELETE_PAGES = RandomUtils.nextBoolean();
 
@@ -51,10 +47,7 @@ public class LibraryServiceTest {
   @Mock private ComicBook comicBook;
   @Mock private FileAdaptor fileAdaptor;
   @Mock private PageCacheService pageCacheService;
-  @Mock private ComicStateHandler comicStateHandler;
   @Mock private ApplicationEventPublisher applicationEventPublisher;
-
-  @Captor private ArgumentCaptor<List<Long>> idListArgumentCaptor;
 
   private List<ComicBook> comicBookList = new ArrayList<>();
   private List<Long> comicIdList = new ArrayList<>();
@@ -121,33 +114,9 @@ public class LibraryServiceTest {
   }
 
   @Test
-  public void testPrepareForPurge() throws ComicBookException {
-    Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_COMIC_COUNT);
-    Mockito.when(comicBookService.findComicsMarkedForDeletion(Mockito.anyInt()))
-        .thenReturn(comicBookList);
-    comicBookList.add(comicBook);
-
+  public void testPrepareForPurge() {
     service.prepareForPurging();
 
-    for (int index = 0; index < comicIdList.size(); index++) {
-      final Long id = comicIdList.get(index);
-      Mockito.verify(comicBookService, Mockito.times(1)).getComic(id);
-    }
-    Mockito.verify(comicBookService, Mockito.times(1)).getComicBookCount();
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .findComicsMarkedForDeletion((int) TEST_COMIC_COUNT);
-    Mockito.verify(comicStateHandler, Mockito.times(comicBookList.size()))
-        .fireEvent(comicBook, ComicEvent.prepareToPurge);
-  }
-
-  @Test
-  public void testPrepareForPurgeNoComicsFound() throws ComicBookException {
-    Mockito.when(comicBookService.getComicBookCount()).thenReturn(0L);
-
-    service.prepareForPurging();
-
-    Mockito.verify(comicBookService, Mockito.times(1)).getComicBookCount();
-    Mockito.verify(comicBookService, Mockito.never()).findComicsMarkedForDeletion(Mockito.anyInt());
-    Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
+    Mockito.verify(comicBookService, Mockito.times(1)).prepareComicBooksForDeleting();
   }
 }

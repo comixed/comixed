@@ -28,7 +28,6 @@ import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
 import org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAction;
 import org.comixedproject.model.batch.BatchProcessDetail;
-import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.messaging.batch.ProcessComicBooksStatus;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.junit.Before;
@@ -67,8 +66,7 @@ public class RemoveDeletedComicBooksChunkListenerTest {
     Mockito.when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);
     Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_TOTAL_COMICS);
-    Mockito.when(comicBookService.getCountForState(ComicState.DELETED))
-        .thenReturn(TEST_REMAINING_COMICS);
+    Mockito.when(comicBookService.findComicsToPurgeCount()).thenReturn(TEST_REMAINING_COMICS);
 
     Mockito.when(chunkContext.getStepContext()).thenReturn(stepContext);
     Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
