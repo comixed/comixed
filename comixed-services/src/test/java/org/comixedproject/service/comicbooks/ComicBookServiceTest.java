@@ -1263,14 +1263,14 @@ public class ComicBookServiceTest {
   @Test
   public void testGetAllIds() {
     comicBookList.add(comicBook);
-    Mockito.when(comicBookRepository.findAll()).thenReturn(comicBookList);
+    Mockito.when(comicBookRepository.getAllIds()).thenReturn(idList);
 
     final List<Long> result = service.getAllIds();
 
     assertNotNull(result);
-    assertTrue(result.contains(TEST_COMIC_BOOK_ID));
+    assertSame(idList, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findAll();
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getAllIds();
   }
 
   @Test

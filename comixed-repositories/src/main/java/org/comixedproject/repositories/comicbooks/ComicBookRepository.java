@@ -691,4 +691,12 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    */
   @Query("SELECT c FROM ComicBook c WHERE c.batchScraping IS TRUE AND c.metadata IS NOT NULL")
   List<ComicBook> findBatchScrapingComics(Pageable pageable);
+
+  /**
+   * Returns all comic book record ids.
+   *
+   * @return the id list
+   */
+  @Query("SELECT c.id FROM ComicBook c")
+  List<Long> getAllIds();
 }
