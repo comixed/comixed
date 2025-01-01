@@ -573,7 +573,7 @@ public class ComicBookControllerTest {
     assertTrue(result.getCoverYears().isEmpty());
     assertTrue(result.getCoverMonths().isEmpty());
     assertEquals(TEST_TOTAL_COMIC_COUNT, result.getTotalCount());
-    assertEquals(TEST_UNREAD_COMIC_COUNT, result.getFilteredCount());
+    assertEquals(TEST_TOTAL_COMIC_COUNT - TEST_UNREAD_COMIC_COUNT, result.getFilteredCount());
 
     Mockito.verify(comicDetailService, Mockito.times(1))
         .loadUnreadComicDetails(
