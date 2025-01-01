@@ -243,7 +243,7 @@ public class ComicDetail {
       mappedBy = "comicDetail",
       cascade = CascadeType.ALL,
       orphanRemoval = true,
-      fetch = FetchType.LAZY)
+      fetch = FetchType.EAGER)
   @JsonProperty("tags")
   @JsonView({View.ComicListView.class, View.ReadingListDetail.class})
   @Getter
@@ -301,6 +301,13 @@ public class ComicDetail {
   @Getter
   @Setter
   private Date addedDate = new Date();
+
+  @ElementCollection
+  @CollectionTable(name = "read_comic_books", joinColumns = @JoinColumn(name = "comic_detail_id"))
+  @Column(name = "comixed_user_id")
+  @JsonView(View.UserList.class)
+  @Getter
+  private Set<Long> readByUserIds = new HashSet<>();
 
   /**
    * Returns the id for the parent comic book.

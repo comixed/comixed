@@ -42,6 +42,7 @@ import org.comixedproject.model.net.comicbooks.PageOrderEntry;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.comixedproject.repositories.comicbooks.ComicBookRepository;
+import org.comixedproject.repositories.comicbooks.ComicTagRepository;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.junit.Before;
@@ -109,6 +110,7 @@ public class ComicBookServiceTest {
   @InjectMocks private ComicBookService service;
   @Mock private ComicStateHandler comicStateHandler;
   @Mock private ComicBookRepository comicBookRepository;
+  @Mock private ComicTagRepository comicTagRepository;
   @Mock private ComicBookMetadataAdaptor comicBookMetadataAdaptor;
   @Mock private ComicFileAdaptor comicFileAdaptor;
   @Mock private ApplicationEventPublisher applicationEventPublisher;
@@ -137,6 +139,7 @@ public class ComicBookServiceTest {
 
   @Before
   public void setUp() {
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_BOOK_ID);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(incomingComicBook.getComicDetail()).thenReturn(incomingComicDetail);
@@ -397,10 +400,14 @@ public class ComicBookServiceTest {
 
   @Test
   public void testDelete() {
+    Mockito.doNothing()
+        .when(comicTagRepository)
+        .deleteAllByComicDetail(Mockito.any(ComicDetail.class));
     Mockito.doNothing().when(comicBookRepository).delete(Mockito.any(ComicBook.class));
 
     service.deleteComicBook(comicBook);
 
+    Mockito.verify(comicTagRepository, Mockito.times(1)).deleteAllByComicDetail(comicDetail);
     Mockito.verify(comicBookRepository, Mockito.times(1)).delete(comicBook);
   }
 
