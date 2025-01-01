@@ -58,6 +58,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -380,20 +381,27 @@ public class ComicBookService {
   }
 
   /**
-   * Finds all comics marked for deletion.
+   * Returns comic books marked for purging that are in the deleted state.
    *
    * @param count the number of comics to return
-   * @return the list of comics
+   * @return the comic book list
    */
-  public List<ComicBook> findComicsMarkedForDeletion(final int count) {
-    log.trace("Finding all comics marked for deletion");
-    return this.comicBookRepository.findForState(ComicState.DELETED, PageRequest.of(0, count));
+  @Transactional
+  public List<ComicBook> findComicBooksToBePurged(final int count) {
+    return this.comicBookRepository.findComicsMarkedForPurging(PageRequest.of(0, count));
+  }
+
+  /** Marks all comics in the deleted state for purging. */
+  @Transactional
+  public void prepareComicBooksForDeleting() {
+    log.trace("Marking all deleted comics for purging");
+    this.comicBookRepository.prepareComicBooksForDeleting();
   }
 
   /**
    * Finds all comics that are to be moved.
    *
-   * @param count the numer of comics to return
+   * @param count the number of comics to return
    * @return the list of comics
    */
   public List<ComicBook> findComicsToBeMoved(final int count) {
@@ -603,7 +611,7 @@ public class ComicBookService {
    *
    * @return the comic count
    */
-  @Transactional
+  @Transactional(isolation = Isolation.READ_UNCOMMITTED)
   public long getComicBookCount() {
     log.trace("Getting total comics count");
     return this.comicBookRepository.count();
