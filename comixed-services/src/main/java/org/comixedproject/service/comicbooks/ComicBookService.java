@@ -44,6 +44,7 @@ import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.comixedproject.repositories.comicbooks.ComicBookRepository;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
+import org.comixedproject.repositories.comicbooks.ComicTagRepository;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +80,7 @@ public class ComicBookService {
   @Autowired private ImprintService imprintService;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
   @Autowired private ApplicationEventPublisher applicationEventPublisher;
+  @Autowired private ComicTagRepository comicTagRepository;
 
   /**
    * Retrieves a single comic by id. It is expected that this comic exists.
@@ -240,6 +242,9 @@ public class ComicBookService {
    */
   @Transactional
   public void deleteComicBook(final ComicBook comicBook) {
+    log.trace("Removing read references");
+    comicBook.getComicDetail().getReadByUserIds().clear();
+    this.comicTagRepository.deleteAllByComicDetail(comicBook.getComicDetail());
     log.debug("Deleting comicBook: id={}", comicBook.getId());
     this.comicBookRepository.delete(comicBook);
   }
