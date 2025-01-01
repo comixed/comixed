@@ -429,7 +429,8 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    */
   boolean existsByFilenameIgnoreCase(@Param("filename") String filename);
 
-  @Query("SELECT COUNT(t) FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue")
+  @Query(
+      "SELECT COUNT(DISTINCT t.comicDetail.id) FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue")
   long getComicCountForTagTypeAndValue(
       @Param("tagType") ComicTagType tagType, @Param("tagValue") String tagValue);
 }
