@@ -324,15 +324,6 @@ public class ComicBookRepositoryTest {
   }
 
   @Test
-  public void testGetAllWithDuplicatePages() {
-    final List<ComicDetail> result = repository.getAllWithDuplicatePages();
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertTrue(result.stream().allMatch(comic -> comic.getComicBook().getDuplicatePageCount() > 0));
-  }
-
-  @Test
   public void testSaveWithNullFields() {
     final ComicBook incoming = new ComicBook();
     incoming.setComicDetail(new ComicDetail(incoming, TEST_COMICBOOK_FILENAME, ArchiveType.CBZ));
