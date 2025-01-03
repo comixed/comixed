@@ -809,17 +809,6 @@ public class ComicBookService {
   }
 
   /**
-   * Returns the list of all comics with duplicate pages.
-   *
-   * @return the list of comics
-   */
-  @Transactional
-  public List<ComicDetail> findDuplicateComics() {
-    log.debug("Finding all comics with duplicate pages");
-    return this.comicBookRepository.getAllWithDuplicatePages();
-  }
-
-  /**
    * Returns the number of unscraped comics.
    *
    * @return the count
