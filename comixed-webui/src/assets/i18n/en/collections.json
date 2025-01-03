@@ -3,6 +3,7 @@
     "publishers": {
       "label": {
         "issue-count": "# Of Comics",
+        "name": "Name",
         "series-count": "# Of Series",
         "series-name": "Series Name",
         "tag-value": "Name",
