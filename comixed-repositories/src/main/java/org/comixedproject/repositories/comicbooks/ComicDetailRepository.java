@@ -405,7 +405,7 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
   Long getDuplicateComicBookCount();
 
   @Query(
-      "SELECT d FROM ComicDetail d JOIN (SELECT c.publisher AS publisher, c.series AS series, c.volume AS volume, c.issueNumber AS issueNumber FROM ComicDetail c WHERE c.publisher IS NOT NULL AND LENGTH(c.publisher) > 0 AND c.series IS NOT NULL AND LENGTH(c.series) > 0 AND c.volume IS NOT NULL AND LENGTH(c.volume) > 0 AND c.issueNumber IS NOT NULL AND LENGTH(c.issueNumber) > 0 GROUP BY c.publisher, c.series, c.volume, c.issueNumber HAVING count(*) > 1) g ON g.publisher = d.publisher AND g.series = d.series AND g.volume = d.volume AND g.issueNumber = d.issueNumber")
+      "SELECT d FROM ComicDetail d JOIN (SELECT c.publisher AS publisher, c.series AS series, c.volume AS volume, c.issueNumber AS issueNumber, c.coverDate as coverDate FROM ComicDetail c WHERE c.publisher IS NOT NULL AND LENGTH(c.publisher) > 0 AND c.series IS NOT NULL AND LENGTH(c.series) > 0 AND c.volume IS NOT NULL AND LENGTH(c.volume) > 0 AND c.issueNumber IS NOT NULL AND LENGTH(c.issueNumber) > 0 AND c.coverDate IS NOT NULL GROUP BY c.publisher, c.series, c.volume, c.issueNumber, c.coverDate HAVING count(*) > 1) g ON g.publisher = d.publisher AND g.series = d.series AND g.volume = d.volume AND g.issueNumber = d.issueNumber AND g.coverDate = d.coverDate")
   List<ComicDetail> getDuplicateComicBooks(Pageable pageable);
 
   @Query("SELECT d FROM ComicDetail d WHERE d.comicBook.id = :comicBookId")

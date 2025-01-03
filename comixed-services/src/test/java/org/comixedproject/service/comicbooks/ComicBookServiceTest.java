@@ -1184,18 +1184,6 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFindDuplicateComics() {
-    Mockito.when(comicBookRepository.getAllWithDuplicatePages()).thenReturn(comicDetailList);
-
-    final List<ComicDetail> result = service.findDuplicateComics();
-
-    assertNotNull(result);
-    assertSame(comicDetailList, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).getAllWithDuplicatePages();
-  }
-
-  @Test
   public void testGetUnscrapedComicCount() {
     Mockito.when(comicBookRepository.getUnscrapedComicCount()).thenReturn(TEST_COMIC_COUNT);
 
