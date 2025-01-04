@@ -36,12 +36,18 @@ export const loadPublisherListFailure = createAction(
 
 export const loadPublisherDetail = createAction(
   '[Publishers] Load the details of a publisher',
-  props<{ name: string }>()
+  props<{
+    name: string;
+    pageIndex: number;
+    pageSize: number;
+    sortBy: string;
+    sortDirection: string;
+  }>()
 );
 
 export const loadPublisherDetailSuccess = createAction(
   '[Publishers] Publisher detail loaded',
-  props<{ detail: Series[] }>()
+  props<{ totalSeries: number; detail: Series[] }>()
 );
 
 export const loadPublisherDetailFailure = createAction(

@@ -19,10 +19,10 @@
 package org.comixedproject.rest.collections;
 
 import io.micrometer.core.annotation.Timed;
-import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.collections.Publisher;
-import org.comixedproject.model.collections.Series;
+import org.comixedproject.model.net.collections.LoadPublisherDetailRequest;
+import org.comixedproject.model.net.collections.LoadPublisherDetailResponse;
 import org.comixedproject.model.net.collections.LoadPublisherListRequest;
 import org.comixedproject.model.net.collections.LoadPublisherListResponse;
 import org.comixedproject.service.comicbooks.ComicBookService;
@@ -68,8 +68,22 @@ public class PublisherController {
   @PostMapping(value = "/api/collections/publishers/{name}")
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.publishers.load-detail")
-  public List<Series> getPublisherDetail(@PathVariable("name") final String name) {
-    log.info("Getting publisher detail: name={}", name);
-    return this.comicBookService.getPublisherDetail(name);
+  public LoadPublisherDetailResponse getPublisherDetail(
+      @PathVariable("name") final String name,
+      @RequestBody final LoadPublisherDetailRequest request) {
+    final Integer pageIndex = request.getPageIndex();
+    final Integer pageSize = request.getPageSize();
+    final String sortBy = request.getSortBy();
+    final String sortDirection = request.getSortDirection();
+    log.info(
+        "Getting publisher detail: name={} page index={} size={} sort by={} direction={}",
+        name,
+        pageIndex,
+        pageSize,
+        sortBy,
+        sortDirection);
+    return new LoadPublisherDetailResponse(
+        this.comicBookService.getSeriesCountForPublisher(name),
+        this.comicBookService.getPublisherDetail(name, pageIndex, pageSize, sortBy, sortDirection));
   }
 }

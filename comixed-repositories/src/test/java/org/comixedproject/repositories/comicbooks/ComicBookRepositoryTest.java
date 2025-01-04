@@ -300,7 +300,8 @@ public class ComicBookRepositoryTest {
 
   @Test
   public void testGetAllSeriesAndVolumesForPublisher() {
-    final List<Series> result = repository.getAllSeriesAndVolumesForPublisher(TEST_PUBLISHER);
+    final List<Series> result =
+        repository.getAllSeriesAndVolumesForPublisher(TEST_PUBLISHER, PageRequest.of(0, 10));
 
     assertNotNull(result);
     assertFalse(result.isEmpty());

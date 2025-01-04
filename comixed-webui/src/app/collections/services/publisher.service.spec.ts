@@ -40,6 +40,7 @@ import {
 } from '@app/collections/collections.constants';
 import { LoadPublisherListRequest } from '@app/collections/models/net/load-publisher-list-request';
 import { LoadPublisherListResponse } from '@app/collections/models/net/load-publisher-list-response';
+import { LoadPublisherDetailRequest } from '@app/collections/models/net/load-publisher-detail-request';
 
 describe('PublisherService', () => {
   const PAGE_NUMBER = 3;
@@ -96,14 +97,25 @@ describe('PublisherService', () => {
     const serviceResponse = DETAIL;
 
     service
-      .loadPublisherDetail({ name: PUBLISHER.name })
+      .loadPublisherDetail({
+        name: PUBLISHER.name,
+        pageIndex: PAGE_NUMBER,
+        pageSize: PAGE_SIZE,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      })
       .subscribe(response => expect(response).toEqual(serviceResponse));
 
     const req = httpMock.expectOne(
       interpolate(LOAD_PUBLISHER_DETAIL_URL, { name: PUBLISHER.name })
     );
     expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({});
+    expect(req.request.body).toEqual({
+      pageIndex: PAGE_NUMBER,
+      pageSize: PAGE_SIZE,
+      sortBy: SORT_BY,
+      sortDirection: SORT_DIRECTION
+    } as LoadPublisherDetailRequest);
     req.flush(serviceResponse);
   });
 });
