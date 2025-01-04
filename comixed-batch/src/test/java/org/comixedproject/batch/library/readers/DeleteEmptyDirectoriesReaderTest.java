@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.readers;
+package org.comixedproject.batch.library.readers;
 
 import static junit.framework.TestCase.*;
 
@@ -82,7 +82,7 @@ public class DeleteEmptyDirectoriesReaderTest {
 
     assertNotNull(reader.directories);
     assertFalse(reader.directories.isEmpty());
-    assertTrue(reader.directories.stream().allMatch(directory -> directory.isDirectory()));
+    assertTrue(reader.directories.stream().allMatch(File::isDirectory));
 
     Mockito.verify(configurationService, Mockito.times(1))
         .getOptionValue(ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY);

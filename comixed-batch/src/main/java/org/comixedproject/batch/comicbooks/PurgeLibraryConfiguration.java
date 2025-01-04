@@ -23,7 +23,7 @@ import org.comixedproject.batch.comicbooks.processors.PurgeMarkedComicsProcessor
 import org.comixedproject.batch.comicbooks.processors.RemoveComicBooksWithoutDetailsProcessor;
 import org.comixedproject.batch.comicbooks.readers.PurgeMarkedComicsReader;
 import org.comixedproject.batch.comicbooks.readers.RemoveComicBooksWithoutDetailsReader;
-import org.comixedproject.batch.comicbooks.writers.RemoveDeletedComicBooksWriter;
+import org.comixedproject.batch.library.writers.RemoveDeletedComicBooksWriter;
 import org.comixedproject.batch.writers.NoopWriter;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.Job;

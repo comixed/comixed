@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,23 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.writers;
+package org.comixedproject.repositories.library;
 
-import lombok.extern.log4j.Log4j2;
-import org.comixedproject.state.comicbooks.ComicEvent;
-import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.stereotype.Component;
+import java.util.List;
+import org.comixedproject.model.library.OrganizingComic;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 /**
- * <code>RemoveDeletedComicBooksWriter</code> fires an event after a comic has been purged.
+ * <code>OrganizingComicRepository</code> provides methods for working with the database for
+ * instacne of {@link OrganizingComic}.
  *
  * @author Darryl L. Pierce
  */
-@Component
-@StepScope
-@Log4j2
-public class RemoveDeletedComicBooksWriter extends AbstractComicBookWriter {
-  public RemoveDeletedComicBooksWriter() {
-    super(ComicEvent.comicPurged);
-  }
+@Repository
+public interface OrganizingComicRepository extends CrudRepository<OrganizingComic, Long> {
+  @Query("SELECT o FROM OrganizingComic o")
+  List<OrganizingComic> loadComics(Pageable pageable);
 }

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,23 +16,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.writers;
+package org.comixedproject.model.library;
 
-import lombok.extern.log4j.Log4j2;
-import org.comixedproject.state.comicbooks.ComicEvent;
-import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.stereotype.Component;
+import java.util.Date;
 
 /**
- * <code>MoveComicFilesWriter</code> updates records for comic books that have been organized.
+ * <code>PublicationDetail</code> provides the publication details for a comic book.
  *
- * @author Darryl L. pierce
+ * @author Darryl L. Pierce
  */
-@Component
-@StepScope
-@Log4j2
-public class MoveComicFilesWriter extends AbstractComicBookWriter {
-  public MoveComicFilesWriter() {
-    super(ComicEvent.comicOrganized);
-  }
+public interface PublicationDetail {
+  String getPublisher();
+
+  String getImprint();
+
+  String getSeries();
+
+  String getVolume();
+
+  String getIssueNumber();
+
+  Date getCoverDate();
+
+  Date getStoreDate();
+
+  String getTitle();
 }

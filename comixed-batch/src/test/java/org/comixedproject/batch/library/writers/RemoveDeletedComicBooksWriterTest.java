@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.writers;
+package org.comixedproject.batch.library.writers;
 
 import java.util.ArrayList;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -31,8 +31,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.batch.item.Chunk;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MoveComicFilesWriterTest {
-  @InjectMocks private MoveComicFilesWriter writer;
+public class RemoveDeletedComicBooksWriterTest {
+  @InjectMocks private RemoveDeletedComicBooksWriter writer;
   @Mock private ComicStateHandler comicStateHandler;
   @Mock private ComicBook comicBook;
 
@@ -45,6 +45,6 @@ public class MoveComicFilesWriterTest {
     writer.write(comicBookList);
 
     Mockito.verify(comicStateHandler, Mockito.times(comicBookList.size()))
-        .fireEvent(comicBook, ComicEvent.comicOrganized);
+        .fireEvent(comicBook, ComicEvent.comicPurged);
   }
 }

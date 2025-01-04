@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.processors;
+package org.comixedproject.batch.library.processors;
 
 import static junit.framework.TestCase.*;
-import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.ORGANIZE_LIBRARY_JOB_DELETE_REMOVED_COMIC_FILES;
+import static org.comixedproject.batch.library.OrganizeLibraryConfiguration.ORGANIZE_LIBRARY_JOB_DELETE_REMOVED_COMIC_FILES;
 
 import java.io.File;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;

@@ -16,36 +16,51 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.readers;
+package org.comixedproject.batch.library.readers;
 
 import java.util.List;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.model.library.OrganizingComic;
+import org.comixedproject.service.library.OrganizingComicService;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>RemoveDeletedComicBooksReader</code> returns comics that are in a deleted state.
+ * <code>MoveComicFilesReader</code> returns comics that are to be moved.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @StepScope
 @Log4j2
-public class RemoveDeletedComicBooksReader extends AbstractComicReader {
+public class MoveComicFilesReader implements ItemReader<OrganizingComic> {
   @Value("${comixed.batch.organize-library.chunk-size:1}")
   @Getter
   private int chunkSize;
 
-  @Autowired private ComicBookService comicBookService;
+  @Autowired private OrganizingComicService organizingComicService;
+
+  @Getter @Setter List<OrganizingComic> organizingComicList = null;
 
   @Override
-  protected List<ComicBook> doLoadComics() {
-    log.trace("Loading comics in the DELETED state");
-    return this.comicBookService.findComicBooksToBePurged(this.chunkSize);
+  public OrganizingComic read() {
+    if (this.organizingComicList == null || this.organizingComicList.isEmpty()) {
+      log.trace("Load more comics to process");
+      this.organizingComicList = this.organizingComicService.loadComics(this.chunkSize);
+    }
+
+    if (this.organizingComicList.isEmpty()) {
+      log.trace("No comics to process");
+      this.organizingComicList = null;
+      return null;
+    }
+
+    log.trace("Returning next comic to process");
+    return this.organizingComicList.remove(0);
   }
 }

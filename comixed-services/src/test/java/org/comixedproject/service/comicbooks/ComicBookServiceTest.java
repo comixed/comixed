@@ -141,6 +141,7 @@ public class ComicBookServiceTest {
 
   @Before
   public void setUp() {
+    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_BOOK_ID);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
@@ -396,7 +397,7 @@ public class ComicBookServiceTest {
     assertNotNull(result);
     assertSame(savedComicBook, result);
 
-    Mockito.verify(comicFileAdaptor, Mockito.times(1)).standardizeFilename(comicBook);
+    Mockito.verify(comicFileAdaptor, Mockito.times(1)).standardizeFilename(TEST_COMIC_FILENAME);
     Mockito.verify(comicBookRepository, Mockito.times(1)).saveAndFlush(comicBook);
   }
 
@@ -641,35 +642,6 @@ public class ComicBookServiceTest {
     service.prepareComicBooksForDeleting();
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).prepareComicBooksForDeleting();
-  }
-
-  @Test
-  public void testFindComicsToBeMoved() {
-    Mockito.when(comicBookRepository.findComicsToBeMoved(pageableCaptor.capture()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result = service.findComicsToBeMoved(TEST_MAXIMUM_COMICS);
-
-    assertNotNull(result);
-    assertSame(comicBookList, result);
-
-    final Pageable pageable = pageableCaptor.getValue();
-    assertNotNull(pageable);
-    assertEquals(0, pageable.getPageNumber());
-    assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsToBeMoved(pageable);
-  }
-
-  @Test
-  public void testFindComicsToBeMovedCount() {
-    Mockito.when(comicBookRepository.findComicsToBeMovedCount()).thenReturn(TEST_COMIC_COUNT);
-
-    final long result = service.findComicsToBeMovedCount();
-
-    assertEquals(TEST_COMIC_COUNT, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsToBeMovedCount();
   }
 
   @Test

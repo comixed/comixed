@@ -16,23 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks;
+package org.comixedproject.batch.library;
 
 import java.io.File;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicbooks.listeners.MoveComicFilesChunkListener;
 import org.comixedproject.batch.comicbooks.listeners.OrganizeLibraryJobListener;
-import org.comixedproject.batch.comicbooks.listeners.RemoveDeletedComicBooksChunkListener;
-import org.comixedproject.batch.comicbooks.processors.DeleteEmptyDirectoriesProcessor;
-import org.comixedproject.batch.comicbooks.processors.MoveComicFilesProcessor;
-import org.comixedproject.batch.comicbooks.processors.RemoveDeletedComicBooksProcessor;
-import org.comixedproject.batch.comicbooks.readers.DeleteEmptyDirectoriesReader;
-import org.comixedproject.batch.comicbooks.readers.MoveComicFilesReader;
-import org.comixedproject.batch.comicbooks.readers.RemoveDeletedComicBooksReader;
-import org.comixedproject.batch.comicbooks.writers.MoveComicFilesWriter;
-import org.comixedproject.batch.comicbooks.writers.RemoveDeletedComicBooksWriter;
+import org.comixedproject.batch.library.listeners.MoveComicFilesChunkListener;
+import org.comixedproject.batch.library.listeners.RemoveDeletedComicBooksChunkListener;
+import org.comixedproject.batch.library.processors.DeleteEmptyDirectoriesProcessor;
+import org.comixedproject.batch.library.processors.MoveComicFilesProcessor;
+import org.comixedproject.batch.library.processors.RemoveDeletedComicBooksProcessor;
+import org.comixedproject.batch.library.readers.DeleteEmptyDirectoriesReader;
+import org.comixedproject.batch.library.readers.MoveComicFilesReader;
+import org.comixedproject.batch.library.readers.RemoveDeletedComicBooksReader;
+import org.comixedproject.batch.library.writers.MoveComicFilesWriter;
+import org.comixedproject.batch.library.writers.RemoveDeletedComicBooksWriter;
 import org.comixedproject.batch.writers.NoopWriter;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.library.OrganizingComic;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -135,7 +136,7 @@ public class OrganizeLibraryConfiguration {
       final MoveComicFilesWriter writer,
       final MoveComicFilesChunkListener listener) {
     return new StepBuilder("moveComicFilesStep", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
+        .<OrganizingComic, OrganizingComic>chunk(this.chunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

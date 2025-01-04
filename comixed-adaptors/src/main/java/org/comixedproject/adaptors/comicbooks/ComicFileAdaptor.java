@@ -29,8 +29,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.library.PublicationDetail;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -105,27 +104,27 @@ public class ComicFileAdaptor {
   /**
    * Generates a filename for the given comicBook based on the supplied rule.
    *
-   * @param comicBook the comicBook
+   * @param detail the publication details
+   * @param filename the current filename
    * @param renamingRule the renaming rule
    * @param targetDirectory the target directory
    * @return the generated filename
    */
   public String createFilenameFromRule(
-      final ComicBook comicBook, final String renamingRule, final String targetDirectory) {
+      final PublicationDetail detail,
+      final String filename,
+      final String renamingRule,
+      final String targetDirectory) {
     if (StringUtils.isEmpty(renamingRule)) {
       log.trace(
-          "No renaming rules: using original filename: {}",
-          FilenameUtils.getBaseName(comicBook.getComicDetail().getFilename()));
-      return String.format(
-          "%s/%s",
-          targetDirectory, FilenameUtils.getBaseName(comicBook.getComicDetail().getFilename()));
+          "No renaming rules: using original filename: {}", FilenameUtils.getBaseName(filename));
+      return String.format("%s/%s", targetDirectory, FilenameUtils.getBaseName(filename));
     }
 
     log.trace("Scrubbing renaming rule: {}", renamingRule);
     final String rule = this.scrub(renamingRule, FORBIDDEN_RULE_CHARACTERS);
 
     log.trace("Generating relative filename based on renaming rule: {}", rule);
-    final ComicDetail detail = comicBook.getComicDetail();
     final String publisher = this.getValueToUse(detail.getPublisher(), UNKNOWN_VALUE);
     final String imprint = this.getValueToUse(detail.getImprint(), publisher);
     final String series = this.getValueToUse(detail.getSeries(), UNKNOWN_VALUE);
@@ -163,7 +162,7 @@ public class ComicFileAdaptor {
             .replace(PLACEHOLDER_PUBLISHED_YEAR, publishedYear)
             .replace(PLACEHOLDER_PUBLISHED_MONTH, publishedMonth);
     final String directory = FilenameUtils.getPath(result);
-    final String filename = FilenameUtils.getName(result);
+    final String baseFilename = FilenameUtils.getName(result);
 
     result =
         FilenameUtils.normalize(
@@ -173,7 +172,7 @@ public class ComicFileAdaptor {
                 File.separator,
                 directory,
                 File.separator,
-                sanitizeFilename(filename)));
+                sanitizeFilename(baseFilename)));
     log.trace("Relative comicBook filename: {}", result);
     return result;
   }
@@ -227,10 +226,10 @@ public class ComicFileAdaptor {
   /**
    * Standardizes the filename for the comic book file.
    *
-   * @param comicBook the comic book
+   * @param filename the comic filename
+   * @return the standardized filename
    */
-  public void standardizeFilename(final ComicBook comicBook) {
-    final String filename = comicBook.getComicDetail().getFilename().replace("\\", "/");
-    comicBook.getComicDetail().setFilename(filename);
+  public String standardizeFilename(final String filename) {
+    return filename.replace("\\", "/");
   }
 }
