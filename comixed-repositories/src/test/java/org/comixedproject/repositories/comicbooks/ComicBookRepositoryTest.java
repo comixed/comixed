@@ -50,6 +50,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = RepositoryContext.class)
@@ -65,15 +66,15 @@ public class ComicBookRepositoryTest {
   private static final long TEST_COMIC_ID = 1001L;
   private static final long TEST_DELETABLE_COMIC_ID = 2000L;
   private static final long TEST_COMIC_ID_WITH_BLOCKED_PAGES = 1001L;
-  private static final Long TEST_USER_ID = 1000L;
+  private static final long TEST_USER_ID = 1000L;
   private static final long TEST_INVALID_ID = 9797L;
   private static final String TEST_PUBLISHER = "Marvel";
   private static final String TEST_SERIES = "Steve Rogers: Captain America";
   private static final String TEST_VOLUME = "2017";
   private static final String TEST_ISSUE_WITH_NO_NEXT = "514";
-  private static final Long TEST_ISSUE_WITH_NEXT = 512L;
+  private static final long TEST_ISSUE_WITH_NEXT = 512L;
   private static final String TEST_ISSUE_WITH_NO_PREV = "249";
-  private static final Long TEST_ISSUE_WITH_PREV = 513L;
+  private static final long TEST_ISSUE_WITH_PREV = 513L;
   private static final Date TEST_COVER_DATE_NO_NEXT = new Date(1490932800000L);
   private static final Date TEST_COVER_DATE_WITH_NEXT = new Date(1485838800000L);
   private static final Date TEST_COVER_DATE_NO_PREV = new Date(1425099600000L);
@@ -81,8 +82,9 @@ public class ComicBookRepositoryTest {
   private static final String TEST_HASH_WITH_NO_COMICS = "FEDCBA9876543210FEDCBA9876543210";
   private static final String TEST_HASH_WITH_COMICS = "0123456789ABCDEF0123456789ABCDEF";
   private static final String TEST_COMICBOOK_FILENAME = "src/test/resources/comicbook.cbz";
-  private static final Long TEST_NEXT_ISSUE_ID = 1001L;
-  private static final Long TEST_PREVIOUS_ISSUE_ID = 1006L;
+  private static final long TEST_NEXT_ISSUE_ID = 1001L;
+  private static final long TEST_PREVIOUS_ISSUE_ID = 1006L;
+  private static final long TEST_ORGANIZING_COMIC = 1005L;
 
   @Autowired private ComicBookRepository repository;
 
@@ -155,15 +157,14 @@ public class ComicBookRepositoryTest {
 
   @Test
   public void testGetIssuesAfterComic() {
-    final Long result =
+    final long result =
         this.repository.findNextComicBookIdInSeries(
             TEST_SERIES,
             TEST_VOLUME,
-            TEST_ISSUE_WITH_NEXT.toString(),
+            String.valueOf(TEST_ISSUE_WITH_NEXT),
             TEST_COVER_DATE_WITH_NEXT,
             Limit.of(1));
 
-    assertNotNull(result);
     assertEquals(TEST_NEXT_ISSUE_ID, result);
   }
 
@@ -182,15 +183,14 @@ public class ComicBookRepositoryTest {
 
   @Test
   public void testGetIssuesBeforeComic() {
-    final Long result =
+    final long result =
         this.repository.findPreviousComicBookIdInSeries(
             TEST_SERIES,
             TEST_VOLUME,
-            TEST_ISSUE_WITH_PREV.toString(),
+            String.valueOf(TEST_ISSUE_WITH_PREV),
             TEST_COVER_DATE_WITH_PREV,
             Limit.of(1));
 
-    assertNotNull(result);
     assertEquals(TEST_PREVIOUS_ISSUE_ID, result);
   }
 
@@ -332,7 +332,6 @@ public class ComicBookRepositoryTest {
     final ComicBook saved = this.repository.save(incoming);
 
     this.repository.flush();
-    ;
 
     assertNotNull(saved.getId());
 
@@ -345,5 +344,16 @@ public class ComicBookRepositoryTest {
     assertNull(updated.get().getComicDetail().getIssueNumber());
     assertNull(updated.get().getComicDetail().getTitle());
     assertNull(updated.get().getComicDetail().getDescription());
+  }
+
+  @Test
+  @Transactional
+  public void testClearOrganizingFlag() {
+    repository.clearOrganizingFlag(TEST_ORGANIZING_COMIC);
+
+    final ComicBook after = repository.getById(TEST_ORGANIZING_COMIC);
+
+    assertNotNull(after);
+    assertFalse(after.isOrganizing());
   }
 }

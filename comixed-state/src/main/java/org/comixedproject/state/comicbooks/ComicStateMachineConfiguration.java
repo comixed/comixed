@@ -44,7 +44,6 @@ public class ComicStateMachineConfiguration
   @Autowired private PrepareComicForProcessingAction prepareComicForProcessingAction;
   @Autowired private FileContentsLoadedAction fileContentsLoadedAction;
   @Autowired private MetadataUpdatedAction metadataUpdatedAction;
-  @Autowired private ComicOrganizedAction comicOrganizedAction;
   @Autowired private UpdateComicBookDetailsAction updateComicBookDetailsAction;
   @Autowired private ComicBookDetailsUpdatedAction comicBookDetailsUpdatedAction;
   @Autowired private ComicFileRecreatedAction comicFileRecreatedAction;
@@ -104,31 +103,6 @@ public class ComicStateMachineConfiguration
         .target(ComicState.STABLE)
         .event(ComicEvent.fileContentsLoaded)
         .action(fileContentsLoadedAction)
-        // the comic was organized
-        .and()
-        .withExternal()
-        .source(ComicState.UNPROCESSED)
-        .target(ComicState.UNPROCESSED)
-        .event(ComicEvent.comicOrganized)
-        .action(comicOrganizedAction)
-        .and()
-        .withExternal()
-        .source(ComicState.STABLE)
-        .target(ComicState.STABLE)
-        .event(ComicEvent.comicOrganized)
-        .action(comicOrganizedAction)
-        .and()
-        .withExternal()
-        .source(ComicState.CHANGED)
-        .target(ComicState.CHANGED)
-        .event(ComicEvent.comicOrganized)
-        .action(comicOrganizedAction)
-        .and()
-        .withExternal()
-        .source(ComicState.DELETED)
-        .target(ComicState.DELETED)
-        .event(ComicEvent.comicOrganized)
-        .action(comicOrganizedAction)
         // the details are going to be edited
         .and()
         .withExternal()

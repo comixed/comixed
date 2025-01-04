@@ -16,28 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.state.comicbooks.actions;
+package org.comixedproject.batch.library.writers;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicState;
+import org.comixedproject.batch.comicbooks.writers.AbstractComicBookWriter;
 import org.comixedproject.state.comicbooks.ComicEvent;
-import org.springframework.statemachine.StateContext;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ComicOrganizedAction</code> is executed after a comic has been organized.
+ * <code>RemoveDeletedComicBooksWriter</code> fires an event after a comic has been purged.
  *
  * @author Darryl L. Pierce
  */
 @Component
+@StepScope
 @Log4j2
-public class ComicOrganizedAction extends AbstractComicAction {
-  @Override
-  public void execute(final StateContext<ComicState, ComicEvent> context) {
-    log.trace("Fetching comicBook");
-    final ComicBook comicBook = this.fetchComic(context);
-    log.trace("Clearing the organizing flag");
-    comicBook.setOrganizing(false);
+public class RemoveDeletedComicBooksWriter extends AbstractComicBookWriter {
+  public RemoveDeletedComicBooksWriter() {
+    super(ComicEvent.comicPurged);
   }
 }

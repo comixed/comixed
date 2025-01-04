@@ -26,6 +26,7 @@ import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -443,4 +444,15 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
   @Query(
       "SELECT COUNT(DISTINCT d.series, d.volume) FROM ComicDetail d WHERE LENGTH(d.publisher) > 0 AND d.publisher = :name")
   long getSeriesCountForPublisher(@Param("name") String name);
+
+  /**
+   * Updates the filename for the given comic detail.
+   *
+   * @param comicDetailId the comic detail id.
+   * @param updatedFilename the updated filename
+   */
+  @Modifying
+  @Query("UPDATE ComicDetail d SET d.filename = :updatedFilename WHERE d.id = :comicDetailId")
+  void updateFilename(
+      @Param("comicDetailId") Long comicDetailId, @Param("updatedFilename") String updatedFilename);
 }

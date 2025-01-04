@@ -42,6 +42,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoadFileContentsProcessorTest {
+  private static final String TEST_COMIC_FILENAME = "src/test/resources/example-metadata.cbz";
   private static final String TEST_METADATA_FILENAME = "src/test/resources/example-metadata.xml";
   private static final String TEST_PROVIDER_NAME = "Provider Name";
   private static final String TEST_WEB_ADDRESS = "The metadata web reference";
@@ -69,9 +70,10 @@ public class LoadFileContentsProcessorTest {
   @Before
   public void setUp() throws ContentAdaptorException, AdaptorException, InterruptedException {
     Mockito.doNothing().when(comicBook).setMetadata(comicMetadataSourceArgumentCaptor.capture());
+    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(false);
-    Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.any(ComicBook.class)))
+    Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.anyString()))
         .thenReturn(TEST_METADATA_FILENAME);
     Mockito.when(contentAdaptorRegistry.getContentAdaptorForFilename(Mockito.anyString()))
         .thenReturn(comicInfoXmlFilenameContentAdaptor);
@@ -205,7 +207,7 @@ public class LoadFileContentsProcessorTest {
   @Test
   public void testProcessNoExternalMetadataFile() throws Exception {
     Mockito.when(comicBook.getPages()).thenReturn(pageList);
-    Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.any(ComicBook.class)))
+    Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.anyString()))
         .thenReturn(TEST_METADATA_FILENAME.substring(1));
 
     final ComicBook result = processor.process(comicBook);

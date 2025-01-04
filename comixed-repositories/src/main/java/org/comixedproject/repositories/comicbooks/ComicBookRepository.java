@@ -176,16 +176,6 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   List<ComicBook> findComicsForBatchMetadataUpdate(Pageable pageable);
 
   /**
-   * Returns all comics with the organizing flag set.
-   *
-   * @param pageable the page request
-   * @return the list of comics
-   */
-  @Query(
-      "SELECT c FROM ComicBook c WHERE c.organizing = true AND c.comicDetail.comicState != 'DELETED'")
-  List<ComicBook> findComicsToBeMoved(Pageable pageable);
-
-  /**
    * Returns the number of comics with the organizing flag set.
    *
    * @return the record count
@@ -688,7 +678,17 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   @Query("SELECT c.id FROM ComicBook c")
   List<Long> getAllIds();
 
+  /** Sets the purging flag for all comics int he DELETED state. */
   @Modifying
   @Query("UPDATE ComicBook c SET c.purging = true WHERE c.comicDetail.comicState = 'DELETED'")
   void prepareComicBooksForDeleting();
+
+  /**
+   * Clears the organizing flag for the specified comic book.
+   *
+   * @param comicBookId the comic book id
+   */
+  @Modifying
+  @Query("UPDATE ComicBook c SET c.organizing = false WHERE c.id = :comicBookId")
+  void clearOrganizingFlag(@Param("comicBookId") Long comicBookId);
 }

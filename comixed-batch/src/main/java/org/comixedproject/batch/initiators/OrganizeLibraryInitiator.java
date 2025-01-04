@@ -18,7 +18,7 @@
 
 package org.comixedproject.batch.initiators;
 
-import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.*;
+import static org.comixedproject.batch.library.OrganizeLibraryConfiguration.*;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_COMIC_RENAMING_RULE;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY;
 
@@ -26,7 +26,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.batch.OrganizingLibraryEvent;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.batch.BatchProcessesService;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.library.OrganizingComicService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersInvalidException;
@@ -51,7 +51,7 @@ import org.springframework.util.StringUtils;
 @Component
 @Log4j2
 public class OrganizeLibraryInitiator {
-  @Autowired private ComicBookService comicBookService;
+  @Autowired private OrganizingComicService organizingComicService;
   @Autowired private ConfigurationService configurationService;
   @Autowired private BatchProcessesService batchProcessesService;
 
@@ -76,7 +76,7 @@ public class OrganizeLibraryInitiator {
 
   private void doExecute() {
     log.trace("Checking for comic files to be organized");
-    if (this.comicBookService.findComicsToBeMovedCount() > 0L
+    if (this.organizingComicService.loadComicCount() > 0L
         && !this.batchProcessesService.hasActiveExecutions(ORGANIZE_LIBRARY_JOB)) {
       log.trace("Loading configured root directory");
       final String rootDirectory =

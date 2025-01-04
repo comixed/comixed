@@ -234,7 +234,7 @@ public class ComicBookAdaptor {
    * @throws AdaptorException if an error occurs while writing the file
    */
   public void saveMetadataFile(final ComicBook comicBook) throws AdaptorException {
-    final String filename = this.getMetadataFilename(comicBook);
+    final String filename = this.getMetadataFilename(comicBook.getComicDetail().getFilename());
     log.trace(
         "Creating external metadata file for comic: id={} filename={}",
         comicBook.getId(),
@@ -248,7 +248,7 @@ public class ComicBookAdaptor {
   }
 
   public void deleteMetadataFile(final ComicBook comicBook) {
-    final String filename = this.getMetadataFilename(comicBook);
+    final String filename = this.getMetadataFilename(comicBook.getComicDetail().getFilename());
     log.trace("Deleting external metadata file (if exists): {}", filename);
     this.fileAdaptor.deleteFile(new File(filename));
   }
@@ -256,13 +256,12 @@ public class ComicBookAdaptor {
   /**
    * Returns the external metadata filename for the given comic book.
    *
-   * @param comicBook the comic book
+   * @param filename the comic filename
    * @return the metadata filename
    */
-  public String getMetadataFilename(ComicBook comicBook) {
-    log.trace("Getting external metadata filename for comic book: id={}", comicBook.getId());
-    return String.format(
-        "%s.xml", FilenameUtils.removeExtension(comicBook.getComicDetail().getFilename()));
+  public String getMetadataFilename(final String filename) {
+    log.trace("Getting external metadata filename for comic book: {}", filename);
+    return String.format("%s.xml", FilenameUtils.removeExtension(filename));
   }
 
   /**

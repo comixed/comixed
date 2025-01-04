@@ -18,8 +18,8 @@
 
 package org.comixedproject.batch.initiators;
 
-import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.*;
 import static org.comixedproject.batch.comicpages.LoadPageHashesConfiguration.LOAD_PAGE_HASHES_JOB;
+import static org.comixedproject.batch.library.OrganizeLibraryConfiguration.*;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_COMIC_RENAMING_RULE;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY;
 import static org.junit.Assert.*;
@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
 import org.comixedproject.model.batch.OrganizingLibraryEvent;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.batch.BatchProcessesService;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.library.OrganizingComicService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,7 +50,7 @@ public class OrganizeLibraryInitiatorTest {
   private static final String TEST_RENAMING_RULE = "The renaming rule";
 
   @InjectMocks private OrganizeLibraryInitiator initiator;
-  @Mock private ComicBookService comicBookService;
+  @Mock private OrganizingComicService organizingComicService;
   @Mock private ConfigurationService configurationService;
   @Mock private BatchProcessesService batchProcessesService;
 
@@ -72,7 +72,7 @@ public class OrganizeLibraryInitiatorTest {
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
           JobRestartException {
-    Mockito.when(comicBookService.findComicsToBeMovedCount())
+    Mockito.when(organizingComicService.loadComicCount())
         .thenReturn(TEST_COMICS_MARKED_FOR_ORGANIZATION_COUNT);
     Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(false);
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
@@ -89,7 +89,7 @@ public class OrganizeLibraryInitiatorTest {
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
           JobRestartException {
-    Mockito.when(comicBookService.findComicsToBeMovedCount()).thenReturn(0L);
+    Mockito.when(organizingComicService.loadComicCount()).thenReturn(0L);
 
     initiator.execute();
 
