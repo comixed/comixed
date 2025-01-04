@@ -16,11 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.processors;
+package org.comixedproject.batch.library.processors;
 
 import static junit.framework.TestCase.*;
-import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.ORGANIZE_LIBRARY_JOB_RENAMING_RULE;
-import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.ORGANIZE_LIBRARY_JOB_TARGET_DIRECTORY;
+import static org.comixedproject.batch.library.OrganizeLibraryConfiguration.ORGANIZE_LIBRARY_JOB_RENAMING_RULE;
+import static org.comixedproject.batch.library.OrganizeLibraryConfiguration.ORGANIZE_LIBRARY_JOB_TARGET_DIRECTORY;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_DONT_MOVE_UNSCRAPED_COMICS;
 
 import java.io.File;
@@ -30,9 +30,8 @@ import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
-import org.comixedproject.model.comicbooks.ComicMetadataSource;
+import org.comixedproject.model.library.OrganizingComic;
+import org.comixedproject.model.library.PublicationDetail;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.junit.Before;
 import org.junit.Test;
@@ -69,9 +68,7 @@ public class MoveComicFilesProcessorTest {
   @Mock private FileAdaptor fileAdaptor;
   @Mock private ComicFileAdaptor comicFileAdaptor;
   @Mock private ComicBookAdaptor comicBookAdaptor;
-  @Mock private ComicDetail comicDetail;
-  @Mock private ComicMetadataSource metadata;
-  @Mock private ComicBook comicBook;
+  @Mock private OrganizingComic organizingComic;
   @Mock private File comicDetailFile;
 
   @Captor private ArgumentCaptor<File> moveFileSourceArgumentCaptor;
@@ -85,21 +82,24 @@ public class MoveComicFilesProcessorTest {
         .thenReturn(TEST_TARGET_DIRECTORY);
     Mockito.when(jobParameters.getString(ORGANIZE_LIBRARY_JOB_RENAMING_RULE))
         .thenReturn(TEST_RENAMING_RULE);
-    Mockito.when(comicDetail.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
+    Mockito.when(organizingComic.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
     Mockito.when(comicDetailFile.exists()).thenReturn(true);
-    Mockito.when(comicDetail.getFile()).thenReturn(comicDetailFile);
-    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_SOURCE_FILENAME);
+    Mockito.when(organizingComic.getFile()).thenReturn(comicDetailFile);
+    Mockito.when(organizingComic.getFilename()).thenReturn(TEST_SOURCE_FILENAME);
     Mockito.when(
             comicFileAdaptor.findAvailableFilename(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyString()))
         .thenReturn(TEST_REBUILT_FILENAME);
-    Mockito.doNothing().when(comicFileAdaptor).standardizeFilename(Mockito.any(ComicBook.class));
-    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+        .thenReturn(TEST_REBUILT_FILENAME_FROM_RULE);
     Mockito.when(
             comicFileAdaptor.createFilenameFromRule(
-                Mockito.any(ComicBook.class), Mockito.anyString(), Mockito.anyString()))
+                Mockito.any(PublicationDetail.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString()))
         .thenReturn(TEST_REBUILT_FILENAME_FROM_RULE);
-    Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.any(ComicBook.class)))
+    Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.anyString()))
         .thenReturn(TEST_SOURCE_METADATA_FILENAME_NOT_EXISTS);
     Mockito.when(fileAdaptor.sameFile(Mockito.any(File.class), Mockito.any(File.class)))
         .thenReturn(false, false);
@@ -113,24 +113,24 @@ public class MoveComicFilesProcessorTest {
   public void testProcess_comicbookNotFound() {
     Mockito.when(comicDetailFile.exists()).thenReturn(false);
 
-    final ComicBook result = processor.process(comicBook);
+    final OrganizingComic result = processor.process(organizingComic);
 
     assertNotNull(result);
-    assertSame(comicBook, result);
+    assertSame(organizingComic, result);
 
-    Mockito.verify(comicDetail, Mockito.never()).setFilename(Mockito.anyString());
+    Mockito.verify(organizingComic, Mockito.never()).setUpdatedFilename(TEST_REBUILT_FILENAME);
   }
 
   @Test
   public void testProcess_comicbookNotScrapedFeatureOn() throws IOException {
     Mockito.when(configurationService.isFeatureEnabled(CFG_DONT_MOVE_UNSCRAPED_COMICS))
         .thenReturn(true);
-    Mockito.when(comicBook.getMetadata()).thenReturn(metadata);
+    Mockito.when(organizingComic.isScraped()).thenReturn(true);
 
-    final ComicBook result = processor.process(comicBook);
+    final OrganizingComic result = processor.process(organizingComic);
 
     assertNotNull(result);
-    assertSame(comicBook, result);
+    assertSame(organizingComic, result);
 
     List<File> moveFileSources = moveFileSourceArgumentCaptor.getAllValues();
     List<File> moveFileTargets = moveFileTargetArgumentCaptor.getAllValues();
@@ -144,26 +144,26 @@ public class MoveComicFilesProcessorTest {
     assertEquals(TEST_REBUILT_FILENAME, rebuiltComicBookFile.getAbsolutePath());
 
     Mockito.verify(fileAdaptor, Mockito.times(1)).moveFile(comicDetailFile, rebuiltComicBookFile);
-    Mockito.verify(comicFileAdaptor, Mockito.times(1)).standardizeFilename(comicBook);
+    Mockito.verify(comicFileAdaptor, Mockito.times(1)).standardizeFilename(TEST_REBUILT_FILENAME);
   }
 
   @Test
   public void testProcess_comicbookNotScrapedFeatureOnAndNoMetadata() {
     Mockito.when(configurationService.isFeatureEnabled(CFG_DONT_MOVE_UNSCRAPED_COMICS))
         .thenReturn(true);
-    Mockito.when(comicBook.getMetadata()).thenReturn(null);
+    Mockito.when(organizingComic.isScraped()).thenReturn(false);
 
-    final ComicBook result = processor.process(comicBook);
+    final OrganizingComic result = processor.process(organizingComic);
 
     assertNotNull(result);
-    assertSame(comicBook, result);
+    assertSame(organizingComic, result);
 
-    Mockito.verify(comicDetail, Mockito.never()).setFilename(Mockito.anyString());
+    Mockito.verify(organizingComic, Mockito.never()).setUpdatedFilename(TEST_REBUILT_FILENAME);
   }
 
   @Test
   public void testProcess() throws IOException {
-    processor.process(comicBook);
+    processor.process(organizingComic);
 
     List<File> moveFileSources = moveFileSourceArgumentCaptor.getAllValues();
     List<File> moveFileTargets = moveFileTargetArgumentCaptor.getAllValues();
@@ -177,7 +177,7 @@ public class MoveComicFilesProcessorTest {
     assertEquals(TEST_REBUILT_FILENAME, rebuiltComicBookFile.getAbsolutePath());
 
     Mockito.verify(fileAdaptor, Mockito.times(1)).moveFile(comicDetailFile, rebuiltComicBookFile);
-    Mockito.verify(comicFileAdaptor, Mockito.times(1)).standardizeFilename(comicBook);
+    Mockito.verify(comicFileAdaptor, Mockito.times(1)).standardizeFilename(TEST_REBUILT_FILENAME);
   }
 
   @Test
@@ -185,7 +185,7 @@ public class MoveComicFilesProcessorTest {
     Mockito.when(fileAdaptor.sameFile(Mockito.any(File.class), Mockito.any(File.class)))
         .thenReturn(true);
 
-    processor.process(comicBook);
+    processor.process(organizingComic);
 
     Mockito.verify(fileAdaptor, Mockito.never())
         .moveFile(Mockito.any(File.class), Mockito.any(File.class));
@@ -197,7 +197,7 @@ public class MoveComicFilesProcessorTest {
         .when(fileAdaptor)
         .moveFile(moveFileSourceArgumentCaptor.capture(), moveFileTargetArgumentCaptor.capture());
 
-    processor.process(comicBook);
+    processor.process(organizingComic);
 
     List<File> moveFileSources = moveFileSourceArgumentCaptor.getAllValues();
     List<File> moveFileTargets = moveFileTargetArgumentCaptor.getAllValues();
@@ -213,17 +213,17 @@ public class MoveComicFilesProcessorTest {
 
     Mockito.verify(fileAdaptor, Mockito.times(1)).moveFile(metadataFileSource, metadataFileTarget);
     Mockito.verify(comicFileAdaptor, Mockito.never()).standardizeFilename(Mockito.any());
-    Mockito.verify(comicDetail, Mockito.never()).setFilename(Mockito.anyString());
+    Mockito.verify(organizingComic, Mockito.never()).setUpdatedFilename(TEST_REBUILT_FILENAME);
   }
 
   @Test
   public void testProcess_MetadataFileExists() throws IOException {
-    Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.any(ComicBook.class)))
+    Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.anyString()))
         .thenReturn(TEST_SOURCE_METADATA_FILENAME, TEST_TARGET_METADATA_FILENAME);
     Mockito.when(fileAdaptor.sameFile(Mockito.any(File.class), Mockito.any(File.class)))
         .thenReturn(true, false);
 
-    processor.process(comicBook);
+    processor.process(organizingComic);
 
     List<File> moveFileSources = moveFileSourceArgumentCaptor.getAllValues();
     List<File> moveFileTargets = moveFileTargetArgumentCaptor.getAllValues();
@@ -246,7 +246,7 @@ public class MoveComicFilesProcessorTest {
     Mockito.when(fileAdaptor.sameFile(Mockito.any(File.class), Mockito.any(File.class)))
         .thenReturn(true, true);
 
-    processor.process(comicBook);
+    processor.process(organizingComic);
 
     Mockito.verify(fileAdaptor, Mockito.never())
         .moveFile(Mockito.any(File.class), Mockito.any(File.class));

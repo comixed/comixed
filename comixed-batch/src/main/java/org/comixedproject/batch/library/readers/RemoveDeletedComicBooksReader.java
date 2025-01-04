@@ -16,11 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.readers;
+package org.comixedproject.batch.library.readers;
 
 import java.util.List;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.batch.comicbooks.readers.AbstractComicReader;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -29,14 +30,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>MoveComicFilesReader</code> returns comics that are to be moved.
+ * <code>RemoveDeletedComicBooksReader</code> returns comics that are in a deleted state.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @StepScope
 @Log4j2
-public class MoveComicFilesReader extends AbstractComicReader {
+public class RemoveDeletedComicBooksReader extends AbstractComicReader {
   @Value("${comixed.batch.organize-library.chunk-size:1}")
   @Getter
   private int chunkSize;
@@ -45,7 +46,7 @@ public class MoveComicFilesReader extends AbstractComicReader {
 
   @Override
   protected List<ComicBook> doLoadComics() {
-    log.trace("Loading comics to be moved");
-    return this.comicBookService.findComicsToBeMoved(this.chunkSize);
+    log.trace("Loading comics in the DELETED state");
+    return this.comicBookService.findComicBooksToBePurged(this.chunkSize);
   }
 }

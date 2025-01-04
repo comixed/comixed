@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.processors;
+package org.comixedproject.batch.library.processors;
 
 import java.io.File;
 import org.comixedproject.adaptors.file.FileAdaptor;

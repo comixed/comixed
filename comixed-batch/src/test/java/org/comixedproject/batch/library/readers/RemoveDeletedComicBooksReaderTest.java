@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.readers;
+package org.comixedproject.batch.library.readers;
 
 import static junit.framework.TestCase.*;
 
@@ -32,20 +32,21 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MoveComicFilesReaderTest {
+public class RemoveDeletedComicBooksReaderTest {
   private static final int MAX_RECORDS = 25;
 
-  @InjectMocks private MoveComicFilesReader reader;
+  @InjectMocks private RemoveDeletedComicBooksReader reader;
   @Mock private ComicBookService comicBookService;
   @Mock private ComicBook comicBook;
 
   private List<ComicBook> comicBookList = new ArrayList<>();
 
   @Test
-  public void testReadNoneLoadedManyFound() {
+  public void testRead_noneLoaded_manyFound() {
     for (int index = 0; index < MAX_RECORDS; index++) comicBookList.add(comicBook);
 
-    Mockito.when(comicBookService.findComicsToBeMoved(Mockito.anyInt())).thenReturn(comicBookList);
+    Mockito.when(comicBookService.findComicBooksToBePurged(Mockito.anyInt()))
+        .thenReturn(comicBookList);
 
     final ComicBook result = reader.read();
 
@@ -54,32 +55,20 @@ public class MoveComicFilesReaderTest {
     assertFalse(comicBookList.isEmpty());
     assertEquals(MAX_RECORDS - 1, comicBookList.size());
 
-    Mockito.verify(comicBookService, Mockito.times(1)).findComicsToBeMoved(reader.getChunkSize());
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .findComicBooksToBePurged(reader.getChunkSize());
   }
 
   @Test
-  public void testReadNoneRemaining() {
-    Mockito.when(comicBookService.findComicsToBeMoved(Mockito.anyInt())).thenReturn(comicBookList);
-
-    reader.comicBookList = comicBookList;
+  public void testRead_noneRemaining() {
+    Mockito.when(comicBookService.findComicBooksToBePurged(Mockito.anyInt()))
+        .thenReturn(comicBookList);
 
     final ComicBook result = reader.read();
 
     assertNull(result);
-    assertNull(reader.comicBookList);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).findComicsToBeMoved(reader.getChunkSize());
-  }
-
-  @Test
-  public void testReadNoneLoadedNoneFound() {
-    Mockito.when(comicBookService.findComicsToBeMoved(Mockito.anyInt())).thenReturn(comicBookList);
-
-    final ComicBook result = reader.read();
-
-    assertNull(result);
-    assertNull(reader.comicBookList);
-
-    Mockito.verify(comicBookService, Mockito.times(1)).findComicsToBeMoved(reader.getChunkSize());
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .findComicBooksToBePurged(reader.getChunkSize());
   }
 }

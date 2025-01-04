@@ -25,7 +25,6 @@ import org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAct
 import org.comixedproject.model.batch.BatchProcessDetail;
 import org.comixedproject.model.messaging.batch.ProcessComicBooksStatus;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicfiles.ComicFileService;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -39,7 +38,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class AbstractBatchProcessListener {
   @Autowired private PublishProcessComicBooksStatusAction publishProcessComicBooksStatusAction;
   @Autowired private PublishBatchProcessDetailUpdateAction publishBatchProcessDetailUpdateAction;
-  @Autowired protected ComicFileService comicFileService;
   @Autowired protected ComicBookService comicBookService;
 
   protected void doPublishProcessComicBookStatus(

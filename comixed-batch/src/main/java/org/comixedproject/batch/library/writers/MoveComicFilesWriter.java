@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2022, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,34 +16,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.processors;
+package org.comixedproject.batch.library.writers;
 
-import java.io.File;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang.ArrayUtils;
-import org.comixedproject.adaptors.file.FileAdaptor;
+import org.comixedproject.model.library.OrganizingComic;
+import org.comixedproject.service.library.OrganizingComicService;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.Chunk;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>DeleteEmptyDirectoriesProcessor</code> deletes a directory that contains no content.
+ * <code>MoveComicFilesWriter</code> updates records for comic books that have been organized.
  *
- * @author Darryl L. Pierce
+ * @author Darryl L. pierce
  */
 @Component
 @StepScope
 @Log4j2
-public class DeleteEmptyDirectoriesProcessor implements ItemProcessor<File, Void> {
-  @Autowired private FileAdaptor fileAdaptor;
+public class MoveComicFilesWriter implements ItemWriter<OrganizingComic> {
+  @Autowired private OrganizingComicService organizingComicService;
 
   @Override
-  public Void process(final File directory) throws Exception {
-    if (ArrayUtils.isEmpty(directory.listFiles())) {
-      log.trace("Deleting empty directory: {}", directory.getAbsolutePath());
-      this.fileAdaptor.deleteDirectory(directory);
-    }
-    return null;
+  public void write(final Chunk<? extends OrganizingComic> comics) {
+    comics.forEach(organizingComic -> this.organizingComicService.saveComic(organizingComic));
   }
 }

@@ -32,6 +32,7 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.archives.ArchiveType;
+import org.comixedproject.model.library.PublicationDetail;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
 import org.springframework.data.annotation.CreatedDate;
@@ -46,7 +47,7 @@ import org.springframework.data.annotation.CreatedDate;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Log4j2
-public class ComicDetail {
+public class ComicDetail implements PublicationDetail {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonView({

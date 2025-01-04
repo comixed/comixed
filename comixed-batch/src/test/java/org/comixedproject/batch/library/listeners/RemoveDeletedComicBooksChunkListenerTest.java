@@ -16,13 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.listeners;
+package org.comixedproject.batch.library.listeners;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
-import static org.comixedproject.batch.comicbooks.OrganizeLibraryConfiguration.ORGANIZE_LIBRARY_JOB;
-import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.MOVE_COMIC_FILES_STEP;
+import static org.comixedproject.batch.library.OrganizeLibraryConfiguration.ORGANIZE_LIBRARY_JOB;
+import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.REMOVE_DELETED_COMIC_BOOKS_STEP;
 
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
@@ -40,11 +40,11 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.scope.context.StepContext;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MoveComicFilesChunkListenerTest {
+public class RemoveDeletedComicBooksChunkListenerTest {
   private static final long TEST_TOTAL_COMICS = 717L;
   private static final long TEST_REMAINING_COMICS = 129L;
 
-  @InjectMocks private MoveComicFilesChunkListener listener;
+  @InjectMocks private RemoveDeletedComicBooksChunkListener listener;
   @Mock private ComicBookService comicBookService;
   @Mock private ChunkContext chunkContext;
   @Mock private StepContext stepContext;
@@ -66,7 +66,7 @@ public class MoveComicFilesChunkListenerTest {
     Mockito.when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);
     Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_TOTAL_COMICS);
-    Mockito.when(comicBookService.findComicsToBeMovedCount()).thenReturn(TEST_REMAINING_COMICS);
+    Mockito.when(comicBookService.findComicsToPurgeCount()).thenReturn(TEST_REMAINING_COMICS);
 
     Mockito.when(chunkContext.getStepContext()).thenReturn(stepContext);
     Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
@@ -87,7 +87,7 @@ public class MoveComicFilesChunkListenerTest {
 
     assertNotNull(status);
     assertTrue(status.isActive());
-    assertEquals(MOVE_COMIC_FILES_STEP, status.getStepName());
+    assertEquals(REMOVE_DELETED_COMIC_BOOKS_STEP, status.getStepName());
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_TOTAL_COMICS - TEST_REMAINING_COMICS, status.getProcessed());
 
@@ -102,7 +102,7 @@ public class MoveComicFilesChunkListenerTest {
 
     assertNotNull(status);
     assertTrue(status.isActive());
-    assertEquals(MOVE_COMIC_FILES_STEP, status.getStepName());
+    assertEquals(REMOVE_DELETED_COMIC_BOOKS_STEP, status.getStepName());
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_TOTAL_COMICS - TEST_REMAINING_COMICS, status.getProcessed());
 
@@ -117,7 +117,7 @@ public class MoveComicFilesChunkListenerTest {
 
     assertNotNull(status);
     assertTrue(status.isActive());
-    assertEquals(MOVE_COMIC_FILES_STEP, status.getStepName());
+    assertEquals(REMOVE_DELETED_COMIC_BOOKS_STEP, status.getStepName());
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_TOTAL_COMICS - TEST_REMAINING_COMICS, status.getProcessed());
 
@@ -126,13 +126,16 @@ public class MoveComicFilesChunkListenerTest {
 
   @Test
   public void testAfterChunkPublishingException() throws PublishingException {
+    Mockito.doThrow(PublishingException.class)
+        .when(publishBatchProcessDetailUpdateAction)
+        .publish(Mockito.any());
     listener.beforeChunk(chunkContext);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
 
     assertNotNull(status);
     assertTrue(status.isActive());
-    assertEquals(MOVE_COMIC_FILES_STEP, status.getStepName());
+    assertEquals(REMOVE_DELETED_COMIC_BOOKS_STEP, status.getStepName());
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_TOTAL_COMICS - TEST_REMAINING_COMICS, status.getProcessed());
 

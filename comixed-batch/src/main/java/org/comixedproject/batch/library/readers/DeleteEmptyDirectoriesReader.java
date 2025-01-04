@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.readers;
+package org.comixedproject.batch.library.readers;
 
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_DELETE_EMPTY_DIRECTORIES;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY;

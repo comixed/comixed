@@ -192,7 +192,8 @@ public class ComicBookService {
     this.imprintService.update(comicBook);
 
     log.trace("Standardizing the comic filename");
-    this.comicFileAdaptor.standardizeFilename(comicBook);
+    final ComicDetail detail = comicBook.getComicDetail();
+    detail.setFilename(comicFileAdaptor.standardizeFilename(detail.getFilename()));
 
     return this.comicBookRepository.saveAndFlush(comicBook);
   }
@@ -396,27 +397,6 @@ public class ComicBookService {
   public void prepareComicBooksForDeleting() {
     log.trace("Marking all deleted comics for purging");
     this.comicBookRepository.prepareComicBooksForDeleting();
-  }
-
-  /**
-   * Finds all comics that are to be moved.
-   *
-   * @param count the number of comics to return
-   * @return the list of comics
-   */
-  public List<ComicBook> findComicsToBeMoved(final int count) {
-    log.trace("Finding all comics to be moved");
-    return this.comicBookRepository.findComicsToBeMoved(PageRequest.of(0, count));
-  }
-
-  /**
-   * Finds the number of comics that are to be moved.
-   *
-   * @return the record count
-   */
-  public long findComicsToBeMovedCount() {
-    log.trace("Finding the count of comics to be moved");
-    return this.comicBookRepository.findComicsToBeMovedCount();
   }
 
   /**

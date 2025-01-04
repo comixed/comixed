@@ -36,6 +36,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = RepositoryContext.class)
@@ -55,6 +56,10 @@ public class ComicDetailRepositoryTest {
   private static final String TEST_READ_VOLUME = "2017";
   private static final String TEST_EMAIL = "comixedreader@localhost";
   private static final long TEST_READING_LIST_ID = 1001L;
+  private static final Long TEST_COMIC_BOOK_ID = 1000L;
+  private static final Long TEST_COMIC_DETAIL_ID = 2000L;
+  private static final String TEST_UPDATED_FILENAME =
+      "/Users/comixed_reader/Documents/library/comics/comicbook.cbz";
 
   @Autowired private ComicDetailRepository repository;
 
@@ -92,7 +97,7 @@ public class ComicDetailRepositoryTest {
   public void testUnscrapedComicDetails() {
     List<ComicDetail> result = repository.findAll();
 
-    assertFalse(result.stream().filter(entry -> entry.getUnscraped()).toList().isEmpty());
+    assertFalse(result.stream().filter(ComicDetail::getUnscraped).toList().isEmpty());
     assertTrue(result.stream().anyMatch(comicDetail -> comicDetail.getPageCount() > 0));
   }
 
@@ -104,5 +109,16 @@ public class ComicDetailRepositoryTest {
     assertNotNull(result);
     assertFalse(result.isEmpty());
     assertEquals(1, result.size());
+  }
+
+  @Test
+  @Transactional
+  public void testUpdateFilename() {
+    repository.updateFilename(TEST_COMIC_DETAIL_ID, TEST_UPDATED_FILENAME);
+
+    final ComicDetail after = repository.findByComicBookId(TEST_COMIC_BOOK_ID);
+
+    assertEquals(TEST_COMIC_DETAIL_ID, after.getId());
+    assertEquals(TEST_UPDATED_FILENAME, after.getFilename());
   }
 }

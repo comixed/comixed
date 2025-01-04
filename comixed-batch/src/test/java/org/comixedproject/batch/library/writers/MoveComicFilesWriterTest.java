@@ -16,12 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.writers;
+package org.comixedproject.batch.library.writers;
 
 import java.util.ArrayList;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.state.comicbooks.ComicEvent;
-import org.comixedproject.state.comicbooks.ComicStateHandler;
+import org.comixedproject.model.library.OrganizingComic;
+import org.comixedproject.service.library.OrganizingComicService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -31,20 +30,20 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.batch.item.Chunk;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RemoveDeletedComicBooksWriterTest {
-  @InjectMocks private RemoveDeletedComicBooksWriter writer;
-  @Mock private ComicStateHandler comicStateHandler;
-  @Mock private ComicBook comicBook;
+public class MoveComicFilesWriterTest {
+  @InjectMocks private MoveComicFilesWriter writer;
+  @Mock private OrganizingComicService organizingComicService;
+  @Mock private OrganizingComic organizingComic;
 
-  private Chunk<ComicBook> comicBookList = new Chunk<>(new ArrayList<>());
+  private Chunk<OrganizingComic> organizingComics = new Chunk<>(new ArrayList<>());
 
   @Test
   public void testWrite() {
-    for (int index = 0; index < 25; index++) comicBookList.add(comicBook);
+    for (int index = 0; index < 25; index++) organizingComics.add(organizingComic);
 
-    writer.write(comicBookList);
+    writer.write(organizingComics);
 
-    Mockito.verify(comicStateHandler, Mockito.times(comicBookList.size()))
-        .fireEvent(comicBook, ComicEvent.comicPurged);
+    Mockito.verify(organizingComicService, Mockito.times(organizingComics.size()))
+        .saveComic(organizingComic);
   }
 }
