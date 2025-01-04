@@ -18,11 +18,12 @@
 
 package org.comixedproject.rest.collections;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.*;
 
 import java.util.List;
 import org.comixedproject.model.collections.Series;
+import org.comixedproject.model.net.collections.LoadPublisherDetailRequest;
+import org.comixedproject.model.net.collections.LoadPublisherDetailResponse;
 import org.comixedproject.model.net.collections.LoadPublisherListRequest;
 import org.comixedproject.model.net.collections.LoadPublisherListResponse;
 import org.comixedproject.service.comicbooks.ComicBookService;
@@ -38,6 +39,9 @@ public class PublisherControllerTest {
   private static final String TEST_PUBLISHER_NAME = "The publisher name";
   private static final int TEST_PAGE_NUMBER = 72;
   private static final int TEST_PAGE_SIZE = 25;
+  private static final String TEST_SORT_BY = "publisher-name";
+  private static final String TEST_SORT_DIRECTION = "asc";
+  private static final long TEST_SERIES_COUNT = 921L;
 
   @InjectMocks private PublisherController controller;
   @Mock private ComicBookService comicBookService;
@@ -64,13 +68,35 @@ public class PublisherControllerTest {
 
   @Test
   public void testGetPublisherDetail() {
-    Mockito.when(comicBookService.getPublisherDetail(Mockito.anyString())).thenReturn(seriesList);
+    Mockito.when(comicBookService.getSeriesCountForPublisher(Mockito.anyString()))
+        .thenReturn(TEST_SERIES_COUNT);
+    Mockito.when(
+            comicBookService.getPublisherDetail(
+                Mockito.anyString(),
+                Mockito.anyInt(),
+                Mockito.anyInt(),
+                Mockito.anyString(),
+                Mockito.anyString()))
+        .thenReturn(seriesList);
 
-    final List<Series> result = controller.getPublisherDetail(TEST_PUBLISHER_NAME);
+    final LoadPublisherDetailResponse result =
+        controller.getPublisherDetail(
+            TEST_PUBLISHER_NAME,
+            new LoadPublisherDetailRequest(
+                TEST_PAGE_NUMBER, TEST_PAGE_SIZE, TEST_SORT_BY, TEST_SORT_DIRECTION));
 
     assertNotNull(result);
-    assertSame(seriesList, result);
+    assertEquals(TEST_SERIES_COUNT, result.getTotalSeries());
+    assertSame(seriesList, result.getEntries());
 
-    Mockito.verify(comicBookService, Mockito.times(1)).getPublisherDetail(TEST_PUBLISHER_NAME);
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .getSeriesCountForPublisher(TEST_PUBLISHER_NAME);
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .getPublisherDetail(
+            TEST_PUBLISHER_NAME,
+            TEST_PAGE_NUMBER,
+            TEST_PAGE_SIZE,
+            TEST_SORT_BY,
+            TEST_SORT_DIRECTION);
   }
 }

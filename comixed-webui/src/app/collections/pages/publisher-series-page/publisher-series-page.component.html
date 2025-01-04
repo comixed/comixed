@@ -10,7 +10,7 @@
 
 <mat-paginator
   showFirstLastButtons="true"
-  [length]="dataSource.data.length"
+  [length]="totalSeries"
   [pageSize]="pageSize"
   [pageIndex]="pageIndex"
   [pageSizeOptions]="pageOptions"
@@ -32,7 +32,7 @@
     queryParameterService.onSortChange($event.active, $event.direction)
   "
 >
-  <ng-container matColumnDef="series">
+  <ng-container matColumnDef="series-name">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "collections.publisher-series.label.series-name" | translate }}
     </mat-header-cell>
@@ -41,7 +41,7 @@
     </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="volume">
+  <ng-container matColumnDef="series-volume">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "collections.publisher-series.label.volume" | translate }}
     </mat-header-cell>
@@ -51,7 +51,7 @@
   </ng-container>
 
   <ng-container matColumnDef="in-library">
-    <mat-header-cell mat-sort-header *matHeaderCellDef>
+    <mat-header-cell *matHeaderCellDef>
       {{ "collections.publisher-series.label.in-library" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
@@ -62,7 +62,7 @@
   </ng-container>
 
   <ng-container matColumnDef="total-issues">
-    <mat-header-cell mat-sort-header *matHeaderCellDef>
+    <mat-header-cell *matHeaderCellDef>
       {{ "collections.publisher-series.label.total-issues" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">

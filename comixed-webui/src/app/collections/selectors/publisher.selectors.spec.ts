@@ -39,7 +39,8 @@ import {
 
 describe('Publisher Selectors', () => {
   const PUBLISHERS = [PUBLISHER_1, PUBLISHER_2, PUBLISHER_3];
-  const DETAIL = [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5];
+  const SERIES_LIST = [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5];
+  const TOTAL_SERIES = SERIES_LIST.length;
 
   let state: PublisherState;
 
@@ -48,7 +49,8 @@ describe('Publisher Selectors', () => {
       busy: Math.random() > 0.5,
       total: PUBLISHERS.length,
       publishers: PUBLISHERS,
-      detail: DETAIL
+      totalSeries: TOTAL_SERIES,
+      detail: SERIES_LIST
     };
   });
 

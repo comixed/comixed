@@ -20,9 +20,9 @@ import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   loadPublisherDetail,
   loadPublisherDetailFailure,
+  loadPublisherDetailSuccess,
   loadPublisherList,
   loadPublisherListFailure,
-  loadPublisherDetailSuccess,
   loadPublisherListSuccess
 } from '../actions/publisher.actions';
 import { Publisher } from '@app/collections/models/publisher';
@@ -34,6 +34,7 @@ export interface PublisherState {
   busy: boolean;
   total: number;
   publishers: Publisher[];
+  totalSeries: number;
   detail: Series[];
 }
 
@@ -41,6 +42,7 @@ export const initialState: PublisherState = {
   busy: false,
   total: 0,
   publishers: [],
+  totalSeries: 0,
   detail: []
 };
 
@@ -59,6 +61,7 @@ export const reducer = createReducer(
   on(loadPublisherDetailSuccess, (state, action) => ({
     ...state,
     busy: false,
+    totalSeries: action.totalSeries,
     detail: action.detail
   })),
   on(loadPublisherDetailFailure, state => ({ ...state, busy: false }))

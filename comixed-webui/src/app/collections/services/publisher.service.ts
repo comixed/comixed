@@ -26,6 +26,7 @@ import {
   LOAD_PUBLISHERS_URL
 } from '@app/collections/collections.constants';
 import { LoadPublisherListRequest } from '@app/collections/models/net/load-publisher-list-request';
+import { LoadPublisherDetailRequest } from '@app/collections/models/net/load-publisher-detail-request';
 
 @Injectable({
   providedIn: 'root'
@@ -48,11 +49,22 @@ export class PublisherService {
     } as LoadPublisherListRequest);
   }
 
-  loadPublisherDetail(args: { name: string }): Observable<any> {
+  loadPublisherDetail(args: {
+    name: string;
+    pageIndex: number;
+    pageSize: number;
+    sortBy: string;
+    sortDirection: string;
+  }): Observable<any> {
     this.logger.debug('Loading one publisher:', args);
     return this.http.post(
       interpolate(LOAD_PUBLISHER_DETAIL_URL, { name: args.name }),
-      {}
+      {
+        pageSize: args.pageSize,
+        pageIndex: args.pageIndex,
+        sortBy: args.sortBy,
+        sortDirection: args.sortDirection
+      } as LoadPublisherDetailRequest
     );
   }
 }
