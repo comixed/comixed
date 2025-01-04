@@ -793,6 +793,8 @@ public class ComicBookService {
     String fieldName;
     switch (sortBy) {
       case "comic-count" -> fieldName = "issueCount";
+      case "series-name" -> fieldName = "comicDetail.series";
+      case "series-volume" -> fieldName = "comicDetail.volume";
       default -> fieldName = "publisher";
     }
 
@@ -803,9 +805,26 @@ public class ComicBookService {
     return Sort.by(direction, fieldName);
   }
 
-  public List<Series> getPublisherDetail(final String name) {
+  /**
+   * Returns a set of series details for the given publisher.
+   *
+   * @param name the publisher
+   * @param pageIndex the page index
+   * @param pageSize the page size
+   * @param sortBy the sort field
+   * @param sortDirection the sort direction
+   * @return the series details
+   */
+  @Transactional
+  public List<Series> getPublisherDetail(
+      final String name,
+      final int pageIndex,
+      final int pageSize,
+      final String sortBy,
+      final String sortDirection) {
     log.debug("Getting detail for one publisher: name={}", name);
-    return this.comicBookRepository.getAllSeriesAndVolumesForPublisher(name);
+    return this.comicBookRepository.getAllSeriesAndVolumesForPublisher(
+        name, PageRequest.of(pageIndex, pageSize, doCreateSort(sortBy, sortDirection)));
   }
 
   /**
@@ -1032,5 +1051,17 @@ public class ComicBookService {
   @Transactional
   public void markComicBooksForBatchScraping(final List<Long> ids) {
     this.comicBookRepository.prepareForBatchScraping(ids);
+  }
+
+  /**
+   * Returns the number of comic series for a publisher.
+   *
+   * @param name the publisher's name
+   * @return the number of series
+   */
+  @Transactional
+  public long getSeriesCountForPublisher(final String name) {
+    log.debug("Loading the number of series for publisher={}", name);
+    return this.comicDetailRepository.getSeriesCountForPublisher(name);
   }
 }

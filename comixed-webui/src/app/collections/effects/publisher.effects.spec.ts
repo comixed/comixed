@@ -46,6 +46,7 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LoadPublisherListResponse } from '@app/collections/models/net/load-publisher-list-response';
+import { LoadPublisherDetailResponse } from '@app/collections/models/net/load-publisher-detail-response';
 
 describe('PublisherEffects', () => {
   const PAGE_NUMBER = 1;
@@ -54,7 +55,8 @@ describe('PublisherEffects', () => {
   const SORT_DIRECTION = 'asc';
   const PUBLISHERS = [PUBLISHER_1, PUBLISHER_2, PUBLISHER_3];
   const PUBLISHER = PUBLISHER_3;
-  const DETAIL = [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5];
+  const SERIES_LIST = [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5];
+  const TOTAL_SERIES = SERIES_LIST.length;
 
   let actions$: Observable<any>;
   let effects: PublisherEffects;
@@ -181,13 +183,31 @@ describe('PublisherEffects', () => {
 
   describe('loading a single publisher', () => {
     it('fires an action on success', () => {
-      const serviceResponse = DETAIL;
-      const action = loadPublisherDetail({ name: PUBLISHER.name });
-      const outcome = loadPublisherDetailSuccess({ detail: DETAIL });
+      const serviceResponse = {
+        totalSeries: TOTAL_SERIES,
+        entries: SERIES_LIST
+      } as LoadPublisherDetailResponse;
+      const action = loadPublisherDetail({
+        name: PUBLISHER.name,
+        pageIndex: PAGE_NUMBER,
+        pageSize: PAGE_SIZE,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      });
+      const outcome = loadPublisherDetailSuccess({
+        totalSeries: TOTAL_SERIES,
+        detail: SERIES_LIST
+      });
 
       actions$ = hot('-a', { a: action });
       publisherService.loadPublisherDetail
-        .withArgs({ name: PUBLISHER.name })
+        .withArgs({
+          name: PUBLISHER.name,
+          pageIndex: PAGE_NUMBER,
+          pageSize: PAGE_SIZE,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -196,12 +216,24 @@ describe('PublisherEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = loadPublisherDetail({ name: PUBLISHER.name });
+      const action = loadPublisherDetail({
+        name: PUBLISHER.name,
+        pageIndex: PAGE_NUMBER,
+        pageSize: PAGE_SIZE,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      });
       const outcome = loadPublisherDetailFailure();
 
       actions$ = hot('-a', { a: action });
       publisherService.loadPublisherDetail
-        .withArgs({ name: PUBLISHER.name })
+        .withArgs({
+          name: PUBLISHER.name,
+          pageIndex: PAGE_NUMBER,
+          pageSize: PAGE_SIZE,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -210,12 +242,24 @@ describe('PublisherEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = loadPublisherDetail({ name: PUBLISHER.name });
+      const action = loadPublisherDetail({
+        name: PUBLISHER.name,
+        pageIndex: PAGE_NUMBER,
+        pageSize: PAGE_SIZE,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      });
       const outcome = loadPublisherDetailFailure();
 
       actions$ = hot('-a', { a: action });
       publisherService.loadPublisherDetail
-        .withArgs({ name: PUBLISHER.name })
+        .withArgs({
+          name: PUBLISHER.name,
+          pageIndex: PAGE_NUMBER,
+          pageSize: PAGE_SIZE,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });

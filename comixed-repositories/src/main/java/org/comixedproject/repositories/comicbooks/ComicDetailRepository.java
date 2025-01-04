@@ -433,4 +433,14 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
       "SELECT COUNT(DISTINCT t.comicDetail.id) FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue")
   long getComicCountForTagTypeAndValue(
       @Param("tagType") ComicTagType tagType, @Param("tagValue") String tagValue);
+
+  /**
+   * Returns the number of distinct series for a publisher.
+   *
+   * @param name the publisher
+   * @return the count
+   */
+  @Query(
+      "SELECT COUNT(DISTINCT d.series, d.volume) FROM ComicDetail d WHERE LENGTH(d.publisher) > 0 AND d.publisher = :name")
+  long getSeriesCountForPublisher(@Param("name") String name);
 }

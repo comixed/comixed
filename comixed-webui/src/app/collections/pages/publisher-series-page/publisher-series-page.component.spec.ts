@@ -41,7 +41,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-describe('PublisherDetailPageComponent', () => {
+describe('PublisherSeriesPageComponent', () => {
   const initialState = { [PUBLISHER_FEATURE_KEY]: initialPublisherState };
   const PUBLISHER = PUBLISHER_3;
   const DETAIL = [SERIES_1, SERIES_3, SERIES_5];
@@ -104,40 +104,6 @@ describe('PublisherDetailPageComponent', () => {
 
     it('populates the table data source', () => {
       expect(component.dataSource.data).toEqual(DETAIL);
-    });
-  });
-
-  describe('sorting data', () => {
-    const ENTRY = SERIES_1;
-
-    it('can sort by series', () => {
-      expect(component.dataSource.sortingDataAccessor(ENTRY, 'series')).toEqual(
-        ENTRY.name
-      );
-    });
-
-    it('can sort by volume', () => {
-      expect(component.dataSource.sortingDataAccessor(ENTRY, 'volume')).toEqual(
-        ENTRY.volume
-      );
-    });
-
-    it('can sort by total issues', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ENTRY, 'total-issues')
-      ).toEqual(ENTRY.totalIssues);
-    });
-
-    it('can sort by issues in library', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ENTRY, 'in-library')
-      ).toEqual(ENTRY.inLibrary);
-    });
-
-    it('ignores unknown fields', () => {
-      expect(component.dataSource.sortingDataAccessor(ENTRY, 'in-')).toEqual(
-        ''
-      );
     });
   });
 });

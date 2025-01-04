@@ -39,7 +39,12 @@ import {
 describe('Publisher Reducer', () => {
   const PUBLISHERS = [PUBLISHER_1, PUBLISHER_2, PUBLISHER_3];
   const PUBLISHER = PUBLISHER_3;
-  const DETAIL = [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5];
+  const SERIES_LIST = [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5];
+  const TOTAL_SERIES = SERIES_LIST.length;
+  const PAGE_INDEX = 3;
+  const PAGE_SIZE = 25;
+  const SORT_BY = 'name';
+  const SORT_DIRECTION = 'asc';
 
   let state: PublisherState;
 
@@ -62,6 +67,10 @@ describe('Publisher Reducer', () => {
 
     it('has no publishers', () => {
       expect(state.publishers).toEqual([]);
+    });
+
+    it('has no total series', () => {
+      expect(state.totalSeries).toEqual(0);
     });
 
     it('has no detail', () => {
@@ -131,8 +140,14 @@ describe('Publisher Reducer', () => {
   describe('loading a single publisher', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, busy: false, detail: DETAIL },
-        loadPublisherDetail({ name: PUBLISHER.name })
+        { ...state, busy: false, detail: SERIES_LIST },
+        loadPublisherDetail({
+          name: PUBLISHER.name,
+          pageIndex: PAGE_INDEX,
+          pageSize: PAGE_SIZE,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
       );
     });
 
@@ -148,7 +163,10 @@ describe('Publisher Reducer', () => {
       beforeEach(() => {
         state = reducer(
           { ...state, busy: true, detail: [] },
-          loadPublisherDetailSuccess({ detail: DETAIL })
+          loadPublisherDetailSuccess({
+            totalSeries: TOTAL_SERIES,
+            detail: SERIES_LIST
+          })
         );
       });
 
@@ -156,8 +174,12 @@ describe('Publisher Reducer', () => {
         expect(state.busy).toBeFalse();
       });
 
-      it('sets the publisher detail', () => {
-        expect(state.detail).toEqual(DETAIL);
+      it('sets the total number of series', () => {
+        expect(state.totalSeries).toEqual(TOTAL_SERIES);
+      });
+
+      it('sets the series list', () => {
+        expect(state.detail).toEqual(SERIES_LIST);
       });
     });
 

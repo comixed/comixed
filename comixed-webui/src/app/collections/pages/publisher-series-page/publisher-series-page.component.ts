@@ -16,18 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  AfterViewInit,
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Series } from '@app/collections/models/series';
 import {
@@ -47,21 +40,20 @@ import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@app/core';
   templateUrl: './publisher-series-page.component.html',
   styleUrls: ['./publisher-series-page.component.scss']
 })
-export class PublisherSeriesPageComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
-  @ViewChild(MatSort) sort: MatSort;
+export class PublisherSeriesPageComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   dataSource = new MatTableDataSource<Series>([]);
   paramSubscription: Subscription;
+  queryParamSubscription: Subscription;
   langChangeSubscription: Subscription;
   publisherStateSubscription: Subscription;
   publisherDetailSubscription: Subscription;
+  totalSeries = 0;
 
   readonly displayedColumns = [
-    'series',
-    'volume',
+    'series-name',
+    'series-volume',
     'in-library',
     'total-issues'
   ];
@@ -81,8 +73,11 @@ export class PublisherSeriesPageComponent
     this.logger.trace('Subscribing to parameter updates');
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.name = params['name'];
-      this.store.dispatch(loadPublisherDetail({ name: this.name }));
+      this.doLoadData();
     });
+    this.queryParamSubscription = this.activatedRoute.queryParams.subscribe(
+      params => this.doLoadData()
+    );
     this.logger.trace('Subscribing to language updates');
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -90,36 +85,21 @@ export class PublisherSeriesPageComponent
     this.logger.trace('Subscribing to publisher state updates');
     this.publisherStateSubscription = this.store
       .select(selectPublisherState)
-      .subscribe(state =>
-        this.store.dispatch(setBusyState({ enabled: state.busy }))
-      );
+      .subscribe(state => {
+        this.store.dispatch(setBusyState({ enabled: state.busy }));
+        this.totalSeries = state.totalSeries;
+      });
     this.logger.trace('Subscribing to publisher detail updates');
     this.publisherDetailSubscription = this.store
       .select(selectPublisherDetail)
       .subscribe(detail => (this.dataSource.data = detail));
   }
 
-  ngAfterViewInit(): void {
-    this.logger.trace('Setting up sorting');
-    this.dataSource.sort = this.sort;
-    this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
-      switch (sortHeaderId) {
-        case 'series':
-          return data.name;
-        case 'volume':
-          return data.volume;
-        case 'total-issues':
-          return data.totalIssues;
-        case 'in-library':
-          return data.inLibrary;
-      }
-      return '';
-    };
-  }
-
   ngOnDestroy(): void {
     this.logger.trace('Unsubscribing from parameter updates');
     this.paramSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from query parameter updates');
+    this.queryParamSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from publisher state updates');
     this.publisherStateSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from publisher detail updates');
@@ -134,6 +114,18 @@ export class PublisherSeriesPageComponent
     this.titleService.setTitle(
       this.translateService.instant('collections.publisher-series.tab-title', {
         name: this.name
+      })
+    );
+  }
+
+  private doLoadData() {
+    this.store.dispatch(
+      loadPublisherDetail({
+        name: this.name,
+        pageIndex: this.queryParameterService.pageIndex$.value,
+        pageSize: this.queryParameterService.pageSize$.value,
+        sortBy: this.queryParameterService.sortBy$.value,
+        sortDirection: this.queryParameterService.sortDirection$.value
       })
     );
   }
