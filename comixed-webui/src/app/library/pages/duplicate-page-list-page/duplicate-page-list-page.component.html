@@ -46,7 +46,7 @@
     <mat-card-subtitle class="cx-text-nowrap">
       {{
         "duplicate-pages.show-popup.subtitle"
-          | translate: { count: popupPage?.comics?.length }
+          | translate: { count: popupPage?.comicCount }
       }}
     </mat-card-subtitle>
     <mat-card-content class="cx-padding-5">
@@ -147,7 +147,7 @@
       {{ "duplicate-pages.header.comic-count" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let row">
-      <span class="cx-text-nowrap">{{ row.item.comics.length }}</span>
+      <span class="cx-text-nowrap">{{ row.item.comicCount }}</span>
     </mat-cell>
   </ng-container>
 

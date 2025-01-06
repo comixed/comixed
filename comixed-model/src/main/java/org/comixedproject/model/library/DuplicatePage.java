@@ -19,13 +19,11 @@ package org.comixedproject.model.library;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.views.View;
 
@@ -34,15 +32,26 @@ import org.comixedproject.views.View;
  *
  * @author Darryl L. Pierce
  */
+@Entity
+@Table(name = "duplicate_pages_view")
 @RequiredArgsConstructor
+@NoArgsConstructor
 public class DuplicatePage {
+  @Id
+  @Column(name = "file_hash")
   @JsonProperty("hash")
   @JsonView(View.DuplicatePageList.class)
   @NonNull
   @Getter
   private String hash;
 
-  @JsonProperty("comics")
+  @Column(name = "comic_count")
+  @JsonProperty("comicCount")
+  @JsonView(View.DuplicatePageList.class)
+  @Getter
+  private Long comicCount;
+
+  @Transient
   @JsonView(View.DuplicatePageList.class)
   @Getter
   @Setter
