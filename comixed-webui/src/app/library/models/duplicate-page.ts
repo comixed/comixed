@@ -20,5 +20,6 @@ import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 export interface DuplicatePage {
   hash: string;
+  comicCount: number;
   comics: ComicDetail[];
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="012_2025_added_duplicate_pages_view.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <viewExists viewName="duplicate_pages_view"/>
+            </not>
+        </preConditions>
+
+        <createView viewName="duplicate_pages_view">
+            SELECT DISTINCT p.file_hash,
+                   (SELECT COUNT(DISTINCT cp.comic_book_id) FROM comic_pages cp WHERE cp.file_hash = p.file_hash) as comic_count
+            FROM comic_pages p
+            WHERE p.file_hash IN (SELECT file_hash FROM comic_pages GROUP BY file_hash HAVING COUNT(*) > 1)
+        </createView>
+
+    </changeSet>
+</databaseChangeLog>
