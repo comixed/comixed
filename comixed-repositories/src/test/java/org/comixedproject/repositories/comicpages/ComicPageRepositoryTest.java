@@ -60,12 +60,12 @@ import org.springframework.transaction.annotation.Transactional;
   DbUnitTestExecutionListener.class
 })
 public class ComicPageRepositoryTest {
+  public static final String TEST_NOT_DELETED_HASH = "6789ABCDEF0123456789ABCDEF012345";
   private static final String TEST_DUPLICATE_PAGE_HASH_1 = "F0123456789ABCDEF0123456789ABCDE";
   private static final String TEST_DUPLICATE_PAGE_HASH_2 = "0123456789ABCDEF0123456789ABCDEF";
   private static final String TEST_DUPLICATE_PAGE_HASH_3 = "123456789ABCDEF0123456789ABCDEF0";
   private static final List<String> TEST_DUPLICATE_PAGE_HASHES = new ArrayList<>();
   private static final String TEST_INVALID_HASH = "111111111AAAAAA1111111111AAAAAA1";
-  public static final String TEST_NOT_DELETED_HASH = "6789ABCDEF0123456789ABCDEF012345";
   private static final String TEST_DELETED_HASH = "56789ABCDEF0123456789ABCDEF01234";
 
   static {
@@ -82,7 +82,8 @@ public class ComicPageRepositoryTest {
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertEquals(2, result.size());
+    assertEquals(10, result.size());
+    assertTrue(result.stream().allMatch(page -> page.getComicCount() > 1L));
   }
 
   @Test

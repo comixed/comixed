@@ -735,7 +735,7 @@
                             issue_number="117"
                             title="The Title"
                             cover_date="2025-01-05"
-                            store_date="2025-01-05" />
+                            store_date="2025-01-05"/>
     <organizing_comics_view comic_book_id="1001"
                             comic_detail_id="2001"
                             filename="C:/users/comixeduser/Documents/comicBooks/example2.cbz"
@@ -748,7 +748,7 @@
                             issue_number="129"
                             title="The Other Title"
                             cover_date="2025-01-05"
-                            store_date="2025-01-05" />
+                            store_date="2025-01-05"/>
     <organizing_comics_view comic_book_id="1002"
                             comic_detail_id="2002"
                             filename="C:/users/comixeduser/Documents/comicBooks/example3.cbz"
@@ -761,5 +761,25 @@
                             issue_number="130"
                             title="The Title"
                             cover_date="2025-01-05"
-                            store_date="2025-01-05" />
+                            store_date="2025-01-05"/>
+    <duplicate_pages_view file_hash="0123456789ABCDEF0123456789ABCDEF"
+                          comic_count="27"/>
+    <duplicate_pages_view file_hash="123456789ABCDEF0123456789ABCDE0F"
+                          comic_count="27"/>
+    <duplicate_pages_view file_hash="23456789ABCDEF0123456789ABCDEF01"
+                          comic_count="27"/>
+    <duplicate_pages_view file_hash="3456789ABCDEF0123456789ABCDEF012"
+                          comic_count="27"/>
+    <duplicate_pages_view file_hash="456789ABCDEF0123456789ABCDEF0123"
+                          comic_count="27"/>
+    <duplicate_pages_view file_hash="56789ABCDEF0123456789ABCDEF01234"
+                          comic_count="27"/>
+    <duplicate_pages_view file_hash="6789ABCDEF0123456789ABCDEF012345"
+                          comic_count="27"/>
+    <duplicate_pages_view file_hash="789ABCDEF0123456789ABCDEF0123456"
+                          comic_count="27"/>
+    <duplicate_pages_view file_hash="89ABCDEF0123456789ABCDEF01234567"
+                          comic_count="27"/>
+    <duplicate_pages_view file_hash="9ABCDEF0123456789ABCDEF012345678"
+                          comic_count="27"/>
 </dataset>

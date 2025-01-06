@@ -60,8 +60,7 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
    *
    * @return a list of ComicPage objects with duplicate hashes
    */
-  @Query(
-      "SELECT DISTINCT new org.comixedproject.model.library.DuplicatePage(p.hash) FROM ComicPage p WHERE p.hash IN (SELECT d.hash FROM ComicPage d GROUP BY d.hash HAVING COUNT(*) > 1)")
+  @Query("SELECT dp FROM DuplicatePage dp")
   List<DuplicatePage> getDuplicatePages(Pageable pageable);
 
   @Query(

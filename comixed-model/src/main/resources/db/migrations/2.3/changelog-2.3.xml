@@ -17,5 +17,6 @@
     <include file="/db/migrations/2.3/009_2261_removed_last_read_dates.xml"/>
     <include file="/db/migrations/2.3/010_2133_added_comic_book_batch_scrape.xml"/>
     <include file="/db/migrations/2.3/011_2290_added_organizing_comics_view.xml"/>
+    <include file="/db/migrations/2.3/012_2025_added_duplicate_pages_view.xml"/>
 
 </databaseChangeLog>

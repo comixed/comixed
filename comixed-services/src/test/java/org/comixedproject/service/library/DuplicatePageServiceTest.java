@@ -42,7 +42,6 @@ public class DuplicatePageServiceTest {
 
   @Before
   public void setUp() {
-    Mockito.doNothing().when(duplicatePage).setComics(comicDetailArgumentCaptor.capture());
     Mockito.when(duplicatePage.getHash()).thenReturn(TEST_PAGE_HASH);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicPage.getComicBook()).thenReturn(comicBook);
@@ -55,8 +54,6 @@ public class DuplicatePageServiceTest {
 
     Mockito.when(comicPageRepository.getDuplicatePages(pageRequestArgumentCaptor.capture()))
         .thenReturn(duplicatePageList);
-    Mockito.when(comicPageRepository.getPagesWithHash(Mockito.anyString()))
-        .thenReturn(comicPageList);
 
     LoadDuplicatePageListResponse result =
         service.getDuplicatePages(
@@ -66,16 +63,11 @@ public class DuplicatePageServiceTest {
     assertFalse(result.getPages().isEmpty());
     assertEquals(TEST_PAGE_HASH, result.getPages().get(0).getHash());
 
-    final Set<ComicDetail> comicDetailSet = comicDetailArgumentCaptor.getValue();
-    assertTrue(comicDetailSet.contains(comicDetail));
-
     final PageRequest pageRequest = pageRequestArgumentCaptor.getValue();
     assertEquals(TEST_PAGE_NUMBER, pageRequest.getPageNumber());
     assertEquals(TEST_PAGE_SIZE, pageRequest.getPageSize());
 
     Mockito.verify(comicPageRepository, Mockito.times(1)).getDuplicatePages(pageRequest);
-    Mockito.verify(comicPageRepository, Mockito.times(1)).getPagesWithHash(TEST_PAGE_HASH);
-    Mockito.verify(duplicatePage, Mockito.times(1)).setComics(comicDetailSet);
   }
 
   @Test(expected = DuplicatePageException.class)

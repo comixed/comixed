@@ -19,10 +19,7 @@
 package org.comixedproject.service.library;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.model.net.library.LoadDuplicatePageListResponse;
@@ -58,16 +55,6 @@ public class DuplicatePageService {
     final List<DuplicatePage> pages =
         this.comicPageRepository.getDuplicatePages(
             PageRequest.of(page, size, this.doCreateSort(sortBy, sortDirection)));
-    log.trace("Build duplicate page list");
-    for (DuplicatePage entry : pages) {
-      log.trace("Loading comics for hash: {}", entry.getHash());
-      final Set<ComicDetail> comics =
-          this.comicPageRepository.getPagesWithHash(entry.getHash()).stream()
-              .map(ComicPage::getComicBook)
-              .map(ComicBook::getComicDetail)
-              .collect(Collectors.toSet());
-      entry.setComics(comics);
-    }
     log.trace("Returning duplicate page list");
     return new LoadDuplicatePageListResponse(this.getDuplicatePageCount(), pages);
   }
