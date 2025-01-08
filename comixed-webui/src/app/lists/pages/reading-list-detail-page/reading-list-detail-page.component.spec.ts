@@ -47,7 +47,10 @@ import { READING_LIST_3 } from '@app/lists/lists.fixtures';
 import {
   COMIC_DETAIL_1,
   COMIC_DETAIL_3,
-  COMIC_DETAIL_5
+  COMIC_DETAIL_5,
+  DISPLAYABLE_COMIC_1,
+  DISPLAYABLE_COMIC_3,
+  DISPLAYABLE_COMIC_5
 } from '@app/comic-books/comic-books.fixtures';
 import { removeSelectedComicBooksFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import {
@@ -71,7 +74,7 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
-import { ComicDetailListViewComponent } from '@app/comic-books/components/comic-detail-list-view/comic-detail-list-view.component';
+import { ComicListViewComponent } from '@app/comic-books/components/comic-list-view/comic-list-view.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
@@ -94,10 +97,6 @@ import {
   LIBRARY_PLUGIN_FEATURE_KEY
 } from '@app/library-plugins/reducers/library-plugin.reducer';
 import {
-  COMIC_DETAILS_LIST_FEATURE_KEY,
-  initialState as initialComicDetailListState
-} from '@app/comic-books/reducers/comic-details-list.reducer';
-import {
   initialState as initialUserState,
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
@@ -105,14 +104,22 @@ import {
   initialState as initialReadComicBooksState,
   READ_COMIC_BOOKS_FEATURE_KEY
 } from '@app/user/reducers/read-comic-books.reducer';
-import { loadComicDetailsForReadingList } from '@app/comic-books/actions/comic-details-list.actions';
+import {
+  COMIC_LIST_FEATURE_KEY,
+  initialState as initialComicListState
+} from '@app/comic-books/reducers/comic-list.reducer';
+import { loadComicsForReadingList } from '@app/comic-books/actions/comic-list.actions';
 
 describe('ReadingListDetailPageComponent', () => {
   const READING_LIST = {
     ...READING_LIST_3,
     entries: [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5]
   };
-  const COMICS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
+  const COMIC_LIST = [
+    DISPLAYABLE_COMIC_1,
+    DISPLAYABLE_COMIC_3,
+    DISPLAYABLE_COMIC_5
+  ];
   const initialState = {
     [READING_LIST_DETAIL_FEATURE_KEY]: initialReadingListDetailsState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
@@ -120,7 +127,7 @@ describe('ReadingListDetailPageComponent', () => {
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
     [USER_FEATURE_KEY]: initialUserState,
     [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState,
-    [COMIC_DETAILS_LIST_FEATURE_KEY]: initialComicDetailListState,
+    [COMIC_LIST_FEATURE_KEY]: initialComicListState,
     [READ_COMIC_BOOKS_FEATURE_KEY]: initialReadComicBooksState
   };
 
@@ -149,7 +156,7 @@ describe('ReadingListDetailPageComponent', () => {
       TestBed.configureTestingModule({
         declarations: [
           ReadingListDetailPageComponent,
-          ComicDetailListViewComponent,
+          ComicListViewComponent,
           ComicCoverUrlPipe,
           ComicTitlePipe
         ],
@@ -330,7 +337,7 @@ describe('ReadingListDetailPageComponent', () => {
 
       it('loads the comics to display', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          loadComicDetailsForReadingList({
+          loadComicsForReadingList({
             readingListId: READING_LIST.id,
             pageSize: PAGE_SIZE_DEFAULT,
             pageIndex: 0,
@@ -395,14 +402,10 @@ describe('ReadingListDetailPageComponent', () => {
   });
 
   describe('removing selected entries', () => {
+    const SELECTED_IDS = COMIC_LIST.map(entry => entry.comicDetailId);
     beforeEach(() => {
       component.readingList = READING_LIST;
-      component.dataSource.data = READING_LIST.entries.map((entry, index) => {
-        return {
-          item: entry,
-          selected: index % 2 === 0
-        };
-      });
+      component.selectedIds = SELECTED_IDS;
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );

@@ -22,13 +22,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.SystemUtils;
-import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.collections.CollectionEntry;
 import org.comixedproject.model.comicbooks.*;
-import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
-import org.comixedproject.service.lists.ReadingListException;
-import org.comixedproject.service.lists.ReadingListService;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -48,7 +44,6 @@ import org.springframework.util.StringUtils;
 @Log4j2
 public class ComicDetailService {
   @Autowired private ComicDetailRepository comicDetailRepository;
-  @Autowired private ReadingListService readingListService;
 
   @Autowired
   private ObjectFactory<ComicDetailExampleBuilder> comicDetailExampleBuilderObjectFactory;
@@ -363,128 +358,6 @@ public class ComicDetailService {
   }
 
   /**
-   * Returns the page of comics for the given index and filters. If the selected flag is set then
-   * only returns those comics which are also in the selected id list.
-   *
-   * @param pageSize the page size
-   * @param pageIndex the page index
-   * @param coverYear the cover year filter
-   * @param coverMonth the cover month filter
-   * @param archiveType the archive type filter
-   * @param comicType the comic type filter
-   * @param comicState the comic state filter
-   * @param unscrapedState the unscraped state filter
-   * @param searchText the search text filter
-   * @param publisher the publisher filter
-   * @param series the series filter
-   * @param volume the volume filter
-   * @param sortBy the sort field
-   * @param sortDirection the sort direction
-   * @return the comic details
-   */
-  public List<ComicDetail> loadComicDetailList(
-      final Integer pageSize,
-      final Integer pageIndex,
-      final Integer coverYear,
-      final Integer coverMonth,
-      final ArchiveType archiveType,
-      final ComicType comicType,
-      final ComicState comicState,
-      final Boolean unscrapedState,
-      final String searchText,
-      final String publisher,
-      final String series,
-      final String volume,
-      final String sortBy,
-      final String sortDirection) {
-    log.debug("Loading comic details");
-    final ComicDetailExampleBuilder builder =
-        this.comicDetailExampleBuilderObjectFactory.getObject();
-
-    builder.setCoverYear(coverYear);
-    builder.setCoverMonth(coverMonth);
-    builder.setArchiveType(archiveType);
-    builder.setComicType(comicType);
-    builder.setComicState(comicState);
-    builder.setUnscrapedState(unscrapedState);
-    builder.setSearchText(searchText);
-    builder.setPublisher(publisher);
-    builder.setSeries(series);
-    builder.setVolume(volume);
-
-    final Example<ComicDetail> comicDetailExample = builder.build();
-
-    if (pageSize != null && pageIndex != null) {
-      return this.comicDetailRepository
-          .findAll(
-              comicDetailExample,
-              PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)))
-          .stream()
-          .toList();
-    } else {
-      return this.comicDetailRepository.findAll(comicDetailExample).stream().toList();
-    }
-  }
-
-  /**
-   * Returns the total number of comics found when the given filters are applied.
-   *
-   * @param coverYear the cover year filter
-   * @param coverMonth the cover month filter
-   * @param archiveType the archive type filter
-   * @param comicType the comic type filter
-   * @param comicState the comic state filter
-   * @param unscrapedState the unscraped state filter
-   * @param searchText the search text filter
-   * @param publisher the publisher filter
-   * @param series the series filter
-   * @param volume the volume filter
-   * @return the comic count
-   */
-  public long getFilterCount(
-      final Integer coverYear,
-      final Integer coverMonth,
-      final ArchiveType archiveType,
-      final ComicType comicType,
-      final ComicState comicState,
-      final Boolean unscrapedState,
-      final String searchText,
-      final String publisher,
-      final String series,
-      final String volume) {
-    log.debug("Loading filtered comic detail count");
-    final ComicDetailExampleBuilder builder =
-        this.comicDetailExampleBuilderObjectFactory.getObject();
-    builder.setCoverYear(coverYear);
-    builder.setCoverMonth(coverMonth);
-    builder.setArchiveType(archiveType);
-    builder.setComicType(comicType);
-    builder.setComicState(comicState);
-    builder.setUnscrapedState(unscrapedState);
-    builder.setSearchText(searchText);
-    builder.setPublisher(publisher);
-    builder.setSeries(series);
-    builder.setVolume(volume);
-
-    final Example<ComicDetail> comicDetailExample = builder.build();
-
-    return this.comicDetailRepository.count(comicDetailExample);
-  }
-
-  /**
-   * Returns the total number of comics with a given tag type and value.
-   *
-   * @param tagType the tag type
-   * @param tagValue the tag value
-   * @return the total comic count
-   */
-  @Transactional
-  public long getFilterCount(final ComicTagType tagType, final String tagValue) {
-    log.debug("Loading filtered comic count for tag: type={} value={}", tagType, tagValue);
-    return this.comicDetailRepository.getFilterCount(tagType, tagValue);
-  }
-
-  /**
    * Loads a set of records by their id.
    *
    * @param ids the record ids
@@ -496,157 +369,6 @@ public class ComicDetailService {
   }
 
   /**
-   * Returns the list of cover years for the given filter criteria.
-   *
-   * @param coverYear the cover year filter
-   * @param coverMonth the cover month filter
-   * @param archiveType the archive type filter
-   * @param comicType the comic type filter
-   * @param comicState the comic state filter
-   * @param unscrapedState the unscraped state filter
-   * @param searchText the search text filter
-   * @param publisher the publisher filter
-   * @param series the series filter
-   * @param volume the volume filter
-   * @return the cover years
-   */
-  public List<Integer> getCoverYears(
-      final Integer coverYear,
-      final Integer coverMonth,
-      final ArchiveType archiveType,
-      final ComicType comicType,
-      final ComicState comicState,
-      final Boolean unscrapedState,
-      final String searchText,
-      final String publisher,
-      final String series,
-      final String volume) {
-    log.debug("Loading cover years");
-    final ComicDetailExampleBuilder builder =
-        this.comicDetailExampleBuilderObjectFactory.getObject();
-    builder.setCoverYear(coverYear);
-    builder.setCoverMonth(coverMonth);
-    builder.setArchiveType(archiveType);
-    builder.setComicType(comicType);
-    builder.setComicState(comicState);
-    builder.setUnscrapedState(unscrapedState);
-    builder.setSearchText(searchText);
-    builder.setPublisher(publisher);
-    builder.setSeries(series);
-    builder.setVolume(volume);
-
-    final Example<ComicDetail> comicDetailExample = builder.build();
-
-    return this.comicDetailRepository.findAll(comicDetailExample).stream()
-        .map(ComicDetail::getYearPublished)
-        .distinct()
-        .toList();
-  }
-
-  /**
-   * Returns the list of cover years for the given set of record ids.
-   *
-   * @param ids the record ids
-   * @return the years
-   */
-  public List<Integer> getCoverYears(final Set<Long> ids) {
-    log.debug("Loading cover years for ids: {}", ids);
-    return this.comicDetailRepository.findAllById(ids).stream()
-        .map(ComicDetail::getYearPublished)
-        .distinct()
-        .toList();
-  }
-
-  /**
-   * Returns all cover years for comics with the given tag type and value.
-   *
-   * @param tagType the tage type
-   * @param tagValue the tag value
-   * @return the years
-   */
-  @Transactional
-  public List<Integer> getCoverYears(final ComicTagType tagType, final String tagValue) {
-    log.debug("Getting cover years for tag: type={} value={}", tagType, tagValue);
-    return this.comicDetailRepository.getCoverYears(tagType, tagValue);
-  }
-
-  /**
-   * Returns the list of cover years for the given filter criteria.
-   *
-   * @param coverYear the cover year filter
-   * @param coverMonth the cover month filter
-   * @param archiveType the archive type filter
-   * @param comicType the comic type filter
-   * @param comicState the comic state filter
-   * @param unscrapedState the unscraped state filter
-   * @param searchText the search text filter
-   * @param publisher the publisher filter
-   * @param series the series filter
-   * @param volume the volume filter
-   * @return the cover years
-   */
-  public List<Integer> getCoverMonths(
-      final Integer coverYear,
-      final Integer coverMonth,
-      final ArchiveType archiveType,
-      final ComicType comicType,
-      final ComicState comicState,
-      final Boolean unscrapedState,
-      final String searchText,
-      final String publisher,
-      final String series,
-      final String volume) {
-    log.debug("Loading cover months");
-    final ComicDetailExampleBuilder builder =
-        this.comicDetailExampleBuilderObjectFactory.getObject();
-    builder.setCoverYear(coverYear);
-    builder.setCoverMonth(coverMonth);
-    builder.setArchiveType(archiveType);
-    builder.setComicType(comicType);
-    builder.setComicState(comicState);
-    builder.setUnscrapedState(unscrapedState);
-    builder.setSearchText(searchText);
-    builder.setPublisher(publisher);
-    builder.setSeries(series);
-    builder.setVolume(volume);
-
-    final Example<ComicDetail> comicDetailExample = builder.build();
-
-    return this.comicDetailRepository.findAll(comicDetailExample).stream()
-        .map(ComicDetail::getMonthPublished)
-        .distinct()
-        .toList();
-  }
-
-  /**
-   * Returns the list of cover months for the given set of record ids.
-   *
-   * @param ids the record ids
-   * @return the months
-   */
-  public List<Integer> getCoverMonths(final Set<Long> ids) {
-    log.debug("Loading cover months for ids: {}", ids);
-    return this.comicDetailRepository.findAllById(ids).stream()
-        .map(ComicDetail::getMonthPublished)
-        .distinct()
-        .sorted()
-        .toList();
-  }
-
-  /**
-   * Returns the list of cover months for comics with the given tag type and value.
-   *
-   * @param tagType the tag type
-   * @param tagValue the tag value
-   * @return the months
-   */
-  @Transactional
-  public List<Integer> getCoverMonths(final ComicTagType tagType, final String tagValue) {
-    log.debug("Loading cover months for tag: type={} value={}", tagType, tagValue);
-    return this.comicDetailRepository.getCoverMonths(tagType, tagValue);
-  }
-
-  /**
    * Returns all records that match the provided example.
    *
    * @param example the example
@@ -655,32 +377,6 @@ public class ComicDetailService {
   public List<ComicDetail> findAllByExample(final Example<ComicDetail> example) {
     log.debug("Finding all comic details by example: {}", example);
     return this.comicDetailRepository.findAll(example);
-  }
-
-  /**
-   * Loads a page of comics with a given tag type and value.
-   *
-   * @param pageSize the number of records to return
-   * @param pageIndex the page number
-   * @param tagType the tag type
-   * @param tagValue the tag value
-   * @param sortBy the sort field
-   * @param sortDirection the sort direction
-   * @return the comics
-   */
-  @Transactional
-  public List<ComicDetail> loadComicDetailListForTagType(
-      final int pageSize,
-      final int pageIndex,
-      final ComicTagType tagType,
-      final String tagValue,
-      final String sortBy,
-      final String sortDirection) {
-    log.debug("Loading comics for collection: type={} value={}", tagType, tagValue);
-    return this.comicDetailRepository.loadForTagTypeAndValue(
-        tagType,
-        tagValue,
-        PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
   }
 
   /**
@@ -726,33 +422,6 @@ public class ComicDetailService {
     return this.comicDetailRepository.getFilterCount(tagType);
   }
 
-  private Sort doCreateSort(final String sortBy, final String sortDirection) {
-    if (!StringUtils.hasLength(sortBy) || !StringUtils.hasLength(sortDirection)) {
-      return Sort.unsorted();
-    }
-
-    String fieldName;
-    switch (sortBy) {
-      case "archive-type" -> fieldName = "archiveType";
-      case "comic-state" -> fieldName = "comicState";
-      case "comic-type" -> fieldName = "comicType";
-      case "publisher", "series", "volume" -> fieldName = sortBy;
-      case "issue-number" -> fieldName = "sortableIssueNumber";
-      case "added-date" -> fieldName = "addedDate";
-      case "cover-date" -> fieldName = "coverDate";
-      case "comic-count" -> fieldName = "comicCount";
-      case "tag-value" -> fieldName = "value";
-      case "page-count" -> fieldName = "pageCount";
-      default -> fieldName = "id";
-    }
-
-    Sort.Direction direction = Sort.Direction.DESC;
-    if (sortDirection.equals("asc")) {
-      direction = Sort.Direction.ASC;
-    }
-    return Sort.by(direction, fieldName);
-  }
-
   private Sort doCreateCollectionSort(final String sortBy, final String sortDirection) {
     if (!StringUtils.hasLength(sortBy) || !StringUtils.hasLength(sortDirection)) {
       return Sort.unsorted();
@@ -771,81 +440,6 @@ public class ComicDetailService {
     return Sort.by(direction, fieldName);
   }
 
-  @Transactional
-  public List<ComicDetail> loadUnreadComicDetails(
-      final String email,
-      final boolean unreadOnly,
-      final int pageSize,
-      final int pageIndex,
-      final String sortBy,
-      final String sortDirection) {
-    if (unreadOnly) {
-      log.debug(
-          "Loading unread comics for user: email={} page={} size={}", email, pageIndex, pageSize);
-      return this.comicDetailRepository.loadUnreadComicDetails(
-          email, PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
-    } else {
-      log.debug(
-          "Loading read comics for user: email={} page={} size={}", email, pageIndex, pageSize);
-      return this.comicDetailRepository.loadReadComicDetails(
-          email, PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
-    }
-  }
-
-  /**
-   * Loads comic details for a reading list.
-   *
-   * @param email the reading list owner's email
-   * @param readingListId the reading list id
-   * @param pageSize the page size
-   * @param pageIndex the page index
-   * @param sortBy the sort field
-   * @param sortDirection the sort direction
-   * @return the entries
-   * @throws ComicDetailException if an error occurs
-   */
-  @Transactional
-  public List<ComicDetail> loadComicDetailsForReadingList(
-      final String email,
-      final long readingListId,
-      final int pageSize,
-      final int pageIndex,
-      final String sortBy,
-      final String sortDirection)
-      throws ComicDetailException {
-    try {
-      log.debug("Loading reading list entries");
-      final ReadingList readingList =
-          this.readingListService.loadReadingListForUser(email, readingListId);
-      return this.comicDetailRepository.loadComicDetailsForReadingList(
-          readingList.getId(),
-          PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
-    } catch (ReadingListException error) {
-      throw new ComicDetailException("Failed to load entries for reading list", error);
-    }
-  }
-
-  /**
-   * Loads comics that were selected.
-   *
-   * @param pageSize the page size
-   * @param pageIndex the page index
-   * @param sortBy the sort field
-   * @param sortDirection the sort direction
-   * @param selectedIds the selected comic book ids
-   * @return the comic detail list
-   */
-  @Transactional
-  public List<ComicDetail> loadComicDetailList(
-      final Integer pageSize,
-      final Integer pageIndex,
-      final String sortBy,
-      final String sortDirection,
-      final List selectedIds) {
-    return this.comicDetailRepository.findSelectedComicBooks(
-        selectedIds, PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
-  }
-
   /**
    * Returns the number of duplicate comic book entries.
    *
@@ -859,32 +453,6 @@ public class ComicDetailService {
       result = 0L;
     }
     return result;
-  }
-
-  /**
-   * Returns a set of duplicate comics.
-   *
-   * @param pageSize the page size
-   * @param pageIndex the page index
-   * @param sortBy the sort field
-   * @param sortDirection the sort direction
-   * @return the comic detail list
-   */
-  @Transactional
-  public List<ComicDetail> loadDuplicateComicBookDetails(
-      final int pageSize, final int pageIndex, final String sortBy, final String sortDirection) {
-    log.debug(
-        "Loading a page of duplicate comics: index={} size={} sort by={} direction={}",
-        pageIndex,
-        pageSize,
-        sortBy,
-        sortDirection);
-    String sorting = sortBy;
-    if (StringUtils.hasLength(sortBy)) {
-      sorting = "d." + sortBy;
-    }
-    return this.comicDetailRepository.getDuplicateComicBooks(
-        PageRequest.of(pageIndex, pageSize, this.doCreateSort(sorting, sortDirection)));
   }
 
   @Transactional

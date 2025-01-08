@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2023, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,25 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.comicbooks;
+import { TagType } from '@app/collections/models/comic-collection.enum';
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-/**
- * <code>LoadUnreadComicBookCountResponse</code> represents the payload when getting the library
- * read state for a user.
- *
- * @author Darryl L. Pierce
- */
-@AllArgsConstructor
-public class LoadUnreadComicBookCountResponse {
-  @JsonProperty("readCount")
-  @Getter
-  private long readCount;
-
-  @JsonProperty("unreadCount")
-  @Getter
-  private long unreadCount;
+export interface LoadComicsForCollectionRequest {
+  pageSize: number;
+  pageIndex: number;
+  tagType: TagType;
+  tagValue: string;
+  sortBy: string;
+  sortDirection: string;
 }

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2023, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,28 +16,28 @@
  * along with this program. If not, see <http:/www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.comicbooks;
+package org.comixedproject.model.net.library;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.views.View;
 
 /**
- * <code>LoadComicDetailsResponse</code> represents the response payload when loading a page worth
- * of comics.
+ * <code>LoadComicsResponse</code> represents the response payload when loading a page worth of
+ * comics.
  *
  * @author Darryl L. Pierce
  */
 @AllArgsConstructor
-public class LoadComicDetailsResponse {
-  @JsonProperty("comicDetails")
+public class LoadComicsResponse {
+  @JsonProperty("comics")
   @JsonView(View.ComicDetailsView.class)
   @Getter
-  private List<ComicDetail> comicDetails;
+  private List<DisplayableComic> comics;
 
   @JsonProperty("coverYears")
   @JsonView(View.ComicDetailsView.class)

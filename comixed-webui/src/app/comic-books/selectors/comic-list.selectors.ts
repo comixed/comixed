@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2023, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,34 +18,35 @@
 
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
-  COMIC_DETAILS_LIST_FEATURE_KEY,
-  ComicDetailsListState
-} from '../reducers/comic-details-list.reducer';
+  COMIC_LIST_FEATURE_KEY,
+  ComicListState
+} from '../reducers/comic-list.reducer';
 
-export const selectLoadComicDetailsListState =
-  createFeatureSelector<ComicDetailsListState>(COMIC_DETAILS_LIST_FEATURE_KEY);
-
-export const selectLoadComicDetailsList = createSelector(
-  selectLoadComicDetailsListState,
-  state => state.comicDetails
+export const selectComicListState = createFeatureSelector<ComicListState>(
+  COMIC_LIST_FEATURE_KEY
 );
 
-export const selectLoadComicDetailsCoverYears = createSelector(
-  selectLoadComicDetailsListState,
+export const selectComicList = createSelector(
+  selectComicListState,
+  state => state.comics
+);
+
+export const selectComicCoverYears = createSelector(
+  selectComicListState,
   state => state.coverYears
 );
 
-export const selectLoadComicDetailsCoverMonths = createSelector(
-  selectLoadComicDetailsListState,
+export const selectComicCoverMonths = createSelector(
+  selectComicListState,
   state => state.coverMonths
 );
 
-export const selectLoadComicDetailsTotalComics = createSelector(
-  selectLoadComicDetailsListState,
+export const selectComicTotalCount = createSelector(
+  selectComicListState,
   state => state.totalCount
 );
 
-export const selectLoadComicDetailsFilteredComics = createSelector(
-  selectLoadComicDetailsListState,
+export const selectComicFilteredCount = createSelector(
+  selectComicListState,
   state => state.filteredCount
 );

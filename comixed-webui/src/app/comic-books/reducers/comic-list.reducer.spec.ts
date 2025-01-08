@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2023, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,38 +16,34 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  ComicDetailsListState,
-  initialState,
-  reducer
-} from './comic-details-list.reducer';
-import {
-  comicDetailRemoved,
-  comicDetailsLoaded,
-  comicDetailUpdated,
-  loadComicDetails,
-  loadComicDetailsById,
-  loadComicDetailsFailed,
-  loadComicDetailsForCollection,
-  loadComicDetailsForReadingList,
-  loadDuplicateComicsDetails,
-  loadReadComicDetails,
-  loadUnreadComicDetails
-} from '@app/comic-books/actions/comic-details-list.actions';
+import { ComicListState, initialState, reducer } from './comic-list.reducer';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
-import {
-  COMIC_DETAIL_1,
-  COMIC_DETAIL_2,
-  COMIC_DETAIL_3,
-  COMIC_DETAIL_4,
-  COMIC_DETAIL_5
-} from '@app/comic-books/comic-books.fixtures';
 import { TagType } from '@app/collections/models/comic-collection.enum';
+import {
+  DISPLAYABLE_COMIC_1,
+  DISPLAYABLE_COMIC_2,
+  DISPLAYABLE_COMIC_3,
+  DISPLAYABLE_COMIC_4,
+  DISPLAYABLE_COMIC_5
+} from '@app/comic-books/comic-books.fixtures';
 import { READING_LIST_3 } from '@app/lists/lists.fixtures';
+import {
+  comicRemoved,
+  comicUpdated,
+  loadComicsByFilter,
+  loadComicsById,
+  loadComicsFailure,
+  loadComicsForCollection,
+  loadComicsForReadingList,
+  loadComicsSuccess,
+  loadDuplicateComics,
+  loadReadComics,
+  loadUnreadComics
+} from '@app/comic-books/actions/comic-list.actions';
 
-describe('ComicDetailsList Reducer', () => {
+describe('ComicList Reducer', () => {
   const PAGE_SIZE = 25;
   const PAGE_INDEX = Math.abs(Math.random() * 1000);
   const COVER_YEAR = Math.random() * 100 + 1900;
@@ -62,24 +58,24 @@ describe('ComicDetailsList Reducer', () => {
   const SORT_DIRECTION = 'ASC';
   const TAG_TYPE = TagType.TEAMS;
   const TAG_VALUE = 'The Avengers';
-  const COMIC_DETAILS = [
-    COMIC_DETAIL_1,
-    COMIC_DETAIL_2,
-    COMIC_DETAIL_3,
-    COMIC_DETAIL_4,
-    COMIC_DETAIL_5
+  const COMIC_LIST = [
+    DISPLAYABLE_COMIC_1,
+    DISPLAYABLE_COMIC_2,
+    DISPLAYABLE_COMIC_3,
+    DISPLAYABLE_COMIC_4,
+    DISPLAYABLE_COMIC_5
   ];
-  const PUBLISHER = COMIC_DETAILS[0].publisher;
-  const SERIES = COMIC_DETAILS[0].series;
-  const VOLUME = COMIC_DETAILS[0].volume;
-  const IDS = COMIC_DETAILS.map(entry => entry.comicId);
+  const PUBLISHER = COMIC_LIST[0].publisher;
+  const SERIES = COMIC_LIST[0].series;
+  const VOLUME = COMIC_LIST[0].volume;
+  const IDS = COMIC_LIST.map(entry => entry.comicBookId);
   const COVER_YEARS = [1965, 1971, 1996, 1998, 2006];
   const COVER_MONTHS = [1, 3, 4, 7, 9];
-  const TOTAL_COUNT = COMIC_DETAILS.length * 2;
+  const TOTAL_COUNT = COMIC_LIST.length * 2;
   const FILTERED_COUNT = Math.floor(TOTAL_COUNT * 0.75);
   const READING_LIST_ID = READING_LIST_3.id;
 
-  let state: ComicDetailsListState;
+  let state: ComicListState;
 
   beforeEach(() => {
     state = { ...initialState };
@@ -90,12 +86,12 @@ describe('ComicDetailsList Reducer', () => {
       state = reducer({ ...initialState }, {} as any);
     });
 
-    it('clears the loading flag', () => {
-      expect(state.loading).toBeFalse();
+    it('clears the busy flag', () => {
+      expect(state.busy).toBeFalse();
     });
 
     it('has no comic details', () => {
-      expect(state.comicDetails).toEqual([]);
+      expect(state.comics).toEqual([]);
     });
 
     it('has no cover years', () => {
@@ -118,8 +114,8 @@ describe('ComicDetailsList Reducer', () => {
   describe('loading comic details', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, loading: false },
-        loadComicDetails({
+        { ...state, busy: false },
+        loadComicsByFilter({
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
           coverYear: COVER_YEAR,
@@ -139,29 +135,26 @@ describe('ComicDetailsList Reducer', () => {
       );
     });
 
-    it('sets the loading flag', () => {
-      expect(state.loading).toBeTrue();
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
     });
   });
 
   describe('loading comic details by id', () => {
     beforeEach(() => {
-      state = reducer(
-        { ...state, loading: false },
-        loadComicDetailsById({ comicBookIds: IDS })
-      );
+      state = reducer({ ...state, busy: false }, loadComicsById({ ids: IDS }));
     });
 
-    it('sets the loading flag', () => {
-      expect(state.loading).toBeTrue();
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
     });
   });
 
   describe('loading comic details for a collection', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, loading: false },
-        loadComicDetailsForCollection({
+        { ...state, busy: false },
+        loadComicsForCollection({
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
           tagType: TAG_TYPE,
@@ -172,16 +165,16 @@ describe('ComicDetailsList Reducer', () => {
       );
     });
 
-    it('sets the loading flag', () => {
-      expect(state.loading).toBeTrue();
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
     });
   });
 
   describe('loading comic details that are unread', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, loading: false },
-        loadUnreadComicDetails({
+        { ...state, busy: false },
+        loadUnreadComics({
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
           sortBy: SORT_BY,
@@ -190,16 +183,16 @@ describe('ComicDetailsList Reducer', () => {
       );
     });
 
-    it('sets the loading flag', () => {
-      expect(state.loading).toBeTrue();
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
     });
   });
 
-  describe('loading comic details that are read', () => {
+  describe('loading read comics', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, loading: false },
-        loadReadComicDetails({
+        { ...state, busy: false },
+        loadReadComics({
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
           sortBy: SORT_BY,
@@ -208,16 +201,16 @@ describe('ComicDetailsList Reducer', () => {
       );
     });
 
-    it('sets the loading flag', () => {
-      expect(state.loading).toBeTrue();
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
     });
   });
 
-  describe('loading comic details for a reading list', () => {
+  describe('loading unread comics', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, loading: false },
-        loadComicDetailsForReadingList({
+        { ...state, busy: false },
+        loadComicsForReadingList({
           readingListId: READING_LIST_ID,
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
@@ -227,16 +220,16 @@ describe('ComicDetailsList Reducer', () => {
       );
     });
 
-    it('sets the loading flag', () => {
-      expect(state.loading).toBeTrue();
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
     });
   });
 
   describe('loading duplicate comic book details', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, loading: false },
-        loadDuplicateComicsDetails({
+        { ...state, busy: false },
+        loadDuplicateComics({
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
           sortBy: SORT_BY,
@@ -245,8 +238,8 @@ describe('ComicDetailsList Reducer', () => {
       );
     });
 
-    it('sets the loading flag', () => {
-      expect(state.loading).toBeTrue();
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
     });
   });
 
@@ -255,13 +248,13 @@ describe('ComicDetailsList Reducer', () => {
       state = reducer(
         {
           ...state,
-          loading: true,
-          comicDetails: [],
+          busy: true,
+          comics: [],
           coverYears: [],
           coverMonths: []
         },
-        comicDetailsLoaded({
-          comicDetails: COMIC_DETAILS,
+        loadComicsSuccess({
+          comics: COMIC_LIST,
           coverYears: COVER_YEARS,
           coverMonths: COVER_MONTHS,
           totalCount: TOTAL_COUNT,
@@ -270,12 +263,12 @@ describe('ComicDetailsList Reducer', () => {
       );
     });
 
-    it('clears the loading flag', () => {
-      expect(state.loading).toBeFalse();
+    it('clears the busy flag', () => {
+      expect(state.busy).toBeFalse();
     });
 
     it('sets the list of comic details', () => {
-      expect(state.comicDetails).toEqual(COMIC_DETAILS);
+      expect(state.comics).toEqual(COMIC_LIST);
     });
 
     it('sets the list of cover years', () => {
@@ -298,22 +291,22 @@ describe('ComicDetailsList Reducer', () => {
   describe('failure to load comic details', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, loading: true, comicDetails: COMIC_DETAILS },
-        loadComicDetailsFailed()
+        { ...state, busy: true, comics: COMIC_LIST },
+        loadComicsFailure()
       );
     });
 
-    it('clears the loading flag', () => {
-      expect(state.loading).toBeFalse();
+    it('clears the busy flag', () => {
+      expect(state.busy).toBeFalse();
     });
 
-    it('leads the comic details intact', () => {
-      expect(state.comicDetails).toEqual(COMIC_DETAILS);
+    it('leaves the comic intact', () => {
+      expect(state.comics).toEqual(COMIC_LIST);
     });
   });
 
-  describe('receiving an updated comic detail', () => {
-    const ORIGINAL = COMIC_DETAILS[3];
+  describe('receiving an updated comic', () => {
+    const ORIGINAL = COMIC_LIST[3];
     const UPDATE = {
       ...ORIGINAL,
       comicState: ComicState.CHANGED
@@ -322,17 +315,17 @@ describe('ComicDetailsList Reducer', () => {
     describe('when it is one of the comics shown', () => {
       beforeEach(() => {
         state = reducer(
-          { ...state, comicDetails: COMIC_DETAILS },
-          comicDetailUpdated({ comicDetail: UPDATE })
+          { ...state, comics: COMIC_LIST },
+          comicUpdated({ comic: UPDATE })
         );
       });
 
       it('removes the original comic', () => {
-        expect(state.comicDetails).not.toContain(ORIGINAL);
+        expect(state.comics).not.toContain(ORIGINAL);
       });
 
       it('adds the updated comic', () => {
-        expect(state.comicDetails).toContain(UPDATE);
+        expect(state.comics).toContain(UPDATE);
       });
     });
 
@@ -341,51 +334,53 @@ describe('ComicDetailsList Reducer', () => {
         state = reducer(
           {
             ...state,
-            comicDetails: COMIC_DETAILS.filter(entry => entry.id !== UPDATE.id)
+            comics: COMIC_LIST.filter(
+              entry => entry.comicBookId !== UPDATE.comicBookId
+            )
           },
-          comicDetailUpdated({ comicDetail: UPDATE })
+          comicUpdated({ comic: UPDATE })
         );
       });
 
       it('does not add the update', () => {
-        expect(state.comicDetails).not.toContain(UPDATE);
+        expect(state.comics).not.toContain(UPDATE);
       });
     });
   });
 
-  describe('receiving a removed comic detail', () => {
-    const ORIGINAL = COMIC_DETAILS[3];
+  describe('receiving a removed comic', () => {
+    const ORIGINAL = COMIC_LIST[3];
 
     describe('when it is one of the comics shown', () => {
       beforeEach(() => {
         state = reducer(
-          { ...state, comicDetails: COMIC_DETAILS },
-          comicDetailRemoved({ comicDetail: ORIGINAL })
+          { ...state, comics: COMIC_LIST },
+          comicRemoved({ comic: ORIGINAL })
         );
       });
 
       it('removes the original comic', () => {
-        expect(state.comicDetails).not.toContain(ORIGINAL);
+        expect(state.comics).not.toContain(ORIGINAL);
       });
     });
 
     describe('when it is not one of the comics shown', () => {
-      const DISPLAYED_LIST = COMIC_DETAILS.filter(
-        entry => entry.id !== ORIGINAL.id
+      const DISPLAYED_LIST = COMIC_LIST.filter(
+        entry => entry.comicBookId !== ORIGINAL.comicBookId
       );
 
       beforeEach(() => {
         state = reducer(
           {
             ...state,
-            comicDetails: DISPLAYED_LIST
+            comics: DISPLAYED_LIST
           },
-          comicDetailRemoved({ comicDetail: ORIGINAL })
+          comicRemoved({ comic: ORIGINAL })
         );
       });
 
-      it('does not change the detail list', () => {
-        expect(state.comicDetails).toEqual(DISPLAYED_LIST);
+      it('does not change the comic list', () => {
+        expect(state.comics).toEqual(DISPLAYED_LIST);
       });
     });
   });

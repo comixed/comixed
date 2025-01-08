@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2023, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,26 +13,25 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http:/www.gnu.org/licenses>
+ * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.comicbooks;
+package org.comixedproject.model.net.library;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.comixedproject.model.comicbooks.ComicDetail;
 
 /**
- * <code>LoadComicDetailsForTagRequest</code> represents the payload when loading {@link
- * ComicDetail} records for a tag type.
+ * <code>LoadComicForListRequest</code> represents the request body when loading comics for a
+ * reading list.
  *
  * @author Darryl L. Pierce
  */
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoadComicDetailsForTagRequest {
+public class LoadComicForListRequest {
   @JsonProperty("pageSize")
   @Getter
   private int pageSize;
@@ -41,14 +40,6 @@ public class LoadComicDetailsForTagRequest {
   @Getter
   private int pageIndex;
 
-  @JsonProperty("tagType")
-  @Getter
-  private String tagType;
-
-  @JsonProperty("tagValue")
-  @Getter
-  private String tagValue;
-
   @JsonProperty("sortBy")
   @Getter
   private String sortBy;
@@ -56,4 +47,20 @@ public class LoadComicDetailsForTagRequest {
   @JsonProperty("sortDirection")
   @Getter
   private String sortDirection;
+
+  @Override
+  public String toString() {
+    return "LoadComicForListRequest{"
+        + "pageSize="
+        + pageSize
+        + ", pageIndex="
+        + pageIndex
+        + ", sortBy='"
+        + sortBy
+        + '\''
+        + ", sortDirection='"
+        + sortDirection
+        + '\''
+        + '}';
+  }
 }

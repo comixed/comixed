@@ -35,7 +35,7 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { USER_ADMIN } from '@app/user/user.fixtures';
 import { PAGE_SIZE_DEFAULT } from '@app/core';
-import { ComicDetailListViewComponent } from '@app/comic-books/components/comic-detail-list-view/comic-detail-list-view.component';
+import { ComicListViewComponent } from '@app/comic-books/components/comic-list-view/comic-list-view.component';
 import { MetadataProcessToolbarComponent } from '@app/comic-metadata/components/metadata-process-toolbar/metadata-process-toolbar.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -55,17 +55,17 @@ import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
 } from '@app/comic-books/reducers/comic-book-selection.reducer';
-import {
-  COMIC_DETAILS_LIST_FEATURE_KEY,
-  initialState as initialLoadComicDetailsState
-} from '@app/comic-books/reducers/comic-details-list.reducer';
 import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
+import {
+  COMIC_LIST_FEATURE_KEY,
+  initialState as initialComicListState
+} from '@app/comic-books/reducers/comic-list.reducer';
 
 describe('MetadataProcessPageComponent', () => {
   const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
   const IDS = COMIC_BOOKS.map(comic => comic.id);
   const initialState = {
-    [COMIC_DETAILS_LIST_FEATURE_KEY]: initialLoadComicDetailsState,
+    [COMIC_LIST_FEATURE_KEY]: initialComicListState,
     [USER_FEATURE_KEY]: initialUserState,
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState
   };
@@ -82,7 +82,7 @@ describe('MetadataProcessPageComponent', () => {
         MetadataProcessPageComponent,
         MetadataProcessStatusComponent,
         MetadataProcessToolbarComponent,
-        ComicDetailListViewComponent,
+        ComicListViewComponent,
         ComicCoverUrlPipe,
         ComicTitlePipe
       ],

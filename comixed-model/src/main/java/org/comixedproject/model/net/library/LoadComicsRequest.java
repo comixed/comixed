@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2023, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program. If not, see <http:/www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.comicbooks;
+package org.comixedproject.model.net.library;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -27,21 +27,20 @@ import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicType;
 
 /**
- * <code>LoadComicDetailsRequest</code> represents the request body when loading a page worth of
- * comics.
+ * <code>LoadComicsRequest</code> represents the request body when loading a page worth of comics.
  *
  * @author Darryl L. Pierce
  */
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoadComicDetailsRequest {
+public class LoadComicsRequest {
   @JsonProperty("pageSize")
   @Getter
-  private Integer pageSize;
+  private int pageSize;
 
   @JsonProperty("pageIndex")
   @Getter
-  private Integer pageIndex;
+  private int pageIndex;
 
   @JsonProperty("coverYear")
   @Getter
@@ -62,10 +61,6 @@ public class LoadComicDetailsRequest {
   @JsonProperty("comicState")
   @Getter
   private ComicState comicState;
-
-  @JsonProperty("selected")
-  @Getter
-  private Boolean selected;
 
   @JsonProperty("unscrapedState")
   @Getter

@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class PublishComicBookUpdateAction extends AbstractPublishAction<ComicBook> {
-  public static final String COMIC_LIST_UPDATE_TOPIC = "/topic/comic-book-list.update";
+  public static final String COMIC_LIST_UPDATE_TOPIC = "/topic/comic-list.update";
 
   /** Topic which receives individual comic updates in real time. */
   public static final String COMIC_BOOK_UPDATE_TOPIC = "/topic/comic-book.%d.update";

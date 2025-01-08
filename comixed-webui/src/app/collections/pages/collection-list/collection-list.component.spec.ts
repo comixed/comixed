@@ -25,9 +25,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { TagType } from '@app/collections/models/comic-collection.enum';
 import {
-  COMIC_DETAIL_1,
-  COMIC_DETAIL_3,
-  COMIC_DETAIL_5
+  DISPLAYABLE_COMIC_1,
+  DISPLAYABLE_COMIC_3,
+  DISPLAYABLE_COMIC_5
 } from '@app/comic-books/comic-books.fixtures';
 import { MatTableModule } from '@angular/material/table';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -41,22 +41,26 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CollectionEntry } from '@app/collections/models/collection-entry';
 import {
-  COMIC_DETAILS_LIST_FEATURE_KEY,
-  initialState as initialComicDetailListState
-} from '@app/comic-books/reducers/comic-details-list.reducer';
-import {
   COLLECTION_LIST_FEATURE_KEY,
   initialState as initialCollectionListState
 } from '@app/collections/reducers/collection-list.reducer';
 import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
+import {
+  COMIC_LIST_FEATURE_KEY,
+  initialState as initialComicListState
+} from '@app/comic-books/reducers/comic-list.reducer';
 
 describe('CollectionListComponent', () => {
-  const COMICS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
+  const COMIC_LIST = [
+    DISPLAYABLE_COMIC_1,
+    DISPLAYABLE_COMIC_3,
+    DISPLAYABLE_COMIC_5
+  ];
   const initialState = {
     [COLLECTION_LIST_FEATURE_KEY]: initialCollectionListState,
-    [COMIC_DETAILS_LIST_FEATURE_KEY]: {
-      ...initialComicDetailListState,
-      comicBooks: COMICS
+    [COMIC_LIST_FEATURE_KEY]: {
+      ...initialComicListState,
+      comics: COMIC_LIST
     }
   };
 

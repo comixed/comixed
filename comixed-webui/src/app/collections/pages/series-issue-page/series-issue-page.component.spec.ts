@@ -26,13 +26,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import {
-  COMIC_DETAILS_LIST_FEATURE_KEY,
-  initialState as initialComicDetailListState
-} from '@app/comic-books/reducers/comic-details-list.reducer';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { ActivatedRoute } from '@angular/router';
-import { ComicDetailListViewComponent } from '@app/comic-books/components/comic-detail-list-view/comic-detail-list-view.component';
+import { ComicListViewComponent } from '@app/comic-books/components/comic-list-view/comic-list-view.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { BehaviorSubject } from 'rxjs';
@@ -40,7 +36,6 @@ import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { PAGE_SIZE_DEFAULT, QUERY_PARAM_PAGE_INDEX } from '@app/core';
-import { loadComicDetails } from '@app/comic-books/actions/comic-details-list.actions';
 import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
@@ -51,13 +46,18 @@ import {
   initialState as initialUserState,
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
+import { loadComicsByFilter } from '@app/comic-books/actions/comic-list.actions';
+import {
+  COMIC_LIST_FEATURE_KEY,
+  initialState as initialComicListState
+} from '@app/comic-books/reducers/comic-list.reducer';
 
 describe('SeriesIssuePageComponent', () => {
   const PUBLISHER_NAME = 'The Publisher';
   const SERIES_NAME = 'The Series';
   const VOLUME = '2024';
   const initialState = {
-    [COMIC_DETAILS_LIST_FEATURE_KEY]: initialComicDetailListState,
+    [COMIC_LIST_FEATURE_KEY]: initialComicListState,
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
     [USER_FEATURE_KEY]: initialUserState
   };
@@ -73,7 +73,7 @@ describe('SeriesIssuePageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SeriesIssuePageComponent, ComicDetailListViewComponent],
+      declarations: [SeriesIssuePageComponent, ComicListViewComponent],
       imports: [
         NoopAnimationsModule,
         LoggerModule.forRoot(),
@@ -152,7 +152,7 @@ describe('SeriesIssuePageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        loadComicDetails({
+        loadComicsByFilter({
           pageSize: PAGE_SIZE_DEFAULT,
           pageIndex: PAGE_NUMBER,
           sortBy: null,

@@ -43,10 +43,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { TagType } from '@app/collections/models/comic-collection.enum';
 import {
   COMIC_DETAIL_1,
-  COMIC_DETAIL_2,
-  COMIC_DETAIL_3,
-  COMIC_DETAIL_4,
-  COMIC_DETAIL_5
+  DISPLAYABLE_COMIC_1,
+  DISPLAYABLE_COMIC_2,
+  DISPLAYABLE_COMIC_3,
+  DISPLAYABLE_COMIC_4,
+  DISPLAYABLE_COMIC_5
 } from '@app/comic-books/comic-books.fixtures';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
@@ -68,18 +69,13 @@ import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 import { MatInputModule } from '@angular/material/input';
-import { ComicDetailListViewComponent } from '@app/comic-books/components/comic-detail-list-view/comic-detail-list-view.component';
+import { ComicListViewComponent } from '@app/comic-books/components/comic-list-view/comic-list-view.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
 } from '@app/comic-books/reducers/comic-book-selection.reducer';
-import {
-  COMIC_DETAILS_LIST_FEATURE_KEY,
-  initialState as initialComicDetailListState
-} from '@app/comic-books/reducers/comic-details-list.reducer';
-import { loadComicDetailsForCollection } from '@app/comic-books/actions/comic-details-list.actions';
 import {
   QUERY_PARAM_PAGE_INDEX,
   QUERY_PARAM_PAGE_SIZE,
@@ -91,26 +87,31 @@ import {
   initialState as initialLibraryPluginState,
   LIBRARY_PLUGIN_FEATURE_KEY
 } from '@app/library-plugins/reducers/library-plugin.reducer';
+import { loadComicsForCollection } from '@app/comic-books/actions/comic-list.actions';
+import {
+  COMIC_LIST_FEATURE_KEY,
+  initialState as initialComicListState
+} from '@app/comic-books/reducers/comic-list.reducer';
 
 describe('CollectionDetailComponent', () => {
   const PAGE_SIZE = 10;
   const PAGE_INDEX = 5;
   const SORT_BY = 'added-date';
   const SORT_DIRECTION = 'asc';
-  const COMIC_DETAILS = [
-    COMIC_DETAIL_1,
-    { ...COMIC_DETAIL_2, publisher: null, series: null, volume: null },
-    COMIC_DETAIL_3,
-    COMIC_DETAIL_4,
-    COMIC_DETAIL_5
+  const COMIC_LIST = [
+    DISPLAYABLE_COMIC_1,
+    { ...DISPLAYABLE_COMIC_2, publisher: null, series: null, volume: null },
+    DISPLAYABLE_COMIC_3,
+    DISPLAYABLE_COMIC_4,
+    DISPLAYABLE_COMIC_5
   ];
   const USER = USER_READER;
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
-    [COMIC_DETAILS_LIST_FEATURE_KEY]: {
-      ...initialComicDetailListState,
-      comicBooks: COMIC_DETAILS
+    [COMIC_LIST_FEATURE_KEY]: {
+      ...initialComicListState,
+      comicBooks: COMIC_LIST
     },
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
@@ -131,7 +132,7 @@ describe('CollectionDetailComponent', () => {
       TestBed.configureTestingModule({
         declarations: [
           CollectionDetailComponent,
-          ComicDetailListViewComponent,
+          ComicListViewComponent,
           ComicTitlePipe,
           ComicCoverUrlPipe,
           ArchiveTypePipe,
@@ -259,22 +260,22 @@ describe('CollectionDetailComponent', () => {
     });
 
     describe('when the collection type is characters', () => {
-      const TAG_VALUE = COMIC_DETAILS[0].tags.find(
+      const TAG_VALUE = COMIC_DETAIL_1.tags.find(
         entry => entry.type === ComicTagType.CHARACTER
       ).value;
 
       beforeEach(() => {
-        component.comicBooks = [];
+        component.comics = [];
         (activatedRoute.params as BehaviorSubject<{}>).next({
           collectionType: 'characters',
           collectionName: TAG_VALUE,
-          volume: COMIC_DETAILS[0].volume
+          volume: COMIC_DETAIL_1.volume
         });
       });
 
       it('selects comics', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          loadComicDetailsForCollection({
+          loadComicsForCollection({
             pageSize: PAGE_SIZE,
             pageIndex: PAGE_INDEX,
             tagType: TagType.CHARACTERS,
@@ -287,22 +288,22 @@ describe('CollectionDetailComponent', () => {
     });
 
     describe('when the collection type is teams', () => {
-      const TAG_VALUE = COMIC_DETAILS[0].tags.find(
+      const TAG_VALUE = COMIC_DETAIL_1.tags.find(
         entry => entry.type === ComicTagType.TEAM
       ).value;
 
       beforeEach(() => {
-        component.comicBooks = [];
+        component.comics = [];
         (activatedRoute.params as BehaviorSubject<{}>).next({
           collectionType: 'teams',
           collectionName: TAG_VALUE,
-          volume: COMIC_DETAILS[0].volume
+          volume: COMIC_DETAIL_1.volume
         });
       });
 
       it('selects comics', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          loadComicDetailsForCollection({
+          loadComicsForCollection({
             pageSize: PAGE_SIZE,
             pageIndex: PAGE_INDEX,
             tagType: TagType.TEAMS,
@@ -315,22 +316,22 @@ describe('CollectionDetailComponent', () => {
     });
 
     describe('when the collection type is locations', () => {
-      const TAG_VALUE = COMIC_DETAILS[0].tags.find(
+      const TAG_VALUE = COMIC_DETAIL_1.tags.find(
         entry => entry.type === ComicTagType.LOCATION
       ).value;
 
       beforeEach(() => {
-        component.comicBooks = [];
+        component.comics = [];
         (activatedRoute.params as BehaviorSubject<{}>).next({
           collectionType: 'locations',
           collectionName: TAG_VALUE,
-          volume: COMIC_DETAILS[0].volume
+          volume: COMIC_DETAIL_1.volume
         });
       });
 
       it('selects comics', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          loadComicDetailsForCollection({
+          loadComicsForCollection({
             pageSize: PAGE_SIZE,
             pageIndex: PAGE_INDEX,
             tagType: TagType.LOCATIONS,
@@ -343,22 +344,22 @@ describe('CollectionDetailComponent', () => {
     });
 
     describe('when the collection type is stories', () => {
-      const TAG_VALUE = COMIC_DETAILS[0].tags.find(
+      const TAG_VALUE = COMIC_DETAIL_1.tags.find(
         entry => entry.type === ComicTagType.STORY
       ).value;
 
       beforeEach(() => {
-        component.comicBooks = [];
+        component.comics = [];
         (activatedRoute.params as BehaviorSubject<{}>).next({
           collectionType: 'stories',
           collectionName: TAG_VALUE,
-          volume: COMIC_DETAILS[0].volume
+          volume: COMIC_DETAIL_1.volume
         });
       });
 
       it('selects comics', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          loadComicDetailsForCollection({
+          loadComicsForCollection({
             pageSize: PAGE_SIZE,
             pageIndex: PAGE_INDEX,
             tagType: TagType.STORIES,

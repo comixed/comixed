@@ -17,7 +17,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { WebSocketService } from '@app/messaging';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -27,30 +27,11 @@ import {
   COMIC_LIST_UPDATE_TOPIC
 } from '@app/library/library.constants';
 import { ComicBook } from '@app/comic-books/models/comic-book';
-import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
-import { ComicType } from '@app/comic-books/models/comic-type';
-import { ComicState } from '@app/comic-books/models/comic-state';
 import { HttpClient } from '@angular/common/http';
-import { interpolate } from '@app/core';
-import { LoadComicDetailsRequest } from '@app/comic-books/models/net/load-comic-details-request';
-import {
-  LOAD_COMIC_DETAILS_BY_ID_URL,
-  LOAD_COMIC_DETAILS_FOR_COLLECTION_URL,
-  LOAD_COMIC_DETAILS_FOR_READING_LIST_URL,
-  LOAD_COMIC_DETAILS_URL,
-  LOAD_DUPLICATE_COMIC_BOOK_DETAILS_URL,
-  LOAD_UNREAD_COMIC_DETAILS_URL
-} from '@app/comic-books/comic-books.constants';
-import { LoadComicDetailsByIdRequest } from '@app/comic-books/models/net/load-comic-details-by-id-request';
 import {
   comicDetailRemoved,
   comicDetailUpdated
 } from '@app/comic-books/actions/comic-details-list.actions';
-import { TagType } from '@app/collections/models/comic-collection.enum';
-import { LoadComicDetailsForCollectionRequest } from '@app/comic-books/models/net/load-comic-details-for-collection-request';
-import { LoadUnreadComicDetailsRequest } from '@app/comic-books/models/net/load-unread-comic-details-request';
-import { LoadComicDetailsForReadingListRequest } from '@app/comic-books/models/net/load-comic-details-for-reading-list-request';
-import { LoadDuplicateComicDetailsRequest } from '@app/comic-books/models/net/load-duplicate-comic-details-request';
 
 @Injectable({
   providedIn: 'root'
@@ -100,124 +81,5 @@ export class ComicDetailListService {
         this.removalSubscription = null;
       }
     });
-  }
-
-  loadComicDetails(args: {
-    pageSize: number;
-    pageIndex: number;
-    coverYear: number;
-    coverMonth: number;
-    archiveType: ArchiveType;
-    comicType: ComicType;
-    comicState: ComicState;
-    selected: boolean;
-    unscrapedState: boolean;
-    searchText: string;
-    publisher: string;
-    series: string;
-    volume: string;
-    sortBy: string;
-    sortDirection: string;
-  }): Observable<any> {
-    this.logger.debug('Loading comic details:', args);
-    return this.http.post(interpolate(LOAD_COMIC_DETAILS_URL), {
-      pageSize: args.pageSize,
-      pageIndex: args.pageIndex,
-      coverYear: args.coverYear,
-      coverMonth: args.coverMonth,
-      archiveType: args.archiveType,
-      comicType: args.comicType,
-      comicState: args.comicState,
-      unscrapedState: args.unscrapedState,
-      selected: args.selected,
-      searchText: args.searchText,
-      publisher: args.publisher,
-      series: args.series,
-      volume: args.volume,
-      sortBy: args.sortBy,
-      sortDirection: args.sortDirection
-    } as LoadComicDetailsRequest);
-  }
-
-  loadComicDetailsById(args: { ids: number[] }): Observable<any> {
-    this.logger.debug('Loading comic details by id:', args);
-    return this.http.post(interpolate(LOAD_COMIC_DETAILS_BY_ID_URL), {
-      comicBookIds: args.ids
-    } as LoadComicDetailsByIdRequest);
-  }
-
-  loadComicDetailsForCollection(args: {
-    pageSize: number;
-    pageIndex: number;
-    tagType: TagType;
-    tagValue: string;
-    sortBy: string;
-    sortDirection: string;
-  }): Observable<any> {
-    this.logger.debug('Loading comic details for collection:', args);
-    return this.http.post(interpolate(LOAD_COMIC_DETAILS_FOR_COLLECTION_URL), {
-      pageSize: args.pageSize,
-      pageIndex: args.pageIndex,
-      tagType: args.tagType,
-      tagValue: args.tagValue,
-      sortBy: args.sortBy,
-      sortDirection: args.sortDirection
-    } as LoadComicDetailsForCollectionRequest);
-  }
-
-  loadUnreadComicDetails(args: {
-    unreadOnly: boolean;
-    pageSize: number;
-    pageIndex: number;
-    sortBy: string;
-    sortDirection: string;
-  }): Observable<any> {
-    this.logger.debug('Loading read/unread comic details:', args);
-    return this.http.post(interpolate(LOAD_UNREAD_COMIC_DETAILS_URL), {
-      unreadOnly: args.unreadOnly,
-      pageSize: args.pageSize,
-      pageIndex: args.pageIndex,
-      sortBy: args.sortBy,
-      sortDirection: args.sortDirection
-    } as LoadUnreadComicDetailsRequest);
-  }
-
-  loadComicDetailsForReadingList(args: {
-    readingListId: number;
-    sortDirection: string;
-    pageIndex: number;
-    pageSize: number;
-    sortBy: string;
-  }): Observable<any> {
-    this.logger.debug('Loading comic details for reading list:', args);
-    return this.http.post(
-      interpolate(LOAD_COMIC_DETAILS_FOR_READING_LIST_URL, {
-        readingListId: args.readingListId
-      }),
-      {
-        pageSize: args.pageSize,
-        pageIndex: args.pageIndex,
-        sortBy: args.sortBy,
-        sortDirection: args.sortDirection
-      } as LoadComicDetailsForReadingListRequest
-    );
-  }
-
-  loadDuplicateComicsDetails(args: {
-    sortDirection: string;
-    pageIndex: number;
-    pageSize: number;
-    sortBy: string;
-  }): Observable<any> {
-    this.logger.debug(
-      'Loading duplicate comic book details for reading list:',
-      args
-    );
-    return this.http.post(interpolate(LOAD_DUPLICATE_COMIC_BOOK_DETAILS_URL), {
-      pageSize: args.pageSize,
-      pageIndex: args.pageIndex,
-      sortBy: args.sortBy,
-      sortDirection: args.sortDirection
-    } as LoadDuplicateComicDetailsRequest);
   }
 }

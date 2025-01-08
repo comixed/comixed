@@ -55,15 +55,15 @@ import {
 } from '@app/lists/actions/reading-lists.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { setMultipleComicBookByIdSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
-import { selectLoadComicDetailsList } from '@app/comic-books/selectors/load-comic-details-list.selectors';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.selectors';
-import { loadComicDetailsForReadingList } from '@app/comic-books/actions/comic-details-list.actions';
+import { loadComicsForReadingList } from '@app/comic-books/actions/comic-list.actions';
+import { selectComicList } from '@app/comic-books/selectors/comic-list.selectors';
+import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
 
 @Component({
   selector: 'cx-user-reading-list-page',
@@ -71,7 +71,7 @@ import { loadComicDetailsForReadingList } from '@app/comic-books/actions/comic-d
   styleUrls: ['./reading-list-detail-page.component.scss']
 })
 export class ReadingListDetailPageComponent implements OnDestroy {
-  dataSource = new MatTableDataSource<SelectableListItem<ComicDetail>>([]);
+  dataSource = new MatTableDataSource<SelectableListItem<DisplayableComic>>([]);
 
   paramsSubscription: Subscription;
   queryParamsSubscription: Subscription;
@@ -88,7 +88,7 @@ export class ReadingListDetailPageComponent implements OnDestroy {
   comicBooksRead: number[] = [];
   langChangeSubscription: Subscription;
   comicDetailListSubscription: Subscription;
-  comicDetails: ComicDetail[] = [];
+  comics: DisplayableComic[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -152,9 +152,9 @@ export class ReadingListDetailPageComponent implements OnDestroy {
       });
     this.logger.trace('Subscribing to comic detail list updates');
     this.comicDetailListSubscription = this.store
-      .select(selectLoadComicDetailsList)
-      .subscribe(comicDetails => {
-        this.comicDetails = comicDetails;
+      .select(selectComicList)
+      .subscribe(comics => {
+        this.comics = comics;
         this.doLoadDataSource();
       });
     this.selectionSubscription = this.store
@@ -341,9 +341,9 @@ export class ReadingListDetailPageComponent implements OnDestroy {
 
   private doLoadDataSource() {
     this.logger.trace('Loading comics from reading list');
-    this.dataSource.data = this.comicDetails.map(entry => {
+    this.dataSource.data = this.comics.map(entry => {
       return {
-        selected: this.selectedIds.includes(entry.comicId),
+        selected: this.selectedIds.includes(entry.comicDetailId),
         item: entry
       };
     });
@@ -372,7 +372,7 @@ export class ReadingListDetailPageComponent implements OnDestroy {
   private loadReadingListEntries() {
     this.logger.trace('Loading reading list entries');
     this.store.dispatch(
-      loadComicDetailsForReadingList({
+      loadComicsForReadingList({
         readingListId: this.readingListId,
         pageSize: this.queryParameterService.pageSize$.value,
         pageIndex: this.queryParameterService.pageIndex$.value,

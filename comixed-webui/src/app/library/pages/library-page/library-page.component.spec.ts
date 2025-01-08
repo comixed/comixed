@@ -66,7 +66,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { USER_READER } from '@app/user/user.fixtures';
 import { CoverDateFilterPipe } from '@app/comic-books/pipes/cover-date-filter.pipe';
 import { MatInputModule } from '@angular/material/input';
-import { ComicDetailListViewComponent } from '@app/comic-books/components/comic-detail-list-view/comic-detail-list-view.component';
+import { ComicListViewComponent } from '@app/comic-books/components/comic-list-view/comic-list-view.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
@@ -74,17 +74,7 @@ import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import {
-  COMIC_DETAILS_LIST_FEATURE_KEY,
-  initialState as initialComicDetailListState
-} from '@app/comic-books/reducers/comic-details-list.reducer';
 import { ComicType } from '@app/comic-books/models/comic-type';
-import {
-  loadComicDetails,
-  loadDuplicateComicsDetails,
-  loadReadComicDetails,
-  loadUnreadComicDetails
-} from '@app/comic-books/actions/comic-details-list.actions';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
@@ -105,6 +95,16 @@ import {
   initialState as initialReadComicBooksState,
   READ_COMIC_BOOKS_FEATURE_KEY
 } from '@app/user/reducers/read-comic-books.reducer';
+import {
+  loadComicsByFilter,
+  loadDuplicateComics,
+  loadReadComics,
+  loadUnreadComics
+} from '@app/comic-books/actions/comic-list.actions';
+import {
+  COMIC_LIST_FEATURE_KEY,
+  initialState as initialComicListState
+} from '@app/comic-books/reducers/comic-list.reducer';
 
 describe('LibraryPageComponent', () => {
   const ONE_DAY = 24 * 60 * 60 * 100;
@@ -142,7 +142,7 @@ describe('LibraryPageComponent', () => {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBooksSelectionState,
-    [COMIC_DETAILS_LIST_FEATURE_KEY]: initialComicDetailListState,
+    [COMIC_LIST_FEATURE_KEY]: initialComicListState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
     [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState,
     [READ_COMIC_BOOKS_FEATURE_KEY]: initialReadComicBooksState
@@ -163,7 +163,7 @@ describe('LibraryPageComponent', () => {
       TestBed.configureTestingModule({
         declarations: [
           LibraryPageComponent,
-          ComicDetailListViewComponent,
+          ComicListViewComponent,
           ArchiveTypePipe,
           CoverDateFilterPipe,
           ComicCoverUrlPipe,
@@ -401,7 +401,7 @@ describe('LibraryPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          loadComicDetails({
+          loadComicsByFilter({
             pageSize: PAGE_SIZE,
             pageIndex: 0,
             coverYear: null,
@@ -432,7 +432,7 @@ describe('LibraryPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          loadComicDetails({
+          loadComicsByFilter({
             pageSize: PAGE_SIZE,
             pageIndex: 0,
             coverYear: null,
@@ -463,7 +463,7 @@ describe('LibraryPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          loadDuplicateComicsDetails({
+          loadDuplicateComics({
             pageSize: PAGE_SIZE,
             pageIndex: 0,
             sortBy: null,
@@ -483,7 +483,7 @@ describe('LibraryPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          loadComicDetails({
+          loadComicsByFilter({
             pageSize: PAGE_SIZE,
             pageIndex: 0,
             coverYear: null,
@@ -514,7 +514,7 @@ describe('LibraryPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          loadUnreadComicDetails({
+          loadUnreadComics({
             pageSize: PAGE_SIZE,
             pageIndex: 0,
             sortBy: null,
@@ -534,7 +534,7 @@ describe('LibraryPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          loadReadComicDetails({
+          loadReadComics({
             pageSize: PAGE_SIZE,
             pageIndex: 0,
             sortBy: null,
@@ -553,7 +553,7 @@ describe('LibraryPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          loadComicDetails({
+          loadComicsByFilter({
             pageSize: PAGE_SIZE,
             pageIndex: 0,
             coverYear: null,
