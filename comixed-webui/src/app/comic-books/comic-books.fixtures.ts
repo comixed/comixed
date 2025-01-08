@@ -29,6 +29,7 @@ import { Imprint } from '@app/comic-books/models/imprint';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 import { ComicType } from '@app/comic-books/models/comic-type';
+import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
 
 export const IMPRINT_1: Imprint = {
   id: 1,
@@ -46,6 +47,111 @@ export const IMPRINT_3: Imprint = {
   id: 3,
   name: 'Imprint 3',
   publisher: 'Publisher 3'
+};
+
+export const DISPLAYABLE_COMIC_1: DisplayableComic = {
+  comicBookId: 1,
+  comicDetailId: 101,
+  archiveType: ArchiveType.CBZ,
+  comicState: ComicState.STABLE,
+  comicType: ComicType.ISSUE,
+  unscraped: false,
+  publisher: 'First Publisher',
+  series: 'First Series',
+  volume: '2017',
+  issueNumber: '1',
+  sortableIssueNumber: '00001',
+  title: 'First ComicBook Title',
+  pageCount: 22,
+  coverDate: new Date().getTime(),
+  storeDate: new Date().getTime(),
+  yearPublished: new Date().getFullYear(),
+  monthPublished: new Date().getMonth(),
+  addedDate: new Date().getTime()
+};
+
+export const DISPLAYABLE_COMIC_2: DisplayableComic = {
+  comicBookId: 2,
+  comicDetailId: 102,
+  archiveType: ArchiveType.CBZ,
+  comicState: ComicState.STABLE,
+  comicType: ComicType.ISSUE,
+  unscraped: false,
+  publisher: 'First Publisher',
+  series: 'First Series',
+  volume: '2017',
+  issueNumber: '1',
+  sortableIssueNumber: '00001',
+  title: 'First ComicBook Title',
+  pageCount: 22,
+  coverDate: new Date().getTime(),
+  storeDate: new Date().getTime(),
+  yearPublished: new Date().getFullYear(),
+  monthPublished: new Date().getMonth(),
+  addedDate: new Date().getTime()
+};
+
+export const DISPLAYABLE_COMIC_3: DisplayableComic = {
+  comicBookId: 3,
+  comicDetailId: 103,
+  archiveType: ArchiveType.CBZ,
+  comicState: ComicState.STABLE,
+  comicType: ComicType.ISSUE,
+  unscraped: false,
+  publisher: 'First Publisher',
+  series: 'First Series',
+  volume: '2017',
+  issueNumber: '1',
+  sortableIssueNumber: '00001',
+  title: 'First ComicBook Title',
+  pageCount: 22,
+  coverDate: new Date().getTime(),
+  storeDate: new Date().getTime(),
+  yearPublished: new Date().getFullYear(),
+  monthPublished: new Date().getMonth(),
+  addedDate: new Date().getTime()
+};
+
+export const DISPLAYABLE_COMIC_4: DisplayableComic = {
+  comicBookId: 4,
+  comicDetailId: 104,
+  archiveType: ArchiveType.CBZ,
+  comicState: ComicState.STABLE,
+  comicType: ComicType.ISSUE,
+  unscraped: false,
+  publisher: 'First Publisher',
+  series: 'First Series',
+  volume: '2017',
+  issueNumber: '1',
+  sortableIssueNumber: '00001',
+  title: 'First ComicBook Title',
+  pageCount: 22,
+  coverDate: new Date().getTime(),
+  storeDate: new Date().getTime(),
+  yearPublished: new Date().getFullYear(),
+  monthPublished: new Date().getMonth(),
+  addedDate: new Date().getTime()
+};
+
+export const DISPLAYABLE_COMIC_5: DisplayableComic = {
+  comicBookId: 5,
+  comicDetailId: 105,
+  archiveType: ArchiveType.CBZ,
+  comicState: ComicState.STABLE,
+  comicType: ComicType.ISSUE,
+  unscraped: false,
+  publisher: 'First Publisher',
+  series: 'First Series',
+  volume: '2017',
+  issueNumber: '1',
+  sortableIssueNumber: '00001',
+  title: 'First ComicBook Title',
+  pageCount: 22,
+  coverDate: new Date().getTime(),
+  storeDate: new Date().getTime(),
+  yearPublished: new Date().getFullYear(),
+  monthPublished: new Date().getMonth(),
+  addedDate: new Date().getTime()
 };
 
 export const COMIC_DETAIL_1: ComicDetail = {
@@ -82,6 +188,7 @@ export const COMIC_DETAIL_1: ComicDetail = {
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
   publishedYear: 2019,
+  publishedMonth: 3,
   addedDate: new Date().getTime()
 };
 
@@ -111,6 +218,7 @@ export const COMIC_DETAIL_2: ComicDetail = {
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
   publishedYear: 2018,
+  publishedMonth: 3,
   addedDate: new Date().getTime()
 };
 
@@ -140,6 +248,7 @@ export const COMIC_DETAIL_3: ComicDetail = {
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
   publishedYear: 1953,
+  publishedMonth: 3,
   addedDate: new Date().getTime()
 };
 
@@ -169,6 +278,7 @@ export const COMIC_DETAIL_4: ComicDetail = {
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
   publishedYear: 1972,
+  publishedMonth: 3,
   addedDate: new Date().getTime()
 };
 
@@ -200,6 +310,7 @@ export const COMIC_DETAIL_5: ComicDetail = {
   ).getTime(),
   storeDate: new Date().getTime(),
   publishedYear: 2000,
+  publishedMonth: 3,
   addedDate: new Date().getTime()
 };
 

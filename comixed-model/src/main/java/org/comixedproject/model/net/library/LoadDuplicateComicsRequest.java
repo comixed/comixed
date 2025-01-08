@@ -16,7 +16,7 @@
  * along with this program. If not, see <http:/www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.comicbooks;
+package org.comixedproject.model.net.library;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -26,13 +26,13 @@ import org.comixedproject.model.comicbooks.ComicDetail;
 
 /**
  * <code>LoadComicDetailsForReadingListRequest</code> represents the request payload when loading
- * {@link ComicDetail} for a reading list.
+ * {@link ComicDetail} for duplicate comic books in the library.
  *
  * @author Darryl L. Pierce
  */
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoadComicDetailsForReadingListRequest {
+public class LoadDuplicateComicsRequest {
   @JsonProperty("pageSize")
   @Getter
   private int pageSize;
@@ -48,4 +48,20 @@ public class LoadComicDetailsForReadingListRequest {
   @JsonProperty("sortDirection")
   @Getter
   private String sortDirection;
+
+  @Override
+  public String toString() {
+    return "LoadDuplicateComicsRequest{"
+        + "pageSize="
+        + pageSize
+        + ", pageIndex="
+        + pageIndex
+        + ", sortBy='"
+        + sortBy
+        + '\''
+        + ", sortDirection='"
+        + sortDirection
+        + '\''
+        + '}';
+  }
 }

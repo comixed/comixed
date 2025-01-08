@@ -18,15 +18,15 @@
 
 import { ComicCoverUrlPipe } from './comic-cover-url.pipe';
 import { API_ROOT_URL } from '@app/core';
-import { COMIC_DETAIL_1 } from '@app/comic-books/comic-books.fixtures';
+import { DISPLAYABLE_COMIC_1 } from '@app/comic-books/comic-books.fixtures';
 import { MISSING_COMIC_IMAGE_URL } from '@app/library/library.constants';
 
 describe('ComicCoverUrlPipe', () => {
   const pipe = new ComicCoverUrlPipe();
 
   it('returns the URL for the comic cover image', () => {
-    expect(pipe.transform(COMIC_DETAIL_1)).toEqual(
-      `${API_ROOT_URL}/comics/${COMIC_DETAIL_1.comicId}/cover/content`
+    expect(pipe.transform(DISPLAYABLE_COMIC_1)).toEqual(
+      `${API_ROOT_URL}/comics/${DISPLAYABLE_COMIC_1.comicBookId}/cover/content`
     );
   });
 

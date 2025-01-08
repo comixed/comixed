@@ -46,6 +46,7 @@ export interface ComicDetail {
   tags: ComicTag[];
   coverDate: number;
   publishedYear: number;
+  publishedMonth: number;
   storeDate: number;
   addedDate: number;
 }

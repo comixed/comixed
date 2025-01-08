@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2024, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,23 +16,22 @@
  * along with this program. If not, see <http:/www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.comicbooks;
+package org.comixedproject.model.net.library;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.comixedproject.model.comicbooks.ComicDetail;
 
 /**
- * <code>LoadComicDetailsForReadingListRequest</code> represents the request payload when loading
- * {@link ComicDetail} for duplicate comic books in the library.
+ * <code>LoadComicsByReadStateRequest</code> represents the payload when loading comics by their
+ * read state.
  *
  * @author Darryl L. Pierce
  */
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoadDuplicateComicBookDetailsRequest {
+public class LoadComicsByReadStateRequest {
   @JsonProperty("pageSize")
   @Getter
   private int pageSize;
@@ -48,4 +47,20 @@ public class LoadDuplicateComicBookDetailsRequest {
   @JsonProperty("sortDirection")
   @Getter
   private String sortDirection;
+
+  @Override
+  public String toString() {
+    return "LoadComicsByReadStateRequest{"
+        + "pageSize="
+        + pageSize
+        + ", pageIndex="
+        + pageIndex
+        + ", sortBy='"
+        + sortBy
+        + '\''
+        + ", sortDirection='"
+        + sortDirection
+        + '\''
+        + '}';
+  }
 }

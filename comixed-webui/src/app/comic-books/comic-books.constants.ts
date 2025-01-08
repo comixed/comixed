@@ -20,12 +20,14 @@ import { API_ROOT_URL } from '../core';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { ComicType } from '@app/comic-books/models/comic-type';
 
-export const LOAD_COMIC_DETAILS_URL = `${API_ROOT_URL}/comics/details/load`;
-export const LOAD_COMIC_DETAILS_BY_ID_URL = `${API_ROOT_URL}/comics/details/load/ids`;
-export const LOAD_COMIC_DETAILS_FOR_COLLECTION_URL = `${API_ROOT_URL}/comics/details/load/tag`;
-export const LOAD_UNREAD_COMIC_DETAILS_URL = `${API_ROOT_URL}/comics/details/load/unread`;
-export const LOAD_COMIC_DETAILS_FOR_READING_LIST_URL = `${API_ROOT_URL}/comics/details/load/readinglist/\${readingListId}`;
-export const LOAD_DUPLICATE_COMIC_BOOK_DETAILS_URL = `${API_ROOT_URL}/comics/details/load/duplicates`;
+export const LOAD_COMICS_BY_FILTER_URL = `${API_ROOT_URL}/comics/filtered`;
+export const LOAD_SELECTED_COMICS_URL = `${API_ROOT_URL}/comics/selected`;
+export const LOAD_COMICS_BY_ID_URL = `${API_ROOT_URL}/comics/ids`;
+export const LOAD_COMICS_FOR_COLLECTION_URL = `${API_ROOT_URL}/comics/collection`;
+export const LOAD_UNREAD_COMICS_URL = `${API_ROOT_URL}/comics/unread`;
+export const LOAD_READ_COMICS_URL = `${API_ROOT_URL}/comics/read`;
+export const LOAD_COMICS_FOR_READING_LIST_URL = `${API_ROOT_URL}/comics/lists/\${readingListId}`;
+export const LOAD_DUPLICATE_COMICS_URL = `${API_ROOT_URL}/comics/duplicates`;
 
 export const LOAD_COMIC_BOOK_SELECTIONS_URL = `${API_ROOT_URL}/comics/selections`;
 export const ADD_SINGLE_COMIC_SELECTION_URL = `${API_ROOT_URL}/comics/selections/\${comicBookId}`;

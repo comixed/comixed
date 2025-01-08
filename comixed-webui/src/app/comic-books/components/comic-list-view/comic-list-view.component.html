@@ -2,25 +2,27 @@
   *ngIf="showComicDetailPopup"
   class="cx-hover cx-centered cx-width-25 cx-border-primary-1"
 >
-  <mat-card appearance="outlined" (click)="showComicDetailPopup = false">
+  <mat-card
+    appearance="outlined"
+    (click)="showComicDetailPopup = false"
+    (keyup)="showComicDetailPopup = false"
+  >
     <mat-card-title class="cx-text-nowrap">
-      {{ selectedComicDetail | comicTitle }}
+      {{ selectedComic | comicTitle }}
     </mat-card-title>
     <mat-card-subtitle
-      *ngIf="
-        !!selectedComicDetail.title && selectedComicDetail.title.length > 0
-      "
+      *ngIf="!!selectedComic.title && selectedComic.title.length > 0"
       class="cx-text-nowrap"
     >
-      {{ selectedComicDetail.title }}
+      {{ selectedComic.title }}
     </mat-card-subtitle>
     <mat-card-content class="cx-padding-5">
       <img
         loading="lazy"
-        [src]="selectedComicDetail | comicCoverUrl"
+        [src]="selectedComic | comicCoverUrl"
         width="100%"
         height="auto"
-        [alt]="selectedComicDetail | comicTitle"
+        [alt]="selectedComic | comicTitle"
       />
     </mat-card-content>
   </mat-card>
@@ -67,6 +69,7 @@
       <mat-icon
         *ngIf="showFilter"
         (click)="onFilterComics(); $event.stopPropagation()"
+        (keyup)="onFilterComics(); $event.stopPropagation()"
         [matTooltip]="'comic-detail-list-view.tooltip.filter-list' | translate"
       >
         filter_list
@@ -74,7 +77,8 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <mat-icon
-        (click)="selectedComicDetail = entry.item; $event.stopPropagation()"
+        (click)="selectedComic = entry.item; $event.stopPropagation()"
+        (keyup)="selectedComic = entry.item; $event.stopPropagation()"
         [matMenuTriggerFor]="contextMenu"
       >
         more_vert
@@ -236,7 +240,7 @@
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap cx-padding-5">
         <a
-          [routerLink]="['/comics', entry.item.comicId]"
+          [routerLink]="['/comics', entry.item.comicBookId]"
           (click)="$event.stopImmediatePropagation()"
         >
           {{ entry.item.issueNumber }}
@@ -294,7 +298,7 @@
     *matRowDef="let row; columns: displayedColumns"
     [class.cx-selected-row]="selectedIds.includes(row.id) || row.selected"
     [class.cx-missing-comic-file]="row.item.missing"
-    [routerLink]="['/comics', row.item.comicId]"
+    [routerLink]="['/comics', row.item.comicBookId]"
   ></mat-row>
   <tr class="mat-row" *matNoDataRow>
     <td class="mat-cell" colspan="4">
@@ -346,14 +350,14 @@
     </mat-label>
   </button>
   <button
-    *ngIf="!isRead(selectedComicDetail)"
+    *ngIf="!isRead(selectedComic)"
     mat-menu-item
     (click)="onMarkOneAsRead(true)"
   >
     <mat-label>{{ "library.context-menu.mark-as-read" | translate }}</mat-label>
   </button>
   <button
-    *ngIf="isRead(selectedComicDetail)"
+    *ngIf="isRead(selectedComic)"
     mat-menu-item
     (click)="onMarkOneAsRead(false)"
   >
@@ -362,14 +366,14 @@
     </mat-label>
   </button>
   <button
-    *ngIf="!isDeleted(selectedComicDetail)"
+    *ngIf="!isDeleted(selectedComic)"
     mat-menu-item
     (click)="onMarkOneAsDeleted(true)"
   >
     <mat-label>{{ "library.context-menu.delete-one" | translate }}</mat-label>
   </button>
   <button
-    *ngIf="isDeleted(selectedComicDetail)"
+    *ngIf="isDeleted(selectedComic)"
     mat-menu-item
     (click)="onMarkOneAsDeleted(false)"
   >
@@ -381,7 +385,7 @@
   <button
     *ngIf="isAdmin"
     mat-menu-item
-    (click)="onUpdateSingleComicBookMetadata(selectedComicDetail)"
+    (click)="onUpdateSingleComicBookMetadata(selectedComic)"
   >
     <mat-label>
       {{ "library.context-menu.update-metadata-one" | translate }}
@@ -391,7 +395,7 @@
   <button
     *ngIf="isAdmin"
     mat-menu-item
-    (click)="onRescanSingleComicBook(selectedComicDetail)"
+    (click)="onRescanSingleComicBook(selectedComic)"
   >
     <mat-label>
       {{ "library.context-menu.rescan-one" | translate }}
@@ -416,7 +420,7 @@
   <button
     *ngFor="let plugin of libraryPluginlist"
     mat-menu-item
-    (click)="onRunLibraryPluginSingleOnComicBook(plugin, selectedComicDetail)"
+    (click)="onRunLibraryPluginSingleOnComicBook(plugin, selectedComic)"
   >
     <mat-label>{{ plugin.name }}</mat-label>
   </button>

@@ -72,6 +72,7 @@ describe('LibraryService', () => {
     COMIC_DETAIL_3,
     COMIC_DETAIL_4
   ];
+  const IDS = COMIC_DETAILS.map(entry => entry.comicId);
   const READ = Math.random() > 0.5;
   const ARCHIVE_TYPE = ArchiveType.CBZ;
   const RENAME_PAGES = Math.random() > 0.5;
@@ -230,7 +231,7 @@ describe('LibraryService', () => {
   it('can convert a single comic book', () => {
     service
       .convertSingleComicBook({
-        comicDetail: COMIC_DETAIL,
+        id: COMIC_DETAIL.comicId,
         archiveType: ARCHIVE_TYPE,
         renamePages: RENAME_PAGES,
         deletePages: DELETE_PAGES
@@ -286,7 +287,7 @@ describe('LibraryService', () => {
   it('can edit multiple comics', () => {
     service
       .editMultipleComics({
-        comicBooks: COMIC_DETAILS,
+        ids: IDS,
         details: EDIT_MULTIPLE_COMICS
       })
       .subscribe(response => expect(response.status).toEqual(200));

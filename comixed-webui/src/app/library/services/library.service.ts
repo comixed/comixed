@@ -149,7 +149,7 @@ export class LibraryService {
   }
 
   convertSingleComicBook(args: {
-    comicDetail: ComicDetail;
+    id: number;
     archiveType: ArchiveType;
     renamePages: boolean;
     deletePages: boolean;
@@ -157,7 +157,7 @@ export class LibraryService {
     this.logger.trace('Converting comics:', args);
     return this.http.put(
       interpolate(CONVERT_SINGLE_COMIC_BOOK_URL, {
-        comicBookId: args.comicDetail.comicId
+        comicBookId: args.id
       }),
       {
         archiveType: args.archiveType,
@@ -189,12 +189,12 @@ export class LibraryService {
   }
 
   editMultipleComics(args: {
-    comicBooks: ComicDetail[];
+    ids: number[];
     details: EditMultipleComics;
   }): Observable<any> {
     this.logger.trace('Editing multiple comics');
     return this.http.post(interpolate(EDIT_MULTIPLE_COMICS_URL), {
-      ids: args.comicBooks.map(comic => comic.comicId),
+      ids: args.ids,
       publisher: args.details.publisher,
       series: args.details.series,
       volume: args.details.volume,

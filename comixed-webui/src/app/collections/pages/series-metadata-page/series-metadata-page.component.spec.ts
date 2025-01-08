@@ -41,35 +41,35 @@ import { TitleService } from '@app/core/services/title.service';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ISSUE_1 } from '@app/collections/collections.fixtures';
 import {
-  COMIC_DETAIL_1,
-  COMIC_DETAIL_2,
-  COMIC_DETAIL_3,
-  COMIC_DETAIL_4,
-  COMIC_DETAIL_5
+  DISPLAYABLE_COMIC_1,
+  DISPLAYABLE_COMIC_2,
+  DISPLAYABLE_COMIC_3,
+  DISPLAYABLE_COMIC_4,
+  DISPLAYABLE_COMIC_5
 } from '@app/comic-books/comic-books.fixtures';
 import { SeriesDetailNamePipe } from '@app/collections/pipes/series-detail-name.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {
-  COMIC_DETAILS_LIST_FEATURE_KEY,
-  initialState as initialComicDetailsListState
-} from '@app/comic-books/reducers/comic-details-list.reducer';
-import {
   initialState as initialLibraryState,
   LIBRARY_FEATURE_KEY
 } from '@app/library/reducers/library.reducer';
+import {
+  COMIC_LIST_FEATURE_KEY,
+  initialState as initialComicListState
+} from '@app/comic-books/reducers/comic-list.reducer';
 
 describe('SeriesMetadataPageComponent', () => {
   const PUBLISHER = 'The Publisher';
   const SERIES = 'The Series';
   const VOLUME = '2022';
-  const COMIC_DETAILS = [
-    COMIC_DETAIL_1,
-    COMIC_DETAIL_2,
-    COMIC_DETAIL_3,
-    COMIC_DETAIL_4,
-    COMIC_DETAIL_5
+  const COMIC_LIST = [
+    DISPLAYABLE_COMIC_1,
+    DISPLAYABLE_COMIC_2,
+    DISPLAYABLE_COMIC_3,
+    DISPLAYABLE_COMIC_4,
+    DISPLAYABLE_COMIC_5
   ];
-  const COMIC_BOOK = COMIC_DETAIL_1;
+  const COMIC_BOOK = DISPLAYABLE_COMIC_1;
   const ISSUE = {
     ...ISSUE_1,
     publisher: COMIC_BOOK.publisher,
@@ -81,7 +81,7 @@ describe('SeriesMetadataPageComponent', () => {
   const initialState = {
     [SERIES_FEATURE_KEY]: initialSeriesState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [COMIC_DETAILS_LIST_FEATURE_KEY]: initialComicDetailsListState,
+    [COMIC_LIST_FEATURE_KEY]: initialComicListState,
     [USER_FEATURE_KEY]: initialUserState
   };
 
@@ -195,11 +195,13 @@ describe('SeriesMetadataPageComponent', () => {
 
   describe('getting the id for an issue', () => {
     beforeEach(() => {
-      component.comicBooks = COMIC_DETAILS;
+      component.comics = COMIC_LIST;
     });
 
     it('returns a value when the issue is found', () => {
-      expect(component.getComicBookIdForRow(ISSUE)).toEqual(COMIC_BOOK.comicId);
+      expect(component.getComicBookIdForRow(ISSUE)).toEqual(
+        COMIC_BOOK.comicBookId
+      );
     });
 
     it('returns a null when the issue is not found', () => {
@@ -220,10 +222,10 @@ describe('SeriesMetadataPageComponent', () => {
       component.dataSource.data = [ISSUE];
       store.setState({
         ...initialState,
-        [COMIC_DETAILS_LIST_FEATURE_KEY]: {
-          ...initialComicDetailsListState,
-          comicDetails: COMIC_DETAILS,
-          filteredCount: COMIC_DETAILS.length
+        [COMIC_LIST_FEATURE_KEY]: {
+          ...initialComicListState,
+          comics: COMIC_LIST,
+          filteredCount: COMIC_LIST.length
         },
         [SERIES_FEATURE_KEY]: { ...initialSeriesState, issues: [ISSUE] }
       });

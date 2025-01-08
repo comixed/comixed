@@ -12,11 +12,11 @@
   [processState]="processState"
 ></cx-metadata-process-status>
 
-<cx-comic-detail-list-view
+<cx-comic-list-view
   *ngIf="!processState || !processState.active"
   class="cx-width-100"
-  [comics]="comicDetails"
+  [comics]="comics"
   [coverYears]="coverYears"
   [coverMonths]="coverMonths"
   [selectedIds]="selectedIds"
-></cx-comic-detail-list-view>
+></cx-comic-list-view>

@@ -16,12 +16,12 @@
   </button>
 </div>
 
-<cx-comic-detail-list-view
+<cx-comic-list-view
   [isAdmin]="isAdmin"
-  [comics]="comicDetails"
+  [comics]="comics"
   [coverYears]="coverYears"
   [coverMonths]="coverMonths"
-  [totalComics]="comicDetailListState?.filteredCount"
+  [totalComics]="comicListState?.filteredCount"
   [showPageCount]="true"
   [comicBooksRead]="comicBooksRead"
   [selectedIds]="selectedIds"
@@ -31,4 +31,4 @@
   (selectAll)="onSetAllComicsSelectedState($event)"
   (filtered)="filtered = $event"
   (showing)="showing = $event"
-></cx-comic-detail-list-view>
+></cx-comic-list-view>

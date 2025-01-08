@@ -33,18 +33,18 @@ import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
-import {
-  selectLoadComicDetailsCoverMonths,
-  selectLoadComicDetailsCoverYears,
-  selectLoadComicDetailsFilteredComics,
-  selectLoadComicDetailsList,
-  selectLoadComicDetailsListState
-} from '@app/comic-books/selectors/load-comic-details-list.selectors';
-import { loadComicDetailsForCollection } from '@app/comic-books/actions/comic-details-list.actions';
 import { setMultipleComicBooksByTagTypeAndValueSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 import { setBusyState } from '@app/core/actions/busy.actions';
+import { loadComicsForCollection } from '@app/comic-books/actions/comic-list.actions';
+import {
+  selectComicCoverMonths,
+  selectComicCoverYears,
+  selectComicFilteredCount,
+  selectComicList,
+  selectComicListState
+} from '@app/comic-books/selectors/comic-list.selectors';
+import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
 
 @Component({
   selector: 'cx-collection-detail',
@@ -52,7 +52,7 @@ import { setBusyState } from '@app/core/actions/busy.actions';
   styleUrls: ['./collection-detail.component.scss']
 })
 export class CollectionDetailComponent implements OnInit, OnDestroy {
-  comicBooks: ComicDetail[] = [];
+  comics: DisplayableComic[] = [];
   totalComics = 0;
   coverYears: number[] = [];
   coverMonths: number[] = [];
@@ -100,21 +100,21 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
         this.loadTranslations();
         this.doLoadComicDetails();
         this.comicDetailListStateSubscription = this.store
-          .select(selectLoadComicDetailsListState)
+          .select(selectComicListState)
           .subscribe(state =>
-            this.store.dispatch(setBusyState({ enabled: state.loading }))
+            this.store.dispatch(setBusyState({ enabled: state.busy }))
           );
         this.comicDetailListSubscription = this.store
-          .select(selectLoadComicDetailsList)
-          .subscribe(entries => (this.comicBooks = entries));
+          .select(selectComicList)
+          .subscribe(entries => (this.comics = entries));
         this.totalComicsSubscription = this.store
-          .select(selectLoadComicDetailsFilteredComics)
+          .select(selectComicFilteredCount)
           .subscribe(totalComics => (this.totalComics = totalComics));
         this.coverYearSubscription = this.store
-          .select(selectLoadComicDetailsCoverYears)
+          .select(selectComicCoverYears)
           .subscribe(coverYears => (this.coverYears = coverYears));
         this.coverMonthsSubscription = this.store
-          .select(selectLoadComicDetailsCoverMonths)
+          .select(selectComicCoverMonths)
           .subscribe(coverMonths => (this.coverMonths = coverMonths));
       }
     });
@@ -190,7 +190,7 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
 
   private doLoadComicDetails(): void {
     this.store.dispatch(
-      loadComicDetailsForCollection({
+      loadComicsForCollection({
         pageSize: this.queryParameterService.pageSize$.value,
         pageIndex: this.queryParameterService.pageIndex$.value,
         tagType: this.tagType,

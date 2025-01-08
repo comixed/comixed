@@ -29,7 +29,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -55,7 +54,6 @@ public class ComicDetailRepositoryTest {
   private static final String TEST_READ_SERIES = "Steve Rogers: Captain America";
   private static final String TEST_READ_VOLUME = "2017";
   private static final String TEST_EMAIL = "comixedreader@localhost";
-  private static final long TEST_READING_LIST_ID = 1001L;
   private static final Long TEST_COMIC_BOOK_ID = 1000L;
   private static final Long TEST_COMIC_DETAIL_ID = 2000L;
   private static final String TEST_UPDATED_FILENAME =
@@ -99,16 +97,6 @@ public class ComicDetailRepositoryTest {
 
     assertFalse(result.stream().filter(ComicDetail::getUnscraped).toList().isEmpty());
     assertTrue(result.stream().anyMatch(comicDetail -> comicDetail.getPageCount() > 0));
-  }
-
-  @Test
-  public void testLoadReadingListEntries() {
-    final List<ComicDetail> result =
-        repository.loadComicDetailsForReadingList(TEST_READING_LIST_ID, PageRequest.of(0, 10));
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertEquals(1, result.size());
   }
 
   @Test

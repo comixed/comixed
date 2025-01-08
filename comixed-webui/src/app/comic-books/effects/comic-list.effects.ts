@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2023, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,34 +18,34 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
-  comicDetailsLoaded,
-  loadComicDetails,
-  loadComicDetailsById,
-  loadComicDetailsFailed,
-  loadComicDetailsForCollection,
-  loadComicDetailsForReadingList,
-  loadDuplicateComicsDetails,
-  loadReadComicDetails,
-  loadUnreadComicDetails
-} from '../actions/comic-details-list.actions';
-import { LoggerService } from '@angular-ru/cdk/logger';
-import { ComicDetailListService } from '@app/comic-books/services/comic-detail-list.service';
+  loadComicsByFilter,
+  loadComicsById,
+  loadComicsFailure,
+  loadComicsForCollection,
+  loadComicsForReadingList,
+  loadComicsSuccess,
+  loadDuplicateComics,
+  loadReadComics,
+  loadUnreadComics
+} from '../actions/comic-list.actions';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { DisplayableComicService } from '@app/comic-books/services/displayable-comic.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
+import { LoggerService } from '@angular-ru/cdk/logger';
+import { LoadComicsResponse } from '@app/comic-books/models/net/load-comics-response';
 import { of } from 'rxjs';
-import { LoadComicDetailsResponse } from '@app/comic-books/models/net/load-comic-details-response';
 
 @Injectable()
-export class ComicDetailsListEffects {
-  loadComicDetails$ = createEffect(() => {
+export class ComicListEffects {
+  loadComicsByFilter$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadComicDetails),
-      tap(action => this.logger.debug('Loading comic details:', action)),
+      ofType(loadComicsByFilter),
+      tap(action => this.logger.debug('Loading comics by filter:', action)),
       switchMap(action =>
-        this.comicBookListService
-          .loadComicDetails({
+        this.displayableComicService
+          .loadComicsByFilter({
             pageSize: action.pageSize,
             pageIndex: action.pageIndex,
             coverYear: action.coverYear,
@@ -64,9 +64,7 @@ export class ComicDetailsListEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map((response: LoadComicDetailsResponse) =>
-              this.doSuccess(response)
-            ),
+            map((response: LoadComicsResponse) => this.doSuccess(response)),
             catchError(error => this.doServiceFailure(error))
           )
       ),
@@ -74,20 +72,18 @@ export class ComicDetailsListEffects {
     );
   });
 
-  loadComicDetailsById$ = createEffect(() => {
+  loadComicsById$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadComicDetailsById),
-      tap(action => this.logger.debug('Loading comic details by id:', action)),
+      ofType(loadComicsById),
+      tap(action => this.logger.debug('Loading comics by id:', action)),
       switchMap(action =>
-        this.comicBookListService
-          .loadComicDetailsById({
-            ids: action.comicBookIds
+        this.displayableComicService
+          .loadComicsById({
+            ids: action.ids
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map((response: LoadComicDetailsResponse) =>
-              this.doSuccess(response)
-            ),
+            map((response: LoadComicsResponse) => this.doSuccess(response)),
             catchError(error => this.doServiceFailure(error))
           )
       ),
@@ -95,15 +91,15 @@ export class ComicDetailsListEffects {
     );
   });
 
-  loadComicDetailsForCollection$ = createEffect(() => {
+  loadComicsForCollection$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadComicDetailsForCollection),
+      ofType(loadComicsForCollection),
       tap(action =>
-        this.logger.debug('Loading comic details for collection:', action)
+        this.logger.debug('Loading comics for collection:', action)
       ),
       switchMap(action =>
-        this.comicBookListService
-          .loadComicDetailsForCollection({
+        this.displayableComicService
+          .loadComicsForCollection({
             pageSize: action.pageSize,
             pageIndex: action.pageIndex,
             tagType: action.tagType,
@@ -113,9 +109,7 @@ export class ComicDetailsListEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map((response: LoadComicDetailsResponse) =>
-              this.doSuccess(response)
-            ),
+            map((response: LoadComicsResponse) => this.doSuccess(response)),
             catchError(error => this.doServiceFailure(error))
           )
       ),
@@ -123,13 +117,13 @@ export class ComicDetailsListEffects {
     );
   });
 
-  loadUnreadComicDetails$ = createEffect(() => {
+  loadUnreadComics$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadUnreadComicDetails),
+      ofType(loadUnreadComics),
       tap(action => this.logger.debug('Loading unread comic details:', action)),
       switchMap(action =>
-        this.comicBookListService
-          .loadUnreadComicDetails({
+        this.displayableComicService
+          .loadComicsByReadState({
             unreadOnly: true,
             pageSize: action.pageSize,
             pageIndex: action.pageIndex,
@@ -138,9 +132,7 @@ export class ComicDetailsListEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map((response: LoadComicDetailsResponse) =>
-              this.doSuccess(response)
-            ),
+            map((response: LoadComicsResponse) => this.doSuccess(response)),
             catchError(error => this.doServiceFailure(error))
           )
       ),
@@ -148,13 +140,13 @@ export class ComicDetailsListEffects {
     );
   });
 
-  loadReadComicDetails$ = createEffect(() => {
+  loadReadComics$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadReadComicDetails),
+      ofType(loadReadComics),
       tap(action => this.logger.debug('Loading read comic details:', action)),
       switchMap(action =>
-        this.comicBookListService
-          .loadUnreadComicDetails({
+        this.displayableComicService
+          .loadComicsByReadState({
             unreadOnly: false,
             pageSize: action.pageSize,
             pageIndex: action.pageIndex,
@@ -163,9 +155,7 @@ export class ComicDetailsListEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map((response: LoadComicDetailsResponse) =>
-              this.doSuccess(response)
-            ),
+            map((response: LoadComicsResponse) => this.doSuccess(response)),
             catchError(error => this.doServiceFailure(error))
           )
       ),
@@ -173,15 +163,15 @@ export class ComicDetailsListEffects {
     );
   });
 
-  loadComicDetailsForReadingList$ = createEffect(() => {
+  loadComicsForReadingList$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadComicDetailsForReadingList),
+      ofType(loadComicsForReadingList),
       tap(action =>
         this.logger.debug('Loading comic details for reading list:', action)
       ),
       switchMap(action =>
-        this.comicBookListService
-          .loadComicDetailsForReadingList({
+        this.displayableComicService
+          .loadComicsForReadingList({
             readingListId: action.readingListId,
             pageSize: action.pageSize,
             pageIndex: action.pageIndex,
@@ -190,9 +180,7 @@ export class ComicDetailsListEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map((response: LoadComicDetailsResponse) =>
-              this.doSuccess(response)
-            ),
+            map((response: LoadComicsResponse) => this.doSuccess(response)),
             catchError(error => this.doServiceFailure(error))
           )
       ),
@@ -202,13 +190,13 @@ export class ComicDetailsListEffects {
 
   loadDuplicateComicsDetails$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadDuplicateComicsDetails),
+      ofType(loadDuplicateComics),
       tap(action =>
         this.logger.debug('Loading duplicate comic book details:', action)
       ),
       switchMap(action =>
-        this.comicBookListService
-          .loadDuplicateComicsDetails({
+        this.displayableComicService
+          .loadDuplicateComics({
             pageSize: action.pageSize,
             pageIndex: action.pageIndex,
             sortBy: action.sortBy,
@@ -216,9 +204,7 @@ export class ComicDetailsListEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map((response: LoadComicDetailsResponse) =>
-              this.doSuccess(response)
-            ),
+            map((response: LoadComicsResponse) => this.doSuccess(response)),
             catchError(error => this.doServiceFailure(error))
           )
       ),
@@ -229,14 +215,14 @@ export class ComicDetailsListEffects {
   constructor(
     private actions$: Actions,
     private logger: LoggerService,
-    private comicBookListService: ComicDetailListService,
+    private displayableComicService: DisplayableComicService,
     private alertService: AlertService,
     private translateService: TranslateService
   ) {}
 
-  private doSuccess(response: LoadComicDetailsResponse) {
-    return comicDetailsLoaded({
-      comicDetails: response.comicDetails,
+  private doSuccess(response: LoadComicsResponse) {
+    return loadComicsSuccess({
+      comics: response.comics,
       coverYears: response.coverYears,
       coverMonths: response.coverMonths,
       totalCount: response.totalCount,
@@ -249,7 +235,7 @@ export class ComicDetailsListEffects {
     this.alertService.error(
       this.translateService.instant('comic-books.load-comics.effect-failure')
     );
-    return of(loadComicDetailsFailed());
+    return of(loadComicsFailure());
   }
 
   private doGeneralFailure(error: any) {
@@ -257,6 +243,6 @@ export class ComicDetailsListEffects {
     this.alertService.error(
       this.translateService.instant('app.general-effect-failure')
     );
-    return of(loadComicDetailsFailed());
+    return of(loadComicsFailure());
   }
 }

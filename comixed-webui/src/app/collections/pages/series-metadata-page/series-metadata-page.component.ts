@@ -37,12 +37,12 @@ import { MatPaginator } from '@angular/material/paginator';
 import { TitleService } from '@app/core/services/title.service';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { PAGE_SIZE_OPTIONS } from '@app/core';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { loadComicsByFilter } from '@app/comic-books/actions/comic-list.actions';
 import {
-  selectLoadComicDetailsFilteredComics,
-  selectLoadComicDetailsList
-} from '@app/comic-books/selectors/load-comic-details-list.selectors';
-import { loadComicDetails } from '@app/comic-books/actions/comic-details-list.actions';
+  selectComicFilteredCount,
+  selectComicList
+} from '@app/comic-books/selectors/comic-list.selectors';
+import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
 
 @Component({
   selector: 'cx-series-metadata-page',
@@ -80,7 +80,7 @@ export class SeriesMetadataPageComponent
   publisher = '';
   name = '';
   volume = '';
-  comicBooks: ComicDetail[] = [];
+  comics: DisplayableComic[] = [];
   percentageComplete = 0;
   inLibrary = 0;
   totalIssues = 0;
@@ -122,14 +122,14 @@ export class SeriesMetadataPageComponent
       });
     this.logger.trace('Subscribing to comic book list updates');
     this.comicBookListSubscription = this.store
-      .select(selectLoadComicDetailsList)
-      .subscribe(comicBooks => {
-        this.comicBooks = comicBooks;
+      .select(selectComicList)
+      .subscribe(comics => {
+        this.comics = comics;
         this.calculatePercentageComplete();
       });
     this.logger.trace('Subscribing to total comics count updates');
     this.totalComicsSubscription = this.store
-      .select(selectLoadComicDetailsFilteredComics)
+      .select(selectComicFilteredCount)
       .subscribe(filteredCount => {
         this.totalComics = filteredCount;
         this.calculatePercentageComplete();
@@ -137,7 +137,7 @@ export class SeriesMetadataPageComponent
     this.pageChangedSubscription = this.activatedRoute.queryParams.subscribe(
       () => {
         this.store.dispatch(
-          loadComicDetails({
+          loadComicsByFilter({
             pageIndex: null,
             pageSize: null,
             coverMonth: null,
@@ -199,14 +199,14 @@ export class SeriesMetadataPageComponent
   }
 
   getComicBookIdForRow(issue: Issue): number {
-    const found = this.comicBooks.find(
+    const found = this.comics.find(
       comicBook =>
         comicBook.publisher === issue.publisher &&
         comicBook.series === issue.series &&
         comicBook.volume === issue.volume &&
         comicBook.issueNumber === issue.issueNumber
     );
-    return found?.comicId;
+    return found?.comicBookId;
   }
 
   private loadTranslations(): void {

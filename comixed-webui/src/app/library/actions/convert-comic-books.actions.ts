@@ -18,12 +18,11 @@
 
 import { createAction, props } from '@ngrx/store';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 export const convertSingleComicBook = createAction(
   '[Convert Comic Books] Convert a single comic book',
   props<{
-    comicDetail: ComicDetail;
+    id: number;
     archiveType: ArchiveType;
     deletePages: boolean;
     renamePages: boolean;

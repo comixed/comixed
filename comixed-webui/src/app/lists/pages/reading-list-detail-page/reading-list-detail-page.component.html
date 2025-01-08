@@ -84,8 +84,8 @@
   </form>
 </div>
 
-<cx-comic-detail-list-view
-  [comics]="comicDetails"
+<cx-comic-list-view
+  [comics]="comics"
   [totalComics]="readingList?.entryIds?.length"
   [selectedIds]="selectedIds"
   [comicBooksRead]="comicBooksRead"
@@ -94,4 +94,4 @@
   [showComicState]="false"
   [showAddedDate]="false"
   (selectAll)="this.onSelectAll($event)"
-></cx-comic-detail-list-view>
+></cx-comic-list-view>

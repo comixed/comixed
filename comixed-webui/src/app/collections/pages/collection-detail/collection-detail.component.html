@@ -9,10 +9,10 @@
   }}
 </h2>
 
-<cx-comic-detail-list-view
+<cx-comic-list-view
   class="cx-width-100"
   [isAdmin]="isAdmin"
-  [comics]="comicBooks"
+  [comics]="comics"
   [totalComics]="totalComics"
   [coverYears]="coverYears"
   [coverMonths]="coverMonths"
@@ -20,4 +20,4 @@
   [comicBooksRead]="lastReadDates"
   [readingLists]="readingLists"
   (selectAll)="onSelectAll($event)"
-></cx-comic-detail-list-view>
+></cx-comic-list-view>

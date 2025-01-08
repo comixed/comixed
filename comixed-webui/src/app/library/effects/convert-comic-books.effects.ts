@@ -42,7 +42,7 @@ export class ConvertComicBooksEffects {
       switchMap(action =>
         this.libraryService
           .convertSingleComicBook({
-            comicDetail: action.comicDetail,
+            id: action.id,
             archiveType: action.archiveType,
             renamePages: action.renamePages,
             deletePages: action.deletePages

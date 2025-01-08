@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2023, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,28 +13,53 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http:/www.gnu.org/licenses>
+ * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.comicbooks;
+package org.comixedproject.model.net.library;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.comixedproject.model.comicbooks.ComicDetail;
 
 /**
- * <code>LoadComicDetailsByIdRequest</code> represents the payload for loading a list of {@link
- * ComicDetail} objects by id.
+ * <code>LoadSelectedComicsRequest</code> represents the payload when loading selected comics.
  *
  * @author Darryl L. Pierce
  */
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoadComicDetailsByIdRequest {
-  @JsonProperty("comicBookIds")
+public class LoadSelectedComicsRequest {
+  @JsonProperty("pageSize")
   @Getter
-  private Set<Long> comicBookIds;
+  private int pageSize;
+
+  @JsonProperty("pageIndex")
+  @Getter
+  private int pageIndex;
+
+  @JsonProperty("sortBy")
+  @Getter
+  private String sortBy;
+
+  @JsonProperty("sortDirection")
+  @Getter
+  private String sortDirection;
+
+  @Override
+  public String toString() {
+    return "LoadSelectedComicsRequest{"
+        + "pageSize="
+        + pageSize
+        + ", pageIndex="
+        + pageIndex
+        + ", sortBy='"
+        + sortBy
+        + '\''
+        + ", sortDirection='"
+        + sortDirection
+        + '\''
+        + '}';
+  }
 }
