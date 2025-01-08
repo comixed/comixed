@@ -17,11 +17,15 @@
  */
 
 import { ComicTitlePipe } from './comic-title.pipe';
-import { COMIC_DETAIL_3 } from '@app/comic-books/comic-books.fixtures';
+import {
+  COMIC_DETAIL_1,
+  DISPLAYABLE_COMIC_1
+} from '@app/comic-books/comic-books.fixtures';
 import { UNKNOWN_VALUE_PLACEHOLDER } from '@app/library/library.constants';
 
 describe('ComicTitlePipe', () => {
-  const COMIC = COMIC_DETAIL_3;
+  const DISPLAYABLE_COMIC = DISPLAYABLE_COMIC_1;
+  const COMIC_DETAIL = COMIC_DETAIL_1;
 
   let pipe: ComicTitlePipe;
 
@@ -36,35 +40,43 @@ describe('ComicTitlePipe', () => {
   it('can handle a missing series name', () => {
     expect(
       pipe.transform({
-        ...COMIC,
+        ...DISPLAYABLE_COMIC,
         series: null
       })
     ).toEqual(
-      `${UNKNOWN_VALUE_PLACEHOLDER} (${COMIC.volume}) #${COMIC.issueNumber}`
+      `${UNKNOWN_VALUE_PLACEHOLDER} (${DISPLAYABLE_COMIC.volume}) #${DISPLAYABLE_COMIC.issueNumber}`
     );
   });
 
   it('can handle a missing volume', () => {
     expect(
       pipe.transform({
-        ...COMIC,
+        ...DISPLAYABLE_COMIC,
         volume: null
       })
-    ).toEqual(`${COMIC.series} (????) #${COMIC.issueNumber}`);
+    ).toEqual(
+      `${DISPLAYABLE_COMIC.series} (????) #${DISPLAYABLE_COMIC.issueNumber}`
+    );
   });
 
   it('can handle a missing issue number', () => {
     expect(
       pipe.transform({
-        ...COMIC,
+        ...DISPLAYABLE_COMIC,
         issueNumber: null
       })
-    ).toEqual(`${COMIC.series} (${COMIC.volume}) #??`);
+    ).toEqual(`${DISPLAYABLE_COMIC.series} (${DISPLAYABLE_COMIC.volume}) #??`);
   });
 
-  it('can handle a well-formed comic', () => {
-    expect(pipe.transform(COMIC)).toEqual(
-      `${COMIC.series} (${COMIC.volume}) #${COMIC.issueNumber}`
+  it('can handle a well-formed displayable comic', () => {
+    expect(pipe.transform(DISPLAYABLE_COMIC)).toEqual(
+      `${DISPLAYABLE_COMIC.series} (${DISPLAYABLE_COMIC.volume}) #${DISPLAYABLE_COMIC.issueNumber}`
+    );
+  });
+
+  it('can handle a well-formed comic detail', () => {
+    expect(pipe.transform(COMIC_DETAIL)).toEqual(
+      `${COMIC_DETAIL.series} (${COMIC_DETAIL.volume}) #${COMIC_DETAIL.issueNumber}`
     );
   });
 });

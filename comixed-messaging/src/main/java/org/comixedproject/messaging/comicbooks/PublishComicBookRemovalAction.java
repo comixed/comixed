@@ -35,7 +35,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class PublishComicBookRemovalAction extends AbstractPublishAction<ComicBook> {
   /** Topic which receives comic list removals in real time. */
-  public static final String COMIC_LIST_REMOVAL_TOPIC = "/topic/comic-book-list.removal";
+  public static final String COMIC_LIST_REMOVAL_TOPIC = "/topic/comic-list.removal";
 
   /** Topic which receives individual comic removals in real time. */
   public static final String COMIC_BOOK_REMOVAL_TOPIC = "/topic/comic-book.%d.removal";

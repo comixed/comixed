@@ -24,10 +24,7 @@ import static org.junit.Assert.*;
 
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import java.security.Principal;
 import java.util.*;
-import org.apache.commons.lang.math.RandomUtils;
-import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.*;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.comicbooks.*;
@@ -35,10 +32,6 @@ import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.service.comicbooks.*;
 import org.comixedproject.service.comicpages.ComicPageException;
 import org.comixedproject.service.comicpages.PageCacheService;
-import org.comixedproject.service.lists.ReadingListException;
-import org.comixedproject.service.lists.ReadingListService;
-import org.comixedproject.service.user.ComiXedUserException;
-import org.comixedproject.service.user.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,69 +44,32 @@ import org.springframework.http.ResponseEntity;
 @SpringBootTest
 public class ComicBookControllerTest {
   private static final long TEST_COMIC_ID = 129;
-  private static final int TEST_PAGE_SIZE = 10;
-  private static final int TEST_PAGE_INDEX = RandomUtils.nextInt(100);
-  private static final Integer TEST_COVER_YEAR = RandomUtils.nextInt(50) + 1970;
-  private static final Integer TEST_COVER_MONTH = RandomUtils.nextInt(12);
-  private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CB7;
-  private static final ComicType TEST_COMIC_TYPE = ComicType.ISSUE;
-  private static final ComicState TEST_COMIC_STATE = ComicState.REMOVED;
-  private static final Boolean TEST_UNSCRAPED_STATE = RandomUtils.nextBoolean();
-  private static final String TEST_SEARCH_TEXT = "The search text";
-  private static final String TEST_PUBLISHER = "THe Publisher Name";
-  private static final String TEST_SERIES = "The Series Name";
-  private static final String TEST_VOLUME = "2023";
-  private static final String TEST_SORT_FIELD = "added-date";
-  private static final String TEST_SORT_DIRECTION = "asc";
-  private static final long TEST_TOTAL_COMIC_COUNT = 500L;
-  private static final long TEST_FILTER_COUNT = TEST_TOTAL_COMIC_COUNT / 2;
-  private static final ComicTagType TEST_TAG_TYPE =
-      ComicTagType.values()[RandomUtils.nextInt(ComicTagType.values().length)];
-  private static final String TEST_TAG_VALUE = "The tag value";
   private static final Object TEST_ENCODED_SELECTIONS = "The encoded selection ids";
   private static final String TEST_REENCODED_SELECTIONS = "The re-encoded selection ids";
-  private static final String TEST_EMAIL = "comixedreader@localhost";
-  private static final int TEST_READ_COMIC_BOOK_COUNT = 320;
-  private static final long TEST_UNREAD_COMIC_COUNT =
-      TEST_TOTAL_COMIC_COUNT - TEST_READ_COMIC_BOOK_COUNT;
-  private static final long TEST_READING_LIST_ID = 501L;
 
   @InjectMocks private ComicBookController controller;
   @Mock private ComicBookService comicBookService;
-  @Mock private ComicDetailService comicDetailService;
   @Mock private PageCacheService pageCacheService;
   @Mock private ComicBookSelectionService comicBookSelectionService;
-  @Mock private ReadingListService readingListService;
   @Mock private ComicBook comicBook;
-  @Mock private UserService userService;
   @Mock private List<PageOrderEntry> pageOrderEntrylist;
-  @Mock private List<ComicDetail> comicDetailList;
-  @Mock private List<Integer> coverYearList;
-  @Mock private List<Integer> coverMonthList;
   @Mock private HttpSession httpSession;
-  @Mock private Principal principal;
   @Mock private DownloadDocument comicBookContent;
   @Mock private ResponseEntity<byte[]> responseEntity;
-  @Mock private Set<Long> readComicBookList;
   @Mock private ComiXedUser user;
 
   private final Set<Long> comicBookIdSet = new HashSet<>();
   private List<Long> selectedIdList = new ArrayList<>();
 
   @Before
-  public void setUp() throws ComicBookSelectionException, ComicBookException, ComiXedUserException {
-    Mockito.when(readComicBookList.size()).thenReturn(TEST_READ_COMIC_BOOK_COUNT);
-    Mockito.when(user.getReadComicBooks()).thenReturn(readComicBookList);
-    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
+  public void setUp() throws ComicBookSelectionException, ComicBookException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     comicBookIdSet.add(TEST_COMIC_ID);
-    Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_TOTAL_COMIC_COUNT);
     Mockito.when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
     Mockito.when(comicBookSelectionService.decodeSelections(Mockito.any()))
         .thenReturn(selectedIdList);
     Mockito.when(comicBookSelectionService.encodeSelections(selectedIdList))
         .thenReturn(TEST_REENCODED_SELECTIONS);
-    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
     for (long index = 0L; index < 100L; index++) {
       selectedIdList.add(index);
     }
@@ -296,359 +252,5 @@ public class ComicBookControllerTest {
 
     Mockito.verify(comicBookService, Mockito.times(1))
         .savePageOrder(TEST_COMIC_ID, pageOrderEntrylist);
-  }
-
-  @Test
-  public void testLoadComicDetailList() throws ComicBookSelectionException {
-    Mockito.when(
-            comicDetailService.loadComicDetailList(
-                TEST_PAGE_SIZE,
-                TEST_PAGE_INDEX,
-                TEST_COVER_YEAR,
-                TEST_COVER_MONTH,
-                TEST_ARCHIVE_TYPE,
-                TEST_COMIC_TYPE,
-                TEST_COMIC_STATE,
-                TEST_UNSCRAPED_STATE,
-                TEST_SEARCH_TEXT,
-                TEST_PUBLISHER,
-                TEST_SERIES,
-                TEST_VOLUME,
-                TEST_SORT_FIELD,
-                TEST_SORT_DIRECTION))
-        .thenReturn(comicDetailList);
-    Mockito.when(
-            comicDetailService.getCoverYears(
-                TEST_COVER_YEAR,
-                TEST_COVER_MONTH,
-                TEST_ARCHIVE_TYPE,
-                TEST_COMIC_TYPE,
-                TEST_COMIC_STATE,
-                TEST_UNSCRAPED_STATE,
-                TEST_SEARCH_TEXT,
-                TEST_PUBLISHER,
-                TEST_SERIES,
-                TEST_VOLUME))
-        .thenReturn(coverYearList);
-    Mockito.when(
-            comicDetailService.getCoverMonths(
-                TEST_COVER_YEAR,
-                TEST_COVER_MONTH,
-                TEST_ARCHIVE_TYPE,
-                TEST_COMIC_TYPE,
-                TEST_COMIC_STATE,
-                TEST_UNSCRAPED_STATE,
-                TEST_SEARCH_TEXT,
-                TEST_PUBLISHER,
-                TEST_SERIES,
-                TEST_VOLUME))
-        .thenReturn(coverMonthList);
-    Mockito.when(
-            comicDetailService.loadComicDetailList(
-                TEST_PAGE_SIZE,
-                TEST_PAGE_INDEX,
-                TEST_COVER_YEAR,
-                TEST_COVER_MONTH,
-                TEST_ARCHIVE_TYPE,
-                TEST_COMIC_TYPE,
-                TEST_COMIC_STATE,
-                TEST_UNSCRAPED_STATE,
-                TEST_SEARCH_TEXT,
-                TEST_PUBLISHER,
-                TEST_SERIES,
-                TEST_VOLUME,
-                TEST_SORT_FIELD,
-                TEST_SORT_DIRECTION))
-        .thenReturn(comicDetailList);
-    Mockito.when(
-            comicDetailService.getFilterCount(
-                TEST_COVER_YEAR,
-                TEST_COVER_MONTH,
-                TEST_ARCHIVE_TYPE,
-                TEST_COMIC_TYPE,
-                TEST_COMIC_STATE,
-                TEST_UNSCRAPED_STATE,
-                TEST_SEARCH_TEXT,
-                TEST_PUBLISHER,
-                TEST_SERIES,
-                TEST_VOLUME))
-        .thenReturn(TEST_FILTER_COUNT);
-
-    final LoadComicDetailsResponse result =
-        controller.loadComicDetailList(
-            httpSession,
-            new LoadComicDetailsRequest(
-                TEST_PAGE_SIZE,
-                TEST_PAGE_INDEX,
-                TEST_COVER_YEAR,
-                TEST_COVER_MONTH,
-                TEST_ARCHIVE_TYPE,
-                TEST_COMIC_TYPE,
-                TEST_COMIC_STATE,
-                false,
-                TEST_UNSCRAPED_STATE,
-                TEST_SEARCH_TEXT,
-                TEST_PUBLISHER,
-                TEST_SERIES,
-                TEST_VOLUME,
-                TEST_SORT_FIELD,
-                TEST_SORT_DIRECTION));
-
-    assertNotNull(result);
-    assertSame(comicDetailList, result.getComicDetails());
-    assertSame(coverYearList, result.getCoverYears());
-    assertSame(coverMonthList, result.getCoverMonths());
-    assertEquals(TEST_TOTAL_COMIC_COUNT, result.getTotalCount());
-    assertEquals(TEST_FILTER_COUNT, result.getFilteredCount());
-  }
-
-  @Test
-  public void testLoadSelectedComicDetailList() throws ComicBookSelectionException {
-    Mockito.when(
-            comicDetailService.loadComicDetailList(
-                TEST_PAGE_SIZE,
-                TEST_PAGE_INDEX,
-                TEST_SORT_FIELD,
-                TEST_SORT_DIRECTION,
-                selectedIdList))
-        .thenReturn(comicDetailList);
-
-    final LoadComicDetailsResponse result =
-        controller.loadComicDetailList(
-            httpSession,
-            new LoadComicDetailsRequest(
-                TEST_PAGE_SIZE,
-                TEST_PAGE_INDEX,
-                TEST_COVER_YEAR,
-                TEST_COVER_MONTH,
-                TEST_ARCHIVE_TYPE,
-                TEST_COMIC_TYPE,
-                TEST_COMIC_STATE,
-                true,
-                TEST_UNSCRAPED_STATE,
-                TEST_SEARCH_TEXT,
-                TEST_PUBLISHER,
-                TEST_SERIES,
-                TEST_VOLUME,
-                TEST_SORT_FIELD,
-                TEST_SORT_DIRECTION));
-
-    assertNotNull(result);
-    assertSame(comicDetailList, result.getComicDetails());
-    assertSame(Collections.emptyList(), result.getCoverYears());
-    assertSame(Collections.emptyList(), result.getCoverMonths());
-    assertEquals(selectedIdList.size(), result.getTotalCount());
-    assertEquals(comicDetailList.size(), result.getFilteredCount());
-  }
-
-  @Test
-  public void testLoadComicDetailsById() {
-    Mockito.when(comicDetailService.loadComicDetailListById(Mockito.anySet()))
-        .thenReturn(comicDetailList);
-    Mockito.when(comicDetailService.getCoverYears(Mockito.anySet())).thenReturn(coverYearList);
-    Mockito.when(comicDetailService.getCoverMonths(Mockito.anySet())).thenReturn(coverMonthList);
-
-    final LoadComicDetailsResponse result =
-        controller.loadComicDetailListById(new LoadComicDetailsByIdRequest(comicBookIdSet));
-
-    assertNotNull(result);
-    assertSame(comicDetailList, result.getComicDetails());
-    assertSame(coverYearList, result.getCoverYears());
-    assertSame(coverMonthList, result.getCoverMonths());
-    assertEquals(comicBookIdSet.size(), result.getTotalCount());
-    assertEquals(comicBookIdSet.size(), result.getFilteredCount());
-
-    Mockito.verify(comicDetailService, Mockito.times(1)).loadComicDetailListById(comicBookIdSet);
-  }
-
-  @Test
-  public void testLoadComicDetailsForTag() {
-    Mockito.when(
-            comicDetailService.loadComicDetailListForTagType(
-                Mockito.anyInt(),
-                Mockito.anyInt(),
-                Mockito.any(ComicTagType.class),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyString()))
-        .thenReturn(comicDetailList);
-    Mockito.when(
-            comicDetailService.getCoverYears(Mockito.any(ComicTagType.class), Mockito.anyString()))
-        .thenReturn(coverYearList);
-    Mockito.when(
-            comicDetailService.getCoverMonths(Mockito.any(ComicTagType.class), Mockito.anyString()))
-        .thenReturn(coverMonthList);
-    Mockito.when(
-            comicDetailService.getFilterCount(Mockito.any(ComicTagType.class), Mockito.anyString()))
-        .thenReturn(TEST_FILTER_COUNT);
-
-    final LoadComicDetailsResponse result =
-        controller.loadComicDetailListForTag(
-            new LoadComicDetailsForTagRequest(
-                TEST_PAGE_SIZE,
-                TEST_PAGE_INDEX,
-                TEST_TAG_TYPE.getValue(),
-                TEST_TAG_VALUE,
-                TEST_SORT_FIELD,
-                TEST_SORT_DIRECTION));
-
-    assertNotNull(result);
-    assertSame(comicDetailList, result.getComicDetails());
-    assertSame(coverYearList, result.getCoverYears());
-    assertSame(coverMonthList, result.getCoverMonths());
-    assertEquals(TEST_TOTAL_COMIC_COUNT, result.getTotalCount());
-    assertEquals(TEST_FILTER_COUNT, result.getFilteredCount());
-
-    Mockito.verify(comicDetailService, Mockito.times(1))
-        .loadComicDetailListForTagType(
-            TEST_PAGE_SIZE,
-            TEST_PAGE_INDEX,
-            TEST_TAG_TYPE,
-            TEST_TAG_VALUE,
-            TEST_SORT_FIELD,
-            TEST_SORT_DIRECTION);
-    Mockito.verify(comicDetailService, Mockito.times(1))
-        .getCoverYears(TEST_TAG_TYPE, TEST_TAG_VALUE);
-    Mockito.verify(comicDetailService, Mockito.times(1))
-        .getCoverMonths(TEST_TAG_TYPE, TEST_TAG_VALUE);
-    Mockito.verify(comicDetailService, Mockito.times(1))
-        .getFilterCount(TEST_TAG_TYPE, TEST_TAG_VALUE);
-  }
-
-  @Test
-  public void testLoadUnreadComicDetails() throws ComiXedUserException {
-    Mockito.when(
-            comicDetailService.loadUnreadComicDetails(
-                Mockito.anyString(),
-                Mockito.anyBoolean(),
-                Mockito.anyInt(),
-                Mockito.anyInt(),
-                Mockito.anyString(),
-                Mockito.anyString()))
-        .thenReturn(comicDetailList);
-
-    final LoadComicDetailsResponse result =
-        controller.loadUnreadComicDetailList(
-            principal,
-            new LoadUnreadComicDetailsRequest(
-                true, TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_FIELD, TEST_SORT_DIRECTION));
-
-    assertNotNull(result);
-    assertSame(comicDetailList, result.getComicDetails());
-    assertTrue(result.getCoverYears().isEmpty());
-    assertTrue(result.getCoverMonths().isEmpty());
-    assertEquals(TEST_TOTAL_COMIC_COUNT, result.getTotalCount());
-    assertEquals(TEST_UNREAD_COMIC_COUNT, result.getFilteredCount());
-
-    Mockito.verify(comicDetailService, Mockito.times(1))
-        .loadUnreadComicDetails(
-            TEST_EMAIL,
-            true,
-            TEST_PAGE_SIZE,
-            TEST_PAGE_INDEX,
-            TEST_SORT_FIELD,
-            TEST_SORT_DIRECTION);
-  }
-
-  @Test
-  public void testLoadReadComicDetails() throws ComiXedUserException {
-    Mockito.when(
-            comicDetailService.loadUnreadComicDetails(
-                Mockito.anyString(),
-                Mockito.anyBoolean(),
-                Mockito.anyInt(),
-                Mockito.anyInt(),
-                Mockito.anyString(),
-                Mockito.anyString()))
-        .thenReturn(comicDetailList);
-
-    final LoadComicDetailsResponse result =
-        controller.loadUnreadComicDetailList(
-            principal,
-            new LoadUnreadComicDetailsRequest(
-                false, TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_FIELD, TEST_SORT_DIRECTION));
-
-    assertNotNull(result);
-    assertSame(comicDetailList, result.getComicDetails());
-    assertTrue(result.getCoverYears().isEmpty());
-    assertTrue(result.getCoverMonths().isEmpty());
-    assertEquals(TEST_TOTAL_COMIC_COUNT, result.getTotalCount());
-    assertEquals(TEST_TOTAL_COMIC_COUNT - TEST_UNREAD_COMIC_COUNT, result.getFilteredCount());
-
-    Mockito.verify(comicDetailService, Mockito.times(1))
-        .loadUnreadComicDetails(
-            TEST_EMAIL,
-            false,
-            TEST_PAGE_SIZE,
-            TEST_PAGE_INDEX,
-            TEST_SORT_FIELD,
-            TEST_SORT_DIRECTION);
-    Mockito.verify(comicBookService, Mockito.times(1)).getComicBookCount();
-  }
-
-  @Test
-  public void testLoadForReadingList() throws ReadingListException, ComicDetailException {
-    Mockito.when(readingListService.getEntryCount(Mockito.anyLong()))
-        .thenReturn(TEST_TOTAL_COMIC_COUNT);
-    Mockito.when(
-            comicDetailService.loadComicDetailsForReadingList(
-                Mockito.anyString(),
-                Mockito.anyLong(),
-                Mockito.anyInt(),
-                Mockito.anyInt(),
-                Mockito.anyString(),
-                Mockito.anyString()))
-        .thenReturn(comicDetailList);
-
-    final LoadComicDetailsResponse result =
-        controller.loadComicDetailsForReadingList(
-            principal,
-            new LoadComicDetailsForReadingListRequest(
-                TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_FIELD, TEST_SORT_DIRECTION),
-            TEST_READING_LIST_ID);
-
-    assertNotNull(result);
-    assertSame(comicDetailList, result.getComicDetails());
-    assertTrue(result.getCoverYears().isEmpty());
-    assertTrue(result.getCoverMonths().isEmpty());
-    assertEquals(TEST_TOTAL_COMIC_COUNT, result.getTotalCount());
-    assertEquals(TEST_TOTAL_COMIC_COUNT, result.getFilteredCount());
-
-    Mockito.verify(comicDetailService, Mockito.times(1))
-        .loadComicDetailsForReadingList(
-            TEST_EMAIL,
-            TEST_READING_LIST_ID,
-            TEST_PAGE_SIZE,
-            TEST_PAGE_INDEX,
-            TEST_SORT_FIELD,
-            TEST_SORT_DIRECTION);
-    Mockito.verify(readingListService, Mockito.times(2)).getEntryCount(TEST_READING_LIST_ID);
-  }
-
-  @Test
-  public void testLoadDuplicateComicBooks() {
-    Mockito.when(
-            comicDetailService.loadDuplicateComicBookDetails(
-                Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(comicDetailList);
-    Mockito.when(comicDetailService.getDuplicateComicBookCount())
-        .thenReturn(TEST_TOTAL_COMIC_COUNT);
-
-    final LoadComicDetailsResponse result =
-        controller.loadDuplicateComicBooks(
-            new LoadDuplicateComicBookDetailsRequest(
-                TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_FIELD, TEST_SORT_DIRECTION));
-
-    assertNotNull(result);
-    assertSame(comicDetailList, result.getComicDetails());
-    assertTrue(result.getCoverYears().isEmpty());
-    assertTrue(result.getCoverMonths().isEmpty());
-    assertEquals(TEST_TOTAL_COMIC_COUNT, result.getTotalCount());
-    assertEquals(TEST_TOTAL_COMIC_COUNT, result.getFilteredCount());
-
-    Mockito.verify(comicDetailService, Mockito.times(1))
-        .loadDuplicateComicBookDetails(
-            TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_FIELD, TEST_SORT_DIRECTION);
-    Mockito.verify(comicDetailService, Mockito.times(2)).getDuplicateComicBookCount();
   }
 }

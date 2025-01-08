@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2023, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,39 +19,18 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
-
-import { ComicDetailsListEffects } from './comic-details-list.effects';
+import { ComicListEffects } from './comic-list.effects';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
-import {
-  COMIC_DETAIL_1,
-  COMIC_DETAIL_2,
-  COMIC_DETAIL_3,
-  COMIC_DETAIL_4,
-  COMIC_DETAIL_5
-} from '@app/comic-books/comic-books.fixtures';
-import { ComicDetailListService } from '@app/comic-books/services/comic-detail-list.service';
-import { LoggerModule } from '@angular-ru/cdk/logger';
-import { TranslateModule } from '@ngx-translate/core';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import {
-  comicDetailsLoaded,
-  loadComicDetails,
-  loadComicDetailsById,
-  loadComicDetailsFailed,
-  loadComicDetailsForCollection,
-  loadComicDetailsForReadingList,
-  loadDuplicateComicsDetails,
-  loadReadComicDetails,
-  loadUnreadComicDetails
-} from '@app/comic-books/actions/comic-details-list.actions';
-import { hot } from 'jasmine-marbles';
-import { HttpErrorResponse } from '@angular/common/http';
-import { AlertService } from '@app/core/services/alert.service';
-import { LoadComicDetailsResponse } from '@app/comic-books/models/net/load-comic-details-response';
 import { TagType } from '@app/collections/models/comic-collection.enum';
-import { READING_LIST_3 } from '@app/lists/lists.fixtures';
+import {
+  DISPLAYABLE_COMIC_1,
+  DISPLAYABLE_COMIC_2,
+  DISPLAYABLE_COMIC_3,
+  DISPLAYABLE_COMIC_4,
+  DISPLAYABLE_COMIC_5
+} from '@app/comic-books/comic-books.fixtures';
 import {
   READ_COMIC_BOOK_1,
   READ_COMIC_BOOK_2,
@@ -59,8 +38,28 @@ import {
   READ_COMIC_BOOK_4,
   READ_COMIC_BOOK_5
 } from '@app/user/user.fixtures';
+import { READING_LIST_3 } from '@app/lists/lists.fixtures';
+import { AlertService } from '@app/core/services/alert.service';
+import { LoggerModule } from '@angular-ru/cdk/logger';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { hot } from 'jasmine-marbles';
+import { HttpErrorResponse } from '@angular/common/http';
+import { DisplayableComicService } from '@app/comic-books/services/displayable-comic.service';
+import { LoadComicsResponse } from '@app/comic-books/models/net/load-comics-response';
+import {
+  loadComicsByFilter,
+  loadComicsById,
+  loadComicsFailure,
+  loadComicsForCollection,
+  loadComicsForReadingList,
+  loadComicsSuccess,
+  loadDuplicateComics,
+  loadReadComics,
+  loadUnreadComics
+} from '@app/comic-books/actions/comic-list.actions';
 
-describe('ComicDetailsListEffects', () => {
+describe('ComicListEffects', () => {
   const PAGE_SIZE = 25;
   const PAGE_INDEX = Math.abs(Math.random() * 1000);
   const COVER_YEAR = Math.random() * 100 + 1900;
@@ -75,12 +74,12 @@ describe('ComicDetailsListEffects', () => {
   const SORT_DIRECTION = 'ASC';
   const TAG_TYPE = TagType.TEAMS;
   const TAG_VALUE = 'The Avengers';
-  const COMIC_DETAILS = [
-    COMIC_DETAIL_1,
-    COMIC_DETAIL_2,
-    COMIC_DETAIL_3,
-    COMIC_DETAIL_4,
-    COMIC_DETAIL_5
+  const COMIC_LIST = [
+    DISPLAYABLE_COMIC_1,
+    DISPLAYABLE_COMIC_2,
+    DISPLAYABLE_COMIC_3,
+    DISPLAYABLE_COMIC_4,
+    DISPLAYABLE_COMIC_5
   ];
   const LAST_READ_ENTRIES = [
     READ_COMIC_BOOK_1,
@@ -89,46 +88,46 @@ describe('ComicDetailsListEffects', () => {
     READ_COMIC_BOOK_4,
     READ_COMIC_BOOK_5
   ];
-  const PUBLISHER = COMIC_DETAILS[0].publisher;
-  const SERIES = COMIC_DETAILS[0].series;
-  const VOLUME = COMIC_DETAILS[0].volume;
-  const IDS = COMIC_DETAILS.map(entry => entry.comicId);
+  const PUBLISHER = COMIC_LIST[0].publisher;
+  const SERIES = COMIC_LIST[0].series;
+  const VOLUME = COMIC_LIST[0].volume;
+  const IDS = COMIC_LIST.map(entry => entry.comicBookId);
   const COVER_YEARS = [1965, 1971, 1996, 1998, 2006];
   const COVER_MONTHS = [1, 3, 4, 7, 9];
-  const TOTAL_COUNT = COMIC_DETAILS.length * 2;
+  const TOTAL_COUNT = COMIC_LIST.length * 2;
   const FILTERED_COUNT = Math.floor(TOTAL_COUNT * 0.75);
   const READING_LIST_ID = READING_LIST_3.id;
 
   let actions$: Observable<any>;
-  let effects: ComicDetailsListEffects;
-  let comicDetailListService: jasmine.SpyObj<ComicDetailListService>;
+  let effects: ComicListEffects;
+  let displayableComicService: jasmine.SpyObj<DisplayableComicService>;
   let alertService: AlertService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        ComicDetailsListEffects,
+        ComicListEffects,
         provideMockActions(() => actions$),
         {
-          provide: ComicDetailListService,
+          provide: DisplayableComicService,
           useValue: {
-            loadComicDetails: jasmine.createSpy(
-              'ComicDetailListService.loadComicDetails()'
+            loadComicsByFilter: jasmine.createSpy(
+              'DisplayableComicsService.loadComicsByFilter()'
             ),
-            loadComicDetailsById: jasmine.createSpy(
-              'ComicDetailListService.loadComicDetailsById()'
+            loadComicsById: jasmine.createSpy(
+              'DisplayableComicsService.loadComicsById()'
             ),
-            loadComicDetailsForCollection: jasmine.createSpy(
-              'ComicDetailListService.loadComicDetailsForCollection()'
+            loadComicsForCollection: jasmine.createSpy(
+              'DisplayableComicsService.loadComicsForCollection()'
             ),
-            loadUnreadComicDetails: jasmine.createSpy(
-              'ComicDetailListService.loadUnreadComicDetails()'
+            loadComicsByReadState: jasmine.createSpy(
+              'DisplayableComicsService.loadComicsByReadState()'
             ),
-            loadComicDetailsForReadingList: jasmine.createSpy(
-              'ComicDetailListService.loadComicDetailsForReadingList()'
+            loadComicsForReadingList: jasmine.createSpy(
+              'DisplayableComicsService.loadComicsForReadingList()'
             ),
-            loadDuplicateComicsDetails: jasmine.createSpy(
-              'ComicDetailListService.loadDuplicateComicsDetails()'
+            loadDuplicateComics: jasmine.createSpy(
+              'DisplayableComicsService.loadDuplicateComics()'
             )
           }
         }
@@ -140,10 +139,10 @@ describe('ComicDetailsListEffects', () => {
       ]
     });
 
-    effects = TestBed.inject(ComicDetailsListEffects);
-    comicDetailListService = TestBed.inject(
-      ComicDetailListService
-    ) as jasmine.SpyObj<ComicDetailListService>;
+    effects = TestBed.inject(ComicListEffects);
+    displayableComicService = TestBed.inject(
+      DisplayableComicService
+    ) as jasmine.SpyObj<DisplayableComicService>;
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'error');
   });
@@ -152,17 +151,17 @@ describe('ComicDetailsListEffects', () => {
     expect(effects).toBeTruthy();
   });
 
-  describe('loading comic details', () => {
+  describe('loading comics by filter', () => {
     it('fires an action on success', () => {
       const serverResponse = {
-        comicDetails: COMIC_DETAILS,
+        comics: COMIC_LIST,
         coverYears: COVER_YEARS,
         coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
         filteredCount: FILTERED_COUNT,
         lastReadEntries: LAST_READ_ENTRIES
-      } as LoadComicDetailsResponse;
-      const action = loadComicDetails({
+      } as LoadComicsResponse;
+      const action = loadComicsByFilter({
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         coverYear: COVER_YEAR,
@@ -179,8 +178,8 @@ describe('ComicDetailsListEffects', () => {
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
-      const outcome = comicDetailsLoaded({
-        comicDetails: COMIC_DETAILS,
+      const outcome = loadComicsSuccess({
+        comics: COMIC_LIST,
         coverYears: COVER_YEARS,
         coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
@@ -188,7 +187,7 @@ describe('ComicDetailsListEffects', () => {
       });
 
       actions$ = hot('-a', { a: action });
-      comicDetailListService.loadComicDetails
+      displayableComicService.loadComicsByFilter
         .withArgs({
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
@@ -209,12 +208,12 @@ describe('ComicDetailsListEffects', () => {
         .and.returnValue(of(serverResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.loadComicDetails$).toBeObservable(expected);
+      expect(effects.loadComicsByFilter$).toBeObservable(expected);
     });
 
     it('fires an action on service failure', () => {
       const serverResponse = new HttpErrorResponse({});
-      const action = loadComicDetails({
+      const action = loadComicsByFilter({
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         coverYear: COVER_YEAR,
@@ -231,10 +230,10 @@ describe('ComicDetailsListEffects', () => {
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
-      const outcome = loadComicDetailsFailed();
+      const outcome = loadComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicDetailListService.loadComicDetails
+      displayableComicService.loadComicsByFilter
         .withArgs({
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
@@ -255,12 +254,12 @@ describe('ComicDetailsListEffects', () => {
         .and.returnValue(throwError(serverResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.loadComicDetails$).toBeObservable(expected);
+      expect(effects.loadComicsByFilter$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = loadComicDetails({
+      const action = loadComicsByFilter({
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         coverYear: COVER_YEAR,
@@ -277,10 +276,10 @@ describe('ComicDetailsListEffects', () => {
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
-      const outcome = loadComicDetailsFailed();
+      const outcome = loadComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicDetailListService.loadComicDetails
+      displayableComicService.loadComicsByFilter
         .withArgs({
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
@@ -301,24 +300,24 @@ describe('ComicDetailsListEffects', () => {
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.loadComicDetails$).toBeObservable(expected);
+      expect(effects.loadComicsByFilter$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
 
-  describe('loading comic details by id', () => {
+  describe('loading selected comics', () => {
     it('fires an action on success', () => {
       const serverResponse = {
-        comicDetails: COMIC_DETAILS,
+        comics: COMIC_LIST,
         coverYears: COVER_YEARS,
         coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
         filteredCount: FILTERED_COUNT,
         lastReadEntries: LAST_READ_ENTRIES
-      } as LoadComicDetailsResponse;
-      const action = loadComicDetailsById({ comicBookIds: IDS });
-      const outcome = comicDetailsLoaded({
-        comicDetails: COMIC_DETAILS,
+      } as LoadComicsResponse;
+      const action = loadComicsById({ ids: IDS });
+      const outcome = loadComicsSuccess({
+        comics: COMIC_LIST,
         coverYears: COVER_YEARS,
         coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
@@ -326,55 +325,55 @@ describe('ComicDetailsListEffects', () => {
       });
 
       actions$ = hot('-a', { a: action });
-      comicDetailListService.loadComicDetailsById
+      displayableComicService.loadComicsById
         .withArgs({ ids: IDS })
         .and.returnValue(of(serverResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.loadComicDetailsById$).toBeObservable(expected);
+      expect(effects.loadComicsById$).toBeObservable(expected);
     });
 
     it('fires an action on service failure', () => {
       const serverResponse = new HttpErrorResponse({});
-      const action = loadComicDetailsById({ comicBookIds: IDS });
-      const outcome = loadComicDetailsFailed();
+      const action = loadComicsById({ ids: IDS });
+      const outcome = loadComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicDetailListService.loadComicDetailsById
+      displayableComicService.loadComicsById
         .withArgs({ ids: IDS })
         .and.returnValue(throwError(serverResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.loadComicDetailsById$).toBeObservable(expected);
+      expect(effects.loadComicsById$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = loadComicDetailsById({ comicBookIds: IDS });
-      const outcome = loadComicDetailsFailed();
+      const action = loadComicsById({ ids: IDS });
+      const outcome = loadComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicDetailListService.loadComicDetailsById
+      displayableComicService.loadComicsById
         .withArgs({ ids: IDS })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.loadComicDetailsById$).toBeObservable(expected);
+      expect(effects.loadComicsById$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
 
-  describe('loading comic details for collection', () => {
+  describe('loading comics for collection', () => {
     it('fires an action on success', () => {
       const serverResponse = {
-        comicDetails: COMIC_DETAILS,
+        comics: COMIC_LIST,
         coverYears: COVER_YEARS,
         coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
         filteredCount: FILTERED_COUNT,
         lastReadEntries: LAST_READ_ENTRIES
-      } as LoadComicDetailsResponse;
-      const action = loadComicDetailsForCollection({
+      } as LoadComicsResponse;
+      const action = loadComicsForCollection({
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         tagType: TAG_TYPE,
@@ -382,8 +381,8 @@ describe('ComicDetailsListEffects', () => {
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
-      const outcome = comicDetailsLoaded({
-        comicDetails: COMIC_DETAILS,
+      const outcome = loadComicsSuccess({
+        comics: COMIC_LIST,
         coverYears: COVER_YEARS,
         coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
@@ -391,7 +390,7 @@ describe('ComicDetailsListEffects', () => {
       });
 
       actions$ = hot('-a', { a: action });
-      comicDetailListService.loadComicDetailsForCollection
+      displayableComicService.loadComicsForCollection
         .withArgs({
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
@@ -403,12 +402,12 @@ describe('ComicDetailsListEffects', () => {
         .and.returnValue(of(serverResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.loadComicDetailsForCollection$).toBeObservable(expected);
+      expect(effects.loadComicsForCollection$).toBeObservable(expected);
     });
 
     it('fires an action on service failure', () => {
       const serverResponse = new HttpErrorResponse({});
-      const action = loadComicDetailsForCollection({
+      const action = loadComicsForCollection({
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         tagType: TAG_TYPE,
@@ -416,10 +415,10 @@ describe('ComicDetailsListEffects', () => {
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
-      const outcome = loadComicDetailsFailed();
+      const outcome = loadComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicDetailListService.loadComicDetailsForCollection
+      displayableComicService.loadComicsForCollection
         .withArgs({
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
@@ -431,12 +430,12 @@ describe('ComicDetailsListEffects', () => {
         .and.returnValue(throwError(serverResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.loadComicDetailsForCollection$).toBeObservable(expected);
+      expect(effects.loadComicsForCollection$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = loadComicDetailsForCollection({
+      const action = loadComicsForCollection({
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         tagType: TAG_TYPE,
@@ -444,10 +443,10 @@ describe('ComicDetailsListEffects', () => {
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
-      const outcome = loadComicDetailsFailed();
+      const outcome = loadComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicDetailListService.loadComicDetailsForCollection
+      displayableComicService.loadComicsForCollection
         .withArgs({
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
@@ -459,29 +458,29 @@ describe('ComicDetailsListEffects', () => {
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.loadComicDetailsForCollection$).toBeObservable(expected);
+      expect(effects.loadComicsForCollection$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
 
-  describe('loading comic details for comics unread by user', () => {
+  describe('loading unread comics', () => {
     it('fires an action on unread success', () => {
       const serverResponse = {
-        comicDetails: COMIC_DETAILS,
+        comics: COMIC_LIST,
         coverYears: COVER_YEARS,
         coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
         filteredCount: FILTERED_COUNT,
         lastReadEntries: LAST_READ_ENTRIES
-      } as LoadComicDetailsResponse;
-      const action = loadUnreadComicDetails({
+      } as LoadComicsResponse;
+      const action = loadUnreadComics({
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
-      const outcome = comicDetailsLoaded({
-        comicDetails: COMIC_DETAILS,
+      const outcome = loadComicsSuccess({
+        comics: COMIC_LIST,
         coverYears: COVER_YEARS,
         coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
@@ -489,7 +488,7 @@ describe('ComicDetailsListEffects', () => {
       });
 
       actions$ = hot('-a', { a: action });
-      comicDetailListService.loadUnreadComicDetails
+      displayableComicService.loadComicsByReadState
         .withArgs({
           unreadOnly: true,
           pageSize: PAGE_SIZE,
@@ -500,21 +499,21 @@ describe('ComicDetailsListEffects', () => {
         .and.returnValue(of(serverResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.loadUnreadComicDetails$).toBeObservable(expected);
+      expect(effects.loadUnreadComics$).toBeObservable(expected);
     });
 
     it('fires an action on service failure', () => {
       const serverResponse = new HttpErrorResponse({});
-      const action = loadUnreadComicDetails({
+      const action = loadUnreadComics({
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
-      const outcome = loadComicDetailsFailed();
+      const outcome = loadComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicDetailListService.loadUnreadComicDetails
+      displayableComicService.loadComicsByReadState
         .withArgs({
           unreadOnly: true,
           pageSize: PAGE_SIZE,
@@ -525,21 +524,21 @@ describe('ComicDetailsListEffects', () => {
         .and.returnValue(throwError(serverResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.loadUnreadComicDetails$).toBeObservable(expected);
+      expect(effects.loadUnreadComics$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = loadUnreadComicDetails({
+      const action = loadUnreadComics({
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
-      const outcome = loadComicDetailsFailed();
+      const outcome = loadComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicDetailListService.loadUnreadComicDetails
+      displayableComicService.loadComicsByReadState
         .withArgs({
           unreadOnly: true,
           pageSize: PAGE_SIZE,
@@ -550,29 +549,29 @@ describe('ComicDetailsListEffects', () => {
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.loadUnreadComicDetails$).toBeObservable(expected);
+      expect(effects.loadUnreadComics$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
 
-  describe('loading comic details for comics read by user', () => {
+  describe('loading read comics', () => {
     it('fires an action on unread success', () => {
       const serverResponse = {
-        comicDetails: COMIC_DETAILS,
+        comics: COMIC_LIST,
         coverYears: COVER_YEARS,
         coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
         filteredCount: FILTERED_COUNT,
         lastReadEntries: LAST_READ_ENTRIES
-      } as LoadComicDetailsResponse;
-      const action = loadReadComicDetails({
+      } as LoadComicsResponse;
+      const action = loadReadComics({
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
-      const outcome = comicDetailsLoaded({
-        comicDetails: COMIC_DETAILS,
+      const outcome = loadComicsSuccess({
+        comics: COMIC_LIST,
         coverYears: COVER_YEARS,
         coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
@@ -580,7 +579,7 @@ describe('ComicDetailsListEffects', () => {
       });
 
       actions$ = hot('-a', { a: action });
-      comicDetailListService.loadUnreadComicDetails
+      displayableComicService.loadComicsByReadState
         .withArgs({
           unreadOnly: false,
           pageSize: PAGE_SIZE,
@@ -591,21 +590,21 @@ describe('ComicDetailsListEffects', () => {
         .and.returnValue(of(serverResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.loadReadComicDetails$).toBeObservable(expected);
+      expect(effects.loadReadComics$).toBeObservable(expected);
     });
 
     it('fires an action on service failure', () => {
       const serverResponse = new HttpErrorResponse({});
-      const action = loadReadComicDetails({
+      const action = loadReadComics({
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
-      const outcome = loadComicDetailsFailed();
+      const outcome = loadComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicDetailListService.loadUnreadComicDetails
+      displayableComicService.loadComicsByReadState
         .withArgs({
           unreadOnly: false,
           pageSize: PAGE_SIZE,
@@ -616,21 +615,21 @@ describe('ComicDetailsListEffects', () => {
         .and.returnValue(throwError(serverResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.loadReadComicDetails$).toBeObservable(expected);
+      expect(effects.loadReadComics$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = loadReadComicDetails({
+      const action = loadReadComics({
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
-      const outcome = loadComicDetailsFailed();
+      const outcome = loadComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicDetailListService.loadUnreadComicDetails
+      displayableComicService.loadComicsByReadState
         .withArgs({
           unreadOnly: false,
           pageSize: PAGE_SIZE,
@@ -641,30 +640,30 @@ describe('ComicDetailsListEffects', () => {
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.loadReadComicDetails$).toBeObservable(expected);
+      expect(effects.loadReadComics$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
 
-  describe('loading comic details for reading list', () => {
+  describe('loading comics for reading list', () => {
     it('fires an action on success', () => {
       const serverResponse = {
-        comicDetails: COMIC_DETAILS,
+        comics: COMIC_LIST,
         coverYears: COVER_YEARS,
         coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
         filteredCount: FILTERED_COUNT,
         lastReadEntries: LAST_READ_ENTRIES
-      } as LoadComicDetailsResponse;
-      const action = loadComicDetailsForReadingList({
+      } as LoadComicsResponse;
+      const action = loadComicsForReadingList({
         readingListId: READING_LIST_ID,
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
-      const outcome = comicDetailsLoaded({
-        comicDetails: COMIC_DETAILS,
+      const outcome = loadComicsSuccess({
+        comics: COMIC_LIST,
         coverYears: COVER_YEARS,
         coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
@@ -672,7 +671,7 @@ describe('ComicDetailsListEffects', () => {
       });
 
       actions$ = hot('-a', { a: action });
-      comicDetailListService.loadComicDetailsForReadingList
+      displayableComicService.loadComicsForReadingList
         .withArgs({
           readingListId: READING_LIST_ID,
           pageSize: PAGE_SIZE,
@@ -683,22 +682,22 @@ describe('ComicDetailsListEffects', () => {
         .and.returnValue(of(serverResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.loadComicDetailsForReadingList$).toBeObservable(expected);
+      expect(effects.loadComicsForReadingList$).toBeObservable(expected);
     });
 
     it('fires an action on service failure', () => {
       const serverResponse = new HttpErrorResponse({});
-      const action = loadComicDetailsForReadingList({
+      const action = loadComicsForReadingList({
         readingListId: READING_LIST_ID,
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
-      const outcome = loadComicDetailsFailed();
+      const outcome = loadComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicDetailListService.loadComicDetailsForReadingList
+      displayableComicService.loadComicsForReadingList
         .withArgs({
           readingListId: READING_LIST_ID,
           pageSize: PAGE_SIZE,
@@ -709,22 +708,22 @@ describe('ComicDetailsListEffects', () => {
         .and.returnValue(throwError(serverResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.loadComicDetailsForReadingList$).toBeObservable(expected);
+      expect(effects.loadComicsForReadingList$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = loadComicDetailsForReadingList({
+      const action = loadComicsForReadingList({
         readingListId: READING_LIST_ID,
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
-      const outcome = loadComicDetailsFailed();
+      const outcome = loadComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicDetailListService.loadComicDetailsForReadingList
+      displayableComicService.loadComicsForReadingList
         .withArgs({
           readingListId: READING_LIST_ID,
           pageSize: PAGE_SIZE,
@@ -735,29 +734,29 @@ describe('ComicDetailsListEffects', () => {
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.loadComicDetailsForReadingList$).toBeObservable(expected);
+      expect(effects.loadComicsForReadingList$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
 
-  describe('loading duplicate comic book details for reading list', () => {
+  describe('loading duplicate comics', () => {
     it('fires an action on success', () => {
       const serverResponse = {
-        comicDetails: COMIC_DETAILS,
+        comics: COMIC_LIST,
         coverYears: COVER_YEARS,
         coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
         filteredCount: FILTERED_COUNT,
         lastReadEntries: LAST_READ_ENTRIES
-      } as LoadComicDetailsResponse;
-      const action = loadDuplicateComicsDetails({
+      } as LoadComicsResponse;
+      const action = loadDuplicateComics({
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
-      const outcome = comicDetailsLoaded({
-        comicDetails: COMIC_DETAILS,
+      const outcome = loadComicsSuccess({
+        comics: COMIC_LIST,
         coverYears: COVER_YEARS,
         coverMonths: COVER_MONTHS,
         totalCount: TOTAL_COUNT,
@@ -765,7 +764,7 @@ describe('ComicDetailsListEffects', () => {
       });
 
       actions$ = hot('-a', { a: action });
-      comicDetailListService.loadDuplicateComicsDetails
+      displayableComicService.loadDuplicateComics
         .withArgs({
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
@@ -780,16 +779,16 @@ describe('ComicDetailsListEffects', () => {
 
     it('fires an action on service failure', () => {
       const serverResponse = new HttpErrorResponse({});
-      const action = loadDuplicateComicsDetails({
+      const action = loadDuplicateComics({
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
-      const outcome = loadComicDetailsFailed();
+      const outcome = loadComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicDetailListService.loadDuplicateComicsDetails
+      displayableComicService.loadDuplicateComics
         .withArgs({
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
@@ -804,16 +803,16 @@ describe('ComicDetailsListEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = loadDuplicateComicsDetails({
+      const action = loadDuplicateComics({
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
-      const outcome = loadComicDetailsFailed();
+      const outcome = loadComicsFailure();
 
       actions$ = hot('-a', { a: action });
-      comicDetailListService.loadDuplicateComicsDetails
+      displayableComicService.loadDuplicateComics
         .withArgs({
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,

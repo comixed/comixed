@@ -25,7 +25,7 @@ import { AlertService } from '@app/core/services/alert.service';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { COMIC_DETAIL_1 } from '@app/comic-books/comic-books.fixtures';
+import { DISPLAYABLE_COMIC_1 } from '@app/comic-books/comic-books.fixtures';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import {
@@ -37,7 +37,7 @@ import {
 import { hot } from 'jasmine-marbles';
 
 describe('ConvertComicBooksEffects', () => {
-  const COMIC_DETAIL = COMIC_DETAIL_1;
+  const ID = DISPLAYABLE_COMIC_1.comicBookId;
   const ARCHIVE_TYPE = ArchiveType.CBZ;
   const RENAME_PAGES = Math.random() > 0.5;
   const DELETE_PAGES = Math.random() > 0.5;
@@ -89,7 +89,7 @@ describe('ConvertComicBooksEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
       const action = convertSingleComicBook({
-        comicDetail: COMIC_DETAIL,
+        id: ID,
         archiveType: ARCHIVE_TYPE,
         deletePages: DELETE_PAGES,
         renamePages: RENAME_PAGES
@@ -99,7 +99,7 @@ describe('ConvertComicBooksEffects', () => {
       actions$ = hot('-a', { a: action });
       libraryService.convertSingleComicBook
         .withArgs({
-          comicDetail: COMIC_DETAIL,
+          id: ID,
           archiveType: ARCHIVE_TYPE,
           deletePages: DELETE_PAGES,
           renamePages: RENAME_PAGES
@@ -114,7 +114,7 @@ describe('ConvertComicBooksEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = convertSingleComicBook({
-        comicDetail: COMIC_DETAIL,
+        id: ID,
         archiveType: ARCHIVE_TYPE,
         deletePages: DELETE_PAGES,
         renamePages: RENAME_PAGES
@@ -124,7 +124,7 @@ describe('ConvertComicBooksEffects', () => {
       actions$ = hot('-a', { a: action });
       libraryService.convertSingleComicBook
         .withArgs({
-          comicDetail: COMIC_DETAIL,
+          id: ID,
           archiveType: ARCHIVE_TYPE,
           deletePages: DELETE_PAGES,
           renamePages: RENAME_PAGES
@@ -138,7 +138,7 @@ describe('ConvertComicBooksEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = convertSingleComicBook({
-        comicDetail: COMIC_DETAIL,
+        id: ID,
         archiveType: ARCHIVE_TYPE,
         deletePages: DELETE_PAGES,
         renamePages: RENAME_PAGES
@@ -148,7 +148,7 @@ describe('ConvertComicBooksEffects', () => {
       actions$ = hot('-a', { a: action });
       libraryService.convertSingleComicBook
         .withArgs({
-          comicDetail: COMIC_DETAIL,
+          id: ID,
           archiveType: ARCHIVE_TYPE,
           deletePages: DELETE_PAGES,
           renamePages: RENAME_PAGES

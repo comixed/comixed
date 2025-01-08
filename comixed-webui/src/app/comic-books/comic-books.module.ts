@@ -64,17 +64,17 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CoverDateFilterPipe } from './pipes/cover-date-filter.pipe';
 import { VolumeMetadataTableComponent } from '@app/comic-books/components/volume-metadata-table/volume-metadata-table.component';
 import { IssueMetadataTitlePipe } from '@app/comic-books/pipes/issue-metadata-title.pipe';
-import { ComicDetailListViewComponent } from './components/comic-detail-list-view/comic-detail-list-view.component';
+import { ComicListViewComponent } from '@app/comic-books/components/comic-list-view/comic-list-view.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
 import { ComicDetailFilterComponent } from './components/comic-detail-filter/comic-detail-filter.component';
-import { ComicDetailsListEffects } from '@app/comic-books/effects/comic-details-list.effects';
-import { comicDetailsListFeature } from '@app/comic-books/reducers/comic-details-list.reducer';
 import { comicBookSelectionFeature } from '@app/comic-books/reducers/comic-book-selection.reducer';
 import { ComicBookSelectionEffects } from '@app/comic-books/effects/comic-book-selection.effects';
 import { VolumeMetadataTitlePipe } from './pipes/volume-metadata-title.pipe';
+import { comicListFeature } from '@app/comic-books/reducers/comic-list.reducer';
+import { ComicListEffects } from '@app/comic-books/effects/comic-list.effects';
 
 @NgModule({
   declarations: [
@@ -93,7 +93,7 @@ import { VolumeMetadataTitlePipe } from './pipes/volume-metadata-title.pipe';
     CoverDateFilterPipe,
     VolumeMetadataTableComponent,
     IssueMetadataTitlePipe,
-    ComicDetailListViewComponent,
+    ComicListViewComponent,
     ComicDetailFilterComponent,
     VolumeMetadataTitlePipe
   ],
@@ -103,13 +103,13 @@ import { VolumeMetadataTitlePipe } from './pipes/volume-metadata-title.pipe';
     StoreModule.forFeature(comicBookFeature),
     StoreModule.forFeature(imprintListFeature),
     StoreModule.forFeature(markComicsDeletedFeature),
-    StoreModule.forFeature(comicDetailsListFeature),
+    StoreModule.forFeature(comicListFeature),
     StoreModule.forFeature(comicBookSelectionFeature),
     EffectsModule.forFeature([
       ComicBookEffects,
       ImprintListEffects,
       DeleteComicBooksEffects,
-      ComicDetailsListEffects,
+      ComicListEffects,
       ComicBookSelectionEffects
     ]),
     TranslateModule.forRoot(),
@@ -150,7 +150,7 @@ import { VolumeMetadataTitlePipe } from './pipes/volume-metadata-title.pipe';
     PageHashUrlPipe,
     CoverDateFilterPipe,
     VolumeMetadataTableComponent,
-    ComicDetailListViewComponent,
+    ComicListViewComponent,
     IssueMetadataTitlePipe,
     VolumeMetadataTitlePipe
   ]

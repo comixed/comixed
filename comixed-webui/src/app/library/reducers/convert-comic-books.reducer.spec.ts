@@ -21,11 +21,7 @@ import {
   initialState,
   reducer
 } from './convert-comic-books.reducer';
-import {
-  COMIC_DETAIL_1,
-  COMIC_DETAIL_3,
-  COMIC_DETAIL_5
-} from '@app/comic-books/comic-books.fixtures';
+import { DISPLAYABLE_COMIC_1 } from '@app/comic-books/comic-books.fixtures';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import {
   convertComicBooksFailure,
@@ -35,8 +31,7 @@ import {
 } from '@app/library/actions/convert-comic-books.actions';
 
 describe('ConvertComicBooks Reducer', () => {
-  const COMIC_DETAILS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
-  const COMIC_DETAIL = COMIC_DETAILS[0];
+  const ID = DISPLAYABLE_COMIC_1.comicBookId;
   const ARCHIVE_TYPE = ArchiveType.CBZ;
   const RENAME_PAGES = Math.random() > 0.5;
   const DELETE_PAGES = Math.random() > 0.5;
@@ -62,7 +57,7 @@ describe('ConvertComicBooks Reducer', () => {
       state = reducer(
         { ...state, converting: false },
         convertSingleComicBook({
-          comicDetail: COMIC_DETAIL,
+          id: ID,
           archiveType: ARCHIVE_TYPE,
           deletePages: DELETE_PAGES,
           renamePages: RENAME_PAGES

@@ -21,14 +21,7 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { Subscription } from 'rxjs';
-import { loadComicDetails } from '@app/comic-books/actions/comic-details-list.actions';
-import {
-  selectLoadComicDetailsFilteredComics,
-  selectLoadComicDetailsList,
-  selectLoadComicDetailsListState
-} from '@app/comic-books/selectors/load-comic-details-list.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { setMultipleComicBookByPublisherSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
@@ -36,6 +29,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { isAdmin } from '@app/user/user.functions';
+import { loadComicsByFilter } from '@app/comic-books/actions/comic-list.actions';
+import {
+  selectComicFilteredCount,
+  selectComicList,
+  selectComicListState
+} from '@app/comic-books/selectors/comic-list.selectors';
+import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
 
 @Component({
   selector: 'cx-publisher-issues-page',
@@ -54,7 +54,7 @@ export class PublisherIssuesPageComponent implements OnInit, OnDestroy {
 
   name = '';
   isAdmin = false;
-  comicDetails: ComicDetail[] = [];
+  comics: DisplayableComic[] = [];
   totalComics = 0;
   selectedIds: number[];
 
@@ -68,9 +68,9 @@ export class PublisherIssuesPageComponent implements OnInit, OnDestroy {
   ) {
     this.logger.trace('Subscribing to comic detail list state updates');
     this.comicDetailListStateSubscription = this.store
-      .select(selectLoadComicDetailsListState)
+      .select(selectComicListState)
       .subscribe(state => {
-        this.store.dispatch(setBusyState({ enabled: state.loading }));
+        this.store.dispatch(setBusyState({ enabled: state.busy }));
       });
     this.logger.trace('Subscribing to language change updates');
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
@@ -87,11 +87,11 @@ export class PublisherIssuesPageComponent implements OnInit, OnDestroy {
     );
     this.logger.trace('Subscribing to comic details updates');
     this.comicDetailslistSubscription = this.store
-      .select(selectLoadComicDetailsList)
-      .subscribe(comicDetails => (this.comicDetails = comicDetails));
+      .select(selectComicList)
+      .subscribe(comics => (this.comics = comics));
     this.logger.trace('Subscribing to comic detail totals updates');
     this.comicDetailsTotalSubscription = this.store
-      .select(selectLoadComicDetailsFilteredComics)
+      .select(selectComicFilteredCount)
       .subscribe(totalComics => (this.totalComics = totalComics));
     this.logger.trace('Subscribing to comic selections updates');
     this.selectionsSubscription = this.store
@@ -138,7 +138,7 @@ export class PublisherIssuesPageComponent implements OnInit, OnDestroy {
 
   private doLoadComicDetails() {
     this.store.dispatch(
-      loadComicDetails({
+      loadComicsByFilter({
         pageSize: this.queryParameterService.pageSize$.value,
         pageIndex: this.queryParameterService.pageIndex$.value,
         sortBy: this.queryParameterService.sortBy$.value,

@@ -29,16 +29,16 @@ import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
 import { filter } from 'rxjs/operators';
 import { PAGE_SIZE_DEFAULT } from '@app/core';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
-import {
-  selectLoadComicDetailsCoverMonths,
-  selectLoadComicDetailsCoverYears,
-  selectLoadComicDetailsList
-} from '@app/comic-books/selectors/load-comic-details-list.selectors';
 import { loadComicBookSelections } from '@app/comic-books/actions/comic-book-selection.actions';
-import { loadComicDetailsById } from '@app/comic-books/actions/comic-details-list.actions';
 import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
+import { loadComicsById } from '@app/comic-books/actions/comic-list.actions';
+import {
+  selectComicCoverMonths,
+  selectComicCoverYears,
+  selectComicList
+} from '@app/comic-books/selectors/comic-list.selectors';
+import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
 
 @Component({
   selector: 'cx-metadata-process-page',
@@ -46,7 +46,7 @@ import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
   styleUrls: ['./metadata-process-page.component.scss']
 })
 export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
-  comicDetails: ComicDetail[] = [];
+  comics: DisplayableComic[] = [];
 
   langChangeSubscription: Subscription;
   selectIdSubscription: Subscription;
@@ -77,25 +77,23 @@ export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
       .select(selectComicBookSelectionIds)
       .subscribe(ids => {
         this.selectedIds = ids;
-        this.store.dispatch(
-          loadComicDetailsById({ comicBookIds: this.selectedIds })
-        );
+        this.store.dispatch(loadComicsById({ ids: this.selectedIds }));
       });
     this.logger.trace('Subscribing to the comic detail list');
     this.comicDetailListSubscription = this.store
-      .select(selectLoadComicDetailsList)
-      .subscribe(comicDetails => {
-        this.comicDetails = comicDetails;
+      .select(selectComicList)
+      .subscribe(comics => {
+        this.comics = comics;
       });
     this.logger.trace('Subscribing to the comic cover year list');
     this.comicDetailCoverYearSubscription = this.store
-      .select(selectLoadComicDetailsCoverYears)
+      .select(selectComicCoverYears)
       .subscribe(coverYears => {
         this.coverYears = coverYears;
       });
     this.logger.trace('Subscribing to the comic cover month list');
     this.comicDetailCoverMonthsSubscription = this.store
-      .select(selectLoadComicDetailsCoverMonths)
+      .select(selectComicCoverMonths)
       .subscribe(coverMonths => {
         this.coverMonths = coverMonths;
       });

@@ -26,7 +26,6 @@ import {
   Output
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { Store } from '@ngrx/store';
@@ -85,13 +84,14 @@ import {
   markSingleComicBookRead
 } from '@app/user/actions/read-comic-books.actions';
 import { batchScrapeComicBooks } from '@app/comic-metadata/actions/multi-book-scraping.actions';
+import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
 
 @Component({
-  selector: 'cx-comic-detail-list-view',
-  templateUrl: './comic-detail-list-view.component.html',
-  styleUrls: ['./comic-detail-list-view.component.scss']
+  selector: 'cx-comic-list-view',
+  templateUrl: './comic-list-view.component.html',
+  styleUrls: ['./comic-list-view.component.scss']
 })
-export class ComicDetailListViewComponent implements OnInit, OnDestroy {
+export class ComicListViewComponent implements OnInit, OnDestroy {
   @Output() selectAll = new EventEmitter<boolean>();
   @Output() filtered = new EventEmitter<boolean>();
   @Output() showing = new EventEmitter<number>();
@@ -126,8 +126,8 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
   selectionState: ComicBookSelectionState;
   showComicDetailPopup = false;
   showComicFilterPopup = false;
-  selectedComicDetail: ComicDetail;
-  dataSource = new MatTableDataSource<SelectableListItem<ComicDetail>>();
+  selectedComic: DisplayableComic;
+  dataSource = new MatTableDataSource<SelectableListItem<DisplayableComic>>();
   queryParamsSubscription: Subscription;
   libraryPluginListSubscription: Subscription;
   libraryPluginlist: LibraryPlugin[] = [];
@@ -198,13 +198,13 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
     this.applyFilters();
   }
 
-  private _comics: ComicDetail[] = [];
+  private _comics: DisplayableComic[] = [];
 
-  get comics(): ComicDetail[] {
+  get comics(): DisplayableComic[] {
     return this._comics;
   }
 
-  @Input() set comics(comics: ComicDetail[]) {
+  @Input() set comics(comics: DisplayableComic[]) {
     this._comics = comics;
     this.applyFilters();
   }
@@ -254,30 +254,30 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
   }
 
   onSetSelectedState(
-    entry: SelectableListItem<ComicDetail>,
+    entry: SelectableListItem<DisplayableComic>,
     selected: boolean
   ): void {
     if (selected) {
       this.logger.debug('Adding comic book selection:', entry.item);
       this.store.dispatch(
-        addSingleComicBookSelection({ comicBookId: entry.item.comicId })
+        addSingleComicBookSelection({ comicBookId: entry.item.comicBookId })
       );
     } else {
       this.logger.debug('Removing comic book selection:', entry.item);
       this.store.dispatch(
-        removeSingleComicBookSelection({ comicBookId: entry.item.comicId })
+        removeSingleComicBookSelection({ comicBookId: entry.item.comicBookId })
       );
     }
   }
 
-  onShowPopup(show: boolean, comic: ComicDetail): void {
+  onShowPopup(show: boolean, comic: DisplayableComic): void {
     this.logger.debug('Setting show popup:', show, this.usePopups);
     this.showComicDetailPopup = show && this.usePopups;
-    this.selectedComicDetail = comic;
+    this.selectedComic = comic;
   }
 
-  isRead(comic: ComicDetail): boolean {
-    return !!comic && this.comicBooksRead.includes(comic.id);
+  isRead(comic: DisplayableComic): boolean {
+    return !!comic && this.comicBooksRead.includes(comic.comicDetailId);
   }
 
   onConvertSingleComicBook(archiveTypeString: string): void {
@@ -292,12 +292,12 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
       confirm: () => {
         this.logger.debug(
           'Converting comic:',
-          this.selectedComicDetail,
+          this.selectedComic,
           archiveTypeString
         );
         this.store.dispatch(
           convertSingleComicBook({
-            comicDetail: this.selectedComicDetail,
+            id: this.selectedComic.comicBookId,
             archiveType: archiveTypeFromString(archiveTypeString),
             deletePages: true,
             renamePages: true
@@ -346,18 +346,14 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
   }
 
   onAddSelectedToReadingList(list: ReadingList): void {
-    this.doAddToReadingList(
-      this.dataSource.data
-        .filter(entry => entry.selected)
-        .map(entry => entry.item),
-      list
-    );
+    this.logger.debug('Adding comics to reading list:', list);
+    this.store.dispatch(addSelectedComicBooksToReadingList({ list }));
   }
 
   onMarkOneAsRead(read: boolean): void {
     this.store.dispatch(
       markSingleComicBookRead({
-        comicBookId: this.selectedComicDetail.comicId,
+        comicBookId: this.selectedComic.comicBookId,
         read
       })
     );
@@ -375,19 +371,19 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  isDeleted(comicDetail: ComicDetail): boolean {
-    return comicDetail?.comicState === ComicState.DELETED;
+  isDeleted(comic: DisplayableComic): boolean {
+    return comic?.comicState === ComicState.DELETED;
   }
 
   onMarkOneAsDeleted(deleted: boolean): void {
     if (deleted) {
       this.store.dispatch(
-        deleteSingleComicBook({ comicBookId: this.selectedComicDetail.comicId })
+        deleteSingleComicBook({ comicBookId: this.selectedComic.comicBookId })
       );
     } else {
       this.store.dispatch(
         undeleteSingleComicBook({
-          comicBookId: this.selectedComicDetail.comicId
+          comicBookId: this.selectedComic.comicBookId
         })
       );
     }
@@ -395,16 +391,13 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
 
   onEditMultipleComics(): void {
     this.logger.debug('Editing multiple comics:', this.selectedIds);
-    const selections = this.dataSource.data
-      .filter(entry => entry.selected)
-      .map(entry => entry.item);
     const dialog = this.dialog.open(EditMultipleComicsComponent, {
-      data: selections
+      data: this.selectedIds
     });
     dialog.afterClosed().subscribe((response: EditMultipleComics) => {
       this.logger.debug('Edit multiple comics response:', response);
       if (!!response) {
-        const count = selections.length;
+        const count = this.selectedIds.length;
         this.confirmationService.confirm({
           title: this.translateService.instant(
             'library.edit-multiple-comics.confirm-title',
@@ -417,7 +410,7 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
           confirm: () => {
             this.logger.debug('Editing multiple comics');
             this.store.dispatch(
-              editMultipleComics({ comicBooks: selections, details: response })
+              editMultipleComics({ ids: this.selectedIds, details: response })
             );
           }
         });
@@ -446,7 +439,7 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
     this.showComicFilterPopup = true;
   }
 
-  onUpdateSingleComicBookMetadata(comicDetail: ComicDetail): void {
+  onUpdateSingleComicBookMetadata(comic: DisplayableComic): void {
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'library.update-metadata.confirmation-title'
@@ -456,12 +449,9 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
         { count: 1 }
       ),
       confirm: () => {
-        this.logger.debug(
-          'Updating metadata for a single comic book:',
-          comicDetail
-        );
+        this.logger.debug('Updating metadata for a single comic book:', comic);
         this.store.dispatch(
-          updateSingleComicBookMetadata({ comicBookId: comicDetail.comicId })
+          updateSingleComicBookMetadata({ comicBookId: comic.comicBookId })
         );
       }
     });
@@ -514,7 +504,7 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
     });
   }
 
-  onRescanSingleComicBook(comicDetail: ComicDetail): void {
+  onRescanSingleComicBook(comic: DisplayableComic): void {
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'library.rescan-comics.confirmation-title'
@@ -524,9 +514,9 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
         { count: 1 }
       ),
       confirm: () => {
-        this.logger.debug('Rescanning a single comic book:', comicDetail);
+        this.logger.debug('Rescanning a single comic book:', comic);
         this.store.dispatch(
-          rescanSingleComicBook({ comicBookId: comicDetail.comicId })
+          rescanSingleComicBook({ comicBookId: comic.comicBookId })
         );
       }
     });
@@ -550,7 +540,7 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
 
   onRunLibraryPluginSingleOnComicBook(
     plugin: LibraryPlugin,
-    comicDetail: ComicDetail
+    comic: DisplayableComic
   ): void {
     this.confirmationService.confirm({
       title: this.translateService.instant(
@@ -565,12 +555,12 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
         this.logger.debug(
           'Running plugin on current comic book:',
           plugin,
-          comicDetail.comicId
+          comic.comicBookId
         );
         this.store.dispatch(
           runLibraryPluginOnOneComicBook({
             plugin,
-            comicBookId: comicDetail.comicId
+            comicBookId: comic.comicBookId
           })
         );
       }
@@ -621,14 +611,6 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
     );
   }
 
-  private doAddToReadingList(
-    comicBooks: ComicDetail[],
-    list: ReadingList
-  ): void {
-    this.logger.debug('Adding comics to reading list:', comicBooks, list);
-    this.store.dispatch(addSelectedComicBooksToReadingList({ list }));
-  }
-
   private applyFilters(): void {
     this.logger.trace('Setting data source');
     const filtered =
@@ -642,7 +624,7 @@ export class ComicDetailListViewComponent implements OnInit, OnDestroy {
     this.dataSource.data = this.comics.map(comic => {
       return {
         item: comic,
-        selected: this.selectedIds.includes(comic.comicId)
+        selected: this.selectedIds.includes(comic.comicBookId)
       };
     });
     this.showing.emit(this.dataSource.filteredData.length);

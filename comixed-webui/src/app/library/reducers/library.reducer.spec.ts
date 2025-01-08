@@ -18,9 +18,9 @@
 
 import { initialState, LibraryState, reducer } from './library.reducer';
 import {
-  COMIC_DETAIL_1,
-  COMIC_DETAIL_2,
-  COMIC_DETAIL_3
+  DISPLAYABLE_COMIC_1,
+  DISPLAYABLE_COMIC_2,
+  DISPLAYABLE_COMIC_3
 } from '@app/comic-books/comic-books.fixtures';
 import {
   editMultipleComics,
@@ -35,9 +35,12 @@ import { ComicState } from '@app/comic-books/models/comic-state';
 import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
 
 describe('Library Reducer', () => {
-  const COMIC = COMIC_DETAIL_1;
-  const COMICS = [COMIC_DETAIL_1, COMIC_DETAIL_2, COMIC_DETAIL_3];
-  const COMIC_IDS = COMICS.map(comic => comic.comicId);
+  const COMIC_LIST = [
+    DISPLAYABLE_COMIC_1,
+    DISPLAYABLE_COMIC_2,
+    DISPLAYABLE_COMIC_3
+  ];
+  const IDS = COMIC_LIST.map(comic => comic.comicBookId);
   const READ = Math.random() > 0.5;
   const TOTAL_COMICS = Math.abs(Math.random() * 100);
   const UNSCRAPED_COMICS = Math.abs(Math.random() * 100);
@@ -72,7 +75,7 @@ describe('Library Reducer', () => {
       state = reducer(
         { ...state, busy: false },
         editMultipleComics({
-          comicBooks: COMICS,
+          ids: IDS,
           details: {} as EditMultipleComics
         })
       );

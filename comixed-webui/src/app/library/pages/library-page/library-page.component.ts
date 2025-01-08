@@ -34,26 +34,11 @@ import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 import { PAGE_SIZE_DEFAULT, QUERY_PARAM_UNREAD_ONLY } from '@app/core';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import {
-  loadComicDetails,
-  loadDuplicateComicsDetails,
-  loadReadComicDetails,
-  loadUnreadComicDetails
-} from '@app/comic-books/actions/comic-details-list.actions';
 import { ComicState } from '@app/comic-books/models/comic-state';
-import {
-  selectLoadComicDetailsCoverMonths,
-  selectLoadComicDetailsCoverYears,
-  selectLoadComicDetailsList,
-  selectLoadComicDetailsListState,
-  selectLoadComicDetailsTotalComics
-} from '@app/comic-books/selectors/load-comic-details-list.selectors';
-import { ComicDetailsListState } from '@app/comic-books/reducers/comic-details-list.reducer';
 import {
   setComicBookSelectionByUnreadState,
   setDuplicateComicBooksSelectionState,
@@ -61,6 +46,21 @@ import {
 } from '@app/comic-books/actions/comic-book-selection.actions';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.selectors';
+import {
+  loadComicsByFilter,
+  loadDuplicateComics,
+  loadReadComics,
+  loadUnreadComics
+} from '@app/comic-books/actions/comic-list.actions';
+import {
+  selectComicCoverMonths,
+  selectComicCoverYears,
+  selectComicList,
+  selectComicListState,
+  selectComicTotalCount
+} from '@app/comic-books/selectors/comic-list.selectors';
+import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import { ComicListState } from '@app/comic-books/reducers/comic-list.reducer';
 
 @Component({
   selector: 'cx-library-page',
@@ -68,10 +68,10 @@ import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.s
   styleUrls: ['./library-page.component.scss']
 })
 export class LibraryPageComponent implements OnInit, OnDestroy {
-  comicDetailListStateSubscription: Subscription;
-  comicDetailListState: ComicDetailsListState;
+  comicListStateSubscription: Subscription;
+  comicListState: ComicListState;
   comicsDetailListSubscription: Subscription;
-  comicDetails: ComicDetail[] = [];
+  comics: DisplayableComic[] = [];
   comicsDetailCoverYearsSubscription: Subscription;
   coverYears: number[] = [];
   comicsDetailCoverMonthsSubscription: Subscription;
@@ -163,23 +163,23 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         this.pageContent = 'duplicates-only';
       }
     });
-    this.comicDetailListStateSubscription = this.store
-      .select(selectLoadComicDetailsListState)
+    this.comicListStateSubscription = this.store
+      .select(selectComicListState)
       .subscribe(state => {
-        this.store.dispatch(setBusyState({ enabled: state.loading }));
-        this.comicDetailListState = state;
+        this.comicListState = state;
+        this.store.dispatch(setBusyState({ enabled: state.busy }));
       });
     this.comicsDetailListSubscription = this.store
-      .select(selectLoadComicDetailsList)
-      .subscribe(comics => (this.comicDetails = comics));
+      .select(selectComicList)
+      .subscribe(comics => (this.comics = comics));
     this.comicsDetailCoverYearsSubscription = this.store
-      .select(selectLoadComicDetailsCoverYears)
+      .select(selectComicCoverYears)
       .subscribe(coverYears => (this.coverYears = coverYears));
     this.comicsDetailCoverMonthsSubscription = this.store
-      .select(selectLoadComicDetailsCoverMonths)
+      .select(selectComicCoverMonths)
       .subscribe(coverMonths => (this.coverMonths = coverMonths));
     this.loadComicsTotalSubscription = this.store
-      .select(selectLoadComicDetailsTotalComics)
+      .select(selectComicTotalCount)
       .subscribe(total => (this.totalComics = total));
     this.selectedSubscription = this.store
       .select(selectComicBookSelectionIds)
@@ -223,7 +223,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
             this.logger.debug('Loading read comics');
             this.pageContent = 'read-only';
             this.store.dispatch(
-              loadReadComicDetails({
+              loadReadComics({
                 pageSize: this.queryParameterService.pageSize$.value,
                 pageIndex: this.queryParameterService.pageIndex$.value,
                 sortBy: this.queryParameterService.sortBy$.value,
@@ -234,7 +234,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
             this.logger.debug('Loading unread comics');
             this.pageContent = 'unread-only';
             this.store.dispatch(
-              loadUnreadComicDetails({
+              loadUnreadComics({
                 pageSize: this.queryParameterService.pageSize$.value,
                 pageIndex: this.queryParameterService.pageIndex$.value,
                 sortBy: this.queryParameterService.sortBy$.value,
@@ -246,7 +246,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
           this.logger.debug('Loading duplicate comics');
           this.pageContent = 'duplicates-only';
           this.store.dispatch(
-            loadDuplicateComicsDetails({
+            loadDuplicateComics({
               pageSize: this.queryParameterService.pageSize$.value,
               pageIndex: this.queryParameterService.pageIndex$.value,
               sortBy: this.queryParameterService.sortBy$.value,
@@ -255,7 +255,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
           );
         } else {
           this.store.dispatch(
-            loadComicDetails({
+            loadComicsByFilter({
               pageSize: this.queryParameterService.pageSize$.value,
               pageIndex: this.queryParameterService.pageIndex$.value,
               coverYear: this.queryParameterService.coverYear$?.value?.year,
@@ -298,7 +298,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.dataSubscription.unsubscribe();
-    this.comicDetailListStateSubscription.unsubscribe();
+    this.comicListStateSubscription.unsubscribe();
     this.comicsDetailListSubscription.unsubscribe();
     this.loadComicsTotalSubscription.unsubscribe();
     this.selectedSubscription.unsubscribe();

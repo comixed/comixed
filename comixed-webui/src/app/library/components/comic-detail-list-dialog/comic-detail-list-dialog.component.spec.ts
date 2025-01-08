@@ -49,7 +49,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
 import { MatSortModule } from '@angular/material/sort';
-import { ComicDetailListViewComponent } from '@app/comic-books/components/comic-detail-list-view/comic-detail-list-view.component';
+import { ComicListViewComponent } from '@app/comic-books/components/comic-list-view/comic-list-view.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
@@ -73,7 +73,7 @@ describe('ComicDetailListDialogComponent', () => {
         declarations: [
           ComicDetailListDialogComponent,
           ComicDetailCardComponent,
-          ComicDetailListViewComponent,
+          ComicListViewComponent,
           ComicTitlePipe,
           ComicCoverUrlPipe
         ],

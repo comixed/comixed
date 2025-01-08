@@ -303,54 +303,6 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
       @Param("tagType") ComicTagType tagType, @Param("tagValue") String tagValue);
 
   /**
-   * Loads comics with the given tag type and value
-   *
-   * @param tagType the tag type
-   * @param tagValue the tag value
-   * @param pageable the page request
-   * @return the matching comics
-   */
-  @Query(
-      "SELECT d FROM ComicDetail d WHERE d IN (SELECT t.comicDetail FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue)")
-  List<ComicDetail> loadForTagTypeAndValue(
-      @Param("tagType") ComicTagType tagType,
-      @Param("tagValue") String tagValue,
-      Pageable pageable);
-
-  /**
-   * Returns the cover years for comics with a given tag type and value.
-   *
-   * @param tagType the tag type
-   * @param tagValue the value
-   * @return the years
-   */
-  @Query(
-      "SELECT DISTINCT(d.yearPublished) FROM ComicDetail d WHERE d.yearPublished IS NOT NULL AND d IN (SELECT t.comicDetail FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue)")
-  List<Integer> getCoverYears(ComicTagType tagType, String tagValue);
-
-  /**
-   * Returns the cover months for comics with a given tag type and value.
-   *
-   * @param tagType the tag type
-   * @param tagValue the value
-   * @return the montsh
-   */
-  @Query(
-      "SELECT DISTINCT(d.monthPublished) FROM ComicDetail d WHERE d.yearPublished IS NOT NULL AND d IN (SELECT t.comicDetail FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue)")
-  List<Integer> getCoverMonths(ComicTagType tagType, String tagValue);
-
-  /**
-   * Returns the total number of comics with a given tag type and value.
-   *
-   * @param tagType the tag type
-   * @param tagValue the value
-   * @return the comic count
-   */
-  @Query(
-      "SELECT COUNT(d) FROM ComicDetail d WHERE d.yearPublished IS NOT NULL AND d IN (SELECT t.comicDetail FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue)")
-  long getFilterCount(ComicTagType tagType, String tagValue);
-
-  /**
    * Returns a display page of {@link CollectionEntry} values.
    *
    * @param tagType the tag type
@@ -363,51 +315,9 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
   @Query("SELECT COUNT(DISTINCT t.value) FROM ComicTag t WHERE t.type = :tagType")
   long getFilterCount(@Param("tagType") ComicTagType tag);
 
-  /**
-   * Loads comics that are not marked as read by the specified user.
-   *
-   * @param email the user's email
-   * @param pageable the page request
-   * @return the details
-   */
-  @Query(
-      "SELECT d FROM ComicDetail d WHERE d.id NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb WHERE u.email = :email)")
-  List<ComicDetail> loadUnreadComicDetails(@Param("email") String email, Pageable pageable);
-
-  /**
-   * Loads comics that are marked as read by the specified user.
-   *
-   * @param email the user's email
-   * @param pageable the page request
-   * @return the details
-   */
-  @Query(
-      "SELECT d FROM ComicDetail d WHERE d.id IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb WHERE u.email = :email)")
-  List<ComicDetail> loadReadComicDetails(@Param("email") String email, Pageable pageable);
-
-  /**
-   * Returns comic details for a given reading list.
-   *
-   * @param readingListId the reading list id
-   * @param pageable the page request
-   * @return the entries
-   */
-  @Query(
-      "SELECT d FROM ComicDetail d WHERE d.comicBook.id IN (SELECT l.entryIds FROM ReadingList  l WHERE l.id = :readingListId)")
-  List<ComicDetail> loadComicDetailsForReadingList(
-      @Param("readingListId") long readingListId, Pageable pageable);
-
-  @Query("SELECT d FROM ComicDetail d WHERE d.comicBook.id IN :selectedIds")
-  List<ComicDetail> findSelectedComicBooks(
-      @Param("selectedIds") List selectedIds, Pageable pageable);
-
   @Query(
       "SELECT sum(total) FROM (SELECT count(*) AS total FROM ComicDetail d WHERE d.publisher IS NOT NULL AND LENGTH(d.publisher) > 0 AND d.series IS NOT NULL AND LENGTH(d.series) > 0 AND d.volume IS NOT NULL AND LENGTH(d.volume) > 0 AND d.issueNumber IS NOT NULL AND LENGTH(d.issueNumber) > 0 AND d.coverDate IS NOT NULL GROUP BY d.publisher, d.series, d.volume, d.issueNumber, d.coverDate HAVING count(*) > 1)")
   Long getDuplicateComicBookCount();
-
-  @Query(
-      "SELECT d FROM ComicDetail d JOIN (SELECT c.publisher AS publisher, c.series AS series, c.volume AS volume, c.issueNumber AS issueNumber, c.coverDate as coverDate FROM ComicDetail c WHERE c.publisher IS NOT NULL AND LENGTH(c.publisher) > 0 AND c.series IS NOT NULL AND LENGTH(c.series) > 0 AND c.volume IS NOT NULL AND LENGTH(c.volume) > 0 AND c.issueNumber IS NOT NULL AND LENGTH(c.issueNumber) > 0 AND c.coverDate IS NOT NULL GROUP BY c.publisher, c.series, c.volume, c.issueNumber, c.coverDate HAVING count(*) > 1) g ON g.publisher = d.publisher AND g.series = d.series AND g.volume = d.volume AND g.issueNumber = d.issueNumber AND g.coverDate = d.coverDate")
-  List<ComicDetail> getDuplicateComicBooks(Pageable pageable);
 
   @Query("SELECT d FROM ComicDetail d WHERE d.comicBook.id = :comicBookId")
   ComicDetail findByComicBookId(@Param("comicBookId") Long comicBookId);

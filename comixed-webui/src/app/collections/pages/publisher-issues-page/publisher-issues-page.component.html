@@ -5,11 +5,11 @@
   }}
 </h2>
 
-<cx-comic-detail-list-view
+<cx-comic-list-view
   [isAdmin]="isAdmin"
-  [comics]="comicDetails"
+  [comics]="comics"
   [selectedIds]="selectedIds"
   [totalComics]="totalComics"
   [showFilter]="false"
   (selectAll)="onSelectAll($event)"
-></cx-comic-detail-list-view>
+></cx-comic-list-view>
