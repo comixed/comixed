@@ -28,7 +28,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.lists.ReadingListState;
 import org.comixedproject.state.lists.ReadingListEvent;
@@ -44,21 +43,22 @@ import org.springframework.statemachine.StateContext;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComicBookIsNotInReadingListGuardTest {
+  private static final Long TEST_COMIC_ID = 717L;
+
   @InjectMocks private ComicIsNotInReadingListGuard guard;
   @Mock private StateContext<ReadingListState, ReadingListEvent> context;
   @Mock private MessageHeaders messageHeaders;
   @Mock private ReadingList readingList;
   @Mock private ComicBook comicBook;
-  @Mock private ComicDetail comicDetail;
 
   private Set<ReadingList> readingLists = new HashSet<>();
-  private List<ComicDetail> commicDetailList = new ArrayList<>();
+  private List<Long> entryIdList = new ArrayList<>();
 
   @Before
   public void setUp() {
-    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_ID);
     Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
-    Mockito.when(readingList.getEntries()).thenReturn(commicDetailList);
+    Mockito.when(readingList.getEntryIds()).thenReturn(entryIdList);
     Mockito.when(messageHeaders.get(HEADER_READING_LIST, ReadingList.class))
         .thenReturn(readingList);
     Mockito.when(messageHeaders.get(HEADER_COMIC, ComicBook.class)).thenReturn(comicBook);
@@ -66,7 +66,7 @@ public class ComicBookIsNotInReadingListGuardTest {
 
   @Test
   public void testEvaluateComicInList() {
-    commicDetailList.add(comicDetail);
+    entryIdList.add(TEST_COMIC_ID);
     readingLists.add(readingList);
 
     final boolean result = guard.evaluate(context);

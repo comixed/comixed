@@ -466,7 +466,7 @@ public class OPDSNavigationService {
             final OPDSNavigationFeedEntry entry =
                 new OPDSNavigationFeedEntry(
                     String.format(
-                        "%s (%d comics)", readingList.getName(), readingList.getEntries().size()),
+                        "%s (%d comics)", readingList.getName(), readingList.getEntryIds().size()),
                     String.valueOf(READING_LIST_FACTOR_ID + readingList.getId()));
             entry.setContent(new OPDSNavigationFeedContent(readingList.getSummary()));
             entry

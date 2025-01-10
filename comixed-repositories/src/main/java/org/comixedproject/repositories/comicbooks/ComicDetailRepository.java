@@ -393,7 +393,7 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @return the entries
    */
   @Query(
-      "SELECT d FROM ComicDetail d WHERE d IN (SELECT l.entries FROM ReadingList  l WHERE l.id = :readingListId)")
+      "SELECT d FROM ComicDetail d WHERE d.comicBook.id IN (SELECT l.entryIds FROM ReadingList  l WHERE l.id = :readingListId)")
   List<ComicDetail> loadComicDetailsForReadingList(
       @Param("readingListId") long readingListId, Pageable pageable);
 

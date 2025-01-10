@@ -25,7 +25,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import lombok.*;
-import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.ColumnTransformer;
@@ -84,15 +83,14 @@ public class ReadingList {
   @Setter
   private String summary;
 
-  @ManyToMany(fetch = FetchType.EAGER)
-  @JoinTable(
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(
       name = "reading_list_entries",
-      joinColumns = {@JoinColumn(name = "reading_list_id")},
-      inverseJoinColumns = {@JoinColumn(name = "comic_detail_id")})
-  @JsonProperty("entries")
+      joinColumns = @JoinColumn(name = "reading_list_id"))
+  @Column(name = "comic_detail_id")
   @JsonView({View.ReadingLists.class})
   @Getter
-  private List<ComicDetail> entries = new ArrayList<>();
+  private List<Long> entryIds = new ArrayList<>();
 
   @Column(name = "created_on")
   @CreatedDate

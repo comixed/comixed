@@ -59,7 +59,7 @@ import {
   READING_LIST_REMOVAL_TOPIC,
   READING_LIST_UPDATES_TOPIC
 } from '@app/lists/lists.constants';
-import { interpolate } from '@app/core';
+import { interpolate, PAGE_SIZE_DEFAULT } from '@app/core';
 import {
   DOWNLOAD_READING_LIST_FEATURE_KEY,
   initialState as initialDownloadReadingListState
@@ -105,6 +105,7 @@ import {
   initialState as initialReadComicBooksState,
   READ_COMIC_BOOKS_FEATURE_KEY
 } from '@app/user/reducers/read-comic-books.reducer';
+import { loadComicDetailsForReadingList } from '@app/comic-books/actions/comic-details-list.actions';
 
 describe('ReadingListDetailPageComponent', () => {
   const READING_LIST = {
@@ -126,6 +127,7 @@ describe('ReadingListDetailPageComponent', () => {
   let component: ReadingListDetailPageComponent;
   let fixture: ComponentFixture<ReadingListDetailPageComponent>;
   let store: MockStore<any>;
+  let dispatchSpy: jasmine.Spy;
   let activatedRoute: ActivatedRoute;
   let router: Router;
   let confirmationService: ConfirmationService;
@@ -198,7 +200,7 @@ describe('ReadingListDetailPageComponent', () => {
       fixture = TestBed.createComponent(ReadingListDetailPageComponent);
       component = fixture.componentInstance;
       store = TestBed.inject(MockStore);
-      spyOn(store, 'dispatch');
+      dispatchSpy = spyOn(store, 'dispatch');
       activatedRoute = TestBed.inject(ActivatedRoute);
       router = TestBed.inject(Router);
       spyOn(router, 'navigateByUrl');
@@ -306,14 +308,8 @@ describe('ReadingListDetailPageComponent', () => {
       beforeEach(() => {
         component.dataSource.data = [];
         component.readingListId = READING_LIST.id;
-        store.setState({
-          ...initialState,
-          [READING_LIST_DETAIL_FEATURE_KEY]: {
-            ...initialReadingListDetailsState,
-            notFound: false,
-            list: READING_LIST
-          }
-        });
+        dispatchSpy.calls.reset();
+        component.readingList = READING_LIST;
       });
 
       it('sets the reading list', () => {
@@ -333,7 +329,15 @@ describe('ReadingListDetailPageComponent', () => {
       });
 
       it('loads the comics to display', () => {
-        expect(component.dataSource.data).not.toEqual([]);
+        expect(store.dispatch).toHaveBeenCalledWith(
+          loadComicDetailsForReadingList({
+            readingListId: READING_LIST.id,
+            pageSize: PAGE_SIZE_DEFAULT,
+            pageIndex: 0,
+            sortBy: undefined,
+            sortDirection: undefined
+          })
+        );
       });
     });
   });
@@ -561,7 +565,7 @@ describe('ReadingListDetailPageComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         setMultipleComicBookByIdSelectionState({
           selected: SELECT,
-          comicBookIds: READING_LIST.entries.map(entry => entry.comicId)
+          comicBookIds: component.selectedIds
         })
       );
     });

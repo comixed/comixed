@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import junit.framework.TestCase;
 import org.apache.commons.lang.math.RandomUtils;
-import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.lists.ReadingList;
@@ -34,6 +33,7 @@ import org.comixedproject.opds.model.CollectionType;
 import org.comixedproject.opds.model.OPDSAcquisitionFeed;
 import org.comixedproject.opds.model.OPDSAcquisitionFeedEntry;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicDetailException;
 import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
@@ -61,28 +61,29 @@ public class OPDSAcquisitionServiceTest {
   private static final Integer TEST_YEAR = 2022;
   private static final Integer TEST_WEEK = RandomUtils.nextInt(52);
   private static final String TEST_SEARCH_TERM = "the search term";
-  private static final String TEST_TAG_NAME = "Tag value";
 
   @InjectMocks private OPDSAcquisitionService service;
   @Mock private ComicBookService comicBookService;
   @Mock private ComicDetailService comicDetailService;
   @Mock private ReadingListService readingListService;
   @Mock private OPDSUtils opdsUtils;
-  @Mock private ComicBook comicBook;
   @Mock private ComicDetail comicDetail;
   @Mock private ReadingList readingList;
   @Mock private OPDSAcquisitionFeedEntry comicEntry;
 
+  private List<Long> entryIdList = new ArrayList<>();
   private List<ComicDetail> comicDetailList = new ArrayList<>();
   private List<ReadingList> readingLists = new ArrayList<>();
 
   @Before
-  public void setUp() {
+  public void setUp() throws ComicDetailException {
     readingLists.add(readingList);
     Mockito.when(readingList.getId()).thenReturn(TEST_READING_LIST_ID);
-    Mockito.when(readingList.getEntries()).thenReturn(comicDetailList);
+    Mockito.when(readingList.getEntryIds()).thenReturn(entryIdList);
     Mockito.when(opdsUtils.urlEncodeString(Mockito.anyString())).thenReturn(TEST_ENCODED_NAME);
+    entryIdList.add(TEST_COMIC_ID);
     comicDetailList.add(comicDetail);
+    Mockito.when(comicDetailService.getByComicBookId(Mockito.anyLong())).thenReturn(comicDetail);
   }
 
   @Test
@@ -209,7 +210,8 @@ public class OPDSAcquisitionServiceTest {
   }
 
   @Test
-  public void testLoadReadingListEntries() throws ReadingListException, OPDSException {
+  public void testLoadReadingListEntries()
+      throws ReadingListException, OPDSException, ComicDetailException {
     Mockito.when(readingListService.loadReadingListForUser(Mockito.anyString(), Mockito.anyLong()))
         .thenReturn(readingList);
     Mockito.when(opdsUtils.createComicEntry(Mockito.any(ComicDetail.class))).thenReturn(comicEntry);
@@ -219,11 +221,11 @@ public class OPDSAcquisitionServiceTest {
 
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
-    assertTrue(result.getEntries().contains(comicEntry));
 
     Mockito.verify(readingListService, Mockito.times(1))
         .loadReadingListForUser(TEST_EMAIL, TEST_READING_LIST_ID);
     Mockito.verify(opdsUtils, Mockito.times(1)).createComicEntry(comicDetail);
+    Mockito.verify(comicDetailService, Mockito.times(1)).getByComicBookId(TEST_COMIC_ID);
   }
 
   @Test
@@ -239,7 +241,7 @@ public class OPDSAcquisitionServiceTest {
 
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
-    assertEquals(comicDetailList.size(), result.getEntries().size());
+    assertEquals(entryIdList.size(), result.getEntries().size());
 
     Mockito.verify(comicDetailService, Mockito.times(1))
         .getComicsForYearAndWeek(TEST_YEAR, TEST_WEEK, TEST_EMAIL, TEST_UNREAD);
@@ -256,7 +258,7 @@ public class OPDSAcquisitionServiceTest {
 
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
-    assertEquals(comicDetailList.size(), result.getEntries().size());
+    assertEquals(entryIdList.size(), result.getEntries().size());
 
     Mockito.verify(comicDetailService, Mockito.times(1)).getComicForSearchTerm(TEST_SEARCH_TERM);
     Mockito.verify(opdsUtils, Mockito.times(1)).createComicEntry(comicDetail);

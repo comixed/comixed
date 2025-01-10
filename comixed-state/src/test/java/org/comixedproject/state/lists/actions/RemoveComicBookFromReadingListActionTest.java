@@ -39,28 +39,30 @@ import org.springframework.statemachine.StateContext;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RemoveComicBookFromReadingListActionTest {
+  private static final Long TEST_COMIC_ID = 717L;
+
   @InjectMocks private RemoveComicFromReadingListAction action;
   @Mock private StateContext<ReadingListState, ReadingListEvent> context;
   @Mock private MessageHeaders messageHeaders;
   @Mock private ReadingList readingList;
   @Mock private ComicBook comicBook;
   @Mock private ComicDetail comicDetail;
-  @Mock private List<ComicDetail> comicDetailList;
+  @Mock private List<Long> entryIdList;
 
   @Before
   public void setUp() {
-    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_ID);
     Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
     Mockito.when(messageHeaders.get(HEADER_READING_LIST, ReadingList.class))
         .thenReturn(readingList);
     Mockito.when(messageHeaders.get(HEADER_COMIC, ComicBook.class)).thenReturn(comicBook);
-    Mockito.when(readingList.getEntries()).thenReturn(comicDetailList);
+    Mockito.when(readingList.getEntryIds()).thenReturn(entryIdList);
   }
 
   @Test
   public void execute() {
     action.execute(context);
 
-    Mockito.verify(comicDetailList, Mockito.times(1)).remove(comicDetail);
+    Mockito.verify(entryIdList, Mockito.times(1)).remove(TEST_COMIC_ID);
   }
 }
