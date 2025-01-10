@@ -26,7 +26,6 @@ import static org.comixedproject.state.lists.ReadingListStateHandler.HEADER_READ
 import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.lists.ReadingListState;
 import org.comixedproject.state.lists.ReadingListEvent;
@@ -42,28 +41,29 @@ import org.springframework.statemachine.StateContext;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComicBookIsInReadingListGuardTest {
+  private static final Long TEST_COMIC_ID = 717L;
+
   @InjectMocks private ComicIsInReadingListGuard guard;
   @Mock private StateContext<ReadingListState, ReadingListEvent> context;
   @Mock private MessageHeaders messageHeaders;
   @Mock private ReadingList readingList;
   @Mock private ComicBook comicBook;
-  @Mock private ComicDetail comicDetail;
 
-  private List<ComicDetail> comicDetailList = new ArrayList<>();
+  private List<Long> entryIdList = new ArrayList<>();
 
   @Before
   public void setUp() {
-    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_ID);
     Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
     Mockito.when(messageHeaders.get(HEADER_READING_LIST, ReadingList.class))
         .thenReturn(readingList);
     Mockito.when(messageHeaders.get(HEADER_COMIC, ComicBook.class)).thenReturn(comicBook);
-    Mockito.when(readingList.getEntries()).thenReturn(comicDetailList);
+    Mockito.when(readingList.getEntryIds()).thenReturn(entryIdList);
   }
 
   @Test
   public void testEvaluateComicNotInList() {
-    comicDetailList.clear();
+    entryIdList.clear();
 
     final boolean result = guard.evaluate(context);
 
@@ -72,7 +72,7 @@ public class ComicBookIsInReadingListGuardTest {
 
   @Test
   public void testEvaluateComicInList() {
-    comicDetailList.add(comicDetail);
+    entryIdList.add(TEST_COMIC_ID);
 
     final boolean result = guard.evaluate(context);
 

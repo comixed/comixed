@@ -30,7 +30,6 @@ import java.util.Set;
 import junit.framework.TestCase;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.opds.OPDSException;
@@ -74,7 +73,7 @@ public class OPDSNavigationServiceTest {
   private List<ComicBook> comicBookList = new ArrayList<>();
   private Set<Integer> yearsList = new HashSet<>();
   private Set<Integer> weekList = new HashSet<>();
-  private List<ComicDetail> comicDetailList = new ArrayList<>();
+  private List<Long> entryIdList = new ArrayList<>();
 
   @Before
   public void setUp() {
@@ -83,7 +82,7 @@ public class OPDSNavigationServiceTest {
     readingLists.add(readingList);
     Mockito.when(readingList.getId()).thenReturn(TEST_READING_LIST_ID);
     Mockito.when(readingList.getSummary()).thenReturn(TEST_READING_LIST_SUMMARY);
-    Mockito.when(readingList.getEntries()).thenReturn(comicDetailList);
+    Mockito.when(readingList.getEntryIds()).thenReturn(entryIdList);
     for (int year = 1965; year < 2022; year++) yearsList.add(year);
     for (int week = 0; week < 52; week++) weekList.add(week);
     comicBookList.add(comicBook);

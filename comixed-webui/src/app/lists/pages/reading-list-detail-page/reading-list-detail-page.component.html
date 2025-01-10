@@ -1,7 +1,8 @@
-<div class="cx-fab-container-bottom-right">
+<div class="cx-fab-container-bottom-left">
   <button
     id="return-to-list-button"
     mat-fab
+    color="accent"
     [matTooltip]="'reading-list.tooltip.return-to-list' | translate"
     routerLink="/lists/reading/all"
   >
@@ -10,6 +11,7 @@
   <button
     id="remove-selected-entries"
     mat-fab
+    color="warn"
     [disabled]="!selectedIds.length"
     [matTooltip]="'reading-list.tooltip.remove-comics' | translate"
     (click)="onRemoveEntries()"
@@ -19,6 +21,7 @@
   <button
     id="reset-changes-button"
     mat-fab
+    color="accent"
     [disabled]="!readingListForm.valid || !readingListForm.dirty"
     [matTooltip]="'reading-list.tooltip.reset-reading-list' | translate"
     (click)="onReset()"
@@ -28,6 +31,7 @@
   <button
     id="download-button"
     mat-fab
+    color="primary"
     [disabled]="!readingList?.id"
     [matTooltip]="'reading-list.tooltip.download-file' | translate"
     (click)="onDownload()"
@@ -37,6 +41,7 @@
   <button
     id="save-changes-button"
     mat-fab
+    color="accent"
     [disabled]="!readingListForm.valid || !readingListForm.dirty"
     [matTooltip]="'reading-list.tooltip.save-reading-list' | translate"
     (click)="onSave()"
@@ -46,6 +51,7 @@
   <button
     id="delete-reading-list-button"
     mat-fab
+    color="warn"
     [matTooltip]="'reading-list.tooltip.delete-reading-list' | translate"
     (click)="onDeleteReadingList()"
   >
@@ -80,7 +86,7 @@
 
 <cx-comic-detail-list-view
   [comics]="comicDetails"
-  [totalComics]="readingList?.entries.length"
+  [totalComics]="readingList?.entryIds?.length"
   [selectedIds]="selectedIds"
   [comicBooksRead]="comicBooksRead"
   [showAction]="false"

@@ -804,6 +804,7 @@ public class ComicDetailService {
    * @return the entries
    * @throws ComicDetailException if an error occurs
    */
+  @Transactional
   public List<ComicDetail> loadComicDetailsForReadingList(
       final String email,
       final long readingListId,
