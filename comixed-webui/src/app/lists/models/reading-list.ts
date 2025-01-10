@@ -17,14 +17,13 @@
  */
 
 import { User } from '../../user/models/user';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 export interface ReadingList {
   id: number;
   owner: User;
   name: string;
   summary: string;
-  entries: ComicDetail[];
+  entryIds: number[];
   createdOn: number;
   lastModifiedOn: number;
 }

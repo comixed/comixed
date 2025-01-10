@@ -33,7 +33,6 @@ import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.lists.PublishReadingListDeletedAction;
 import org.comixedproject.messaging.lists.PublishReadingListUpdateAction;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.lists.ReadingListState;
 import org.comixedproject.model.net.DownloadDocument;
@@ -67,6 +66,10 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
   static final String SERIES_HEADER = "Series";
   static final String VOLUME_HEADER = "Volume";
   static final String ISSUE_NUMBER_HEADER = "Issue Number";
+  static final String ENCODING_ERROR_PUBLISHER = "Error Encoding Comic Book";
+  static final String ENCODING_ERROR_SERIES = "";
+  static final String ENCODING_ERROR_VOLUME = "????";
+  static final String ENCODING_ERROR_ISSUE_NUMBER = "??";
 
   @Autowired private ReadingListStateHandler readingListStateHandler;
   @Autowired private ReadingListRepository readingListRepository;
@@ -249,16 +252,20 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
           "User is not owner: " + email + " != " + readingList.getOwner().getEmail());
     }
 
-    final List<ComicDetail> removedEntries =
-        readingList.getEntries().stream()
-            .filter(comicDetail -> comicBookIds.contains(comicDetail.getComicId()))
-            .toList();
-    readingList.getEntries().removeAll(removedEntries);
-    this.readingListRepository.save(readingList);
-    this.readingListRepository.flush();
+    final List<Long> removedEntries =
+        readingList.getEntryIds().stream().filter(comicBookIds::contains).toList();
+    readingList.getEntryIds().removeAll(removedEntries);
+    final ReadingList updatedReadingList = this.readingListRepository.saveAndFlush(readingList);
+
+    try {
+      log.trace("Publishing changes");
+      this.publishReadingListUpdateAction.publish(updatedReadingList);
+    } catch (PublishingException error) {
+      log.error("Failed to publish update", error);
+    }
 
     log.trace("Returning reading list");
-    return this.doLoadReadingList(id);
+    return updatedReadingList;
   }
 
   private ReadingList doLoadReadingList(final long id) throws ReadingListException {
@@ -313,8 +320,8 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
       log.trace("Encoding reading list");
       final byte[] content =
           this.csvAdaptor.encodeRecords(
-              readingList.getEntries(),
-              (index, model) -> {
+              readingList.getEntryIds(),
+              (index, entryId) -> {
                 if (index == 0) {
                   return new String[] {
                     POSITION_HEADER,
@@ -324,13 +331,25 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
                     ISSUE_NUMBER_HEADER
                   };
                 } else {
-                  return new String[] {
-                    String.valueOf(index),
-                    model.getPublisher(),
-                    model.getSeries(),
-                    model.getVolume(),
-                    model.getIssueNumber()
-                  };
+                  try {
+                    final ComicBook comic = this.comicBookService.getComic(entryId);
+                    return new String[] {
+                      String.valueOf(index),
+                      comic.getComicDetail().getPublisher(),
+                      comic.getComicDetail().getSeries(),
+                      comic.getComicDetail().getVolume(),
+                      comic.getComicDetail().getIssueNumber()
+                    };
+                  } catch (ComicBookException error) {
+                    log.error("Failed to encode comic", error);
+                    return new String[] {
+                      String.valueOf(index),
+                      ENCODING_ERROR_PUBLISHER,
+                      ENCODING_ERROR_SERIES,
+                      ENCODING_ERROR_VOLUME,
+                      ENCODING_ERROR_ISSUE_NUMBER
+                    };
+                  }
                 }
               });
       log.trace("Returning encoded reading list");
@@ -423,11 +442,11 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
   public void deleteEntriesForComicBook(final ComicBook comicBook) {
     log.trace("Deleting all reading list entries for comic book: id={}", comicBook.getId());
     this.readingListRepository
-        .getReadingListsWithComic(comicBook.getComicDetail())
+        .getReadingListsWithComic(comicBook.getComicDetail().getId())
         .forEach(
             readingList -> {
               log.trace("Removing comic book from reading list: list id={}", readingList.getId());
-              readingList.getEntries().remove(comicBook.getComicDetail());
+              readingList.getEntryIds().remove(comicBook.getComicDetail().getId());
               log.trace("Saving reading list");
               this.readingListRepository.save(readingList);
             });
@@ -441,6 +460,6 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
    * @throws ReadingListException if an error occurs
    */
   public long getEntryCount(final long readingListId) throws ReadingListException {
-    return this.doLoadReadingList(readingListId).getEntries().size();
+    return this.doLoadReadingList(readingListId).getEntryIds().size();
   }
 }

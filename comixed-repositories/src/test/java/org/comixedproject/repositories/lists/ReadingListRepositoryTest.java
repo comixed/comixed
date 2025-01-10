@@ -111,31 +111,27 @@ public class ReadingListRepositoryTest {
 
     list.setOwner(reader);
     list.setName(TEST_NEW_LIST_NAME);
-    list.getEntries().add(comicDetail1);
-    list.getEntries().add(comicDetail2);
+    list.getEntryIds().add(comicDetail1.getId());
+    list.getEntryIds().add(comicDetail2.getId());
 
     final ReadingList result = repository.save(list);
 
     assertNotNull(result);
     assertEquals(reader.getId(), result.getOwner().getId());
-    assertEquals(list.getEntries().size(), result.getEntries().size());
+    assertEquals(list.getEntryIds().size(), result.getEntryIds().size());
   }
 
   @Test
   public void testUpdateReadingList() {
     ReadingList list = repository.getById(TEST_READING_LIST_ID_1);
 
-    list.getEntries().add(comicDetail2);
+    list.getEntryIds().add(comicDetail2.getComicId());
     repository.save(list);
 
     ReadingList result = repository.getById(list.getId());
 
-    assertEquals(list.getEntries().size(), result.getEntries().size());
-    boolean found = false;
-    for (ComicDetail entry : result.getEntries()) {
-      found |= (entry.getId().longValue() == comicDetail2.getId().longValue());
-    }
-    assertTrue(found);
+    assertEquals(list.getEntryIds().size(), result.getEntryIds().size());
+    assertTrue(result.getEntryIds().contains(comicDetail2.getComicId()));
   }
 
   @Test
@@ -151,7 +147,7 @@ public class ReadingListRepositoryTest {
 
   @Test
   public void testGetReadingListsWithComicBook() {
-    final List<ReadingList> result = repository.getReadingListsWithComic(comicDetail1);
+    final List<ReadingList> result = repository.getReadingListsWithComic(comicDetail1.getComicId());
 
     assertNotNull(result);
   }

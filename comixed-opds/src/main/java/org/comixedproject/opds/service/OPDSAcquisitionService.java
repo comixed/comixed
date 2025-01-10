@@ -34,6 +34,7 @@ import org.comixedproject.opds.OPDSUtils;
 import org.comixedproject.opds.model.CollectionType;
 import org.comixedproject.opds.model.OPDSAcquisitionFeed;
 import org.comixedproject.opds.model.OPDSLink;
+import org.comixedproject.service.comicbooks.ComicDetailException;
 import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
@@ -165,16 +166,25 @@ public class OPDSAcquisitionService {
       final ReadingList list = this.readingListService.loadReadingListForUser(email, id);
       final OPDSAcquisitionFeed response =
           new OPDSAcquisitionFeed(
-              String.format("Reading List: %s (%d)", list.getName(), list.getEntries().size()),
+              String.format("Reading List: %s (%d)", list.getName(), list.getEntryIds().size()),
               String.valueOf(READING_LIST_FACTOR_ID + list.getId()));
       response
           .getLinks()
           .add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, String.format("lists/%d", id)));
-      list.getEntries().stream()
+      list.getEntryIds().stream()
           .forEach(
-              comic -> {
-                log.trace("Adding comic to reading list entries: {}", comic.getId());
-                response.getEntries().add(this.opdsUtils.createComicEntry(comic));
+              entryId -> {
+                log.trace("Adding comic to reading list entries: comic book id={}", entryId);
+                try {
+
+                  response
+                      .getEntries()
+                      .add(
+                          this.opdsUtils.createComicEntry(
+                              this.comicDetailService.getByComicBookId(entryId)));
+                } catch (ComicDetailException error) {
+                  log.error("Failed to load comic for acquisition feed", error);
+                }
               });
 
       return response;

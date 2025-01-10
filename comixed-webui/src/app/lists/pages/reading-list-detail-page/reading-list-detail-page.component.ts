@@ -61,9 +61,9 @@ import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { setMultipleComicBookByIdSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 import { selectLoadComicDetailsList } from '@app/comic-books/selectors/load-comic-details-list.selectors';
-import { loadComicDetailsForReadingList } from '@app/comic-books/actions/comic-details-list.actions';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.selectors';
+import { loadComicDetailsForReadingList } from '@app/comic-books/actions/comic-details-list.actions';
 
 @Component({
   selector: 'cx-user-reading-list-page',
@@ -119,18 +119,7 @@ export class ReadingListDetailPageComponent implements OnDestroy {
     });
     this.logger.trace('Subscribing to query parameter updates');
     this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
-      params => {
-        this.logger.trace('Loading reading list entries');
-        this.store.dispatch(
-          loadComicDetailsForReadingList({
-            readingListId: this.readingListId,
-            pageSize: this.queryParameterService.pageSize$.value,
-            pageIndex: this.queryParameterService.pageIndex$.value,
-            sortBy: this.queryParameterService.sortBy$.value,
-            sortDirection: this.queryParameterService.sortDirection$.value
-          })
-        );
-      }
+      params => this.loadReadingListEntries()
     );
     this.readingListForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.maxLength(128)]],
@@ -164,7 +153,10 @@ export class ReadingListDetailPageComponent implements OnDestroy {
     this.logger.trace('Subscribing to comic detail list updates');
     this.comicDetailListSubscription = this.store
       .select(selectLoadComicDetailsList)
-      .subscribe(comicDetails => (this.comicDetails = comicDetails));
+      .subscribe(comicDetails => {
+        this.comicDetails = comicDetails;
+        this.doLoadDataSource();
+      });
     this.selectionSubscription = this.store
       .select(selectComicBookSelectionIds)
       .subscribe(selections => {
@@ -191,6 +183,7 @@ export class ReadingListDetailPageComponent implements OnDestroy {
             list => {
               this.logger.trace('Reading list updated received');
               this.store.dispatch(readingListLoaded({ list }));
+              this.loadReadingListEntries();
             }
           );
         }
@@ -243,13 +236,7 @@ export class ReadingListDetailPageComponent implements OnDestroy {
     this.readingListForm.controls.name.setValue(readingList.name);
     this.readingListForm.controls.summary.setValue(readingList.summary);
     this.readingListForm.markAsPristine();
-    this.logger.trace('Loading comics from reading list');
-    this.dataSource.data = readingList.entries.map(entry => {
-      return {
-        selected: this.selectedIds.includes(entry.id),
-        item: entry
-      };
-    });
+    this.loadReadingListEntries();
   }
 
   ngOnDestroy(): void {
@@ -347,9 +334,19 @@ export class ReadingListDetailPageComponent implements OnDestroy {
     this.store.dispatch(
       setMultipleComicBookByIdSelectionState({
         selected,
-        comicBookIds: this.readingList.entries.map(entry => entry.comicId)
+        comicBookIds: this.readingList.entryIds
       })
     );
+  }
+
+  private doLoadDataSource() {
+    this.logger.trace('Loading comics from reading list');
+    this.dataSource.data = this.comicDetails.map(entry => {
+      return {
+        selected: this.selectedIds.includes(entry.comicId),
+        item: entry
+      };
+    });
   }
 
   private encodeForm(): ReadingList {
@@ -370,5 +367,18 @@ export class ReadingListDetailPageComponent implements OnDestroy {
         })
       );
     }
+  }
+
+  private loadReadingListEntries() {
+    this.logger.trace('Loading reading list entries');
+    this.store.dispatch(
+      loadComicDetailsForReadingList({
+        readingListId: this.readingListId,
+        pageSize: this.queryParameterService.pageSize$.value,
+        pageIndex: this.queryParameterService.pageIndex$.value,
+        sortBy: this.queryParameterService.sortBy$.value,
+        sortDirection: this.queryParameterService.sortDirection$.value
+      })
+    );
   }
 }
