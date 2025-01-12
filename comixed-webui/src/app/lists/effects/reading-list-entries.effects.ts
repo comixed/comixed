@@ -30,7 +30,7 @@ import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ReadingListService } from '@app/lists/services/reading-list.service';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { readingListLoaded } from '@app/lists/actions/reading-list-detail.actions';
 import { of } from 'rxjs';
@@ -51,18 +51,15 @@ export class ReadingListEntriesEffects {
           .addSelectedComicBooks({ list: action.list })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            tap((response: ReadingList) =>
+            tap(() =>
               this.alertService.info(
                 this.translateService.instant(
                   'reading-list-entries.import-comic-files.effect-success',
-                  { name: response.name }
+                  { name: action.list.name }
                 )
               )
             ),
-            mergeMap((response: ReadingList) => [
-              addComicBooksToReadingListSuccess(),
-              readingListLoaded({ list: response })
-            ]),
+            map(() => addComicBooksToReadingListSuccess()),
             catchError(error => this.doAddingServiceFailure(error))
           )
       ),

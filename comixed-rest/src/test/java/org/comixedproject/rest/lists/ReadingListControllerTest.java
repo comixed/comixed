@@ -18,7 +18,6 @@
 
 package org.comixedproject.rest.lists;
 
-import static junit.framework.TestCase.assertEquals;
 import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
@@ -27,6 +26,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -72,7 +72,8 @@ public class ReadingListControllerTest {
   @Mock private InputStream inputStream;
   @Mock private List<Long> readingListIdList;
   @Mock private HttpSession session;
-  @Mock private List selectedIdList;
+
+  private List selectedIdList = new ArrayList();
 
   @Before
   public void setUp() throws IOException, ComicBookSelectionException {
@@ -177,57 +178,19 @@ public class ReadingListControllerTest {
     }
   }
 
-  @Test(expected = ReadingListException.class)
-  public void testAddSelectedComicBooksToReadingListServiceException() throws ReadingListException {
-    Mockito.when(
-            readingListService.addComicsToList(
-                Mockito.anyString(), Mockito.anyLong(), Mockito.anyList()))
-        .thenThrow(ReadingListException.class);
-
-    try {
-      controller.addSelectedComicBooksToReadingList(session, principal, TEST_READING_LIST_ID);
-    } finally {
-      Mockito.verify(readingListService, Mockito.times(1))
-          .addComicsToList(TEST_USER_EMAIL, TEST_READING_LIST_ID, selectedIdList);
-    }
-  }
-
   @Test
   public void testAddSelectedComicBooksToList() throws ReadingListException {
-    Mockito.when(
-            readingListService.addComicsToList(
-                Mockito.anyString(), Mockito.anyLong(), Mockito.anyList()))
-        .thenReturn(readingList);
-
-    final ReadingList result =
-        controller.addSelectedComicBooksToReadingList(session, principal, TEST_READING_LIST_ID);
-
-    assertNotNull(result);
-    assertEquals(readingList, result);
+    controller.addSelectedComicBooksToReadingList(session, principal, TEST_READING_LIST_ID);
 
     Mockito.verify(readingListService, Mockito.times(1))
         .addComicsToList(TEST_USER_EMAIL, TEST_READING_LIST_ID, selectedIdList);
   }
 
   @Test(expected = ReadingListException.class)
-  public void testAddSelectedComicBooksToReadingListSelectionServiceExceptionOnEncode()
-      throws ReadingListException, ComicBookSelectionException {
-    Mockito.when(comicSelectionService.encodeSelections(Mockito.anyList()))
-        .thenThrow(ComicBookSelectionException.class);
-
-    try {
-      controller.addSelectedComicBooksToReadingList(session, principal, TEST_READING_LIST_ID);
-    } finally {
-      Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(selectedIdList);
-    }
-  }
-
-  @Test(expected = ReadingListException.class)
-  public void testRemoveComicsFromReadingListServiceException() throws ReadingListException {
-    Mockito.when(
-            readingListService.removeComicsFromList(
-                Mockito.anyString(), Mockito.anyLong(), Mockito.anyList()))
-        .thenThrow(ReadingListException.class);
+  public void testRemoveComicsFromReadingList_serviceException() throws ReadingListException {
+    Mockito.doThrow(ReadingListException.class)
+        .when(readingListService)
+        .removeComicsFromList(Mockito.anyString(), Mockito.anyLong(), Mockito.anyList());
 
     try {
       controller.removeSelectedComicBooksFromReadingList(session, principal, TEST_READING_LIST_ID);
@@ -239,17 +202,7 @@ public class ReadingListControllerTest {
 
   @Test
   public void testRemoveComicsFromList() throws ReadingListException {
-    Mockito.when(
-            readingListService.removeComicsFromList(
-                Mockito.anyString(), Mockito.anyLong(), Mockito.anyList()))
-        .thenReturn(readingList);
-
-    final ReadingList result =
-        controller.removeSelectedComicBooksFromReadingList(
-            session, principal, TEST_READING_LIST_ID);
-
-    assertNotNull(result);
-    assertEquals(readingList, result);
+    controller.removeSelectedComicBooksFromReadingList(session, principal, TEST_READING_LIST_ID);
 
     Mockito.verify(readingListService, Mockito.times(1))
         .removeComicsFromList(TEST_USER_EMAIL, TEST_READING_LIST_ID, selectedIdList);

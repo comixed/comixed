@@ -316,7 +316,14 @@ describe('ReadingListDetailPageComponent', () => {
         component.dataSource.data = [];
         component.readingListId = READING_LIST.id;
         dispatchSpy.calls.reset();
-        component.readingList = READING_LIST;
+        store.setState({
+          ...initialState,
+          [READING_LIST_DETAIL_FEATURE_KEY]: {
+            ...initialReadingListDetailsState,
+            notFound: false,
+            list: READING_LIST
+          }
+        });
       });
 
       it('sets the reading list', () => {
@@ -426,23 +433,29 @@ describe('ReadingListDetailPageComponent', () => {
   });
 
   describe('when messaging is started', () => {
+    const EMAIL = 'reader@comixedproject.org';
+    const LIST_UPDATES = interpolate(READING_LIST_UPDATES_TOPIC, {
+      id: READING_LIST.id,
+      email: EMAIL
+    });
+    const LIST_REMOVALS = interpolate(READING_LIST_REMOVAL_TOPIC, {
+      email: EMAIL
+    });
     let readingListRemovalSubscription: any;
 
     beforeEach(() => {
       component.readingListId = READING_LIST.id;
       component.readingListUpdateSubscription = null;
       component.readingListRemovalSubscription = null;
+      component.email = EMAIL;
       webSocketService.subscribe
-        .withArgs(
-          interpolate(READING_LIST_UPDATES_TOPIC, { id: READING_LIST.id }),
-          jasmine.anything()
-        )
+        .withArgs(LIST_UPDATES, jasmine.anything())
         .and.callFake((topic, callback) => {
           callback(READING_LIST);
           return {} as Subscription;
         });
       webSocketService.subscribe
-        .withArgs(READING_LIST_REMOVAL_TOPIC, jasmine.anything())
+        .withArgs(LIST_REMOVALS, jasmine.anything())
         .and.callFake((topic, callback) => {
           readingListRemovalSubscription = callback;
           return {} as Subscription;
@@ -455,14 +468,14 @@ describe('ReadingListDetailPageComponent', () => {
 
     it('subscribes to reading list update topic', () => {
       expect(webSocketService.subscribe).toHaveBeenCalledWith(
-        interpolate(READING_LIST_UPDATES_TOPIC, { id: READING_LIST.id }),
+        LIST_UPDATES,
         jasmine.anything()
       );
     });
 
     it('subscribes to reading list removal topic', () => {
       expect(webSocketService.subscribe).toHaveBeenCalledWith(
-        READING_LIST_REMOVAL_TOPIC,
+        LIST_REMOVALS,
         jasmine.anything()
       );
     });

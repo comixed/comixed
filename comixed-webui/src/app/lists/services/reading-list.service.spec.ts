@@ -57,6 +57,10 @@ import {
 } from '@app/lists/actions/reading-lists.actions';
 import { WebSocketService } from '@app/messaging';
 import { Subscription } from 'rxjs';
+import {
+  initialState as initialUserState,
+  USER_FEATURE_KEY
+} from '@app/user/reducers/user.reducer';
 
 describe('ReadingListService', () => {
   const READING_LISTS = [READING_LIST_1, READING_LIST_3, READING_LIST_5];
@@ -68,9 +72,11 @@ describe('ReadingListService', () => {
     mediaType: 'text/csv'
   } as DownloadDocument;
   const UPLOADED_FILE = new File([], 'testing');
+  const EMAIL = 'reader@comixedproject.org';
 
   const initialState = {
-    [MESSAGING_FEATURE_KEY]: { ...initialMessagingState }
+    [MESSAGING_FEATURE_KEY]: { ...initialMessagingState },
+    [USER_FEATURE_KEY]: { ...initialUserState }
   };
 
   let service: ReadingListService;
@@ -162,11 +168,12 @@ describe('ReadingListService', () => {
   });
 
   it('can add selected comic books to a reading list', () => {
+    const serverResponse = new HttpResponse({ status: 200 });
     service
       .addSelectedComicBooks({
         list: READING_LIST
       })
-      .subscribe(response => expect(response).toEqual(READING_LIST));
+      .subscribe(response => expect(response).toBe(serverResponse));
 
     const req = httpMock.expectOne(
       interpolate(ADD_SELECTED_COMIC_BOOKS_TO_READING_LIST_URL, {
@@ -175,7 +182,7 @@ describe('ReadingListService', () => {
     );
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual({});
-    req.flush(READING_LIST);
+    req.flush(serverResponse);
   });
 
   it('can remove selected comic books from a reading list', () => {
@@ -231,17 +238,25 @@ describe('ReadingListService', () => {
   });
 
   describe('when messaging is started', () => {
+    const LISTS_UPDATE_TOPIC = interpolate(READING_LISTS_UPDATES_TOPIC, {
+      email: EMAIL
+    });
+    const LISTS_REMOVED_UPDATE = interpolate(READING_LIST_REMOVAL_TOPIC, {
+      email: EMAIL
+    });
+
     beforeEach(() => {
+      service.email = EMAIL;
       service.readingListUpdateSubscription = null;
       service.readingListRemovalSubscription = null;
       webSocketService.subscribe
-        .withArgs(READING_LISTS_UPDATES_TOPIC, jasmine.anything())
+        .withArgs(LISTS_UPDATE_TOPIC, jasmine.anything())
         .and.callFake((topic, callback) => {
           callback(READING_LIST);
           return {} as Subscription;
         });
       webSocketService.subscribe
-        .withArgs(READING_LIST_REMOVAL_TOPIC, jasmine.anything())
+        .withArgs(LISTS_REMOVED_UPDATE, jasmine.anything())
         .and.callFake((topic, callback) => {
           callback(READING_LIST);
           return {} as Subscription;
@@ -254,14 +269,14 @@ describe('ReadingListService', () => {
 
     it('subscribes to reading list update topic', () => {
       expect(webSocketService.subscribe).toHaveBeenCalledWith(
-        READING_LISTS_UPDATES_TOPIC,
+        LISTS_UPDATE_TOPIC,
         jasmine.anything()
       );
     });
 
     it('subscribes to reading list removal topic', () => {
       expect(webSocketService.subscribe).toHaveBeenCalledWith(
-        READING_LIST_REMOVAL_TOPIC,
+        LISTS_REMOVED_UPDATE,
         jasmine.anything()
       );
     });
