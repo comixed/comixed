@@ -42,10 +42,10 @@ public class PublishReadingListUpdateAction extends AbstractPublishAction<Readin
   @Override
   public void publish(final ReadingList readingList) throws PublishingException {
     log.trace("Publishing reading lists update");
-    this.doPublish(
+    this.doPublishToUser(
         readingList.getOwner(), READING_LISTS_UPDATE_TOPIC, readingList, View.ReadingLists.class);
     log.trace("Publishing reading list detail update");
-    this.doPublish(
+    this.doPublishToUser(
         readingList.getOwner(),
         String.format(READING_LIST_UPDATE_TOPIC, readingList.getId()),
         readingList,

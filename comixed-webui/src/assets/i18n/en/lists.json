@@ -73,7 +73,7 @@
       "effect-success": "Added comics to reading list: {name}"
     },
     "remove-comics": {
-      "confirmation-message": "Are you sure you want to remove {count, plural, =1{one comic} other{# comics}} from this reading list?",
+      "confirmation-message": "Are you sure you want to remove the selected comics from this reading list?",
       "confirmation-title": "Remove Comics From Reading List",
       "effect-failure": "Failed to remove comics from reading list.",
       "effect-success": "Removed comics from reading list: {name}"
