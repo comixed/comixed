@@ -27,8 +27,8 @@ import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.net.comicbooks.*;
 import org.comixedproject.opds.OPDSUtils;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;
-import org.comixedproject.service.comicbooks.ComicBookSelectionService;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicSelectionService;
+import org.comixedproject.service.library.DisplayableComicService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,10 +48,10 @@ public class ComicBookSelectionController {
   /** The comic book selections session property name. */
   public static final String LIBRARY_SELECTIONS = "library.selections";
 
-  @Autowired private ComicBookSelectionService comicBookSelectionService;
+  @Autowired private ComicSelectionService comicSelectionService;
   @Autowired private UserService userService;
   @Autowired private OPDSUtils opdsUtils;
-  @Autowired private ComicBookService comicBookService;
+  @Autowired private DisplayableComicService displayableComicService;
 
   /**
    * Loads the user's comic book selections.
@@ -65,8 +65,7 @@ public class ComicBookSelectionController {
   @Timed(value = "comixed.comic-book.selections.load")
   public List getAllSelections(final HttpSession session) throws ComicBookSelectionException {
     log.info("Loading comic book selections");
-    return this.comicBookSelectionService.decodeSelections(
-        session.getAttribute(LIBRARY_SELECTIONS));
+    return this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
   }
 
   /**
@@ -86,12 +85,12 @@ public class ComicBookSelectionController {
       final HttpSession session, @PathVariable("comicBookId") final Long comicBookId)
       throws ComicBookSelectionException {
     final List selections =
-        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+        this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     log.info("Adding comic selection: comic book id={}", comicBookId);
-    this.comicBookSelectionService.addComicSelectionForUser(selections, comicBookId);
+    this.comicSelectionService.addComicSelectionForUser(selections, comicBookId);
     log.debug("Updating comic selections");
     session.setAttribute(
-        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
+        LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selections));
   }
 
   /**
@@ -109,10 +108,10 @@ public class ComicBookSelectionController {
       throws ComicBookSelectionException {
     log.info("Removing comic selection:comic book id={}", comicBookId);
     final List selections =
-        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
-    this.comicBookSelectionService.removeComicSelectionFromUser(selections, comicBookId);
+        this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+    this.comicSelectionService.removeComicSelectionFromUser(selections, comicBookId);
     session.setAttribute(
-        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
+        LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selections));
   }
 
   /**
@@ -133,8 +132,8 @@ public class ComicBookSelectionController {
       throws ComicBookSelectionException {
     log.info("Updating multiple comic books selection: {}", request);
     final List selections =
-        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
-    this.comicBookSelectionService.selectByFilter(
+        this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+    this.comicSelectionService.selectByFilter(
         selections,
         request.getCoverYear(),
         request.getCoverMonth(),
@@ -145,7 +144,7 @@ public class ComicBookSelectionController {
         request.getSearchText(),
         request.getSelected());
     session.setAttribute(
-        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
+        LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selections));
   }
 
   /**
@@ -171,11 +170,11 @@ public class ComicBookSelectionController {
         tagType,
         decodedTagValue);
     final List selections =
-        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
-    this.comicBookSelectionService.addByTagTypeAndValue(selections, tagType, tagValue);
-    this.comicBookSelectionService.publishSelections(selections);
+        this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+    this.comicSelectionService.addByTagTypeAndValue(selections, tagType, tagValue);
+    this.comicSelectionService.publishSelections(selections);
     session.setAttribute(
-        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
+        LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selections));
   }
 
   /**
@@ -202,11 +201,11 @@ public class ComicBookSelectionController {
         tagType,
         decodedTagValue);
     final List selections =
-        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
-    this.comicBookSelectionService.removeByTagTypeAndValue(selections, tagType, tagValue);
-    this.comicBookSelectionService.publishSelections(selections);
+        this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+    this.comicSelectionService.removeByTagTypeAndValue(selections, tagType, tagValue);
+    this.comicSelectionService.publishSelections(selections);
     session.setAttribute(
-        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
+        LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selections));
   }
 
   /**
@@ -223,7 +222,7 @@ public class ComicBookSelectionController {
       final HttpSession session, @RequestBody() final AddComicBookSelectionsByIdRequest request)
       throws ComicBookSelectionException {
     final List selections =
-        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+        this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
     if (request.isSelected()) {
       log.info("Adding ids from comic book selections");
@@ -233,9 +232,9 @@ public class ComicBookSelectionController {
       selections.removeAll(request.getComicBookIds());
     }
 
-    this.comicBookSelectionService.publishSelections(selections);
+    this.comicSelectionService.publishSelections(selections);
     session.setAttribute(
-        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
+        LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selections));
   }
 
   /**
@@ -256,19 +255,19 @@ public class ComicBookSelectionController {
     final boolean selected = request.isSelected();
     log.info("Setting selections by publisher name: publisher={} selected={}", publisher, selected);
     final List<Long> selections =
-        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+        this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
     if (selected) {
       log.info("Adding ids from comic book selections");
-      selections.addAll(comicBookService.getIdsByPublisher(publisher));
+      selections.addAll(this.displayableComicService.getIdsByPublisher(publisher));
     } else {
       log.info("Removing ids from comic book selections");
-      selections.removeAll(comicBookService.getIdsByPublisher(publisher));
+      selections.removeAll(this.displayableComicService.getIdsByPublisher(publisher));
     }
 
-    this.comicBookSelectionService.publishSelections(selections);
+    this.comicSelectionService.publishSelections(selections);
     session.setAttribute(
-        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
+        LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selections));
   }
 
   /**
@@ -296,21 +295,21 @@ public class ComicBookSelectionController {
         volume,
         selected);
     final List<Long> selections =
-        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+        this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
     if (selected) {
       log.info("Adding ids from comic book selections");
       selections.addAll(
-          comicBookService.getIdsByPublisherSeriesAndVolume(publisher, series, volume));
+          this.displayableComicService.getIdsByPublisherSeriesAndVolume(publisher, series, volume));
     } else {
       log.info("Removing ids from comic book selections");
       selections.removeAll(
-          comicBookService.getIdsByPublisherSeriesAndVolume(publisher, series, volume));
+          this.displayableComicService.getIdsByPublisherSeriesAndVolume(publisher, series, volume));
     }
 
-    this.comicBookSelectionService.publishSelections(selections);
+    this.comicSelectionService.publishSelections(selections);
     session.setAttribute(
-        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
+        LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selections));
   }
 
   /**
@@ -329,9 +328,9 @@ public class ComicBookSelectionController {
     final boolean selected = request.isSelected();
     log.info("Setting selections for all duplicate comic books: selected={}", selected);
     final List<Long> selections =
-        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+        this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
-    final List<Long> idList = comicBookService.getDuplicateComicIds();
+    final List<Long> idList = this.displayableComicService.getDuplicateComicIds();
     if (selected) {
       log.info("Selecting ids for duplicate comic books");
       selections.addAll(idList);
@@ -340,9 +339,9 @@ public class ComicBookSelectionController {
       selections.removeAll(idList);
     }
 
-    this.comicBookSelectionService.publishSelections(selections);
+    this.comicSelectionService.publishSelections(selections);
     session.setAttribute(
-        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
+        LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selections));
   }
 
   /**
@@ -370,16 +369,16 @@ public class ComicBookSelectionController {
         selected,
         unread);
     final List<Long> selections =
-        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+        this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
     if (selected) {
       selections.addAll(this.userService.getComicBookIdsForUser(email, unread));
     } else {
       selections.removeAll(this.userService.getComicBookIdsForUser(email, unread));
     }
-    this.comicBookSelectionService.publishSelections(selections);
+    this.comicSelectionService.publishSelections(selections);
     session.setAttribute(
-        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
+        LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selections));
   }
 
   /**
@@ -393,10 +392,10 @@ public class ComicBookSelectionController {
   @Timed(value = "comixed.comic-book.selections.clear")
   public void clearSelections(final HttpSession session) throws ComicBookSelectionException {
     final List selections =
-        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+        this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     log.info("Clearing comic selections");
-    this.comicBookSelectionService.clearSelectedComicBooks(selections);
+    this.comicSelectionService.clearSelectedComicBooks(selections);
     session.setAttribute(
-        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selections));
+        LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selections));
   }
 }

@@ -38,7 +38,7 @@ import org.comixedproject.model.net.lists.SaveReadingListRequest;
 import org.comixedproject.model.net.lists.UpdateReadingListRequest;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;
-import org.comixedproject.service.comicbooks.ComicBookSelectionService;
+import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.junit.Before;
@@ -63,7 +63,7 @@ public class ReadingListControllerTest {
 
   @InjectMocks private ReadingListController controller;
   @Mock private ReadingListService readingListService;
-  @Mock private ComicBookSelectionService comicBookSelectionService;
+  @Mock private ComicSelectionService comicSelectionService;
   @Mock private ReadingList readingList;
   @Mock private Principal principal;
   @Mock private List<ReadingList> readingLists;
@@ -81,9 +81,8 @@ public class ReadingListControllerTest {
     Mockito.when(multipartFile.getOriginalFilename())
         .thenReturn(String.format("%s.csv", TEST_READING_LIST_NAME));
     Mockito.when(session.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
-    Mockito.when(comicBookSelectionService.decodeSelections(Mockito.any()))
-        .thenReturn(selectedIdList);
-    Mockito.when(comicBookSelectionService.encodeSelections(Mockito.anyList()))
+    Mockito.when(comicSelectionService.decodeSelections(Mockito.any())).thenReturn(selectedIdList);
+    Mockito.when(comicSelectionService.encodeSelections(Mockito.anyList()))
         .thenReturn(TEST_REENCODED_SELECTIONS);
   }
 
@@ -167,13 +166,13 @@ public class ReadingListControllerTest {
   @Test(expected = ReadingListException.class)
   public void testAddSelectedComicBooksToReadingListSelectionServiceExceptionOnDecode()
       throws ReadingListException, ComicBookSelectionException {
-    Mockito.when(comicBookSelectionService.decodeSelections(Mockito.any()))
+    Mockito.when(comicSelectionService.decodeSelections(Mockito.any()))
         .thenThrow(ComicBookSelectionException.class);
 
     try {
       controller.addSelectedComicBooksToReadingList(session, principal, TEST_READING_LIST_ID);
     } finally {
-      Mockito.verify(comicBookSelectionService, Mockito.times(1))
+      Mockito.verify(comicSelectionService, Mockito.times(1))
           .decodeSelections(TEST_ENCODED_SELECTIONS);
     }
   }
@@ -213,13 +212,13 @@ public class ReadingListControllerTest {
   @Test(expected = ReadingListException.class)
   public void testAddSelectedComicBooksToReadingListSelectionServiceExceptionOnEncode()
       throws ReadingListException, ComicBookSelectionException {
-    Mockito.when(comicBookSelectionService.encodeSelections(Mockito.anyList()))
+    Mockito.when(comicSelectionService.encodeSelections(Mockito.anyList()))
         .thenThrow(ComicBookSelectionException.class);
 
     try {
       controller.addSelectedComicBooksToReadingList(session, principal, TEST_READING_LIST_ID);
     } finally {
-      Mockito.verify(comicBookSelectionService, Mockito.times(1)).encodeSelections(selectedIdList);
+      Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(selectedIdList);
     }
   }
 

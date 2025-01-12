@@ -344,8 +344,12 @@ public class ComicDetailService {
    * @param email the use's email
    * @param unread the unread flag
    * @return the matching comics
+   * @deprecated See {@link
+   *     org.comixedproject.service.library.DisplayableComicService#loadComicsByTagTypeAndValue(int,
+   *     int, ComicTagType, String, String, String)}
    */
   @Transactional
+  @Deprecated
   public List<ComicDetail> getAllComicsForTag(
       final ComicTagType tagType, final String tagValue, final String email, final boolean unread) {
     if (unread) {

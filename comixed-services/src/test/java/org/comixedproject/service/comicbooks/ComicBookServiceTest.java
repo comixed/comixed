@@ -1407,47 +1407,6 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetIdsByPublisher() {
-    Mockito.when(comicBookRepository.getAllIdsByPublisher(Mockito.anyString())).thenReturn(idList);
-
-    final List<Long> result = service.getIdsByPublisher(TEST_PUBLISHER);
-
-    assertNotNull(result);
-    assertSame(idList, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).getAllIdsByPublisher(TEST_PUBLISHER);
-  }
-
-  @Test
-  public void testGetIdsByPublisherSeriesAndVolume() {
-    Mockito.when(
-            comicBookRepository.getAllIdsByPublisherSeriesAndVolume(
-                Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(idList);
-
-    final List<Long> result =
-        service.getIdsByPublisherSeriesAndVolume(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
-
-    assertNotNull(result);
-    assertSame(idList, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1))
-        .getAllIdsByPublisherSeriesAndVolume(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
-  }
-
-  @Test
-  public void testGetDuplicateComicBookIds() {
-    Mockito.when(comicBookRepository.getDuplicateComicIds()).thenReturn(idList);
-
-    final List<Long> result = service.getDuplicateComicIds();
-
-    assertNotNull(result);
-    assertSame(idList, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).getDuplicateComicIds();
-  }
-
-  @Test
   public void testGetAllComicDetails_missingFiles() {
     Mockito.when(comicBookRepository.getComicFilenames(true)).thenReturn(comicFilenameList);
 

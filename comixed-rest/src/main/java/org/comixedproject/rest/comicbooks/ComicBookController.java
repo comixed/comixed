@@ -52,7 +52,7 @@ public class ComicBookController {
 
   @Autowired private ComicBookService comicBookService;
   @Autowired private ComicDetailService comicDetailService;
-  @Autowired private ComicBookSelectionService comicBookSelectionService;
+  @Autowired private ComicSelectionService comicSelectionService;
   @Autowired private PageCacheService pageCacheService;
 
   /**
@@ -127,13 +127,12 @@ public class ComicBookController {
 
     try {
       final List<Long> ids =
-          this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+          this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
       log.info("Deleting multiple comics: ids={}", ids.toArray());
       this.comicBookService.deleteComicBooksById(ids);
 
-      this.comicBookSelectionService.clearSelectedComicBooks(new ArrayList<>(ids));
-      session.setAttribute(
-          LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(ids));
+      this.comicSelectionService.clearSelectedComicBooks(new ArrayList<>(ids));
+      session.setAttribute(LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(ids));
     } catch (ComicBookSelectionException error) {
       throw new ComicBookException("Failed to delete selected comic books", error);
     }
@@ -152,14 +151,13 @@ public class ComicBookController {
   public void undeleteSelectedComicBooks(final HttpSession session) throws ComicBookException {
     try {
       final List<Long> ids =
-          this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+          this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
       log.info("Undeleting multiple comic: {}", ids.toArray());
       this.comicBookService.undeleteComicBooksById(new ArrayList<>(ids));
 
-      this.comicBookSelectionService.clearSelectedComicBooks(ids);
-      session.setAttribute(
-          LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(ids));
+      this.comicSelectionService.clearSelectedComicBooks(ids);
+      session.setAttribute(LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(ids));
     } catch (ComicBookSelectionException error) {
       throw new ComicBookException("Failed to delete selected comic books", error);
     }

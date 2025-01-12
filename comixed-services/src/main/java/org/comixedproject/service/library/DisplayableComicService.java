@@ -18,7 +18,6 @@
 
 package org.comixedproject.service.library;
 
-import jakarta.persistence.Transient;
 import java.util.List;
 import java.util.Objects;
 import lombok.extern.log4j.Log4j2;
@@ -73,6 +72,7 @@ public class DisplayableComicService {
    * @param sortDirection the optional sort direction
    * @return the comics
    */
+  @Transactional
   public List<DisplayableComic> loadComicsByFilter(
       final Integer pageSize,
       final Integer pageIndex,
@@ -115,6 +115,45 @@ public class DisplayableComicService {
   }
 
   /**
+   * Returns the comic ids that match the provided filter.
+   *
+   * @param coverYear the optional cover year
+   * @param coverMonth the optional cover month
+   * @param archiveType the optional archive type
+   * @param comicType the optional comic type
+   * @param comicState the optional comic state
+   * @param unscrapedState the optional unscraped state
+   * @param searchText the optional search text
+   * @return the ids
+   */
+  @Transactional
+  public List<Long> getIdsByFilter(
+      final Integer coverYear,
+      final Integer coverMonth,
+      final ArchiveType archiveType,
+      final ComicType comicType,
+      final ComicState comicState,
+      final Boolean unscrapedState,
+      final String searchText) {
+    final var displayableComicExample =
+        doCreateExample(
+            coverYear,
+            coverMonth,
+            archiveType,
+            comicType,
+            comicState,
+            unscrapedState,
+            searchText,
+            null,
+            null,
+            null);
+
+    return this.displayableComicRepository.findAll(displayableComicExample).stream()
+        .map(DisplayableComic::getComicDetailId)
+        .toList();
+  }
+
+  /**
    * Returns the list of cover years for the given filter criteria.
    *
    * @param archiveType the optional archive type
@@ -127,6 +166,7 @@ public class DisplayableComicService {
    * @param volume the optional volume
    * @return the cover years
    */
+  @Transactional
   public List<Integer> getCoverYearsForFilter(
       final ArchiveType archiveType,
       final ComicType comicType,
@@ -169,6 +209,7 @@ public class DisplayableComicService {
    * @param volume the optional volume
    * @return the cover years
    */
+  @Transactional
   public List<Integer> getCoverMonthsForFilter(
       final ArchiveType archiveType,
       final ComicType comicType,
@@ -213,6 +254,7 @@ public class DisplayableComicService {
    * @param volume the optional volume
    * @return the cover years
    */
+  @Transactional
   public long getComicCountForFilter(
       final Integer coverYear,
       final Integer coverMonth,
@@ -251,6 +293,7 @@ public class DisplayableComicService {
    * @param idList the id list
    * @return the comics
    */
+  @Transactional
   public List<DisplayableComic> loadComicsById(
       final Integer pageSize,
       final Integer pageIndex,
@@ -272,7 +315,7 @@ public class DisplayableComicService {
    * @param sortDirection the sort direction
    * @return the comics
    */
-  @Transient
+  @Transactional
   public List<DisplayableComic> loadComicsByTagTypeAndValue(
       final int pageSize,
       final int pageIndex,
@@ -284,6 +327,44 @@ public class DisplayableComicService {
         tagType,
         tagValue,
         PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
+  }
+
+  /**
+   * Retrieves the comic ids for a given tag type and value.
+   *
+   * @param tagType the tag type
+   * @param tagValue the ta value
+   * @return the ids
+   */
+  @Transactional
+  public List<Long> getIdsByTagTypeAndValue(final ComicTagType tagType, final String tagValue) {
+    return this.displayableComicRepository.getIdsByTagTypeAndValue(tagType, tagValue);
+  }
+
+  /**
+   * Loads all comic ids for the given publisher.
+   *
+   * @param publisher the publisher
+   * @return the comic ids
+   */
+  @Transactional
+  public List<Long> getIdsByPublisher(final String publisher) {
+    return this.displayableComicRepository.getIdsByPublisher(publisher);
+  }
+
+  /**
+   * Loads all comic ids for the given publisher, series, and volume.
+   *
+   * @param publisher the publisher
+   * @param series the series
+   * @param volume the volume
+   * @return the ids
+   */
+  @Transactional
+  public List<Long> getIdsByPublisherSeriesAndVolume(
+      final String publisher, final String series, final String volume) {
+    return this.displayableComicRepository.getIdsByPublisherSeriesAndVolume(
+        publisher, series, volume);
   }
 
   /**
@@ -307,7 +388,8 @@ public class DisplayableComicService {
    * @return the years
    */
   @Transactional
-  public List<Integer> getCoverMonthsForFilter(final ComicTagType tagType, final String tagValue) {
+  public List<Integer> getCoverMonthsForTagTypeAndValue(
+      final ComicTagType tagType, final String tagValue) {
     return this.displayableComicRepository.getCoverMonthsForTagTypeAndValue(tagType, tagValue);
   }
 
@@ -319,7 +401,7 @@ public class DisplayableComicService {
    * @return the comic count
    */
   @Transactional
-  public long getComicCountForFilter(final ComicTagType tagType, final String tagValue) {
+  public long getComicCountForTagTypeAndValue(final ComicTagType tagType, final String tagValue) {
     return this.displayableComicRepository.getComicCountForTagTypeAndValue(tagType, tagValue);
   }
 
@@ -420,6 +502,16 @@ public class DisplayableComicService {
         sortDirection);
     return this.displayableComicRepository.loadDuplicateComics(
         PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
+  }
+
+  /**
+   * Loads the set of comic ids for all duplicate comics.
+   *
+   * @return the ids
+   */
+  @Transactional
+  public List<Long> getDuplicateComicIds() {
+    return this.displayableComicRepository.getDuplicateComicIds();
   }
 
   /**
