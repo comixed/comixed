@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.csv.CsvAdaptor;
 import org.comixedproject.messaging.PublishingException;
@@ -48,6 +49,7 @@ import org.comixedproject.state.lists.ReadingListStateHandler;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.statemachine.state.State;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -199,12 +201,12 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
    * @param email the owner's email address
    * @param id the reading list id
    * @param comicIds the list of comic ids
-   * @return the updated reading lis
    * @throws ReadingListException if the reading list id is invalid or the list is not owned by the
    *     given user
    */
   @Transactional
-  public ReadingList addComicsToList(String email, long id, List<Long> comicIds)
+  @Async
+  public void addComicsToList(String email, long id, List<Long> comicIds)
       throws ReadingListException {
     log.trace("Loading reading list: id={}", id);
     final ReadingList readingList = this.doLoadReadingList(id);
@@ -213,22 +215,9 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
       throw new ReadingListException(
           "User is not owner: " + email + " != " + readingList.getOwner().getEmail());
     }
-    comicIds.forEach(
-        comicId -> {
-          try {
-            log.trace("Loading comicBook: id={}", comicId);
-            final ComicBook comicBook = this.comicBookService.getComic(comicId);
-            log.trace("Adding comicBook to reading list");
-            Map<String, Object> headers = new HashMap<>();
-            headers.put(HEADER_COMIC, comicBook);
-            this.readingListStateHandler.fireEvent(
-                readingList, ReadingListEvent.comicAdded, headers);
-          } catch (ComicBookException error) {
-            log.error("Failed to add comic to reading list", error);
-          }
-        });
-    log.trace("Returning reading list");
-    return this.doLoadReadingList(id);
+    comicIds.removeAll(readingList.getEntryIds());
+    readingList.getEntryIds().addAll(comicIds.stream().distinct().collect(Collectors.toList()));
+    this.readingListStateHandler.fireEvent(readingList, ReadingListEvent.updated);
   }
 
   /**
@@ -236,13 +225,13 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
    *
    * @param email the owner's email
    * @param id the reading list record id
-   * @param comicBookIds the comic ids
-   * @return the updated reading list
+   * @param comicIds the comic ids
    * @throws ReadingListException if the reading list id is invalid or the list is not owned by the
    *     given user
    */
   @Transactional
-  public ReadingList removeComicsFromList(String email, long id, List<Long> comicBookIds)
+  @Async
+  public void removeComicsFromList(String email, long id, List<Long> comicIds)
       throws ReadingListException {
     log.trace("Loading reading list: id={}", id);
     final ReadingList readingList = this.doLoadReadingList(id);
@@ -251,21 +240,8 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
       throw new ReadingListException(
           "User is not owner: " + email + " != " + readingList.getOwner().getEmail());
     }
-
-    final List<Long> removedEntries =
-        readingList.getEntryIds().stream().filter(comicBookIds::contains).toList();
-    readingList.getEntryIds().removeAll(removedEntries);
-    final ReadingList updatedReadingList = this.readingListRepository.saveAndFlush(readingList);
-
-    try {
-      log.trace("Publishing changes");
-      this.publishReadingListUpdateAction.publish(updatedReadingList);
-    } catch (PublishingException error) {
-      log.error("Failed to publish update", error);
-    }
-
-    log.trace("Returning reading list");
-    return updatedReadingList;
+    readingList.getEntryIds().removeAll(comicIds);
+    this.readingListStateHandler.fireEvent(readingList, ReadingListEvent.updated);
   }
 
   private ReadingList doLoadReadingList(final long id) throws ReadingListException {

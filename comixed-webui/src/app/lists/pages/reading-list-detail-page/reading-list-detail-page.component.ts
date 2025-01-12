@@ -47,7 +47,6 @@ import {
   READING_LIST_REMOVAL_TOPIC,
   READING_LIST_UPDATES_TOPIC
 } from '@app/lists/lists.constants';
-import { interpolate } from '@app/core';
 import { downloadReadingList } from '@app/lists/actions/download-reading-list.actions';
 import {
   deleteReadingLists,
@@ -64,6 +63,8 @@ import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.s
 import { loadComicsForReadingList } from '@app/comic-books/actions/comic-list.actions';
 import { selectComicList } from '@app/comic-books/selectors/comic-list.selectors';
 import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import { interpolate } from '@app/core';
+import { selectUser } from '@app/user/selectors/user.selectors';
 
 @Component({
   selector: 'cx-user-reading-list-page',
@@ -78,8 +79,9 @@ export class ReadingListDetailPageComponent implements OnDestroy {
   readingListStateSubscription: Subscription;
   readingListSubscription: Subscription;
   messagingSubscription: Subscription;
-  readingListUpdateSubscription: MessagingSubscription;
-  readingListRemovalSubscription: MessagingSubscription;
+  userSubscription: Subscription;
+  readingListUpdateSubscription: MessagingSubscription | null = null;
+  readingListRemovalSubscription: MessagingSubscription | null = null;
   selectionSubscription: Subscription;
   lastReadDataSubscription: Subscription;
   readingListForm: UntypedFormGroup;
@@ -89,6 +91,7 @@ export class ReadingListDetailPageComponent implements OnDestroy {
   langChangeSubscription: Subscription;
   comicDetailListSubscription: Subscription;
   comics: DisplayableComic[] = [];
+  email: string | null = null;
 
   constructor(
     private logger: LoggerService,
@@ -170,22 +173,8 @@ export class ReadingListDetailPageComponent implements OnDestroy {
     this.messagingSubscription = this.store
       .select(selectMessagingState)
       .subscribe(state => {
-        if (
-          state.started &&
-          this.readingListId !== -1 &&
-          !this.readingListUpdateSubscription
-        ) {
-          this.logger.trace('Subscribing to reading list updates');
-          this.readingListUpdateSubscription = this.webSocketService.subscribe(
-            interpolate(READING_LIST_UPDATES_TOPIC, {
-              id: this.readingListId
-            }),
-            list => {
-              this.logger.trace('Reading list updated received');
-              this.store.dispatch(readingListLoaded({ list }));
-              this.loadReadingListEntries();
-            }
-          );
+        if (state.started && this.readingListId !== -1) {
+          this.doSubscribeToListUpdates();
         }
 
         if (!state.started && !!this.readingListUpdateSubscription) {
@@ -199,26 +188,12 @@ export class ReadingListDetailPageComponent implements OnDestroy {
           this.readingListRemovalSubscription.unsubscribe();
           this.readingListRemovalSubscription = null;
         }
-
-        if (
-          state.started &&
-          this.readingListId !== -1 &&
-          !this.readingListRemovalSubscription
-        ) {
-          this.logger.trace('Subscribing to reading list removal');
-          this.readingListRemovalSubscription = this.webSocketService.subscribe(
-            READING_LIST_REMOVAL_TOPIC,
-            list => {
-              this.logger.trace('Reading list removal received');
-              this.store.dispatch(readingListRemoved({ list }));
-              if (list.id === this.readingListId) {
-                this.logger.trace('This reading list was removed');
-                this.router.navigateByUrl('/lists/reading/all');
-              }
-            }
-          );
-        }
       });
+    this.logger.trace('Subscribing to user updates');
+    this.userSubscription = this.store.select(selectUser).subscribe(user => {
+      this.email = user?.email;
+      this.doSubscribeToListUpdates();
+    });
     this.logger.trace('Subscribing to language change updates');
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -244,7 +219,13 @@ export class ReadingListDetailPageComponent implements OnDestroy {
     this.paramsSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from query parameter updates');
     this.queryParamsSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from reading list updates');
+    this.logger.trace('Unsubscribing from messaging updates');
+    this.messagingSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from user updates');
+    this.userSubscription.unsubscribe();
+    if (!!this.readingListSubscription) {
+      this.logger.trace('Unsubscribing from reading list updates');
+    }
     this.readingListSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from comic detail list updates');
     this.comicDetailListSubscription.unsubscribe();
@@ -294,8 +275,7 @@ export class ReadingListDetailPageComponent implements OnDestroy {
         'reading-list-entries.remove-comics.confirmation-title'
       ),
       message: this.translateService.instant(
-        'reading-list-entries.remove-comics.confirmation-message',
-        { count: this.dataSource.data.filter(entry => entry.selected).length }
+        'reading-list-entries.remove-comics.confirmation-message'
       ),
       confirm: () => {
         this.logger.trace('Firing action: remove comics from reading list');
@@ -380,5 +360,38 @@ export class ReadingListDetailPageComponent implements OnDestroy {
         sortDirection: this.queryParameterService.sortDirection$.value
       })
     );
+  }
+
+  private doSubscribeToListUpdates() {
+    if (!!this.email) {
+      if (this.readingListUpdateSubscription == null) {
+        this.logger.trace('Subscribing to reading list updates');
+        this.readingListUpdateSubscription = this.webSocketService.subscribe(
+          interpolate(READING_LIST_UPDATES_TOPIC, {
+            id: this.readingListId,
+            email: this.email
+          }),
+          list => {
+            this.logger.trace('Reading list updated received');
+            this.store.dispatch(readingListLoaded({ list }));
+            this.loadReadingListEntries();
+          }
+        );
+      }
+      if (this.readingListRemovalSubscription === null) {
+        this.logger.trace('Subscribing to reading list removal');
+        this.readingListRemovalSubscription = this.webSocketService.subscribe(
+          interpolate(READING_LIST_REMOVAL_TOPIC, { email: this.email }),
+          list => {
+            this.logger.trace('Reading list removal received');
+            this.store.dispatch(readingListRemoved({ list }));
+            if (list.id === this.readingListId) {
+              this.logger.trace('This reading list was removed');
+              this.router.navigateByUrl('/lists/reading/all');
+            }
+          }
+        );
+      }
+    }
   }
 }

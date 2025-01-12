@@ -93,15 +93,14 @@ describe('ReadingListEntriesEffects', () => {
       const action = addSelectedComicBooksToReadingList({
         list: READING_LIST
       });
-      const outcome1 = addComicBooksToReadingListSuccess();
-      const outcome2 = readingListLoaded({ list: READING_LIST });
+      const outcome = addComicBooksToReadingListSuccess();
 
       actions$ = hot('-a', { a: action });
       readingListService.addSelectedComicBooks
         .withArgs({ list: READING_LIST })
         .and.returnValue(of(serviceResponse));
 
-      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
+      const expected = hot('-b', { b: outcome });
       expect(effects.adSelectedComicBooksToReadingList$).toBeObservable(
         expected
       );

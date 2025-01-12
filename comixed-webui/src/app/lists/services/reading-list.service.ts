@@ -44,6 +44,7 @@ import {
   readingListRemoved,
   readingListUpdate
 } from '@app/lists/actions/reading-lists.actions';
+import { selectUser } from '@app/user/selectors/user.selectors';
 
 @Injectable({
   providedIn: 'root'
@@ -52,6 +53,7 @@ export class ReadingListService {
   readingListsSubscription: MessagingSubscription;
   readingListUpdateSubscription: MessagingSubscription;
   readingListRemovalSubscription: MessagingSubscription;
+  email: string | null = null;
 
   constructor(
     private logger: LoggerService,
@@ -59,27 +61,13 @@ export class ReadingListService {
     private store: Store<any>,
     private webSocketService: WebSocketService
   ) {
+    this.store.select(selectUser).subscribe(user => {
+      this.email = user?.email;
+      this.doSubscribeToTopics();
+    });
     this.store.select(selectMessagingState).subscribe(state => {
-      if (state.started && !this.readingListUpdateSubscription) {
-        this.logger.trace('Subscribing to reading list updates');
-        this.readingListUpdateSubscription = this.webSocketService.subscribe(
-          interpolate(READING_LISTS_UPDATES_TOPIC),
-          list => {
-            this.logger.trace('Updated reading list received:', list);
-            this.store.dispatch(readingListUpdate({ list }));
-          }
-        );
-        this.store.dispatch(loadReadingLists());
-      }
-      if (state.started && !this.readingListRemovalSubscription) {
-        this.logger.trace('Subscribing to reading list removals');
-        this.readingListRemovalSubscription = this.webSocketService.subscribe(
-          READING_LIST_REMOVAL_TOPIC,
-          list => {
-            this.logger.trace('Reading list removed:', list);
-            this.store.dispatch(readingListRemoved({ list }));
-          }
-        );
+      if (state.started) {
+        this.doSubscribeToTopics();
       }
 
       if (!state.started && !!this.readingListUpdateSubscription) {
@@ -157,5 +145,31 @@ export class ReadingListService {
     return this.http.post(interpolate(DELETE_READING_LISTS_URL), {
       ids: args.lists.map(entry => entry.id)
     } as DeleteReadingListsRequest);
+  }
+
+  private doSubscribeToTopics(): void {
+    if (!!this.email) {
+      if (!this.readingListUpdateSubscription) {
+        this.logger.trace('Subscribing to reading list updates');
+        this.readingListUpdateSubscription = this.webSocketService.subscribe(
+          interpolate(READING_LISTS_UPDATES_TOPIC, { email: this.email }),
+          list => {
+            this.logger.trace('Updated reading list received:', list);
+            this.store.dispatch(readingListUpdate({ list }));
+          }
+        );
+        this.store.dispatch(loadReadingLists());
+      }
+      if (!this.readingListRemovalSubscription) {
+        this.logger.trace('Subscribing to reading list removals');
+        this.readingListRemovalSubscription = this.webSocketService.subscribe(
+          interpolate(READING_LIST_REMOVAL_TOPIC, { email: this.email }),
+          list => {
+            this.logger.trace('Reading list removed:', list);
+            this.store.dispatch(readingListRemoved({ list }));
+          }
+        );
+      }
+    }
   }
 }

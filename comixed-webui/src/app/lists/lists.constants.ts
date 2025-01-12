@@ -42,6 +42,6 @@ export const READING_LIST_TEMPLATE: ReadingList = {
   entryIds: []
 };
 
-export const READING_LISTS_UPDATES_TOPIC = `${SECURED_PREFIX}/topic/reading-lists.update`;
-export const READING_LIST_UPDATES_TOPIC = `${SECURED_PREFIX}/topic/reading-list.\${id}.update`;
-export const READING_LIST_REMOVAL_TOPIC = `${SECURED_PREFIX}/topic/reading-list.removed`;
+export const READING_LISTS_UPDATES_TOPIC = `${SECURED_PREFIX}/\${email}/topic/reading-lists.update`;
+export const READING_LIST_REMOVAL_TOPIC = `${SECURED_PREFIX}/\${email}/topic/reading-list.removed`;
+export const READING_LIST_UPDATES_TOPIC = `${SECURED_PREFIX}/\${email}/topic/reading-list.\${id}.update`;

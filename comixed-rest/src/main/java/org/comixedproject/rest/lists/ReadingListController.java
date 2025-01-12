@@ -25,6 +25,7 @@ import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
@@ -163,7 +164,6 @@ public class ReadingListController {
    * @param session the session
    * @param principal the reading list owner
    * @param id the reading list id
-   * @return the updated reading list
    * @throws ReadingListException if an error occurs
    */
   @PutMapping(
@@ -173,7 +173,7 @@ public class ReadingListController {
   @JsonView(View.ReadingListDetail.class)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.reading-list.add-selected-comic-books")
-  public ReadingList addSelectedComicBooksToReadingList(
+  public void addSelectedComicBooksToReadingList(
       final HttpSession session, final Principal principal, @PathVariable("id") final Long id)
       throws ReadingListException {
     String email = principal.getName();
@@ -182,19 +182,16 @@ public class ReadingListController {
           this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
       log.info(
-          "Adding {} comic{} to the reading list for {}: id={}",
+          "Adding {} comic(s) to the reading list for {}: id={}",
           selectedComicBookIds.size(),
-          selectedComicBookIds.size() == 1 ? "" : "s",
           email,
           id);
-      final ReadingList readingList =
-          this.readingListService.addComicsToList(email, id, selectedComicBookIds);
+
+      this.readingListService.addComicsToList(email, id, new ArrayList<>(selectedComicBookIds));
 
       this.comicSelectionService.clearSelectedComicBooks(selectedComicBookIds);
       session.setAttribute(
           LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicBookIds));
-
-      return readingList;
     } catch (ComicBookSelectionException error) {
       throw new ReadingListException("Failed to add selected comic books to reading list", error);
     }
@@ -206,14 +203,13 @@ public class ReadingListController {
    * @param session the session
    * @param principal the reading list owner
    * @param id the reading list id
-   * @return the updated reading list
    * @throws ReadingListException if an error occurs
    */
   @DeleteMapping(value = "/api/lists/reading/{id}/comics/remove/selected")
   @JsonView(View.ReadingListDetail.class)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.reading-list.remove-comics")
-  public ReadingList removeSelectedComicBooksFromReadingList(
+  public void removeSelectedComicBooksFromReadingList(
       final HttpSession session, final Principal principal, @PathVariable("id") final long id)
       throws ReadingListException {
     String email = principal.getName();
@@ -222,19 +218,16 @@ public class ReadingListController {
           this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
       log.info(
-          "Removing {} comic{} from the reading list for {}: id={}",
+          "Removing {} comic(s) from the reading list for {}: id={}",
           selectedComicBookIds.size(),
-          selectedComicBookIds.size() == 1 ? "" : "s",
           email,
           id);
-      final ReadingList readingList =
-          this.readingListService.removeComicsFromList(email, id, selectedComicBookIds);
+      this.readingListService.removeComicsFromList(
+          email, id, new ArrayList<>(selectedComicBookIds));
 
       this.comicSelectionService.clearSelectedComicBooks(selectedComicBookIds);
       session.setAttribute(
           LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicBookIds));
-
-      return readingList;
     } catch (ReadingListException | ComicBookSelectionException error) {
       throw new ReadingListException("Failed to remove selected comics from reading list", error);
     }
