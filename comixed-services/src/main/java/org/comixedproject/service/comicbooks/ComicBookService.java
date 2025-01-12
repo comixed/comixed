@@ -936,39 +936,6 @@ public class ComicBookService {
   }
 
   /**
-   * Returns the set of comic book ids for the given publisher.
-   *
-   * @param publisher the publisher
-   * @return the ids
-   */
-  @Transactional
-  public List<Long> getIdsByPublisher(final String publisher) {
-    log.debug("Loading all ids: publisher={}", publisher);
-    return this.comicBookRepository.getAllIdsByPublisher(publisher);
-  }
-
-  /**
-   * Returns the set of comic book ids for the given publisher, series, and volume.
-   *
-   * @param publisher the publisher
-   * @param series the series
-   * @param volume the volume
-   * @return the ids
-   */
-  @Transactional
-  public List<Long> getIdsByPublisherSeriesAndVolume(
-      final String publisher, final String series, final String volume) {
-    log.debug("Loading all ids: publisher={} series={} volume={}", publisher, series, volume);
-    return this.comicBookRepository.getAllIdsByPublisherSeriesAndVolume(publisher, series, volume);
-  }
-
-  @Transactional
-  public List<Long> getDuplicateComicIds() {
-    log.debug("Loading all ids for duplicate comic books");
-    return this.comicBookRepository.getDuplicateComicIds();
-  }
-
-  /**
    * Returns a subset of comic filenames based on whether they were previously marked as missing.
    *
    * @param missing the missing flag

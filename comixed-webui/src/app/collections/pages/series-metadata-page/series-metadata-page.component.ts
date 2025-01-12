@@ -138,8 +138,8 @@ export class SeriesMetadataPageComponent
       () => {
         this.store.dispatch(
           loadComicsByFilter({
-            pageIndex: null,
-            pageSize: null,
+            pageIndex: this.queryParameterService.pageIndex$.value,
+            pageSize: this.queryParameterService.pageSize$.value,
             coverMonth: null,
             coverYear: null,
             archiveType: null,

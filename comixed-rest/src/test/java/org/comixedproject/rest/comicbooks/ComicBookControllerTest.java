@@ -50,7 +50,7 @@ public class ComicBookControllerTest {
   @InjectMocks private ComicBookController controller;
   @Mock private ComicBookService comicBookService;
   @Mock private PageCacheService pageCacheService;
-  @Mock private ComicBookSelectionService comicBookSelectionService;
+  @Mock private ComicSelectionService comicSelectionService;
   @Mock private ComicBook comicBook;
   @Mock private List<PageOrderEntry> pageOrderEntrylist;
   @Mock private HttpSession httpSession;
@@ -66,9 +66,8 @@ public class ComicBookControllerTest {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     comicBookIdSet.add(TEST_COMIC_ID);
     Mockito.when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
-    Mockito.when(comicBookSelectionService.decodeSelections(Mockito.any()))
-        .thenReturn(selectedIdList);
-    Mockito.when(comicBookSelectionService.encodeSelections(selectedIdList))
+    Mockito.when(comicSelectionService.decodeSelections(Mockito.any())).thenReturn(selectedIdList);
+    Mockito.when(comicSelectionService.encodeSelections(selectedIdList))
         .thenReturn(TEST_REENCODED_SELECTIONS);
     for (long index = 0L; index < 100L; index++) {
       selectedIdList.add(index);
@@ -174,10 +173,10 @@ public class ComicBookControllerTest {
 
     controller.undeleteSelectedComicBooks(httpSession);
 
-    Mockito.verify(comicBookSelectionService, Mockito.times(1))
+    Mockito.verify(comicSelectionService, Mockito.times(1))
         .decodeSelections(TEST_ENCODED_SELECTIONS);
     Mockito.verify(comicBookService, Mockito.times(1)).undeleteComicBooksById(selectedIdList);
-    Mockito.verify(comicBookSelectionService, Mockito.times(1)).encodeSelections(selectedIdList);
+    Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(selectedIdList);
     Mockito.verify(httpSession, Mockito.times(1))
         .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
   }

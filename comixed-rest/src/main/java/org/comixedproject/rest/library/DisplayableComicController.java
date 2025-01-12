@@ -32,8 +32,8 @@ import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.model.net.library.*;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;
-import org.comixedproject.service.comicbooks.ComicBookSelectionService;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.comixedproject.service.library.DisplayableComicService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.lists.ReadingListException;
@@ -60,7 +60,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DisplayableComicController {
   @Autowired private DisplayableComicService displayableComicService;
   @Autowired private ComicBookService comicBookService;
-  @Autowired private ComicBookSelectionService comicBookSelectionService;
+  @Autowired private ComicSelectionService comicSelectionService;
   @Autowired private UserService userService;
   @Autowired private ReadingListService readingListService;
 
@@ -151,7 +151,7 @@ public class DisplayableComicController {
       throws ComicBookSelectionException {
     log.info("Loading selected comics: {}", request);
     final List<Long> selectedIds =
-        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+        this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     final List<DisplayableComic> comics =
         this.displayableComicService.loadComicsById(
             request.getPageSize(),
@@ -191,11 +191,11 @@ public class DisplayableComicController {
         this.displayableComicService.loadComicsByTagTypeAndValue(
             pageSize, pageIndex, tagType, tagValue, sortBy, sortDirection);
     final long filteredComics =
-        this.displayableComicService.getComicCountForFilter(tagType, tagValue);
+        this.displayableComicService.getComicCountForTagTypeAndValue(tagType, tagValue);
     return new LoadComicsResponse(
         comicDetails,
         this.displayableComicService.getCoverYearsForTagTypeAndValue(tagType, tagValue),
-        this.displayableComicService.getCoverMonthsForFilter(tagType, tagValue),
+        this.displayableComicService.getCoverMonthsForTagTypeAndValue(tagType, tagValue),
         filteredComics,
         filteredComics);
   }

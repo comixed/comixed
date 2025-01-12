@@ -35,8 +35,8 @@ import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.model.net.library.*;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;
-import org.comixedproject.service.comicbooks.ComicBookSelectionService;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.comixedproject.service.library.DisplayableComicService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.lists.ReadingListException;
@@ -81,7 +81,7 @@ public class DisplayableComicControllerTest {
   @InjectMocks private DisplayableComicController controller;
   @Mock private DisplayableComicService displayableComicService;
   @Mock private ComicBookService comicBookService;
-  @Mock private ComicBookSelectionService comicBookSelectionService;
+  @Mock private ComicSelectionService comicSelectionService;
   @Mock private UserService userService;
   @Mock private ReadingListService readingListService;
 
@@ -119,8 +119,7 @@ public class DisplayableComicControllerTest {
     Mockito.when(selectedRequest.getSortDirection()).thenReturn(TEST_SORT_DIRECTION);
 
     Mockito.when(session.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
-    Mockito.when(comicBookSelectionService.decodeSelections(Mockito.any()))
-        .thenReturn(selectedIdList);
+    Mockito.when(comicSelectionService.decodeSelections(Mockito.any())).thenReturn(selectedIdList);
 
     Mockito.when(selectedIdList.size()).thenReturn(TEST_SELECTED_SIZE);
 
@@ -256,11 +255,11 @@ public class DisplayableComicControllerTest {
                 Mockito.any(ComicTagType.class), Mockito.anyString()))
         .thenReturn(coverYears);
     Mockito.when(
-            displayableComicService.getCoverMonthsForFilter(
+            displayableComicService.getCoverMonthsForTagTypeAndValue(
                 Mockito.any(ComicTagType.class), Mockito.anyString()))
         .thenReturn(coverMonths);
     Mockito.when(
-            displayableComicService.getComicCountForFilter(
+            displayableComicService.getComicCountForTagTypeAndValue(
                 Mockito.any(ComicTagType.class), Mockito.anyString()))
         .thenReturn(TEST_FILTERED_COUNT);
 
@@ -294,7 +293,7 @@ public class DisplayableComicControllerTest {
     Mockito.verify(displayableComicService, Mockito.times(1))
         .getCoverYearsForTagTypeAndValue(TEST_TAG_TYPE, TEST_TAG_VALUE);
     Mockito.verify(displayableComicService, Mockito.times(1))
-        .getComicCountForFilter(TEST_TAG_TYPE, TEST_TAG_VALUE);
+        .getComicCountForTagTypeAndValue(TEST_TAG_TYPE, TEST_TAG_VALUE);
   }
 
   @Test

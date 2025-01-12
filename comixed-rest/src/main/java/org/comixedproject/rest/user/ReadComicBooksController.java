@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;
-import org.comixedproject.service.comicbooks.ComicBookSelectionService;
+import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.comixedproject.service.user.ReadComicBooksException;
 import org.comixedproject.service.user.ReadComicBooksService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 public class ReadComicBooksController {
   @Autowired private ReadComicBooksService readComicBooksService;
-  @Autowired private ComicBookSelectionService comicBookSelectionService;
+  @Autowired private ComicSelectionService comicSelectionService;
 
   /**
    * Marks a single comic book as read by the given user.
@@ -102,11 +102,10 @@ public class ReadComicBooksController {
     final String email = principal.getName();
     log.info("Marking selected comic books as read by {}", email);
     final List<Long> selectedIds =
-        this.comicBookSelectionService.decodeSelections(
-            httpSession.getAttribute(LIBRARY_SELECTIONS));
-    this.comicBookSelectionService.clearSelectedComicBooks(new ArrayList<>(selectedIds));
+        this.comicSelectionService.decodeSelections(httpSession.getAttribute(LIBRARY_SELECTIONS));
+    this.comicSelectionService.clearSelectedComicBooks(new ArrayList<>(selectedIds));
     httpSession.setAttribute(
-        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selectedIds));
+        LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedIds));
     this.readComicBooksService.markSelectionsAsRead(email, selectedIds);
   }
 
@@ -126,11 +125,10 @@ public class ReadComicBooksController {
     final String email = principal.getName();
     log.info("Unmarking selected comic books as read by {}", email);
     final List<Long> selectedIds =
-        this.comicBookSelectionService.decodeSelections(
-            httpSession.getAttribute(LIBRARY_SELECTIONS));
+        this.comicSelectionService.decodeSelections(httpSession.getAttribute(LIBRARY_SELECTIONS));
     this.readComicBooksService.unmarkSelectionsAsRead(email, new ArrayList<>(selectedIds));
-    this.comicBookSelectionService.clearSelectedComicBooks(selectedIds);
+    this.comicSelectionService.clearSelectedComicBooks(selectedIds);
     httpSession.setAttribute(
-        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selectedIds));
+        LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedIds));
   }
 }

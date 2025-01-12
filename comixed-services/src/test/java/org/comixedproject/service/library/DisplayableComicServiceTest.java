@@ -78,6 +78,7 @@ public class DisplayableComicServiceTest {
   @Mock private Stream<DisplayableComic> displayableComicStream;
   @Mock private Stream<Integer> distinctIntegerStream;
   @Mock private Stream<Integer> integerStream;
+  @Mock private Stream<Long> longStream;
   @Mock private Page<DisplayableComic> displayableComicPage;
   @Mock private List<DisplayableComic> comicList;
   @Mock private List<Long> idList;
@@ -318,6 +319,36 @@ public class DisplayableComicServiceTest {
   }
 
   @Test
+  public void testGetIdsByPublisher() {
+    Mockito.when(displayableComicRepository.getIdsByPublisher(Mockito.anyString()))
+        .thenReturn(idList);
+
+    final List<Long> result = service.getIdsByPublisher(TEST_PUBLISHER);
+
+    assertNotNull(result);
+    assertSame(idList, result);
+
+    Mockito.verify(displayableComicRepository, Mockito.times(1)).getIdsByPublisher(TEST_PUBLISHER);
+  }
+
+  @Test
+  public void testGetIdsByPublisherAndSeriesAndVolume() {
+    Mockito.when(
+            displayableComicRepository.getIdsByPublisherSeriesAndVolume(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(idList);
+
+    final List<Long> result =
+        service.getIdsByPublisherSeriesAndVolume(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
+
+    assertNotNull(result);
+    assertSame(idList, result);
+
+    Mockito.verify(displayableComicRepository, Mockito.times(1))
+        .getIdsByPublisherSeriesAndVolume(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
+  }
+
+  @Test
   public void testGetCoverYearsForTagTypeAndValue() {
     Mockito.when(
             displayableComicRepository.getCoverYearsForTagTypeAndValue(
@@ -341,7 +372,8 @@ public class DisplayableComicServiceTest {
                 Mockito.any(ComicTagType.class), Mockito.anyString()))
         .thenReturn(monthList);
 
-    final List<Integer> result = service.getCoverMonthsForFilter(TEST_TAG_TYPE, TEST_TAG_VALUE);
+    final List<Integer> result =
+        service.getCoverMonthsForTagTypeAndValue(TEST_TAG_TYPE, TEST_TAG_VALUE);
 
     assertNotNull(result);
     assertSame(monthList, result);
@@ -357,7 +389,7 @@ public class DisplayableComicServiceTest {
                 Mockito.any(ComicTagType.class), Mockito.anyString()))
         .thenReturn(TEST_COMIC_COUNT);
 
-    final long result = service.getComicCountForFilter(TEST_TAG_TYPE, TEST_TAG_VALUE);
+    final long result = service.getComicCountForTagTypeAndValue(TEST_TAG_TYPE, TEST_TAG_VALUE);
 
     assertEquals(TEST_COMIC_COUNT, result);
 
@@ -475,6 +507,18 @@ public class DisplayableComicServiceTest {
     assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
 
     Mockito.verify(displayableComicRepository, Mockito.times(1)).loadDuplicateComics(pageable);
+  }
+
+  @Test
+  public void testLoadDuplicateComicIds() {
+    Mockito.when(displayableComicRepository.getDuplicateComicIds()).thenReturn(idList);
+
+    final List<Long> result = service.getDuplicateComicIds();
+
+    assertNotNull(result);
+    assertSame(idList, result);
+
+    Mockito.verify(displayableComicRepository, Mockito.times(1)).getDuplicateComicIds();
   }
 
   @Test

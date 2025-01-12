@@ -33,7 +33,7 @@ import org.comixedproject.model.net.plugin.CreatePluginRequest;
 import org.comixedproject.model.net.plugin.UpdatePluginRequest;
 import org.comixedproject.model.plugin.LibraryPlugin;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;
-import org.comixedproject.service.comicbooks.ComicBookSelectionService;
+import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.comixedproject.service.plugin.LibraryPluginException;
 import org.comixedproject.service.plugin.LibraryPluginService;
 import org.comixedproject.views.View;
@@ -52,7 +52,7 @@ import org.springframework.web.bind.annotation.*;
 @Log4j2
 public class LibraryPluginController {
   @Autowired private LibraryPluginService libraryPluginService;
-  @Autowired private ComicBookSelectionService comicBookSelectionService;
+  @Autowired private ComicSelectionService comicSelectionService;
 
   /**
    * Returns the list of all plugins.
@@ -171,13 +171,12 @@ public class LibraryPluginController {
       throws LibraryPluginException {
     try {
       final List<Long> selectedComicBookIdList =
-          this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+          this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
       log.info("Running plugin on selected comic books: plugin id={}", pluginId);
       this.libraryPluginService.runLibraryPlugin(pluginId, selectedComicBookIdList);
-      this.comicBookSelectionService.clearSelectedComicBooks(selectedComicBookIdList);
+      this.comicSelectionService.clearSelectedComicBooks(selectedComicBookIdList);
       session.setAttribute(
-          LIBRARY_SELECTIONS,
-          this.comicBookSelectionService.encodeSelections(selectedComicBookIdList));
+          LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicBookIdList));
     } catch (ComicBookSelectionException error) {
       throw new LibraryPluginException("Failed to run plugin against selected comic books", error);
     }
