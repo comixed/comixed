@@ -615,34 +615,6 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   void prepareForBatchScraping(@Param("ids") List<Long> ids);
 
   /**
-   * Returns all comic book ids for the given publisher.
-   *
-   * @param publisher the publisher
-   * @return the ids
-   */
-  @Query("SELECT c.id FROM ComicBook c WHERE c.comicDetail.publisher = :publisher")
-  List<Long> getAllIdsByPublisher(@Param("publisher") String publisher);
-
-  /**
-   * Returns all comic book ids for the given publisher, series, and volume.
-   *
-   * @param publisher the publisher
-   * @param series the series
-   * @param volume the volume
-   * @return the ids
-   */
-  @Query(
-      "SELECT c.id FROM ComicBook c WHERE c.comicDetail.publisher = :publisher AND c.comicDetail.series = :series AND c.comicDetail.volume = :volume")
-  List<Long> getAllIdsByPublisherSeriesAndVolume(
-      @Param("publisher") String publisher,
-      @Param("series") String series,
-      @Param("volume") String volume);
-
-  @Query(
-      "SELECT d.comicBook.id FROM ComicDetail d JOIN (SELECT c.publisher AS publisher, c.series AS series, c.volume AS volume, c.issueNumber AS issueNumber FROM ComicDetail c GROUP BY c.publisher, c.series, c.volume, c.issueNumber HAVING count(*) > 1) g ON g.publisher = d.publisher AND g.series = d.series AND g.volume = d.volume AND g.issueNumber = d.issueNumber")
-  List<Long> getDuplicateComicIds();
-
-  /**
    * Returns a subset of comic filenames based on the previously marked missing status.
    *
    * @param missing the missing flag

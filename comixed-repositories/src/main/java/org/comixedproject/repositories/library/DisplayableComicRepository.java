@@ -146,4 +146,45 @@ public interface DisplayableComicRepository extends JpaRepository<DisplayableCom
   @Query(
       "SELECT sum(total) FROM (SELECT count(*) AS total FROM DisplayableComic d WHERE d.publisher IS NOT NULL AND LENGTH(d.publisher) > 0 AND d.series IS NOT NULL AND LENGTH(d.series) > 0 AND d.volume IS NOT NULL AND LENGTH(d.volume) > 0 AND d.issueNumber IS NOT NULL AND LENGTH(d.issueNumber) > 0 AND d.coverDate IS NOT NULL GROUP BY d.publisher, d.series, d.volume, d.issueNumber, d.coverDate HAVING count(*) > 1)")
   long getDuplicateComicCount();
+
+  /**
+   * Returns the comic ids for all duplicate comics.
+   *
+   * @return the comic ids
+   */
+  @Query(
+      "SELECT d.comicDetailId FROM DisplayableComic d JOIN (SELECT c.publisher AS publisher, c.series AS series, c.volume AS volume, c.issueNumber AS issueNumber, c.coverDate as coverDate FROM ComicDetail c WHERE c.publisher IS NOT NULL AND LENGTH(c.publisher) > 0 AND c.series IS NOT NULL AND LENGTH(c.series) > 0 AND c.volume IS NOT NULL AND LENGTH(c.volume) > 0 AND c.issueNumber IS NOT NULL AND LENGTH(c.issueNumber) > 0 AND c.coverDate IS NOT NULL GROUP BY c.publisher, c.series, c.volume, c.issueNumber, c.coverDate HAVING count(*) > 1) g ON g.publisher = d.publisher AND g.series = d.series AND g.volume = d.volume AND g.issueNumber = d.issueNumber AND g.coverDate = d.coverDate")
+  List<Long> getDuplicateComicIds();
+
+  /**
+   * Returns all comic ids for a given publisher.
+   *
+   * @param publisher the publisher
+   * @return the comic ids
+   */
+  @Query("SELECT d.comicDetailId from DisplayableComic d WHERE d.publisher = :publisher")
+  List<Long> getIdsByPublisher(@Param("publisher") String publisher);
+
+  /**
+   * Returns all comic ids for a given publisher, series, and volume.
+   *
+   * @param publisher the publisher
+   * @param series the series
+   * @param volume the volume
+   * @return the comic ids
+   */
+  @Query(
+      "SELECT d.comicDetailId From DisplayableComic d WHERE d.publisher = :publisher AND d.series = :series AND d.volume = :volume")
+  List<Long> getIdsByPublisherSeriesAndVolume(String publisher, String series, String volume);
+
+  /**
+   * Returns the list of comic ids for a given tag type and value.
+   *
+   * @param tagType the tag type
+   * @param tagValue the tag value
+   * @return the comic ids
+   */
+  @Query(
+      "SELECT d.comicDetailId FROM DisplayableComic d WHERE d.comicDetailId IN (SELECT t.comicDetail.id FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue)")
+  List<Long> getIdsByTagTypeAndValue(ComicTagType tagType, String tagValue);
 }

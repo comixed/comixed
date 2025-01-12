@@ -67,7 +67,7 @@ public class LibraryControllerTest {
   @Mock private LibraryService libraryService;
   @Mock private RemoteLibraryStateService remoteLibraryStateService;
   @Mock private ComicBookService comicBookService;
-  @Mock private ComicBookSelectionService comicBookSelectionService;
+  @Mock private ComicSelectionService comicSelectionService;
   @Mock private ConfigurationService configurationService;
   @Mock private List<Long> idList;
   @Mock private JobLauncher jobLauncher;
@@ -86,9 +86,8 @@ public class LibraryControllerTest {
   @Before
   public void setUp() throws ComicBookSelectionException {
     Mockito.when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_IDS);
-    Mockito.when(comicBookSelectionService.decodeSelections(TEST_ENCODED_IDS))
-        .thenReturn(selectedIds);
-    Mockito.when(comicBookSelectionService.encodeSelections(Mockito.anyList()))
+    Mockito.when(comicSelectionService.decodeSelections(TEST_ENCODED_IDS)).thenReturn(selectedIds);
+    Mockito.when(comicSelectionService.encodeSelections(Mockito.anyList()))
         .thenReturn(TEST_REENCODED_IDS);
   }
 
@@ -189,9 +188,8 @@ public class LibraryControllerTest {
 
     Mockito.verify(libraryService, Mockito.times(1)).prepareForOrganization(selectedIds);
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
-    Mockito.verify(comicBookSelectionService, Mockito.times(1)).decodeSelections(TEST_ENCODED_IDS);
-    Mockito.verify(comicBookSelectionService, Mockito.times(1))
-        .clearSelectedComicBooks(selectedIds);
+    Mockito.verify(comicSelectionService, Mockito.times(1)).decodeSelections(TEST_ENCODED_IDS);
+    Mockito.verify(comicSelectionService, Mockito.times(1)).clearSelectedComicBooks(selectedIds);
     Mockito.verify(httpSession, Mockito.times(1))
         .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_IDS);
   }

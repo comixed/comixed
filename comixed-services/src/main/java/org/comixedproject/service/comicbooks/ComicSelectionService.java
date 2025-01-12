@@ -32,27 +32,23 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishComicBookSelectionStateAction;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.comicbooks.ComicType;
-import org.springframework.beans.factory.ObjectFactory;
+import org.comixedproject.service.library.DisplayableComicService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
- * <code>ComicBookSelectionService</code> provides business functions for managing a user's
- * selection of comics.
+ * <code>ComicSelectionService</code> provides business functions for managing a user's selection of
+ * comics.
  *
  * @author Darryl L. Pierce
  */
 @Service
 @Log4j2
-public class ComicBookSelectionService {
-  @Autowired private ComicDetailService comicDetailService;
-  @Autowired private ObjectFactory<ComicDetailExampleBuilder> exampleBuilderObjectFactory;
+public class ComicSelectionService {
+  @Autowired private DisplayableComicService displayableComicService;
   @Autowired private PublishComicBookSelectionStateAction publishComicBookSelectionStateAction;
   @Autowired private ObjectMapper objectMapper;
 
@@ -64,7 +60,6 @@ public class ComicBookSelectionService {
    * @param selections the current selection set
    * @param comicBookId the incoming comic book id
    */
-  @Transactional
   public void addComicSelectionForUser(final List<Long> selections, final Long comicBookId) {
     if (!selections.contains(comicBookId)) {
       log.debug("Adding comic book to selections: {}", comicBookId);
@@ -79,7 +74,6 @@ public class ComicBookSelectionService {
    * @param selections the current selections
    * @param comicBookId the incoming comic book id
    */
-  @Transactional
   public void removeComicSelectionFromUser(final List selections, final Long comicBookId) {
     if (selections.contains(comicBookId)) {
       log.debug("Removing comic book from selections: {}", comicBookId);
@@ -101,7 +95,6 @@ public class ComicBookSelectionService {
    * @param searchText the optional search text
    * @param adding adding or removing flag
    */
-  @Transactional
   public void selectByFilter(
       final List selections,
       final Integer coverYear,
@@ -112,20 +105,9 @@ public class ComicBookSelectionService {
       final Boolean unscrapedState,
       final String searchText,
       final boolean adding) {
-    final ComicDetailExampleBuilder builder = this.exampleBuilderObjectFactory.getObject();
-    builder.setCoverYear(coverYear);
-    builder.setCoverMonth(coverMonth);
-    builder.setArchiveType(archiveType);
-    builder.setComicType(comicType);
-    builder.setComicState(comicState);
-    builder.setUnscrapedState(unscrapedState);
-    builder.setSearchText(searchText);
-
-    final Example<ComicDetail> example = builder.build();
     final List selectedIds =
-        this.comicDetailService.findAllByExample(example).stream()
-            .map(ComicDetail::getComicId)
-            .toList();
+        this.displayableComicService.getIdsByFilter(
+            coverYear, coverMonth, archiveType, comicType, comicState, unscrapedState, searchText);
     if (adding) {
       log.debug("Adding {} selection{}", selections.size(), selectedIds.size() == 1 ? "" : "s");
       selections.addAll(selectedIds);
@@ -222,11 +204,7 @@ public class ComicBookSelectionService {
    */
   public void addByTagTypeAndValue(
       final List selections, final ComicTagType tagType, final String tagValue) {
-    selections.addAll(
-        this.comicDetailService.getAllComicsForTag(tagType, tagValue, null, false).stream()
-            .map(ComicDetail::getComicId)
-            .filter(id -> !selections.contains(id))
-            .toList());
+    selections.addAll(this.displayableComicService.getIdsByTagTypeAndValue(tagType, tagValue));
   }
 
   /**
@@ -238,10 +216,7 @@ public class ComicBookSelectionService {
    */
   public void removeByTagTypeAndValue(
       final List selections, final ComicTagType tagType, final String tagValue) {
-    selections.removeAll(
-        this.comicDetailService.getAllComicsForTag(tagType, tagValue, null, false).stream()
-            .map(ComicDetail::getComicId)
-            .toList());
+    selections.removeAll(this.displayableComicService.getIdsByTagTypeAndValue(tagType, tagValue));
   }
 
   @NoArgsConstructor

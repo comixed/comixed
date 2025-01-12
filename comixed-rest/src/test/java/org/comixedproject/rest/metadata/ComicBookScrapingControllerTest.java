@@ -35,8 +35,8 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.net.metadata.*;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;
-import org.comixedproject.service.comicbooks.ComicBookSelectionService;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.comixedproject.service.metadata.MetadataCacheService;
 import org.comixedproject.service.metadata.MetadataService;
 import org.junit.Before;
@@ -77,7 +77,7 @@ public class ComicBookScrapingControllerTest {
   @InjectMocks private ComicBookScrapingController controller;
   @Mock private MetadataService metadataService;
   @Mock private MetadataCacheService metadataCacheService;
-  @Mock private ComicBookSelectionService comicBookSelectionService;
+  @Mock private ComicSelectionService comicSelectionService;
   @Mock private ComicBookService comicBookService;
   @Mock private List<VolumeMetadata> comicVolumeList;
   @Mock private IssueMetadata comicIssue;
@@ -96,15 +96,15 @@ public class ComicBookScrapingControllerTest {
   @Before
   public void setUp() throws ComicBookSelectionException {
     Mockito.when(session.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
-    Mockito.when(comicBookSelectionService.decodeSelections(TEST_ENCODED_SELECTIONS))
+    Mockito.when(comicSelectionService.decodeSelections(TEST_ENCODED_SELECTIONS))
         .thenReturn(selectedIdList);
-    Mockito.when(comicBookSelectionService.encodeSelections(selectedIdList))
+    Mockito.when(comicSelectionService.encodeSelections(selectedIdList))
         .thenReturn(TEST_REENCODED_SELECTIONS);
     Mockito.when(session.getAttribute(MULTI_BOOK_SCRAPING_SELECTIONS))
         .thenReturn(TEST_ENCODED_MULTI_BOOKS);
-    Mockito.when(comicBookSelectionService.decodeSelections(TEST_ENCODED_MULTI_BOOKS))
+    Mockito.when(comicSelectionService.decodeSelections(TEST_ENCODED_MULTI_BOOKS))
         .thenReturn(multiBookIdList);
-    Mockito.when(comicBookSelectionService.encodeSelections(multiBookIdList))
+    Mockito.when(comicSelectionService.encodeSelections(multiBookIdList))
         .thenReturn(TEST_REENCODED_MULTI_BOOKS);
   }
 
@@ -277,7 +277,7 @@ public class ComicBookScrapingControllerTest {
       controller.startBatchMetadataUpdate(
           session, new StartMetadataUpdateProcessRequest(TEST_SKIP_CACHE));
     } finally {
-      Mockito.verify(comicBookSelectionService, Mockito.times(1))
+      Mockito.verify(comicSelectionService, Mockito.times(1))
           .decodeSelections(TEST_ENCODED_SELECTIONS);
       Mockito.verify(comicBookService, Mockito.times(1))
           .markComicBooksForBatchMetadataUpdate(selectedIdList);
@@ -296,12 +296,12 @@ public class ComicBookScrapingControllerTest {
 
     assertNotNull(jobParameters);
 
-    Mockito.verify(comicBookSelectionService, Mockito.times(1))
+    Mockito.verify(comicSelectionService, Mockito.times(1))
         .decodeSelections(TEST_ENCODED_SELECTIONS);
     Mockito.verify(comicBookService, Mockito.times(1))
         .markComicBooksForBatchMetadataUpdate(selectedIdList);
     Mockito.verify(jobLauncher, Mockito.times(1)).run(updateComicBookMetadata, jobParameters);
-    Mockito.verify(comicBookSelectionService, Mockito.times(1)).encodeSelections(selectedIdList);
+    Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(selectedIdList);
     Mockito.verify(session, Mockito.times(1))
         .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
   }
@@ -372,13 +372,13 @@ public class ComicBookScrapingControllerTest {
   @Test(expected = MetadataException.class)
   public void testStartMultiBookScraping_selectionsException()
       throws MetadataException, ComicBookSelectionException {
-    Mockito.when(comicBookSelectionService.decodeSelections(Mockito.any()))
+    Mockito.when(comicSelectionService.decodeSelections(Mockito.any()))
         .thenThrow(ComicBookSelectionException.class);
 
     try {
       controller.startMultiBookScraping(session, new StartMultiBookScrapingRequest(TEST_PAGE_SIZE));
     } finally {
-      Mockito.verify(comicBookSelectionService, Mockito.times(1))
+      Mockito.verify(comicSelectionService, Mockito.times(1))
           .decodeSelections(TEST_ENCODED_SELECTIONS);
     }
   }
@@ -399,12 +399,12 @@ public class ComicBookScrapingControllerTest {
     assertNotNull(result);
     assertSame(comicBookList, result.getComicBooks());
 
-    Mockito.verify(comicBookSelectionService, Mockito.times(1))
+    Mockito.verify(comicSelectionService, Mockito.times(1))
         .decodeSelections(TEST_ENCODED_MULTI_BOOKS);
     Mockito.verify(multiBookIdList, Mockito.times(1)).addAll(selectedIdList);
     Mockito.verify(comicBookService, Mockito.times(1))
         .loadByComicBookId(multiBookIdList, TEST_PAGE_SIZE, 0);
-    Mockito.verify(comicBookSelectionService, Mockito.times(1)).encodeSelections(multiBookIdList);
+    Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(multiBookIdList);
     Mockito.verify(session, Mockito.times(1))
         .setAttribute(MULTI_BOOK_SCRAPING_SELECTIONS, TEST_REENCODED_MULTI_BOOKS);
   }
@@ -425,12 +425,12 @@ public class ComicBookScrapingControllerTest {
     assertNotNull(result);
     assertSame(comicBookList, result.getComicBooks());
 
-    Mockito.verify(comicBookSelectionService, Mockito.times(1))
+    Mockito.verify(comicSelectionService, Mockito.times(1))
         .decodeSelections(TEST_ENCODED_MULTI_BOOKS);
     Mockito.verify(multiBookIdList, Mockito.never()).addAll(selectedIdList);
     Mockito.verify(comicBookService, Mockito.times(1))
         .loadByComicBookId(multiBookIdList, TEST_PAGE_SIZE, 0);
-    Mockito.verify(comicBookSelectionService, Mockito.times(1)).encodeSelections(multiBookIdList);
+    Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(multiBookIdList);
     Mockito.verify(session, Mockito.times(1))
         .setAttribute(MULTI_BOOK_SCRAPING_SELECTIONS, TEST_REENCODED_MULTI_BOOKS);
   }
@@ -459,7 +459,7 @@ public class ComicBookScrapingControllerTest {
   @Test(expected = MetadataException.class)
   public void testScrapeMultiBookComic_decodingException()
       throws MetadataException, ComicBookSelectionException {
-    Mockito.when(comicBookSelectionService.decodeSelections(TEST_ENCODED_MULTI_BOOKS))
+    Mockito.when(comicSelectionService.decodeSelections(TEST_ENCODED_MULTI_BOOKS))
         .thenThrow(ComicBookSelectionException.class);
 
     try {
@@ -469,7 +469,7 @@ public class ComicBookScrapingControllerTest {
           TEST_METADATA_SOURCE_ID,
           TEST_COMIC_ID);
     } finally {
-      Mockito.verify(comicBookSelectionService, Mockito.times(1))
+      Mockito.verify(comicSelectionService, Mockito.times(1))
           .decodeSelections(TEST_ENCODED_MULTI_BOOKS);
     }
   }
@@ -484,9 +484,9 @@ public class ComicBookScrapingControllerTest {
         .thenReturn(localComicBookList);
 
     final List<Long> localMultiBookIdList = new ArrayList<>();
-    Mockito.when(comicBookSelectionService.decodeSelections(TEST_ENCODED_MULTI_BOOKS))
+    Mockito.when(comicSelectionService.decodeSelections(TEST_ENCODED_MULTI_BOOKS))
         .thenReturn(localMultiBookIdList);
-    Mockito.when(comicBookSelectionService.encodeSelections(Mockito.anyList()))
+    Mockito.when(comicSelectionService.encodeSelections(Mockito.anyList()))
         .thenReturn(TEST_REENCODED_MULTI_BOOKS);
 
     final StartMultiBookScrapingResponse result =
@@ -494,12 +494,11 @@ public class ComicBookScrapingControllerTest {
 
     assertNotNull(result);
 
-    Mockito.verify(comicBookSelectionService, Mockito.times(1))
+    Mockito.verify(comicSelectionService, Mockito.times(1))
         .decodeSelections(TEST_ENCODED_MULTI_BOOKS);
     Mockito.verify(comicBookService, Mockito.times(1))
         .loadByComicBookId(localMultiBookIdList, TEST_PAGE_SIZE, 0);
-    Mockito.verify(comicBookSelectionService, Mockito.times(1))
-        .encodeSelections(localMultiBookIdList);
+    Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(localMultiBookIdList);
     Mockito.verify(session, Mockito.times(1))
         .setAttribute(MULTI_BOOK_SCRAPING_SELECTIONS, TEST_REENCODED_MULTI_BOOKS);
   }
@@ -507,13 +506,13 @@ public class ComicBookScrapingControllerTest {
   @Test(expected = MetadataException.class)
   public void testRemoveMultiBookComic_decodingException()
       throws MetadataException, ComicBookSelectionException {
-    Mockito.when(comicBookSelectionService.decodeSelections(TEST_ENCODED_MULTI_BOOKS))
+    Mockito.when(comicSelectionService.decodeSelections(TEST_ENCODED_MULTI_BOOKS))
         .thenThrow(ComicBookSelectionException.class);
 
     try {
       controller.removeMultiBookComic(session, TEST_COMIC_ID, TEST_PAGE_SIZE);
     } finally {
-      Mockito.verify(comicBookSelectionService, Mockito.times(1))
+      Mockito.verify(comicSelectionService, Mockito.times(1))
           .decodeSelections(TEST_ENCODED_MULTI_BOOKS);
     }
   }
@@ -528,9 +527,9 @@ public class ComicBookScrapingControllerTest {
         .thenReturn(localComicBookList);
 
     final List<Long> localMultiBookIdList = new ArrayList<>();
-    Mockito.when(comicBookSelectionService.decodeSelections(TEST_ENCODED_MULTI_BOOKS))
+    Mockito.when(comicSelectionService.decodeSelections(TEST_ENCODED_MULTI_BOOKS))
         .thenReturn(localMultiBookIdList);
-    Mockito.when(comicBookSelectionService.encodeSelections(Mockito.anyList()))
+    Mockito.when(comicSelectionService.encodeSelections(Mockito.anyList()))
         .thenReturn(TEST_REENCODED_MULTI_BOOKS);
 
     final StartMultiBookScrapingResponse result =
@@ -543,12 +542,11 @@ public class ComicBookScrapingControllerTest {
 
     assertNotNull(result);
 
-    Mockito.verify(comicBookSelectionService, Mockito.times(1))
+    Mockito.verify(comicSelectionService, Mockito.times(1))
         .decodeSelections(TEST_ENCODED_MULTI_BOOKS);
     Mockito.verify(comicBookService, Mockito.times(1))
         .loadByComicBookId(localMultiBookIdList, TEST_PAGE_SIZE, TEST_PAGE_NUMBER);
-    Mockito.verify(comicBookSelectionService, Mockito.times(1))
-        .encodeSelections(localMultiBookIdList);
+    Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(localMultiBookIdList);
     Mockito.verify(session, Mockito.times(1))
         .setAttribute(MULTI_BOOK_SCRAPING_SELECTIONS, TEST_REENCODED_MULTI_BOOKS);
   }

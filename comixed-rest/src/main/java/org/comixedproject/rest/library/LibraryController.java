@@ -63,7 +63,7 @@ public class LibraryController {
   @Autowired private RemoteLibraryStateService remoteLibraryStateService;
   @Autowired private ComicBookService comicBookService;
   @Autowired private ConfigurationService configurationService;
-  @Autowired private ComicBookSelectionService comicBookSelectionService;
+  @Autowired private ComicSelectionService comicSelectionService;
 
   @Autowired
   @Qualifier("batchJobLauncher")
@@ -146,7 +146,7 @@ public class LibraryController {
     log.trace("Loading comic book selections");
     try {
       final List<Long> idList =
-          this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+          this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
       final ArchiveType archiveType = request.getArchiveType();
       final boolean renamePages = request.isRenamePages();
       final boolean deletePages = request.isDeletePages();
@@ -161,10 +161,9 @@ public class LibraryController {
       log.trace("Preparing to recreate comic files");
       this.libraryService.prepareToRecreate(idList, archiveType, renamePages, deletePages);
       log.trace("Clearing comic book selections");
-      this.comicBookSelectionService.clearSelectedComicBooks(idList);
+      this.comicSelectionService.clearSelectedComicBooks(idList);
       log.trace("Saving comic book selections");
-      session.setAttribute(
-          LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(idList));
+      session.setAttribute(LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(idList));
     } catch (ComicBookSelectionException error) {
       throw new LibraryException("Failed to start converting selected comic books", error);
     }
@@ -183,14 +182,14 @@ public class LibraryController {
   @Timed(value = "comixed.library.organize")
   public void organizeLibrary(final HttpSession session) throws Exception {
     final List<Long> selectedIds =
-        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+        this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     log.info("Organizing library: count={}", selectedIds.size());
     this.libraryService.prepareForOrganization(selectedIds);
     log.debug("Clearing comic book selections");
-    this.comicBookSelectionService.clearSelectedComicBooks(selectedIds);
+    this.comicSelectionService.clearSelectedComicBooks(selectedIds);
     log.debug("Deleting selections from session");
     session.setAttribute(
-        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selectedIds));
+        LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedIds));
   }
 
   /** Initiates the library organization process for all comics. */
@@ -252,12 +251,12 @@ public class LibraryController {
   @Timed(value = "comixed.library.batch.rescan-selected")
   public void rescanSelectedComicBooks(final HttpSession session) throws Exception {
     final List selectedIdList =
-        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+        this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     log.info("Rescanning selected comic books");
     this.comicBookService.prepareForRescan(selectedIdList);
-    this.comicBookSelectionService.clearSelectedComicBooks(selectedIdList);
+    this.comicSelectionService.clearSelectedComicBooks(selectedIdList);
     session.setAttribute(
-        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selectedIdList));
+        LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedIdList));
   }
 
   /**
@@ -286,15 +285,15 @@ public class LibraryController {
   @Timed(value = "comixed.library.batch.metadata-update-selected-comic-books")
   public void updateSelectedComicBooksMetadata(final HttpSession session) throws Exception {
     final List<Long> selectedComicBookIds =
-        this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+        this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     log.info(
         "Updating the metadata for {} comic{}",
         selectedComicBookIds.size(),
         selectedComicBookIds.size() == 1 ? "" : "s");
     this.libraryService.updateMetadata(selectedComicBookIds);
-    this.comicBookSelectionService.clearSelectedComicBooks(selectedComicBookIds);
+    this.comicSelectionService.clearSelectedComicBooks(selectedComicBookIds);
     session.setAttribute(
-        LIBRARY_SELECTIONS, this.comicBookSelectionService.encodeSelections(selectedComicBookIds));
+        LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicBookIds));
   }
 
   /**

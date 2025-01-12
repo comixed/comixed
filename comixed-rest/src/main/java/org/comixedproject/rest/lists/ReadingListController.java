@@ -35,7 +35,7 @@ import org.comixedproject.model.net.lists.SaveReadingListRequest;
 import org.comixedproject.model.net.lists.UpdateReadingListRequest;
 import org.comixedproject.repositories.lists.ReadingListRepository;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;
-import org.comixedproject.service.comicbooks.ComicBookSelectionService;
+import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.comixedproject.views.View;
@@ -56,7 +56,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ReadingListController {
   @Autowired ReadingListRepository readingListRepository;
   @Autowired ReadingListService readingListService;
-  @Autowired private ComicBookSelectionService comicBookSelectionService;
+  @Autowired private ComicSelectionService comicSelectionService;
 
   /**
    * Retrieves all reading lists for the current user.
@@ -179,7 +179,7 @@ public class ReadingListController {
     String email = principal.getName();
     try {
       List<Long> selectedComicBookIds =
-          this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+          this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
       log.info(
           "Adding {} comic{} to the reading list for {}: id={}",
@@ -190,10 +190,9 @@ public class ReadingListController {
       final ReadingList readingList =
           this.readingListService.addComicsToList(email, id, selectedComicBookIds);
 
-      this.comicBookSelectionService.clearSelectedComicBooks(selectedComicBookIds);
+      this.comicSelectionService.clearSelectedComicBooks(selectedComicBookIds);
       session.setAttribute(
-          LIBRARY_SELECTIONS,
-          this.comicBookSelectionService.encodeSelections(selectedComicBookIds));
+          LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicBookIds));
 
       return readingList;
     } catch (ComicBookSelectionException error) {
@@ -220,7 +219,7 @@ public class ReadingListController {
     String email = principal.getName();
     try {
       List<Long> selectedComicBookIds =
-          this.comicBookSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
+          this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
       log.info(
           "Removing {} comic{} from the reading list for {}: id={}",
@@ -231,10 +230,9 @@ public class ReadingListController {
       final ReadingList readingList =
           this.readingListService.removeComicsFromList(email, id, selectedComicBookIds);
 
-      this.comicBookSelectionService.clearSelectedComicBooks(selectedComicBookIds);
+      this.comicSelectionService.clearSelectedComicBooks(selectedComicBookIds);
       session.setAttribute(
-          LIBRARY_SELECTIONS,
-          this.comicBookSelectionService.encodeSelections(selectedComicBookIds));
+          LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicBookIds));
 
       return readingList;
     } catch (ReadingListException | ComicBookSelectionException error) {

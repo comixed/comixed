@@ -26,49 +26,52 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishComicBookSelectionStateAction;
+import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicTagType;
+import org.comixedproject.model.comicbooks.ComicType;
+import org.comixedproject.service.library.DisplayableComicService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.ObjectFactory;
-import org.springframework.data.domain.Example;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ComicBookSelectionServiceTest {
+public class ComicSelectionServiceTest {
   private static final Long TEST_COMIC_BOOK_ID = 717L;
   private static final Object TEST_ENCODED_SELECTIONS = "The encoded selections";
   private static final ComicTagType TEST_TAG_TYPE = ComicTagType.STORY;
   private static final String TEST_TAG_VALUE = "Age Of Ultron";
+  private static final Integer TEST_YEAR = 2025;
+  private static final Integer TEST_MONTH = 1;
+  private static final ArchiveType TEST_ARCHIVE_TYPE =
+      ArchiveType.values()[RandomUtils.nextInt(ArchiveType.values().length)];
+  private static final ComicType TEST_COMIC_TYPE =
+      ComicType.values()[RandomUtils.nextInt(ComicType.values().length)];
+  private static final ComicState TEST_COMIC_STATE =
+      ComicState.values()[RandomUtils.nextInt(ComicState.values().length)];
+  private static final String TEST_SEARCH_TEXT = "The search text";
 
   private final List<Long> selectedIds = new ArrayList<>();
   private final Set<Long> storedSelectedIds = new HashSet<>();
   private final List<ComicDetail> comicDetailList = new ArrayList<>();
 
-  @InjectMocks private ComicBookSelectionService service;
-  @Mock private ComicDetailService comicDetailService;
+  @InjectMocks private ComicSelectionService service;
+  @Mock private DisplayableComicService displayableComicService;
   @Mock private ObjectMapper objectMapper;
-  @Mock private Example<ComicDetail> example;
-  @Mock private ComicDetailExampleBuilder exampleBuilder;
-  @Mock private ObjectFactory<ComicDetailExampleBuilder> exampleBuilderObjectFactory;
   @Mock private PublishComicBookSelectionStateAction publishComicBookSelectionStateAction;
   @Mock private ComicDetail comicDetail;
 
-  @Captor private ArgumentCaptor<ComicBookSelectionService.ListOfIds> idsArgumentCaptor;
+  @Captor private ArgumentCaptor<ComicSelectionService.ListOfIds> idsArgumentCaptor;
 
   @Before
   public void setUp() {
-    Mockito.when(exampleBuilder.build()).thenReturn(example);
-    Mockito.when(exampleBuilderObjectFactory.getObject()).thenReturn(exampleBuilder);
-
-    Mockito.when(comicDetail.getComicId()).thenReturn(TEST_COMIC_BOOK_ID);
     comicDetailList.add(comicDetail);
-    Mockito.when(comicDetailService.findAllByExample(Mockito.any(Example.class)))
-        .thenReturn(comicDetailList);
   }
 
   @Test
@@ -144,23 +147,92 @@ public class ComicBookSelectionServiceTest {
 
   @Test
   public void testAddingMultipleComics() throws PublishingException {
+    final List<Long> comicIds = new ArrayList<>();
+    comicIds.add(TEST_COMIC_BOOK_ID);
+
+    Mockito.when(
+            displayableComicService.getIdsByFilter(
+                Mockito.anyInt(),
+                Mockito.anyInt(),
+                Mockito.any(ArchiveType.class),
+                Mockito.any(ComicType.class),
+                Mockito.any(ComicState.class),
+                Mockito.anyBoolean(),
+                Mockito.anyString()))
+        .thenReturn(comicIds);
+
     selectedIds.clear();
 
-    service.selectByFilter(selectedIds, null, null, null, null, null, false, null, true);
+    service.selectByFilter(
+        selectedIds,
+        TEST_YEAR,
+        TEST_MONTH,
+        TEST_ARCHIVE_TYPE,
+        TEST_COMIC_TYPE,
+        TEST_COMIC_STATE,
+        false,
+        TEST_SEARCH_TEXT,
+        true);
 
     assertFalse(selectedIds.isEmpty());
+    assertTrue(selectedIds.contains(TEST_COMIC_BOOK_ID));
 
     Mockito.verify(publishComicBookSelectionStateAction, Mockito.times(comicDetailList.size()))
         .publish(selectedIds);
+
+    Mockito.verify(displayableComicService, Mockito.times(1))
+        .getIdsByFilter(
+            TEST_YEAR,
+            TEST_MONTH,
+            TEST_ARCHIVE_TYPE,
+            TEST_COMIC_TYPE,
+            TEST_COMIC_STATE,
+            false,
+            TEST_SEARCH_TEXT);
   }
 
   @Test
   public void testRemovingMultipleComics() throws PublishingException {
+    final List<Long> comicIds = new ArrayList<>();
+    comicIds.add(TEST_COMIC_BOOK_ID);
     selectedIds.add(TEST_COMIC_BOOK_ID);
 
-    service.selectByFilter(selectedIds, null, null, null, null, null, false, null, false);
+    Mockito.when(
+            displayableComicService.getIdsByFilter(
+                Mockito.anyInt(),
+                Mockito.anyInt(),
+                Mockito.any(ArchiveType.class),
+                Mockito.any(ComicType.class),
+                Mockito.any(ComicState.class),
+                Mockito.anyBoolean(),
+                Mockito.anyString()))
+        .thenReturn(comicIds);
 
-    Mockito.verify(publishComicBookSelectionStateAction, Mockito.times(1)).publish(selectedIds);
+    service.selectByFilter(
+        selectedIds,
+        TEST_YEAR,
+        TEST_MONTH,
+        TEST_ARCHIVE_TYPE,
+        TEST_COMIC_TYPE,
+        TEST_COMIC_STATE,
+        false,
+        TEST_SEARCH_TEXT,
+        false);
+
+    assertTrue(selectedIds.isEmpty());
+
+    Mockito.verify(publishComicBookSelectionStateAction, Mockito.times(comicDetailList.size()))
+        .publish(selectedIds);
+
+    Mockito.verify(displayableComicService, Mockito.times(1))
+        .getIdsByFilter(
+            TEST_YEAR,
+            TEST_MONTH,
+            TEST_ARCHIVE_TYPE,
+            TEST_COMIC_TYPE,
+            TEST_COMIC_STATE,
+            false,
+            TEST_SEARCH_TEXT);
   }
 
   @Test
@@ -192,14 +264,14 @@ public class ComicBookSelectionServiceTest {
       service.decodeSelections(TEST_ENCODED_SELECTIONS);
     } finally {
       Mockito.verify(objectMapper, Mockito.times(1))
-          .readValue(TEST_ENCODED_SELECTIONS.toString(), ComicBookSelectionService.ListOfIds.class);
+          .readValue(TEST_ENCODED_SELECTIONS.toString(), ComicSelectionService.ListOfIds.class);
     }
   }
 
   @Test
   public void testDecodeSelections() throws ComicBookSelectionException, JsonProcessingException {
-    final ComicBookSelectionService.ListOfIds encodedIds =
-        new ComicBookSelectionService.ListOfIds(storedSelectedIds);
+    final ComicSelectionService.ListOfIds encodedIds =
+        new ComicSelectionService.ListOfIds(storedSelectedIds);
     storedSelectedIds.add(TEST_COMIC_BOOK_ID);
 
     Mockito.when(objectMapper.readValue(Mockito.anyString(), Mockito.any(Class.class)))
@@ -212,7 +284,7 @@ public class ComicBookSelectionServiceTest {
     assertEquals(TEST_COMIC_BOOK_ID, result.get(0));
 
     Mockito.verify(objectMapper, Mockito.times(1))
-        .readValue(TEST_ENCODED_SELECTIONS.toString(), ComicBookSelectionService.ListOfIds.class);
+        .readValue(TEST_ENCODED_SELECTIONS.toString(), ComicSelectionService.ListOfIds.class);
   }
 
   @Test
@@ -225,7 +297,7 @@ public class ComicBookSelectionServiceTest {
     assertNotNull(result);
     assertEquals(TEST_ENCODED_SELECTIONS.toString(), result);
 
-    final ComicBookSelectionService.ListOfIds ids = idsArgumentCaptor.getValue();
+    final ComicSelectionService.ListOfIds ids = idsArgumentCaptor.getValue();
     assertNotNull(ids);
     assertEquals(selectedIds, ids.getIds().stream().toList());
 
@@ -241,7 +313,7 @@ public class ComicBookSelectionServiceTest {
     try {
       service.encodeSelections(selectedIds);
     } finally {
-      final ComicBookSelectionService.ListOfIds ids = idsArgumentCaptor.getValue();
+      final ComicSelectionService.ListOfIds ids = idsArgumentCaptor.getValue();
 
       assertNotNull(ids);
       assertEquals(selectedIds, ids.getIds().stream().toList());
@@ -251,14 +323,35 @@ public class ComicBookSelectionServiceTest {
   }
 
   @Test
+  public void testPublishSelections() throws ComicBookSelectionException, PublishingException {
+    service.publishSelections(selectedIds);
+
+    Mockito.verify(publishComicBookSelectionStateAction, Mockito.times(1)).publish(selectedIds);
+  }
+
+  @Test(expected = ComicBookSelectionException.class)
+  public void testPublishSelections_publishingException()
+      throws ComicBookSelectionException, PublishingException {
+    Mockito.doThrow(PublishingException.class)
+        .when(publishComicBookSelectionStateAction)
+        .publish(Mockito.any());
+
+    try {
+      service.publishSelections(selectedIds);
+    } finally {
+      Mockito.verify(publishComicBookSelectionStateAction, Mockito.times(1)).publish(selectedIds);
+    }
+  }
+
+  @Test
   public void testAddByTagTypeAndValue() {
+    final List<Long> existingIds = new ArrayList<>();
+    existingIds.add(TEST_COMIC_BOOK_ID);
+
     Mockito.when(
-            comicDetailService.getAllComicsForTag(
-                Mockito.any(ComicTagType.class),
-                Mockito.anyString(),
-                Mockito.isNull(),
-                Mockito.anyBoolean()))
-        .thenReturn(comicDetailList);
+            displayableComicService.getIdsByTagTypeAndValue(
+                Mockito.any(ComicTagType.class), Mockito.anyString()))
+        .thenReturn(existingIds);
 
     final List emptyIds = new ArrayList();
 
@@ -266,19 +359,19 @@ public class ComicBookSelectionServiceTest {
 
     assertTrue(emptyIds.contains(TEST_COMIC_BOOK_ID));
 
-    Mockito.verify(comicDetailService, Mockito.times(1))
-        .getAllComicsForTag(TEST_TAG_TYPE, TEST_TAG_VALUE, null, false);
+    Mockito.verify(displayableComicService, Mockito.times(1))
+        .getIdsByTagTypeAndValue(TEST_TAG_TYPE, TEST_TAG_VALUE);
   }
 
   @Test
   public void testRemoveByTagTypeAndValue() {
+    final List<Long> existingIds = new ArrayList<>();
+    existingIds.add(TEST_COMIC_BOOK_ID);
+
     Mockito.when(
-            comicDetailService.getAllComicsForTag(
-                Mockito.any(ComicTagType.class),
-                Mockito.anyString(),
-                Mockito.isNull(),
-                Mockito.anyBoolean()))
-        .thenReturn(comicDetailList);
+            displayableComicService.getIdsByTagTypeAndValue(
+                Mockito.any(ComicTagType.class), Mockito.anyString()))
+        .thenReturn(existingIds);
 
     final List emptyIds = new ArrayList();
     emptyIds.add(TEST_COMIC_BOOK_ID);
@@ -289,7 +382,7 @@ public class ComicBookSelectionServiceTest {
     assertFalse(emptyIds.contains(TEST_COMIC_BOOK_ID));
     assertFalse(emptyIds.isEmpty());
 
-    Mockito.verify(comicDetailService, Mockito.times(1))
-        .getAllComicsForTag(TEST_TAG_TYPE, TEST_TAG_VALUE, null, false);
+    Mockito.verify(displayableComicService, Mockito.times(1))
+        .getIdsByTagTypeAndValue(TEST_TAG_TYPE, TEST_TAG_VALUE);
   }
 }
