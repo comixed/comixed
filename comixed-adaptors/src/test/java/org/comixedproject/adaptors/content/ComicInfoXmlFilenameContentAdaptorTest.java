@@ -18,10 +18,7 @@
 
 package org.comixedproject.adaptors.content;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertNull;
-import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.*;
 
 import java.io.IOException;
 import org.comixedproject.model.archives.ArchiveType;
@@ -37,6 +34,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class ComicInfoXmlFilenameContentAdaptorTest extends BaseContentAdaptorTest {
   private static final String TEST_COMICINFO_FILE_COMPLETE =
       "src/test/resources/ComicInfo-complete.xml";
+  private static final String TEST_COMICINFO_FILE_LONG_VOLUME =
+      "src/test/resources/ComicInfo-long-volume.xml";
   private static final String TEST_COMICINFO_FILE_NOT_XML =
       "src/test/resources/application.properties";
   private static final String TEST_PUBLISHER_NAME = "Test Publisher";
@@ -61,7 +60,7 @@ public class ComicInfoXmlFilenameContentAdaptorTest extends BaseContentAdaptorTe
   }
 
   @Test(expected = ContentAdaptorException.class)
-  public void testLoadComicInfoXmlNotXml() throws IOException, ContentAdaptorException {
+  public void testLoadComicInfoXml_notXml() throws IOException, ContentAdaptorException {
     adaptor.loadContent(
         comicBook,
         TEST_COMICINFO_FILE_COMPLETE,
@@ -92,7 +91,7 @@ public class ComicInfoXmlFilenameContentAdaptorTest extends BaseContentAdaptorTe
   }
 
   @Test
-  public void testLoadComicInfoXmlSkipMetadata() throws IOException, ContentAdaptorException {
+  public void testLoadComicInfoXml_skipMetadata() throws IOException, ContentAdaptorException {
     contentAdaptorRules.setSkipMetadata(true);
 
     adaptor.loadContent(
@@ -109,5 +108,17 @@ public class ComicInfoXmlFilenameContentAdaptorTest extends BaseContentAdaptorTe
     assertNull(comicBook.getComicDetail().getIssueNumber());
     assertNull(comicBook.getComicDetail().getTitle());
     assertNull(comicBook.getComicDetail().getDescription());
+  }
+
+  @Test
+  public void testLoadComicInfoXml_volumeTooLong() throws IOException, ContentAdaptorException {
+    adaptor.loadContent(
+        comicBook,
+        TEST_COMICINFO_FILE_LONG_VOLUME,
+        loadFile(TEST_COMICINFO_FILE_LONG_VOLUME),
+        contentAdaptorRules);
+
+    assertNotNull(comicBook.getComicDetail().getVolume());
+    assertEquals(4, comicBook.getComicDetail().getVolume().length());
   }
 }
