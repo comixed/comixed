@@ -7,7 +7,7 @@
       {{ popupComicDetail | comicTitle }}
     </mat-card-title>
     <mat-card-subtitle
-      *ngIf="!!popupComicDetail.title && popupComicDetail.length > 0"
+      *ngIf="!!popupComicDetail.title && popupComicDetail?.title.length > 0"
       class="cx-text-nowrap"
     >
       {{ popupComicDetail.title }}
@@ -15,7 +15,7 @@
     <mat-card-content class="cx-padding-5">
       <img
         loading="lazy"
-        [src]="popupComicDetail | comicCoverUrl"
+        [src]="popupComicDetail | comicDetailCoverUrl"
         width="100%"
         height="auto"
         [alt]="popupComicDetail | comicTitle"
@@ -69,7 +69,7 @@
           [style.width]="'100%'"
           [style.height]="'auto'"
           [alt]="currentComicBook?.detail | comicTitle"
-          [src]="currentComicBook?.detail | comicCoverUrl"
+          [src]="currentComicBook?.detail | comicDetailCoverUrl"
         />
       </mat-card-content>
     </mat-card>
@@ -131,7 +131,7 @@
           >
             <img
               loading="lazy"
-              [src]="entry | comicCoverUrl"
+              [src]="entry | comicDetailCoverUrl"
               [alt]="entry | comicTitle"
               width="100%"
               height="auto"
