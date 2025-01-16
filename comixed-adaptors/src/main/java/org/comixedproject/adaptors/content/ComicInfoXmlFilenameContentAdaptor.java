@@ -19,6 +19,7 @@
 package org.comixedproject.adaptors.content;
 
 import static org.apache.commons.lang3.StringUtils.trim;
+import static org.apache.commons.lang3.StringUtils.truncate;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import java.io.ByteArrayInputStream;
@@ -75,7 +76,7 @@ public class ComicInfoXmlFilenameContentAdaptor implements FilenameContentAdapto
       log.trace("Setting comic metadata");
       comicBook.getComicDetail().setPublisher(trim(comicInfo.getPublisher()));
       comicBook.getComicDetail().setSeries(trim(comicInfo.getSeries()));
-      comicBook.getComicDetail().setVolume(trim(comicInfo.getVolume()));
+      comicBook.getComicDetail().setVolume(truncate(trim(comicInfo.getVolume()), 0, 4));
       comicBook.getComicDetail().setIssueNumber(trim(comicInfo.getIssueNumber()));
       if (comicInfo.getYear() != null && comicInfo.getMonth() != null) {
         GregorianCalendar gc =
