@@ -20,7 +20,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ComicDetailsDialogComponent } from './comic-details-dialog.component';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
-import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicPageComponent } from '@app/comic-books/components/comic-page/comic-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { provideMockStore } from '@ngrx/store/testing';
@@ -31,6 +30,7 @@ import {
 import { MatCardModule } from '@angular/material/card';
 import { USER_READER } from '@app/user/user.fixtures';
 import { TranslateModule } from '@ngx-translate/core';
+import { ComicDetailCoverUrlPipe } from '@app/comic-books/pipes/comic-detail-cover-url.pipe';
 
 describe('ComicDetailsDialogComponent', () => {
   const USER = USER_READER;
@@ -48,7 +48,7 @@ describe('ComicDetailsDialogComponent', () => {
           ComicDetailsDialogComponent,
           ComicPageComponent,
           ComicTitlePipe,
-          ComicCoverUrlPipe
+          ComicDetailCoverUrlPipe
         ],
         imports: [
           LoggerModule.forRoot(),

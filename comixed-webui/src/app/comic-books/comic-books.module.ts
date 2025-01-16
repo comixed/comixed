@@ -75,6 +75,7 @@ import { ComicBookSelectionEffects } from '@app/comic-books/effects/comic-book-s
 import { VolumeMetadataTitlePipe } from './pipes/volume-metadata-title.pipe';
 import { comicListFeature } from '@app/comic-books/reducers/comic-list.reducer';
 import { ComicListEffects } from '@app/comic-books/effects/comic-list.effects';
+import { ComicDetailCoverUrlPipe } from '@app/comic-books/pipes/comic-detail-cover-url.pipe';
 
 @NgModule({
   declarations: [
@@ -87,6 +88,7 @@ import { ComicListEffects } from '@app/comic-books/effects/comic-list.effects';
     ComicStoryComponent,
     ComicDetailCardComponent,
     ComicCoverUrlPipe,
+    ComicDetailCoverUrlPipe,
     ComicPageUrlPipe,
     ComicTitlePipe,
     PageHashUrlPipe,
@@ -152,7 +154,8 @@ import { ComicListEffects } from '@app/comic-books/effects/comic-list.effects';
     VolumeMetadataTableComponent,
     ComicListViewComponent,
     IssueMetadataTitlePipe,
-    VolumeMetadataTitlePipe
+    VolumeMetadataTitlePipe,
+    ComicDetailCoverUrlPipe
   ]
 })
 export class ComicBooksModule {
