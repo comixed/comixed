@@ -30,7 +30,8 @@ import {
   loadComicsSuccess,
   loadDuplicateComics,
   loadReadComics,
-  loadUnreadComics
+  loadUnreadComics,
+  resetComicList
 } from '@app/comic-books/actions/comic-list.actions';
 
 export const COMIC_LIST_FEATURE_KEY = 'comic_list_state';
@@ -55,6 +56,14 @@ export const initialState: ComicListState = {
 
 export const reducer = createReducer(
   initialState,
+  on(resetComicList, state => ({
+    ...state,
+    comics: [],
+    coverYears: [],
+    coverMonths: [],
+    totalCount: 0,
+    filteredCount: 0
+  })),
   on(loadComicsByFilter, state => ({ ...state, busy: true })),
   on(loadComicsById, state => ({ ...state, busy: true })),
   on(loadComicsForCollection, state => ({ ...state, busy: true })),

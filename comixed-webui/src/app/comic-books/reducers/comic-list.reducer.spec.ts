@@ -40,7 +40,8 @@ import {
   loadComicsSuccess,
   loadDuplicateComics,
   loadReadComics,
-  loadUnreadComics
+  loadUnreadComics,
+  resetComicList
 } from '@app/comic-books/actions/comic-list.actions';
 
 describe('ComicList Reducer', () => {
@@ -90,7 +91,7 @@ describe('ComicList Reducer', () => {
       expect(state.busy).toBeFalse();
     });
 
-    it('has no comic details', () => {
+    it('has no comics', () => {
       expect(state.comics).toEqual([]);
     });
 
@@ -111,7 +112,47 @@ describe('ComicList Reducer', () => {
     });
   });
 
-  describe('loading comic details', () => {
+  describe('resetting the comic list', () => {
+    beforeEach(() => {
+      state = reducer(
+        {
+          ...state,
+          comics: COMIC_LIST,
+          coverYears: COVER_YEARS,
+          coverMonths: COVER_MONTHS,
+          totalCount: TOTAL_COUNT,
+          filteredCount: FILTERED_COUNT
+        },
+        resetComicList()
+      );
+    });
+
+    it('clears the list of comics', () => {
+      expect(state.comics).toEqual([]);
+    });
+
+    it('clears the list of cover years', () => {
+      expect(state.coverYears).toEqual([]);
+    });
+
+    it('clears the list of cover months', () => {
+      expect(state.coverMonths).toEqual([]);
+    });
+
+    it('clears the list of cover months', () => {
+      expect(state.coverMonths).toEqual([]);
+    });
+
+    it('resets the total count', () => {
+      expect(state.totalCount).toEqual(0);
+    });
+
+    it('resets the filtered count', () => {
+      expect(state.filteredCount).toEqual(0);
+    });
+  });
+
+  describe('loading comics', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: false },
@@ -140,7 +181,7 @@ describe('ComicList Reducer', () => {
     });
   });
 
-  describe('loading comic details by id', () => {
+  describe('loading comics by id', () => {
     beforeEach(() => {
       state = reducer({ ...state, busy: false }, loadComicsById({ ids: IDS }));
     });
@@ -150,7 +191,7 @@ describe('ComicList Reducer', () => {
     });
   });
 
-  describe('loading comic details for a collection', () => {
+  describe('loading comics for a collection', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: false },
@@ -170,7 +211,7 @@ describe('ComicList Reducer', () => {
     });
   });
 
-  describe('loading comic details that are unread', () => {
+  describe('loading comics that are unread', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: false },
@@ -225,7 +266,7 @@ describe('ComicList Reducer', () => {
     });
   });
 
-  describe('loading duplicate comic book details', () => {
+  describe('loading duplicate comic books', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: false },
@@ -243,7 +284,7 @@ describe('ComicList Reducer', () => {
     });
   });
 
-  describe('receiving comic details', () => {
+  describe('receiving comics', () => {
     beforeEach(() => {
       state = reducer(
         {
@@ -267,7 +308,7 @@ describe('ComicList Reducer', () => {
       expect(state.busy).toBeFalse();
     });
 
-    it('sets the list of comic details', () => {
+    it('sets the list of comics', () => {
       expect(state.comics).toEqual(COMIC_LIST);
     });
 
@@ -288,7 +329,7 @@ describe('ComicList Reducer', () => {
     });
   });
 
-  describe('failure to load comic details', () => {
+  describe('failure to load comics', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: true, comics: COMIC_LIST },

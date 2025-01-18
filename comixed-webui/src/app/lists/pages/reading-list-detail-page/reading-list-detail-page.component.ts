@@ -60,7 +60,10 @@ import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-bo
 import { setMultipleComicBookByIdSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.selectors';
-import { loadComicsForReadingList } from '@app/comic-books/actions/comic-list.actions';
+import {
+  loadComicsForReadingList,
+  resetComicList
+} from '@app/comic-books/actions/comic-list.actions';
 import { selectComicList } from '@app/comic-books/selectors/comic-list.selectors';
 import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
 import { interpolate } from '@app/core';
@@ -116,6 +119,8 @@ export class ReadingListDetailPageComponent implements OnDestroy {
         this.store.dispatch(loadReadingList({ id: this.readingListId }));
       } else {
         this.readingListId = -1;
+        this.logger.trace('Resetting comic list');
+        this.store.dispatch(resetComicList());
         this.logger.trace('Firing action to create a reading list');
         this.store.dispatch(createReadingList());
       }
