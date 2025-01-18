@@ -353,6 +353,22 @@ describe('ReadingListDetailPageComponent', () => {
           })
         );
       });
+
+      describe('receiving the comics to display', () => {
+        beforeEach(() => {
+          store.setState({
+            ...initialState,
+            [COMIC_LIST_FEATURE_KEY]: {
+              ...initialComicListState,
+              comics: COMIC_LIST
+            }
+          });
+        });
+
+        it('loads the table data source', () => {
+          expect(component.dataSource.data).not.toEqual([]);
+        });
+      });
     });
   });
 

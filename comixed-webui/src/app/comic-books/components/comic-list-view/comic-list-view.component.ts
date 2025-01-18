@@ -17,6 +17,7 @@
  */
 
 import {
+  AfterViewInit,
   Component,
   EventEmitter,
   HostListener,
@@ -85,13 +86,16 @@ import {
 } from '@app/user/actions/read-comic-books.actions';
 import { batchScrapeComicBooks } from '@app/comic-metadata/actions/multi-book-scraping.actions';
 import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import { loadReadingLists } from '@app/lists/actions/reading-lists.actions';
 
 @Component({
   selector: 'cx-comic-list-view',
   templateUrl: './comic-list-view.component.html',
   styleUrls: ['./comic-list-view.component.scss']
 })
-export class ComicListViewComponent implements OnInit, OnDestroy {
+export class ComicListViewComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
   @Output() selectAll = new EventEmitter<boolean>();
   @Output() filtered = new EventEmitter<boolean>();
   @Output() showing = new EventEmitter<number>();
@@ -207,6 +211,11 @@ export class ComicListViewComponent implements OnInit, OnDestroy {
   @Input() set comics(comics: DisplayableComic[]) {
     this._comics = comics;
     this.applyFilters();
+  }
+
+  ngAfterViewInit(): void {
+    this.logger.trace('Loading reading lists');
+    this.store.dispatch(loadReadingLists());
   }
 
   ngOnInit(): void {

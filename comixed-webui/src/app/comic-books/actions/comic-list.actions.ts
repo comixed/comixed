@@ -23,6 +23,10 @@ import { ComicState } from '@app/comic-books/models/comic-state';
 import { TagType } from '@app/collections/models/comic-collection.enum';
 import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
 
+export const resetComicList = createAction(
+  '[Comic List] Resets the list of comics'
+);
+
 export const loadComicsByFilter = createAction(
   '[Comic List] Load a page worth of comic details',
   props<{
