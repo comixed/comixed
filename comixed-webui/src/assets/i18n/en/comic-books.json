@@ -74,6 +74,9 @@
       "effect-failure": "Failed to {deleted, select, true{mark} other{unmark}} for deletion.",
       "effect-success": "{deleted, select, true{Marked} other{Unmarked}} for deletion."
     },
+    "navigation-link": {
+      "series": "V{volume}"
+    },
     "placeholder": {
       "api-key": "The API key used when scraping comics...",
       "metadata-source-id": "######",
