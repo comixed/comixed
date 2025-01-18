@@ -1,0 +1,7 @@
+<service>
+    <id>comixed</id>
+    <name>ComiXed</name>
+    <description>The ComiXed digital comic book management system v24.0-SNAPSHOT.</description>
+    <executable>"%BASE%\run.bat"</executable>
+    <log mode="roll"></log>
+</service>

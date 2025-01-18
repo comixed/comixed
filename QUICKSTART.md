@@ -153,6 +153,18 @@ text, the application is ready for the next step:
 2018-07-24 08:38:44.644  INFO 75198 --- [           main] org.comixedproject.ComiXedApp            : Started ComiXedApp in 8.979 seconds (JVM running for 9.62)
 ```
 
+### Running As A Windows Service
+
+You can setup ComiXed to run as a service on Windows. To do this, you'll need
+to do a few things first:
+
+1. Install .NET Framework 3.5.
+   1. If you're using Windows 11 and experience problems, see [this page](https://answers.microsoft.com/en-us/windows/forum/all/net-framework-35-installation-error-0x800f0950/5dbc8d69-f283-43f2-bfb7-ed9486e12cce).
+1. In the ComiXed directory, run the following command: ```comixed-service install```
+1. In the ComiXed directory, run the following command: ```comixed-service start```
+
+You should now have a service install and running.
+
 # Logging In
 
 ## The First Account Is The Administrator

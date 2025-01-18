@@ -4,7 +4,7 @@
 
 Name "${NAME}"
 OutFile "..\..\..\..\${SLUG} Installer.exe"
-DirText "Please select the target directory for ComiXed"
+DirText "Please select the installation directory for ComiXed"
 InstallDir "$PROGRAMFILES\${NAME}"
 InstallDirRegKey HKCU "Software\${NAME}" ""
 RequestExecutionLevel admin
@@ -22,6 +22,8 @@ File ..\assembly\scripts\dbbackup.bat
 File ..\assembly\scripts\dbrestore.bat
 File ..\assembly\scripts\dbtool.bat
 File ..\..\..\..\comixed-app\target\comixed-app-2.4-SNAPSHOT.jar
+File ..\..\..\target\classes\org\comixedproject\modules\windows_agent_installer\comixed-service.exe
+File .\comixed-service.xml
 
 SetOutPath $INSTDIR\lib
 File ..\..\..\target\lib\h2*jar
@@ -40,6 +42,10 @@ SectionEnd
 
 ;------------------
 Section "Uninstall"
+
+SetOutPath $INSTDIR\bin
+ExecWait "$INSTDIR\bin\comixed-service.exe stop"
+ExecWait "$INSTDIR\bin\comixed-service.exe uninstall"
 
 Delete $INSTDIR\Uninstall.exe
 
