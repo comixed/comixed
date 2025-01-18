@@ -86,6 +86,7 @@ public class MoveComicFilesProcessorTest {
     Mockito.when(comicDetailFile.exists()).thenReturn(true);
     Mockito.when(organizingComic.getFile()).thenReturn(comicDetailFile);
     Mockito.when(organizingComic.getFilename()).thenReturn(TEST_SOURCE_FILENAME);
+    Mockito.when(organizingComic.getFilename()).thenReturn(TEST_SOURCE_FILENAME);
     Mockito.when(
             comicFileAdaptor.findAvailableFilename(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyString()))
@@ -217,11 +218,12 @@ public class MoveComicFilesProcessorTest {
   }
 
   @Test
-  public void testProcess_MetadataFileExists() throws IOException {
+  public void testProcess_metadataFileExists() throws IOException {
     Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.anyString()))
         .thenReturn(TEST_SOURCE_METADATA_FILENAME, TEST_TARGET_METADATA_FILENAME);
     Mockito.when(fileAdaptor.sameFile(Mockito.any(File.class), Mockito.any(File.class)))
         .thenReturn(true, false);
+    Mockito.when(organizingComic.getUpdatedFilename()).thenReturn(TEST_REBUILT_FILENAME);
 
     processor.process(organizingComic);
 
