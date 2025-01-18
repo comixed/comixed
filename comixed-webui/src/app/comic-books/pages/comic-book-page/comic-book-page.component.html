@@ -135,6 +135,41 @@
   {{ comicBook?.detail | comicTitle }}
 </h1>
 
+<h2
+  *ngIf="
+    comicBook?.detail?.publisher?.length > 0 &&
+    comicBook?.detail?.series?.length > 0 &&
+    comicBook?.detail?.volume?.length > 0
+  "
+>
+  <a
+    [routerLink]="[
+      '/library/collections/publishers',
+      comicBook.detail.publisher,
+      'issues'
+    ]"
+  >
+    {{ comicBook.detail.publisher }}
+  </a>
+  &nbsp;/&nbsp;
+  <a
+    [routerLink]="[
+      '/library/collections/publishers',
+      comicBook.detail.publisher,
+      'series',
+      comicBook.detail.series,
+      'volumes',
+      comicBook.detail.volume,
+      'issues'
+    ]"
+  >
+    {{
+      "comic-book.navigation-link.series"
+        | translate: { volume: comicBook.detail.volume }
+    }}
+  </a>
+</h2>
+
 <div *ngIf="!!comicBook" id="comic-detail-container">
   <div id="comic-cover-container">
     <mat-card appearance="outlined" class="cx-padding-0">
