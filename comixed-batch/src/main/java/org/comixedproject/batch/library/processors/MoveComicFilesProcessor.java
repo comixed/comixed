@@ -108,7 +108,7 @@ public class MoveComicFilesProcessor
 
       if (metadataSourceFile.exists()) {
         File metadataTargetFile =
-            new File(this.comicBookAdaptor.getMetadataFilename(comic.getFilename()));
+            new File(this.comicBookAdaptor.getMetadataFilename(comic.getUpdatedFilename()));
         if (!this.fileAdaptor.sameFile(metadataSourceFile, metadataTargetFile)) {
           log.trace(
               "Moving comic metadata file: {} => {}",
