@@ -21,15 +21,19 @@ import { TestBed } from '@angular/core/testing';
 import { ServerRuntimeService } from './server-runtime.service';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { interpolate } from '@app/core';
 import {
   LOAD_SERVER_HEALTH_URL,
   SHUTDOWN_SERVER_URL
 } from '@app/admin/admin.constants';
-import { HttpResponse } from '@angular/common/http';
+import {
+  HttpResponse,
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 import { SERVER_HEALTH } from '@app/admin/admin.fixtures';
 
 describe('ServerRuntimeService', () => {
@@ -40,7 +44,11 @@ describe('ServerRuntimeService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [LoggerModule.forRoot()],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
     service = TestBed.inject(ServerRuntimeService);
     httpMock = TestBed.inject(HttpTestingController);

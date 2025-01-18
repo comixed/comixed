@@ -19,8 +19,8 @@
 import { TestBed } from '@angular/core/testing';
 import { ReadingListService } from './reading-list.service';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import {
   READING_LIST_1,
@@ -44,7 +44,11 @@ import {
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { COMIC_DETAIL_1 } from '@app/comic-books/comic-books.fixtures';
 import { DownloadDocument } from '@app/core/models/download-document';
-import { HttpResponse } from '@angular/common/http';
+import {
+  HttpResponse,
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 import { DeleteReadingListsRequest } from '@app/lists/models/net/delete-reading-lists-request';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
@@ -94,7 +98,7 @@ describe('ReadingListService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
+      imports: [LoggerModule.forRoot()],
       providers: [
         provideMockStore({ initialState }),
         {
@@ -102,7 +106,9 @@ describe('ReadingListService', () => {
           useValue: {
             subscribe: jasmine.createSpy('WebSocketService.subscribe()')
           }
-        }
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
       ]
     });
 

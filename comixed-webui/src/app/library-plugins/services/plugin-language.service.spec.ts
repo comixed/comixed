@@ -20,12 +20,16 @@ import { TestBed } from '@angular/core/testing';
 import { PluginLanguageService } from './plugin-language.service';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { PLUGIN_LANGUAGE_LIST } from '@app/library-plugins/library-plugins.fixtures';
 import { interpolate } from '@app/core';
 import { LOAD_LANGUAGE_RUNTIME_LIST_URL } from '@app/library-plugins/library-plugins.constants';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 
 describe('PluginLanguageService', () => {
   let service: PluginLanguageService;
@@ -33,7 +37,11 @@ describe('PluginLanguageService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [LoggerModule.forRoot()],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
 
     service = TestBed.inject(PluginLanguageService);

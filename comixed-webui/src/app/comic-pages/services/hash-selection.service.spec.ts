@@ -20,8 +20,8 @@ import { TestBed } from '@angular/core/testing';
 import { HashSelectionService } from './hash-selection.service';
 import { PAGE_1, PAGE_2, PAGE_3 } from '@app/comic-pages/comic-pages.fixtures';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { interpolate } from '@app/core';
 import {
@@ -32,6 +32,10 @@ import {
   REMOVE_HASH_SELECTION_URL
 } from '@app/comic-pages/comic-pages.constants';
 import { LoggerModule } from '@angular-ru/cdk/logger';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 
 describe('HashSelectionService', () => {
   const HASHES = [PAGE_1.hash, PAGE_2.hash, PAGE_3.hash];
@@ -42,7 +46,11 @@ describe('HashSelectionService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [LoggerModule.forRoot()],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
 
     service = TestBed.inject(HashSelectionService);

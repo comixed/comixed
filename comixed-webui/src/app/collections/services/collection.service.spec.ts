@@ -26,8 +26,8 @@ import {
   COLLECTION_ENTRY_5
 } from '@app/collections/collections.fixtures';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TagType } from '@app/collections/models/comic-collection.enum';
@@ -35,6 +35,10 @@ import { interpolate } from '@app/core';
 import { LOAD_COLLECTION_ENTRIES_URL } from '@app/collections/collections.constants';
 import { LoadCollectionEntriesRequest } from '@app/collections/models/net/load-collection-entries-request';
 import { LoadCollectionEntriesResponse } from '@app/collections/models/net/load-collection-entries-response';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 
 describe('CollectionService', () => {
   const COLLECTION_LIST = [
@@ -56,7 +60,11 @@ describe('CollectionService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [LoggerModule.forRoot()],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
 
     service = TestBed.inject(CollectionService);

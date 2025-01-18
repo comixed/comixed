@@ -19,8 +19,8 @@
 import { TestBed } from '@angular/core/testing';
 import { StoryService } from './story.service';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { STORY_1, STORY_2, STORY_3 } from '@app/lists/lists.fixtures';
@@ -29,6 +29,10 @@ import {
   LOAD_ALL_STORY_NAMES_URL,
   LOAD_STORIES_FOR_NAME_URL
 } from '@app/lists/lists.constants';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 
 describe('StoryService', () => {
   const ENTRIES = [STORY_1, STORY_2, STORY_3];
@@ -39,7 +43,11 @@ describe('StoryService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [LoggerModule.forRoot()],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
     service = TestBed.inject(StoryService);
     httpMock = TestBed.inject(HttpTestingController);

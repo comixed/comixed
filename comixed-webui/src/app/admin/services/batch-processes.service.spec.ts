@@ -23,8 +23,8 @@ import {
   BATCH_PROCESS_DETAIL_2
 } from '@app/admin/admin.fixtures';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/core';
@@ -46,6 +46,10 @@ import {
 } from '@app/admin/actions/batch-processes.actions';
 import { WebSocketService } from '@app/messaging';
 import { DeleteSelectedJobsRequest } from '@app/admin/models/net/delete-selected-jobs-request';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 
 describe('BatchProcessesService', () => {
   const ENTRIES = [BATCH_PROCESS_DETAIL_1, BATCH_PROCESS_DETAIL_2];
@@ -60,7 +64,7 @@ describe('BatchProcessesService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
+      imports: [LoggerModule.forRoot()],
       providers: [
         provideMockStore({ initialState }),
         {
@@ -69,7 +73,9 @@ describe('BatchProcessesService', () => {
             send: jasmine.createSpy('WebSocketService.send()'),
             subscribe: jasmine.createSpy('WebSocketService.subscribe()')
           }
-        }
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
       ]
     });
 

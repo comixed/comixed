@@ -23,11 +23,15 @@ import {
   SET_COMIC_BOOK_READ_STATE_URL,
   SET_SELECTED_COMIC_BOOKS_READ_STATE_URL
 } from '@app/user/user.constants';
-import { HttpResponse } from '@angular/common/http';
+import {
+  HttpResponse,
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { COMIC_DETAIL_4 } from '@app/comic-books/comic-books.fixtures';
 import {
@@ -55,7 +59,11 @@ describe('ReadComicBooksService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [LoggerModule.forRoot()],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
 
     service = TestBed.inject(ReadComicBooksService);

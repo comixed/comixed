@@ -1,12 +1,12 @@
 @use '@angular/material' as mat;
 
-$dark-theme: mat.define-dark-theme(
+$dark-theme: mat.m2-define-dark-theme(
   (
     color: (
-      primary: mat.define-palette(mat.$gray-palette),
-      accent: mat.define-palette(mat.$cyan-palette)
+      primary: mat.m2-define-palette(mat.$m2-gray-palette),
+      accent: mat.m2-define-palette(mat.$m2-cyan-palette)
     ),
-    typography: mat.define-typography-config(),
+    typography: mat.m2-define-typography-config(),
     density: 0
   )
 );

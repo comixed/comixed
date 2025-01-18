@@ -29,8 +29,8 @@ import {
   SERIES_5
 } from '@app/collections/collections.fixtures';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/core';
@@ -41,6 +41,10 @@ import {
 import { LoadPublisherListRequest } from '@app/collections/models/net/load-publisher-list-request';
 import { LoadPublisherListResponse } from '@app/collections/models/net/load-publisher-list-response';
 import { LoadPublisherDetailRequest } from '@app/collections/models/net/load-publisher-detail-request';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 
 describe('PublisherService', () => {
   const PAGE_NUMBER = 3;
@@ -56,7 +60,11 @@ describe('PublisherService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [LoggerModule.forRoot()],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
 
     service = TestBed.inject(PublisherService);

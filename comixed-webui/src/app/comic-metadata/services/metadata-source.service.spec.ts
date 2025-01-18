@@ -19,8 +19,8 @@
 import { TestBed } from '@angular/core/testing';
 import { MetadataSourceService } from './metadata-source.service';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
@@ -33,7 +33,11 @@ import {
   MARK_METADATA_SOURCE_AS_PREFERRED_URL,
   UPDATE_METADATA_SOURCE_URL
 } from '@app/comic-metadata/comic-metadata.constants';
-import { HttpResponse } from '@angular/common/http';
+import {
+  HttpResponse,
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 
 describe('MetadataSourceService', () => {
   const METADATA_SOURCE = METADATA_SOURCE_1;
@@ -44,7 +48,11 @@ describe('MetadataSourceService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [LoggerModule.forRoot()],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
 
     service = TestBed.inject(MetadataSourceService);

@@ -29,8 +29,8 @@ import {
   USER_READER
 } from '@app/user/user.fixtures';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { interpolate } from '@app/core';
 import {
@@ -70,7 +70,11 @@ import {
   COMICS_READ_STATISTICS_5
 } from '@app/app.fixtures';
 import { CheckForAdminResponse } from '@app/user/models/net/check-for-admin-response';
-import { HttpResponse } from '@angular/common/http';
+import {
+  HttpResponse,
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 import { CreateAccountRequest } from '@app/user/models/net/create-account-request';
 import { CreateUserAccountRequest } from '@app/user/models/net/create-user-account-request';
 import { setReadComicBooks } from '@app/user/actions/read-comic-books.actions';
@@ -112,7 +116,7 @@ describe('UserService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
+      imports: [LoggerModule.forRoot()],
       providers: [
         provideMockStore({ initialState }),
         {
@@ -121,7 +125,9 @@ describe('UserService', () => {
             send: jasmine.createSpy('WebSocketService.send()'),
             subscribe: jasmine.createSpy('WebSocketService.subscribe()')
           }
-        }
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
       ]
     });
 
