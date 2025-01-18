@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
@@ -60,6 +61,11 @@ public class ScrapeComicBookInitiator {
   @Autowired
   @Qualifier("batchJobLauncher")
   private JobLauncher jobLauncher;
+
+  @Scheduled(cron = "${comixed.batch.scrape-metadata.schedule:0 0 3 * * *}")
+  public void execute() {
+    this.doExecute();
+  }
 
   @EventListener
   @Async
