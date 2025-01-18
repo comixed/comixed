@@ -19,8 +19,8 @@
 import { TestBed } from '@angular/core/testing';
 import { DuplicatePageService } from './duplicate-page.service';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/core';
@@ -35,6 +35,10 @@ import {
 } from '@app/library/library.fixtures';
 import { LoadDuplicatePageListRequest } from '@app/library/models/net/load-duplicate-page-list-request';
 import { LoadDuplicatePageListResponse } from '@app/library/models/net/load-duplicate-page-list-response';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 
 describe('DuplicatePageService', () => {
   const DETAIL = DUPLICATE_PAGE_1;
@@ -50,7 +54,11 @@ describe('DuplicatePageService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [LoggerModule.forRoot()],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
 
     service = TestBed.inject(DuplicatePageService);

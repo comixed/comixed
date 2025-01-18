@@ -23,8 +23,8 @@ import {
   PLUGIN_LIST
 } from '@app/library-plugins/library-plugins.fixtures';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/core';
@@ -38,7 +38,11 @@ import {
 } from '@app/library-plugins/library-plugins.constants';
 import { CreatePluginRequest } from '@app/library-plugins/models/net/create-plugin-request';
 import { UpdatePluginRequest } from '@app/library-plugins/models/net/update-plugin-request';
-import { HttpResponse } from '@angular/common/http';
+import {
+  HttpResponse,
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 import { COMIC_BOOK_2 } from '@app/comic-books/comic-books.fixtures';
 
 describe('LibraryPluginService', () => {
@@ -50,7 +54,11 @@ describe('LibraryPluginService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [LoggerModule.forRoot()],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
 
     service = TestBed.inject(LibraryPluginService);

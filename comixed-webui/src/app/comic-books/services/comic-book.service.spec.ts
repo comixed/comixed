@@ -20,8 +20,8 @@ import { TestBed } from '@angular/core/testing';
 
 import { ComicBookService } from './comic-book.service';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import {
   COMIC_BOOK_1,
@@ -47,7 +47,11 @@ import {
   UNDELETE_SELECTED_COMIC_BOOKS_URL,
   UNDELETE_SINGLE_COMIC_BOOK_URL
 } from '@app/comic-books/comic-books.constants';
-import { HttpResponse } from '@angular/common/http';
+import {
+  HttpResponse,
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
 import { MarkPagesDeletedRequest } from '@app/comic-books/models/net/mark-pages-deleted-request';
 import { SavePageOrderRequest } from '@app/comic-books/models/net/save-page-order-request';
@@ -72,7 +76,11 @@ describe('ComicBookService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [LoggerModule.forRoot()],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
 
     service = TestBed.inject(ComicBookService);

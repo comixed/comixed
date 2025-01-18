@@ -24,7 +24,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { UserEffects } from './effects/user.effects';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { UserRouting } from './user.routing';
-import { HttpClientModule } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 import { CoreModule } from '@app/core/core.module';
 import { MatCardModule } from '@angular/material/card';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -57,12 +60,11 @@ import { ReadComicBooksEffects } from '@app/user/effects/read-comic-books-effect
     EditAccountBarComponent,
     CreateAdminPageComponent
   ],
-  providers: [UserService],
+  exports: [EditAccountBarComponent],
   imports: [
     CommonModule,
     CoreModule,
     UserRouting,
-    HttpClientModule,
     TranslateModule.forRoot(),
     StoreModule.forFeature(initialUserAccountFeature),
     StoreModule.forFeature(userFeature),
@@ -87,6 +89,6 @@ import { ReadComicBooksEffects } from '@app/user/effects/read-comic-books-effect
     MatToolbarModule,
     MatSelectModule
   ],
-  exports: [EditAccountBarComponent]
+  providers: [UserService, provideHttpClient(withInterceptorsFromDi())]
 })
 export class UserModule {}

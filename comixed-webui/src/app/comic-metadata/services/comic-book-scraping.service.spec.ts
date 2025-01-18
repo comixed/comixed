@@ -27,8 +27,8 @@ import {
   COMIC_DETAIL_1
 } from '@app/comic-books/comic-books.fixtures';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/core';
@@ -53,7 +53,11 @@ import {
   SCRAPING_VOLUME_2,
   SCRAPING_VOLUME_3
 } from '@app/comic-metadata/comic-metadata.fixtures';
-import { HttpResponse } from '@angular/common/http';
+import {
+  HttpResponse,
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 import { StartMetadataUpdateProcessRequest } from '@app/comic-metadata/models/net/start-metadata-update-process-request';
 import { WebSocketService } from '@app/messaging';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
@@ -118,7 +122,7 @@ describe('ComicBookScrapingService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
+      imports: [LoggerModule.forRoot()],
       providers: [
         provideMockStore({ initialState }),
         {
@@ -127,7 +131,9 @@ describe('ComicBookScrapingService', () => {
             send: jasmine.createSpy('WebSocketService.send()'),
             subscribe: jasmine.createSpy('WebSocketService.subscribe()')
           }
-        }
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
       ]
     });
 

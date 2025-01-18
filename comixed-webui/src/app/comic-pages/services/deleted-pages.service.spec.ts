@@ -26,12 +26,16 @@ import {
   DELETED_PAGE_4
 } from '@app/comic-pages/comic-pages.fixtures';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { interpolate } from '@app/core';
 import { LOAD_ALL_DELETED_PAGES_URL } from '@app/comic-pages/comic-pages.constants';
 import { LoggerModule } from '@angular-ru/cdk/logger';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 
 describe('DeletedPagesService', () => {
   const DELETED_PAGE_LIST = [
@@ -46,7 +50,11 @@ describe('DeletedPagesService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [LoggerModule.forRoot()],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
 
     service = TestBed.inject(DeletedPagesService);

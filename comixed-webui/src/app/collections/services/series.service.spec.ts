@@ -19,8 +19,8 @@
 import { TestBed } from '@angular/core/testing';
 import { SeriesService } from './series.service';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { LoadSeriesListResponse } from '@app/collections/models/net/load-series-list-response';
 import {
@@ -40,6 +40,10 @@ import {
 } from '@app/collections/collections.constants';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { LoadSeriesDetailRequest } from '@app/collections/models/net/load-series-detail-request';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 
 describe('SeriesService', () => {
   const SERIES_LIST = [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5];
@@ -53,7 +57,11 @@ describe('SeriesService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [LoggerModule.forRoot(), HttpClientTestingModule]
+      imports: [LoggerModule.forRoot()],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
 
     service = TestBed.inject(SeriesService);

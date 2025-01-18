@@ -30,8 +30,8 @@ import {
 } from '@app/comic-pages/comic-pages.fixtures';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import {
   initialState as initialMessagingState,
@@ -57,7 +57,11 @@ import {
 } from '@app/comic-pages/comic-pages.constants';
 import { interpolate } from '@app/core';
 import { Subscription } from 'rxjs';
-import { HttpResponse } from '@angular/common/http';
+import {
+  HttpResponse,
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 import { DeleteBlockedPagesRequest } from '@app/comic-pages/models/net/delete-blocked-pages-request';
 import { SetBlockedStateRequest } from '@app/comic-pages/models/net/set-blocked-state-request';
 import { MarkPagesWithHashRequest } from '@app/comic-pages/models/net/mark-pages-with-hash-request';
@@ -96,7 +100,7 @@ describe('BlockedHashService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
+      imports: [LoggerModule.forRoot()],
       providers: [
         provideMockStore({ initialState }),
         {
@@ -108,7 +112,9 @@ describe('BlockedHashService', () => {
               'WebSocketService.requestResponse()'
             )
           }
-        }
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
       ]
     });
 

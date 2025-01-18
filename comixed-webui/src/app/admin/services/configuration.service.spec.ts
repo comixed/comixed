@@ -26,8 +26,8 @@ import {
   CONFIGURATION_OPTION_5
 } from '@app/admin/admin.fixtures';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/core';
@@ -39,6 +39,10 @@ import {
 import { SaveConfigurationOptionsResponse } from '@app/admin/models/net/save-configuration-options-response';
 import { SaveConfigurationOptionsRequest } from '@app/admin/models/net/save-configuration-options-request';
 import { FeatureEnabledResponse } from '@app/admin/models/net/feature-enabled-response';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 
 describe('ConfigurationService', () => {
   const OPTIONS = [
@@ -56,7 +60,11 @@ describe('ConfigurationService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [LoggerModule.forRoot()],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
 
     service = TestBed.inject(ConfigurationService);

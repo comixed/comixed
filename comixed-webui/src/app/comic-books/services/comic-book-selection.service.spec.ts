@@ -20,11 +20,15 @@ import { TestBed } from '@angular/core/testing';
 
 import { ComicBookSelectionService } from './comic-book-selection.service';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { HttpResponse } from '@angular/common/http';
+import {
+  HttpResponse,
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 import { interpolate } from '@app/core';
 import {
   ADD_SINGLE_COMIC_SELECTION_URL,
@@ -89,7 +93,7 @@ describe('ComicBookSelectionService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
+      imports: [LoggerModule.forRoot()],
       providers: [
         provideMockStore({ initialState }),
         {
@@ -98,7 +102,9 @@ describe('ComicBookSelectionService', () => {
             send: jasmine.createSpy('WebSocketService.send()'),
             subscribe: jasmine.createSpy('WebSocketService.subscribe()')
           }
-        }
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
       ]
     });
 

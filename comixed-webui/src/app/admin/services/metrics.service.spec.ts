@@ -20,8 +20,8 @@ import { TestBed } from '@angular/core/testing';
 
 import { MetricsService } from './metrics.service';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { METRIC_DETAIL, METRIC_LIST } from '@app/admin/admin.fixtures';
@@ -30,6 +30,10 @@ import {
   LOAD_METRIC_DETAIL_URL,
   LOAD_METRIC_LIST_URL
 } from '@app/admin/admin.constants';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 
 describe('MetricsService', () => {
   let service: MetricsService;
@@ -37,7 +41,11 @@ describe('MetricsService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [LoggerModule.forRoot()],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
 
     service = TestBed.inject(MetricsService);

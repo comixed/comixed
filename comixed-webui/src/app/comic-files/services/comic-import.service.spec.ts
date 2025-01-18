@@ -22,12 +22,16 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/core';
 import { LoadComicFilesResponse } from '@app/library/models/net/load-comic-files-response';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { LoadComicFilesRequest } from '@app/library/models/net/load-comic-files-request';
 import { ImportComicFilesRequest } from '@app/library/models/net/import-comic-files-request';
-import { HttpResponse } from '@angular/common/http';
+import {
+  HttpResponse,
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 import {
   COMIC_FILE_1,
   COMIC_FILE_2,
@@ -70,7 +74,11 @@ describe('ComicImportService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [LoggerModule.forRoot()],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
 
     service = TestBed.inject(ComicImportService);

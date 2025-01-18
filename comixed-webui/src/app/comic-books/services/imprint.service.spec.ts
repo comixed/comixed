@@ -25,12 +25,16 @@ import {
   IMPRINT_3
 } from '@app/comic-books/comic-books.fixtures';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/core';
 import { GET_IMPRINTS_URL } from '@app/comic-books/comic-books.constants';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 
 describe('ImprintService', () => {
   const ENTRIES = [IMPRINT_1, IMPRINT_2, IMPRINT_3];
@@ -40,7 +44,11 @@ describe('ImprintService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [LoggerModule.forRoot()],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
 
     service = TestBed.inject(ImprintService);

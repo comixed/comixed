@@ -20,8 +20,8 @@ import { TestBed } from '@angular/core/testing';
 
 import { DisplayableComicService } from './displayable-comic.service';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
@@ -73,6 +73,10 @@ import {
   comicUpdated
 } from '@app/comic-books/actions/comic-list.actions';
 import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 
 describe('DisplayableComicService', () => {
   const PAGE_SIZE = 25;
@@ -122,7 +126,7 @@ describe('DisplayableComicService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
+      imports: [LoggerModule.forRoot()],
       providers: [
         provideMockStore({ initialState }),
         {
@@ -134,7 +138,9 @@ describe('DisplayableComicService', () => {
               'WebSocketService.requestResponse()'
             )
           }
-        }
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
       ]
     });
 

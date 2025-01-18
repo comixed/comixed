@@ -25,8 +25,8 @@ import {
   COMIC_DETAIL_4
 } from '@app/comic-books/comic-books.fixtures';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/core';
@@ -45,7 +45,11 @@ import {
   UPDATE_SELECTED_COMIC_BOOKS_METADATA_URL,
   UPDATE_SINGLE_COMIC_BOOK_METADATA_URL
 } from '@app/library/library.constants';
-import { HttpResponse } from '@angular/common/http';
+import {
+  HttpResponse,
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-request';
 import { OrganizeLibraryRequest } from '@app/library/models/net/organize-library-request';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
@@ -95,7 +99,7 @@ describe('LibraryService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
+      imports: [LoggerModule.forRoot()],
       providers: [
         provideMockStore({ initialState }),
         {
@@ -104,7 +108,9 @@ describe('LibraryService', () => {
             send: jasmine.createSpy('WebSocketService.send()'),
             subscribe: jasmine.createSpy('WebSocketService.subscribe()')
           }
-        }
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
       ]
     });
 

@@ -19,8 +19,8 @@
 import { TestBed } from '@angular/core/testing';
 import { ReleaseService } from './release.service';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { CURRENT_RELEASE, LATEST_RELEASE } from '@app/app.fixtures';
@@ -29,6 +29,10 @@ import {
   LOAD_LATEST_RELEASE_DETAILS_URL
 } from '@app/app.constants';
 import { interpolate } from '@app/core';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 
 describe('ReleaseService', () => {
   let service: ReleaseService;
@@ -36,7 +40,11 @@ describe('ReleaseService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [LoggerModule.forRoot()],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
 
     service = TestBed.inject(ReleaseService);

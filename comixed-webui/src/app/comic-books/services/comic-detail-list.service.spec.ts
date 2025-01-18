@@ -44,8 +44,8 @@ import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import {
   comicDetailRemoved,
@@ -53,6 +53,10 @@ import {
 } from '@app/comic-books/actions/comic-details-list.actions';
 import { TagType } from '@app/collections/models/comic-collection.enum';
 import { READING_LIST_3 } from '@app/lists/lists.fixtures';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 
 describe('ComicDetailListService', () => {
   const PAGE_SIZE = 25;
@@ -102,7 +106,7 @@ describe('ComicDetailListService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
+      imports: [LoggerModule.forRoot()],
       providers: [
         provideMockStore({ initialState }),
         {
@@ -114,7 +118,9 @@ describe('ComicDetailListService', () => {
               'WebSocketService.requestResponse()'
             )
           }
-        }
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
       ]
     });
 

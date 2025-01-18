@@ -27,8 +27,8 @@ import {
 } from '@app/admin/admin.fixtures';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { interpolate } from '@app/core';
 import {
@@ -37,7 +37,11 @@ import {
   SAVE_FILENAME_SCRAPING_RULES_URL,
   UPLOAD_FILENAME_SCRAPING_RULES_URL
 } from '@app/admin/admin.constants';
-import { HttpResponse } from '@angular/common/http';
+import {
+  HttpResponse,
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 
 describe('FilenameScrapingRulesService', () => {
   const RULES = [
@@ -53,7 +57,11 @@ describe('FilenameScrapingRulesService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [LoggerModule.forRoot()],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
     service = TestBed.inject(FilenameScrapingRulesService);
     httpMock = TestBed.inject(HttpTestingController);

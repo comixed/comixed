@@ -21,15 +21,17 @@ import { HttpInterceptor } from './http.interceptor';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { AUTHENTICATION_TOKEN } from '@app/core/core.fixtures';
 import {
-  HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import {
   HTTP_INTERCEPTORS,
   HttpEvent,
   HttpHandler,
   HttpRequest,
-  HttpResponse
+  HttpResponse,
+  provideHttpClient,
+  withInterceptorsFromDi
 } from '@angular/common/http';
 import {
   HTTP_AUTHORIZATION_HEADER,
@@ -55,7 +57,6 @@ describe('HttpInterceptor', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule,
         RouterTestingModule.withRoutes([
           {
             path: '**',
@@ -74,7 +75,9 @@ describe('HttpInterceptor', () => {
             getAuthToken: jasmine.createSpy('TokenService.getAuthToken()')
           }
         },
-        HttpInterceptor
+        HttpInterceptor,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
       ]
     });
 
