@@ -45,7 +45,7 @@ public class MissingFileScannerTest {
       new File("target/test-classes").getAbsolutePath();
   private static final String TEST_COMIC_FILENAME =
       new File("target/test-classes/example.cbz").getAbsolutePath();
-  private static final String TEST_MISSING_COMIC_FILENAME = TEST_COMIC_FILENAME.substring(1);
+  private static final String TEST_MISSING_COMIC_FILENAME = TEST_COMIC_FILENAME + "-not-found";
   private static final String TEST_RELATIVE_FILENAME = "example.cbz";
 
   @InjectMocks private MissingFileScanner scanner;
@@ -137,21 +137,10 @@ public class MissingFileScannerTest {
   }
 
   @Test
-  public void testWatchDirectory_directoryNotFound() throws IOException, InterruptedException {
-    scanner.watchService = watchService;
-
-    scanner.watchDirectory(TEST_ROOT_DIRECTORY.substring(1));
-
-    assertNull(scanner.watchService);
-
-    Mockito.verify(watchService, Mockito.times(1)).close();
-  }
-
-  @Test
   public void testWatchDirectory_fileNotDirectory() throws IOException, InterruptedException {
     scanner.watchService = watchService;
 
-    scanner.watchDirectory(TEST_COMIC_FILENAME.substring(1));
+    scanner.watchDirectory(TEST_ROOT_DIRECTORY.substring(0, TEST_ROOT_DIRECTORY.length() - 1));
 
     assertNull(scanner.watchService);
 

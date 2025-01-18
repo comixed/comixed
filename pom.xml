@@ -51,6 +51,11 @@
         <enabled>true</enabled>
       </snapshots>
     </repository>
+
+    <repository>
+      <id>Jenkins</id>
+      <url>https://repo.jenkins-ci.org/artifactory/releases</url>
+    </repository>
   </repositories>
 
   <properties>
