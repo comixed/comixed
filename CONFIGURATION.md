@@ -11,7 +11,9 @@ needs of the server administrator.
 | comixed.batch.page-reader.chunk-size              | The number of pages to process at a time        | Count    |
 | comixed.batch.add-image-cache-entries.chunk-size  | The number of pages to process at a time        | Count    |
 | comixed.batch.metadata-process.chunk-size         | The number of comics to process at a time       | Count    |
+| comixed.batch.purge-library.period                | The period to wait when purging comics          | Delay    |
 | comixed.batch.purge-library.chunk-size            | The number of comics to process at a time       | Count    |
+| comixed.batch.recreate-comic-files.period         | The period to wait when recreating comic files  | Delay    |   
 | comixed.batch.recreate-comic-files.chunk-size     | The number of comics to process at a time       | Count    |
 | comixed.batch.update-comic-metadata.chunk-size    | The number of comics to process at a time       | Count    |
 | comixed.batch.add-cover-to-image-cache.schedule   | The schedule for caching cover images           | Schedule |
@@ -24,6 +26,8 @@ needs of the server administrator.
 | comixed.batch.mark-blocked-pages.chunk-size       | The number of comics to process at a time       | Count    |
 | comixed.batch.organize-library.period             | The time between checking for comics to process | Delay    |
 | comixed.batch.organize-library.chunk-size         | The number of comics to process at a time       | Count    |
+| comixed.batch.scrape-metadata.schedule            | The schedule for automatically scraping comics  | Schedule |
+| comixed.batch.scrape-metadata.chunk-size          | The batch scraping chunk size                   | Count    |
 | comixed.batch.update-metadata.period              | The time between checking for comics to process | Delay    |
 | comixed.batch.update-metadata.chunk-size          | The number of comics to process at a time       | Count    |
 
@@ -49,6 +53,10 @@ minute, hour, day of the month, and day of the week to run the job. It is
 beyond the scope of this document to give more information, but you can
 read more about it
 [here](https://spring.io/blog/2020/11/10/new-in-spring-5-3-improved-cron-expressions#usage).
+
+To **disable** a scheduled batch process, set the schedule value to "-". For example:
+
+```comixed.batch.scrape-metadata.schedule=-```
 
 ### Path Values
 
