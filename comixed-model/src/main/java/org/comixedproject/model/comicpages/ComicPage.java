@@ -53,7 +53,7 @@ public class ComicPage {
   @NonNull
   private ComicBook comicBook;
 
-  @Column(name = "page_state", nullable = false, updatable = true)
+  @Column(name = "page_state", nullable = false, updatable = true, columnDefinition = "VARCHAR(32)")
   @Enumerated(EnumType.STRING)
   @Getter
   @Setter

@@ -47,14 +47,14 @@ public class DisplayableComic {
   @Getter
   private Long comicDetailId;
 
-  @Column(name = "archive_type")
+  @Column(name = "archive_type", columnDefinition = "VARCHAR(4)")
   @JsonView({View.ComicDetailsView.class})
   @Enumerated(EnumType.STRING)
   @Getter
   @Setter
   private ArchiveType archiveType;
 
-  @Column(name = "comic_state")
+  @Column(name = "comic_state", columnDefinition = "VARCHAR(64)")
   @JsonView({View.ComicDetailsView.class})
   @Enumerated(EnumType.STRING)
   @Getter
@@ -67,7 +67,7 @@ public class DisplayableComic {
   @Setter
   private Boolean unscraped;
 
-  @Column(name = "comic_type")
+  @Column(name = "comic_type", columnDefinition = "VARCHAR(32)")
   @JsonView({View.ComicDetailsView.class})
   @Enumerated(EnumType.STRING)
   @Getter

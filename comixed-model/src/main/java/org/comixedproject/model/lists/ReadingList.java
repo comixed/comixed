@@ -48,7 +48,11 @@ public class ReadingList {
   @Getter
   private Long id;
 
-  @Column(name = "reading_list_state", nullable = false, updatable = true)
+  @Column(
+      name = "reading_list_state",
+      nullable = false,
+      updatable = true,
+      columnDefinition = "VARCHAR(32)")
   @Enumerated(EnumType.STRING)
   @JsonProperty("readingListState")
   @JsonView({View.ComicListView.class, View.ReadingLists.class})
