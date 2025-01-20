@@ -55,7 +55,6 @@ public class OPDSPublisherController {
   @GetMapping(value = "/opds/collections/publishers", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.opds.collections.publisher.get-root")
-  @ResponseBody
   public OPDSNavigationFeed getRootFeedForPublishers(
       final Principal principal, @RequestParam(name = "unread") final boolean unread) {
     final String email = principal.getName();
@@ -75,7 +74,6 @@ public class OPDSPublisherController {
       produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.opds.collections.publisher.get-series")
-  @ResponseBody
   OPDSNavigationFeed getSeriesFeedForPublisher(
       final Principal principal,
       @PathVariable("publisher") @NonNull final String publisher,
@@ -103,7 +101,6 @@ public class OPDSPublisherController {
       produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.opds.collections.publisher.get-volumes")
-  @ResponseBody
   OPDSNavigationFeed getVolumeFeedForPublisherAndSeries(
       final Principal principal,
       @PathVariable("publisher") @NonNull final String publisher,
@@ -137,7 +134,6 @@ public class OPDSPublisherController {
       produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.opds.collections.publisher.get-comics")
-  @ResponseBody
   OPDSAcquisitionFeed getComicFeedsForPublisherAndSeriesAndVolume(
       final Principal principal,
       @RequestParam(name = "unread", defaultValue = "false") final boolean unread,

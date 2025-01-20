@@ -34,7 +34,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -60,7 +59,6 @@ public class OPDSListsController {
   @GetMapping(value = "/opds/lists", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.opds.reading-lists.get-all")
-  @ResponseBody
   public OPDSNavigationFeed loadReadingLists(final Principal principal) throws OPDSException {
     final String email = principal.getName();
     log.info("Getting reading lists for user: {}", email);
@@ -78,7 +76,6 @@ public class OPDSListsController {
   @GetMapping(value = "/opds/lists/{id}", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.opds.reading-lists.get-one")
-  @ResponseBody
   public OPDSAcquisitionFeed loadReadingListEntries(
       final Principal principal, @PathVariable("id") final Long id) throws OPDSException {
     final String email = principal.getName();

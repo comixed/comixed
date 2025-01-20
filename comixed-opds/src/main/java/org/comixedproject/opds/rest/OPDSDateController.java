@@ -33,7 +33,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -58,7 +57,6 @@ public class OPDSDateController {
   @GetMapping(value = "/opds/dates/released", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.opds.date.get-years")
-  @ResponseBody
   public OPDSNavigationFeed getYearsFeed(
       final Principal principal,
       @RequestParam(name = "unread", defaultValue = "false") final boolean unread) {
@@ -81,7 +79,6 @@ public class OPDSDateController {
       produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.opds.date.get-weeks")
-  @ResponseBody
   public OPDSNavigationFeed getWeeksFeedForYear(
       final Principal principal,
       @PathVariable("year") @NonNull final Integer year,
@@ -106,7 +103,6 @@ public class OPDSDateController {
       produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.opds.date.get-comics")
-  @ResponseBody
   public OPDSAcquisitionFeed loadComicsForYearAndWeek(
       final Principal principal,
       @PathVariable("year") @NonNull final Integer year,

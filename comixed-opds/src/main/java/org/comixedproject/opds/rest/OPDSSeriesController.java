@@ -54,7 +54,6 @@ public class OPDSSeriesController {
   @GetMapping(value = "/opds/collections/series", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.opds.collections.series.get-root")
-  @ResponseBody
   public OPDSNavigationFeed getRootFeedForSeries(
       final Principal principal, @RequestParam(name = "unread") final boolean unread) {
     final String email = principal.getName();
@@ -73,7 +72,6 @@ public class OPDSSeriesController {
   @GetMapping(value = "/opds/collections/series/{name}", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.opds.collections.series.get-volumes")
-  @ResponseBody
   public OPDSNavigationFeed getPublishersFeedForSeries(
       final Principal principal,
       @PathVariable("name") @NonNull final String name,

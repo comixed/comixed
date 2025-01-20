@@ -56,7 +56,6 @@ public class OPDSCollectionController {
   @GetMapping(value = "/opds/collections/{type}", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.opds.collection.get-root")
-  @ResponseBody
   public OPDSNavigationFeed getCollectionFeed(
       final Principal principal,
       @NonNull @PathVariable("type") final CollectionType collectionType,
@@ -81,7 +80,6 @@ public class OPDSCollectionController {
    */
   @GetMapping(value = "/opds/collections/{type}/{name}", produces = MediaType.APPLICATION_XML_VALUE)
   @Timed(value = "comixed.opds.collection.get-entries")
-  @ResponseBody
   public OPDSAcquisitionFeed getEntriesForCollectionFeed(
       final Principal principal,
       @PathVariable("type") final CollectionType collectionType,

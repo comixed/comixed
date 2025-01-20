@@ -27,7 +27,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -48,7 +47,6 @@ public class OPDSLibraryController {
   @GetMapping(value = "/opds/root.xml", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.opds.library.get-root")
-  @ResponseBody
   public OPDSNavigationFeed getRootFeed() {
     log.info("Loading OPDS root navigation feed");
     return this.opdsNavigationService.getRootFeed();
@@ -63,7 +61,6 @@ public class OPDSLibraryController {
   @GetMapping(value = "/opds/library", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.opds.library.get-feed")
-  @ResponseBody
   public OPDSNavigationFeed getLibraryFeed(
       @RequestParam(name = "unread", defaultValue = "false") final Boolean unread) {
     log.info("Loading OPDS library feed: unread={}", unread);

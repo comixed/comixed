@@ -50,4 +50,33 @@ public class WebResponseEncoder {
         .contentType(mediaType)
         .body(content);
   }
+
+  /**
+   * Returns an encoded response body for partial content with the specified status code.
+   *
+   * @param start the start index
+   * @param finish the finish index
+   * @param length the content length
+   * @param content the content
+   * @param filename the filename
+   * @param mediaType the MIME type
+   * @param <T> the content type
+   * @return the response body
+   */
+  public <T> ResponseEntity<T> encode(
+      final int start,
+      final int finish,
+      final int length,
+      final T content,
+      final String filename,
+      final MediaType mediaType) {
+    log.trace("Encoding web content from file: {}", filename);
+    return ResponseEntity.status(206)
+        .contentLength(length)
+        .header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
+        .header("Accept-Ranges", "bytes")
+        .header("Content-Range", String.format("bytes {}-{}/{}", start, finish, length))
+        .contentType(mediaType)
+        .body(content);
+  }
 }
