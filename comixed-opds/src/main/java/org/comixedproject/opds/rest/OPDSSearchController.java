@@ -28,7 +28,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -45,7 +44,6 @@ public class OPDSSearchController {
 
   @GetMapping(value = "/opds/search.xml", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
-  @ResponseBody
   public OpenSearchDescriptor getSearchDescriptor() {
     log.info("Getting the library search document descriptor");
     return this.searchDescriptor;

@@ -21,11 +21,11 @@ package org.comixedproject.opds.rest;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.IOUtils;
@@ -47,6 +47,7 @@ import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
@@ -73,7 +74,7 @@ public class OPDSComicBookControllerTest {
   @Mock private ResponseEntity<InputStreamResource> encodedInputStreamResourceResponse;
   @Mock private ComicPage page;
   @Mock private ResponseEntity<byte[]> encodedByteArrayResponse;
-  @Mock private Principal principal;
+  @Mock private HttpServletRequest request;
 
   @Captor private ArgumentCaptor<InputStreamResource> inputStreamResourceArgumentCaptor;
 
@@ -83,11 +84,12 @@ public class OPDSComicBookControllerTest {
   private byte[] imageContent;
 
   @Before
-  public void setUp() throws IOException {
-    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+  public void setUp() throws IOException, ComicBookException {
+    Mockito.when(comicBook.getPages()).thenReturn(pageList);
     Mockito.when(comicDetail.getFile()).thenReturn(comicFile);
     Mockito.when(comicDetail.getBaseFilename()).thenReturn(TEST_COMIC_FILENAME);
-    Mockito.when(comicBook.getPages()).thenReturn(pageList);
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(page.getFilename()).thenReturn(TEST_PAGE_NAME);
     Mockito.when(page.getWidth()).thenReturn(TEST_PAGE_WIDTH);
     pageList.add(page);
@@ -99,24 +101,44 @@ public class OPDSComicBookControllerTest {
   }
 
   @Test(expected = OPDSException.class)
-  public void testDownloadComicInvalidId() throws ComicBookException, OPDSException {
+  public void testDownloadComic_invalidId() throws ComicBookException, OPDSException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicBookException.class);
 
     try {
       controller.downloadComic(
-          principal, TEST_COMIC_ID, opdsUtils.urlEncodeString(TEST_COMIC_FILENAME));
+          request, TEST_COMIC_ID, opdsUtils.urlEncodeString(TEST_COMIC_FILENAME));
+    } finally {
+      Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
+    }
+  }
+
+  @Test(expected = OPDSException.class)
+  public void testDownloadComic_invalidRange() throws ComicBookException, OPDSException {
+    Mockito.when(request.getHeader(HttpHeaders.RANGE))
+        .thenReturn(String.format("bytes=%d-%d", this.fileLength, 0));
+
+    try {
+      controller.downloadComic(
+          request, TEST_COMIC_ID, opdsUtils.urlEncodeString(TEST_COMIC_FILENAME));
     } finally {
       Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
     }
   }
 
   @Test
-  public void testDownloadComic() throws ComicBookException, OPDSException {
+  public void testDownloadComic_withRange() throws ComicBookException, OPDSException {
+    final int start = (int) (this.fileLength / 2);
+
+    Mockito.when(request.getHeader(HttpHeaders.RANGE))
+        .thenReturn(String.format("bytes=%d-%d", start, this.fileLength));
+
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicDetail.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
 
     Mockito.when(
             webResponseEncoder.encode(
+                Mockito.anyInt(),
+                Mockito.anyInt(),
                 Mockito.anyInt(),
                 inputStreamResourceArgumentCaptor.capture(),
                 Mockito.anyString(),
@@ -125,7 +147,7 @@ public class OPDSComicBookControllerTest {
 
     final ResponseEntity<InputStreamResource> result =
         controller.downloadComic(
-            principal, TEST_COMIC_ID, opdsUtils.urlEncodeString(TEST_COMIC_FILENAME));
+            request, TEST_COMIC_ID, opdsUtils.urlEncodeString(TEST_COMIC_FILENAME));
 
     assertNotNull(result);
     assertSame(encodedInputStreamResourceResponse, result);
@@ -136,6 +158,124 @@ public class OPDSComicBookControllerTest {
     Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
     Mockito.verify(webResponseEncoder, Mockito.times(1))
         .encode(
+            start,
+            (int) this.fileLength,
+            (int) this.fileLength - start,
+            inputStreamResource,
+            TEST_COMIC_FILENAME,
+            MediaType.parseMediaType(TEST_ARCHIVE_TYPE.getMimeType()));
+  }
+
+  @Test
+  public void testDownloadComic_withRangeStart() throws ComicBookException, OPDSException {
+    final int start = (int) (this.fileLength / 2);
+
+    Mockito.when(request.getHeader(HttpHeaders.RANGE))
+        .thenReturn(String.format("bytes=%d-", start));
+
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
+    Mockito.when(comicDetail.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
+
+    Mockito.when(
+            webResponseEncoder.encode(
+                Mockito.anyInt(),
+                Mockito.anyInt(),
+                Mockito.anyInt(),
+                inputStreamResourceArgumentCaptor.capture(),
+                Mockito.anyString(),
+                Mockito.any(MediaType.class)))
+        .thenReturn(encodedInputStreamResourceResponse);
+
+    final ResponseEntity<InputStreamResource> result =
+        controller.downloadComic(
+            request, TEST_COMIC_ID, opdsUtils.urlEncodeString(TEST_COMIC_FILENAME));
+
+    assertNotNull(result);
+    assertSame(encodedInputStreamResourceResponse, result);
+
+    final InputStreamResource inputStreamResource = inputStreamResourceArgumentCaptor.getValue();
+    assertNotNull(inputStreamResource);
+
+    Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
+    Mockito.verify(webResponseEncoder, Mockito.times(1))
+        .encode(
+            start,
+            (int) this.fileLength,
+            (int) this.fileLength - start,
+            inputStreamResource,
+            TEST_COMIC_FILENAME,
+            MediaType.parseMediaType(TEST_ARCHIVE_TYPE.getMimeType()));
+  }
+
+  @Test
+  public void testDownloadComic_withRangeEnd() throws ComicBookException, OPDSException {
+    Mockito.when(request.getHeader(HttpHeaders.RANGE))
+        .thenReturn(String.format("bytes=-%d", this.fileLength));
+
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
+    Mockito.when(comicDetail.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
+
+    Mockito.when(
+            webResponseEncoder.encode(
+                Mockito.anyInt(),
+                Mockito.anyInt(),
+                Mockito.anyInt(),
+                inputStreamResourceArgumentCaptor.capture(),
+                Mockito.anyString(),
+                Mockito.any(MediaType.class)))
+        .thenReturn(encodedInputStreamResourceResponse);
+
+    final ResponseEntity<InputStreamResource> result =
+        controller.downloadComic(
+            request, TEST_COMIC_ID, opdsUtils.urlEncodeString(TEST_COMIC_FILENAME));
+
+    assertNotNull(result);
+    assertSame(encodedInputStreamResourceResponse, result);
+
+    final InputStreamResource inputStreamResource = inputStreamResourceArgumentCaptor.getValue();
+    assertNotNull(inputStreamResource);
+
+    Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
+    Mockito.verify(webResponseEncoder, Mockito.times(1))
+        .encode(
+            0,
+            (int) this.fileLength,
+            (int) this.fileLength,
+            inputStreamResource,
+            TEST_COMIC_FILENAME,
+            MediaType.parseMediaType(TEST_ARCHIVE_TYPE.getMimeType()));
+  }
+
+  @Test
+  public void testDownloadComic() throws ComicBookException, OPDSException {
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
+    Mockito.when(comicDetail.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
+
+    Mockito.when(
+            webResponseEncoder.encode(
+                Mockito.anyInt(),
+                Mockito.anyInt(),
+                Mockito.anyInt(),
+                inputStreamResourceArgumentCaptor.capture(),
+                Mockito.anyString(),
+                Mockito.any(MediaType.class)))
+        .thenReturn(encodedInputStreamResourceResponse);
+
+    final ResponseEntity<InputStreamResource> result =
+        controller.downloadComic(
+            request, TEST_COMIC_ID, opdsUtils.urlEncodeString(TEST_COMIC_FILENAME));
+
+    assertNotNull(result);
+    assertSame(encodedInputStreamResourceResponse, result);
+
+    final InputStreamResource inputStreamResource = inputStreamResourceArgumentCaptor.getValue();
+    assertNotNull(inputStreamResource);
+
+    Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
+    Mockito.verify(webResponseEncoder, Mockito.times(1))
+        .encode(
+            0,
+            (int) this.fileLength,
             (int) this.fileLength,
             inputStreamResource,
             TEST_COMIC_FILENAME,

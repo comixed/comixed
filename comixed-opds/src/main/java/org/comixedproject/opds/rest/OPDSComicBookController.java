@@ -19,11 +19,16 @@
 package org.comixedproject.opds.rest;
 
 import io.micrometer.core.annotation.Timed;
+import jakarta.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.security.Principal;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
@@ -36,11 +41,12 @@ import org.comixedproject.service.comicbooks.ComicBookService;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -56,10 +62,12 @@ public class OPDSComicBookController {
   @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
 
+  private Pattern pattern = Pattern.compile("bytes=([\\d]*)-([\\d]*)");
+
   /**
    * Retrieves a specific comic by record id.
    *
-   * @param principal the user principal
+   * @param request the request
    * @param id the record id
    * @param filename the filename
    * @return the comic content
@@ -67,22 +75,54 @@ public class OPDSComicBookController {
    */
   @GetMapping(value = "/opds/comics/{id}/content/{filename}")
   @Timed(value = "comixed.opds.comic-book.download")
-  @ResponseBody
   public ResponseEntity<InputStreamResource> downloadComic(
-      final Principal principal,
+      final HttpServletRequest request,
       @PathVariable("id") Long id,
       @PathVariable("filename") final String filename)
       throws OPDSException {
     try {
       log.info("Downloading comicBook: id={} filename={}", id, filename);
       ComicBook comicBook = this.comicBookService.getComic(id);
-      log.trace("Returning encoded file: {}", comicBook.getComicDetail().getFilename());
+      long start = 0L;
+      long finish = comicBook.getComicDetail().getFile().length();
+      final long length = finish;
+      log.debug("Returning encoded file: {}", comicBook.getComicDetail().getFilename());
+      final String rangeHeader = request.getHeader(HttpHeaders.RANGE);
+      if (Objects.nonNull(rangeHeader)) {
+        final Matcher matches = this.pattern.matcher(rangeHeader);
+        if (matches.matches()) {
+          final String left = matches.group(1);
+          final String right = matches.group(2);
+          if (StringUtils.hasLength(left) && StringUtils.hasLength(right)) {
+            start = Long.valueOf(left);
+            finish = Long.valueOf(right);
+          } else if (StringUtils.hasLength(left)) {
+            start = Long.valueOf(left);
+          } else if (StringUtils.hasLength(right)) {
+            finish = Long.valueOf(right);
+          }
+        }
+      }
+
+      log.debug("Range requested: {}-{}", start, finish);
+
+      if (start > finish || start > length || finish > length) {
+        throw new OPDSException("Asking for more data than the file contains");
+      }
+
+      final byte[] content =
+          Arrays.copyOfRange(
+              FileUtils.readFileToByteArray(comicBook.getComicDetail().getFile()),
+              Math.toIntExact(start),
+              Math.toIntExact(finish));
       return this.webResponseEncoder.encode(
-          (int) comicBook.getComicDetail().getFile().length(),
-          new InputStreamResource(new FileInputStream(comicBook.getComicDetail().getFile())),
+          (int) start,
+          (int) finish,
+          content.length,
+          new InputStreamResource(new ByteArrayInputStream(content)),
           comicBook.getComicDetail().getBaseFilename(),
           MediaType.parseMediaType(comicBook.getComicDetail().getArchiveType().getMimeType()));
-    } catch (ComicBookException | FileNotFoundException error) {
+    } catch (ComicBookException | IOException error) {
       throw new OPDSException("Failed to download comic: id=" + id, error);
     }
   }
