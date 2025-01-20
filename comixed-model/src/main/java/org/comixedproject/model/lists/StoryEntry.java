@@ -49,7 +49,11 @@ public class StoryEntry {
   @Getter
   private Story story;
 
-  @Column(name = "story_entry_state", nullable = false, updatable = true)
+  @Column(
+      name = "story_entry_state",
+      nullable = false,
+      updatable = true,
+      columnDefinition = "VARCHAR(32)")
   @Enumerated(EnumType.STRING)
   @NonNull
   @Getter

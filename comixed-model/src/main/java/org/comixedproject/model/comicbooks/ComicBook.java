@@ -135,7 +135,11 @@ public class ComicBook {
   @Setter
   private boolean organizing = false;
 
-  @Column(name = "target_archive_type", nullable = true, updatable = true)
+  @Column(
+      name = "target_archive_type",
+      nullable = true,
+      updatable = true,
+      columnDefinition = "VARCHAR(4)")
   @Enumerated(EnumType.STRING)
   @JsonIgnore
   @Getter

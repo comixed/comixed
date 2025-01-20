@@ -59,7 +59,12 @@ public class ComicTag {
   @NonNull
   private ComicDetail comicDetail;
 
-  @Column(name = "tag_type", insertable = true, nullable = false, updatable = false)
+  @Column(
+      name = "tag_type",
+      insertable = true,
+      nullable = false,
+      updatable = false,
+      columnDefinition = "VARCHAR(32)")
   @Enumerated(EnumType.STRING)
   @JsonProperty("type")
   @JsonView({View.ComicListView.class})

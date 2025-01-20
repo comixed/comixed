@@ -61,7 +61,11 @@ public class Story {
   @Setter
   private Integer comicVineId;
 
-  @Column(name = "story_state", nullable = false, updatable = true)
+  @Column(
+      name = "story_state",
+      nullable = false,
+      updatable = true,
+      columnDefinition = "VARCHAR(32)")
   @Enumerated(EnumType.STRING)
   @JsonIgnore
   @Getter

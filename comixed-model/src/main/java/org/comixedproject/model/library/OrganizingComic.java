@@ -46,7 +46,7 @@ public class OrganizingComic implements PublicationDetail {
   @Getter
   private String filename;
 
-  @Column(name = "archive_type")
+  @Column(name = "archive_type", columnDefinition = "VARCHAR(4)")
   @Enumerated(EnumType.STRING)
   @Getter
   private ArchiveType archiveType;

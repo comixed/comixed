@@ -90,7 +90,11 @@ public class ComicDetail implements PublicationDetail {
   @Setter
   private boolean missing = false;
 
-  @Column(name = "archive_type", nullable = false, updatable = true)
+  @Column(
+      name = "archive_type",
+      nullable = false,
+      updatable = true,
+      columnDefinition = "VARCHAR(4)")
   @Enumerated(EnumType.STRING)
   @JsonProperty("archiveType")
   @JsonView({
@@ -105,7 +109,11 @@ public class ComicDetail implements PublicationDetail {
   @NonNull
   private ArchiveType archiveType;
 
-  @Column(name = "comic_state", nullable = false, updatable = true)
+  @Column(
+      name = "comic_state",
+      nullable = false,
+      updatable = true,
+      columnDefinition = "VARCHAR(64)")
   @Enumerated(EnumType.STRING)
   @JsonProperty("comicState")
   @JsonView({
@@ -118,7 +126,7 @@ public class ComicDetail implements PublicationDetail {
   @Setter
   private ComicState comicState = ComicState.CREATED;
 
-  @Column(name = "comic_type", nullable = false, updatable = true)
+  @Column(name = "comic_type", nullable = false, updatable = true, columnDefinition = "VARCHAR(32)")
   @Enumerated(EnumType.STRING)
   @JsonProperty("comicType")
   @JsonView({
