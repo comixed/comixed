@@ -37,7 +37,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>LoadPageHashesInitiator</code> periodically checks for any pages that does not have a
+ * <code>LoadPageHashesInitiator</code> periodically checks for any page that does not have a
  * defined hash. If any are found, and if the <code>library.blocked-pages-enabled</code> feature is
  * enabled, then it spawns a batch job to load those hashes.
  *

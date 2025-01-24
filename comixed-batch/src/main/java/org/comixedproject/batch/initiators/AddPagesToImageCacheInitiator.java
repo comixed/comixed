@@ -19,7 +19,9 @@
 package org.comixedproject.batch.initiators;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicpages.AddImageCacheEntriesConfiguration;
+import org.comixedproject.batch.comicpages.AddPagesToImageCacheConfiguration;
+import org.comixedproject.service.batch.BatchProcessesService;
+import org.comixedproject.service.comicpages.ComicPageService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -34,19 +36,21 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>CreateCoverPageImageCacheEntriesInitiator</code> provides the entry point to initiate the
- * create image cache entries batch process.
+ * <code>AddPagesToImageCacheInitiator</code> provides the entry point to initiate the add pages to
+ * the image cache batch process.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class CreateCoverPageImageCacheEntriesInitiator {
+public class AddPagesToImageCacheInitiator {
   @Autowired private PageCacheService pageCacheService;
+  private ComicPageService comicPageService;
+  @Autowired private BatchProcessesService batchProcessesService;
 
   @Autowired
-  @Qualifier("addPageToImageCacheJob")
-  private Job addPageToImageCacheJob;
+  @Qualifier(AddPagesToImageCacheConfiguration.ADD_PAGES_TO_IMAGE_CACHE_JOB)
+  private Job addPagesToImageCacheJob;
 
   @Autowired
   @Qualifier("batchJobLauncher")
@@ -55,16 +59,21 @@ public class CreateCoverPageImageCacheEntriesInitiator {
   /** Starts a batch process to add pages to the image cache. */
   @Scheduled(cron = "${comixed.batch.add-cover-to-image-cache.schedule:0 0 * * * *}")
   public void execute() {
-    log.info("Starting process: add pages to image cache");
     try {
+      log.debug("Preparing to process uncached cover pages");
       this.pageCacheService.prepareCoverPagesWithoutCacheEntries();
-      this.jobLauncher.run(
-          addPageToImageCacheJob,
-          new JobParametersBuilder()
-              .addLong(
-                  AddImageCacheEntriesConfiguration.PARAM_ADD_IMAGE_CACHE_ENTRIES_STARTED,
-                  System.currentTimeMillis())
-              .toJobParameters());
+      if (this.comicPageService.findPagesNeedingCacheEntriesCount() > 0L
+          && !this.batchProcessesService.hasActiveExecutions(
+              AddPagesToImageCacheConfiguration.ADD_PAGES_TO_IMAGE_CACHE_JOB)) {
+        log.debug("Starting process: add pages to image cache");
+        this.jobLauncher.run(
+            addPagesToImageCacheJob,
+            new JobParametersBuilder()
+                .addLong(
+                    AddPagesToImageCacheConfiguration.PARAM_ADD_IMAGE_CACHE_ENTRIES_STARTED,
+                    System.currentTimeMillis())
+                .toJobParameters());
+      }
     } catch (JobExecutionAlreadyRunningException
         | JobInstanceAlreadyCompleteException
         | JobParametersInvalidException

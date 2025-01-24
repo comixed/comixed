@@ -18,9 +18,12 @@
 
 package org.comixedproject.batch.initiators;
 
-import static org.junit.Assert.*;
+import static org.comixedproject.batch.comicpages.AddPagesToImageCacheConfiguration.ADD_PAGES_TO_IMAGE_CACHE_JOB;
+import static org.junit.Assert.assertNotNull;
 
-import org.comixedproject.batch.comicpages.AddImageCacheEntriesConfiguration;
+import org.comixedproject.batch.comicpages.AddPagesToImageCacheConfiguration;
+import org.comixedproject.service.batch.BatchProcessesService;
+import org.comixedproject.service.comicpages.ComicPageService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,13 +41,16 @@ import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CreateCoverPageImageCacheEntriesInitiatorTest {
-  @InjectMocks private CreateCoverPageImageCacheEntriesInitiator initiator;
+public class AddPagesToImageCacheInitiatorTest {
+  private static final long TEST_PAGE_COUNT = 27L;
+  @InjectMocks private AddPagesToImageCacheInitiator initiator;
   @Mock private PageCacheService pageCacheService;
+  @Mock private ComicPageService comicPageService;
+  @Mock private BatchProcessesService batchProcessesService;
 
   @Mock
-  @Qualifier("addPageToImageCacheJob")
-  private Job addPageToImageCacheJob;
+  @Qualifier(ADD_PAGES_TO_IMAGE_CACHE_JOB)
+  private Job addPagesToImageCacheJob;
 
   @Mock
   @Qualifier("batchJobLauncher")
@@ -62,6 +68,9 @@ public class CreateCoverPageImageCacheEntriesInitiatorTest {
           JobRestartException {
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
+    Mockito.when(comicPageService.findPagesNeedingCacheEntriesCount()).thenReturn(TEST_PAGE_COUNT);
+    Mockito.when(batchProcessesService.hasActiveExecutions(ADD_PAGES_TO_IMAGE_CACHE_JOB))
+        .thenReturn(false);
   }
 
   @Test
@@ -76,14 +85,43 @@ public class CreateCoverPageImageCacheEntriesInitiatorTest {
     assertNotNull(jobParameters);
     assertNotNull(
         jobParameters.getLong(
-            AddImageCacheEntriesConfiguration.PARAM_ADD_IMAGE_CACHE_ENTRIES_STARTED));
+            AddPagesToImageCacheConfiguration.PARAM_ADD_IMAGE_CACHE_ENTRIES_STARTED));
 
     Mockito.verify(pageCacheService, Mockito.times(1)).prepareCoverPagesWithoutCacheEntries();
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(addPageToImageCacheJob, jobParameters);
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(addPagesToImageCacheJob, jobParameters);
   }
 
   @Test
-  public void testExecuteJobLauncherThrowsException()
+  public void testExecute_noPagesNeedCaching()
+      throws JobInstanceAlreadyCompleteException,
+          JobExecutionAlreadyRunningException,
+          JobParametersInvalidException,
+          JobRestartException {
+    Mockito.when(comicPageService.findPagesNeedingCacheEntriesCount()).thenReturn(0L);
+
+    initiator.execute();
+
+    Mockito.verify(pageCacheService, Mockito.times(1)).prepareCoverPagesWithoutCacheEntries();
+    Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(Job.class), Mockito.any());
+  }
+
+  @Test
+  public void testExecute_existingJobFound()
+      throws JobInstanceAlreadyCompleteException,
+          JobExecutionAlreadyRunningException,
+          JobParametersInvalidException,
+          JobRestartException {
+    Mockito.when(batchProcessesService.hasActiveExecutions(ADD_PAGES_TO_IMAGE_CACHE_JOB))
+        .thenReturn(true);
+
+    initiator.execute();
+
+    Mockito.verify(pageCacheService, Mockito.times(1)).prepareCoverPagesWithoutCacheEntries();
+    Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(Job.class), Mockito.any());
+  }
+
+  @Test
+  public void testExecute_jobLauncherThrowsException()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -97,9 +135,9 @@ public class CreateCoverPageImageCacheEntriesInitiatorTest {
     assertNotNull(jobParameters);
     assertNotNull(
         jobParameters.getLong(
-            AddImageCacheEntriesConfiguration.PARAM_ADD_IMAGE_CACHE_ENTRIES_STARTED));
+            AddPagesToImageCacheConfiguration.PARAM_ADD_IMAGE_CACHE_ENTRIES_STARTED));
 
     Mockito.verify(pageCacheService, Mockito.times(1)).prepareCoverPagesWithoutCacheEntries();
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(addPageToImageCacheJob, jobParameters);
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(addPagesToImageCacheJob, jobParameters);
   }
 }

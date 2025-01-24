@@ -46,8 +46,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 @Log4j2
 public class LoadPageHashesConfiguration {
-  public static final String JOB_LOAD_PAGE_HASHES_STARTED = "job.load-page-hashes.started";
   public static final String LOAD_PAGE_HASHES_JOB = "loadPageHashesJob";
+  public static final String JOB_LOAD_PAGE_HASHES_STARTED = "job.load-page-hashes.started";
 
   @Value("${comixed.batch.load-page-hashes.chunk-size:10}")
   private int chunkSize;
