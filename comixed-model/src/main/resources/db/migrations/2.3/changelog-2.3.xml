@@ -19,5 +19,6 @@
     <include file="/db/migrations/2.3/011_2290_added_organizing_comics_view.xml"/>
     <include file="/db/migrations/2.3/012_2025_added_duplicate_pages_view.xml"/>
     <include file="/db/migrations/2.3/013_2292_added_displayable_comics_view.xml"/>
+    <include file="/db/migrations/2.3/014_2318_add_comic_details_filtered_index.xml"/>
 
 </databaseChangeLog>
