@@ -25,7 +25,6 @@ import org.apache.commons.lang3.SystemUtils;
 import org.comixedproject.model.collections.CollectionEntry;
 import org.comixedproject.model.comicbooks.*;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
@@ -44,9 +43,6 @@ import org.springframework.util.StringUtils;
 @Log4j2
 public class ComicDetailService {
   @Autowired private ComicDetailRepository comicDetailRepository;
-
-  @Autowired
-  private ObjectFactory<ComicDetailExampleBuilder> comicDetailExampleBuilderObjectFactory;
 
   boolean caseSensitiveFilenames = !SystemUtils.IS_OS_WINDOWS;
 
