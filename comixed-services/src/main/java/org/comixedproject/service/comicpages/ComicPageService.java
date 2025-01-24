@@ -191,6 +191,17 @@ public class ComicPageService {
   }
 
   /**
+   * Returns the number of records for pages that need to have a cache entry generated.
+   *
+   * @return the count
+   */
+  @Transactional
+  public long findPagesNeedingCacheEntriesCount() {
+    log.debug("Loading pages needing image cache entries");
+    return this.comicPageRepository.findPagesNeedingCacheEntriesCount();
+  }
+
+  /**
    * Marks all pages with a given hash as being in the image cache.
    *
    * @param hash the page hash

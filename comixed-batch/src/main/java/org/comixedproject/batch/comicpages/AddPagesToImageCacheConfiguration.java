@@ -36,14 +36,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * <code>AddImageCacheEntriesConfiguration</code> defines a batch process that periodically creates
+ * <code>AddPagesToImageCacheConfiguration</code> defines a batch process that periodically creates
  * image cache entries for comic pages that do not have one.
  *
  * @author Darryl L. Pierce
  */
 @Configuration
 @Log4j2
-public class AddImageCacheEntriesConfiguration {
+public class AddPagesToImageCacheConfiguration {
+  public static final String ADD_PAGES_TO_IMAGE_CACHE_JOB = "addPagesToImageCacheJob";
   public static final String PARAM_ADD_IMAGE_CACHE_ENTRIES_STARTED =
       "job.add-image-cache-entries.start";
 
@@ -57,11 +58,11 @@ public class AddImageCacheEntriesConfiguration {
    * @param createImageCacheEntriesStep the generate thumbnail step
    * @return the job
    */
-  @Bean(name = "addPageToImageCacheJob")
-  public Job addPageToImageCacheJob(
+  @Bean(name = ADD_PAGES_TO_IMAGE_CACHE_JOB)
+  public Job addPagesToImageCacheJob(
       final JobRepository jobRepository,
       @Qualifier("createImageCacheEntriesStep") final Step createImageCacheEntriesStep) {
-    return new JobBuilder("addPageToImageCacheJob", jobRepository)
+    return new JobBuilder(ADD_PAGES_TO_IMAGE_CACHE_JOB, jobRepository)
         .incrementer(new RunIdIncrementer())
         .start(createImageCacheEntriesStep)
         .next(createImageCacheEntriesStep)
