@@ -52,6 +52,7 @@ public class ComicPageServiceTest {
   private static final String TEST_PAGE_FILENAME = "src/test/resources/example.jpg";
   private static final int TEST_BATCH_SIZE = 129;
   private static final String TEST_COMIC_FILENAME = "example-comic.cbz";
+  private static final long TEST_PAGE_COUNT = 273L;
 
   @InjectMocks private ComicPageService service;
   @Mock private ComicPageRepository comicPageRepository;
@@ -257,6 +258,18 @@ public class ComicPageServiceTest {
     assertEquals(0, pageable.getPageNumber());
 
     Mockito.verify(comicPageRepository, Mockito.times(1)).findPagesNeedingCacheEntries(pageable);
+  }
+
+  @Test
+  public void testLoadPagesNeedingCacheEntriesCount() {
+    Mockito.when(comicPageRepository.findPagesNeedingCacheEntriesCount())
+        .thenReturn(TEST_PAGE_COUNT);
+
+    final long result = service.findPagesNeedingCacheEntriesCount();
+
+    assertEquals(TEST_PAGE_COUNT, result);
+
+    Mockito.verify(comicPageRepository, Mockito.times(1)).findPagesNeedingCacheEntriesCount();
   }
 
   @Test

@@ -95,6 +95,14 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
   List<ComicPage> findPagesNeedingCacheEntries(Pageable pageable);
 
   /**
+   * Returns the number of page records with the add to cache column set to true.
+   *
+   * @return the count
+   */
+  @Query("SELECT COUNT(p) FROM ComicPage p WHERE p.addingToCache = true")
+  long findPagesNeedingCacheEntriesCount();
+
+  /**
    * Marks all pages with a given hash as being added to the image cache.
    *
    * @param hash the page hash

@@ -20,6 +20,7 @@ package org.comixedproject.batch.initiators;
 
 import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.PROCESS_COMIC_BOOKS_JOB;
 import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.PROCESS_COMIC_BOOKS_STARTED_JOB;
+import static org.comixedproject.batch.comicpages.AddPagesToImageCacheConfiguration.ADD_PAGES_TO_IMAGE_CACHE_JOB;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
@@ -48,8 +49,8 @@ public class ProcessComicBooksInitiatorTest {
   @Mock private ComicBookService comicBookService;
   @Mock private BatchProcessesService batchProcessesService;
 
-  @Mock(name = "addPageToImageCacheJob")
-  private Job addPageToImageCacheJob;
+  @Mock(name = ADD_PAGES_TO_IMAGE_CACHE_JOB)
+  private Job addPagesToImageCacheJob;
 
   @Mock(name = "batchJobLauncher")
   private JobLauncher jobLauncher;
@@ -88,7 +89,7 @@ public class ProcessComicBooksInitiatorTest {
     assertNotNull(jobParameters.getLong(PROCESS_COMIC_BOOKS_STARTED_JOB));
 
     Mockito.verify(comicBookService, Mockito.times(1)).getUnprocessedComicBookCount();
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(addPageToImageCacheJob, jobParameters);
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(addPagesToImageCacheJob, jobParameters);
   }
 
   @Test
@@ -106,7 +107,7 @@ public class ProcessComicBooksInitiatorTest {
     assertNotNull(jobParameters.getLong(PROCESS_COMIC_BOOKS_STARTED_JOB));
 
     Mockito.verify(comicBookService, Mockito.times(1)).getUnprocessedComicBookCount();
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(addPageToImageCacheJob, jobParameters);
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(addPagesToImageCacheJob, jobParameters);
   }
 
   @Test
@@ -123,7 +124,7 @@ public class ProcessComicBooksInitiatorTest {
     assertNotNull(jobParameters);
     assertNotNull(jobParameters.getLong(PROCESS_COMIC_BOOKS_STARTED_JOB));
 
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(addPageToImageCacheJob, jobParameters);
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(addPagesToImageCacheJob, jobParameters);
   }
 
   @Test
@@ -139,7 +140,7 @@ public class ProcessComicBooksInitiatorTest {
     assertNotNull(jobParameters);
     assertNotNull(jobParameters.getLong(PROCESS_COMIC_BOOKS_STARTED_JOB));
 
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(addPageToImageCacheJob, jobParameters);
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(addPagesToImageCacheJob, jobParameters);
   }
 
   @Test
@@ -171,7 +172,7 @@ public class ProcessComicBooksInitiatorTest {
     assertNotNull(jobParameters);
     assertFalse(jobParameters.isEmpty());
 
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(addPageToImageCacheJob, jobParameters);
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(addPagesToImageCacheJob, jobParameters);
   }
 
   @Test
