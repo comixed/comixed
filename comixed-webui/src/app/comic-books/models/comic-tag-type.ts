@@ -17,6 +17,8 @@
  */
 
 export enum ComicTagType {
+  PUBLISHER = 'PUBLISHER',
+  SERIES = 'SERIES',
   CHARACTER = 'CHARACTER',
   TEAM = 'TEAM',
   LOCATION = 'LOCATION',
@@ -27,7 +29,8 @@ export enum ComicTagType {
   INKER = 'INKER',
   COLORIST = 'COLORIST',
   LETTERER = 'LETTERER',
-  COVER = 'COVER'
+  COVER = 'COVER',
+  OTHER = 'OTHER'
 }
 
 export const CreditTags = [
@@ -37,5 +40,24 @@ export const CreditTags = [
   ComicTagType.INKER,
   ComicTagType.COLORIST,
   ComicTagType.LETTERER,
-  ComicTagType.COVER
+  ComicTagType.COVER,
+  ComicTagType.OTHER
 ];
+
+export function comicTagTypeFromString(key: string): ComicTagType {
+  switch (key) {
+    case 'publishers':
+      return ComicTagType.PUBLISHER;
+    case 'series':
+      return ComicTagType.SERIES;
+    case 'characters':
+      return ComicTagType.CHARACTER;
+    case 'locations':
+      return ComicTagType.LOCATION;
+    case 'stories':
+      return ComicTagType.STORY;
+    case 'teams':
+      return ComicTagType.TEAM;
+  }
+  return null;
+}

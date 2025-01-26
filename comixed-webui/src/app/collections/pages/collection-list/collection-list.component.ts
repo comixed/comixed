@@ -21,10 +21,6 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
-import {
-  TagType,
-  tagTypeFromString
-} from '@app/collections/models/comic-collection.enum';
 import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
@@ -37,6 +33,13 @@ import {
 import { CollectionEntry } from '@app/collections/models/collection-entry';
 import { loadCollectionList } from '@app/collections/actions/collection-list.actions';
 import { setBusyState } from '@app/core/actions/busy.actions';
+import { filter } from 'rxjs/operators';
+import { QUERY_PARAM_FILTER_TEXT } from '@app/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import {
+  ComicTagType,
+  comicTagTypeFromString
+} from '@app/comic-books/models/comic-tag-type';
 
 @Component({
   selector: 'cx-collection-list',
@@ -46,16 +49,18 @@ import { setBusyState } from '@app/core/actions/busy.actions';
 export class CollectionListComponent implements OnInit, OnDestroy {
   paramSubscription: Subscription;
   queryParamSubscription: Subscription;
-  collectionType: TagType;
+  collectionType: ComicTagType;
   routableTypeName: string;
   collectionStateSubscription: Subscription;
   collectionEntrySubscription: Subscription;
   totalEntriesSubscription: Subscription;
   totalEntries = 0;
   dataSource = new MatTableDataSource<CollectionEntry>([]);
+  filterTextForm: FormGroup;
 
   readonly displayedColumns = ['tag-value', 'comic-count'];
   langChangeSubscription: Subscription;
+  protected readonly filter = filter;
 
   constructor(
     private logger: LoggerService,
@@ -64,11 +69,13 @@ export class CollectionListComponent implements OnInit, OnDestroy {
     private router: Router,
     private translateService: TranslateService,
     private titleService: TitleService,
+    private formBuilder: FormBuilder,
     public queryParameterService: QueryParameterService
   ) {
+    this.filterTextForm = this.formBuilder.group({ filterTextInput: [''] });
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.routableTypeName = params.collectionType;
-      this.collectionType = tagTypeFromString(this.routableTypeName);
+      this.collectionType = comicTagTypeFromString(this.routableTypeName);
       if (!this.collectionType) {
         this.logger.error('Invalid collection type:', params.collectionType);
         this.router.navigateByUrl('/library');
@@ -78,9 +85,14 @@ export class CollectionListComponent implements OnInit, OnDestroy {
     });
     this.queryParamSubscription = this.activatedRoute.queryParams.subscribe(
       () => {
+        this.filterTextForm.controls['filterTextInput'].setValue(
+          this.queryParameterService.filterText$.value || ''
+        );
+        this.filterTextForm.markAsUntouched();
         this.store.dispatch(
           loadCollectionList({
             tagType: this.collectionType,
+            searchText: this.queryParameterService.filterText$.value,
             pageSize: this.queryParameterService.pageSize$.value,
             pageIndex: this.queryParameterService.pageIndex$.value,
             sortBy: this.queryParameterService.sortBy$.value,
@@ -130,6 +142,16 @@ export class CollectionListComponent implements OnInit, OnDestroy {
       'collections',
       this.routableTypeName,
       entry.tagValue
+    ]);
+  }
+
+  onApplyFilter(searchText: string): void {
+    this.logger.debug('Setting collection search text:', searchText);
+    this.queryParameterService.updateQueryParam([
+      {
+        name: QUERY_PARAM_FILTER_TEXT,
+        value: searchText?.length > 0 ? searchText : null
+      }
     ]);
   }
 

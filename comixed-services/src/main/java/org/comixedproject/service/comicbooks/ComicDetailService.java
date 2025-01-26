@@ -392,23 +392,21 @@ public class ComicDetailService {
   @Transactional
   public List<CollectionEntry> loadCollectionEntries(
       final ComicTagType tagType,
+      final String filterText,
       final int pageSize,
       final int pageIndex,
       final String sortBy,
       final String sortDirection) {
-    log.debug("Loading collection entries: type={} page={} size={}", tagType, pageIndex, pageSize);
-
-    return this.comicDetailRepository
-        .loadCollectionEntries(
-            tagType,
-            PageRequest.of(pageIndex, pageSize, this.doCreateCollectionSort(sortBy, sortDirection)))
-        .stream()
-        .map(
-            tagValue ->
-                new CollectionEntry(
-                    tagValue,
-                    this.comicDetailRepository.getComicCountForTagTypeAndValue(tagType, tagValue)))
-        .toList();
+    if (StringUtils.hasLength(filterText)) {
+      return this.comicDetailRepository.loadCollectionEntriesWithFiltering(
+          tagType,
+          "%" + filterText + "%",
+          PageRequest.of(pageIndex, pageSize, this.doCreateCollectionSort(sortBy, sortDirection)));
+    } else {
+      return this.comicDetailRepository.loadCollectionEntries(
+          tagType,
+          PageRequest.of(pageIndex, pageSize, this.doCreateCollectionSort(sortBy, sortDirection)));
+    }
   }
 
   /**
@@ -417,9 +415,13 @@ public class ComicDetailService {
    * @param tagType the tag type
    * @return the number of comics
    */
-  public long loadCollectionTotalEntries(final ComicTagType tagType) {
-    log.debug("Getting the number of comics with tag type: {}", tagType);
-    return this.comicDetailRepository.getFilterCount(tagType);
+  public long loadCollectionTotalEntries(final ComicTagType tagType, final String filterText) {
+    if (StringUtils.hasLength(filterText)) {
+      return this.comicDetailRepository.getFilterCountWithFiltering(
+          tagType, "%" + filterText + "%");
+    } else {
+      return this.comicDetailRepository.getFilterCount(tagType);
+    }
   }
 
   private Sort doCreateCollectionSort(final String sortBy, final String sortDirection) {

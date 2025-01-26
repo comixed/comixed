@@ -16,23 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
-import { LoggerService } from '@angular-ru/cdk/logger';
-import { HttpClient } from '@angular/common/http';
-import { Observable, Subscription } from 'rxjs';
-import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
-import { ComicType } from '@app/comic-books/models/comic-type';
-import { ComicState } from '@app/comic-books/models/comic-state';
-import { TagType } from '@app/collections/models/comic-collection.enum';
-import { Store } from '@ngrx/store';
-import { WebSocketService } from '@app/messaging';
-import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
-import { ComicBook } from '@app/comic-books/models/comic-book';
-import {
-  COMIC_LIST_REMOVAL_TOPIC,
-  COMIC_LIST_UPDATE_TOPIC
-} from '@app/library/library.constants';
-import { interpolate } from '@app/core';
+import {Injectable} from '@angular/core';
+import {LoggerService} from '@angular-ru/cdk/logger';
+import {HttpClient} from '@angular/common/http';
+import {Observable, Subscription} from 'rxjs';
+import {ArchiveType} from '@app/comic-books/models/archive-type.enum';
+import {ComicType} from '@app/comic-books/models/comic-type';
+import {ComicState} from '@app/comic-books/models/comic-state';
+import {Store} from '@ngrx/store';
+import {WebSocketService} from '@app/messaging';
+import {selectMessagingState} from '@app/messaging/selectors/messaging.selectors';
+import {ComicBook} from '@app/comic-books/models/comic-book';
+import {COMIC_LIST_REMOVAL_TOPIC, COMIC_LIST_UPDATE_TOPIC} from '@app/library/library.constants';
+import {interpolate} from '@app/core';
 import {
   LOAD_COMICS_BY_FILTER_URL,
   LOAD_COMICS_BY_ID_URL,
@@ -43,19 +39,17 @@ import {
   LOAD_SELECTED_COMICS_URL,
   LOAD_UNREAD_COMICS_URL
 } from '@app/comic-books/comic-books.constants';
-import { LoadComicsByFilterRequest } from '@app/comic-books/models/net/load-comics-by-filter-request';
-import { LoadSelectedComicsRequest } from '@app/comic-books/models/net/load-selected-comics-request';
-import { LoadComicsByIdRequest } from '@app/comic-books/models/net/load-comics-by-id-request';
-import { LoadComicsForCollectionRequest } from '@app/comic-books/models/net/load-comics-for-collection-request';
-import { LoadComicsByReadStateRequest } from '@app/comic-books/models/net/load-comics-by-read-state-request';
-import { LoadComicsForListRequest } from '@app/comic-books/models/net/load-comics-for-list-request';
-import { LoadDuplicateComicsRequest } from '@app/comic-books/models/net/load-duplicate-comics-request';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
-import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
-import {
-  comicRemoved,
-  comicUpdated
-} from '@app/comic-books/actions/comic-list.actions';
+import {LoadComicsByFilterRequest} from '@app/comic-books/models/net/load-comics-by-filter-request';
+import {LoadSelectedComicsRequest} from '@app/comic-books/models/net/load-selected-comics-request';
+import {LoadComicsByIdRequest} from '@app/comic-books/models/net/load-comics-by-id-request';
+import {LoadComicsForCollectionRequest} from '@app/comic-books/models/net/load-comics-for-collection-request';
+import {LoadComicsByReadStateRequest} from '@app/comic-books/models/net/load-comics-by-read-state-request';
+import {LoadComicsForListRequest} from '@app/comic-books/models/net/load-comics-for-list-request';
+import {LoadDuplicateComicsRequest} from '@app/comic-books/models/net/load-duplicate-comics-request';
+import {ComicDetail} from '@app/comic-books/models/comic-detail';
+import {DisplayableComic} from '@app/comic-books/model/displayable-comic';
+import {comicRemoved, comicUpdated} from '@app/comic-books/actions/comic-list.actions';
+import {ComicTagType} from '@app/comic-books/models/comic-tag-type';
 
 @Injectable({
   providedIn: 'root'
@@ -167,20 +161,24 @@ export class DisplayableComicService {
   loadComicsForCollection(args: {
     pageSize: number;
     pageIndex: number;
-    tagType: TagType;
+    tagType: ComicTagType;
     tagValue: string;
     sortBy: string;
     sortDirection: string;
   }): Observable<any> {
     this.logger.debug('Loading comics for collection:', args);
-    return this.http.post(interpolate(LOAD_COMICS_FOR_COLLECTION_URL), {
-      pageSize: args.pageSize,
-      pageIndex: args.pageIndex,
-      tagType: args.tagType,
-      tagValue: args.tagValue,
-      sortBy: args.sortBy,
-      sortDirection: args.sortDirection
-    } as LoadComicsForCollectionRequest);
+    return this.http.post(
+      interpolate(LOAD_COMICS_FOR_COLLECTION_URL, {
+        tagType: args.tagType,
+        tagValue: args.tagValue
+      }),
+      {
+        pageSize: args.pageSize,
+        pageIndex: args.pageIndex,
+        sortBy: args.sortBy,
+        sortDirection: args.sortDirection
+      } as LoadComicsForCollectionRequest
+    );
   }
 
   loadComicsByReadState(args: {

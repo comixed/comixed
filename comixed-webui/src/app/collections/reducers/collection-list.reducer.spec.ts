@@ -33,7 +33,7 @@ import {
   loadCollectionListFailure,
   loadCollectionListSuccess
 } from '@app/collections/actions/collection-list.actions';
-import { TagType } from '@app/collections/models/comic-collection.enum';
+import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 
 describe('CollectionList Reducer', () => {
   const COLLECTION_ENTRIES = [
@@ -43,7 +43,8 @@ describe('CollectionList Reducer', () => {
     COLLECTION_ENTRY_4,
     COLLECTION_ENTRY_5
   ];
-  const TAG_TYPE = TagType.TEAMS;
+  const TAG_TYPE = ComicTagType.TEAM;
+  const SEARCH_TEXT = 'The filtering text';
   const PAGE_SIZE = 25;
   const PAGE_INDEX = 10;
   const SORT_BY = 'comic-count';
@@ -80,6 +81,7 @@ describe('CollectionList Reducer', () => {
         { ...state, busy: false },
         loadCollectionList({
           tagType: TAG_TYPE,
+          searchText: SEARCH_TEXT,
           pageIndex: PAGE_INDEX,
           pageSize: PAGE_SIZE,
           sortBy: SORT_BY,

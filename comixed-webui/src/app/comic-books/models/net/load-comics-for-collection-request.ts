@@ -16,13 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { TagType } from '@app/collections/models/comic-collection.enum';
-
 export interface LoadComicsForCollectionRequest {
   pageSize: number;
   pageIndex: number;
-  tagType: TagType;
-  tagValue: string;
   sortBy: string;
   sortDirection: string;
 }

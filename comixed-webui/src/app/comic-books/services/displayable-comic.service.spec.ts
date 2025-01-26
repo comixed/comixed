@@ -16,24 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { DisplayableComicService } from './displayable-comic.service';
-import {
-  HttpTestingController,
-  provideHttpClientTesting
-} from '@angular/common/http/testing';
-import { LoggerModule } from '@angular-ru/cdk/logger';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { WebSocketService } from '@app/messaging';
-import {
-  initialState as initialMessagingState,
-  MESSAGING_FEATURE_KEY
-} from '@app/messaging/reducers/messaging.reducer';
-import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
-import { ComicType } from '@app/comic-books/models/comic-type';
-import { ComicState } from '@app/comic-books/models/comic-state';
-import { TagType } from '@app/collections/models/comic-collection.enum';
+import {DisplayableComicService} from './displayable-comic.service';
+import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
+import {LoggerModule} from '@angular-ru/cdk/logger';
+import {MockStore, provideMockStore} from '@ngrx/store/testing';
+import {WebSocketService} from '@app/messaging';
+import {initialState as initialMessagingState, MESSAGING_FEATURE_KEY} from '@app/messaging/reducers/messaging.reducer';
+import {ArchiveType} from '@app/comic-books/models/archive-type.enum';
+import {ComicType} from '@app/comic-books/models/comic-type';
+import {ComicState} from '@app/comic-books/models/comic-state';
 import {
   COMIC_BOOK_1,
   COMIC_BOOK_2,
@@ -43,13 +36,10 @@ import {
   DISPLAYABLE_COMIC_4,
   DISPLAYABLE_COMIC_5
 } from '@app/comic-books/comic-books.fixtures';
-import { READING_LIST_3 } from '@app/lists/lists.fixtures';
-import { Subscription } from 'rxjs';
-import {
-  COMIC_LIST_REMOVAL_TOPIC,
-  COMIC_LIST_UPDATE_TOPIC
-} from '@app/library/library.constants';
-import { interpolate } from '@app/core';
+import {READING_LIST_3} from '@app/lists/lists.fixtures';
+import {Subscription} from 'rxjs';
+import {COMIC_LIST_REMOVAL_TOPIC, COMIC_LIST_UPDATE_TOPIC} from '@app/library/library.constants';
+import {interpolate} from '@app/core';
 import {
   LOAD_COMICS_BY_FILTER_URL,
   LOAD_COMICS_BY_ID_URL,
@@ -60,23 +50,18 @@ import {
   LOAD_SELECTED_COMICS_URL,
   LOAD_UNREAD_COMICS_URL
 } from '@app/comic-books/comic-books.constants';
-import { LoadComicsResponse } from '@app/comic-books/models/net/load-comics-response';
-import { LoadComicsByFilterRequest } from '@app/comic-books/models/net/load-comics-by-filter-request';
-import { LoadSelectedComicsRequest } from '@app/comic-books/models/net/load-selected-comics-request';
-import { LoadComicsByIdRequest } from '@app/comic-books/models/net/load-comics-by-id-request';
-import { LoadComicsForCollectionRequest } from '@app/comic-books/models/net/load-comics-for-collection-request';
-import { LoadComicsByReadStateRequest } from '@app/comic-books/models/net/load-comics-by-read-state-request';
-import { LoadComicsForListRequest } from '@app/comic-books/models/net/load-comics-for-list-request';
-import { LoadDuplicateComicsRequest } from '@app/comic-books/models/net/load-duplicate-comics-request';
-import {
-  comicRemoved,
-  comicUpdated
-} from '@app/comic-books/actions/comic-list.actions';
-import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
-import {
-  provideHttpClient,
-  withInterceptorsFromDi
-} from '@angular/common/http';
+import {LoadComicsResponse} from '@app/comic-books/models/net/load-comics-response';
+import {LoadComicsByFilterRequest} from '@app/comic-books/models/net/load-comics-by-filter-request';
+import {LoadSelectedComicsRequest} from '@app/comic-books/models/net/load-selected-comics-request';
+import {LoadComicsByIdRequest} from '@app/comic-books/models/net/load-comics-by-id-request';
+import {LoadComicsForCollectionRequest} from '@app/comic-books/models/net/load-comics-for-collection-request';
+import {LoadComicsByReadStateRequest} from '@app/comic-books/models/net/load-comics-by-read-state-request';
+import {LoadComicsForListRequest} from '@app/comic-books/models/net/load-comics-for-list-request';
+import {LoadDuplicateComicsRequest} from '@app/comic-books/models/net/load-duplicate-comics-request';
+import {comicRemoved, comicUpdated} from '@app/comic-books/actions/comic-list.actions';
+import {DisplayableComic} from '@app/comic-books/model/displayable-comic';
+import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {ComicTagType} from '@app/comic-books/models/comic-tag-type';
 
 describe('DisplayableComicService', () => {
   const PAGE_SIZE = 25;
@@ -91,7 +76,7 @@ describe('DisplayableComicService', () => {
   const SEARCH_TEXT = 'This is some text';
   const SORT_BY = 'addedDate';
   const SORT_DIRECTION = 'ASC';
-  const COLLECTION_TYPE = TagType.TEAMS;
+  const COLLECTION_TYPE = ComicTagType.TEAM;
   const COLLECTION_NAME = 'The Avengers';
   const COMIC_LIST = [
     DISPLAYABLE_COMIC_1,
@@ -403,13 +388,16 @@ describe('DisplayableComicService', () => {
       })
       .subscribe(response => expect(response).toEqual(serviceResponse));
 
-    const req = httpMock.expectOne(interpolate(LOAD_COMICS_FOR_COLLECTION_URL));
+    const req = httpMock.expectOne(
+      interpolate(LOAD_COMICS_FOR_COLLECTION_URL, {
+        tagType: COLLECTION_TYPE,
+        tagValue: COLLECTION_NAME
+      })
+    );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
       pageSize: PAGE_SIZE,
       pageIndex: PAGE_INDEX,
-      tagType: COLLECTION_TYPE,
-      tagValue: COLLECTION_NAME,
       sortBy: SORT_BY,
       sortDirection: SORT_DIRECTION
     } as LoadComicsForCollectionRequest);

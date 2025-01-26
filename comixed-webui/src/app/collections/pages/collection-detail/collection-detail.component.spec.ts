@@ -40,7 +40,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { TagType } from '@app/collections/models/comic-collection.enum';
 import {
   COMIC_DETAIL_1,
   DISPLAYABLE_COMIC_1,
@@ -165,7 +164,7 @@ describe('CollectionDetailComponent', () => {
             provide: ActivatedRoute,
             useValue: {
               params: new BehaviorSubject<{}>({
-                collectionType: TagType.CHARACTERS,
+                collectionType: ComicTagType.CHARACTER,
                 collectionName: 'Batman'
               }),
               queryParams: new BehaviorSubject<{}>({}),
@@ -228,7 +227,7 @@ describe('CollectionDetailComponent', () => {
     });
 
     it('sets the collection type', () => {
-      expect(component.tagType).toEqual(TagType.STORIES);
+      expect(component.tagType).toEqual(ComicTagType.STORY);
     });
 
     it('sets the routable type name', () => {
@@ -278,7 +277,7 @@ describe('CollectionDetailComponent', () => {
           loadComicsForCollection({
             pageSize: PAGE_SIZE,
             pageIndex: PAGE_INDEX,
-            tagType: TagType.CHARACTERS,
+            tagType: ComicTagType.CHARACTER,
             tagValue: TAG_VALUE,
             sortBy: SORT_BY,
             sortDirection: SORT_DIRECTION
@@ -306,7 +305,7 @@ describe('CollectionDetailComponent', () => {
           loadComicsForCollection({
             pageSize: PAGE_SIZE,
             pageIndex: PAGE_INDEX,
-            tagType: TagType.TEAMS,
+            tagType: ComicTagType.TEAM,
             tagValue: TAG_VALUE,
             sortBy: SORT_BY,
             sortDirection: SORT_DIRECTION
@@ -334,7 +333,7 @@ describe('CollectionDetailComponent', () => {
           loadComicsForCollection({
             pageSize: PAGE_SIZE,
             pageIndex: PAGE_INDEX,
-            tagType: TagType.LOCATIONS,
+            tagType: ComicTagType.LOCATION,
             tagValue: TAG_VALUE,
             sortBy: SORT_BY,
             sortDirection: SORT_DIRECTION
@@ -362,7 +361,7 @@ describe('CollectionDetailComponent', () => {
           loadComicsForCollection({
             pageSize: PAGE_SIZE,
             pageIndex: PAGE_INDEX,
-            tagType: TagType.STORIES,
+            tagType: ComicTagType.STORY,
             tagValue: TAG_VALUE,
             sortBy: SORT_BY,
             sortDirection: SORT_DIRECTION
@@ -374,7 +373,7 @@ describe('CollectionDetailComponent', () => {
 
   describe('selecting all comic books', () => {
     const SELECT = Math.random() > 0.5;
-    const TAG_TYPE = TagType.LOCATIONS;
+    const TAG_TYPE = ComicTagType.LOCATION;
     const TAG_VALUE = 'Wakanda';
 
     beforeEach(() => {

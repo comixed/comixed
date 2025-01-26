@@ -20,8 +20,11 @@ package org.comixedproject.model.collections;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
+import java.util.Objects;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.views.View;
 
 /**
@@ -29,14 +32,37 @@ import org.comixedproject.views.View;
  *
  * @author Darryl L. Pierce
  */
-@AllArgsConstructor
+@Entity
+@Table(name = "collections_view")
 @JsonView(View.CollectionEntryList.class)
+@NoArgsConstructor
 public class CollectionEntry {
-  @JsonProperty("tagValue")
-  @Getter
-  private String tagValue;
+  @EmbeddedId @Getter private CollectionEntryId id;
 
+  @Column(name = "comic_count")
   @JsonProperty("comicCount")
   @Getter
   private long comicCount;
+
+  public ComicTagType getTagType() {
+    return id.getTagType();
+  }
+
+  public String getTagValue() {
+    return id.getTagValue();
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (o == null || getClass() != o.getClass()) return false;
+    final CollectionEntry that = (CollectionEntry) o;
+    return getComicCount() == that.getComicCount()
+        && getTagType() == that.getTagType()
+        && Objects.equals(getTagValue(), that.getTagValue());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getTagType(), getTagValue(), getComicCount());
+  }
 }

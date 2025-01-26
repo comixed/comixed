@@ -20,6 +20,7 @@ import { Series } from '@app/collections/models/series';
 import { Issue } from '@app/collections/models/issue';
 import { Publisher } from '@app/collections/models/publisher';
 import { CollectionEntry } from '@app/collections/models/collection-entry';
+import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 
 export const PUBLISHER_1: Publisher = {
   name: 'Publisher 1',
@@ -116,26 +117,31 @@ export const ISSUE_3: Issue = {
 };
 
 export const COLLECTION_ENTRY_1: CollectionEntry = {
+  tagType: ComicTagType.STORY,
   tagValue: 'tag 1',
   comicCount: Math.floor(Math.random() * 1000)
 };
 
 export const COLLECTION_ENTRY_2: CollectionEntry = {
+  tagType: ComicTagType.STORY,
   tagValue: 'tag 2',
   comicCount: Math.floor(Math.random() * 1000)
 };
 
 export const COLLECTION_ENTRY_3: CollectionEntry = {
+  tagType: ComicTagType.STORY,
   tagValue: 'tag 3',
   comicCount: Math.floor(Math.random() * 1000)
 };
 
 export const COLLECTION_ENTRY_4: CollectionEntry = {
+  tagType: ComicTagType.STORY,
   tagValue: 'tag 4',
   comicCount: Math.floor(Math.random() * 1000)
 };
 
 export const COLLECTION_ENTRY_5: CollectionEntry = {
+  tagType: ComicTagType.STORY,
   tagValue: 'tag 5',
   comicCount: Math.floor(Math.random() * 1000)
 };

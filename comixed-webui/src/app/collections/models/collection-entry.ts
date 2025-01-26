@@ -16,7 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
+
 export interface CollectionEntry {
+  tagType: ComicTagType;
   tagValue: string;
   comicCount: number;
 }

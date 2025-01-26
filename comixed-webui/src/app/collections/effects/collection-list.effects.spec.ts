@@ -28,7 +28,6 @@ import {
   COLLECTION_ENTRY_4,
   COLLECTION_ENTRY_5
 } from '@app/collections/collections.fixtures';
-import { TagType } from '@app/collections/models/comic-collection.enum';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { LoadCollectionEntriesResponse } from '@app/collections/models/net/load-collection-entries-response';
 import {
@@ -41,6 +40,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 
 describe('CollectionListEffects', () => {
   const COLLECTION_ENTRIES = [
@@ -50,7 +50,8 @@ describe('CollectionListEffects', () => {
     COLLECTION_ENTRY_4,
     COLLECTION_ENTRY_5
   ];
-  const TAG_TYPE = TagType.TEAMS;
+  const TAG_TYPE = ComicTagType.TEAM;
+  const SEARCH_TEXT = 'The filtering text';
   const PAGE_SIZE = 25;
   const PAGE_INDEX = 10;
   const SORT_BY = 'comic-count';
@@ -104,6 +105,7 @@ describe('CollectionListEffects', () => {
       } as LoadCollectionEntriesResponse;
       const action = loadCollectionList({
         tagType: TAG_TYPE,
+        searchText: SEARCH_TEXT,
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         sortBy: SORT_BY,
@@ -118,6 +120,7 @@ describe('CollectionListEffects', () => {
       collectionListService.loadCollectionEntries
         .withArgs({
           tagType: TAG_TYPE,
+          searchText: SEARCH_TEXT,
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
           sortBy: SORT_BY,
@@ -133,6 +136,7 @@ describe('CollectionListEffects', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = loadCollectionList({
         tagType: TAG_TYPE,
+        searchText: SEARCH_TEXT,
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         sortBy: SORT_BY,
@@ -144,6 +148,7 @@ describe('CollectionListEffects', () => {
       collectionListService.loadCollectionEntries
         .withArgs({
           tagType: TAG_TYPE,
+          searchText: SEARCH_TEXT,
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
           sortBy: SORT_BY,
@@ -159,6 +164,7 @@ describe('CollectionListEffects', () => {
     it('fires an action on general failure', () => {
       const action = loadCollectionList({
         tagType: TAG_TYPE,
+        searchText: SEARCH_TEXT,
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         sortBy: SORT_BY,
@@ -170,6 +176,7 @@ describe('CollectionListEffects', () => {
       collectionListService.loadCollectionEntries
         .withArgs({
           tagType: TAG_TYPE,
+          searchText: SEARCH_TEXT,
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
           sortBy: SORT_BY,

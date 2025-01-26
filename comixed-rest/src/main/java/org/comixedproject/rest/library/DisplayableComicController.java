@@ -172,19 +172,19 @@ public class DisplayableComicController {
    * @return the response body
    */
   @PostMapping(
-      value = "/api/comics/collection",
+      value = "/api/comics/collections/{tagType}/{tagValue}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.comic-book.load-for-collection")
   @PreAuthorize("hasRole('READER')")
   @JsonView(View.ComicDetailsView.class)
   public LoadComicsResponse loadComicsByTagTypeAndValue(
-      @RequestBody() final LoadComicsForCollectionRequest request) {
+      @RequestBody() final LoadComicsForCollectionRequest request,
+      @PathVariable("tagType") final ComicTagType tagType,
+      @PathVariable("tagValue") final String tagValue) {
     log.info("Loading comics for collection: {}", request);
     final int pageSize = request.getPageSize();
     final int pageIndex = request.getPageIndex();
-    final ComicTagType tagType = request.getTagType();
-    final String tagValue = request.getTagValue();
     final String sortBy = request.getSortBy();
     final String sortDirection = request.getSortDirection();
     final List<DisplayableComic> comicDetails =
