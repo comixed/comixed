@@ -240,4 +240,16 @@ public class BatchProcessesServiceTest {
     Mockito.verify(jobExplorer, Mockito.times(1)).getJobExecution(TEST_JOB_ID);
     Mockito.verify(jobRepository, Mockito.times(1)).deleteJobExecution(jobExecution);
   }
+
+  @Test
+  public void testDeleteSelectedJobId_JobNotFound() {
+    Mockito.when(jobExplorer.getJobExecution(Mockito.anyLong())).thenReturn(null);
+
+    final List<BatchProcessDetail> result = service.deleteSelectedJobs(Arrays.asList(TEST_JOB_ID));
+
+    assertNotNull(result);
+
+    Mockito.verify(jobExplorer, Mockito.times(1)).getJobExecution(TEST_JOB_ID);
+    Mockito.verify(jobRepository, Mockito.never()).deleteJobExecution(Mockito.any());
+  }
 }
