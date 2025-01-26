@@ -88,8 +88,10 @@ public class BatchProcessesService {
     jobIds.forEach(
         jobId -> {
           final JobExecution jobExecution = this.jobExplorer.getJobExecution(jobId);
-          log.trace("Deleting job execution: id={}", jobExecution.getJobId());
-          this.jobRepository.deleteJobExecution(jobExecution);
+          if (Objects.nonNull(jobExecution)) {
+            log.trace("Deleting job execution: id={}", jobExecution.getJobId());
+            this.jobRepository.deleteJobExecution(jobExecution);
+          }
         });
     return this.getAllBatchProcesses();
   }
