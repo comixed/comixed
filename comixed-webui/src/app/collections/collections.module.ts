@@ -49,6 +49,7 @@ import { CollectionListEffects } from '@app/collections/effects/collection-list.
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { PublisherIssuesPageComponent } from '@app/collections/pages/publisher-issues-page/publisher-issues-page.component';
 import { SeriesIssuePageComponent } from '@app/collections/pages/series-issue-page/series-issue-page.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -86,7 +87,8 @@ import { SeriesIssuePageComponent } from '@app/collections/pages/series-issue-pa
     MatInputModule,
     MatDividerModule,
     MatTab,
-    MatTabGroup
+    MatTabGroup,
+    ReactiveFormsModule
   ],
   exports: [CommonModule]
 })

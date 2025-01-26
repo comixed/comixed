@@ -16,6 +16,39 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export interface LoadComicDetailsByIdRequest {
-  comicBookIds: number[];
+package org.comixedproject.model.net.collections;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+/**
+ * <code>LoadComicsForCollectionRequest</code> represents the request body when loading collection
+ * entries.
+ *
+ * @author Darryl L. Pierce
+ */
+@NoArgsConstructor
+@AllArgsConstructor
+public class LoadComicsForCollectionRequest {
+  @JsonProperty("searchText")
+  @Getter
+  String searchText;
+
+  @JsonProperty("pageSize")
+  @Getter
+  int pageSize;
+
+  @JsonProperty("pageIndex")
+  @Getter
+  int pageIndex;
+
+  @JsonProperty("sortBy")
+  @Getter
+  private String sortBy;
+
+  @JsonProperty("sortDirection")
+  @Getter
+  private String sortDirection;
 }

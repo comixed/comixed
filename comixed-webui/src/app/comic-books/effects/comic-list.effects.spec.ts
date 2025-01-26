@@ -23,7 +23,6 @@ import { ComicListEffects } from './comic-list.effects';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
-import { TagType } from '@app/collections/models/comic-collection.enum';
 import {
   DISPLAYABLE_COMIC_1,
   DISPLAYABLE_COMIC_2,
@@ -58,6 +57,7 @@ import {
   loadReadComics,
   loadUnreadComics
 } from '@app/comic-books/actions/comic-list.actions';
+import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 
 describe('ComicListEffects', () => {
   const PAGE_SIZE = 25;
@@ -72,7 +72,7 @@ describe('ComicListEffects', () => {
   const SEARCH_TEXT = 'This is some text';
   const SORT_BY = 'addedDate';
   const SORT_DIRECTION = 'ASC';
-  const TAG_TYPE = TagType.TEAMS;
+  const TAG_TYPE = ComicTagType.TEAM;
   const TAG_VALUE = 'The Avengers';
   const COMIC_LIST = [
     DISPLAYABLE_COMIC_1,

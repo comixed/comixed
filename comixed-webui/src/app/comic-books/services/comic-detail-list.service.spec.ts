@@ -51,12 +51,12 @@ import {
   comicDetailRemoved,
   comicDetailUpdated
 } from '@app/comic-books/actions/comic-details-list.actions';
-import { TagType } from '@app/collections/models/comic-collection.enum';
 import { READING_LIST_3 } from '@app/lists/lists.fixtures';
 import {
   provideHttpClient,
   withInterceptorsFromDi
 } from '@angular/common/http';
+import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 
 describe('ComicDetailListService', () => {
   const PAGE_SIZE = 25;
@@ -71,7 +71,7 @@ describe('ComicDetailListService', () => {
   const SEARCH_TEXT = 'This is some text';
   const SORT_BY = 'addedDate';
   const SORT_DIRECTION = 'ASC';
-  const COLLECTION_TYPE = TagType.TEAMS;
+  const COLLECTION_TYPE = ComicTagType.TEAM;
   const COLLECTION_NAME = 'The Avengers';
   const COMIC_DETAILS = [
     COMIC_DETAIL_1,

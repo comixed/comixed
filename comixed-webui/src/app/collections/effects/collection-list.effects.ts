@@ -41,6 +41,7 @@ export class CollectionListEffects {
         this.collectionService
           .loadCollectionEntries({
             tagType: action.tagType,
+            searchText: action.searchText,
             pageSize: action.pageSize,
             pageIndex: action.pageIndex,
             sortBy: action.sortBy,

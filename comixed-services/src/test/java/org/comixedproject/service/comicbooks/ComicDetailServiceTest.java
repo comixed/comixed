@@ -48,6 +48,7 @@ public class ComicDetailServiceTest {
   private static final String TEST_SERIES = "The Series Name";
   private static final String TEST_VOLUME = "2023";
   private static final ComicTagType TEST_TAG_TYPE = ComicTagType.CHARACTER;
+  private static final String TEST_FILTER_TEXT = "The filtering text";
   private static final int TEST_YEAR = 2023;
   private static final int TEST_WEEK = 17;
   private static final String TEST_SEARCH_TERM = "Random text...";
@@ -68,17 +69,16 @@ public class ComicDetailServiceTest {
   @Mock private Set<Integer> yearsList;
   @Mock private Set<Long> comicBookIdSet;
   @Mock private Example<ComicDetail> example;
+  @Mock private CollectionEntry collectionEntry;
 
   @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
   @Captor private ArgumentCaptor<Date> startDateArgumentCaptor;
   @Captor private ArgumentCaptor<Date> endDateArgumentCaptor;
-  @Captor private ArgumentCaptor<Example<ComicDetail>> exampleArgumentCaptor;
-  @Captor private ArgumentCaptor<Pageable> sortArgumentCaptor;
 
   private final Set<Date> weeksList = new HashSet<>();
   private final List<String> sortFieldNames = new ArrayList<>();
   private final List<ComicDetail> comicDetailList = new ArrayList<>();
-  private List<String> tagValueList = new ArrayList<>();
+  private List<CollectionEntry> collectionEntryList = new ArrayList<>();
 
   @Before
   public void setUp() {
@@ -513,20 +513,16 @@ public class ComicDetailServiceTest {
 
   @Test
   public void testLoadCollectionEntries() {
-    tagValueList.add(TEST_TAG_VALUE);
+    collectionEntryList.add(collectionEntry);
 
     Mockito.when(
             comicDetailRepository.loadCollectionEntries(
                 Mockito.any(ComicTagType.class), pageableArgumentCaptor.capture()))
-        .thenReturn(tagValueList);
-    Mockito.when(
-            comicDetailRepository.getComicCountForTagTypeAndValue(
-                Mockito.any(ComicTagType.class), Mockito.anyString()))
-        .thenReturn(TEST_TOTAL_COMIC_COUNT);
+        .thenReturn(collectionEntryList);
 
     final List<CollectionEntry> result =
         service.loadCollectionEntries(
-            TEST_TAG_TYPE, TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION);
+            TEST_TAG_TYPE, "", TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION);
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
@@ -541,15 +537,62 @@ public class ComicDetailServiceTest {
   }
 
   @Test
+  public void testLoadCollectionEntries_withFiltering() {
+    collectionEntryList.add(collectionEntry);
+
+    Mockito.when(
+            comicDetailRepository.loadCollectionEntriesWithFiltering(
+                Mockito.any(ComicTagType.class),
+                Mockito.anyString(),
+                pageableArgumentCaptor.capture()))
+        .thenReturn(collectionEntryList);
+
+    final List<CollectionEntry> result =
+        service.loadCollectionEntries(
+            TEST_TAG_TYPE,
+            TEST_FILTER_TEXT,
+            TEST_PAGE_SIZE,
+            TEST_PAGE_INDEX,
+            TEST_SORT_BY,
+            TEST_SORT_DIRECTION);
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+
+    final Pageable pageable = pageableArgumentCaptor.getValue();
+    assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
+    assertEquals(TEST_PAGE_INDEX, pageable.getPageNumber());
+    assertFalse(pageable.getSort().stream().toList().isEmpty());
+
+    Mockito.verify(comicDetailRepository, Mockito.times(1))
+        .loadCollectionEntriesWithFiltering(TEST_TAG_TYPE, "%" + TEST_FILTER_TEXT + "%", pageable);
+  }
+
+  @Test
   public void testLoadCollectionTotalEntries() {
     Mockito.when(comicDetailRepository.getFilterCount(Mockito.any(ComicTagType.class)))
         .thenReturn(TEST_TOTAL_COMIC_COUNT);
 
-    final long result = service.loadCollectionTotalEntries(TEST_TAG_TYPE);
+    final long result = service.loadCollectionTotalEntries(TEST_TAG_TYPE, "");
 
     assertEquals(TEST_TOTAL_COMIC_COUNT, result);
 
     Mockito.verify(comicDetailRepository, Mockito.times(1)).getFilterCount(TEST_TAG_TYPE);
+  }
+
+  @Test
+  public void testLoadCollectionTotalEntries_withFiltering() {
+    Mockito.when(
+            comicDetailRepository.getFilterCountWithFiltering(
+                Mockito.any(ComicTagType.class), Mockito.anyString()))
+        .thenReturn(TEST_TOTAL_COMIC_COUNT);
+
+    final long result = service.loadCollectionTotalEntries(TEST_TAG_TYPE, TEST_FILTER_TEXT);
+
+    assertEquals(TEST_TOTAL_COMIC_COUNT, result);
+
+    Mockito.verify(comicDetailRepository, Mockito.times(1))
+        .getFilterCountWithFiltering(TEST_TAG_TYPE, "%" + TEST_FILTER_TEXT + "%");
   }
 
   @Test

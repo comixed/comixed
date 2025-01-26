@@ -21,10 +21,6 @@ import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import {
-  TagType,
-  tagTypeFromString
-} from '@app/collections/models/comic-collection.enum';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 import { selectUser } from '@app/user/selectors/user.selectors';
@@ -45,6 +41,10 @@ import {
   selectComicListState
 } from '@app/comic-books/selectors/comic-list.selectors';
 import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import {
+  ComicTagType,
+  comicTagTypeFromString
+} from '@app/comic-books/models/comic-tag-type';
 
 @Component({
   selector: 'cx-collection-detail',
@@ -65,7 +65,7 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
   coverYearSubscription: Subscription;
   coverMonthsSubscription: Subscription;
   routableTypeName: string;
-  tagType: TagType;
+  tagType: ComicTagType;
   tagValue: string;
   selectedSubscription: Subscription;
   selectedIds: number[] = [];
@@ -92,7 +92,7 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
     this.paramsSubscription = this.activatedRoute.params.subscribe(params => {
       this.routableTypeName = params.collectionType;
       this.tagValue = params.collectionName;
-      this.tagType = tagTypeFromString(this.routableTypeName);
+      this.tagType = comicTagTypeFromString(this.routableTypeName);
       if (!this.tagType) {
         this.logger.error('Invalid collection type:', params.collectionType);
         this.router.navigateByUrl('/library');

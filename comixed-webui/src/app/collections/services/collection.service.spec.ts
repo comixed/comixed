@@ -30,7 +30,6 @@ import {
   provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { TagType } from '@app/collections/models/comic-collection.enum';
 import { interpolate } from '@app/core';
 import { LOAD_COLLECTION_ENTRIES_URL } from '@app/collections/collections.constants';
 import { LoadCollectionEntriesRequest } from '@app/collections/models/net/load-collection-entries-request';
@@ -39,6 +38,7 @@ import {
   provideHttpClient,
   withInterceptorsFromDi
 } from '@angular/common/http';
+import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 
 describe('CollectionService', () => {
   const COLLECTION_LIST = [
@@ -48,9 +48,10 @@ describe('CollectionService', () => {
     COLLECTION_ENTRY_4,
     COLLECTION_ENTRY_5
   ];
-  const TAG_TYPE = TagType.TEAMS;
+  const TAG_TYPE = ComicTagType.TEAM;
   const PAGE_SIZE = 25;
   const PAGE_INDEX = 10;
+  const SEARCH_TEXT = 'Text for filtering';
   const SORT_BY = 'comic-count';
   const SORT_DIRECTION = 'desc';
   const TOTAL_ENTRIES = Math.floor(Math.random() * 3000);
@@ -84,6 +85,7 @@ describe('CollectionService', () => {
     service
       .loadCollectionEntries({
         tagType: TAG_TYPE,
+        searchText: SEARCH_TEXT,
         pageSize: PAGE_SIZE,
         pageIndex: PAGE_INDEX,
         sortBy: SORT_BY,
@@ -96,6 +98,7 @@ describe('CollectionService', () => {
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
+      searchText: SEARCH_TEXT,
       pageSize: PAGE_SIZE,
       pageIndex: PAGE_INDEX,
       sortBy: SORT_BY,

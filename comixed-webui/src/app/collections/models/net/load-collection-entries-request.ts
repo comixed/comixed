@@ -19,6 +19,7 @@
 export interface LoadCollectionEntriesRequest {
   pageSize: number;
   pageIndex: number;
+  searchText: string;
   sortBy: string;
   sortDirection: string;
 }
