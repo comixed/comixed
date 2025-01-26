@@ -22,8 +22,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicTagType;
-import org.comixedproject.model.net.collections.LoadCollectionListRequest;
-import org.comixedproject.model.net.collections.LoadCollectionListResponse;
+import org.comixedproject.model.net.collections.LoadComicsForCollectionRequest;
+import org.comixedproject.model.net.collections.LoadComicsForCollectionResponse;
 import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,18 +51,18 @@ public class TagController {
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.collection.load-list")
   @JsonView(View.CollectionEntryList.class)
-  public LoadCollectionListResponse loadCollectionList(
-      @RequestBody final LoadCollectionListRequest request,
-      @PathVariable("tagType") final String tagType) {
-    final ComicTagType tag = ComicTagType.forValue(tagType);
-    log.info("Loading collection list entries: type={}", tag);
-    return new LoadCollectionListResponse(
+  public LoadComicsForCollectionResponse loadCollectionList(
+      @RequestBody final LoadComicsForCollectionRequest request,
+      @PathVariable("tagType") final ComicTagType tagType) {
+    log.info("Loading collection list entries: type={}", tagType);
+    return new LoadComicsForCollectionResponse(
         this.comicDetailService.loadCollectionEntries(
-            tag,
+            tagType,
+            request.getSearchText(),
             request.getPageSize(),
             request.getPageIndex(),
             request.getSortBy(),
             request.getSortDirection()),
-        this.comicDetailService.loadCollectionTotalEntries(tag));
+        this.comicDetailService.loadCollectionTotalEntries(tagType, request.getSearchText()));
   }
 }

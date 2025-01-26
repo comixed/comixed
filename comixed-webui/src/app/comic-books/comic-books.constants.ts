@@ -23,7 +23,7 @@ import { ComicType } from '@app/comic-books/models/comic-type';
 export const LOAD_COMICS_BY_FILTER_URL = `${API_ROOT_URL}/comics/filtered`;
 export const LOAD_SELECTED_COMICS_URL = `${API_ROOT_URL}/comics/selected`;
 export const LOAD_COMICS_BY_ID_URL = `${API_ROOT_URL}/comics/ids`;
-export const LOAD_COMICS_FOR_COLLECTION_URL = `${API_ROOT_URL}/comics/collection`;
+export const LOAD_COMICS_FOR_COLLECTION_URL = `${API_ROOT_URL}/comics/collections/\${tagType}/\${tagValue}`;
 export const LOAD_UNREAD_COMICS_URL = `${API_ROOT_URL}/comics/unread`;
 export const LOAD_READ_COMICS_URL = `${API_ROOT_URL}/comics/read`;
 export const LOAD_COMICS_FOR_READING_LIST_URL = `${API_ROOT_URL}/comics/lists/\${readingListId}`;

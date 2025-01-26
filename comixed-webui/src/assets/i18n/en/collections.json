@@ -105,8 +105,8 @@
     }
   },
   "collection-detail": {
-    "page-title": "{tagType, select, characters{Character} teams{Team} locations{Location} stories{Story} other{Unknown}} | {tagValue}",
-    "tab-title": "Collection|{tagType, select, characters{Character} teams{Team} locations{Location} stories{Story} other{Unknown}}|{tagValue}",
+    "page-title": "{tagType, select, CHARACTER{Character} TEAM{Team} LOCATION{Location} STORY{Story} other{Unknown}} | {tagValue}",
+    "tab-title": "Collection|{tagType, select, CHARACTER{Character} TEAM{Team} LOCATION{Location} STORY{Story} other{Unknown}}|{tagValue}",
     "title": {
       "characters": "Character | {name} ({count, plural, =1{One Comic} other{# Comics}})",
       "locations": "Location | {name} ({count, plural, =1{One Comic} other{# Comics}})",
@@ -127,6 +127,7 @@
     },
     "tab-title": "Collections|All {collection, select, characters{Characters} teams{Teams} locations{Locations} stories{Stories} publishers{Publishers} series{Series} other{Unknown}}",
     "text": {
+      "filter-text": "Enter text here to filter the collections...",
       "undefined": "[UNDEFINED]"
     }
   },

@@ -53,8 +53,8 @@ import {
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
-import { TagType } from '@app/collections/models/comic-collection.enum';
 import { PUBLISHER_1, SERIES_1 } from '@app/collections/collections.fixtures';
+import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 
 describe('ComicBookSelection Reducer', () => {
   const COVER_YEAR = Math.random() * 100 + 1900;
@@ -71,7 +71,7 @@ describe('ComicBookSelection Reducer', () => {
     COMIC_BOOK_4,
     COMIC_BOOK_5
   ];
-  const TAG_TYPE = TagType.TEAMS;
+  const TAG_TYPE = ComicTagType.TEAM;
   const TAG_VALUE = 'Some team';
   const IDS = COMIC_BOOKS.map(comicBook => comicBook.id);
   const PUBLISHER = PUBLISHER_1.name;

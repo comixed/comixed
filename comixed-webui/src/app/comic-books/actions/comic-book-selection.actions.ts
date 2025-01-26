@@ -20,7 +20,7 @@ import { createAction, props } from '@ngrx/store';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
-import { TagType } from '@app/collections/models/comic-collection.enum';
+import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 
 export const loadComicBookSelections = createAction(
   '[Comic Book Selection] Loads the initial set of comic book selections'
@@ -92,7 +92,7 @@ export const setMultipleComicBooksByTagTypeAndValueSelectionState =
   createAction(
     '[Comic Book Selection] Set the selected state for multiple comic books by tag type and value',
     props<{
-      tagType: TagType;
+      tagType: ComicTagType;
       tagValue: string;
       selected: boolean;
     }>()

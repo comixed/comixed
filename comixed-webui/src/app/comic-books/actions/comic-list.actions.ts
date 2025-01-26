@@ -20,8 +20,8 @@ import { createAction, props } from '@ngrx/store';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
-import { TagType } from '@app/collections/models/comic-collection.enum';
 import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 
 export const resetComicList = createAction(
   '[Comic List] Resets the list of comics'
@@ -58,7 +58,7 @@ export const loadComicsForCollection = createAction(
   props<{
     pageSize: number;
     pageIndex: number;
-    tagType: TagType;
+    tagType: ComicTagType;
     tagValue: string;
     sortBy: string;
     sortDirection: string;

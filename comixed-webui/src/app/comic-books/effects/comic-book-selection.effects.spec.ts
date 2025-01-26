@@ -51,8 +51,8 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { AlertService } from '@app/core/services/alert.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { TagType } from '@app/collections/models/comic-collection.enum';
 import { PUBLISHER_1, SERIES_1 } from '@app/collections/collections.fixtures';
+import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 
 describe('ComicBookSelectionEffects', () => {
   const COVER_YEAR = Math.random() * 100 + 1900;
@@ -68,7 +68,7 @@ describe('ComicBookSelectionEffects', () => {
   const VOLUME = '2024';
   const SELECTED = Math.random() > 0.5;
   const UNREAD_ONLY = Math.random() > 0.5;
-  const TAG_TYPE = TagType.TEAMS;
+  const TAG_TYPE = ComicTagType.TEAM;
   const TAG_VALUE = 'Some team';
   const COMIC_BOOK_IDS = [7, 17, 65, 1, 29, 91];
 

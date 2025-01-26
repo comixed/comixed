@@ -27,14 +27,14 @@ import org.comixedproject.model.collections.CollectionEntry;
 import org.comixedproject.views.View;
 
 /**
- * <code>LoadCollectionListResponse</code> represents the response body when loading collection
+ * <code>LoadComicsForCollectionResponse</code> represents the response body when loading collection
  * entries.
  *
  * @author Darryl L. Pierce
  */
 @AllArgsConstructor
 @JsonView(View.CollectionEntryList.class)
-public class LoadCollectionListResponse {
+public class LoadComicsForCollectionResponse {
   @JsonProperty("entries")
   @Getter
   private List<CollectionEntry> entries;

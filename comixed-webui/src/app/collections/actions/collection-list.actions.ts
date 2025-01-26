@@ -17,13 +17,14 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { TagType } from '@app/collections/models/comic-collection.enum';
 import { CollectionEntry } from '@app/collections/models/collection-entry';
+import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 
 export const loadCollectionList = createAction(
   '[Collection List] Load the list of values for the collection',
   props<{
-    tagType: TagType;
+    tagType: ComicTagType;
+    searchText: string;
     pageSize: number;
     pageIndex: number;
     sortBy: string;

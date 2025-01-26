@@ -19,11 +19,11 @@
 import { Injectable } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
-import { TagType } from '@app/collections/models/comic-collection.enum';
 import { Observable } from 'rxjs';
 import { interpolate } from '@app/core';
 import { LOAD_COLLECTION_ENTRIES_URL } from '@app/collections/collections.constants';
 import { LoadCollectionEntriesRequest } from '@app/collections/models/net/load-collection-entries-request';
+import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 
 @Injectable({
   providedIn: 'root'
@@ -32,16 +32,18 @@ export class CollectionService {
   constructor(private logger: LoggerService, private http: HttpClient) {}
 
   loadCollectionEntries(args: {
-    sortDirection: string;
+    tagType: ComicTagType;
+    searchText: string;
     pageIndex: number;
-    tagType: TagType;
     pageSize: number;
     sortBy: string;
+    sortDirection: string;
   }): Observable<any> {
     this.logger.debug('Loading collection entries:', args);
     return this.http.post(
       interpolate(LOAD_COLLECTION_ENTRIES_URL, { tagType: args.tagType }),
       {
+        searchText: args.searchText,
         pageIndex: args.pageIndex,
         pageSize: args.pageSize,
         sortBy: args.sortBy,

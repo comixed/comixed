@@ -33,7 +33,6 @@ import {
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
-import { TagType } from '@app/collections/models/comic-collection.enum';
 import {
   COMIC_BOOK_1,
   COMIC_BOOK_2,
@@ -73,6 +72,7 @@ import {
   comicUpdated
 } from '@app/comic-books/actions/comic-list.actions';
 import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 
 describe('DisplayableComicService', () => {
   const PAGE_SIZE = 25;
@@ -87,7 +87,7 @@ describe('DisplayableComicService', () => {
   const SEARCH_TEXT = 'This is some text';
   const SORT_BY = 'addedDate';
   const SORT_DIRECTION = 'ASC';
-  const COLLECTION_TYPE = TagType.TEAMS;
+  const COLLECTION_TYPE = ComicTagType.TEAM;
   const COLLECTION_NAME = 'The Avengers';
   const COMIC_LIST = [
     DISPLAYABLE_COMIC_1,
@@ -397,13 +397,16 @@ describe('DisplayableComicService', () => {
       })
       .subscribe(response => expect(response).toEqual(serviceResponse));
 
-    const req = httpMock.expectOne(interpolate(LOAD_COMICS_FOR_COLLECTION_URL));
+    const req = httpMock.expectOne(
+      interpolate(LOAD_COMICS_FOR_COLLECTION_URL, {
+        tagType: COLLECTION_TYPE,
+        tagValue: COLLECTION_NAME
+      })
+    );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
       pageSize: PAGE_SIZE,
       pageIndex: PAGE_INDEX,
-      tagType: COLLECTION_TYPE,
-      tagValue: COLLECTION_NAME,
       sortBy: SORT_BY,
       sortDirection: SORT_DIRECTION
     } as LoadComicsForCollectionRequest);

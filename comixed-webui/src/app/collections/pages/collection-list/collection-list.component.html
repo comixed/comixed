@@ -1,3 +1,37 @@
+<h2>
+  {{
+    "collection-list.page-title"
+      | translate
+        : {
+            collection: collectionType,
+            shown: dataSource.filteredData.length
+          }
+  }}
+</h2>
+
+<div class="cx-width-100">
+  <form [formGroup]="filterTextForm">
+    <mat-form-field class="cx-width-100" appearance="outline">
+      <button
+        id="filter-text-button"
+        mat-icon-button
+        matPrefix
+        (click)="onApplyFilter(filterTextInput.value)"
+      >
+        <mat-icon>filter</mat-icon>
+      </button>
+      <input
+        id="collection-filter-text-input"
+        #filterTextInput
+        matInput
+        type="text"
+        formControlName="filterTextInput"
+        [placeholder]="'collection-list.text.filter-text' | translate"
+      />
+    </mat-form-field>
+  </form>
+</div>
+
 <mat-paginator
   showFirstLastButtons="true"
   class="cx-height-100"
@@ -13,17 +47,6 @@
     )
   "
 ></mat-paginator>
-
-<h2>
-  {{
-    "collection-list.page-title"
-      | translate
-        : {
-            collection: collectionType,
-            shown: dataSource.filteredData.length
-          }
-  }}
-</h2>
 
 <mat-table
   [dataSource]="dataSource"

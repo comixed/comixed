@@ -46,12 +46,12 @@ import {
   comicBookSelectionUpdate,
   loadComicBookSelections
 } from '@app/comic-books/actions/comic-book-selection.actions';
-import { TagType } from '@app/collections/models/comic-collection.enum';
 import { SetSelectedByIdRequest } from '@app/comic-books/models/net/set-selected-by-id-request';
 import { SetSelectedByPublisherRequest } from '@app/comic-books/models/net/set-selected-by-publisher-request';
 import { SetSelectedByPublisherSeriesVolumeRequest } from '@app/comic-books/models/net/set-selected-by-publisher-series-volume-request';
 import { DuplicateComicBooksSelectionRequest } from '@app/comic-books/models/net/duplicate-comic-books-selection-request';
 import { UnreadComicBooksSelectionRequest } from '@app/comic-books/models/net/unread-comic-books-selection-request';
+import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 
 @Injectable({
   providedIn: 'root'
@@ -139,7 +139,7 @@ export class ComicBookSelectionService {
   }
 
   setSelectedByTagTypeAndValue(args: {
-    tagType: TagType;
+    tagType: ComicTagType;
     tagValue: string;
     selected: boolean;
   }): Observable<any> {

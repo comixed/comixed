@@ -309,11 +309,32 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @param pageable the page request
    * @return the values
    */
-  @Query("SELECT DISTINCT t.value FROM ComicTag t WHERE t.type = :tagType")
-  List<String> loadCollectionEntries(@Param("tagType") ComicTagType tagType, Pageable pageable);
+  @Query("SELECT DISTINCT c FROM CollectionEntry c WHERE c.id.tagType = :tagType")
+  List<CollectionEntry> loadCollectionEntries(
+      @Param("tagType") ComicTagType tagType, Pageable pageable);
+
+  /**
+   * Returns a display page of {@link CollectionEntry} values using filter text.
+   *
+   * @param tagType the tag type
+   * @param filterText the filter text
+   * @param pageable the page request
+   * @return the values
+   */
+  @Query(
+      "SELECT c FROM CollectionEntry c WHERE c.id.tagType = :tagType AND c.id.tagValue ILIKE :filterText")
+  List<CollectionEntry> loadCollectionEntriesWithFiltering(
+      @Param("tagType") ComicTagType tagType,
+      @Param("filterText") String filterText,
+      Pageable pageable);
 
   @Query("SELECT COUNT(DISTINCT t.value) FROM ComicTag t WHERE t.type = :tagType")
   long getFilterCount(@Param("tagType") ComicTagType tag);
+
+  @Query(
+      "SELECT COUNT(DISTINCT t.value) FROM ComicTag t WHERE t.type = :tagType AND t.value ILIKE :filterText")
+  long getFilterCountWithFiltering(
+      @Param("tagType") ComicTagType tag, @Param("filterText") String filterText);
 
   @Query(
       "SELECT sum(total) FROM (SELECT count(*) AS total FROM ComicDetail d WHERE d.publisher IS NOT NULL AND LENGTH(d.publisher) > 0 AND d.series IS NOT NULL AND LENGTH(d.series) > 0 AND d.volume IS NOT NULL AND LENGTH(d.volume) > 0 AND d.issueNumber IS NOT NULL AND LENGTH(d.issueNumber) > 0 AND d.coverDate IS NOT NULL GROUP BY d.publisher, d.series, d.volume, d.issueNumber, d.coverDate HAVING count(*) > 1)")

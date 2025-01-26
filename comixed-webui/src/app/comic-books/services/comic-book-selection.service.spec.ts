@@ -55,13 +55,13 @@ import {
   comicBookSelectionUpdate,
   loadComicBookSelections
 } from '@app/comic-books/actions/comic-book-selection.actions';
-import { TagType } from '@app/collections/models/comic-collection.enum';
 import { SetSelectedByIdRequest } from '@app/comic-books/models/net/set-selected-by-id-request';
 import { SetSelectedByPublisherRequest } from '@app/comic-books/models/net/set-selected-by-publisher-request';
 import { PUBLISHER_1, SERIES_1 } from '@app/collections/collections.fixtures';
 import { SetSelectedByPublisherSeriesVolumeRequest } from '@app/comic-books/models/net/set-selected-by-publisher-series-volume-request';
 import { DuplicateComicBooksSelectionRequest } from '@app/comic-books/models/net/duplicate-comic-books-selection-request';
 import { UnreadComicBooksSelectionRequest } from '@app/comic-books/models/net/unread-comic-books-selection-request';
+import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 
 describe('ComicBookSelectionService', () => {
   const COVER_YEAR = Math.random() * 100 + 1900;
@@ -72,7 +72,7 @@ describe('ComicBookSelectionService', () => {
   const UNSCRAPED_STATE = Math.random() > 0.5;
   const SEARCH_TEXT = 'This is some text';
   const ID = 65;
-  const TAG_TYPE = TagType.TEAMS;
+  const TAG_TYPE = ComicTagType.TEAM;
   const TAG_VALUE = 'Some team';
   const PUBLISHER = PUBLISHER_1.name;
   const SERIES = SERIES_1.name;

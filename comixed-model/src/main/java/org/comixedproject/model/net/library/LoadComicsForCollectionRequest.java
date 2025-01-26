@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.comixedproject.model.comicbooks.ComicTagType;
 
 /**
  * <code>LoadComicsForCollectionRequest</code> represents a request to load comics for collection.
@@ -40,14 +39,6 @@ public class LoadComicsForCollectionRequest {
   @Getter
   private int pageIndex;
 
-  @JsonProperty("tagType")
-  @Getter
-  private ComicTagType tagType;
-
-  @JsonProperty("tagValue")
-  @Getter
-  private String tagValue;
-
   @JsonProperty("sortBy")
   @Getter
   private String sortBy;
@@ -63,12 +54,6 @@ public class LoadComicsForCollectionRequest {
         + pageSize
         + ", pageIndex="
         + pageIndex
-        + ", tagType='"
-        + tagType
-        + '\''
-        + ", tagValue='"
-        + tagValue
-        + '\''
         + ", sortBy='"
         + sortBy
         + '\''

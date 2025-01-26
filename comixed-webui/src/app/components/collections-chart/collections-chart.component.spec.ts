@@ -26,8 +26,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
-import { TagType } from '@app/collections/models/comic-collection.enum';
 import { initialState as initialLibraryState } from '@app/library/reducers/library.reducer';
+import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 
 describe('CollectionsChartComponent', () => {
   const LIBRARY_STATE = {
@@ -111,14 +111,11 @@ describe('CollectionsChartComponent', () => {
   });
 
   describe('when a collection is selected', () => {
-    const COLLECTION_TYPE = TagType.PUBLISHERS;
+    const COLLECTION_TYPE = ComicTagType.PUBLISHER;
     const COLLECTION_NAME = 'the collection';
 
     beforeEach(() => {
-      component.onCollectionSelected(
-        COLLECTION_TYPE.toString(),
-        COLLECTION_NAME
-      );
+      component.onCollectionSelected('publishers', COLLECTION_NAME);
     });
 
     it('redirects the browser', () => {
@@ -127,27 +124,6 @@ describe('CollectionsChartComponent', () => {
         'collections',
         COLLECTION_TYPE,
         COLLECTION_NAME
-      ]);
-    });
-  });
-
-  describe('when an unknown collection is selected', () => {
-    const COLLECTION_TYPE = TagType.PUBLISHERS;
-    const COLLECTION_NAME = null;
-
-    beforeEach(() => {
-      component.onCollectionSelected(
-        COLLECTION_TYPE.toString(),
-        COLLECTION_NAME
-      );
-    });
-
-    it('redirects the browser', () => {
-      expect(router.navigate).toHaveBeenCalledWith([
-        'library',
-        'collections',
-        COLLECTION_TYPE,
-        '[UNKNOWN]'
       ]);
     });
   });

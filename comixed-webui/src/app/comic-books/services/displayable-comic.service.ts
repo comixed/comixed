@@ -23,7 +23,6 @@ import { Observable, Subscription } from 'rxjs';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
-import { TagType } from '@app/collections/models/comic-collection.enum';
 import { Store } from '@ngrx/store';
 import { WebSocketService } from '@app/messaging';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
@@ -56,6 +55,7 @@ import {
   comicRemoved,
   comicUpdated
 } from '@app/comic-books/actions/comic-list.actions';
+import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 
 @Injectable({
   providedIn: 'root'
@@ -167,20 +167,24 @@ export class DisplayableComicService {
   loadComicsForCollection(args: {
     pageSize: number;
     pageIndex: number;
-    tagType: TagType;
+    tagType: ComicTagType;
     tagValue: string;
     sortBy: string;
     sortDirection: string;
   }): Observable<any> {
     this.logger.debug('Loading comics for collection:', args);
-    return this.http.post(interpolate(LOAD_COMICS_FOR_COLLECTION_URL), {
-      pageSize: args.pageSize,
-      pageIndex: args.pageIndex,
-      tagType: args.tagType,
-      tagValue: args.tagValue,
-      sortBy: args.sortBy,
-      sortDirection: args.sortDirection
-    } as LoadComicsForCollectionRequest);
+    return this.http.post(
+      interpolate(LOAD_COMICS_FOR_COLLECTION_URL, {
+        tagType: args.tagType,
+        tagValue: args.tagValue
+      }),
+      {
+        pageSize: args.pageSize,
+        pageIndex: args.pageIndex,
+        sortBy: args.sortBy,
+        sortDirection: args.sortDirection
+      } as LoadComicsForCollectionRequest
+    );
   }
 
   loadComicsByReadState(args: {

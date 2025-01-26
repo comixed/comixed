@@ -266,12 +266,9 @@ public class DisplayableComicControllerTest {
     final LoadComicsResponse result =
         controller.loadComicsByTagTypeAndValue(
             new LoadComicsForCollectionRequest(
-                TEST_PAGE_SIZE,
-                TEST_PAGE_INDEX,
-                TEST_TAG_TYPE,
-                TEST_TAG_VALUE,
-                TEST_SORT_BY,
-                TEST_SORT_DIRECTION));
+                TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION),
+            TEST_TAG_TYPE,
+            TEST_TAG_VALUE);
 
     assertNotNull(result);
     assertSame(comicList, result.getComics());

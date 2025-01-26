@@ -24,8 +24,8 @@ import java.util.List;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.collections.CollectionEntry;
 import org.comixedproject.model.comicbooks.ComicTagType;
-import org.comixedproject.model.net.collections.LoadCollectionListRequest;
-import org.comixedproject.model.net.collections.LoadCollectionListResponse;
+import org.comixedproject.model.net.collections.LoadComicsForCollectionRequest;
+import org.comixedproject.model.net.collections.LoadComicsForCollectionResponse;
 import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,6 +36,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TagControllerTest {
+  private static final String TEST_FILTER_TEXT = "the filter text";
   private static final int TEST_PAGE_SIZE = 10;
   private static final int TEST_PAGE_INDEX = 12;
   private static final String TEST_SORT_BY = "comic-count";
@@ -53,19 +54,26 @@ public class TagControllerTest {
     Mockito.when(
             comicDetailService.loadCollectionEntries(
                 Mockito.any(ComicTagType.class),
+                Mockito.anyString(),
                 Mockito.anyInt(),
                 Mockito.anyInt(),
                 Mockito.anyString(),
                 Mockito.anyString()))
         .thenReturn(collectionEntryList);
-    Mockito.when(comicDetailService.loadCollectionTotalEntries(Mockito.any(ComicTagType.class)))
+    Mockito.when(
+            comicDetailService.loadCollectionTotalEntries(
+                Mockito.any(ComicTagType.class), Mockito.anyString()))
         .thenReturn(TEST_COMIC_COUNT);
 
-    final LoadCollectionListResponse result =
+    final LoadComicsForCollectionResponse result =
         controller.loadCollectionList(
-            new LoadCollectionListRequest(
-                TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION),
-            TEST_TAG_TYPE.getValue());
+            new LoadComicsForCollectionRequest(
+                TEST_FILTER_TEXT,
+                TEST_PAGE_SIZE,
+                TEST_PAGE_INDEX,
+                TEST_SORT_BY,
+                TEST_SORT_DIRECTION),
+            TEST_TAG_TYPE);
 
     assertNotNull(result);
     assertSame(collectionEntryList, result.getEntries());
@@ -73,7 +81,13 @@ public class TagControllerTest {
 
     Mockito.verify(comicDetailService, Mockito.times(1))
         .loadCollectionEntries(
-            TEST_TAG_TYPE, TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION);
-    Mockito.verify(comicDetailService, Mockito.times(1)).loadCollectionTotalEntries(TEST_TAG_TYPE);
+            TEST_TAG_TYPE,
+            TEST_FILTER_TEXT,
+            TEST_PAGE_SIZE,
+            TEST_PAGE_INDEX,
+            TEST_SORT_BY,
+            TEST_SORT_DIRECTION);
+    Mockito.verify(comicDetailService, Mockito.times(1))
+        .loadCollectionTotalEntries(TEST_TAG_TYPE, TEST_FILTER_TEXT);
   }
 }

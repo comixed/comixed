@@ -23,7 +23,6 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { TagType } from '@app/collections/models/comic-collection.enum';
 import {
   DISPLAYABLE_COMIC_1,
   DISPLAYABLE_COMIC_3,
@@ -49,6 +48,10 @@ import {
   COMIC_LIST_FEATURE_KEY,
   initialState as initialComicListState
 } from '@app/comic-books/reducers/comic-list.reducer';
+import { QUERY_PARAM_FILTER_TEXT } from '@app/core';
+import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('CollectionListComponent', () => {
   const COMIC_LIST = [
@@ -56,6 +59,7 @@ describe('CollectionListComponent', () => {
     DISPLAYABLE_COMIC_3,
     DISPLAYABLE_COMIC_5
   ];
+  const SEARCH_TEXT = 'The filtering text';
   const initialState = {
     [COLLECTION_LIST_FEATURE_KEY]: initialCollectionListState,
     [COMIC_LIST_FEATURE_KEY]: {
@@ -80,6 +84,8 @@ describe('CollectionListComponent', () => {
         imports: [
           NoopAnimationsModule,
           RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+          FormsModule,
+          ReactiveFormsModule,
           LoggerModule.forRoot(),
           TranslateModule.forRoot(),
           MatTableModule,
@@ -87,7 +93,8 @@ describe('CollectionListComponent', () => {
           MatToolbarModule,
           MatPaginatorModule,
           MatFormFieldModule,
-          MatInputModule
+          MatInputModule,
+          MatIconModule
         ],
         providers: [
           provideMockStore({ initialState }),
@@ -95,23 +102,25 @@ describe('CollectionListComponent', () => {
           {
             provide: ActivatedRoute,
             useValue: {
-              params: new BehaviorSubject<{}>({}),
+              params: new BehaviorSubject<{}>({
+                collectionType: 'stories'
+              }),
               queryParams: new BehaviorSubject<{}>({})
             }
           },
           {
             provide: QueryParameterService,
-            useValue: {}
-          },
-          {
-            provide: QueryParameterService,
             useValue: {
+              updateQueryParam: jasmine.createSpy(
+                'QueryParameterService.updateQueryParam()'
+              ),
               coverYear$: new BehaviorSubject<CoverDateFilter>({
                 year: null,
                 month: null
               }),
               pageSize$: new BehaviorSubject<number>(10),
               pageIndex$: new BehaviorSubject<number>(3),
+              filterText$: new BehaviorSubject<number>(3),
               sortBy$: new BehaviorSubject<string>(null),
               sortDirection$: new BehaviorSubject<string>(null)
             }
@@ -170,7 +179,7 @@ describe('CollectionListComponent', () => {
     });
 
     it('sets the collection type', () => {
-      expect(component.collectionType).toEqual(TagType.STORIES);
+      expect(component.collectionType).toEqual(ComicTagType.STORY);
     });
 
     it('sets the routable type name', () => {
@@ -186,7 +195,7 @@ describe('CollectionListComponent', () => {
     const COLLECTION_NAME = 'The Collection';
 
     beforeEach(() => {
-      component.collectionType = TagType.PUBLISHERS;
+      component.collectionType = ComicTagType.PUBLISHER;
       component.routableTypeName = 'publishers';
       component.onShowCollection({
         tagValue: COLLECTION_NAME,
@@ -200,6 +209,36 @@ describe('CollectionListComponent', () => {
         'collections',
         'publishers',
         COLLECTION_NAME
+      ]);
+    });
+  });
+
+  describe('applying search text', () => {
+    beforeEach(() => {
+      component.onApplyFilter(SEARCH_TEXT);
+    });
+
+    it('updates the filter text', () => {
+      expect(queryParameterService.updateQueryParam).toHaveBeenCalledWith([
+        {
+          name: QUERY_PARAM_FILTER_TEXT,
+          value: SEARCH_TEXT
+        }
+      ]);
+    });
+  });
+
+  describe('clearing the search text', () => {
+    beforeEach(() => {
+      component.onApplyFilter('');
+    });
+
+    it('updates the filter text', () => {
+      expect(queryParameterService.updateQueryParam).toHaveBeenCalledWith([
+        {
+          name: QUERY_PARAM_FILTER_TEXT,
+          value: null
+        }
       ]);
     });
   });
