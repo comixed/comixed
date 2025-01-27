@@ -432,6 +432,7 @@ public class ComicDetailService {
     String fieldName;
     switch (sortBy) {
       case "tag-value" -> fieldName = "id.tagValue";
+      case "comic-count" -> fieldName = "comicCount";
       default -> fieldName = "id.tagValue";
     }
 
