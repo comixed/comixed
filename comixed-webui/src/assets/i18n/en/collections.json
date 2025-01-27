@@ -121,11 +121,11 @@
       "comic-count": "# Comics",
       "tag-value": "Collection"
     },
-    "page-title": "All {collection, select, characters{Characters} teams{Teams} locations{Locations} stories{Stories} publishers{Publishers} series{Series} other{Unknown}}",
+    "page-title": "All {collection, select, CHARACTER{Characters} TEAM{Teams} LOCATION{Locations} STORY{Stories} publishers{Publishers} series{Series} other{Unknown}}",
     "placeholder": {
       "filter-entries": "Enter text to filer the entries displayed."
     },
-    "tab-title": "Collections|All {collection, select, characters{Characters} teams{Teams} locations{Locations} stories{Stories} publishers{Publishers} series{Series} other{Unknown}}",
+    "tab-title": "Collections|All {collection, select, CHARACTER{Characters} TEAM{Teams} LOCATION{Locations} STORY{Stories} publishers{Publishers} series{Series} other{Unknown}}",
     "text": {
       "filter-text": "Enter text here to filter the collections...",
       "undefined": "[UNDEFINED]"
