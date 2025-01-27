@@ -138,8 +138,7 @@ public class ComicBookSelectionControllerTest {
   public void testAddComicBooksByTagTypeAndValue() throws ComicBookSelectionException {
     Mockito.when(opdsUtils.urlDecodeString(TEST_TAG_VALUE)).thenReturn(TEST_TAG_VALUE);
 
-    controller.addComicBooksByTagTypeAndValue(
-        httpSession, TEST_TAG_TYPE.getValue(), TEST_TAG_VALUE);
+    controller.addComicBooksByTagTypeAndValue(httpSession, TEST_TAG_TYPE, TEST_TAG_VALUE);
 
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
     Mockito.verify(comicSelectionService, Mockito.times(1))
@@ -153,8 +152,7 @@ public class ComicBookSelectionControllerTest {
   public void testRemoveComicBooksByTagTypeAndValue() throws ComicBookSelectionException {
     Mockito.when(opdsUtils.urlDecodeString(TEST_TAG_VALUE)).thenReturn(TEST_TAG_VALUE);
 
-    controller.removeComicBooksByTagTypeAndValue(
-        httpSession, TEST_TAG_TYPE.getValue(), TEST_TAG_VALUE);
+    controller.removeComicBooksByTagTypeAndValue(httpSession, TEST_TAG_TYPE, TEST_TAG_VALUE);
 
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
     Mockito.verify(comicSelectionService, Mockito.times(1))

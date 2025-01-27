@@ -151,7 +151,7 @@ public class ComicBookSelectionController {
    * Adds selections by tag type and value
    *
    * @param session the session
-   * @param tagTypeString the tag type string
+   * @param tagType the tag type
    * @param tagValue the tag value
    * @throws ComicBookSelectionException if an error occurs
    */
@@ -160,10 +160,9 @@ public class ComicBookSelectionController {
   @Timed(value = "comixed.comic-book.selections.add-by-tag-type-and-value")
   public void addComicBooksByTagTypeAndValue(
       final HttpSession session,
-      @PathVariable("tagType") final String tagTypeString,
+      @PathVariable("tagType") final ComicTagType tagType,
       @PathVariable("tagValue") final String tagValue)
       throws ComicBookSelectionException {
-    final ComicTagType tagType = ComicTagType.forValue(tagTypeString);
     final String decodedTagValue = this.opdsUtils.urlDecodeString(tagValue);
     log.info(
         "Adding multiple comic books by tag type and value: type={} value={}",
@@ -181,7 +180,7 @@ public class ComicBookSelectionController {
    * Removes selections using filters.
    *
    * @param session the session
-   * @param tagTypeString the tag type string
+   * @param tagType the tag type
    * @param tagValue the tag value
    * @throws ComicBookSelectionException if an error occurs
    */
@@ -190,10 +189,9 @@ public class ComicBookSelectionController {
   @Timed(value = "comixed.comic-book.selections.remove-by-tag-type-and-value")
   public void removeComicBooksByTagTypeAndValue(
       final HttpSession session,
-      @PathVariable("tagType") final String tagTypeString,
+      @PathVariable("tagType") final ComicTagType tagType,
       @PathVariable("tagValue") final String tagValue)
       throws ComicBookSelectionException {
-    final ComicTagType tagType = ComicTagType.forValue(tagTypeString);
     final String decodedTagValue = this.opdsUtils.urlDecodeString(tagValue);
 
     log.info(
