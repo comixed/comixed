@@ -46,7 +46,7 @@ public class OPDSPublisherControllerTest {
   private static final String TEST_PUBLISHER_ENCODED = "The+Publisher";
   private static final String TEST_PUBLISHER = "The Publisher";
   private static final boolean TEST_UNREAD = RandomUtils.nextBoolean();
-  private static final String TEST_SERIES_ENCODED = "The+Series+Name";
+  private static final String TEST_SERIES_ENCODED = "The+SeriesDetail+Name";
   private static final String TEST_SERIES = "The Series Name";
   private static final String TEST_VOLUME_ENCODED = "The+Volume";
   private static final String TEST_VOLUME = "The Volume";

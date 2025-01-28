@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Optional;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.collections.Publisher;
-import org.comixedproject.model.collections.Series;
+import org.comixedproject.model.collections.SeriesDetail;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
@@ -292,7 +292,7 @@ public class ComicBookRepositoryTest {
 
   @Test
   public void testGetAllSeriesAndVolumes() {
-    final List<Series> result = repository.getAllSeriesAndVolumes();
+    final List<SeriesDetail> result = repository.getAllSeriesAndVolumes();
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
@@ -300,7 +300,7 @@ public class ComicBookRepositoryTest {
 
   @Test
   public void testGetAllSeriesAndVolumesForPublisher() {
-    final List<Series> result =
+    final List<SeriesDetail> result =
         repository.getAllSeriesAndVolumesForPublisher(TEST_PUBLISHER, PageRequest.of(0, 10));
 
     assertNotNull(result);

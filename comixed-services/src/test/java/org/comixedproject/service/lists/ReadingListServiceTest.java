@@ -67,7 +67,7 @@ public class ReadingListServiceTest {
   private static final ReadingListState TEST_READING_LIST_STATE = ReadingListState.STABLE;
   private static final String TEST_POSITION = "1";
   private static final String TEST_PUBLISHER = "Publisher";
-  private static final String TEST_SERIES = "Series";
+  private static final String TEST_SERIES = "SeriesDetail";
   private static final String TEST_VOLUME = "Volume";
   private static final String TEST_ISSUE_NUMBER = "Issue#";
   private static final byte[] TEST_ENCODED_READING_LIST =

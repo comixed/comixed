@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2022, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,23 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.collections;
+package org.comixedproject.repositories.collections;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.comixedproject.model.collections.SeriesDetail;
+import org.comixedproject.model.collections.SeriesDetailId;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
- * <code>LoadSeriesListResponse</code> represents the response body when loading a seriesDetails
- * list.
+ * <code>SeriesDetailsRepository</code> provides methods for working with persisted instances of
+ * {@link SeriesDetail}.
  *
  * @author Darryl L. Pierce
  */
-@AllArgsConstructor
-public class LoadSeriesListResponse {
-  @JsonProperty("series")
-  @Getter
-  private List<SeriesDetail> seriesDetails;
-}
+@Repository
+public interface SeriesDetailsRepository extends JpaRepository<SeriesDetail, SeriesDetailId> {}
