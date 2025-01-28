@@ -11,6 +11,7 @@
 <mat-paginator
   showFirstLastButtons="true"
   class="cx-height-100"
+  [length]="totalSeries"
   [pageSize]="queryParameterService.pageSize$ | async"
   [pageIndex]="queryParameterService.pageIndex$ | async"
   [pageSizeOptions]="pageOptions"
@@ -65,7 +66,7 @@
   </ng-container>
 
   <ng-container matColumnDef="total-comics">
-    <mat-header-cell *matHeaderCellDef>
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "collections.series.label.total-comics" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
@@ -86,7 +87,7 @@
         ]"
       >
         <mat-label>
-          {{ entry.inLibrary }}
+          {{ entry.totalIssues }}
         </mat-label>
         <mat-icon>info</mat-icon>
       </button>
@@ -94,7 +95,7 @@
   </ng-container>
 
   <ng-container matColumnDef="in-library">
-    <mat-header-cell *matHeaderCellDef>
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "collections.series.label.in-library" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">

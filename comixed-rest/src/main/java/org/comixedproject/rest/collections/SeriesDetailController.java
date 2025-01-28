@@ -23,6 +23,7 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.collections.Issue;
 import org.comixedproject.model.net.collections.LoadSeriesDetailRequest;
+import org.comixedproject.model.net.collections.LoadSeriesListRequest;
 import org.comixedproject.model.net.collections.LoadSeriesListResponse;
 import org.comixedproject.service.collections.SeriesDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,9 +54,15 @@ public class SeriesDetailController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.series.load-list")
-  public LoadSeriesListResponse loadSeriesList() {
-    log.info("Loading series");
-    return new LoadSeriesListResponse(this.seriesDetailService.getSeriesList());
+  public LoadSeriesListResponse loadSeriesList(@RequestBody final LoadSeriesListRequest request) {
+    log.info("Loading series: {}", request);
+    final int pageIndex = request.getPageIndex();
+    final int pageSize = request.getPageSize();
+    final String sortBy = request.getSortBy();
+    final String sortDirection = request.getSortDirection();
+    return new LoadSeriesListResponse(
+        this.seriesDetailService.getSeriesList(pageIndex, pageSize, sortBy, sortDirection),
+        this.seriesDetailService.getSeriesCount());
   }
 
   /**

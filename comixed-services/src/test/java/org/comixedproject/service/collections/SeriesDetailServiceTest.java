@@ -18,11 +18,11 @@
 
 package org.comixedproject.service.collections;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 import org.comixedproject.model.collections.Issue;
 import org.comixedproject.model.collections.SeriesDetail;
 import org.comixedproject.model.collections.SeriesDetailId;
@@ -30,42 +30,137 @@ import org.comixedproject.repositories.collections.SeriesDetailsRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SeriesDetailServiceTest {
+  private static final int TEST_PAGE_INDEX = 3;
+  private static final int TEST_PAGE_SIZE = 25;
+  private static final String TEST_SORT_BY = "name";
+  private static final String TEST_SORT_DIRECTION = "asc";
   private static final String TEST_PUBLISHER = "The publisher";
   private static final String TEST_SERIES = "The series";
   private static final String TEST_VOLUME = "2022";
   private static final Long TEST_ISSUE_COUNT = 29L;
+  private static final int TEST_SERIES_COUNT = 237;
 
   @InjectMocks private SeriesDetailService service;
   @Mock private SeriesDetailsRepository seriesDetailsRepository;
   @Mock private IssueService issueService;
+  @Mock private Stream<SeriesDetail> seriesDetailStream;
+  @Mock private Page<SeriesDetail> seriesDetailPage;
   @Mock private List<Issue> issueList;
+
+  @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
 
   private List<SeriesDetail> seriesDetailList = new ArrayList<>();
 
   @Before
   public void setUp() {
+    Mockito.when(seriesDetailPage.stream()).thenReturn(seriesDetailStream);
+    Mockito.when(seriesDetailStream.toList()).thenReturn(seriesDetailList);
     seriesDetailList.add(
         new SeriesDetail(
             new SeriesDetailId(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME), TEST_ISSUE_COUNT));
   }
 
   @Test
-  public void testLoadSeriesList() {
-    Mockito.when(seriesDetailsRepository.findAll()).thenReturn(seriesDetailList);
+  public void testLoadSeriesList_sortedByPublisher() {
+    Mockito.when(seriesDetailsRepository.findAll(pageableArgumentCaptor.capture()))
+        .thenReturn(seriesDetailPage);
 
-    final List<SeriesDetail> result = service.getSeriesList();
+    doLoadSeriesList_sorted("publisher");
+  }
+
+  @Test
+  public void testLoadSeriesList_sortedByName() {
+    Mockito.when(seriesDetailsRepository.findAll(pageableArgumentCaptor.capture()))
+        .thenReturn(seriesDetailPage);
+
+    doLoadSeriesList_sorted("name");
+  }
+
+  @Test
+  public void testLoadSeriesList_sortedByVolume() {
+    Mockito.when(seriesDetailsRepository.findAll(pageableArgumentCaptor.capture()))
+        .thenReturn(seriesDetailPage);
+
+    doLoadSeriesList_sorted("volume");
+  }
+
+  @Test
+  public void testLoadSeriesList_sortedByLibraryCount() {
+    Mockito.when(seriesDetailsRepository.findAll(pageableArgumentCaptor.capture()))
+        .thenReturn(seriesDetailPage);
+
+    doLoadSeriesList_sorted("in-library");
+  }
+
+  @Test
+  public void testLoadSeriesList_sortedByTotalComics() {
+    Mockito.when(seriesDetailsRepository.findAll(pageableArgumentCaptor.capture()))
+        .thenReturn(seriesDetailPage);
+
+    doLoadSeriesList_sorted("total-comics");
+  }
+
+  @Test
+  public void testLoadSeriesList_sortedByUnknown() {
+    Mockito.when(seriesDetailsRepository.findAll(pageableArgumentCaptor.capture()))
+        .thenReturn(seriesDetailPage);
+
+    doLoadSeriesList_sorted("farkle");
+  }
+
+  private void doLoadSeriesList_sorted(final String publisher) {
+    for (int index = 0; index < 2; index++) {
+      final List<SeriesDetail> result =
+          service.getSeriesList(
+              TEST_PAGE_INDEX, TEST_PAGE_SIZE, publisher, index == 0 ? "asc" : "desc");
+
+      assertNotNull(result);
+      assertSame(seriesDetailList, result);
+
+      final Pageable pageRequest = pageableArgumentCaptor.getValue();
+      assertEquals(TEST_PAGE_INDEX, pageRequest.getPageNumber());
+      assertEquals(TEST_PAGE_SIZE, pageRequest.getPageSize());
+      assertTrue(TEST_SORT_BY, pageRequest.getSort().isSorted());
+
+      Mockito.verify(seriesDetailsRepository, Mockito.times(1)).findAll(pageRequest);
+    }
+  }
+
+  @Test
+  public void testLoadSeriesList_unsorted() {
+    Mockito.when(seriesDetailsRepository.findAll(pageableArgumentCaptor.capture()))
+        .thenReturn(seriesDetailPage);
+
+    final List<SeriesDetail> result =
+        service.getSeriesList(TEST_PAGE_INDEX, TEST_PAGE_SIZE, "", "");
 
     assertNotNull(result);
     assertSame(seriesDetailList, result);
 
-    Mockito.verify(seriesDetailsRepository, Mockito.times(1)).findAll();
+    final Pageable pageRequest = pageableArgumentCaptor.getValue();
+    assertEquals(TEST_PAGE_INDEX, pageRequest.getPageNumber());
+    assertEquals(TEST_PAGE_SIZE, pageRequest.getPageSize());
+    assertFalse(TEST_SORT_BY, pageRequest.getSort().isSorted());
+
+    Mockito.verify(seriesDetailsRepository, Mockito.times(1)).findAll(pageRequest);
+  }
+
+  @Test
+  public void testLoadSeriesCount() {
+    Mockito.when(seriesDetailsRepository.getSeriesCount()).thenReturn(TEST_SERIES_COUNT);
+
+    final int result = service.getSeriesCount();
+
+    assertEquals(TEST_SERIES_COUNT, result);
+
+    Mockito.verify(seriesDetailsRepository, Mockito.times(1)).getSeriesCount();
   }
 
   @Test

@@ -19,11 +19,11 @@
 import { initialState, reducer, SeriesState } from './series.reducer';
 import {
   loadSeriesDetail,
-  loadSeriesDetailFailed,
-  loadSeriesFailed,
+  loadSeriesDetailFailure,
+  loadSeriesDetailSuccess,
   loadSeriesList,
-  seriesDetailLoaded,
-  seriesLoaded
+  loadSeriesListFailure,
+  loadSeriesListSuccess
 } from '@app/collections/actions/series.actions';
 import {
   ISSUE_1,
@@ -37,6 +37,10 @@ import {
 } from '@app/collections/collections.fixtures';
 
 describe('Series Reducer', () => {
+  const PAGE_INDEX = 3;
+  const PAGE_SIZE = 25;
+  const SORT_BY = 'publisher';
+  const SORT_DIRECTION = 'desc';
   const SERIES_LIST = [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5];
   const SERIES_DETAIL = [ISSUE_1, ISSUE_2, ISSUE_3];
   const PUBLISHER = 'The Publisher';
@@ -58,6 +62,10 @@ describe('Series Reducer', () => {
       expect(state.busy).toBeFalse();
     });
 
+    it('has no series', () => {
+      expect(state.totalSeries).toEqual(0);
+    });
+
     it('has no series list loaded', () => {
       expect(state.series).toEqual([]);
     });
@@ -69,38 +77,53 @@ describe('Series Reducer', () => {
 
   describe('loading series', () => {
     beforeEach(() => {
-      state = reducer({ ...state, busy: false }, loadSeriesList());
+      state = reducer(
+        { ...state, busy: false },
+        loadSeriesList({
+          pageIndex: PAGE_INDEX,
+          pageSize: PAGE_SIZE,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
+      );
     });
 
     it('sets the busy flag', () => {
       expect(state.busy).toBeTrue();
     });
-  });
 
-  describe('series loaded', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, busy: true, series: [] },
-        seriesLoaded({ series: SERIES_LIST })
-      );
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: true, series: [] },
+          loadSeriesListSuccess({
+            series: SERIES_LIST,
+            totalSeries: SERIES_LIST.length
+          })
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+
+      it('sets the series count', () => {
+        expect(state.totalSeries).toEqual(SERIES_LIST.length);
+      });
+
+      it('sets the list series', () => {
+        expect(state.series).toEqual(SERIES_LIST);
+      });
     });
 
-    it('clears the busy flag', () => {
-      expect(state.busy).toBeFalse();
-    });
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer({ ...state, busy: true }, loadSeriesListFailure());
+      });
 
-    it('sets the list series', () => {
-      expect(state.series).toEqual(SERIES_LIST);
-    });
-  });
-
-  describe('failed to load series', () => {
-    beforeEach(() => {
-      state = reducer({ ...state, busy: true }, loadSeriesFailed());
-    });
-
-    it('clears the busy flag', () => {
-      expect(state.busy).toBeFalse();
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
     });
   });
 
@@ -123,32 +146,32 @@ describe('Series Reducer', () => {
     it('clears the loaded detail', () => {
       expect(state.detail).toEqual([]);
     });
-  });
 
-  describe('series detail loaded', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, busy: true, series: [] },
-        seriesDetailLoaded({ detail: SERIES_DETAIL })
-      );
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: true, series: [] },
+          loadSeriesDetailSuccess({ detail: SERIES_DETAIL })
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+
+      it('sets the series detail', () => {
+        expect(state.detail).toEqual(SERIES_DETAIL);
+      });
     });
 
-    it('clears the busy flag', () => {
-      expect(state.busy).toBeFalse();
-    });
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer({ ...state, busy: true }, loadSeriesDetailFailure());
+      });
 
-    it('sets the series detail', () => {
-      expect(state.detail).toEqual(SERIES_DETAIL);
-    });
-  });
-
-  describe('failed to load series detail', () => {
-    beforeEach(() => {
-      state = reducer({ ...state, busy: true }, loadSeriesDetailFailed());
-    });
-
-    it('clears the busy flag', () => {
-      expect(state.busy).toBeFalse();
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
     });
   });
 });

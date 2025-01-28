@@ -19,11 +19,11 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   loadSeriesDetail,
-  loadSeriesDetailFailed,
-  loadSeriesFailed,
+  loadSeriesDetailFailure,
+  loadSeriesListFailure,
   loadSeriesList,
-  seriesDetailLoaded,
-  seriesLoaded
+  loadSeriesDetailSuccess,
+  loadSeriesListSuccess
 } from '../actions/series.actions';
 import { Series } from '@app/collections/models/series';
 import { Issue } from '@app/collections/models/issue';
@@ -32,12 +32,14 @@ export const SERIES_FEATURE_KEY = 'series_state';
 
 export interface SeriesState {
   busy: boolean;
+  totalSeries: number;
   series: Series[];
   detail: Issue[];
 }
 
 export const initialState: SeriesState = {
   busy: false,
+  totalSeries: 0,
   series: [],
   detail: []
 };
@@ -46,19 +48,20 @@ export const reducer = createReducer(
   initialState,
 
   on(loadSeriesList, state => ({ ...state, busy: true })),
-  on(seriesLoaded, (state, action) => ({
+  on(loadSeriesListSuccess, (state, action) => ({
     ...state,
     busy: false,
+    totalSeries: action.totalSeries,
     series: action.series
   })),
-  on(loadSeriesFailed, state => ({ ...state, busy: false })),
+  on(loadSeriesListFailure, state => ({ ...state, busy: false })),
   on(loadSeriesDetail, state => ({ ...state, busy: true, detail: [] })),
-  on(seriesDetailLoaded, (state, action) => ({
+  on(loadSeriesDetailSuccess, (state, action) => ({
     ...state,
     busy: false,
     detail: action.detail
   })),
-  on(loadSeriesDetailFailed, state => ({ ...state, busy: false }))
+  on(loadSeriesDetailFailure, state => ({ ...state, busy: false }))
 );
 
 export const seriesFeature = createFeature({
