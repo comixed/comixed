@@ -71,7 +71,7 @@ public class MetadataServiceTest {
   private static final String TEST_ISSUE_SERIES_NAME = "The issue series name";
   private static final String TEST_ISSUE_VOLUME = "The series volume";
   private static final String TEST_PUBLISHER = "Publisher Name";
-  private static final String TEST_SERIES_NAME = "Series Name";
+  private static final String TEST_SERIES_NAME = "SeriesDetail Name";
   private static final String TEST_VOLUME = "2020";
   private static final Integer TEST_MAX_RECORDS = 1000;
   private static final String TEST_ENCODED_VALUE = "JSON object as string";

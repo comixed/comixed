@@ -32,7 +32,7 @@ import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.batch.OrganizingLibraryEvent;
 import org.comixedproject.model.batch.RecreateComicFilesEvent;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
-import org.comixedproject.model.collections.Series;
+import org.comixedproject.model.collections.SeriesDetail;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
@@ -511,7 +511,7 @@ public class ComicBookService {
     return this.comicBookRepository.findDistinctSeries();
   }
 
-  public List<Series> getAllSeriesAndVolumes() {
+  public List<SeriesDetail> getAllSeriesAndVolumes() {
     log.trace("Loading all series and volumes");
     return this.comicBookRepository.getAllSeriesAndVolumes();
   }
@@ -796,7 +796,7 @@ public class ComicBookService {
    * @return the series details
    */
   @Transactional
-  public List<Series> getPublisherDetail(
+  public List<SeriesDetail> getPublisherDetail(
       final String name,
       final int pageIndex,
       final int pageSize,

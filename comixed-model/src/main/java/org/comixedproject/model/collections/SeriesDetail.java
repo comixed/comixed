@@ -19,58 +19,76 @@
 package org.comixedproject.model.collections;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import java.util.Objects;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 /**
- * <code>Series</code> represents the details for a single series in the library.
+ * <code>SeriesDetail</code> represents the details for a single series in the library.
  *
  * @author Darryl L. Pierce
  */
+@Entity
+@Table(name = "series_details_view")
+@NoArgsConstructor
 @RequiredArgsConstructor
-public class Series {
-  @JsonProperty("publisher")
-  @Getter
-  @NonNull
-  private String publisher;
+public class SeriesDetail {
+  @EmbeddedId @Getter @NonNull private SeriesDetailId id;
 
-  @JsonProperty("name")
-  @Getter
-  @NonNull
-  private String name;
-
-  @JsonProperty("volume")
-  @Getter
-  @NonNull
-  private String volume;
-
+  @Column(name = "in_library")
   @JsonProperty("inLibrary")
   @Getter
   @Setter
   @NonNull
   private Long inLibrary;
 
+  @Column(name = "issue_count")
   @JsonProperty("totalIssues")
   @Getter
   @Setter
   private Long totalIssues = 0L;
 
+  @JsonProperty("publisher")
+  public String getPublisher() {
+    return this.id.getPublisher();
+  }
+
+  @JsonProperty("name")
+  public String getName() {
+    return this.id.getSeries();
+  }
+
+  @JsonProperty("volume")
+  public String getVolume() {
+    return this.id.getVolume();
+  }
+
   @Override
   public boolean equals(final Object o) {
-    if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    final Series series = (Series) o;
-    return Objects.equals(publisher, series.publisher)
-        && Objects.equals(name, series.name)
-        && Objects.equals(volume, series.volume)
-        && Objects.equals(inLibrary, series.inLibrary);
+    final SeriesDetail that = (SeriesDetail) o;
+    return Objects.equals(id, that.id)
+        && Objects.equals(inLibrary, that.inLibrary)
+        && Objects.equals(totalIssues, that.totalIssues);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(publisher, name, volume, inLibrary);
+    return Objects.hash(id, inLibrary, totalIssues);
+  }
+
+  @Override
+  public String toString() {
+    return "SeriesDetail{"
+        + "id="
+        + id
+        + ", inLibrary="
+        + inLibrary
+        + ", totalIssues="
+        + totalIssues
+        + '}';
   }
 }

@@ -858,4 +858,9 @@
                              year_published="2025"
                              store_date="2025-01-08"
                              added_date="2025-01-08"/>
+    <series_details_view publisher="Marvel"
+                         series="Steve Rogers: Captain America"
+                         volume="2017"
+                         in_library="10"
+                         issue_count="25"/>
 </dataset>

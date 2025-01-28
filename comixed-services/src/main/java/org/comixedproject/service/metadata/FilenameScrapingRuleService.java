@@ -46,7 +46,7 @@ import org.springframework.util.StringUtils;
 public class FilenameScrapingRuleService {
   static final String RULE_NAME_HEADER = "Name";
   static final String RULE_CONTENT_HEADER = "Rule";
-  static final String SERIES_POSITION_HEADER = "Series Position";
+  static final String SERIES_POSITION_HEADER = "SeriesDetail Position";
   static final String VOLUME_POSITION_HEADER = "Volume Position";
   static final String ISSUE_NUMBER_POSITION_HEADER = "Issue # Position";
   static final String COVER_DATE_POSITION_HEADER = "Cover Date Position";

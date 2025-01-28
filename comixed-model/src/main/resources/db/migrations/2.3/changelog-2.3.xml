@@ -21,5 +21,6 @@
     <include file="/db/migrations/2.3/013_2292_added_displayable_comics_view.xml"/>
     <include file="/db/migrations/2.3/014_2318_add_comic_details_filtered_index.xml"/>
     <include file="/db/migrations/2.3/015_1863_added_collections_view.xml"/>
+    <include file="/db/migrations/2.3/016_2331_added_series_details_view.xml"/>
 
 </databaseChangeLog>
