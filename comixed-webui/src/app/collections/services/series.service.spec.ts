@@ -44,8 +44,13 @@ import {
   provideHttpClient,
   withInterceptorsFromDi
 } from '@angular/common/http';
+import { LoadSeriesListRequest } from '@app/collections/models/net/load-series-list-request';
 
 describe('SeriesService', () => {
+  const PAGE_INDEX = 3;
+  const PAGE_SIZE = 25;
+  const SORT_BY = 'publisher';
+  const SORT_DIRECTION = 'desc';
   const SERIES_LIST = [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5];
   const SERIES_DETAIL = [ISSUE_1, ISSUE_2, ISSUE_3];
   const PUBLISHER = 'The publisher';
@@ -75,12 +80,22 @@ describe('SeriesService', () => {
   it('can load series', () => {
     const serviceResponse = { series: SERIES_LIST } as LoadSeriesListResponse;
     service
-      .loadSeries()
+      .loadSeries({
+        pageIndex: PAGE_INDEX,
+        pageSize: PAGE_SIZE,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      })
       .subscribe(response => expect(response).toEqual(serviceResponse));
 
     const req = httpMock.expectOne(interpolate(LOAD_SERIES_URL));
     expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({});
+    expect(req.request.body).toEqual({
+      pageIndex: PAGE_INDEX,
+      pageSize: PAGE_SIZE,
+      sortBy: SORT_BY,
+      sortDirection: SORT_DIRECTION
+    } as LoadSeriesListRequest);
     req.flush(serviceResponse);
   });
 

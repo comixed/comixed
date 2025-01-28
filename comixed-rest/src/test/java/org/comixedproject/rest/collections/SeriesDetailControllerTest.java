@@ -25,6 +25,7 @@ import java.util.List;
 import org.comixedproject.model.collections.Issue;
 import org.comixedproject.model.collections.SeriesDetail;
 import org.comixedproject.model.net.collections.LoadSeriesDetailRequest;
+import org.comixedproject.model.net.collections.LoadSeriesListRequest;
 import org.comixedproject.model.net.collections.LoadSeriesListResponse;
 import org.comixedproject.service.collections.SeriesDetailService;
 import org.junit.Test;
@@ -36,6 +37,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SeriesDetailControllerTest {
+  private static final int TEST_PAGE_INDEX = 3;
+  private static final int TEST_PAGE_SIZE = 25;
+  private static final String TEST_SORT_BY = "name";
+  private static final String TEST_SORT_DIRECTION = "asc";
   private static final String TEST_PUBLISHER = "Publisher Name";
   private static final String TEST_SERIES = "SeriesDetail Name";
   private static final String TEST_VOLUME = "2022";
@@ -47,14 +52,21 @@ public class SeriesDetailControllerTest {
 
   @Test
   public void testLoadSeriesList() {
-    Mockito.when(seriesDetailService.getSeriesList()).thenReturn(seriesDetailList);
+    Mockito.when(
+            seriesDetailService.getSeriesList(
+                Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(seriesDetailList);
 
-    final LoadSeriesListResponse result = controller.loadSeriesList();
+    final LoadSeriesListResponse result =
+        controller.loadSeriesList(
+            new LoadSeriesListRequest(
+                TEST_PAGE_INDEX, TEST_PAGE_SIZE, TEST_SORT_BY, TEST_SORT_DIRECTION));
 
     assertNotNull(result);
     assertSame(seriesDetailList, result.getSeriesDetails());
 
-    Mockito.verify(seriesDetailService, Mockito.times(1)).getSeriesList();
+    Mockito.verify(seriesDetailService, Mockito.times(1))
+        .getSeriesList(TEST_PAGE_INDEX, TEST_PAGE_SIZE, TEST_SORT_BY, TEST_SORT_DIRECTION);
   }
 
   @Test

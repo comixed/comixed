@@ -22,6 +22,11 @@ import { SERIES_FEATURE_KEY, SeriesState } from '../reducers/series.reducer';
 export const selectSeriesState =
   createFeatureSelector<SeriesState>(SERIES_FEATURE_KEY);
 
+export const selectSeriesTotal = createSelector(
+  selectSeriesState,
+  state => state.totalSeries
+);
+
 export const selectSeriesList = createSelector(
   selectSeriesState,
   state => state.series
