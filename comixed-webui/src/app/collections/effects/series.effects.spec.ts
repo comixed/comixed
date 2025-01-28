@@ -37,17 +37,21 @@ import { TranslateModule } from '@ngx-translate/core';
 import { LoadSeriesListResponse } from '@app/collections/models/net/load-series-list-response';
 import {
   loadSeriesDetail,
-  loadSeriesDetailFailed,
-  loadSeriesFailed,
+  loadSeriesDetailFailure,
+  loadSeriesDetailSuccess,
   loadSeriesList,
-  seriesDetailLoaded,
-  seriesLoaded
+  loadSeriesListFailure,
+  loadSeriesListSuccess
 } from '@app/collections/actions/series.actions';
 import { hot } from 'jasmine-marbles';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 
 describe('SeriesEffects', () => {
+  const PAGE_INDEX = 3;
+  const PAGE_SIZE = 25;
+  const SORT_BY = 'publisher';
+  const SORT_DIRECTION = 'desc';
   const SERIES_LIST = [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5];
   const SERIES_DETAIL = [ISSUE_1, ISSUE_2, ISSUE_3];
   const PUBLISHER = 'The publisher';
@@ -99,12 +103,30 @@ describe('SeriesEffects', () => {
 
   describe('loading series', () => {
     it('fires an action on success', () => {
-      const serviceResponse = { series: SERIES_LIST } as LoadSeriesListResponse;
-      const action = loadSeriesList();
-      const outcome = seriesLoaded({ series: SERIES_LIST });
+      const serviceResponse = {
+        series: SERIES_LIST,
+        totalSeries: SERIES_LIST.length
+      } as LoadSeriesListResponse;
+      const action = loadSeriesList({
+        pageIndex: PAGE_INDEX,
+        pageSize: PAGE_INDEX,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      });
+      const outcome = loadSeriesListSuccess({
+        series: SERIES_LIST,
+        totalSeries: SERIES_LIST.length
+      });
 
       actions$ = hot('-a', { a: action });
-      seriesService.loadSeries.and.returnValue(of(serviceResponse));
+      seriesService.loadSeries
+        .withArgs({
+          pageIndex: PAGE_INDEX,
+          pageSize: PAGE_INDEX,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
+        .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.loadSeriesList$).toBeObservable(expected);
@@ -112,11 +134,23 @@ describe('SeriesEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = loadSeriesList();
-      const outcome = loadSeriesFailed();
+      const action = loadSeriesList({
+        pageIndex: PAGE_INDEX,
+        pageSize: PAGE_INDEX,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      });
+      const outcome = loadSeriesListFailure();
 
       actions$ = hot('-a', { a: action });
-      seriesService.loadSeries.and.returnValue(throwError(serviceResponse));
+      seriesService.loadSeries
+        .withArgs({
+          pageIndex: PAGE_INDEX,
+          pageSize: PAGE_INDEX,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
+        .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.loadSeriesList$).toBeObservable(expected);
@@ -124,11 +158,23 @@ describe('SeriesEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = loadSeriesList();
-      const outcome = loadSeriesFailed();
+      const action = loadSeriesList({
+        pageIndex: PAGE_INDEX,
+        pageSize: PAGE_INDEX,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      });
+      const outcome = loadSeriesListFailure();
 
       actions$ = hot('-a', { a: action });
-      seriesService.loadSeries.and.throwError('expected');
+      seriesService.loadSeries
+        .withArgs({
+          pageIndex: PAGE_INDEX,
+          pageSize: PAGE_INDEX,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
+        .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.loadSeriesList$).toBeObservable(expected);
@@ -144,7 +190,7 @@ describe('SeriesEffects', () => {
         name: SERIES,
         volume: VOLUME
       });
-      const outcome = seriesDetailLoaded({ detail: SERIES_DETAIL });
+      const outcome = loadSeriesDetailSuccess({ detail: SERIES_DETAIL });
 
       actions$ = hot('-a', { a: action });
       seriesService.loadSeriesDetail
@@ -166,7 +212,7 @@ describe('SeriesEffects', () => {
         name: SERIES,
         volume: VOLUME
       });
-      const outcome = loadSeriesDetailFailed();
+      const outcome = loadSeriesDetailFailure();
 
       actions$ = hot('-a', { a: action });
       seriesService.loadSeriesDetail
@@ -188,7 +234,7 @@ describe('SeriesEffects', () => {
         name: SERIES,
         volume: VOLUME
       });
-      const outcome = loadSeriesDetailFailed();
+      const outcome = loadSeriesDetailFailure();
 
       actions$ = hot('-a', { a: action });
       seriesService.loadSeriesDetail

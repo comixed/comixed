@@ -24,8 +24,11 @@ import org.comixedproject.model.collections.Issue;
 import org.comixedproject.model.collections.SeriesDetail;
 import org.comixedproject.repositories.collections.SeriesDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 /**
  * <code>SeriesDetailService</code> provides methods for working with instances of {@link
@@ -45,9 +48,23 @@ public class SeriesDetailService {
    * @return the list of series
    */
   @Transactional(readOnly = true)
-  public List<SeriesDetail> getSeriesList() {
+  public List<SeriesDetail> getSeriesList(
+      final int pageIndex, final int pageSize, final String sortBy, final String sortDirection) {
     log.debug("Loading series list");
-    return this.seriesDetailsRepository.findAll();
+    return this.seriesDetailsRepository
+        .findAll(PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)))
+        .stream()
+        .toList();
+  }
+
+  /**
+   * Returns the number of series in the database.
+   *
+   * @return the series count
+   */
+  @Transactional
+  public int getSeriesCount() {
+    return this.seriesDetailsRepository.getSeriesCount();
   }
 
   /**
@@ -63,5 +80,27 @@ public class SeriesDetailService {
       final String publisher, final String name, final String volume) {
     log.debug("Loading series detail: publisher={} name={} volume={}", publisher, name, volume);
     return this.issueService.getAll(publisher, name, volume);
+  }
+
+  private Sort doCreateSort(final String sortBy, final String sortDirection) {
+    if (!StringUtils.hasLength(sortBy) || !StringUtils.hasLength(sortDirection)) {
+      return Sort.unsorted();
+    }
+
+    String fieldName;
+    switch (sortBy) {
+      case "publisher" -> fieldName = "id.publisher";
+      case "name" -> fieldName = "id.series";
+      case "volume" -> fieldName = "id.volume";
+      case "in-library" -> fieldName = "inLibrary";
+      case "total-comics" -> fieldName = "totalIssues";
+      default -> fieldName = "id.publisher";
+    }
+
+    Sort.Direction direction = Sort.Direction.DESC;
+    if (sortDirection.equals("asc")) {
+      direction = Sort.Direction.ASC;
+    }
+    return Sort.by(direction, fieldName);
   }
 }

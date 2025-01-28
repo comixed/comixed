@@ -20,7 +20,8 @@ import { SERIES_FEATURE_KEY, SeriesState } from '../reducers/series.reducer';
 import {
   selectSeriesDetail,
   selectSeriesList,
-  selectSeriesState
+  selectSeriesState,
+  selectSeriesTotal
 } from './series.selectors';
 import {
   ISSUE_1,
@@ -39,6 +40,7 @@ describe('Series Selectors', () => {
   beforeEach(() => {
     state = {
       busy: Math.random() > 0.5,
+      totalSeries: 27,
       series: [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5],
       detail: [ISSUE_1, ISSUE_2, ISSUE_3]
     };
@@ -50,6 +52,14 @@ describe('Series Selectors', () => {
         [SERIES_FEATURE_KEY]: state
       })
     ).toEqual(state);
+  });
+
+  it('should select the series count', () => {
+    expect(
+      selectSeriesTotal({
+        [SERIES_FEATURE_KEY]: state
+      })
+    ).toEqual(state.totalSeries);
   });
 
   it('should select the series list', () => {

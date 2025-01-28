@@ -107,38 +107,4 @@ describe('SeriesListPageComponent', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
-
-  describe('sorting the table', () => {
-    const ENTRY = { sortOrder: 1, item: SERIES_1 } as SortableListItem<Series>;
-
-    it('can sort by publisher', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ENTRY.item, 'publisher')
-      ).toEqual(ENTRY.item.publisher);
-    });
-
-    it('can sort by series name', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ENTRY.item, 'name')
-      ).toEqual(ENTRY.item.name);
-    });
-
-    it('can sort by volume', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ENTRY.item, 'volume')
-      ).toEqual(ENTRY.item.volume);
-    });
-
-    it('can sort by total issues', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ENTRY.item, 'total-issues')
-      ).toEqual(ENTRY.item.totalIssues);
-    });
-
-    it('can sort by comics in the library', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ENTRY.item, 'in-library')
-      ).toEqual(ENTRY.item.inLibrary);
-    });
-  });
 });

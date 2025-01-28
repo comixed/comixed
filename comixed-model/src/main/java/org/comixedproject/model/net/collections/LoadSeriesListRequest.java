@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2022, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,24 +19,42 @@
 package org.comixedproject.model.net.collections;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.comixedproject.model.collections.SeriesDetail;
+import lombok.NoArgsConstructor;
 
-/**
- * <code>LoadSeriesListResponse</code> represents the response body when loading a seriesDetails
- * list.
- *
- * @author Darryl L. Pierce
- */
+@NoArgsConstructor
 @AllArgsConstructor
-public class LoadSeriesListResponse {
-  @JsonProperty("series")
+public class LoadSeriesListRequest {
+  @JsonProperty("pageIndex")
   @Getter
-  private List<SeriesDetail> seriesDetails;
+  private int pageIndex;
 
-  @JsonProperty("totalSeries")
+  @JsonProperty("pageSize")
   @Getter
-  private int totalSeries;
+  private int pageSize;
+
+  @JsonProperty("sortBy")
+  @Getter
+  private String sortBy;
+
+  @JsonProperty("sortDirection")
+  @Getter
+  private String sortDirection;
+
+  @Override
+  public String toString() {
+    return "LoadSeriesListRequest{"
+        + "pageIndex="
+        + pageIndex
+        + ", pageSize="
+        + pageSize
+        + ", sortBy='"
+        + sortBy
+        + '\''
+        + ", sortDirection='"
+        + sortDirection
+        + '\''
+        + '}';
+  }
 }

@@ -21,11 +21,11 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
   loadSeriesDetail,
-  loadSeriesDetailFailed,
-  loadSeriesFailed,
+  loadSeriesDetailFailure,
+  loadSeriesDetailSuccess,
   loadSeriesList,
-  seriesDetailLoaded,
-  seriesLoaded
+  loadSeriesListFailure,
+  loadSeriesListSuccess
 } from '../actions/series.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { SeriesService } from '@app/collections/services/series.service';
@@ -42,28 +42,38 @@ export class SeriesEffects {
       ofType(loadSeriesList),
       tap(action => this.logger.debug('Loading series:', action)),
       switchMap(action =>
-        this.seriesService.loadSeries().pipe(
-          tap(response => this.logger.debug('Response received:', response)),
-          map((response: LoadSeriesListResponse) =>
-            seriesLoaded({ series: response.series })
-          ),
-          catchError(error => {
-            this.logger.error('Service failure:', error);
-            this.alertService.error(
-              this.translateService.instant(
-                'collections.series.load-series.effect-failure'
-              )
-            );
-            return of(loadSeriesFailed());
+        this.seriesService
+          .loadSeries({
+            pageIndex: action.pageIndex,
+            pageSize: action.pageSize,
+            sortBy: action.sortBy,
+            sortDirection: action.sortDirection
           })
-        )
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map((response: LoadSeriesListResponse) =>
+              loadSeriesListSuccess({
+                series: response.series,
+                totalSeries: response.totalSeries
+              })
+            ),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'collections.series.load-series.effect-failure'
+                )
+              );
+              return of(loadSeriesListFailure());
+            })
+          )
       ),
       catchError(error => {
         this.logger.error('General failure:', error);
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(loadSeriesFailed());
+        return of(loadSeriesListFailure());
       })
     );
   });
@@ -82,7 +92,7 @@ export class SeriesEffects {
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
             map((response: Issue[]) =>
-              seriesDetailLoaded({ detail: response })
+              loadSeriesDetailSuccess({ detail: response })
             ),
             catchError(error => {
               this.logger.error('Service failure:', error);
@@ -91,7 +101,7 @@ export class SeriesEffects {
                   'collections.series-detail.load-effect-failure'
                 )
               );
-              return of(loadSeriesDetailFailed());
+              return of(loadSeriesDetailFailure());
             })
           )
       ),
@@ -100,7 +110,7 @@ export class SeriesEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(loadSeriesDetailFailed());
+        return of(loadSeriesDetailFailure());
       })
     );
   });

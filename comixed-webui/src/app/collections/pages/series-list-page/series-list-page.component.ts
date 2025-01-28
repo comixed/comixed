@@ -16,13 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  AfterViewInit,
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Series } from '@app/collections/models/series';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -30,31 +24,26 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { User } from '@app/user/models/user';
 import { selectUser } from '@app/user/selectors/user.selectors';
-import { MatSort } from '@angular/material/sort';
-import { loadSeriesList } from '@app/collections/actions/series.actions';
 import {
   selectSeriesList,
-  selectSeriesState
+  selectSeriesState,
+  selectSeriesTotal
 } from '@app/collections/selectors/series.selectors';
-import { MatPaginator } from '@angular/material/paginator';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { isAdmin } from '@app/user/user.functions';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { PAGE_SIZE_OPTIONS } from '@app/core';
 import { setBusyState } from '@app/core/actions/busy.actions';
+import { ActivatedRoute, Router } from '@angular/router';
+import { loadSeriesList } from '@app/collections/actions/series.actions';
 
 @Component({
   selector: 'cx-series-list-page',
   templateUrl: './series-list-page.component.html',
   styleUrls: ['./series-list-page.component.scss']
 })
-export class SeriesListPageComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-
+export class SeriesListPageComponent implements OnDestroy, AfterViewInit {
   dataSource = new MatTableDataSource<Series>([]);
   seriesListSubscription: Subscription;
   seriesStateSubscription: Subscription;
@@ -70,9 +59,12 @@ export class SeriesListPageComponent
   ];
 
   langChangeSubscription: Subscription;
+  queryParamsSubscription: Subscription;
   userSubscription: Subscription;
   user: User;
   isAdmin = false;
+  totalSeriesSubscription: Subscription;
+  totalSeries = 0;
 
   selectedSeries: Series;
 
@@ -81,11 +73,27 @@ export class SeriesListPageComponent
     private store: Store<any>,
     private titleService: TitleService,
     private translateService: TranslateService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
     public queryParameterService: QueryParameterService
   ) {
     this.logger.trace('Subscribing to language change updates');
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
+    );
+    this.logger.trace('Subscribing to query parameter updates');
+    this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
+      params => {
+        this.logger.trace('Loading series list');
+        this.store.dispatch(
+          loadSeriesList({
+            pageIndex: this.queryParameterService.pageIndex$.value,
+            pageSize: this.queryParameterService.pageSize$.value,
+            sortBy: this.queryParameterService.sortBy$.value,
+            sortDirection: this.queryParameterService.sortDirection$.value
+          })
+        );
+      }
     );
     this.logger.trace('Subscribing to user updates');
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
@@ -99,6 +107,7 @@ export class SeriesListPageComponent
       .subscribe(state =>
         this.store.dispatch(setBusyState({ enabled: state.busy }))
       );
+    this.logger.trace('Subscribing to series list updates');
     this.seriesListSubscription = this.store
       .select(selectSeriesList)
       .subscribe(series => {
@@ -110,48 +119,32 @@ export class SeriesListPageComponent
           this.dataSource.paginator.pageIndex = pageIndex;
         }
       });
-  }
-
-  ngOnInit(): void {
-    this.logger.trace('Loading series list');
-    this.store.dispatch(loadSeriesList());
+    this.logger.trace('Subscribing to total series updates');
+    this.totalSeriesSubscription = this.store
+      .select(selectSeriesTotal)
+      .subscribe(total => (this.totalSeries = total));
   }
 
   ngOnDestroy(): void {
+    this.logger.trace('Unsubscribing from query parameter updates');
+    this.queryParamsSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from user updates');
     this.userSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from series state updates');
     this.seriesStateSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from series list updates');
     this.seriesListSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from series total updates');
+    this.totalSeriesSubscription.unsubscribe();
   }
 
   ngAfterViewInit(): void {
-    this.dataSource.sort = this.sort;
-    this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
-      switch (sortHeaderId) {
-        case 'publisher':
-          return data.publisher;
-        case 'name':
-          return data.name;
-        case 'volume':
-          return data.volume;
-        case 'total-issues':
-          return data.totalIssues;
-        case 'in-library':
-          return data.inLibrary;
-      }
-    };
-    this.dataSource.paginator = this.paginator;
     this.loadTranslations();
   }
 
   private loadTranslations(): void {
     this.titleService.setTitle(
       this.translateService.instant('collections.series.list-page.tab-title')
-    );
-    this.paginator._intl.itemsPerPageLabel = this.translateService.instant(
-      'collections.series.label.pagination-items-per-page'
     );
   }
 }

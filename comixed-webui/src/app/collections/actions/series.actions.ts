@@ -20,14 +20,22 @@ import { createAction, props } from '@ngrx/store';
 import { Series } from '@app/collections/models/series';
 import { Issue } from '@app/collections/models/issue';
 
-export const loadSeriesList = createAction('[Series] Load a series list');
-
-export const seriesLoaded = createAction(
-  '[Series] A series list was loaded',
-  props<{ series: Series[] }>()
+export const loadSeriesList = createAction(
+  '[Series] Load a series list',
+  props<{
+    pageIndex: number;
+    pageSize: number;
+    sortBy: string;
+    sortDirection: string;
+  }>()
 );
 
-export const loadSeriesFailed = createAction(
+export const loadSeriesListSuccess = createAction(
+  '[Series] A series list was loaded',
+  props<{ series: Series[]; totalSeries: number }>()
+);
+
+export const loadSeriesListFailure = createAction(
   '[Series] Failed to load a series list'
 );
 
@@ -36,11 +44,11 @@ export const loadSeriesDetail = createAction(
   props<{ publisher: string; name: string; volume: string }>()
 );
 
-export const seriesDetailLoaded = createAction(
+export const loadSeriesDetailSuccess = createAction(
   '[Series] Returns the details for a series',
   props<{ detail: Issue[] }>()
 );
 
-export const loadSeriesDetailFailed = createAction(
+export const loadSeriesDetailFailure = createAction(
   '[Series] Failed to load the details for a series'
 );
