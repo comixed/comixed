@@ -85,7 +85,7 @@ import {
   markSingleComicBookRead
 } from '@app/user/actions/read-comic-books.actions';
 import { batchScrapeComicBooks } from '@app/comic-metadata/actions/multi-book-scraping.actions';
-import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import { loadReadingLists } from '@app/lists/actions/reading-lists.actions';
 
 @Component({

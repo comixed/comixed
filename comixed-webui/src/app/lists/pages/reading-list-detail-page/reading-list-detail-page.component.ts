@@ -65,7 +65,7 @@ import {
   resetComicList
 } from '@app/comic-books/actions/comic-list.actions';
 import { selectComicList } from '@app/comic-books/selectors/comic-list.selectors';
-import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import { interpolate } from '@app/core';
 import { selectUser } from '@app/user/selectors/user.selectors';
 

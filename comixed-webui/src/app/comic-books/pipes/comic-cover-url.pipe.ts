@@ -22,7 +22,7 @@ import {
   MISSING_COMIC_IMAGE_URL
 } from '@app/library/library.constants';
 import { interpolate } from '@app/core';
-import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Pipe({
   name: 'comicCoverUrl'

@@ -35,7 +35,7 @@ import {
   selectComicList,
   selectComicListState
 } from '@app/comic-books/selectors/comic-list.selectors';
-import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Component({
   selector: 'cx-series-issue-page',
@@ -158,7 +158,8 @@ export class SeriesIssuePageComponent implements OnInit, OnDestroy {
         searchText: null,
         publisher: this.publisherName,
         series: this.seriesName,
-        volume: this.volume
+        volume: this.volume,
+        pageCount: null
       })
     );
   }

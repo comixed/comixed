@@ -92,6 +92,7 @@ public class ComicSelectionService {
    * @param comicType the optional cover type
    * @param comicState the optional comic state
    * @param unscrapedState the optional unscraped state
+   * @param pageCount the optional page count
    * @param searchText the optional search text
    * @param adding adding or removing flag
    */
@@ -103,11 +104,19 @@ public class ComicSelectionService {
       final ComicType comicType,
       final ComicState comicState,
       final Boolean unscrapedState,
+      final Integer pageCount,
       final String searchText,
       final boolean adding) {
     final List selectedIds =
         this.displayableComicService.getIdsByFilter(
-            coverYear, coverMonth, archiveType, comicType, comicState, unscrapedState, searchText);
+            coverYear,
+            coverMonth,
+            archiveType,
+            comicType,
+            comicState,
+            unscrapedState,
+            pageCount,
+            searchText);
     if (adding) {
       log.debug("Adding {} selection{}", selections.size(), selectedIds.size() == 1 ? "" : "s");
       selections.addAll(selectedIds);

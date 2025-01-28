@@ -141,6 +141,7 @@ public class ComicBookSelectionController {
         request.getComicType(),
         request.getComicState(),
         request.getUnscrapedState(),
+        request.getPageCount(),
         request.getSearchText(),
         request.getSelected());
     session.setAttribute(

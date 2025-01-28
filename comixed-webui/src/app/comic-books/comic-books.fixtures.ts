@@ -29,7 +29,7 @@ import { Imprint } from '@app/comic-books/models/imprint';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 import { ComicType } from '@app/comic-books/models/comic-type';
-import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 export const IMPRINT_1: Imprint = {
   id: 1,

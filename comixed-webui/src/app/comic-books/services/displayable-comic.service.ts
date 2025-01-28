@@ -50,7 +50,7 @@ import { LoadComicsByReadStateRequest } from '@app/comic-books/models/net/load-c
 import { LoadComicsForListRequest } from '@app/comic-books/models/net/load-comics-for-list-request';
 import { LoadDuplicateComicsRequest } from '@app/comic-books/models/net/load-duplicate-comics-request';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
-import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import {
   comicRemoved,
   comicUpdated
@@ -125,6 +125,7 @@ export class DisplayableComicService {
     publisher: string;
     series: string;
     volume: string;
+    pageCount: number | null;
     sortBy: string;
     sortDirection: string;
   }): Observable<any> {
@@ -151,6 +152,7 @@ export class DisplayableComicService {
         publisher: args.publisher,
         series: args.series,
         volume: args.volume,
+        pageCount: args.pageCount,
         sortBy: args.sortBy,
         sortDirection: args.sortDirection
       } as LoadComicsByFilterRequest);

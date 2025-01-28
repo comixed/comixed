@@ -62,7 +62,7 @@ import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics'
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ComicDetailFilterComponent } from '@app/comic-books/components/comic-detail-filter/comic-detail-filter.component';
+import { ComicListFilterComponent } from '@app/comic-books/components/comic-list-filter/comic-list-filter.component';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
@@ -99,7 +99,7 @@ import {
   markSingleComicBookRead
 } from '@app/user/actions/read-comic-books.actions';
 import { batchScrapeComicBooks } from '@app/comic-metadata/actions/multi-book-scraping.actions';
-import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 describe('ComicListViewComponent', () => {
   const COMIC_BOOKS = [
@@ -139,7 +139,7 @@ describe('ComicListViewComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [
         ComicListViewComponent,
-        ComicDetailFilterComponent,
+        ComicListFilterComponent,
         ComicCoverUrlPipe,
         ComicTitlePipe
       ],

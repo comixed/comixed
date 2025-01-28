@@ -21,19 +21,16 @@ import { QueryParameterService } from '@app/core/services/query-parameter.servic
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ListItem } from '@app/core/models/ui/list-item';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 
 @Component({
-  selector: 'cx-comic-detail-filter',
-  templateUrl: './comic-detail-filter.component.html',
-  styleUrls: ['./comic-detail-filter.component.scss']
+  selector: 'cx-comic-list-filter',
+  templateUrl: './comic-list-filter.component.html',
+  styleUrls: ['./comic-list-filter.component.scss']
 })
-export class ComicDetailFilterComponent {
-  @Input() comicDetails: ComicDetail[] = [];
-
+export class ComicListFilterComponent {
   @Output() closeFilter = new EventEmitter<void>();
 
   filterForm: FormGroup;
@@ -54,6 +51,7 @@ export class ComicDetailFilterComponent {
     },
     { label: 'comic-type.label.manga', value: ComicType.MANGA }
   ];
+  readonly pageCountOptions = Array.from({ length: 250 }, (_, index) => index);
 
   constructor(
     private logger: LoggerService,
@@ -65,7 +63,8 @@ export class ComicDetailFilterComponent {
       coverYear: [''],
       coverMonth: [''],
       archiveType: [''],
-      comicType: ['']
+      comicType: [''],
+      pageCount: ['']
     });
   }
 

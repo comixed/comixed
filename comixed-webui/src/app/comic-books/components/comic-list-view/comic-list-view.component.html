@@ -29,12 +29,11 @@
 </div>
 
 <div id="comic-detail-filter" *ngIf="showComicFilterPopup">
-  <cx-comic-detail-filter
-    [comicDetails]="comics"
+  <cx-comic-list-filter
     [coverYears]="coverYears"
     [coverMonths]="coverMonths"
     (closeFilter)="showComicFilterPopup = false"
-  ></cx-comic-detail-filter>
+  ></cx-comic-list-filter>
 </div>
 
 <mat-paginator

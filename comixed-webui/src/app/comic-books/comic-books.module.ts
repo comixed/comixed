@@ -69,7 +69,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
-import { ComicDetailFilterComponent } from './components/comic-detail-filter/comic-detail-filter.component';
+import { ComicListFilterComponent } from '@app/comic-books/components/comic-list-filter/comic-list-filter.component';
 import { comicBookSelectionFeature } from '@app/comic-books/reducers/comic-book-selection.reducer';
 import { ComicBookSelectionEffects } from '@app/comic-books/effects/comic-book-selection.effects';
 import { VolumeMetadataTitlePipe } from './pipes/volume-metadata-title.pipe';
@@ -96,7 +96,7 @@ import { ComicDetailCoverUrlPipe } from '@app/comic-books/pipes/comic-detail-cov
     VolumeMetadataTableComponent,
     IssueMetadataTitlePipe,
     ComicListViewComponent,
-    ComicDetailFilterComponent,
+    ComicListFilterComponent,
     VolumeMetadataTitlePipe
   ],
   imports: [

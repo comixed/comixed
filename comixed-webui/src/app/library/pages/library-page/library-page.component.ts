@@ -59,7 +59,7 @@ import {
   selectComicListState,
   selectComicTotalCount
 } from '@app/comic-books/selectors/comic-list.selectors';
-import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import { ComicListState } from '@app/comic-books/reducers/comic-list.reducer';
 
 @Component({
@@ -269,6 +269,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
               publisher: null,
               series: null,
               volume: null,
+              pageCount: this.queryParameterService.pageCount$.value,
               sortBy: this.queryParameterService.sortBy$.value,
               sortDirection: this.queryParameterService.sortDirection$.value
             })

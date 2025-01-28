@@ -33,6 +33,7 @@ export interface LoadComicsByFilterRequest {
   publisher: string;
   series: string;
   volume: string;
+  pageCount: number | null;
   sortBy: string;
   sortDirection: string;
 }
