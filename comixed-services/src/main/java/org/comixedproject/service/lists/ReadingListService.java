@@ -65,7 +65,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReadingListService implements ReadingListStateChangeListener, InitializingBean {
   static final String POSITION_HEADER = "";
   static final String PUBLISHER_HEADER = "Publisher";
-  static final String SERIES_HEADER = "Series";
+  static final String SERIES_HEADER = "SeriesDetail";
   static final String VOLUME_HEADER = "Volume";
   static final String ISSUE_NUMBER_HEADER = "Issue Number";
   static final String ENCODING_ERROR_PUBLISHER = "Error Encoding Comic Book";

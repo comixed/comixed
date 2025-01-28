@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Set;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.collections.Publisher;
-import org.comixedproject.model.collections.Series;
+import org.comixedproject.model.collections.SeriesDetail;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
@@ -264,8 +264,8 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the series list
    */
   @Query(
-      "SELECT new org.comixedproject.model.collections.Series(c.comicDetail.publisher, c.comicDetail.series, c.comicDetail.volume, COUNT(c)) FROM ComicBook c WHERE LENGTH(c.comicDetail.publisher) > 0 AND LENGTH(c.comicDetail.series) > 0 and c.comicDetail.volume IS NOT NULL GROUP BY c.comicDetail.publisher, c.comicDetail.series, c.comicDetail.volume")
-  List<Series> getAllSeriesAndVolumes();
+      "SELECT s FROM SeriesDetail s WHERE LENGTH(s.id.publisher) > 0 AND LENGTH(s.id.series) > 0 and s.id.volume IS NOT NULL GROUP BY s.id.publisher, s.id.series, s.id.volume")
+  List<SeriesDetail> getAllSeriesAndVolumes();
 
   /**
    * Returns the list of all series along with thei count of comics for a single publisher.
@@ -274,8 +274,9 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the series list
    */
   @Query(
-      "SELECT new org.comixedproject.model.collections.Series(c.comicDetail.publisher, c.comicDetail.series, c.comicDetail.volume, COUNT(c)) FROM ComicBook c WHERE c.comicDetail.publisher = :name AND LENGTH(c.comicDetail.series) > 0 and c.comicDetail.volume IS NOT NULL GROUP BY c.comicDetail.publisher, c.comicDetail.series, c.comicDetail.volume")
-  List<Series> getAllSeriesAndVolumesForPublisher(@Param("name") String name, Pageable pageable);
+      "SELECT s FROM SeriesDetail s WHERE s.id.publisher = :name AND LENGTH(s.id.series) > 0 and s.id.volume IS NOT NULL GROUP BY s.id.publisher, s.id.series, s.id.volume")
+  List<SeriesDetail> getAllSeriesAndVolumesForPublisher(
+      @Param("name") String name, Pageable pageable);
 
   /**
    * Returns all comics with a given series.

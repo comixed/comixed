@@ -30,7 +30,7 @@ import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.batch.OrganizingLibraryEvent;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
 import org.comixedproject.model.collections.Publisher;
-import org.comixedproject.model.collections.Series;
+import org.comixedproject.model.collections.SeriesDetail;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
@@ -69,7 +69,7 @@ public class ComicBookServiceTest {
   private static final ComicType TEST_COMIC_TYPE =
       ComicType.values()[RandomUtils.nextInt(ComicType.values().length)];
   private static final String TEST_PUBLISHER = "Awesome Publications";
-  private static final String TEST_SERIES = "Series Name";
+  private static final String TEST_SERIES = "SeriesDetail Name";
   private static final String TEST_VOLUME = "Volume Name";
   private static final String TEST_ISSUE_NUMBER = "237";
   private static final int TEST_MAXIMUM_COMICS = 100;
@@ -128,8 +128,8 @@ public class ComicBookServiceTest {
   @Mock private List<RemoteLibrarySegmentState> librarySegmentList;
   @Mock private List<PublisherAndYearSegment> byPublisherAndYearList;
   @Mock private List<Publisher> publisherWithSeriesCountList;
-  @Mock private List<Series> publisherDetail;
-  @Mock private List<Series> seriesList;
+  @Mock private List<SeriesDetail> publisherDetail;
+  @Mock private List<SeriesDetail> seriesDetailList;
   @Mock private ComicBook savedComicBook;
   @Mock private ArchiveType targetArchiveType;
 
@@ -1139,7 +1139,7 @@ public class ComicBookServiceTest {
                 Mockito.anyString(), pageableCaptor.capture()))
         .thenReturn(publisherDetail);
 
-    final List<Series> result =
+    final List<SeriesDetail> result =
         service.getPublisherDetail(TEST_PUBLISHER, TEST_PAGE_NUMBER, TEST_PAGE_SIZE, null, null);
 
     assertNotNull(result);
@@ -1162,7 +1162,7 @@ public class ComicBookServiceTest {
                 Mockito.anyString(), pageableCaptor.capture()))
         .thenReturn(publisherDetail);
 
-    final List<Series> result =
+    final List<SeriesDetail> result =
         service.getPublisherDetail(
             TEST_PUBLISHER, TEST_PAGE_NUMBER, TEST_PAGE_SIZE, "series-name", "desc");
 
@@ -1186,7 +1186,7 @@ public class ComicBookServiceTest {
                 Mockito.anyString(), pageableCaptor.capture()))
         .thenReturn(publisherDetail);
 
-    final List<Series> result =
+    final List<SeriesDetail> result =
         service.getPublisherDetail(
             TEST_PUBLISHER, TEST_PAGE_NUMBER, TEST_PAGE_SIZE, "series-name", "desc");
 
@@ -1210,7 +1210,7 @@ public class ComicBookServiceTest {
                 Mockito.anyString(), pageableCaptor.capture()))
         .thenReturn(publisherDetail);
 
-    final List<Series> result =
+    final List<SeriesDetail> result =
         service.getPublisherDetail(
             TEST_PUBLISHER, TEST_PAGE_NUMBER, TEST_PAGE_SIZE, "series-volume", "desc");
 
@@ -1234,7 +1234,7 @@ public class ComicBookServiceTest {
                 Mockito.anyString(), pageableCaptor.capture()))
         .thenReturn(publisherDetail);
 
-    final List<Series> result =
+    final List<SeriesDetail> result =
         service.getPublisherDetail(
             TEST_PUBLISHER, TEST_PAGE_NUMBER, TEST_PAGE_SIZE, "series-volume", "desc");
 
@@ -1253,11 +1253,11 @@ public class ComicBookServiceTest {
 
   @Test
   public void testGetAllSeriesAndVolumes() {
-    Mockito.when(comicBookRepository.getAllSeriesAndVolumes()).thenReturn(seriesList);
+    Mockito.when(comicBookRepository.getAllSeriesAndVolumes()).thenReturn(seriesDetailList);
 
-    final List<Series> result = service.getAllSeriesAndVolumes();
+    final List<SeriesDetail> result = service.getAllSeriesAndVolumes();
 
-    assertSame(seriesList, result);
+    assertSame(seriesDetailList, result);
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).getAllSeriesAndVolumes();
   }

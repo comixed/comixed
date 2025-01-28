@@ -21,21 +21,22 @@ package org.comixedproject.service.collections;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.collections.Issue;
-import org.comixedproject.model.collections.Series;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.model.collections.SeriesDetail;
+import org.comixedproject.repositories.collections.SeriesDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * <code>SeriesService</code> provides methods for working with instances of {@link Series}.
+ * <code>SeriesDetailService</code> provides methods for working with instances of {@link
+ * SeriesDetail}.
  *
  * @author Darryl L. Pierce
  */
 @Service
 @Log4j2
-public class SeriesService {
-  @Autowired private ComicBookService comicBookService;
+public class SeriesDetailService {
+  @Autowired private SeriesDetailsRepository seriesDetailsRepository;
   @Autowired private IssueService issueService;
 
   /**
@@ -43,17 +44,10 @@ public class SeriesService {
    *
    * @return the list of series
    */
-  public List<Series> getSeriesList() {
+  @Transactional(readOnly = true)
+  public List<SeriesDetail> getSeriesList() {
     log.debug("Loading series list");
-    final List<Series> result = this.comicBookService.getAllSeriesAndVolumes();
-    result.forEach(
-        series -> {
-          log.trace(
-              "Loading total issue count for series: {} {}", series.getName(), series.getVolume());
-          series.setTotalIssues(
-              this.issueService.getCountForSeriesAndVolume(series.getName(), series.getVolume()));
-        });
-    return result;
+    return this.seriesDetailsRepository.findAll();
   }
 
   /**

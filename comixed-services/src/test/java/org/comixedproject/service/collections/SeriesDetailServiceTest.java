@@ -18,16 +18,15 @@
 
 package org.comixedproject.service.collections;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.collections.Issue;
-import org.comixedproject.model.collections.Series;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.model.collections.SeriesDetail;
+import org.comixedproject.model.collections.SeriesDetailId;
+import org.comixedproject.repositories.collections.SeriesDetailsRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,45 +36,36 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SeriesServiceTest {
+public class SeriesDetailServiceTest {
   private static final String TEST_PUBLISHER = "The publisher";
   private static final String TEST_SERIES = "The series";
   private static final String TEST_VOLUME = "2022";
   private static final Long TEST_ISSUE_COUNT = 29L;
-  private static final Long TEST_TOTAL_ISSUES = 79L;
 
-  @InjectMocks private SeriesService service;
-  @Mock private ComicBookService comicBookService;
+  @InjectMocks private SeriesDetailService service;
+  @Mock private SeriesDetailsRepository seriesDetailsRepository;
   @Mock private IssueService issueService;
   @Mock private List<Issue> issueList;
 
-  private List<Series> seriesList = new ArrayList<>();
+  private List<SeriesDetail> seriesDetailList = new ArrayList<>();
 
   @Before
   public void setUp() {
-    seriesList.add(new Series(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_COUNT));
+    seriesDetailList.add(
+        new SeriesDetail(
+            new SeriesDetailId(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME), TEST_ISSUE_COUNT));
   }
 
   @Test
   public void testLoadSeriesList() {
-    Mockito.when(comicBookService.getAllSeriesAndVolumes()).thenReturn(seriesList);
-    Mockito.when(issueService.getCountForSeriesAndVolume(Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(TEST_TOTAL_ISSUES);
+    Mockito.when(seriesDetailsRepository.findAll()).thenReturn(seriesDetailList);
 
-    final List<Series> result = service.getSeriesList();
+    final List<SeriesDetail> result = service.getSeriesList();
 
     assertNotNull(result);
-    assertFalse(result.isEmpty());
+    assertSame(seriesDetailList, result);
 
-    assertEquals(TEST_PUBLISHER, result.get(0).getPublisher());
-    assertEquals(TEST_SERIES, result.get(0).getName());
-    assertEquals(TEST_VOLUME, result.get(0).getVolume());
-    assertEquals(TEST_ISSUE_COUNT, result.get(0).getInLibrary());
-    assertEquals(TEST_TOTAL_ISSUES, result.get(0).getTotalIssues());
-
-    Mockito.verify(comicBookService, Mockito.times(1)).getAllSeriesAndVolumes();
-    Mockito.verify(issueService, Mockito.times(seriesList.size()))
-        .getCountForSeriesAndVolume(TEST_SERIES, TEST_VOLUME);
+    Mockito.verify(seriesDetailsRepository, Mockito.times(1)).findAll();
   }
 
   @Test

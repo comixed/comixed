@@ -24,7 +24,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.collections.Issue;
 import org.comixedproject.model.net.collections.LoadSeriesDetailRequest;
 import org.comixedproject.model.net.collections.LoadSeriesListResponse;
-import org.comixedproject.service.collections.SeriesService;
+import org.comixedproject.service.collections.SeriesDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,14 +33,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * <code>SeriesController</code> provides web endpoints for working with series collections.
+ * <code>SeriesDetailController</code> provides web endpoints for working with series collections.
  *
  * @author Darryl L. Pierce
  */
 @RestController
 @Log4j2
-public class SeriesController {
-  @Autowired private SeriesService seriesService;
+public class SeriesDetailController {
+  @Autowired private SeriesDetailService seriesDetailService;
 
   /**
    * Returns the list of series, sorted by the given sort field.
@@ -55,7 +55,7 @@ public class SeriesController {
   @Timed(value = "comixed.series.load-list")
   public LoadSeriesListResponse loadSeriesList() {
     log.info("Loading series");
-    return new LoadSeriesListResponse(this.seriesService.getSeriesList());
+    return new LoadSeriesListResponse(this.seriesDetailService.getSeriesList());
   }
 
   /**
@@ -75,6 +75,6 @@ public class SeriesController {
     final String name = request.getName();
     final String volume = request.getVolume();
     log.info("Loading series detail: publisher={} name={} volume={}", publisher, name, volume);
-    return this.seriesService.loadSeriesDetail(publisher, name, volume);
+    return this.seriesDetailService.loadSeriesDetail(publisher, name, volume);
   }
 }

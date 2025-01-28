@@ -21,7 +21,7 @@ package org.comixedproject.rest.collections;
 import static junit.framework.TestCase.*;
 
 import java.util.List;
-import org.comixedproject.model.collections.Series;
+import org.comixedproject.model.collections.SeriesDetail;
 import org.comixedproject.model.net.collections.LoadPublisherDetailRequest;
 import org.comixedproject.model.net.collections.LoadPublisherDetailResponse;
 import org.comixedproject.model.net.collections.LoadPublisherListRequest;
@@ -45,7 +45,7 @@ public class PublisherControllerTest {
 
   @InjectMocks private PublisherController controller;
   @Mock private ComicBookService comicBookService;
-  @Mock private List<Series> seriesList;
+  @Mock private List<SeriesDetail> seriesDetailList;
   @Mock private LoadPublisherListResponse loadPublisherResponse;
 
   @Test
@@ -77,7 +77,7 @@ public class PublisherControllerTest {
                 Mockito.anyInt(),
                 Mockito.anyString(),
                 Mockito.anyString()))
-        .thenReturn(seriesList);
+        .thenReturn(seriesDetailList);
 
     final LoadPublisherDetailResponse result =
         controller.getPublisherDetail(
@@ -87,7 +87,7 @@ public class PublisherControllerTest {
 
     assertNotNull(result);
     assertEquals(TEST_SERIES_COUNT, result.getTotalSeries());
-    assertSame(seriesList, result.getEntries());
+    assertSame(seriesDetailList, result.getEntries());
 
     Mockito.verify(comicBookService, Mockito.times(1))
         .getSeriesCountForPublisher(TEST_PUBLISHER_NAME);
