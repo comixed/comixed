@@ -161,7 +161,8 @@ describe('PublisherIssuesComponent', () => {
           searchText: null,
           publisher: PUBLISHER_NAME,
           series: null,
-          volume: null
+          volume: null,
+          pageCount: null
         })
       );
     });

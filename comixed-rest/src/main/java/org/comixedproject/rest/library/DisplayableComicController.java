@@ -77,7 +77,8 @@ public class DisplayableComicController {
   @Timed(value = "comixed.comic-book.load-filtered")
   @PreAuthorize("hasRole('READER')")
   @JsonView(View.ComicDetailsView.class)
-  public LoadComicsResponse loadComicsByFilter(@RequestBody() final LoadComicsRequest request) {
+  public LoadComicsResponse loadComicsByFilter(
+      @RequestBody() final LoadComicsByFilterRequest request) {
     log.info("Loading comics: {}", request);
     final List<DisplayableComic> comics =
         this.displayableComicService.loadComicsByFilter(
@@ -93,6 +94,7 @@ public class DisplayableComicController {
             request.getPublisher(),
             request.getSeries(),
             request.getVolume(),
+            request.getPageCount(),
             request.getSortBy(),
             request.getSortDirection());
     final List<Integer> coverYears =
@@ -104,7 +106,8 @@ public class DisplayableComicController {
             request.getSearchText(),
             request.getPublisher(),
             request.getSeries(),
-            request.getVolume());
+            request.getVolume(),
+            request.getPageCount());
     final List<Integer> coverMonths =
         this.displayableComicService.getCoverMonthsForFilter(
             request.getArchiveType(),
@@ -114,7 +117,8 @@ public class DisplayableComicController {
             request.getSearchText(),
             request.getPublisher(),
             request.getSeries(),
-            request.getVolume());
+            request.getVolume(),
+            request.getPageCount());
     final long filterCount =
         this.displayableComicService.getComicCountForFilter(
             request.getCoverYear(),
@@ -126,7 +130,8 @@ public class DisplayableComicController {
             request.getSearchText(),
             request.getPublisher(),
             request.getSeries(),
-            request.getVolume());
+            request.getVolume(),
+            request.getPageCount());
     final long totalCount = this.comicBookService.getComicBookCount();
     return new LoadComicsResponse(comics, coverYears, coverMonths, totalCount, filterCount);
   }

@@ -18,6 +18,7 @@
 
 package org.comixedproject.service.library;
 
+import java.util.Objects;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.archives.ArchiveType;
@@ -51,6 +52,7 @@ public class DisplayableComicExampleBuilder {
   @Setter private String publisher;
   @Setter private String series;
   @Setter private String volume;
+  @Setter private Integer pageCount;
 
   public Example<DisplayableComic> build() {
     log.trace("Building ComicDetail example");
@@ -63,6 +65,7 @@ public class DisplayableComicExampleBuilder {
     detail.setAddedDate(null);
     detail.setComicType(null);
     detail.setUnscraped(null);
+    detail.setPageCount(null);
 
     ExampleMatcher matcher = ExampleMatcher.matching();
 
@@ -118,6 +121,12 @@ public class DisplayableComicExampleBuilder {
       log.debug("Enabling volume filter");
       detail.setVolume(volume);
       matcher = matcher.withMatcher("volume", ExampleMatcher.GenericPropertyMatchers.exact());
+    }
+
+    if (Objects.nonNull(pageCount) && pageCount >= 0) {
+      log.debug("Enabling page count filter");
+      detail.setPageCount(pageCount);
+      matcher = matcher.withMatcher("pageCount", ExampleMatcher.GenericPropertyMatchers.exact());
     }
 
     if (StringUtils.hasLength(searchText)) {

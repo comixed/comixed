@@ -91,6 +91,7 @@ describe('ComicListEffects', () => {
   const PUBLISHER = COMIC_LIST[0].publisher;
   const SERIES = COMIC_LIST[0].series;
   const VOLUME = COMIC_LIST[0].volume;
+  const PAGE_COUNT = 0;
   const IDS = COMIC_LIST.map(entry => entry.comicBookId);
   const COVER_YEARS = [1965, 1971, 1996, 1998, 2006];
   const COVER_MONTHS = [1, 3, 4, 7, 9];
@@ -175,6 +176,7 @@ describe('ComicListEffects', () => {
         publisher: PUBLISHER,
         series: SERIES,
         volume: VOLUME,
+        pageCount: PAGE_COUNT,
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
@@ -202,6 +204,7 @@ describe('ComicListEffects', () => {
           publisher: PUBLISHER,
           series: SERIES,
           volume: VOLUME,
+          pageCount: PAGE_COUNT,
           sortBy: SORT_BY,
           sortDirection: SORT_DIRECTION
         })
@@ -227,6 +230,7 @@ describe('ComicListEffects', () => {
         publisher: PUBLISHER,
         series: SERIES,
         volume: VOLUME,
+        pageCount: PAGE_COUNT,
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
@@ -248,6 +252,7 @@ describe('ComicListEffects', () => {
           publisher: PUBLISHER,
           series: SERIES,
           volume: VOLUME,
+          pageCount: PAGE_COUNT,
           sortBy: SORT_BY,
           sortDirection: SORT_DIRECTION
         })
@@ -273,6 +278,7 @@ describe('ComicListEffects', () => {
         publisher: PUBLISHER,
         series: SERIES,
         volume: VOLUME,
+        pageCount: PAGE_COUNT,
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       });
@@ -294,6 +300,7 @@ describe('ComicListEffects', () => {
           publisher: PUBLISHER,
           series: SERIES,
           volume: VOLUME,
+          pageCount: PAGE_COUNT,
           sortBy: SORT_BY,
           sortDirection: SORT_DIRECTION
         })

@@ -71,7 +71,7 @@ import {
   comicRemoved,
   comicUpdated
 } from '@app/comic-books/actions/comic-list.actions';
-import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import {
   provideHttpClient,
   withInterceptorsFromDi
@@ -103,6 +103,7 @@ describe('DisplayableComicService', () => {
   const PUBLISHER = COMIC_LIST[0].publisher;
   const SERIES = COMIC_LIST[0].series;
   const VOLUME = COMIC_LIST[0].volume;
+  const PAGE_COUNT = 23;
   const IDS = COMIC_LIST.map(entry => entry.comicBookId);
   const TOTAL_COUNT = COMIC_LIST.length * 2;
   const FILTERED_COUNT = Math.floor(TOTAL_COUNT * 0.75);
@@ -303,6 +304,7 @@ describe('DisplayableComicService', () => {
         publisher: PUBLISHER,
         series: SERIES,
         volume: VOLUME,
+        pageCount: PAGE_COUNT,
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       })
@@ -323,6 +325,7 @@ describe('DisplayableComicService', () => {
       publisher: PUBLISHER,
       series: SERIES,
       volume: VOLUME,
+      pageCount: PAGE_COUNT,
       sortBy: SORT_BY,
       sortDirection: SORT_DIRECTION
     } as LoadComicsByFilterRequest);
@@ -350,6 +353,7 @@ describe('DisplayableComicService', () => {
         publisher: PUBLISHER,
         series: SERIES,
         volume: VOLUME,
+        pageCount: PAGE_COUNT,
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       })

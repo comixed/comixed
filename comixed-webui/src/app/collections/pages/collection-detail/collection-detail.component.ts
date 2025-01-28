@@ -40,7 +40,7 @@ import {
   selectComicList,
   selectComicListState
 } from '@app/comic-books/selectors/comic-list.selectors';
-import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import {
   ComicTagType,
   comicTagTypeFromString

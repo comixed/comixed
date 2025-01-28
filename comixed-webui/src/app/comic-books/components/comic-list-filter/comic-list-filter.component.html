@@ -83,6 +83,20 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+      <mat-form-field class="cx-filter-field-input">
+        <mat-label>{{ "filtering.label.page-count" | translate }}</mat-label>
+        <mat-select
+          (selectionChange)="
+            queryParameterService.onPageCountChange($event.value)
+          "
+          [value]="queryParameterService.pageCount$ | async"
+          [disabled]="queryParameterService.filterText$.value?.length > 0"
+        >
+          <mat-option *ngFor="let option of pageCountOptions" [value]="option">
+            {{ option }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </mat-card-content>
     <mat-card-actions>
       <button

@@ -1,5 +1,5 @@
 @use "variables" as *;
 
 .cx-filter-field-input {
-  width: min(100%, max(25%, $cx-smallest-width));
+  width: min(100%, max(20%, $cx-smallest-width));
 }

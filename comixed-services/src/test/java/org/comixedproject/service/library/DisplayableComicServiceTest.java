@@ -60,6 +60,7 @@ public class DisplayableComicServiceTest {
   private static final String TEST_PUBLISHER = "The Publisher";
   private static final String TEST_SERIES = "The Series";
   private static final String TEST_VOLUME = "2025";
+  private static final Integer TEST_PAGE_COUNT = 77;
   private static final String TEST_SORT_BY = "series";
   private static final String TEST_SORT_DIRECTION = "asc";
   private static final long TEST_COMIC_COUNT = 32567L;
@@ -129,6 +130,7 @@ public class DisplayableComicServiceTest {
             TEST_PUBLISHER,
             TEST_SERIES,
             TEST_VOLUME,
+            TEST_PAGE_COUNT,
             TEST_SORT_BY,
             TEST_SORT_DIRECTION);
 
@@ -162,6 +164,7 @@ public class DisplayableComicServiceTest {
             TEST_PUBLISHER,
             TEST_SERIES,
             TEST_VOLUME,
+            TEST_PAGE_COUNT,
             TEST_SORT_BY,
             TEST_SORT_DIRECTION);
 
@@ -190,6 +193,7 @@ public class DisplayableComicServiceTest {
             TEST_PUBLISHER,
             TEST_SERIES,
             TEST_VOLUME,
+            TEST_PAGE_COUNT,
             TEST_SORT_BY,
             TEST_SORT_DIRECTION);
 
@@ -214,7 +218,8 @@ public class DisplayableComicServiceTest {
             TEST_SEARCH_TEXT,
             TEST_PUBLISHER,
             TEST_SERIES,
-            TEST_VOLUME);
+            TEST_VOLUME,
+            TEST_PAGE_COUNT);
 
     assertNotNull(result);
     assertSame(yearList, result);
@@ -237,7 +242,8 @@ public class DisplayableComicServiceTest {
             TEST_SEARCH_TEXT,
             TEST_PUBLISHER,
             TEST_SERIES,
-            TEST_VOLUME);
+            TEST_VOLUME,
+            TEST_PAGE_COUNT);
 
     assertNotNull(result);
     assertSame(monthList, result);
@@ -261,7 +267,8 @@ public class DisplayableComicServiceTest {
             TEST_SEARCH_TEXT,
             TEST_PUBLISHER,
             TEST_SERIES,
-            TEST_VOLUME);
+            TEST_VOLUME,
+            TEST_PAGE_COUNT);
 
     assertEquals(TEST_COMIC_COUNT, result);
 
@@ -546,7 +553,8 @@ public class DisplayableComicServiceTest {
             TEST_SEARCH_TEXT,
             TEST_PUBLISHER,
             TEST_SERIES,
-            TEST_VOLUME);
+            TEST_VOLUME,
+            TEST_PAGE_COUNT);
 
     assertNotNull(result);
     assertSame(displayableComicExample, result);

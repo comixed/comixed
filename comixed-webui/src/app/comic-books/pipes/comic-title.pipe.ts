@@ -18,7 +18,7 @@
 
 import { Pipe, PipeTransform } from '@angular/core';
 import { UNKNOWN_VALUE_PLACEHOLDER } from '@app/library/library.constants';
-import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Pipe({

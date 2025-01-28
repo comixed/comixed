@@ -17,7 +17,7 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ComicDetailFilterComponent } from './comic-detail-filter.component';
+import { ComicListFilterComponent } from './comic-list-filter.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatCardModule } from '@angular/material/card';
@@ -29,29 +29,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  COMIC_DETAIL_1,
-  COMIC_DETAIL_2,
-  COMIC_DETAIL_3,
-  COMIC_DETAIL_4,
-  COMIC_DETAIL_5
-} from '@app/comic-books/comic-books.fixtures';
 
-describe('ComicDetailFilterComponent', () => {
-  const COMIC_DETAILS = [
-    COMIC_DETAIL_1,
-    COMIC_DETAIL_2,
-    COMIC_DETAIL_3,
-    COMIC_DETAIL_4,
-    COMIC_DETAIL_5
-  ];
-
-  let component: ComicDetailFilterComponent;
-  let fixture: ComponentFixture<ComicDetailFilterComponent>;
+describe('ComicListFilterComponent', () => {
+  let component: ComicListFilterComponent;
+  let fixture: ComponentFixture<ComicListFilterComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ComicDetailFilterComponent],
+      declarations: [ComicListFilterComponent],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
@@ -68,7 +53,7 @@ describe('ComicDetailFilterComponent', () => {
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ComicDetailFilterComponent);
+    fixture = TestBed.createComponent(ComicListFilterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -85,16 +70,6 @@ describe('ComicDetailFilterComponent', () => {
 
     it('emits an event', () => {
       expect(component.closeFilter.emit).toHaveBeenCalled();
-    });
-  });
-
-  describe('loading comic details', () => {
-    beforeEach(() => {
-      component.comicDetails = COMIC_DETAILS;
-    });
-
-    it('populates the comic details list', () => {
-      expect(component.comicDetails).not.toEqual([]);
     });
   });
 

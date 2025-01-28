@@ -60,6 +60,10 @@ public class MultipleComicBooksSelectionRequest {
   @Getter
   private Boolean unscrapedState;
 
+  @JsonProperty("pageCount")
+  @Getter
+  private Integer pageCount;
+
   @JsonProperty("searchText")
   @Getter
   private String searchText;
@@ -83,6 +87,8 @@ public class MultipleComicBooksSelectionRequest {
         + comicState
         + ", unscrapedState="
         + unscrapedState
+        + ", pageCount="
+        + pageCount
         + ", searchText='"
         + searchText
         + '\''
