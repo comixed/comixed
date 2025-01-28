@@ -56,6 +56,7 @@ public class ComicSelectionServiceTest {
   private static final ComicState TEST_COMIC_STATE =
       ComicState.values()[RandomUtils.nextInt(ComicState.values().length)];
   private static final String TEST_SEARCH_TEXT = "The search text";
+  private static final Integer TEST_PAGE_COUNT = 72;
 
   private final List<Long> selectedIds = new ArrayList<>();
   private final Set<Long> storedSelectedIds = new HashSet<>();
@@ -158,6 +159,7 @@ public class ComicSelectionServiceTest {
                 Mockito.any(ComicType.class),
                 Mockito.any(ComicState.class),
                 Mockito.anyBoolean(),
+                Mockito.anyInt(),
                 Mockito.anyString()))
         .thenReturn(comicIds);
 
@@ -171,6 +173,7 @@ public class ComicSelectionServiceTest {
         TEST_COMIC_TYPE,
         TEST_COMIC_STATE,
         false,
+        TEST_PAGE_COUNT,
         TEST_SEARCH_TEXT,
         true);
 
@@ -188,6 +191,7 @@ public class ComicSelectionServiceTest {
             TEST_COMIC_TYPE,
             TEST_COMIC_STATE,
             false,
+            TEST_PAGE_COUNT,
             TEST_SEARCH_TEXT);
   }
 
@@ -205,6 +209,7 @@ public class ComicSelectionServiceTest {
                 Mockito.any(ComicType.class),
                 Mockito.any(ComicState.class),
                 Mockito.anyBoolean(),
+                Mockito.anyInt(),
                 Mockito.anyString()))
         .thenReturn(comicIds);
 
@@ -216,6 +221,7 @@ public class ComicSelectionServiceTest {
         TEST_COMIC_TYPE,
         TEST_COMIC_STATE,
         false,
+        TEST_PAGE_COUNT,
         TEST_SEARCH_TEXT,
         false);
 
@@ -232,6 +238,7 @@ public class ComicSelectionServiceTest {
             TEST_COMIC_TYPE,
             TEST_COMIC_STATE,
             false,
+            TEST_PAGE_COUNT,
             TEST_SEARCH_TEXT);
   }
 

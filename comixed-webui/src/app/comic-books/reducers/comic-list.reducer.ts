@@ -17,7 +17,7 @@
  */
 
 import { createFeature, createReducer, on } from '@ngrx/store';
-import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import { deepClone } from '@angular-ru/cdk/object';
 import {
   comicRemoved,

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 export interface LoadComicsResponse {
   comics: DisplayableComic[];

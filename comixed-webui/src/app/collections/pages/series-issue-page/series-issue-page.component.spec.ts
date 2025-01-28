@@ -167,7 +167,8 @@ describe('SeriesIssuePageComponent', () => {
           searchText: null,
           publisher: PUBLISHER_NAME,
           series: SERIES_NAME,
-          volume: VOLUME
+          volume: VOLUME,
+          pageCount: null
         })
       );
     });

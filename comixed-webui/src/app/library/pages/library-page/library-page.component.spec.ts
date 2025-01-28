@@ -216,6 +216,7 @@ describe('LibraryPageComponent', () => {
               archiveType$: new BehaviorSubject<ArchiveType>(null),
               filterText$: new BehaviorSubject<string>(null),
               comicType$: new BehaviorSubject<ComicType>(null),
+              pageCount$: new BehaviorSubject<number | null>(null),
               sortBy$: new BehaviorSubject<ComicType>(null),
               sortDirection$: new BehaviorSubject<ComicType>(null),
               updateQueryParam: jasmine.createSpy(
@@ -415,6 +416,7 @@ describe('LibraryPageComponent', () => {
             publisher: null,
             series: null,
             volume: null,
+            pageCount: null,
             sortBy: null,
             sortDirection: null
           })
@@ -446,6 +448,7 @@ describe('LibraryPageComponent', () => {
             publisher: null,
             series: null,
             volume: null,
+            pageCount: null,
             sortBy: null,
             sortDirection: null
           })
@@ -497,6 +500,7 @@ describe('LibraryPageComponent', () => {
             publisher: null,
             series: null,
             volume: null,
+            pageCount: null,
             sortBy: null,
             sortDirection: null
           })
@@ -567,6 +571,7 @@ describe('LibraryPageComponent', () => {
             publisher: null,
             series: null,
             volume: null,
+            pageCount: null,
             sortBy: null,
             sortDirection: null
           })

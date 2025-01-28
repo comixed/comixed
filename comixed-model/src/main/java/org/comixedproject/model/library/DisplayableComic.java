@@ -110,7 +110,8 @@ public class DisplayableComic {
   @Column(name = "page_count")
   @JsonView({View.ComicDetailsView.class})
   @Getter
-  private String pageCount;
+  @Setter
+  private Integer pageCount;
 
   @Column(name = "cover_date")
   @JsonView({View.ComicDetailsView.class})

@@ -20,7 +20,7 @@ import { createAction, props } from '@ngrx/store';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { ComicState } from '@app/comic-books/models/comic-state';
-import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 
 export const resetComicList = createAction(
@@ -45,6 +45,7 @@ export const loadComicsByFilter = createAction(
     publisher: string;
     series: string;
     volume: string;
+    pageCount: number | null;
   }>()
 );
 

@@ -59,6 +59,7 @@ export class ComicListEffects {
             publisher: action.publisher,
             series: action.series,
             volume: action.volume,
+            pageCount: action.pageCount,
             sortBy: action.sortBy,
             sortDirection: action.sortDirection
           })

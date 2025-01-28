@@ -35,7 +35,7 @@ import {
   selectComicList,
   selectComicListState
 } from '@app/comic-books/selectors/comic-list.selectors';
-import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Component({
   selector: 'cx-publisher-issues-page',
@@ -153,7 +153,8 @@ export class PublisherIssuesPageComponent implements OnInit, OnDestroy {
         searchText: null,
         publisher: this.name,
         series: null,
-        volume: null
+        volume: null,
+        pageCount: null
       })
     );
   }

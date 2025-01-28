@@ -36,3 +36,4 @@ export const QUERY_PARAM_ARCHIVE_TYPE = 'archive-type';
 export const QUERY_PARAM_COMIC_TYPE = 'comic-type';
 export const QUERY_PARAM_PAGES_AS_GRID = 'pages-as-grid';
 export const QUERY_PARAM_UNREAD_ONLY = 'unread-only';
+export const QUERY_PARAM_PAGE_COUNT = 'page-count';

@@ -42,7 +42,7 @@ import {
   selectComicFilteredCount,
   selectComicList
 } from '@app/comic-books/selectors/comic-list.selectors';
-import { DisplayableComic } from '@app/comic-books/model/displayable-comic';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Component({
   selector: 'cx-series-metadata-page',
@@ -152,7 +152,8 @@ export class SeriesMetadataPageComponent
             series: this.name,
             volume: this.volume,
             sortBy: null,
-            sortDirection: null
+            sortDirection: null,
+            pageCount: null
           })
         );
       }

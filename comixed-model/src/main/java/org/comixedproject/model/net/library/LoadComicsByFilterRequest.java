@@ -27,13 +27,14 @@ import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicType;
 
 /**
- * <code>LoadComicsRequest</code> represents the request body when loading a page worth of comics.
+ * <code>LoadComicsByFilterRequest</code> represents the request body when loading a page worth of
+ * comics.
  *
  * @author Darryl L. Pierce
  */
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoadComicsRequest {
+public class LoadComicsByFilterRequest {
   @JsonProperty("pageSize")
   @Getter
   private int pageSize;
@@ -81,6 +82,10 @@ public class LoadComicsRequest {
   @JsonProperty("volume")
   @Getter
   private String volume;
+
+  @JsonProperty("pageCount")
+  @Getter
+  private Integer pageCount;
 
   @JsonProperty("sortBy")
   @Getter

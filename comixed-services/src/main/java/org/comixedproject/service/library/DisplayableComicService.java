@@ -68,6 +68,7 @@ public class DisplayableComicService {
    * @param publisher the optional publisher
    * @param series the optional series
    * @param volume the optional volume
+   * @param pageCount the optional page count
    * @param sortBy the optional sort field
    * @param sortDirection the optional sort direction
    * @return the comics
@@ -86,6 +87,7 @@ public class DisplayableComicService {
       final String publisher,
       final String series,
       final String volume,
+      final Integer pageCount,
       final String sortBy,
       final String sortDirection) {
     log.debug("Loading comic details");
@@ -100,7 +102,8 @@ public class DisplayableComicService {
             searchText,
             publisher,
             series,
-            volume);
+            volume,
+            pageCount);
 
     if (Objects.nonNull(pageSize) && Objects.nonNull(pageIndex)) {
       return this.displayableComicRepository
@@ -123,6 +126,7 @@ public class DisplayableComicService {
    * @param comicType the optional comic type
    * @param comicState the optional comic state
    * @param unscrapedState the optional unscraped state
+   * @param pageCount the optional page count
    * @param searchText the optional search text
    * @return the ids
    */
@@ -134,6 +138,7 @@ public class DisplayableComicService {
       final ComicType comicType,
       final ComicState comicState,
       final Boolean unscrapedState,
+      final Integer pageCount,
       final String searchText) {
     final var displayableComicExample =
         doCreateExample(
@@ -146,7 +151,8 @@ public class DisplayableComicService {
             searchText,
             null,
             null,
-            null);
+            null,
+            pageCount);
 
     return this.displayableComicRepository.findAll(displayableComicExample).stream()
         .map(DisplayableComic::getComicDetailId)
@@ -164,6 +170,7 @@ public class DisplayableComicService {
    * @param publisher the optional publisher
    * @param series the optional series
    * @param volume the optional volume
+   * @param pageCount the optional page count
    * @return the cover years
    */
   @Transactional
@@ -175,7 +182,8 @@ public class DisplayableComicService {
       final String searchText,
       final String publisher,
       final String series,
-      final String volume) {
+      final String volume,
+      final Integer pageCount) {
     log.debug("Loading cover years for filter");
     final var comicDetailExample =
         doCreateExample(
@@ -188,7 +196,8 @@ public class DisplayableComicService {
             searchText,
             publisher,
             series,
-            volume);
+            volume,
+            pageCount);
 
     return this.displayableComicRepository.findAll(comicDetailExample).stream()
         .map(DisplayableComic::getYearPublished)
@@ -207,6 +216,7 @@ public class DisplayableComicService {
    * @param publisher the optional publisher
    * @param series the optional series
    * @param volume the optional volume
+   * @param pageCount the optional page count
    * @return the cover years
    */
   @Transactional
@@ -218,7 +228,8 @@ public class DisplayableComicService {
       final String searchText,
       final String publisher,
       final String series,
-      final String volume) {
+      final String volume,
+      final Integer pageCount) {
     log.debug("Loading cover months for filter");
     final var comicDetailExample =
         doCreateExample(
@@ -231,7 +242,8 @@ public class DisplayableComicService {
             searchText,
             publisher,
             series,
-            volume);
+            volume,
+            pageCount);
 
     return this.displayableComicRepository.findAll(comicDetailExample).stream()
         .map(DisplayableComic::getMonthPublished)
@@ -252,6 +264,7 @@ public class DisplayableComicService {
    * @param publisher the optional publisher
    * @param series the optional series
    * @param volume the optional volume
+   * @param pageCount the optional page count
    * @return the cover years
    */
   @Transactional
@@ -265,7 +278,8 @@ public class DisplayableComicService {
       final String searchText,
       final String publisher,
       final String series,
-      final String volume) {
+      final String volume,
+      final Integer pageCount) {
     log.debug("Loading comic count for filter");
     final var comicDetailExample =
         doCreateExample(
@@ -278,7 +292,8 @@ public class DisplayableComicService {
             searchText,
             publisher,
             series,
-            volume);
+            volume,
+            pageCount);
 
     return this.displayableComicRepository.count(comicDetailExample);
   }
@@ -534,7 +549,8 @@ public class DisplayableComicService {
       final String searchText,
       final String publisher,
       final String series,
-      final String volume) {
+      final String volume,
+      final Integer pageCount) {
     final DisplayableComicExampleBuilder builder = this.exampleBuilderObjectFactory.getObject();
 
     builder.setCoverYear(coverYear);
@@ -547,6 +563,7 @@ public class DisplayableComicService {
     builder.setPublisher(publisher);
     builder.setSeries(series);
     builder.setVolume(volume);
+    builder.setPageCount(pageCount);
 
     return builder.build();
   }

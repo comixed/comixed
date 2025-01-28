@@ -65,6 +65,7 @@ public class DisplayableComicControllerTest {
   private static final String TEST_PUBLISHER = "The Publisher";
   private static final String TEST_SERIES = "The Series";
   private static final String TEST_VOLUME = "2025";
+  private static final Integer TEST_PAGE_COUNT = 5;
   private static final String TEST_SORT_BY = "series";
   private static final String TEST_SORT_DIRECTION = "asc";
   private static final long TEST_FILTERED_COUNT = 3237L;
@@ -85,7 +86,7 @@ public class DisplayableComicControllerTest {
   @Mock private UserService userService;
   @Mock private ReadingListService readingListService;
 
-  @Mock private LoadComicsRequest filteredRequest;
+  @Mock private LoadComicsByFilterRequest filteredRequest;
   @Mock private List<DisplayableComic> comicList;
   @Mock private List<Integer> coverYears;
   @Mock private List<Integer> coverMonths;
@@ -110,6 +111,7 @@ public class DisplayableComicControllerTest {
     Mockito.when(filteredRequest.getPublisher()).thenReturn(TEST_PUBLISHER);
     Mockito.when(filteredRequest.getSeries()).thenReturn(TEST_SERIES);
     Mockito.when(filteredRequest.getVolume()).thenReturn(TEST_VOLUME);
+    Mockito.when(filteredRequest.getPageCount()).thenReturn(TEST_PAGE_COUNT);
     Mockito.when(filteredRequest.getSortBy()).thenReturn(TEST_SORT_BY);
     Mockito.when(filteredRequest.getSortDirection()).thenReturn(TEST_SORT_DIRECTION);
 
@@ -146,6 +148,7 @@ public class DisplayableComicControllerTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
+                Mockito.anyInt(),
                 Mockito.anyString(),
                 Mockito.anyString()))
         .thenReturn(comicList);
@@ -158,7 +161,8 @@ public class DisplayableComicControllerTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.anyString()))
+                Mockito.anyString(),
+                Mockito.anyInt()))
         .thenReturn(coverYears);
     Mockito.when(
             displayableComicService.getCoverMonthsForFilter(
@@ -169,7 +173,8 @@ public class DisplayableComicControllerTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.anyString()))
+                Mockito.anyString(),
+                Mockito.anyInt()))
         .thenReturn(coverMonths);
     Mockito.when(
             displayableComicService.getComicCountForFilter(
@@ -182,7 +187,8 @@ public class DisplayableComicControllerTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.anyString()))
+                Mockito.anyString(),
+                Mockito.anyInt()))
         .thenReturn(TEST_FILTERED_COUNT);
     Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_COMIC_COUNT);
 
@@ -209,6 +215,7 @@ public class DisplayableComicControllerTest {
             TEST_PUBLISHER,
             TEST_SERIES,
             TEST_VOLUME,
+            TEST_PAGE_COUNT,
             TEST_SORT_BY,
             TEST_SORT_DIRECTION);
   }

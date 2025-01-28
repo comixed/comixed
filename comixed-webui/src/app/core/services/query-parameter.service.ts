@@ -28,6 +28,7 @@ import {
   QUERY_PARAM_COVER_MONTH,
   QUERY_PARAM_COVER_YEAR,
   QUERY_PARAM_FILTER_TEXT,
+  QUERY_PARAM_PAGE_COUNT,
   QUERY_PARAM_PAGE_INDEX,
   QUERY_PARAM_PAGE_SIZE,
   QUERY_PARAM_PAGES_AS_GRID,
@@ -64,6 +65,7 @@ export class QueryParameterService {
     month: null
   });
   archiveType$ = new BehaviorSubject<ArchiveType>(null);
+  pageCount$ = new BehaviorSubject<number | null>(null);
   filterText$ = new BehaviorSubject<string>(null);
   comicType$ = new BehaviorSubject<ComicType>(null);
   pagesAsGrid$ = new BehaviorSubject<boolean>(false);
@@ -108,6 +110,10 @@ export class QueryParameterService {
       const archiveType = params[QUERY_PARAM_ARCHIVE_TYPE] || null;
       this.logger.debug('Using parameter for archive type:', archiveType);
       this.archiveType$.next(archiveTypeFromString(archiveType));
+
+      const pageCount = params[QUERY_PARAM_PAGE_COUNT] || null;
+      this.logger.debug('Using parameter for page count:', pageCount);
+      this.pageCount$.next(pageCount);
 
       const filterText = params[QUERY_PARAM_FILTER_TEXT] || null;
       this.logger.debug('Using parameter for filter text:', filterText);
@@ -209,6 +215,16 @@ export class QueryParameterService {
   onComicTypeChanged(comicType: ComicType): void {
     this.logger.debug('Setting comic type filter:', comicType);
     this.updateQueryParam([{ name: QUERY_PARAM_COMIC_TYPE, value: comicType }]);
+  }
+
+  onPageCountChange(pageCount: number | null): void {
+    this.logger.debug('Setting page count filter:', pageCount);
+    this.updateQueryParam([
+      {
+        name: QUERY_PARAM_PAGE_COUNT,
+        value: !!pageCount ? `${pageCount}` : null
+      }
+    ]);
   }
 
   updateQueryParam(params: { name: string; value: string }[]): void {
