@@ -20,13 +20,19 @@ package org.comixedproject;
 
 import jakarta.annotation.PreDestroy;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.messaging.app.PublishApplicationMessageAction;
+import org.comixedproject.model.messaging.ApplicationEvent;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.event.ContextClosedEvent;
+import org.springframework.context.event.EventListener;
 
 /**
  * <code>ComiXedApp</code> is the main entry point for the ComiXed application.
@@ -36,16 +42,23 @@ import org.springframework.context.ConfigurableApplicationContext;
 @SpringBootApplication
 @Log4j2
 public class ComiXedApp implements CommandLineRunner, ApplicationContextAware {
+  @Autowired private PublishApplicationMessageAction publishApplicationMessageAction;
+
   private ApplicationContext applicationContext;
 
   public static void main(String[] args) {
     new SpringApplication(ComiXedApp.class).run(args);
   }
 
-  @Override
-  public void run(String... args) throws Exception {
-    // process any command line arguments here
+  @EventListener({ContextClosedEvent.class})
+  public void onContextClosed(ContextClosedEvent event) throws PublishingException {
+    log.info("Publishing application shutdown message");
+    this.publishApplicationMessageAction.publish(
+        new ApplicationEvent("ComiXed is now shutting down"));
   }
+
+  @Override
+  public void run(String... args) throws Exception {}
 
   @PreDestroy
   public void onDestroy() {
