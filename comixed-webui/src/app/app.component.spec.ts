@@ -52,6 +52,7 @@ import {
   initialState as initialImportCountState
 } from '@app/reducers/import-comic-books.reducer';
 import {
+  APP_MESSAGING_TOPIC,
   LOADING_ICON_URL,
   LOGGER_LEVEL_PREFERENCE,
   SEARCHING_ICON_URL,
@@ -88,6 +89,10 @@ import {
   initialState as initialReadComicBooksState,
   READ_COMIC_BOOKS_FEATURE_KEY
 } from '@app/user/reducers/read-comic-books.reducer';
+import { Subscription } from 'rxjs';
+import { WebSocketService } from '@app/messaging';
+import { ApplicationEvent } from '@app/models/messages/application-event';
+import { AlertService } from '@app/core/services/alert.service';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -112,6 +117,8 @@ describe('AppComponent', () => {
 
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
+  let webSocketService: jasmine.SpyObj<WebSocketService>;
+  let alertService: AlertService;
   let store: MockStore<any>;
   let logger: LoggerService;
 
@@ -140,11 +147,26 @@ describe('AppComponent', () => {
           MatSidenavModule,
           MatListModule
         ],
-        providers: [provideMockStore({ initialState })]
+        providers: [
+          provideMockStore({ initialState }),
+          {
+            provide: WebSocketService,
+            useValue: {
+              send: jasmine.createSpy('WebSocketService.send()'),
+              subscribe: jasmine.createSpy('WebSocketService.subscribe()')
+            }
+          },
+          AlertService
+        ]
       }).compileComponents();
 
       fixture = TestBed.createComponent(AppComponent);
       component = fixture.componentInstance;
+      webSocketService = TestBed.inject(
+        WebSocketService
+      ) as jasmine.SpyObj<WebSocketService>;
+      alertService = TestBed.inject(AlertService);
+      spyOn(alertService, 'info');
       store = TestBed.inject(MockStore);
       spyOn(store, 'dispatch');
       fixture.detectChanges();
@@ -317,6 +339,60 @@ describe('AppComponent', () => {
     it('returns the default image url', () => {
       component.busyIcon = BusyIcon.DEFAULT;
       expect(component.busyIconURL).toEqual(WORKING_ICON_URL);
+    });
+  });
+
+  describe('when messaging starts', () => {
+    let topic: string;
+    let subscription: any;
+
+    beforeEach(() => {
+      component.appMessagingSubscription = null;
+      webSocketService.subscribe.and.callFake((topicUsed, callback) => {
+        topic = topicUsed;
+        subscription = callback;
+        return {} as Subscription;
+      });
+      store.setState({
+        ...initialState,
+        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: true }
+      });
+    });
+
+    it('subscribes to user updates', () => {
+      expect(topic).toEqual(APP_MESSAGING_TOPIC);
+    });
+
+    describe('when updates are received', () => {
+      const APP_MESSAGE = 'This is the sample message.';
+
+      beforeEach(() => {
+        subscription({ message: APP_MESSAGE } as ApplicationEvent);
+      });
+
+      it('notifies the user', () => {
+        expect(alertService.info).toHaveBeenCalledWith(APP_MESSAGE);
+      });
+    });
+  });
+
+  describe('when messaging is stopped', () => {
+    const subscription = jasmine.createSpyObj(['unsubscribe']);
+
+    beforeEach(() => {
+      component.appMessagingSubscription = subscription;
+      store.setState({
+        ...initialState,
+        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: false }
+      });
+    });
+
+    it('unsubscribes from updates', () => {
+      expect(subscription.unsubscribe).toHaveBeenCalled();
+    });
+
+    it('clears the subscription reference', () => {
+      expect(component.appMessagingSubscription).toBeNull();
     });
   });
 });

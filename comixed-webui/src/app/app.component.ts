@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ApplicationRef, Component, HostBinding, OnInit } from '@angular/core';
+import { Component, HostBinding, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LoggerLevel, LoggerService } from '@angular-ru/cdk/logger';
 import { selectUser } from '@app/user/selectors/user.selectors';
@@ -25,6 +25,7 @@ import { loadCurrentUser } from '@app/user/actions/user.actions';
 import { selectBusyState } from '@app/core/selectors/busy.selectors';
 import { TranslateService } from '@ngx-translate/core';
 import {
+  APP_MESSAGING_TOPIC,
   DARK_MODE_PREFERENCE,
   LANGUAGE_PREFERENCE,
   LOADING_ICON_URL,
@@ -43,9 +44,12 @@ import { selectLibraryState } from '@app/library/selectors/library.selectors';
 import { LibraryState } from '@app/library/reducers/library.reducer';
 import { toggleDarkThemeMode } from '@app/actions/dark-theme.actions';
 import { selectDarkThemeActive } from '@app/selectors/dark-theme.selectors';
-import { OverlayContainer } from '@angular/cdk/overlay';
 import { BusyIcon } from '@app/core/actions/busy.actions';
 import { resetReadComicBooks } from '@app/user/actions/read-comic-books.actions';
+import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
+import { WebSocketService } from '@app/messaging';
+import { AlertService } from '@app/core/services/alert.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-root',
@@ -63,13 +67,14 @@ export class AppComponent implements OnInit {
   libraryState: LibraryState;
   darkMode = false;
   busyIcon = BusyIcon.DEFAULT;
+  appMessagingSubscription: Subscription | null = null;
 
   constructor(
     private logger: LoggerService,
     private translateService: TranslateService,
     private store: Store<any>,
-    private overlayContainer: OverlayContainer,
-    private app: ApplicationRef
+    private webSocketService: WebSocketService,
+    private alertService: AlertService
   ) {
     this.logger.level = LoggerLevel.INFO;
     this.translateService.use('en');
@@ -154,6 +159,29 @@ export class AppComponent implements OnInit {
         this.currentTheme = 'lite-theme';
       }
     });
+    this.store
+      .select(selectMessagingState)
+      .pipe(filter(state => !!state))
+      .subscribe(state => {
+        if (state.started && this.appMessagingSubscription == null) {
+          this.logger.debug('Subscribing from application messages');
+          this.appMessagingSubscription = this.webSocketService.subscribe(
+            APP_MESSAGING_TOPIC,
+            appEvent => {
+              this.logger.debug(
+                'Application event message received:',
+                appEvent
+              );
+              this.alertService.info(appEvent.message);
+            }
+          );
+        }
+        if (!state.started && this.appMessagingSubscription !== null) {
+          this.logger.debug('Unsubscribing from application messages');
+          this.appMessagingSubscription.unsubscribe();
+          this.appMessagingSubscription = null;
+        }
+      });
   }
 
   get busyIconURL(): string {
@@ -174,7 +202,7 @@ export class AppComponent implements OnInit {
     this.store.dispatch(loadCurrentUser());
   }
 
-  private subscribeToLibraryState(): void {
+  subscribeToLibraryState(): void {
     this.libraryStateSubscription = this.store
       .select(selectLibraryState)
       .subscribe(state => (this.libraryState = state));
