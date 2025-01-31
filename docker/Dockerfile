@@ -29,5 +29,6 @@ ENV PATH="$JAVA_HOME/bin:${PATH}"
 EXPOSE 7171
 VOLUME /library
 VOLUME /imports
+VOLUME /config
 
-CMD ["bash", "/app/comixed-release/bin/run.sh", "-L", "/library/comixed.log"]
+CMD ["bash", "/app/comixed-release/bin/run.sh", "-L", "/library/comixed.log", "-c", "/config"]
