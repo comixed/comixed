@@ -21,9 +21,7 @@ CD /d %~dp0
 
 FOR %%f IN (comixed-app*.jar) DO SET COMIXED_JAR_FILE=%%f
 SET LOGFILE="%COMIXEDLOG%"
-SET EXTDIR="%USERPROFILE%\.comixed\extensions"
-SET PLGDIR="%USERPROFILE%\.comixed\plugins"
-SET CFGFILE="%USERPROFILE%\.comixed\application.properties"
+SET CFGDIR="%USERPROFILE%\.comixed"
 
 :process_command_line
 IF "%~1" == "" GOTO end_process_command_line
@@ -35,14 +33,20 @@ IF "%PARAM%" == "-D" SET FULLDEBUG="ON"
 IF "%PARAM%" == "-M" SET METADATADEBUG="ON"
 IF "%PARAM%" == "-C" SET DBCONSOLE="ON"
 IF "%PARAM%" == "-S" SET ENABLE_SSL="ON"
+IF "%PARAM%" == "-c" GOTO set_cfgdir
 IF "%PARAM%" == "-j" GOTO set_jdbc_url
 IF "%PARAM%" == "-u" GOTO set_jdbc_user
 IF "%PARAM%" == "-p" GOTO set_jdbc_pwrd
 IF "%PARAM%" == "-i" GOTO set_image_cache_dir
 IF "%PARAM%" == "-L" GOTO set_logging_file
-IF "%PARAM%" == "-P" GOTO set_plugin_dir
 IF "%PARAM%" == "-H" GOTO set_heap_size
 IF "%PARAM%" == "-X" GOTO set_debug_option
+SHIFT
+GOTO process_command_line
+
+:set_cfgdir
+SET CFGDIR=%ARG%
+SHIFT
 SHIFT
 GOTO process_command_line
 
@@ -76,12 +80,6 @@ SHIFT
 SHIFT
 GOTO process_command_line
 
-:set_plugin_dir
-SET PLGDIR=%ARG%
-SHIFT
-SHIFT
-GOTO process_command_line
-
 :set_heap_size
 SET JVMOPTIONS=%JVMOPTIONS% -Xmx%ARG%m
 SHIFT
@@ -102,7 +100,7 @@ ECHO  -j [URL]      - Set the database URL
 ECHO  -u [USERNAME] - Set the database username
 ECHO  -p [PASSWORD] - Set the database password
 ECHO  -i [DIR]      - Set the image caching directory
-ECHO  -P [DIR]      - Set the plugin directory
+ECHO  -c [DIR]      - Set the config directory (def. %USERPROFILE%)
 ECHO  -H [SIZE]     - Set the runtime heap size (in mb)
 ECHO  -S            - Enable SSL (def. off)
 ECHO.
@@ -155,17 +153,20 @@ IF "%DBPWRD%" == "" GOTO skip_jdbc_pwrd
 SET JAROPTIONS=%JAROPTIONS% --spring.datasource.password=%DBPWRD%
 :skip_jdbc_pwrd
 
-IF "%IMGCACHEDIR%" == "" GOTO skip_image_cache_dir
-SET JAROPTIONS=%JAROPTIONS% --comixed.images.cache.location=%IMGCACHEDIR%
-:skip_image_cache_dir
-
-IF "%PLGDIR" == "" GOTO skip_plugin_dir
-SET JAROPTIONS=%JAROPTIONS% --comixed.plugins.location=%PLGDIR%
-:skip_plugin_dir
-
 IF "%ENABLE_SSL%" == "" GOTO skip_enable_ssl
 SET JAROPTIONS=%JAROPTIONS% --server.ssl.enabled=true
 :skip_enable_ssl
+
+SET EXTDIR="%CFGDIR%\extensions"
+SET CFGFILE="%CFGDIR%\application.properties"
+
+IF "%IMGCACHEDIR%" == "" GOTO set_image_cache_dir
+GOTO skip_image_cache_dir
+
+:set_image_cache_dir
+SET IMGCACHEDIR="%CFGDIR%\image-cache"
+SET JAROPTIONS=%JAROPTIONS% --comixed.images.cache.location=%IMGCACHEDIR%
+:skip_image_cache_dir
 
 IF NOT EXIST "%CFGFILE%" GOTO skip_cfg_file
 SET JAROPTIONS=%JAROPTIONS% --spring.config.location=file:%CFGFILE%
@@ -173,10 +174,10 @@ SET JAROPTIONS=%JAROPTIONS% --spring.config.location=file:%CFGFILE%
 
 IF "%EXTDIR%" == "" GOTO skip_lib_dir
 SET LOADER_PATH=-Dloader.path=%EXTDIR%
+:skip_lib_dir
+
 SET JVMOPTIONS=-cp %COMIXED_JAR_FILE% %JVMOPTIONS%
 SET COMIXED_JAR_FILE=-Dloader.main=org.comixedproject.ComiXedApp org.springframework.boot.loader.launch.PropertiesLauncher
-
-:skip_lib_dir
 
 java %JVMOPTIONS% %LOADER_PATH% %COMIXED_JAR_FILE% %JAROPTIONS%
 

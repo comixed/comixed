@@ -22,9 +22,7 @@ realpath() {
 
 ME=$(realpath "$0")
 BINDIR=$(dirname "${ME}")
-EXTDIR=$(realpath "${HOME}/.comixed/extensions")
-PLGDIR=$(realpath "${HOME}/.comixed/plugins")
-CFGFILE=$(realpath "${HOME}/.comixed/application.properties")
+CFGDIR="${HOME}/.comixed"
 
 JAVA=$(which java)
 JAROPTIONS=""
@@ -38,9 +36,7 @@ VERBOSE=false
 JDBCURL="${JDBCURL}"
 DBUSER="${DBUSERNAME}"
 DBPWRD="${DBPASSWORD}"
-IMGCACHEDIR=""
 LOGFILE="${COMIXEDLOG}"
-PLGDIR=""
 
 usage() {
   echo "Usage: run.sh [OPTIONS]"
@@ -50,7 +46,7 @@ usage() {
   echo " -u [USERNAME] - Set the database username"
   echo " -p [PASSWORD] - Set the database password"
   echo " -i [DIR]      - Set the image caching directory"
-  echo " -P [DIR]      - Set the plugin directory"
+  echo " -c [DIR]      - Set the config directory (def. ${HOME})"
   echo " -H [SIZE]     - Set the runtime heap size (in mb)"
   echo " -S            - Enable SSL (def. off)"
   echo ""
@@ -69,13 +65,13 @@ usage() {
   exit 0
 }
 
-while getopts "j:u:p:i:l:P:H:SX:dDMCvL:" option; do
+while getopts "j:u:p:i:l:c:H:SX:dDMCvL:" option; do
   case ${option} in
   j) JDBCURL="${OPTARG}" ;;
   u) DBUSER="${OPTARG}" ;;
   p) DBPWRD="${OPTARG}" ;;
   i) IMGCACHEDIR="${OPTARG}" ;;
-  P) PLGDIR="${OPTARG}" ;;
+  c) CFGDIR="${OPTARG}" ;;
   H) JVMOPTIONS="${JVMOPTIONS} -Xmx${OPTARG}m" ;;
   S) ENABLE_SSL="ON" ;;
   X) JVMOPTIONS="${JVMOPTIONS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${OPTARG}" ;;
@@ -134,20 +130,23 @@ if [[ $DBPWRD ]]; then
   JAROPTIONS="${JAROPTIONS} --spring.datasource.password=${DBPWRD}"
 fi
 
-if [[ $IMGCACHEDIR ]]; then
-  JAROPTIONS="${JAROPTIONS} --comixed.images.cache.location=${IMGCACHEDIR}"
-fi
-
-if [[ $PLGDIR ]]; then
-  JAROPTIONS="${JAROPTIONS} --comixed.plugins.location=${PLGDIR}"
-fi
-
 if [[ $ENABLE_SSL ]]; then
   JAROPTIONS="${JAROPTIONS} --server.ssl.enabled=true"
 fi
 
+EXTDIR=$(realpath "${CFGDIR}/extensions")
+CFGFILE=$(realpath "${CFGDIR}/application.properties")
+
+if [[ -z "${IMGCACHEDIR}" ]]; then
+  IMGCACHEDIR="$(realpath "${CFGDIR}/image-cache")"
+fi
+
 if [[ -f $CFGFILE ]]; then
   JAROPTIONS="${JAROPTIONS} --spring.config.location=file:${CFGFILE}"
+fi
+
+if [[ $IMGCACHEDIR ]]; then
+  JAROPTIONS="${JAROPTIONS} --comixed.images.cache.location=${IMGCACHEDIR}"
 fi
 
 # build a list of JVM arguments
