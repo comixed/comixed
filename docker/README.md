@@ -29,7 +29,7 @@ To create the Docker image using the above directories, we'll use the following 
       -it -p 7171:7171/tcp \
       -v /Users/reader/comixed/library:/library \
       -v /Users/reader/comixed/imports:/imports \
-      -v /Users/reader/comixed/config:/root/.comixed \
+      -v /Users/reader/comixed/config:/config \
       comixed/comixed:latest
 ```
 
