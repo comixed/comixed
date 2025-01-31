@@ -22,9 +22,7 @@ realpath() {
 
 ME=$(realpath "$0")
 BINDIR=$(dirname "${ME}")
-EXTDIR=$(realpath "${HOME}/.comixed/extensions")
-PLGDIR=$(realpath "${HOME}/.comixed/plugins")
-CFGFILE=$(realpath "${HOME}/.comixed/application.properties")
+CFGDIR=$(realpath "${HOME}"/.comixed)
 
 JAVA=$(which java)
 JAROPTIONS=""
@@ -38,9 +36,7 @@ VERBOSE=false
 JDBCURL="${JDBCURL}"
 DBUSER="${DBUSERNAME}"
 DBPWRD="${DBPASSWORD}"
-IMGCACHEDIR=""
 LOGFILE="${COMIXEDLOG}"
-PLGDIR=""
 
 usage() {
   echo "Usage: run.sh [OPTIONS]"
@@ -49,10 +45,9 @@ usage() {
   echo " -j [URL]      - Set the database URL (see -u and -p)"
   echo " -u [USERNAME] - Set the database username"
   echo " -p [PASSWORD] - Set the database password"
-  echo " -i [DIR]      - Set the image caching directory"
-  echo " -P [DIR]      - Set the plugin directory"
   echo " -H [SIZE]     - Set the runtime heap size (in mb)"
   echo " -S            - Enable SSL (def. off)"
+  echo " -c [DIR}      - Set the config directory (def. ${HOME}/.comixed)"
   echo ""
   echo "Other options:"
   echo " -d            - Debug mode (def. false)"
@@ -69,15 +64,14 @@ usage() {
   exit 0
 }
 
-while getopts "j:u:p:i:l:P:H:SX:dDMCvL:" option; do
+while getopts "j:u:p:l:H:Sc:X:dDMCvL:" option; do
   case ${option} in
   j) JDBCURL="${OPTARG}" ;;
   u) DBUSER="${OPTARG}" ;;
   p) DBPWRD="${OPTARG}" ;;
-  i) IMGCACHEDIR="${OPTARG}" ;;
-  P) PLGDIR="${OPTARG}" ;;
   H) JVMOPTIONS="${JVMOPTIONS} -Xmx${OPTARG}m" ;;
   S) ENABLE_SSL="ON" ;;
+  c) CFGDIR="${OPTARG}" ;;
   X) JVMOPTIONS="${JVMOPTIONS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${OPTARG}" ;;
   d) DEBUG=true ;;
   D) FULL_DEBUG=true ;;
@@ -93,10 +87,10 @@ if $VERBOSE; then
   set -x
 fi
 
-if [[ ! -f "${COMIXED_JAR_FILE}" ]]; then
-  echo "Missing JAR file"
-  exit 1
-fi
+#if [[ ! -f "${COMIXED_JAR_FILE}" ]]; then
+#  echo "Missing JAR file"
+#  exit 1
+#fi
 
 if $DEBUG; then
   # enable global logging for CX
@@ -134,14 +128,6 @@ if [[ $DBPWRD ]]; then
   JAROPTIONS="${JAROPTIONS} --spring.datasource.password=${DBPWRD}"
 fi
 
-if [[ $IMGCACHEDIR ]]; then
-  JAROPTIONS="${JAROPTIONS} --comixed.images.cache.location=${IMGCACHEDIR}"
-fi
-
-if [[ $PLGDIR ]]; then
-  JAROPTIONS="${JAROPTIONS} --comixed.plugins.location=${PLGDIR}"
-fi
-
 if [[ $ENABLE_SSL ]]; then
   JAROPTIONS="${JAROPTIONS} --server.ssl.enabled=true"
 fi
@@ -151,6 +137,13 @@ if [[ -f $CFGFILE ]]; then
 fi
 
 # build a list of JVM arguments
+
+CFGFILE="${CFGDIR}/application.properties"
+EXTDIR="${CFGDIR}/extensions"
+PLGDIR="${CFGDIR}/plugins"
+IMGCACHEDIR="${CFGDIR}/image-cache"
+
+JAROPTIONS="${JAROPTIONS} --comixed.images.cache.location=${IMGCACHEDIR}"
 
 if [[ $EXTDIR ]]; then
   LOADER_PATH="-Dloader.path=${EXTDIR}"
