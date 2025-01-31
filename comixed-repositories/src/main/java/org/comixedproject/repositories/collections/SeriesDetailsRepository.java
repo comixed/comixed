@@ -20,6 +20,8 @@ package org.comixedproject.repositories.collections;
 
 import org.comixedproject.model.collections.SeriesDetail;
 import org.comixedproject.model.collections.SeriesDetailId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -32,11 +34,17 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface SeriesDetailsRepository extends JpaRepository<SeriesDetail, SeriesDetailId> {
+  @Override
+  @Query(
+      "SELECT s FROM SeriesDetail s WHERE LENGTH(s.id.publisher) > 0 AND LENGTH(s.id.series) > 0 AND LENGTH(s.id.volume) > 0")
+  Page<SeriesDetail> findAll(Pageable pageable);
+
   /**
    * Returns the number of unique series in the database.
    *
    * @return the series count
    */
-  @Query("SELECT COUNT(s) FROM SeriesDetail s")
+  @Query(
+      "SELECT COUNT(s) FROM SeriesDetail s WHERE LENGTH(s.id.publisher) > 0 AND LENGTH(s.id.series) > 0 AND LENGTH(s.id.volume) > 0")
   int getSeriesCount();
 }
