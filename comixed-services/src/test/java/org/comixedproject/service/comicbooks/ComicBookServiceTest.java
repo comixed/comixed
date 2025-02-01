@@ -29,7 +29,7 @@ import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.batch.OrganizingLibraryEvent;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
-import org.comixedproject.model.collections.Publisher;
+import org.comixedproject.model.collections.PublisherDetail;
 import org.comixedproject.model.collections.SeriesDetail;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
@@ -37,10 +37,10 @@ import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicType;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.net.DownloadDocument;
-import org.comixedproject.model.net.collections.LoadPublisherListResponse;
 import org.comixedproject.model.net.comicbooks.PageOrderEntry;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
+import org.comixedproject.repositories.collections.PublisherDetailRepository;
 import org.comixedproject.repositories.comicbooks.ComicBookRepository;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
 import org.comixedproject.repositories.comicbooks.ComicTagRepository;
@@ -111,6 +111,7 @@ public class ComicBookServiceTest {
   @InjectMocks private ComicBookService service;
   @Mock private ComicStateHandler comicStateHandler;
   @Mock private ComicBookRepository comicBookRepository;
+  @Mock private PublisherDetailRepository publisherDetailRepository;
   @Mock private ComicDetailRepository comicDetailRepository;
   @Mock private ComicTagRepository comicTagRepository;
   @Mock private ComicBookMetadataAdaptor comicBookMetadataAdaptor;
@@ -127,7 +128,7 @@ public class ComicBookServiceTest {
   @Mock private List<String> publisherList;
   @Mock private List<RemoteLibrarySegmentState> librarySegmentList;
   @Mock private List<PublisherAndYearSegment> byPublisherAndYearList;
-  @Mock private List<Publisher> publisherWithSeriesCountList;
+  @Mock private List<PublisherDetail> publisherWithSeriesCountList;
   @Mock private List<SeriesDetail> publisherDetail;
   @Mock private List<SeriesDetail> seriesDetailList;
   @Mock private ComicBook savedComicBook;
@@ -1107,29 +1108,6 @@ public class ComicBookServiceTest {
     assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsWithEditDetails(pageable);
-  }
-
-  @Test
-  public void testGetAllPublishers() {
-    Mockito.when(comicBookRepository.getAllPublishersWithNumberOfSeriesCount())
-        .thenReturn((int) TEST_COMIC_COUNT);
-    Mockito.when(comicBookRepository.getAllPublishersWithNumberOfSeries(pageableCaptor.capture()))
-        .thenReturn(publisherWithSeriesCountList);
-
-    final LoadPublisherListResponse result =
-        service.getAllPublishersWithSeries(TEST_PAGE_NUMBER, TEST_PAGE_SIZE, "name", "asc");
-
-    assertNotNull(result);
-    assertEquals(TEST_COMIC_COUNT, result.getTotal());
-    assertSame(publisherWithSeriesCountList, result.getPublishers());
-
-    final Pageable pageable = pageableCaptor.getValue();
-    assertEquals(TEST_PAGE_NUMBER, pageable.getPageNumber());
-    assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).getAllPublishersWithNumberOfSeriesCount();
-    Mockito.verify(comicBookRepository, Mockito.times(1))
-        .getAllPublishersWithNumberOfSeries(pageable);
   }
 
   @Test

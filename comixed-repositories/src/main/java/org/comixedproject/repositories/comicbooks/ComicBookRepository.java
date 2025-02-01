@@ -22,7 +22,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.collections.Publisher;
 import org.comixedproject.model.collections.SeriesDetail;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
@@ -244,19 +243,6 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   @Query("SELECT DISTINCT c.series FROM ComicDetail c WHERE c.series IS NOT NULL")
   List<String> findDistinctSeries();
 
-  @Query(
-      "SELECT COUNT(DISTINCT d.publisher) FROM ComicDetail d, ComicBook c WHERE LENGTH(c.comicDetail.publisher) > 0 AND d.publisher = c.comicDetail.publisher AND c.id = d.comicBook.id")
-  int getAllPublishersWithNumberOfSeriesCount();
-
-  /**
-   * Returns the list of all publishers with the count of series for each.
-   *
-   * @return the publisher list
-   */
-  @Query(
-      "SELECT new org.comixedproject.model.collections.Publisher(d.publisher, count(c), count(DISTINCT d.series, d.volume)) FROM ComicDetail d, ComicBook c WHERE LENGTH(c.comicDetail.publisher) > 0 AND d.publisher = c.comicDetail.publisher AND c.id = d.comicBook.id GROUP BY d.publisher")
-  List<Publisher> getAllPublishersWithNumberOfSeries(Pageable pageable);
-
   /**
    * Returns the list of all series along with the count of comics, grouped by publisher, name, and
    * volume.
@@ -274,7 +260,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the series list
    */
   @Query(
-      "SELECT s FROM SeriesDetail s WHERE s.id.publisher = :name AND LENGTH(s.id.series) > 0 and s.id.volume IS NOT NULL GROUP BY s.id.publisher, s.id.series, s.id.volume")
+      "SELECT s FROM SeriesDetail s WHERE s.id.publisher = :name AND LENGTH(s.id.series) > 0 and s.id.volume IS NOT NULL GROUP BY s.id.publisher, s.id.series, s.id.volume, s.inLibrary, s.totalIssues")
   List<SeriesDetail> getAllSeriesAndVolumesForPublisher(
       @Param("name") String name, Pageable pageable);
 

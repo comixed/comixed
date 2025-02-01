@@ -30,7 +30,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.collections.Publisher;
 import org.comixedproject.model.collections.SeriesDetail;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
@@ -306,22 +305,6 @@ public class ComicBookRepositoryTest {
     assertNotNull(result);
     assertFalse(result.isEmpty());
     assertTrue(result.stream().allMatch(series -> series.getPublisher().equals(TEST_PUBLISHER)));
-  }
-
-  @Test
-  public void getAllPublishersWithNumberOfSeriesCount() {
-    final int result = repository.getAllPublishersWithNumberOfSeriesCount();
-
-    assertTrue(result > 0);
-  }
-
-  @Test
-  public void getAllPublishersWithNumberOfSeries() {
-    final List<Publisher> result =
-        repository.getAllPublishersWithNumberOfSeries(PageRequest.of(0, 10));
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
   }
 
   @Test
