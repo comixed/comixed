@@ -50,7 +50,7 @@ public class LibraryLibraryPluginServiceTest {
   private static final String TEST_LANGUAGE = "The Plugin langauge";
   private static final String TEST_PLUGIN_FILENAME = "The Plugin filename";
   private static final String TEST_PLUGIN_NAME = "The Plugin Name";
-  private static final String TEST_PLUGIN_VERSION = "1.2.3.4";
+  private static final String TEST_PLUGIN_VERSION = "1.2.3.5";
   private static final String TEST_UNKNOWN_PROPERTY_NAME = "unknown_property_name";
   private static final String TEST_PROPERTY_NAME = "property_name";
   private static final Integer TEST_PROPERTY_LENGTH = Math.abs(RandomUtils.nextInt());

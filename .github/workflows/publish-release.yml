@@ -33,9 +33,9 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           draft: false
           prerelease: true
-          title: Changes For 2.3.4
+          title: Changes For 2.3.5
           files: |
-            comixed-release-2.3.4.zip
+            comixed-release-2.3.5.zip
 
   build-windows-installer:
     name: Build Windows installer
@@ -64,6 +64,6 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          file: "ComiXed 2.3.4 Installer.exe"
+          file: "ComiXed 2.3.5 Installer.exe"
           prerelease: true
           overwrite: true

@@ -36,7 +36,7 @@ public class GroovyLibraryPluginRuntimeTest {
   private static final String TEST_GOOD_PLUGIN = "src/test/resources/good.cxplugin";
   private static final String TEST_BROKEN_PLUGIN = "src/test/resources/broken.cxplugin";
   private static final String TEST_PLUGIN_NAME = "Good Plugin";
-  private static final String TEST_PLUGIN_VERSION = "1.2.3.4";
+  private static final String TEST_PLUGIN_VERSION = "1.2.3.5";
   private static final String TEST_PROPERTY_NAME_1 = "test_property_1";
   private static final Integer TEST_PROPERTY_1_LENGTH = 32;
   private static final String TEST_PROPERTY_NAME_2 = "test_property_2";
