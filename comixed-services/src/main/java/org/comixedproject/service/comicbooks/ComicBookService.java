@@ -38,7 +38,6 @@ import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.net.DownloadDocument;
-import org.comixedproject.model.net.collections.LoadPublisherListResponse;
 import org.comixedproject.model.net.comicbooks.PageOrderEntry;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
@@ -747,35 +746,18 @@ public class ComicBookService {
     return this.comicBookRepository.findComicsWithEditDetails(PageRequest.of(0, count));
   }
 
-  /**
-   * Returns a page of publishers in the library, along with the count of series for each.
-   *
-   * @param page the page number
-   * @param size the page size
-   * @param sortBy the field to sort by
-   * @param sortDirection the sort direction
-   * @return the publisher list
-   */
-  public LoadPublisherListResponse getAllPublishersWithSeries(
-      final int page, final int size, final String sortBy, final String sortDirection) {
-    log.debug("Getting all publishers with their series counts");
-    return new LoadPublisherListResponse(
-        this.comicBookRepository.getAllPublishersWithNumberOfSeriesCount(),
-        this.comicBookRepository.getAllPublishersWithNumberOfSeries(
-            PageRequest.of(page, size, this.doCreateSort(sortBy, sortDirection))));
-  }
-
-  private Sort doCreateSort(final String sortBy, final String sortDirection) {
+  private Sort doCreatePublisherSort(final String sortBy, final String sortDirection) {
     if (!StringUtils.hasLength(sortBy) || !StringUtils.hasLength(sortDirection)) {
       return Sort.unsorted();
     }
 
     String fieldName;
     switch (sortBy) {
-      case "comic-count" -> fieldName = "issueCount";
-      case "series-name" -> fieldName = "comicDetail.series";
-      case "series-volume" -> fieldName = "comicDetail.volume";
-      default -> fieldName = "publisher";
+      case "series-name" -> fieldName = "id.series";
+      case "series-volume" -> fieldName = "id.volume";
+      case "in-library" -> fieldName = "inLibrary";
+      case "total-issues" -> fieldName = "totalIssues";
+      default -> fieldName = "comicDetail.series";
     }
 
     Sort.Direction direction = Sort.Direction.DESC;
@@ -795,7 +777,7 @@ public class ComicBookService {
    * @param sortDirection the sort direction
    * @return the series details
    */
-  @Transactional
+  @Transactional(readOnly = true)
   public List<SeriesDetail> getPublisherDetail(
       final String name,
       final int pageIndex,
@@ -804,7 +786,7 @@ public class ComicBookService {
       final String sortDirection) {
     log.debug("Getting detail for one publisher: name={}", name);
     return this.comicBookRepository.getAllSeriesAndVolumesForPublisher(
-        name, PageRequest.of(pageIndex, pageSize, doCreateSort(sortBy, sortDirection)));
+        name, PageRequest.of(pageIndex, pageSize, doCreatePublisherSort(sortBy, sortDirection)));
   }
 
   /**
@@ -838,7 +820,6 @@ public class ComicBookService {
   public void prepareForOrganization(final List<Long> ids) {
     log.trace("Marking comics for organization");
     this.comicBookRepository.markForOrganizationById(ids);
-    log.trace("Initiating batch process");
     this.applicationEventPublisher.publishEvent(OrganizingLibraryEvent.instance);
   }
 
@@ -846,7 +827,6 @@ public class ComicBookService {
   public void prepareAllForOrganization() {
     log.trace("Marking all comics for organization");
     this.comicBookRepository.markAllForOrganization();
-    log.trace("Initiating batch process");
     this.applicationEventPublisher.publishEvent(OrganizingLibraryEvent.instance);
   }
 
@@ -866,7 +846,6 @@ public class ComicBookService {
       final boolean deletePages) {
     log.trace("Marking comics for recreation");
     this.comicBookRepository.markForRecreationById(ids, archiveType, renamePages, deletePages);
-    log.trace("Initiating batch process");
     this.applicationEventPublisher.publishEvent(RecreateComicFilesEvent.instance);
   }
 

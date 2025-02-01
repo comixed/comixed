@@ -863,4 +863,7 @@
                          volume="2017"
                          in_library="10"
                          issue_count="25"/>
+    <publisher_details_view name="Marvel"
+                            issue_count="1234"
+                            series_count="224"/>
 </dataset>

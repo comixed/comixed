@@ -20,26 +20,28 @@ package org.comixedproject.rest.collections;
 
 import io.micrometer.core.annotation.Timed;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.collections.Publisher;
+import org.comixedproject.model.collections.PublisherDetail;
 import org.comixedproject.model.net.collections.LoadPublisherDetailRequest;
 import org.comixedproject.model.net.collections.LoadPublisherDetailResponse;
 import org.comixedproject.model.net.collections.LoadPublisherListRequest;
 import org.comixedproject.model.net.collections.LoadPublisherListResponse;
+import org.comixedproject.service.collections.PublisherDetailService;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * <code>PublisherController</code> provides web endpoints for working with {@link Publisher}
- * instances.
+ * <code>PublisherDetailController</code> provides web endpoints for working with {@link
+ * PublisherDetail} instances.
  *
  * @author Darryl L. Pierce
  */
 @RestController
 @Log4j2
-public class PublisherController {
+public class PublisherDetailController {
   @Autowired private ComicBookService comicBookService;
+  @Autowired private PublisherDetailService publisherDetailService;
 
   /**
    * Returns a page worth of publishers to display.
@@ -56,7 +58,9 @@ public class PublisherController {
     final String sortBy = request.getSortBy();
     final String sortDirection = request.getSortDirection();
     log.info("Getting all publishers");
-    return this.comicBookService.getAllPublishersWithSeries(page, size, sortBy, sortDirection);
+    return new LoadPublisherListResponse(
+        this.publisherDetailService.getAllPublishers(page, size, sortBy, sortDirection),
+        this.publisherDetailService.getPublisherCount());
   }
 
   /**

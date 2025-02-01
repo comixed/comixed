@@ -51,7 +51,7 @@
   </ng-container>
 
   <ng-container matColumnDef="in-library">
-    <mat-header-cell *matHeaderCellDef>
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "collections.publisher-series.label.in-library" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
@@ -62,7 +62,7 @@
   </ng-container>
 
   <ng-container matColumnDef="total-issues">
-    <mat-header-cell *matHeaderCellDef>
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "collections.publisher-series.label.total-issues" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">

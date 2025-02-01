@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.comixedproject.model.collections.Publisher;
+import org.comixedproject.model.collections.PublisherDetail;
 
 /**
  * <code>LoadPublisherListResponse</code> represents the response body when loading a page of
@@ -32,11 +32,11 @@ import org.comixedproject.model.collections.Publisher;
  */
 @AllArgsConstructor
 public class LoadPublisherListResponse {
-  @JsonProperty("total")
-  @Getter
-  private int total;
-
   @JsonProperty("publishers")
   @Getter
-  private List<Publisher> publishers;
+  private List<PublisherDetail> publishers;
+
+  @JsonProperty("total")
+  @Getter
+  private long total;
 }
