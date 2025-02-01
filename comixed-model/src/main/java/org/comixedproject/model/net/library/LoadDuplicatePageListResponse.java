@@ -34,13 +34,13 @@ import org.comixedproject.views.View;
  */
 @AllArgsConstructor
 public class LoadDuplicatePageListResponse {
-  @JsonProperty("total")
-  @JsonView(View.DuplicatePageList.class)
-  @Getter
-  private int total;
-
   @JsonProperty("pages")
   @JsonView(View.DuplicatePageList.class)
   @Getter
   private List<DuplicatePage> pages;
+
+  @JsonProperty("total")
+  @JsonView(View.DuplicatePageList.class)
+  @Getter
+  private long total;
 }

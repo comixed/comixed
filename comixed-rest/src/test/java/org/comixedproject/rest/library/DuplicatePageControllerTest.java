@@ -18,9 +18,9 @@
 
 package org.comixedproject.rest.library;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.*;
 
+import java.util.List;
 import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.model.net.library.LoadDuplicatePageListRequest;
 import org.comixedproject.model.net.library.LoadDuplicatePageListResponse;
@@ -40,10 +40,12 @@ public class DuplicatePageControllerTest {
   private static final int TEST_PAGE_SIZE = 25;
   private static final String TEST_SORT_BY = "hash";
   private static final String TEST_SORT_DIRECTION = "desc";
+  private static final long TEST_DUPLICATE_PAGE_COUNT = 238L;
 
   @InjectMocks private DuplicatePageController controller;
   @Mock private DuplicatePageService duplicatePageService;
   @Mock private DuplicatePage duplicatePage;
+  @Mock private List<DuplicatePage> duplicatePageList;
   @Mock private LoadDuplicatePageListResponse duplicatePageListResponse;
 
   @Test
@@ -51,7 +53,9 @@ public class DuplicatePageControllerTest {
     Mockito.when(
             duplicatePageService.getDuplicatePages(
                 Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(duplicatePageListResponse);
+        .thenReturn(duplicatePageList);
+    Mockito.when(duplicatePageService.getDuplicatePageCount())
+        .thenReturn(TEST_DUPLICATE_PAGE_COUNT);
 
     final LoadDuplicatePageListResponse result =
         controller.getDuplicatePageList(
@@ -59,7 +63,8 @@ public class DuplicatePageControllerTest {
                 TEST_PAGE_NUMBER, TEST_PAGE_SIZE, TEST_SORT_BY, TEST_SORT_DIRECTION));
 
     assertNotNull(result);
-    assertSame(duplicatePageListResponse, result);
+    assertSame(duplicatePageList, result.getPages());
+    assertEquals(TEST_DUPLICATE_PAGE_COUNT, result.getTotal());
 
     Mockito.verify(duplicatePageService, Mockito.times(1))
         .getDuplicatePages(TEST_PAGE_NUMBER, TEST_PAGE_SIZE, TEST_SORT_BY, TEST_SORT_DIRECTION);

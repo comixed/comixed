@@ -40,7 +40,7 @@ public class DuplicatePageUpdate {
 
   @JsonProperty("total")
   @Getter
-  private int total;
+  private long total;
 
   @JsonProperty("page")
   @JsonView(View.DuplicatePageList.class)
