@@ -11,6 +11,7 @@
           [placeholder]="
             'library.list-page.placeholder.filter-comics' | translate
           "
+          formControlName="filterText"
           (keyup)="queryParameterService.onFilterTextChanged(filterInput.value)"
         />
       </mat-form-field>
@@ -21,7 +22,7 @@
           (selectionChange)="
             queryParameterService.onCoverYearChanged($event.value)
           "
-          [value]="(queryParameterService.coverYear$ | async)?.year"
+          formControlName="coverYear"
           [disabled]="queryParameterService.filterText$.value?.length > 0"
         >
           <mat-option
@@ -38,7 +39,7 @@
           (selectionChange)="
             queryParameterService.onCoverMonthChanged($event.value)
           "
-          [value]="(queryParameterService.coverYear$ | async)?.month"
+          formControlName="coverMonth"
           [disabled]="queryParameterService.filterText$.value?.length > 0"
         >
           <mat-option
@@ -55,7 +56,7 @@
           (selectionChange)="
             queryParameterService.onArchiveTypeChanged($event.value)
           "
-          [value]="queryParameterService.archiveType$ | async"
+          formControlName="archiveType"
           [disabled]="queryParameterService.filterText$.value?.length > 0"
         >
           <mat-option
@@ -72,7 +73,7 @@
           (selectionChange)="
             queryParameterService.onComicTypeChanged($event.value)
           "
-          [value]="queryParameterService.comicType$ | async"
+          formControlName="comicType"
           [disabled]="queryParameterService.filterText$.value?.length > 0"
         >
           <mat-option
@@ -89,11 +90,14 @@
           (selectionChange)="
             queryParameterService.onPageCountChange($event.value)
           "
-          [value]="queryParameterService.pageCount$ | async"
+          formControlName="pageCount"
           [disabled]="queryParameterService.filterText$.value?.length > 0"
         >
-          <mat-option *ngFor="let option of pageCountOptions" [value]="option">
-            {{ option }}
+          <mat-option
+            *ngFor="let option of pageCountOptions"
+            [value]="option.value"
+          >
+            {{ option.label | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>
