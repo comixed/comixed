@@ -19,28 +19,36 @@
 package org.comixedproject.model.collections;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.util.Objects;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 /**
- * <code>Publisher</code> represents the details for a single publisher in the library.
+ * <code>PublisherDetail</code> represents the details for a single publisher in the library.
  *
  * @author Darryl L. Pierce
  */
-@RequiredArgsConstructor
-public class Publisher {
+@Entity
+@Table(name = "publisher_details_view")
+@NoArgsConstructor
+public class PublisherDetail {
+  @Id
+  @Column(name = "name")
   @JsonProperty("name")
   @NonNull
   @Getter
   private String name;
 
+  @Column(name = "issue_count")
   @JsonProperty("issueCount")
   @NonNull
   @Getter
   private Long issueCount;
 
+  @Column(name = "series_count")
   @JsonProperty("seriesCount")
   @NonNull
   @Getter
@@ -50,7 +58,7 @@ public class Publisher {
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    final Publisher publisher = (Publisher) o;
+    final PublisherDetail publisher = (PublisherDetail) o;
     return name.equals(publisher.name) && issueCount.equals(publisher.issueCount);
   }
 
