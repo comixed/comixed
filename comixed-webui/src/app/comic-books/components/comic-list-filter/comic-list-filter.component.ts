@@ -24,6 +24,16 @@ import { ListItem } from '@app/core/models/ui/list-item';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import {
+  QUERY_PARAM_ARCHIVE_TYPE,
+  QUERY_PARAM_COMIC_TYPE,
+  QUERY_PARAM_COVER_MONTH,
+  QUERY_PARAM_COVER_YEAR,
+  QUERY_PARAM_FILTER_TEXT,
+  QUERY_PARAM_PAGE_COUNT
+} from '@app/core';
 
 @Component({
   selector: 'cx-comic-list-filter',
@@ -34,8 +44,10 @@ export class ComicListFilterComponent {
   @Output() closeFilter = new EventEmitter<void>();
 
   filterForm: FormGroup;
-  displayableCoverYears: ListItem<number>[] = [];
-  displayableCoverMonths: ListItem<number>[] = [];
+  displayableCoverYears: ListItem<string>[] = [];
+  displayableCoverMonths: ListItem<string>[] = [];
+  queryParamSubscription: Subscription;
+
   readonly archiveTypeOptions: SelectionOption<ArchiveType>[] = [
     { label: 'archive-type.label.all', value: null },
     { label: 'archive-type.label.cbz', value: ArchiveType.CBZ },
@@ -51,13 +63,23 @@ export class ComicListFilterComponent {
     },
     { label: 'comic-type.label.manga', value: ComicType.MANGA }
   ];
-  readonly pageCountOptions = Array.from({ length: 250 }, (_, index) => index);
+  readonly pageCountOptions: ListItem<string>[] = Array.from(
+    { length: 250 },
+    (_, index) => index
+  ).map(entry => {
+    return {
+      label: `${entry}`,
+      value: entry > 0 ? `${entry}` : null
+    } as ListItem<string>;
+  });
 
   constructor(
     private logger: LoggerService,
     private formBuilder: FormBuilder,
+    private activatedRoute: ActivatedRoute,
     public queryParameterService: QueryParameterService
   ) {
+    this.logger.trace('Creating the comic list filter form group');
     this.filterForm = this.formBuilder.group({
       filterText: [''],
       coverYear: [''],
@@ -66,6 +88,30 @@ export class ComicListFilterComponent {
       comicType: [''],
       pageCount: ['']
     });
+    this.logger.trace('Subscribing to query param updates');
+    this.queryParamSubscription = this.activatedRoute.queryParams.subscribe(
+      params => {
+        this.filterForm.controls['filterText'].setValue(
+          params[QUERY_PARAM_FILTER_TEXT] || ''
+        );
+        this.filterForm.controls['coverYear'].setValue(
+          params[QUERY_PARAM_COVER_YEAR]
+        );
+        this.filterForm.controls['coverMonth'].setValue(
+          params[QUERY_PARAM_COVER_MONTH]
+        );
+        this.filterForm.controls['archiveType'].setValue(
+          params[QUERY_PARAM_ARCHIVE_TYPE]
+        );
+        this.filterForm.controls['comicType'].setValue(
+          params[QUERY_PARAM_COMIC_TYPE]
+        );
+        this.filterForm.controls['pageCount'].setValue(
+          params[QUERY_PARAM_PAGE_COUNT]
+        );
+        this.filterForm.markAsPristine();
+      }
+    );
   }
 
   @Input() set coverYears(coverYears: number[]) {
@@ -73,13 +119,13 @@ export class ComicListFilterComponent {
       {
         label: 'filtering.label.all-years',
         value: null
-      } as ListItem<number>
+      } as ListItem<string>
     ].concat(
       coverYears
         .filter(year => !!year)
         .sort((l, r) => l - r)
         .map(year => {
-          return { value: year, label: `${year}` } as ListItem<number>;
+          return { value: `${year}`, label: `${year}` } as ListItem<string>;
         })
     );
   }
@@ -93,9 +139,9 @@ export class ComicListFilterComponent {
         .sort((l, r) => l - r)
         .map(month => {
           return {
-            value: month,
+            value: `${month}`,
             label: `filtering.label.month-${month}`
-          } as ListItem<number>;
+          } as ListItem<string>;
         })
     );
   }
