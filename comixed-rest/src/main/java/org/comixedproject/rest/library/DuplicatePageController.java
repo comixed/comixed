@@ -70,7 +70,9 @@ public class DuplicatePageController {
         size,
         sortBy,
         sortDirection);
-    return this.duplicatePageService.getDuplicatePages(page, size, sortBy, sortDirection);
+    return new LoadDuplicatePageListResponse(
+        this.duplicatePageService.getDuplicatePages(page, size, sortBy, sortDirection),
+        this.duplicatePageService.getDuplicatePageCount());
   }
 
   /**

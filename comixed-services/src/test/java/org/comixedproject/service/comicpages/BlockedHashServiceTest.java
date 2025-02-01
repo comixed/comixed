@@ -75,7 +75,7 @@ public class BlockedHashServiceTest {
   private static final byte[] TEST_PAGE_CONTENT = "This is the page content".getBytes();
   private static final String TEST_ENCODED_PAGE = "This is the encoded page.";
   private static final byte[] TEST_DECODED_PAGE = "This is the decoded page".getBytes();
-  private static final int TEST_TOTAL_DUPLICATE_PAGES = 320;
+  private static final long TEST_TOTAL_DUPLICATE_PAGES = 320L;
 
   @InjectMocks private BlockedHashService service;
   @Mock private DuplicatePageService duplicatePageService;

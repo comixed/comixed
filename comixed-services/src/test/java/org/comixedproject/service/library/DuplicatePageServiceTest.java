@@ -10,7 +10,6 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.library.DuplicatePage;
-import org.comixedproject.model.net.library.LoadDuplicatePageListResponse;
 import org.comixedproject.repositories.comicpages.ComicPageRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +41,6 @@ public class DuplicatePageServiceTest {
 
   @Before
   public void setUp() {
-    Mockito.when(duplicatePage.getHash()).thenReturn(TEST_PAGE_HASH);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicPage.getComicBook()).thenReturn(comicBook);
   }
@@ -55,13 +53,12 @@ public class DuplicatePageServiceTest {
     Mockito.when(comicPageRepository.getDuplicatePages(pageRequestArgumentCaptor.capture()))
         .thenReturn(duplicatePageList);
 
-    LoadDuplicatePageListResponse result =
+    List<DuplicatePage> result =
         service.getDuplicatePages(
             TEST_PAGE_NUMBER, TEST_PAGE_SIZE, TEST_SORT_BY, TEST_SORT_DIRECTION);
 
     assertNotNull(result);
-    assertFalse(result.getPages().isEmpty());
-    assertEquals(TEST_PAGE_HASH, result.getPages().get(0).getHash());
+    assertFalse(result.isEmpty());
 
     final PageRequest pageRequest = pageRequestArgumentCaptor.getValue();
     assertEquals(TEST_PAGE_NUMBER, pageRequest.getPageNumber());

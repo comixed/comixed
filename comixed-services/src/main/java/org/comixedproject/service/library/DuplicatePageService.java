@@ -22,7 +22,6 @@ import java.util.*;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.library.DuplicatePage;
-import org.comixedproject.model.net.library.LoadDuplicatePageListResponse;
 import org.comixedproject.repositories.comicpages.ComicPageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -46,21 +45,23 @@ public class DuplicatePageService {
   /**
    * Retrieves the list of all duplicate pages in the library.
    *
-   * @return the duplicate pages
+   * @return the duplicate page list
    */
   @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-  public LoadDuplicatePageListResponse getDuplicatePages(
+  public List<DuplicatePage> getDuplicatePages(
       final int page, final int size, final String sortBy, final String sortDirection) {
     log.trace("Getting pages from repository");
-    final List<DuplicatePage> pages =
-        this.comicPageRepository.getDuplicatePages(
-            PageRequest.of(page, size, this.doCreateSort(sortBy, sortDirection)));
-    log.trace("Returning duplicate page list");
-    return new LoadDuplicatePageListResponse(this.getDuplicatePageCount(), pages);
+    return this.comicPageRepository.getDuplicatePages(
+        PageRequest.of(page, size, this.doCreateSort(sortBy, sortDirection)));
   }
 
+  /**
+   * Retrieves the number of duplicate pages in the library.
+   *
+   * @return the page count
+   */
   @Transactional
-  public int getDuplicatePageCount() {
+  public long getDuplicatePageCount() {
     log.debug("Loading duplicate page count");
     return this.comicPageRepository.getDuplicatePageCount();
   }
@@ -73,6 +74,7 @@ public class DuplicatePageService {
     String fieldName;
     switch (sortBy) {
       case "hash" -> fieldName = "hash";
+      case "comic-count" -> fieldName = "comicCount";
       default -> fieldName = "hash";
     }
 
