@@ -65,7 +65,7 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
 
   @Query(
       "SELECT COUNT(DISTINCT p.hash) FROM ComicPage p WHERE p.hash in (SELECT d.hash FROM ComicPage d GROUP BY d.hash HAVING COUNT(*) > 1)")
-  int getDuplicatePageCount();
+  long getDuplicatePageCount();
 
   /**
    * Returns the list of pages that have the given hash and state flag value.

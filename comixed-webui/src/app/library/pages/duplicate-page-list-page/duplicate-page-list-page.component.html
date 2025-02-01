@@ -134,7 +134,7 @@
   </ng-container>
 
   <ng-container matColumnDef="hash">
-    <mat-header-cell mat-sort-header mat-sort-header *matHeaderCellDef>
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "duplicate-pages.header.hash" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let row">
@@ -143,7 +143,7 @@
   </ng-container>
 
   <ng-container matColumnDef="comic-count">
-    <mat-header-cell *matHeaderCellDef>
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "duplicate-pages.header.comic-count" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let row">
