@@ -145,7 +145,7 @@ public class OPDSNavigationService {
     response.getEntries().add(entry);
 
     log.trace("Adding series link");
-    entry = new OPDSNavigationFeedEntry("SeriesDetail", String.valueOf(SERIES_ID));
+    entry = new OPDSNavigationFeedEntry("Series", String.valueOf(SERIES_ID));
     entry.setContent(new OPDSNavigationFeedContent("All Series"));
     entry
         .getLinks()
@@ -301,7 +301,7 @@ public class OPDSNavigationService {
     final String selfHref =
         String.format("%s?unread=%s", this.opdsUtils.urlEncodeString(series), unread);
     OPDSNavigationFeed result =
-        new OPDSNavigationFeed(String.format("SeriesDetail: %s", series), selfHref);
+        new OPDSNavigationFeed(String.format("Series: %s", series), selfHref);
     result.getLinks().add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, selfHref));
     this.comicDetailService
         .getAllVolumesForPublisherAndSeries(publisher, series, email, unread)
@@ -341,7 +341,7 @@ public class OPDSNavigationService {
   public OPDSNavigationFeed getRootFeedForSeries(final String email, final boolean unread) {
     log.trace("Loading root feed for series");
     final String selfHref = String.format("series?unread=%s", unread);
-    final OPDSNavigationFeed feed = new OPDSNavigationFeed("SeriesDetail", selfHref);
+    final OPDSNavigationFeed feed = new OPDSNavigationFeed("Series", selfHref);
     feed.getLinks().add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, selfHref));
     this.comicDetailService.getAllSeries(email, unread).stream()
         .map(
@@ -386,8 +386,7 @@ public class OPDSNavigationService {
     log.trace("Loading volumes feed for series: {}", name);
     final String selfHref =
         String.format("%s?unread=%s", this.opdsUtils.urlEncodeString(name), unread);
-    OPDSNavigationFeed result =
-        new OPDSNavigationFeed(String.format("SeriesDetail: %s", name), selfHref);
+    OPDSNavigationFeed result = new OPDSNavigationFeed(String.format("Series: %s", name), selfHref);
     result.getLinks().add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, selfHref));
     this.comicDetailService.getAllPublishersForSeries(name, email, unread).stream()
         .forEach(
