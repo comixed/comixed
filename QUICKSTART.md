@@ -117,7 +117,7 @@ writer and artist, or other details for a comic, you can use the
 extension.
 
 Referring to the $HOME location described earlier in
-[Configurating The Application](#configuring-the-application), the following
+[Configuring The Application](#configuring-the-application), the following
 lists the directories used:
 
 | Type       | Directory                 |
