@@ -69,7 +69,7 @@
   </ng-container>
 
   <ng-container matColumnDef="comic-count">
-    <mat-header-cell *matHeaderCellDef>
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "collection-list.label.comic-count" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
