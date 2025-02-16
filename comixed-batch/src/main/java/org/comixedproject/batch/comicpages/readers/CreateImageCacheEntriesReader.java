@@ -45,7 +45,7 @@ public class CreateImageCacheEntriesReader implements ItemReader<ComicPage> {
   @Getter
   private int chunkSize;
 
-  public List<ComicPage> pageList;
+  List<ComicPage> pageList;
 
   @Override
   public ComicPage read() {

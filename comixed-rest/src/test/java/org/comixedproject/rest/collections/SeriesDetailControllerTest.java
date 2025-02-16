@@ -28,15 +28,15 @@ import org.comixedproject.model.net.collections.LoadSeriesDetailRequest;
 import org.comixedproject.model.net.collections.LoadSeriesListRequest;
 import org.comixedproject.model.net.collections.LoadSeriesListResponse;
 import org.comixedproject.service.collections.SeriesDetailService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class SeriesDetailControllerTest {
+@ExtendWith(MockitoExtension.class)
+class SeriesDetailControllerTest {
   private static final int TEST_PAGE_INDEX = 3;
   private static final int TEST_PAGE_SIZE = 25;
   private static final String TEST_SORT_BY = "name";
@@ -51,7 +51,7 @@ public class SeriesDetailControllerTest {
   @Mock private List<Issue> seriesDetail;
 
   @Test
-  public void testLoadSeriesList() {
+  void loadSeriesList() {
     Mockito.when(
             seriesDetailService.getSeriesList(
                 Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
@@ -70,7 +70,7 @@ public class SeriesDetailControllerTest {
   }
 
   @Test
-  public void testLoadSeriesDetail() {
+  void loadSeriesDetail() {
     Mockito.when(
             seriesDetailService.loadSeriesDetail(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))

@@ -35,17 +35,20 @@ import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.state.lists.StoryEvent;
 import org.comixedproject.state.lists.StoryStateHandler;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.statemachine.state.State;
 
-@RunWith(MockitoJUnitRunner.class)
-public class StoryServiceTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class StoryServiceTest {
   private static final StoryState TEST_STORY_STATE = StoryState.STABLE;
   private static final String TEST_STORY_NAME = "The Story Name";
   private static final String TEST_PUBLISHER = "The Publisher";
@@ -66,7 +69,7 @@ public class StoryServiceTest {
 
   @Captor private ArgumentCaptor<Story> storyArgumentCaptor;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(message.getHeaders()).thenReturn(messageHeaders);
     Mockito.when(messageHeaders.get(HEADER_STORY, Story.class)).thenReturn(story);
@@ -76,14 +79,14 @@ public class StoryServiceTest {
   }
 
   @Test
-  public void testAfterPropertiesSet() throws Exception {
+  void afterPropertiesSet() throws Exception {
     service.afterPropertiesSet();
 
     Mockito.verify(storyStateHandler, Mockito.times(1)).addListener(service);
   }
 
   @Test
-  public void testOnStoryStateChange() throws PublishingException {
+  void onStoryStateChange() throws PublishingException {
     Mockito.when(state.getId()).thenReturn(TEST_STORY_STATE);
     Mockito.when(storyRepository.save(Mockito.any(Story.class))).thenReturn(savedStory);
 
@@ -96,7 +99,7 @@ public class StoryServiceTest {
   }
 
   @Test
-  public void testOnStoryStateChangePublishingException() throws PublishingException {
+  void onStoryStateChange_publishingException() throws PublishingException {
     Mockito.when(state.getId()).thenReturn(TEST_STORY_STATE);
     Mockito.when(storyRepository.save(Mockito.any(Story.class))).thenReturn(savedStory);
     Mockito.doThrow(PublishingException.class)
@@ -112,7 +115,7 @@ public class StoryServiceTest {
   }
 
   @Test
-  public void testLoadAll() {
+  void loadAll() {
     final List<Story> stories = new ArrayList<>();
     stories.add(story);
     final Set<String> distinctStories = new HashSet<>();
@@ -134,7 +137,7 @@ public class StoryServiceTest {
   }
 
   @Test
-  public void testFindByName() {
+  void findByName() {
     final List<Story> stories = new ArrayList<>();
     stories.add(story);
     Mockito.when(storyRepository.findByName(Mockito.anyString())).thenReturn(stories);
@@ -155,7 +158,7 @@ public class StoryServiceTest {
   }
 
   @Test
-  public void testCreateStory() throws StoryException {
+  void createStory() throws StoryException {
     Mockito.when(storyRepository.save(storyArgumentCaptor.capture())).thenReturn(story);
     Mockito.when(story.getId()).thenReturn(TEST_STORY_ID);
     Mockito.when(storyRepository.getById(Mockito.anyLong())).thenReturn(savedStory);

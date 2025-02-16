@@ -24,22 +24,22 @@ import java.util.List;
 import org.comixedproject.model.batch.BatchProcessDetail;
 import org.comixedproject.model.net.batch.DeleteSelectedJobsRequest;
 import org.comixedproject.service.batch.BatchProcessesService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class BatchProcessesControllerTest {
+@ExtendWith(MockitoExtension.class)
+class BatchProcessesControllerTest {
   @InjectMocks private BatchProcessesController controller;
   @Mock private BatchProcessesService batchProcessesService;
   @Mock private List<BatchProcessDetail> batchProcessList;
   @Mock private List<Long> jobIdList;
 
   @Test
-  public void testGetAllBatchProcesses() {
+  void getAllBatchProcesses() {
     Mockito.when(batchProcessesService.getAllBatchProcesses()).thenReturn(batchProcessList);
 
     final List<BatchProcessDetail> result = controller.getAllBatchProcesses();
@@ -51,7 +51,7 @@ public class BatchProcessesControllerTest {
   }
 
   @Test
-  public void testDeleteCompletedJobs() {
+  void deleteCompletedJobs() {
     Mockito.when(batchProcessesService.deleteCompletedJobs()).thenReturn(batchProcessList);
 
     final List<BatchProcessDetail> result = controller.deleteCompletedJobs();
@@ -63,7 +63,7 @@ public class BatchProcessesControllerTest {
   }
 
   @Test
-  public void testDeleteSelectedJobs() {
+  void deleteSelectedJobs() {
     Mockito.when(batchProcessesService.deleteSelectedJobs(Mockito.anyList()))
         .thenReturn(batchProcessList);
 

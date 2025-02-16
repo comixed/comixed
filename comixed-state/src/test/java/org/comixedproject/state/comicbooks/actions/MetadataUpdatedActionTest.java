@@ -1,6 +1,6 @@
 /*
- * ComiXed - A digital comicBook book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,32 +21,32 @@ package org.comixedproject.state.comicbooks.actions;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.comicbooks.ComicEvent;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.statemachine.StateContext;
 
-@RunWith(MockitoJUnitRunner.class)
-public class MetadataUpdatedActionTest {
+@ExtendWith(MockitoExtension.class)
+class MetadataUpdatedActionTest {
   @InjectMocks private MetadataUpdatedAction action;
   @Mock private StateContext<ComicState, ComicEvent> context;
   @Mock private MessageHeaders messageHeaders;
   @Mock private ComicBook comicBook;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
     Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
         .thenReturn(comicBook);
   }
 
   @Test
-  public void testExecute() {
+  void execute() {
     action.execute(context);
 
     Mockito.verify(comicBook, Mockito.times(1)).setUpdateMetadata(false);

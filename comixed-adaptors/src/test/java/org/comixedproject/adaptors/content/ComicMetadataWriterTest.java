@@ -1,6 +1,7 @@
 package org.comixedproject.adaptors.content;
 
-import static junit.framework.TestCase.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -12,15 +13,18 @@ import java.util.Set;
 import org.comixedproject.model.comicbooks.*;
 import org.comixedproject.model.metadata.ComicInfo;
 import org.comixedproject.model.metadata.MetadataSource;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ComicMetadataWriterTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ComicMetadataWriterTest {
   private static final String TEST_METADATA_SOURCE_NAME = "ComicVine";
   private static final String TEST_METADATA_REFERENCE_ID = "12971";
   private static final Date TEST_COVER_DATE = new Date();
@@ -38,8 +42,8 @@ public class ComicMetadataWriterTest {
   private byte[] contentByte = "The encoded content".getBytes();
   private Set<ComicTag> tags = new HashSet<>();
 
-  @Before
-  public void setUp() throws JsonProcessingException {
+  @BeforeEach
+  void setUp() throws JsonProcessingException {
     Mockito.when(objectMapper.writeValueAsBytes(metadataArgumentCaptor.capture()))
         .thenReturn(contentByte);
     Mockito.when(xmlConverter.getObjectMapper()).thenReturn(objectMapper);
@@ -55,7 +59,7 @@ public class ComicMetadataWriterTest {
   }
 
   @Test
-  public void testAfterPropertiesSet() throws Exception {
+  void afterPropertiesSet() throws Exception {
     writer.afterPropertiesSet();
 
     Mockito.verify(objectMapper, Mockito.times(1))
@@ -63,14 +67,14 @@ public class ComicMetadataWriterTest {
   }
 
   @Test
-  public void testCreateContent() throws ContentAdaptorException {
+  void createContent() throws ContentAdaptorException {
     final byte[] result = writer.createContent(comicBook);
 
     assertNotNull(result);
   }
 
   @Test
-  public void testCreateContentWithMetadataContent() throws ContentAdaptorException {
+  void createContent_metadataContent() throws ContentAdaptorException {
     Mockito.when(comicBook.getMetadata()).thenReturn(comicMetadataSource);
 
     final byte[] result = writer.createContent(comicBook);
@@ -78,11 +82,11 @@ public class ComicMetadataWriterTest {
     assertNotNull(result);
   }
 
-  @Test(expected = ContentAdaptorException.class)
-  public void testCreateContentObjectWriterException() throws ContentAdaptorException, IOException {
+  @Test
+  void createContent_objectWriterException() throws IOException {
     Mockito.when(objectMapper.writeValueAsBytes(metadataArgumentCaptor.capture()))
         .thenThrow(JsonProcessingException.class);
 
-    writer.createContent(comicBook);
+    assertThrows(ContentAdaptorException.class, () -> writer.createContent(comicBook));
   }
 }

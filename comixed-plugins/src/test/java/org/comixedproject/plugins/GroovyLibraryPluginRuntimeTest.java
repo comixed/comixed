@@ -24,15 +24,15 @@ import java.util.List;
 import org.comixedproject.model.plugin.LibraryPlugin;
 import org.comixedproject.model.plugin.LibraryPluginProperty;
 import org.comixedproject.plugins.groovy.GroovyPluginRuntime;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class GroovyLibraryPluginRuntimeTest {
+@ExtendWith(MockitoExtension.class)
+class GroovyLibraryPluginRuntimeTest {
   private static final String TEST_GOOD_PLUGIN = "src/test/resources/good.cxplugin";
   private static final String TEST_BROKEN_PLUGIN = "src/test/resources/broken.cxplugin";
   private static final String TEST_PLUGIN_NAME = "Good Plugin";
@@ -46,7 +46,7 @@ public class GroovyLibraryPluginRuntimeTest {
   @Mock private LibraryPlugin libraryPlugin;
 
   @Test
-  public void testExecuteHelloWorld() {
+  void testExecuteHelloWorld() {
     Mockito.when(libraryPlugin.getFilename()).thenReturn(TEST_GOOD_PLUGIN);
 
     final Boolean result = runner.execute(libraryPlugin);
@@ -55,7 +55,7 @@ public class GroovyLibraryPluginRuntimeTest {
   }
 
   @Test
-  public void testExecuteBadScript() {
+  void testExecuteBadScript() {
     Mockito.when(libraryPlugin.getFilename()).thenReturn(TEST_BROKEN_PLUGIN);
 
     final Boolean result = runner.execute(libraryPlugin);
@@ -64,7 +64,7 @@ public class GroovyLibraryPluginRuntimeTest {
   }
 
   @Test
-  public void testExecuteMissingScript() {
+  void testExecuteMissingScript() {
     Mockito.when(libraryPlugin.getFilename()).thenReturn(TEST_BROKEN_PLUGIN.substring(1));
 
     final Boolean result = runner.execute(libraryPlugin);
@@ -73,7 +73,7 @@ public class GroovyLibraryPluginRuntimeTest {
   }
 
   @Test
-  public void testGetName() {
+  void testGetName() {
     final String result = runner.getName(TEST_GOOD_PLUGIN);
 
     assertNotNull(result);
@@ -81,7 +81,7 @@ public class GroovyLibraryPluginRuntimeTest {
   }
 
   @Test
-  public void testGetNameBadScript() {
+  void testGetNameBadScript() {
     final String result = runner.getName(TEST_BROKEN_PLUGIN);
 
     assertNotNull(result);
@@ -89,7 +89,7 @@ public class GroovyLibraryPluginRuntimeTest {
   }
 
   @Test
-  public void testGetNameMissingPlugin() {
+  void testGetNameMissingPlugin() {
     final String result = runner.getName(TEST_BROKEN_PLUGIN.substring(1));
 
     assertNotNull(result);
@@ -97,7 +97,7 @@ public class GroovyLibraryPluginRuntimeTest {
   }
 
   @Test
-  public void testGetVersion() {
+  void testGetVersion() {
     final String result = runner.getVersion(TEST_GOOD_PLUGIN);
 
     assertNotNull(result);
@@ -105,7 +105,7 @@ public class GroovyLibraryPluginRuntimeTest {
   }
 
   @Test
-  public void testGetVersionBadScript() {
+  void testGetVersionBadScript() {
     final String result = runner.getVersion(TEST_BROKEN_PLUGIN);
 
     assertNotNull(result);
@@ -113,7 +113,7 @@ public class GroovyLibraryPluginRuntimeTest {
   }
 
   @Test
-  public void testGetVersionMissingPlugin() {
+  void testGetVersionMissingPlugin() {
     final String result = runner.getVersion(TEST_BROKEN_PLUGIN.substring(1));
 
     assertNotNull(result);
@@ -121,35 +121,35 @@ public class GroovyLibraryPluginRuntimeTest {
   }
 
   @Test
-  public void testLoadProperties() {
+  void testLoadProperties() {
     final List<LibraryPluginProperty> result = runner.getProperties(TEST_GOOD_PLUGIN);
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
     assertTrue(
         result.stream()
-            .map(property -> property.getName())
+            .map(LibraryPluginProperty::getName)
             .toList()
             .contains(TEST_PROPERTY_NAME_1));
     assertTrue(
         result.stream()
-            .map(property -> property.getLength())
+            .map(LibraryPluginProperty::getLength)
             .toList()
             .contains(TEST_PROPERTY_1_LENGTH));
     assertTrue(
         result.stream()
-            .map(property -> property.getName())
+            .map(LibraryPluginProperty::getName)
             .toList()
             .contains(TEST_PROPERTY_NAME_2));
     assertTrue(
         result.stream()
-            .map(property -> property.getLength())
+            .map(LibraryPluginProperty::getLength)
             .toList()
             .contains(TEST_PROPERTY_2_LENGTH));
   }
 
   @Test
-  public void testLoadPropertiesBadScript() {
+  void testLoadPropertiesBadScript() {
     final List<LibraryPluginProperty> result = runner.getProperties(TEST_BROKEN_PLUGIN);
 
     assertNotNull(result);
@@ -157,7 +157,7 @@ public class GroovyLibraryPluginRuntimeTest {
   }
 
   @Test
-  public void testLoadPropertiesMissingPlugin() {
+  void testLoadPropertiesMissingPlugin() {
     final List<LibraryPluginProperty> result =
         runner.getProperties(TEST_BROKEN_PLUGIN.substring(1));
 

@@ -18,13 +18,13 @@
 
 package org.comixedproject.adaptors.comicbooks;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
 import static org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor.CHANGED_COMIC_MARKER;
 import static org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor.MISSING_ISSUE_NUMBER;
 import static org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor.MISSING_VOLUME;
 import static org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor.NO_COVER_DATE;
 import static org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor.UNNAMED_SERIES;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Date;
 import java.util.Set;
@@ -32,16 +32,19 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicTag;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ComicBookMetadataAdaptorTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ComicBookMetadataAdaptorTest {
   private static final Date TEST_COVER_DATE = new Date();
   private static final String TEST_SERIES_NAME = "The Series Name";
   private static final String TEST_VOLUME = "2023";
@@ -52,8 +55,8 @@ public class ComicBookMetadataAdaptorTest {
   @Mock private ComicDetail comicDetail;
   @Mock private Set<ComicTag> comicTags;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     Mockito.when(comicDetail.getCoverDate()).thenReturn(TEST_COVER_DATE);
     Mockito.when(comicDetail.getSeries()).thenReturn(TEST_SERIES_NAME);
     Mockito.when(comicDetail.getVolume()).thenReturn(TEST_VOLUME);
@@ -61,7 +64,7 @@ public class ComicBookMetadataAdaptorTest {
   }
 
   @Test
-  public void testClear() {
+  void clear() {
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicDetail.getTags()).thenReturn(comicTags);
 
@@ -80,7 +83,7 @@ public class ComicBookMetadataAdaptorTest {
   }
 
   @Test
-  public void testGetDisplayableTitleNoMetadata() {
+  void getDisplayableTitle_noMetadata() {
     Mockito.when(comicDetail.getCoverDate()).thenReturn(null);
     Mockito.when(comicDetail.getSeries()).thenReturn(null);
     Mockito.when(comicDetail.getVolume()).thenReturn(null);
@@ -96,7 +99,7 @@ public class ComicBookMetadataAdaptorTest {
   }
 
   @Test
-  public void testGetDisplayableTitleNoCoverDate() {
+  void getDisplayableTitle_noCoverDate() {
     Mockito.when(comicDetail.getCoverDate()).thenReturn(null);
 
     final String result = adaptor.getDisplayableTitle(comicDetail);
@@ -109,7 +112,7 @@ public class ComicBookMetadataAdaptorTest {
   }
 
   @Test
-  public void testGetDisplayableTitleNoSeries() {
+  void getDisplayableTitle_noSeries() {
     Mockito.when(comicDetail.getSeries()).thenReturn(null);
 
     final String result = adaptor.getDisplayableTitle(comicDetail);
@@ -126,7 +129,7 @@ public class ComicBookMetadataAdaptorTest {
   }
 
   @Test
-  public void testGetDisplayableTitleNoVolume() {
+  void getDisplayableTitle_noVolume() {
     Mockito.when(comicDetail.getVolume()).thenReturn(null);
 
     final String result = adaptor.getDisplayableTitle(comicDetail);
@@ -143,7 +146,7 @@ public class ComicBookMetadataAdaptorTest {
   }
 
   @Test
-  public void testGetDisplayableTitleNoIssueNumber() {
+  void getDisplayableTitle_noIssueNumber() {
     Mockito.when(comicDetail.getIssueNumber()).thenReturn(null);
 
     final String result = adaptor.getDisplayableTitle(comicDetail);
@@ -160,7 +163,7 @@ public class ComicBookMetadataAdaptorTest {
   }
 
   @Test
-  public void testGetDisplayableTitleWhenMetadataIsChanged() {
+  void getDisplayableTitle_metadataIsChanged() {
     Mockito.when(comicDetail.getComicState()).thenReturn(ComicState.CHANGED);
 
     final String result = adaptor.getDisplayableTitle(comicDetail);

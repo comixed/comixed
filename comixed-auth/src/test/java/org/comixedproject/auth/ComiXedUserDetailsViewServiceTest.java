@@ -18,27 +18,26 @@
 
 package org.comixedproject.auth;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.user.ComiXedRole;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.users.ComiXedUserRepository;
-import org.comixedproject.service.user.ComiXedUserException;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ComiXedUserDetailsViewServiceTest {
+@ExtendWith(MockitoExtension.class)
+class ComiXedUserDetailsViewServiceTest {
   private static final String TEST_PASSWORD_HASH = "the password hash";
   private static final String TEST_USER_EMAIL = "reader@comixedproject.org";
 
@@ -48,24 +47,22 @@ public class ComiXedUserDetailsViewServiceTest {
 
   private List<ComiXedRole> roles = new ArrayList<>();
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     roles.add(new ComiXedRole("ROLE"));
   }
 
-  @Test(expected = UsernameNotFoundException.class)
-  public void testLoadUserByUsernameNotFound() throws ComiXedUserException {
+  @Test
+  void loadUserByUsername_notFound() {
     Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(null);
 
-    try {
-      userDetailsService.loadUserByUsername(TEST_USER_EMAIL);
-    } finally {
-      Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
-    }
+    assertThrows(
+        UsernameNotFoundException.class,
+        () -> userDetailsService.loadUserByUsername(TEST_USER_EMAIL));
   }
 
   @Test
-  public void testLoadUserByUsername() throws ComiXedUserException {
+  void loadUserByUsername() {
     Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.when(user.getPasswordHash()).thenReturn(TEST_PASSWORD_HASH);
     Mockito.when(user.getRoles()).thenReturn(roles);

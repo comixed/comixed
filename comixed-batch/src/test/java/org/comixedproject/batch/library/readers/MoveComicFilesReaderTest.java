@@ -24,15 +24,15 @@ import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.library.OrganizingComic;
 import org.comixedproject.service.library.OrganizingComicService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class MoveComicFilesReaderTest {
+@ExtendWith(MockitoExtension.class)
+class MoveComicFilesReaderTest {
   private static final int MAX_RECORDS = 25;
 
   @InjectMocks private MoveComicFilesReader reader;
@@ -42,7 +42,7 @@ public class MoveComicFilesReaderTest {
   private List<OrganizingComic> organzingComicList = new ArrayList<>();
 
   @Test
-  public void testRead_noneLoaded_manyFound() {
+  void read_noneLoaded_manyFound() {
     for (int index = 0; index < MAX_RECORDS; index++) organzingComicList.add(organizingComic);
 
     Mockito.when(organizingComicService.loadComics(Mockito.anyInt()))
@@ -59,7 +59,7 @@ public class MoveComicFilesReaderTest {
   }
 
   @Test
-  public void testRead_noneLoaded_noneFound() {
+  void read_noneLoaded_noneFound() {
     Mockito.when(organizingComicService.loadComics(Mockito.anyInt()))
         .thenReturn(organzingComicList);
 

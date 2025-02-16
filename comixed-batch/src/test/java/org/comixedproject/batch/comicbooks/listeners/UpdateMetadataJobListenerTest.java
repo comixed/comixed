@@ -19,20 +19,19 @@
 package org.comixedproject.batch.comicbooks.listeners;
 
 import static org.comixedproject.batch.comicbooks.UpdateMetadataConfiguration.UPDATE_METADATA_JOB;
-import static org.junit.Assert.*;
 
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
 import org.comixedproject.model.batch.BatchProcessDetail;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.core.*;
 
-@RunWith(MockitoJUnitRunner.class)
-public class UpdateMetadataJobListenerTest {
+@ExtendWith(MockitoExtension.class)
+class UpdateMetadataJobListenerTest {
   @InjectMocks private UpdateMetadataJobListener listener;
   @Mock private JobInstance jobInstance;
   @Mock private JobExecution jobExecution;
@@ -41,7 +40,7 @@ public class UpdateMetadataJobListenerTest {
 
   @Captor ArgumentCaptor<BatchProcessDetail> batchProcessDetailArgumentCaptor;
 
-  @Before
+  @BeforeEach
   public void setUp() throws PublishingException {
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
     Mockito.when(jobInstance.getJobName()).thenReturn(UPDATE_METADATA_JOB);
@@ -55,7 +54,7 @@ public class UpdateMetadataJobListenerTest {
   }
 
   @Test
-  public void testBeforeJob() throws PublishingException {
+  void beforeJob() throws PublishingException {
     listener.beforeJob(jobExecution);
 
     final BatchProcessDetail detail = batchProcessDetailArgumentCaptor.getValue();
@@ -64,7 +63,7 @@ public class UpdateMetadataJobListenerTest {
   }
 
   @Test
-  public void testAfterJob() throws PublishingException {
+  void afterJob() throws PublishingException {
     listener.afterJob(jobExecution);
 
     final BatchProcessDetail detail = batchProcessDetailArgumentCaptor.getValue();

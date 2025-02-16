@@ -25,11 +25,13 @@ import org.comixedproject.batch.comicpages.AddPagesToImageCacheConfiguration;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicpages.ComicPageService;
 import org.comixedproject.service.comicpages.PageCacheService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
@@ -40,8 +42,9 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-@RunWith(MockitoJUnitRunner.class)
-public class AddPagesToImageCacheInitiatorTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class AddPagesToImageCacheInitiatorTest {
   private static final long TEST_PAGE_COUNT = 27L;
   @InjectMocks private AddPagesToImageCacheInitiator initiator;
   @Mock private PageCacheService pageCacheService;
@@ -60,7 +63,7 @@ public class AddPagesToImageCacheInitiatorTest {
 
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
-  @Before
+  @BeforeEach
   public void setUp()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
@@ -74,7 +77,7 @@ public class AddPagesToImageCacheInitiatorTest {
   }
 
   @Test
-  public void testExecute()
+  void execute()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -92,7 +95,7 @@ public class AddPagesToImageCacheInitiatorTest {
   }
 
   @Test
-  public void testExecute_noPagesNeedCaching()
+  void execute_noPagesNeedCaching()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -106,7 +109,7 @@ public class AddPagesToImageCacheInitiatorTest {
   }
 
   @Test
-  public void testExecute_existingJobFound()
+  void execute_existingJobFound()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -121,7 +124,7 @@ public class AddPagesToImageCacheInitiatorTest {
   }
 
   @Test
-  public void testExecute_jobLauncherThrowsException()
+  void execute_jobLauncherThrowsException()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,

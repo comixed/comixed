@@ -27,19 +27,22 @@ import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.item.ExecutionContext;
 
-@RunWith(MockitoJUnitRunner.class)
-public class RemoveDeletedComicBooksProcessorTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class RemoveDeletedComicBooksProcessorTest {
   private static final String TEST_FILENAME = "/Users/comixed/Documents/comics/comicBook.cbz";
 
   @InjectMocks private RemoveDeletedComicBooksProcessor processor;
@@ -53,7 +56,7 @@ public class RemoveDeletedComicBooksProcessorTest {
   @Mock private ComicDetail comicDetail;
   @Mock private File file;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
     Mockito.when(jobExecution.getExecutionContext()).thenReturn(executionContext);
@@ -64,7 +67,7 @@ public class RemoveDeletedComicBooksProcessorTest {
   }
 
   @Test
-  public void testProcessWithDeleteFile() {
+  void process_withDeleteFile() {
     Mockito.when(
             executionContext.getString(
                 ORGANIZE_LIBRARY_JOB_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))
@@ -81,7 +84,7 @@ public class RemoveDeletedComicBooksProcessorTest {
   }
 
   @Test
-  public void testProcess() {
+  void process() {
     Mockito.when(
             executionContext.getString(
                 ORGANIZE_LIBRARY_JOB_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))
@@ -97,7 +100,7 @@ public class RemoveDeletedComicBooksProcessorTest {
   }
 
   @Test
-  public void testAfterStep() {
+  void afterStep() {
     assertNull(processor.afterStep(stepExecution));
   }
 }

@@ -21,15 +21,15 @@ package org.comixedproject.batch.comicpages.listeners;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
 import org.comixedproject.model.batch.BatchProcessDetail;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.core.*;
 
-@RunWith(MockitoJUnitRunner.class)
-public class MarkBlockedPagesJobListenerTest {
+@ExtendWith(MockitoExtension.class)
+class MarkBlockedPagesJobListenerTest {
   private static final String TEST_JOB_NAME = "The job name";
 
   @InjectMocks private MarkBlockedPagesJobListener listener;
@@ -40,7 +40,7 @@ public class MarkBlockedPagesJobListenerTest {
 
   @Captor ArgumentCaptor<BatchProcessDetail> batchProcessDetailArgumentCaptor;
 
-  @Before
+  @BeforeEach
   public void setUp() throws PublishingException {
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
     Mockito.when(jobInstance.getJobName()).thenReturn(TEST_JOB_NAME);
@@ -55,7 +55,7 @@ public class MarkBlockedPagesJobListenerTest {
   }
 
   @Test
-  public void testBeforeJob() throws PublishingException {
+  void beforeJob() throws PublishingException {
     listener.beforeJob(jobExecution);
 
     final BatchProcessDetail detail = batchProcessDetailArgumentCaptor.getValue();
@@ -64,7 +64,7 @@ public class MarkBlockedPagesJobListenerTest {
   }
 
   @Test
-  public void testAfterJob() throws PublishingException {
+  void afterJob() throws PublishingException {
     listener.afterJob(jobExecution);
 
     final BatchProcessDetail detail = batchProcessDetailArgumentCaptor.getValue();
@@ -73,7 +73,7 @@ public class MarkBlockedPagesJobListenerTest {
   }
 
   @Test
-  public void testAfterJobPublishingException() throws PublishingException {
+  void afterJob_publishingException() throws PublishingException {
     listener.afterJob(jobExecution);
 
     final BatchProcessDetail detail = batchProcessDetailArgumentCaptor.getValue();

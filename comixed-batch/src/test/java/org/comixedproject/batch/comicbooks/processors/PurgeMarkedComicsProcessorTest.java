@@ -28,16 +28,19 @@ import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.lists.ReadingListService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PurgeMarkedComicsProcessorTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class PurgeMarkedComicsProcessorTest {
   @InjectMocks private PurgeMarkedComicsProcessor processor;
   @Mock private ComicBookService comicBookService;
   @Mock private ReadingListService readingListService;
@@ -47,7 +50,7 @@ public class PurgeMarkedComicsProcessorTest {
   @Mock private ComicDetail comicDetail;
   @Mock private ComicBook comicBook;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(comicDetail.getFile()).thenReturn(comicFile);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
@@ -58,7 +61,7 @@ public class PurgeMarkedComicsProcessorTest {
   }
 
   @Test
-  public void testProcess_errorThrown() throws Exception {
+  void process_errorThrown() throws Exception {
     Mockito.doThrow(NullPointerException.class)
         .when(readingListService)
         .deleteEntriesForComicBook(Mockito.any());
@@ -73,7 +76,7 @@ public class PurgeMarkedComicsProcessorTest {
   }
 
   @Test
-  public void testProcess_deleteFilesEnabled() throws Exception {
+  void process_deleteFilesEnabled() throws Exception {
     Mockito.when(
             configurationService.isFeatureEnabled(
                 ConfigurationService.CFG_DELETE_PURGED_COMIC_FILES))

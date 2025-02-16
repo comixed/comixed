@@ -35,19 +35,22 @@ import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.library.DisplayableComicRepository;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-@RunWith(MockitoJUnitRunner.class)
-public class DisplayableComicServiceTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class DisplayableComicServiceTest {
   private static final Integer TEST_PAGE_SIZE = 25;
   private static final Integer TEST_PAGE_INDEX = 3;
   private static final Integer TEST_COVER_YEAR = 2025;
@@ -92,7 +95,7 @@ public class DisplayableComicServiceTest {
 
   @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
 
-  @Before
+  @BeforeEach
   public void setUp() throws ReadingListException {
     Mockito.when(exampleBuilderObjectFactory.getObject()).thenReturn(exampleBuilder);
     Mockito.when(exampleBuilder.build()).thenReturn(displayableComicExample);
@@ -110,7 +113,7 @@ public class DisplayableComicServiceTest {
   }
 
   @Test
-  public void testLoadComicsByFilter() {
+  void LoadComicsByFilter() {
     Mockito.when(
             displayableComicRepository.findAll(
                 Mockito.any(Example.class), pageableArgumentCaptor.capture()))
@@ -146,7 +149,7 @@ public class DisplayableComicServiceTest {
   }
 
   @Test
-  public void testLoadComicsByFilter_noPageSizeOrIndex() {
+  void LoadComicsByFilter_noPageSizeOrIndex() {
     Mockito.when(displayableComicRepository.findAll(Mockito.any(Example.class)))
         .thenReturn(comicList);
 
@@ -175,7 +178,7 @@ public class DisplayableComicServiceTest {
   }
 
   @Test
-  public void testLoadComicsByFilter_noPageIndex() {
+  void LoadComicsByFilter_noPageIndex() {
     Mockito.when(displayableComicRepository.findAll(Mockito.any(Example.class)))
         .thenReturn(comicList);
 
@@ -204,7 +207,7 @@ public class DisplayableComicServiceTest {
   }
 
   @Test
-  public void testGetCoverYearsForFilter() {
+  void GetCoverYearsForFilter() {
     Mockito.when(displayableComicRepository.findAll(Mockito.any(Example.class)))
         .thenReturn(comicList);
     Mockito.when(distinctIntegerStream.toList()).thenReturn(yearList);
@@ -228,7 +231,7 @@ public class DisplayableComicServiceTest {
   }
 
   @Test
-  public void testGetCoverMonthsForFilter() {
+  void GetCoverMonthsForFilter() {
     Mockito.when(displayableComicRepository.findAll(Mockito.any(Example.class)))
         .thenReturn(comicList);
     Mockito.when(distinctIntegerStream.toList()).thenReturn(monthList);
@@ -252,7 +255,7 @@ public class DisplayableComicServiceTest {
   }
 
   @Test
-  public void testGetComicCountForFilter() {
+  void GetComicCountForFilter() {
     Mockito.when(displayableComicRepository.count(Mockito.any(Example.class)))
         .thenReturn(TEST_COMIC_COUNT);
 
@@ -276,7 +279,7 @@ public class DisplayableComicServiceTest {
   }
 
   @Test
-  public void testLoadComicsById() {
+  void LoadComicsById() {
     Mockito.when(
             displayableComicRepository.loadComicsById(
                 Mockito.any(), pageableArgumentCaptor.capture()))
@@ -297,7 +300,7 @@ public class DisplayableComicServiceTest {
   }
 
   @Test
-  public void testLoadComicsByTagTypeAndValue() {
+  void LoadComicsByTagTypeAndValue() {
     Mockito.when(
             displayableComicRepository.loadComicsByTagTypeAndValue(
                 Mockito.any(ComicTagType.class),
@@ -326,7 +329,7 @@ public class DisplayableComicServiceTest {
   }
 
   @Test
-  public void testGetIdsByPublisher() {
+  void GetIdsByPublisher() {
     Mockito.when(displayableComicRepository.getIdsByPublisher(Mockito.anyString()))
         .thenReturn(idList);
 
@@ -339,7 +342,7 @@ public class DisplayableComicServiceTest {
   }
 
   @Test
-  public void testGetIdsByPublisherAndSeriesAndVolume() {
+  void GetIdsByPublisherAndSeriesAndVolume() {
     Mockito.when(
             displayableComicRepository.getIdsByPublisherSeriesAndVolume(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
@@ -356,7 +359,7 @@ public class DisplayableComicServiceTest {
   }
 
   @Test
-  public void testGetCoverYearsForTagTypeAndValue() {
+  void GetCoverYearsForTagTypeAndValue() {
     Mockito.when(
             displayableComicRepository.getCoverYearsForTagTypeAndValue(
                 Mockito.any(ComicTagType.class), Mockito.anyString()))
@@ -373,7 +376,7 @@ public class DisplayableComicServiceTest {
   }
 
   @Test
-  public void testGetCoverMonthForTagTypeAndValue() {
+  void GetCoverMonthForTagTypeAndValue() {
     Mockito.when(
             displayableComicRepository.getCoverMonthsForTagTypeAndValue(
                 Mockito.any(ComicTagType.class), Mockito.anyString()))
@@ -390,7 +393,7 @@ public class DisplayableComicServiceTest {
   }
 
   @Test
-  public void testGetComicCountForTagTypeAndValue() {
+  void GetComicCountForTagTypeAndValue() {
     Mockito.when(
             displayableComicRepository.getComicCountForTagTypeAndValue(
                 Mockito.any(ComicTagType.class), Mockito.anyString()))
@@ -405,7 +408,7 @@ public class DisplayableComicServiceTest {
   }
 
   @Test
-  public void testLoadUnreadComics() {
+  void LoadUnreadComics() {
     Mockito.when(
             displayableComicRepository.loadUnreadComics(
                 Mockito.anySet(), pageableArgumentCaptor.capture()))
@@ -427,7 +430,7 @@ public class DisplayableComicServiceTest {
   }
 
   @Test
-  public void testLoadReadComics() {
+  void LoadReadComics() {
     Mockito.when(
             displayableComicRepository.loadReadComics(
                 Mockito.anySet(), pageableArgumentCaptor.capture()))
@@ -449,7 +452,7 @@ public class DisplayableComicServiceTest {
   }
 
   @Test
-  public void testLoadComicsForList() throws LibraryException, ReadingListException {
+  void LoadComicsForList() throws LibraryException, ReadingListException {
     Mockito.when(
             displayableComicRepository.loadComicsForList(
                 Mockito.anyLong(), pageableArgumentCaptor.capture()))
@@ -478,27 +481,25 @@ public class DisplayableComicServiceTest {
         .loadComicsForList(TEST_READING_LIST_ID, pageable);
   }
 
-  @Test(expected = LibraryException.class)
-  public void testLoadComicsForList_noSuchList() throws LibraryException, ReadingListException {
+  @Test
+  void loadComicsForList_noSuchList() throws ReadingListException {
     Mockito.when(readingListService.loadReadingListForUser(Mockito.anyString(), Mockito.anyLong()))
         .thenThrow(ReadingListException.class);
 
-    try {
-      service.loadComicsForList(
-          TEST_EMAIL,
-          TEST_READING_LIST_ID,
-          TEST_PAGE_SIZE,
-          TEST_PAGE_INDEX,
-          TEST_SORT_BY,
-          TEST_SORT_DIRECTION);
-    } finally {
-      Mockito.verify(readingListService, Mockito.times(1))
-          .loadReadingListForUser(TEST_EMAIL, TEST_READING_LIST_ID);
-    }
+    assertThrows(
+        LibraryException.class,
+        () ->
+            service.loadComicsForList(
+                TEST_EMAIL,
+                TEST_READING_LIST_ID,
+                TEST_PAGE_SIZE,
+                TEST_PAGE_INDEX,
+                TEST_SORT_BY,
+                TEST_SORT_DIRECTION));
   }
 
   @Test
-  public void testLoadDuplicateComics() {
+  void LoadDuplicateComics() {
     Mockito.when(displayableComicRepository.loadDuplicateComics(pageableArgumentCaptor.capture()))
         .thenReturn(comicList);
 
@@ -517,7 +518,7 @@ public class DisplayableComicServiceTest {
   }
 
   @Test
-  public void testLoadDuplicateComicIds() {
+  void LoadDuplicateComicIds() {
     Mockito.when(displayableComicRepository.getDuplicateComicIds()).thenReturn(idList);
 
     final List<Long> result = service.getDuplicateComicIds();
@@ -529,7 +530,7 @@ public class DisplayableComicServiceTest {
   }
 
   @Test
-  public void testGetDuplicateCount() {
+  void GetDuplicateCount() {
     Mockito.when(displayableComicRepository.getDuplicateComicCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.getDuplicateComicCount();
@@ -540,7 +541,7 @@ public class DisplayableComicServiceTest {
   }
 
   @Test
-  public void testCreateExample() {
+  void CreateExample() {
 
     final Example<DisplayableComic> result =
         service.doCreateExample(
@@ -572,14 +573,14 @@ public class DisplayableComicServiceTest {
   }
 
   @Test
-  public void testCreateSort_noFields() {
+  void CreateSort_noFields() {
     final Sort result = service.doCreateSort(null, null);
 
     assertSame(Sort.unsorted(), result);
   }
 
   @Test
-  public void testCreateSort() {
+  void CreateSort() {
     final String[][] fields =
         new String[][] {
           {"unknown", "id"},

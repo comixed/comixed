@@ -22,16 +22,16 @@ import java.util.ArrayList;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.item.Chunk;
 
-@RunWith(MockitoJUnitRunner.class)
-public class UpdateMetadataWriterTest {
+@ExtendWith(MockitoExtension.class)
+class UpdateMetadataWriterTest {
   @InjectMocks private UpdateMetadataWriter writer;
   @Mock private ComicStateHandler comicStateHandler;
   @Mock private ComicBook comicBook;
@@ -39,7 +39,7 @@ public class UpdateMetadataWriterTest {
   private Chunk<ComicBook> comicBookList = new Chunk<>(new ArrayList<>());
 
   @Test
-  public void testWrite() {
+  void write() {
     for (int index = 0; index < 25; index++) comicBookList.add(comicBook);
 
     writer.write(comicBookList);

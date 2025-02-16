@@ -18,39 +18,34 @@
 
 package org.comixedproject.adaptors.archive;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.AdaptorTestContext;
 import org.comixedproject.adaptors.archive.model.ArchiveWriteHandle;
 import org.comixedproject.adaptors.archive.model.Cb7ArchiveReadHandle;
 import org.comixedproject.adaptors.archive.model.ComicArchiveEntry;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = AdaptorTestContext.class)
-public class Cb7ArchiveAdaptorTest {
+class Cb7ArchiveAdaptorTest {
   private static final String TEST_ZIP_FILENAME = "src/test/resources/example.cb7";
   private static final String TEST_SAVE_FILENAME = "target/test-classes/save-example.cb7";
 
   @Autowired private Cb7ArchiveAdaptor adaptor;
 
-  @Before
-  public void setUp() throws IOException {
+  @BeforeEach
+  void setUp() {
     FileUtils.deleteQuietly(new File(TEST_SAVE_FILENAME));
   }
 
   @Test
-  public void testGetEntries() throws ArchiveAdaptorException {
+  void GetEntries() throws ArchiveAdaptorException {
     final Cb7ArchiveReadHandle archiveHandle = adaptor.openArchiveForRead(TEST_ZIP_FILENAME);
     final List<ComicArchiveEntry> entries = adaptor.getEntries(archiveHandle);
     adaptor.closeArchiveForRead(archiveHandle);
@@ -75,18 +70,16 @@ public class Cb7ArchiveAdaptorTest {
     assertEquals(2881, entries.get(4).getSize());
   }
 
-  @Test(expected = ArchiveAdaptorException.class)
-  public void testGetEntryNotFound() throws ArchiveAdaptorException {
+  @Test
+  void readEntry_notFound() throws ArchiveAdaptorException {
     final Cb7ArchiveReadHandle archiveHandle = adaptor.openArchiveForRead(TEST_ZIP_FILENAME);
-    try {
-      adaptor.readEntry(archiveHandle, "exampleCBR.gif");
-    } finally {
-      adaptor.closeArchiveForRead(archiveHandle);
-    }
+
+    assertThrows(
+        ArchiveAdaptorException.class, () -> adaptor.readEntry(archiveHandle, "exampleCBR.gif"));
   }
 
   @Test
-  public void testGetEntry() throws ArchiveAdaptorException {
+  void readEntry() throws ArchiveAdaptorException {
     final Cb7ArchiveReadHandle archiveHandle = adaptor.openArchiveForRead(TEST_ZIP_FILENAME);
     final byte[] result = adaptor.readEntry(archiveHandle, "exampleCBR.jpg");
     adaptor.closeArchiveForRead(archiveHandle);
@@ -96,7 +89,7 @@ public class Cb7ArchiveAdaptorTest {
   }
 
   @Test
-  public void testSaveNewFile() throws ArchiveAdaptorException {
+  void save_newFile() throws ArchiveAdaptorException {
     Cb7ArchiveReadHandle readHandle = adaptor.openArchiveForRead(TEST_ZIP_FILENAME);
     final ArchiveWriteHandle writeHandle = adaptor.openArchiveForWrite(TEST_SAVE_FILENAME);
 

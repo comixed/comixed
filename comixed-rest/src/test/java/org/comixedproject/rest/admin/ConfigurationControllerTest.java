@@ -19,6 +19,7 @@
 package org.comixedproject.rest.admin;
 
 import static junit.framework.TestCase.*;
+import static org.junit.Assert.assertThrows;
 
 import java.util.List;
 import org.apache.commons.lang.math.RandomUtils;
@@ -28,15 +29,15 @@ import org.comixedproject.model.net.admin.SaveConfigurationOptionsRequest;
 import org.comixedproject.model.net.admin.SaveConfigurationOptionsResponse;
 import org.comixedproject.service.admin.ConfigurationOptionException;
 import org.comixedproject.service.admin.ConfigurationService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ConfigurationControllerTest {
+@ExtendWith(MockitoExtension.class)
+class ConfigurationControllerTest {
   private static final Boolean TEST_FEATURE_ENABLED = RandomUtils.nextBoolean();
   private static final String TEST_FEATURE_NAME = "test.feature-name";
 
@@ -46,7 +47,7 @@ public class ConfigurationControllerTest {
   @Mock private List<ConfigurationOption> savedOptionList;
 
   @Test
-  public void testGetAll() {
+  void getAll() {
     Mockito.when(configurationService.getAll()).thenReturn(optionList);
 
     final List<ConfigurationOption> result = controller.getAll();
@@ -57,20 +58,18 @@ public class ConfigurationControllerTest {
     Mockito.verify(configurationService, Mockito.times(1)).getAll();
   }
 
-  @Test(expected = ConfigurationOptionException.class)
-  public void testSaveOptionsServiceException() throws ConfigurationOptionException {
+  @Test
+  void saveOptionsServiceException() throws ConfigurationOptionException {
     Mockito.when(configurationService.saveOptions(Mockito.anyList()))
         .thenThrow(ConfigurationOptionException.class);
 
-    try {
-      controller.saveOptions(new SaveConfigurationOptionsRequest(optionList));
-    } finally {
-      Mockito.verify(configurationService, Mockito.times(1)).saveOptions(optionList);
-    }
+    assertThrows(
+        ConfigurationOptionException.class,
+        () -> controller.saveOptions(new SaveConfigurationOptionsRequest(optionList)));
   }
 
   @Test
-  public void testSaveOptions() throws ConfigurationOptionException {
+  void saveOptions() throws ConfigurationOptionException {
     Mockito.when(configurationService.saveOptions(Mockito.anyList())).thenReturn(savedOptionList);
 
     final SaveConfigurationOptionsResponse result =
@@ -83,7 +82,7 @@ public class ConfigurationControllerTest {
   }
 
   @Test
-  public void testGetFeatureEnabled() {
+  void getFeatureEnabled() {
     Mockito.when(configurationService.isFeatureEnabled(Mockito.anyString()))
         .thenReturn(TEST_FEATURE_ENABLED);
 

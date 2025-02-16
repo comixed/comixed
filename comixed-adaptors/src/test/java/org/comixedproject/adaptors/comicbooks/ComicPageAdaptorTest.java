@@ -18,20 +18,20 @@
 
 package org.comixedproject.adaptors.comicbooks;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.comixedproject.model.comicpages.ComicPage;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ComicPageAdaptorTest {
+@ExtendWith(MockitoExtension.class)
+class ComicPageAdaptorTest {
   private static final String TEST_RENAMING_RULE = "page-$INDEX";
   private static final int TEST_PAGE_INDEX = 3;
   private static final String TEST_FILENAME = "oldname3.png";
@@ -41,13 +41,13 @@ public class ComicPageAdaptorTest {
   @InjectMocks private ComicPageAdaptor adaptor;
   @Mock private ComicPage page;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     Mockito.when(page.getFilename()).thenReturn(TEST_FILENAME);
   }
 
   @Test
-  public void testCreateFilenameFromRule() {
+  void createFilenameFromRule() {
     final String result =
         adaptor.createFilenameFromRule(
             page, TEST_RENAMING_RULE, TEST_PAGE_INDEX, TEST_PAGE_COUNT_LENGTH);

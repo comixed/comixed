@@ -18,22 +18,24 @@
 
 package org.comixedproject.adaptors.comicbooks;
 
-import static junit.framework.TestCase.*;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.text.MessageFormat;
 import org.comixedproject.model.metadata.FilenameMetadata;
 import org.comixedproject.model.metadata.FilenameScrapingRule;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
-public class FilenameScraperAdaptorTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class FilenameScraperAdaptorTest {
   private static final String TEST_SCRAPING_RULE =
       "^(([\\w[\\s][,-]]+)?(\\sVol\\.))([0-9]{4}).*\\#([0-9]{1,5}).*\\(([a-zA-Z]+, [0-9]{4})\\).*$";
   private static final String TEST_DATE_FORMAT = "MMMMM, yyyy";
@@ -55,8 +57,8 @@ public class FilenameScraperAdaptorTest {
   @InjectMocks private FilenameScraperAdaptor adaptor;
   @Mock private FilenameScrapingRule filenameScrapingRule;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     Mockito.when(filenameScrapingRule.getRule()).thenReturn(TEST_SCRAPING_RULE);
     Mockito.when(filenameScrapingRule.getDateFormat()).thenReturn(TEST_DATE_FORMAT);
     Mockito.when(filenameScrapingRule.getSeriesPosition()).thenReturn(2);
@@ -66,7 +68,7 @@ public class FilenameScraperAdaptorTest {
   }
 
   @Test
-  public void testExecuteFilenameDoesNotApply() {
+  void ExecuteFilenameDoesNotApply() {
     final FilenameMetadata result = adaptor.execute(TEST_INVALID_FILENAME, filenameScrapingRule);
 
     assertNotNull(result);
@@ -74,7 +76,7 @@ public class FilenameScraperAdaptorTest {
   }
 
   @Test
-  public void testExecute() {
+  void execute() {
     final FilenameMetadata result = adaptor.execute(TEST_FILENAME, filenameScrapingRule);
 
     assertNotNull(result);
@@ -86,7 +88,7 @@ public class FilenameScraperAdaptorTest {
   }
 
   @Test
-  public void testExecuteInvalidDate() {
+  void execute_invalidDate() {
     final FilenameMetadata result =
         adaptor.execute(TEST_FILENAME_INVALID_DATE, filenameScrapingRule);
 

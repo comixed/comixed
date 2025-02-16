@@ -21,15 +21,15 @@ package org.comixedproject.service.metadata.action;
 import static org.junit.Assert.*;
 
 import org.comixedproject.service.admin.ConfigurationService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ProcessComicDescriptionActionTest {
+@ExtendWith(MockitoExtension.class)
+class ProcessComicDescriptionActionTest {
   private static final String TEST_TEXT = "This is the actual text we want!";
   private static final String TEST_TEXT_WITH_HTML =
       String.format("<html><head></head><body>%s</body></html>", TEST_TEXT);
@@ -37,7 +37,7 @@ public class ProcessComicDescriptionActionTest {
   @Mock private ConfigurationService configurationService;
 
   @Test
-  public void testExecute_stripHtmlFeatureDisabled() {
+  void execute_stripHtmlFeatureDisabled() {
     Mockito.when(
             configurationService.isFeatureEnabled(
                 ConfigurationService.CFG_STRIP_HTML_FROM_METADATA))
@@ -49,7 +49,7 @@ public class ProcessComicDescriptionActionTest {
   }
 
   @Test
-  public void testExecute_stripHtmlFeatureEnabled() {
+  void execute_stripHtmlFeatureEnabled() {
     Mockito.when(
             configurationService.isFeatureEnabled(
                 ConfigurationService.CFG_STRIP_HTML_FROM_METADATA))

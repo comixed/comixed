@@ -24,14 +24,17 @@ import static org.junit.Assert.*;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Set;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
-public class SelectedHashManagerTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class SelectedHashManagerTest {
   @InjectMocks private SelectedHashManager manager;
   @Mock private HttpSession session;
   @Mock private Set<String> selectionSet;
@@ -39,13 +42,13 @@ public class SelectedHashManagerTest {
 
   @Captor private ArgumentCaptor<Set<String>> selectionSetArgumentCaptor;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     Mockito.when(session.getAttribute(HASH_SELECTIONS)).thenReturn(selectionSet);
   }
 
   @Test
-  public void testLoad_noSelectionsFound() {
+  void load_noSelectionsFound() {
     Mockito.when(session.getAttribute(HASH_SELECTIONS)).thenReturn(null);
 
     final Set<String> result = manager.load(session);
@@ -57,7 +60,7 @@ public class SelectedHashManagerTest {
   }
 
   @Test
-  public void testLoad() {
+  void load() {
     final Set<String> result = manager.load(session);
 
     assertNotNull(result);
@@ -67,14 +70,14 @@ public class SelectedHashManagerTest {
   }
 
   @Test
-  public void testSave() {
+  void save() {
     manager.save(session, selectionSet);
 
     Mockito.verify(session, Mockito.times(1)).setAttribute(HASH_SELECTIONS, selectionSet);
   }
 
   @Test
-  public void testMerge() {
+  void merge() {
     manager.merge(session, additionalSelectionList);
 
     Mockito.verify(session, Mockito.times(1)).getAttribute(HASH_SELECTIONS);
@@ -83,7 +86,7 @@ public class SelectedHashManagerTest {
   }
 
   @Test
-  public void testClear() {
+  void clear() {
     Mockito.doNothing()
         .when(session)
         .setAttribute(Mockito.anyString(), selectionSetArgumentCaptor.capture());

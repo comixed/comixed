@@ -22,19 +22,19 @@ import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
 
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class NoopComicBookProcessorTest {
+@ExtendWith(MockitoExtension.class)
+class NoopComicBookProcessorTest {
   @InjectMocks private NoopComicProcessor processor;
   @Mock private ComicBook comicBook;
 
   @Test
-  public void testProcess() {
+  void process() {
     final ComicBook result = processor.process(comicBook);
 
     assertNotNull(result);

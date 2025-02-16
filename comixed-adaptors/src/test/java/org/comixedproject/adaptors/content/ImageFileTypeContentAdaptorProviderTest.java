@@ -18,41 +18,42 @@
 
 package org.comixedproject.adaptors.content;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ImageFileTypeContentAdaptorProviderTest {
+@ExtendWith(MockitoExtension.class)
+class ImageFileTypeContentAdaptorProviderTest {
   @InjectMocks private ImageFileTypeContentAdaptorProvider provider;
 
   @Test
-  public void testCreate() {
+  void create() {
     final FileTypeContentAdaptor result = provider.create();
 
     assertNotNull(result);
   }
 
   @Test
-  public void testSupportsJpeg() {
+  void supports_jpeg() {
     assertTrue(provider.supports("jpeg"));
   }
 
   @Test
-  public void testSupportsGif() {
+  void supports_gif() {
     assertTrue(provider.supports("gif"));
   }
 
   @Test
-  public void testSupportsPng() {
+  void supports_png() {
     assertTrue(provider.supports("png"));
   }
 
   @Test
-  public void testSupportsWebP() {
+  void supports_webP() {
     assertTrue(provider.supports("webp"));
   }
 }

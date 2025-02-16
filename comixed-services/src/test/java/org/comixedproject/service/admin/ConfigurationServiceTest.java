@@ -24,14 +24,17 @@ import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.admin.ConfigurationOption;
 import org.comixedproject.repositories.admin.ConfigurationRepository;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ConfigurationServiceTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ConfigurationServiceTest {
   private static final String TEST_OPTION_NAME = "option.name";
   private static final String TEST_OPTION_VALUE = "option-value";
   private static final String TEST_DEFAULT_OPTION_VALUE = "default-option-value";
@@ -47,7 +50,7 @@ public class ConfigurationServiceTest {
 
   private List<ConfigurationOption> optionList = new ArrayList<>();
 
-  @Before
+  @BeforeEach
   public void setUp() {
     optionList.add(option);
     Mockito.when(option.getName()).thenReturn(TEST_OPTION_NAME);
@@ -57,7 +60,7 @@ public class ConfigurationServiceTest {
   }
 
   @Test
-  public void testGetAll() {
+  void getAll() {
     Mockito.when(configurationRepository.getAll()).thenReturn(optionList);
 
     final List<ConfigurationOption> result = service.getAll();
@@ -69,7 +72,7 @@ public class ConfigurationServiceTest {
   }
 
   @Test
-  public void testSaveConfigurationOptionsEntryNotFound() throws ConfigurationOptionException {
+  void saveOptions_entryNotFound() throws ConfigurationOptionException {
     Mockito.when(configurationRepository.findByName(Mockito.anyString())).thenReturn(null);
     Mockito.when(configurationRepository.save(configurationOptionArgumentCaptor.capture()))
         .thenReturn(existingOption);
@@ -78,18 +81,19 @@ public class ConfigurationServiceTest {
 
     assertNotNull(result.isEmpty());
 
-    final ConfigurationOption record = configurationOptionArgumentCaptor.getValue();
+    final ConfigurationOption configurationOption = configurationOptionArgumentCaptor.getValue();
 
-    assertEquals(TEST_OPTION_NAME, record.getName());
-    assertEquals(TEST_OPTION_VALUE, record.getValue());
+    assertEquals(TEST_OPTION_NAME, configurationOption.getName());
+    assertEquals(TEST_OPTION_VALUE, configurationOption.getValue());
 
     Mockito.verify(configurationRepository, Mockito.times(optionList.size()))
         .findByName(TEST_OPTION_NAME);
-    Mockito.verify(configurationRepository, Mockito.times(optionList.size())).save(record);
+    Mockito.verify(configurationRepository, Mockito.times(optionList.size()))
+        .save(configurationOption);
   }
 
   @Test
-  public void testSaveConfigurationOptions() throws ConfigurationOptionException {
+  void saveOptions() throws ConfigurationOptionException {
     Mockito.when(configurationRepository.findByName(Mockito.anyString()))
         .thenReturn(existingOption);
     Mockito.when(configurationRepository.save(Mockito.any(ConfigurationOption.class)))
@@ -110,7 +114,7 @@ public class ConfigurationServiceTest {
   }
 
   @Test
-  public void testGetOptionValueNotFound() {
+  void getOptionValue_notFound() {
     Mockito.when(configurationRepository.findByName(Mockito.anyString())).thenReturn(null);
 
     final String result = service.getOptionValue(TEST_OPTION_NAME);
@@ -121,7 +125,7 @@ public class ConfigurationServiceTest {
   }
 
   @Test
-  public void testGetOptionValue() {
+  void getOptionValue() {
     Mockito.when(configurationRepository.findByName(Mockito.anyString())).thenReturn(option);
 
     final String result = service.getOptionValue(TEST_OPTION_NAME);
@@ -133,7 +137,7 @@ public class ConfigurationServiceTest {
   }
 
   @Test
-  public void testGetOptionValueWithDefaultNotFound() {
+  void getOptionValue_withDefault_notFound() {
     Mockito.when(configurationRepository.findByName(Mockito.anyString())).thenReturn(null);
 
     final String result = service.getOptionValue(TEST_OPTION_NAME, TEST_DEFAULT_OPTION_VALUE);
@@ -145,7 +149,7 @@ public class ConfigurationServiceTest {
   }
 
   @Test
-  public void testGetOptionValueWithDefault() {
+  void getOptionValue_withDefault() {
     Mockito.when(configurationRepository.findByName(Mockito.anyString())).thenReturn(option);
 
     final String result = service.getOptionValue(TEST_OPTION_NAME, TEST_DEFAULT_OPTION_VALUE);
@@ -157,7 +161,7 @@ public class ConfigurationServiceTest {
   }
 
   @Test
-  public void testIsFeatureEnabledNotFound() {
+  void isFeatureEnabled_notFound() {
     Mockito.when(configurationRepository.findByName(Mockito.anyString())).thenReturn(null);
 
     assertFalse(service.isFeatureEnabled(TEST_OPTION_NAME));
@@ -166,7 +170,7 @@ public class ConfigurationServiceTest {
   }
 
   @Test
-  public void testIsFeatureEnabledNotEnabled() {
+  void isFeatureEnabled_notEnabled() {
     Mockito.when(option.getValue()).thenReturn(Boolean.FALSE.toString());
     Mockito.when(configurationRepository.findByName(Mockito.anyString())).thenReturn(option);
 
@@ -176,7 +180,7 @@ public class ConfigurationServiceTest {
   }
 
   @Test
-  public void testIsFeatureEnabledEnabled() {
+  void isFeatureEnabledEnabled() {
     Mockito.when(option.getValue()).thenReturn(Boolean.TRUE.toString());
     Mockito.when(configurationRepository.findByName(Mockito.anyString())).thenReturn(option);
 

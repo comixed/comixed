@@ -27,21 +27,19 @@ import org.comixedproject.opds.model.OPDSAcquisitionFeed;
 import org.comixedproject.opds.model.OPDSNavigationFeed;
 import org.comixedproject.opds.service.OPDSAcquisitionService;
 import org.comixedproject.opds.service.OPDSNavigationService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class OPDSSeriesControllerTest {
+@ExtendWith(MockitoExtension.class)
+class OPDSSeriesControllerTest {
   private static final boolean TEST_UNREAD = RandomUtils.nextBoolean();
   private static final String TEST_SERIES_NAME_ENCODED = "The encoded series";
   private static final String TEST_SERIES_NAME_DECODED = "The decoded series";
-  private static final String TEST_VOLUME_NAME_ENCODED = "The encoded volume";
-  private static final String TEST_VOLUME_NAME_DECODED = "The decoded volume";
   private static final String TEST_EMAIL = "reader@comixedproject.org";
 
   @InjectMocks private OPDSSeriesController controller;
@@ -52,13 +50,13 @@ public class OPDSSeriesControllerTest {
   @Mock private OPDSAcquisitionFeed opdsAcquisitionFeed;
   @Mock private Principal principal;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
   }
 
   @Test
-  public void testGetRootFeedForSeries() {
+  void getRootFeedForSeries() {
     Mockito.when(
             opdsNavigationService.getRootFeedForSeries(Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(opdsNavigationFeed);
@@ -73,7 +71,7 @@ public class OPDSSeriesControllerTest {
   }
 
   @Test
-  public void testGetVolumeFeedForSeries() {
+  void getVolumeFeedForSeries() {
     Mockito.when(opdsUtils.urlDecodeString(Mockito.anyString()))
         .thenReturn(TEST_SERIES_NAME_DECODED);
     Mockito.when(

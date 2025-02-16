@@ -22,21 +22,21 @@ import static org.junit.Assert.*;
 
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class RemoveComicBooksWithoutDetailsProcessorTest {
+@ExtendWith(MockitoExtension.class)
+class RemoveComicBooksWithoutDetailsProcessorTest {
   @InjectMocks private RemoveComicBooksWithoutDetailsProcessor processor;
   @Mock private ComicBookService comicBookService;
   @Mock private ComicBook comicBook;
 
   @Test
-  public void process() {
+  void process() {
     final ComicBook result = processor.process(comicBook);
 
     assertNull(result);

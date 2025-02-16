@@ -21,6 +21,7 @@ package org.comixedproject.opds.service;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -40,16 +41,19 @@ import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
-public class OPDSNavigationServiceTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class OPDSNavigationServiceTest {
   private static final boolean TEST_UNREAD = RandomUtils.nextBoolean();
   private static final String TEST_COLLECTION_ENTRY_NAME = "The Collection Name";
   private static final String TEST_SUBSET_ENTRY_NAME = "The collection subset name";
@@ -75,8 +79,8 @@ public class OPDSNavigationServiceTest {
   private Set<Integer> weekList = new HashSet<>();
   private List<Long> entryIdList = new ArrayList<>();
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     collectionList.add(TEST_COLLECTION_ENTRY_NAME);
     collectionSet.add(TEST_COLLECTION_ENTRY_NAME);
     readingLists.add(readingList);
@@ -90,7 +94,7 @@ public class OPDSNavigationServiceTest {
   }
 
   @Test
-  public void testGetRoot() {
+  void getRoot() {
     OPDSNavigationFeed result = service.getRootFeed();
 
     assertNotNull(result);
@@ -104,7 +108,7 @@ public class OPDSNavigationServiceTest {
   }
 
   @Test
-  public void testGetLibraryFeed() {
+  void getLibraryFeed() {
     OPDSNavigationFeed result = service.getLibraryFeed(TEST_UNREAD);
 
     assertNotNull(result);
@@ -133,7 +137,7 @@ public class OPDSNavigationServiceTest {
   }
 
   @Test
-  public void testRootFeedForPublishers() {
+  void rootFeedForPublishers() {
     Mockito.when(comicDetailService.getAllPublishers(Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(collectionList);
 
@@ -147,7 +151,7 @@ public class OPDSNavigationServiceTest {
   }
 
   @Test
-  public void testGetSeriesFeedForPublisher() {
+  void getSeriesFeedForPublisher() {
     Mockito.when(
             comicDetailService.getAllSeriesForPublisher(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
@@ -164,7 +168,7 @@ public class OPDSNavigationServiceTest {
   }
 
   @Test
-  public void testGetVolumeFeedForPublisherAndSeries() {
+  void getVolumeFeedForPublisherAndSeries() {
     Mockito.when(
             comicDetailService.getAllVolumesForPublisherAndSeries(
                 Mockito.anyString(),
@@ -186,7 +190,7 @@ public class OPDSNavigationServiceTest {
   }
 
   @Test
-  public void testRootFeedForSeries() {
+  void rootFeedForSeries() {
     Mockito.when(comicDetailService.getAllSeries(Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(collectionList);
 
@@ -200,7 +204,7 @@ public class OPDSNavigationServiceTest {
   }
 
   @Test
-  public void testGetVolumeFeedForSeries() {
+  void getVolumeFeedForSeries() {
     Mockito.when(
             comicDetailService.getAllPublishersForSeries(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
@@ -217,7 +221,7 @@ public class OPDSNavigationServiceTest {
   }
 
   @Test
-  public void testGetCollectionFeedForCharacter() {
+  void getCollectionFeedForCharacter() {
     Mockito.when(
             comicDetailService.getAllValuesForTag(
                 Mockito.any(ComicTagType.class), Mockito.anyString(), Mockito.anyBoolean()))
@@ -234,7 +238,7 @@ public class OPDSNavigationServiceTest {
   }
 
   @Test
-  public void testGetCollectionFeedForTeams() {
+  void getCollectionFeedForTeams() {
     Mockito.when(
             comicDetailService.getAllValuesForTag(
                 Mockito.any(ComicTagType.class), Mockito.anyString(), Mockito.anyBoolean()))
@@ -251,7 +255,7 @@ public class OPDSNavigationServiceTest {
   }
 
   @Test
-  public void testGetCollectionFeedForLocations() {
+  void getCollectionFeedForLocations() {
     Mockito.when(
             comicDetailService.getAllValuesForTag(
                 Mockito.any(ComicTagType.class), Mockito.anyString(), Mockito.anyBoolean()))
@@ -268,7 +272,7 @@ public class OPDSNavigationServiceTest {
   }
 
   @Test
-  public void testGetCollectionFeedForStory() {
+  void getCollectionFeedForStory() {
     Mockito.when(
             comicDetailService.getAllValuesForTag(
                 Mockito.any(ComicTagType.class), Mockito.anyString(), Mockito.anyBoolean()))
@@ -284,21 +288,16 @@ public class OPDSNavigationServiceTest {
         .getAllValuesForTag(ComicTagType.STORY, TEST_EMAIL, TEST_UNREAD);
   }
 
-  @Test(expected = OPDSException.class)
-  public void testLoadReadingListFeedReadingListException()
-      throws ReadingListException, OPDSException {
+  @Test
+  void loadReadingListFeedReadingListException() throws ReadingListException {
     Mockito.when(readingListService.loadReadingListsForUser(Mockito.anyString()))
         .thenThrow(ReadingListException.class);
 
-    try {
-      service.getReadingListsFeed(TEST_EMAIL);
-    } finally {
-      Mockito.verify(readingListService, Mockito.times(1)).loadReadingListsForUser(TEST_EMAIL);
-    }
+    assertThrows(OPDSException.class, () -> service.getReadingListsFeed(TEST_EMAIL));
   }
 
   @Test
-  public void testLoadReadingListFeed() throws ReadingListException, OPDSException {
+  void loadReadingListFeed() throws ReadingListException, OPDSException {
     Mockito.when(readingListService.loadReadingListsForUser(Mockito.anyString()))
         .thenReturn(readingLists);
 
@@ -314,7 +313,7 @@ public class OPDSNavigationServiceTest {
   }
 
   @Test
-  public void testGetYearsFeed() {
+  void getYearsFeed() {
     Mockito.when(comicDetailService.getAllYears(Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(yearsList);
 
@@ -328,7 +327,7 @@ public class OPDSNavigationServiceTest {
   }
 
   @Test
-  public void testGetWeeksFeedForYear() {
+  void getWeeksFeedForYear() {
     Mockito.when(
             comicDetailService.getAllWeeksForYear(
                 Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))

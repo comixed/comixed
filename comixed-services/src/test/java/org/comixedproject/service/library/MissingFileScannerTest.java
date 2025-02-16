@@ -30,17 +30,20 @@ import java.util.Set;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicDetailService;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
-public class MissingFileScannerTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class MissingFileScannerTest {
   private static final String TEST_ROOT_DIRECTORY =
       new File("target/test-classes").getAbsolutePath();
   private static final String TEST_COMIC_FILENAME =
@@ -62,7 +65,7 @@ public class MissingFileScannerTest {
   private Set<String> missingComicDetailSet = new HashSet<>();
   private Set<String> notMissingComicDetailSet = new HashSet<>();
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(configurationService.getOptionValue(Mockito.anyString()))
         .thenReturn(TEST_ROOT_DIRECTORY);
@@ -80,7 +83,7 @@ public class MissingFileScannerTest {
     Mockito.when(comicDetailService.filenameFound(Mockito.anyString())).thenReturn(true);
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws IOException {
     if (scanner.watchService != null) {
       scanner.stopWatching();
@@ -88,7 +91,7 @@ public class MissingFileScannerTest {
   }
 
   @Test
-  public void testAfterPropertiesSet() throws Exception {
+  void afterPropertiesSet() throws Exception {
     scanner.afterPropertiesSet();
 
     assertNotNull(scanner.watchService);
@@ -97,7 +100,7 @@ public class MissingFileScannerTest {
   }
 
   @Test
-  public void testOptionChanged_directoryIsEmpty() {
+  void optionChanged_directoryIsEmpty() {
     scanner.rootDirectory = null;
 
     scanner.optionChanged(CFG_LIBRARY_ROOT_DIRECTORY, "");
@@ -110,7 +113,7 @@ public class MissingFileScannerTest {
   }
 
   @Test
-  public void testOptionChanged_fileNotDirectory() {
+  void optionChanged_fileNotDirectory() {
     scanner.rootDirectory = null;
 
     scanner.optionChanged(CFG_LIBRARY_ROOT_DIRECTORY, TEST_COMIC_FILENAME);
@@ -123,7 +126,7 @@ public class MissingFileScannerTest {
   }
 
   @Test
-  public void testOptionChanged() {
+  void optionChanged() {
     scanner.rootDirectory = null;
 
     scanner.optionChanged(CFG_LIBRARY_ROOT_DIRECTORY, TEST_ROOT_DIRECTORY);
@@ -137,7 +140,7 @@ public class MissingFileScannerTest {
   }
 
   @Test
-  public void testWatchDirectory_fileNotDirectory() throws IOException, InterruptedException {
+  void watchDirectory_fileNotDirectory() throws IOException, InterruptedException {
     scanner.watchService = watchService;
 
     scanner.watchDirectory(TEST_ROOT_DIRECTORY.substring(0, TEST_ROOT_DIRECTORY.length() - 1));
@@ -148,7 +151,7 @@ public class MissingFileScannerTest {
   }
 
   @Test
-  public void testProcessWatchEvent_notInLibrary() {
+  void processWatchEvent_notInLibrary() {
     Mockito.when(comicDetailService.filenameFound(Mockito.anyString())).thenReturn(false);
 
     scanner.processWatchEvent(key, watchEvent);
@@ -159,7 +162,7 @@ public class MissingFileScannerTest {
   }
 
   @Test
-  public void testProcessWatchEvent_fileDeleted() {
+  void processWatchEvent_fileDeleted() {
     Mockito.when(watchEvent.kind()).thenReturn(ENTRY_DELETE);
 
     scanner.processWatchEvent(key, watchEvent);
@@ -169,7 +172,7 @@ public class MissingFileScannerTest {
   }
 
   @Test
-  public void testProcessWatchEvent_fileModified() {
+  void processWatchEvent_fileModified() {
     Mockito.when(watchEvent.kind()).thenReturn(ENTRY_MODIFY);
 
     scanner.processWatchEvent(key, watchEvent);
@@ -179,7 +182,7 @@ public class MissingFileScannerTest {
   }
 
   @Test
-  public void testProcessWatchEvent_fileCreated() {
+  void processWatchEvent_fileCreated() {
     Mockito.when(watchEvent.kind()).thenReturn(ENTRY_CREATE);
 
     scanner.processWatchEvent(key, watchEvent);

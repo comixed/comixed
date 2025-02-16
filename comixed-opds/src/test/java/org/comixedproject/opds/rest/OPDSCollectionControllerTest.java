@@ -28,16 +28,16 @@ import org.comixedproject.opds.model.OPDSAcquisitionFeed;
 import org.comixedproject.opds.model.OPDSNavigationFeed;
 import org.comixedproject.opds.service.OPDSAcquisitionService;
 import org.comixedproject.opds.service.OPDSNavigationService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class OPDSCollectionControllerTest {
+@ExtendWith(MockitoExtension.class)
+class OPDSCollectionControllerTest {
   private static final String TEST_ENCODED_NAME = "Collection Entry Name";
   private static final String TEST_DECODED_NAME = "The decoded collection name";
   private static final String TEST_EMAIL = "reader@comixedproject.org";
@@ -53,13 +53,13 @@ public class OPDSCollectionControllerTest {
   @Mock private Principal principal;
   @Mock private OPDSUtils opdsUtils;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
   }
 
   @Test
-  public void testGetCollectionFeed() {
+  void getCollectionFeed() {
     Mockito.when(
             opdsNavigationService.getCollectionFeed(
                 Mockito.any(CollectionType.class), Mockito.anyString(), Mockito.anyBoolean()))
@@ -76,7 +76,7 @@ public class OPDSCollectionControllerTest {
   }
 
   @Test
-  public void testGetEntriesForCollectionFeed() {
+  void getEntriesForCollectionFeed() {
     Mockito.when(opdsUtils.urlDecodeString(Mockito.anyString())).thenReturn(TEST_DECODED_NAME);
     Mockito.when(
             opdsAcquisitionService.getEntriesForCollectionFeed(

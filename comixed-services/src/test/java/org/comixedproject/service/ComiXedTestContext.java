@@ -5,4 +5,4 @@ import org.springframework.test.context.TestPropertySource;
 
 @Configuration
 @TestPropertySource("classpath:application.properties")
-public class ComiXedTestContext {}
+class ComiXedTestContext {}

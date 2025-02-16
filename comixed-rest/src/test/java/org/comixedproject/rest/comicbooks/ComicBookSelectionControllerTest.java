@@ -34,16 +34,19 @@ import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.comixedproject.service.library.DisplayableComicService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ComicBookSelectionControllerTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ComicBookSelectionControllerTest {
   private static final String TEST_ENCODED_SELECTIONS = "This is the encoded selection set";
   private static final String TEST_REENCODED_SELECTIONS = "This is the selection set re-encoded";
   private static final Long TEST_COMIC_BOOK_ID = 17L;
@@ -64,8 +67,8 @@ public class ComicBookSelectionControllerTest {
   @Mock private Principal principal;
   @Mock private List<Long> comicDetailIdList;
 
-  @Before
-  public void setUp() throws ComicBookSelectionException, ComiXedUserException {
+  @BeforeEach
+  void setUp() throws ComicBookSelectionException, ComiXedUserException {
     Mockito.when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
     Mockito.when(comicSelectionService.decodeSelections(TEST_ENCODED_SELECTIONS))
         .thenReturn(selectedIds);
@@ -77,7 +80,7 @@ public class ComicBookSelectionControllerTest {
   }
 
   @Test
-  public void testGetAllSelections() throws ComicBookSelectionException {
+  void getAllSelections() throws ComicBookSelectionException {
     final List result = controller.getAllSelections(httpSession);
 
     assertNotNull(result);
@@ -87,7 +90,7 @@ public class ComicBookSelectionControllerTest {
   }
 
   @Test
-  public void testAddSingleSelection_selecting() throws ComicBookSelectionException {
+  void addSingleSelection_selecting() throws ComicBookSelectionException {
     controller.addSingleSelection(httpSession, TEST_COMIC_BOOK_ID);
 
     Mockito.verify(comicSelectionService, Mockito.times(1))
@@ -98,7 +101,7 @@ public class ComicBookSelectionControllerTest {
   }
 
   @Test
-  public void testAddSingleSelection_deselecting() throws ComicBookSelectionException {
+  void addSingleSelection_deselecting() throws ComicBookSelectionException {
     controller.deleteSingleSelection(httpSession, TEST_COMIC_BOOK_ID);
 
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
@@ -110,7 +113,7 @@ public class ComicBookSelectionControllerTest {
   }
 
   @Test
-  public void testSelectComicBooksByFilter_selecting() throws ComicBookSelectionException {
+  void selectComicBooksByFilter_selecting() throws ComicBookSelectionException {
     controller.selectComicBooksByFilter(
         httpSession,
         new MultipleComicBooksSelectionRequest(
@@ -124,7 +127,7 @@ public class ComicBookSelectionControllerTest {
   }
 
   @Test
-  public void testSelectComicBooksByFilter_deselecting() throws ComicBookSelectionException {
+  void selectComicBooksByFilter_deselecting() throws ComicBookSelectionException {
     controller.selectComicBooksByFilter(
         httpSession,
         new MultipleComicBooksSelectionRequest(
@@ -138,7 +141,7 @@ public class ComicBookSelectionControllerTest {
   }
 
   @Test
-  public void testAddComicBooksByTagTypeAndValue() throws ComicBookSelectionException {
+  void addComicBooksByTagTypeAndValue() throws ComicBookSelectionException {
     Mockito.when(opdsUtils.urlDecodeString(TEST_TAG_VALUE)).thenReturn(TEST_TAG_VALUE);
 
     controller.addComicBooksByTagTypeAndValue(httpSession, TEST_TAG_TYPE, TEST_TAG_VALUE);
@@ -152,7 +155,7 @@ public class ComicBookSelectionControllerTest {
   }
 
   @Test
-  public void testRemoveComicBooksByTagTypeAndValue() throws ComicBookSelectionException {
+  void removeComicBooksByTagTypeAndValue() throws ComicBookSelectionException {
     Mockito.when(opdsUtils.urlDecodeString(TEST_TAG_VALUE)).thenReturn(TEST_TAG_VALUE);
 
     controller.removeComicBooksByTagTypeAndValue(httpSession, TEST_TAG_TYPE, TEST_TAG_VALUE);
@@ -166,7 +169,7 @@ public class ComicBookSelectionControllerTest {
   }
 
   @Test
-  public void testAddSelectionsById_selecting() throws ComicBookSelectionException {
+  void addSelectionsById_selecting() throws ComicBookSelectionException {
     final List<Long> comicBookIdList = new ArrayList<Long>();
     for (long index = 1000L; index < 2000L; index++) comicBookIdList.add(index);
 
@@ -181,7 +184,7 @@ public class ComicBookSelectionControllerTest {
   }
 
   @Test
-  public void testAddSelectionsById_deselecting() throws ComicBookSelectionException {
+  void addSelectionsById_deselecting() throws ComicBookSelectionException {
     final List<Long> comicBookIdList = new ArrayList<Long>();
     for (long index = 1000L; index < 2000L; index++) comicBookIdList.add(index);
 
@@ -196,8 +199,7 @@ public class ComicBookSelectionControllerTest {
   }
 
   @Test
-  public void testAddSelectionsByPublisherForAddition_selecting()
-      throws ComicBookSelectionException {
+  void addSelectionsByPublisherForAddition_selecting() throws ComicBookSelectionException {
     Mockito.when(displayableComicService.getIdsByPublisher(Mockito.anyString()))
         .thenReturn(selectedIds);
 
@@ -213,8 +215,7 @@ public class ComicBookSelectionControllerTest {
   }
 
   @Test
-  public void testAddSelectionsByPublisherForAddition_deselecting()
-      throws ComicBookSelectionException {
+  void addSelectionsByPublisherForAddition_deselecting() throws ComicBookSelectionException {
     Mockito.when(displayableComicService.getIdsByPublisher(Mockito.anyString()))
         .thenReturn(selectedIds);
 
@@ -230,8 +231,7 @@ public class ComicBookSelectionControllerTest {
   }
 
   @Test
-  public void testAddSelectionsByPublisherSeriesVolume_selecting()
-      throws ComicBookSelectionException {
+  void addSelectionsByPublisherSeriesVolume_selecting() throws ComicBookSelectionException {
     Mockito.when(
             this.displayableComicService.getIdsByPublisherSeriesAndVolume(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
@@ -252,8 +252,7 @@ public class ComicBookSelectionControllerTest {
   }
 
   @Test
-  public void testAddSelectionsByPublisherSeriesVolume_deselecting()
-      throws ComicBookSelectionException {
+  void addSelectionsByPublisherSeriesVolume_deselecting() throws ComicBookSelectionException {
     Mockito.when(
             displayableComicService.getIdsByPublisherSeriesAndVolume(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
@@ -274,7 +273,7 @@ public class ComicBookSelectionControllerTest {
   }
 
   @Test
-  public void testAddDuplicateComicBooksToSelections() throws ComicBookSelectionException {
+  void addDuplicateComicBooksToSelections() throws ComicBookSelectionException {
     Mockito.when(displayableComicService.getDuplicateComicIds()).thenReturn(selectedIds);
 
     controller.addDuplicateComicBooksSelection(
@@ -289,7 +288,7 @@ public class ComicBookSelectionControllerTest {
   }
 
   @Test
-  public void testRemoveDuplicateComicBooksToSelections() throws ComicBookSelectionException {
+  void removeDuplicateComicBooksToSelections() throws ComicBookSelectionException {
     Mockito.when(displayableComicService.getDuplicateComicIds()).thenReturn(selectedIds);
 
     controller.addDuplicateComicBooksSelection(
@@ -304,7 +303,7 @@ public class ComicBookSelectionControllerTest {
   }
 
   @Test
-  public void testAddUnreadComicBooksSelection_selectingRead()
+  void addUnreadComicBooksSelection_selectingRead()
       throws ComicBookSelectionException, ComiXedUserException {
     controller.addUnreadComicBooksSelection(
         httpSession, principal, new UnreadComicBooksSelectionRequest(true, false));
@@ -318,7 +317,7 @@ public class ComicBookSelectionControllerTest {
   }
 
   @Test
-  public void testAddUnreadComicBooksSelection_deselectingRead()
+  void addUnreadComicBooksSelection_deselectingRead()
       throws ComicBookSelectionException, ComiXedUserException {
     controller.addUnreadComicBooksSelection(
         httpSession, principal, new UnreadComicBooksSelectionRequest(false, false));
@@ -332,7 +331,7 @@ public class ComicBookSelectionControllerTest {
   }
 
   @Test
-  public void testAddUnreadComicBooksSelection_selectingUnread()
+  void addUnreadComicBooksSelection_selectingUnread()
       throws ComicBookSelectionException, ComiXedUserException {
     controller.addUnreadComicBooksSelection(
         httpSession, principal, new UnreadComicBooksSelectionRequest(true, true));
@@ -346,7 +345,7 @@ public class ComicBookSelectionControllerTest {
   }
 
   @Test
-  public void testAddUnreadComicBooksSelection_deselectingUnread()
+  void addUnreadComicBooksSelection_deselectingUnread()
       throws ComicBookSelectionException, ComiXedUserException {
     controller.addUnreadComicBooksSelection(
         httpSession, principal, new UnreadComicBooksSelectionRequest(false, true));
@@ -360,7 +359,7 @@ public class ComicBookSelectionControllerTest {
   }
 
   @Test
-  public void testClearSelections() throws ComicBookSelectionException {
+  void clearSelections() throws ComicBookSelectionException {
     controller.clearSelections(httpSession);
 
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);

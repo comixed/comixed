@@ -18,8 +18,7 @@
 
 package org.comixedproject.adaptors.archive;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.util.List;
@@ -28,16 +27,13 @@ import org.comixedproject.AdaptorTestContext;
 import org.comixedproject.adaptors.archive.model.ArchiveWriteHandle;
 import org.comixedproject.adaptors.archive.model.CbzArchiveReadHandle;
 import org.comixedproject.adaptors.archive.model.ComicArchiveEntry;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = AdaptorTestContext.class)
-public class CbzArchiveAdaptorTest {
+class CbzArchiveAdaptorTest {
   private static final String TEST_ZIP_FILENAME = "src/test/resources/example.cbz";
   private static final String TEST_ZIP_FILENAME_WITH_SUBDIRS =
       "src/test/resources/example-with-subdirs.cbz";
@@ -45,13 +41,13 @@ public class CbzArchiveAdaptorTest {
 
   @Autowired private CbzArchiveAdaptor adaptor;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     FileUtils.deleteQuietly(new File(TEST_SAVE_FILENAME));
   }
 
   @Test
-  public void testGetEntries() throws ArchiveAdaptorException {
+  void getEntries() throws ArchiveAdaptorException {
     final CbzArchiveReadHandle archiveHandle = adaptor.openArchiveForRead(TEST_ZIP_FILENAME);
     final List<ComicArchiveEntry> entries = adaptor.getEntries(archiveHandle);
     adaptor.closeArchiveForRead(archiveHandle);
@@ -77,7 +73,7 @@ public class CbzArchiveAdaptorTest {
   }
 
   @Test
-  public void testGetEntriesInSubdirs() throws ArchiveAdaptorException {
+  void getEntries_inSubdirs() throws ArchiveAdaptorException {
     final CbzArchiveReadHandle archiveHandle =
         adaptor.openArchiveForRead(TEST_ZIP_FILENAME_WITH_SUBDIRS);
     final List<ComicArchiveEntry> entries = adaptor.getEntries(archiveHandle);
@@ -106,18 +102,15 @@ public class CbzArchiveAdaptorTest {
     assertEquals(17303073, entries.get(5).getSize());
   }
 
-  @Test(expected = ArchiveAdaptorException.class)
-  public void testGetEntryNotFound() throws ArchiveAdaptorException {
+  @Test
+  void readEntry_notFound() throws ArchiveAdaptorException {
     final CbzArchiveReadHandle archiveHandle = adaptor.openArchiveForRead(TEST_ZIP_FILENAME);
-    try {
-      adaptor.readEntry(archiveHandle, "exampleCBR.gif");
-    } finally {
-      adaptor.closeArchiveForRead(archiveHandle);
-    }
+    assertThrows(
+        ArchiveAdaptorException.class, () -> adaptor.readEntry(archiveHandle, "exampleCBR.gif"));
   }
 
   @Test
-  public void testGetEntry() throws ArchiveAdaptorException {
+  void readEntry() throws ArchiveAdaptorException {
     final CbzArchiveReadHandle archiveHandle = adaptor.openArchiveForRead(TEST_ZIP_FILENAME);
     final byte[] result = adaptor.readEntry(archiveHandle, "exampleCBR.jpg");
     adaptor.closeArchiveForRead(archiveHandle);
@@ -127,7 +120,7 @@ public class CbzArchiveAdaptorTest {
   }
 
   @Test
-  public void testSaveNewFile() throws ArchiveAdaptorException {
+  void save_newFile() throws ArchiveAdaptorException {
     CbzArchiveReadHandle readHandle = adaptor.openArchiveForRead(TEST_ZIP_FILENAME);
     final ArchiveWriteHandle writeHandle = adaptor.openArchiveForWrite(TEST_SAVE_FILENAME);
 

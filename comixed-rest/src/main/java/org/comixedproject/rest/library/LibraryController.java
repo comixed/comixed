@@ -250,7 +250,7 @@ public class LibraryController {
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.library.batch.rescan-selected")
   public void rescanSelectedComicBooks(final HttpSession session) throws Exception {
-    final List selectedIdList =
+    final List<Long> selectedIdList =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     log.info("Rescanning selected comic books");
     this.comicBookService.prepareForRescan(selectedIdList);

@@ -19,6 +19,7 @@
 package org.comixedproject.rest.library;
 
 import static junit.framework.TestCase.*;
+import static org.junit.Assert.assertThrows;
 
 import java.util.List;
 import org.comixedproject.model.library.DuplicatePage;
@@ -26,15 +27,15 @@ import org.comixedproject.model.net.library.LoadDuplicatePageListRequest;
 import org.comixedproject.model.net.library.LoadDuplicatePageListResponse;
 import org.comixedproject.service.library.DuplicatePageException;
 import org.comixedproject.service.library.DuplicatePageService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class DuplicatePageControllerTest {
+@ExtendWith(MockitoExtension.class)
+class DuplicatePageControllerTest {
   private static final String TEST_PAGE_HASH = "0123456789ABCDEF0123456789ABCDEF";
   private static final int TEST_PAGE_NUMBER = 74;
   private static final int TEST_PAGE_SIZE = 25;
@@ -49,7 +50,7 @@ public class DuplicatePageControllerTest {
   @Mock private LoadDuplicatePageListResponse duplicatePageListResponse;
 
   @Test
-  public void testGetDuplicatePageList() {
+  void getDuplicatePageList() {
     Mockito.when(
             duplicatePageService.getDuplicatePages(
                 Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
@@ -70,20 +71,16 @@ public class DuplicatePageControllerTest {
         .getDuplicatePages(TEST_PAGE_NUMBER, TEST_PAGE_SIZE, TEST_SORT_BY, TEST_SORT_DIRECTION);
   }
 
-  @Test(expected = DuplicatePageException.class)
-  public void testGetPageForHashServiceException() throws DuplicatePageException {
+  @Test
+  void getPageForHashServiceException() throws DuplicatePageException {
     Mockito.when(duplicatePageService.getForHash(Mockito.anyString()))
         .thenThrow(DuplicatePageException.class);
 
-    try {
-      controller.getForHash(TEST_PAGE_HASH);
-    } finally {
-      Mockito.verify(duplicatePageService, Mockito.times(1)).getForHash(TEST_PAGE_HASH);
-    }
+    assertThrows(DuplicatePageException.class, () -> controller.getForHash(TEST_PAGE_HASH));
   }
 
   @Test
-  public void testGetPageForHash() throws DuplicatePageException {
+  void getPageForHash() throws DuplicatePageException {
     Mockito.when(duplicatePageService.getForHash(Mockito.anyString())).thenReturn(duplicatePage);
 
     final DuplicatePage result = controller.getForHash(TEST_PAGE_HASH);

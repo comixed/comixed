@@ -21,24 +21,21 @@ package org.comixedproject.opds.rest;
 import static junit.framework.TestCase.*;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.opds.OPDSException;
 import org.comixedproject.opds.model.OPDSAcquisitionFeed;
 import org.comixedproject.opds.model.OPDSNavigationFeed;
 import org.comixedproject.opds.service.OPDSAcquisitionService;
 import org.comixedproject.opds.service.OPDSNavigationService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class OPDSListsControllerTest {
+@ExtendWith(MockitoExtension.class)
+class OPDSListsControllerTest {
   private static final String TEST_EMAIL = "reader@comixedproject.org";
   private static final long TEST_READING_LIST_ID = 217L;
 
@@ -49,15 +46,13 @@ public class OPDSListsControllerTest {
   @Mock private OPDSNavigationFeed opdsNavigationFeed;
   @Mock private OPDSAcquisitionFeed opdsAcquisitionFeed;
 
-  private List<ComicBook> comicBookList = new ArrayList<>();
-
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
   }
 
   @Test
-  public void testLoadReadingLists() throws OPDSException {
+  void loadReadingLists() throws OPDSException {
     Mockito.when(opdsNavigationService.getReadingListsFeed(Mockito.anyString()))
         .thenReturn(opdsNavigationFeed);
 
@@ -70,7 +65,7 @@ public class OPDSListsControllerTest {
   }
 
   @Test
-  public void testLoadReadingListEntries() throws OPDSException {
+  void loadReadingListEntries() throws OPDSException {
     Mockito.when(
             opdsAcquisitionService.getComicFeedForReadingList(
                 Mockito.anyString(), Mockito.anyLong()))

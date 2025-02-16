@@ -18,23 +18,23 @@
 
 package org.comixedproject.adaptors.encoders;
 
-import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class DataEncoderTest {
+@ExtendWith(MockitoExtension.class)
+class DataEncoderTest {
   private static final byte[] TEST_CONTENT =
       "This is some content that I want to encode".getBytes();
 
   @InjectMocks private DataEncoder encoder;
 
   @Test
-  public void testEncodeAndDecode() {
+  void encode_and_decode() {
     final String encoded = encoder.encode(TEST_CONTENT);
 
     assertNotNull(encoded);

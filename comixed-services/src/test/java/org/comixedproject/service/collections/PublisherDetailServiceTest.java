@@ -24,16 +24,19 @@ import java.util.List;
 import java.util.stream.Stream;
 import org.comixedproject.model.collections.PublisherDetail;
 import org.comixedproject.repositories.collections.PublisherDetailRepository;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PublisherDetailServiceTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class PublisherDetailServiceTest {
   private static final int TEST_PAGE_INDEX = 32;
   private static final int TEST_PAGE_SIZE = 25;
   private static final long TEST_PUBLISHER_COUNT = 475L;
@@ -46,14 +49,14 @@ public class PublisherDetailServiceTest {
 
   @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(publisherDetailStream.toList()).thenReturn(publisherDetailList);
     Mockito.when(publisherDetailPage.stream()).thenReturn(publisherDetailStream);
   }
 
   @Test
-  public void testGetAllPublishers_sortedByName_ascending() {
+  void getAllPublishers_sortedByName_ascending() {
     Mockito.when(publisherDetailRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(publisherDetailPage);
 
@@ -61,7 +64,7 @@ public class PublisherDetailServiceTest {
   }
 
   @Test
-  public void testGetAllPublishers_sortedByName_descending() {
+  void getAllPublishers_sortedByName_descending() {
     Mockito.when(publisherDetailRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(publisherDetailPage);
 
@@ -69,7 +72,7 @@ public class PublisherDetailServiceTest {
   }
 
   @Test
-  public void testGetAllPublishers_sortedByIssueCount_ascending() {
+  void getAllPublishers_sortedByIssueCount_ascending() {
     Mockito.when(publisherDetailRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(publisherDetailPage);
 
@@ -77,7 +80,7 @@ public class PublisherDetailServiceTest {
   }
 
   @Test
-  public void testGetAllPublishers_sortedByIssueCount_descending() {
+  void getAllPublishers_sortedByIssueCount_descending() {
     Mockito.when(publisherDetailRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(publisherDetailPage);
 
@@ -85,7 +88,7 @@ public class PublisherDetailServiceTest {
   }
 
   @Test
-  public void testGetAllPublishers_sortedBySeriesCount_ascending() {
+  void getAllPublishers_sortedBySeriesCount_ascending() {
     Mockito.when(publisherDetailRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(publisherDetailPage);
 
@@ -93,7 +96,7 @@ public class PublisherDetailServiceTest {
   }
 
   @Test
-  public void testGetAllPublishers_sortedBySeriesCount_descending() {
+  void getAllPublishers_sortedBySeriesCount_descending() {
     Mockito.when(publisherDetailRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(publisherDetailPage);
 
@@ -101,7 +104,7 @@ public class PublisherDetailServiceTest {
   }
 
   @Test
-  public void testGetAllPublishers_sortedByUnknown_ascending() {
+  void getAllPublishers_sortedByUnknown_ascending() {
     Mockito.when(publisherDetailRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(publisherDetailPage);
 
@@ -109,7 +112,7 @@ public class PublisherDetailServiceTest {
   }
 
   @Test
-  public void testGetAllPublishers_sortedByUnknown_descending() {
+  void getAllPublishers_sortedByUnknown_descending() {
     Mockito.when(publisherDetailRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(publisherDetailPage);
 
@@ -117,7 +120,7 @@ public class PublisherDetailServiceTest {
   }
 
   @Test
-  public void testGetAllPublishers_unsorted() {
+  void getAllPublishers_unsorted() {
     Mockito.when(publisherDetailRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(publisherDetailPage);
 
@@ -136,7 +139,7 @@ public class PublisherDetailServiceTest {
   }
 
   @Test
-  public void testGetPublisherCount() {
+  void getPublisherCount() {
     Mockito.when(publisherDetailRepository.getPublisherCount()).thenReturn(TEST_PUBLISHER_COUNT);
 
     final long result = service.getPublisherCount();

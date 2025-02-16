@@ -24,17 +24,15 @@ import static org.junit.Assert.assertNotNull;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.opds.model.OPDSNavigationFeed;
 import org.comixedproject.opds.service.OPDSNavigationService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-@SpringBootTest
-public class OPDSLibraryControllerTest {
+@ExtendWith(MockitoExtension.class)
+class OPDSLibraryControllerTest {
   private static final boolean TEST_UNREAD = RandomUtils.nextBoolean();
 
   @InjectMocks private OPDSLibraryController controller;
@@ -42,7 +40,7 @@ public class OPDSLibraryControllerTest {
   @Mock private OPDSNavigationFeed navigationFeed;
 
   @Test
-  public void testGetRoot() {
+  void getRoot() {
     Mockito.when(opdsNavigationService.getRootFeed()).thenReturn(navigationFeed);
 
     final OPDSNavigationFeed response = controller.getRootFeed();
@@ -54,7 +52,7 @@ public class OPDSLibraryControllerTest {
   }
 
   @Test
-  public void testGetLibraryFeed() {
+  void getLibraryFeed() {
     Mockito.when(opdsNavigationService.getLibraryFeed(Mockito.anyBoolean()))
         .thenReturn(navigationFeed);
 

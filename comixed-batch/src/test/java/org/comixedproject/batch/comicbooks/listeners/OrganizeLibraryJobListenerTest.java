@@ -23,15 +23,15 @@ import static org.comixedproject.batch.library.OrganizeLibraryConfiguration.ORGA
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
 import org.comixedproject.model.batch.BatchProcessDetail;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.core.*;
 
-@RunWith(MockitoJUnitRunner.class)
-public class OrganizeLibraryJobListenerTest {
+@ExtendWith(MockitoExtension.class)
+class OrganizeLibraryJobListenerTest {
   @InjectMocks private OrganizeLibraryJobListener listener;
   @Mock private JobInstance jobInstance;
   @Mock private JobExecution jobExecution;
@@ -40,7 +40,7 @@ public class OrganizeLibraryJobListenerTest {
 
   @Captor ArgumentCaptor<BatchProcessDetail> batchProcessDetailArgumentCaptor;
 
-  @Before
+  @BeforeEach
   public void setUp() throws PublishingException {
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
     Mockito.when(jobInstance.getJobName()).thenReturn(ORGANIZE_LIBRARY_JOB);
@@ -54,7 +54,7 @@ public class OrganizeLibraryJobListenerTest {
   }
 
   @Test
-  public void testBeforeJob() throws PublishingException {
+  void beforeJob() throws PublishingException {
     listener.beforeJob(jobExecution);
 
     final BatchProcessDetail detail = batchProcessDetailArgumentCaptor.getValue();
@@ -63,7 +63,7 @@ public class OrganizeLibraryJobListenerTest {
   }
 
   @Test
-  public void testAfterJob() throws PublishingException {
+  void afterJob() throws PublishingException {
     listener.afterJob(jobExecution);
 
     final BatchProcessDetail detail = batchProcessDetailArgumentCaptor.getValue();

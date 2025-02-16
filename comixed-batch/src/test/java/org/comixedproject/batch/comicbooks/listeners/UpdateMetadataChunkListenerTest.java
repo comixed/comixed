@@ -30,17 +30,17 @@ import org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAct
 import org.comixedproject.model.batch.BatchProcessDetail;
 import org.comixedproject.model.messaging.batch.ProcessComicBooksStatus;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.scope.context.StepContext;
 
-@RunWith(MockitoJUnitRunner.class)
-public class UpdateMetadataChunkListenerTest {
+@ExtendWith(MockitoExtension.class)
+class UpdateMetadataChunkListenerTest {
   private static final long TEST_TOTAL_COMICS = 77L;
   private static final long TEST_PROCESSED_COMICS = 15L;
 
@@ -58,7 +58,7 @@ public class UpdateMetadataChunkListenerTest {
   @Captor ArgumentCaptor<ProcessComicBooksStatus> processComicStatusArgumentCaptor;
   @Captor ArgumentCaptor<BatchProcessDetail> batchProcessDetailArgumentCaptor;
 
-  @Before
+  @BeforeEach
   public void setUp() throws PublishingException {
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
     Mockito.when(jobInstance.getJobName()).thenReturn(UPDATE_METADATA_JOB);
@@ -80,7 +80,7 @@ public class UpdateMetadataChunkListenerTest {
   }
 
   @Test
-  public void testBeforeChunk() throws PublishingException {
+  void beforeChunk() throws PublishingException {
     listener.beforeChunk(chunkContext);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
@@ -95,7 +95,7 @@ public class UpdateMetadataChunkListenerTest {
   }
 
   @Test
-  public void testAfterChunk() throws PublishingException {
+  void afterChunk() throws PublishingException {
     listener.afterChunk(chunkContext);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
@@ -110,7 +110,7 @@ public class UpdateMetadataChunkListenerTest {
   }
 
   @Test
-  public void testAfterChunkError() throws PublishingException {
+  void afterChunkError() throws PublishingException {
     listener.afterChunkError(chunkContext);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
@@ -125,7 +125,7 @@ public class UpdateMetadataChunkListenerTest {
   }
 
   @Test
-  public void testAfterChunkPublishingException() throws PublishingException {
+  void afterChunk_publishingException() throws PublishingException {
     listener.beforeChunk(chunkContext);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();

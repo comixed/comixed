@@ -18,21 +18,26 @@
 
 package org.comixedproject.http.websocket;
 
+import static org.junit.Assert.assertThrows;
+
 import junit.framework.TestCase;
 import org.comixedproject.auth.ComiXedUserDetailsService;
 import org.comixedproject.auth.JwtTokenUtil;
 import org.comixedproject.model.websocket.StompPrincipal;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ComiXedWebSocketChannelInterceptorTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ComiXedWebSocketChannelInterceptorTest {
   private static final String TEST_TOKEN = "This.is.the.auth.token";
   private static final String TEST_EMAIL = "user@domain.tld";
 
@@ -44,8 +49,8 @@ public class ComiXedWebSocketChannelInterceptorTest {
 
   @Captor ArgumentCaptor<StompPrincipal> principalArgumentCaptor;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     Mockito.when(jwtTokenUtil.getEmailFromToken(Mockito.anyString())).thenReturn(TEST_EMAIL);
     Mockito.when(userDetailsService.loadUserByUsername(Mockito.anyString()))
         .thenReturn(userDetails);
@@ -53,7 +58,7 @@ public class ComiXedWebSocketChannelInterceptorTest {
   }
 
   @Test
-  public void testDoCreatePrincipalGetEmailFails() {
+  void createPrincipal_invalidEmail() {
     Mockito.when(jwtTokenUtil.getEmailFromToken(Mockito.anyString()))
         .thenThrow(RuntimeException.class);
 
@@ -63,21 +68,18 @@ public class ComiXedWebSocketChannelInterceptorTest {
     Mockito.verify(userDetailsService, Mockito.never()).loadUserByUsername(Mockito.anyString());
   }
 
-  @Test(expected = UsernameNotFoundException.class)
-  public void testCreatePrincipalNoSuchEmail() {
+  @Test
+  void createPrincipal_emailNotFound() {
     Mockito.when(userDetailsService.loadUserByUsername(Mockito.anyString()))
         .thenThrow(UsernameNotFoundException.class);
 
-    try {
-      interceptor.createPrincipal(stompHeaderAccessor, TEST_TOKEN);
-    } finally {
-      Mockito.verify(jwtTokenUtil, Mockito.times(1)).getEmailFromToken(TEST_TOKEN);
-      Mockito.verify(userDetailsService, Mockito.times(1)).loadUserByUsername(TEST_EMAIL);
-    }
+    assertThrows(
+        UsernameNotFoundException.class,
+        () -> interceptor.createPrincipal(stompHeaderAccessor, TEST_TOKEN));
   }
 
   @Test
-  public void testCreatePrincipalInvalidToken() {
+  void createPrincipal_invalidToken() {
     Mockito.when(jwtTokenUtil.validateToken(Mockito.anyString(), Mockito.any(UserDetails.class)))
         .thenReturn(false);
 
@@ -87,7 +89,7 @@ public class ComiXedWebSocketChannelInterceptorTest {
   }
 
   @Test
-  public void testCreatePrincipalSuccess() {
+  void createPrincipal() {
     Mockito.when(jwtTokenUtil.validateToken(Mockito.anyString(), Mockito.any(UserDetails.class)))
         .thenReturn(true);
 

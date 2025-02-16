@@ -28,15 +28,15 @@ import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.service.comicpages.ComicPageService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class MarkBlockedPagesReaderTest {
+@ExtendWith(MockitoExtension.class)
+class MarkBlockedPagesReaderTest {
   private static final int MAX_RECORDS = 25;
 
   @InjectMocks private MarkBlockedPagesReader reader;
@@ -46,7 +46,7 @@ public class MarkBlockedPagesReaderTest {
   private List<ComicPage> pageList = new ArrayList<>();
 
   @Test
-  public void testReadNoneLoaded() {
+  void read_noneLoaded() {
     for (int index = 0; index < MAX_RECORDS; index++) pageList.add(page);
 
     Mockito.when(comicPageService.getUnmarkedWithBlockedHash(Mockito.anyInt()))
@@ -66,7 +66,7 @@ public class MarkBlockedPagesReaderTest {
   }
 
   @Test
-  public void testReadNoneRemaining() {
+  void read_noneRemaining() {
     for (int index = 0; index < MAX_RECORDS; index++) pageList.add(page);
 
     Mockito.when(comicPageService.getUnmarkedWithBlockedHash(Mockito.anyInt()))
@@ -86,7 +86,7 @@ public class MarkBlockedPagesReaderTest {
   }
 
   @Test
-  public void testReadSomeRemaining() {
+  void read_someRemaining() {
     for (int index = 0; index < MAX_RECORDS; index++) pageList.add(page);
 
     reader.pageList = pageList;
@@ -102,7 +102,7 @@ public class MarkBlockedPagesReaderTest {
   }
 
   @Test
-  public void testReadNoneLoadedNoneFound() {
+  void read_noneLoaded_noneFound() {
     Mockito.when(comicPageService.getUnmarkedWithBlockedHash(Mockito.anyInt()))
         .thenReturn(pageList);
 

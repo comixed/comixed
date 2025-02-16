@@ -21,16 +21,16 @@ package org.comixedproject.batch.library.writers;
 import java.util.ArrayList;
 import org.comixedproject.model.library.OrganizingComic;
 import org.comixedproject.service.library.OrganizingComicService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.item.Chunk;
 
-@RunWith(MockitoJUnitRunner.class)
-public class MoveComicFilesWriterTest {
+@ExtendWith(MockitoExtension.class)
+class MoveComicFilesWriterTest {
   @InjectMocks private MoveComicFilesWriter writer;
   @Mock private OrganizingComicService organizingComicService;
   @Mock private OrganizingComic organizingComic;
@@ -38,7 +38,7 @@ public class MoveComicFilesWriterTest {
   private Chunk<OrganizingComic> organizingComics = new Chunk<>(new ArrayList<>());
 
   @Test
-  public void testWrite() {
+  void write() {
     for (int index = 0; index < 25; index++) organizingComics.add(organizingComic);
 
     writer.write(organizingComics);

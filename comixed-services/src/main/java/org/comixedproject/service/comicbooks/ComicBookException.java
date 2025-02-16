@@ -40,7 +40,9 @@ public class ComicBookException extends Exception {
    * Creates an instance with the given message and cause.
    *
    * @param message the message
-   * @param error the cause
+   * @param cause the cause
    */
-  public ComicBookException(final String message, final Exception error) {}
+  public ComicBookException(final String message, final Exception cause) {
+    super(message, cause);
+  }
 }

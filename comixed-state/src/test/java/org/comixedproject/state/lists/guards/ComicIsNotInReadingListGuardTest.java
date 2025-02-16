@@ -1,6 +1,6 @@
 /*
- * ComiXed - A digital comicBook book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,8 +20,8 @@ package org.comixedproject.state.lists.guards;
 
 import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC;
 import static org.comixedproject.state.lists.ReadingListStateHandler.HEADER_READING_LIST;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,18 +31,18 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.lists.ReadingListState;
 import org.comixedproject.state.lists.ReadingListEvent;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.statemachine.StateContext;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ComicBookIsNotInReadingListGuardTest {
+@ExtendWith(MockitoExtension.class)
+class ComicIsNotInReadingListGuardTest {
   private static final Long TEST_COMIC_ID = 717L;
 
   @InjectMocks private ComicIsNotInReadingListGuard guard;
@@ -54,8 +54,8 @@ public class ComicBookIsNotInReadingListGuardTest {
   private Set<ReadingList> readingLists = new HashSet<>();
   private List<Long> entryIdList = new ArrayList<>();
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_ID);
     Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
     Mockito.when(readingList.getEntryIds()).thenReturn(entryIdList);
@@ -65,7 +65,7 @@ public class ComicBookIsNotInReadingListGuardTest {
   }
 
   @Test
-  public void testEvaluateComicInList() {
+  void evaluate_comicInReadingList() {
     entryIdList.add(TEST_COMIC_ID);
     readingLists.add(readingList);
 
@@ -75,7 +75,7 @@ public class ComicBookIsNotInReadingListGuardTest {
   }
 
   @Test
-  public void testEvaluate() {
+  void evaluate_comicNotInReadingList() {
     final boolean result = guard.evaluate(context);
 
     assertTrue(result);

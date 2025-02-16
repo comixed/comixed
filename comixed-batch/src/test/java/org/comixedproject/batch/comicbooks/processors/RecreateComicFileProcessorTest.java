@@ -28,16 +28,19 @@ import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.service.admin.ConfigurationService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
-public class RecreateComicFileProcessorTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class RecreateComicFileProcessorTest {
   private static final ArchiveType TEST_TARGET_ARCHIVE = ArchiveType.CBZ;
   private static final String TEST_PAGE_RENAMING_RULE = "The page renaming rule";
 
@@ -48,7 +51,7 @@ public class RecreateComicFileProcessorTest {
   @Mock private ComicDetail comicDetail;
   @Mock private ComicBook comicBook;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(comicFile.exists()).thenReturn(true);
     Mockito.when(comicFile.isFile()).thenReturn(true);
@@ -63,7 +66,7 @@ public class RecreateComicFileProcessorTest {
   }
 
   @Test
-  public void testProcessDeleteMarkedPages() throws Exception {
+  void process_deleteMarkedPages() throws Exception {
     Mockito.when(comicBook.isDeletePages()).thenReturn(true);
 
     final ComicBook result = processor.process(comicBook);
@@ -76,7 +79,7 @@ public class RecreateComicFileProcessorTest {
   }
 
   @Test
-  public void testProcessAdaptorExceptionOnSave() throws Exception {
+  void process_adaptorExceptionOnSave() throws Exception {
     Mockito.doThrow(AdaptorException.class)
         .when(comicBookAdaptor)
         .save(
@@ -96,7 +99,7 @@ public class RecreateComicFileProcessorTest {
   }
 
   @Test
-  public void testProcessSourceNotFound() throws Exception {
+  void process_sourceNotFound() throws Exception {
     Mockito.when(comicFile.exists()).thenReturn(false);
 
     final ComicBook result = processor.process(comicBook);
@@ -110,7 +113,7 @@ public class RecreateComicFileProcessorTest {
   }
 
   @Test
-  public void testProcessSourceNotFile() throws Exception {
+  void process_sourceNotFile() throws Exception {
     Mockito.when(comicFile.isFile()).thenReturn(false);
 
     final ComicBook result = processor.process(comicBook);
@@ -124,7 +127,7 @@ public class RecreateComicFileProcessorTest {
   }
 
   @Test
-  public void testProcess() throws Exception {
+  void process() throws Exception {
     final ComicBook result = processor.process(comicBook);
 
     assertNotNull(result);

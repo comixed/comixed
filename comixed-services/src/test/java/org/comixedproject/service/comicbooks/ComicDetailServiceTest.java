@@ -26,17 +26,17 @@ import org.comixedproject.model.collections.CollectionEntry;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ComicDetailServiceTest {
+@ExtendWith(MockitoExtension.class)
+class ComicDetailServiceTest {
   private static final String TEST_EMAIL = "reader@comixedproject.org";
   private static final String TEST_PUBLISHER = "THe Publisher Name";
   private static final String TEST_SERIES = "The Series Name";
@@ -71,7 +71,7 @@ public class ComicDetailServiceTest {
   @Captor private ArgumentCaptor<Date> endDateArgumentCaptor;
   private List<CollectionEntry> collectionEntryList = new ArrayList<>();
 
-  @Before
+  @BeforeEach
   public void setUp() {
     weeksList.add(new Date());
 
@@ -90,7 +90,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testFilenameFound_caseInsensitive() {
+  void filenameFound_caseInsensitive() {
     service.caseSensitiveFilenames = false;
 
     Mockito.when(comicDetailRepository.existsByFilenameIgnoreCase(Mockito.anyString()))
@@ -103,7 +103,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testFilenameFound_caseSensitive() {
+  void filenameFound_caseSensitive() {
     service.caseSensitiveFilenames = true;
 
     Mockito.when(comicDetailRepository.existsByFilename(Mockito.anyString())).thenReturn(true);
@@ -114,7 +114,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetAllPublishersWithUnread() {
+  void getAllPublishers_withUnread() {
     Mockito.when(comicDetailRepository.getAllUnreadPublishers(Mockito.anyString()))
         .thenReturn(publisherList);
 
@@ -127,7 +127,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetAllPublishers() {
+  void getAllPublishers() {
     Mockito.when(comicDetailRepository.getAllPublishers()).thenReturn(publisherList);
 
     final Set<String> result = service.getAllPublishers(TEST_EMAIL, false);
@@ -139,7 +139,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetAllSeriesForPublisherWithUnread() {
+  void getAllSeriesForPublisher_withUnread() {
     Mockito.when(
             comicDetailRepository.getAllUnreadSeriesForPublisher(
                 Mockito.anyString(), Mockito.anyString()))
@@ -155,7 +155,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetAllSeriesForPublishers() {
+  void getAllSeriesForPublishers() {
     Mockito.when(comicDetailRepository.getAllSeriesForPublisher(Mockito.anyString()))
         .thenReturn(seriesList);
 
@@ -169,7 +169,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetAllVolumesForPublisherAndSeriesWithUnread() {
+  void getAllVolumesForPublisherAndSeries_withUnread() {
     Mockito.when(
             comicDetailRepository.getAllUnreadVolumesForPublisherAndSeries(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
@@ -186,7 +186,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetAllVolumesForPublisherAndSeries() {
+  void getAllVolumesForPublisherAndSeries() {
     Mockito.when(
             comicDetailRepository.getAllVolumesForPublisherAndSeries(
                 Mockito.anyString(), Mockito.anyString()))
@@ -203,7 +203,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetAllSeries() {
+  void getAllSeries() {
     Mockito.when(comicDetailRepository.getAllSeries()).thenReturn(seriesList);
 
     final Set<String> result = service.getAllSeries();
@@ -215,7 +215,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetAllSeriesAsTopLevelWithUnread() {
+  void getAllSeriesAsTopLevel_withUnread() {
     Mockito.when(comicDetailRepository.getAllUnreadSeries(Mockito.anyString()))
         .thenReturn(volumeList);
 
@@ -228,7 +228,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetAllSeriesAsTopLevel() {
+  void getAllSeriesAsTopLevel() {
     Mockito.when(comicDetailRepository.getAllSeries()).thenReturn(volumeList);
 
     final Set<String> result = service.getAllSeries(TEST_EMAIL, false);
@@ -240,7 +240,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetAllPublishersForSeriesWithUnread() {
+  void getAllPublishersForSeries_withUnread() {
     Mockito.when(
             comicDetailRepository.getAllUnreadPublishersForSeries(
                 Mockito.anyString(), Mockito.anyString()))
@@ -256,7 +256,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetAllPublishersForSeries() {
+  void getAllPublishersForSeries() {
     Mockito.when(comicDetailRepository.getAllPublishersForSeries(Mockito.anyString()))
         .thenReturn(publisherList);
 
@@ -269,7 +269,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetAllComicBooksForPublisherAndSeriesAndVolumeWithUnread() {
+  void getAllComicBooksForPublisherAndSeriesAndVolume_withUnread() {
     Mockito.when(
             comicDetailRepository.getAllUnreadForPublisherAndSeriesAndVolume(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
@@ -288,7 +288,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetAllComicBooksForPublisherAndSeriesAndVolume() {
+  void getAllComicBooksForPublisherAndSeriesAndVolume() {
     Mockito.when(
             comicDetailRepository.getAllForPublisherAndSeriesAndVolume(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
@@ -306,7 +306,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetAllValuesForTagsWithUnread() {
+  void getAllValuesForTags_withUnread() {
     Mockito.when(
             comicDetailRepository.getAllUnreadValuesForTagType(
                 Mockito.any(ComicTagType.class), Mockito.anyString()))
@@ -322,7 +322,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetAllValuesForTags() {
+  void getAllValuesForTags() {
     Mockito.when(comicDetailRepository.getAllValuesForTagType(Mockito.any(ComicTagType.class)))
         .thenReturn(tagSet);
 
@@ -335,7 +335,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetAllYearsWithUnread() {
+  void getAllYears_withUnread() {
     Mockito.when(comicDetailRepository.getAllUnreadYears(Mockito.anyString()))
         .thenReturn(yearsList);
 
@@ -348,7 +348,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetAllYears() {
+  void getAllYears() {
     Mockito.when(comicDetailRepository.getAllYears()).thenReturn(yearsList);
 
     final Set<Integer> result = service.getAllYears(TEST_EMAIL, false);
@@ -360,7 +360,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetAllWeeksForYearWithUnread() {
+  void getAllWeeksForYear_withUnread() {
     Mockito.when(
             comicDetailRepository.getAllUnreadWeeksForYear(Mockito.anyInt(), Mockito.anyString()))
         .thenReturn(weeksList);
@@ -375,7 +375,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetAllWeeksForYear() {
+  void getAllWeeksForYear() {
     Mockito.when(comicDetailRepository.getAllWeeksForYear(Mockito.anyInt())).thenReturn(weeksList);
 
     final Set<Integer> result = service.getAllWeeksForYear(TEST_YEAR, TEST_EMAIL, false);
@@ -387,7 +387,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetComicsForYearAndWeekWithUnread() {
+  void getComicsForYearAndWeek_withUnread() {
     Mockito.when(
             comicDetailRepository.getAllUnreadForYearAndWeek(
                 startDateArgumentCaptor.capture(),
@@ -410,7 +410,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetComicsForYearAndWeek() {
+  void getComicsForYearAndWeek() {
     Mockito.when(
             comicDetailRepository.getAllForYearAndWeek(
                 startDateArgumentCaptor.capture(), endDateArgumentCaptor.capture()))
@@ -431,7 +431,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetComicsForSearchTerm() {
+  void getComicsForSearchTerm() {
     Mockito.when(comicDetailRepository.getForSearchTerm(Mockito.anyString()))
         .thenReturn(comicDetailList);
 
@@ -444,7 +444,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetComicsForTagWithUnread() {
+  void getComicsForTag_withUnread() {
     Mockito.when(
             comicDetailRepository.getAllUnreadComicsForTagType(
                 Mockito.any(ComicTagType.class), Mockito.anyString(), Mockito.anyString()))
@@ -461,7 +461,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetComicsForTag() {
+  void getComicsForTag() {
     Mockito.when(
             comicDetailRepository.getAllComicsForTagType(
                 Mockito.any(ComicTagType.class), Mockito.anyString()))
@@ -478,7 +478,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testFindAllByExample() {
+  void findAllByExample() {
     Mockito.when(comicDetailRepository.findAll(Mockito.any(Example.class)))
         .thenReturn(comicDetailList);
 
@@ -491,7 +491,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testLoadComicDetailsById() {
+  void loadComicDetailsById() {
     Mockito.when(comicDetailRepository.findAllById(Mockito.anySet())).thenReturn(comicDetailList);
 
     final List<ComicDetail> result = service.loadComicDetailListById(comicBookIdSet);
@@ -503,7 +503,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testLoadCollectionEntries_unsorted() {
+  void loadCollectionEntries_unsorted() {
     collectionEntryList.add(collectionEntry);
 
     Mockito.when(
@@ -515,7 +515,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testLoadCollectionEntries_tagValueSort() {
+  void loadCollectionEntries_tagValueSort() {
     collectionEntryList.add(collectionEntry);
 
     Mockito.when(
@@ -527,7 +527,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testLoadCollectionEntries_comicCountSort() {
+  void loadCollectionEntries_comicCountSort() {
     collectionEntryList.add(collectionEntry);
 
     Mockito.when(
@@ -558,7 +558,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testLoadCollectionEntries_unsorted_withFiltering() {
+  void loadCollectionEntries_unsorted_withFiltering() {
     collectionEntryList.add(collectionEntry);
 
     Mockito.when(
@@ -572,7 +572,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testLoadCollectionEntries_tagValueSort_withFiltering() {
+  void loadCollectionEntries_tagValueSort_withFiltering() {
     collectionEntryList.add(collectionEntry);
 
     Mockito.when(
@@ -610,7 +610,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testLoadCollectionEntries_comicCountSort_withFiltering() {
+  void loadCollectionEntries_comicCountSort_withFiltering() {
     collectionEntryList.add(collectionEntry);
 
     Mockito.when(
@@ -624,7 +624,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testLoadCollectionTotalEntries() {
+  void loadCollectionTotalEntries() {
     Mockito.when(comicDetailRepository.getFilterCount(Mockito.any(ComicTagType.class)))
         .thenReturn(TEST_TOTAL_COMIC_COUNT);
 
@@ -636,7 +636,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testLoadCollectionTotalEntries_withFiltering() {
+  void loadCollectionTotalEntries_withFiltering() {
     Mockito.when(
             comicDetailRepository.getFilterCountWithFiltering(
                 Mockito.any(ComicTagType.class), Mockito.anyString()))
@@ -651,7 +651,7 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetDuplicateComicBookCount() {
+  void getDuplicateComicBookCount() {
     Mockito.when(comicDetailRepository.getDuplicateComicBookCount())
         .thenReturn(TEST_TOTAL_COMIC_COUNT);
 

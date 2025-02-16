@@ -27,6 +27,7 @@ import static org.comixedproject.service.comicpages.BlockedHashService.PAGE_HASH
 import static org.comixedproject.service.comicpages.BlockedHashService.PAGE_LABEL_HEADER;
 import static org.comixedproject.service.comicpages.BlockedHashService.PAGE_SNAPSHOT_HEADER;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertThrows;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,18 +55,21 @@ import org.comixedproject.model.net.library.LoadDuplicatePageListResponse;
 import org.comixedproject.repositories.comicpages.BlockedHashRepository;
 import org.comixedproject.service.library.DuplicatePageException;
 import org.comixedproject.service.library.DuplicatePageService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
-public class BlockedHashServiceTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class BlockedHashServiceTest {
   private static final String TEST_PAGE_HASH = "The page hash";
   private static final String TEST_PAGE_LABEL = "The blocked page label";
   private static final String TEST_PAGE_THUMBNAIL = "The blocked page content encoded";
@@ -106,7 +110,7 @@ public class BlockedHashServiceTest {
 
   private List<String> blockedPageHashList = new ArrayList<>();
 
-  @Before
+  @BeforeEach
   public void setUp() throws AdaptorException, DuplicatePageException, PublishingException {
     Mockito.when(blockedHash.getLabel()).thenReturn(TEST_PAGE_LABEL);
     Mockito.when(blockedHash.getHash()).thenReturn(TEST_PAGE_HASH);
@@ -131,7 +135,7 @@ public class BlockedHashServiceTest {
   }
 
   @Test
-  public void testGetAll() {
+  void getAll() {
     Mockito.when(blockedHashRepository.getAll()).thenReturn(blockedHashList);
 
     final List<BlockedHash> result = service.getAll();
@@ -142,19 +146,15 @@ public class BlockedHashServiceTest {
     Mockito.verify(blockedHashRepository, Mockito.times(1)).getAll();
   }
 
-  @Test(expected = BlockedHashException.class)
-  public void testGetByHashNoSuchHash() throws BlockedHashException {
+  @Test
+  void getByHash_noSuchHash() {
     Mockito.when(blockedHashRepository.findByHash(Mockito.anyString())).thenReturn(null);
 
-    try {
-      service.getByHash(TEST_PAGE_HASH);
-    } finally {
-      Mockito.verify(blockedHashRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-    }
+    assertThrows(BlockedHashException.class, () -> service.getByHash(TEST_PAGE_HASH));
   }
 
   @Test
-  public void testGetByHash() throws BlockedHashException {
+  void getByHash() throws BlockedHashException {
     Mockito.when(blockedHashRepository.findByHash(Mockito.anyString()))
         .thenReturn(blockedHashRecord);
 
@@ -167,7 +167,7 @@ public class BlockedHashServiceTest {
   }
 
   @Test
-  public void testGetHashes() {
+  void getHashes() {
     Mockito.when(blockedHashRepository.getHashes()).thenReturn(blockedPageHashList);
 
     final List<String> result = service.getHashes();
@@ -179,7 +179,7 @@ public class BlockedHashServiceTest {
   }
 
   @Test
-  public void testBlockPagesEntryAlreadyExists() {
+  void blockPages_entryAlreadyExists() {
     blockedPageHashList.add(TEST_PAGE_HASH);
 
     Mockito.when(blockedHashRepository.findByHash(Mockito.anyString()))
@@ -192,7 +192,7 @@ public class BlockedHashServiceTest {
   }
 
   @Test
-  public void testBlockPagesPublishingException() throws PublishingException {
+  void blockPages_publishingException() throws PublishingException {
     blockedPageHashList.add(TEST_PAGE_HASH);
 
     Mockito.when(blockedHashRepository.findByHash(Mockito.anyString())).thenReturn(null);
@@ -217,7 +217,7 @@ public class BlockedHashServiceTest {
   }
 
   @Test
-  public void testBlockPages() throws PublishingException {
+  void blockPages() throws PublishingException {
     blockedPageHashList.add(TEST_PAGE_HASH);
 
     Mockito.when(blockedHashRepository.findByHash(Mockito.anyString())).thenReturn(null);
@@ -244,7 +244,7 @@ public class BlockedHashServiceTest {
   }
 
   @Test
-  public void testUpdateBlockedPageNotBlocked() throws DuplicatePageException {
+  void updateBlockedPage_notBlocked() throws DuplicatePageException {
     Mockito.when(blockedHashRepository.findByHash(Mockito.anyString())).thenReturn(null);
     Mockito.when(blockedHashRepository.save(blockedPageArgumentCaptor.capture()))
         .thenReturn(savedBlockedHash);
@@ -254,17 +254,16 @@ public class BlockedHashServiceTest {
     assertNotNull(result);
     assertSame(savedBlockedHash, result);
 
-    final BlockedHash record = blockedPageArgumentCaptor.getValue();
+    final BlockedHash blockedPage = blockedPageArgumentCaptor.getValue();
 
-    assertEquals(TEST_PAGE_HASH, record.getHash());
+    assertEquals(TEST_PAGE_HASH, blockedPage.getHash());
 
     Mockito.verify(blockedHashRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-    Mockito.verify(blockedHashRepository, Mockito.times(1)).save(record);
+    Mockito.verify(blockedHashRepository, Mockito.times(1)).save(blockedPage);
   }
 
   @Test
-  public void testUpdateBlockedPagePublishingException()
-      throws DuplicatePageException, PublishingException {
+  void updateBlockedPage_publishingException() throws DuplicatePageException, PublishingException {
     Mockito.when(blockedHashRepository.findByHash(Mockito.anyString()))
         .thenReturn(blockedHashRecord);
     Mockito.doThrow(PublishingException.class)
@@ -292,7 +291,7 @@ public class BlockedHashServiceTest {
   }
 
   @Test
-  public void testUpdateBlockedPage() throws DuplicatePageException, PublishingException {
+  void updateBlockedPage() throws DuplicatePageException, PublishingException {
     Mockito.when(blockedHashRepository.findByHash(Mockito.anyString()))
         .thenReturn(blockedHashRecord);
     Mockito.when(blockedHashRepository.save(Mockito.any(BlockedHash.class)))
@@ -318,7 +317,7 @@ public class BlockedHashServiceTest {
   }
 
   @Test
-  public void testUnblockedPageNotBlocked() throws BlockedHashException {
+  void unblockedPage_notBlocked() {
     blockedPageHashList.add(TEST_PAGE_HASH);
 
     Mockito.when(blockedHashRepository.findByHash(Mockito.anyString())).thenReturn(null);
@@ -330,8 +329,7 @@ public class BlockedHashServiceTest {
   }
 
   @Test
-  public void testUnblockedPagesPublishingException()
-      throws BlockedHashException, PublishingException {
+  void unblockedPages_publishingException() throws PublishingException {
     blockedPageHashList.add(TEST_PAGE_HASH);
 
     Mockito.when(blockedHashRepository.findByHash(Mockito.anyString()))
@@ -348,7 +346,7 @@ public class BlockedHashServiceTest {
   }
 
   @Test
-  public void testUnblockPages() throws BlockedHashException, PublishingException {
+  void unblockPages() throws PublishingException {
     blockedPageHashList.add(TEST_PAGE_HASH);
 
     Mockito.when(blockedHashRepository.findByHash(Mockito.anyString()))
@@ -371,7 +369,7 @@ public class BlockedHashServiceTest {
   }
 
   @Test
-  public void testCreateFile() throws IOException {
+  void createFile() throws IOException {
     Mockito.when(blockedHashRepository.findAll()).thenReturn(blockedHashList);
     Mockito.when(csvAdaptor.encodeRecords(Mockito.anyList(), csvRowHandlerArgumentCaptor.capture()))
         .thenReturn(TEST_CSV_ROW);
@@ -400,7 +398,7 @@ public class BlockedHashServiceTest {
   }
 
   @Test
-  public void testUploadFile() throws IOException {
+  void uploadFile() throws IOException {
     Mockito.when(blockedHashRepository.findAll()).thenReturn(blockedHashList);
     Mockito.doNothing()
         .when(csvAdaptor)
@@ -432,7 +430,7 @@ public class BlockedHashServiceTest {
   }
 
   @Test
-  public void testDeletedBlockedPages() throws PublishingException {
+  void deleteBlockedPages() throws PublishingException {
     final List<String> blockedPageHashes = new ArrayList<>();
     for (int index = 0; index < 25; index++) {
       blockedPageHashes.add(RandomStringUtils.random(32, true, true));
@@ -458,7 +456,7 @@ public class BlockedHashServiceTest {
   }
 
   @Test
-  public void testDeletedBlockedPagesPublishingException() throws PublishingException {
+  void deleteBlockedPages_publishingException() throws PublishingException {
     final List<String> blockedPageHashes = new ArrayList<>();
     for (int index = 0; index < 25; index++) {
       blockedPageHashes.add(RandomStringUtils.random(32, true, true));
@@ -487,7 +485,7 @@ public class BlockedHashServiceTest {
   }
 
   @Test
-  public void testIsHashBlockedWhenFound() {
+  void isHashBlocked_whenFound() {
     Mockito.when(blockedHashRepository.findByHash(Mockito.anyString()))
         .thenReturn(blockedHashRecord);
 
@@ -499,7 +497,7 @@ public class BlockedHashServiceTest {
   }
 
   @Test
-  public void testIsHashBlockedWhenNotFound() {
+  void isHashBlocked_whenNotFound() {
     Mockito.when(blockedHashRepository.findByHash(Mockito.anyString())).thenReturn(null);
 
     final boolean result = service.isHashBlocked(TEST_PAGE_HASH);
@@ -509,19 +507,15 @@ public class BlockedHashServiceTest {
     Mockito.verify(blockedHashRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
   }
 
-  @Test(expected = BlockedHashException.class)
-  public void testGetThumbnailNotFound() throws BlockedHashException {
+  @Test
+  void GetThumbnail_notFound() {
     Mockito.when(blockedHashRepository.findByHash(Mockito.anyString())).thenReturn(null);
 
-    try {
-      service.getThumbnail(TEST_PAGE_HASH);
-    } finally {
-      Mockito.verify(blockedHashRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-    }
+    assertThrows(BlockedHashException.class, () -> service.getThumbnail(TEST_PAGE_HASH));
   }
 
   @Test
-  public void testGetThumbnail() throws BlockedHashException {
+  void getThumbnail() throws BlockedHashException {
     Mockito.when(blockedHashRepository.findByHash(Mockito.anyString())).thenReturn(blockedHash);
 
     final byte[] result = service.getThumbnail(TEST_PAGE_HASH);

@@ -23,17 +23,17 @@ import static junit.framework.TestCase.*;
 import java.text.ParseException;
 import org.comixedproject.model.app.BuildDetails;
 import org.comixedproject.model.net.app.LatestReleaseDetails;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ReleaseServiceTest {
+@ExtendWith(MockitoExtension.class)
+class ReleaseServiceTest {
   private static final String TEST_BRANCH = "feature/issue-189";
   private static final String TEST_BUILD_HOST = "buildmachine.local";
   private static final String TEST_BUILD_TIME = "20190831083412";
@@ -53,7 +53,7 @@ public class ReleaseServiceTest {
   @Mock private GetLatestReleaseAction getLatestReleaseAction;
   @Mock private LatestReleaseDetails latestReleaseDetails;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     ReflectionTestUtils.setField(service, "branch", TEST_BRANCH);
     ReflectionTestUtils.setField(service, "buildHost", TEST_BUILD_HOST);
@@ -70,7 +70,7 @@ public class ReleaseServiceTest {
   }
 
   @Test
-  public void testGetCurrentReleaseDetails() throws ParseException {
+  void GetCurrentReleaseDetails() throws ParseException {
     final BuildDetails result = service.getCurrentReleaseDetails();
 
     assertNotNull(result);
@@ -94,7 +94,7 @@ public class ReleaseServiceTest {
   }
 
   @Test
-  public void testGetLatestReleaseDetailsSameVersion() {
+  void getLatestReleaseDetails_sameVersion() {
     Mockito.when(latestReleaseDetails.getVersion()).thenReturn("v" + TEST_BUILD_VERSION);
     Mockito.when(getLatestReleaseAction.execute()).thenReturn(latestReleaseDetails);
 
@@ -108,7 +108,7 @@ public class ReleaseServiceTest {
   }
 
   @Test
-  public void testGetLatestReleaseDetailsDifferentVersion() {
+  void getLatestReleaseDetailsDifferentVersion() {
     Mockito.when(latestReleaseDetails.getVersion()).thenReturn("v" + TEST_NEWER_VERSION);
     Mockito.when(getLatestReleaseAction.execute()).thenReturn(latestReleaseDetails);
 

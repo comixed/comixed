@@ -22,7 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class BaseContentAdaptorTest {
+class BaseContentAdaptorTest {
 
   public BaseContentAdaptorTest() {
     super();

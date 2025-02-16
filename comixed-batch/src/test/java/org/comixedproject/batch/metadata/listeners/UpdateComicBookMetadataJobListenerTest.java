@@ -25,16 +25,19 @@ import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.metadata.PublishMetadataUpdateProcessStateUpdateAction;
 import org.comixedproject.model.net.metadata.MetadataUpdateProcessUpdate;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.item.ExecutionContext;
 
-@RunWith(MockitoJUnitRunner.class)
-public class UpdateComicBookMetadataJobListenerTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class UpdateComicBookMetadataJobListenerTest {
   private static final Long TEST_TOTAL_COUNT = 717L;
 
   @Mock
@@ -49,7 +52,7 @@ public class UpdateComicBookMetadataJobListenerTest {
   @Captor private ArgumentCaptor<Long> finishedTimestampArgumentCaptor;
   @Captor private ArgumentCaptor<MetadataUpdateProcessUpdate> payloadArgumentCaptor;
 
-  @Before
+  @BeforeEach
   public void setup() throws PublishingException {
     Mockito.when(jobExecution.getExecutionContext()).thenReturn(executionContext);
     Mockito.when(executionContext.containsKey(PARAM_METADATA_UPDATE_STARTED)).thenReturn(true);
@@ -61,7 +64,7 @@ public class UpdateComicBookMetadataJobListenerTest {
   }
 
   @Test
-  public void testBeforeJob() throws PublishingException {
+  void beforeJob() throws PublishingException {
     Mockito.when(executionContext.containsKey(PARAM_METADATA_UPDATE_FINISHED)).thenReturn(false);
     Mockito.when(comicBookService.findComicsForBatchMetadataUpdateCount())
         .thenReturn(TEST_TOTAL_COUNT);
@@ -81,7 +84,7 @@ public class UpdateComicBookMetadataJobListenerTest {
   }
 
   @Test
-  public void testAfterJob() throws PublishingException {
+  void afterJob() throws PublishingException {
     Mockito.when(executionContext.containsKey(PARAM_METADATA_UPDATE_FINISHED)).thenReturn(true);
     Mockito.doNothing()
         .when(executionContext)

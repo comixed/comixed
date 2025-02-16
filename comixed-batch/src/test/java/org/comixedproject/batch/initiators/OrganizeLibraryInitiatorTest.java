@@ -28,11 +28,13 @@ import org.comixedproject.model.batch.OrganizingLibraryEvent;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.library.OrganizingComicService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
@@ -43,8 +45,9 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-@RunWith(MockitoJUnitRunner.class)
-public class OrganizeLibraryInitiatorTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class OrganizeLibraryInitiatorTest {
   private static final Long TEST_COMICS_MARKED_FOR_ORGANIZATION_COUNT = 717L;
   private static final String TEST_ROOT_DIRECTORY = "/Users/comixed/Documents/library";
   private static final String TEST_RENAMING_RULE = "The renaming rule";
@@ -66,7 +69,7 @@ public class OrganizeLibraryInitiatorTest {
 
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
-  @Before
+  @BeforeEach
   public void setUp()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
@@ -84,7 +87,7 @@ public class OrganizeLibraryInitiatorTest {
   }
 
   @Test
-  public void testExecuteNoComicsToMove()
+  void execute_noComicsToMove()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -97,7 +100,7 @@ public class OrganizeLibraryInitiatorTest {
   }
 
   @Test
-  public void testExecuteHasRunningJobs()
+  void execute_hasRunningJobs()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -110,7 +113,7 @@ public class OrganizeLibraryInitiatorTest {
   }
 
   @Test
-  public void testExecuteFromScheduler()
+  void execute_fromScheduler()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -128,7 +131,7 @@ public class OrganizeLibraryInitiatorTest {
   }
 
   @Test
-  public void testExecuteFromListener()
+  void execute_fromListener()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -146,7 +149,7 @@ public class OrganizeLibraryInitiatorTest {
   }
 
   @Test
-  public void testExecuteNoRootDirectory()
+  void execute_noRootDirectory()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -159,7 +162,7 @@ public class OrganizeLibraryInitiatorTest {
   }
 
   @Test
-  public void testExecuteNoRenamingRule()
+  void execute_noRenamingRule()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -173,7 +176,7 @@ public class OrganizeLibraryInitiatorTest {
   }
 
   @Test
-  public void testExecuteJobException()
+  void execute_jobException()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,

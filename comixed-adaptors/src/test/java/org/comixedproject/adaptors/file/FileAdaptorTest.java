@@ -18,21 +18,21 @@
 
 package org.comixedproject.adaptors.file;
 
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import org.apache.commons.lang.SystemUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class FileAdaptorTest {
+@ExtendWith(MockitoExtension.class)
+class FileAdaptorTest {
 
   private static final File TEST_DELETABLE_FILE = new File("target/test-classes/deletable-file");
   private static final File TEST_FILE_1 = new File("target/maven-javadoc-stale-data.txt");
@@ -42,32 +42,32 @@ public class FileAdaptorTest {
 
   @InjectMocks private FileAdaptor adaptor;
 
-  @Before
-  public void setUp() throws IOException {
+  @BeforeEach
+  void setUp() throws IOException {
     FileWriter output = new FileWriter(TEST_DELETABLE_FILE);
     output.write("Here is some content");
     output.close();
   }
 
   @Test
-  public void testDeleteFile() {
+  void testDeleteFile() {
     adaptor.deleteFile(TEST_DELETABLE_FILE);
 
     assertFalse(TEST_DELETABLE_FILE.exists());
   }
 
   @Test
-  public void testSameFile() {
+  void testSameFile() {
     assertTrue(adaptor.sameFile(TEST_FILE_1, TEST_FILE_1));
   }
 
   @Test
-  public void testSameFileNotSameFile() {
+  void testSameFileNotSameFile() {
     assertTrue(adaptor.sameFile(TEST_FILE_1, TEST_NOT_FILE_1));
   }
 
   @Test
-  public void testSameFileForWindows() {
+  void testSameFileForWindows() {
     // since windows is case insensitive, this test ensures that both Windows and *nix are doing
     // what we expect
     final boolean result = adaptor.sameFile(TEST_FILE_1, TEST_FILE_1_NAME_UPPER_CASE);

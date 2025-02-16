@@ -41,11 +41,9 @@ public class ReadComicBooksService {
   public void markComicBookAsRead(final String email, final long comicId)
       throws ReadComicBooksException {
     try {
-      log.debug("Loading user: {}", email);
       final ComiXedUser user = this.userService.findByEmail(email);
       log.debug("Adding comic book to read list: id={}", comicId);
       user.getReadComicBooks().add(comicId);
-      log.debug("Saving user");
       this.userService.save(user);
     } catch (ComiXedUserException error) {
       throw new ReadComicBooksException("Failed to mark comic book as read", error);
@@ -57,11 +55,9 @@ public class ReadComicBooksService {
   public void unmarkComicBookAsRead(final String email, final long comicId)
       throws ReadComicBooksException {
     try {
-      log.debug("Loading user: {}", email);
       final ComiXedUser user = this.userService.findByEmail(email);
       log.debug("Removing comic book from read list: id={}", comicId);
       user.getReadComicBooks().remove(comicId);
-      log.debug("Saving user");
       this.userService.save(user);
     } catch (ComiXedUserException error) {
       throw new ReadComicBooksException("Failed to mark comic book as read", error);
@@ -73,11 +69,9 @@ public class ReadComicBooksService {
   public void markSelectionsAsRead(final String email, final List<Long> idList)
       throws ReadComicBooksException {
     try {
-      log.debug("Loading user: {}", email);
       final ComiXedUser user = this.userService.findByEmail(email);
       log.debug("Adding {} comic book(s) to read list", idList.size());
       user.getReadComicBooks().addAll(idList);
-      log.debug("Saving user");
       this.userService.save(user);
     } catch (ComiXedUserException error) {
       throw new ReadComicBooksException("Failed to mark comic book as read", error);
@@ -93,7 +87,6 @@ public class ReadComicBooksService {
       final ComiXedUser user = this.userService.findByEmail(email);
       log.debug("Removing {} comic book(s) from read list", idList.size());
       user.getReadComicBooks().removeAll(idList);
-      log.debug("Saving user");
       this.userService.save(user);
     } catch (ComiXedUserException error) {
       throw new ReadComicBooksException("Failed to mark comic book as read", error);

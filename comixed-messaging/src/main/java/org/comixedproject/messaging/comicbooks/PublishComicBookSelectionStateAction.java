@@ -33,11 +33,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class PublishComicBookSelectionStateAction extends AbstractPublishAction<List> {
+public class PublishComicBookSelectionStateAction extends AbstractPublishAction<List<Long>> {
   static final String COMIC_BOOK_SELECTION_UPDATE_TOPIC = "/topic/user/comic-book-selection.update";
 
   @Override
-  public void publish(final List ids) throws PublishingException {
+  public void publish(final List<Long> ids) throws PublishingException {
     log.debug(
         "Publishing update of {} selected comic book id{}", ids.size(), ids.size() == 1 ? "" : "s");
     this.doPublish(COMIC_BOOK_SELECTION_UPDATE_TOPIC, ids, View.GenericObjectView.class);

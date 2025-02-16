@@ -18,6 +18,8 @@
 
 package org.comixedproject.messaging.lists;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -25,19 +27,18 @@ import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.views.View;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PublishReadingListDeletedActionTest {
+@ExtendWith(MockitoExtension.class)
+class PublishReadingListDeletedActionTest {
   private static final String TEST_READING_LIST_AS_JSON = "The reading list as JSON";
-  private static final long TEST_READING_LIST_ID = 717L;
   private static final String TEST_OWNER_EMAIL = "reader@comixedproject.org";
 
   @InjectMocks private PublishReadingListDeletedAction action;
@@ -47,7 +48,7 @@ public class PublishReadingListDeletedActionTest {
   @Mock private ReadingList readingList;
   @Mock private ComiXedUser owner;
 
-  @Before
+  @BeforeEach
   public void setUp() throws JsonProcessingException {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
@@ -57,7 +58,7 @@ public class PublishReadingListDeletedActionTest {
   }
 
   @Test
-  public void testPublishReadingListUpdate() throws PublishingException, JsonProcessingException {
+  void PublishReadingListUpdate() throws PublishingException, JsonProcessingException {
     action.publish(readingList);
 
     Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.ReadingListDetail.class);
@@ -69,19 +70,11 @@ public class PublishReadingListDeletedActionTest {
             TEST_READING_LIST_AS_JSON);
   }
 
-  @Test(expected = PublishingException.class)
-  public void testPublishReadingListUpdatePublishingException()
-      throws PublishingException, JsonProcessingException {
+  @Test
+  void PublishReadingListUpdatePublishingException() throws JsonProcessingException {
     Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
         .thenThrow(JsonProcessingException.class);
 
-    try {
-      action.publish(readingList);
-    } finally {
-      Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.ReadingListDetail.class);
-      Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(readingList);
-      Mockito.verify(messagingTemplate, Mockito.never())
-          .convertAndSendToUser(Mockito.any(), Mockito.any(), Mockito.any());
-    }
+    assertThrows(PublishingException.class, () -> action.publish(readingList));
   }
 }

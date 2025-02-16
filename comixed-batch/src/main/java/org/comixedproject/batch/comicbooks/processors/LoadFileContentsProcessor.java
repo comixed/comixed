@@ -86,7 +86,7 @@ public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, Comic
         log.debug("Processing metadata web address: {}", metadataWebAddress);
         final MetadataAdaptorProvider provider =
             this.metadataService.findForWebAddress(metadataWebAddress);
-        if (Objects.isNull(provider) == false) {
+        if (!Objects.isNull(provider)) {
           final MetadataAdaptor adaptor = provider.create();
           final MetadataSource source =
               this.metadataSourceService.getByAdaptorName(provider.getName());

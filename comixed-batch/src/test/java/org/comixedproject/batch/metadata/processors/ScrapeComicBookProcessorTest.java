@@ -26,18 +26,21 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicMetadataSource;
 import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.service.metadata.MetadataService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.StepExecution;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ScrapeComicBookProcessorTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ScrapeComicBookProcessorTest {
   private static final Long TEST_COMIC_METADATA_SOURCE_ID = 72L;
   private static final Long TEST_COMIC_BOOK_ID = 27L;
   private static final String TEST_METADATA_REFERENCE_ID = "92731";
@@ -53,7 +56,7 @@ public class ScrapeComicBookProcessorTest {
   @Mock private StepExecution stepExecution;
   @Mock private JobParameters jobParameters;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_BOOK_ID);
     Mockito.when(comicBook.getMetadata()).thenReturn(comicMetadataSource);
@@ -67,7 +70,7 @@ public class ScrapeComicBookProcessorTest {
   }
 
   @Test
-  public void testProcessNoMetadataSource() throws Exception {
+  void process_noMetadataSource() throws Exception {
     Mockito.when(comicBook.getMetadata()).thenReturn(null);
 
     final ComicBook result = processor.process(comicBook);
@@ -79,7 +82,7 @@ public class ScrapeComicBookProcessorTest {
   }
 
   @Test
-  public void testProcessNoMetadataSourceId() throws Exception {
+  void process_noMetadataSourceId() throws Exception {
     Mockito.when(comicMetadataSource.getId()).thenReturn(null);
 
     final ComicBook result = processor.process(comicBook);
@@ -91,7 +94,7 @@ public class ScrapeComicBookProcessorTest {
   }
 
   @Test
-  public void testProcess() throws Exception {
+  void process() throws Exception {
     Mockito.when(
             metadataService.scrapeComic(
                 Mockito.anyLong(), Mockito.anyLong(), Mockito.anyString(), Mockito.anyBoolean()))
@@ -114,7 +117,7 @@ public class ScrapeComicBookProcessorTest {
   }
 
   @Test
-  public void testAfterStep() {
+  void afterStep() {
     assertNull(processor.afterStep(stepExecution));
   }
 }

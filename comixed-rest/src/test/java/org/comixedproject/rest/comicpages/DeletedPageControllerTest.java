@@ -24,21 +24,21 @@ import static junit.framework.TestCase.assertSame;
 import java.util.List;
 import org.comixedproject.model.comicpages.DeletedPage;
 import org.comixedproject.service.comicpages.DeletedPageService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class DeletedPageControllerTest {
+@ExtendWith(MockitoExtension.class)
+class DeletedPageControllerTest {
   @InjectMocks private DeletedPageController controller;
   @Mock private DeletedPageService deletedPageService;
   @Mock private List<DeletedPage> deletedPageList;
 
   @Test
-  public void testLoadAll() {
+  void loadAll() {
     Mockito.when(deletedPageService.loadAll()).thenReturn(deletedPageList);
 
     final List<DeletedPage> result = controller.loadAll();

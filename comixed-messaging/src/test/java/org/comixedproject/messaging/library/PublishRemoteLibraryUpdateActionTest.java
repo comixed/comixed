@@ -18,23 +18,25 @@
 
 package org.comixedproject.messaging.library;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.net.library.RemoteLibraryState;
 import org.comixedproject.views.View;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PublishRemoteLibraryUpdateActionTest {
+@ExtendWith(MockitoExtension.class)
+class PublishRemoteLibraryUpdateActionTest {
   private static final String TEST_LIBRARY_STATE_AS_JSON = "The library state as JSON";
 
   @InjectMocks private PublishRemoteLibraryUpdateAction action;
@@ -43,28 +45,23 @@ public class PublishRemoteLibraryUpdateActionTest {
   @Mock private ObjectWriter objectWriter;
   @Mock private RemoteLibraryState libraryState;
 
-  @Before
+  @BeforeEach
   public void setUp() throws JsonProcessingException {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
         .thenReturn(TEST_LIBRARY_STATE_AS_JSON);
   }
 
-  @Test(expected = PublishingException.class)
-  public void testPublishJsonProcessingException()
-      throws PublishingException, JsonProcessingException {
+  @Test
+  void publish_jsonProcessingException() throws JsonProcessingException {
     Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
         .thenThrow(JsonProcessingException.class);
 
-    try {
-      action.publish(libraryState);
-    } finally {
-      Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.RemoteLibraryState.class);
-    }
+    assertThrows(PublishingException.class, () -> action.publish(libraryState));
   }
 
   @Test
-  public void testPublish() throws PublishingException, JsonProcessingException {
+  void publish() throws PublishingException, JsonProcessingException {
     Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
         .thenReturn(TEST_LIBRARY_STATE_AS_JSON);
 

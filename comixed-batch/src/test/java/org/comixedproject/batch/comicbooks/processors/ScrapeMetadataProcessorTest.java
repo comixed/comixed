@@ -27,21 +27,24 @@ import org.comixedproject.model.comicbooks.ComicMetadataSource;
 import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.metadata.MetadataService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.item.ExecutionContext;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ScrapeMetadataProcessorTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ScrapeMetadataProcessorTest {
   private static final long TEST_METADATA_SOURCE_ID = 4L;
   private static final long TEST_COMIC_BOOK_ID = 717L;
   private static final String TEST_REFERENCE_NUMBER = "91732";
@@ -60,7 +63,7 @@ public class ScrapeMetadataProcessorTest {
   @Mock private StepExecution stepExecution;
   @Mock private ComicBook savedComicBook;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     processor.errorThreshold = TEST_ERROR_THRESHOLD;
 
@@ -76,7 +79,7 @@ public class ScrapeMetadataProcessorTest {
   }
 
   @Test
-  public void testProcess() throws MetadataException {
+  void process() throws MetadataException {
     final ComicBook result = processor.process(comicBook);
 
     assertNotNull(result);
@@ -87,7 +90,7 @@ public class ScrapeMetadataProcessorTest {
   }
 
   @Test
-  public void testProcess_errorThresholdExceeded() throws MetadataException {
+  void process_errorThresholdExceeded() throws MetadataException {
     Mockito.when(stepExecution.getSkipCount()).thenReturn(TEST_ERROR_COUNT + 1);
     processor.errorThreshold = TEST_ERROR_COUNT;
 
@@ -102,7 +105,7 @@ public class ScrapeMetadataProcessorTest {
   }
 
   @Test
-  public void testProcess_errorOccurs() throws MetadataException {
+  void process_errorOccurs() throws MetadataException {
     Mockito.when(
             metadataService.scrapeComic(
                 Mockito.anyLong(), Mockito.anyLong(), Mockito.anyString(), Mockito.anyBoolean()))
@@ -117,7 +120,7 @@ public class ScrapeMetadataProcessorTest {
   }
 
   @Test
-  public void testBeforeStep() {
+  void beforeStep() {
     Mockito.when(jobParameters.getLong(SCRAPE_METADATA_JOB_ERROR_THRESHOLD))
         .thenReturn(TEST_ERROR_THRESHOLD);
 
@@ -128,7 +131,7 @@ public class ScrapeMetadataProcessorTest {
   }
 
   @Test
-  public void testAfterStep() {
+  void afterStep() {
     final ExitStatus result = processor.afterStep(stepExecution);
 
     assertNull(result);
@@ -137,7 +140,7 @@ public class ScrapeMetadataProcessorTest {
   }
 
   @Test
-  public void testAfterStep_belowThreshold() {
+  void afterStep_belowThreshold() {
     Mockito.when(stepExecution.getSkipCount()).thenReturn(TEST_ERROR_THRESHOLD - 1);
 
     final ExitStatus result = processor.afterStep(stepExecution);
@@ -148,7 +151,7 @@ public class ScrapeMetadataProcessorTest {
   }
 
   @Test
-  public void testAfterStep_processSkipCountMeetsThreshold() {
+  void afterStep_processSkipCountMeetsThreshold() {
     Mockito.when(stepExecution.getSkipCount()).thenReturn(TEST_ERROR_THRESHOLD);
 
     final ExitStatus result = processor.afterStep(stepExecution);
@@ -160,7 +163,7 @@ public class ScrapeMetadataProcessorTest {
   }
 
   @Test
-  public void testAfterStep_processSkipCountExceedsThreshold() {
+  void afterStep_processSkipCountExceedsThreshold() {
     Mockito.when(stepExecution.getSkipCount()).thenReturn(TEST_ERROR_THRESHOLD + 1);
 
     final ExitStatus result = processor.afterStep(stepExecution);

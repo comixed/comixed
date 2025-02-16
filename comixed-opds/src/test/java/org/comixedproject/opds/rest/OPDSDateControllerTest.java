@@ -27,16 +27,16 @@ import org.comixedproject.opds.model.OPDSAcquisitionFeed;
 import org.comixedproject.opds.model.OPDSNavigationFeed;
 import org.comixedproject.opds.service.OPDSAcquisitionService;
 import org.comixedproject.opds.service.OPDSNavigationService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class OPDSDateControllerTest {
+@ExtendWith(MockitoExtension.class)
+class OPDSDateControllerTest {
   private static final Integer TEST_YEAR = 2022;
   private static final Integer TEST_WEEK = RandomUtils.nextInt(52);
   private static final boolean TEST_UNREAD = RandomUtils.nextBoolean();
@@ -49,13 +49,13 @@ public class OPDSDateControllerTest {
   @Mock private OPDSNavigationFeed opdsNavigationFeed;
   @Mock private OPDSAcquisitionFeed opdsAcquisitionFeed;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
   }
 
   @Test
-  public void testGetYearsFeed() {
+  void getYearsFeed() {
     Mockito.when(opdsNavigationService.getYearsFeed(Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(opdsNavigationFeed);
 
@@ -68,7 +68,7 @@ public class OPDSDateControllerTest {
   }
 
   @Test
-  public void testGetWeeksForYear() throws OPDSException {
+  void getWeeksForYear() throws OPDSException {
     Mockito.when(
             opdsNavigationService.getWeeksFeedForYear(
                 Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))
@@ -85,7 +85,7 @@ public class OPDSDateControllerTest {
   }
 
   @Test
-  public void testLoadComicsForYearAndWeek() throws OPDSException {
+  void loadComicsForYearAndWeek() {
     Mockito.when(
             opdsAcquisitionService.getComicsFeedForYearAndWeek(
                 Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean()))

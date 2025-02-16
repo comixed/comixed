@@ -208,7 +208,6 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
   @Async
   public void addComicsToList(String email, long id, List<Long> comicIds)
       throws ReadingListException {
-    log.trace("Loading reading list: id={}", id);
     final ReadingList readingList = this.doLoadReadingList(id);
     log.trace("Verifying owner: {}", email);
     if (!readingList.getOwner().getEmail().equals(email)) {
@@ -233,7 +232,6 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
   @Async
   public void removeComicsFromList(String email, long id, List<Long> comicIds)
       throws ReadingListException {
-    log.trace("Loading reading list: id={}", id);
     final ReadingList readingList = this.doLoadReadingList(id);
     log.trace("Verifying owner: {}", email);
     if (!readingList.getOwner().getEmail().equals(email)) {
@@ -245,6 +243,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
   }
 
   private ReadingList doLoadReadingList(final long id) throws ReadingListException {
+    log.trace("Loading reading list: id={}", id);
     final ReadingList result = this.readingListRepository.getById(id);
     if (result == null) throw new ReadingListException("No such reading list: id=" + id);
     return result;
@@ -395,7 +394,6 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
     ids.forEach(
         id -> {
           try {
-            log.trace("Loading reading list: id={}", id);
             final ReadingList readingList = this.doLoadReadingListForOwner(id, email);
             log.trace("Deleting reading list");
             this.readingListRepository.delete(readingList);

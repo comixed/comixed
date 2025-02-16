@@ -21,19 +21,19 @@ package org.comixedproject.batch.processors;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class NoopProcessorTest {
+@ExtendWith(MockitoExtension.class)
+class NoopProcessorTest {
   @InjectMocks private NoopProcessor<Object> processor;
   @Mock private Object item;
 
   @Test
-  public void testProcess() throws Exception {
+  void process() throws Exception {
     final Object result = processor.process(item);
 
     assertNotNull(result);

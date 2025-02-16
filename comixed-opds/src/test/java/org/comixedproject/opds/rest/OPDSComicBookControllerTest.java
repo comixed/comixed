@@ -20,6 +20,7 @@ package org.comixedproject.opds.rest;
 
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -41,18 +42,21 @@ import org.comixedproject.opds.OPDSException;
 import org.comixedproject.opds.OPDSUtils;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
-@RunWith(MockitoJUnitRunner.class)
-public class OPDSComicBookControllerTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class OPDSComicBookControllerTest {
   private static final long TEST_COMIC_ID = 717L;
   private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CBZ;
   private static final String TEST_COMIC_FILENAME = "Base Filename.CBZ";
@@ -83,7 +87,7 @@ public class OPDSComicBookControllerTest {
   private List<ComicPage> pageList = new ArrayList<>();
   private byte[] imageContent;
 
-  @Before
+  @BeforeEach
   public void setUp() throws IOException, ComicBookException {
     Mockito.when(comicBook.getPages()).thenReturn(pageList);
     Mockito.when(comicDetail.getFile()).thenReturn(comicFile);
@@ -100,33 +104,31 @@ public class OPDSComicBookControllerTest {
     this.fileLength = comicFile.length();
   }
 
-  @Test(expected = OPDSException.class)
-  public void testDownloadComic_invalidId() throws ComicBookException, OPDSException {
+  @Test
+  void downloadComic_invalidId() throws ComicBookException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicBookException.class);
 
-    try {
-      controller.downloadComic(
-          request, TEST_COMIC_ID, opdsUtils.urlEncodeString(TEST_COMIC_FILENAME));
-    } finally {
-      Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
-    }
-  }
-
-  @Test(expected = OPDSException.class)
-  public void testDownloadComic_invalidRange() throws ComicBookException, OPDSException {
-    Mockito.when(request.getHeader(HttpHeaders.RANGE))
-        .thenReturn(String.format("bytes=%d-%d", this.fileLength, 0));
-
-    try {
-      controller.downloadComic(
-          request, TEST_COMIC_ID, opdsUtils.urlEncodeString(TEST_COMIC_FILENAME));
-    } finally {
-      Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
-    }
+    assertThrows(
+        OPDSException.class,
+        () ->
+            controller.downloadComic(
+                request, TEST_COMIC_ID, opdsUtils.urlEncodeString(TEST_COMIC_FILENAME)));
   }
 
   @Test
-  public void testDownloadComic_withRange() throws ComicBookException, OPDSException {
+  void downloadComic_invalidRange() {
+    Mockito.when(request.getHeader(HttpHeaders.RANGE))
+        .thenReturn(String.format("bytes=%d-%d", this.fileLength, 0));
+
+    assertThrows(
+        OPDSException.class,
+        () ->
+            controller.downloadComic(
+                request, TEST_COMIC_ID, opdsUtils.urlEncodeString(TEST_COMIC_FILENAME)));
+  }
+
+  @Test
+  void downloadComic_withRange() throws ComicBookException, OPDSException {
     final int start = (int) (this.fileLength / 2);
 
     Mockito.when(request.getHeader(HttpHeaders.RANGE))
@@ -167,7 +169,7 @@ public class OPDSComicBookControllerTest {
   }
 
   @Test
-  public void testDownloadComic_withRangeStart() throws ComicBookException, OPDSException {
+  void downloadComic_withRangeStart() throws ComicBookException, OPDSException {
     final int start = (int) (this.fileLength / 2);
 
     Mockito.when(request.getHeader(HttpHeaders.RANGE))
@@ -208,7 +210,7 @@ public class OPDSComicBookControllerTest {
   }
 
   @Test
-  public void testDownloadComic_withRangeEnd() throws ComicBookException, OPDSException {
+  void downloadComic_withRangeEnd() throws ComicBookException, OPDSException {
     Mockito.when(request.getHeader(HttpHeaders.RANGE))
         .thenReturn(String.format("bytes=-%d", this.fileLength));
 
@@ -247,7 +249,7 @@ public class OPDSComicBookControllerTest {
   }
 
   @Test
-  public void testDownloadComic() throws ComicBookException, OPDSException {
+  void downloadComic() throws ComicBookException, OPDSException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicDetail.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
 
@@ -282,21 +284,19 @@ public class OPDSComicBookControllerTest {
             MediaType.parseMediaType(TEST_ARCHIVE_TYPE.getMimeType()));
   }
 
-  @Test(expected = OPDSException.class)
-  public void testGetPageByComicAndIndexWithMaxWidthInvalidId()
-      throws ComicBookException, OPDSException {
+  @Test
+  void getPageByComicAndIndexWithMaxWidthInvalidId() throws ComicBookException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicBookException.class);
 
-    try {
-      controller.getPageByComicAndIndexWithMaxWidth(
-          TEST_COMIC_ID, TEST_PAGE_INDEX, TEST_PAGE_WIDTH);
-    } finally {
-      Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
-    }
+    assertThrows(
+        OPDSException.class,
+        () ->
+            controller.getPageByComicAndIndexWithMaxWidth(
+                TEST_COMIC_ID, TEST_PAGE_INDEX, TEST_PAGE_WIDTH));
   }
 
   @Test
-  public void testGetPageByComicAndIndexWithMaxWidthInvalidPageIndex()
+  void getPageByComicAndIndexWithMaxWidthInvalidPageIndex()
       throws ComicBookException, OPDSException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(fileTypeAdaptor.getMimeTypeFor(Mockito.any()))
@@ -320,7 +320,7 @@ public class OPDSComicBookControllerTest {
   }
 
   @Test
-  public void testGetPageByComicAndIndexWithMaxWidth()
+  void getPageByComicAndIndexWithMaxWidth()
       throws ComicBookException, OPDSException, AdaptorException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))

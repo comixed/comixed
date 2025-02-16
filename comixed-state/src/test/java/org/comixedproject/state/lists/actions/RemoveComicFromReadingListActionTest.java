@@ -1,6 +1,6 @@
 /*
- * ComiXed - A digital comicBook book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,44 +23,46 @@ import static org.comixedproject.state.lists.ReadingListStateHandler.HEADER_READ
 
 import java.util.List;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.lists.ReadingListState;
 import org.comixedproject.state.lists.ReadingListEvent;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.statemachine.StateContext;
 
-@RunWith(MockitoJUnitRunner.class)
-public class AddComicBookToReadingListActionTest {
-  private static final Long TEST_COMIC_BOOK_ID = 717L;
+@ExtendWith(MockitoExtension.class)
+class RemoveComicFromReadingListActionTest {
+  private static final Long TEST_COMIC_ID = 717L;
 
-  @InjectMocks private AddComicToReadingListAction action;
+  @InjectMocks private RemoveComicFromReadingListAction action;
   @Mock private StateContext<ReadingListState, ReadingListEvent> context;
   @Mock private MessageHeaders messageHeaders;
   @Mock private ReadingList readingList;
   @Mock private ComicBook comicBook;
-  @Mock private List<Long> readingListEntries;
+  @Mock private ComicDetail comicDetail;
+  @Mock private List<Long> entryIdList;
 
-  @Before
-  public void setUp() {
-    Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_BOOK_ID);
+  @BeforeEach
+  void setUp() {
+    Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_ID);
     Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
     Mockito.when(messageHeaders.get(HEADER_READING_LIST, ReadingList.class))
         .thenReturn(readingList);
     Mockito.when(messageHeaders.get(HEADER_COMIC, ComicBook.class)).thenReturn(comicBook);
-    Mockito.when(readingList.getEntryIds()).thenReturn(readingListEntries);
+    Mockito.when(readingList.getEntryIds()).thenReturn(entryIdList);
   }
 
   @Test
-  public void testExecute() {
+  void execute() {
     action.execute(context);
 
-    Mockito.verify(readingListEntries, Mockito.times(1)).add(TEST_COMIC_BOOK_ID);
+    Mockito.verify(entryIdList, Mockito.times(1)).remove(TEST_COMIC_ID);
   }
 }

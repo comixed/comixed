@@ -18,18 +18,19 @@
 
 package org.comixedproject.adaptors.content;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.ComicPage;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ImageFileTypeContentAdaptorTest extends BaseContentAdaptorTest {
+@ExtendWith(MockitoExtension.class)
+class ImageFileTypeContentAdaptorTest extends BaseContentAdaptorTest {
   private static final String TEST_JPEG_FILENAME = "src/test/resources/example.jpg";
   private static final String TEST_WEBP_FILENAME = "src/test/resources/example.webp";
   private static final String TEST_GIF_FILENAME = "src/test/resources/example.gif";
@@ -40,7 +41,7 @@ public class ImageFileTypeContentAdaptorTest extends BaseContentAdaptorTest {
   private ContentAdaptorRules contentAdaptorRules = new ContentAdaptorRules();
 
   @Test
-  public void testLoadFileAlreadyExists() throws IOException {
+  void loadContent_fileAlreadyExists() throws IOException {
     comicBook.getPages().add(new ComicPage());
     comicBook.getPages().get(0).setFilename(TEST_JPEG_FILENAME);
 
@@ -53,7 +54,7 @@ public class ImageFileTypeContentAdaptorTest extends BaseContentAdaptorTest {
   }
 
   @Test
-  public void testLoadJPGImage() throws IOException {
+  void loadContent_jpg() throws IOException {
     byte[] content = loadFile(TEST_JPEG_FILENAME);
 
     adaptor.loadContent(comicBook, TEST_JPEG_FILENAME, content, contentAdaptorRules);
@@ -63,7 +64,7 @@ public class ImageFileTypeContentAdaptorTest extends BaseContentAdaptorTest {
   }
 
   @Test
-  public void testLoadWebPImage() throws IOException {
+  void loadContent_webp() throws IOException {
     byte[] content = loadFile(TEST_WEBP_FILENAME);
 
     adaptor.loadContent(comicBook, TEST_WEBP_FILENAME, content, contentAdaptorRules);
@@ -73,7 +74,7 @@ public class ImageFileTypeContentAdaptorTest extends BaseContentAdaptorTest {
   }
 
   @Test
-  public void testLoadGifImage() throws IOException {
+  void loadContent_gif() throws IOException {
     byte[] content = loadFile(TEST_GIF_FILENAME);
 
     adaptor.loadContent(comicBook, TEST_GIF_FILENAME, content, contentAdaptorRules);
