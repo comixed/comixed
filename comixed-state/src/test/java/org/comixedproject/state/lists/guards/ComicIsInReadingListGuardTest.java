@@ -1,6 +1,6 @@
 /*
- * ComiXed - A digital comicBook book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,41 +16,43 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.state.lists.actions;
+package org.comixedproject.state.lists.guards;
 
 import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC;
 import static org.comixedproject.state.lists.ReadingListStateHandler.HEADER_READING_LIST;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.lists.ReadingListState;
 import org.comixedproject.state.lists.ReadingListEvent;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.statemachine.StateContext;
 
-@RunWith(MockitoJUnitRunner.class)
-public class RemoveComicBookFromReadingListActionTest {
+@ExtendWith(MockitoExtension.class)
+class ComicIsInReadingListGuardTest {
   private static final Long TEST_COMIC_ID = 717L;
 
-  @InjectMocks private RemoveComicFromReadingListAction action;
+  @InjectMocks private ComicIsInReadingListGuard guard;
   @Mock private StateContext<ReadingListState, ReadingListEvent> context;
   @Mock private MessageHeaders messageHeaders;
   @Mock private ReadingList readingList;
   @Mock private ComicBook comicBook;
-  @Mock private ComicDetail comicDetail;
-  @Mock private List<Long> entryIdList;
 
-  @Before
-  public void setUp() {
+  private List<Long> entryIdList = new ArrayList<>();
+
+  @BeforeEach
+  void setUp() {
     Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_ID);
     Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
     Mockito.when(messageHeaders.get(HEADER_READING_LIST, ReadingList.class))
@@ -60,9 +62,20 @@ public class RemoveComicBookFromReadingListActionTest {
   }
 
   @Test
-  public void execute() {
-    action.execute(context);
+  void evaluate_comicNotInList() {
+    entryIdList.clear();
 
-    Mockito.verify(entryIdList, Mockito.times(1)).remove(TEST_COMIC_ID);
+    final boolean result = guard.evaluate(context);
+
+    assertFalse(result);
+  }
+
+  @Test
+  void evaluate_comicInList() {
+    entryIdList.add(TEST_COMIC_ID);
+
+    final boolean result = guard.evaluate(context);
+
+    assertTrue(result);
   }
 }

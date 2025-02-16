@@ -26,15 +26,15 @@ import org.comixedproject.model.metadata.FilenameScrapingRule;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.service.metadata.FilenameScrapingRuleException;
 import org.comixedproject.service.metadata.FilenameScrapingRuleService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class FilenameScrapingRuleControllerTest {
+@ExtendWith(MockitoExtension.class)
+class FilenameScrapingRuleControllerTest {
   @InjectMocks private FilenameScrapingRuleController controller;
   @Mock private FilenameScrapingRuleService filenameScrapingRuleService;
   @Mock private List<FilenameScrapingRule> ruleList;
@@ -42,7 +42,7 @@ public class FilenameScrapingRuleControllerTest {
   @Mock private DownloadDocument filenameScrapingRulesFile;
 
   @Test
-  public void testLoadRules() {
+  void loadRules() {
     Mockito.when(filenameScrapingRuleService.loadRules()).thenReturn(ruleList);
 
     final List<FilenameScrapingRule> result = controller.loadRules();
@@ -54,7 +54,7 @@ public class FilenameScrapingRuleControllerTest {
   }
 
   @Test
-  public void testSaveRules() {
+  void saveRules() {
     Mockito.when(filenameScrapingRuleService.saveRules(Mockito.anyList()))
         .thenReturn(savedRuleList);
 
@@ -67,7 +67,7 @@ public class FilenameScrapingRuleControllerTest {
   }
 
   @Test
-  public void testDownloadFiles() throws FilenameScrapingRuleException {
+  void downloadFiles() throws FilenameScrapingRuleException {
     Mockito.when(filenameScrapingRuleService.getFilenameScrapingRulesFile())
         .thenReturn(filenameScrapingRulesFile);
 

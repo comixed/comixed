@@ -29,22 +29,22 @@ import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicpages.DeletedPage;
 import org.comixedproject.model.comicpages.DeletedPageAndComic;
 import org.comixedproject.repositories.comicpages.ComicPageRepository;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class DeletedPageServiceTest {
+@ExtendWith(MockitoExtension.class)
+class DeletedPageServiceTest {
   @InjectMocks private DeletedPageService service;
   @Mock private ComicPageRepository comicPageRepository;
 
   private List<DeletedPageAndComic> deletedPageList = new ArrayList<>();
 
-  @Before
+  @BeforeEach
   public void setUp() {
     for (int index = 0; index < 100; index++) {
       final DeletedPageAndComic deletedPageAndComic = mock(DeletedPageAndComic.class);
@@ -59,7 +59,7 @@ public class DeletedPageServiceTest {
   }
 
   @Test
-  public void testLoadAll() {
+  void loadAll() {
     Mockito.when(comicPageRepository.loadAllDeletedPages()).thenReturn(deletedPageList);
 
     final List<DeletedPage> result = service.loadAll();

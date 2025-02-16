@@ -25,15 +25,15 @@ import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ScrapeComicBookReaderTest {
+@ExtendWith(MockitoExtension.class)
+class ScrapeComicBookReaderTest {
   private static final int MAX_RECORDS = 25;
 
   @InjectMocks private ScrapeComicBookReader reader;
@@ -43,7 +43,7 @@ public class ScrapeComicBookReaderTest {
   private List<ComicBook> comicBookList = new ArrayList<>();
 
   @Test
-  public void testReadNoneLoadedManyFound() {
+  void read_noneLoaded_manyFound() {
     for (int index = 0; index < MAX_RECORDS; index++) comicBookList.add(comicBook);
 
     Mockito.when(comicBookService.findComicsForBatchMetadataUpdate(Mockito.anyInt()))
@@ -61,7 +61,7 @@ public class ScrapeComicBookReaderTest {
   }
 
   @Test
-  public void testReadNoneRemaining() {
+  void read_noneRemaining() {
     Mockito.when(comicBookService.findComicsForBatchMetadataUpdate(Mockito.anyInt()))
         .thenReturn(comicBookList);
 
@@ -77,7 +77,7 @@ public class ScrapeComicBookReaderTest {
   }
 
   @Test
-  public void testReadNoneLoadedNoneFound() {
+  void read_noneLoaded_noneFound() {
     Mockito.when(comicBookService.findComicsForBatchMetadataUpdate(Mockito.anyInt()))
         .thenReturn(comicBookList);
 

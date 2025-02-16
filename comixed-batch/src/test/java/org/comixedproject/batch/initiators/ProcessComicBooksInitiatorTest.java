@@ -29,11 +29,13 @@ import org.comixedproject.model.batch.ProcessComicBooksEvent;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
@@ -43,8 +45,9 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ProcessComicBooksInitiatorTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ProcessComicBooksInitiatorTest {
   @InjectMocks private ProcessComicBooksInitiator initiator;
   @Mock private ComicBookService comicBookService;
   @Mock private BatchProcessesService batchProcessesService;
@@ -60,7 +63,7 @@ public class ProcessComicBooksInitiatorTest {
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
   private List<ComicBook> comicBookList = new ArrayList<>();
 
-  @Before
+  @BeforeEach
   public void setUp()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
@@ -75,7 +78,7 @@ public class ProcessComicBooksInitiatorTest {
   }
 
   @Test
-  public void testExecuteWithComicsWithoutContent()
+  void execute_comicsWithoutContent()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -93,7 +96,7 @@ public class ProcessComicBooksInitiatorTest {
   }
 
   @Test
-  public void testExecuteWithComicsFromListener()
+  void execute_comicsFromListener()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -111,7 +114,7 @@ public class ProcessComicBooksInitiatorTest {
   }
 
   @Test
-  public void testExecuteOneComicFound()
+  void execute_oneComicFound()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -128,7 +131,7 @@ public class ProcessComicBooksInitiatorTest {
   }
 
   @Test
-  public void testExecuteWithFinishedProcessing()
+  void execute_finishedProcessing()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -144,7 +147,7 @@ public class ProcessComicBooksInitiatorTest {
   }
 
   @Test
-  public void testExecuteNoComicBooksFound()
+  void execute_noComicBooksFound()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -157,7 +160,7 @@ public class ProcessComicBooksInitiatorTest {
   }
 
   @Test
-  public void testExecuteJobLauncherThrowsException()
+  void execute_jobLauncherThrowsException()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -176,7 +179,7 @@ public class ProcessComicBooksInitiatorTest {
   }
 
   @Test
-  public void testExecuteHasActiveJob()
+  void execute_hasActiveJob()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,

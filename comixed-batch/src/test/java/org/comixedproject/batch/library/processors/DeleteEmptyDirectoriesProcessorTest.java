@@ -20,15 +20,15 @@ package org.comixedproject.batch.library.processors;
 
 import java.io.File;
 import org.comixedproject.adaptors.file.FileAdaptor;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class DeleteEmptyDirectoriesProcessorTest {
+@ExtendWith(MockitoExtension.class)
+class DeleteEmptyDirectoriesProcessorTest {
   @InjectMocks private DeleteEmptyDirectoriesProcessor processor;
   @Mock private FileAdaptor fileAdaptor;
   @Mock private File directory;
@@ -37,7 +37,7 @@ public class DeleteEmptyDirectoriesProcessorTest {
   private File[] fileList = new File[] {new File("foo"), new File("bar")};
 
   @Test
-  public void testProcess() throws Exception {
+  void process() throws Exception {
     Mockito.when(directory.listFiles()).thenReturn(emptyFileList);
 
     processor.process(directory);
@@ -46,7 +46,7 @@ public class DeleteEmptyDirectoriesProcessorTest {
   }
 
   @Test
-  public void testProcessNotEmpty() throws Exception {
+  void process_notEmpty() throws Exception {
     Mockito.when(directory.listFiles()).thenReturn(fileList);
 
     processor.process(directory);

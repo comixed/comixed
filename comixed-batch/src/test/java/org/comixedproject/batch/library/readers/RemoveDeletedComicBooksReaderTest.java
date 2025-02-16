@@ -24,15 +24,15 @@ import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class RemoveDeletedComicBooksReaderTest {
+@ExtendWith(MockitoExtension.class)
+class RemoveDeletedComicBooksReaderTest {
   private static final int MAX_RECORDS = 25;
 
   @InjectMocks private RemoveDeletedComicBooksReader reader;
@@ -42,7 +42,7 @@ public class RemoveDeletedComicBooksReaderTest {
   private List<ComicBook> comicBookList = new ArrayList<>();
 
   @Test
-  public void testRead_noneLoaded_manyFound() {
+  void read_noneLoaded_manyFound() {
     for (int index = 0; index < MAX_RECORDS; index++) comicBookList.add(comicBook);
 
     Mockito.when(comicBookService.findComicBooksToBePurged(Mockito.anyInt()))
@@ -60,7 +60,7 @@ public class RemoveDeletedComicBooksReaderTest {
   }
 
   @Test
-  public void testRead_noneRemaining() {
+  void read_noneRemaining() {
     Mockito.when(comicBookService.findComicBooksToBePurged(Mockito.anyInt()))
         .thenReturn(comicBookList);
 

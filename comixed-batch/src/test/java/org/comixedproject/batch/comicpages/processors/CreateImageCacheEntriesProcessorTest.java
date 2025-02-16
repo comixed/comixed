@@ -22,16 +22,16 @@ import static org.junit.Assert.*;
 
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.service.comicpages.PageCacheService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class CreateImageCacheEntriesProcessorTest {
+@ExtendWith(MockitoExtension.class)
+class CreateImageCacheEntriesProcessorTest {
   private static final String TEST_PAGE_HASH = "0123456789ABCDEF0123456789ABCDEF";
 
   @InjectMocks private CreateImageCacheEntriesProcessor processor;
@@ -40,13 +40,13 @@ public class CreateImageCacheEntriesProcessorTest {
 
   private byte[] cachedPage = "THis is the cached page".getBytes();
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(page.getHash()).thenReturn(TEST_PAGE_HASH);
   }
 
   @Test
-  public void testProcessImageAlreadyCached() {
+  void process_imageAlreadyCached() {
     Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(cachedPage);
 
     final String result = processor.process(page);
@@ -58,7 +58,7 @@ public class CreateImageCacheEntriesProcessorTest {
   }
 
   @Test
-  public void testProcessImageNotFound() {
+  void process_imageNotFound() {
     Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(null);
 
     final String result = processor.process(page);

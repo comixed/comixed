@@ -18,22 +18,20 @@
 
 package org.comixedproject.batch.comicpages.writers;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.state.comicpages.ComicPageEvent;
 import org.comixedproject.state.comicpages.ComicPageStateHandler;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.item.Chunk;
 
-@RunWith(MockitoJUnitRunner.class)
-public class MarkBlockedPagesWriterTest {
+@ExtendWith(MockitoExtension.class)
+class MarkBlockedPagesWriterTest {
   @InjectMocks private MarkBlockedPagesWriter writer;
   @Mock private ComicPageStateHandler comicPageStateHandler;
   @Mock private ComicPage page;
@@ -41,7 +39,7 @@ public class MarkBlockedPagesWriterTest {
   private Chunk<ComicPage> pageList = new Chunk<>(new ArrayList<>());
 
   @Test
-  public void testWrite() throws Exception {
+  void write() throws Exception {
     pageList.add(page);
 
     writer.write(pageList);

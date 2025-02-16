@@ -26,16 +26,19 @@ import org.comixedproject.model.collections.Issue;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.repositories.collections.IssueRepository;
 import org.comixedproject.service.comicbooks.ComicDetailService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
-public class IssueServiceTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class IssueServiceTest {
   private static final String TEST_PUBLISHER = "The Publisher Name";
   private static final String TEST_SERIES = "The Series Name";
   private static final String TEST_VOLUME = "2022";
@@ -51,7 +54,7 @@ public class IssueServiceTest {
   private List<Issue> issueList = new ArrayList<>();
   private List<ComicDetail> comicDetailList = new ArrayList<>();
 
-  @Before
+  @BeforeEach
   public void setUp() {
     final Issue issue = new Issue();
     issue.setSeries(TEST_SERIES);
@@ -66,7 +69,7 @@ public class IssueServiceTest {
   }
 
   @Test
-  public void testGetCountForSeriesAndVolume() {
+  void getCountForSeriesAndVolume() {
     Mockito.when(
             issueRepository.getCountForSeriesAndVolume(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(TEST_COUNT);
@@ -80,7 +83,7 @@ public class IssueServiceTest {
   }
 
   @Test
-  public void testGetAllForSeriesAndVolume() {
+  void getAllForSeriesAndVolume() {
     Mockito.when(
             issueRepository.getAll(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
         .thenReturn(issueList);
@@ -95,7 +98,7 @@ public class IssueServiceTest {
   }
 
   @Test
-  public void testGetAllForSeriesAndVolumeNoneFound() {
+  void getAllForSeriesAndVolume_noneFound() {
     Mockito.when(
             issueRepository.getAll(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
         .thenReturn(new ArrayList<>());
@@ -125,7 +128,7 @@ public class IssueServiceTest {
   }
 
   @Test
-  public void testSaveIssues() {
+  void saveIssues() {
     Mockito.doNothing()
         .when(issueRepository)
         .deleteSeriesAndVolume(Mockito.anyString(), Mockito.anyString());
@@ -142,11 +145,10 @@ public class IssueServiceTest {
   }
 
   @Test
-  public void testDeleteForSeriesAndVolume() {
+  void deleteForSeriesAndVolume() {
     Mockito.doNothing()
         .when(issueRepository)
         .deleteSeriesAndVolume(Mockito.anyString(), Mockito.anyString());
-    ;
 
     service.deleteSeriesAndVolume(TEST_SERIES, TEST_VOLUME);
 

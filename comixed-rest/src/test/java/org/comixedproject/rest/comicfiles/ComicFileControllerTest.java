@@ -34,19 +34,17 @@ import org.comixedproject.model.net.comicfiles.ImportComicFilesRequest;
 import org.comixedproject.model.net.comicfiles.LoadComicFilesResponse;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.service.metadata.FilenameScrapingRuleService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@RunWith(MockitoJUnitRunner.class)
-@SpringBootTest
-public class ComicFileControllerTest {
+@ExtendWith(MockitoExtension.class)
+class ComicFileControllerTest {
   private static final Random RANDOM = new Random();
   private static final String COMIC_ARCHIVE = "testcomic.cbz";
   private static final byte[] IMAGE_CONTENT = new byte[65535];
@@ -68,7 +66,7 @@ public class ComicFileControllerTest {
   @Mock private FilenameMetadata filenameMetadata;
 
   @Test
-  public void testGetImportFileCoverServiceThrowsException() throws AdaptorException {
+  void getImportFileCoverServiceThrowsException() throws AdaptorException {
     Mockito.when(comicFileService.getImportFileCover(Mockito.anyString()))
         .thenThrow(AdaptorException.class);
 
@@ -80,7 +78,7 @@ public class ComicFileControllerTest {
   }
 
   @Test
-  public void testGetImportFileCover() throws AdaptorException {
+  void getImportFileCover() throws AdaptorException {
     Mockito.when(comicFileService.getImportFileCover(Mockito.anyString()))
         .thenReturn(IMAGE_CONTENT);
 
@@ -93,7 +91,7 @@ public class ComicFileControllerTest {
   }
 
   @Test
-  public void testGetAllComicsUnderNoLimit() throws IOException {
+  void getAllComicsUnderNoLimit() throws IOException {
     Mockito.when(comicFileService.getAllComicsUnder(Mockito.anyString(), Mockito.anyInt()))
         .thenReturn(comicFileGroupList);
 
@@ -108,7 +106,7 @@ public class ComicFileControllerTest {
   }
 
   @Test
-  public void testGetAllComicsUnder() throws IOException {
+  void getAllComicsUnder() throws IOException {
     Mockito.when(comicFileService.getAllComicsUnder(Mockito.anyString(), Mockito.anyInt()))
         .thenReturn(comicFileGroupList);
 
@@ -123,7 +121,7 @@ public class ComicFileControllerTest {
   }
 
   @Test
-  public void testImportComicFiles()
+  void importComicFiles()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -135,7 +133,7 @@ public class ComicFileControllerTest {
   }
 
   @Test
-  public void testScrapeFilename() {
+  void scrapeFilename() {
     Mockito.when(filenameScrapingRuleService.loadFilenameMetadata(Mockito.anyString()))
         .thenReturn(filenameMetadata);
     Mockito.when(filenameMetadata.getSeries()).thenReturn(TEST_SERIES);
@@ -155,7 +153,7 @@ public class ComicFileControllerTest {
   }
 
   @Test
-  public void testScrapeFilenameNoRuleApplied() {
+  void scrapeFilenameNoRuleApplied() {
     Mockito.when(filenameScrapingRuleService.loadFilenameMetadata(Mockito.anyString()))
         .thenReturn(new FilenameMetadata());
 

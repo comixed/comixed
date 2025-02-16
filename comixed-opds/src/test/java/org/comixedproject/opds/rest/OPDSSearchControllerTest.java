@@ -25,15 +25,15 @@ import org.comixedproject.opds.OPDSUtils;
 import org.comixedproject.opds.model.OPDSAcquisitionFeed;
 import org.comixedproject.opds.model.OpenSearchDescriptor;
 import org.comixedproject.opds.service.OPDSAcquisitionService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class OPDSSearchControllerTest {
+@ExtendWith(MockitoExtension.class)
+class OPDSSearchControllerTest {
   private static final String TEST_ENCODED_STRING = "The encoded string";
   private static final String TEST_DECODED_STRING = "The decoded string";
 
@@ -43,7 +43,7 @@ public class OPDSSearchControllerTest {
   @Mock private OPDSAcquisitionFeed feed;
 
   @Test
-  public void testGetSearchDescriptor() {
+  void getSearchDescriptor() {
     final OpenSearchDescriptor result = controller.getSearchDescriptor();
 
     assertNotNull(result);
@@ -51,7 +51,7 @@ public class OPDSSearchControllerTest {
   }
 
   @Test
-  public void testSearch() {
+  void search() {
     Mockito.when(opdsUtils.urlDecodeString(Mockito.anyString())).thenReturn(TEST_DECODED_STRING);
     Mockito.when(opdsAcquisitionService.getComicsFeedForSearchTerms(Mockito.anyString()))
         .thenReturn(feed);

@@ -26,14 +26,14 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
-@RunWith(MockitoJUnitRunner.class)
-public class CachingRequestBodyFilterTest {
+@ExtendWith(MockitoExtension.class)
+class CachingRequestBodyFilterTest {
   @InjectMocks private CachingRequestBodyFilter filter;
   @Mock HttpServletRequest servletRequest;
   @Mock ServletResponse servletResponse;
@@ -41,7 +41,7 @@ public class CachingRequestBodyFilterTest {
   @Captor private ArgumentCaptor<ServletRequest> servletRequestArgumentCaptor;
 
   @Test
-  public void testDoFilter() throws IOException, ServletException {
+  void doFilter() throws IOException, ServletException {
     Mockito.doNothing().when(chain).doFilter(servletRequestArgumentCaptor.capture(), Mockito.any());
 
     filter.doFilter(servletRequest, servletResponse, chain);

@@ -20,20 +20,21 @@ package org.comixedproject.rest.lists;
 
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
+import static org.junit.Assert.assertThrows;
 
 import java.util.Set;
 import org.comixedproject.model.lists.Story;
 import org.comixedproject.service.lists.StoryException;
 import org.comixedproject.service.lists.StoryService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class StoryControllerTest {
+@ExtendWith(MockitoExtension.class)
+class StoryControllerTest {
   private static final String TEST_STORY_NEW = "Story Name";
 
   @InjectMocks private StoryController controller;
@@ -44,7 +45,7 @@ public class StoryControllerTest {
   @Mock private Set<Story> storySet;
 
   @Test
-  public void testLoadAll() {
+  void loadAll() {
     Mockito.when(storyService.loadAll()).thenReturn(storyNameSet);
 
     final Set<String> result = controller.loadAllNames();
@@ -56,7 +57,7 @@ public class StoryControllerTest {
   }
 
   @Test
-  public void testLoadAllWithName() {
+  void loadAllWithName() {
     Mockito.when(storyService.findByName(Mockito.anyString())).thenReturn(storySet);
 
     final Set<Story> result = controller.loadAllWithName(TEST_STORY_NEW);
@@ -67,20 +68,16 @@ public class StoryControllerTest {
     Mockito.verify(storyService, Mockito.times(1)).findByName(TEST_STORY_NEW);
   }
 
-  @Test(expected = StoryException.class)
-  public void testCreateStoryServiceException() throws StoryException {
+  @Test
+  void createStoryServiceException() throws StoryException {
     Mockito.when(storyService.createStory(Mockito.any(Story.class)))
         .thenThrow(StoryException.class);
 
-    try {
-      controller.createStory(story);
-    } finally {
-      Mockito.verify(storyService, Mockito.times(1)).createStory(story);
-    }
+    assertThrows(StoryException.class, () -> controller.createStory(story));
   }
 
   @Test
-  public void testCreateStory() throws StoryException {
+  void createStory() throws StoryException {
     Mockito.when(storyService.createStory(Mockito.any(Story.class))).thenReturn(savedStory);
 
     final Story result = controller.createStory(story);

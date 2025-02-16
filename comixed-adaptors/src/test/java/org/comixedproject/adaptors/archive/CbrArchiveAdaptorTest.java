@@ -18,35 +18,24 @@
 
 package org.comixedproject.adaptors.archive;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 import org.comixedproject.AdaptorTestContext;
-import org.comixedproject.adaptors.archive.model.ArchiveWriteHandle;
 import org.comixedproject.adaptors.archive.model.CbrArchiveReadHandle;
 import org.comixedproject.adaptors.archive.model.ComicArchiveEntry;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = AdaptorTestContext.class)
-public class CbrArchiveAdaptorTest {
+class CbrArchiveAdaptorTest {
   private static final String TEST_RAR_FILENAME = "src/test/resources/example.cbr";
-  private static final String TEST_NOT_RAR_FILENAME = "src/test/resources/example.cbz";
 
   @Autowired private CbrArchiveAdaptor adaptor;
 
-  @Test(expected = ArchiveAdaptorException.class)
-  public void testOpenArchiveFileNotFound() throws ArchiveAdaptorException {
-    adaptor.openArchiveForRead(TEST_RAR_FILENAME.substring(1));
-  }
-
   @Test
-  public void testGetEntries() throws ArchiveAdaptorException {
+  void getEntries() throws ArchiveAdaptorException {
     final CbrArchiveReadHandle archiveHandle = adaptor.openArchiveForRead(TEST_RAR_FILENAME);
     final List<ComicArchiveEntry> entries = adaptor.getEntries(archiveHandle);
     adaptor.closeArchiveForRead(archiveHandle);
@@ -68,18 +57,15 @@ public class CbrArchiveAdaptorTest {
     assertEquals(17303073, entries.get(3).getSize());
   }
 
-  @Test(expected = ArchiveAdaptorException.class)
-  public void testGetEntryNotFound() throws ArchiveAdaptorException {
+  @Test
+  void getEntry_notFound() throws ArchiveAdaptorException {
     final CbrArchiveReadHandle archiveHandle = adaptor.openArchiveForRead(TEST_RAR_FILENAME);
-    try {
-      final byte[] result = adaptor.readEntry(archiveHandle, "exampleCBR.gif");
-    } finally {
-      adaptor.closeArchiveForRead(archiveHandle);
-    }
+    assertThrows(
+        ArchiveAdaptorException.class, () -> adaptor.readEntry(archiveHandle, "exampleCBR.gif"));
   }
 
   @Test
-  public void testGetEntry() throws ArchiveAdaptorException {
+  void getEntry() throws ArchiveAdaptorException {
     final CbrArchiveReadHandle archiveHandle = adaptor.openArchiveForRead(TEST_RAR_FILENAME);
     final byte[] result = adaptor.readEntry(archiveHandle, "exampleCBR.jpg");
     adaptor.closeArchiveForRead(archiveHandle);
@@ -88,8 +74,15 @@ public class CbrArchiveAdaptorTest {
     assertEquals(58656, result.length);
   }
 
-  @Test(expected = ArchiveAdaptorException.class)
-  public void testOpenForWriteThrowsException() throws ArchiveAdaptorException {
-    final ArchiveWriteHandle archiveHandle = adaptor.openArchiveForWrite("any file.rar");
+  @Test
+  void openArchive_fileNotFound() {
+    assertThrows(
+        ArchiveAdaptorException.class,
+        () -> adaptor.openArchiveForRead(TEST_RAR_FILENAME.substring(1)));
+  }
+
+  @Test
+  void openForWrite_throwsException() {
+    assertThrows(ArchiveAdaptorException.class, () -> adaptor.openArchiveForWrite("any file.rar"));
   }
 }

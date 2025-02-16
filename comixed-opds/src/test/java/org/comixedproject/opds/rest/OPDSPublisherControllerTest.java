@@ -33,16 +33,19 @@ import org.comixedproject.opds.model.OPDSAcquisitionFeed;
 import org.comixedproject.opds.model.OPDSNavigationFeed;
 import org.comixedproject.opds.service.OPDSAcquisitionService;
 import org.comixedproject.opds.service.OPDSNavigationService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
-public class OPDSPublisherControllerTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class OPDSPublisherControllerTest {
   private static final String TEST_PUBLISHER_ENCODED = "The+Publisher";
   private static final String TEST_PUBLISHER = "The Publisher";
   private static final boolean TEST_UNREAD = RandomUtils.nextBoolean();
@@ -65,7 +68,7 @@ public class OPDSPublisherControllerTest {
   private Set<String> volumeList = new HashSet<>();
   private List<ComicBook> comicBookList = new ArrayList<>();
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(opdsUtils.urlDecodeString(TEST_PUBLISHER_ENCODED)).thenReturn(TEST_PUBLISHER);
     Mockito.when(opdsUtils.urlDecodeString(TEST_SERIES_ENCODED)).thenReturn(TEST_SERIES);
@@ -79,7 +82,7 @@ public class OPDSPublisherControllerTest {
   }
 
   @Test
-  public void testGetRootFeedForPublishers() {
+  void getRootFeedForPublishers() {
     Mockito.when(
             opdsNavigationService.getRootFeedForPublishers(
                 Mockito.anyString(), Mockito.anyBoolean()))
@@ -95,7 +98,7 @@ public class OPDSPublisherControllerTest {
   }
 
   @Test
-  public void testGetSeriesFeedForPublisher() {
+  void getSeriesFeedForPublisher() {
     Mockito.when(
             opdsNavigationService.getSeriesFeedForPublisher(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
@@ -112,7 +115,7 @@ public class OPDSPublisherControllerTest {
   }
 
   @Test
-  public void testGetVolumeFeedForPublisherAndSeries() {
+  void getVolumeFeedForPublisherAndSeries() {
     Mockito.when(
             opdsNavigationService.getVolumeFeedForPublisherAndSeries(
                 Mockito.anyString(),
@@ -133,7 +136,7 @@ public class OPDSPublisherControllerTest {
   }
 
   @Test
-  public void testGetComicFeedForPublisherAndSeriesAndVolume() {
+  void getComicFeedForPublisherAndSeriesAndVolume() {
     Mockito.when(
             opdsAcquisitionService.getComicFeedsForPublisherAndSeriesAndVolume(
                 Mockito.anyString(),

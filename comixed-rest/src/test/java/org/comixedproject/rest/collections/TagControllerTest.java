@@ -27,15 +27,15 @@ import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.net.collections.LoadComicsForCollectionRequest;
 import org.comixedproject.model.net.collections.LoadComicsForCollectionResponse;
 import org.comixedproject.service.comicbooks.ComicDetailService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class TagControllerTest {
+@ExtendWith(MockitoExtension.class)
+class TagControllerTest {
   private static final String TEST_FILTER_TEXT = "the filter text";
   private static final int TEST_PAGE_SIZE = 10;
   private static final int TEST_PAGE_INDEX = 12;
@@ -50,7 +50,7 @@ public class TagControllerTest {
   @Mock private List<CollectionEntry> collectionEntryList;
 
   @Test
-  public void testLocalCollection() {
+  void localCollection() {
     Mockito.when(
             comicDetailService.loadCollectionEntries(
                 Mockito.any(ComicTagType.class),

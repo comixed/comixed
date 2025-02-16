@@ -30,19 +30,20 @@ import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.service.admin.ConfigurationService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
-public class UpdateMetadataProcessorTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class UpdateMetadataProcessorTest {
   private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CB7;
-  private static final String TEST_TRUE = Boolean.TRUE.toString();
-  private static final String TEST_FALSE = Boolean.FALSE.toString();
 
   @InjectMocks private UpdateMetadataProcessor processor;
   @Mock private ComicBookAdaptor comicBookAdaptor;
@@ -50,14 +51,14 @@ public class UpdateMetadataProcessorTest {
   @Mock private ComicBook comicBook;
   @Mock private ComicDetail comicDetail;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicDetail.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
   }
 
   @Test
-  public void testProcessUpdateException() throws Exception {
+  void process_updateException() throws Exception {
     Mockito.doThrow(AdaptorException.class)
         .when(comicBookAdaptor)
         .save(
@@ -76,7 +77,7 @@ public class UpdateMetadataProcessorTest {
   }
 
   @Test
-  public void testProcessCreateExternalFileThrowsException() throws Exception {
+  void process_createExternalFileThrowsException() throws Exception {
     Mockito.when(configurationService.isFeatureEnabled(CREATE_EXTERNAL_METADATA_FILE))
         .thenReturn(true);
     Mockito.doThrow(AdaptorException.class)
@@ -94,7 +95,7 @@ public class UpdateMetadataProcessorTest {
   }
 
   @Test
-  public void testProcessCreateExternalFile() throws Exception {
+  void process_createExternalFile() throws Exception {
     Mockito.when(configurationService.isFeatureEnabled(CREATE_EXTERNAL_METADATA_FILE))
         .thenReturn(true);
 
@@ -109,7 +110,7 @@ public class UpdateMetadataProcessorTest {
   }
 
   @Test
-  public void testProcessForRarFile() throws Exception {
+  void process_forRarFile() throws Exception {
     Mockito.when(comicDetail.getArchiveType()).thenReturn(ArchiveType.CBR);
 
     final ComicBook result = processor.process(comicBook);
@@ -126,7 +127,7 @@ public class UpdateMetadataProcessorTest {
   }
 
   @Test
-  public void testProcessNoComicInfoFileEnabled() throws Exception {
+  void process_noComicInfoFileEnabled() throws Exception {
     Mockito.when(configurationService.isFeatureEnabled(CFG_LIBRARY_NO_COMICINFO_ENTRY))
         .thenReturn(true);
 
@@ -144,7 +145,7 @@ public class UpdateMetadataProcessorTest {
   }
 
   @Test
-  public void testProcessNoRecreateComicFileAlowed() throws Exception {
+  void process_noRecreateComicFileAlowed() throws Exception {
     Mockito.when(configurationService.isFeatureEnabled(CFG_LIBRARY_NO_RECREATE_COMICS))
         .thenReturn(true);
 
@@ -162,7 +163,7 @@ public class UpdateMetadataProcessorTest {
   }
 
   @Test
-  public void testProcess() throws Exception {
+  void process() throws Exception {
     Mockito.when(configurationService.isFeatureEnabled(CREATE_EXTERNAL_METADATA_FILE))
         .thenReturn(true);
 

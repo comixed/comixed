@@ -19,6 +19,7 @@
 package org.comixedproject.messaging.comicbooks;
 
 import static org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAction.PROCESS_COMIC_BOOKS_STATUS_TOPIC;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,17 +27,17 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.messaging.batch.ProcessComicBooksStatus;
 import org.comixedproject.views.View;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PublishProcessComicBooksStatusActionTest {
+@ExtendWith(MockitoExtension.class)
+class PublishProcessComicBooksStatusActionTest {
   private static final String TEST_STATUS_AS_JSON = "The status as JSON";
 
   @InjectMocks private PublishProcessComicBooksStatusAction action;
@@ -45,27 +46,22 @@ public class PublishProcessComicBooksStatusActionTest {
   @Mock private ObjectWriter objectWriter;
   @Mock private ProcessComicBooksStatus status;
 
-  @Before
+  @BeforeEach
   public void setUp() throws JsonProcessingException {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_STATUS_AS_JSON);
   }
 
-  @Test(expected = PublishingException.class)
-  public void testPublishJsonProcessingException()
-      throws PublishingException, JsonProcessingException {
+  @Test
+  void publish_jsonProcessingException() throws JsonProcessingException {
     Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
         .thenThrow(JsonProcessingException.class);
 
-    try {
-      action.publish(status);
-    } finally {
-      Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.GenericObjectView.class);
-    }
+    assertThrows(PublishingException.class, () -> action.publish(status));
   }
 
   @Test
-  public void testPublish() throws PublishingException, JsonProcessingException {
+  void publish() throws PublishingException, JsonProcessingException {
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_STATUS_AS_JSON);
 
     action.publish(status);

@@ -27,18 +27,19 @@ import org.comixedproject.model.net.user.*;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
-@SpringBootTest
-public class UserControllerTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class UserControllerTest {
   private static final long TEST_USER_ID = 717L;
   private static final String TEST_EMAIL = "comixedreader@comixed.org";
   private static final String TEST_PASSWORD = "My!P455w0rD";
@@ -55,8 +56,8 @@ public class UserControllerTest {
   @Mock private List<ComiXedUser> userList;
   @Mock private CreateAccountRequest createAccountRequest;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
     Mockito.when(createAccountRequest.getEmail()).thenReturn(TEST_EMAIL);
     Mockito.when(createAccountRequest.getPassword()).thenReturn(TEST_PASSWORD);
@@ -64,7 +65,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void testCheckForAdminAccount() {
+  void checkForAdminAccount() {
     Mockito.when(userService.hasAdminAccounts()).thenReturn(TEST_HAS_EXISTING);
 
     final checkForAdminAccountResponse result = controller.checkForAdmin();
@@ -75,41 +76,37 @@ public class UserControllerTest {
     Mockito.verify(userService, Mockito.times(1)).hasAdminAccounts();
   }
 
-  @Test(expected = ComiXedUserException.class)
-  public void testCreateAdminAccountServiceThrowsException() throws ComiXedUserException {
+  @Test
+  void createAdminAccountServiceThrowsException() throws ComiXedUserException {
     Mockito.doThrow(ComiXedUserException.class)
         .when(userService)
         .createAdminAccount(Mockito.anyString(), Mockito.anyString());
 
-    try {
-      controller.createAdminAccount(new CreateAdminAccountRequest(TEST_EMAIL, TEST_PASSWORD));
-    } finally {
-      Mockito.verify(userService, Mockito.times(1)).createAdminAccount(TEST_EMAIL, TEST_PASSWORD);
-    }
+    assertThrows(
+        ComiXedUserException.class,
+        () ->
+            controller.createAdminAccount(
+                new CreateAdminAccountRequest(TEST_EMAIL, TEST_PASSWORD)));
   }
 
   @Test
-  public void testCreateAdminAccount() throws ComiXedUserException {
+  void createAdminAccount() throws ComiXedUserException {
     controller.createAdminAccount(new CreateAdminAccountRequest(TEST_EMAIL, TEST_PASSWORD));
 
     Mockito.verify(userService, Mockito.times(1)).createAdminAccount(TEST_EMAIL, TEST_PASSWORD);
   }
 
-  @Test(expected = ComiXedUserException.class)
-  public void testLoadCurrentUserInvalidEmail() throws ComiXedUserException {
+  @Test
+  void loadCurrentUserInvalidEmail() throws ComiXedUserException {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
     Mockito.when(userService.findByEmail(Mockito.anyString()))
         .thenThrow(ComiXedUserException.class);
 
-    try {
-      controller.loadCurrentUser(principal);
-    } finally {
-      Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
-    }
+    assertThrows(ComiXedUserException.class, () -> controller.loadCurrentUser(principal));
   }
 
   @Test
-  public void testLoadCurrentUser() throws ComiXedUserException {
+  void loadCurrentUser() throws ComiXedUserException {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
     Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
 
@@ -121,24 +118,24 @@ public class UserControllerTest {
     Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
   }
 
-  @Test(expected = ComiXedUserException.class)
-  public void testSetUserPropertyServiceFailure() throws ComiXedUserException {
+  @Test
+  void setUserPropertyServiceFailure() throws ComiXedUserException {
     Mockito.when(
             userService.setUserProperty(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
         .thenThrow(ComiXedUserException.class);
 
-    try {
-      controller.saveCurrentUserPreference(
-          principal, TEST_PROPERTY_NAME, new SaveCurrentUserPreferenceRequest(TEST_PROPERTY_VALUE));
-    } finally {
-      Mockito.verify(userService, Mockito.times(1))
-          .setUserProperty(TEST_EMAIL, TEST_PROPERTY_NAME, TEST_PROPERTY_VALUE);
-    }
+    assertThrows(
+        ComiXedUserException.class,
+        () ->
+            controller.saveCurrentUserPreference(
+                principal,
+                TEST_PROPERTY_NAME,
+                new SaveCurrentUserPreferenceRequest(TEST_PROPERTY_VALUE)));
   }
 
   @Test
-  public void testSetUserProperty() throws ComiXedUserException {
+  void setUserProperty() throws ComiXedUserException {
     Mockito.when(
             userService.setUserProperty(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
@@ -157,21 +154,18 @@ public class UserControllerTest {
         .setUserProperty(TEST_EMAIL, TEST_PROPERTY_NAME, TEST_PROPERTY_VALUE);
   }
 
-  @Test(expected = ComiXedUserException.class)
-  public void testDeleteUserPropertyServiceFailure() throws ComiXedUserException {
+  @Test
+  void deleteUserPropertyServiceFailure() throws ComiXedUserException {
     Mockito.when(userService.deleteUserProperty(Mockito.anyString(), Mockito.anyString()))
         .thenThrow(ComiXedUserException.class);
 
-    try {
-      controller.deleteCurrentUserProperty(principal, TEST_PROPERTY_NAME);
-    } finally {
-      Mockito.verify(userService, Mockito.times(1))
-          .deleteUserProperty(TEST_EMAIL, TEST_PROPERTY_NAME);
-    }
+    assertThrows(
+        ComiXedUserException.class,
+        () -> controller.deleteCurrentUserProperty(principal, TEST_PROPERTY_NAME));
   }
 
   @Test
-  public void testDeleteUserProperty() throws ComiXedUserException {
+  void deleteUserProperty() throws ComiXedUserException {
     Mockito.when(userService.deleteUserProperty(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(user);
 
@@ -184,24 +178,22 @@ public class UserControllerTest {
         .deleteUserProperty(TEST_EMAIL, TEST_PROPERTY_NAME);
   }
 
-  @Test(expected = ComiXedUserException.class)
-  public void testSaveCurrentUserServiceThrowsException() throws ComiXedUserException {
+  @Test
+  void saveCurrentUserServiceThrowsException() throws ComiXedUserException {
     Mockito.when(
             userService.updateCurrentUser(
                 Mockito.anyLong(), Mockito.anyString(), Mockito.anyString()))
         .thenThrow(ComiXedUserException.class);
 
-    try {
-      controller.updateCurrentUser(
-          TEST_USER_ID, new UpdateCurrentUserRequest(TEST_EMAIL, TEST_PASSWORD));
-    } finally {
-      Mockito.verify(userService, Mockito.times(1))
-          .updateCurrentUser(TEST_USER_ID, TEST_EMAIL, TEST_PASSWORD);
-    }
+    assertThrows(
+        ComiXedUserException.class,
+        () ->
+            controller.updateCurrentUser(
+                TEST_USER_ID, new UpdateCurrentUserRequest(TEST_EMAIL, TEST_PASSWORD)));
   }
 
   @Test
-  public void testSaveCurrentUser() throws ComiXedUserException {
+  void saveCurrentUser() throws ComiXedUserException {
     Mockito.when(
             userService.updateCurrentUser(
                 Mockito.anyLong(), Mockito.anyString(), Mockito.anyString()))
@@ -219,7 +211,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void testLoadComicsReadStatistics() throws ComiXedUserException {
+  void loadComicsReadStatistics() throws ComiXedUserException {
     Mockito.when(userService.loadComicsReadStatistics(Mockito.anyString()))
         .thenReturn(comicsReadStatisticsList);
 
@@ -232,7 +224,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void testGetUserAccountList() {
+  void getUserAccountList() {
     Mockito.when(userService.getUserAccountList()).thenReturn(userList);
 
     final List<ComiXedUser> result = controller.getUserAccountList();
@@ -243,23 +235,19 @@ public class UserControllerTest {
     Mockito.verify(userService, Mockito.times(1)).getUserAccountList();
   }
 
-  @Test(expected = ComiXedUserException.class)
-  public void testCreateUserAccount_serviceException() throws ComiXedUserException {
+  @Test
+  void createUserAccount_serviceException() throws ComiXedUserException {
     Mockito.when(
             userService.createUserAccount(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
         .thenThrow(ComiXedUserException.class);
 
-    try {
-      controller.createUserAccount(createAccountRequest);
-    } finally {
-      Mockito.verify(userService, Mockito.times(1))
-          .createUserAccount(TEST_EMAIL, TEST_PASSWORD, TEST_ADMIN);
-    }
+    assertThrows(
+        ComiXedUserException.class, () -> controller.createUserAccount(createAccountRequest));
   }
 
   @Test
-  public void testCreateUserAccount() throws ComiXedUserException {
+  void createUserAccount() throws ComiXedUserException {
     Mockito.when(
             userService.createUserAccount(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
@@ -274,23 +262,20 @@ public class UserControllerTest {
         .createUserAccount(TEST_EMAIL, TEST_PASSWORD, TEST_ADMIN);
   }
 
-  @Test(expected = ComiXedUserException.class)
-  public void testUpdateUserAccount_serviceException() throws ComiXedUserException {
+  @Test
+  void updateUserAccount_serviceException() throws ComiXedUserException {
     Mockito.when(
             userService.updateUserAccount(
                 Mockito.anyLong(), Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
         .thenThrow(ComiXedUserException.class);
 
-    try {
-      controller.updateUserAccount(createAccountRequest, TEST_USER_ID);
-    } finally {
-      Mockito.verify(userService, Mockito.times(1))
-          .updateUserAccount(TEST_USER_ID, TEST_EMAIL, TEST_PASSWORD, TEST_ADMIN);
-    }
+    assertThrows(
+        ComiXedUserException.class,
+        () -> controller.updateUserAccount(createAccountRequest, TEST_USER_ID));
   }
 
   @Test
-  public void testUpdateUserAccount() throws ComiXedUserException {
+  void updateUserAccount() throws ComiXedUserException {
     Mockito.when(
             userService.updateUserAccount(
                 Mockito.anyLong(), Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
@@ -306,21 +291,17 @@ public class UserControllerTest {
         .updateUserAccount(TEST_USER_ID, TEST_EMAIL, TEST_PASSWORD, TEST_ADMIN);
   }
 
-  @Test(expected = ComiXedUserException.class)
-  public void testDeleteUserAccount_serviceException() throws ComiXedUserException {
+  @Test
+  void deleteUserAccount_serviceException() throws ComiXedUserException {
     Mockito.doThrow(ComiXedUserException.class)
         .when(userService)
         .deleteUserAccount(Mockito.anyLong());
 
-    try {
-      controller.deleteUserAccount(TEST_USER_ID);
-    } finally {
-      Mockito.verify(userService, Mockito.times(1)).deleteUserAccount(TEST_USER_ID);
-    }
+    assertThrows(ComiXedUserException.class, () -> controller.deleteUserAccount(TEST_USER_ID));
   }
 
   @Test
-  public void testDeleteUserAccount() throws ComiXedUserException {
+  void deleteUserAccount() throws ComiXedUserException {
     controller.deleteUserAccount(TEST_USER_ID);
 
     Mockito.verify(userService, Mockito.times(1)).deleteUserAccount(TEST_USER_ID);

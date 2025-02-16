@@ -25,11 +25,13 @@ import static org.junit.Assert.*;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
@@ -40,8 +42,9 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-@RunWith(MockitoJUnitRunner.class)
-public class UpdateMetadataInitiatorTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class UpdateMetadataInitiatorTest {
   private static final Long TEST_UNPROCESSED_COMIC_COUNT = 717L;
 
   @InjectMocks private UpdateMetadataInitiator initiator;
@@ -60,7 +63,7 @@ public class UpdateMetadataInitiatorTest {
 
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
-  @Before
+  @BeforeEach
   public void setUp()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
@@ -74,7 +77,7 @@ public class UpdateMetadataInitiatorTest {
   }
 
   @Test
-  public void testExecuteNoComicsToMove()
+  void execute_noComicsToMove()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -87,7 +90,7 @@ public class UpdateMetadataInitiatorTest {
   }
 
   @Test
-  public void testExecuteHasRunningJobs()
+  void execute_hasRunningJobs()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -100,7 +103,7 @@ public class UpdateMetadataInitiatorTest {
   }
 
   @Test
-  public void testExecuteFromScheduler()
+  void execute_fromScheduler()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -115,7 +118,7 @@ public class UpdateMetadataInitiatorTest {
   }
 
   @Test
-  public void testExecuteFromListener()
+  void execute_fromListener()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -130,7 +133,7 @@ public class UpdateMetadataInitiatorTest {
   }
 
   @Test
-  public void testExecuteJobException()
+  void execute_jobException()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,

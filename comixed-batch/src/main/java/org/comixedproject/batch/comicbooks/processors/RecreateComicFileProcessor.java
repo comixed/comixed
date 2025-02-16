@@ -25,7 +25,6 @@ import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.admin.ConfigurationService;
-import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +41,6 @@ import org.springframework.stereotype.Component;
 public class RecreateComicFileProcessor implements ItemProcessor<ComicBook, ComicBook> {
   @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private ConfigurationService configurationService;
-
-  private JobParameters jobParameters;
 
   @Override
   public ComicBook process(final ComicBook comicBook) throws Exception {

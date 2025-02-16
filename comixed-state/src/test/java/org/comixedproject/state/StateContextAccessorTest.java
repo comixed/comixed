@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2024, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,35 +20,36 @@ package org.comixedproject.state;
 
 import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC;
 import static org.comixedproject.state.lists.ReadingListStateHandler.HEADER_READING_LIST;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.lists.ReadingList;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.statemachine.StateContext;
 
-@RunWith(MockitoJUnitRunner.class)
-public class StateContextAccessorTest {
+@ExtendWith(MockitoExtension.class)
+class StateContextAccessorTest {
   @InjectMocks private StateContextAccessor accessor;
   @Mock private MessageHeaders messageHeaders;
   @Mock private StateContext<?, ?> context;
   @Mock private ComicBook comicBook;
   @Mock private ReadingList readingList;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
   }
 
   @Test
-  public void testFetchComic() {
+  void fetchComic() {
     Mockito.when(messageHeaders.get(HEADER_COMIC, ComicBook.class)).thenReturn(comicBook);
 
     final ComicBook result = accessor.fetchComic(context);
@@ -58,7 +59,8 @@ public class StateContextAccessorTest {
   }
 
   @Test
-  public void testFetchReadingLIst() {
+  void fetchReadingList() {
+
     Mockito.when(messageHeaders.get(HEADER_READING_LIST, ReadingList.class))
         .thenReturn(readingList);
 

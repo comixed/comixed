@@ -69,16 +69,16 @@ public abstract class OPDSFeed<E extends OPDSFeedEntry> {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "link")
   @Getter
-  private List<OPDSLink> links =
-      new ArrayList<>() {
-        {
-          add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, "start", ROOT_ID));
-          add(new OPDSLink(SEARCH_LINK_TYPE, "search", "search.xml", title = "Search the library"));
-        }
-      };
+  private List<OPDSLink> links = new ArrayList<>();
 
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "entry", namespace = "http://www.w3.org/2005/Atom")
   @Getter
   private List<E> entries = new ArrayList<>();
+
+  public OPDSFeed() {
+    this.links.add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, "start", ROOT_ID));
+    this.links.add(
+        new OPDSLink(SEARCH_LINK_TYPE, "search", "search.xml", title = "Search the library"));
+  }
 }

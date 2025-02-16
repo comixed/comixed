@@ -18,34 +18,35 @@
 
 package org.comixedproject.adaptors.content;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ComicInfoXmlFilenameContentAdaptorProviderTest {
+@ExtendWith(MockitoExtension.class)
+class ComicInfoXmlFilenameContentAdaptorProviderTest {
   @InjectMocks private ComicInfoXmlFilenameContentAdaptorProvider provider;
 
   @Test
-  public void testCreate() {
+  void create() {
     assertNotNull(provider.create());
   }
 
   @Test
-  public void testSupportsWithSimpleFilename() {
+  void supports_simpleFilename() {
     assertTrue(provider.supports("ComicInfo.xml"));
   }
 
   @Test
-  public void testSupportsIgnorsCase() {
+  void supports_ignorsCase() {
     assertTrue(provider.supports("comicinfo.XML"));
   }
 
   @Test
-  public void testSupportsWithSubdirectory() {
+  void supports_withSubdirectory() {
     assertTrue(provider.supports("subdir/ComicInfo.XML"));
   }
 }

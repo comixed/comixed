@@ -115,7 +115,7 @@ public class ComicFileAdaptor {
       final String filename,
       final String renamingRule,
       final String targetDirectory) {
-    if (StringUtils.isEmpty(renamingRule)) {
+    if (!StringUtils.hasLength(renamingRule)) {
       log.trace(
           "No renaming rules: using original filename: {}", FilenameUtils.getBaseName(filename));
       return String.format("%s/%s", targetDirectory, FilenameUtils.getBaseName(filename));

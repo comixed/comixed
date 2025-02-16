@@ -25,19 +25,22 @@ import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.metadata.PublishMetadataUpdateProcessStateUpdateAction;
 import org.comixedproject.model.net.metadata.MetadataUpdateProcessUpdate;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.scope.context.StepContext;
 import org.springframework.batch.item.ExecutionContext;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ScrapeComicBookChunkListenerTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ScrapeComicBookChunkListenerTest {
   private static final Long TEST_TOTAL_COMICS = 800L;
   private static final Long TEST_REMAINING_COMICS = 723L;
   @InjectMocks private ScrapeComicBookChunkListener listener;
@@ -55,7 +58,7 @@ public class ScrapeComicBookChunkListenerTest {
 
   @Captor private ArgumentCaptor<MetadataUpdateProcessUpdate> payloadArgumentCaptor;
 
-  @Before
+  @BeforeEach
   public void setUp() throws PublishingException {
     Mockito.when(chunkContext.getStepContext()).thenReturn(stepContext);
     Mockito.when(stepContext.getStepExecution()).thenReturn(stepExecution);
@@ -67,14 +70,14 @@ public class ScrapeComicBookChunkListenerTest {
   }
 
   @Test
-  public void testBeforeChunk() {
+  void beforeChunk() {
     listener.beforeChunk(chunkContext);
 
     Mockito.verify(chunkContext, Mockito.never()).getStepContext();
   }
 
   @Test
-  public void testAfterChunkFinishedParameterPresent() {
+  void afterChunkFinishedParameterPresent() {
     Mockito.when(executionContext.containsKey(PARAM_METADATA_UPDATE_STARTED)).thenReturn(true);
     Mockito.when(executionContext.containsKey(PARAM_METADATA_UPDATE_FINISHED)).thenReturn(true);
 
@@ -88,7 +91,7 @@ public class ScrapeComicBookChunkListenerTest {
   }
 
   @Test
-  public void testAfterChunkPublishException() throws PublishingException {
+  void afterChunk_publishException() throws PublishingException {
     Mockito.when(executionContext.containsKey(PARAM_METADATA_UPDATE_STARTED)).thenReturn(true);
     Mockito.when(executionContext.containsKey(PARAM_METADATA_UPDATE_FINISHED)).thenReturn(false);
     Mockito.when(executionContext.getLong(PARAM_METADATA_UPDATE_TOTAL_COMICS))
@@ -112,7 +115,7 @@ public class ScrapeComicBookChunkListenerTest {
   }
 
   @Test
-  public void testAfterChunk() {
+  void afterChunk() {
     Mockito.when(executionContext.containsKey(PARAM_METADATA_UPDATE_STARTED)).thenReturn(true);
     Mockito.when(executionContext.containsKey(PARAM_METADATA_UPDATE_FINISHED)).thenReturn(false);
     Mockito.when(executionContext.getLong(PARAM_METADATA_UPDATE_TOTAL_COMICS))
@@ -131,7 +134,7 @@ public class ScrapeComicBookChunkListenerTest {
   }
 
   @Test
-  public void testAfterChunkError() {
+  void afterChunkError() {
     listener.afterChunkError(chunkContext);
 
     Mockito.verify(chunkContext, Mockito.never()).getStepContext();

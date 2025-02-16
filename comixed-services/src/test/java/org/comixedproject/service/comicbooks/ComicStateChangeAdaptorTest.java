@@ -9,19 +9,22 @@ import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.statemachine.state.State;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ComicStateChangeAdaptorTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ComicStateChangeAdaptorTest {
   private static final ComicState TEST_STATE = ComicState.CHANGED;
 
   @InjectMocks private ComicStateChangeAdaptor adaptor;
@@ -36,20 +39,20 @@ public class ComicStateChangeAdaptorTest {
   @Mock private ComicBook comicBookRecord;
   @Mock private ComicDetail comicDetail;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
   }
 
   @Test
-  public void testAfterPropertiesSet() throws Exception {
+  void afterPropertiesSet() throws Exception {
     adaptor.afterPropertiesSet();
 
     Mockito.verify(comicStateHandler, Mockito.times(1)).addListener(adaptor);
   }
 
   @Test
-  public void testOnComicStateChangePurgeEvent() throws PublishingException {
+  void onComicStateChange_purgeEvent() throws PublishingException {
     Mockito.when(message.getHeaders()).thenReturn(messageHeaders);
     Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
         .thenReturn(comicBook);
@@ -61,7 +64,7 @@ public class ComicStateChangeAdaptorTest {
   }
 
   @Test
-  public void testOnComicStateChangePurgeEventPublishingException() throws PublishingException {
+  void onComicStateChange_purgeEventPublishingException() throws PublishingException {
     Mockito.when(message.getHeaders()).thenReturn(messageHeaders);
     Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
         .thenReturn(comicBook);
@@ -76,7 +79,7 @@ public class ComicStateChangeAdaptorTest {
   }
 
   @Test
-  public void testOnComicStateChange() throws PublishingException {
+  void onComicStateChange() throws PublishingException {
     Mockito.when(message.getHeaders()).thenReturn(messageHeaders);
     Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
         .thenReturn(comicBook);
@@ -92,7 +95,7 @@ public class ComicStateChangeAdaptorTest {
   }
 
   @Test
-  public void testOnComicStateChangePublishError() throws PublishingException {
+  void onComicStateChange_publishingError() throws PublishingException {
     Mockito.when(message.getHeaders()).thenReturn(messageHeaders);
     Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
         .thenReturn(comicBook);

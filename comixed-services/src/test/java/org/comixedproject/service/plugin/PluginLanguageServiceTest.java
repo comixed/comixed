@@ -26,16 +26,16 @@ import java.util.stream.Collectors;
 import org.comixedproject.model.net.plugin.PluginLanguage;
 import org.comixedproject.plugins.PluginRuntimeProvider;
 import org.comixedproject.plugins.PluginRuntimeRegistry;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PluginLanguageServiceTest {
+@ExtendWith(MockitoExtension.class)
+class PluginLanguageServiceTest {
   private static final String TEST_PLUGIN_RUNTIME_1 = "groovy";
   private static final String TEST_PLUGIN_RUNTIME_2 = "python";
   private static final String TEST_PLUGIN_RUNTIME_3 = "kotlin";
@@ -48,7 +48,7 @@ public class PluginLanguageServiceTest {
 
   private List<PluginRuntimeProvider> pluginRuntimeList = new ArrayList<>();
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(pluginRuntime1.getName()).thenReturn(TEST_PLUGIN_RUNTIME_1);
     pluginRuntimeList.add(pluginRuntime1);
@@ -59,7 +59,7 @@ public class PluginLanguageServiceTest {
   }
 
   @Test
-  public void testGetPluginLanguageList() {
+  void getPluginLanguageList() {
     Mockito.when(pluginRuntimeRegistry.getPluginRuntimeList()).thenReturn(pluginRuntimeList);
 
     final List<PluginLanguage> result = service.getPluginLanguageList();

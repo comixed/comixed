@@ -27,20 +27,22 @@ import org.comixedproject.model.collections.Issue;
 import org.comixedproject.model.collections.SeriesDetail;
 import org.comixedproject.model.collections.SeriesDetailId;
 import org.comixedproject.repositories.collections.SeriesDetailsRepository;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-@RunWith(MockitoJUnitRunner.class)
-public class SeriesDetailServiceTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class SeriesDetailServiceTest {
   private static final int TEST_PAGE_INDEX = 3;
   private static final int TEST_PAGE_SIZE = 25;
   private static final String TEST_SORT_BY = "name";
-  private static final String TEST_SORT_DIRECTION = "asc";
   private static final String TEST_PUBLISHER = "The publisher";
   private static final String TEST_SERIES = "The series";
   private static final String TEST_VOLUME = "2022";
@@ -58,7 +60,7 @@ public class SeriesDetailServiceTest {
 
   private List<SeriesDetail> seriesDetailList = new ArrayList<>();
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(seriesDetailPage.stream()).thenReturn(seriesDetailStream);
     Mockito.when(seriesDetailStream.toList()).thenReturn(seriesDetailList);
@@ -68,7 +70,7 @@ public class SeriesDetailServiceTest {
   }
 
   @Test
-  public void testLoadSeriesList_sortedByPublisher() {
+  void loadSeriesList_sortedByPublisher() {
     Mockito.when(seriesDetailsRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(seriesDetailPage);
 
@@ -76,7 +78,7 @@ public class SeriesDetailServiceTest {
   }
 
   @Test
-  public void testLoadSeriesList_sortedByName() {
+  void loadSeriesList_sortedByName() {
     Mockito.when(seriesDetailsRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(seriesDetailPage);
 
@@ -84,7 +86,7 @@ public class SeriesDetailServiceTest {
   }
 
   @Test
-  public void testLoadSeriesList_sortedByVolume() {
+  void loadSeriesList_sortedByVolume() {
     Mockito.when(seriesDetailsRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(seriesDetailPage);
 
@@ -92,7 +94,7 @@ public class SeriesDetailServiceTest {
   }
 
   @Test
-  public void testLoadSeriesList_sortedByLibraryCount() {
+  void loadSeriesList_sortedByLibraryCount() {
     Mockito.when(seriesDetailsRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(seriesDetailPage);
 
@@ -100,7 +102,7 @@ public class SeriesDetailServiceTest {
   }
 
   @Test
-  public void testLoadSeriesList_sortedByTotalComics() {
+  void loadSeriesList_sortedByTotalComics() {
     Mockito.when(seriesDetailsRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(seriesDetailPage);
 
@@ -108,7 +110,7 @@ public class SeriesDetailServiceTest {
   }
 
   @Test
-  public void testLoadSeriesList_sortedByUnknown() {
+  void loadSeriesList_sortedByUnknown() {
     Mockito.when(seriesDetailsRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(seriesDetailPage);
 
@@ -134,7 +136,7 @@ public class SeriesDetailServiceTest {
   }
 
   @Test
-  public void testLoadSeriesList_unsorted() {
+  void loadSeriesList_unsorted() {
     Mockito.when(seriesDetailsRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(seriesDetailPage);
 
@@ -153,7 +155,7 @@ public class SeriesDetailServiceTest {
   }
 
   @Test
-  public void testLoadSeriesCount() {
+  void loadSeriesCount() {
     Mockito.when(seriesDetailsRepository.getSeriesCount()).thenReturn(TEST_SERIES_COUNT);
 
     final int result = service.getSeriesCount();
@@ -164,7 +166,7 @@ public class SeriesDetailServiceTest {
   }
 
   @Test
-  public void testLoadSeriesDetail() {
+  void loadSeriesDetail() {
     Mockito.when(issueService.getAll(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
         .thenReturn(issueList);
 

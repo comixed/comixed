@@ -1,20 +1,20 @@
 package org.comixedproject.adaptors.csv;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.comicpages.BlockedHash;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class CsvAdaptorTest {
+@ExtendWith(MockitoExtension.class)
+class CsvAdaptorTest {
   private static final String TEST_PAGE_LABEL = "The blocked page label";
   private static final String TEST_PAGE_HASH = "The page hash";
   private static final String TEST_PAGE_THUMBNAIL = "The blocked page content encoded";
@@ -29,7 +29,7 @@ public class CsvAdaptorTest {
   private List<BlockedHash> blockedHashes = new ArrayList<>();
 
   @Test
-  public void testEncodeAndDecode() throws IOException {
+  void encode_decode() throws IOException {
     blockedHashes.add(blockedHash);
 
     final byte[] encoded =

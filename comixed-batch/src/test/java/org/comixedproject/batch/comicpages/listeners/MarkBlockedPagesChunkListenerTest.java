@@ -28,17 +28,17 @@ import org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAct
 import org.comixedproject.model.batch.BatchProcessDetail;
 import org.comixedproject.model.messaging.batch.ProcessComicBooksStatus;
 import org.comixedproject.service.comicpages.ComicPageService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.scope.context.StepContext;
 
-@RunWith(MockitoJUnitRunner.class)
-public class MarkBlockedPagesChunkListenerTest {
+@ExtendWith(MockitoExtension.class)
+class MarkBlockedPagesChunkListenerTest {
   private static final long TEST_PAGE_COUNT = 717L;
   private static final long TEST_UNPROCESSED_PAGE_COUNT = TEST_PAGE_COUNT / 2L;
 
@@ -56,7 +56,7 @@ public class MarkBlockedPagesChunkListenerTest {
   @Captor private ArgumentCaptor<ProcessComicBooksStatus> publishComicBooksStatusArgumentCaptor;
   @Captor private ArgumentCaptor<BatchProcessDetail> batchProcessDetailArgumentCaptor;
 
-  @Before
+  @BeforeEach
   public void setUp() throws PublishingException {
     Mockito.when(comicPageService.getCount()).thenReturn(TEST_PAGE_COUNT);
     Mockito.when(comicPageService.getUnmarkedWithBlockedHashCount())
@@ -79,21 +79,21 @@ public class MarkBlockedPagesChunkListenerTest {
   }
 
   @Test
-  public void testBeforeChunk() throws PublishingException {
+  void beforeChunk() throws PublishingException {
     listener.beforeChunk(chunkContext);
 
     this.doCommonChecks();
   }
 
   @Test
-  public void testAftereChunk() throws PublishingException {
+  void afterChunk() throws PublishingException {
     listener.afterChunk(chunkContext);
 
     this.doCommonChecks();
   }
 
   @Test
-  public void testAfterChunkError() throws PublishingException {
+  void afterChunkError() throws PublishingException {
     listener.afterChunkError(chunkContext);
 
     this.doCommonChecks();

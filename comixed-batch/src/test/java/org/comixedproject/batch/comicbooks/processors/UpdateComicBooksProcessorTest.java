@@ -25,19 +25,22 @@ import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicType;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.StepExecution;
 
-@RunWith(MockitoJUnitRunner.class)
-public class UpdateComicBooksProcessorTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class UpdateComicBooksProcessorTest {
   private static final String TEST_PUBLISHER = "The publisher";
   private static final String TEST_SERIES = "The series";
   private static final String TEST_VOLUME = "2022";
@@ -53,7 +56,7 @@ public class UpdateComicBooksProcessorTest {
   @Mock private ComicBook comicBook;
   @Mock private ComicDetail comicDetail;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
 
@@ -73,7 +76,7 @@ public class UpdateComicBooksProcessorTest {
   }
 
   @Test
-  public void testProcess() throws Exception {
+  void process() throws Exception {
     processor.process(comicBook);
 
     Mockito.verify(comicDetail, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
@@ -84,7 +87,7 @@ public class UpdateComicBooksProcessorTest {
   }
 
   @Test
-  public void testProcessNoPublisher() throws Exception {
+  void process_noPublisher() throws Exception {
     Mockito.when(jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_PUBLISHER)).thenReturn(null);
 
     processor.process(comicBook);
@@ -93,7 +96,7 @@ public class UpdateComicBooksProcessorTest {
   }
 
   @Test
-  public void testProcessNoSeries() throws Exception {
+  void process_noSeries() throws Exception {
     Mockito.when(jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_SERIES)).thenReturn(null);
 
     processor.process(comicBook);
@@ -102,7 +105,7 @@ public class UpdateComicBooksProcessorTest {
   }
 
   @Test
-  public void testProcessNoVolume() throws Exception {
+  void process_noVolume() throws Exception {
     Mockito.when(jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_VOLUME)).thenReturn(null);
 
     processor.process(comicBook);
@@ -111,7 +114,7 @@ public class UpdateComicBooksProcessorTest {
   }
 
   @Test
-  public void testProcessNoIssueNumber() throws Exception {
+  void process_noIssueNumber() throws Exception {
     Mockito.when(jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_ISSUE_NUMBER)).thenReturn(null);
 
     processor.process(comicBook);
@@ -120,7 +123,7 @@ public class UpdateComicBooksProcessorTest {
   }
 
   @Test
-  public void testProcessNoImprint() throws Exception {
+  void process_noImprint() throws Exception {
     Mockito.when(jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_IMPRINT)).thenReturn(null);
 
     processor.process(comicBook);
@@ -129,7 +132,7 @@ public class UpdateComicBooksProcessorTest {
   }
 
   @Test
-  public void testProcessNoComicType() throws Exception {
+  void process_noComicType() throws Exception {
     Mockito.when(jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_COMIC_TYPE)).thenReturn(null);
 
     processor.process(comicBook);
@@ -138,7 +141,7 @@ public class UpdateComicBooksProcessorTest {
   }
 
   @Test
-  public void testAfterStep() {
+  void afterStep() {
     assertNull(processor.afterStep(stepExecution));
   }
 }

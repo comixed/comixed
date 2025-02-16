@@ -20,20 +20,21 @@ package org.comixedproject.rest.metadata;
 
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
+import static org.junit.Assert.assertThrows;
 
 import java.util.List;
 import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.service.metadata.MetadataSourceException;
 import org.comixedproject.service.metadata.MetadataSourceService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class MetadataSourceControllerTest {
+@ExtendWith(MockitoExtension.class)
+class MetadataSourceControllerTest {
   private static final Long TEST_SOURCE_ID = 237L;
 
   @InjectMocks private MetadataSourceController controller;
@@ -43,7 +44,7 @@ public class MetadataSourceControllerTest {
   @Mock private MetadataSource savedSource;
 
   @Test
-  public void testLoadMetadataSources() {
+  void loadMetadataSources() {
     Mockito.when(metadataSourceService.loadMetadataSources()).thenReturn(metadataSourceList);
 
     final List<MetadataSource> result = controller.loadMetadataSources();
@@ -54,20 +55,16 @@ public class MetadataSourceControllerTest {
     Mockito.verify(metadataSourceService, Mockito.times(1)).loadMetadataSources();
   }
 
-  @Test(expected = MetadataSourceException.class)
-  public void testCreateAndServiceThrowsException() throws MetadataSourceException {
+  @Test
+  void createAndServiceThrowsException() throws MetadataSourceException {
     Mockito.when(metadataSourceService.create(Mockito.any(MetadataSource.class)))
         .thenThrow(MetadataSourceException.class);
 
-    try {
-      controller.create(incomingSource);
-    } finally {
-      Mockito.verify(metadataSourceService, Mockito.times(1)).create(incomingSource);
-    }
+    assertThrows(MetadataSourceException.class, () -> controller.create(incomingSource));
   }
 
   @Test
-  public void testCreate() throws MetadataSourceException {
+  void create() throws MetadataSourceException {
     Mockito.when(metadataSourceService.create(Mockito.any(MetadataSource.class)))
         .thenReturn(savedSource);
 
@@ -79,20 +76,16 @@ public class MetadataSourceControllerTest {
     Mockito.verify(metadataSourceService, Mockito.times(1)).create(incomingSource);
   }
 
-  @Test(expected = MetadataSourceException.class)
-  public void testGetOneServiceException() throws MetadataSourceException {
+  @Test
+  void getOneServiceException() throws MetadataSourceException {
     Mockito.when(metadataSourceService.getById(Mockito.anyLong()))
         .thenThrow(MetadataSourceException.class);
 
-    try {
-      controller.getOne(TEST_SOURCE_ID);
-    } finally {
-      Mockito.verify(metadataSourceService, Mockito.times(1)).getById(TEST_SOURCE_ID);
-    }
+    assertThrows(MetadataSourceException.class, () -> controller.getOne(TEST_SOURCE_ID));
   }
 
   @Test
-  public void testGetOne() throws MetadataSourceException {
+  void getOne() throws MetadataSourceException {
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(savedSource);
 
     final MetadataSource result = controller.getOne(TEST_SOURCE_ID);
@@ -103,21 +96,17 @@ public class MetadataSourceControllerTest {
     Mockito.verify(metadataSourceService, Mockito.times(1)).getById(TEST_SOURCE_ID);
   }
 
-  @Test(expected = MetadataSourceException.class)
-  public void testUpdateAndServiceThrowsException() throws MetadataSourceException {
+  @Test
+  void updateAndServiceThrowsException() throws MetadataSourceException {
     Mockito.when(metadataSourceService.update(Mockito.anyLong(), Mockito.any(MetadataSource.class)))
         .thenThrow(MetadataSourceException.class);
 
-    try {
-      controller.update(TEST_SOURCE_ID, incomingSource);
-    } finally {
-      Mockito.verify(metadataSourceService, Mockito.times(1))
-          .update(TEST_SOURCE_ID, incomingSource);
-    }
+    assertThrows(
+        MetadataSourceException.class, () -> controller.update(TEST_SOURCE_ID, incomingSource));
   }
 
   @Test
-  public void testUpdate() throws MetadataSourceException {
+  void update() throws MetadataSourceException {
     Mockito.when(metadataSourceService.update(Mockito.anyLong(), Mockito.any(MetadataSource.class)))
         .thenReturn(savedSource);
 
@@ -129,20 +118,16 @@ public class MetadataSourceControllerTest {
     Mockito.verify(metadataSourceService, Mockito.times(1)).update(TEST_SOURCE_ID, incomingSource);
   }
 
-  @Test(expected = MetadataSourceException.class)
-  public void testDeleteAndServiceThrowsException() throws MetadataSourceException {
+  @Test
+  void deleteAndServiceThrowsException() throws MetadataSourceException {
     Mockito.when(metadataSourceService.delete(Mockito.anyLong()))
         .thenThrow(MetadataSourceException.class);
 
-    try {
-      controller.delete(TEST_SOURCE_ID);
-    } finally {
-      Mockito.verify(metadataSourceService, Mockito.times(1)).delete(TEST_SOURCE_ID);
-    }
+    assertThrows(MetadataSourceException.class, () -> controller.delete(TEST_SOURCE_ID));
   }
 
   @Test
-  public void testDelete() throws MetadataSourceException {
+  void delete() throws MetadataSourceException {
     Mockito.when(metadataSourceService.delete(Mockito.anyLong())).thenReturn(metadataSourceList);
 
     final List<MetadataSource> result = controller.delete(TEST_SOURCE_ID);

@@ -26,15 +26,18 @@ import org.comixedproject.model.library.OrganizingComic;
 import org.comixedproject.repositories.comicbooks.ComicBookRepository;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
 import org.comixedproject.repositories.library.OrganizingComicRepository;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.data.domain.PageRequest;
 
-@RunWith(MockitoJUnitRunner.class)
-public class OrganizingComicServiceTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class OrganizingComicServiceTest {
   private static final int TEST_MAX_COMICS = 23;
   private static final long TEST_COMIC_DETAIL_ID = 129L;
   private static final long TEST_COMIC_BOOK_ID = 320L;
@@ -52,7 +55,7 @@ public class OrganizingComicServiceTest {
 
   private List<OrganizingComic> organizingComicList = new ArrayList<>();
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(organizingComicRepository.loadComics(pageRequestArgumentCaptor.capture()))
         .thenReturn(organizingComicList);
@@ -62,7 +65,7 @@ public class OrganizingComicServiceTest {
   }
 
   @Test
-  public void testLoadComics() {
+  void loadComics() {
     final List<OrganizingComic> result = service.loadComics(TEST_MAX_COMICS);
 
     assertNotNull(result);
@@ -76,7 +79,7 @@ public class OrganizingComicServiceTest {
   }
 
   @Test
-  public void testSaveComic() {
+  void saveComic() {
     service.saveComic(comic);
 
     Mockito.verify(comicDetailRepository, Mockito.times(1))
@@ -85,7 +88,7 @@ public class OrganizingComicServiceTest {
   }
 
   @Test
-  public void testSaveComic_filenameNotUpdated() {
+  void saveComic_filenameNotUpdated() {
     Mockito.when(comic.getUpdatedFilename()).thenReturn(null);
 
     service.saveComic(comic);
@@ -96,7 +99,7 @@ public class OrganizingComicServiceTest {
   }
 
   @Test
-  public void testloadComicCount() {
+  void loadComicCount() {
     Mockito.when(organizingComicRepository.count()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.loadComicCount();

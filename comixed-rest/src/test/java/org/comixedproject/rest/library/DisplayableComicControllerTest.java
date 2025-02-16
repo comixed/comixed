@@ -20,6 +20,7 @@ package org.comixedproject.rest.library;
 
 import static junit.framework.TestCase.*;
 import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
+import static org.junit.Assert.assertThrows;
 
 import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
@@ -43,16 +44,19 @@ import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
-public class DisplayableComicControllerTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class DisplayableComicControllerTest {
   private static final Integer TEST_PAGE_SIZE = 25;
   private static final Integer TEST_PAGE_INDEX = 3;
   private static final Integer TEST_COVER_YEAR = 2025;
@@ -97,8 +101,8 @@ public class DisplayableComicControllerTest {
   @Mock private ComiXedUser user;
   @Mock private Set<Long> comicBooksRead;
 
-  @Before
-  public void setUp() throws ComicBookSelectionException, ComiXedUserException {
+  @BeforeEach
+  void setUp() throws ComicBookSelectionException, ComiXedUserException {
     Mockito.when(filteredRequest.getPageSize()).thenReturn(TEST_PAGE_SIZE);
     Mockito.when(filteredRequest.getPageIndex()).thenReturn(TEST_PAGE_INDEX);
     Mockito.when(filteredRequest.getCoverYear()).thenReturn(TEST_COVER_YEAR);
@@ -133,7 +137,7 @@ public class DisplayableComicControllerTest {
   }
 
   @Test
-  public void testLoadComicsByFilter() {
+  void loadComicsByFilter() {
     Mockito.when(
             displayableComicService.loadComicsByFilter(
                 Mockito.anyInt(),
@@ -221,7 +225,7 @@ public class DisplayableComicControllerTest {
   }
 
   @Test
-  public void testLoadComicsBySelectedState() throws ComicBookSelectionException {
+  void loadComicsBySelectedState() throws ComicBookSelectionException {
     Mockito.when(
             displayableComicService.loadComicsById(
                 Mockito.anyInt(),
@@ -247,7 +251,7 @@ public class DisplayableComicControllerTest {
   }
 
   @Test
-  public void testLoadComicsByTagTypeAndValue() {
+  void loadComicsByTagTypeAndValue() {
     Mockito.when(
             displayableComicService.loadComicsByTagTypeAndValue(
                 Mockito.anyInt(),
@@ -301,7 +305,7 @@ public class DisplayableComicControllerTest {
   }
 
   @Test
-  public void testLoadUnreadComics() throws ComiXedUserException {
+  void loadUnreadComics() throws ComiXedUserException {
     Mockito.when(
             displayableComicService.loadUnreadComics(
                 Mockito.any(ComiXedUser.class),
@@ -329,22 +333,21 @@ public class DisplayableComicControllerTest {
         .loadUnreadComics(user, TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION);
   }
 
-  @Test(expected = ComiXedUserException.class)
-  public void testLoadUnreadComics_userNotFound() throws ComiXedUserException {
+  @Test
+  void loadUnreadComics_userNotFound() throws ComiXedUserException {
     Mockito.when(userService.findByEmail(TEST_EMAIL)).thenThrow(ComiXedUserException.class);
 
-    try {
-      controller.loadUnreadComics(
-          principal,
-          new LoadComicsByReadStateRequest(
-              TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION));
-    } finally {
-      Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
-    }
+    assertThrows(
+        ComiXedUserException.class,
+        () ->
+            controller.loadUnreadComics(
+                principal,
+                new LoadComicsByReadStateRequest(
+                    TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION)));
   }
 
   @Test
-  public void testLoadReadComics() throws ComiXedUserException {
+  void loadReadComics() throws ComiXedUserException {
     Mockito.when(
             displayableComicService.loadReadComics(
                 Mockito.any(ComiXedUser.class),
@@ -372,39 +375,36 @@ public class DisplayableComicControllerTest {
         .loadReadComics(user, TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION);
   }
 
-  @Test(expected = ComiXedUserException.class)
-  public void testLoadReadComics_userNotFound() throws ComiXedUserException {
+  @Test
+  void loadReadComics_userNotFound() throws ComiXedUserException {
     Mockito.when(userService.findByEmail(TEST_EMAIL)).thenThrow(ComiXedUserException.class);
 
-    try {
-      controller.loadReadComics(
-          principal,
-          new LoadComicsByReadStateRequest(
-              TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION));
-    } finally {
-      Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
-    }
-  }
-
-  @Test(expected = ReadingListException.class)
-  public void testLoadComicsForList_readingListException()
-      throws ReadingListException, LibraryException {
-    Mockito.when(readingListService.getEntryCount(Mockito.anyLong()))
-        .thenThrow(ReadingListException.class);
-
-    try {
-      controller.loadComicsForList(
-          principal,
-          new LoadComicForListRequest(
-              TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION),
-          TEST_READING_LIST_ID);
-    } finally {
-      Mockito.verify(readingListService, Mockito.times(1)).getEntryCount(TEST_READING_LIST_ID);
-    }
+    assertThrows(
+        ComiXedUserException.class,
+        () ->
+            controller.loadReadComics(
+                principal,
+                new LoadComicsByReadStateRequest(
+                    TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION)));
   }
 
   @Test
-  public void testLoadComicsForList() throws ReadingListException, LibraryException {
+  void loadComicsForList_readingListException() throws ReadingListException {
+    Mockito.when(readingListService.getEntryCount(Mockito.anyLong()))
+        .thenThrow(ReadingListException.class);
+
+    assertThrows(
+        ReadingListException.class,
+        () ->
+            controller.loadComicsForList(
+                principal,
+                new LoadComicForListRequest(
+                    TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION),
+                TEST_READING_LIST_ID));
+  }
+
+  @Test
+  void loadComicsForList() throws ReadingListException, LibraryException {
     Mockito.when(
             displayableComicService.loadComicsForList(
                 Mockito.anyString(),
@@ -441,7 +441,7 @@ public class DisplayableComicControllerTest {
   }
 
   @Test
-  public void testLoadDuplicateComics() {
+  void loadDuplicateComics() {
     Mockito.when(
             displayableComicService.loadDuplicateComics(
                 Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))

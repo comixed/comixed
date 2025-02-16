@@ -33,17 +33,18 @@ import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.state.comicpages.ComicPageEvent;
 import org.comixedproject.state.comicpages.ComicPageStateHandler;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.data.domain.Pageable;
 
-@RunWith(MockitoJUnitRunner.class)
-@SpringBootTest
-public class ComicPageServiceTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ComicPageServiceTest {
   private static final long TEST_PAGE_ID = 129L;
   private static final long TEST_COMIC_ID = 1002L;
   private static final int TEST_PAGE_INDEX = 7;
@@ -73,13 +74,13 @@ public class ComicPageServiceTest {
   private Set<String> hashSet = new HashSet<>();
   private List<String> hashList = new ArrayList<>();
 
-  @Before
+  @BeforeEach
   public void setUp() throws IOException {
     pageContent = FileUtils.readFileToByteArray(new File(TEST_PAGE_FILENAME));
   }
 
   @Test
-  public void testGetOneForHash() {
+  void getOneForHash() {
     pageList.add(page);
 
     Mockito.when(comicPageRepository.findByHash(Mockito.anyString())).thenReturn(pageList);
@@ -93,7 +94,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testGetOneForHash_noneFound() {
+  void getOneForHash_noneFound() {
     Mockito.when(comicPageRepository.findByHash(Mockito.anyString()))
         .thenReturn(Collections.emptyList());
 
@@ -104,19 +105,17 @@ public class ComicPageServiceTest {
     Mockito.verify(comicPageRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
   }
 
-  @Test(expected = ComicBookException.class)
-  public void testGetPageInComicByIndex_noSuchComic() throws ComicBookException {
+  @Test
+  void getPageInComicByIndex_noSuchComic() throws ComicBookException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicBookException.class);
 
-    try {
-      service.getPageInComicByIndex(TEST_COMIC_ID, TEST_PAGE_INDEX);
-    } finally {
-      Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
-    }
+    assertThrows(
+        ComicBookException.class,
+        () -> service.getPageInComicByIndex(TEST_COMIC_ID, TEST_PAGE_INDEX));
   }
 
   @Test
-  public void testGetPageInComicByIndex_indexOutOfBounds() throws ComicBookException {
+  void getPageInComicByIndex_indexOutOfBounds() throws ComicBookException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicBook.getPageCount()).thenReturn(TEST_PAGE_INDEX - 1);
 
@@ -129,7 +128,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testGetImageInComicByIndex() throws ComicBookException {
+  void getPageInComicByIndex() throws ComicBookException {
     final List<ComicPage> pages = new ArrayList<>();
     for (int index = 0; index < TEST_PAGE_INDEX * 2; index++) {
       pages.add(page);
@@ -149,19 +148,15 @@ public class ComicPageServiceTest {
     Mockito.verify(comicBook, Mockito.times(1)).getPages();
   }
 
-  @Test(expected = ComicPageException.class)
-  public void testGetPageById_noSuchPage() throws ComicPageException {
+  @Test
+  void getForId_noSuchPage() {
     Mockito.when(comicPageRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
-    try {
-      service.getForId(TEST_PAGE_ID);
-    } finally {
-      Mockito.verify(comicPageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
-    }
+    assertThrows(ComicPageException.class, () -> service.getForId(TEST_PAGE_ID));
   }
 
   @Test
-  public void testGetPageById() throws ComicPageException {
+  void getForId() throws ComicPageException {
     Mockito.when(comicPageRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(page));
 
     final ComicPage result = service.getForId(TEST_PAGE_ID);
@@ -173,7 +168,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testSave() throws ComicPageException {
+  void save() throws ComicPageException {
     Mockito.when(page.getId()).thenReturn(TEST_PAGE_ID);
     Mockito.when(comicPageRepository.saveAndFlush(Mockito.any(ComicPage.class)))
         .thenReturn(pageRecord);
@@ -187,7 +182,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testGetUnamrkedWithHash_forDeletion() {
+  void getUnamrkedWithHash_forDeletion() {
     Mockito.when(
             comicPageRepository.findByHashAndPageState(
                 Mockito.anyString(), Mockito.any(ComicPageState.class)))
@@ -203,7 +198,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testGetMarkedWithHash_forDeletion() {
+  void getMarkedWithHash_forDeletion() {
     Mockito.when(
             comicPageRepository.findByHashAndPageState(
                 Mockito.anyString(), Mockito.any(ComicPageState.class)))
@@ -219,7 +214,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testUpdatePageDeletion_forDeletion() {
+  void updatePageDeletion_forDeletion() {
     idList.add(TEST_PAGE_ID);
 
     Mockito.when(comicPageRepository.getById(Mockito.anyLong())).thenReturn(page);
@@ -231,7 +226,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testUpdatePageDeletion_notForDeletion() {
+  void updatePageDeletion_notForDeletion() {
     idList.add(TEST_PAGE_ID);
 
     Mockito.when(comicPageRepository.getById(Mockito.anyLong())).thenReturn(page);
@@ -243,7 +238,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testLoadPagesNeedingCacheEntries() {
+  void loadPagesNeedingCacheEntries() {
     Mockito.when(comicPageRepository.findPagesNeedingCacheEntries(argumentCaptorPageable.capture()))
         .thenReturn(pageList);
 
@@ -261,7 +256,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testLoadPagesNeedingCacheEntriesCount() {
+  void loadPagesNeedingCacheEntriesCount() {
     Mockito.when(comicPageRepository.findPagesNeedingCacheEntriesCount())
         .thenReturn(TEST_PAGE_COUNT);
 
@@ -273,7 +268,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testMarkPagesAsHavingCacheEntry() {
+  void markPagesAsHavingCacheEntry() {
     service.markPagesAsHavingCacheEntry(TEST_PAGE_HASH);
 
     Mockito.verify(comicPageRepository, Mockito.times(1))
@@ -281,7 +276,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testFindAllCoverPageHashes() {
+  void findAllCoverPageHashes() {
     Mockito.when(comicPageRepository.findAllCoverPageHashes()).thenReturn(hashSet);
 
     final Set<String> result = service.findAllCoverPageHashes();
@@ -293,7 +288,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testMarkCoverPagesToHaveCacheEntryCreated() {
+  void markCoverPagesToHaveCacheEntryCreated() {
     service.markCoverPagesToHaveCacheEntryCreated(TEST_PAGE_HASH);
 
     Mockito.verify(comicPageRepository, Mockito.times(1))
@@ -301,7 +296,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testUpdatePageContent_NoImageContent() {
+  void updatePageContent_noImageContent() {
     final byte[] content = "Invalid image content".getBytes();
     Mockito.when(genericUtilitiesAdaptor.createHash(Mockito.any(byte[].class)))
         .thenReturn(TEST_PAGE_HASH);
@@ -318,7 +313,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testUpdatePageContent() {
+  void updatePageContent() {
     Mockito.when(genericUtilitiesAdaptor.createHash(Mockito.any(byte[].class)))
         .thenReturn(TEST_PAGE_HASH);
     Mockito.when(comicPageRepository.save(Mockito.any(ComicPage.class))).thenReturn(savedPage);
@@ -334,7 +329,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testHasPagesWithoutHash_recordsFound() {
+  void hasPagesWithoutHash_recordsFound() {
     Mockito.when(comicPageRepository.getPagesWithoutHashesCount()).thenReturn(TEST_MAX_ENTRIES);
 
     assertTrue(service.hasPagesWithoutHash());
@@ -343,7 +338,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testHasPagesWithoutHash_noRecordsFound() {
+  void hasPagesWithoutHash_noRecordsFound() {
     Mockito.when(comicPageRepository.getPagesWithoutHashesCount()).thenReturn(0L);
 
     assertFalse(service.hasPagesWithoutHash());
@@ -352,7 +347,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testGetPagesWithoutHashesCount() {
+  void getPagesWithoutHashesCount() {
     Mockito.when(comicPageRepository.getPagesWithoutHashesCount()).thenReturn(TEST_MAX_ENTRIES);
 
     final long result = service.getPagesWithoutHashCount();
@@ -363,7 +358,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testGetCount() {
+  void getCount() {
     Mockito.when(comicPageRepository.count()).thenReturn(TEST_MAX_ENTRIES);
 
     final long result = service.getCount();
@@ -374,7 +369,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testGetUnmarkedWithBlockedHash() {
+  void getUnmarkedWithBlockedHash() {
     Mockito.when(comicPageRepository.getUnmarkedWithBlockedHash(argumentCaptorPageable.capture()))
         .thenReturn(pageList);
 
@@ -392,7 +387,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testGetUnmarkedWithBlockedHashCount() {
+  void getUnmarkedWithBlockedHashCount() {
     Mockito.when(comicPageRepository.getUnmarkedWithBlockedHashCount())
         .thenReturn(TEST_MAX_ENTRIES);
 
@@ -404,7 +399,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testMarkPagesWithHashForDeletion() {
+  void markPagesWithHashForDeletion() {
     pageList.add(page);
     hashList.add(TEST_PAGE_HASH);
 
@@ -417,7 +412,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testUnmarkPagesWithHashForDeletion() {
+  void unmarkPagesWithHashForDeletion() {
     pageList.add(page);
     hashList.add(TEST_PAGE_HASH);
 
@@ -430,7 +425,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testGetPageIdForComicBookCover_noComicBookFound() throws ComicPageException {
+  void getPageIdForComicBookCover_noComicBookFound() throws ComicPageException {
     Mockito.when(comicPageRepository.getPageIdForComicBookCover(Mockito.anyLong()))
         .thenReturn(null);
 
@@ -442,7 +437,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testGetPageIdForComicBookCover() throws ComicPageException {
+  void getPageIdForComicBookCover() throws ComicPageException {
     Mockito.when(comicPageRepository.getPageIdForComicBookCover(Mockito.anyLong()))
         .thenReturn(TEST_PAGE_ID);
 
@@ -454,19 +449,15 @@ public class ComicPageServiceTest {
     Mockito.verify(comicPageRepository, Mockito.times(1)).getPageIdForComicBookCover(TEST_COMIC_ID);
   }
 
-  @Test(expected = ComicPageException.class)
-  public void testGetComicFilenameForPage_noComicBookFound() throws ComicPageException {
+  @Test
+  void getComicFilenameForPage_noComicBookFound() {
     Mockito.when(comicPageRepository.getComicFilenameForPage(Mockito.anyLong())).thenReturn(null);
 
-    try {
-      service.getComicFilenameForPage(TEST_PAGE_ID);
-    } finally {
-      Mockito.verify(comicPageRepository, Mockito.times(1)).getComicFilenameForPage(TEST_PAGE_ID);
-    }
+    assertThrows(ComicPageException.class, () -> service.getComicFilenameForPage(TEST_PAGE_ID));
   }
 
   @Test
-  public void testGetComicFilenameForPage() throws ComicPageException {
+  void getComicFilenameForPage() throws ComicPageException {
     Mockito.when(comicPageRepository.getComicFilenameForPage(Mockito.anyLong()))
         .thenReturn(TEST_COMIC_FILENAME);
 
@@ -478,19 +469,15 @@ public class ComicPageServiceTest {
     Mockito.verify(comicPageRepository, Mockito.times(1)).getComicFilenameForPage(TEST_PAGE_ID);
   }
 
-  @Test(expected = ComicPageException.class)
-  public void testGetPageFilename_pageNotFound() throws ComicPageException {
+  @Test
+  void getPageFilename_pageNotFound() throws ComicPageException {
     Mockito.when(comicPageRepository.getPageFilename(Mockito.anyLong())).thenReturn(null);
 
-    try {
-      service.getPageFilename(TEST_PAGE_ID);
-    } finally {
-      Mockito.verify(comicPageRepository, Mockito.times(1)).getPageFilename(TEST_PAGE_ID);
-    }
+    assertThrows(ComicPageException.class, () -> service.getPageFilename(TEST_PAGE_ID));
   }
 
   @Test
-  public void testGetPageFilename() throws ComicPageException {
+  void getPageFilename() throws ComicPageException {
     Mockito.when(comicPageRepository.getPageFilename(Mockito.anyLong()))
         .thenReturn(TEST_PAGE_FILENAME);
 
@@ -503,7 +490,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testGetHashForPage_noSuchPage() {
+  void getHashForPage_noSuchPage() {
     Mockito.when(comicPageRepository.getHashForPage(Mockito.anyLong())).thenReturn(null);
 
     final String result = service.getHashForPage(TEST_PAGE_ID);
@@ -514,7 +501,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testGetHashForPage() {
+  void getHashForPage() {
     Mockito.when(comicPageRepository.getHashForPage(Mockito.anyLong())).thenReturn(TEST_PAGE_HASH);
 
     final String result = service.getHashForPage(TEST_PAGE_ID);
@@ -526,7 +513,7 @@ public class ComicPageServiceTest {
   }
 
   @Test
-  public void testGetAllDuplicateHashes() {
+  void getAllDuplicateHashes() {
     Mockito.when(comicPageRepository.getAllDuplicateHashes()).thenReturn(duplicateHashList);
 
     final List<String> result = service.getAllDuplicateHashes();

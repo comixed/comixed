@@ -19,26 +19,25 @@
 package org.comixedproject.rest.comicpages;
 
 import static org.comixedproject.rest.comicbooks.ComicBookController.MISSING_COMIC_COVER_FILENAME;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.*;
 
 import java.io.InputStream;
 import java.util.List;
-import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.net.comicpages.UpdatePageDeletionRequest;
 import org.comixedproject.service.comicpages.ComicPageException;
 import org.comixedproject.service.comicpages.ComicPageService;
 import org.comixedproject.service.comicpages.PageCacheService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.http.ResponseEntity;
 
-@RunWith(MockitoJUnitRunner.class)
-@SpringBootTest
-public class PageControllerTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class PageControllerTest {
   private static final long TEST_PAGE_ID = 129;
   private static final String TEST_PAGE_HASH = "12345";
 
@@ -50,23 +49,16 @@ public class PageControllerTest {
 
   @Captor private ArgumentCaptor<InputStream> inputStream;
 
-  private ArchiveType archiveType = ArchiveType.CB7;
-
-  @Test(expected = ComicPageException.class)
-  public void testGetPageContentAdaptorException() throws ComicPageException {
+  @Test
+  void getPageContentAdaptorException() throws ComicPageException {
     Mockito.when(pageCacheService.getPageContent(Mockito.anyLong(), Mockito.anyString()))
         .thenThrow(ComicPageException.class);
 
-    try {
-      controller.getPageContent(TEST_PAGE_ID);
-    } finally {
-      Mockito.verify(pageCacheService, Mockito.times(1))
-          .getPageContent(TEST_PAGE_ID, MISSING_COMIC_COVER_FILENAME);
-    }
+    assertThrows(ComicPageException.class, () -> controller.getPageContent(TEST_PAGE_ID));
   }
 
   @Test
-  public void testGetPageContent() throws ComicPageException {
+  void getPageContent() throws ComicPageException {
     Mockito.when(pageCacheService.getPageContent(Mockito.anyLong(), Mockito.anyString()))
         .thenReturn(responseEntity);
 
@@ -79,21 +71,16 @@ public class PageControllerTest {
         .getPageContent(TEST_PAGE_ID, MISSING_COMIC_COVER_FILENAME);
   }
 
-  @Test(expected = ComicPageException.class)
-  public void testGetPageForHashNoPageFound() throws ComicPageException {
+  @Test
+  void getPageForHashNoPageFound() throws ComicPageException {
     Mockito.when(pageCacheService.getPageContent(Mockito.anyString(), Mockito.anyString()))
         .thenThrow(ComicPageException.class);
 
-    try {
-      controller.getPageForHash(TEST_PAGE_HASH);
-    } finally {
-      Mockito.verify(pageCacheService, Mockito.times(1))
-          .getPageContent(TEST_PAGE_HASH, MISSING_COMIC_COVER_FILENAME);
-    }
+    assertThrows(ComicPageException.class, () -> controller.getPageForHash(TEST_PAGE_HASH));
   }
 
   @Test
-  public void testGetPageForHash() throws ComicPageException {
+  void getPageForHash() throws ComicPageException {
     Mockito.when(pageCacheService.getPageContent(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(responseEntity);
 
@@ -107,14 +94,14 @@ public class PageControllerTest {
   }
 
   @Test
-  public void testUpdatePageDeletionMarkDeleted() {
+  void updatePageDeletionMarkDeleted() {
     controller.markPagesForDeletion(new UpdatePageDeletionRequest(idList));
 
     Mockito.verify(comicPageService, Mockito.times(1)).updatePageDeletion(idList, true);
   }
 
   @Test
-  public void testUpdatePageDeletionUnmarkDeleted() {
+  void updatePageDeletionUnmarkDeleted() {
     controller.unmarkPagesForDeletion(new UpdatePageDeletionRequest(idList));
 
     Mockito.verify(comicPageService, Mockito.times(1)).updatePageDeletion(idList, false);

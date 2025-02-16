@@ -38,17 +38,18 @@ import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.service.metadata.FilenameScrapingRuleService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.context.ApplicationEventPublisher;
 
-@RunWith(MockitoJUnitRunner.class)
-@SpringBootTest
-public class ComicFileServiceTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ComicFileServiceTest {
   private static final String TEST_ARCHIVE_FILENAME = "example.cbz";
   private static final byte[] TEST_COVER_CONTENT = "this is image data".getBytes();
   private static final String TEST_ROOT_DIRECTORY = "src/test/resources";
@@ -77,7 +78,7 @@ public class ComicFileServiceTest {
 
   private List<String> filenameList = new ArrayList<>();
 
-  @Before
+  @BeforeEach
   public void setUp() throws AdaptorException {
     filenameList.add(TEST_COMIC_ARCHIVE);
 
@@ -93,7 +94,7 @@ public class ComicFileServiceTest {
   }
 
   @Test
-  public void testGetImportFileCoverWithNoCover() throws AdaptorException {
+  void getImportFileCover_noNoCover() throws AdaptorException {
     Mockito.when(comicBookAdaptor.loadCover(Mockito.anyString())).thenReturn(null);
 
     assertNull(service.getImportFileCover(TEST_COMIC_ARCHIVE));
@@ -102,7 +103,7 @@ public class ComicFileServiceTest {
   }
 
   @Test
-  public void testGetImportFileCover() throws AdaptorException {
+  void getImportFileCover() throws AdaptorException {
     Mockito.when(comicBookAdaptor.loadCover(Mockito.anyString())).thenReturn(TEST_COVER_CONTENT);
 
     final byte[] result = service.getImportFileCover(TEST_COMIC_ARCHIVE);
@@ -114,7 +115,7 @@ public class ComicFileServiceTest {
   }
 
   @Test
-  public void testGetAllComicsUnderInvalidDirectory() throws IOException {
+  void getAllComicsUnder_directoryNotFound() throws IOException {
     final List<ComicFileGroup> result =
         service.getAllComicsUnder(TEST_ROOT_DIRECTORY + "/nonexistent", TEST_LIMIT);
 
@@ -123,7 +124,7 @@ public class ComicFileServiceTest {
   }
 
   @Test
-  public void testGetAllComicsUnderWithFileSupplied() throws IOException {
+  void getAllComicsUnder_fileNotDirectory() throws IOException {
     final List<ComicFileGroup> result = service.getAllComicsUnder(TEST_COMIC_ARCHIVE, TEST_LIMIT);
 
     assertNotNull(result);
@@ -131,7 +132,7 @@ public class ComicFileServiceTest {
   }
 
   @Test
-  public void testGetAllComicsAlreadyImported() throws IOException {
+  void getAllComicsUnder_nothingNewFound() throws IOException {
     Mockito.when(comicFileAdaptor.isComicFile(Mockito.any(File.class))).thenReturn(true);
     Mockito.when(comicDetailService.filenameFound(Mockito.anyString())).thenReturn(true);
 
@@ -145,7 +146,7 @@ public class ComicFileServiceTest {
   }
 
   @Test
-  public void testGetAllComicsUnderWithLimit() throws IOException {
+  void getAllComicsUnder_withLimit() throws IOException {
     Mockito.when(comicFileAdaptor.isComicFile(Mockito.any(File.class))).thenReturn(true);
 
     final List<ComicFileGroup> result = service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_LIMIT);
@@ -162,7 +163,7 @@ public class ComicFileServiceTest {
   }
 
   @Test
-  public void testGetAllComicsUnder() throws IOException {
+  void getAllComicsUnder() throws IOException {
     Mockito.when(comicFileAdaptor.isComicFile(Mockito.any(File.class))).thenCallRealMethod();
 
     final List<ComicFileGroup> result =
@@ -175,7 +176,7 @@ public class ComicFileServiceTest {
   }
 
   @Test
-  public void testGetAllComicsUnderWithExistingComicBook() throws IOException {
+  void getAllComicsUnder_withExistingComicBook() throws IOException {
     Mockito.when(comicDetailService.filenameFound(Mockito.anyString())).thenReturn(true);
     Mockito.when(comicFileAdaptor.isComicFile(Mockito.any(File.class))).thenCallRealMethod();
 
@@ -189,7 +190,7 @@ public class ComicFileServiceTest {
   }
 
   @Test
-  public void testImporComicFilesAlreadyFound() {
+  void importComicFiles_alreadyFound() {
     Mockito.when(comicDetailService.filenameFound(Mockito.anyString())).thenReturn(true);
 
     service.importComicFiles(filenameList);
@@ -201,7 +202,7 @@ public class ComicFileServiceTest {
   }
 
   @Test
-  public void testImporComicFiles() throws AdaptorException {
+  void imporComicFiles() throws AdaptorException {
     Mockito.when(comicDetailService.filenameFound(Mockito.anyString())).thenReturn(false);
 
     service.importComicFiles(filenameList);
@@ -218,7 +219,7 @@ public class ComicFileServiceTest {
   }
 
   @Test
-  public void testImporComicFilesComicBookAdaptorException() throws AdaptorException {
+  void importComicFiles_comicBookAdaptorException() throws AdaptorException {
     Mockito.when(comicDetailService.filenameFound(Mockito.anyString())).thenReturn(false);
     Mockito.when(comicBookAdaptor.createComic(Mockito.anyString()))
         .thenThrow(AdaptorException.class);
@@ -236,7 +237,7 @@ public class ComicFileServiceTest {
   }
 
   @Test
-  public void testImporComicFilesWithFilenameMetadata() throws AdaptorException {
+  void importComicFiles_withFilenameMetadata() throws AdaptorException {
     Mockito.when(metadata.isFound()).thenReturn(true);
     Mockito.when(metadata.getSeries()).thenReturn(TEST_SERIES_NAME);
     Mockito.when(metadata.getVolume()).thenReturn(TEST_VOLUME);

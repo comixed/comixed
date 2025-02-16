@@ -18,33 +18,33 @@
 
 package org.comixedproject.adaptors;
 
-import static junit.framework.TestCase.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.RandomStringUtils;
 import org.comixedproject.adaptors.csv.CsvAdaptor;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class CsvAdaptorTest {
+@ExtendWith(MockitoExtension.class)
+class CsvAdaptorTest {
   @InjectMocks private CsvAdaptor adaptor;
   private List<String> records = new ArrayList<>();
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     for (int index = 0; index < 25; index++) {
       records.add(RandomStringUtils.random(32, true, true));
     }
   }
 
   @Test
-  public void testEncodeRecords() throws IOException {
+  void encodeRecords() throws IOException {
     final byte[] result =
         adaptor.encodeRecords(
             records,

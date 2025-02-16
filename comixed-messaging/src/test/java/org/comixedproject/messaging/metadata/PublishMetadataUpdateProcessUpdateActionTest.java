@@ -18,23 +18,25 @@
 
 package org.comixedproject.messaging.metadata;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.net.metadata.MetadataUpdateProcessUpdate;
 import org.comixedproject.views.View;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PublishMetadataUpdateProcessUpdateActionTest {
+@ExtendWith(MockitoExtension.class)
+class PublishMetadataUpdateProcessUpdateActionTest {
   private static final String TEST_UPDATE_AS_JSON = "The update as JSON";
   @InjectMocks private PublishMetadataUpdateProcessStateUpdateAction action;
   @Mock private SimpMessagingTemplate messagingTemplate;
@@ -42,28 +44,22 @@ public class PublishMetadataUpdateProcessUpdateActionTest {
   @Mock private ObjectWriter objectWriter;
   @Mock private MetadataUpdateProcessUpdate update;
 
-  @Before
+  @BeforeEach
   public void setUp() throws JsonProcessingException {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_UPDATE_AS_JSON);
   }
 
-  @Test(expected = PublishingException.class)
-  public void testPublishJsonProcessingException()
-      throws JsonProcessingException, PublishingException {
+  @Test
+  void publish_jsonProcessingException() throws JsonProcessingException {
     Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
         .thenThrow(JsonProcessingException.class);
 
-    try {
-      action.publish(update);
-    } finally {
-      Mockito.verify(objectMapper, Mockito.times(1))
-          .writerWithView(View.MetadataUpdateProcessState.class);
-    }
+    assertThrows(PublishingException.class, () -> action.publish(update));
   }
 
   @Test
-  public void testPublish() throws JsonProcessingException, PublishingException {
+  void publish() throws JsonProcessingException, PublishingException {
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_UPDATE_AS_JSON);
 
     action.publish(update);

@@ -63,7 +63,7 @@ public class ComicBookSelectionController {
   @GetMapping(value = "/api/comics/selections", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.load")
-  public List getAllSelections(final HttpSession session) throws ComicBookSelectionException {
+  public List<Long> getAllSelections(final HttpSession session) throws ComicBookSelectionException {
     log.info("Loading comic book selections");
     return this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
   }
@@ -84,7 +84,7 @@ public class ComicBookSelectionController {
   public void addSingleSelection(
       final HttpSession session, @PathVariable("comicBookId") final Long comicBookId)
       throws ComicBookSelectionException {
-    final List selections =
+    final List<Long> selections =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     log.info("Adding comic selection: comic book id={}", comicBookId);
     this.comicSelectionService.addComicSelectionForUser(selections, comicBookId);
@@ -107,7 +107,7 @@ public class ComicBookSelectionController {
       final HttpSession session, @PathVariable("comicBookId") final Long comicBookId)
       throws ComicBookSelectionException {
     log.info("Removing comic selection:comic book id={}", comicBookId);
-    final List selections =
+    final List<Long> selections =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     this.comicSelectionService.removeComicSelectionFromUser(selections, comicBookId);
     session.setAttribute(
@@ -131,7 +131,7 @@ public class ComicBookSelectionController {
       final HttpSession session, @RequestBody() final MultipleComicBooksSelectionRequest request)
       throws ComicBookSelectionException {
     log.info("Updating multiple comic books selection: {}", request);
-    final List selections =
+    final List<Long> selections =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     this.comicSelectionService.selectByFilter(
         selections,
@@ -169,7 +169,7 @@ public class ComicBookSelectionController {
         "Adding multiple comic books by tag type and value: type={} value={}",
         tagType,
         decodedTagValue);
-    final List selections =
+    final List<Long> selections =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     this.comicSelectionService.addByTagTypeAndValue(selections, tagType, tagValue);
     this.comicSelectionService.publishSelections(selections);
@@ -199,7 +199,7 @@ public class ComicBookSelectionController {
         "Removing multiple comic books by tag type and value: type={} value={}",
         tagType,
         decodedTagValue);
-    final List selections =
+    final List<Long> selections =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     this.comicSelectionService.removeByTagTypeAndValue(selections, tagType, tagValue);
     this.comicSelectionService.publishSelections(selections);
@@ -220,7 +220,7 @@ public class ComicBookSelectionController {
   public void addComicBookSelectionsById(
       final HttpSession session, @RequestBody() final AddComicBookSelectionsByIdRequest request)
       throws ComicBookSelectionException {
-    final List selections =
+    final List<Long> selections =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
     if (request.isSelected()) {
@@ -390,7 +390,7 @@ public class ComicBookSelectionController {
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.comic-book.selections.clear")
   public void clearSelections(final HttpSession session) throws ComicBookSelectionException {
-    final List selections =
+    final List<Long> selections =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     log.info("Clearing comic selections");
     this.comicSelectionService.clearSelectedComicBooks(selections);

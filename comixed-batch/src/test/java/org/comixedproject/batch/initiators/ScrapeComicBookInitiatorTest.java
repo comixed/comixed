@@ -26,11 +26,13 @@ import org.comixedproject.model.batch.ScrapeMetadataEvent;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
@@ -41,8 +43,9 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ScrapeComicBookInitiatorTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ScrapeComicBookInitiatorTest {
   private static final long TEST_BATCH_SCRAPING_COUNT = 717L;
   private static final long TEST_CONFIGURED_ERROR_THRESHOLD = 100L;
 
@@ -63,7 +66,7 @@ public class ScrapeComicBookInitiatorTest {
 
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
-  @Before
+  @BeforeEach
   public void setUp()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
@@ -81,7 +84,7 @@ public class ScrapeComicBookInitiatorTest {
   }
 
   @Test
-  public void testExecuteFromListener()
+  void execute_fromListener()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -99,7 +102,7 @@ public class ScrapeComicBookInitiatorTest {
   }
 
   @Test
-  public void testExecuteFromListener_noErrorThresholdConfigured()
+  void execute_fromListener_noErrorThresholdConfigured()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -121,7 +124,7 @@ public class ScrapeComicBookInitiatorTest {
   }
 
   @Test
-  public void testExecuteJobException()
+  void execute_jobException()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,

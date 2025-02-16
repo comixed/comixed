@@ -30,17 +30,20 @@ import org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAct
 import org.comixedproject.model.batch.BatchProcessDetail;
 import org.comixedproject.model.messaging.batch.ProcessComicBooksStatus;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.scope.context.StepContext;
 
-@RunWith(MockitoJUnitRunner.class)
-public class RemoveDeletedComicBooksChunkListenerTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class RemoveDeletedComicBooksChunkListenerTest {
   private static final long TEST_TOTAL_COMICS = 717L;
   private static final long TEST_REMAINING_COMICS = 129L;
 
@@ -58,7 +61,7 @@ public class RemoveDeletedComicBooksChunkListenerTest {
   @Captor ArgumentCaptor<ProcessComicBooksStatus> processComicStatusArgumentCaptor;
   @Captor ArgumentCaptor<BatchProcessDetail> batchProcessDetailArgumentCaptor;
 
-  @Before
+  @BeforeEach
   public void setUp() throws PublishingException {
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
     Mockito.when(jobInstance.getJobName()).thenReturn(ORGANIZE_LIBRARY_JOB);
@@ -80,7 +83,7 @@ public class RemoveDeletedComicBooksChunkListenerTest {
   }
 
   @Test
-  public void testBeforeChunk() throws PublishingException {
+  void beforeChunk() throws PublishingException {
     listener.beforeChunk(chunkContext);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
@@ -95,7 +98,7 @@ public class RemoveDeletedComicBooksChunkListenerTest {
   }
 
   @Test
-  public void testAfterChunk() throws PublishingException {
+  void afterChunk() throws PublishingException {
     listener.afterChunk(chunkContext);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
@@ -110,7 +113,7 @@ public class RemoveDeletedComicBooksChunkListenerTest {
   }
 
   @Test
-  public void testAfterChunkError() throws PublishingException {
+  void afterChunkError() throws PublishingException {
     listener.afterChunkError(chunkContext);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
@@ -125,7 +128,7 @@ public class RemoveDeletedComicBooksChunkListenerTest {
   }
 
   @Test
-  public void testAfterChunkPublishingException() throws PublishingException {
+  void afterChunk_publishingException() throws PublishingException {
     Mockito.doThrow(PublishingException.class)
         .when(publishBatchProcessDetailUpdateAction)
         .publish(Mockito.any());

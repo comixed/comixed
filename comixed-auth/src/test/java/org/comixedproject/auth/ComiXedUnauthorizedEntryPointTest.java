@@ -22,23 +22,23 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.AuthenticationException;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ComiXedUnauthorizedEntryPointTest {
+@ExtendWith(MockitoExtension.class)
+class ComiXedUnauthorizedEntryPointTest {
   @InjectMocks private ComiXedUnauthorizedEntryPoint entryPoint;
   @Mock private HttpServletRequest request;
   @Mock private HttpServletResponse response;
   @Mock private AuthenticationException authException;
 
   @Test
-  public void testCommence() throws IOException, ServletException {
+  void commence() throws IOException, ServletException {
     entryPoint.commence(request, response, authException);
 
     Mockito.verify(response, Mockito.times(1))

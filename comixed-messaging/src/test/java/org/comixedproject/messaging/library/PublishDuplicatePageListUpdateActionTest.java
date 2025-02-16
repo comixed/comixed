@@ -24,17 +24,17 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.net.library.DuplicatePageUpdate;
 import org.comixedproject.views.View;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PublishDuplicatePageListUpdateActionTest {
+@ExtendWith(MockitoExtension.class)
+class PublishDuplicatePageListUpdateActionTest {
   private static final String TEST_DUPLICATE_PAGE_LIST_AS_JSON = "This is the JSON encoded list";
 
   @InjectMocks private PublishDuplicatePageListUpdateAction action;
@@ -43,13 +43,13 @@ public class PublishDuplicatePageListUpdateActionTest {
   @Mock private ObjectWriter objectWriter;
   @Mock private DuplicatePageUpdate duplicatePageList;
 
-  @Before
-  public void setUp() throws JsonProcessingException {
+  @BeforeEach
+  public void setUp() {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
   }
 
   @Test
-  public void testPublish() throws PublishingException, JsonProcessingException {
+  void publish() throws PublishingException, JsonProcessingException {
     Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
         .thenReturn(TEST_DUPLICATE_PAGE_LIST_AS_JSON);
 

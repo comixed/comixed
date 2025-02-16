@@ -117,10 +117,7 @@ public abstract class AbstractArchiveAdaptor<
   }
 
   byte[] doLoadMissingPageContent() throws IOException {
-    final byte[] content =
-        IOUtils.toByteArray(this.getClass().getResourceAsStream("/corrupted-page.png"));
-
-    return content;
+    return IOUtils.toByteArray(this.getClass().getResourceAsStream("/corrupted-page.png"));
   }
 
   protected abstract byte[] doGetEntry(final R archiveHandle, final String filename)

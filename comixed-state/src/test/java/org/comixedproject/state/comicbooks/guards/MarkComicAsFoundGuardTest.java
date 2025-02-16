@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2024, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,23 +18,24 @@
 
 package org.comixedproject.state.comicbooks.guards;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.statemachine.StateContext;
 
-@RunWith(MockitoJUnitRunner.class)
-public class MarkComicAsFoundGuardTest {
+@ExtendWith(MockitoExtension.class)
+class MarkComicAsFoundGuardTest {
   private static final String TEST_EXISTING_FILE = "src/test/resources/example.cbz";
 
   @InjectMocks private MarkComicAsFoundGuard guard;
@@ -43,8 +44,8 @@ public class MarkComicAsFoundGuardTest {
   @Mock private ComicDetail comicDetail;
   @Mock private ComicBook comicBook;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
     Mockito.when(comicDetail.isMissing()).thenReturn(true);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
@@ -53,21 +54,21 @@ public class MarkComicAsFoundGuardTest {
   }
 
   @Test
-  public void testEvaluate_comicNotMarkedAsMissing() {
+  void evaluate_comicNotMarkedAsMissing() {
     Mockito.when(comicDetail.isMissing()).thenReturn(false);
 
     assertFalse(guard.evaluate(context));
   }
 
   @Test
-  public void testEvaluate_fileWasNotFound() {
+  void evaluate_fileWasNotFound() {
     Mockito.when(comicDetail.getFile()).thenReturn(new File(TEST_EXISTING_FILE.substring(1)));
 
     assertFalse(guard.evaluate(context));
   }
 
   @Test
-  public void testEvaluate() {
+  void evaluate() {
     Mockito.when(comicDetail.getFile()).thenReturn(new File(TEST_EXISTING_FILE));
 
     assertTrue(guard.evaluate(context));

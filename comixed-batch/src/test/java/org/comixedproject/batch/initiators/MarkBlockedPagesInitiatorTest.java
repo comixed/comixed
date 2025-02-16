@@ -26,11 +26,13 @@ import static org.junit.Assert.*;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicpages.ComicPageService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
@@ -41,8 +43,9 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-@RunWith(MockitoJUnitRunner.class)
-public class MarkBlockedPagesInitiatorTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class MarkBlockedPagesInitiatorTest {
   @InjectMocks private MarkBlockedPagesInitiator initiator;
   @Mock private ConfigurationService configurationService;
   @Mock private ComicPageService comicPageService;
@@ -60,7 +63,7 @@ public class MarkBlockedPagesInitiatorTest {
 
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
-  @Before
+  @BeforeEach
   public void setUp()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
@@ -74,7 +77,7 @@ public class MarkBlockedPagesInitiatorTest {
   }
 
   @Test
-  public void testExecuteNotManagingBlockedPages()
+  void execute_notManagingBlockedPages()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -89,7 +92,7 @@ public class MarkBlockedPagesInitiatorTest {
   }
 
   @Test
-  public void testExecuteNoMissingHashes()
+  void execute_noMissingHashes()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -102,7 +105,7 @@ public class MarkBlockedPagesInitiatorTest {
   }
 
   @Test
-  public void testExecuteHasRunningJobs()
+  void execute_hasRunningJobs()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -115,7 +118,7 @@ public class MarkBlockedPagesInitiatorTest {
   }
 
   @Test
-  public void testExecute()
+  void execute()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -130,7 +133,7 @@ public class MarkBlockedPagesInitiatorTest {
   }
 
   @Test
-  public void testExecuteJobException()
+  void execute_jobException()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,

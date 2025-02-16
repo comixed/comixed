@@ -19,6 +19,7 @@
 package org.comixedproject.service.comicbooks;
 
 import static junit.framework.TestCase.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.*;
 import org.apache.commons.io.FilenameUtils;
@@ -46,24 +47,25 @@ import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
 import org.comixedproject.repositories.comicbooks.ComicTagRepository;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-@RunWith(MockitoJUnitRunner.class)
-@SpringBootTest
-public class ComicBookServiceTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ComicBookServiceTest {
   private static final long TEST_COMIC_BOOK_ID = 5;
   private static final String TEST_COMIC_FILENAME = "src/test/resources/example.cbz";
   private static final ComicType TEST_COMIC_TYPE =
@@ -140,7 +142,7 @@ public class ComicBookServiceTest {
   @Captor private ArgumentCaptor<Limit> nextComicBookLimitArgumentCaptor;
   private Set<String> comicFilenameList = new HashSet<>();
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
@@ -192,7 +194,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetComic() throws ComicBookException {
+  void getComic() throws ComicBookException {
     List<ComicBook> previousComicBooks = new ArrayList<>();
     previousComicBooks.add(previousComicBook);
     previousComicBooks.add(beforePreviousComicBook);
@@ -248,19 +250,15 @@ public class ComicBookServiceTest {
             nextComicBookLimit);
   }
 
-  @Test(expected = ComicBookException.class)
-  public void testDeleteComicBookNonexistent() throws ComicBookException {
+  @Test
+  void deleteComicBook_notFound() {
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
 
-    try {
-      service.deleteComicBook(TEST_COMIC_BOOK_ID);
-    } finally {
-      Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
-    }
+    assertThrows(ComicBookException.class, () -> service.deleteComicBook(TEST_COMIC_BOOK_ID));
   }
 
   @Test
-  public void testDeleteComicBook() throws ComicBookException {
+  void deleteComicBook() throws ComicBookException {
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBookRecord);
 
@@ -274,19 +272,15 @@ public class ComicBookServiceTest {
         .fireEvent(comicBookRecord, ComicEvent.deleteComic);
   }
 
-  @Test(expected = ComicBookException.class)
-  public void testRestoreComicBookNonexistent() throws ComicBookException {
+  @Test
+  void restoreComicBook_notFound() {
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
 
-    try {
-      service.undeleteComicBook(TEST_COMIC_BOOK_ID);
-    } finally {
-      Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
-    }
+    assertThrows(ComicBookException.class, () -> service.undeleteComicBook(TEST_COMIC_BOOK_ID));
   }
 
   @Test
-  public void testRestoreComic() throws ComicBookException {
+  void restoreComic() throws ComicBookException {
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBookRecord);
 
@@ -300,31 +294,23 @@ public class ComicBookServiceTest {
         .fireEvent(comicBookRecord, ComicEvent.undeleteComic);
   }
 
-  @Test(expected = ComicBookException.class)
-  public void testGetComicContentNoSuchComicBook() throws ComicBookException {
+  @Test
+  void GetComicContentNoSuchComicBook() {
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
 
-    try {
-      this.service.getComicContent(TEST_COMIC_BOOK_ID);
-    } finally {
-      Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
-    }
-  }
-
-  @Test(expected = ComicBookException.class)
-  public void testGetComicContentFileNotFound() throws ComicBookException {
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
-    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME.substring(1));
-
-    try {
-      this.service.getComicContent(TEST_COMIC_BOOK_ID);
-    } finally {
-      Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
-    }
+    assertThrows(ComicBookException.class, () -> this.service.getComicContent(TEST_COMIC_BOOK_ID));
   }
 
   @Test
-  public void testGetComicContent() throws ComicBookException {
+  void getComicContentFileNotFound() {
+    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME.substring(1));
+
+    assertThrows(ComicBookException.class, () -> this.service.getComicContent(TEST_COMIC_BOOK_ID));
+  }
+
+  @Test
+  void getComicContent() throws ComicBookException {
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME);
 
@@ -339,18 +325,16 @@ public class ComicBookServiceTest {
     Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getMimeTypeFor(Mockito.any());
   }
 
-  @Test(expected = ComicBookException.class)
-  public void testUpdateComicInvalidComic() throws ComicBookException {
+  @Test
+  void updateComicInvalidComic() {
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
-    try {
-      service.updateComic(TEST_COMIC_BOOK_ID, incomingComicBook);
-    } finally {
-      Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
-    }
+
+    assertThrows(
+        ComicBookException.class, () -> service.updateComic(TEST_COMIC_BOOK_ID, incomingComicBook));
   }
 
   @Test
-  public void testUpdateComic() throws ComicBookException {
+  void updateComic() throws ComicBookException {
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(incomingComicDetail.getComicType()).thenReturn(TEST_COMIC_TYPE);
     Mockito.when(incomingComicDetail.getPublisher()).thenReturn(TEST_PUBLISHER);
@@ -389,7 +373,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testSave() {
+  void save() {
     Mockito.when(comicBookRepository.saveAndFlush(Mockito.any(ComicBook.class)))
         .thenReturn(savedComicBook);
 
@@ -403,7 +387,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testDelete() {
+  void delete() {
     Mockito.doNothing()
         .when(comicTagRepository)
         .deleteAllByComicDetail(Mockito.any(ComicDetail.class));
@@ -416,7 +400,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFindComicsToMove() {
+  void findComicsToMove() {
     Mockito.when(comicBookRepository.findComicsToMove(pageRequestCaptor.capture()))
         .thenReturn(comicBookList);
 
@@ -435,7 +419,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFindByFilename() {
+  void findByFilename() {
     Mockito.when(comicBookRepository.findByFilename(TEST_COMIC_FILENAME)).thenReturn(comicBook);
 
     final ComicBook result = service.findByFilename(TEST_COMIC_FILENAME);
@@ -446,19 +430,15 @@ public class ComicBookServiceTest {
     Mockito.verify(comicBookRepository, Mockito.times(1)).findByFilename(TEST_COMIC_FILENAME);
   }
 
-  @Test(expected = ComicBookException.class)
-  public void testDeleteMetadataInvalidComicId() throws ComicBookException {
+  @Test
+  void deleteMetadataInvalidComicId() {
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
 
-    try {
-      service.deleteMetadata(TEST_COMIC_BOOK_ID);
-    } finally {
-      Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
-    }
+    assertThrows(ComicBookException.class, () -> service.deleteMetadata(TEST_COMIC_BOOK_ID));
   }
 
   @Test
-  public void testDeleteMetadata() throws ComicBookException {
+  void deleteMetadata() throws ComicBookException {
     Mockito.when(comicBookRepository.getById(Mockito.anyLong()))
         .thenReturn(comicBook, comicBookRecord);
 
@@ -474,7 +454,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetComicsWithoutContentCount() {
+  void getComicsWithoutContentCount() {
     Mockito.when(comicBookRepository.findUnprocessedComicsWithoutContentCount())
         .thenReturn(TEST_MAXIMUM_COMICS);
 
@@ -487,7 +467,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFindComicsWithCreateMetadataFlagSet() {
+  void findComicsWithCreateMetadataFlagSet() {
     Mockito.when(
             comicBookRepository.findUnprocessedComicsWithCreateMetadataFlagSet(
                 pageableCaptor.capture()))
@@ -508,7 +488,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFindComicsWithContentToLoad() {
+  void findComicsWithContentToLoad() {
     Mockito.when(comicBookRepository.findComicsWithContentToLoad(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
@@ -526,7 +506,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFindProcessedComics() {
+  void findProcessedComics() {
     Mockito.when(comicBookRepository.findProcessedComics()).thenReturn(comicBookList);
 
     final List<ComicBook> result = service.findProcessedComics();
@@ -538,7 +518,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testPrepareForRescan() {
+  void prepareForRescan() {
     for (long index = 0L; index < 25L; index++) idList.add(index + 100);
 
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
@@ -552,7 +532,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testPrepareForRescanNoSuchComic() {
+  void prepareForRescanNoSuchComic() {
     idList.add(TEST_COMIC_BOOK_ID);
 
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
@@ -565,7 +545,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetCountForState() {
+  void getCountForState() {
     for (int index = 0; index < 50; index++) comicBookList.add(comicBook);
 
     Mockito.when(comicBookRepository.findForStateCount(Mockito.any(ComicState.class)))
@@ -579,7 +559,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFindComicsWithMetadataToUpdate() {
+  void findComicsWithMetadataToUpdate() {
     Mockito.when(comicBookRepository.findComicsWithMetadataToUpdate(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
@@ -597,7 +577,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFindComicsForBatchMetadataUpdate() {
+  void findComicsForBatchMetadataUpdate() {
     Mockito.when(comicBookRepository.findComicsForBatchMetadataUpdate(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
@@ -616,7 +596,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFindComicsForBatchMetadataUpdateCount() {
+  void findComicsForBatchMetadataUpdateCount() {
     Mockito.when(comicBookRepository.findComicsForBatchMetadataUpdateCount())
         .thenReturn(TEST_COMIC_COUNT);
 
@@ -628,7 +608,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetComicBooksToBePurgedCount() {
+  void getComicBooksToBePurgedCount() {
     Mockito.when(comicBookRepository.findComicsToPurgeCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.findComicsToPurgeCount();
@@ -639,14 +619,14 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFindAllComicsMarkedForDeletion() {
+  void findAllComicsMarkedForDeletion() {
     service.prepareComicBooksForDeleting();
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).prepareComicBooksForDeleting();
   }
 
   @Test
-  public void testFindComicsToRecreateCount() {
+  void findComicsToRecreateCount() {
     Mockito.when(comicBookRepository.findComicsToBeRecreatedCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.findComicsToRecreateCount();
@@ -657,7 +637,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFindComicsToPurgeCount() {
+  void FindComicsToPurgeCount() {
     Mockito.when(comicBookRepository.findComicsToPurgeCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.findComicsToPurgeCount();
@@ -668,7 +648,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFindAll() {
+  void findAll() {
     Mockito.when(comicBookRepository.findAll()).thenReturn(comicBookList);
 
     final List<ComicBook> result = service.findAll();
@@ -680,7 +660,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testDeleteComicBooksByIdInvalidId() {
+  void deleteComicBooksByIdInvalidId() {
     idList.clear();
     idList.add(TEST_COMIC_BOOK_ID);
 
@@ -692,7 +672,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testDeleteComicBooksById() {
+  void deleteComicBooksById() {
     idList.clear();
     idList.add(TEST_COMIC_BOOK_ID);
 
@@ -706,7 +686,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testUndeleteComicBookByIdInvalidId() {
+  void undeleteComicBookByIdInvalidId() {
     idList.add(TEST_COMIC_BOOK_ID);
 
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
@@ -717,7 +697,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testUndeleteComicBooksById() {
+  void undeleteComicBooksById() {
     idList.add(TEST_COMIC_BOOK_ID);
 
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
@@ -730,7 +710,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFindAllComicsToRecreate() {
+  void findAllComicsToRecreate() {
     Mockito.when(comicBookRepository.findComicsToRecreate(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
@@ -748,7 +728,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFindComicNotFound() {
+  void findComicNotFound() {
     Mockito.when(
             comicBookRepository.findComic(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
@@ -765,7 +745,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFindComic() {
+  void findComic() {
     comicBookList.add(comicBook);
 
     Mockito.when(
@@ -784,7 +764,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFindSeries() {
+  void findSeries() {
     Mockito.when(comicBookRepository.findDistinctSeries()).thenReturn(collectionList);
 
     final List<String> result = service.getAllSeries();
@@ -796,7 +776,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetAllPublishersForStory() {
+  void getAllPublishersForStory() {
     Mockito.when(comicBookRepository.findDistinctPublishersForStory(Mockito.anyString()))
         .thenReturn(publisherList);
 
@@ -810,7 +790,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFindComicsMarkedForPurging() {
+  void findComicsMarkedForPurging() {
     Mockito.when(comicBookRepository.findComicsMarkedForPurging(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
@@ -827,20 +807,17 @@ public class ComicBookServiceTest {
     Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsMarkedForPurging(pageable);
   }
 
-  @Test(expected = ComicBookException.class)
-  public void testSavePageOrderInvalidId() throws ComicBookException {
+  @Test
+  void savePageOrder_invalidId() {
     List<PageOrderEntry> entryList = new ArrayList<>();
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
 
-    try {
-      service.savePageOrder(TEST_COMIC_BOOK_ID, entryList);
-    } finally {
-      Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
-    }
+    assertThrows(
+        ComicBookException.class, () -> service.savePageOrder(TEST_COMIC_BOOK_ID, entryList));
   }
 
-  @Test(expected = ComicBookException.class)
-  public void testSavePageOrderContainsGap() throws ComicBookException {
+  @Test
+  void savePageOrder_containsGap() {
     List<PageOrderEntry> entryList = new ArrayList<>();
     for (int index = 0; index < 25; index++) {
       entryList.add(new PageOrderEntry(String.format("filename-%d", index), index + 1));
@@ -848,15 +825,12 @@ public class ComicBookServiceTest {
 
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
 
-    try {
-      service.savePageOrder(TEST_COMIC_BOOK_ID, entryList);
-    } finally {
-      Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
-    }
+    assertThrows(
+        ComicBookException.class, () -> service.savePageOrder(TEST_COMIC_BOOK_ID, entryList));
   }
 
-  @Test(expected = ComicBookException.class)
-  public void testSavePageOrderMissingFilename() throws ComicBookException {
+  @Test
+  void savePageOrder_missingFilename() {
     List<PageOrderEntry> entryList = new ArrayList<>();
     List<ComicPage> pageList = new ArrayList<>();
     for (int index = 0; index < 25; index++) {
@@ -870,15 +844,12 @@ public class ComicBookServiceTest {
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicBook.getPages()).thenReturn(pageList);
 
-    try {
-      service.savePageOrder(TEST_COMIC_BOOK_ID, entryList);
-    } finally {
-      Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
-    }
+    assertThrows(
+        ComicBookException.class, () -> service.savePageOrder(TEST_COMIC_BOOK_ID, entryList));
   }
 
   @Test
-  public void testSavePageOrder() throws ComicBookException {
+  void savePageOrder() throws ComicBookException {
     List<PageOrderEntry> entryList = new ArrayList<>();
     List<ComicPage> pageList = new ArrayList<>();
     for (int index = 0; index < 25; index++) {
@@ -910,21 +881,17 @@ public class ComicBookServiceTest {
         .fireEvent(comicBook, ComicEvent.detailsUpdated);
   }
 
-  @Test(expected = ComicBookException.class)
-  public void testUpdateMultipleComicsInvalidId() throws ComicBookException {
+  @Test
+  void updateMultipleComics_invalidId() {
     idList.add(TEST_COMIC_BOOK_ID);
 
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
 
-    try {
-      service.updateMultipleComics(idList);
-    } finally {
-      Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
-    }
+    assertThrows(ComicBookException.class, () -> service.updateMultipleComics(idList));
   }
 
   @Test
-  public void testUpdateMultipleComics() throws ComicBookException {
+  void updateMultipleComics() throws ComicBookException {
     idList.add(TEST_COMIC_BOOK_ID);
 
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
@@ -936,7 +903,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetComicBookCount() {
+  void getComicBookCount() {
     Mockito.when(comicBookRepository.count()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.getComicBookCount();
@@ -947,7 +914,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetDeletedComicBookCount() {
+  void getDeletedComicBookCount() {
     Mockito.when(comicBookRepository.findForStateCount(Mockito.any())).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.getDeletedComicCount();
@@ -958,7 +925,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetPublishersState() {
+  void getPublishersState() {
     Mockito.when(comicBookRepository.getPublishersState()).thenReturn(librarySegmentList);
 
     final List<RemoteLibrarySegmentState> result = service.getPublishersState();
@@ -970,7 +937,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetSeriesState() {
+  void getSeriesState() {
     Mockito.when(comicBookRepository.getSeriesState()).thenReturn(librarySegmentList);
 
     final List<RemoteLibrarySegmentState> result = service.getSeriesState();
@@ -982,7 +949,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetCharactersState() {
+  void getCharactersState() {
     Mockito.when(comicBookRepository.getCharactersState()).thenReturn(librarySegmentList);
 
     final List<RemoteLibrarySegmentState> result = service.getCharactersState();
@@ -994,7 +961,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetTeamsState() {
+  void getTeamsState() {
     Mockito.when(comicBookRepository.getTeamsState()).thenReturn(librarySegmentList);
 
     final List<RemoteLibrarySegmentState> result = service.getTeamsState();
@@ -1006,7 +973,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetLocationsState() {
+  void getLocationsState() {
     Mockito.when(comicBookRepository.getLocationsState()).thenReturn(librarySegmentList);
 
     final List<RemoteLibrarySegmentState> result = service.getLocationsState();
@@ -1018,7 +985,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetStoriesState() {
+  void getStoriesState() {
     Mockito.when(comicBookRepository.getStoriesState()).thenReturn(librarySegmentList);
 
     final List<RemoteLibrarySegmentState> result = service.getStoriesState();
@@ -1030,7 +997,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetComicBooksState() {
+  void getComicBooksState() {
     Mockito.when(comicBookRepository.getComicBooksState()).thenReturn(librarySegmentList);
 
     final List<RemoteLibrarySegmentState> result = service.getComicBooksState();
@@ -1042,7 +1009,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetByPublisherAndYear() {
+  void getByPublisherAndYear() {
     Mockito.when(comicBookRepository.getByPublisherAndYear()).thenReturn(byPublisherAndYearList);
 
     final List<PublisherAndYearSegment> result = service.getByPublisherAndYear();
@@ -1053,21 +1020,18 @@ public class ComicBookServiceTest {
     Mockito.verify(comicBookRepository, Mockito.times(1)).getByPublisherAndYear();
   }
 
-  @Test(expected = ComicBookException.class)
-  public void testMarkComicsForBatchMetadataUpdateInvalidId() throws ComicBookException {
+  @Test
+  void markComicsForBatchMetadataUpdate_invalidId() {
     idList.add(TEST_COMIC_BOOK_ID);
 
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
 
-    try {
-      service.markComicBooksForBatchMetadataUpdate(idList);
-    } finally {
-      Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
-    }
+    assertThrows(
+        ComicBookException.class, () -> service.markComicBooksForBatchMetadataUpdate(idList));
   }
 
   @Test
-  public void testMarkComicsForBatchMetadataUpdate() throws ComicBookException {
+  void markComicsForBatchMetadataUpdate() throws ComicBookException {
     idList.add(TEST_COMIC_BOOK_ID);
 
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
@@ -1082,7 +1046,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetComicBookssForSearchTerms() {
+  void getComicBookssForSearchTerms() {
     Mockito.when(comicBookRepository.findForSearchTerms(Mockito.anyString()))
         .thenReturn(comicDetailList);
 
@@ -1094,7 +1058,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFindComicsWithEditDetails() {
+  void findComicsWithEditDetails() {
     Mockito.when(comicBookRepository.findComicsWithEditDetails(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
@@ -1111,7 +1075,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetPublisherDetail_unsorted() {
+  void getPublisherDetail_unsorted() {
     Mockito.when(
             comicBookRepository.getAllSeriesAndVolumesForPublisher(
                 Mockito.anyString(), pageableCaptor.capture()))
@@ -1134,7 +1098,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetPublisherDetail_ascendingNameSort() {
+  void getPublisherDetail_ascendingNameSort() {
     Mockito.when(
             comicBookRepository.getAllSeriesAndVolumesForPublisher(
                 Mockito.anyString(), pageableCaptor.capture()))
@@ -1158,7 +1122,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetPublisherDetail_descendingNameSort() {
+  void getPublisherDetail_descendingNameSort() {
     Mockito.when(
             comicBookRepository.getAllSeriesAndVolumesForPublisher(
                 Mockito.anyString(), pageableCaptor.capture()))
@@ -1182,7 +1146,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetPublisherDetail_ascendingVolumeSort() {
+  void getPublisherDetail_ascendingVolumeSort() {
     Mockito.when(
             comicBookRepository.getAllSeriesAndVolumesForPublisher(
                 Mockito.anyString(), pageableCaptor.capture()))
@@ -1206,7 +1170,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetPublisherDetail_descendingVolumeSort() {
+  void getPublisherDetail_descendingVolumeSort() {
     Mockito.when(
             comicBookRepository.getAllSeriesAndVolumesForPublisher(
                 Mockito.anyString(), pageableCaptor.capture()))
@@ -1230,7 +1194,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetAllSeriesAndVolumes() {
+  void getAllSeriesAndVolumes() {
     Mockito.when(comicBookRepository.getAllSeriesAndVolumes()).thenReturn(seriesDetailList);
 
     final List<SeriesDetail> result = service.getAllSeriesAndVolumes();
@@ -1241,7 +1205,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetUnscrapedComicCount() {
+  void getUnscrapedComicCount() {
     Mockito.when(comicBookRepository.getUnscrapedComicCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.getUnscrapedComicCount();
@@ -1252,7 +1216,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetComicBooksWithoutDetails() {
+  void getComicBooksWithoutDetails() {
     Mockito.when(comicBookRepository.getComicBooksWithoutDetails(Mockito.anyInt()))
         .thenReturn(comicBookList);
 
@@ -1266,14 +1230,14 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testPrepareForMetadataUpdate() {
+  void prepareForMetadataUpdate() {
     service.prepareForMetadataUpdate(idList);
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).prepareForMetadataUpdate(idList);
   }
 
   @Test
-  public void testPrepareForOrganization() {
+  void prepareForOrganization() {
     service.prepareForOrganization(idList);
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).markForOrganizationById(idList);
@@ -1282,7 +1246,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testPrepareAllForOrganization() {
+  void prepareAllForOrganization() {
     service.prepareAllForOrganization();
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).markAllForOrganization();
@@ -1291,7 +1255,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testPrepareForRecreation() {
+  void prepareForRecreation() {
     service.prepareForRecreation(idList, targetArchiveType, TEST_RENAME_PAGES, TEST_DELETE_PAGES);
 
     Mockito.verify(comicBookRepository, Mockito.times(1))
@@ -1299,7 +1263,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetUnprocessedComicBookCount() {
+  void getUnprocessedComicBookCount() {
     Mockito.when(comicBookRepository.getUnprocessedComicBookCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.getUnprocessedComicBookCount();
@@ -1310,7 +1274,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetAllIds() {
+  void getAllIds() {
     comicBookList.add(comicBook);
     Mockito.when(comicBookRepository.getAllIds()).thenReturn(idList);
 
@@ -1323,7 +1287,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetUpdateMetatdataCount() {
+  void getUpdateMetatdataCount() {
     Mockito.when(comicBookRepository.getUpdateMetadataCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.getUpdateMetadataCount();
@@ -1334,7 +1298,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetRecreatingCount() {
+  void getRecreatingCount() {
     Mockito.when(comicBookRepository.getRecreatingCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.getRecreatingCount();
@@ -1345,7 +1309,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testLoadByComicBookIdForPageAndSize() {
+  void loadByComicBookIdForPageAndSize() {
     Mockito.when(comicBookRepository.loadByComicDetailId(Mockito.anyList()))
         .thenReturn(comicBookList);
 
@@ -1359,7 +1323,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testLoadByComicBookIdForPageTooBig() {
+  void loadByComicBookId_pageTooBig() {
     Mockito.when(comicBookRepository.loadByComicDetailId(Mockito.anyList()))
         .thenReturn(comicBookList);
 
@@ -1372,7 +1336,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testLoadByComicBookIdForPageAndSizeNotEnoughComics() {
+  void loadByComicBookId_pageAndSizeNotEnoughComics() {
     Mockito.when(comicBookRepository.loadByComicDetailId(Mockito.anyList()))
         .thenReturn(comicBookList);
 
@@ -1385,7 +1349,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetAllComicDetails_missingFiles() {
+  void getAllComicDetails_missingFiles() {
     Mockito.when(comicBookRepository.getComicFilenames(true)).thenReturn(comicFilenameList);
 
     final Set<String> result = service.getAllComicDetails(true);
@@ -1397,7 +1361,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetAllComicDetails_notMissingFiles() {
+  void getAllComicDetails_notMissingFiles() {
     Mockito.when(comicBookRepository.getComicFilenames(false)).thenReturn(comicFilenameList);
 
     final Set<String> result = service.getAllComicDetails(false);
@@ -1409,7 +1373,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testMarkComicAsFound() {
+  void markComicAsFound() {
     Mockito.when(comicBookRepository.findByFilename(Mockito.anyString())).thenReturn(comicBook);
 
     service.markComicAsFound(TEST_COMIC_FILENAME);
@@ -1420,7 +1384,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testMarkComicAsMissing() {
+  void markComicAsMissing() {
     Mockito.when(comicBookRepository.findByFilename(Mockito.anyString())).thenReturn(comicBook);
 
     service.markComicAsMissing(TEST_COMIC_FILENAME);
@@ -1431,7 +1395,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetBatchScrapingCount() {
+  void getBatchScrapingCount() {
     Mockito.when(comicBookRepository.getBatchScrapingCount()).thenReturn(TEST_COMIC_COUNT);
 
     final long result = service.getBatchScrapingCount();
@@ -1442,7 +1406,7 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFindBatchScrapingComics() {
+  void findBatchScrapingComics() {
     Mockito.when(comicBookRepository.findBatchScrapingComics(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
@@ -1460,14 +1424,14 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testMarkComicBooksForBatchScraping() {
+  void markComicBooksForBatchScraping() {
     service.markComicBooksForBatchScraping(idList);
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).prepareForBatchScraping(idList);
   }
 
   @Test
-  public void testGetSeriesCountForPublisher() {
+  void getSeriesCountForPublisher() {
     Mockito.when(comicDetailRepository.getSeriesCountForPublisher(Mockito.anyString()))
         .thenReturn(TEST_COMIC_COUNT);
 

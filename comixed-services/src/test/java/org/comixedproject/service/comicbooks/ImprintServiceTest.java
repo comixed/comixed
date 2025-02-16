@@ -26,16 +26,19 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.Imprint;
 import org.comixedproject.repositories.comicbooks.ImprintRepository;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ImprintServiceTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ImprintServiceTest {
   private static final String TEST_PUBLISHER = "Marvel";
   private static final String TEST_IMPRINT = "Marvel Soleil";
 
@@ -46,7 +49,7 @@ public class ImprintServiceTest {
   @Mock private Imprint imprint;
   @Mock private List<Imprint> imprintList;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicDetail.getImprint()).thenReturn(TEST_IMPRINT);
@@ -55,7 +58,7 @@ public class ImprintServiceTest {
   }
 
   @Test
-  public void testComicWithImprint() {
+  void update_comicWithImprint() {
     Mockito.when(imprintRepository.findByName(Mockito.anyString())).thenReturn(imprint);
 
     imprintService.update(comicBook);
@@ -65,7 +68,7 @@ public class ImprintServiceTest {
   }
 
   @Test
-  public void testComicWithoutImprint() {
+  void update_comicWithoutImprint() {
     Mockito.when(imprintRepository.findByName(Mockito.anyString())).thenReturn(null);
 
     imprintService.update(comicBook);
@@ -75,7 +78,7 @@ public class ImprintServiceTest {
   }
 
   @Test
-  public void testGetAll() {
+  void getAll() {
     Mockito.when(imprintRepository.findAll()).thenReturn(imprintList);
 
     final List<Imprint> result = imprintService.getAll();

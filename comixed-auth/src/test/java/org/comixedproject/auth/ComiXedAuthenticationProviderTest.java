@@ -27,18 +27,21 @@ import org.comixedproject.model.user.ComiXedRole;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ComiXedAuthenticationProviderTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ComiXedAuthenticationProviderTest {
   private static final String TEST_EMAIL = "reader@comixedproject.org";
   private static final String TEST_PASSWORD = "A password";
   private static final String TEST_PASSWORD_HASH = "The password hash";
@@ -51,8 +54,8 @@ public class ComiXedAuthenticationProviderTest {
 
   private List<ComiXedRole> roles = new ArrayList<>();
 
-  @Before
-  public void setUp() throws ComiXedUserException {
+  @BeforeEach
+  void setUp() {
     Mockito.when(authentication.getName()).thenReturn(TEST_EMAIL);
     Mockito.when(authentication.getCredentials()).thenReturn(TEST_PASSWORD);
     Mockito.when(user.getPasswordHash()).thenReturn(TEST_PASSWORD_HASH);
@@ -65,7 +68,7 @@ public class ComiXedAuthenticationProviderTest {
   }
 
   @Test
-  public void testAuthenticationUserServiceException() throws ComiXedUserException {
+  void authentication_userServiceException() throws ComiXedUserException {
     Mockito.when(userService.findByEmail(Mockito.anyString()))
         .thenThrow(ComiXedUserException.class);
 
@@ -77,7 +80,7 @@ public class ComiXedAuthenticationProviderTest {
   }
 
   @Test
-  public void testAuthenticationNoUserEmail() throws ComiXedUserException {
+  void authenticationNoUserEmail() throws ComiXedUserException {
     Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(null);
 
     final Authentication result = authenticationProvider.authenticate(authentication);
@@ -88,7 +91,7 @@ public class ComiXedAuthenticationProviderTest {
   }
 
   @Test
-  public void testAuthenticationPasswordsDontMatch() throws ComiXedUserException {
+  void authentication_passwordsDontMatch() throws ComiXedUserException {
     Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.when(user.getPasswordHash()).thenReturn(TEST_PASSWORD_HASH.substring(1));
 
@@ -100,7 +103,7 @@ public class ComiXedAuthenticationProviderTest {
   }
 
   @Test
-  public void testAuthentication() throws ComiXedUserException {
+  void authentication() throws ComiXedUserException {
     Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
 
     final Authentication result = authenticationProvider.authenticate(authentication);

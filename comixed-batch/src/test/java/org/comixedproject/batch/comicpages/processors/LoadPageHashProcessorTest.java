@@ -28,16 +28,19 @@ import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.ComicPage;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
-public class LoadPageHashProcessorTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class LoadPageHashProcessorTest {
   private static final String TEST_IMAGE_PATH = "src/test/resources/example.jpg";
   private byte[] imageContent;
   private static final Integer TEST_PAGE_NUMBER = 17;
@@ -49,7 +52,7 @@ public class LoadPageHashProcessorTest {
   @Mock private ComicPage page;
   @Mock private ComicBook comicBook;
 
-  @Before
+  @BeforeEach
   public void setUp() throws AdaptorException, IOException {
     imageContent = FileUtils.readFileToByteArray(new File(TEST_IMAGE_PATH));
     Mockito.when(genericUtilitiesAdaptor.createHash(Mockito.any(byte[].class)))
@@ -61,7 +64,7 @@ public class LoadPageHashProcessorTest {
   }
 
   @Test
-  public void testProcessCreateHashException() throws Exception {
+  void process_createHashException() throws Exception {
     Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))
         .thenThrow(AdaptorException.class);
 
@@ -72,8 +75,7 @@ public class LoadPageHashProcessorTest {
   }
 
   @Test
-  public void testProcess() throws Exception {
-
+  void process() {
     processor.process(page);
 
     assertNotEquals(-1, page.getWidth().intValue());

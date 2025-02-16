@@ -34,12 +34,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-@RunWith(SpringRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = RepositoryContext.class)
 @TestPropertySource(locations = "classpath:application.properties")
 @DatabaseSetup("classpath:test-database.xml")
@@ -74,7 +74,7 @@ public class IssueRepositoryTest {
     assertTrue(result.stream().allMatch(issue -> issue.getPublisher().equals(TEST_PUBLISHER)));
     assertTrue(result.stream().allMatch(issue -> issue.getSeries().equals(TEST_SERIES)));
     assertTrue(result.stream().allMatch(issue -> issue.getVolume().equals(TEST_VOLUME)));
-    assertTrue(result.stream().anyMatch(issue -> issue.isFound()));
+    assertTrue(result.stream().anyMatch(Issue::isFound));
     assertTrue(result.stream().anyMatch(issue -> !issue.isFound()));
   }
 

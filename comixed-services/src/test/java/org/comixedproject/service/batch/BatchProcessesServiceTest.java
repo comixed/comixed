@@ -25,20 +25,23 @@ import java.time.ZoneId;
 import java.util.*;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.batch.BatchProcessDetail;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.launch.NoSuchJobException;
 import org.springframework.batch.core.repository.JobRepository;
 
-@RunWith(MockitoJUnitRunner.class)
-public class BatchProcessesServiceTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class BatchProcessesServiceTest {
   private static final String TEST_JOB_NAME = "jobName:";
   private static final long TEST_INSTANCE_COUNT = 1L;
   private static final long TEST_JOB_ID = RandomUtils.nextLong();
@@ -60,7 +63,7 @@ public class BatchProcessesServiceTest {
   private List<JobExecution> jobExecutionList = new ArrayList<>();
   private Map<String, JobParameter<?>> parameters = new HashMap<>();
 
-  @Before
+  @BeforeEach
   public void setUp() throws NoSuchJobException {
     jobNames.add(TEST_JOB_NAME);
     Mockito.when(jobExplorer.getJobNames()).thenReturn(jobNames);
@@ -87,7 +90,7 @@ public class BatchProcessesServiceTest {
   }
 
   @Test
-  public void testGetAllBatchProcessesNoSuchJobException() throws NoSuchJobException {
+  void getAllBatchProcesses_noSuchJobException() throws NoSuchJobException {
     Mockito.when(jobExplorer.getJobInstanceCount(Mockito.anyString()))
         .thenThrow(NoSuchJobException.class);
 
@@ -98,7 +101,7 @@ public class BatchProcessesServiceTest {
   }
 
   @Test
-  public void testGetAllBatchProcesses() {
+  void getAllBatchProcesses() {
     final List<BatchProcessDetail> result = service.getAllBatchProcesses();
 
     assertNotNull(result);
@@ -124,7 +127,7 @@ public class BatchProcessesServiceTest {
   }
 
   @Test
-  public void testGetAllBatchProcessesNoStartOrFinishedTime() {
+  void getAllBatchProcesses_noStartOrFinishedTime() {
     Mockito.when(jobExecution.getStartTime()).thenReturn(null);
     Mockito.when(jobExecution.getEndTime()).thenReturn(null);
 
@@ -149,7 +152,7 @@ public class BatchProcessesServiceTest {
   }
 
   @Test
-  public void testDeleteWhenCompleted() {
+  void deleteCompletedJobs_whenCompleted() {
     Mockito.when(jobExplorer.getJobExecutions(Mockito.any(JobInstance.class)))
         .thenReturn(jobExecutionList);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);
@@ -163,7 +166,7 @@ public class BatchProcessesServiceTest {
   }
 
   @Test
-  public void testDeleteWhenFailed() {
+  void deleteCompletedJobs_whenFailed() {
     Mockito.when(jobExplorer.getJobExecutions(Mockito.any(JobInstance.class)))
         .thenReturn(jobExecutionList);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.FAILED);
@@ -177,7 +180,7 @@ public class BatchProcessesServiceTest {
   }
 
   @Test
-  public void testDeleteWhenRunning() {
+  void deleteCompletedJobs_whenExecuting() {
     Mockito.when(jobExplorer.getJobExecutions(Mockito.any(JobInstance.class)))
         .thenReturn(jobExecutionList);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.EXECUTING);
@@ -191,7 +194,7 @@ public class BatchProcessesServiceTest {
   }
 
   @Test
-  public void testDeleteNoSuchJobException() throws NoSuchJobException {
+  void deleteCompletedJobs_noSuchJobs() throws NoSuchJobException {
     Mockito.when(jobExplorer.getJobInstanceCount(Mockito.anyString()))
         .thenThrow(NoSuchJobException.class);
 
@@ -203,7 +206,7 @@ public class BatchProcessesServiceTest {
   }
 
   @Test
-  public void testExecutionCountForInvalidJob() throws NoSuchJobException {
+  void hasActiveExceptions_invalidJobName() throws NoSuchJobException {
     Mockito.when(jobExplorer.getJobInstanceCount(Mockito.anyString()))
         .thenThrow(NoSuchJobException.class);
 
@@ -213,7 +216,7 @@ public class BatchProcessesServiceTest {
   }
 
   @Test
-  public void testExecutionCountFor() {
+  void hasActiveExecutions() {
     Mockito.when(jobExecution.isRunning()).thenReturn(true);
     Mockito.when(jobExecution.getEndTime()).thenReturn(null);
 
@@ -223,7 +226,7 @@ public class BatchProcessesServiceTest {
   }
 
   @Test
-  public void testExecutionCountForNoneFound() {
+  void hasActiveExecutions_noneFound() {
     Mockito.when(jobExecution.isRunning()).thenReturn(false);
 
     final boolean result = service.hasActiveExecutions(TEST_JOB_NAME);
@@ -232,7 +235,7 @@ public class BatchProcessesServiceTest {
   }
 
   @Test
-  public void testDeleteSelectedJobIds() {
+  void deleteSelectedJobs() {
     final List<BatchProcessDetail> result = service.deleteSelectedJobs(Arrays.asList(TEST_JOB_ID));
 
     assertNotNull(result);
@@ -242,7 +245,7 @@ public class BatchProcessesServiceTest {
   }
 
   @Test
-  public void testDeleteSelectedJobId_JobNotFound() {
+  void deleteSelectedJobs_jobNotFound() {
     Mockito.when(jobExplorer.getJobExecution(Mockito.anyLong())).thenReturn(null);
 
     final List<BatchProcessDetail> result = service.deleteSelectedJobs(Arrays.asList(TEST_JOB_ID));

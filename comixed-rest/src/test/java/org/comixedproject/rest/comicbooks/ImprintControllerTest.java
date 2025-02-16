@@ -24,21 +24,21 @@ import static junit.framework.TestCase.assertSame;
 import java.util.List;
 import org.comixedproject.model.comicbooks.Imprint;
 import org.comixedproject.service.comicbooks.ImprintService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ImprintControllerTest {
+@ExtendWith(MockitoExtension.class)
+class ImprintControllerTest {
   @InjectMocks private ImprintController controller;
   @Mock private ImprintService imprintService;
   @Mock private List<Imprint> imprintList;
 
   @Test
-  public void testGetAll() {
+  void getAll() {
     Mockito.when(imprintService.getAll()).thenReturn(imprintList);
 
     final List<Imprint> result = controller.getAll();

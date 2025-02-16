@@ -19,6 +19,7 @@
 package org.comixedproject.rest.user;
 
 import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
+import static org.junit.Assert.assertThrows;
 
 import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
@@ -28,16 +29,19 @@ import org.comixedproject.service.comicbooks.ComicBookSelectionException;
 import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.comixedproject.service.user.ReadComicBooksException;
 import org.comixedproject.service.user.ReadComicBooksService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ReadComicBooksControllerTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ReadComicBooksControllerTest {
   private static final String TEST_EMAIL = "reader@comixedproject.org";
   private static final String TEST_ENCODED_IDS = "The encoded selected ids";
   private static final String TEST_REENCODED_IDS = "The re-encoded selected ids";
@@ -51,8 +55,8 @@ public class ReadComicBooksControllerTest {
 
   private List selectedIds = new ArrayList();
 
-  @Before
-  public void setUp() throws ComicBookSelectionException {
+  @BeforeEach
+  void setUp() throws ComicBookSelectionException {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
     Mockito.when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_IDS);
     Mockito.when(comicSelectionService.decodeSelections(TEST_ENCODED_IDS)).thenReturn(selectedIds);
@@ -60,95 +64,79 @@ public class ReadComicBooksControllerTest {
         .thenReturn(TEST_REENCODED_IDS);
   }
 
-  @Test(expected = ReadComicBooksException.class)
-  public void testMarkComicBookAsRead_serviceThrowsException() throws ReadComicBooksException {
+  @Test
+  void markComicBookAsRead_serviceThrowsException() throws ReadComicBooksException {
     Mockito.doThrow(ReadComicBooksException.class)
         .when(readComicBooksService)
         .markComicBookAsRead(Mockito.anyString(), Mockito.anyLong());
 
-    try {
-      controller.markSingleComicBookRead(principal, TESTS_COMIC_ID);
-    } finally {
-      Mockito.verify(readComicBooksService, Mockito.times(1))
-          .markComicBookAsRead(TEST_EMAIL, TESTS_COMIC_ID);
-    }
+    assertThrows(
+        ReadComicBooksException.class,
+        () -> controller.markSingleComicBookRead(principal, TESTS_COMIC_ID));
   }
 
   @Test
-  public void testMarkComicBookAsRead() throws ReadComicBooksException {
+  void markComicBookAsRead() throws ReadComicBooksException {
     controller.markSingleComicBookRead(principal, TESTS_COMIC_ID);
 
     Mockito.verify(readComicBooksService, Mockito.times(1))
         .markComicBookAsRead(TEST_EMAIL, TESTS_COMIC_ID);
   }
 
-  @Test(expected = ReadComicBooksException.class)
-  public void testUmnarkComicBookAsRead_serviceThrowsException() throws ReadComicBooksException {
+  @Test
+  void umnarkComicBookAsRead_serviceThrowsException() throws ReadComicBooksException {
     Mockito.doThrow(ReadComicBooksException.class)
         .when(readComicBooksService)
         .unmarkComicBookAsRead(Mockito.anyString(), Mockito.anyLong());
 
-    try {
-      controller.unmarkSingleComicBookRead(principal, TESTS_COMIC_ID);
-    } finally {
-      Mockito.verify(readComicBooksService, Mockito.times(1))
-          .unmarkComicBookAsRead(TEST_EMAIL, TESTS_COMIC_ID);
-    }
+    assertThrows(
+        ReadComicBooksException.class,
+        () -> controller.unmarkSingleComicBookRead(principal, TESTS_COMIC_ID));
   }
 
   @Test
-  public void testUnmarkComicBookAsRead() throws ReadComicBooksException {
+  void unmarkComicBookAsRead() throws ReadComicBooksException {
     controller.unmarkSingleComicBookRead(principal, TESTS_COMIC_ID);
 
     Mockito.verify(readComicBooksService, Mockito.times(1))
         .unmarkComicBookAsRead(TEST_EMAIL, TESTS_COMIC_ID);
   }
 
-  @Test(expected = ReadComicBooksException.class)
-  public void testMarkSelectedAsRead_serviceThrowsException()
-      throws ReadComicBooksException, ComicBookSelectionException {
+  @Test
+  void markSelectedAsRead_serviceThrowsException() throws ReadComicBooksException {
     Mockito.doThrow(ReadComicBooksException.class)
         .when(readComicBooksService)
         .markSelectionsAsRead(Mockito.anyString(), Mockito.anyList());
 
-    try {
-      controller.markSelectedComicBooksRead(principal, httpSession);
-    } finally {
-      Mockito.verify(readComicBooksService, Mockito.times(1))
-          .markSelectionsAsRead(TEST_EMAIL, selectedIds);
-    }
+    assertThrows(
+        ReadComicBooksException.class,
+        () -> controller.markSelectedComicBooksRead(principal, httpSession));
   }
 
-  @Test(expected = ReadComicBooksException.class)
-  public void testMarkSelectedAsRead_selectionExceptionDuringDecode()
-      throws ReadComicBooksException, ComicBookSelectionException {
+  @Test
+  void markSelectedAsRead_selectionExceptionDuringDecode() throws ReadComicBooksException {
     Mockito.doThrow(ReadComicBooksException.class)
         .when(readComicBooksService)
         .markSelectionsAsRead(Mockito.anyString(), Mockito.anyList());
 
-    try {
-      controller.markSelectedComicBooksRead(principal, httpSession);
-    } finally {
-      Mockito.verify(comicSelectionService, Mockito.times(1)).decodeSelections(TEST_ENCODED_IDS);
-    }
+    assertThrows(
+        ReadComicBooksException.class,
+        () -> controller.markSelectedComicBooksRead(principal, httpSession));
   }
 
-  @Test(expected = ComicBookSelectionException.class)
-  public void testMarkSelectedAsRead_selectionExceptionDuringEncode()
-      throws ReadComicBooksException, ComicBookSelectionException {
+  @Test
+  void markSelectedAsRead_selectionExceptionDuringEncode() throws ComicBookSelectionException {
     Mockito.doThrow(ComicBookSelectionException.class)
         .when(comicSelectionService)
         .encodeSelections(Mockito.anyList());
 
-    try {
-      controller.markSelectedComicBooksRead(principal, httpSession);
-    } finally {
-      Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(selectedIds);
-    }
+    assertThrows(
+        ComicBookSelectionException.class,
+        () -> controller.markSelectedComicBooksRead(principal, httpSession));
   }
 
   @Test
-  public void testMarkSelectedAsRead() throws ReadComicBooksException, ComicBookSelectionException {
+  void markSelectedAsRead() throws ReadComicBooksException, ComicBookSelectionException {
     controller.markSelectedComicBooksRead(principal, httpSession);
 
     Mockito.verify(readComicBooksService, Mockito.times(1))
@@ -156,52 +144,41 @@ public class ReadComicBooksControllerTest {
     Mockito.verify(comicSelectionService, Mockito.times(1)).clearSelectedComicBooks(selectedIds);
   }
 
-  @Test(expected = ReadComicBooksException.class)
-  public void testUnmarkSelectedAsRead_serviceThrowsException()
-      throws ReadComicBooksException, ComicBookSelectionException {
+  @Test
+  void unmarkSelectedAsRead_serviceThrowsException() throws ReadComicBooksException {
     Mockito.doThrow(ReadComicBooksException.class)
         .when(readComicBooksService)
         .unmarkSelectionsAsRead(Mockito.anyString(), Mockito.anyList());
 
-    try {
-      controller.unmarkSelectedComicBooksRead(principal, httpSession);
-    } finally {
-      Mockito.verify(readComicBooksService, Mockito.times(1))
-          .unmarkSelectionsAsRead(TEST_EMAIL, selectedIds);
-    }
+    assertThrows(
+        ReadComicBooksException.class,
+        () -> controller.unmarkSelectedComicBooksRead(principal, httpSession));
   }
 
-  @Test(expected = ReadComicBooksException.class)
-  public void testUnmarkSelectedAsRead_selectionExceptionDuringDecode()
-      throws ReadComicBooksException, ComicBookSelectionException {
+  @Test
+  void unmarkSelectedAsRead_selectionExceptionDuringDecode() throws ReadComicBooksException {
     Mockito.doThrow(ReadComicBooksException.class)
         .when(readComicBooksService)
         .unmarkSelectionsAsRead(Mockito.anyString(), Mockito.anyList());
 
-    try {
-      controller.unmarkSelectedComicBooksRead(principal, httpSession);
-    } finally {
-      Mockito.verify(comicSelectionService, Mockito.times(1)).decodeSelections(TEST_ENCODED_IDS);
-    }
+    assertThrows(
+        ReadComicBooksException.class,
+        () -> controller.unmarkSelectedComicBooksRead(principal, httpSession));
   }
 
-  @Test(expected = ComicBookSelectionException.class)
-  public void testUnmarkSelectedAsRead_selectionExceptionDuringEncode()
-      throws ReadComicBooksException, ComicBookSelectionException {
+  @Test
+  void unmarkSelectedAsRead_selectionExceptionDuringEncode() throws ComicBookSelectionException {
     Mockito.doThrow(ComicBookSelectionException.class)
         .when(comicSelectionService)
         .encodeSelections(Mockito.anyList());
 
-    try {
-      controller.unmarkSelectedComicBooksRead(principal, httpSession);
-    } finally {
-      Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(selectedIds);
-    }
+    assertThrows(
+        ComicBookSelectionException.class,
+        () -> controller.unmarkSelectedComicBooksRead(principal, httpSession));
   }
 
   @Test
-  public void testUnmarkSelectedAsRead()
-      throws ReadComicBooksException, ComicBookSelectionException {
+  void unmarkSelectedAsRead() throws ReadComicBooksException, ComicBookSelectionException {
     controller.unmarkSelectedComicBooksRead(principal, httpSession);
 
     Mockito.verify(readComicBooksService, Mockito.times(1))

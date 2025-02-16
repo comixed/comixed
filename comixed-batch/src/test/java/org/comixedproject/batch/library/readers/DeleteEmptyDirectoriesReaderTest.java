@@ -23,22 +23,22 @@ import static junit.framework.TestCase.*;
 import java.io.File;
 import java.util.ArrayList;
 import org.comixedproject.service.admin.ConfigurationService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class DeleteEmptyDirectoriesReaderTest {
+@ExtendWith(MockitoExtension.class)
+class DeleteEmptyDirectoriesReaderTest {
   private static final String TEST_ROOT_DIRECTORY = "src/test";
 
   @InjectMocks private DeleteEmptyDirectoriesReader reader;
   @Mock private ConfigurationService configurationService;
 
   @Test
-  public void testReadNoDirectoryDefined() throws Exception {
+  void read_noDirectoryDefined() throws Exception {
     Mockito.when(configurationService.getOptionValue(Mockito.anyString())).thenReturn("");
 
     final File result = reader.read();
@@ -50,7 +50,7 @@ public class DeleteEmptyDirectoriesReaderTest {
   }
 
   @Test
-  public void testReadConfigurationDisabled() throws Exception {
+  void read_configurationDisabled() throws Exception {
     Mockito.when(configurationService.getOptionValue(Mockito.anyString()))
         .thenReturn(TEST_ROOT_DIRECTORY);
     Mockito.when(configurationService.getOptionValue(Mockito.anyString(), Mockito.anyString()))
@@ -68,7 +68,7 @@ public class DeleteEmptyDirectoriesReaderTest {
   }
 
   @Test
-  public void testReadOptionEnabled() throws Exception {
+  void read_optionEnabled() throws Exception {
     Mockito.when(configurationService.getOptionValue(Mockito.anyString()))
         .thenReturn(TEST_ROOT_DIRECTORY);
     Mockito.when(configurationService.getOptionValue(Mockito.anyString(), Mockito.anyString()))
@@ -92,7 +92,7 @@ public class DeleteEmptyDirectoriesReaderTest {
   }
 
   @Test
-  public void testReadNoMoreEntries() throws Exception {
+  void read_noMoreEntries() throws Exception {
     reader.directories = new ArrayList<>();
 
     final File result = reader.read();

@@ -29,15 +29,15 @@ import org.comixedproject.model.net.collections.LoadPublisherListRequest;
 import org.comixedproject.model.net.collections.LoadPublisherListResponse;
 import org.comixedproject.service.collections.PublisherDetailService;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PublisherDetailControllerTest {
+@ExtendWith(MockitoExtension.class)
+class PublisherDetailControllerTest {
   private static final String TEST_PUBLISHER_NAME = "The publisher name";
   private static final int TEST_PAGE_NUMBER = 72;
   private static final int TEST_PAGE_SIZE = 25;
@@ -53,7 +53,7 @@ public class PublisherDetailControllerTest {
   @Mock private List<PublisherDetail> publisherDetailList;
 
   @Test
-  public void testLoadPublisherList() {
+  void loadPublisherList() {
     Mockito.when(
             publisherDetailService.getAllPublishers(
                 TEST_PAGE_NUMBER, TEST_PAGE_SIZE, "name", "asc"))
@@ -74,7 +74,7 @@ public class PublisherDetailControllerTest {
   }
 
   @Test
-  public void testGetPublisherDetail() {
+  void getPublisherDetail() {
     Mockito.when(comicBookService.getSeriesCountForPublisher(Mockito.anyString()))
         .thenReturn(TEST_SERIES_COUNT);
     Mockito.when(

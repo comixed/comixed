@@ -20,16 +20,16 @@ package org.comixedproject.batch.comicpages.writers;
 
 import java.util.ArrayList;
 import org.comixedproject.service.comicpages.ComicPageService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.item.Chunk;
 
-@RunWith(MockitoJUnitRunner.class)
-public class CreateImageCacheEntriesWriterTest {
+@ExtendWith(MockitoExtension.class)
+class CreateImageCacheEntriesWriterTest {
   private static final String TEST_PAGE_HASH = "0123456789ABCDEF0123456789ABCDEF";
 
   @InjectMocks private CreateImageCacheEntriesWriter writer;
@@ -37,7 +37,7 @@ public class CreateImageCacheEntriesWriterTest {
   private Chunk<String> hashList = new Chunk<>(new ArrayList<>());
 
   @Test
-  public void testWrite() {
+  void write() {
     for (int index = 0; index < 25; index++) hashList.add(TEST_PAGE_HASH);
 
     writer.write(hashList);

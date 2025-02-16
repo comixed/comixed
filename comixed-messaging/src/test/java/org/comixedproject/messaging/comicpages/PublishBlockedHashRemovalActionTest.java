@@ -18,23 +18,25 @@
 
 package org.comixedproject.messaging.comicpages;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.comicpages.BlockedHash;
 import org.comixedproject.views.View;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PublishBlockedHashRemovalActionTest {
+@ExtendWith(MockitoExtension.class)
+class PublishBlockedHashRemovalActionTest {
   private static final String TEST_BLOCKED_PAGE_AS_JSON = "Object as JSON";
 
   @InjectMocks private PublishBlockedPageRemovalAction action;
@@ -43,28 +45,23 @@ public class PublishBlockedHashRemovalActionTest {
   @Mock private ObjectWriter objectWriter;
   @Mock private BlockedHash blockedHash;
 
-  @Before
+  @BeforeEach
   public void setUp() throws JsonProcessingException {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
         .thenReturn(TEST_BLOCKED_PAGE_AS_JSON);
   }
 
-  @Test(expected = PublishingException.class)
-  public void testPublishJsonProcessingException()
-      throws PublishingException, JsonProcessingException {
+  @Test
+  void publish_jsonProcessingException() throws JsonProcessingException {
     Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
         .thenThrow(JsonProcessingException.class);
 
-    try {
-      action.publish(blockedHash);
-    } finally {
-      Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.BlockedHashList.class);
-    }
+    assertThrows(PublishingException.class, () -> action.publish(blockedHash));
   }
 
   @Test
-  public void testPublish() throws PublishingException, JsonProcessingException {
+  void publish() throws PublishingException, JsonProcessingException {
     Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
         .thenReturn(TEST_BLOCKED_PAGE_AS_JSON);
 

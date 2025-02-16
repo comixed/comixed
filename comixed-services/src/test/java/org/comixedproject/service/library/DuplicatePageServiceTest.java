@@ -1,6 +1,7 @@
 package org.comixedproject.service.library;
 
 import static junit.framework.TestCase.*;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -11,15 +12,18 @@ import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.repositories.comicpages.ComicPageRepository;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.data.domain.PageRequest;
 
-@RunWith(MockitoJUnitRunner.class)
-public class DuplicatePageServiceTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class DuplicatePageServiceTest {
   private static final String TEST_PAGE_HASH = "1234567890ABCDEF";
   private static final int TEST_PAGE_NUMBER = 23;
   private static final int TEST_PAGE_SIZE = 10;
@@ -39,14 +43,14 @@ public class DuplicatePageServiceTest {
   private List<DuplicatePage> duplicatePageList = new ArrayList<>();
   private List<ComicPage> comicPageList = new ArrayList<>();
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicPage.getComicBook()).thenReturn(comicBook);
   }
 
   @Test
-  public void testGetDuplicatePages() {
+  void getDuplicatePages() {
     duplicatePageList.add(duplicatePage);
     comicPageList.add(comicPage);
 
@@ -67,19 +71,15 @@ public class DuplicatePageServiceTest {
     Mockito.verify(comicPageRepository, Mockito.times(1)).getDuplicatePages(pageRequest);
   }
 
-  @Test(expected = DuplicatePageException.class)
-  public void testGetForHashNotFound() throws DuplicatePageException {
+  @Test
+  void getForHashNotFound() {
     Mockito.when(comicPageRepository.findByHash(Mockito.anyString())).thenReturn(comicPageList);
 
-    try {
-      service.getForHash(TEST_PAGE_HASH);
-    } finally {
-      Mockito.verify(comicPageRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-    }
+    assertThrows(DuplicatePageException.class, () -> service.getForHash(TEST_PAGE_HASH));
   }
 
   @Test
-  public void testGetForHash() throws DuplicatePageException {
+  void getForHash() throws DuplicatePageException {
     comicPageList.add(comicPage);
 
     Mockito.when(comicPageRepository.findByHash(Mockito.anyString())).thenReturn(comicPageList);

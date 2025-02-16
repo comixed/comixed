@@ -21,6 +21,7 @@ package org.comixedproject.service.metadata;
 import static junit.framework.TestCase.*;
 import static org.comixedproject.service.metadata.FilenameScrapingRuleService.*;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,14 +34,17 @@ import org.comixedproject.adaptors.csv.CsvRowEncoder;
 import org.comixedproject.model.metadata.FilenameMetadata;
 import org.comixedproject.model.metadata.FilenameScrapingRule;
 import org.comixedproject.repositories.metadata.FilenameScrapingRuleRepository;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
-public class FilenameScrapingRuleServiceTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class FilenameScrapingRuleServiceTest {
   private static final Integer TEST_PRIORITY = 0;
   private static final String TEST_NAME = "Rule name";
   private static final String TEST_RULE = "Rule value";
@@ -68,7 +72,7 @@ public class FilenameScrapingRuleServiceTest {
   private List<FilenameScrapingRule> filenameScrapingRuleList = new ArrayList<>();
   private List<String> decodedRow = new ArrayList<>();
 
-  @Before
+  @BeforeEach
   public void setUp() {
     filenameScrapingRuleList.add(filenameScrapingRule);
 
@@ -93,7 +97,7 @@ public class FilenameScrapingRuleServiceTest {
   }
 
   @Test
-  public void testLoadRules() {
+  void loadRules() {
     Mockito.when(filenameScrapingRuleRepository.findAll()).thenReturn(filenameScrapingRuleList);
 
     final List<FilenameScrapingRule> result = service.loadRules();
@@ -105,7 +109,7 @@ public class FilenameScrapingRuleServiceTest {
   }
 
   @Test
-  public void testSaveRules() {
+  void saveRules() {
     Mockito.when(filenameScrapingRuleRepository.saveAll(saveAllRulesListArgumentCaptor.capture()))
         .thenReturn(savedRuleList);
 
@@ -133,7 +137,7 @@ public class FilenameScrapingRuleServiceTest {
   }
 
   @Test
-  public void testLoadFilenameMetadata() {
+  void loadFilenameMetadata() {
     Mockito.when(filenameScrapingRuleRepository.findAll()).thenReturn(filenameScrapingRuleList);
     Mockito.when(
             filenameScraperAdaptor.execute(
@@ -151,7 +155,7 @@ public class FilenameScrapingRuleServiceTest {
   }
 
   @Test
-  public void testLoadFilenameMetadata_notLoaded() {
+  void loadFilenameMetadata_notLoaded() {
     Mockito.when(filenameScrapingRuleRepository.findAll()).thenReturn(filenameScrapingRuleList);
     Mockito.when(
             filenameScraperAdaptor.execute(
@@ -169,24 +173,18 @@ public class FilenameScrapingRuleServiceTest {
         .execute(TEST_FILENAME, filenameScrapingRule);
   }
 
-  @Test(expected = FilenameScrapingRuleException.class)
-  public void testGetFilenameRulesFile_encodeRecordThrowsException()
-      throws IOException, FilenameScrapingRuleException {
+  @Test
+  void getFilenameRulesFile_encodeRecordThrowsException() throws IOException {
     filenameScrapingRuleList.add(filenameScrapingRule);
 
     Mockito.when(csvAdaptor.encodeRecords(Mockito.anyList(), rowEncoderArgumentCaptor.capture()))
         .thenThrow(IOException.class);
 
-    try {
-      service.getFilenameScrapingRulesFile();
-    } finally {
-      Mockito.verify(filenameScrapingRuleRepository, Mockito.times(1)).findAll();
-    }
+    assertThrows(FilenameScrapingRuleException.class, () -> service.getFilenameScrapingRulesFile());
   }
 
   @Test
-  public void testGetFilenameRulesFile_noSeriesPosition()
-      throws IOException, FilenameScrapingRuleException {
+  void getFilenameRulesFile_noSeriesPosition() throws IOException, FilenameScrapingRuleException {
     Mockito.when(filenameScrapingRule.getSeriesPosition()).thenReturn(null);
 
     filenameScrapingRuleList.add(filenameScrapingRule);
@@ -226,8 +224,7 @@ public class FilenameScrapingRuleServiceTest {
   }
 
   @Test
-  public void testGetFilenameRulesFile_noVolumePosition()
-      throws IOException, FilenameScrapingRuleException {
+  void getFilenameRulesFile_noVolumePosition() throws IOException, FilenameScrapingRuleException {
     Mockito.when(filenameScrapingRule.getVolumePosition()).thenReturn(null);
 
     filenameScrapingRuleList.add(filenameScrapingRule);
@@ -267,7 +264,7 @@ public class FilenameScrapingRuleServiceTest {
   }
 
   @Test
-  public void testGetFilenameRulesFile_noIssueNumberPosition()
+  void getFilenameRulesFile_noIssueNumberPosition()
       throws IOException, FilenameScrapingRuleException {
     Mockito.when(filenameScrapingRule.getIssueNumberPosition()).thenReturn(null);
 
@@ -308,7 +305,7 @@ public class FilenameScrapingRuleServiceTest {
   }
 
   @Test
-  public void testGetFilenameRulesFile_noCoverDatePosition()
+  void getFilenameRulesFile_noCoverDatePosition()
       throws IOException, FilenameScrapingRuleException {
     Mockito.when(filenameScrapingRule.getCoverDatePosition()).thenReturn(null);
 
@@ -349,7 +346,7 @@ public class FilenameScrapingRuleServiceTest {
   }
 
   @Test
-  public void testGetFilenameRulesFile() throws IOException, FilenameScrapingRuleException {
+  void getFilenameRulesFile() throws IOException, FilenameScrapingRuleException {
     filenameScrapingRuleList.add(filenameScrapingRule);
 
     Mockito.when(csvAdaptor.encodeRecords(Mockito.anyList(), rowEncoderArgumentCaptor.capture()))
@@ -387,7 +384,7 @@ public class FilenameScrapingRuleServiceTest {
   }
 
   @Test
-  public void testUploadFile_noExistingRecords() throws IOException {
+  void uploadFile_noExistingRecords() throws IOException {
     filenameScrapingRuleList.clear();
 
     Mockito.when(filenameScrapingRuleRepository.findAll()).thenReturn(filenameScrapingRuleList);
@@ -425,7 +422,7 @@ public class FilenameScrapingRuleServiceTest {
   }
 
   @Test
-  public void testUploadFile() throws IOException {
+  void uploadFile() throws IOException {
     Mockito.when(filenameScrapingRuleRepository.findAll()).thenReturn(filenameScrapingRuleList);
     Mockito.doNothing()
         .when(csvAdaptor)

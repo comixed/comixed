@@ -75,7 +75,7 @@ public class WebResponseEncoder {
         .contentLength(length)
         .header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
         .header("Accept-Ranges", "bytes")
-        .header("Content-Range", String.format("bytes {}-{}/{}", start, finish, length))
+        .header("Content-Range", String.format("bytes %d-%d/%d", start, finish, length))
         .contentType(mediaType)
         .body(content);
   }

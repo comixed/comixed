@@ -29,18 +29,21 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Base64;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ComiXedAuthenticationFilterTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ComiXedAuthenticationFilterTest {
   private static final String TEST_EMAIL = "reader@comixedproject.org";
   private static final String TEST_PASSWORD = "test password";
   private static final String TEST_AUTH_TOKEN =
@@ -61,8 +64,8 @@ public class ComiXedAuthenticationFilterTest {
   @Captor
   private ArgumentCaptor<UsernamePasswordAuthenticationToken> authenticationTokenArgumentCaptor;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     Mockito.when(userDetailsService.loadUserByUsername(Mockito.anyString()))
         .thenReturn(userDetails);
     Mockito.when(userDetails.getPassword()).thenReturn(TEST_PASSWORD);
@@ -71,7 +74,7 @@ public class ComiXedAuthenticationFilterTest {
   }
 
   @Test
-  public void testDoFilterInternalBasicAuth() throws ServletException, IOException {
+  void doFilterInternal_basicAuth() throws ServletException, IOException {
     Mockito.when(request.getHeader(HEADER_STRING)).thenReturn(TEST_BASIC_AUTH_HEADER);
 
     authenticationFilter.doFilterInternal(request, response, filterChain);
@@ -80,7 +83,7 @@ public class ComiXedAuthenticationFilterTest {
   }
 
   @Test
-  public void testDoFilterInternalExceptionOnEmailFromToken() throws ServletException, IOException {
+  void doFilterInternalExceptionOnEmailFromToken() throws ServletException, IOException {
     Mockito.when(request.getHeader(HEADER_STRING)).thenReturn(TEST_TOKEN_AUTH_TOKEN);
     Mockito.when(jwtTokenUtil.getEmailFromToken(Mockito.anyString()))
         .thenThrow(RuntimeException.class);
@@ -91,7 +94,7 @@ public class ComiXedAuthenticationFilterTest {
   }
 
   @Test
-  public void testDoFilterInternalTokenReceived() throws ServletException, IOException {
+  void doFilterInternal_tokenReceived() throws ServletException, IOException {
     Mockito.when(request.getHeader(HEADER_STRING)).thenReturn(TEST_TOKEN_AUTH_TOKEN);
     Mockito.when(jwtTokenUtil.getEmailFromToken(Mockito.anyString())).thenReturn(TEST_EMAIL);
     Mockito.when(jwtTokenUtil.validateToken(Mockito.anyString(), Mockito.any(UserDetails.class)))
@@ -113,7 +116,7 @@ public class ComiXedAuthenticationFilterTest {
   }
 
   @Test
-  public void testDoFilterInternalInvalidTokenReceived() throws ServletException, IOException {
+  void doFilterInternal_invalidTokenReceived() throws ServletException, IOException {
     Mockito.when(request.getHeader(HEADER_STRING)).thenReturn(TEST_TOKEN_AUTH_TOKEN);
     Mockito.when(jwtTokenUtil.getEmailFromToken(Mockito.anyString())).thenReturn(TEST_EMAIL);
     Mockito.when(jwtTokenUtil.validateToken(Mockito.anyString(), Mockito.any(UserDetails.class)))

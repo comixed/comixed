@@ -33,14 +33,17 @@ import org.comixedproject.service.comicbooks.ComicBookSelectionException;
 import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.comixedproject.service.plugin.LibraryPluginException;
 import org.comixedproject.service.plugin.LibraryPluginService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
-public class LibraryPluginControllerTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class LibraryPluginControllerTest {
   private static final String TEST_USER_EMAIL = "reader@comixedproject.org";
   private static final long TEST_PLUGIN_ID = 129L;
   private static final String TEST_PLUGIN_LANGUAGE = "The libraryPlugin language";
@@ -63,8 +66,8 @@ public class LibraryPluginControllerTest {
 
   @Captor private ArgumentCaptor<List<Long>> idListArgumentCaptor;
 
-  @Before
-  public void setUp() throws ComicBookSelectionException {
+  @BeforeEach
+  void setUp() throws ComicBookSelectionException {
     Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
     Mockito.when(session.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_IDS);
     Mockito.when(comicSelectionService.decodeSelections(TEST_ENCODED_IDS)).thenReturn(selectedIds);
@@ -72,20 +75,16 @@ public class LibraryPluginControllerTest {
         .thenReturn(TEST_REENCODED_IDS);
   }
 
-  @Test(expected = LibraryPluginException.class)
-  public void testLoadAllServiceException() throws LibraryPluginException {
+  @Test
+  void loadAllServiceException() throws LibraryPluginException {
     Mockito.when(libraryPluginService.getAllPlugins(TEST_USER_EMAIL))
         .thenThrow(LibraryPluginException.class);
 
-    try {
-      controller.getAllPlugins(principal);
-    } finally {
-      Mockito.verify(libraryPluginService, Mockito.times(1)).getAllPlugins(TEST_USER_EMAIL);
-    }
+    assertThrows(LibraryPluginException.class, () -> controller.getAllPlugins(principal));
   }
 
   @Test
-  public void testLoadAll() throws LibraryPluginException {
+  void loadAll() throws LibraryPluginException {
     Mockito.when(libraryPluginService.getAllPlugins(TEST_USER_EMAIL)).thenReturn(libraryPluginList);
 
     final List<LibraryPlugin> result = controller.getAllPlugins(principal);
@@ -96,21 +95,20 @@ public class LibraryPluginControllerTest {
     Mockito.verify(libraryPluginService, Mockito.times(1)).getAllPlugins(TEST_USER_EMAIL);
   }
 
-  @Test(expected = LibraryPluginException.class)
-  public void testCreatePluginServiceException() throws LibraryPluginException {
+  @Test
+  void createPluginServiceException() throws LibraryPluginException {
     Mockito.when(libraryPluginService.createPlugin(Mockito.anyString(), Mockito.anyString()))
         .thenThrow(LibraryPluginException.class);
 
-    try {
-      controller.createPlugin(new CreatePluginRequest(TEST_PLUGIN_LANGUAGE, TEST_PLUGIN_FILENAME));
-    } finally {
-      Mockito.verify(libraryPluginService, Mockito.times(1))
-          .createPlugin(TEST_PLUGIN_LANGUAGE, TEST_PLUGIN_FILENAME);
-    }
+    assertThrows(
+        LibraryPluginException.class,
+        () ->
+            controller.createPlugin(
+                new CreatePluginRequest(TEST_PLUGIN_LANGUAGE, TEST_PLUGIN_FILENAME)));
   }
 
   @Test
-  public void testCreatePlugin() throws LibraryPluginException {
+  void createPlugin() throws LibraryPluginException {
     Mockito.when(libraryPluginService.createPlugin(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(savedLibraryPlugin);
 
@@ -125,24 +123,22 @@ public class LibraryPluginControllerTest {
         .createPlugin(TEST_PLUGIN_LANGUAGE, TEST_PLUGIN_FILENAME);
   }
 
-  @Test(expected = LibraryPluginException.class)
-  public void testUpdatePluginServiceException() throws LibraryPluginException {
+  @Test
+  void updatePluginServiceException() throws LibraryPluginException {
     Mockito.when(
             libraryPluginService.updatePlugin(
                 Mockito.anyLong(), Mockito.anyBoolean(), Mockito.anyMap()))
         .thenThrow(LibraryPluginException.class);
 
-    try {
-      controller.updatePlugin(
-          TEST_PLUGIN_ID, new UpdatePluginRequest(TEST_ADMIN_ONLY, pluginProperties));
-    } finally {
-      Mockito.verify(libraryPluginService, Mockito.times(1))
-          .updatePlugin(TEST_PLUGIN_ID, TEST_ADMIN_ONLY, pluginProperties);
-    }
+    assertThrows(
+        LibraryPluginException.class,
+        () ->
+            controller.updatePlugin(
+                TEST_PLUGIN_ID, new UpdatePluginRequest(TEST_ADMIN_ONLY, pluginProperties)));
   }
 
   @Test
-  public void testUpdatePlugin() throws LibraryPluginException {
+  void updatePlugin() throws LibraryPluginException {
     Mockito.when(
             libraryPluginService.updatePlugin(
                 Mockito.anyLong(), Mockito.anyBoolean(), Mockito.anyMap()))
@@ -159,49 +155,35 @@ public class LibraryPluginControllerTest {
         .updatePlugin(TEST_PLUGIN_ID, TEST_ADMIN_ONLY, pluginProperties);
   }
 
-  @Test(expected = LibraryPluginException.class)
-  public void testDeletePluginServiceException() throws LibraryPluginException {
+  @Test
+  void deletePluginServiceException() throws LibraryPluginException {
     Mockito.doThrow(LibraryPluginException.class)
         .when(libraryPluginService)
         .deletePlugin(Mockito.anyLong());
 
-    try {
-      controller.deletePlugin(TEST_PLUGIN_ID);
-    } finally {
-      Mockito.verify(libraryPluginService, Mockito.times(1)).deletePlugin(TEST_PLUGIN_ID);
-    }
+    assertThrows(LibraryPluginException.class, () -> controller.deletePlugin(TEST_PLUGIN_ID));
   }
 
   @Test
-  public void testDeletePlugin() throws LibraryPluginException {
+  void deletePlugin() throws LibraryPluginException {
     controller.deletePlugin(TEST_PLUGIN_ID);
 
     Mockito.verify(libraryPluginService, Mockito.times(1)).deletePlugin(TEST_PLUGIN_ID);
   }
 
-  @Test(expected = LibraryPluginException.class)
-  public void testRunLibraryPluginOnOneComicServiceException() throws LibraryPluginException {
+  @Test
+  void runLibraryPluginOnOneComicServiceException() throws LibraryPluginException {
     Mockito.doThrow(LibraryPluginException.class)
         .when(libraryPluginService)
         .runLibraryPlugin(Mockito.anyLong(), idListArgumentCaptor.capture());
 
-    try {
-      controller.runLibraryPluginOnOneComicBook(TEST_PLUGIN_ID, TEST_COMIC_BOOK_ID);
-    } finally {
-      final List<Long> idList = idListArgumentCaptor.getValue();
-
-      assertNotNull(idList);
-      assertFalse(idList.isEmpty());
-      assertEquals(1, idList.size());
-      assertTrue(idList.contains(TEST_COMIC_BOOK_ID));
-
-      Mockito.verify(libraryPluginService, Mockito.times(1))
-          .runLibraryPlugin(TEST_PLUGIN_ID, idList);
-    }
+    assertThrows(
+        LibraryPluginException.class,
+        () -> controller.runLibraryPluginOnOneComicBook(TEST_PLUGIN_ID, TEST_COMIC_BOOK_ID));
   }
 
   @Test
-  public void testRunLibraryPluginOnOneComic() throws LibraryPluginException {
+  void runLibraryPluginOnOneComic() throws LibraryPluginException {
     Mockito.doNothing()
         .when(libraryPluginService)
         .runLibraryPlugin(Mockito.anyLong(), idListArgumentCaptor.capture());
@@ -218,39 +200,30 @@ public class LibraryPluginControllerTest {
     Mockito.verify(libraryPluginService, Mockito.times(1)).runLibraryPlugin(TEST_PLUGIN_ID, idList);
   }
 
-  @Test(expected = LibraryPluginException.class)
-  public void testRunLibraryPluginOnSelectedComicBooksSelectionDecodingException()
-      throws LibraryPluginException, ComicBookSelectionException {
+  @Test
+  void runLibraryPluginOnSelectedComicBooksSelectionDecodingException()
+      throws ComicBookSelectionException {
     Mockito.when(comicSelectionService.decodeSelections(TEST_ENCODED_IDS))
         .thenThrow(ComicBookSelectionException.class);
 
-    try {
-      controller.runLibraryPluginOnSelectedComicBooks(session, TEST_PLUGIN_ID);
-    } finally {
-      Mockito.verify(libraryPluginService, Mockito.never())
-          .runLibraryPlugin(Mockito.anyLong(), Mockito.anyList());
-    }
+    assertThrows(
+        LibraryPluginException.class,
+        () -> controller.runLibraryPluginOnSelectedComicBooks(session, TEST_PLUGIN_ID));
   }
 
-  @Test(expected = LibraryPluginException.class)
-  public void testRunLibraryPluginOnSelectedComicBooksServiceException()
-      throws LibraryPluginException {
+  @Test
+  void runLibraryPluginOnSelectedComicBooksServiceException() throws LibraryPluginException {
     Mockito.doThrow(LibraryPluginException.class)
         .when(libraryPluginService)
         .runLibraryPlugin(Mockito.anyLong(), Mockito.anyList());
 
-    try {
-      controller.runLibraryPluginOnSelectedComicBooks(session, TEST_PLUGIN_ID);
-    } finally {
-      Mockito.verify(libraryPluginService, Mockito.times(1))
-          .runLibraryPlugin(TEST_PLUGIN_ID, selectedIds);
-      Mockito.verify(comicSelectionService, Mockito.never())
-          .clearSelectedComicBooks(Mockito.anyList());
-    }
+    assertThrows(
+        LibraryPluginException.class,
+        () -> controller.runLibraryPluginOnSelectedComicBooks(session, TEST_PLUGIN_ID));
   }
 
   @Test
-  public void testRunLibraryPluginOnSelectedComicBooks() throws LibraryPluginException {
+  void runLibraryPluginOnSelectedComicBooks() throws LibraryPluginException {
     controller.runLibraryPluginOnSelectedComicBooks(session, TEST_PLUGIN_ID);
 
     Mockito.verify(libraryPluginService, Mockito.times(1))

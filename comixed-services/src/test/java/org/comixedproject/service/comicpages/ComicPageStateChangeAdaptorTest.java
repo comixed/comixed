@@ -6,19 +6,22 @@ import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.comicpages.ComicPageState;
 import org.comixedproject.state.comicpages.ComicPageEvent;
 import org.comixedproject.state.comicpages.ComicPageStateHandler;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.statemachine.state.State;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ComicPageStateChangeAdaptorTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ComicPageStateChangeAdaptorTest {
   private static final ComicPageState TEST_STATE = ComicPageState.STABLE;
 
   @InjectMocks private ComicPageStateChangeAdaptor adaptor;
@@ -30,7 +33,7 @@ public class ComicPageStateChangeAdaptorTest {
   @Mock private ComicPage page;
   @Mock private ComicPage savedPage;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Mockito.when(message.getHeaders()).thenReturn(messageHeaders);
     Mockito.when(messageHeaders.get(HEADER_PAGE, ComicPage.class)).thenReturn(page);
@@ -38,14 +41,14 @@ public class ComicPageStateChangeAdaptorTest {
   }
 
   @Test
-  public void testAfterPropertiesSet() throws Exception {
+  void afterPropertiesSet() throws Exception {
     adaptor.afterPropertiesSet();
 
     Mockito.verify(comicPageStateHandler, Mockito.times(1)).addListener(adaptor);
   }
 
   @Test
-  public void testOnPageStateChangePageIsNull() throws ComicPageException {
+  void onPageStateChange_pageIsNull() throws ComicPageException {
     Mockito.when(messageHeaders.get(HEADER_PAGE, ComicPage.class)).thenReturn(null);
 
     adaptor.onPageStateChange(state, message);
@@ -55,7 +58,7 @@ public class ComicPageStateChangeAdaptorTest {
   }
 
   @Test
-  public void testOnPageStateChangeSaveThrowsException() throws ComicPageException {
+  void onPageStateChange_saveThrowsException() throws ComicPageException {
     Mockito.when(comicPageService.save(Mockito.any(ComicPage.class)))
         .thenThrow(ComicPageException.class);
 
@@ -66,7 +69,7 @@ public class ComicPageStateChangeAdaptorTest {
   }
 
   @Test
-  public void testOnPageStateChange() throws ComicPageException {
+  void onPageStateChange() throws ComicPageException {
     Mockito.when(comicPageService.save(Mockito.any(ComicPage.class))).thenReturn(savedPage);
 
     adaptor.onPageStateChange(state, message);

@@ -24,16 +24,19 @@ import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Set;
 import org.comixedproject.service.comicpages.ComicPageService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
-public class HashSelectionControllerTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class HashSelectionControllerTest {
   private static final String TEST_HASH = "The Hash Value";
 
   @InjectMocks private HashSelectionController controller;
@@ -43,15 +46,15 @@ public class HashSelectionControllerTest {
   @Mock private Set<String> selectedHashList;
   @Mock private List<String> duplicateHashList;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     Mockito.when(selectedHashManager.load(Mockito.any(HttpSession.class)))
         .thenReturn(selectedHashList);
     Mockito.when(comicPageService.getAllDuplicateHashes()).thenReturn(duplicateHashList);
   }
 
   @Test
-  public void testLoadHashSelections() {
+  void loadHashSelections() {
     final Set<String> result = controller.loadHashSelections(session);
 
     assertSame(selectedHashList, result);
@@ -60,7 +63,7 @@ public class HashSelectionControllerTest {
   }
 
   @Test
-  public void testAddAllDuplicateHashes() {
+  void addAllDuplicateHashes() {
     final Set<String> result = controller.addAllDuplicateHashes(session);
 
     assertSame(selectedHashList, result);
@@ -69,7 +72,7 @@ public class HashSelectionControllerTest {
   }
 
   @Test
-  public void testAddSelectedHash() {
+  void addSelectedHash() {
     final Set<String> result = controller.addHashSelection(session, TEST_HASH);
 
     assertNotNull(result);
@@ -81,7 +84,7 @@ public class HashSelectionControllerTest {
   }
 
   @Test
-  public void testRemoveSelectedHash() {
+  void removeSelectedHash() {
     final Set<String> result = controller.removeHashSelection(session, TEST_HASH);
 
     assertNotNull(result);
@@ -93,7 +96,7 @@ public class HashSelectionControllerTest {
   }
 
   @Test
-  public void testClearHashSelections() {
+  void clearHashSelections() {
     controller.clearHashSelections(session);
 
     Mockito.verify(selectedHashManager, Mockito.times(1)).clearSelections(session);

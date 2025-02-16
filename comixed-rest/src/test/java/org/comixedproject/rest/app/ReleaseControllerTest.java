@@ -20,40 +20,35 @@ package org.comixedproject.rest.app;
 
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
+import static org.junit.Assert.assertThrows;
 
 import java.text.ParseException;
 import org.comixedproject.model.app.BuildDetails;
 import org.comixedproject.model.net.app.LatestReleaseDetails;
 import org.comixedproject.service.app.ReleaseService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-@SpringBootTest
-public class ReleaseControllerTest {
+@ExtendWith(MockitoExtension.class)
+class ReleaseControllerTest {
   @InjectMocks private ReleaseController controller;
   @Mock private ReleaseService releaseService;
   @Mock private BuildDetails buildDetails;
   @Mock private LatestReleaseDetails latestReleaseDetails;
 
-  @Test(expected = ParseException.class)
-  public void testGetCurrentReleaseParsingException() throws ParseException {
+  @Test
+  void getCurrentReleaseParsingException() throws ParseException {
     Mockito.when(releaseService.getCurrentReleaseDetails()).thenThrow(ParseException.class);
 
-    try {
-      controller.getCurrentRelease();
-    } finally {
-      Mockito.verify(releaseService, Mockito.times(1)).getCurrentReleaseDetails();
-    }
+    assertThrows(ParseException.class, () -> controller.getCurrentRelease());
   }
 
   @Test
-  public void testGetCurrentRelease() throws ParseException {
+  void getCurrentRelease() throws ParseException {
     Mockito.when(releaseService.getCurrentReleaseDetails()).thenReturn(buildDetails);
 
     final BuildDetails result = controller.getCurrentRelease();
@@ -65,7 +60,7 @@ public class ReleaseControllerTest {
   }
 
   @Test
-  public void testGetLatestRelease() {
+  void getLatestRelease() {
     Mockito.when(releaseService.getLatestReleaseDetails()).thenReturn(latestReleaseDetails);
 
     final LatestReleaseDetails result = controller.getLatestRelease();

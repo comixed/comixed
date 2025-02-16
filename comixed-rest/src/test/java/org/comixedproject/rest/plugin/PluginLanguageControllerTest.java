@@ -24,21 +24,21 @@ import static junit.framework.TestCase.assertSame;
 import java.util.List;
 import org.comixedproject.model.net.plugin.PluginLanguage;
 import org.comixedproject.service.plugin.PluginLanguageService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PluginLanguageControllerTest {
+@ExtendWith(MockitoExtension.class)
+class PluginLanguageControllerTest {
   @InjectMocks private PluginLanguageController controller;
   @Mock private PluginLanguageService pluginLanguageService;
   @Mock private List<PluginLanguage> pluginLanguageList;
 
   @Test
-  public void testLoadAllPluginLanguages() {
+  void loadAllPluginLanguages() {
     Mockito.when(pluginLanguageService.getPluginLanguageList()).thenReturn(pluginLanguageList);
 
     final List<PluginLanguage> result = controller.loadPluginLanguageList();
