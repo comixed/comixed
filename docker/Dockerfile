@@ -31,4 +31,4 @@ VOLUME /library
 VOLUME /imports
 VOLUME /config
 
-CMD ["bash", "/app/comixed-release/bin/run.sh", "-L", "/library/comixed.log", "-c", "/config"]
+CMD ["bash", "/app/comixed-release/bin/docker-run.sh", "-L", "/library/comixed.log", "-c", "/config"]
