@@ -33,6 +33,7 @@ class JwtTokenUtilTest {
     Mockito.when(user.getEmail()).thenReturn(TEST_EMAIL);
     Mockito.when(userDetails.getUsername()).thenReturn(TEST_EMAIL);
 
+    tokenUtil.signingKey = "the-testing-key";
     this.token = tokenUtil.doGenerateToken(TEST_EMAIL);
   }
 
