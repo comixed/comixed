@@ -30,6 +30,7 @@ import org.comixedproject.model.user.ComiXedRole;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.users.ComiXedUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -44,7 +45,9 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class JwtTokenUtil {
   private static final String ROLE_PREFIX = "ROLE_";
-  private static final String SIGNING_KEY = "comixedproject";
+
+  @Value("${comixed.auth.jwt-signing-key}")
+  String signingKey;
 
   @Autowired private ComiXedUserRepository userRepository;
 
@@ -62,7 +65,7 @@ public class JwtTokenUtil {
   }
 
   private Claims getAllClaimsFromToken(String token) {
-    return Jwts.parser().setSigningKey(SIGNING_KEY).parseClaimsJws(token).getBody();
+    return Jwts.parser().setSigningKey(this.signingKey).parseClaimsJws(token).getBody();
   }
 
   private Boolean isTokenExpired(String token) {
@@ -93,7 +96,7 @@ public class JwtTokenUtil {
         .setIssuer("http://www.comixedproject.org")
         .setIssuedAt(new Date(System.currentTimeMillis()))
         .setExpiration(new Date(System.currentTimeMillis() + (5 * 60 * 60) * 1000))
-        .signWith(SignatureAlgorithm.HS256, SIGNING_KEY)
+        .signWith(SignatureAlgorithm.HS256, this.signingKey)
         .compact();
   }
 

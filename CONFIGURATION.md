@@ -7,6 +7,7 @@ needs of the server administrator.
 
 | PROPERTY                                          | USAGE                                           | FORMAT   |
 |---------------------------------------------------|-------------------------------------------------|----------|
+| comixed.auth.jwt-signing-key                      | The JWT signing key to use                      | Text     |
 | comixed.batch.thread-pool-size                    | The number of threads used for batch processing | Count    |
 | comixed.batch.page-reader.chunk-size              | The number of pages to process at a time        | Count    |
 | comixed.batch.add-image-cache-entries.chunk-size  | The number of pages to process at a time        | Count    |
@@ -30,6 +31,10 @@ needs of the server administrator.
 | comixed.batch.scrape-metadata.chunk-size          | The batch scraping chunk size                   | Count    |
 | comixed.batch.update-metadata.period              | The time between checking for comics to process | Delay    |
 | comixed.batch.update-metadata.chunk-size          | The number of comics to process at a time       | Count    |
+
+### Text Values
+
+Free form text.
 
 ### Count Values
 
