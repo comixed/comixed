@@ -264,7 +264,7 @@ public class PageCacheService {
       try {
         log.debug("Fetching content for page");
         content = this.comicBookAdaptor.loadPageContent(comicFilename, pageFilename);
-        if (!Objects.isNull(content) && Objects.isNull(pageHash)) {
+        if (!Objects.isNull(content) && !Objects.isNull(pageHash)) {
           log.debug("Caching image for hash: {} bytes hash={}", content.length, pageHash);
           this.saveByHash(pageHash, content);
         }
