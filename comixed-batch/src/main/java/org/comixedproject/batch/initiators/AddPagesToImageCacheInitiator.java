@@ -45,7 +45,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class AddPagesToImageCacheInitiator {
   @Autowired private PageCacheService pageCacheService;
-  private ComicPageService comicPageService;
+  @Autowired private ComicPageService comicPageService;
   @Autowired private BatchProcessesService batchProcessesService;
 
   @Autowired
