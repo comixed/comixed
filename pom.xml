@@ -62,7 +62,7 @@
     <assembly.name>local</assembly.name>
     <maven-git-code-format.version>5.1</maven-git-code-format.version>
     <git-code-format-maven-plugin.version>4.2</git-code-format-maven-plugin.version>
-    <java.version>17</java.version>
+    <java.version>21</java.version>
     <sonar.organization>comixed</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.links.scm>https://github.com/comixed/comixed</sonar.links.scm>
@@ -255,7 +255,7 @@
   </dependencies>
   <build>
     <plugins>
-    <plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
@@ -418,40 +418,40 @@
           </execution>
         </executions>
       </plugin>
-    <plugin>
-      <groupId>com.github.danielflower.mavenplugins</groupId>
-      <artifactId>gitlog-maven-plugin</artifactId>
-      <version>1.14.0</version>
-      <configuration>
-        <reportTitle>Changelog for ComiXed v2.4-SNAPSHOT</reportTitle>
-        <verbose>false</verbose>
-        <outputDirectory>${project.basedir}</outputDirectory>
-        <generateMarkdownChangeLog>true</generateMarkdownChangeLog>
-        <markdownChangeLogFilename>CHANGELOG.md</markdownChangeLogFilename>
-        <generateSimpleHTMLChangeLog>false</generateSimpleHTMLChangeLog>
-        <generatePlainTextChangeLog>false</generatePlainTextChangeLog>
-        <generateAsciidocChangeLog>false</generateAsciidocChangeLog>
-        <generateJSONChangeLog>false</generateJSONChangeLog>
-        <generateHTMLTableOnlyChangeLog>false</generateHTMLTableOnlyChangeLog>
-        <issueManagementSystem>GitHub issue tracker</issueManagementSystem>
-        <issueManagementUrl>https://github.com/comixed/comixed/issues</issueManagementUrl>
-        <fullGitMessage>false</fullGitMessage>
-        <dateFormat>yyyy-MM-dd HH:mm:ss Z</dateFormat>
-        <bugzillaPattern>(?:Bug|UPDATE|FIX|ADD|NEW|#) ?#?(\d+)</bugzillaPattern>
-      </configuration>
-      <executions>
-        <execution>
-          <goals>
-            <goal>generate</goal>
-          </goals>
-        </execution>
-      </executions>
-    </plugin>
-    <plugin>
-      <groupId>org.sonarsource.scanner.maven</groupId>
-      <artifactId>sonar-maven-plugin</artifactId>
-      <version>4.0.0.4121</version>
-    </plugin>
+      <plugin>
+        <groupId>com.github.danielflower.mavenplugins</groupId>
+        <artifactId>gitlog-maven-plugin</artifactId>
+        <version>1.14.0</version>
+        <configuration>
+          <reportTitle>Changelog for ComiXed v2.4-SNAPSHOT</reportTitle>
+          <verbose>false</verbose>
+          <outputDirectory>${project.basedir}</outputDirectory>
+          <generateMarkdownChangeLog>true</generateMarkdownChangeLog>
+          <markdownChangeLogFilename>CHANGELOG.md</markdownChangeLogFilename>
+          <generateSimpleHTMLChangeLog>false</generateSimpleHTMLChangeLog>
+          <generatePlainTextChangeLog>false</generatePlainTextChangeLog>
+          <generateAsciidocChangeLog>false</generateAsciidocChangeLog>
+          <generateJSONChangeLog>false</generateJSONChangeLog>
+          <generateHTMLTableOnlyChangeLog>false</generateHTMLTableOnlyChangeLog>
+          <issueManagementSystem>GitHub issue tracker</issueManagementSystem>
+          <issueManagementUrl>https://github.com/comixed/comixed/issues</issueManagementUrl>
+          <fullGitMessage>false</fullGitMessage>
+          <dateFormat>yyyy-MM-dd HH:mm:ss Z</dateFormat>
+          <bugzillaPattern>(?:Bug|UPDATE|FIX|ADD|NEW|#) ?#?(\d+)</bugzillaPattern>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.sonarsource.scanner.maven</groupId>
+        <artifactId>sonar-maven-plugin</artifactId>
+        <version>4.0.0.4121</version>
+      </plugin>
     </plugins>
   </build>
   <modules>
