@@ -65,8 +65,7 @@ public class ComicPageService {
   @Transactional
   public ComicPage getOneForHash(final String hash) {
     log.trace("Finding a page with hash: {}", hash);
-    final List<ComicPage> results = this.comicPageRepository.findByHash(hash);
-    return results.isEmpty() ? null : results.get(0);
+    return this.comicPageRepository.findTopByHash(hash);
   }
 
   /**

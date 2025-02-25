@@ -82,26 +82,25 @@ public class ComicPageServiceTest {
   public void testGetOneForHash() {
     pageList.add(page);
 
-    Mockito.when(comicPageRepository.findByHash(Mockito.anyString())).thenReturn(pageList);
+    Mockito.when(comicPageRepository.findTopByHash(Mockito.anyString())).thenReturn(page);
 
     final ComicPage result = service.getOneForHash(TEST_PAGE_HASH);
 
     assertNotNull(result);
     assertSame(page, result);
 
-    Mockito.verify(comicPageRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
+    Mockito.verify(comicPageRepository, Mockito.times(1)).findTopByHash(TEST_PAGE_HASH);
   }
 
   @Test
   public void testGetOneForHash_noneFound() {
-    Mockito.when(comicPageRepository.findByHash(Mockito.anyString()))
-        .thenReturn(Collections.emptyList());
+    Mockito.when(comicPageRepository.findTopByHash(Mockito.anyString())).thenReturn(null);
 
     final ComicPage result = service.getOneForHash(TEST_PAGE_HASH);
 
     assertNull(result);
 
-    Mockito.verify(comicPageRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
+    Mockito.verify(comicPageRepository, Mockito.times(1)).findTopByHash(TEST_PAGE_HASH);
   }
 
   @Test(expected = ComicBookException.class)

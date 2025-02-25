@@ -69,12 +69,12 @@ public class DuplicatePageServiceTest {
 
   @Test(expected = DuplicatePageException.class)
   public void testGetForHashNotFound() throws DuplicatePageException {
-    Mockito.when(comicPageRepository.findByHash(Mockito.anyString())).thenReturn(comicPageList);
+    Mockito.when(comicPageRepository.findAllByHash(Mockito.anyString())).thenReturn(comicPageList);
 
     try {
       service.getForHash(TEST_PAGE_HASH);
     } finally {
-      Mockito.verify(comicPageRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
+      Mockito.verify(comicPageRepository, Mockito.times(1)).findAllByHash(TEST_PAGE_HASH);
     }
   }
 
@@ -82,7 +82,7 @@ public class DuplicatePageServiceTest {
   public void testGetForHash() throws DuplicatePageException {
     comicPageList.add(comicPage);
 
-    Mockito.when(comicPageRepository.findByHash(Mockito.anyString())).thenReturn(comicPageList);
+    Mockito.when(comicPageRepository.findAllByHash(Mockito.anyString())).thenReturn(comicPageList);
 
     final DuplicatePage result = service.getForHash(TEST_PAGE_HASH);
 
@@ -90,6 +90,6 @@ public class DuplicatePageServiceTest {
     assertEquals(TEST_PAGE_HASH, result.getHash());
     assertTrue(result.getComics().contains(comicDetail));
 
-    Mockito.verify(comicPageRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
+    Mockito.verify(comicPageRepository, Mockito.times(1)).findAllByHash(TEST_PAGE_HASH);
   }
 }

@@ -95,7 +95,7 @@ public class DuplicatePageService {
   @Transactional
   public DuplicatePage getForHash(final String hash) throws DuplicatePageException {
     log.trace("Loading all pages with a given hash");
-    final List<ComicPage> pages = this.comicPageRepository.findByHash(hash);
+    final List<ComicPage> pages = this.comicPageRepository.findAllByHash(hash);
     if (pages.isEmpty()) {
       log.trace("Hash not found: raising exception");
       throw new DuplicatePageException("Hash not found: " + hash);

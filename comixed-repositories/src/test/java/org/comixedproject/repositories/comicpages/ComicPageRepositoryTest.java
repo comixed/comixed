@@ -24,6 +24,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
@@ -88,17 +89,17 @@ public class ComicPageRepositoryTest {
 
   @Test
   public void testFindByHashNotFound() {
-    final List<ComicPage> result = repository.findByHash(TEST_INVALID_HASH);
+    final ComicPage result = repository.findTopByHash(TEST_INVALID_HASH);
 
-    assertTrue(result.isEmpty());
+    assertNull(result);
   }
 
   @Test
   public void testFindByHash() {
-    final List<ComicPage> result = repository.findByHash(TEST_DUPLICATE_PAGE_HASH_1);
+    final ComicPage result = repository.findTopByHash(TEST_DUPLICATE_PAGE_HASH_1);
 
-    assertFalse(result.isEmpty());
-    assertEquals(TEST_DUPLICATE_PAGE_HASH_1, result.get(0).getHash());
+    assertNotNull(result);
+    assertEquals(TEST_DUPLICATE_PAGE_HASH_1, result.getHash());
   }
 
   @Test

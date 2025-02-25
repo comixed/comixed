@@ -53,7 +53,16 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
    * @param hash the page hash
    * @return the page
    */
-  List<ComicPage> findByHash(String hash);
+  ComicPage findTopByHash(String hash);
+
+  /**
+   * Finds all pages with a given hash.
+   *
+   * @param hash the page hash
+   * @return the page list
+   */
+  @Query("SELECT p FROM ComicPage p WHERE p.hash = :hash")
+  List<ComicPage> findAllByHash(@Param("hash") String hash);
 
   /**
    * Returns a list of Pages with duplicate hashes.
