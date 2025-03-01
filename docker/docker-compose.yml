@@ -1,16 +1,21 @@
-# Replace /config-path with the path for your database files.
-# Replace /comics-path with the path for your comic files.
+# /config is where plugins, extensions, and configuration files are placed.
+# /imports is where comics to be imported are placed
+# /library is where the comics library is maintaned
 
 version: "3.6"
 services:
   comixed:
-    image: "comixed/comixed"
-    container_name: "comixed"
+    image: comixed/comixed
+    container_name: comixed
     environment:
+      - PUID=1000
+      - PGID=1000
       - TZ=Etc/UTC
     volumes:
-      - "/config-path:/root/.comixed"
-      - "/comic-path:/comics"
+      - /path/to/library:/library
+      - /path/to/imports:/imports
+      - /path/to/config:/config
     ports:
-      - "0.0.0.0:7171:7171/tcp"
+      - 7171:7171
+    entrypoint: ["bash", "/app/comixed-release/bin/docker-run.sh", "-L", "/library/comixed.log", "-c", "/config"]
     restart: unless-stopped
