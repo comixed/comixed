@@ -13,3 +13,4 @@ what it is today.
  * J Fine <jfine@jfine.com>
  * Natalie Stroud @natastro
  * Heather Anderson <heath@odysseus.anderson.name>
+ * Sathwik Hejamady Bhat <sathwikhbhat@gmail.com>

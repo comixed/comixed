@@ -1,4 +1,4 @@
-FROM openjdk:17-jdk-slim
+FROM openjdk:21-jdk-slim
 
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
