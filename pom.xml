@@ -62,7 +62,7 @@
     <assembly.name>local</assembly.name>
     <maven-git-code-format.version>5.1</maven-git-code-format.version>
     <git-code-format-maven-plugin.version>4.2</git-code-format-maven-plugin.version>
-    <java.version>17</java.version>
+    <java.version>21</java.version>
     <sonar.organization>comixed</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.links.scm>https://github.com/comixed/comixed</sonar.links.scm>
