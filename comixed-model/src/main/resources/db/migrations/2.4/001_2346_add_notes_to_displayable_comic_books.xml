@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet id="001_2346_add_notes_to_displayable_comic_books.xml" author="mcpierce">
+
+      <createView viewName="displayable_comics_view" replaceIfExists="true">
+          SELECT DISTINCT d.comic_book_id   as comic_book_id,
+                          d.id              as comic_detail_id,
+                          d.archive_type    as archive_type,
+                          d.comic_state     as comic_state,
+                          CASE
+                              WHEN EXISTS(SELECT *
+                                          FROM comic_metadata_sources s
+                                          WHERE s.comic_book_id = d.comic_book_id)
+                                  THEN false
+                              ELSE true END AS is_unscraped,
+                          d.comic_type      as comic_type,
+                          d.publisher       as publisher,
+                          d.series          as series,
+                          d.volume          as volume,
+                          d.issue_number    as issue_number,
+                          (SELECT RIGHT(CONCAT('0000000000', d.issue_number), 10)) as sortable_issue_number, d.title as title, (
+          SELECT COUNT (*)
+          FROM comic_pages cp
+          WHERE cp.comic_book_id = d.comic_book_id) as page_count
+              , d.cover_date as cover_date
+              , CASE WHEN d.cover_date IS NULL THEN 0 ELSE MONTH (cover_date)
+          END
+          as month_published,
+                            CASE WHEN d.cover_date IS NULL THEN 0 ELSE YEAR (cover_date)
+          END
+          as year_published,
+                            d.store_date as store_date,
+                            d.added_date as added_date,
+          d.notes as notes,
+          d.description as description
+            FROM comic_details d
+          </createView>
+
+  </changeSet>
+</databaseChangeLog>
