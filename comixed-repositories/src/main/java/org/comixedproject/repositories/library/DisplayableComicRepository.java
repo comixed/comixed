@@ -144,7 +144,7 @@ public interface DisplayableComicRepository extends JpaRepository<DisplayableCom
    * @return the comics
    */
   @Query(
-      "SELECT COALESCE(0, sum(total)) FROM (SELECT count(*) AS total FROM DisplayableComic d WHERE d.publisher IS NOT NULL AND LENGTH(d.publisher) > 0 AND d.series IS NOT NULL AND LENGTH(d.series) > 0 AND d.volume IS NOT NULL AND LENGTH(d.volume) > 0 AND d.issueNumber IS NOT NULL AND LENGTH(d.issueNumber) > 0 AND d.coverDate IS NOT NULL GROUP BY d.publisher, d.series, d.volume, d.issueNumber, d.coverDate HAVING count(*) > 1)")
+      "SELECT COALESCE(SUM(COALESCE(total, 0)), 0) FROM (SELECT count(*) AS total FROM DisplayableComic d WHERE d.publisher IS NOT NULL AND LENGTH(d.publisher) > 0 AND d.series IS NOT NULL AND LENGTH(d.series) > 0 AND d.volume IS NOT NULL AND LENGTH(d.volume) > 0 AND d.issueNumber IS NOT NULL AND LENGTH(d.issueNumber) > 0 AND d.coverDate IS NOT NULL GROUP BY d.publisher, d.series, d.volume, d.issueNumber, d.coverDate HAVING count(*) > 1)")
   long getDuplicateComicCount();
 
   /**
