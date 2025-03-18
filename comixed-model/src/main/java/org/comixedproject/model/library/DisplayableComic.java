@@ -105,7 +105,20 @@ public class DisplayableComic {
   @Column(name = "title")
   @JsonView({View.ComicDetailsView.class})
   @Getter
+  @Setter
   private String title;
+
+  @Column(name = "notes")
+  @JsonView({View.ComicDetailsView.class})
+  @Getter
+  @Setter
+  private String notes;
+
+  @Column(name = "description")
+  @JsonView({View.ComicDetailsView.class})
+  @Getter
+  @Setter
+  private String description;
 
   @Column(name = "page_count")
   @JsonView({View.ComicDetailsView.class})

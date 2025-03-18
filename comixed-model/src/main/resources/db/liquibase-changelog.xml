@@ -10,5 +10,6 @@
   <include file="/db/migrations/2.1/changelog-2.1.xml"/>
   <include file="/db/migrations/2.2/changelog-2.2.xml"/>
   <include file="/db/migrations/2.3/changelog-2.3.xml"/>
+  <include file="/db/migrations/2.4/changelog-2.4.xml"/>
 
 </databaseChangeLog>
