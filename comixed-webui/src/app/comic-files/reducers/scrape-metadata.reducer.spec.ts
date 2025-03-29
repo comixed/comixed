@@ -23,10 +23,10 @@ import {
 } from './scrape-metadata.reducer';
 import { COMIC_DETAIL_2 } from '@app/comic-books/comic-books.fixtures';
 import {
-  metadataScrapedFromFilename,
+  scrapeMetadataFromFilenameSuccess,
   resetScrapedMetadata,
   scrapeMetadataFromFilename,
-  scrapeMetadataFromFilenameFailed
+  scrapeMetadataFromFilenameFailure
 } from '@app/comic-files/actions/scrape-metadata.actions';
 
 describe('ScrapeMetadata Reducer', () => {
@@ -126,7 +126,7 @@ describe('ScrapeMetadata Reducer', () => {
           volume: '',
           issueNumber: ''
         },
-        metadataScrapedFromFilename({
+        scrapeMetadataFromFilenameSuccess({
           found: FOUND,
           series: SERIES,
           volume: VOLUME,
@@ -160,7 +160,7 @@ describe('ScrapeMetadata Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: true, found: true },
-        scrapeMetadataFromFilenameFailed()
+        scrapeMetadataFromFilenameFailure()
       );
     });
 

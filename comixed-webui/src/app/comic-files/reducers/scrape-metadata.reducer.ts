@@ -18,10 +18,10 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  metadataScrapedFromFilename,
+  scrapeMetadataFromFilenameSuccess,
   resetScrapedMetadata,
   scrapeMetadataFromFilename,
-  scrapeMetadataFromFilenameFailed
+  scrapeMetadataFromFilenameFailure
 } from '@app/comic-files/actions/scrape-metadata.actions';
 
 export const SCRAPE_METADATA_FEATURE_KEY = 'scrape_metadata_state';
@@ -56,7 +56,7 @@ export const reducer = createReducer(
     ...state,
     busy: true
   })),
-  on(metadataScrapedFromFilename, (state, action) => ({
+  on(scrapeMetadataFromFilenameSuccess, (state, action) => ({
     ...state,
     busy: false,
     found: action.found,
@@ -64,7 +64,7 @@ export const reducer = createReducer(
     volume: action.volume,
     issueNumber: action.issueNumber
   })),
-  on(scrapeMetadataFromFilenameFailed, state => ({
+  on(scrapeMetadataFromFilenameFailure, state => ({
     ...state,
     busy: false,
     found: false

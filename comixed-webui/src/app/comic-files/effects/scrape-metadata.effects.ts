@@ -19,9 +19,9 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
-  metadataScrapedFromFilename,
+  scrapeMetadataFromFilenameSuccess,
   scrapeMetadataFromFilename,
-  scrapeMetadataFromFilenameFailed
+  scrapeMetadataFromFilenameFailure
 } from '../actions/scrape-metadata.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from '@app/core/services/alert.service';
@@ -51,7 +51,7 @@ export class ScrapeMetadataEffects {
               )
             ),
             map((response: FilenameMetadataResponse) =>
-              metadataScrapedFromFilename({
+              scrapeMetadataFromFilenameSuccess({
                 found: response.found,
                 series: response.series,
                 volume: response.volume,
@@ -63,7 +63,7 @@ export class ScrapeMetadataEffects {
               this.alertService.error(
                 this.translateService.instant('scrape-filename.effect-failure')
               );
-              return of(scrapeMetadataFromFilenameFailed());
+              return of(scrapeMetadataFromFilenameFailure());
             })
           )
       ),
@@ -72,7 +72,7 @@ export class ScrapeMetadataEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(scrapeMetadataFromFilenameFailed());
+        return of(scrapeMetadataFromFilenameFailure());
       })
     );
   });
