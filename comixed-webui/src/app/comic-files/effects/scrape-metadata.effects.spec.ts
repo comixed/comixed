@@ -28,9 +28,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FilenameMetadataResponse } from '@app/comic-files/models/net/filename-metadata-response';
 import {
-  metadataScrapedFromFilename,
+  scrapeMetadataFromFilenameSuccess,
   scrapeMetadataFromFilename,
-  scrapeMetadataFromFilenameFailed
+  scrapeMetadataFromFilenameFailure
 } from '@app/comic-files/actions/scrape-metadata.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -91,7 +91,7 @@ describe('ScrapeMetadataEffects', () => {
         issueNumber: ISSUE_NUMBER
       } as FilenameMetadataResponse;
       const action = scrapeMetadataFromFilename({ filename: FILENAME });
-      const outcome = metadataScrapedFromFilename({
+      const outcome = scrapeMetadataFromFilenameSuccess({
         found: FOUND,
         series: SERIES,
         volume: VOLUME,
@@ -111,7 +111,7 @@ describe('ScrapeMetadataEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = scrapeMetadataFromFilename({ filename: FILENAME });
-      const outcome = scrapeMetadataFromFilenameFailed();
+      const outcome = scrapeMetadataFromFilenameFailure();
 
       actions$ = hot('-a', { a: action });
       comicImportService.scrapeFilename
@@ -125,7 +125,7 @@ describe('ScrapeMetadataEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = scrapeMetadataFromFilename({ filename: FILENAME });
-      const outcome = scrapeMetadataFromFilenameFailed();
+      const outcome = scrapeMetadataFromFilenameFailure();
 
       actions$ = hot('-a', { a: action });
       comicImportService.scrapeFilename

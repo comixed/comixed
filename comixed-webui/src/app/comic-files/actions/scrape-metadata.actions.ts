@@ -27,7 +27,7 @@ export const scrapeMetadataFromFilename = createAction(
   props<{ filename: string }>()
 );
 
-export const metadataScrapedFromFilename = createAction(
+export const scrapeMetadataFromFilenameSuccess = createAction(
   '[Scrape Metadata] The metadata was scraped from the filename',
   props<{
     found: boolean;
@@ -37,6 +37,6 @@ export const metadataScrapedFromFilename = createAction(
   }>()
 );
 
-export const scrapeMetadataFromFilenameFailed = createAction(
+export const scrapeMetadataFromFilenameFailure = createAction(
   '[Scrape Metadata] Failed to scrape the metadata from a filename'
 );

@@ -162,6 +162,6 @@ public class ComicFileController {
     log.info("Scraping filename: {}", filename);
     final FilenameMetadata info = this.filenameScrapingRuleService.loadFilenameMetadata(filename);
     return new FilenameMetadataResponse(
-        false, info.getSeries(), info.getVolume(), info.getIssueNumber());
+        info.isFound(), info.getSeries(), info.getVolume(), info.getIssueNumber());
   }
 }
