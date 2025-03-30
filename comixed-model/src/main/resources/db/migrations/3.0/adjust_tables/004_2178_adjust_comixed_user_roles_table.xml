@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="004_2178_adjust_comixed_user_roles_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="comixed_user_roles"/>
+            <not>
+                <columnExists tableName="comixed_user_roles" columnName="comixed_user_role_id"/>
+            </not>
+        </preConditions>
+
+        <renameTable oldTableName="comixed_user_roles" newTableName="old_comixed_user_roles"/>
+
+        <createTable tableName="comixed_user_roles">
+            <column name="comixed_user_role_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="comixed_user_roles_v3_pk"/>
+            </column>
+
+            <column name="comixed_user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="comixed_role_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <sql>INSERT INTO comixed_user_roles(comixed_user_id, comixed_role_id)
+             SELECT comixed_user_id, comixed_role_id
+             FROM old_comixed_user_roles</sql>
+
+        <dropTable tableName="old_comixed_user_roles"/>
+
+        <addForeignKeyConstraint baseTableName="comixed_user_roles" baseColumnNames="comixed_user_id"
+                                 constraintName="comixed_user_rolec_comixed_user_fk"
+                                 referencedTableName="comixed_users"
+                                 referencedColumnNames="comixed_user_id"/>
+
+        <addForeignKeyConstraint baseTableName="comixed_user_roles" baseColumnNames="comixed_role_id"
+                                 constraintName="comixed_user_role_comixed_role_fk"
+                                 referencedTableName="comixed_roles"
+                                 referencedColumnNames="comixed_role_id"/>
+
+        <addUniqueConstraint tableName="comixed_user_roles" columnNames="comixed_user_id,comixed_role_id"
+                             constraintName="comixed_user_roles_uniq_comixed_user_and_role"/>
+
+    </changeSet>
+</databaseChangeLog>

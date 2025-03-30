@@ -38,9 +38,11 @@ import org.comixedproject.views.View;
 public class ComiXedUser {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "comixed_user_id")
+  @JsonProperty("comixedUserId")
   @JsonView(View.UserList.class)
   @Getter
-  private Long id;
+  private Long comixedUserId;
 
   @Column(name = "email", updatable = true, nullable = false, unique = true)
   @JsonView(View.UserList.class)

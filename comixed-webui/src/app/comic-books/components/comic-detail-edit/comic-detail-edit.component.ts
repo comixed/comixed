@@ -90,7 +90,7 @@ export class ComicDetailEditComponent implements OnInit, OnDestroy {
         this.imprintOptions = [
           {
             label: '---',
-            value: { id: -1, name: '', publisher: '' }
+            value: { imprintId: -1, name: '', publisher: '' }
           } as SelectionOption<Imprint>
         ].concat(
           imprints.map(imprint => {
@@ -110,7 +110,7 @@ export class ComicDetailEditComponent implements OnInit, OnDestroy {
       ...this._comicBook,
       detail: {
         ...this._comicBook.detail,
-        id: undefined,
+        comicDetailId: undefined,
         comicType: this.comicBookForm.controls.comicType.value,
         publisher: this.comicBookForm.controls.publisher.value,
         series: this.comicBookForm.controls.series.value,

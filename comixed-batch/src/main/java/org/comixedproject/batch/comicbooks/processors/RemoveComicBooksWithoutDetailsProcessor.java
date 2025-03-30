@@ -44,7 +44,7 @@ public class RemoveComicBooksWithoutDetailsProcessor
   @Override
   @Transactional
   public ComicBook process(final ComicBook comicBook) {
-    log.debug("Deleting comic book: id={}", comicBook.getId());
+    log.debug("Deleting comic book: id={}", comicBook.getComicBookId());
     this.comicBookService.deleteComicBook(comicBook);
     return null;
   }

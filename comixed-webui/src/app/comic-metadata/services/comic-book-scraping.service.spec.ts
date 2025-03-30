@@ -163,7 +163,9 @@ describe('ComicBookScrapingService', () => {
       .subscribe(response => expect(response).toEqual(VOLUMES));
 
     const req = httpMock.expectOne(
-      interpolate(LOAD_SCRAPING_VOLUMES_URL, { sourceId: METADATA_SOURCE.id })
+      interpolate(LOAD_SCRAPING_VOLUMES_URL, {
+        sourceId: METADATA_SOURCE.metadataSourceId
+      })
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
@@ -187,7 +189,7 @@ describe('ComicBookScrapingService', () => {
 
     const req = httpMock.expectOne(
       interpolate(LOAD_SCRAPING_ISSUE_URL, {
-        sourceId: METADATA_SOURCE.id,
+        sourceId: METADATA_SOURCE.metadataSourceId,
         volumeId: VOLUME_ID,
         issueNumber: ISSUE_NUMBER
       })
@@ -211,8 +213,8 @@ describe('ComicBookScrapingService', () => {
 
     const req = httpMock.expectOne(
       interpolate(SCRAPE_SINGLE_BOOK_COMIC_URL, {
-        sourceId: METADATA_SOURCE.id,
-        comicId: COMIC_BOOK.id
+        sourceId: METADATA_SOURCE.metadataSourceId,
+        comicId: COMIC_BOOK.comicBookId
       })
     );
     expect(req.request.method).toEqual('PUT');
@@ -267,7 +269,7 @@ describe('ComicBookScrapingService', () => {
 
     const req = httpMock.expectOne(
       interpolate(REMOVE_MULTI_BOOK_COMIC_URL, {
-        comicBookId: COMIC_BOOK.id,
+        comicBookId: COMIC_BOOK.comicBookId,
         pageSize: PAGE_SIZE
       })
     );
@@ -291,8 +293,8 @@ describe('ComicBookScrapingService', () => {
 
     const req = httpMock.expectOne(
       interpolate(SCRAPE_MULTI_BOOK_COMIC_URL, {
-        sourceId: METADATA_SOURCE.id,
-        comicBookId: COMIC_BOOK.id
+        sourceId: METADATA_SOURCE.metadataSourceId,
+        comicBookId: COMIC_BOOK.comicBookId
       })
     );
     expect(req.request.method).toEqual('POST');
@@ -414,7 +416,7 @@ describe('ComicBookScrapingService', () => {
       .subscribe(response => expect(response).toEqual(serviceResponse));
 
     const req = httpMock.expectOne(
-      interpolate(SCRAPE_SERIES_URL, { id: METADATA_SOURCE.id })
+      interpolate(SCRAPE_SERIES_URL, { id: METADATA_SOURCE.metadataSourceId })
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({

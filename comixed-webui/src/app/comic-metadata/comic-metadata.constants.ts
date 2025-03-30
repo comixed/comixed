@@ -31,7 +31,7 @@ export const METADATA_UPDATE_PROCESS_UPDATE_TOPIC =
   '/topic/metadata.update-process.update';
 
 export const METADATA_SOURCE_TEMPLATE: MetadataSource = {
-  id: null,
+  metadataSourceId: null,
   name: '',
   version: '',
   homepage: '',

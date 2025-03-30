@@ -258,7 +258,7 @@ export class ScrapingIssuesPageComponent implements OnInit, OnDestroy {
     this.store.dispatch(
       multiBookScrapingRemoveBook({
         comicBook: this.comicBooks.find(
-          entry => entry.id === comicDetail.comicId
+          entry => entry.comicBookId === comicDetail.comicId
         ),
         pageSize: this.queryParameterService.pageSize$.value
       })
@@ -267,7 +267,7 @@ export class ScrapingIssuesPageComponent implements OnInit, OnDestroy {
 
   onSelectComicBook(comicDetail: ComicDetail): void {
     const comicBook = this.comicBooks.find(
-      entry => entry.id === comicDetail.comicId
+      entry => entry.comicBookId === comicDetail.comicId
     );
     this.logger.debug('Selecting comic book:', comicDetail);
     this.store.dispatch(multiBookScrapingSetCurrentBook({ comicBook }));

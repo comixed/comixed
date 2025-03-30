@@ -25,7 +25,7 @@ export interface LibraryPluginProperty {
 }
 
 export interface LibraryPlugin {
-  id: number;
+  libraryPluginId: number;
   name: string;
   version: string;
   language: string;

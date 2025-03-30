@@ -155,8 +155,12 @@ describe('FilenameScrapingRulesConfigurationComponent', () => {
     });
 
     it('reorders the rules', () => {
-      expect(component.rules[0].id).toEqual(RULES[1].id);
-      expect(component.rules[1].id).toEqual(RULES[0].id);
+      expect(component.rules[0].filenameScrapingRuleId).toEqual(
+        RULES[1].filenameScrapingRuleId
+      );
+      expect(component.rules[1].filenameScrapingRuleId).toEqual(
+        RULES[0].filenameScrapingRuleId
+      );
     });
 
     it('updates the rule priorities', () => {

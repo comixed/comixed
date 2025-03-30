@@ -19,6 +19,7 @@
 package org.comixedproject.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -45,9 +46,11 @@ public class ComiXedRole {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "comixed_role_id")
+  @JsonProperty("comixedRoleId")
   @JsonIgnore
   @Getter
-  private Long id;
+  private Long comixedRoleId;
 
   @Column(name = "name", updatable = true, nullable = false, unique = true)
   @JsonView(UserList.class)
@@ -65,11 +68,11 @@ public class ComiXedRole {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final ComiXedRole role = (ComiXedRole) o;
-    return Objects.equals(id, role.id) && Objects.equals(name, role.name);
+    return Objects.equals(comixedRoleId, role.comixedRoleId) && Objects.equals(name, role.name);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name);
+    return Objects.hash(comixedRoleId, name);
   }
 }

@@ -72,17 +72,17 @@
     <mat-header-cell mat-sort-header *matHeaderCellDef></mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <button
-        *ngIf="!entry.id"
+        *ngIf="!entry.storyId"
         mat-icon-button
         [matTooltip]="'story-list.tooltip.scrape-story' | translate"
       >
         <mat-icon>cloud_circle</mat-icon>
       </button>
       <button
-        *ngIf="!!entry.id"
+        *ngIf="!!entry.storyId"
         mat-icon-button
         [matTooltip]="'story-list.tooltip.view-story' | translate"
-        [routerLink]="['/lists', 'stories', entry.id]"
+        [routerLink]="['/lists', 'stories', entry.storyId]"
       >
         <mat-icon>info</mat-icon>
       </button>

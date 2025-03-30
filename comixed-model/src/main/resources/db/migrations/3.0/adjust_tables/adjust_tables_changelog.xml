@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!-- the migrations are only to support users migrating from  pre-3.0 releases -->
+
+    <include file="/db/migrations/3.0/adjust_tables/001_2178_adjust_comixed_users_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/002_2178_adjust_comixed_user_preferences_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/003_2178_adjust_comixed_roles_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/004_2178_adjust_comixed_user_roles_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/005_2178_adjust_blocked_hashes_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/006_2178_adjust_configuration_options_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/007_2178_adjust_filename_scraping_rules_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/008_2178_adjust_imprints_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/009_2178_adjust_issues_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/010_2178_adjust_library_plugins_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/011_2178_adjust_library_plugin_properties_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/012_2178_adjust_comic_books_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/013_2178_adjust_comic_pages_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/014_2178_adjust_comic_details_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/015_2178_adjust_metadata_cache_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/016_2178_adjust_metadata_cache_entries_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/017_2178_adjust_metadata_sources_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/018_2178_adjust_metadata_source_properties_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/019_2178_adjust_comic_metadata_sources_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/020_2178_adjust_read_comic_books_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/021_2178_adjust_reading_lists_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/022_2178_adjust_reading_list_entries_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/023_2178_adjust_stories_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/024_2178_adjust_story_entries_table.xml"/>
+    <include file="/db/migrations/3.0/adjust_tables/025_2178_adjust_comic_tags_table.xml"/>
+
+</databaseChangeLog>

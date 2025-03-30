@@ -110,7 +110,7 @@ public class ComicBookService {
             result.getComicDetail().getCoverDate(),
             Limit.of(1)));
 
-    log.debug("Returning comic: id={}", result.getId());
+    log.debug("Returning comic: id={}", result.getComicBookId());
     return result;
   }
 
@@ -133,7 +133,7 @@ public class ComicBookService {
    * @throws ComicBookException if the comic id is invalid
    */
   @Transactional
-  @CacheEvict(key = "#result.id")
+  @CacheEvict(key = "#result.comicBookId")
   public ComicBook deleteComicBook(final long id) throws ComicBookException {
     log.debug("Marking comic for deletion: id={}", id);
     final var comic = this.doGetComic(id);
@@ -150,7 +150,7 @@ public class ComicBookService {
    * @throws ComicBookException if the id is invalid
    */
   @Transactional
-  @CachePut(key = "#result.id")
+  @CachePut(key = "#result.comicBookId")
   public ComicBook updateComic(final long id, final ComicBook update) throws ComicBookException {
     log.debug("Updating comic: id={}", id);
     final var comic = this.doGetComic(id);
@@ -183,7 +183,7 @@ public class ComicBookService {
    * @return the saved comicBook
    */
   @Transactional
-  @CacheEvict(cacheNames = COMICBOOK_CACHE, key = "#result.id")
+  @CacheEvict(cacheNames = COMICBOOK_CACHE, key = "#result.comicBookId")
   public ComicBook save(final ComicBook comicBook) {
     log.debug("Saving comicBook: filename={}", comicBook.getComicDetail().getFilename());
 
@@ -228,7 +228,7 @@ public class ComicBookService {
    * @throws ComicBookException if the comic id is invalid
    */
   @Transactional
-  @CachePut(key = "#result.id")
+  @CachePut(key = "#result.comicBookId")
   public ComicBook undeleteComicBook(final long id) throws ComicBookException {
     log.debug("Restoring comic: id={}", id);
     final var comic = this.doGetComic(id);
@@ -246,7 +246,7 @@ public class ComicBookService {
     log.trace("Removing read references");
     comicBook.getComicDetail().getReadByUserIds().clear();
     this.comicTagRepository.deleteAllByComicDetail(comicBook.getComicDetail());
-    log.debug("Deleting comicBook: id={}", comicBook.getId());
+    log.debug("Deleting comicBook: id={}", comicBook.getComicBookId());
     this.comicBookRepository.delete(comicBook);
   }
 
@@ -268,7 +268,7 @@ public class ComicBookService {
    * @return the comic
    */
   @Transactional
-  @CachePut(key = "#result.id")
+  @CachePut(key = "#result.comicBookId")
   public ComicBook findByFilename(final String filename) {
     return this.comicBookRepository.findByFilename(filename);
   }
@@ -281,7 +281,7 @@ public class ComicBookService {
    * @throws ComicBookException if the comic id is invalid
    */
   @Transactional
-  @CachePut(key = "#result.id")
+  @CachePut(key = "#result.comicBookId")
   public ComicBook deleteMetadata(final long comicId) throws ComicBookException {
     log.debug("Loading comic: id={}", comicId);
     final var comic = this.doGetComic(comicId);
@@ -441,7 +441,7 @@ public class ComicBookService {
         id -> {
           try {
             final ComicBook comicBook = this.doGetComic(id);
-            log.trace("Marking comicBook for deletion: id={}", comicBook.getId());
+            log.trace("Marking comicBook for deletion: id={}", comicBook.getComicBookId());
             this.comicStateHandler.fireEvent(comicBook, ComicEvent.deleteComic);
           } catch (ComicBookException error) {
             log.error("Failed to load comic", error);
@@ -460,7 +460,7 @@ public class ComicBookService {
         id -> {
           try {
             final ComicBook comicBook = this.doGetComic(id);
-            log.trace("Unmarking comicBook for deletion: id={}", comicBook.getId());
+            log.trace("Unmarking comicBook for deletion: id={}", comicBook.getComicBookId());
             this.comicStateHandler.fireEvent(comicBook, ComicEvent.undeleteComic);
           } catch (ComicBookException error) {
             log.error("Failed to load comic", error);
@@ -934,7 +934,7 @@ public class ComicBookService {
   public void markComicAsFound(final String filename) {
     final ComicBook comicBook = this.comicBookRepository.findByFilename(filename);
     if (Objects.nonNull(comicBook)) {
-      log.debug("Marking comic book as found: id={}", comicBook.getId());
+      log.debug("Marking comic book as found: id={}", comicBook.getComicBookId());
       this.comicStateHandler.fireEvent(comicBook, ComicEvent.markAsFound);
     }
   }
@@ -948,7 +948,7 @@ public class ComicBookService {
   public void markComicAsMissing(final String filename) {
     final ComicBook comicBook = this.comicBookRepository.findByFilename(filename);
     if (Objects.nonNull(comicBook)) {
-      log.debug("Marking comic book as missing: id={}", comicBook.getId());
+      log.debug("Marking comic book as missing: id={}", comicBook.getComicBookId());
       this.comicStateHandler.fireEvent(comicBook, ComicEvent.markAsMissing);
     }
   }

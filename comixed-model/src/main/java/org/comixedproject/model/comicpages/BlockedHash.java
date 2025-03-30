@@ -40,10 +40,11 @@ import org.hibernate.annotations.Formula;
 public class BlockedHash {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonProperty("id")
+  @Column(name = "blocked_hash_id")
+  @JsonProperty("blockedHashId")
   @JsonView(View.BlockedHashList.class)
   @Getter
-  private Long id;
+  private Long blockedHashId;
 
   @Column(name = "label", nullable = true, updatable = true, length = 128)
   @JsonProperty("label")
@@ -75,7 +76,7 @@ public class BlockedHash {
   private Date createdOn = new Date();
 
   @Formula(
-      "(SELECT COUNT(*) FROM comic_books c WHERE c.id IN (SELECT p.comic_book_id FROM comic_pages p WHERE p.file_hash = hash_value))")
+      "(SELECT COUNT(*) FROM comic_books c WHERE c.comic_book_id IN (SELECT p.comic_book_id FROM comic_pages p WHERE p.file_hash = hash_value))")
   @JsonProperty("comicCount")
   @JsonView(View.BlockedHashList.class)
   @Getter

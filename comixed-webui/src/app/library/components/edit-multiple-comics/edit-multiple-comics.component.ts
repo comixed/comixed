@@ -78,7 +78,7 @@ export class EditMultipleComicsComponent implements OnInit, OnDestroy {
         this.imprintOptions = [
           {
             label: '---',
-            value: { id: -1, name: '', publisher: '' }
+            value: { imprintId: -1, name: '', publisher: '' }
           } as SelectionOption<Imprint>
         ].concat(
           imprints.map(imprint => {

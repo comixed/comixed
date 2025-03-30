@@ -315,7 +315,7 @@ describe('MultiBookScraping Reducer', () => {
 
   describe('removing a book from the process', () => {
     const UPDATED_COMIC_DETAILS = COMIC_BOOKS.filter(
-      entry => entry.id != CURRENT_COMIC_BOOK.id
+      entry => entry.comicBookId != CURRENT_COMIC_BOOK.comicBookId
     );
 
     beforeEach(() => {

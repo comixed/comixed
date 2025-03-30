@@ -36,14 +36,15 @@ import org.hibernate.annotations.Formula;
 @Log4j2
 @NoArgsConstructor
 @RequiredArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "comicPageId")
 public class ComicPage {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonProperty("id")
+  @Column(name = "comic_page_id")
+  @JsonProperty("comicPageId")
   @JsonView({View.ComicDetailsView.class})
   @Getter
-  private Long id;
+  private Long comicPageId;
 
   @ManyToOne
   @JoinColumn(name = "comic_book_id")
@@ -148,7 +149,7 @@ public class ComicPage {
   @Override
   public int hashCode() {
     return Objects.hash(
-        getId(),
+        getComicPageId(),
         getComicBook(),
         getPageState(),
         getFilename(),

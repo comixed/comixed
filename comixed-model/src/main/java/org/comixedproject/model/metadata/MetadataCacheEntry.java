@@ -32,8 +32,9 @@ import lombok.Setter;
 public class MetadataCacheEntry {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "metadata_cache_entry_id")
   @Getter
-  private Long id;
+  private Long metadataCacheEntryId;
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "metadata_cache_id", updatable = false, nullable = false)

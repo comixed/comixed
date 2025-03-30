@@ -45,7 +45,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the list of comics
    */
   @Query(
-      "SELECT d FROM ComicDetail d WHERE d.id NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb)")
+      "SELECT d FROM ComicDetail d WHERE d.comicDetailId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb)")
   List<ComicDetail> findAllUnreadByUser(@Param("userId") long userId);
 
   /**
@@ -67,11 +67,11 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   List<ComicBook> findBySeries(@Param("series") String series);
 
   @Query(
-      "SELECT c FROM ComicBook c LEFT JOIN FETCH c.comicDetail LEFT JOIN FETCH c.metadata mds LEFT JOIN FETCH c.pages WHERE c.id = :id")
+      "SELECT c FROM ComicBook c LEFT JOIN FETCH c.comicDetail LEFT JOIN FETCH c.metadata mds LEFT JOIN FETCH c.pages WHERE c.comicBookId = :id")
   ComicBook getById(@Param("id") long id);
 
   @Query(
-      "SELECT c.id FROM ComicBook c WHERE c.comicDetail.series = :series AND c.comicDetail.volume = :volume AND c.comicDetail.issueNumber <> :issueNumber AND c.comicDetail.coverDate <= :coverDate ORDER BY c.comicDetail.coverDate, c.comicDetail.issueNumber DESC")
+      "SELECT c.comicBookId FROM ComicBook c WHERE c.comicDetail.series = :series AND c.comicDetail.volume = :volume AND c.comicDetail.issueNumber <> :issueNumber AND c.comicDetail.coverDate <= :coverDate ORDER BY c.comicDetail.coverDate, c.comicDetail.issueNumber DESC")
   Long findPreviousComicBookIdInSeries(
       @Param("series") final String series,
       @Param("volume") final String volume,
@@ -80,7 +80,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
       final Limit limit);
 
   @Query(
-      "SELECT c.id FROM ComicBook c WHERE c.comicDetail.series = :series AND c.comicDetail.volume = :volume AND c.comicDetail.issueNumber <> :issueNumber AND c.comicDetail.coverDate >= :coverDate ORDER BY c.comicDetail.coverDate, c.comicDetail.issueNumber ASC")
+      "SELECT c.comicBookId FROM ComicBook c WHERE c.comicDetail.series = :series AND c.comicDetail.volume = :volume AND c.comicDetail.issueNumber <> :issueNumber AND c.comicDetail.coverDate >= :coverDate ORDER BY c.comicDetail.coverDate, c.comicDetail.issueNumber ASC")
   Long findNextComicBookIdInSeries(
       @Param("series") String series,
       @Param("volume") String volume,
@@ -88,7 +88,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
       @Param("coverDate") Date coverDate,
       final Limit limit);
 
-  @Query("SELECT c FROM ComicBook c ORDER BY c.id")
+  @Query("SELECT c FROM ComicBook c ORDER BY c.comicBookId")
   List<ComicBook> findComicsToMove(Pageable pageable);
 
   /**
@@ -288,7 +288,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the comics
    */
   @Query(
-      "SELECT d FROM ComicDetail d WHERE d.id IN (SELECT t.comicDetail.id FROM ComicTag t WHERE t.type = 'CHARACTER' AND t.value = :name) ORDER BY d.coverDate")
+      "SELECT d FROM ComicDetail d WHERE d.comicDetailId IN (SELECT t.comicDetail.comicDetailId FROM ComicTag t WHERE t.type = 'CHARACTER' AND t.value = :name) ORDER BY d.coverDate")
   List<ComicDetail> findAllByCharacters(@Param("name") String name);
 
   /**
@@ -352,7 +352,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the publishers
    */
   @Query(
-      "SELECT DISTINCT d.publisher FROM ComicDetail d WHERE d.id IN (SELECT t.comicDetail.id FROM ComicTag t WHERE t.type = 'STORY' AND t.value = :name)")
+      "SELECT DISTINCT d.publisher FROM ComicDetail d WHERE d.comicDetailId IN (SELECT t.comicDetail.comicDetailId FROM ComicTag t WHERE t.type = 'STORY' AND t.value = :name)")
   List<String> findDistinctPublishersForStory(@Param("name") String name);
 
   /**
@@ -543,7 +543,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the record count
    */
   @Query(
-      "SELECT COUNT(c) FROM ComicBook c WHERE c.id NOT IN (SELECT s.comicBook.id FROM ComicMetadataSource s)")
+      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicBookId NOT IN (SELECT s.comicBook.comicBookId FROM ComicMetadataSource s)")
   long getUnscrapedComicCount();
 
   /**
@@ -552,12 +552,13 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param chunkSize the batch chunk size
    * @return the list of comic books
    */
-  @Query("SELECT c FROM ComicBook c WHERE c.id NOT IN (SELECT d.comicBook.id FROM ComicDetail d)")
+  @Query(
+      "SELECT c FROM ComicBook c WHERE c.comicBookId NOT IN (SELECT d.comicBook.comicBookId FROM ComicDetail d)")
   List<ComicBook> getComicBooksWithoutDetails(int chunkSize);
 
   @Modifying
   @Query(
-      "UPDATE ComicBook c SET c.organizing = true WHERE c.id IN (:ids) AND c.organizing IS FALSE")
+      "UPDATE ComicBook c SET c.organizing = true WHERE c.comicBookId IN (:ids) AND c.organizing IS FALSE")
   void markForOrganizationById(@Param("ids") List<Long> ids);
 
   @Modifying
@@ -566,14 +567,14 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
 
   @Modifying
   @Query(
-      "UPDATE ComicBook c SET c.targetArchiveType = :archiveType, c.renamePages = :renamePages, c.deletePages = :deletePages WHERE c.id IN (:ids)")
+      "UPDATE ComicBook c SET c.targetArchiveType = :archiveType, c.renamePages = :renamePages, c.deletePages = :deletePages WHERE c.comicBookId IN (:ids)")
   void markForRecreationById(
       @Param("ids") List<Long> ids,
       @Param("archiveType") final ArchiveType archiveType,
       @Param("renamePages") final boolean renamePages,
       @Param("deletePages") final boolean deletePages);
 
-  @Query("SELECT b FROM ComicBook b WHERE  b.id IN :comicDetailIds")
+  @Query("SELECT b FROM ComicBook b WHERE  b.comicBookId IN :comicDetailIds")
   List<ComicBook> loadByComicDetailId(@Param("comicDetailIds") List<Long> comicDetailIds);
 
   /**
@@ -582,12 +583,12 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the list of comic books
    */
   @Query(
-      "SELECT COUNT(b) FROM ComicBook b WHERE b.id IN (select d.comicBook.id FROM ComicDetail d WHERE d.comicState = 'UNPROCESSED')")
+      "SELECT COUNT(b) FROM ComicBook b WHERE b.comicBookId IN (select d.comicBook.comicBookId FROM ComicDetail d WHERE d.comicState = 'UNPROCESSED')")
   long getUnprocessedComicBookCount();
 
   @Modifying
   @Query(
-      "UPDATE ComicBook c SET c.updateMetadata = true WHERE c.id IN (:ids) AND c.updateMetadata IS FALSE")
+      "UPDATE ComicBook c SET c.updateMetadata = true WHERE c.comicBookId IN (:ids) AND c.updateMetadata IS FALSE")
   void prepareForMetadataUpdate(@Param("ids") List<Long> ids);
 
   @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.updateMetadata IS TRUE")
@@ -598,7 +599,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
 
   @Modifying
   @Query(
-      "UPDATE ComicBook c SET c.batchScraping = true WHERE c.id IN (:ids) AND c.batchScraping IS FALSE AND c.metadata IS NOT NULL")
+      "UPDATE ComicBook c SET c.batchScraping = true WHERE c.comicBookId IN (:ids) AND c.batchScraping IS FALSE AND c.metadata IS NOT NULL")
   void prepareForBatchScraping(@Param("ids") List<Long> ids);
 
   /**
@@ -634,7 +635,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    *
    * @return the id list
    */
-  @Query("SELECT c.id FROM ComicBook c")
+  @Query("SELECT c.comicBookId FROM ComicBook c")
   List<Long> getAllIds();
 
   /** Sets the purging flag for all comics int he DELETED state. */
@@ -648,6 +649,6 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param comicBookId the comic book id
    */
   @Modifying
-  @Query("UPDATE ComicBook c SET c.organizing = false WHERE c.id = :comicBookId")
+  @Query("UPDATE ComicBook c SET c.organizing = false WHERE c.comicBookId = :comicBookId")
   void clearOrganizingFlag(@Param("comicBookId") Long comicBookId);
 }

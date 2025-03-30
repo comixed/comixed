@@ -69,7 +69,7 @@ public class StoryService implements InitializingBean, StoryStateChangeListener 
     if (story == null) {
       return;
     }
-    log.trace("Updating story state: [{}] =>  {}", story.getId(), state.getId());
+    log.trace("Updating story state: [{}] =>  {}", story.getStoryId(), state.getId());
     story.setStoryState(state.getId());
     log.trace("Updating last modified date");
     story.setModifiedOn(new Date());
@@ -120,7 +120,7 @@ public class StoryService implements InitializingBean, StoryStateChangeListener 
         .findByName(name)
         .forEach(
             story -> {
-              log.trace("Adding story: id={}", story.getId());
+              log.trace("Adding story: id={}", story.getStoryId());
               result.add(story);
             });
     this.comicBookService
@@ -148,7 +148,7 @@ public class StoryService implements InitializingBean, StoryStateChangeListener 
     log.trace("Firing event: story saved");
     this.storyStateHandler.fireEvent(story, StoryEvent.saved);
     log.trace("Returning saved story");
-    return this.doGetStory(story.getId());
+    return this.doGetStory(story.getStoryId());
   }
 
   private Story doGetStory(final long id) throws StoryException {

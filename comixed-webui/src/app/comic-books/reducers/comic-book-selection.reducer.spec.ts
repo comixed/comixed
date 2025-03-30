@@ -73,7 +73,7 @@ describe('ComicBookSelection Reducer', () => {
   ];
   const TAG_TYPE = ComicTagType.TEAM;
   const TAG_VALUE = 'Some team';
-  const IDS = COMIC_BOOKS.map(comicBook => comicBook.id);
+  const IDS = COMIC_BOOKS.map(comicBook => comicBook.comicBookId);
   const PUBLISHER = PUBLISHER_1.name;
   const SERIES = SERIES_1.name;
   const VOLUME = '2024';

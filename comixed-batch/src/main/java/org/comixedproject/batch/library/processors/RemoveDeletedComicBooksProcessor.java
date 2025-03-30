@@ -53,7 +53,7 @@ public class RemoveDeletedComicBooksProcessor
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
-    log.debug("Removing comicBook from database: id={}", comicBook.getId());
+    log.debug("Removing comicBook from database: id={}", comicBook.getComicBookId());
     this.comicBookService.deleteComicBook(comicBook);
     if (Boolean.parseBoolean(
         this.executionContext.getString(

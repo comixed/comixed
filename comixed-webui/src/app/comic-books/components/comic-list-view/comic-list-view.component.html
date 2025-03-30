@@ -295,7 +295,9 @@
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row
     *matRowDef="let row; columns: displayedColumns"
-    [class.cx-selected-row]="selectedIds.includes(row.id) || row.selected"
+    [class.cx-selected-row]="
+      selectedIds.includes(row.comicBookId) || row.selected
+    "
     [class.cx-missing-comic-file]="row.item.missing"
     [routerLink]="['/comics', row.item.comicBookId]"
   ></mat-row>

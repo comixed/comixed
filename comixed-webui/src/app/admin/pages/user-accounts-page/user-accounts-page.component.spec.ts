@@ -257,7 +257,7 @@ describe('UserAccountsPageComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         saveUserAccount({
-          id: USER.id,
+          id: USER.comixedUserId,
           email: USER.email,
           password: PASSWORD,
           admin: isAdmin(USER)
@@ -285,7 +285,7 @@ describe('UserAccountsPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        deleteUserAccount({ id: USER.id, email: USER.email })
+        deleteUserAccount({ id: USER.comixedUserId, email: USER.email })
       );
     });
   });

@@ -84,16 +84,16 @@ public class ScrapeMetadataProcessor
       return comicBook;
     }
 
-    log.debug("Batch scraping comic book: id={}", comicBook.getId());
+    log.debug("Batch scraping comic book: id={}", comicBook.getComicBookId());
     try {
       final ComicMetadataSource metadata = comicBook.getMetadata();
-      log.debug("Turning off batch scraping flag: id={}", comicBook.getId());
+      log.debug("Turning off batch scraping flag: id={}", comicBook.getComicBookId());
       comicBook.setBatchScraping(false);
       this.comicBookService.save(comicBook);
       log.debug("Scraping comic");
       this.metadataService.scrapeComic(
-          metadata.getMetadataSource().getId(),
-          comicBook.getId(),
+          metadata.getMetadataSource().getMetadataSourceId(),
+          comicBook.getComicBookId(),
           metadata.getReferenceId(),
           false);
     } catch (Exception error) {

@@ -20,7 +20,7 @@ import { Role } from '@app/user/models/role';
 import { Preference } from '@app/user/models/preference';
 
 export interface User {
-  id: number;
+  comixedUserId: number;
   email: string;
   firstLoginDate: number;
   lastLoginDate: number;

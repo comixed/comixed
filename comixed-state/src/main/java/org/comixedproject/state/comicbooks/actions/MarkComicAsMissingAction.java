@@ -18,7 +18,6 @@
 
 package org.comixedproject.state.comicbooks.actions;
 
-import javax.swing.*;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
@@ -37,7 +36,7 @@ public class MarkComicAsMissingAction extends AbstractComicAction {
   @Override
   public void execute(final StateContext<ComicState, ComicEvent> context) {
     final ComicBook comicBook = this.fetchComic(context);
-    log.debug("Marking comic book as missing: id={}", comicBook.getId());
+    log.debug("Marking comic book as missing: id={}", comicBook.getComicBookId());
     comicBook.getComicDetail().setMissing(true);
   }
 }

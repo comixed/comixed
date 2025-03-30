@@ -85,7 +85,7 @@ describe('LoadReadingList Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, loading: false, notFound: true, list: READING_LIST },
-        loadReadingList({ id: READING_LIST.id })
+        loadReadingList({ id: READING_LIST.readingListId })
       );
     });
 

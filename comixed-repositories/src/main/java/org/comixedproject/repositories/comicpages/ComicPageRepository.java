@@ -44,7 +44,7 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
    * @param id the record id
    * @return the page
    */
-  @Query("SELECT p FROM ComicPage p WHERE p.id = :id")
+  @Query("SELECT p FROM ComicPage p WHERE p.comicPageId = :id")
   ComicPage getById(@Param("id") long id);
 
   /**
@@ -157,16 +157,17 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
    * @param comicBookId the comic book id
    * @return the page id
    */
-  @Query("SELECT p.id FROM ComicPage p WHERE p.comicBook.id = :comicBookId AND p.pageNumber = 0")
+  @Query(
+      "SELECT p.comicPageId FROM ComicPage p WHERE p.comicBook.comicBookId = :comicBookId AND p.pageNumber = 0")
   Long getPageIdForComicBookCover(@Param("comicBookId") long comicBookId);
 
-  @Query("SELECT p.comicBook.comicDetail.filename FROM ComicPage p WHERE p.id = :pageId")
+  @Query("SELECT p.comicBook.comicDetail.filename FROM ComicPage p WHERE p.comicPageId = :pageId")
   String getComicFilenameForPage(@Param("pageId") Long pageId);
 
-  @Query("SELECT p.filename FROM ComicPage p WHERE p.id = :pageId")
+  @Query("SELECT p.filename FROM ComicPage p WHERE p.comicPageId = :pageId")
   String getPageFilename(@Param("pageId") long pageId);
 
-  @Query("SELECT p.hash FROM ComicPage p WHERE p.id = :pageId")
+  @Query("SELECT p.hash FROM ComicPage p WHERE p.comicPageId = :pageId")
   String getHashForPage(@Param("pageId") long pageId);
 
   @Query(

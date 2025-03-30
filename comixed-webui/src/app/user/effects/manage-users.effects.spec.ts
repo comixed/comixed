@@ -202,7 +202,7 @@ describe('ManageUsersEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = USERS;
       const action = saveUserAccount({
-        id: USER.id,
+        id: USER.comixedUserId,
         email: USER.email,
         password: PASSWORD,
         admin: false
@@ -212,7 +212,7 @@ describe('ManageUsersEffects', () => {
       actions$ = hot('-a', { a: action });
       userService.saveUserAccount
         .withArgs({
-          id: USER.id,
+          id: USER.comixedUserId,
           email: USER.email,
           password: PASSWORD,
           admin: false
@@ -227,7 +227,7 @@ describe('ManageUsersEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = saveUserAccount({
-        id: USER.id,
+        id: USER.comixedUserId,
         email: USER.email,
         password: PASSWORD,
         admin: false
@@ -237,7 +237,7 @@ describe('ManageUsersEffects', () => {
       actions$ = hot('-a', { a: action });
       userService.saveUserAccount
         .withArgs({
-          id: USER.id,
+          id: USER.comixedUserId,
           email: USER.email,
           password: PASSWORD,
           admin: false
@@ -251,7 +251,7 @@ describe('ManageUsersEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = saveUserAccount({
-        id: USER.id,
+        id: USER.comixedUserId,
         email: USER.email,
         password: PASSWORD,
         admin: false
@@ -261,7 +261,7 @@ describe('ManageUsersEffects', () => {
       actions$ = hot('-a', { a: action });
       userService.saveUserAccount
         .withArgs({
-          id: USER.id,
+          id: USER.comixedUserId,
           email: USER.email,
           password: PASSWORD,
           admin: false
@@ -277,14 +277,17 @@ describe('ManageUsersEffects', () => {
   describe('deleting a user account', () => {
     it('fires an action on success', () => {
       const serviceResponse = USERS;
-      const action = deleteUserAccount({ id: USER.id, email: USER.email });
+      const action = deleteUserAccount({
+        id: USER.comixedUserId,
+        email: USER.email
+      });
       const outcome1 = deleteUserAccountSuccess({ users: USERS });
       const outcome2 = loadUserAccountList();
       const outcome3 = setCurrentUser({ user: null });
 
       actions$ = hot('-a', { a: action });
       userService.deleteUserAccount
-        .withArgs({ id: USER.id })
+        .withArgs({ id: USER.comixedUserId })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-(bcd)', { b: outcome1, c: outcome2, d: outcome3 });
@@ -294,12 +297,15 @@ describe('ManageUsersEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = deleteUserAccount({ id: USER.id, email: USER.email });
+      const action = deleteUserAccount({
+        id: USER.comixedUserId,
+        email: USER.email
+      });
       const outcome = deleteUserAccountFailure();
 
       actions$ = hot('-a', { a: action });
       userService.deleteUserAccount
-        .withArgs({ id: USER.id })
+        .withArgs({ id: USER.comixedUserId })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -308,12 +314,15 @@ describe('ManageUsersEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = deleteUserAccount({ id: USER.id, email: USER.email });
+      const action = deleteUserAccount({
+        id: USER.comixedUserId,
+        email: USER.email
+      });
       const outcome = deleteUserAccountFailure();
 
       actions$ = hot('-a', { a: action });
       userService.deleteUserAccount
-        .withArgs({ id: USER.id })
+        .withArgs({ id: USER.comixedUserId })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });

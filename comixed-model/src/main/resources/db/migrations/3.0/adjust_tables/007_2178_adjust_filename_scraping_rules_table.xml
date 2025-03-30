@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="007_2178_adjust_filename_scraping_rules_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="filename_scraping_rules"/>
+            <not>
+                <columnExists tableName="filename_scraping_rules" columnName="filename_scraping_rule_id"/>
+            </not>
+        </preConditions>
+
+        <renameTable oldTableName="filename_scraping_rules" newTableName="old_filename_scraping_rules"/>
+
+        <createTable tableName="filename_scraping_rules">
+            <column name="filename_scraping_rule_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="filename_scraping_rules_v3_pk"/>
+            </column>
+
+            <column name="rule_name" type="varchar(128)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="rule" type="varchar(256)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="priority" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="series_position" type="int">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="volume_position" type="int">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="issue_number_position" type="int">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="cover_date_position" type="int">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="date_format" type="varchar(32)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="last_modified_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <sql>INSERT INTO filename_scraping_rules(filename_scraping_rule_id, rule_name, rule, priority, series_position,
+                                                 volume_position, issue_number_position, cover_date_position,
+                                                 date_format, last_modified_on)
+             SELECT id,
+                    rule_name,
+                    rule,
+                    priority,
+                    series_position,
+                    volume_position,
+                    issue_number_position,
+                    cover_date_position,
+                    date_format,
+                    last_modified_on
+             FROM old_filename_scraping_rules</sql>
+
+        <dropTable tableName="old_filename_scraping_rules"/>
+
+    </changeSet>
+</databaseChangeLog>

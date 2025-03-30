@@ -27,7 +27,7 @@ import {
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { Page } from '@app/comic-books/models/page';
+import { ComicPage } from '@app/comic-books/models/comic-page';
 import { TranslateService } from '@ngx-translate/core';
 import { updatePageDeletion } from '@app/comic-books/actions/comic-book.actions';
 import { MatTableDataSource } from '@angular/material/table';
@@ -49,7 +49,7 @@ export class ComicPagesComponent implements AfterViewInit {
   @Input() showPagesAsGrid = true;
   @Input() isAdmin = false;
 
-  @Output() pagesChanged = new EventEmitter<Page[]>();
+  @Output() pagesChanged = new EventEmitter<ComicPage[]>();
 
   readonly displayedColumns = [
     'page-number',
@@ -57,8 +57,8 @@ export class ComicPagesComponent implements AfterViewInit {
     'filename',
     'dimensions'
   ];
-  dataSource = new MatTableDataSource<Page>([]);
-  page: Page;
+  dataSource = new MatTableDataSource<ComicPage>([]);
+  page: ComicPage;
   contextMenuX = '';
   contextMenuY = '';
 
@@ -69,12 +69,12 @@ export class ComicPagesComponent implements AfterViewInit {
     private translateService: TranslateService
   ) {}
 
-  get pages(): Page[] {
+  get pages(): ComicPage[] {
     return this.dataSource.data;
   }
 
   @Input()
-  set pages(pages: Page[]) {
+  set pages(pages: ComicPage[]) {
     this.dataSource.data = _.cloneDeep(pages).sort(
       (left, right) => left.pageNumber - right.pageNumber
     );
@@ -96,7 +96,7 @@ export class ComicPagesComponent implements AfterViewInit {
     };
   }
 
-  onShowContextMenu(page: Page, x: string, y: string): void {
+  onShowContextMenu(page: ComicPage, x: string, y: string): void {
     this.logger.debug('Popping up context menu for:', page);
     this.page = page;
     this.contextMenuX = x;
@@ -104,14 +104,14 @@ export class ComicPagesComponent implements AfterViewInit {
     this.contextMenu.openMenu();
   }
 
-  onSetPageBlocked(page: Page, blocked: boolean): void {
+  onSetPageBlocked(page: ComicPage, blocked: boolean): void {
     this.logger.debug('Updating page blocked state:', page, blocked);
     this.store.dispatch(
       setBlockedStateForHash({ hashes: [page.hash], blocked })
     );
   }
 
-  onSetPageDeleted(page: Page, deleted: boolean): void {
+  onSetPageDeleted(page: ComicPage, deleted: boolean): void {
     this.logger.trace('Confirming marking page as deleted:', deleted);
     this.confirmationService.confirm({
       title: this.translateService.instant(
@@ -129,7 +129,7 @@ export class ComicPagesComponent implements AfterViewInit {
     });
   }
 
-  onReorderPages(dragDropEvent: CdkDragDrop<Page[], any>): void {
+  onReorderPages(dragDropEvent: CdkDragDrop<ComicPage[], any>): void {
     this.logger.trace('Pages reordered');
     const pages = _.cloneDeep(this.pages);
     moveItemInArray(

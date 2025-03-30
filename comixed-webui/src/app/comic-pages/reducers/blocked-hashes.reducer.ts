@@ -74,7 +74,9 @@ export const reducer = createReducer(
   })),
   on(loadBlockedHashListFailure, state => ({ ...state, busy: false })),
   on(blockedHashUpdated, (state, action) => {
-    const entries = state.entries.filter(entry => entry.id !== action.entry.id);
+    const entries = state.entries.filter(
+      entry => entry.blockedHashId !== action.entry.blockedHashId
+    );
     entries.push(action.entry);
     return { ...state, entries };
   }),

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="012_2178_adjust_comic_books_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="comic_books"/>
+            <not>
+                <columnExists tableName="comic_books" columnName="comic_book_id"/>
+            </not>
+        </preConditions>
+
+        <dropView viewName="organizing_comics_view"/>
+
+        <dropView viewName="displayable_comics_view"/>
+
+        <dropForeignKeyConstraint baseTableName="comic_pages" constraintName="comic_pages_comic_book_fk"/>
+
+        <dropForeignKeyConstraint baseTableName="comic_details" constraintName="comic_details_comic_book_fk"/>
+
+        <dropForeignKeyConstraint baseTableName="comic_metadata_sources"
+                                  constraintName="comic_metadata_sources_comic_book_fk"/>
+
+        <dropForeignKeyConstraint baseTableName="story_entries" constraintName="story_entries_comic_book_fk"/>
+
+        <renameTable oldTableName="comic_books" newTableName="old_comic_books"/>
+
+        <createTable tableName="comic_books">
+            <column name="comic_book_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="comic_books_v3_pk"/>
+            </column>
+
+            <column name="last_modified_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="file_contents_loaded" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="blocked_pages_marked" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="update_metadata" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="organizing" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="purging" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="create_metadata_source" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="batch_metadata_update" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="edit_details" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="target_archive_type" type="varchar(4)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="rename_pages" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="delete_pages" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="batch_scraping" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <sql>INSERT INTO comic_books(comic_book_id, last_modified_on, file_contents_loaded, blocked_pages_marked,
+                                     update_metadata, organizing, purging, create_metadata_source,
+                                     batch_metadata_update, edit_details, target_archive_Type, rename_pages,
+                                     delete_pages, batch_scraping)
+             SELECT id,
+                    last_modified_on,
+                    file_contents_loaded,
+                    blocked_pages_marked,
+                    update_metadata,
+                    organizing,
+                    purging,
+                    create_metadata_source,
+                    batch_metadata_update,
+                    edit_details,
+                    target_archive_Type,
+                    rename_pages,
+                    delete_pages,
+                    batch_scraping
+             FROM old_comic_books</sql>
+
+        <dropTable tableName="old_comic_books"/>
+
+        <createIndex tableName="comic_books" indexName="comic_book_create_metadata_source_idx">
+            <column name="create_metadata_source"/>
+        </createIndex>
+
+        <createIndex tableName="comic_books" indexName="comic_book_last_modified_on_idx">
+            <column name="last_modified_on"/>
+        </createIndex>
+
+        <createIndex tableName="comic_books" indexName="comic_book_organizing_idx">
+            <column name="organizing"/>
+        </createIndex>
+
+        <createIndex tableName="comic_books" indexName="comic_book_batch_scraping_idx">
+            <column name="batch_scraping"/>
+        </createIndex>
+
+        <createIndex tableName="comic_books" indexName="comic_book_batch_metadata_update_idx">
+            <column name="batch_metadata_update"/>
+        </createIndex>
+
+        <createIndex tableName="comic_books" indexName="comic_book_purging_idx">
+            <column name="purging"/>
+        </createIndex>
+
+        <createIndex tableName="comic_books" indexName="comic_book_target_archive_type_idx">
+            <column name="target_archive_type"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

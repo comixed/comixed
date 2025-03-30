@@ -39,8 +39,10 @@ import org.comixedproject.views.View;
 public class ConfigurationOption {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "configuration_option_id")
+  @JsonProperty("configurationOptionId")
   @Getter
-  Long id;
+  Long configurationOptionId;
 
   @Column(name = "option_name", length = 64, updatable = false)
   @JsonProperty("name")

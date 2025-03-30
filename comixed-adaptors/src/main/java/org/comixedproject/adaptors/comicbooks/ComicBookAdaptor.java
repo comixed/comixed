@@ -88,7 +88,7 @@ public class ComicBookAdaptor {
       @NonNull final String filename = comicBook.getComicDetail().getFilename();
       log.trace(
           "Getting archive adaptor for comic book file: id={} rule={}",
-          comicBook.getId(),
+          comicBook.getComicBookId(),
           rules.toString());
       final ArchiveAdaptor archiveAdaptor = this.fileTypeAdaptor.getArchiveAdaptorFor(filename);
       log.trace("Opening comic book file");
@@ -237,7 +237,7 @@ public class ComicBookAdaptor {
     final String filename = this.getMetadataFilename(comicBook.getComicDetail().getFilename());
     log.trace(
         "Creating external metadata file for comic: id={} filename={}",
-        comicBook.getId(),
+        comicBook.getComicBookId(),
         filename);
     try (OutputStream outstream = new FileOutputStream(new File(filename), false)) {
       log.trace("Writing metadata content");

@@ -39,8 +39,9 @@ import org.comixedproject.views.View;
 public class ComicMetadataSource {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "comic_metadata_source_id")
   @Getter
-  private Long id;
+  private Long comicMetadataSourceId;
 
   @OneToOne
   @JoinColumn(name = "comic_book_id", nullable = false, updatable = false, unique = true)

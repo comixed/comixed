@@ -114,7 +114,7 @@ describe('ComicBookEffects', () => {
   describe('loading a single comic', () => {
     it('fires an action on success', () => {
       const serviceResponse = COMIC_BOOK;
-      const action = loadComicBook({ id: COMIC_BOOK.id });
+      const action = loadComicBook({ id: COMIC_BOOK.comicBookId });
       const outcome = comicBookLoaded({ comicBook: COMIC_BOOK });
 
       actions$ = hot('-a', { a: action });
@@ -126,7 +126,7 @@ describe('ComicBookEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = loadComicBook({ id: COMIC_BOOK.id });
+      const action = loadComicBook({ id: COMIC_BOOK.comicBookId });
       const outcome = loadComicBookFailed();
 
       actions$ = hot('-a', { a: action });
@@ -138,7 +138,7 @@ describe('ComicBookEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = loadComicBook({ id: COMIC_BOOK.id });
+      const action = loadComicBook({ id: COMIC_BOOK.comicBookId });
       const outcome = loadComicBookFailed();
 
       actions$ = hot('-a', { a: action });

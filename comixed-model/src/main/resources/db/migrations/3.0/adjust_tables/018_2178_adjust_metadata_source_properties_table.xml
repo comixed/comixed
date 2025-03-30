@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="018_2178_adjust_metadata_source_properties_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="metadata_source_properties"/>
+            <not>
+                <columnExists tableName="metadata_source_properties" columnName="metadata_source_property_id"/>
+            </not>
+        </preConditions>
+
+        <renameTable oldTableName="metadata_source_properties" newTableName="old_metadata_source_properties"/>
+
+        <createTable tableName="metadata_source_properties">
+            <column name="metadata_source_property_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="metadata_source_properties_v3_pk"/>
+            </column>
+
+            <column name="metadata_source_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="property_name" type="varchar(32)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="property_value" type="varchar(256)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <sql>INSERT INTO metadata_source_properties(metadata_source_property_id, metadata_source_id, property_name,
+                                                    property_value)
+             SELECT id, metadata_source_id, property_name, property_value
+             FROM old_metadata_source_properties</sql>
+
+        <dropTable tableName="old_metadata_source_properties"/>
+
+        <createIndex tableName="metadata_source_properties" indexName="metadata_source_properties_source_idx">
+            <column name="metadata_source_id"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

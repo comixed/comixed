@@ -39,10 +39,11 @@ import org.comixedproject.views.View;
 public class MetadataSource {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "metadata_source_id")
   @JsonProperty("id")
   @JsonView({View.MetadataSourceList.class, View.ComicDetailsView.class})
   @Getter
-  private Long id;
+  private Long metadataSourceId;
 
   @Column(
       name = "adaptor_name",

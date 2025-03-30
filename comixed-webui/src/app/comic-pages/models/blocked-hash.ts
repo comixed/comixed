@@ -17,7 +17,7 @@
  */
 
 export interface BlockedHash {
-  id: number;
+  blockedHashId: number;
   label: string;
   hash: string;
   createdOn: number;

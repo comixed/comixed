@@ -106,7 +106,7 @@ describe('LibraryPluginService', () => {
     const properties = {};
     PLUGIN.properties.forEach(entry => (properties[entry.name] = entry.value));
     const req = httpMock.expectOne(
-      interpolate(UPDATE_PLUGIN_URL, { pluginId: PLUGIN.id })
+      interpolate(UPDATE_PLUGIN_URL, { pluginId: PLUGIN.libraryPluginId })
     );
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual({
@@ -124,7 +124,7 @@ describe('LibraryPluginService', () => {
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
-      interpolate(DELETE_PLUGIN_URL, { pluginId: PLUGIN.id })
+      interpolate(DELETE_PLUGIN_URL, { pluginId: PLUGIN.libraryPluginId })
     );
     expect(req.request.method).toEqual('DELETE');
     req.flush(new HttpResponse({ status: 200 }));
@@ -134,14 +134,14 @@ describe('LibraryPluginService', () => {
     service
       .runLibraryPluginOnOneComicBook({
         plugin: PLUGIN,
-        comicBookId: COMIC_BOOK.id
+        comicBookId: COMIC_BOOK.comicBookId
       })
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
       interpolate(RUN_LIBRARY_PLUGIN_ON_ONE_COMIC_BOOK_URL, {
-        pluginId: PLUGIN.id,
-        comicBookId: COMIC_BOOK.id
+        pluginId: PLUGIN.libraryPluginId,
+        comicBookId: COMIC_BOOK.comicBookId
       })
     );
     expect(req.request.method).toEqual('POST');
@@ -158,7 +158,7 @@ describe('LibraryPluginService', () => {
 
     const req = httpMock.expectOne(
       interpolate(RUN_LIBRARY_PLUGIN_ON_SELECTED_COMIC_BOOKS_URL, {
-        pluginId: PLUGIN.id
+        pluginId: PLUGIN.libraryPluginId
       })
     );
     expect(req.request.method).toEqual('POST');

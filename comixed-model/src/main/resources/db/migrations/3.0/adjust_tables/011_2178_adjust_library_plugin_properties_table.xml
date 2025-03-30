@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="011_2178_adjust_library_plugin_properties_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="library_plugin_properties"/>
+            <not>
+                <columnExists tableName="library_plugin_properties" columnName="library_plugin_property_id"/>
+            </not>
+        </preConditions>
+
+        <renameTable oldTableName="library_plugin_properties" newTableName="old_library_plugin_properties"/>
+
+        <createTable tableName="library_plugin_properties">
+            <column name="library_plugin_property_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="library_plugin_properties_v3_pk"/>
+            </column>
+
+            <column name="library_plugin_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="property_name" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="property_length" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="property_default_value" type="varchar(128)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="property_required" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="property_value" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <sql>INSERT INTO library_plugin_properties(library_plugin_property_id, library_plugin_id, property_name,
+                                                   property_length, property_default_value, property_required,
+                                                   property_value)
+             SELECT id,
+                    library_plugin_id,
+                    property_name,
+                    property_length,
+                    property_default_value,
+                    property_required,
+                    property_value
+             FROM old_library_plugin_properties</sql>
+
+        <dropTable tableName="old_library_plugin_properties"/>
+
+        <addForeignKeyConstraint baseTableName="library_plugin_properties" baseColumnNames="library_plugin_property_id"
+                                 constraintName="library_plugin_property_plugin_fk"
+                                 referencedTableName="library_plugins"
+                                 referencedColumnNames="library_plugin_id"/>
+
+        <addUniqueConstraint tableName="library_plugin_properties"
+                             constraintName="library_plugin_property_unique_plugin_and_property_name"
+                             columnNames="library_plugin_id, property_name"/>
+
+    </changeSet>
+</databaseChangeLog>

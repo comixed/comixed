@@ -57,12 +57,16 @@ export const reducer = createReducer(
   on(readingListsDeleted, state => ({ ...state, deleting: false })),
   on(deleteReadingListsFailed, state => ({ ...state, deleting: false })),
   on(readingListUpdate, (state, action) => {
-    const entries = state.entries.filter(entry => entry.id !== action.list.id);
+    const entries = state.entries.filter(
+      entry => entry.readingListId !== action.list.readingListId
+    );
     entries.push(action.list);
     return { ...state, entries };
   }),
   on(readingListRemoved, (state, action) => {
-    const entries = state.entries.filter(entry => entry.id !== action.list.id);
+    const entries = state.entries.filter(
+      entry => entry.readingListId !== action.list.readingListId
+    );
     return { ...state, entries };
   })
 );

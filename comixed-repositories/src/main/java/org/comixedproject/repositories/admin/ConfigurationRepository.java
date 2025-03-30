@@ -38,7 +38,7 @@ public interface ConfigurationRepository extends JpaRepository<ConfigurationOpti
    *
    * @return the configuration options
    */
-  @Query("SELECT o FROM ConfigurationOption o ORDER BY o.id")
+  @Query("SELECT o FROM ConfigurationOption o ORDER BY o.configurationOptionId")
   List<ConfigurationOption> getAll();
 
   /**

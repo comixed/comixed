@@ -19,7 +19,7 @@
 import { User } from '../../user/models/user';
 
 export interface ReadingList {
-  id: number;
+  readingListId: number;
   owner: User;
   name: string;
   summary: string;

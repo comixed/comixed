@@ -46,6 +46,6 @@ public interface StoryRepository extends JpaRepository<Story, Long> {
    * @param id the record id
    * @return the story
    */
-  @Query("SELECT s FROM Story s WHERE s.id = :id")
+  @Query("SELECT s FROM Story s WHERE s.storyId = :id")
   Story getById(@Param("id") long id);
 }
