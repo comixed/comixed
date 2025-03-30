@@ -157,14 +157,16 @@ describe('BlockedHashListPageComponent', () => {
     it('maintains the existing selections', () => {
       component.dataSource.data
         .filter(entry =>
-          ENTRIES.map(mapEntry => mapEntry.id).includes(entry.item.id)
+          ENTRIES.map(mapEntry => mapEntry.blockedHashId).includes(
+            entry.item.blockedHashId
+          )
         )
         .forEach(entry => expect(entry.selected).toBeTrue());
     });
 
     it('does not select the addition', () => {
       component.dataSource.data
-        .filter(entry => entry.item.id === ENTRY.id)
+        .filter(entry => entry.item.blockedHashId === ENTRY.blockedHashId)
         .forEach(entry => expect(entry.selected).toBeFalse());
     });
   });

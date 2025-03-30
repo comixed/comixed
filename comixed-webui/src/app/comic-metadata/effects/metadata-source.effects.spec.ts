@@ -90,12 +90,14 @@ describe('MetadataSourceEffects', () => {
   describe('loading a source', () => {
     it('fires an action on success', () => {
       const serviceResponse = METADATA_SOURCE;
-      const action = loadMetadataSource({ id: METADATA_SOURCE.id });
+      const action = loadMetadataSource({
+        id: METADATA_SOURCE.metadataSourceId
+      });
       const outcome = metadataSourceLoaded({ source: METADATA_SOURCE });
 
       actions$ = hot('-a', { a: action });
       metadataSourceService.loadOne
-        .withArgs({ id: METADATA_SOURCE.id })
+        .withArgs({ id: METADATA_SOURCE.metadataSourceId })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -104,12 +106,14 @@ describe('MetadataSourceEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = loadMetadataSource({ id: METADATA_SOURCE.id });
+      const action = loadMetadataSource({
+        id: METADATA_SOURCE.metadataSourceId
+      });
       const outcome = loadMetadataSourceFailed();
 
       actions$ = hot('-a', { a: action });
       metadataSourceService.loadOne
-        .withArgs({ id: METADATA_SOURCE.id })
+        .withArgs({ id: METADATA_SOURCE.metadataSourceId })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -118,12 +122,14 @@ describe('MetadataSourceEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = loadMetadataSource({ id: METADATA_SOURCE.id });
+      const action = loadMetadataSource({
+        id: METADATA_SOURCE.metadataSourceId
+      });
       const outcome = loadMetadataSourceFailed();
 
       actions$ = hot('-a', { a: action });
       metadataSourceService.loadOne
-        .withArgs({ id: METADATA_SOURCE.id })
+        .withArgs({ id: METADATA_SOURCE.metadataSourceId })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });

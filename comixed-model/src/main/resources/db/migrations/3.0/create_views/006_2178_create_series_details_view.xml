@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="006_2178_create_series_details_view.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <viewExists viewName="series_details_view"/>
+            </not>
+        </preConditions>
+
+        <createView viewName="series_details_view">
+            SELECT d.publisher,
+                   d.series,
+                   d.volume,
+                   (COUNT(*))                  AS in_library,
+                   (SELECT COUNT(*)
+                    FROM issues i
+                    WHERE i.publisher = d.publisher
+                      AND i.series = d.series
+                      AND i.volume = d.volume) AS issue_count
+            FROM comic_details d
+            GROUP BY d.publisher, d.series, d.volume;
+        </createView>
+
+    </changeSet>
+</databaseChangeLog>

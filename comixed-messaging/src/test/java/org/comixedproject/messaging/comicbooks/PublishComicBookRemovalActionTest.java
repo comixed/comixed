@@ -53,7 +53,7 @@ class PublishComicBookRemovalActionTest {
   public void setUp() throws JsonProcessingException {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_COMIC_AS_JSON);
-    Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_ID);
+    Mockito.when(comicBook.getComicBookId()).thenReturn(TEST_COMIC_ID);
   }
 
   @Test

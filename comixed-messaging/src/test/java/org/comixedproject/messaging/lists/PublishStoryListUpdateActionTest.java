@@ -53,7 +53,7 @@ class PublishStoryListUpdateActionTest {
   public void setUp() throws JsonProcessingException {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_STORY_AS_JSON);
-    Mockito.when(story.getId()).thenReturn(TEST_STORY_ID);
+    Mockito.when(story.getStoryId()).thenReturn(TEST_STORY_ID);
   }
 
   @Test

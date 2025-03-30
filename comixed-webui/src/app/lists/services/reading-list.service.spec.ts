@@ -137,12 +137,12 @@ describe('ReadingListService', () => {
 
   it('can load a single reading list', () => {
     service
-      .loadOne({ id: READING_LIST.id })
+      .loadOne({ id: READING_LIST.readingListId })
       .subscribe(response => expect(response).toEqual(READING_LIST));
 
     const req = httpMock.expectOne(
       interpolate(LOAD_READING_LIST_URL, {
-        id: READING_LIST.id
+        id: READING_LIST.readingListId
       })
     );
     expect(req.request.method).toEqual('GET');
@@ -151,12 +151,12 @@ describe('ReadingListService', () => {
 
   it('can save a new reading list', () => {
     service
-      .save({ list: { ...READING_LIST, id: null } })
+      .save({ list: { ...READING_LIST, readingListId: null } })
       .subscribe(response => expect(response).toEqual(READING_LIST));
 
     const req = httpMock.expectOne(interpolate(SAVE_READING_LIST));
     expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({ ...READING_LIST, id: null });
+    expect(req.request.body).toEqual({ ...READING_LIST, readingListId: null });
     req.flush(READING_LIST);
   });
 
@@ -166,7 +166,7 @@ describe('ReadingListService', () => {
       .subscribe(response => expect(response).toEqual(READING_LIST));
 
     const req = httpMock.expectOne(
-      interpolate(UPDATE_READING_LIST, { id: READING_LIST.id })
+      interpolate(UPDATE_READING_LIST, { id: READING_LIST.readingListId })
     );
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual(READING_LIST);
@@ -183,7 +183,7 @@ describe('ReadingListService', () => {
 
     const req = httpMock.expectOne(
       interpolate(ADD_SELECTED_COMIC_BOOKS_TO_READING_LIST_URL, {
-        id: READING_LIST.id
+        id: READING_LIST.readingListId
       })
     );
     expect(req.request.method).toEqual('PUT');
@@ -200,7 +200,7 @@ describe('ReadingListService', () => {
 
     const req = httpMock.expectOne(
       interpolate(REMOVE_SELECTED_COMIC_BOOKS_FROM_READING_LIST_URL, {
-        id: READING_LIST.id
+        id: READING_LIST.readingListId
       })
     );
     expect(req.request.method).toEqual('DELETE');
@@ -213,7 +213,7 @@ describe('ReadingListService', () => {
       .subscribe(response => expect(response).toEqual(DOWNLOAD_DOCUMENT));
 
     const req = httpMock.expectOne(
-      interpolate(DOWNLOAD_READING_LIST_URL, { id: READING_LIST.id })
+      interpolate(DOWNLOAD_READING_LIST_URL, { id: READING_LIST.readingListId })
     );
     expect(req.request.method).toEqual('GET');
     req.flush(DOWNLOAD_DOCUMENT);
@@ -238,7 +238,7 @@ describe('ReadingListService', () => {
     const req = httpMock.expectOne(interpolate(DELETE_READING_LISTS_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      ids: READING_LISTS.map(list => list.id)
+      ids: READING_LISTS.map(list => list.readingListId)
     } as DeleteReadingListsRequest);
     req.flush(new HttpResponse({ status: 200 }));
   });

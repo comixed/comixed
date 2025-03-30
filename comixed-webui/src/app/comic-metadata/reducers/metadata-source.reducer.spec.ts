@@ -76,7 +76,7 @@ describe('MetadataSource Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: false },
-        loadMetadataSource({ id: METADATA_SOURCE.id })
+        loadMetadataSource({ id: METADATA_SOURCE.metadataSourceId })
       );
     });
 

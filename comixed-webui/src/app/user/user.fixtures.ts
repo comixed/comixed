@@ -42,7 +42,7 @@ export const PREFERENCE_1: Preference = {
 };
 
 export const USER_READER: User = {
-  id: 1,
+  comixedUserId: 1,
   email: 'comixedreader@localhost',
   firstLoginDate: new Date(
     new Date().getTime() - 31 * 24 * 60 * 60 * 1000
@@ -54,7 +54,7 @@ export const USER_READER: User = {
 };
 
 export const USER_ADMIN: User = {
-  id: 2,
+  comixedUserId: 2,
   email: 'comixedadmin@localhost',
   firstLoginDate: new Date(
     new Date().getTime() - 31 * 24 * 60 * 60 * 1000
@@ -66,7 +66,7 @@ export const USER_ADMIN: User = {
 };
 
 export const USER_BLOCKED: User = {
-  id: 3,
+  comixedUserId: 3,
   email: 'comixedblocked@localhost',
   firstLoginDate: new Date(
     new Date().getTime() - 31 * 24 * 60 * 60 * 1000
@@ -77,12 +77,12 @@ export const USER_BLOCKED: User = {
   readComicBooks: []
 };
 
-export const READ_COMIC_BOOK_1 = COMIC_DETAIL_1.id;
+export const READ_COMIC_BOOK_1 = COMIC_DETAIL_1.comicDetailId;
 
-export const READ_COMIC_BOOK_2 = COMIC_DETAIL_2.id;
+export const READ_COMIC_BOOK_2 = COMIC_DETAIL_2.comicDetailId;
 
-export const READ_COMIC_BOOK_3 = COMIC_DETAIL_3.id;
+export const READ_COMIC_BOOK_3 = COMIC_DETAIL_3.comicDetailId;
 
-export const READ_COMIC_BOOK_4 = COMIC_DETAIL_4.id;
+export const READ_COMIC_BOOK_4 = COMIC_DETAIL_4.comicDetailId;
 
-export const READ_COMIC_BOOK_5 = COMIC_DETAIL_5.id;
+export const READ_COMIC_BOOK_5 = COMIC_DETAIL_5.comicDetailId;

@@ -49,17 +49,18 @@ public class ScrapeComicBookProcessor
   @Override
   public ComicBook process(final ComicBook comicBook) throws Exception {
     ComicBook result = comicBook;
-    if (comicBook.getMetadata() == null || comicBook.getMetadata().getId() == null) {
-      log.error("No metadata source associated with comic: {}", comicBook.getId());
+    if (comicBook.getMetadata() == null
+        || comicBook.getMetadata().getComicMetadataSourceId() == null) {
+      log.error("No metadata source associated with comic: {}", comicBook.getComicBookId());
     } else {
       final boolean skipCache =
           Boolean.parseBoolean(this.jobParameters.getString(PARAM_SKIP_CACHE));
-      log.info("Scraping comic book: id={}", comicBook.getId());
+      log.info("Scraping comic book: id={}", comicBook.getComicBookId());
       final ComicMetadataSource source = comicBook.getMetadata();
       result =
           this.metadataService.scrapeComic(
-              source.getMetadataSource().getId(),
-              comicBook.getId(),
+              source.getMetadataSource().getMetadataSourceId(),
+              comicBook.getComicBookId(),
               source.getReferenceId(),
               skipCache);
     }

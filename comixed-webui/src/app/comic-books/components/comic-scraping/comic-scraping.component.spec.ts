@@ -491,10 +491,12 @@ describe('ComicScrapingComponent', () => {
         { label: 'first', value: OTHER_METADATA_SOURCE },
         {
           label: 'second',
-          value: { id: OTHER_METADATA_SOURCE.id + 100 } as MetadataSource
+          value: {
+            metadataSourceId: OTHER_METADATA_SOURCE.metadataSourceId + 100
+          } as MetadataSource
         }
       ];
-      component.onMetadataSourceChosen(OTHER_METADATA_SOURCE.id);
+      component.onMetadataSourceChosen(OTHER_METADATA_SOURCE.metadataSourceId);
     });
 
     it('fires an action', () => {

@@ -58,10 +58,11 @@ class ScrapeComicBookProcessorTest {
 
   @BeforeEach
   public void setUp() {
-    Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_BOOK_ID);
+    Mockito.when(comicBook.getComicBookId()).thenReturn(TEST_COMIC_BOOK_ID);
     Mockito.when(comicBook.getMetadata()).thenReturn(comicMetadataSource);
-    Mockito.when(comicMetadataSource.getId()).thenReturn(TEST_COMIC_METADATA_SOURCE_ID);
-    Mockito.when(metadataSource.getId()).thenReturn(TEST_METADATA_SOURCE_ID);
+    Mockito.when(comicMetadataSource.getComicMetadataSourceId())
+        .thenReturn(TEST_COMIC_METADATA_SOURCE_ID);
+    Mockito.when(metadataSource.getMetadataSourceId()).thenReturn(TEST_METADATA_SOURCE_ID);
     Mockito.when(comicMetadataSource.getMetadataSource()).thenReturn(metadataSource);
     Mockito.when(comicMetadataSource.getReferenceId()).thenReturn(TEST_METADATA_REFERENCE_ID);
     Mockito.when(jobParameters.getString(PARAM_SKIP_CACHE))
@@ -83,7 +84,7 @@ class ScrapeComicBookProcessorTest {
 
   @Test
   void process_noMetadataSourceId() throws Exception {
-    Mockito.when(comicMetadataSource.getId()).thenReturn(null);
+    Mockito.when(comicMetadataSource.getComicMetadataSourceId()).thenReturn(null);
 
     final ComicBook result = processor.process(comicBook);
 

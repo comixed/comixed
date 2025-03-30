@@ -313,7 +313,7 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
 
   onMetadataSourceChosen(id: number): void {
     const metadataSource = this.metadataSourceList.find(
-      entry => entry.value.id === id
+      entry => entry.value.metadataSourceId === id
     ).value;
     this.logger.debug('Metadata source selected:', metadataSource);
     this.store.dispatch(setChosenMetadataSource({ metadataSource }));
@@ -380,7 +380,7 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
       ...this.comic,
       detail: {
         ...this.comic.detail,
-        id: undefined,
+        comicDetailId: undefined,
         publisher: this.comicForm.controls.publisher.value,
         series: this.comicForm.controls.series.value,
         volume: this.comicForm.controls.volume.value,

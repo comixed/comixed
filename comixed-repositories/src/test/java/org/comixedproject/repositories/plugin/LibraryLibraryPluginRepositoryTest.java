@@ -55,6 +55,6 @@ public class LibraryLibraryPluginRepositoryTest {
     final LibraryPlugin result = repository.getById(TEST_PLUGIN_ID);
 
     assertNotNull(result);
-    assertEquals(TEST_PLUGIN_ID, result.getId());
+    assertEquals(TEST_PLUGIN_ID, result.getLibraryPluginId());
   }
 }

@@ -107,7 +107,7 @@ class DisplayableComicServiceTest {
 
     Mockito.when(user.getReadComicBooks()).thenReturn(readComicBookList);
 
-    Mockito.when(readingList.getId()).thenReturn(TEST_READING_LIST_ID);
+    Mockito.when(readingList.getReadingListId()).thenReturn(TEST_READING_LIST_ID);
     Mockito.when(readingListService.loadReadingListForUser(Mockito.anyString(), Mockito.anyLong()))
         .thenReturn(readingList);
   }
@@ -476,7 +476,7 @@ class DisplayableComicServiceTest {
 
     Mockito.verify(readingListService, Mockito.times(1))
         .loadReadingListForUser(TEST_EMAIL, TEST_READING_LIST_ID);
-    Mockito.verify(readingList, Mockito.times(1)).getId();
+    Mockito.verify(readingList, Mockito.times(1)).getReadingListId();
     Mockito.verify(displayableComicRepository, Mockito.times(1))
         .loadComicsForList(TEST_READING_LIST_ID, pageable);
   }
@@ -583,7 +583,7 @@ class DisplayableComicServiceTest {
   void CreateSort() {
     final String[][] fields =
         new String[][] {
-          {"unknown", "id"},
+          {"unknown", "comicDetailId"},
           {"archive-type", "archiveType"},
           {"comic-state", "comicState"},
           {"comic-type", "comicType"},

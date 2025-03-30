@@ -101,7 +101,7 @@ public class ReadingListStateHandler extends LifecycleObjectSupport {
    */
   public void fireEvent(
       final ReadingList readingList, final ReadingListEvent event, Map<String, ?> headers) {
-    log.debug("Firing reading list event: {} => {}", readingList.getId(), event);
+    log.debug("Firing reading list event: {} => {}", readingList.getReadingListId(), event);
     final Message<ReadingListEvent> message =
         MessageBuilder.withPayload(event)
             .copyHeaders(headers)

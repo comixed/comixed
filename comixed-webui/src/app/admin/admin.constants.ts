@@ -20,7 +20,7 @@ import { API_ROOT_URL } from '../core';
 import { FilenameScrapingRule } from '@app/admin/models/filename-scraping-rule';
 
 export const FILENAME_SCRAPING_RULE_TEMPLATE: FilenameScrapingRule = {
-  id: null,
+  filenameScrapingRuleId: null,
   priority: null,
   name: 'New Rule',
   rule: '',

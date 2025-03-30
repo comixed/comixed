@@ -56,7 +56,7 @@ class ComicIsNotInReadingListGuardTest {
 
   @BeforeEach
   void setUp() {
-    Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_ID);
+    Mockito.when(comicBook.getComicBookId()).thenReturn(TEST_COMIC_ID);
     Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
     Mockito.when(readingList.getEntryIds()).thenReturn(entryIdList);
     Mockito.when(messageHeaders.get(HEADER_READING_LIST, ReadingList.class))

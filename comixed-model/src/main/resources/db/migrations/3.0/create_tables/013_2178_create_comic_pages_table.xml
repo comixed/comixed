@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="013_2178_create_comic_pages_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="comic_pages"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="comic_pages">
+            <column name="comic_page_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="comic_pages_v3_pk"/>
+            </column>
+
+            <column name="comic_book_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="filename" type="varchar(768)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="file_hash" type="char(32)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="height" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="width" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="page_number" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="page_state" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="adding_to_cache" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="comic_pages" indexName="comic_page_comic_book_and_page_number_idx">
+            <column name="comic_book_id"/>
+            <column name="page_number"/>
+        </createIndex>
+
+        <createIndex tableName="comic_pages" indexName="comic_page_comic_book_idx">
+            <column name="comic_book_id"/>
+        </createIndex>
+
+        <createIndex tableName="comic_pages" indexName="comic_page_file_hash_idx">
+            <column name="file_hash"/>
+        </createIndex>
+
+        <createIndex tableName="comic_pages" indexName="comic_page_page_state_idx">
+            <column name="page_state"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

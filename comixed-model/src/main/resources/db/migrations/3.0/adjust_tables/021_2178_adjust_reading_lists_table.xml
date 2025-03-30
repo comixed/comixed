@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="021_2178_adjust_reading_lists_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="reading_lists"/>
+            <not>
+                <columnExists tableName="reading_lists" columnName="reading_list_id"/>
+            </not>
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="reading_list_entries"
+                                  constraintName="reading_list_entries_reading_list_fk"/>
+
+        <renameTable oldTableName="reading_lists" newTableName="old_reading_lists"/>
+
+        <createTable tableName="reading_lists">
+            <column name="reading_list_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="reading_lists_v3_pk"/>
+            </column>
+
+            <column name="owner_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="reading_list_name" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="last_modified_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="summary" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="reading_list_state" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="name_key" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <sql>INSERT INTO reading_lists(reading_list_id, owner_id, reading_list_name, last_modified_on, summary,
+                                       created_on, reading_list_state, name_key)
+             SELECT id,
+                    owner_id,
+                    reading_list_name,
+                    last_modified_on,
+                    summary,
+                    created_on,
+                    reading_list_state,
+                    name_key
+             FROM old_reading_lists</sql>
+
+        <dropTable tableName="old_reading_lists"/>
+
+        <addForeignKeyConstraint baseTableName="reading_lists" baseColumnNames="owner_id"
+                                 constraintName="reading_list_owner_fk"
+                                 referencedTableName="comixed_users"
+                                 referencedColumnNames="comixed_user_id"/>
+
+        <addUniqueConstraint tableName="reading_lists" columnNames="owner_id, name_key"
+                             constraintName="reading_list_uniq_owner_name"/>
+
+    </changeSet>
+</databaseChangeLog>

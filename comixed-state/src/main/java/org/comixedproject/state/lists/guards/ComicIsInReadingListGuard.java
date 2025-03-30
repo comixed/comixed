@@ -40,6 +40,6 @@ public class ComicIsInReadingListGuard extends AbstractReadingListGuard {
     final ReadingList readingList = this.fetchReadingList(context);
     log.trace("Fetching comicBook");
     final ComicBook comicBook = this.fetchComic(context);
-    return readingList.getEntryIds().contains(comicBook.getId());
+    return readingList.getEntryIds().contains(comicBook.getComicBookId());
   }
 }

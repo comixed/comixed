@@ -38,7 +38,7 @@ public class MarkComicAsFoundGuard extends AbstractComicBookGuard {
   public boolean evaluate(final StateContext<ComicState, ComicEvent> stateContext) {
     final ComicBook comicBook = this.fetchComic(stateContext);
     if (!comicBook.getComicDetail().isMissing()) {
-      log.trace("Comic book not marked as missing: id={}", comicBook.getId());
+      log.trace("Comic book not marked as missing: id={}", comicBook.getComicBookId());
       return false;
     }
     final File file = comicBook.getComicDetail().getFile();
@@ -47,7 +47,7 @@ public class MarkComicAsFoundGuard extends AbstractComicBookGuard {
       return false;
     }
 
-    log.debug("Comic book can be marked as missing: id={}", comicBook.getId());
+    log.debug("Comic book can be marked as missing: id={}", comicBook.getComicBookId());
     return true;
   }
 }

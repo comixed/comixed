@@ -169,7 +169,7 @@ class ComicPageServiceTest {
 
   @Test
   void save() throws ComicPageException {
-    Mockito.when(page.getId()).thenReturn(TEST_PAGE_ID);
+    Mockito.when(page.getComicPageId()).thenReturn(TEST_PAGE_ID);
     Mockito.when(comicPageRepository.saveAndFlush(Mockito.any(ComicPage.class)))
         .thenReturn(pageRecord);
 

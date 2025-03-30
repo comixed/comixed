@@ -75,7 +75,8 @@ class OPDSUtilsTest {
     assertNotNull(result);
     assertEquals(TEST_ARCHIVE_TYPE.getMimeType(), result.getMimeType());
     assertEquals(
-        String.format(COMIC_LINK_URL, comicBook.getId(), utils.urlEncodeString(TEST_BASE_FILENAME)),
+        String.format(
+            COMIC_LINK_URL, comicBook.getComicBookId(), utils.urlEncodeString(TEST_BASE_FILENAME)),
         result.getReference());
   }
 
@@ -86,7 +87,8 @@ class OPDSUtilsTest {
     assertNotNull(result);
     assertEquals(MIME_TYPE_IMAGE, result.getMimeType());
     assertEquals(OPDS_IMAGE_RELATION, result.getRelation());
-    assertEquals(String.format(COMIC_COVER_URL, comicBook.getId(), 0, 160), result.getReference());
+    assertEquals(
+        String.format(COMIC_COVER_URL, comicBook.getComicBookId(), 0, 160), result.getReference());
   }
 
   @Test
@@ -96,7 +98,8 @@ class OPDSUtilsTest {
     assertNotNull(result);
     assertEquals(TEST_MIME_TYPE_IMAGE, result.getMimeType());
     assertEquals(OPDS_IMAGE_RELATION, result.getRelation());
-    assertEquals(String.format(COMIC_COVER_URL, comicBook.getId(), 0, 160), result.getReference());
+    assertEquals(
+        String.format(COMIC_COVER_URL, comicBook.getComicBookId(), 0, 160), result.getReference());
   }
 
   @Test
@@ -106,7 +109,8 @@ class OPDSUtilsTest {
     assertNotNull(result);
     assertEquals(TEST_MIME_TYPE_IMAGE, result.getMimeType());
     assertEquals(OPDS_IMAGE_THUMBNAIL, result.getRelation());
-    assertEquals(String.format(COMIC_COVER_URL, comicBook.getId(), 0, 160), result.getReference());
+    assertEquals(
+        String.format(COMIC_COVER_URL, comicBook.getComicBookId(), 0, 160), result.getReference());
   }
 
   @Test

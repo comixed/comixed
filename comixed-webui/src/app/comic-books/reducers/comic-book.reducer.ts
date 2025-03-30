@@ -64,7 +64,10 @@ export const reducer = createReducer(
   on(loadComicBookFailed, state => ({ ...state, loading: false })),
   on(updateComicBook, state => ({ ...state, saving: true, saved: false })),
   on(comicBookUpdated, (state, action) => {
-    if (!!state.comicBook && state.comicBook.id === action.comicBook.id) {
+    if (
+      !!state.comicBook &&
+      state.comicBook.comicBookId === action.comicBook.comicBookId
+    ) {
       return {
         ...state,
         saving: false,

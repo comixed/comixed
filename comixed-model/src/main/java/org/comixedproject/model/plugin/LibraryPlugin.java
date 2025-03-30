@@ -40,10 +40,11 @@ import org.hibernate.annotations.ColumnTransformer;
 public class LibraryPlugin {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonProperty("id")
+  @Column(name = "library_plugin_id")
+  @JsonProperty("libraryPluginId")
   @JsonView(View.LibraryPluginList.class)
   @Getter
-  private Long id;
+  private Long libraryPluginId;
 
   @Column(name = "name", length = 64, insertable = true, updatable = false, nullable = false)
   @JsonProperty("name")

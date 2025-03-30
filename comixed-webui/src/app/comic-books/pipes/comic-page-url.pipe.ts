@@ -22,15 +22,15 @@ import {
   GET_PAGE_CONTENT_URL,
   MISSING_COMIC_IMAGE_URL
 } from '@app/library/library.constants';
-import { Page } from '@app/comic-books/models/page';
+import { ComicPage } from '@app/comic-books/models/comic-page';
 
 @Pipe({
   name: 'comicPageUrl'
 })
 export class ComicPageUrlPipe implements PipeTransform {
-  transform(page: Page): string {
+  transform(page: ComicPage): string {
     if (!!page) {
-      return interpolate(GET_PAGE_CONTENT_URL, { id: page.id });
+      return interpolate(GET_PAGE_CONTENT_URL, { id: page.comicPageId });
     } else {
       return MISSING_COMIC_IMAGE_URL;
     }

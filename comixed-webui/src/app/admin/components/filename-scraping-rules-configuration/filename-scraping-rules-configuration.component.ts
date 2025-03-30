@@ -95,7 +95,10 @@ export class FilenameScrapingRulesConfigurationComponent
     this.logger.debug('Setting filename scraping rules:', rules);
     const oldRules = this.dataSource.data;
     this.dataSource.data = rules.map((rule, index) => {
-      const oldRule = oldRules.find(entry => entry.item.id === rule.id);
+      const oldRule = oldRules.find(
+        entry =>
+          entry.item.filenameScrapingRuleId === rule.filenameScrapingRuleId
+      );
 
       return {
         item: { ...rule, priority: index + 1 },

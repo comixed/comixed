@@ -106,7 +106,7 @@ public class ComicDetailRepositoryTest {
 
     final ComicDetail after = repository.findByComicBookId(TEST_COMIC_BOOK_ID);
 
-    assertEquals(TEST_COMIC_DETAIL_ID, after.getId());
+    assertEquals(TEST_COMIC_DETAIL_ID, after.getComicDetailId());
     assertEquals(TEST_UPDATED_FILENAME, after.getFilename());
   }
 }

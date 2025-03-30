@@ -59,7 +59,7 @@ class PublishReadingListUpdateActionTest {
         .thenReturn(TEST_READING_LIST_AS_JSON);
     Mockito.when(readingList.getOwner()).thenReturn(owner);
     Mockito.when(owner.getEmail()).thenReturn(TEST_OWNER_EMAIL);
-    Mockito.when(readingList.getId()).thenReturn(TEST_READING_LIST_ID);
+    Mockito.when(readingList.getReadingListId()).thenReturn(TEST_READING_LIST_ID);
   }
 
   @Test

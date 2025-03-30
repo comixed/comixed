@@ -17,7 +17,7 @@
  */
 
 export interface Imprint {
-  id: number;
+  imprintId: number;
   name: string;
   publisher: string;
 }

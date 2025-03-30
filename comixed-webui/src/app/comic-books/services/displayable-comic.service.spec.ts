@@ -107,7 +107,7 @@ describe('DisplayableComicService', () => {
   const IDS = COMIC_LIST.map(entry => entry.comicBookId);
   const TOTAL_COUNT = COMIC_LIST.length * 2;
   const FILTERED_COUNT = Math.floor(TOTAL_COUNT * 0.75);
-  const READING_LIST_ID = READING_LIST_3.id;
+  const READING_LIST_ID = READING_LIST_3.readingListId;
   const initialState = {
     [MESSAGING_FEATURE_KEY]: { ...initialMessagingState }
   };
@@ -206,7 +206,7 @@ describe('DisplayableComicService', () => {
         comicUpdated({
           comic: {
             comicBookId: COMIC_ADDED.detail.comicId,
-            comicDetailId: COMIC_ADDED.detail.id,
+            comicDetailId: COMIC_ADDED.detail.comicDetailId,
             archiveType: COMIC_ADDED.detail.archiveType,
             comicState: COMIC_ADDED.detail.comicState,
             unscraped: COMIC_ADDED.detail.unscraped,
@@ -233,7 +233,7 @@ describe('DisplayableComicService', () => {
         comicRemoved({
           comic: {
             comicBookId: COMIC_REMOVED.detail.comicId,
-            comicDetailId: COMIC_REMOVED.detail.id,
+            comicDetailId: COMIC_REMOVED.detail.comicDetailId,
             archiveType: COMIC_REMOVED.detail.archiveType,
             comicState: COMIC_REMOVED.detail.comicState,
             unscraped: COMIC_REMOVED.detail.unscraped,

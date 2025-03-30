@@ -21,7 +21,7 @@ import { USER_READER } from '../user/user.fixtures';
 import { Story } from '@app/lists/models/story';
 
 export const READING_LIST_1: ReadingList = {
-  id: 1,
+  readingListId: 1,
   name: 'Reading List 1',
   summary: 'Reading list 1',
   owner: USER_READER,
@@ -31,7 +31,7 @@ export const READING_LIST_1: ReadingList = {
 };
 
 export const READING_LIST_2: ReadingList = {
-  id: 2,
+  readingListId: 2,
   name: 'Reading List 2',
   summary: 'Reading list 2',
   owner: USER_READER,
@@ -41,7 +41,7 @@ export const READING_LIST_2: ReadingList = {
 };
 
 export const READING_LIST_3: ReadingList = {
-  id: 3,
+  readingListId: 3,
   name: 'Reading List 3',
   summary: 'Reading list 3',
   owner: USER_READER,
@@ -51,7 +51,7 @@ export const READING_LIST_3: ReadingList = {
 };
 
 export const READING_LIST_4: ReadingList = {
-  id: 4,
+  readingListId: 4,
   name: 'Reading List 4',
   summary: 'Reading list 4',
   owner: USER_READER,
@@ -61,7 +61,7 @@ export const READING_LIST_4: ReadingList = {
 };
 
 export const READING_LIST_5: ReadingList = {
-  id: 5,
+  readingListId: 5,
   name: 'Reading List 5',
   summary: 'Reading list 5',
   owner: USER_READER,
@@ -71,7 +71,7 @@ export const READING_LIST_5: ReadingList = {
 };
 
 export const STORY_1: Story = {
-  id: 1,
+  storyId: 1,
   name: 'Story 1',
   publisher: 'Publisher 1',
   comicVineId: null,
@@ -81,7 +81,7 @@ export const STORY_1: Story = {
 };
 
 export const STORY_2: Story = {
-  id: 2,
+  storyId: 2,
   name: 'Story 1',
   publisher: 'Publisher 2',
   comicVineId: null,
@@ -91,7 +91,7 @@ export const STORY_2: Story = {
 };
 
 export const STORY_3: Story = {
-  id: 3,
+  storyId: 3,
   name: 'Story 1',
   publisher: 'Publisher 3',
   comicVineId: null,
@@ -101,7 +101,7 @@ export const STORY_3: Story = {
 };
 
 export const STORY_4: Story = {
-  id: 4,
+  storyId: 4,
   name: 'Story 1',
   publisher: 'Publisher 4',
   comicVineId: null,
@@ -111,7 +111,7 @@ export const STORY_4: Story = {
 };
 
 export const STORY_5: Story = {
-  id: 5,
+  storyId: 5,
   name: 'Story 1',
   publisher: 'Publisher 5',
   comicVineId: null,

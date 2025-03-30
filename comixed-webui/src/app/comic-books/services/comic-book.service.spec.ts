@@ -109,7 +109,7 @@ describe('ComicBookService', () => {
       .subscribe(response => expect(response).toEqual(COMIC_BOOK_2));
 
     const req = httpMock.expectOne(
-      interpolate(UPDATE_COMIC_URL, { id: COMIC_BOOK.id })
+      interpolate(UPDATE_COMIC_URL, { id: COMIC_BOOK.comicBookId })
     );
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual(COMIC_BOOK);
@@ -181,7 +181,7 @@ describe('ComicBookService', () => {
     const req = httpMock.expectOne(interpolate(MARK_PAGES_DELETED_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      ids: [PAGE.id],
+      ids: [PAGE.comicPageId],
       deleted: true
     } as MarkPagesDeletedRequest);
     req.flush(new HttpResponse({ status: 200 }));
@@ -198,7 +198,7 @@ describe('ComicBookService', () => {
     const req = httpMock.expectOne(interpolate(MARK_PAGES_UNDELETED_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      ids: [PAGE.id],
+      ids: [PAGE.comicPageId],
       deleted: false
     } as MarkPagesDeletedRequest);
     req.flush(new HttpResponse({ status: 200 }));
@@ -213,7 +213,7 @@ describe('ComicBookService', () => {
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
-      interpolate(SAVE_PAGE_ORDER_URL, { id: COMIC_BOOK.id })
+      interpolate(SAVE_PAGE_ORDER_URL, { id: COMIC_BOOK.comicBookId })
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
@@ -228,7 +228,9 @@ describe('ComicBookService', () => {
       .subscribe(response => expect(response).toEqual(DOWNLOAD_COMIC_BOOK));
 
     const req = httpMock.expectOne(
-      interpolate(DOWNLOAD_COMIC_BOOK_URL, { comicBookId: COMIC_BOOK.id })
+      interpolate(DOWNLOAD_COMIC_BOOK_URL, {
+        comicBookId: COMIC_BOOK.comicBookId
+      })
     );
     expect(req.request.method).toEqual('GET');
     req.flush(DOWNLOAD_COMIC_BOOK);

@@ -77,7 +77,7 @@ describe('ComicBook Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, comicBook: COMIC, loading: false },
-        loadComicBook({ id: COMIC.id })
+        loadComicBook({ id: COMIC.comicBookId })
       );
     });
 

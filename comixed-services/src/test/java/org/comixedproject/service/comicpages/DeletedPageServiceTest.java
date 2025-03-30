@@ -50,7 +50,7 @@ class DeletedPageServiceTest {
       final DeletedPageAndComic deletedPageAndComic = mock(DeletedPageAndComic.class);
       Mockito.when(deletedPageAndComic.getHash()).thenReturn(String.valueOf(index % 7));
       final ComicBook comicBook = mock(ComicBook.class);
-      Mockito.when(comicBook.getId()).thenReturn((long) index);
+      Mockito.when(comicBook.getComicBookId()).thenReturn((long) index);
       final ComicDetail comicDetail = mock(ComicDetail.class);
       Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
       Mockito.when(deletedPageAndComic.getComicBook()).thenReturn(comicBook);

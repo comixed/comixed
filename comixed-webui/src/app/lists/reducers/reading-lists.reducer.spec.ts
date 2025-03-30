@@ -152,7 +152,9 @@ describe('ReadingLists Reducer', () => {
 
     it('keeps the other entries', () => {
       expect(state.entries).toEqual(
-        READING_LISTS.filter(entry => entry.id !== REMOVED.id)
+        READING_LISTS.filter(
+          entry => entry.readingListId !== REMOVED.readingListId
+        )
       );
     });
   });

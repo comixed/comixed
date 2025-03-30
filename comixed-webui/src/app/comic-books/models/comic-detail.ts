@@ -22,7 +22,7 @@ import { ComicTag } from '@app/comic-books/models/comic-tag';
 import { ComicType } from '@app/comic-books/models/comic-type';
 
 export interface ComicDetail {
-  id: number;
+  comicDetailId: number;
   comicId: number;
   filename: string;
   baseFilename: string;

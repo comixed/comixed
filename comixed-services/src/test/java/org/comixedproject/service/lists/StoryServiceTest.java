@@ -160,7 +160,7 @@ class StoryServiceTest {
   @Test
   void createStory() throws StoryException {
     Mockito.when(storyRepository.save(storyArgumentCaptor.capture())).thenReturn(story);
-    Mockito.when(story.getId()).thenReturn(TEST_STORY_ID);
+    Mockito.when(story.getStoryId()).thenReturn(TEST_STORY_ID);
     Mockito.when(storyRepository.getById(Mockito.anyLong())).thenReturn(savedStory);
 
     final Story result = service.createStory(story);

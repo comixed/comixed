@@ -82,7 +82,7 @@ class OPDSAcquisitionServiceTest {
   @BeforeEach
   public void setUp() throws ComicDetailException {
     readingLists.add(readingList);
-    Mockito.when(readingList.getId()).thenReturn(TEST_READING_LIST_ID);
+    Mockito.when(readingList.getReadingListId()).thenReturn(TEST_READING_LIST_ID);
     Mockito.when(readingList.getEntryIds()).thenReturn(entryIdList);
     Mockito.when(opdsUtils.urlEncodeString(Mockito.anyString())).thenReturn(TEST_ENCODED_NAME);
     entryIdList.add(TEST_COMIC_ID);

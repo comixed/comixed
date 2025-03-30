@@ -75,7 +75,7 @@ public class UserService {
       throw new ComiXedUserException("No such user: " + email);
     }
 
-    log.debug("Found user: id={}", result.getId());
+    log.debug("Found user: id={}", result.getComixedUserId());
 
     return result;
   }

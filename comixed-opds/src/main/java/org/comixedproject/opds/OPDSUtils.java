@@ -127,7 +127,7 @@ public class OPDSUtils {
     final OPDSAcquisitionFeedEntry result =
         new OPDSAcquisitionFeedEntry(
             this.comicBookMetadataAdaptor.getDisplayableTitle(comicDetail),
-            String.valueOf(comicDetail.getId()));
+            String.valueOf(comicDetail.getComicDetailId()));
     log.trace("Setting comicBook link");
     result.getLinks().add(this.createComicCoverLink(comicDetail));
     result.getLinks().add(this.createComicThumbnailLink(comicDetail));

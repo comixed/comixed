@@ -146,7 +146,7 @@ class ComicBookServiceTest {
   public void setUp() {
     Mockito.when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
-    Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_BOOK_ID);
+    Mockito.when(comicBook.getComicBookId()).thenReturn(TEST_COMIC_BOOK_ID);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(incomingComicBook.getComicDetail()).thenReturn(incomingComicDetail);
 

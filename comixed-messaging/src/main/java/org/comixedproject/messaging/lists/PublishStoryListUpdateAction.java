@@ -44,6 +44,7 @@ public class PublishStoryListUpdateAction extends AbstractPublishAction<Story> {
     log.trace("Publishing story list update");
     this.doPublish(STORY_LIST_UPDATE_TOPIC, story, View.StoryList.class);
     log.trace("Publishing story update");
-    this.doPublish(String.format(STORY_UPDATE_TOPIC, story.getId()), story, View.StoryDetail.class);
+    this.doPublish(
+        String.format(STORY_UPDATE_TOPIC, story.getStoryId()), story, View.StoryDetail.class);
   }
 }

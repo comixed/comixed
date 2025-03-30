@@ -45,11 +45,12 @@ import org.hibernate.annotations.Formula;
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class Issue {
-  @JsonProperty("id")
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "issue_id")
+  @JsonProperty("issueId")
   @Getter
-  private Long id;
+  private Long issueId;
 
   @JsonProperty("publisher")
   @Column(name = "publisher", length = 255, nullable = false, unique = false, updatable = false)
@@ -102,7 +103,7 @@ public class Issue {
   @JsonProperty("found")
   @Formula(
       value =
-          "(SELECT CASE WHEN COUNT(*) > 0 THEN true ELSE false END FROM comic_books c WHERE c.id IN (SELECT d.comic_book_id FROM comic_details d WHERE d.publisher = publisher AND d.series = series AND d.volume = volume AND d.issue_number = issue_number))")
+          "(SELECT CASE WHEN COUNT(*) > 0 THEN true ELSE false END FROM comic_books c WHERE c.comic_book_id IN (SELECT d.comic_book_id FROM comic_details d WHERE d.publisher = publisher AND d.series = series AND d.volume = volume AND d.issue_number = issue_number))")
   @Getter
   @Setter
   private boolean found;
