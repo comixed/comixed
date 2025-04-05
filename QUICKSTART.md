@@ -21,6 +21,7 @@ durable environment.
 
 ComiXed ships with support for two database environments:
  * [MySQL](https://www.mysql.com/) v8.1 or later
+ * [MariaDB](https://mariadb.org/) v10.11 or later.
  * [PosgreSQL](https://www.postgresql.org/) v16.0 or later
 
 It also ships with support for the embedded H2 database. However, it is
