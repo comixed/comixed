@@ -19,6 +19,7 @@
 package org.comixedproject.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,7 +38,10 @@ import org.comixedproject.views.View.UserList;
 public class ComiXedUserPreference {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @JsonProperty("comixedUserPreferenceId")
+  @Column(name = "comixed_user_preference_id")
+  @Getter
+  private Long comixedUserPreferenceId;
 
   @ManyToOne
   @JoinColumn(name = "comixed_user_id", updatable = false, nullable = false)

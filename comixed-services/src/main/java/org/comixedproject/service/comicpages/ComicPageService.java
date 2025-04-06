@@ -125,9 +125,9 @@ public class ComicPageService {
   @Transactional
   @CacheEvict(
       cacheNames = {COMICBOOK_CACHE},
-      key = "#page.comicBook.id")
+      key = "#page.comicBook.comicBookId")
   public ComicPage save(final ComicPage page) throws ComicPageException {
-    log.trace("Saving page: id={}", page.getId());
+    log.trace("Saving page: id={}", page.getComicPageId());
     return this.comicPageRepository.saveAndFlush(page);
   }
 

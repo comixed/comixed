@@ -100,7 +100,7 @@ public class ComicBookRepositoryTest {
   public void testDelete() {
     repository.delete(deletableComicBook);
 
-    final Optional<ComicBook> result = repository.findById(deletableComicBook.getId());
+    final Optional<ComicBook> result = repository.findById(deletableComicBook.getComicBookId());
 
     assertFalse(result.isPresent());
   }
@@ -316,9 +316,9 @@ public class ComicBookRepositoryTest {
 
     this.repository.flush();
 
-    assertNotNull(saved.getId());
+    assertNotNull(saved.getComicBookId());
 
-    final Optional<ComicBook> updated = this.repository.findById(saved.getId());
+    final Optional<ComicBook> updated = this.repository.findById(saved.getComicBookId());
 
     assertTrue(updated.isPresent());
     assertNull(updated.get().getComicDetail().getPublisher());

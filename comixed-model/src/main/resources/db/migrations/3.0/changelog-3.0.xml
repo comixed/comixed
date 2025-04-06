@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!-- migrate existing tables -->
+    <include file="/db/migrations/3.0/adjust_tables/adjust_tables_changelog.xml"/>
+
+    <!-- create new tables for v3.0 -->
+    <include file="/db/migrations/3.0/create_tables/create_tables_changelog.xml"/>
+
+    <!-- create views -->
+
+    <include file="/db/migrations/3.0/create_views/create_views_changelog.xml"/>
+
+    <!-- v3.0 migrations -->
+
+</databaseChangeLog>

@@ -32,19 +32,19 @@ import { ComicType } from '@app/comic-books/models/comic-type';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 export const IMPRINT_1: Imprint = {
-  id: 1,
+  imprintId: 1,
   name: 'Imprint 1',
   publisher: 'Publisher 1'
 };
 
 export const IMPRINT_2: Imprint = {
-  id: 2,
+  imprintId: 2,
   name: 'Imprint 2',
   publisher: 'Publisher 2'
 };
 
 export const IMPRINT_3: Imprint = {
-  id: 3,
+  imprintId: 3,
   name: 'Imprint 3',
   publisher: 'Publisher 3'
 };
@@ -155,7 +155,7 @@ export const DISPLAYABLE_COMIC_5: DisplayableComic = {
 };
 
 export const COMIC_DETAIL_1: ComicDetail = {
-  id: 101,
+  comicDetailId: 101,
   comicId: 1,
   filename: '/Users/comixedreader/Documents/library/comicfile1.cbz',
   baseFilename: 'comicfile1.cbz',
@@ -193,7 +193,7 @@ export const COMIC_DETAIL_1: ComicDetail = {
 };
 
 export const COMIC_DETAIL_2: ComicDetail = {
-  id: 102,
+  comicDetailId: 102,
   comicId: 2,
   comicState: ComicState.STABLE,
   comicType: ComicType.ISSUE,
@@ -223,7 +223,7 @@ export const COMIC_DETAIL_2: ComicDetail = {
 };
 
 export const COMIC_DETAIL_3: ComicDetail = {
-  id: 103,
+  comicDetailId: 103,
   comicId: 3,
   archiveType: ArchiveType.CB7,
   filename: '/Users/comixedreader/Documents/library/comicfile3.cbz',
@@ -253,7 +253,7 @@ export const COMIC_DETAIL_3: ComicDetail = {
 };
 
 export const COMIC_DETAIL_4: ComicDetail = {
-  id: 104,
+  comicDetailId: 104,
   comicId: 4,
   filename: '/Users/comixedreader/Documents/library/comicfile4.cbz',
   baseFilename: 'comicfile4.cbz',
@@ -283,7 +283,7 @@ export const COMIC_DETAIL_4: ComicDetail = {
 };
 
 export const COMIC_DETAIL_5: ComicDetail = {
-  id: 15,
+  comicDetailId: 15,
   comicId: 5,
   archiveType: ArchiveType.CBZ,
   filename: '/Users/comixedreader/Documents/library/comicfile5.cbz',
@@ -315,7 +315,7 @@ export const COMIC_DETAIL_5: ComicDetail = {
 };
 
 export const COMIC_BOOK_1: ComicBook = {
-  id: 1,
+  comicBookId: 1,
   detail: COMIC_DETAIL_1,
   pages: [PAGE_1, PAGE_2, PAGE_3, PAGE_4],
   duplicatePageCount: 0,
@@ -327,7 +327,7 @@ export const COMIC_BOOK_1: ComicBook = {
 };
 
 export const COMIC_BOOK_2: ComicBook = {
-  id: 2,
+  comicBookId: 2,
   detail: COMIC_DETAIL_2,
   pages: [PAGE_1],
   duplicatePageCount: 0,
@@ -339,7 +339,7 @@ export const COMIC_BOOK_2: ComicBook = {
 };
 
 export const COMIC_BOOK_3: ComicBook = {
-  id: 3,
+  comicBookId: 3,
   detail: COMIC_DETAIL_3,
   pages: [PAGE_1],
   duplicatePageCount: 0,
@@ -351,7 +351,7 @@ export const COMIC_BOOK_3: ComicBook = {
 };
 
 export const COMIC_BOOK_4: ComicBook = {
-  id: 4,
+  comicBookId: 4,
   detail: COMIC_DETAIL_4,
   pages: [PAGE_1],
   duplicatePageCount: 0,
@@ -363,7 +363,7 @@ export const COMIC_BOOK_4: ComicBook = {
 };
 
 export const COMIC_BOOK_5: ComicBook = {
-  id: 5,
+  comicBookId: 5,
   detail: COMIC_DETAIL_5,
   pages: [PAGE_1],
   duplicatePageCount: 0,

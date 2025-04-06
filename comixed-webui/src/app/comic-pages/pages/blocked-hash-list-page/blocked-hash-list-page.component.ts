@@ -124,7 +124,8 @@ export class BlockedHashListPageComponent
     const oldData = this.dataSource.data;
     this.dataSource.data = entries.map(item => {
       const selected =
-        oldData.find(entry => entry.item.id === item.id)?.selected || false;
+        oldData.find(entry => entry.item.blockedHashId === item.blockedHashId)
+          ?.selected || false;
       return { selected, item };
     });
     this.hasSelections = this.dataSource.data.some(entry => entry.selected);

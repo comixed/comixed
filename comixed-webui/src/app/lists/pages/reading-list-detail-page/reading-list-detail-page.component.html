@@ -32,7 +32,7 @@
     id="download-button"
     mat-fab
     color="primary"
-    [disabled]="!readingList?.id"
+    [disabled]="!readingList?.readingListId"
     [matTooltip]="'reading-list.tooltip.download-file' | translate"
     (click)="onDownload()"
   >

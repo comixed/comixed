@@ -18,7 +18,7 @@
 
 import { createAction, props } from '@ngrx/store';
 import { ComicBook } from '@app/comic-books/models/comic-book';
-import { Page } from '@app/comic-books/models/page';
+import { ComicPage } from '@app/comic-books/models/comic-page';
 import { PageOrderEntry } from '@app/comic-books/models/net/page-order-entry';
 
 export const loadComicBook = createAction(
@@ -51,7 +51,7 @@ export const updateComicBookFailed = createAction(
 
 export const updatePageDeletion = createAction(
   '[Comic Book] Update page deletion state',
-  props<{ pages: Page[]; deleted: boolean }>()
+  props<{ pages: ComicPage[]; deleted: boolean }>()
 );
 
 export const pageDeletionUpdated = createAction(

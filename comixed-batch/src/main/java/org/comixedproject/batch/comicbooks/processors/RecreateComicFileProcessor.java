@@ -44,7 +44,7 @@ public class RecreateComicFileProcessor implements ItemProcessor<ComicBook, Comi
 
   @Override
   public ComicBook process(final ComicBook comicBook) throws Exception {
-    log.debug("Getting target archive adaptor: id={}", comicBook.getId());
+    log.debug("Getting target archive adaptor: id={}", comicBook.getComicBookId());
     if (comicBook.getComicDetail().getFile().exists()
         && comicBook.getComicDetail().getFile().isFile()) {
       try {

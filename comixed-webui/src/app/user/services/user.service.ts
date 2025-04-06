@@ -155,7 +155,7 @@ export class UserService {
   saveUser(args: { user: User; password: string }): Observable<any> {
     this.logger.debug('Saving user:', args);
     return this.http.put(
-      interpolate(SAVE_CURRENT_USER_URL, { id: args.user.id }),
+      interpolate(SAVE_CURRENT_USER_URL, { id: args.user.comixedUserId }),
       {
         email: args.user.email,
         password: args.password

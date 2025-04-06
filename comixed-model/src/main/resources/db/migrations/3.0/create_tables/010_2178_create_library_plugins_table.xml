@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="010_2178_create_library_plugins_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="library_plugins"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="library_plugins">
+            <column name="library_plugin_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="library_plugins_v3_pk"/>
+            </column>
+
+            <column name="name" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="unique_name" type="varchar(64)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="language" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="version" type="varchar(16)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="filename" type="varchar(1024)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="admin_only" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+</databaseChangeLog>

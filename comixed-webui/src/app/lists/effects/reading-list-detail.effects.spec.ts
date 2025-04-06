@@ -82,7 +82,7 @@ describe('LoadReadingListEffects', () => {
   describe('loading a reading list', () => {
     it('fires an action on success', () => {
       const serviceResponse = READING_LIST;
-      const action = loadReadingList({ id: READING_LIST.id });
+      const action = loadReadingList({ id: READING_LIST.readingListId });
       const outcome = readingListLoaded({ list: READING_LIST });
 
       actions$ = hot('-a', { a: action });
@@ -94,7 +94,7 @@ describe('LoadReadingListEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = loadReadingList({ id: READING_LIST.id });
+      const action = loadReadingList({ id: READING_LIST.readingListId });
       const outcome = loadReadingListFailed();
 
       actions$ = hot('-a', { a: action });
@@ -106,7 +106,7 @@ describe('LoadReadingListEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = loadReadingList({ id: READING_LIST.id });
+      const action = loadReadingList({ id: READING_LIST.readingListId });
       const outcome = loadReadingListFailed();
 
       actions$ = hot('-a', { a: action });

@@ -55,7 +55,7 @@ public class DeletedPageService {
               log.trace(
                   "Processing deleted page: hash={} id={}",
                   deletedPageAndComic.getHash(),
-                  deletedPageAndComic.getComicBook().getId());
+                  deletedPageAndComic.getComicBook().getComicBookId());
               if (!result.containsKey(deletedPageAndComic.getHash())) {
                 log.trace("Creating new hash entry");
                 result.put(

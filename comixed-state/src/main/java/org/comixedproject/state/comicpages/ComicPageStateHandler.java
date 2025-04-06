@@ -101,7 +101,7 @@ public class ComicPageStateHandler extends LifecycleObjectSupport {
   @Synchronized
   public void fireEvent(
       final ComicPage page, final ComicPageEvent event, final Map<String, String> headers) {
-    log.debug("Firing page event: {} => {}", page.getId(), event);
+    log.debug("Firing page event: {} => {}", page.getComicPageId(), event);
     final Message<ComicPageEvent> message =
         MessageBuilder.withPayload(event).copyHeaders(headers).setHeader(HEADER_PAGE, page).build();
     this.stateMachine

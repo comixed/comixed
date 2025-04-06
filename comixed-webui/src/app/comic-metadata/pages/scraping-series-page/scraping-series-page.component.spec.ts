@@ -243,7 +243,7 @@ describe('ScrapingSeriesPageComponent', () => {
 
   describe('selecting a metadata source', () => {
     beforeEach(() => {
-      component.onMetadataSourceSelected(METADATA_SOURCE_2.id);
+      component.onMetadataSourceSelected(METADATA_SOURCE_2.metadataSourceId);
     });
 
     it('selects the source', () => {

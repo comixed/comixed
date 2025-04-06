@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="004_2178_create_organizing_comics_view.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <viewExists viewName="organizing_comics_view"/>
+            </not>
+        </preConditions>
+
+        <createView viewName="organizing_comics_view">
+            SELECT d.comic_book_id    as comic_book_id,
+                   d.comic_detail_id  AS comic_detail_id,
+                   d.filename,
+                   d.archive_type,
+                   d.publisher,
+                   d.imprint,
+                   d.series,
+                   d.volume,
+                   d.issue_number,
+                   d.title,
+                   d.cover_date,
+                   d.store_date,
+                   CASE
+                       WHEN EXISTS(SELECT * FROM comic_metadata_sources s WHERE s.comic_book_id = d.comic_book_id)
+                           THEN true
+                       ELSE false END AS is_scraped
+            FROM comic_details d
+            WHERE d.comic_book_id IN (SELECT comic_book_id FROM comic_books WHERE organizing IS TRUE)
+        </createView>
+
+    </changeSet>
+</databaseChangeLog>

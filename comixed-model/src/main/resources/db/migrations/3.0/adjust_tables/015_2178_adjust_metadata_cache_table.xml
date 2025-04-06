@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="015_2178_adjust_metadata_cache_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="metadata_cache"/>
+            <not>
+                <columnExists tableName="metadata_cache" columnName="metadata_cache_id"/>
+            </not>
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="metadata_cache_entries"
+                                  constraintName="metadata_cache_entries_metadata_cache_fk"/>
+
+        <renameTable oldTableName="metadata_cache" newTableName="old_metadata_cache"/>
+
+        <createTable tableName="metadata_cache">
+            <column name="metadata_cache_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="metadata_cache_v3_pk"/>
+            </column>
+
+            <column name="metadata_source" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cache_key" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <sql>INSERT INTO metadata_cache(metadata_cache_id, metadata_source, cache_key, created_on)
+             SELECT id, metadata_source, cache_key, created_on
+             FROM old_metadata_cache</sql>
+
+        <dropTable tableName="old_metadata_cache"/>
+
+        <createIndex tableName="metadata_cache" indexName="metadata_cache_source_and_cache_key_idx">
+            <column name="metadata_source"/>
+            <column name="cache_key"/>
+        </createIndex>
+
+        <addUniqueConstraint tableName="metadata_cache"
+                             constraintName="metadata_cache_unique_metadata_source_and_cache_key"
+                             columnNames="metadata_source, cache_key"/>
+
+    </changeSet>
+</databaseChangeLog>

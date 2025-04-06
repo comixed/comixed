@@ -154,7 +154,7 @@ export class SingleBookScrapingEffects {
             mergeMap(() => [
               scrapeSingleComicBookSuccess(),
               removeSingleComicBookSelection({
-                comicBookId: action.comic.id
+                comicBookId: action.comic.comicBookId
               })
             ]),
             catchError(error => {

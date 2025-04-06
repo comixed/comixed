@@ -333,7 +333,7 @@ describe('UserService', () => {
       .subscribe(response => expect(response).toEqual(USER));
 
     const req = httpMock.expectOne(
-      interpolate(SAVE_CURRENT_USER_URL, { id: USER.id })
+      interpolate(SAVE_CURRENT_USER_URL, { id: USER.comixedUserId })
     );
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual({
@@ -392,7 +392,7 @@ describe('UserService', () => {
   it('can save a user', () => {
     service
       .saveUserAccount({
-        id: USER.id,
+        id: USER.comixedUserId,
         email: USER.email,
         password: PASSWORD,
         admin: false
@@ -400,7 +400,7 @@ describe('UserService', () => {
       .subscribe(response => expect(response).toBe(USERS));
 
     const req = httpMock.expectOne(
-      interpolate(SAVE_USER_ACCOUNT_URL, { userId: USER.id })
+      interpolate(SAVE_USER_ACCOUNT_URL, { userId: USER.comixedUserId })
     );
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual({
@@ -413,11 +413,11 @@ describe('UserService', () => {
 
   it('can delete a user', () => {
     service
-      .deleteUserAccount({ id: USER.id })
+      .deleteUserAccount({ id: USER.comixedUserId })
       .subscribe(response => expect(response).toBe(USERS));
 
     const req = httpMock.expectOne(
-      interpolate(DELETE_USER_ACCOUNT_URL, { userId: USER.id })
+      interpolate(DELETE_USER_ACCOUNT_URL, { userId: USER.comixedUserId })
     );
     expect(req.request.method).toEqual('DELETE');
     req.flush(USERS);

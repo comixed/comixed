@@ -82,11 +82,11 @@ public class ReadingListRepositoryTest {
     assertNotNull(result);
     assertEquals(2, result.size());
     for (ReadingList list : result) {
-      assertEquals(reader.getId(), list.getOwner().getId());
-      switch (list.getId().intValue()) {
+      assertEquals(reader.getComixedUserId(), list.getOwner().getComixedUserId());
+      switch (list.getReadingListId().intValue()) {
         case 1000 -> assertEquals("First Reading List", list.getName());
         case 1001 -> assertEquals("Second Reading List", list.getName());
-        default -> fail("Unexpected list id: " + list.getId());
+        default -> fail("Unexpected list id: " + list.getReadingListId());
       }
     }
   }
@@ -112,13 +112,13 @@ public class ReadingListRepositoryTest {
 
     list.setOwner(reader);
     list.setName(TEST_NEW_LIST_NAME);
-    list.getEntryIds().add(comicDetail1.getId());
-    list.getEntryIds().add(comicDetail2.getId());
+    list.getEntryIds().add(comicDetail1.getComicDetailId());
+    list.getEntryIds().add(comicDetail2.getComicDetailId());
 
     final ReadingList result = repository.save(list);
 
     assertNotNull(result);
-    assertEquals(reader.getId(), result.getOwner().getId());
+    assertEquals(reader.getComixedUserId(), result.getOwner().getComixedUserId());
     assertEquals(list.getEntryIds().size(), result.getEntryIds().size());
   }
 
@@ -129,7 +129,7 @@ public class ReadingListRepositoryTest {
     list.getEntryIds().add(comicDetail2.getComicId());
     repository.save(list);
 
-    ReadingList result = repository.getById(list.getId());
+    ReadingList result = repository.getById(list.getReadingListId());
 
     assertEquals(list.getEntryIds().size(), result.getEntryIds().size());
     assertTrue(result.getEntryIds().contains(comicDetail2.getComicId()));

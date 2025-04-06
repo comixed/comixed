@@ -289,7 +289,7 @@ public class BlockedHashService {
           log.trace("Loading blocked page for hash: {}", hash);
           final BlockedHash entry = this.blockedHashRepository.findByHash(hash);
           if (entry != null) {
-            log.trace("Deleting entry: id={}", entry.getId());
+            log.trace("Deleting entry: id={}", entry.getBlockedHashId());
             this.blockedHashRepository.delete(entry);
             result.add(entry.getHash());
             try {

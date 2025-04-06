@@ -20,7 +20,7 @@ import { LibraryPlugin } from '@app/library-plugins/models/library-plugin';
 import { PluginLanguage } from '@app/library-plugins/models/plugin-language';
 
 export const LIBRARY_PLUGIN_1: LibraryPlugin = {
-  id: 1,
+  libraryPluginId: 1,
   name: 'Plugin 1',
   version: '1.2.3',
   language: 'Groovy',
@@ -38,7 +38,7 @@ export const LIBRARY_PLUGIN_1: LibraryPlugin = {
 };
 
 export const LIBRARY_PLUGIN_2: LibraryPlugin = {
-  id: 2,
+  libraryPluginId: 2,
   name: 'Plugin 2',
   version: '1.2.3',
   language: 'Groovy',
@@ -56,7 +56,7 @@ export const LIBRARY_PLUGIN_2: LibraryPlugin = {
 };
 
 export const LIBRARY_PLUGIN_3: LibraryPlugin = {
-  id: 3,
+  libraryPluginId: 3,
   name: 'Plugin 3',
   version: '1.2.3',
   language: 'Groovy',
@@ -74,7 +74,7 @@ export const LIBRARY_PLUGIN_3: LibraryPlugin = {
 };
 
 export const LIBRARY_PLUGIN_4: LibraryPlugin = {
-  id: 4,
+  libraryPluginId: 4,
   name: 'Plugin 4',
   version: '1.2.3',
   language: 'Groovy',
@@ -99,7 +99,7 @@ export const LIBRARY_PLUGIN_4: LibraryPlugin = {
 };
 
 export const LIBRARY_PLUGIN_5: LibraryPlugin = {
-  id: 5,
+  libraryPluginId: 5,
   name: 'Plugin 5',
   version: '1.2.3',
   language: 'Groovy',

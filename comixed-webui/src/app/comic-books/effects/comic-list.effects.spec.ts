@@ -97,7 +97,7 @@ describe('ComicListEffects', () => {
   const COVER_MONTHS = [1, 3, 4, 7, 9];
   const TOTAL_COUNT = COMIC_LIST.length * 2;
   const FILTERED_COUNT = Math.floor(TOTAL_COUNT * 0.75);
-  const READING_LIST_ID = READING_LIST_3.id;
+  const READING_LIST_ID = READING_LIST_3.readingListId;
 
   let actions$: Observable<any>;
   let effects: ComicListEffects;

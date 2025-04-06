@@ -73,13 +73,13 @@
       </mat-label>
       <mat-select
         formControlName="metadataSource"
-        [value]="metadataSource?.id"
+        [value]="metadataSource?.metadataSourceId"
         (selectionChange)="onMetadataSourceSelected($event.value)"
       >
         <mat-option
           [disabled]="scrapingVolumes.length > 0"
           *ngFor="let source of metadataSourceList"
-          [value]="source.id"
+          [value]="source.metadataSourceId"
         >
           {{ source.name }}
         </mat-option>

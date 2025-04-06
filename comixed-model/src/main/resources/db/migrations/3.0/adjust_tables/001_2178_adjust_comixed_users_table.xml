@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="001_2178_adjust_comixed_users_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="comixed_users"/>
+            <not>
+                <columnExists tableName="comixed_users" columnName="comixed_user_id"/>
+            </not>
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="reading_lists" constraintName="reading_lists_owner_fk"/>
+        <dropForeignKeyConstraint baseTableName="read_comic_books" constraintName="read_comic_books_user_fk"/>
+
+        <renameTable oldTableName="comixed_users" newTableName="old_comixed_users"/>
+
+        <createTable tableName="comixed_users">
+            <column name="comixed_user_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="comixed_users_v3_pk"/>
+            </column>
+
+            <column name="email" type="varchar(256)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="password_hash" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_on" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="last_logged_on" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <sql>INSERT INTO comixed_users(comixed_user_id, email, password_hash, created_on, last_logged_on)
+             SELECT id, email, password_hash, created_on, last_logged_on
+             FROM old_comixed_users</sql>
+
+        <dropTable tableName="old_comixed_users"/>
+
+    </changeSet>
+</databaseChangeLog>

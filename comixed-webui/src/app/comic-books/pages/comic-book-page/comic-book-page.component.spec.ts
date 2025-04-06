@@ -290,7 +290,10 @@ describe('ComicBookPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markSingleComicBookRead({ comicBookId: COMIC_BOOK.id, read: true })
+          markSingleComicBookRead({
+            comicBookId: COMIC_BOOK.comicBookId,
+            read: true
+          })
         );
       });
     });
@@ -302,7 +305,10 @@ describe('ComicBookPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markSingleComicBookRead({ comicBookId: COMIC_BOOK.id, read: false })
+          markSingleComicBookRead({
+            comicBookId: COMIC_BOOK.comicBookId,
+            read: false
+          })
         );
       });
     });
@@ -323,7 +329,7 @@ describe('ComicBookPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        updateSingleComicBookMetadata({ comicBookId: COMIC_BOOK.id })
+        updateSingleComicBookMetadata({ comicBookId: COMIC_BOOK.comicBookId })
       );
     });
   });
@@ -331,7 +337,7 @@ describe('ComicBookPageComponent', () => {
   describe('loading the last read state', () => {
     beforeEach(() => {
       component.comicBook = COMIC_BOOK;
-      component.comicId = COMIC_BOOK.id;
+      component.comicId = COMIC_BOOK.comicBookId;
     });
 
     describe('when the comic is read', () => {
@@ -388,7 +394,7 @@ describe('ComicBookPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          deleteSingleComicBook({ comicBookId: COMIC_BOOK.id })
+          deleteSingleComicBook({ comicBookId: COMIC_BOOK.comicBookId })
         );
       });
     });
@@ -404,7 +410,7 @@ describe('ComicBookPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          undeleteSingleComicBook({ comicBookId: COMIC_BOOK.id })
+          undeleteSingleComicBook({ comicBookId: COMIC_BOOK.comicBookId })
         );
       });
     });
@@ -412,7 +418,7 @@ describe('ComicBookPageComponent', () => {
 
   describe('subscribing to comic updates', () => {
     beforeEach(() => {
-      component.comicId = COMIC_BOOK.id;
+      component.comicId = COMIC_BOOK.comicBookId;
       webSocketService.subscribe.and.callFake((topic, callback) => {
         callback(COMIC_BOOK);
         return {} as Subscription;
@@ -428,7 +434,7 @@ describe('ComicBookPageComponent', () => {
 
     it('subscribes to the task topic', () => {
       expect(webSocketService.subscribe).toHaveBeenCalledWith(
-        interpolate(COMIC_BOOK_UPDATE_TOPIC, { id: COMIC_BOOK.id }),
+        interpolate(COMIC_BOOK_UPDATE_TOPIC, { id: COMIC_BOOK.comicBookId }),
         jasmine.anything()
       );
     });

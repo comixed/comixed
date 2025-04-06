@@ -109,11 +109,11 @@ class ReadingListServiceTest {
   public void setUp() throws ComiXedUserException {
     Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.when(readingList.getOwner()).thenReturn(owner);
-    Mockito.when(readingList.getId()).thenReturn(TEST_READING_LIST_ID);
+    Mockito.when(readingList.getReadingListId()).thenReturn(TEST_READING_LIST_ID);
     Mockito.when(owner.getEmail()).thenReturn(TEST_OWNER_EMAIL);
     Mockito.when(readingList.getName()).thenReturn(TEST_READING_LIST_NAME);
     Mockito.when(readingList.getEntryIds()).thenReturn(entryIdList);
-    Mockito.when(comicDetail.getId()).thenReturn(TEST_COMIC_ID);
+    Mockito.when(comicDetail.getComicDetailId()).thenReturn(TEST_COMIC_ID);
     Mockito.when(comicDetail.getPublisher()).thenReturn(TEST_PUBLISHER);
     Mockito.when(comicDetail.getSeries()).thenReturn(TEST_SERIES);
     Mockito.when(comicDetail.getVolume()).thenReturn(TEST_VOLUME);
@@ -204,7 +204,7 @@ class ReadingListServiceTest {
 
   @Test
   void save() {
-    Mockito.when(readingList.getId()).thenReturn(TEST_READING_LIST_ID);
+    Mockito.when(readingList.getReadingListId()).thenReturn(TEST_READING_LIST_ID);
     Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(loadedReadingList);
 
     final ReadingList result = service.saveReadingList(readingList);
@@ -585,7 +585,7 @@ class ReadingListServiceTest {
             comicBookService.findComic(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
         .thenReturn(comicBookList);
-    Mockito.when(savedReadingList.getId()).thenReturn(TEST_READING_LIST_ID);
+    Mockito.when(savedReadingList.getReadingListId()).thenReturn(TEST_READING_LIST_ID);
     Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(readingList);
     Mockito.doNothing()
         .when(readingListStateHandler)

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="008_2178_adjust_imprints_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="imprints"/>
+            <not>
+                <columnExists tableName="imprints" columnName="imprint_id"/>
+            </not>
+        </preConditions>
+
+        <renameTable oldTableName="imprints" newTableName="old_imprints"/>
+
+        <createTable tableName="imprints">
+            <column name="imprint_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="imprints_v3_pk"/>
+            </column>
+
+            <column name="imprint_name" type="varchar(128)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="publisher" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <sql>INSERT INTO imprints(imprint_id, imprint_name, publisher)
+             SELECT id, imprint_name, publisher
+             FROM old_imprints</sql>
+
+        <dropTable tableName="old_imprints"/>
+
+    </changeSet>
+</databaseChangeLog>

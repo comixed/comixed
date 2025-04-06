@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="005_2178_create_publisher_details_view.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <viewExists viewName="publisher_details_view"/>
+            </not>
+        </preConditions>
+
+        <createView viewName="publisher_details_view">
+            SELECT d.publisher                                                            as name,
+                   (SELECT COUNT(*) FROM comic_details c WHERE c.publisher = d.publisher) as issue_count,
+                   (SELECT COUNT(DISTINCT c.series)
+                    FROM comic_details c
+                    WHERE c.publisher = d.publisher
+                      AND c.series IS NOT NULL
+                      AND LENGTH(c.series) > 0)                                           AS series_count
+            FROM comic_details d
+            GROUP BY d.publisher;
+        </createView>
+
+    </changeSet>
+</databaseChangeLog>

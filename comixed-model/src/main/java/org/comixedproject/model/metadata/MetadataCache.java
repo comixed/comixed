@@ -18,6 +18,7 @@
 
 package org.comixedproject.model.metadata;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,8 +37,10 @@ import lombok.Setter;
 public class MetadataCache {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "metadata_cache_id")
+  @JsonProperty("metadataCacheId")
   @Getter
-  private Long id;
+  private Long metadataCacheId;
 
   @Column(name = "metadata_source", length = 32, updatable = false, nullable = false)
   @Getter

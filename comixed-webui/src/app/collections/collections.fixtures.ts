@@ -81,7 +81,7 @@ export const SERIES_5: Series = {
 };
 
 export const ISSUE_1: Issue = {
-  id: 1,
+  issueId: 1,
   publisher: 'Publisher 1',
   series: 'Series 1',
   volume: '2022',
@@ -93,7 +93,7 @@ export const ISSUE_1: Issue = {
 };
 
 export const ISSUE_2: Issue = {
-  id: 2,
+  issueId: 2,
   publisher: 'Publisher 1',
   series: 'Series 1',
   volume: '2022',
@@ -105,7 +105,7 @@ export const ISSUE_2: Issue = {
 };
 
 export const ISSUE_3: Issue = {
-  id: 3,
+  issueId: 3,
   publisher: 'Publisher 1',
   series: 'Series 1',
   volume: '2022',

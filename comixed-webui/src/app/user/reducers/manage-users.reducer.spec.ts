@@ -192,7 +192,7 @@ describe('ManageUsers Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: false },
-        deleteUserAccount({ id: USER.id, email: USER.email })
+        deleteUserAccount({ id: USER.comixedUserId, email: USER.email })
       );
     });
 

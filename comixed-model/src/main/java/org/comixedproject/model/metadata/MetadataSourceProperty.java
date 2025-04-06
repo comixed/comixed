@@ -37,8 +37,9 @@ import org.comixedproject.views.View;
 public class MetadataSourceProperty {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "metadata_source_property_id")
   @Getter
-  private Long id;
+  private Long metadataSourcePropertyId;
 
   @ManyToOne
   @JoinColumn(name = "metadata_source_id", nullable = false, updatable = false)

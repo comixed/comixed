@@ -33,7 +33,7 @@ export const LOAD_ALL_STORY_NAMES_URL = `${API_ROOT_URL}/lists/stories/names`;
 export const LOAD_STORIES_FOR_NAME_URL = `${API_ROOT_URL}/lists/stories?name=\${name}`;
 
 export const READING_LIST_TEMPLATE: ReadingList = {
-  id: null,
+  readingListId: null,
   name: '',
   summary: '',
   owner: null,

@@ -17,7 +17,7 @@
  */
 
 export interface FilenameScrapingRule {
-  id: number;
+  filenameScrapingRuleId: number;
   name: string;
   rule: string;
   priority: number;

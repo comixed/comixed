@@ -251,7 +251,7 @@ describe('SingleBookScrapingEffects', () => {
       });
       const outcome1 = scrapeSingleComicBookSuccess();
       const outcome2 = removeSingleComicBookSelection({
-        comicBookId: COMIC_BOOK.id
+        comicBookId: COMIC_BOOK.comicBookId
       });
 
       actions$ = hot('-a', { a: action });

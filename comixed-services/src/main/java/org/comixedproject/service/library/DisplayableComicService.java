@@ -490,7 +490,7 @@ public class DisplayableComicService {
       final ReadingList readingList =
           this.readingListService.loadReadingListForUser(email, readingListId);
       return this.displayableComicRepository.loadComicsForList(
-          readingList.getId(),
+          readingList.getReadingListId(),
           PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
     } catch (ReadingListException error) {
       throw new LibraryException("Failed to load entries for reading list", error);
@@ -585,7 +585,7 @@ public class DisplayableComicService {
       case "cover-date" -> fieldName = "coverDate";
       case "comic-count" -> fieldName = "comicCount";
       case "tag-value" -> fieldName = "value";
-      default -> fieldName = "id";
+      default -> fieldName = "comicDetailId";
     }
 
     Sort.Direction direction = Sort.Direction.DESC;

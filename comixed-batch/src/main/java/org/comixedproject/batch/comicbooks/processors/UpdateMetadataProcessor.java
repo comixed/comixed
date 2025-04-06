@@ -45,7 +45,7 @@ public class UpdateMetadataProcessor implements ItemProcessor<ComicBook, ComicBo
   public ComicBook process(final ComicBook comicBook) {
     if (this.configurationService.isFeatureEnabled(
         ConfigurationService.CREATE_EXTERNAL_METADATA_FILE)) {
-      log.debug("Creating external metadata file for comic: id={}", comicBook.getId());
+      log.debug("Creating external metadata file for comic: id={}", comicBook.getComicBookId());
       try {
         this.comicBookAdaptor.saveMetadataFile(comicBook);
       } catch (AdaptorException error) {
@@ -67,7 +67,7 @@ public class UpdateMetadataProcessor implements ItemProcessor<ComicBook, ComicBo
     }
 
     try {
-      log.debug("Updating comic book metadata: id={}", comicBook.getId());
+      log.debug("Updating comic book metadata: id={}", comicBook.getComicBookId());
       this.comicBookAdaptor.save(comicBook, comicBook.getComicDetail().getArchiveType(), false, "");
     } catch (AdaptorException error) {
       log.error("Failed to update metadata for comic book", error);

@@ -59,7 +59,7 @@ export class LibraryPluginService {
       entry => (properties[entry.name] = entry.value)
     );
     return this.http.put(
-      interpolate(UPDATE_PLUGIN_URL, { pluginId: args.plugin.id }),
+      interpolate(UPDATE_PLUGIN_URL, { pluginId: args.plugin.libraryPluginId }),
       {
         adminOnly: args.plugin.adminOnly,
         properties
@@ -70,7 +70,7 @@ export class LibraryPluginService {
   deletePlugin(args: { plugin: LibraryPlugin }): Observable<any> {
     this.logger.trace('Deleting plugin:', args);
     return this.http.delete(
-      interpolate(DELETE_PLUGIN_URL, { pluginId: args.plugin.id })
+      interpolate(DELETE_PLUGIN_URL, { pluginId: args.plugin.libraryPluginId })
     );
   }
 
@@ -81,7 +81,7 @@ export class LibraryPluginService {
     this.logger.trace('Running plugin against one comic book:', args);
     return this.http.post(
       interpolate(RUN_LIBRARY_PLUGIN_ON_ONE_COMIC_BOOK_URL, {
-        pluginId: args.plugin.id,
+        pluginId: args.plugin.libraryPluginId,
         comicBookId: args.comicBookId
       }),
       {}
@@ -94,7 +94,7 @@ export class LibraryPluginService {
     this.logger.trace('Running plugin against selected comic books:', args);
     return this.http.post(
       interpolate(RUN_LIBRARY_PLUGIN_ON_SELECTED_COMIC_BOOKS_URL, {
-        pluginId: args.plugin.id
+        pluginId: args.plugin.libraryPluginId
       }),
       {}
     );

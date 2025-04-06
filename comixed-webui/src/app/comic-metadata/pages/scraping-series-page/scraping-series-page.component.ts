@@ -209,13 +209,16 @@ export class ScrapingSeriesPageComponent implements OnInit, OnDestroy {
   get metadataSource(): MetadataSource {
     return this.metadataSourceList.find(
       source =>
-        source.id === this.scrapeSeriesForm.controls.metadataSource.value
+        source.metadataSourceId ===
+        this.scrapeSeriesForm.controls.metadataSource.value
     );
   }
 
   set metadataSource(metadataSource: MetadataSource) {
     this.logger.debug(`Selected metadata source: ${metadataSource?.name}`);
-    this.scrapeSeriesForm.controls.metadataSource.setValue(metadataSource?.id);
+    this.scrapeSeriesForm.controls.metadataSource.setValue(
+      metadataSource?.metadataSourceId
+    );
   }
 
   ngOnInit(): void {
@@ -243,7 +246,7 @@ export class ScrapingSeriesPageComponent implements OnInit, OnDestroy {
   onMetadataSourceSelected(id: number): void {
     this.logger.debug(`Selected metadata source: id=${id}`);
     this.metadataSource = this.metadataSourceList.find(
-      source => source.id === id
+      source => source.metadataSourceId === id
     );
   }
 

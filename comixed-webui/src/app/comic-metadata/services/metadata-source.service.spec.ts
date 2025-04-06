@@ -75,11 +75,13 @@ describe('MetadataSourceService', () => {
 
   it('can load a metadata source', () => {
     service
-      .loadOne({ id: METADATA_SOURCE.id })
+      .loadOne({ id: METADATA_SOURCE.metadataSourceId })
       .subscribe(response => expect(response).toEqual(METADATA_SOURCE));
 
     const req = httpMock.expectOne(
-      interpolate(LOAD_METADATA_SOURCE_URL, { id: METADATA_SOURCE.id })
+      interpolate(LOAD_METADATA_SOURCE_URL, {
+        id: METADATA_SOURCE.metadataSourceId
+      })
     );
     expect(req.request.method).toEqual('GET');
     req.flush(METADATA_SOURCE);
@@ -91,14 +93,17 @@ describe('MetadataSourceService', () => {
         .save({
           source: {
             ...METADATA_SOURCE,
-            id: null
+            metadataSourceId: null
           }
         })
         .subscribe(response => expect(response).toEqual(METADATA_SOURCE));
 
       const req = httpMock.expectOne(interpolate(CREATE_METADATA_SOURCE_URL));
       expect(req.request.method).toEqual('POST');
-      expect(req.request.body).toEqual({ ...METADATA_SOURCE, id: null });
+      expect(req.request.body).toEqual({
+        ...METADATA_SOURCE,
+        metadataSourceId: null
+      });
       req.flush(METADATA_SOURCE);
     });
 
@@ -110,7 +115,9 @@ describe('MetadataSourceService', () => {
         .subscribe(response => expect(response).toEqual(METADATA_SOURCE));
 
       const req = httpMock.expectOne(
-        interpolate(UPDATE_METADATA_SOURCE_URL, { id: METADATA_SOURCE.id })
+        interpolate(UPDATE_METADATA_SOURCE_URL, {
+          id: METADATA_SOURCE.metadataSourceId
+        })
       );
       expect(req.request.method).toEqual('PUT');
       expect(req.request.body).toEqual(METADATA_SOURCE);
@@ -124,7 +131,9 @@ describe('MetadataSourceService', () => {
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
-      interpolate(DELETE_METADATA_SOURCE_URL, { id: METADATA_SOURCE.id })
+      interpolate(DELETE_METADATA_SOURCE_URL, {
+        id: METADATA_SOURCE.metadataSourceId
+      })
     );
     expect(req.request.method).toEqual('DELETE');
     req.flush(new HttpResponse({ status: 200 }));
@@ -132,12 +141,12 @@ describe('MetadataSourceService', () => {
 
   it('can mark a metadata source as preferred', () => {
     service
-      .markAsPreferred({ id: METADATA_SOURCE.id })
+      .markAsPreferred({ id: METADATA_SOURCE.metadataSourceId })
       .subscribe(response => expect(response).toEqual(METADATA_SOURCES));
 
     const req = httpMock.expectOne(
       interpolate(MARK_METADATA_SOURCE_AS_PREFERRED_URL, {
-        id: METADATA_SOURCE.id
+        id: METADATA_SOURCE.metadataSourceId
       })
     );
     expect(req.request.method).toEqual('POST');

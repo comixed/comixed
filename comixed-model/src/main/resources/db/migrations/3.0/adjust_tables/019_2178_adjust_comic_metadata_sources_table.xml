@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="019_2178_adjust_comic_metadata_sources_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="comic_metadata_sources"/>
+            <not>
+                <columnExists tableName="comic_metadata_sources" columnName="comic_metadata_source_id"/>
+            </not>
+        </preConditions>
+
+        <renameTable oldTableName="comic_metadata_sources" newTableName="old_comic_metadata_sources"/>
+
+        <createTable tableName="comic_metadata_sources">
+            <column name="comic_metadata_source_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="comic_metadata_sources_v3_pk"/>
+            </column>
+
+            <column name="comic_book_id" type="bigint">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="metadata_source_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="reference_id" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <sql>INSERT INTO comic_metadata_sources(comic_metadata_source_id, comic_book_id, metadata_source_id,
+                                                reference_id)
+             SELECT id, comic_book_id, metadata_source_id, reference_id
+             FROM old_comic_metadata_sources</sql>
+
+        <dropTable tableName="old_comic_metadata_sources"/>
+
+        <addForeignKeyConstraint baseTableName="comic_metadata_sources" baseColumnNames="comic_book_id"
+                                 constraintName="comic_metadata_source_comic_book_fk"
+                                 referencedTableName="comic_books"
+                                 referencedColumnNames="comic_book_id"/>
+
+        <addForeignKeyConstraint baseTableName="comic_metadata_sources" baseColumnNames="metadata_source_id"
+                                 constraintName="comic_metadata_source_metadata_source_fk"
+                                 referencedTableName="metadata_sources"
+                                 referencedColumnNames="metadata_source_id"/>
+
+        <createIndex tableName="comic_metadata_sources" indexName="comic_metadata_source_comic_book_idx">
+            <column name="comic_book_id"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

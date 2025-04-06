@@ -120,6 +120,6 @@
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row
     *matRowDef="let row; columns: displayedColumns"
-    [routerLink]="['/lists', 'reading', row.item.id]"
+    [routerLink]="['/lists', 'reading', row.item.readingListId]"
   ></mat-row>
 </mat-table>

@@ -39,14 +39,17 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Entity
 @Table(name = "reading_lists")
 @NoArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "readingListId")
 public class ReadingList {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonProperty("id")
+  @Column(name = "reading_list_id")
+  @JsonProperty("readingListId")
   @JsonView({View.ComicListView.class, View.ReadingLists.class})
   @Getter
-  private Long id;
+  private Long readingListId;
 
   @Column(
       name = "reading_list_state",
@@ -124,7 +127,7 @@ public class ReadingList {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     ReadingList that = (ReadingList) o;
-    return Objects.equals(id, that.id)
+    return Objects.equals(readingListId, that.readingListId)
         && Objects.equals(readingListState, that.readingListState)
         && Objects.equals(nameKey, that.nameKey)
         && Objects.equals(name, that.name)
@@ -136,6 +139,7 @@ public class ReadingList {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, readingListState, name, summary, owner, createdOn, lastModifiedOn);
+    return Objects.hash(
+        readingListId, readingListState, name, summary, owner, createdOn, lastModifiedOn);
   }
 }

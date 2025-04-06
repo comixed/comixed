@@ -349,7 +349,7 @@
   *ngFor="let list of readingLists"
   mat-button
   class="menu-button"
-  [routerLink]="['/lists', 'reading', list.id]"
+  [routerLink]="['/lists', 'reading', list.readingListId]"
   routerLinkActive="active-nav-button"
 >
   <mat-icon>format_list_numbered_rtl</mat-icon>

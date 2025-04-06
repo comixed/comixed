@@ -64,7 +64,7 @@ public class ComicStateChangeAdaptor implements InitializingBean, ComicStateChan
       final State<ComicState, ComicEvent> state, final Message<ComicEvent> message) {
     final var comic = message.getHeaders().get(HEADER_COMIC, ComicBook.class);
     if (comic == null) return;
-    log.debug("Processing comic state change: [{}] =>  {}", comic.getId(), state.getId());
+    log.debug("Processing comic state change: [{}] =>  {}", comic.getComicBookId(), state.getId());
     if (state.getId() == ComicState.REMOVED) {
       log.trace("Publishing comic removal");
       try {

@@ -37,8 +37,10 @@ import org.comixedproject.views.View;
 public class LibraryPluginProperty {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "library_plugin_property_id")
+  @JsonProperty("libraryPluginPropertyId")
   @Getter
-  private Long id;
+  private Long libraryPluginPropertyId;
 
   @ManyToOne()
   @JoinColumn(name = "library_plugin_id", insertable = true, updatable = false, nullable = false)

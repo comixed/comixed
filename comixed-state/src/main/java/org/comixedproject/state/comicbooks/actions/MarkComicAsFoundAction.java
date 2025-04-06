@@ -36,7 +36,7 @@ public class MarkComicAsFoundAction extends AbstractComicAction {
   @Override
   public void execute(final StateContext<ComicState, ComicEvent> context) {
     final ComicBook comicBook = this.fetchComic(context);
-    log.debug("Marking comic book as found: id={}", comicBook.getId());
+    log.debug("Marking comic book as found: id={}", comicBook.getComicBookId());
     comicBook.getComicDetail().setMissing(false);
   }
 }

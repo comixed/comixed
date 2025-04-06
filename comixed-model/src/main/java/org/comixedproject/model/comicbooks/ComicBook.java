@@ -45,15 +45,16 @@ import org.hibernate.annotations.Formula;
 @Table(name = "comic_books")
 @Log4j2
 @NoArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "comicBookId")
 public class ComicBook {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonProperty("id")
+  @Column(name = "comic_book_id")
+  @JsonProperty("comicBookId")
   @JsonView({View.ComicListView.class, View.DuplicatePageList.class, View.ReadingListDetail.class})
   @Getter
   @Setter
-  private Long id;
+  private Long comicBookId;
 
   @OneToOne(mappedBy = "comicBook", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonProperty("detail")
@@ -77,7 +78,7 @@ public class ComicBook {
   List<ComicPage> pages = new ArrayList<>();
 
   @Formula(
-      "(SELECT COUNT(*) FROM comic_pages p WHERE p.comic_book_id = id AND p.file_hash IN (SELECT d.file_hash FROM comic_pages d GROUP BY d.file_hash HAVING COUNT(*) > 1))")
+      "(SELECT COUNT(*) FROM comic_pages p WHERE p.comic_book_id = comic_book_id AND p.file_hash IN (SELECT d.file_hash FROM comic_pages d GROUP BY d.file_hash HAVING COUNT(*) > 1))")
   @JsonProperty("duplicatePageCount")
   @JsonView({View.ComicListView.class})
   @Getter
@@ -85,7 +86,7 @@ public class ComicBook {
 
   @Formula(
       value =
-          "(SELECT COUNT(*) FROM comic_pages p WHERE p.comic_book_id = id AND p.file_hash in (SELECT b.hash_value FROM blocked_hashes b))")
+          "(SELECT COUNT(*) FROM comic_pages p WHERE p.comic_book_id = comic_book_id AND p.file_hash in (SELECT b.hash_value FROM blocked_hashes b))")
   @JsonProperty("blockedPageCount")
   @JsonView({View.ComicListView.class})
   @Getter
@@ -245,7 +246,7 @@ public class ComicBook {
         .forEach(
             page -> {
               if (page.getPageState() == ComicPageState.DELETED) {
-                log.trace("Removing page: {}", page.getId());
+                log.trace("Removing page: {}", page.getComicPageId());
                 this.pages.remove(page);
               }
             });

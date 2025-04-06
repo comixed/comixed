@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { Page } from '@app/comic-books/models/page';
+import { ComicPage } from '@app/comic-books/models/comic-page';
 import { PageContextMenuEvent } from '@app/comic-books/models/event/page-context-menu-event';
 
 /** Displays a page from a comic. Provides events for when the page is clicked. */
@@ -28,7 +28,7 @@ import { PageContextMenuEvent } from '@app/comic-books/models/event/page-context
   styleUrls: ['./comic-page.component.scss']
 })
 export class ComicPageComponent {
-  @Input() page: Page;
+  @Input() page: ComicPage;
   @Input() imageUrl: string;
   @Input() selected: boolean;
   @Input() title: string;

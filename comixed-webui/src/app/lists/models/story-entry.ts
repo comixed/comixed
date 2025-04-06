@@ -19,7 +19,7 @@
 import { ComicBook } from '@app/comic-books/models/comic-book';
 
 export interface StoryEntry {
-  id: number;
+  storyEntryId: number;
   readingOrder: number;
   series: string;
   volume: string;

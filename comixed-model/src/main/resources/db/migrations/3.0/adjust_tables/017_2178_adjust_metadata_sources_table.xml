@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="017_2178_adjust_metadata_sources_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="metadata_sources"/>
+            <not>
+                <columnExists tableName="metadata_sources" columnName="metadata_source_id"/>
+            </not>
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="metadata_source_properties"
+                                  constraintName="metadata_source_properties_metadata_source_fk"/>
+        <dropForeignKeyConstraint baseTableName="comic_metadata_sources"
+                                  constraintName="comic_metadata_sources_metadata_source_fk"/>
+
+        <renameTable oldTableName="metadata_sources" newTableName="old_metadata_sources"/>
+
+        <createTable tableName="metadata_sources">
+            <column name="metadata_source_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="metadata_sources_v3_pk"/>
+            </column>
+
+            <column name="adaptor_name" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="preferred_source" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <sql>INSERT INTO metadata_sources(metadata_source_id, adaptor_name, preferred_source)
+             SELECT id, adaptor_name, preferred_source
+             FROM old_metadata_sources</sql>
+
+        <dropTable tableName="old_metadata_sources"/>
+
+    </changeSet>
+</databaseChangeLog>

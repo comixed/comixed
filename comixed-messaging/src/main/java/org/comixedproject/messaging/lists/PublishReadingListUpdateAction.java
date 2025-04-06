@@ -47,7 +47,7 @@ public class PublishReadingListUpdateAction extends AbstractPublishAction<Readin
     log.trace("Publishing reading list detail update");
     this.doPublishToUser(
         readingList.getOwner(),
-        String.format(READING_LIST_UPDATE_TOPIC, readingList.getId()),
+        String.format(READING_LIST_UPDATE_TOPIC, readingList.getReadingListId()),
         readingList,
         View.ReadingListDetail.class);
   }

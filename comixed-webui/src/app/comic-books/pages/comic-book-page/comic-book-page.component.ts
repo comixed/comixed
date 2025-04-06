@@ -64,7 +64,7 @@ import {
   undeleteSingleComicBook
 } from '@app/comic-books/actions/delete-comic-books.actions';
 import { COMIC_BOOK_UPDATE_TOPIC } from '@app/comic-books/comic-books.constants';
-import { Page } from '@app/comic-books/models/page';
+import { ComicPage } from '@app/comic-books/models/comic-page';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
@@ -90,7 +90,7 @@ export class ComicBookPageComponent
   comicId = -1;
   pageIndex = 0;
   comicBook: ComicBook;
-  pages: Page[];
+  pages: ComicPage[];
   userSubscription: Subscription;
   readComicBooksSubscription: Subscription;
   isAdmin = false;
@@ -264,7 +264,7 @@ export class ComicBookPageComponent
   setReadState(read: boolean): void {
     this.logger.debug('Marking comic read status:', read);
     this.store.dispatch(
-      markSingleComicBookRead({ comicBookId: this.comicBook.id, read })
+      markSingleComicBookRead({ comicBookId: this.comicBook.comicBookId, read })
     );
   }
 
@@ -280,7 +280,9 @@ export class ComicBookPageComponent
       confirm: () => {
         this.logger.debug('Updating comic file:', this.comicBook);
         this.store.dispatch(
-          updateSingleComicBookMetadata({ comicBookId: this.comicBook.id })
+          updateSingleComicBookMetadata({
+            comicBookId: this.comicBook.comicBookId
+          })
         );
       }
     });
@@ -301,11 +303,11 @@ export class ComicBookPageComponent
         this.logger.trace('Marking comic for deletion');
         if (deleted) {
           this.store.dispatch(
-            deleteSingleComicBook({ comicBookId: this.comicBook.id })
+            deleteSingleComicBook({ comicBookId: this.comicBook.comicBookId })
           );
         } else {
           this.store.dispatch(
-            undeleteSingleComicBook({ comicBookId: this.comicBook.id })
+            undeleteSingleComicBook({ comicBookId: this.comicBook.comicBookId })
           );
         }
       }
@@ -320,7 +322,7 @@ export class ComicBookPageComponent
     }
   }
 
-  onPagesChanged(pages: Page[]): void {
+  onPagesChanged(pages: ComicPage[]): void {
     this.pages = pages;
   }
 
@@ -382,6 +384,8 @@ export class ComicBookPageComponent
   }
 
   private doCheckIfRead() {
-    this.isRead = this.readComicBookList.includes(this.comicBook?.detail?.id);
+    this.isRead = this.readComicBookList.includes(
+      this.comicBook?.detail?.comicDetailId
+    );
   }
 }

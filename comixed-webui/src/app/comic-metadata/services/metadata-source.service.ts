@@ -50,10 +50,12 @@ export class MetadataSourceService {
   }
 
   save(args: { source: MetadataSource }): Observable<any> {
-    if (!!args.source.id) {
+    if (!!args.source.metadataSourceId) {
       this.logger.trace('Updating metadata source:', args);
       return this.http.put(
-        interpolate(UPDATE_METADATA_SOURCE_URL, { id: args.source.id }),
+        interpolate(UPDATE_METADATA_SOURCE_URL, {
+          id: args.source.metadataSourceId
+        }),
         args.source
       );
     } else {
@@ -68,7 +70,9 @@ export class MetadataSourceService {
   delete(args: { source: MetadataSource }): Observable<any> {
     this.logger.trace('Deleting metadata source:', args);
     return this.http.delete(
-      interpolate(DELETE_METADATA_SOURCE_URL, { id: args.source.id })
+      interpolate(DELETE_METADATA_SOURCE_URL, {
+        id: args.source.metadataSourceId
+      })
     );
   }
 

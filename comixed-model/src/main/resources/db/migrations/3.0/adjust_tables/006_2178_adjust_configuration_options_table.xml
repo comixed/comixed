@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="006_2178_adjust_configuration_options_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="configuration_options"/>
+            <not>
+                <columnExists tableName="configuration_options" columnName="configuration_option_id"/>
+            </not>
+        </preConditions>
+
+        <renameTable oldTableName="configuration_options" newTableName="old_configuration_options"/>
+
+        <createTable tableName="configuration_options">
+            <column name="configuration_option_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="configuration_options_v3_pk"/>
+            </column>
+
+            <column name="option_name" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="option_value" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="last_modified_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <sql>INSERT INTO configuration_options(configuration_option_id, option_name, option_value, last_modified_on)
+             SELECT id, option_name, option_value, last_modified_on
+             FROM old_configuration_options</sql>
+
+        <dropTable tableName="old_configuration_options"/>
+
+    </changeSet>
+</databaseChangeLog>

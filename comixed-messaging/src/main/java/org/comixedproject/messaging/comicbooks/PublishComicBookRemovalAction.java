@@ -46,7 +46,7 @@ public class PublishComicBookRemovalAction extends AbstractPublishAction<ComicBo
     this.doPublish(COMIC_LIST_REMOVAL_TOPIC, comicBook, View.ComicDetailsView.class);
     log.trace("Publishing comicBook book removal");
     this.doPublish(
-        String.format(COMIC_BOOK_REMOVAL_TOPIC, comicBook.getId()),
+        String.format(COMIC_BOOK_REMOVAL_TOPIC, comicBook.getComicBookId()),
         comicBook,
         View.ComicDetailsView.class);
   }

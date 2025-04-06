@@ -17,7 +17,7 @@
  */
 
 export interface Issue {
-  id: number;
+  issueId: number;
   publisher: string;
   series: string;
   volume: string;

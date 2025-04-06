@@ -94,10 +94,10 @@ export class ReadingListService {
   }
 
   save(args: { list: ReadingList }): Observable<any> {
-    if (!!args.list.id) {
+    if (!!args.list.readingListId) {
       this.logger.trace('Updating reading list:', args);
       return this.http.put(
-        interpolate(UPDATE_READING_LIST, { id: args.list.id }),
+        interpolate(UPDATE_READING_LIST, { id: args.list.readingListId }),
         args.list
       );
     } else {
@@ -110,7 +110,7 @@ export class ReadingListService {
     this.logger.trace('Adding comics to reading list:', args);
     return this.http.put(
       interpolate(ADD_SELECTED_COMIC_BOOKS_TO_READING_LIST_URL, {
-        id: args.list.id
+        id: args.list.readingListId
       }),
       {}
     );
@@ -120,7 +120,7 @@ export class ReadingListService {
     this.logger.trace('Removing comics from reading list:', args);
     return this.http.delete(
       interpolate(REMOVE_SELECTED_COMIC_BOOKS_FROM_READING_LIST_URL, {
-        id: args.list.id
+        id: args.list.readingListId
       }),
       {}
     );
@@ -129,7 +129,7 @@ export class ReadingListService {
   downloadFile(args: { list: ReadingList }): Observable<any> {
     this.logger.trace('Downloading reading list:', args);
     return this.http.get(
-      interpolate(DOWNLOAD_READING_LIST_URL, { id: args.list.id })
+      interpolate(DOWNLOAD_READING_LIST_URL, { id: args.list.readingListId })
     );
   }
 
@@ -143,7 +143,7 @@ export class ReadingListService {
   deleteReadingLists(args: { lists: ReadingList[] }): Observable<any> {
     this.logger.trace('Deleting reading lists:', args);
     return this.http.post(interpolate(DELETE_READING_LISTS_URL), {
-      ids: args.lists.map(entry => entry.id)
+      ids: args.lists.map(entry => entry.readingListId)
     } as DeleteReadingListsRequest);
   }
 

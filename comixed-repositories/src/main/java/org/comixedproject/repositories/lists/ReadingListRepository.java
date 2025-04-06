@@ -57,7 +57,7 @@ public interface ReadingListRepository extends JpaRepository<ReadingList, Long> 
    * @param id the record id
    * @return the reading list
    */
-  @Query("SELECT l FROM ReadingList l WHERE l.id = :id AND l.owner = :owner")
+  @Query("SELECT l FROM ReadingList l WHERE l.readingListId = :id AND l.owner = :owner")
   ReadingList getReadingListForUserAndId(@Param("owner") ComiXedUser owner, @Param("id") long id);
 
   @Query(
@@ -71,7 +71,7 @@ public interface ReadingListRepository extends JpaRepository<ReadingList, Long> 
    * @param id the record id
    * @return the reading list
    */
-  @Query("SELECT l FROM ReadingList l WHERE l.id = :id")
+  @Query("SELECT l FROM ReadingList l WHERE l.readingListId = :id")
   ReadingList getById(@Param("id") Long id);
 
   @Query("SELECT l FROM ReadingList l WHERE :comicBookId MEMBER OF l.entryIds ")

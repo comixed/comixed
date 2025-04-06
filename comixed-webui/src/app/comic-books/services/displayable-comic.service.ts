@@ -257,7 +257,7 @@ export class DisplayableComicService {
   private doConvertToDisplayableComic(detail: ComicDetail): DisplayableComic {
     return {
       comicBookId: detail.comicId,
-      comicDetailId: detail.id,
+      comicDetailId: detail.comicDetailId,
       archiveType: detail.archiveType,
       comicState: detail.comicState,
       unscraped: detail.unscraped,

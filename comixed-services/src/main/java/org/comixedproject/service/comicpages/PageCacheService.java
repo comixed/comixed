@@ -140,7 +140,7 @@ public class PageCacheService {
    * @param page the page
    */
   public void addPageToCache(final ComicPage page) {
-    log.debug("Adding page to cache: id={}", page.getId());
+    log.debug("Adding page to cache: id={}", page.getComicPageId());
     try {
       this.saveByHash(
           page.getHash(),
@@ -230,7 +230,7 @@ public class PageCacheService {
 
   private ResponseEntity<byte[]> doGetPageContent(ComicPage page, final String missingFilename)
       throws ComicPageException {
-    log.debug("creating response entity for page: id={}", page.getId());
+    log.debug("creating response entity for page: id={}", page.getComicPageId());
     byte[] content = this.findByHash(page.getHash());
 
     if (content == null) {
@@ -238,7 +238,7 @@ public class PageCacheService {
         log.debug("Fetching content for page");
         content = this.comicBookAdaptor.loadPageContent(page.getComicBook(), page.getPageNumber());
         if (!Objects.isNull(content) && Objects.isNull(page.getHash())) {
-          log.debug("Updating page content: id={}", page.getId());
+          log.debug("Updating page content: id={}", page.getComicPageId());
           page = this.comicPageService.updatePageContent(page, content);
           log.debug("Caching image for hash: {} bytes hash={}", content.length, page.getHash());
           this.saveByHash(page.getHash(), content);

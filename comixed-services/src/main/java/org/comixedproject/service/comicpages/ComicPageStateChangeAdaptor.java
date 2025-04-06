@@ -54,7 +54,7 @@ public class ComicPageStateChangeAdaptor implements InitializingBean, ComicPageS
       final State<ComicPageState, ComicPageEvent> state, final Message<ComicPageEvent> message) {
     final var page = message.getHeaders().get(HEADER_PAGE, ComicPage.class);
     if (page == null) return;
-    log.debug("Processing page state change: [{}] =>  {}", page.getId(), state.getId());
+    log.debug("Processing page state change: [{}] =>  {}", page.getComicPageId(), state.getId());
     page.setPageState(state.getId());
     try {
       this.comicPageService.save(page);

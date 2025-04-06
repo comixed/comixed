@@ -174,8 +174,8 @@ describe('ComicPagesComponent', () => {
     });
 
     it('reorders the pages', () => {
-      expect(component.pages[0].id).toEqual(PAGES[1].id);
-      expect(component.pages[1].id).toEqual(PAGES[0].id);
+      expect(component.pages[0].comicPageId).toEqual(PAGES[1].comicPageId);
+      expect(component.pages[1].comicPageId).toEqual(PAGES[0].comicPageId);
     });
   });
 

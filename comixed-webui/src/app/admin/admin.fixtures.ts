@@ -57,7 +57,7 @@ export const FILENAME_SCRAPING_RULES_FILE: DownloadDocument = {
 };
 
 export const FILENAME_SCRAPING_RULE_1: FilenameScrapingRule = {
-  id: 1,
+  filenameScrapingRuleId: 1,
   name: 'Rule 1',
   rule: 'rule text',
   priority: 1,
@@ -69,7 +69,7 @@ export const FILENAME_SCRAPING_RULE_1: FilenameScrapingRule = {
 };
 
 export const FILENAME_SCRAPING_RULE_2: FilenameScrapingRule = {
-  id: 2,
+  filenameScrapingRuleId: 2,
   name: 'Rule 2',
   rule: 'rule text',
   priority: 2,
@@ -81,7 +81,7 @@ export const FILENAME_SCRAPING_RULE_2: FilenameScrapingRule = {
 };
 
 export const FILENAME_SCRAPING_RULE_3: FilenameScrapingRule = {
-  id: 3,
+  filenameScrapingRuleId: 3,
   name: 'Rule 3',
   rule: 'rule text',
   priority: 3,

@@ -119,7 +119,7 @@ export class ComicBookScrapingService {
     this.logger.debug('Loading scraping volumes:', args);
     return this.http.post(
       interpolate(LOAD_SCRAPING_VOLUMES_URL, {
-        sourceId: args.metadataSource.id
+        sourceId: args.metadataSource.metadataSourceId
       }),
       {
         publisher: args.publisher,
@@ -147,7 +147,7 @@ export class ComicBookScrapingService {
     this.logger.debug('Loading scraping issue:', args);
     return this.http.post(
       interpolate(LOAD_SCRAPING_ISSUE_URL, {
-        sourceId: args.metadataSource.id,
+        sourceId: args.metadataSource.metadataSourceId,
         volumeId: args.volumeId,
         issueNumber: args.issueNumber
       }),
@@ -174,8 +174,8 @@ export class ComicBookScrapingService {
     this.logger.debug('Scrape comic:', args);
     return this.http.put(
       interpolate(SCRAPE_SINGLE_BOOK_COMIC_URL, {
-        sourceId: args.metadataSource.id,
-        comicId: args.comicBook.id
+        sourceId: args.metadataSource.metadataSourceId,
+        comicId: args.comicBook.comicBookId
       }),
       {
         issueId: args.issueId,
@@ -210,7 +210,7 @@ export class ComicBookScrapingService {
     this.logger.debug('Removing comic from multi-books scraping:', args);
     return this.http.delete(
       interpolate(REMOVE_MULTI_BOOK_COMIC_URL, {
-        comicBookId: args.comicBook.id,
+        comicBookId: args.comicBook.comicBookId,
         pageSize: args.pageSize
       })
     );
@@ -226,8 +226,8 @@ export class ComicBookScrapingService {
     this.logger.debug('Scrape comic:', args);
     return this.http.post(
       interpolate(SCRAPE_MULTI_BOOK_COMIC_URL, {
-        sourceId: args.metadataSource.id,
-        comicBookId: args.comicBook.id
+        sourceId: args.metadataSource.metadataSourceId,
+        comicBookId: args.comicBook.comicBookId
       }),
       {
         issueId: args.issueId,
@@ -263,7 +263,7 @@ export class ComicBookScrapingService {
   }): Observable<any> {
     this.logger.debug('Fetching issues for series:', args);
     return this.http.post(
-      interpolate(SCRAPE_SERIES_URL, { id: args.source.id }),
+      interpolate(SCRAPE_SERIES_URL, { id: args.source.metadataSourceId }),
       {
         originalPublisher: args.originalPublisher,
         originalSeries: args.originalSeries,

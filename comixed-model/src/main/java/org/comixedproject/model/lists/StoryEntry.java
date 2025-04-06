@@ -38,10 +38,11 @@ import org.comixedproject.views.View;
 public class StoryEntry {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonProperty("id")
+  @Column(name = "story_entry_id")
+  @JsonProperty("storyEntryId")
   @JsonView(View.StoryList.class)
   @Getter
-  private Long id;
+  private Long storyEntryId;
 
   @ManyToOne
   @JoinColumn(name = "story_id", nullable = false, updatable = false)

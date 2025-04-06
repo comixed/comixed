@@ -19,7 +19,7 @@
 import { StoryEntry } from '@app/lists/models/story-entry';
 
 export interface Story {
-  id: number;
+  storyId: number;
   name: string;
   comicVineId: number;
   publisher: string;

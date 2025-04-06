@@ -147,7 +147,7 @@ export class UserAccountsPageComponent
 
   set user(user: User | null) {
     if (!!user) {
-      this.editUserForm.controls.id.setValue(user.id);
+      this.editUserForm.controls.id.setValue(user.comixedUserId);
       this.editUserForm.controls.email.setValue(user.email);
       this.editUserForm.controls.admin.setValue(isAdmin(user));
     } else {
@@ -212,7 +212,7 @@ export class UserAccountsPageComponent
 
   onDeleteUser(): void {
     const email = this.user?.email;
-    const id = this.user?.id;
+    const id = this.user?.comixedUserId;
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'user-accounts.delete-user-account.confirmation-title'

@@ -35,10 +35,11 @@ import org.comixedproject.views.View;
 public class Imprint {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonProperty("id")
+  @Column(name = "imprint_id")
+  @JsonProperty("imprintId")
   @JsonView(View.ImprintListView.class)
   @Getter
-  private Long id;
+  private Long imprintId;
 
   @Column(name = "imprint_name", length = 128, nullable = false, updatable = false, unique = true)
   @JsonProperty("name")

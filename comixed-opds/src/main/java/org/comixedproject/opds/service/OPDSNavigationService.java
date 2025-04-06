@@ -467,7 +467,7 @@ public class OPDSNavigationService {
                 new OPDSNavigationFeedEntry(
                     String.format(
                         "%s (%d comics)", readingList.getName(), readingList.getEntryIds().size()),
-                    String.valueOf(READING_LIST_FACTOR_ID + readingList.getId()));
+                    String.valueOf(READING_LIST_FACTOR_ID + readingList.getReadingListId()));
             entry.setContent(new OPDSNavigationFeedContent(readingList.getSummary()));
             entry
                 .getLinks()
@@ -475,7 +475,7 @@ public class OPDSNavigationService {
                     new OPDSLink(
                         ACQUISITION_FEED_LINK_TYPE,
                         SUBSECTION,
-                        String.format("lists/%d", readingList.getId())));
+                        String.format("lists/%d", readingList.getReadingListId())));
             response.getEntries().add(entry);
           });
       return response;

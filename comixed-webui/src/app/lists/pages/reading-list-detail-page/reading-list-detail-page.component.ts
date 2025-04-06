@@ -149,9 +149,13 @@ export class ReadingListDetailPageComponent implements OnDestroy {
       .select(selectReadingList)
       .pipe(filter(list => !!list))
       .subscribe(readingList => {
-        if (this.readingListId === -1 && !!readingList.id) {
+        if (this.readingListId === -1 && !!readingList.readingListId) {
           this.logger.trace('Redirecting to reading list details');
-          this.router.navigate(['/lists', 'reading', readingList.id]);
+          this.router.navigate([
+            '/lists',
+            'reading',
+            readingList.readingListId
+          ]);
         } else {
           this.logger.trace('Received reading list');
           this.readingList = readingList;
@@ -390,7 +394,7 @@ export class ReadingListDetailPageComponent implements OnDestroy {
           list => {
             this.logger.trace('Reading list removal received');
             this.store.dispatch(readingListRemoved({ list }));
-            if (list.id === this.readingListId) {
+            if (list.readingListId === this.readingListId) {
               this.logger.trace('This reading list was removed');
               this.router.navigateByUrl('/lists/reading/all');
             }

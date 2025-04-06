@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="009_2178_adjust_issues_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="issues"/>
+            <not>
+                <columnExists tableName="issues" columnName="issue_id"/>
+            </not>
+        </preConditions>
+
+        <dropView viewName="series_details_view" />
+        <renameTable oldTableName="issues" newTableName="old_issues"/>
+
+        <createTable tableName="issues">
+            <column name="issue_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="issues_v3_pk"/>
+            </column>
+
+            <column name="publisher" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="series" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="volume" type="varchar(6)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="issue_number" type="varchar(16)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="title" type="varchar(128)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="cover_date" type="date">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="store_date" type="date">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <sql>INSERT INTO issues(issue_id, publisher, series, volume, issue_number, title, cover_date, store_date)
+             SELECT id,
+                    publisher,
+                    series,
+                    volume,
+                    issue_number,
+                    title,
+                    cover_date,
+                    store_date
+             FROM old_issues</sql>
+
+        <dropTable tableName="old_issues"/>
+
+    </changeSet>
+</databaseChangeLog>

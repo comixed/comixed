@@ -84,7 +84,7 @@ class OPDSNavigationServiceTest {
     collectionList.add(TEST_COLLECTION_ENTRY_NAME);
     collectionSet.add(TEST_COLLECTION_ENTRY_NAME);
     readingLists.add(readingList);
-    Mockito.when(readingList.getId()).thenReturn(TEST_READING_LIST_ID);
+    Mockito.when(readingList.getReadingListId()).thenReturn(TEST_READING_LIST_ID);
     Mockito.when(readingList.getSummary()).thenReturn(TEST_READING_LIST_SUMMARY);
     Mockito.when(readingList.getEntryIds()).thenReturn(entryIdList);
     for (int year = 1965; year < 2022; year++) yearsList.add(year);

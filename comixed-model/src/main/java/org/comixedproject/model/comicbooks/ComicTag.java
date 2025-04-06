@@ -50,8 +50,9 @@ import org.hibernate.annotations.Formula;
 public class ComicTag {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "comic_tag_id")
   @Getter
-  private Long id;
+  private Long comicTagId;
 
   @ManyToOne
   @JoinColumn(name = "comic_detail_id", insertable = true, nullable = false, updatable = false)

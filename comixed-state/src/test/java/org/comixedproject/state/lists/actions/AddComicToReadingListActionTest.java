@@ -49,7 +49,7 @@ class AddComicToReadingListActionTest {
 
   @BeforeEach
   void setUp() {
-    Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_BOOK_ID);
+    Mockito.when(comicBook.getComicBookId()).thenReturn(TEST_COMIC_BOOK_ID);
     Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
     Mockito.when(messageHeaders.get(HEADER_READING_LIST, ReadingList.class))
         .thenReturn(readingList);

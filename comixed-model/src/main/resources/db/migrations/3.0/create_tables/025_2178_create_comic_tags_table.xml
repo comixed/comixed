@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="025_2178_create_comic_tags_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="comic_tags"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="comic_tags">
+            <column name="comic_tag_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="comic_tags_v3_pk"/>
+            </column>
+
+            <column name="comic_detail_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="tag_type" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="tag_value" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="comic_tags" baseColumnNames="comic_detail_id"
+                                 constraintName="comic_tag_comic_detail_fk"
+                                 referencedTableName="comic_details"
+                                 referencedColumnNames="comic_detail_id"/>
+
+        <createIndex tableName="comic_tags" indexName="comic_tag_comic_detail_idx">
+            <column name="comic_detail_id"/>
+        </createIndex>
+
+        <createIndex tableName="comic_tags" indexName="comic_tag_tag_type_idx">
+            <column name="tag_type"/>
+        </createIndex>
+
+        <createIndex tableName="comic_tags" indexName="comic_tag_tag_type_tag_value_idx">
+            <column name="tag_type"/>
+            <column name="tag_value"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

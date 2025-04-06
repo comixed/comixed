@@ -68,11 +68,11 @@ class ScrapeMetadataProcessorTest {
     processor.errorThreshold = TEST_ERROR_THRESHOLD;
 
     Mockito.when(stepExecution.getSkipCount()).thenReturn(TEST_ERROR_COUNT - 1);
-    Mockito.when(metadataSource.getId()).thenReturn(TEST_METADATA_SOURCE_ID);
+    Mockito.when(metadataSource.getMetadataSourceId()).thenReturn(TEST_METADATA_SOURCE_ID);
     Mockito.when(metadata.getMetadataSource()).thenReturn(metadataSource);
     Mockito.when(metadata.getReferenceId()).thenReturn(TEST_REFERENCE_NUMBER);
     Mockito.when(comicBook.getMetadata()).thenReturn(metadata);
-    Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_BOOK_ID);
+    Mockito.when(comicBook.getComicBookId()).thenReturn(TEST_COMIC_BOOK_ID);
     Mockito.when(jobExecutionContext.getJobParameters()).thenReturn(jobParameters);
     Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecutionContext);
     Mockito.when(comicBookService.save(Mockito.any(ComicBook.class))).thenReturn(savedComicBook);

@@ -109,7 +109,7 @@
         <mat-cell *matCellDef="let entry">
           <button
             mat-icon-button
-            [id]="'remove-multi-book-entry' + entry.id"
+            [id]="'remove-multi-book-entry' + entry.comicDetailId"
             color="warn"
             [matTooltip]="
               'scraping.tooltip.remove-comic-from-queue' | translate
@@ -173,7 +173,9 @@
       <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
       <mat-row
         *matRowDef="let row; columns: displayColumns"
-        [class.cx-selected-row]="currentComicBook?.id === row.id"
+        [class.cx-selected-row]="
+          currentComicBook?.comicBookId === row.comicBookId
+        "
         (click)="onSelectComicBook(row)"
         (keyup)="onSelectComicBook(row)"
       ></mat-row>

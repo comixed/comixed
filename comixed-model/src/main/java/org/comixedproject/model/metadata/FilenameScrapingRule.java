@@ -40,10 +40,11 @@ import org.comixedproject.views.View;
 public class FilenameScrapingRule {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonProperty("id")
+  @Column(name = "filename_scraping_rule_id")
+  @JsonProperty("filenameScrapingRuleId")
   @JsonView(View.FilenameScrapingRuleList.class)
   @Getter
-  private Long id;
+  private Long filenameScrapingRuleId;
 
   @Column(name = "rule_name", length = 25, nullable = false, updatable = true, unique = true)
   @JsonProperty("name")

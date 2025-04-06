@@ -104,7 +104,7 @@ public class ComicStateHandler extends LifecycleObjectSupport {
   @Synchronized
   public void fireEvent(
       final ComicBook comicBook, final ComicEvent event, final Map<String, Object> headers) {
-    log.debug("Firing comicBook event: {} => {}", comicBook.getId(), event);
+    log.debug("Firing comicBook event: {} => {}", comicBook.getComicBookId(), event);
     final Message<ComicEvent> message =
         MessageBuilder.withPayload(event)
             .copyHeaders(headers)

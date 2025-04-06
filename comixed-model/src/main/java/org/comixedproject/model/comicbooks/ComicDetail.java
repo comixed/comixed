@@ -50,6 +50,7 @@ import org.springframework.data.annotation.CreatedDate;
 public class ComicDetail implements PublicationDetail {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "comic_detail_id")
   @JsonView({
     View.ComicListView.class,
     View.DeletedPageList.class,
@@ -58,7 +59,7 @@ public class ComicDetail implements PublicationDetail {
     View.DuplicatePageList.class
   })
   @Getter
-  private Long id;
+  private Long comicDetailId;
 
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "comic_book_id", nullable = false, updatable = false)
@@ -333,7 +334,7 @@ public class ComicDetail implements PublicationDetail {
     View.DuplicatePageList.class
   })
   public Long getComicId() {
-    return this.comicBook.getId();
+    return this.comicBook.getComicBookId();
   }
 
   /**

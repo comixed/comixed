@@ -47,6 +47,6 @@ public interface LibraryPluginRepository extends JpaRepository<LibraryPlugin, Lo
    * @param id the record id
    * @return the plugin
    */
-  @Query("SELECT p FROM LibraryPlugin p WHERE p.id = :id")
+  @Query("SELECT p FROM LibraryPlugin p WHERE p.libraryPluginId = :id")
   LibraryPlugin getById(@Param("id") Long id);
 }

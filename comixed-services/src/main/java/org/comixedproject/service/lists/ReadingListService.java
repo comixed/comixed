@@ -123,7 +123,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
     final ReadingList result = this.readingListRepository.save(readingList);
     log.trace("Firing new reading list event");
     this.readingListStateHandler.fireEvent(result, ReadingListEvent.created);
-    return this.readingListRepository.getById(result.getId());
+    return this.readingListRepository.getById(result.getReadingListId());
   }
 
   /**
@@ -192,7 +192,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
   public ReadingList saveReadingList(final ReadingList readingList) {
     log.debug("Saving reading list: {}", readingList.getName());
     this.readingListStateHandler.fireEvent(readingList, ReadingListEvent.updated);
-    return this.readingListRepository.getById(readingList.getId());
+    return this.readingListRepository.getById(readingList.getReadingListId());
   }
 
   /**
@@ -259,7 +259,8 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
     if (readingList == null) {
       return;
     }
-    log.trace("Updating reading list state: [{}] =>  {}", readingList.getId(), state.getId());
+    log.trace(
+        "Updating reading list state: [{}] =>  {}", readingList.getReadingListId(), state.getId());
     readingList.setReadingListState(state.getId());
     log.trace("Updating last modified date");
     readingList.setLastModifiedOn(new Date());
@@ -349,7 +350,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
       final String email, final String name, final InputStream input)
       throws ReadingListException, IOException {
     final ReadingList readingList = this.createReadingList(email, name, "");
-    final Long readingListId = readingList.getId();
+    final Long readingListId = readingList.getReadingListId();
     this.csvAdaptor.decodeRecords(
         input,
         new String[] {
@@ -414,13 +415,16 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
    */
   @Transactional
   public void deleteEntriesForComicBook(final ComicBook comicBook) {
-    log.trace("Deleting all reading list entries for comic book: id={}", comicBook.getId());
+    log.trace(
+        "Deleting all reading list entries for comic book: id={}", comicBook.getComicBookId());
     this.readingListRepository
-        .getReadingListsWithComic(comicBook.getComicDetail().getId())
+        .getReadingListsWithComic(comicBook.getComicDetail().getComicDetailId())
         .forEach(
             readingList -> {
-              log.trace("Removing comic book from reading list: list id={}", readingList.getId());
-              readingList.getEntryIds().remove(comicBook.getComicDetail().getId());
+              log.trace(
+                  "Removing comic book from reading list: list id={}",
+                  readingList.getReadingListId());
+              readingList.getEntryIds().remove(comicBook.getComicDetail().getComicDetailId());
               log.trace("Saving reading list");
               this.readingListRepository.save(readingList);
             });

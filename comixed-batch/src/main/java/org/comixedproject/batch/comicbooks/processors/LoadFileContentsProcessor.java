@@ -56,11 +56,11 @@ public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, Comic
   @Override
   public ComicBook process(final ComicBook comicBook) {
     if (comicBook.isFileContentsLoaded()) {
-      log.debug("Comic book contents already loaded: id={}", comicBook.getId());
+      log.debug("Comic book contents already loaded: id={}", comicBook.getComicBookId());
       return comicBook;
     }
     final ContentAdaptorRules rules = new ContentAdaptorRules();
-    log.debug("Loading comicBook file contents: id={} rules={}", comicBook.getId(), rules);
+    log.debug("Loading comicBook file contents: id={} rules={}", comicBook.getComicBookId(), rules);
     try {
       this.comicBookAdaptor.load(comicBook, rules);
       log.trace("Sorting comicBook pages");

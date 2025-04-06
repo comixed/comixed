@@ -116,7 +116,9 @@ export class ReadingListsPageComponent
     this.logger.trace('Loading reading lists data source');
     const oldData = this.dataSource.data;
     this.dataSource.data = readingLists.map(list => {
-      const oldEntry = oldData.find(entry => entry.item.id === list.id);
+      const oldEntry = oldData.find(
+        entry => entry.item.readingListId === list.readingListId
+      );
 
       return {
         item: list,

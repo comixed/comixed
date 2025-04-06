@@ -101,7 +101,7 @@ public class StoryStateHandler extends LifecycleObjectSupport {
    */
   @Synchronized
   public void fireEvent(final Story story, final StoryEvent event, Map<String, ?> headers) {
-    log.debug("Firing story event: {} => {}", story.getId(), event);
+    log.debug("Firing story event: {} => {}", story.getStoryId(), event);
     final Message<StoryEvent> message =
         MessageBuilder.withPayload(event)
             .copyHeaders(headers)
