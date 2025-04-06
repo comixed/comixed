@@ -3,7 +3,7 @@
 <databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
-  <changeSet id="001_2346_add_notes_to_displayable_comic_books.xml" author="mcpierce">
+  <changeSet id="018_2346_add_notes_to_displayable_comic_books.xml" author="mcpierce">
 
       <createView viewName="displayable_comics_view" replaceIfExists="true">
           SELECT DISTINCT d.comic_book_id   as comic_book_id,
@@ -22,7 +22,7 @@
                           d.volume          as volume,
                           d.issue_number    as issue_number,
                           (SELECT RIGHT(CONCAT('0000000000', d.issue_number), 10)) as sortable_issue_number, d.title as title, (
-          SELECT COUNT (*)
+          SELECT COUNT(*)
           FROM comic_pages cp
           WHERE cp.comic_book_id = d.comic_book_id) as page_count
               , d.cover_date as cover_date
