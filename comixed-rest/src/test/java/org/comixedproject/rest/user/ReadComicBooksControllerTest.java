@@ -141,7 +141,8 @@ class ReadComicBooksControllerTest {
 
     Mockito.verify(readComicBooksService, Mockito.times(1))
         .markSelectionsAsRead(TEST_EMAIL, selectedIds);
-    Mockito.verify(comicSelectionService, Mockito.times(1)).clearSelectedComicBooks(selectedIds);
+    Mockito.verify(comicSelectionService, Mockito.times(1))
+        .clearSelectedComicBooks(TEST_EMAIL, selectedIds);
   }
 
   @Test
@@ -183,6 +184,7 @@ class ReadComicBooksControllerTest {
 
     Mockito.verify(readComicBooksService, Mockito.times(1))
         .unmarkSelectionsAsRead(TEST_EMAIL, selectedIds);
-    Mockito.verify(comicSelectionService, Mockito.times(1)).clearSelectedComicBooks(selectedIds);
+    Mockito.verify(comicSelectionService, Mockito.times(1))
+        .clearSelectedComicBooks(TEST_EMAIL, selectedIds);
   }
 }

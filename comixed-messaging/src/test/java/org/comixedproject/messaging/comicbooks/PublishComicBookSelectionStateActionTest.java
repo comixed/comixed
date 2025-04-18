@@ -27,6 +27,8 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.model.messaging.comicbooks.ComicBookSelectionEvent;
+import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.views.View;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,16 +42,25 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 @ExtendWith(MockitoExtension.class)
 class PublishComicBookSelectionStateActionTest {
   private static final String TEST_IDS_AS_JSON = "Object as JSON";
-  private final List comicBookIdList = new ArrayList();
+  private static final String TEST_USER_EMAIL = "user@comixedproject.org";
+
   @InjectMocks private PublishComicBookSelectionStateAction action;
   @Mock private SimpMessagingTemplate messagingTemplate;
   @Mock private ObjectMapper objectMapper;
   @Mock private ObjectWriter objectWriter;
+  @Mock private ComiXedUser user;
+
+  private final List<Long> comicBookIds = new ArrayList<>();
+  private ComicBookSelectionEvent comicBookSelectionEvent;
 
   @BeforeEach
   public void setUp() throws JsonProcessingException {
-    Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
-    Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_IDS_AS_JSON);
+    Mockito.lenient().when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
+    Mockito.lenient()
+        .when(objectWriter.writeValueAsString(Mockito.any()))
+        .thenReturn(TEST_IDS_AS_JSON);
+    Mockito.lenient().when(user.getEmail()).thenReturn(TEST_USER_EMAIL);
+    this.comicBookSelectionEvent = new ComicBookSelectionEvent(this.user, this.comicBookIds);
   }
 
   @Test
@@ -57,20 +68,18 @@ class PublishComicBookSelectionStateActionTest {
     Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
         .thenThrow(JsonProcessingException.class);
 
-    assertThrows(PublishingException.class, () -> action.publish(comicBookIdList));
+    assertThrows(PublishingException.class, () -> action.publish(comicBookSelectionEvent));
   }
 
   @Test
   void publish() throws JsonProcessingException, PublishingException {
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_IDS_AS_JSON);
 
-    action.publish(comicBookIdList);
+    action.publish(comicBookSelectionEvent);
 
     Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.GenericObjectView.class);
-    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(comicBookIdList);
+    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(comicBookIds);
     Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(COMIC_BOOK_SELECTION_UPDATE_TOPIC, TEST_IDS_AS_JSON);
-    Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(COMIC_BOOK_SELECTION_UPDATE_TOPIC, TEST_IDS_AS_JSON);
+        .convertAndSendToUser(TEST_USER_EMAIL, COMIC_BOOK_SELECTION_UPDATE_TOPIC, TEST_IDS_AS_JSON);
   }
 }

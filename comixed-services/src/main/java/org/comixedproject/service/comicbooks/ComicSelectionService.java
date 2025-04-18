@@ -35,7 +35,11 @@ import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.comicbooks.ComicType;
+import org.comixedproject.model.messaging.comicbooks.ComicBookSelectionEvent;
+import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.service.library.DisplayableComicService;
+import org.comixedproject.service.user.ComiXedUserException;
+import org.comixedproject.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +53,7 @@ import org.springframework.stereotype.Service;
 @Log4j2
 public class ComicSelectionService {
   @Autowired private DisplayableComicService displayableComicService;
+  @Autowired private UserService userService;
   @Autowired private PublishComicBookSelectionStateAction publishComicBookSelectionStateAction;
   @Autowired private ObjectMapper objectMapper;
 
@@ -57,34 +62,39 @@ public class ComicSelectionService {
    * then the set is updated. Otherwise, any matches found are removed. The updated set of ids is
    * returned.
    *
+   * @param email the user's email
    * @param selections the current selection set
    * @param comicBookId the incoming comic book id
    */
-  public void addComicSelectionForUser(final List<Long> selections, final Long comicBookId) {
+  public void addComicSelectionForUser(
+      final String email, final List<Long> selections, final Long comicBookId) {
     if (!selections.contains(comicBookId)) {
       log.debug("Adding comic book to selections: {}", comicBookId);
       selections.add(comicBookId);
-      this.doPublishSelectionUpdateForUser(selections);
+      this.doPublishSelectionUpdateForUser(email, selections);
     }
   }
 
   /**
    * Removes a comic selection from the specified user if it exists.
    *
+   * @param email the user's email
    * @param selections the current selections
    * @param comicBookId the incoming comic book id
    */
-  public void removeComicSelectionFromUser(final List selections, final Long comicBookId) {
+  public void removeComicSelectionFromUser(
+      final String email, final List selections, final Long comicBookId) {
     if (selections.contains(comicBookId)) {
       log.debug("Removing comic book from selections: {}", comicBookId);
       selections.remove(comicBookId);
-      this.doPublishSelectionUpdateForUser(selections);
+      this.doPublishSelectionUpdateForUser(email, selections);
     }
   }
 
   /**
    * Marks comics as selected based on filters.
    *
+   * @param email the user's email
    * @param selections the selected comic book ids
    * @param coverYear the optional cover year
    * @param coverMonth the optional cover month
@@ -97,6 +107,7 @@ public class ComicSelectionService {
    * @param adding adding or removing flag
    */
   public void selectByFilter(
+      final String email,
       final List selections,
       final Integer coverYear,
       final Integer coverMonth,
@@ -126,20 +137,21 @@ public class ComicSelectionService {
     }
 
     if (!selectedIds.isEmpty()) {
-      this.doPublishSelectionUpdateForUser(selections);
+      this.doPublishSelectionUpdateForUser(email, selections);
     }
   }
 
   /**
    * Returns a cleared out collection of ids. It also publishes an update to the client.
    *
+   * @param email the user's email
    * @param selections the selected comic book ids
    */
-  public void clearSelectedComicBooks(final List<Long> selections) {
+  public void clearSelectedComicBooks(final String email, final List<Long> selections) {
     log.debug("Clearing the selected ids");
     selections.clear();
     log.debug("Publishing cleared out selection update");
-    this.doPublishSelectionUpdateForUser(selections);
+    this.doPublishSelectionUpdateForUser(email, selections);
   }
 
   /**
@@ -184,23 +196,20 @@ public class ComicSelectionService {
   /**
    * Publishes the selection update.
    *
+   * @param email the user's email
    * @param selections the selected ids
-   * @throws ComicBookSelectionException if an error occurs
    */
-  public void publishSelections(final List<Long> selections) throws ComicBookSelectionException {
-    try {
-      this.publishComicBookSelectionStateAction.publish(selections);
-    } catch (PublishingException error) {
-      throw new ComicBookSelectionException("Failed to publish selection updates", error);
-    }
+  public void publishSelections(final String email, final List<Long> selections) {
+    this.doPublishSelectionUpdateForUser(email, selections);
   }
 
-  private void doPublishSelectionUpdateForUser(final List selections) {
+  private void doPublishSelectionUpdateForUser(final String email, final List<Long> selections) {
     try {
-      log.trace("Publishing selection update");
-      this.publishComicBookSelectionStateAction.publish(selections);
-    } catch (PublishingException error) {
-      log.error("failed to publish selection update", error);
+      final ComiXedUser user = this.userService.findByEmail(email);
+      this.publishComicBookSelectionStateAction.publish(
+          new ComicBookSelectionEvent(user, selections));
+    } catch (PublishingException | ComiXedUserException error) {
+      log.error("Failed to publish selection update", error);
     }
   }
 

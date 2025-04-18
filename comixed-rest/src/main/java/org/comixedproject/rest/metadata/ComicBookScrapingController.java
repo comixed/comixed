@@ -23,6 +23,7 @@ import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LI
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -167,6 +168,7 @@ public class ComicBookScrapingController {
    * Initiates a metadata update batch process of the provided comic book IDs.
    *
    * @param session the session
+   * @param principal the user principal
    * @param request the request body
    * @throws Exception if an id is invalid
    */
@@ -174,9 +176,12 @@ public class ComicBookScrapingController {
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.metadata.batch-update")
   public void startBatchMetadataUpdate(
-      final HttpSession session, @RequestBody() final StartMetadataUpdateProcessRequest request)
+      final HttpSession session,
+      final Principal principal,
+      @RequestBody() final StartMetadataUpdateProcessRequest request)
       throws Exception {
-    log.info("Starting batch metadata update process");
+    final String email = principal.getName();
+    log.info("Starting batch metadata update process: email={}", email);
     @NonNull
     final List<Long> selectedComicBookIdList =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
@@ -195,7 +200,7 @@ public class ComicBookScrapingController {
                 System.currentTimeMillis())
             .addString(MetadataProcessConfiguration.PARAM_SKIP_CACHE, String.valueOf(skipCache))
             .toJobParameters());
-    this.comicSelectionService.clearSelectedComicBooks(selectedComicBookIdList);
+    this.comicSelectionService.clearSelectedComicBooks(email, selectedComicBookIdList);
     session.setAttribute(
         LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicBookIdList));
   }
@@ -244,6 +249,7 @@ public class ComicBookScrapingController {
    * Starts, or returns, the multi-book comic scraping state.
    *
    * @param session the session
+   * @param principal the user principal
    * @return the scraping state
    * @throws MetadataException if an error occurs
    */
@@ -254,9 +260,12 @@ public class ComicBookScrapingController {
   @Timed(value = "comixed.metadata.multi-book-start")
   @JsonView(View.ComicListView.class)
   public StartMultiBookScrapingResponse startMultiBookScraping(
-      final HttpSession session, @RequestBody final StartMultiBookScrapingRequest request)
+      final HttpSession session,
+      final Principal principal,
+      @RequestBody final StartMultiBookScrapingRequest request)
       throws MetadataException {
     try {
+      final String email = principal.getName();
       final List<Long> selectedIds =
           this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
       final List<Long> comicDetailIds =
@@ -266,7 +275,7 @@ public class ComicBookScrapingController {
       if (!selectedIds.isEmpty()) {
         comicDetailIds.addAll(selectedIds);
 
-        this.comicSelectionService.clearSelectedComicBooks(selectedIds);
+        this.comicSelectionService.clearSelectedComicBooks(email, selectedIds);
         session.setAttribute(
             LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedIds));
       }
@@ -391,6 +400,7 @@ public class ComicBookScrapingController {
    * Starts batch scraping comic books.
    *
    * @param session the user session
+   * @param principal the user principal
    * @throws ComicBookSelectionException if an error occurs
    */
   @PostMapping(
@@ -398,12 +408,14 @@ public class ComicBookScrapingController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.metadata.batch-scrape-selected")
-  public void batchScrapeSelected(final HttpSession session) throws ComicBookSelectionException {
-    log.info("Preparing to batch scrape selected comic books");
+  public void batchScrapeSelected(final HttpSession session, final Principal principal)
+      throws ComicBookSelectionException {
+    final String email = principal.getName();
+    log.info("Preparing to batch scrape selected comic books: email={}", email);
     final List<Long> ids =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     this.metadataService.batchScrapeComicBooks(new ArrayList<>(ids));
-    this.comicSelectionService.clearSelectedComicBooks(ids);
+    this.comicSelectionService.clearSelectedComicBooks(email, ids);
     session.setAttribute(LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(ids));
   }
 

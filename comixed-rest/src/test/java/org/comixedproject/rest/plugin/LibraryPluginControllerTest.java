@@ -208,7 +208,7 @@ class LibraryPluginControllerTest {
 
     assertThrows(
         LibraryPluginException.class,
-        () -> controller.runLibraryPluginOnSelectedComicBooks(session, TEST_PLUGIN_ID));
+        () -> controller.runLibraryPluginOnSelectedComicBooks(session, principal, TEST_PLUGIN_ID));
   }
 
   @Test
@@ -219,15 +219,16 @@ class LibraryPluginControllerTest {
 
     assertThrows(
         LibraryPluginException.class,
-        () -> controller.runLibraryPluginOnSelectedComicBooks(session, TEST_PLUGIN_ID));
+        () -> controller.runLibraryPluginOnSelectedComicBooks(session, principal, TEST_PLUGIN_ID));
   }
 
   @Test
   void runLibraryPluginOnSelectedComicBooks() throws LibraryPluginException {
-    controller.runLibraryPluginOnSelectedComicBooks(session, TEST_PLUGIN_ID);
+    controller.runLibraryPluginOnSelectedComicBooks(session, principal, TEST_PLUGIN_ID);
 
     Mockito.verify(libraryPluginService, Mockito.times(1))
         .runLibraryPlugin(TEST_PLUGIN_ID, selectedIds);
-    Mockito.verify(comicSelectionService, Mockito.times(1)).clearSelectedComicBooks(selectedIds);
+    Mockito.verify(comicSelectionService, Mockito.times(1))
+        .clearSelectedComicBooks(TEST_USER_EMAIL, selectedIds);
   }
 }

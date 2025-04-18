@@ -189,7 +189,7 @@ public class ReadingListController {
 
       this.readingListService.addComicsToList(email, id, new ArrayList<>(selectedComicBookIds));
 
-      this.comicSelectionService.clearSelectedComicBooks(selectedComicBookIds);
+      this.comicSelectionService.clearSelectedComicBooks(email, selectedComicBookIds);
       session.setAttribute(
           LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicBookIds));
     } catch (ComicBookSelectionException error) {
@@ -225,7 +225,7 @@ public class ReadingListController {
       this.readingListService.removeComicsFromList(
           email, id, new ArrayList<>(selectedComicBookIds));
 
-      this.comicSelectionService.clearSelectedComicBooks(selectedComicBookIds);
+      this.comicSelectionService.clearSelectedComicBooks(email, selectedComicBookIds);
       session.setAttribute(
           LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicBookIds));
     } catch (ReadingListException | ComicBookSelectionException error) {

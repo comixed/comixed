@@ -24,6 +24,7 @@ import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LI
 import static org.junit.Assert.assertThrows;
 
 import jakarta.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -66,6 +67,7 @@ class LibraryControllerTest {
   private static final String TEST_IMPRINT = "The Imprint";
   private static final String TEST_ENCODED_IDS = "The encoded selected ids";
   private static final String TEST_REENCODED_IDS = "The re-encoded selected ids";
+  private static final String TEST_EMAIL = "user@comixedproject.org";
 
   @InjectMocks private LibraryController controller;
   @Mock private LibraryService libraryService;
@@ -80,6 +82,7 @@ class LibraryControllerTest {
   @Mock private RemoteLibraryState remoteLibraryState;
   @Mock private List selectedIds;
   @Mock private HttpSession httpSession;
+  @Mock private Principal principal;
 
   @Mock
   @Qualifier(UPDATE_COMIC_BOOKS_JOB)
@@ -90,6 +93,7 @@ class LibraryControllerTest {
   @BeforeEach
   void setUp() throws ComicBookSelectionException {
     Mockito.when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_IDS);
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
     Mockito.when(comicSelectionService.decodeSelections(TEST_ENCODED_IDS)).thenReturn(selectedIds);
     Mockito.when(comicSelectionService.encodeSelections(Mockito.anyList()))
         .thenReturn(TEST_REENCODED_IDS);
@@ -154,6 +158,7 @@ class LibraryControllerTest {
         () ->
             controller.convertSelectedComicBooks(
                 httpSession,
+                principal,
                 new ConvertComicsRequest(
                     TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_MARKED_PAGES)));
   }
@@ -167,6 +172,7 @@ class LibraryControllerTest {
 
     controller.convertSelectedComicBooks(
         httpSession,
+        principal,
         new ConvertComicsRequest(TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_MARKED_PAGES));
 
     Mockito.verify(libraryService, Mockito.times(1))
@@ -176,12 +182,13 @@ class LibraryControllerTest {
 
   @Test
   void organizeLibrary() throws Exception {
-    controller.organizeLibrary(httpSession);
+    controller.organizeLibrary(httpSession, principal);
 
     Mockito.verify(libraryService, Mockito.times(1)).prepareForOrganization(selectedIds);
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
     Mockito.verify(comicSelectionService, Mockito.times(1)).decodeSelections(TEST_ENCODED_IDS);
-    Mockito.verify(comicSelectionService, Mockito.times(1)).clearSelectedComicBooks(selectedIds);
+    Mockito.verify(comicSelectionService, Mockito.times(1))
+        .clearSelectedComicBooks(TEST_EMAIL, selectedIds);
     Mockito.verify(httpSession, Mockito.times(1))
         .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_IDS);
   }
@@ -219,7 +226,7 @@ class LibraryControllerTest {
 
   @Test
   void rescanComicBooks() throws Exception {
-    controller.rescanSelectedComicBooks(httpSession);
+    controller.rescanSelectedComicBooks(httpSession, principal);
 
     Mockito.verify(comicBookService, Mockito.times(1)).prepareForRescan(selectedIds);
   }
@@ -234,7 +241,7 @@ class LibraryControllerTest {
 
   @Test
   void updateSelectedComicBooksMetadata() throws Exception {
-    controller.updateSelectedComicBooksMetadata(httpSession);
+    controller.updateSelectedComicBooksMetadata(httpSession, principal);
 
     Mockito.verify(libraryService, Mockito.times(1)).updateMetadata(selectedIds);
   }

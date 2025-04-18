@@ -23,6 +23,7 @@ import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LI
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
@@ -119,19 +120,21 @@ public class ComicBookController {
    * Deletes the selected comic books.
    *
    * @param session the session
+   * @param principal the principal
    * @throws ComicBookException if an error occurs
    */
   @DeleteMapping(value = "/api/comics/mark/deleted/selected")
   @Timed(value = "comixed.comics.mark-many.delete-selected")
-  public void deleteSelectedComicBooks(final HttpSession session) throws ComicBookException {
-
+  public void deleteSelectedComicBooks(final HttpSession session, final Principal principal)
+      throws ComicBookException {
     try {
+      final String email = principal.getName();
       final List<Long> ids =
           this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
-      log.info("Deleting multiple comics: ids={}", ids.toArray());
+      log.info("Deleting multiple comics: email={} ids={}", email, ids.toArray());
       this.comicBookService.deleteComicBooksById(ids);
 
-      this.comicSelectionService.clearSelectedComicBooks(new ArrayList<>(ids));
+      this.comicSelectionService.clearSelectedComicBooks(email, new ArrayList<>(ids));
       session.setAttribute(LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(ids));
     } catch (ComicBookSelectionException error) {
       throw new ComicBookException("Failed to delete selected comic books", error);
@@ -142,21 +145,24 @@ public class ComicBookController {
    * Undeletes the selected comic books
    *
    * @param session the http session
+   * @param principal the user principal
    * @throws ComicBookException if an error occurs
    */
   @PutMapping(
       value = "/api/comics/mark/deleted/selected",
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.comics.mark-many.undelete-selected")
-  public void undeleteSelectedComicBooks(final HttpSession session) throws ComicBookException {
+  public void undeleteSelectedComicBooks(final HttpSession session, final Principal principal)
+      throws ComicBookException {
     try {
+      final String email = principal.getName();
       final List<Long> ids =
           this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
-      log.info("Undeleting multiple comic: {}", ids.toArray());
+      log.info("Undeleting multiple comic: email={} ids={}", email, ids.toArray());
       this.comicBookService.undeleteComicBooksById(new ArrayList<>(ids));
 
-      this.comicSelectionService.clearSelectedComicBooks(ids);
+      this.comicSelectionService.clearSelectedComicBooks(email, ids);
       session.setAttribute(LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(ids));
     } catch (ComicBookSelectionException error) {
       throw new ComicBookException("Failed to delete selected comic books", error);

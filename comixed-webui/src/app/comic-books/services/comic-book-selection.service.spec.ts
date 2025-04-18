@@ -66,6 +66,11 @@ import { SetSelectedByPublisherSeriesVolumeRequest } from '@app/comic-books/mode
 import { DuplicateComicBooksSelectionRequest } from '@app/comic-books/models/net/duplicate-comic-books-selection-request';
 import { UnreadComicBooksSelectionRequest } from '@app/comic-books/models/net/unread-comic-books-selection-request';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
+import {
+  initialState as initialUserState,
+  USER_FEATURE_KEY
+} from '@app/user/reducers/user.reducer';
+import { USER_ADMIN } from '@app/user/user.fixtures';
 
 describe('ComicBookSelectionService', () => {
   const COVER_YEAR = Math.random() * 100 + 1900;
@@ -84,7 +89,11 @@ describe('ComicBookSelectionService', () => {
   const SELECTED = Math.random() > 0.5;
   const UNREAD_ONLY = Math.random() > 0.5;
   const COMIC_BOOK_IDS = [3.2, 96, 9, 21, 98];
-  const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
+  const USER = USER_ADMIN;
+  const initialState = {
+    [MESSAGING_FEATURE_KEY]: initialMessagingState,
+    [USER_FEATURE_KEY]: { ...initialUserState, user: USER }
+  };
 
   let service: ComicBookSelectionService;
   let httpMock: HttpTestingController;
@@ -382,7 +391,9 @@ describe('ComicBookSelectionService', () => {
     });
 
     it('subscribes to user updates', () => {
-      expect(topic).toEqual(COMIC_BOOK_SELECTION_UPDATE_TOPIC);
+      expect(topic).toEqual(
+        interpolate(COMIC_BOOK_SELECTION_UPDATE_TOPIC, { email: USER.email })
+      );
     });
 
     describe('when updates are received', () => {
