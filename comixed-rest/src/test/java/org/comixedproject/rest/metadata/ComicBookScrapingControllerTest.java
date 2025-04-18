@@ -25,6 +25,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
 import jakarta.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.math.RandomUtils;
@@ -73,6 +74,7 @@ public class ComicBookScrapingControllerTest {
   private static final int TEST_PAGE_SIZE = 25;
   private static final int TEST_PAGE_NUMBER = 3;
   private static final Boolean TEST_MATCH_PUBLISHER = RandomUtils.nextBoolean();
+  private static final String TEST_EMAIL = "user@comixedproject.org";
 
   @InjectMocks private ComicBookScrapingController controller;
   @Mock private MetadataService metadataService;
@@ -88,6 +90,7 @@ public class ComicBookScrapingControllerTest {
   @Mock private Job updateComicBookMetadata;
   @Mock private JobExecution jobExecution;
   @Mock private HttpSession session;
+  @Mock private Principal principal;
   @Mock private List<ComicBook> comicBookList;
   @Mock private ScrapeSeriesResponse scrapeSeriesResponse;
 
@@ -96,6 +99,7 @@ public class ComicBookScrapingControllerTest {
   @Before
   public void setUp() throws ComicBookSelectionException {
     Mockito.when(session.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
     Mockito.when(comicSelectionService.decodeSelections(TEST_ENCODED_SELECTIONS))
         .thenReturn(selectedIdList);
     Mockito.when(comicSelectionService.encodeSelections(selectedIdList))
@@ -275,7 +279,7 @@ public class ComicBookScrapingControllerTest {
         .markComicBooksForBatchMetadataUpdate(Mockito.anyList());
     try {
       controller.startBatchMetadataUpdate(
-          session, new StartMetadataUpdateProcessRequest(TEST_SKIP_CACHE));
+          session, principal, new StartMetadataUpdateProcessRequest(TEST_SKIP_CACHE));
     } finally {
       Mockito.verify(comicSelectionService, Mockito.times(1))
           .decodeSelections(TEST_ENCODED_SELECTIONS);
@@ -290,7 +294,7 @@ public class ComicBookScrapingControllerTest {
         .thenReturn(jobExecution);
 
     controller.startBatchMetadataUpdate(
-        session, new StartMetadataUpdateProcessRequest(TEST_SKIP_CACHE));
+        session, principal, new StartMetadataUpdateProcessRequest(TEST_SKIP_CACHE));
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
@@ -376,7 +380,8 @@ public class ComicBookScrapingControllerTest {
         .thenThrow(ComicBookSelectionException.class);
 
     try {
-      controller.startMultiBookScraping(session, new StartMultiBookScrapingRequest(TEST_PAGE_SIZE));
+      controller.startMultiBookScraping(
+          session, principal, new StartMultiBookScrapingRequest(TEST_PAGE_SIZE));
     } finally {
       Mockito.verify(comicSelectionService, Mockito.times(1))
           .decodeSelections(TEST_ENCODED_SELECTIONS);
@@ -394,7 +399,7 @@ public class ComicBookScrapingControllerTest {
 
     final StartMultiBookScrapingResponse result =
         controller.startMultiBookScraping(
-            session, new StartMultiBookScrapingRequest(TEST_PAGE_SIZE));
+            session, principal, new StartMultiBookScrapingRequest(TEST_PAGE_SIZE));
 
     assertNotNull(result);
     assertSame(comicBookList, result.getComicBooks());
@@ -420,7 +425,7 @@ public class ComicBookScrapingControllerTest {
 
     final StartMultiBookScrapingResponse result =
         controller.startMultiBookScraping(
-            session, new StartMultiBookScrapingRequest(TEST_PAGE_SIZE));
+            session, principal, new StartMultiBookScrapingRequest(TEST_PAGE_SIZE));
 
     assertNotNull(result);
     assertSame(comicBookList, result.getComicBooks());

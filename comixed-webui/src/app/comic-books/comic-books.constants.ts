@@ -19,6 +19,7 @@
 import { API_ROOT_URL } from '../core';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { ComicType } from '@app/comic-books/models/comic-type';
+import { SECURED_PREFIX } from '@app/messaging/messaging.constants';
 
 export const LOAD_COMICS_BY_FILTER_URL = `${API_ROOT_URL}/comics/filtered`;
 export const LOAD_SELECTED_COMICS_URL = `${API_ROOT_URL}/comics/selected`;
@@ -54,8 +55,7 @@ export const MARK_PAGES_DELETED_URL = `${API_ROOT_URL}/pages/deleted`;
 export const MARK_PAGES_UNDELETED_URL = `${API_ROOT_URL}/pages/undeleted`;
 
 export const COMIC_BOOK_UPDATE_TOPIC = `/topic/comic-book.\${id}.update`;
-export const COMIC_BOOK_SELECTION_UPDATE_TOPIC =
-  '/topic/user/comic-book-selection.update';
+export const COMIC_BOOK_SELECTION_UPDATE_TOPIC = `${SECURED_PREFIX}/\${email}/topic/comic-book-selection.update`;
 
 export const COMIC_TYPE_SELECTION_OPTIONS: SelectionOption<ComicType>[] = [
   {

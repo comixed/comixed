@@ -103,7 +103,8 @@ public class ReadComicBooksController {
     log.info("Marking selected comic books as read by {}", email);
     final List<Long> selectedIds =
         this.comicSelectionService.decodeSelections(httpSession.getAttribute(LIBRARY_SELECTIONS));
-    this.comicSelectionService.clearSelectedComicBooks(new ArrayList<>(selectedIds));
+    this.readComicBooksService.markSelectionsAsRead(email, new ArrayList<>(selectedIds));
+    this.comicSelectionService.clearSelectedComicBooks(email, new ArrayList<>(selectedIds));
     httpSession.setAttribute(
         LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedIds));
     this.readComicBooksService.markSelectionsAsRead(email, selectedIds);
@@ -127,7 +128,7 @@ public class ReadComicBooksController {
     final List<Long> selectedIds =
         this.comicSelectionService.decodeSelections(httpSession.getAttribute(LIBRARY_SELECTIONS));
     this.readComicBooksService.unmarkSelectionsAsRead(email, new ArrayList<>(selectedIds));
-    this.comicSelectionService.clearSelectedComicBooks(selectedIds);
+    this.comicSelectionService.clearSelectedComicBooks(email, selectedIds);
     httpSession.setAttribute(
         LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedIds));
   }

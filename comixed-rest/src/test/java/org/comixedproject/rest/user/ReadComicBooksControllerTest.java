@@ -151,9 +151,10 @@ public class ReadComicBooksControllerTest {
   public void testMarkSelectedAsRead() throws ReadComicBooksException, ComicBookSelectionException {
     controller.markSelectedComicBooksRead(principal, httpSession);
 
-    Mockito.verify(readComicBooksService, Mockito.times(1))
+    Mockito.verify(readComicBooksService, Mockito.times(2))
         .markSelectionsAsRead(TEST_EMAIL, selectedIds);
-    Mockito.verify(comicSelectionService, Mockito.times(1)).clearSelectedComicBooks(selectedIds);
+    Mockito.verify(comicSelectionService, Mockito.times(1))
+        .clearSelectedComicBooks(TEST_EMAIL, selectedIds);
   }
 
   @Test(expected = ReadComicBooksException.class)
@@ -206,6 +207,7 @@ public class ReadComicBooksControllerTest {
 
     Mockito.verify(readComicBooksService, Mockito.times(1))
         .unmarkSelectionsAsRead(TEST_EMAIL, selectedIds);
-    Mockito.verify(comicSelectionService, Mockito.times(1)).clearSelectedComicBooks(selectedIds);
+    Mockito.verify(comicSelectionService, Mockito.times(1))
+        .clearSelectedComicBooks(TEST_EMAIL, selectedIds);
   }
 }

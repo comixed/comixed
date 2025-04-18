@@ -52,12 +52,14 @@ import { SetSelectedByPublisherSeriesVolumeRequest } from '@app/comic-books/mode
 import { DuplicateComicBooksSelectionRequest } from '@app/comic-books/models/net/duplicate-comic-books-selection-request';
 import { UnreadComicBooksSelectionRequest } from '@app/comic-books/models/net/unread-comic-books-selection-request';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
+import { selectUser } from '@app/user/selectors/user.selectors';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ComicBookSelectionService {
   selectionUpdateSubscription: Subscription;
+  email: string | null = null;
 
   constructor(
     private logger: LoggerService,
@@ -65,28 +67,20 @@ export class ComicBookSelectionService {
     private webSocketService: WebSocketService,
     private http: HttpClient
   ) {
+    this.store.select(selectUser).subscribe(user => {
+      this.email = user?.email;
+      this.doSubscribeToSelectionUpdates();
+    });
+
     this.store.select(selectMessagingState).subscribe(state => {
-      this.store.select(selectMessagingState).subscribe(state => {
-        if (state.started && !this.selectionUpdateSubscription) {
-          this.logger.trace('Subscribing to comic book selection updates');
-          this.selectionUpdateSubscription = this.webSocketService.subscribe<
-            number[]
-          >(COMIC_BOOK_SELECTION_UPDATE_TOPIC, ids => {
-            this.logger.debug(
-              'Received comic book selection update update:',
-              ids
-            );
-            this.store.dispatch(comicBookSelectionUpdate({ ids }));
-          });
-          this.logger.debug('Loading the initial set of ids');
-          this.store.dispatch(loadComicBookSelections());
-        }
-        if (!state.started && !!this.selectionUpdateSubscription) {
-          this.logger.debug('Stopping comic book selection subscription');
-          this.selectionUpdateSubscription.unsubscribe();
-          this.selectionUpdateSubscription = null;
-        }
-      });
+      if (state.started && !this.selectionUpdateSubscription) {
+        this.doSubscribeToSelectionUpdates();
+      }
+      if (!state.started && !!this.selectionUpdateSubscription) {
+        this.logger.debug('Stopping comic book selection subscription');
+        this.selectionUpdateSubscription.unsubscribe();
+        this.selectionUpdateSubscription = null;
+      }
     });
   }
 
@@ -235,5 +229,25 @@ export class ComicBookSelectionService {
   clearSelections(): Observable<any> {
     this.logger.debug('Clearing comic book selections');
     return this.http.delete(interpolate(CLEAR_COMIC_BOOK_SELECTION_STATE_URL));
+  }
+
+  private doSubscribeToSelectionUpdates() {
+    if (!!this.email) {
+      this.logger.trace('Subscribing to comic book selection updates');
+      this.selectionUpdateSubscription = this.webSocketService.subscribe<
+        number[]
+      >(
+        interpolate(COMIC_BOOK_SELECTION_UPDATE_TOPIC, { email: this.email }),
+        ids => {
+          this.logger.debug(
+            'Received comic book selection update update:',
+            ids
+          );
+          this.store.dispatch(comicBookSelectionUpdate({ ids }));
+        }
+      );
+      this.logger.debug('Loading the initial set of ids');
+      this.store.dispatch(loadComicBookSelections());
+    }
   }
 }

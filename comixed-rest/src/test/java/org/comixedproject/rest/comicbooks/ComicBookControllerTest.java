@@ -24,6 +24,7 @@ import static org.junit.Assert.*;
 
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.*;
 import org.comixedproject.model.comicbooks.*;
 import org.comixedproject.model.net.DownloadDocument;
@@ -46,6 +47,7 @@ public class ComicBookControllerTest {
   private static final long TEST_COMIC_ID = 129;
   private static final Object TEST_ENCODED_SELECTIONS = "The encoded selection ids";
   private static final String TEST_REENCODED_SELECTIONS = "The re-encoded selection ids";
+  private static final String TEST_EMAIL = "user@comixedproject.org";
 
   @InjectMocks private ComicBookController controller;
   @Mock private ComicBookService comicBookService;
@@ -54,6 +56,7 @@ public class ComicBookControllerTest {
   @Mock private ComicBook comicBook;
   @Mock private List<PageOrderEntry> pageOrderEntrylist;
   @Mock private HttpSession httpSession;
+  @Mock private Principal principal;
   @Mock private DownloadDocument comicBookContent;
   @Mock private ResponseEntity<byte[]> responseEntity;
   @Mock private ComiXedUser user;
@@ -66,6 +69,7 @@ public class ComicBookControllerTest {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     comicBookIdSet.add(TEST_COMIC_ID);
     Mockito.when(httpSession.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
     Mockito.when(comicSelectionService.decodeSelections(Mockito.any())).thenReturn(selectedIdList);
     Mockito.when(comicSelectionService.encodeSelections(selectedIdList))
         .thenReturn(TEST_REENCODED_SELECTIONS);
@@ -162,7 +166,7 @@ public class ComicBookControllerTest {
   public void testDeleteSelectedComicBooks() throws ComicBookException {
     Mockito.doNothing().when(comicBookService).deleteComicBooksById(selectedIdList);
 
-    controller.deleteSelectedComicBooks(httpSession);
+    controller.deleteSelectedComicBooks(httpSession, principal);
 
     Mockito.verify(comicBookService, Mockito.times(1)).deleteComicBooksById(this.selectedIdList);
   }
@@ -171,7 +175,7 @@ public class ComicBookControllerTest {
   public void testUndeleteSelectedComicBooks() throws Exception {
     Mockito.doNothing().when(comicBookService).undeleteComicBooksById(selectedIdList);
 
-    controller.undeleteSelectedComicBooks(httpSession);
+    controller.undeleteSelectedComicBooks(httpSession, principal);
 
     Mockito.verify(comicSelectionService, Mockito.times(1))
         .decodeSelections(TEST_ENCODED_SELECTIONS);

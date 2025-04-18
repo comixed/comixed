@@ -24,6 +24,7 @@ import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LI
 import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -127,6 +128,7 @@ public class LibraryController {
    * Prepares comics to have their underlying file recreated.
    *
    * @param session the session
+   * @param principal the user principal
    * @param request the request body
    * @throws LibraryException if an error occurs
    */
@@ -136,12 +138,16 @@ public class LibraryController {
   @Timed(value = "comixed.library.convert-selected-comic-books")
   @PreAuthorize("hasRole('ADMIN')")
   public void convertSelectedComicBooks(
-      final HttpSession session, @RequestBody() final ConvertComicsRequest request)
+      final HttpSession session,
+      final Principal principal,
+      @RequestBody() final ConvertComicsRequest request)
       throws LibraryException {
     if (this.configurationService.isFeatureEnabled(
         ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS)) {
       throw new LibraryException("Recreating comic files is currently disabled");
     }
+
+    final String email = principal.getName();
 
     log.trace("Loading comic book selections");
     try {
@@ -152,8 +158,8 @@ public class LibraryController {
       final boolean deletePages = request.isDeletePages();
 
       log.info(
-          "Converting comic{}: target={} delete pages={} rename pages={}",
-          idList.size() == 1 ? "" : "s",
+          "Converting comic(s): email={} target={} delete pages={} rename pages={}",
+          email,
           archiveType,
           renamePages,
           deletePages);
@@ -161,7 +167,7 @@ public class LibraryController {
       log.trace("Preparing to recreate comic files");
       this.libraryService.prepareToRecreate(idList, archiveType, renamePages, deletePages);
       log.trace("Clearing comic book selections");
-      this.comicSelectionService.clearSelectedComicBooks(idList);
+      this.comicSelectionService.clearSelectedComicBooks(email, idList);
       log.trace("Saving comic book selections");
       session.setAttribute(LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(idList));
     } catch (ComicBookSelectionException error) {
@@ -173,6 +179,7 @@ public class LibraryController {
    * Initiates the library organization process.
    *
    * @param session the session
+   * @param principal the user principal
    * @throws Exception if an error occurs
    */
   @PostMapping(
@@ -180,13 +187,15 @@ public class LibraryController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.library.organize")
-  public void organizeLibrary(final HttpSession session) throws Exception {
+  public void organizeLibrary(final HttpSession session, final Principal principal)
+      throws Exception {
+    final String email = principal.getName();
     final List<Long> selectedIds =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
-    log.info("Organizing library: count={}", selectedIds.size());
+    log.info("Organizing library: email={} count={}", email, selectedIds.size());
     this.libraryService.prepareForOrganization(selectedIds);
     log.debug("Clearing comic book selections");
-    this.comicSelectionService.clearSelectedComicBooks(selectedIds);
+    this.comicSelectionService.clearSelectedComicBooks(email, selectedIds);
     log.debug("Deleting selections from session");
     session.setAttribute(
         LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedIds));
@@ -244,17 +253,20 @@ public class LibraryController {
    * Initiates the rescan process for the selected comic books.
    *
    * @param session the session
+   * @param principal the user principal
    * @throws Exception if an error occurs
    */
   @PutMapping(value = "/api/library/rescan/selected", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.library.batch.rescan-selected")
-  public void rescanSelectedComicBooks(final HttpSession session) throws Exception {
-    final List selectedIdList =
+  public void rescanSelectedComicBooks(final HttpSession session, final Principal principal)
+      throws Exception {
+    final String email = principal.getName();
+    final List<Long> selectedIdList =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
-    log.info("Rescanning selected comic books");
+    log.info("Rescanning selected comic books: email={}", email);
     this.comicBookService.prepareForRescan(selectedIdList);
-    this.comicSelectionService.clearSelectedComicBooks(selectedIdList);
+    this.comicSelectionService.clearSelectedComicBooks(email, selectedIdList);
     session.setAttribute(
         LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedIdList));
   }
@@ -278,20 +290,20 @@ public class LibraryController {
    * Starts the metadata update process for the selected comic books.
    *
    * @param session the session
+   * @param principal the user principal
    * @throws Exception if an error occurs
    */
   @PutMapping(value = "/api/library/metadata/update/selected")
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.library.batch.metadata-update-selected-comic-books")
-  public void updateSelectedComicBooksMetadata(final HttpSession session) throws Exception {
+  public void updateSelectedComicBooksMetadata(final HttpSession session, final Principal principal)
+      throws Exception {
+    final String email = principal.getName();
     final List<Long> selectedComicBookIds =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
-    log.info(
-        "Updating the metadata for {} comic{}",
-        selectedComicBookIds.size(),
-        selectedComicBookIds.size() == 1 ? "" : "s");
+    log.info("Updating the metadata for {} comic(s): email={}", selectedComicBookIds.size(), email);
     this.libraryService.updateMetadata(selectedComicBookIds);
-    this.comicSelectionService.clearSelectedComicBooks(selectedComicBookIds);
+    this.comicSelectionService.clearSelectedComicBooks(email, selectedComicBookIds);
     session.setAttribute(
         LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicBookIds));
   }

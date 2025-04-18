@@ -24,7 +24,6 @@ import {
   startMessagingSuccess,
   stopMessaging
 } from '@app/messaging/actions/messaging.actions';
-import * as SockJS from 'sockjs-client';
 import { HTTP_AUTHORIZATION_HEADER } from '@app/app.constants';
 import { Observable, Subscription } from 'rxjs';
 import { securedTopic } from '@app/messaging/messaging.functions';
@@ -32,6 +31,7 @@ import { TokenService } from '@app/core/services/token.service';
 import { IFrame, RxStompState } from '@stomp/rx-stomp';
 import { Message } from '@stomp/stompjs';
 import { StompService } from '@app/messaging/services/stomp.service';
+import SockJS from 'sockjs-client';
 
 @Injectable({
   providedIn: 'root'

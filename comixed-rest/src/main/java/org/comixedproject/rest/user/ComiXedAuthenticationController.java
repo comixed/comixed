@@ -61,7 +61,7 @@ public class ComiXedAuthenticationController {
   public AuthToken generateToken(
       @RequestParam("email") String email, @RequestParam("password") String password)
       throws AuthenticationException {
-    log.debug("Attemping to authenticate user: {}", email);
+    log.debug("Attempting to authenticate user: {}", email);
     final Authentication authentication =
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(email, password));

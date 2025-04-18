@@ -22,6 +22,8 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.AbstractPublishAction;
 import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.model.messaging.comicbooks.ComicBookSelectionEvent;
+import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.views.View;
 import org.springframework.stereotype.Component;
 
@@ -33,13 +35,19 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class PublishComicBookSelectionStateAction extends AbstractPublishAction<List> {
-  static final String COMIC_BOOK_SELECTION_UPDATE_TOPIC = "/topic/user/comic-book-selection.update";
+public class PublishComicBookSelectionStateAction
+    extends AbstractPublishAction<ComicBookSelectionEvent> {
+  static final String COMIC_BOOK_SELECTION_UPDATE_TOPIC = "/topic/comic-book-selection.update";
 
   @Override
-  public void publish(final List ids) throws PublishingException {
+  public void publish(final ComicBookSelectionEvent event) throws PublishingException {
+    final ComiXedUser user = event.getUser();
+    final List<Long> comicBookIds = event.getComicBookIds();
     log.debug(
-        "Publishing update of {} selected comic book id{}", ids.size(), ids.size() == 1 ? "" : "s");
-    this.doPublish(COMIC_BOOK_SELECTION_UPDATE_TOPIC, ids, View.GenericObjectView.class);
+        "Publishing update of {} selected comic book id for user: email={}",
+        comicBookIds.size(),
+        user);
+    this.doPublishToUser(
+        user, COMIC_BOOK_SELECTION_UPDATE_TOPIC, comicBookIds, View.GenericObjectView.class);
   }
 }
