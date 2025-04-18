@@ -91,10 +91,10 @@ class ComicBookSelectionControllerTest {
 
   @Test
   void addSingleSelection_selecting() throws ComicBookSelectionException {
-    controller.addSingleSelection(httpSession, TEST_COMIC_BOOK_ID);
+    controller.addSingleSelection(httpSession, principal, TEST_COMIC_BOOK_ID);
 
     Mockito.verify(comicSelectionService, Mockito.times(1))
-        .addComicSelectionForUser(selectedIds, TEST_COMIC_BOOK_ID);
+        .addComicSelectionForUser(TEST_EMAIL, selectedIds, TEST_COMIC_BOOK_ID);
     Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(selectedIds);
     Mockito.verify(httpSession, Mockito.times(1))
         .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
@@ -102,11 +102,11 @@ class ComicBookSelectionControllerTest {
 
   @Test
   void addSingleSelection_deselecting() throws ComicBookSelectionException {
-    controller.deleteSingleSelection(httpSession, TEST_COMIC_BOOK_ID);
+    controller.deleteSingleSelection(httpSession, principal, TEST_COMIC_BOOK_ID);
 
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
     Mockito.verify(comicSelectionService, Mockito.times(1))
-        .removeComicSelectionFromUser(selectedIds, TEST_COMIC_BOOK_ID);
+        .removeComicSelectionFromUser(TEST_EMAIL, selectedIds, TEST_COMIC_BOOK_ID);
     Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(selectedIds);
     Mockito.verify(httpSession, Mockito.times(1))
         .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
@@ -116,11 +116,13 @@ class ComicBookSelectionControllerTest {
   void selectComicBooksByFilter_selecting() throws ComicBookSelectionException {
     controller.selectComicBooksByFilter(
         httpSession,
+        principal,
         new MultipleComicBooksSelectionRequest(
             null, null, null, null, null, false, null, null, true));
 
     Mockito.verify(comicSelectionService, Mockito.times(1))
-        .selectByFilter(selectedIds, null, null, null, null, null, false, null, null, true);
+        .selectByFilter(
+            TEST_EMAIL, selectedIds, null, null, null, null, null, false, null, null, true);
     Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(selectedIds);
     Mockito.verify(httpSession, Mockito.times(1))
         .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
@@ -130,11 +132,13 @@ class ComicBookSelectionControllerTest {
   void selectComicBooksByFilter_deselecting() throws ComicBookSelectionException {
     controller.selectComicBooksByFilter(
         httpSession,
+        principal,
         new MultipleComicBooksSelectionRequest(
             null, null, null, null, null, false, null, null, false));
 
     Mockito.verify(comicSelectionService, Mockito.times(1))
-        .selectByFilter(selectedIds, null, null, null, null, null, false, null, null, false);
+        .selectByFilter(
+            TEST_EMAIL, selectedIds, null, null, null, null, null, false, null, null, false);
     Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(selectedIds);
     Mockito.verify(httpSession, Mockito.times(1))
         .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
@@ -144,7 +148,8 @@ class ComicBookSelectionControllerTest {
   void addComicBooksByTagTypeAndValue() throws ComicBookSelectionException {
     Mockito.when(opdsUtils.urlDecodeString(TEST_TAG_VALUE)).thenReturn(TEST_TAG_VALUE);
 
-    controller.addComicBooksByTagTypeAndValue(httpSession, TEST_TAG_TYPE, TEST_TAG_VALUE);
+    controller.addComicBooksByTagTypeAndValue(
+        httpSession, principal, TEST_TAG_TYPE, TEST_TAG_VALUE);
 
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
     Mockito.verify(comicSelectionService, Mockito.times(1))
@@ -158,7 +163,8 @@ class ComicBookSelectionControllerTest {
   void removeComicBooksByTagTypeAndValue() throws ComicBookSelectionException {
     Mockito.when(opdsUtils.urlDecodeString(TEST_TAG_VALUE)).thenReturn(TEST_TAG_VALUE);
 
-    controller.removeComicBooksByTagTypeAndValue(httpSession, TEST_TAG_TYPE, TEST_TAG_VALUE);
+    controller.removeComicBooksByTagTypeAndValue(
+        httpSession, principal, TEST_TAG_TYPE, TEST_TAG_VALUE);
 
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
     Mockito.verify(comicSelectionService, Mockito.times(1))
@@ -174,7 +180,7 @@ class ComicBookSelectionControllerTest {
     for (long index = 1000L; index < 2000L; index++) comicBookIdList.add(index);
 
     controller.addComicBookSelectionsById(
-        httpSession, new AddComicBookSelectionsByIdRequest(comicBookIdList, true));
+        httpSession, principal, new AddComicBookSelectionsByIdRequest(comicBookIdList, true));
 
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
     Mockito.verify(selectedIds, Mockito.times(1)).addAll(comicBookIdList);
@@ -189,7 +195,7 @@ class ComicBookSelectionControllerTest {
     for (long index = 1000L; index < 2000L; index++) comicBookIdList.add(index);
 
     controller.addComicBookSelectionsById(
-        httpSession, new AddComicBookSelectionsByIdRequest(comicBookIdList, false));
+        httpSession, principal, new AddComicBookSelectionsByIdRequest(comicBookIdList, false));
 
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
     Mockito.verify(selectedIds, Mockito.times(1)).removeAll(comicBookIdList);
@@ -204,7 +210,7 @@ class ComicBookSelectionControllerTest {
         .thenReturn(selectedIds);
 
     controller.addComicBookSelectionsByPublisher(
-        httpSession, new AddComicBookSelectionsByPublisherRequest(TEST_PUBLISHER, true));
+        httpSession, principal, new AddComicBookSelectionsByPublisherRequest(TEST_PUBLISHER, true));
 
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
     Mockito.verify(displayableComicService, Mockito.times(1)).getIdsByPublisher(TEST_PUBLISHER);
@@ -220,7 +226,9 @@ class ComicBookSelectionControllerTest {
         .thenReturn(selectedIds);
 
     controller.addComicBookSelectionsByPublisher(
-        httpSession, new AddComicBookSelectionsByPublisherRequest(TEST_PUBLISHER, false));
+        httpSession,
+        principal,
+        new AddComicBookSelectionsByPublisherRequest(TEST_PUBLISHER, false));
 
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
     Mockito.verify(displayableComicService, Mockito.times(1)).getIdsByPublisher(TEST_PUBLISHER);
@@ -239,6 +247,7 @@ class ComicBookSelectionControllerTest {
 
     controller.addComicBookSelectionsByPublisherSeriesVolume(
         httpSession,
+        principal,
         new AddComicBookSelectionsByPublisherSeriesVolumeRequest(
             TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, true));
 
@@ -260,6 +269,7 @@ class ComicBookSelectionControllerTest {
 
     controller.addComicBookSelectionsByPublisherSeriesVolume(
         httpSession,
+        principal,
         new AddComicBookSelectionsByPublisherSeriesVolumeRequest(
             TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, false));
 
@@ -277,7 +287,7 @@ class ComicBookSelectionControllerTest {
     Mockito.when(displayableComicService.getDuplicateComicIds()).thenReturn(selectedIds);
 
     controller.addDuplicateComicBooksSelection(
-        httpSession, new DuplicateComicBooksSelectionRequest(true));
+        httpSession, principal, new DuplicateComicBooksSelectionRequest(true));
 
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
     Mockito.verify(displayableComicService, Mockito.times(1)).getDuplicateComicIds();
@@ -292,7 +302,7 @@ class ComicBookSelectionControllerTest {
     Mockito.when(displayableComicService.getDuplicateComicIds()).thenReturn(selectedIds);
 
     controller.addDuplicateComicBooksSelection(
-        httpSession, new DuplicateComicBooksSelectionRequest(false));
+        httpSession, principal, new DuplicateComicBooksSelectionRequest(false));
 
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
     Mockito.verify(displayableComicService, Mockito.times(1)).getDuplicateComicIds();
@@ -360,7 +370,7 @@ class ComicBookSelectionControllerTest {
 
   @Test
   void clearSelections() throws ComicBookSelectionException {
-    controller.clearSelections(httpSession);
+    controller.clearSelections(httpSession, principal);
 
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
     Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(selectedIds);

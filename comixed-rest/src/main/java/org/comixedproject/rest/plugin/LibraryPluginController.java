@@ -162,19 +162,23 @@ public class LibraryPluginController {
    * Runs a plugin against the selected comic books.
    *
    * @param pluginId the plugin id
+   * @param principal the user principal
    * @throws LibraryPluginException if an error occurs
    */
   @PostMapping(value = "/api/plugins/{pluginId}/comics/selected")
   @Timed(value = "comixed.plugins.run-selected-comic-books")
   public void runLibraryPluginOnSelectedComicBooks(
-      final HttpSession session, @PathVariable("pluginId") final long pluginId)
+      final HttpSession session,
+      final Principal principal,
+      @PathVariable("pluginId") final long pluginId)
       throws LibraryPluginException {
     try {
+      final String email = principal.getName();
       final List<Long> selectedComicBookIdList =
           this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
-      log.info("Running plugin on selected comic books: plugin id={}", pluginId);
+      log.info("Running plugin on selected comic books: email={} plugin id={}", email, pluginId);
       this.libraryPluginService.runLibraryPlugin(pluginId, selectedComicBookIdList);
-      this.comicSelectionService.clearSelectedComicBooks(selectedComicBookIdList);
+      this.comicSelectionService.clearSelectedComicBooks(email, selectedComicBookIdList);
       session.setAttribute(
           LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicBookIdList));
     } catch (ComicBookSelectionException error) {
