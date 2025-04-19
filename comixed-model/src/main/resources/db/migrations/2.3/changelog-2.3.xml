@@ -26,5 +26,6 @@
     <include file="/db/migrations/2.3/017_2341_added_publisher_details_view.xml"/>
     <include file="/db/migrations/2.3/018_2346_add_notes_to_displayable_comic_books.xml"/>
     <include file="/db/migrations/2.3/019_2368_stories_reference_metadata_source.xml"/>
+    <include file="/db/migrations/2.3/020_2368_removed_comic_vine_id_from_story_entries.xml"/>
 
 </databaseChangeLog>

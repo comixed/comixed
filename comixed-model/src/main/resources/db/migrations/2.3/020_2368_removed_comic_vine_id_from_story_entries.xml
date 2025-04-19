@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="020_2368_removed_comic_vine_id_from_story_entries.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="story_entries" columnName="comic_vine_id"/>
+        </preConditions>
+
+        <dropColumn tableName="story_entries" columnName="comic_vine_id"/>
+
+    </changeSet>
+</databaseChangeLog>
