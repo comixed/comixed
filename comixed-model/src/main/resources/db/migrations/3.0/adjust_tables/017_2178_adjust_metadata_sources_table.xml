@@ -16,6 +16,8 @@
                                   constraintName="metadata_source_properties_metadata_source_fk"/>
         <dropForeignKeyConstraint baseTableName="comic_metadata_sources"
                                   constraintName="comic_metadata_sources_metadata_source_fk"/>
+        <dropForeignKeyConstraint baseTableName="stories"
+                                  constraintName="story_metadata_source_fk"/>
 
         <renameTable oldTableName="metadata_sources" newTableName="old_metadata_sources"/>
 
