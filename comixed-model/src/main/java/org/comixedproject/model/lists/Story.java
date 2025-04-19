@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import lombok.*;
+import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.views.View;
 
 /**
@@ -55,12 +56,20 @@ public class Story {
   @NonNull
   private String name;
 
-  @Column(name = "comic_vine_id", nullable = true, updatable = true, unique = true)
-  @JsonProperty("comicVineId")
-  @JsonView(View.StoryList.class)
+  @ManyToOne
+  @JoinColumn(name = "metadata_source_id", nullable = false, updatable = true)
+  @JsonProperty("metadataSource")
+  @JsonView({View.ComicListView.class})
   @Getter
   @Setter
-  private Integer comicVineId;
+  private MetadataSource metadataSource;
+
+  @Column(name = "reference_id", length = 32, nullable = false, updatable = true)
+  @JsonProperty("referenceId")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  @Setter
+  private String referenceId;
 
   @Column(
       name = "story_state",

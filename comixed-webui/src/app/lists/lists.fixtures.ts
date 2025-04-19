@@ -74,7 +74,6 @@ export const STORY_1: Story = {
   storyId: 1,
   name: 'Story 1',
   publisher: 'Publisher 1',
-  comicVineId: null,
   entries: [],
   createdOn: new Date().getTime(),
   modifiedOn: new Date().getTime()
@@ -84,7 +83,6 @@ export const STORY_2: Story = {
   storyId: 2,
   name: 'Story 1',
   publisher: 'Publisher 2',
-  comicVineId: null,
   entries: [],
   createdOn: new Date().getTime(),
   modifiedOn: new Date().getTime()
@@ -94,7 +92,6 @@ export const STORY_3: Story = {
   storyId: 3,
   name: 'Story 1',
   publisher: 'Publisher 3',
-  comicVineId: null,
   entries: [],
   createdOn: new Date().getTime(),
   modifiedOn: new Date().getTime()
@@ -104,7 +101,6 @@ export const STORY_4: Story = {
   storyId: 4,
   name: 'Story 1',
   publisher: 'Publisher 4',
-  comicVineId: null,
   entries: [],
   createdOn: new Date().getTime(),
   modifiedOn: new Date().getTime()
@@ -114,7 +110,6 @@ export const STORY_5: Story = {
   storyId: 5,
   name: 'Story 1',
   publisher: 'Publisher 5',
-  comicVineId: null,
   entries: [],
   createdOn: new Date().getTime(),
   modifiedOn: new Date().getTime()
