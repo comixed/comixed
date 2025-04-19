@@ -27,6 +27,7 @@ import { PublisherSeriesPageComponent } from '@app/collections/pages/publisher-s
 import { PublisherIssuesPageComponent } from '@app/collections/pages/publisher-issues-page/publisher-issues-page.component';
 import { SeriesMetadataPageComponent } from '@app/collections/pages/series-metadata-page/series-metadata-page.component';
 import { SeriesIssuePageComponent } from '@app/collections/pages/series-issue-page/series-issue-page.component';
+import { StoryDetailPageComponent } from '@app/collections/pages/story-detail-page/story-detail-page.component';
 
 const routes: Routes = [
   {
@@ -62,6 +63,11 @@ const routes: Routes = [
   {
     path: 'library/collections/publishers/:publisher/series/:name/volumes/:volume/metadata',
     component: SeriesMetadataPageComponent,
+    canActivate: [ReaderGuard]
+  },
+  {
+    path: 'library/collections/stories/:storyName',
+    component: StoryDetailPageComponent,
     canActivate: [ReaderGuard]
   },
   {

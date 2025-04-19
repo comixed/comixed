@@ -1,0 +1,40 @@
+<h2>
+  {{
+    "story-detail.page-title"
+      | translate
+        : {
+            tagValue: storyName
+          }
+  }}
+</h2>
+
+<div *ngIf="isAdmin && !showStoryScraping" class="cx-fab-container-bottom-left">
+  <button
+    id="show-scraping-form-button"
+    mat-fab
+    color="primary"
+    [matTooltip]="'story-detail.button.scrape-story' | translate"
+    (click)="onShowStoryScraping()"
+  >
+    <mat-icon>find_replace</mat-icon>
+  </button>
+</div>
+
+<cx-comic-list-view
+  *ngIf="!showStoryScraping"
+  class="cx-width-100"
+  [isAdmin]="isAdmin"
+  [comics]="comics"
+  [totalComics]="totalComics"
+  [coverYears]="coverYears"
+  [coverMonths]="coverMonths"
+  [selectedIds]="selectedIds"
+  [comicBooksRead]="lastReadDates"
+  [readingLists]="readingLists"
+  (selectAll)="onSelectAll($event)"
+></cx-comic-list-view>
+
+<cx-story-scraping
+  *ngIf="showStoryScraping"
+  [storyName]="storyName"
+></cx-story-scraping>

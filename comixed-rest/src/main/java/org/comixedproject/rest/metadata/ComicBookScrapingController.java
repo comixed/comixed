@@ -32,6 +32,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.metadata.MetadataProcessConfiguration;
 import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.model.IssueMetadata;
+import org.comixedproject.metadata.model.StoryMetadata;
 import org.comixedproject.metadata.model.VolumeMetadata;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.net.metadata.*;
@@ -219,6 +220,7 @@ public class ComicBookScrapingController {
    *
    * @param sourceId the metadata source id
    * @param request the request body
+   * @return the scrape series response
    * @throws MetadataException if an error occurs
    */
   @PostMapping(
@@ -417,6 +419,67 @@ public class ComicBookScrapingController {
     this.metadataService.batchScrapeComicBooks(new ArrayList<>(ids));
     this.comicSelectionService.clearSelectedComicBooks(email, ids);
     session.setAttribute(LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(ids));
+  }
+
+  /**
+   * Loads a set of candidates for scraping a story.
+   *
+   * @param request the request body
+   * @param sourceId the metadata source id
+   * @return the list of story candidates
+   * @throws MetadataException if an error occurs
+   */
+  @PostMapping(
+      value = "/api/metadata/sources/{sourceId}/stories",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.metadata.get-stories")
+  public List<StoryMetadata> loadStoryCandidates(
+      @RequestBody LoadScrapingStoriesRequest request,
+      @PathVariable("sourceId") final Long sourceId)
+      throws MetadataException {
+    final String name = request.getName();
+    final int maxRecords = request.getMaxRecords();
+    final boolean skipCache = request.isSkipCache();
+
+    log.info(
+        "Getting story candidates: name={} maxRecords={} skipCache={}",
+        name,
+        maxRecords,
+        skipCache);
+
+    return this.metadataService.getStories(name, maxRecords, sourceId, skipCache);
+  }
+
+  /**
+   * Scrapes a story.
+   *
+   * @param request the request body
+   * @param sourceId the metadata source id
+   * @param referenceId the story reference id
+   * @throws MetadataException if an error occurs
+   */
+  @PostMapping(
+      value = "/api/metadata/sources/{sourceId}/stories/scrape/{referenceId}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.metadata.get-stories")
+  public void scrapeStory(
+      @RequestBody ScrapeStoryRequest request,
+      @PathVariable("sourceId") final Long sourceId,
+      @PathVariable("referenceId") final String referenceId)
+      throws MetadataException {
+    final boolean skipCache = request.isSkipCache();
+
+    log.info(
+        "Scraping story: source id={} reference id={} skipCache={}",
+        sourceId,
+        referenceId,
+        skipCache);
+
+    this.metadataService.scrapeStory(sourceId, referenceId, skipCache);
   }
 
   private StartMultiBookScrapingResponse doRemoveComicBook(

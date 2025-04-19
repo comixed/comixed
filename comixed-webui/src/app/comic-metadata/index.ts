@@ -20,9 +20,9 @@ import { Params } from '@angular/router';
 import { routerReducer, RouterReducerState } from '@ngrx/router-store';
 import { ActionReducerMap } from '@ngrx/store';
 import {
+  reducer as scrapingReducer,
   SINGLE_BOOK_SCRAPING_FEATURE_KEY,
-  SingleBookScrapingState,
-  reducer as scrapingReducer
+  SingleBookScrapingState
 } from '@app/comic-metadata/reducers/single-book-scraping.reducer';
 import {
   METADATA_SOURCE_LIST_FEATURE_KEY,
@@ -40,10 +40,15 @@ import {
   reducer as metadataUpdateProcessReducer
 } from '@app/comic-metadata/reducers/metadata-update-process.reducer';
 import {
-  SERIES_SCRAPING_FEATURE_KEY,
-  SeriesScrapingState,
-  reducer as fetchIssuesForSeriesReducer
-} from '@app/comic-metadata/reducers/series-scraping.reducer';
+  reducer as fetchIssuesForSeriesReducer,
+  SCRAPE_SERIES_FEATURE_KEY,
+  SeriesScrapingState
+} from '@app/comic-metadata/reducers/scrape-series.reducer';
+import {
+  reducer as scrapeStoryReducer,
+  SCRAPE_STORY_FEATURE_KEY,
+  ScrapeStoryState
+} from '@app/comic-metadata/reducers/scrape-story.reducer';
 
 interface RouterStateUrl {
   url: string;
@@ -57,7 +62,8 @@ export interface ComicMetadataModuleState {
   [METADATA_SOURCE_LIST_FEATURE_KEY]: MetadataSourceListState;
   [METADATA_SOURCE_FEATURE_KEY]: MetadataSourceState;
   [METADATA_UPDATE_PROCESS_FEATURE_KEY]: MetadataUpdateProcessState;
-  [SERIES_SCRAPING_FEATURE_KEY]: SeriesScrapingState;
+  [SCRAPE_SERIES_FEATURE_KEY]: SeriesScrapingState;
+  [SCRAPE_STORY_FEATURE_KEY]: ScrapeStoryState;
 }
 
 export type ModuleState = ComicMetadataModuleState;
@@ -68,5 +74,6 @@ export const reducers: ActionReducerMap<ComicMetadataModuleState> = {
   [METADATA_SOURCE_LIST_FEATURE_KEY]: metadataSourceListReducer,
   [METADATA_SOURCE_FEATURE_KEY]: metadataSourceReducer,
   [METADATA_UPDATE_PROCESS_FEATURE_KEY]: metadataUpdateProcessReducer,
-  [SERIES_SCRAPING_FEATURE_KEY]: fetchIssuesForSeriesReducer
+  [SCRAPE_SERIES_FEATURE_KEY]: fetchIssuesForSeriesReducer,
+  [SCRAPE_STORY_FEATURE_KEY]: scrapeStoryReducer
 };

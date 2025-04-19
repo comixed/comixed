@@ -3,7 +3,7 @@
 <databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
-    <changeSet id="024_2178_adjust_scraped_story_entries_table.xml" author="mcpierce">
+    <changeSet id="022_2178_adjust_scraped_story_entries_table.xml" author="mcpierce">
 
         <preConditions onFail="MARK_RAN">
             <tableExists tableName="scraped_story_entries"/>
@@ -15,8 +15,8 @@
         <renameTable oldTableName="scraped_story_entries" newTableName="old_scraped_story_entries"/>
 
         <createTable tableName="scraped_story_entries">
-            <column name="scraped_story_entry_id" type="bigint" autoIncrement="true">
-                <constraints primaryKey="true" primaryKeyName="scraped_story_entries_v3_pk"/>
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="scraped_story_entries_v2_pk"/>
             </column>
 
             <column name="scraped_story_id" type="bigint">
@@ -35,7 +35,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="comic_book_id" type="bigint">
+            <column name="cover_date" type="date">
                 <constraints nullable="true"/>
             </column>
 
@@ -44,7 +44,7 @@
             </column>
         </createTable>
 
-        <sql>INSERT INTO scraped_story_entries(scraped_story_entry_id, scraped_story_id, reading_order, series, volume,
+        <sql>INSERT INTO scraped_story_entries(id, scraped_story_id, reading_order, series, volume,
                                                issue_number)
              SELECT id,
                     scraped_story_id,
@@ -59,19 +59,24 @@
         <addForeignKeyConstraint baseTableName="scraped_story_entries" baseColumnNames="scraped_story_id"
                                  constraintName="scraped_story_entry_story_fk"
                                  referencedTableName="scraped_stories"
-                                 referencedColumnNames="scraped_story_id"/>
-
-        <addForeignKeyConstraint baseTableName="scraped_story_entries" baseColumnNames="comic_book_id"
-                                 constraintName="scraped_story_entry_comic_book_fk"
-                                 referencedTableName="comic_books"
-                                 referencedColumnNames="comic_book_id"/>
-
-        <createIndex tableName="scraped_story_entries" indexName="scraped_story_entry_comic_book_idx">
-            <column name="comic_book_id"/>
-        </createIndex>
+                                 referencedColumnNames="id"/>
 
         <addUniqueConstraint tableName="scraped_story_entries" columnNames="scraped_story_id, reading_order"
                              constraintName="scraped_story_entry_unique_scraped_story_and_reading_order"/>
 
+    </changeSet>
+    <changeSet id="022_2178_adjust_scraped_story_entries_table-part-2" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="scraped_stories" columnName="description"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="scraped_stories">
+            <column name="description" type="clob">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
     </changeSet>
 </databaseChangeLog>

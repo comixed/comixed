@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.repositories.lists;
+package org.comixedproject.repositories.collections;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -24,9 +24,8 @@ import static org.junit.Assert.assertNotNull;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.List;
-import org.comixedproject.model.lists.ScrapedStory;
+import org.comixedproject.model.collections.ScrapedStory;
 import org.comixedproject.repositories.RepositoryContext;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +53,6 @@ public class ScrapedStoryRepositoryTest {
   @Autowired private ScrapedStoryRepository repository;
 
   @Test
-  @Ignore
   public void testFindAll() {
     final List<ScrapedStory> result = repository.findAll();
 
@@ -63,7 +61,6 @@ public class ScrapedStoryRepositoryTest {
   }
 
   @Test
-  @Ignore
   public void testFindByName() {
     final List<ScrapedStory> result = repository.findByName(TEST_STORY_NAME);
 

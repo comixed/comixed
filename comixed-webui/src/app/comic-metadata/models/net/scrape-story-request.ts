@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2022, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector } from '@ngrx/store';
-import {
-  SERIES_SCRAPING_FEATURE_KEY,
-  SeriesScrapingState
-} from '../reducers/series-scraping.reducer';
-
-export const selectSeriesScrapingState =
-  createFeatureSelector<SeriesScrapingState>(SERIES_SCRAPING_FEATURE_KEY);
+export interface ScrapeStoryRequest {
+  skipCache: boolean;
+}

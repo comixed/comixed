@@ -21,7 +21,7 @@ package org.comixedproject.messaging.lists;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.AbstractPublishAction;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.lists.ScrapedStory;
+import org.comixedproject.model.collections.ScrapedStory;
 import org.comixedproject.views.View;
 import org.springframework.stereotype.Component;
 

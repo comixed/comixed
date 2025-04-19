@@ -18,6 +18,8 @@
 
 package org.comixedproject.service.comicbooks;
 
+import static org.comixedproject.model.comicbooks.ComicTagType.STORY;
+
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
@@ -398,14 +400,31 @@ public class ComicDetailService {
       final String sortBy,
       final String sortDirection) {
     if (StringUtils.hasLength(filterText)) {
-      return this.comicDetailRepository.loadCollectionEntriesWithFiltering(
-          tagType,
-          "%" + filterText + "%",
-          PageRequest.of(pageIndex, pageSize, this.doCreateCollectionSort(sortBy, sortDirection)));
+      if (tagType == STORY) {
+        return this.comicDetailRepository.loadCollectionEntriesWithFiltering(
+            tagType,
+            "%" + filterText + "%",
+            PageRequest.of(
+                pageIndex, pageSize, this.doCreateCollectionSort(sortBy, sortDirection)));
+      } else {
+        return this.comicDetailRepository.loadCollectionEntriesWithFiltering(
+            tagType,
+            "%" + filterText + "%",
+            PageRequest.of(
+                pageIndex, pageSize, this.doCreateCollectionSort(sortBy, sortDirection)));
+      }
     } else {
-      return this.comicDetailRepository.loadCollectionEntries(
-          tagType,
-          PageRequest.of(pageIndex, pageSize, this.doCreateCollectionSort(sortBy, sortDirection)));
+      if (tagType == STORY) {
+        return this.comicDetailRepository.loadCollectionEntries(
+            tagType,
+            PageRequest.of(
+                pageIndex, pageSize, this.doCreateCollectionSort(sortBy, sortDirection)));
+      } else {
+        return this.comicDetailRepository.loadCollectionEntries(
+            tagType,
+            PageRequest.of(
+                pageIndex, pageSize, this.doCreateCollectionSort(sortBy, sortDirection)));
+      }
     }
   }
 

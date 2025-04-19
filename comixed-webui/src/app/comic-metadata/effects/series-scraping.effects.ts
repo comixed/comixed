@@ -23,7 +23,7 @@ import {
   scrapeSeriesMetadata,
   scrapeSeriesMetadataFailure,
   scrapeSeriesMetadataSuccess
-} from '../actions/series-scraping.actions';
+} from '../actions/scrape-series.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicBookScrapingService } from '@app/comic-metadata/services/comic-book-scraping.service';
 import { AlertService } from '@app/core/services/alert.service';

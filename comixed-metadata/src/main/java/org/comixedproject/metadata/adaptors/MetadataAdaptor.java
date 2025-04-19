@@ -20,9 +20,7 @@ package org.comixedproject.metadata.adaptors;
 
 import java.util.List;
 import org.comixedproject.metadata.MetadataException;
-import org.comixedproject.metadata.model.IssueDetailsMetadata;
-import org.comixedproject.metadata.model.IssueMetadata;
-import org.comixedproject.metadata.model.VolumeMetadata;
+import org.comixedproject.metadata.model.*;
 import org.comixedproject.model.metadata.MetadataSource;
 
 /**
@@ -46,6 +44,45 @@ public interface MetadataAdaptor {
    * @return the identifier
    */
   String getIdentifier();
+
+  /**
+   * Generates a consistent key for the list returned for the given story name.
+   *
+   * @param storyName the story name
+   * @return the key value
+   */
+  String getStoryListKey(String storyName);
+
+  /**
+   * Generates a consistent key for the given story by reference id.
+   *
+   * @param referenceId the reference id
+   * @return the key value
+   */
+  String getStoryDetailKey(String referenceId);
+
+  /**
+   * Returns the list of stories for the given name.
+   *
+   * @param storyName the story name
+   * @param maxRecords the maximum records to fetch
+   * @param metadataSource the metadata source
+   * @return the list of stories
+   * @throws MetadataException if an error occurs
+   */
+  List<StoryMetadata> getStories(
+      String storyName, Integer maxRecords, MetadataSource metadataSource) throws MetadataException;
+
+  /**
+   * Returns the details for a single story.
+   *
+   * @param referenceId the reference id
+   * @param metadatasSource the metadata source
+   * @return the story detail
+   * @throws MetadataException if an error occurs
+   */
+  StoryDetailMetadata getStory(String referenceId, MetadataSource metadatasSource)
+      throws MetadataException;
 
   /**
    * Returns a list of volumes for the given series name.

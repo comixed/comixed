@@ -17,7 +17,7 @@
  */
 
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { CollectionListComponent } from './pages/collection-list/collection-list.component';
 import { CollectionDetailComponent } from './pages/collection-detail/collection-detail.component';
 import { CollectionsRouting } from './collections.routing';
@@ -51,6 +51,9 @@ import { PublisherIssuesPageComponent } from '@app/collections/pages/publisher-i
 import { SeriesIssuePageComponent } from '@app/collections/pages/series-issue-page/series-issue-page.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FilterTextFormComponent } from '@app/collections/components/filter-text-form/filter-text-form.component';
+import { MatCardModule } from '@angular/material/card';
+import { StoryScrapingComponent } from '@app/collections/components/story-scraping/story-scraping.component';
+import { StoryDetailPageComponent } from '@app/collections/pages/story-detail-page/story-detail-page.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +66,8 @@ import { FilterTextFormComponent } from '@app/collections/components/filter-text
     PublisherSeriesPageComponent,
     PublisherIssuesPageComponent,
     FilterTextFormComponent,
+    StoryDetailPageComponent,
+    StoryScrapingComponent,
     SeriesDetailNamePipe
   ],
   imports: [
@@ -90,7 +95,9 @@ import { FilterTextFormComponent } from '@app/collections/components/filter-text
     MatDividerModule,
     MatTab,
     MatTabGroup,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatCardModule,
+    NgOptimizedImage
   ],
   exports: [CommonModule]
 })

@@ -203,6 +203,28 @@
       "skip-cache": "Skip the cache when fetching metadata."
     }
   },
+  "scrape-story": {
+    "load-story-candidates": {
+      "effect-failure": "Failed to load any story candidates for '{name}'..."
+    },
+    "story-candidates-table": {
+      "label": {
+        "action": "Action",
+        "name": "Story Name",
+        "publisher": "Publisher",
+        "thumbnail": "Thumbnail"
+      },
+      "text": {
+        "no-records-found": "No stories candidates loaded..."
+      }
+    },
+    "scrape-story-metadata": {
+      "confirmation-message": "Are you sure you want to scrape \"{story}\" from {source}?",
+      "confirmation-title": "Scrape Story Metadata",
+      "effect-failure": "Failed to scrape story data...",
+      "effect-success": "Story data successfully scraped."
+    }
+  },
   "scraping-series-page": {
     "page-title-with-form": "Comic Series Scraping",
     "page-title-with-volumes": "Comic Series Scraping ({count, plural, =1{One Volume} other{# Volumes}})",

@@ -25,7 +25,7 @@ import {
   scrapeSeriesMetadata,
   scrapeSeriesMetadataFailure,
   scrapeSeriesMetadataSuccess
-} from '@app/comic-metadata/actions/series-scraping.actions';
+} from '@app/comic-metadata/actions/scrape-series.actions';
 import { HttpErrorResponse } from '@angular/common/http';
 import { hot } from 'jasmine-marbles';
 import {

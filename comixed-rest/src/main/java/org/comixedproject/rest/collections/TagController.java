@@ -49,7 +49,7 @@ public class TagController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
-  @Timed(value = "comixed.collection.load-list")
+  @Timed(value = "comixed.collection.load-collection-list")
   @JsonView(View.CollectionEntryList.class)
   public LoadComicsForCollectionResponse loadCollectionList(
       @RequestBody final LoadComicsForCollectionRequest request,
