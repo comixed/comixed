@@ -17,11 +17,13 @@
  */
 
 import { StoryEntry } from '@app/lists/models/story-entry';
+import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 
 export interface Story {
   id: number;
   name: string;
-  comicVineId: number;
+  metadataSource?: MetadataSource;
+  referenceId?: string;
   publisher: string;
   entries: StoryEntry[];
   createdOn: number;

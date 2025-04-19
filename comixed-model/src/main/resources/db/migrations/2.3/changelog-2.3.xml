@@ -25,5 +25,6 @@
     <include file="/db/migrations/2.3/016_2331_added_series_details_view.xml"/>
     <include file="/db/migrations/2.3/017_2341_added_publisher_details_view.xml"/>
     <include file="/db/migrations/2.3/018_2346_add_notes_to_displayable_comic_books.xml"/>
+    <include file="/db/migrations/2.3/019_2368_stories_reference_metadata_source.xml"/>
 
 </databaseChangeLog>
