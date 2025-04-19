@@ -30,6 +30,7 @@ import java.util.List;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.model.IssueMetadata;
+import org.comixedproject.metadata.model.StoryMetadata;
 import org.comixedproject.metadata.model.VolumeMetadata;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.net.metadata.*;
@@ -59,6 +60,7 @@ import org.springframework.batch.core.launch.JobLauncher;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class ComicBookScrapingControllerTest {
   private static final Long TEST_METADATA_SOURCE_ID = 73L;
+  private static final String TEST_REFERENCE_ID = "8675309";
   private static final String TEST_PUBLISHER = "Powerful Publisher";
   private static final String TEST_SERIES_NAME = "Awesome ComicBook";
   private static final Integer TEST_MAX_RECORDS = 37;
@@ -75,6 +77,7 @@ class ComicBookScrapingControllerTest {
   private static final int TEST_PAGE_NUMBER = 3;
   private static final Boolean TEST_MATCH_PUBLISHER = RandomUtils.nextBoolean();
   private static final String TEST_EMAIL = "user@comixedproject.org";
+  private static final String TEST_STORY_NAME = "The Story Name";
 
   @InjectMocks private ComicBookScrapingController controller;
   @Mock private MetadataService metadataService;
@@ -93,6 +96,7 @@ class ComicBookScrapingControllerTest {
   @Mock private Principal principal;
   @Mock private List<ComicBook> comicBookList;
   @Mock private ScrapeSeriesResponse scrapeSeriesResponse;
+  @Mock private List<StoryMetadata> storyList;
 
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
@@ -496,6 +500,25 @@ class ComicBookScrapingControllerTest {
   }
 
   @Test
+  void batchScrapeSelected() throws ComicBookSelectionException {
+    final List<Long> localMultiBookIdList = new ArrayList<>();
+    Mockito.when(session.getAttribute(LIBRARY_SELECTIONS)).thenReturn(TEST_ENCODED_SELECTIONS);
+    Mockito.when(comicSelectionService.decodeSelections(TEST_ENCODED_SELECTIONS))
+        .thenReturn(localMultiBookIdList);
+    Mockito.when(comicSelectionService.encodeSelections(Mockito.anyList()))
+        .thenReturn(TEST_REENCODED_SELECTIONS);
+
+    controller.batchScrapeSelected(session, principal);
+
+    Mockito.verify(comicSelectionService, Mockito.times(1))
+        .decodeSelections(TEST_ENCODED_SELECTIONS);
+    Mockito.verify(metadataService, Mockito.times(1)).batchScrapeComicBooks(localMultiBookIdList);
+    Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(localMultiBookIdList);
+    Mockito.verify(session, Mockito.times(1))
+        .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
+  }
+
+  @Test
   void scrapeMultiBookComic() throws MetadataException, ComicBookSelectionException {
     final List<ComicBook> localComicBookList = new ArrayList<>();
     localComicBookList.add(comicBook);
@@ -527,5 +550,33 @@ class ComicBookScrapingControllerTest {
     Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(localMultiBookIdList);
     Mockito.verify(session, Mockito.times(1))
         .setAttribute(MULTI_BOOK_SCRAPING_SELECTIONS, TEST_REENCODED_MULTI_BOOKS);
+  }
+
+  @Test
+  void loadStoryCandidates() throws MetadataException {
+    Mockito.when(
+            metadataService.getStories(
+                Mockito.anyString(), Mockito.anyInt(), Mockito.anyLong(), Mockito.anyBoolean()))
+        .thenReturn(storyList);
+
+    final List<StoryMetadata> result =
+        controller.loadStoryCandidates(
+            new LoadScrapingStoriesRequest(TEST_STORY_NAME, TEST_MAX_RECORDS, true),
+            TEST_METADATA_SOURCE_ID);
+
+    assertNotNull(result);
+    assertSame(storyList, result);
+
+    Mockito.verify(metadataService, Mockito.times(1))
+        .getStories(TEST_STORY_NAME, TEST_MAX_RECORDS, TEST_METADATA_SOURCE_ID, true);
+  }
+
+  @Test
+  void scrapeStory() throws MetadataException {
+    controller.scrapeStory(
+        new ScrapeStoryRequest(TEST_SKIP_CACHE), TEST_METADATA_SOURCE_ID, TEST_REFERENCE_ID);
+
+    Mockito.verify(metadataService, Mockito.times(1))
+        .scrapeStory(TEST_METADATA_SOURCE_ID, TEST_REFERENCE_ID, TEST_SKIP_CACHE);
   }
 }

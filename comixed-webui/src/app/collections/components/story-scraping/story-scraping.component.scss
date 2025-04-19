@@ -1,0 +1,23 @@
+@use 'variables' as *;
+
+.mat-column-action {
+  width: $cx-column-smallish;
+  max-width: $cx-column-smallish;
+  resize: none;
+}
+
+.mat-column-thumbnail {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-namae {
+  resize: horizontal;
+}
+
+.mat-column-publisher {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+  resize: none;
+}

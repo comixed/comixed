@@ -48,9 +48,9 @@ import {
 } from '@app/library/library.constants';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { scrapeSeriesMetadata } from '@app/comic-metadata/actions/series-scraping.actions';
-import { SeriesScrapingState } from '@app/comic-metadata/reducers/series-scraping.reducer';
-import { selectSeriesScrapingState } from '@app/comic-metadata/selectors/series-scraping.selectors';
+import { scrapeSeriesMetadata } from '@app/comic-metadata/actions/scrape-series.actions';
+import { SeriesScrapingState } from '@app/comic-metadata/reducers/scrape-series.reducer';
+import { selectScrapeSeriesState } from '@app/comic-metadata/selectors/scrape-series.selectors';
 import { METADATA_RECORD_LIMITS } from '@app/comic-metadata/comic-metadata.constants';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -157,7 +157,7 @@ export class ScrapingSeriesPageComponent implements OnInit, OnDestroy {
       'Subscribing to fetching issues for series state updates'
     );
     this.fetchIssuesForSeriesStateSubscription = this.store
-      .select(selectSeriesScrapingState)
+      .select(selectScrapeSeriesState)
       .subscribe(state => {
         this.fetchIssuesForSeriesState = state;
         this.updateBusyState();

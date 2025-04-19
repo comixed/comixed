@@ -20,19 +20,19 @@ import {
   initialState,
   reducer,
   SeriesScrapingState
-} from './series-scraping.reducer';
+} from './scrape-series.reducer';
 import {
   scrapeSeriesMetadata,
   scrapeSeriesMetadataFailure,
   scrapeSeriesMetadataSuccess
-} from '@app/comic-metadata/actions/series-scraping.actions';
+} from '@app/comic-metadata/actions/scrape-series.actions';
 import {
   METADATA_SOURCE_1,
   SCRAPING_VOLUME_1
 } from '@app/comic-metadata/comic-metadata.fixtures';
 import { PUBLISHER_1, SERIES_1 } from '@app/collections/collections.fixtures';
 
-describe('SeriesScraping Reducer', () => {
+describe('ScrapeSeries Reducer', () => {
   const ORIGINAL_PUBLISHER = PUBLISHER_1.name;
   const ORIGINAL_SERIES = SERIES_1.name;
   const ORIGINAL_VOLUME = SERIES_1.volume;

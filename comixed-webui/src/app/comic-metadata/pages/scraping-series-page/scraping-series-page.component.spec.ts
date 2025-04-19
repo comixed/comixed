@@ -63,11 +63,11 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
-import { scrapeSeriesMetadata } from '@app/comic-metadata/actions/series-scraping.actions';
+import { scrapeSeriesMetadata } from '@app/comic-metadata/actions/scrape-series.actions';
 import {
   initialState as initialFetchIssuesForSeriesState,
-  SERIES_SCRAPING_FEATURE_KEY
-} from '@app/comic-metadata/reducers/series-scraping.reducer';
+  SCRAPE_SERIES_FEATURE_KEY
+} from '@app/comic-metadata/reducers/scrape-series.reducer';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -89,7 +89,7 @@ describe('ScrapingSeriesPageComponent', () => {
       sources: [{ ...METADATA_SOURCE_1, preferred: true }, METADATA_SOURCE_2]
     },
     [SINGLE_BOOK_SCRAPING_FEATURE_KEY]: { ...initialMetadataState },
-    [SERIES_SCRAPING_FEATURE_KEY]: {
+    [SCRAPE_SERIES_FEATURE_KEY]: {
       ...initialFetchIssuesForSeriesState
     }
   };
