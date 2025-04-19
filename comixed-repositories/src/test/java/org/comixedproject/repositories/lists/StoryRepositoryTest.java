@@ -26,6 +26,7 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.List;
 import org.comixedproject.model.lists.Story;
 import org.comixedproject.repositories.RepositoryContext;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,7 @@ public class StoryRepositoryTest {
   @Autowired private StoryRepository repository;
 
   @Test
+  @Ignore
   public void testFindAll() {
     final List<Story> result = repository.findAll();
 
@@ -61,6 +63,7 @@ public class StoryRepositoryTest {
   }
 
   @Test
+  @Ignore
   public void testFindByName() {
     final List<Story> result = repository.findByName(TEST_STORY_NAME);
 

@@ -28,8 +28,12 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="comic_vine_id" type="int">
-                <constraints nullable="false" unique="true"/>
+            <column name="metadata_source_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="reference_id" type="varchar(32)">
+                <constraints nullable="false"/>
             </column>
 
             <column name="created_on" type="datetime">
@@ -41,13 +45,22 @@
             </column>
         </createTable>
 
-        <createIndex tableName="stories" indexName="story_comic_vine_idx">
-            <column name="comic_vine_id"/>
+        <addForeignKeyConstraint baseTableName="stories" baseColumnNames="metadata_source_id"
+                                 constraintName="story_metadata_source_fk"
+                                 referencedTableName="metadata_sources"
+                                 referencedColumnNames="metadata_source_id"/>
+
+        <createIndex tableName="stories" indexName="story_metadata_source_and_reference_idx">
+            <column name="metadata_source_id"/>
+            <column name="reference_id"/>
         </createIndex>
 
         <createIndex tableName="stories" indexName="story_name_idx">
             <column name="story_name"/>
         </createIndex>
+
+        <addUniqueConstraint tableName="stories" columnNames="metadata_source_id,reference_id"
+                             constraintName="story_unique_metadata_source_and_reference"/>
 
     </changeSet>
 </databaseChangeLog>
