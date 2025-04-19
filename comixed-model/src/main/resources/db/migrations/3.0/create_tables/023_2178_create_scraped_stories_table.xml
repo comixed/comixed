@@ -24,6 +24,10 @@
                 <constraints nullable="false"/>
             </column>
 
+            <column name="description" type="clob">
+                <constraints nullable="false"/>
+            </column>
+
             <column name="metadata_source_id" type="bigint">
                 <constraints nullable="false"/>
             </column>

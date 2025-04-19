@@ -16,11 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.repositories.lists;
+package org.comixedproject.repositories.collections;
 
 import java.util.List;
-import org.comixedproject.model.lists.ScrapedStory;
+import org.comixedproject.model.collections.ScrapedStory;
+import org.comixedproject.model.collections.ScrapedStoryEntry;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -49,4 +51,17 @@ public interface ScrapedStoryRepository extends JpaRepository<ScrapedStory, Long
    */
   @Query("SELECT s FROM ScrapedStory s WHERE s.id = :id")
   ScrapedStory getById(@Param("id") long id);
+
+  /**
+   * Returns the story with the given name.
+   *
+   * @param name the name
+   * @return the story
+   */
+  @Query("SELECT s FROM ScrapedStory s WHERE s.name = :name")
+  ScrapedStory getByName(@Param("name") String name);
+
+  @Modifying
+  @Query("DELETE FROM ScrapedStoryEntry e WHERE e = :entry")
+  void deleteStoryEntry(@Param("entry") ScrapedStoryEntry entry);
 }

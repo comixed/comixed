@@ -32,11 +32,11 @@ import org.comixedproject.metadata.MetadataAdaptorProvider;
 import org.comixedproject.metadata.MetadataAdaptorRegistry;
 import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.adaptors.MetadataAdaptor;
-import org.comixedproject.metadata.model.IssueDetailsMetadata;
-import org.comixedproject.metadata.model.IssueMetadata;
-import org.comixedproject.metadata.model.VolumeMetadata;
+import org.comixedproject.metadata.model.*;
 import org.comixedproject.model.batch.ScrapeMetadataEvent;
 import org.comixedproject.model.collections.Issue;
+import org.comixedproject.model.collections.ScrapedStory;
+import org.comixedproject.model.collections.ScrapedStoryEntry;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicMetadataSource;
@@ -46,6 +46,7 @@ import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.model.net.metadata.ScrapeSeriesResponse;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.collections.IssueService;
+import org.comixedproject.service.collections.ScrapedStoryService;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ImprintService;
@@ -69,6 +70,7 @@ import org.springframework.util.StringUtils;
 public class MetadataService {
   @Autowired private MetadataAdaptorRegistry metadataAdaptorRegistry;
   @Autowired private MetadataSourceService metadataSourceService;
+  @Autowired private ScrapedStoryService scrapedStoryService;
   @Autowired private ObjectMapper objectMapper;
   @Autowired private MetadataCacheService metadataCacheService;
   @Autowired private ComicBookService comicBookService;
@@ -571,11 +573,182 @@ public class MetadataService {
     return result.get();
   }
 
+  /**
+   * Marks comics for batch scraping based on the provided list of ids, then initiates the batch
+   * scraping process.
+   *
+   * @param ids the comic ids
+   */
   @Async
   public void batchScrapeComicBooks(final List<Long> ids) {
     log.debug("Marking comics for batch scraping");
     this.comicBookService.markComicBooksForBatchScraping(ids);
     log.debug("Starting batch scraping process");
     this.applicationEventPublisher.publishEvent(ScrapeMetadataEvent.instance);
+  }
+
+  /**
+   * Retrieves a list of story candidates from the specified metadata source.
+   *
+   * @param storyName the story name
+   * @param maxRecords the maximum records
+   * @param sourceId the metadata source id
+   * @param skipCache skips cache if true
+   * @return the list of candidates
+   * @throws MetadataException if an error occurs
+   */
+  public List<StoryMetadata> getStories(
+      final String storyName,
+      final Integer maxRecords,
+      final Long sourceId,
+      final boolean skipCache)
+      throws MetadataException {
+    log.debug(
+        "Loading stories: storyName={} maxRecords={} sourceId={}", storyName, maxRecords, sourceId);
+
+    final MetadataSource metadataSource = this.doLoadMetadataSource(sourceId);
+    final MetadataAdaptor metadataAdaptor = this.doLoadScrapingAdaptor(metadataSource);
+    final String key = metadataAdaptor.getStoryListKey(storyName);
+
+    List<StoryMetadata> result = new ArrayList<>();
+    final String source = metadataAdaptor.getSource();
+
+    if (!skipCache) {
+      result = this.doLoadScrapingStories(source, key);
+    }
+
+    if (result.isEmpty()) {
+      result = metadataAdaptor.getStories(storyName, maxRecords, metadataSource);
+
+      log.debug("Encoding fetched entries");
+      final List<String> cacheEntries = new ArrayList<>();
+      for (StoryMetadata volume : result) {
+        try {
+          cacheEntries.add(this.objectMapper.writeValueAsString(volume));
+        } catch (JsonProcessingException error) {
+          throw new MetadataException("Failed to encoded scraping volume", error);
+        }
+      }
+      log.debug("Caching fetched entries: source={} key={}", source, key);
+      this.metadataCacheService.saveToCache(source, key, cacheEntries);
+    }
+
+    return result;
+  }
+
+  /**
+   * Scrapes the details for a story.
+   *
+   * @param sourceId the metadata source id
+   * @param referenceId the story reference id
+   * @param skipCache skips cache if true
+   * @throws MetadataException if an error occurs
+   */
+  @Async
+  public void scrapeStory(final Long sourceId, final String referenceId, final boolean skipCache)
+      throws MetadataException {
+    log.debug("Scraping story: sourceId={} reference id={}", sourceId, referenceId);
+
+    final MetadataSource metadataSource = this.doLoadMetadataSource(sourceId);
+    final MetadataAdaptor metadataAdaptor = this.doLoadScrapingAdaptor(metadataSource);
+    final String key = metadataAdaptor.getStoryDetailKey(referenceId);
+    final String source = metadataAdaptor.getSource();
+
+    StoryDetailMetadata storyDetailMetadata = null;
+    if (!skipCache) {
+      storyDetailMetadata = this.doLoadStory(source, key);
+    }
+
+    if (Objects.isNull(storyDetailMetadata)) {
+      storyDetailMetadata = metadataAdaptor.getStory(referenceId, metadataSource);
+
+      log.debug("Encoding fetched story");
+      final List<String> cacheEntries = new ArrayList<>();
+      try {
+        cacheEntries.add(this.objectMapper.writeValueAsString(storyDetailMetadata));
+      } catch (JsonProcessingException error) {
+        throw new MetadataException("Failed to encoded scraping volume", error);
+      }
+
+      log.debug("Caching fetched story: source={} key={}", source, key);
+      this.metadataCacheService.saveToCache(source, key, cacheEntries);
+    }
+
+    ScrapedStory story = this.scrapedStoryService.getForName(storyDetailMetadata.getName());
+    if (Objects.isNull(story)) {
+      story = new ScrapedStory();
+      story.setMetadataSource(metadataSource);
+      story.setReferenceId(referenceId);
+    } else {
+      while (!story.getEntries().isEmpty()) {
+        final ScrapedStoryEntry entry = story.getEntries().removeFirst();
+        entry.setStory(null);
+      }
+      story = this.scrapedStoryService.saveStory(story);
+    }
+
+    if (Objects.isNull(storyDetailMetadata.getPublisher())) {
+      story.setPublisher("");
+    } else {
+      story.setPublisher(storyDetailMetadata.getPublisher());
+    }
+    if (Objects.isNull(storyDetailMetadata.getDescription())) {
+      story.setDescription("");
+    } else {
+      story.setDescription(storyDetailMetadata.getDescription());
+    }
+    for (int index = 0; index < storyDetailMetadata.getIssues().size(); index++) {
+      final StoryIssueMetadata issue = storyDetailMetadata.getIssues().get(index);
+      log.debug(
+          "Adding issue entry: {} {} {} {} [order={}]",
+          issue.getName(),
+          issue.getVolume(),
+          issue.getIssueNumber(),
+          issue.getCoverDate(),
+          issue.getReadingOrder());
+      final ScrapedStoryEntry storyIssue = new ScrapedStoryEntry();
+      storyIssue.setStory(story);
+      storyIssue.setSeries(issue.getName());
+      storyIssue.setVolume(issue.getVolume());
+      storyIssue.setIssueNumber(issue.getIssueNumber());
+      storyIssue.setReadingOrder(issue.getReadingOrder());
+      storyIssue.setCoverDate(issue.getCoverDate());
+      story.getEntries().add(storyIssue);
+    }
+
+    log.debug("Saving scraped story");
+    this.scrapedStoryService.saveStory(story);
+  }
+
+  private StoryDetailMetadata doLoadStory(final String source, final String key) {
+    final List<String> cachedEntries = this.metadataCacheService.getFromCache(source, key);
+
+    StoryDetailMetadata result = null;
+    if (cachedEntries != null && !cachedEntries.isEmpty()) {
+      try {
+        result = this.objectMapper.readValue(cachedEntries.get(0), StoryDetailMetadata.class);
+      } catch (JsonProcessingException error) {
+        log.error("Failed to decode scraping story", error);
+        return null;
+      }
+    }
+
+    return result;
+  }
+
+  private List<StoryMetadata> doLoadScrapingStories(final String source, final String key) {
+    List<StoryMetadata> result = new ArrayList<>();
+    final List<String> cachedEntries = this.metadataCacheService.getFromCache(source, key);
+    if (cachedEntries != null && !cachedEntries.isEmpty()) {
+      for (String entry : cachedEntries) {
+        try {
+          result.add(this.objectMapper.readValue(entry, StoryMetadata.class));
+        } catch (JsonProcessingException error) {
+          log.error("Failed to decode scraping stories", error);
+          return new ArrayList<>();
+        }
+      }
+    }
+    return result;
   }
 }

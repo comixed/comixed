@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.lists;
+package org.comixedproject.model.collections;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -78,7 +78,15 @@ public class ScrapedStory {
   @NonNull
   String publisher;
 
-  @OneToMany(mappedBy = "story")
+  @Column(name = "description")
+  @Lob
+  @JsonProperty("description")
+  @JsonView(View.StoryDetail.class)
+  @Getter
+  @Setter
+  private String description;
+
+  @OneToMany(mappedBy = "story", cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderColumn(name = "reading_order")
   @JsonProperty("entries")
   @JsonView(View.StoryList.class)

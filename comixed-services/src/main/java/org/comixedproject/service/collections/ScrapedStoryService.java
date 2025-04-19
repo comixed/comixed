@@ -16,29 +16,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.service.lists;
+package org.comixedproject.service.collections;
 
 import java.util.HashSet;
 import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.lists.PublishStoryListUpdateAction;
-import org.comixedproject.model.lists.ScrapedStory;
-import org.comixedproject.repositories.lists.ScrapedStoryRepository;
+import org.comixedproject.model.collections.ScrapedStory;
+import org.comixedproject.repositories.collections.ScrapedStoryRepository;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.lists.StoryException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * <code>StoryService</code> provides business methods for working with instances of {@link
+ * <code>ScrapedStoryService</code> provides business methods for working with instances of {@link
  * ScrapedStory}.
  *
  * @author Darryl L. Pierce
  */
 @Service
 @Log4j2
-public class StoryService {
+public class ScrapedStoryService {
   @Autowired private ScrapedStoryRepository scrapedStoryRepository;
   @Autowired private ComicBookService comicBookService;
   @Autowired private PublishStoryListUpdateAction publishStoryListUpdateAction;
@@ -95,10 +96,10 @@ public class StoryService {
    */
   @Transactional
   public ScrapedStory createStory(final ScrapedStory source) throws StoryException {
-    log.trace("Copying story to new model");
+    log.debug("Copying story to new model");
     final ScrapedStory story =
         this.scrapedStoryRepository.save(new ScrapedStory(source.getName(), source.getPublisher()));
-    log.trace(
+    log.debug(
         "Publishing story list update: id={} name={}", story.getScrapedStoryId(), story.getName());
     try {
       this.publishStoryListUpdateAction.publish(story);
@@ -108,9 +109,34 @@ public class StoryService {
     return story;
   }
 
-  private ScrapedStory doGetStory(final long id) throws StoryException {
-    final ScrapedStory result = this.scrapedStoryRepository.getById(id);
-    if (result == null) throw new StoryException("No such story: id=" + id);
+  /**
+   * Returns the story with the given name.
+   *
+   * @param name the story name
+   * @return the story
+   */
+  @Transactional(readOnly = true)
+  public ScrapedStory getForName(final String name) {
+    log.debug("Loading story: name={}", name);
+    return this.scrapedStoryRepository.getByName(name);
+  }
+
+  /**
+   * Saves the provided story.
+   *
+   * @param story the story
+   * @return the updated story
+   */
+  @Transactional
+  public ScrapedStory saveStory(final ScrapedStory story) {
+    log.debug("Saving story: id={} name={}", story.getScrapedStoryId(), story.getName());
+    final ScrapedStory result = this.scrapedStoryRepository.save(story);
+    log.debug("Publishing story update");
+    try {
+      this.publishStoryListUpdateAction.publish(result);
+    } catch (PublishingException error) {
+      log.error("Failed to publish story update", error);
+    }
     return result;
   }
 }

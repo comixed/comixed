@@ -12,5 +12,6 @@
     <include file="/db/migrations/3.0/create_views/004_2178_create_organizing_comics_view.xml"/>
     <include file="/db/migrations/3.0/create_views/005_2178_create_publisher_details_view.xml"/>
     <include file="/db/migrations/3.0/create_views/006_2178_create_series_details_view.xml"/>
+    <include file="/db/migrations/3.0/create_views/007_0906_create_stories_view.xml"/>
 
 </databaseChangeLog>

@@ -16,11 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.lists;
+package org.comixedproject.model.collections;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
+import java.util.Date;
 import java.util.Objects;
 import lombok.*;
 import org.comixedproject.views.View;
@@ -33,7 +34,6 @@ import org.comixedproject.views.View;
 @Entity
 @Table(name = "scraped_story_entries")
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class ScrapedStoryEntry {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,8 +45,8 @@ public class ScrapedStoryEntry {
 
   @ManyToOne
   @JoinColumn(name = "scraped_story_id", nullable = false, updatable = false)
-  @NonNull
   @Getter
+  @Setter
   private ScrapedStory story;
 
   @Column(name = "series", length = 128, nullable = false, updatable = true)
@@ -70,10 +70,18 @@ public class ScrapedStoryEntry {
   @Setter
   private String issueNumber;
 
+  @Column(name = "cover_date")
+  @JsonProperty("coverDate")
+  @JsonView(View.StoryList.class)
+  @Getter
+  @Setter
+  private Date coverDate;
+
   @Column(name = "reading_order", nullable = false, updatable = false)
   @JsonProperty("readingOrder")
   @JsonView(View.StoryList.class)
   @Getter
+  @Setter
   private int readingOrder;
 
   @Override

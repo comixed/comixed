@@ -24,7 +24,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.lists.ScrapedStory;
+import org.comixedproject.model.collections.ScrapedStory;
 import org.comixedproject.views.View;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
