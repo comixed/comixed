@@ -51,7 +51,7 @@
                                  referencedColumnNames="comixed_user_id"/>
 
         <addUniqueConstraint tableName="reading_lists" columnNames="owner_id, name_key"
-                             constraintName="reading_list_uniq_owner_name"/>
+                             constraintName="reading_list_unique_owner_name"/>
 
     </changeSet>
 </databaseChangeLog>

@@ -25,5 +25,4 @@ export interface StoryEntry {
   volume: string;
   issueNumber: string;
   comic: ComicBook;
-  comicVineId: number;
 }

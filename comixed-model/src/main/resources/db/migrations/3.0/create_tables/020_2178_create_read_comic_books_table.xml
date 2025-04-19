@@ -36,7 +36,7 @@
                                  referencedColumnNames="comic_detail_id"/>
 
         <addUniqueConstraint tableName="read_comic_books" columnNames="comixed_user_id,comic_detail_id"
-                             constraintName="read_comic_books_uniq_comixed_user_comic_detail"/>
+                             constraintName="read_comic_books_unique_comixed_user_comic_detail"/>
 
         <createIndex tableName="read_comic_books" indexName="read_comic_book_comic_detail_idx">
             <column name="comic_detail_id"/>

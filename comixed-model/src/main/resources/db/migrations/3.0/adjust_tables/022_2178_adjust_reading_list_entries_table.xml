@@ -41,7 +41,7 @@
 
         <addUniqueConstraint tableName="reading_list_entries"
                              columnNames="reading_list_id, comic_detail_id"
-                             constraintName="reading_list_entry_uniq_reading_list_and_comic_details"/>
+                             constraintName="reading_list_entry_unique_reading_list_and_comic_details"/>
 
     </changeSet>
 </databaseChangeLog>

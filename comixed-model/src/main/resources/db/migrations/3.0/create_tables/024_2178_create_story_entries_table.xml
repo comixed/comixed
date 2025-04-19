@@ -43,10 +43,6 @@
             <column name="comic_book_id" type="bigint">
                 <constraints nullable="true"/>
             </column>
-
-            <column name="comic_vine_id" type="integer">
-                <constraints nullable="false"/>
-            </column>
         </createTable>
 
         <addForeignKeyConstraint baseTableName="story_entries" baseColumnNames="story_id"
@@ -59,16 +55,12 @@
                                  referencedTableName="comic_books"
                                  referencedColumnNames="comic_book_id"/>
 
-        <createIndex tableName="story_entries" indexName="story_entry_comic_vine_idx">
-            <column name="comic_vine_id"/>
-        </createIndex>
-
         <createIndex tableName="story_entries" indexName="story_entry_comic_book_idx">
             <column name="comic_book_id"/>
         </createIndex>
 
         <addUniqueConstraint tableName="story_entries" columnNames="story_id, reading_order"
-                             constraintName="story_entry_uniq_story_and_reading_order"/>
+                             constraintName="story_entry_unique_story_and_reading_order"/>
 
     </changeSet>
 </databaseChangeLog>
