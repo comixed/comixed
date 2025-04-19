@@ -274,14 +274,16 @@ public class ComicDetail implements PublicationDetail {
   @Setter
   private Date coverDate;
 
-  @Formula("(SELECT CASE WHEN cover_date IS NULL THEN 0 ELSE YEAR(cover_date) END)")
+  @Formula(
+      "(SELECT CASE WHEN cover_date IS NULL THEN 0 ELSE (SELECT EXTRACT(YEAR FROM cover_date)) END)")
   @JsonProperty("yearPublished")
   @JsonView({View.ComicListView.class})
   @Getter
   @Setter
   private Integer yearPublished;
 
-  @Formula("(SELECT CASE WHEN cover_date IS NULL THEN 0 ELSE MONTH(cover_date) END)")
+  @Formula(
+      "(SELECT CASE WHEN cover_date IS NULL THEN 0 ELSE (SELECT EXTRACT(MONTH FROM cover_date)) END)")
   @JsonProperty("monthPublished")
   @JsonView({View.ComicListView.class})
   @Getter

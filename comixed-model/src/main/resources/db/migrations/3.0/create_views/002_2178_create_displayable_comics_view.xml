@@ -34,10 +34,10 @@
             FROM comic_pages cp
             WHERE cp.comic_book_id = d.comic_book_id) as page_count
                 , d.cover_date as cover_date
-                , CASE WHEN d.cover_date IS NULL THEN 0 ELSE MONTH (cover_date)
+                , CASE WHEN d.cover_date IS NULL THEN 0 ELSE (SELECT EXTRACT(MONTH FROM cover_date))
             END
             as month_published
-                    , CASE WHEN d.cover_date IS NULL THEN 0 ELSE YEAR (cover_date)
+                    , CASE WHEN d.cover_date IS NULL THEN 0 ELSE (SELECT EXTRACT(YEAR FROM cover_date))
             END
             as year_published,
                             d.store_date as store_date,
