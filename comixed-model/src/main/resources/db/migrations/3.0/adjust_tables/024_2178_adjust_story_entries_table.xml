@@ -46,14 +46,10 @@
             <column name="comic_book_id" type="bigint">
                 <constraints nullable="true"/>
             </column>
-
-            <column name="comic_vine_id" type="integer">
-                <constraints nullable="false"/>
-            </column>
         </createTable>
 
         <sql>INSERT INTO story_entries(story_entry_id, story_id, story_entry_state, reading_order, series, volume,
-                                       issue_number, comic_book_id, comic_vine_id)
+                                       issue_number, comic_book_id)
              SELECT id,
                     story_id,
                     story_entry_state,
@@ -61,8 +57,7 @@
                     series,
                     volume,
                     issue_number,
-                    comic_book_id,
-                    comic_vine_id
+                    comic_book_id
              FROM old_story_entries</sql>
 
         <dropTable tableName="old_story_entries"/>

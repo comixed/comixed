@@ -43,10 +43,6 @@
             <column name="comic_book_id" type="bigint">
                 <constraints nullable="true"/>
             </column>
-
-            <column name="comic_vine_id" type="integer">
-                <constraints nullable="false"/>
-            </column>
         </createTable>
 
         <addForeignKeyConstraint baseTableName="story_entries" baseColumnNames="story_id"

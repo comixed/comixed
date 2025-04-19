@@ -96,13 +96,6 @@ public class StoryEntry {
   @Setter
   private ComicBook comicBook;
 
-  @Column(name = "comic_vine_id", nullable = true, updatable = true, unique = true)
-  @JsonProperty("comicVineId")
-  @JsonView(View.StoryList.class)
-  @Getter
-  @Setter
-  private Integer comicVineId;
-
   @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
