@@ -44,7 +44,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCardModule } from '@angular/material/card';
-import { seriesScrapingFeature } from '@app/comic-metadata/reducers/series-scraping.reducer';
+import { scrapeSeriesFeature } from '@app/comic-metadata/reducers/scrape-series.reducer';
 import { SeriesScrapingEffects } from '@app/comic-metadata/effects/series-scraping.effects';
 import { singleBookScrapingFeature } from '@app/comic-metadata/reducers/single-book-scraping.reducer';
 import { SingleBookScrapingEffects } from '@app/comic-metadata/effects/single-book-scraping.effects';
@@ -53,6 +53,8 @@ import { multiBookScrapingFeature } from '@app/comic-metadata/reducers/multi-boo
 import { MultiBookScrapingEffects } from '@app/comic-metadata/effects/multi-book-scraping.effects';
 import { ScrapingIssuesPageComponent } from '@app/comic-metadata/pages/scraping-issues-page/scraping-issues-page.component';
 import { MatDialogContainer, MatDialogContent } from '@angular/material/dialog';
+import { scrapeStoryFeature } from '@app/comic-metadata/reducers/scrape-story.reducer';
+import { ScrapeStoryEffects } from '@app/comic-metadata/effects/scrape-story.effects';
 
 @NgModule({
   declarations: [
@@ -70,14 +72,16 @@ import { MatDialogContainer, MatDialogContent } from '@angular/material/dialog';
     StoreModule.forFeature(metadataSourceListFeature),
     StoreModule.forFeature(metadataSourceFeature),
     StoreModule.forFeature(metadataUpdateProcessFeature),
-    StoreModule.forFeature(seriesScrapingFeature),
+    StoreModule.forFeature(scrapeSeriesFeature),
     StoreModule.forFeature(multiBookScrapingFeature),
+    StoreModule.forFeature(scrapeStoryFeature),
     EffectsModule.forFeature([
       SingleBookScrapingEffects,
       MetadataSourceListEffects,
       MetadataSourceEffects,
       SeriesScrapingEffects,
-      MultiBookScrapingEffects
+      MultiBookScrapingEffects,
+      ScrapeStoryEffects
     ]),
     MatToolbarModule,
     MatButtonModule,

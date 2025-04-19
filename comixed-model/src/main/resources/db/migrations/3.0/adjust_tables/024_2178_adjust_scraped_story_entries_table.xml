@@ -35,7 +35,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="comic_book_id" type="bigint">
+            <column name="cover_date" type="date">
                 <constraints nullable="true"/>
             </column>
 
@@ -60,15 +60,6 @@
                                  constraintName="scraped_story_entry_story_fk"
                                  referencedTableName="scraped_stories"
                                  referencedColumnNames="scraped_story_id"/>
-
-        <addForeignKeyConstraint baseTableName="scraped_story_entries" baseColumnNames="comic_book_id"
-                                 constraintName="scraped_story_entry_comic_book_fk"
-                                 referencedTableName="comic_books"
-                                 referencedColumnNames="comic_book_id"/>
-
-        <createIndex tableName="scraped_story_entries" indexName="scraped_story_entry_comic_book_idx">
-            <column name="comic_book_id"/>
-        </createIndex>
 
         <addUniqueConstraint tableName="scraped_story_entries" columnNames="scraped_story_id, reading_order"
                              constraintName="scraped_story_entry_unique_scraped_story_and_reading_order"/>

@@ -27,12 +27,7 @@
     <input matInput formControlName="publisher" [readonly]="!isAdmin" />
   </mat-form-field>
 
-  <mat-form-field
-    appearance="fill"
-    class="cx-width-50"
-    appearance="fill"
-    required
-  >
+  <mat-form-field class="cx-width-50" appearance="fill" required>
     <mat-label>{{ "comic-book.label.series" | translate }}</mat-label>
     <input matInput formControlName="series" [readonly]="!isAdmin" />
   </mat-form-field>

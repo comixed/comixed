@@ -111,9 +111,13 @@
       "characters": "Character | {name} ({count, plural, =1{One Comic} other{# Comics}})",
       "locations": "Location | {name} ({count, plural, =1{One Comic} other{# Comics}})",
       "publishers": "Publisher | {name} ({count, plural, =1{One Comic} other{# Comics}})",
+      "scraping-story-form": "Scrape Story",
       "series": "Series | {name} v{volume} ({count, plural, =1{One Comic} other{# Comics}})",
       "stories": "Story | {name} ({count, plural, =1{One Comic} other{# Comics}})",
       "teams": "Team | {name} ({count, plural, =1{One Comic} other{# Comics}})"
+    },
+    "tooltip": {
+      "scrape-collection": "Scrape the metadata for this collection..."
     }
   },
   "collection-list": {
@@ -133,5 +137,18 @@
   },
   "load-collection-list": {
     "effect-failure": "Failed to load collection entries..."
+  },
+  "story-detail": {
+    "page-title": "Story | {tagValue}",
+    "tab-title": "Collection|Story|{tagValue}"
+  },
+  "story-scraping": {
+    "label": {
+      "metadata-source": "Metadata Source"
+    },
+    "placeholder": {
+      "reference-id": "The reference ID for this story...",
+      "story-name": "The story name..."
+    }
   }
 }

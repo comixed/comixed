@@ -44,6 +44,8 @@ public abstract class AbstractMetadataAdaptor implements MetadataAdaptor {
   private static final String VOLUMES_KEY = "volumes[%s]";
   private static final String ISSUE_KEY = "issues[%s-%s]";
   private static final String ISSUE_DETAILS_KEY = "issue[%s]";
+  private static final String STORY_LIST_KEY = "story-list[%s-%s]";
+  private static final String STORY_KEY = "story[%s-%s]";
 
   @Autowired protected ObjectMapper objectMapper;
 
@@ -70,6 +72,16 @@ public abstract class AbstractMetadataAdaptor implements MetadataAdaptor {
   @Override
   public String getIssueDetailsKey(final String issueId) {
     return String.format(ISSUE_DETAILS_KEY, issueId);
+  }
+
+  @Override
+  public String getStoryListKey(final String storyName) {
+    return String.format(STORY_LIST_KEY, this.source, storyName);
+  }
+
+  @Override
+  public String getStoryDetailKey(final String referenceId) {
+    return String.format(STORY_KEY, this.source, referenceId);
   }
 
   @Override

@@ -16,32 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  scrapeSeriesMetadata,
-  scrapeSeriesMetadataFailure,
-  scrapeSeriesMetadataSuccess
-} from '../actions/series-scraping.actions';
+  SCRAPE_SERIES_FEATURE_KEY,
+  SeriesScrapingState
+} from '../reducers/scrape-series.reducer';
+import { selectScrapeSeriesState } from './scrape-series.selectors';
 
-export const SERIES_SCRAPING_FEATURE_KEY = 'series_scraping_state';
+describe('ScrapeSeries Selectors', () => {
+  let state: SeriesScrapingState;
 
-export interface SeriesScrapingState {
-  busy: boolean;
-}
+  beforeEach(() => {
+    state = { busy: Math.random() > 0.5 };
+  });
 
-export const initialState: SeriesScrapingState = {
-  busy: false
-};
-
-export const reducer = createReducer(
-  initialState,
-
-  on(scrapeSeriesMetadata, state => ({ ...state, busy: true })),
-  on(scrapeSeriesMetadataSuccess, state => ({ ...state, busy: false })),
-  on(scrapeSeriesMetadataFailure, state => ({ ...state, busy: false }))
-);
-
-export const seriesScrapingFeature = createFeature({
-  name: SERIES_SCRAPING_FEATURE_KEY,
-  reducer
+  it('should select the feature state', () => {
+    expect(
+      selectScrapeSeriesState({
+        [SCRAPE_SERIES_FEATURE_KEY]: state
+      })
+    ).toEqual(state);
+  });
 });

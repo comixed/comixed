@@ -1,0 +1,205 @@
+<mat-toolbar color="accent">
+  <div class="cx-spacer"></div>
+  <button
+    id="skip-cache-button"
+    class="cx-toolbar-button cx-margin-left-5"
+    mat-icon-button
+    [matTooltip]="
+      'scraping.tooltip.skip-cache' | translate: { enabled: skipCache }
+    "
+    (click)="skipCache = !skipCache"
+  >
+    <mat-icon *ngIf="skipCache">block</mat-icon>
+    <mat-icon *ngIf="!skipCache">remove_circle_outline</mat-icon>
+  </button>
+
+  <button
+    id="scrape-button"
+    class="cx-toolbar-button cx-margin-left-5"
+    mat-icon-button
+    [matTooltip]="'comic-book.tooltip.scrape-comic' | translate"
+    [disabled]="!storyScrapingForm.valid"
+    (click)="onLoadStoryCandidates()"
+  >
+    <mat-icon>find_replace</mat-icon>
+  </button>
+</mat-toolbar>
+
+<div id="scrape-story-container" class="cx-horizontal-container">
+  <div id="scrape-story-form-container" class="cx-grow-0 cx-max-width-25">
+    <form [formGroup]="storyScrapingForm">
+      <mat-card>
+        <mat-card-title class="cx-align-content-center">
+          {{ "collection-detail.title.scraping-story-form" | translate }}
+        </mat-card-title>
+
+        <mat-card-content>
+          <mat-form-field class="cx-width-100" appearance="fill" required>
+            <mat-label>
+              {{ "story-scraping.label.metadata-source" | translate }}
+            </mat-label>
+            <mat-select
+              formControlName="metadataSource"
+              [value]="metadataSource?.metadataSourceId"
+            >
+              <mat-option
+                *ngFor="let source of metadataSources"
+                [value]="source.metadataSourceId"
+              >
+                {{ source.name }}
+              </mat-option>
+            </mat-select>
+            <input matInput hidden />
+          </mat-form-field>
+
+          <mat-form-field class="cx-width-100" appearance="fill" required>
+            <input
+              matInput
+              [placeholder]="
+                'story-scraping.placeholder.reference-id' | translate
+              "
+              formControlName="referenceId"
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              color="primary"
+              (click)="onScrapeByReferenceId()"
+              [disabled]="!readyToScrapeByReference"
+            >
+              <mat-icon>find_replace</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <mat-form-field class="cx-width-100" appearance="fill" required>
+            <mat-label>
+              {{ "story-scraping.label.max-records" | translate }}
+            </mat-label>
+            <mat-select formControlName="maxRecords">
+              <mat-option
+                *ngFor="let option of maxRecordsOptions"
+                [value]="option.value"
+              >
+                {{ option.label | translate }}
+              </mat-option>
+            </mat-select>
+            <input matInput hidden />
+          </mat-form-field>
+
+          <mat-form-field class="cx-width-100" appearance="fill" required>
+            <input
+              matInput
+              [placeholder]="
+                'story-scraping.placeholder.story-name' | translate
+              "
+              formControlName="storyName"
+            />
+          </mat-form-field>
+        </mat-card-content>
+      </mat-card>
+    </form>
+
+    <div *ngIf="imageUrl?.length > 0" class="cx-width-100">
+      <mat-card>
+        <mat-card-title class="cx-align-content-center cx-text-nowrap">
+          {{ imageTitle }}
+        </mat-card-title>
+        <mat-card-content>
+          <img
+            loading="lazy"
+            [src]="imageUrl"
+            [alt]="imageUrl"
+            width="100%"
+            height="auto"
+          />
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div id="story-candidate-list-container" class="cx-grow-1">
+    <mat-paginator
+      [pageSizeOptions]="pageSizeOptions"
+      showFirstLastButtons="true"
+    ></mat-paginator>
+
+    <mat-table
+      [dataSource]="dataSource"
+      matSort
+      matSortActive="sortOrder"
+      matSortDirection="desc"
+      matSortDisableClear="false"
+    >
+      <ng-container matColumnDef="action">
+        <mat-header-cell *matHeaderCellDef>
+          {{ "scrape-story.story-candidates-table.label.action" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <button
+            [id]="'select-story-' + entry.referenceId + '-button'"
+            mat-icon-button
+            (click)="onScrapeStory(entry)"
+          >
+            <mat-icon>thumb_up</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="thumbnail">
+        <mat-header-cell *matHeaderCellDef>
+          {{
+            "scrape-story.story-candidates-table.label.thumbnail" | translate
+          }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span
+            class="cx-width-100 cx-text-nowrap cx-padding-2 cx-overflow-y-clip"
+          >
+            <img
+              loading="lazy"
+              [src]="entry.imageUrl"
+              [alt]="entry.imageUrl"
+              width="100%"
+              height="auto"
+              (mouseenter)="onShowPopup(entry)"
+              (mouseleave)="onShowPopup(null)"
+            />
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="publisher">
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{
+            "scrape-story.story-candidates-table.label.publisher" | translate
+          }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span class="cx-width-100 cx-text-nowrap">{{ entry.publisher }}</span>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ "scrape-story.story-candidates-table.label.name" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span class="cx-width-100 cx-text-nowrap">
+            {{ entry.name }}
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">
+          {{
+            "scrape-story.story-candidates-table.text.no-records-found"
+              | translate
+          }}
+        </td>
+      </tr>
+    </mat-table>
+  </div>
+</div>

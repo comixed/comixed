@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2019, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,23 +16,38 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.service.lists;
+package org.comixedproject.metadata.model;
 
-import org.comixedproject.model.collections.ScrapedStory;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
- * <code>StoryException</code> is thrown when an exception occurs while working with a {@link
- * ScrapedStory}.
+ * <code>StoryMetadata</code> contains the candidate details for a single story candidate.
  *
  * @author Darryl L. Pierce
+ * @see StoryDetailMetadata
  */
-public class StoryException extends Exception {
-  /**
-   * Creates an instance with the given message.
-   *
-   * @param message the message
-   */
-  public StoryException(final String message) {
-    super(message);
-  }
+@NoArgsConstructor
+public class StoryMetadata {
+  @JsonProperty("referenceId")
+  @Getter
+  @Setter
+  private String referenceId;
+
+  @JsonProperty("name")
+  @Getter
+  @Setter
+  private String name;
+
+  @JsonProperty("publisher")
+  @Getter
+  @Setter
+  private String publisher;
+
+  @JsonProperty("imageUrl")
+  @Getter
+  @Setter
+  private String imageUrl;
 }

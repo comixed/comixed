@@ -43,8 +43,10 @@ import { Store } from '@ngrx/store';
 import { WebSocketService } from '@app/messaging';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import {
+  LOAD_STORY_CANDIDATES_URL,
   METADATA_UPDATE_PROCESS_UPDATE_TOPIC,
-  SCRAPE_SERIES_URL
+  SCRAPE_SERIES_URL,
+  SCRAPE_STORY_URL
 } from '@app/comic-metadata/comic-metadata.constants';
 import { MetadataUpdateProcessUpdate } from '@app/comic-metadata/models/net/metadata-update-process-update';
 import { metadataUpdateProcessStatusUpdated } from '@app/comic-metadata/actions/metadata-update-process.actions';
@@ -52,6 +54,7 @@ import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import { ScrapeSeriesRequest } from '@app/comic-metadata/models/net/scrape-series-request';
 import { ScrapeMultiBookComicRequest } from '@app/comic-metadata/models/net/scrape-multi-book-comic-request';
 import { LoadMultiBookScrapingRequest } from '@app/comic-metadata/models/net/load-multi-book-scraping-request';
+import { ScrapeStoryRequest } from '@app/comic-metadata/models/net/scrape-story-request';
 
 /**
  * Interacts with the REST APIs during scraping.
@@ -270,6 +273,38 @@ export class ComicBookScrapingService {
         originalVolume: args.originalVolume,
         volumeId: args.volume.id
       } as ScrapeSeriesRequest
+    );
+  }
+
+  loadStoryCandidates(args: {
+    sourceId: number;
+    storyName: string;
+    maxRecords: number;
+    skipCache: boolean;
+  }): Observable<any> {
+    this.logger.debug('Loading story candidates:', args);
+    return this.http.post(
+      interpolate(LOAD_STORY_CANDIDATES_URL, { id: args.sourceId }),
+      {
+        name: args.storyName,
+        maxRecords: args.maxRecords,
+        skipCache: args.skipCache
+      }
+    );
+  }
+
+  scrapeStory(args: {
+    sourceId: number;
+    referenceId: string;
+    skipCache: boolean;
+  }): Observable<any> {
+    this.logger.debug('Scraping story:', args);
+    return this.http.post(
+      interpolate(SCRAPE_STORY_URL, {
+        id: args.sourceId,
+        referenceId: args.referenceId
+      }),
+      { skipCache: args.skipCache } as ScrapeStoryRequest
     );
   }
 }

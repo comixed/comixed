@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="007_0906_create_stories_view.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <viewExists viewName="stories_view"/>
+            </not>
+        </preConditions>
+
+        <createView viewName="stories_view">
+            SELECT ct.tag_value                                                                          AS story_name,
+                   (SELECT COUNT(*) FROM comic_details cd WHERE ct.comic_detail_id = cd.comic_detail_id) AS comic_count
+            FROM comic_tags ct
+            WHERE ct.tag_type = 'STORY'
+            UNION
+            SELECT s.story_name                                     AS story_name,
+                   (SELECT COUNT(*)
+                    FROM scraped_story_entries se
+                    WHERE se.scraped_story_id = s.scraped_story_id) AS comic_count
+            FROM scraped_stories s
+        </createView>
+
+    </changeSet>
+</databaseChangeLog>

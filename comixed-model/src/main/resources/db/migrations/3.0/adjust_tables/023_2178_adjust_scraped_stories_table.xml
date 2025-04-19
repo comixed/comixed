@@ -29,6 +29,10 @@
                 <constraints nullable="false"/>
             </column>
 
+            <column name="description" type="clob">
+                <constraints nullable="false"/>
+            </column>
+
             <column name="metadata_source_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
@@ -46,12 +50,14 @@
             </column>
         </createTable>
 
-        <sql>INSERT INTO scraped_stories(scraped_story_id, story_name, publisher, metadata_source_id, reference_id,
+        <sql>INSERT INTO scraped_stories(scraped_story_id, story_name, publisher, description, metadata_source_id,
+                                         reference_id,
                                          created_on,
                                          last_modified_on)
              SELECT id,
                     story_name,
                     publisher,
+                    description,
                     metadata_source_id,
                     reference_id,
                     created_on,

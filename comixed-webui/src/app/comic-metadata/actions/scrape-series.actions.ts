@@ -21,7 +21,7 @@ import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 
 export const scrapeSeriesMetadata = createAction(
-  '[Series Scraping] Scrape series metadata',
+  '[Scrape Series] Scrape series metadata',
   props<{
     originalPublisher: string;
     originalSeries: string;
@@ -32,9 +32,9 @@ export const scrapeSeriesMetadata = createAction(
 );
 
 export const scrapeSeriesMetadataSuccess = createAction(
-  '[Series Scraping] Successfully scraped series metadata'
+  '[Scrape Series] Successfully scraped series metadata'
 );
 
 export const scrapeSeriesMetadataFailure = createAction(
-  '[Series Scraping] Failed to scrape series metadata'
+  '[Scrape Series] Failed to scrape series metadata'
 );
