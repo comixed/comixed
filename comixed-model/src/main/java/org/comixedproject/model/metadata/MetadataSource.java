@@ -40,7 +40,7 @@ public class MetadataSource {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "metadata_source_id")
-  @JsonProperty("id")
+  @JsonProperty("metadataSourceId")
   @JsonView({View.MetadataSourceList.class, View.ComicDetailsView.class})
   @Getter
   private Long metadataSourceId;
