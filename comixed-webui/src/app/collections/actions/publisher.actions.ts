@@ -22,7 +22,13 @@ import { Series } from '@app/collections/models/series';
 
 export const loadPublisherList = createAction(
   '[Publishers] Load publishers',
-  props<{ size: number; page: number; sortBy: string; sortDirection: string }>()
+  props<{
+    searchText: string;
+    size: number;
+    page: number;
+    sortBy: string;
+    sortDirection: string;
+  }>()
 );
 
 export const loadPublisherListSuccess = createAction(

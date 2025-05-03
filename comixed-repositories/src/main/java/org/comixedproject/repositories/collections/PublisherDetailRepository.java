@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -31,10 +32,22 @@ public interface PublisherDetailRepository extends JpaRepository<PublisherDetail
   /**
    * Returns the list of all publishers with the count of series for each.
    *
+   * @param pageable the page request
    * @return the publisher list
    */
   @Query("SELECT p FROM PublisherDetail p WHERE p.name IS NOT NULL AND LENGTH(p.name) > 0")
   Page<PublisherDetail> findAll(Pageable pageable);
+
+  /**
+   * Returns the list of all publishers with the count of series for each, where the name matches
+   * the filter.
+   *
+   * @param filterText the filter text
+   * @param pageable the page request
+   * @return the publisher list
+   */
+  @Query("SELECT p FROM PublisherDetail p WHERE p.name ILIKE :filterText")
+  Page<PublisherDetail> findAllFiltered(@Param("filterText") String filterText, Pageable pageable);
 
   /**
    * Returns the number of publishers in the database.
@@ -43,4 +56,13 @@ public interface PublisherDetailRepository extends JpaRepository<PublisherDetail
    */
   @Query("SELECT COUNT(p) FROM PublisherDetail p WHERE p.name IS NOT NULL AND LENGTH(p.name) > 0")
   long getPublisherCount();
+
+  /**
+   * Returns the number of publishers whose name matches the provided filter.
+   *
+   * @param filterText the filter text
+   * @return the publisher count
+   */
+  @Query("SELECT COUNT(p) FROM PublisherDetail p WHERE p.name ILIKE :filterText")
+  long getPublisherCountWithFilter(@Param("filterText") String filterText);
 }

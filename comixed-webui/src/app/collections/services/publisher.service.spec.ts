@@ -47,6 +47,7 @@ import {
 } from '@angular/common/http';
 
 describe('PublisherService', () => {
+  const SEARCH_TEXT = 'some text';
   const PAGE_NUMBER = 3;
   const PAGE_SIZE = 50;
   const SORT_BY = 'name';
@@ -83,6 +84,7 @@ describe('PublisherService', () => {
 
     service
       .loadPublishers({
+        searchText: SEARCH_TEXT,
         page: PAGE_NUMBER,
         size: PAGE_SIZE,
         sortBy: SORT_BY,
@@ -93,6 +95,7 @@ describe('PublisherService', () => {
     const req = httpMock.expectOne(interpolate(LOAD_PUBLISHERS_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
+      searchText: SEARCH_TEXT,
       page: PAGE_NUMBER,
       size: PAGE_SIZE,
       sortBy: SORT_BY,

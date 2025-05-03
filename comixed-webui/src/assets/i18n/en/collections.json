@@ -127,7 +127,7 @@
     },
     "tab-title": "Collections|All {collection, select, CHARACTER{Characters} TEAM{Teams} LOCATION{Locations} STORY{Stories} publishers{Publishers} series{Series} other{Unknown}}",
     "text": {
-      "filter-text": "Enter text here to filter the collections...",
+      "filter-text": "Enter text here to filter the entries shown...",
       "undefined": "[UNDEFINED]"
     }
   },
