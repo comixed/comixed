@@ -39,8 +39,13 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { USER_ADMIN } from '@app/user/user.fixtures';
 import { TitleService } from '@app/core/services/title.service';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { QUERY_PARAM_FILTER_TEXT } from '@app/core';
+import { MatIconModule } from '@angular/material/icon';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('PublisherListPageComponent', () => {
+  const FILTER_TEXT = 'the text';
   const initialState = {
     [PUBLISHER_FEATURE_KEY]: initialPublisherState,
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER_ADMIN }
@@ -52,12 +57,15 @@ describe('PublisherListPageComponent', () => {
   let storeDispatchSpy: jasmine.Spy;
   let translateService: TranslateService;
   let titleService: TitleService;
+  let queryParameterService: QueryParameterService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PublisherListPageComponent],
       imports: [
         NoopAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
@@ -66,7 +74,8 @@ describe('PublisherListPageComponent', () => {
         MatPaginatorModule,
         MatTableModule,
         MatSortModule,
-        MatInputModule
+        MatInputModule,
+        MatIconModule
       ],
       providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();
@@ -78,6 +87,8 @@ describe('PublisherListPageComponent', () => {
     translateService = TestBed.inject(TranslateService);
     titleService = TestBed.inject(TitleService);
     spyOn(titleService, 'setTitle');
+    queryParameterService = TestBed.inject(QueryParameterService);
+    spyOn(queryParameterService, 'updateQueryParam');
     fixture.detectChanges();
   });
 
@@ -92,6 +103,38 @@ describe('PublisherListPageComponent', () => {
 
     it('updates the tab title', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('applying a filter', () => {
+    describe('adding a filter', () => {
+      beforeEach(() => {
+        component.onApplyFilter(FILTER_TEXT);
+      });
+
+      it('updates the query parameters', () => {
+        expect(queryParameterService.updateQueryParam).toHaveBeenCalledWith([
+          {
+            name: QUERY_PARAM_FILTER_TEXT,
+            value: FILTER_TEXT
+          }
+        ]);
+      });
+    });
+
+    describe('clearing a filter', () => {
+      beforeEach(() => {
+        component.onApplyFilter('');
+      });
+
+      it('updates the query parameters', () => {
+        expect(queryParameterService.updateQueryParam).toHaveBeenCalledWith([
+          {
+            name: QUERY_PARAM_FILTER_TEXT,
+            value: null
+          }
+        ]);
+      });
     });
   });
 });

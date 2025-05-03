@@ -41,9 +41,14 @@ import { TitleService } from '@app/core/services/title.service';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@app/core';
+import {
+  PAGE_SIZE_DEFAULT,
+  PAGE_SIZE_OPTIONS,
+  QUERY_PARAM_FILTER_TEXT
+} from '@app/core';
 import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
 import { ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'cx-publisher-list-page',
@@ -65,13 +70,13 @@ export class PublisherListPageComponent
   publisherStateSubscription: Subscription;
   userSubscription: Subscription;
   totalPublishers = 0;
+  filterTextForm: FormGroup;
 
   dataSource = new MatTableDataSource<Publisher>([]);
   pageIndex = 0;
   pageSize = PAGE_SIZE_DEFAULT;
   sortBy = 'name';
   sortDirection: SortDirection = 'asc';
-  private;
 
   constructor(
     private logger: LoggerService,
@@ -79,6 +84,7 @@ export class PublisherListPageComponent
     private store: Store<any>,
     private titleService: TitleService,
     private translateService: TranslateService,
+    private formBuilder: FormBuilder,
     public queryParameterService: QueryParameterService
   ) {
     this.logger.trace('Subscribing to language change updates');
@@ -87,16 +93,21 @@ export class PublisherListPageComponent
     );
     this.logger.trace('Subscribing to query parameter updates');
     this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
-      () =>
+      () => {
         this.store.dispatch(
           loadPublisherList({
+            searchText: this.queryParameterService.filterText$.value,
             page: this.queryParameterService.pageIndex$.value,
             size: this.queryParameterService.pageSize$.value,
             sortBy: this.queryParameterService.sortBy$.value,
             sortDirection: this.queryParameterService.sortDirection$.value
           })
-        )
+        );
+      }
     );
+    this.filterTextForm = this.formBuilder.group({
+      filterTextInput: ['']
+    });
     this.logger.trace('Subscribing to publisher list updates');
     this.publisherListSubscription = this.store
       .select(selectPublisherList)
@@ -129,6 +140,7 @@ export class PublisherListPageComponent
     this.logger.trace('Loading publishers');
     this.store.dispatch(
       loadPublisherList({
+        searchText: this.queryParameterService.filterText$.value,
         page: this.queryParameterService.pageIndex$.value,
         size: this.queryParameterService.pageSize$.value,
         sortBy: this.queryParameterService.sortBy$.value,
@@ -163,5 +175,15 @@ export class PublisherListPageComponent
         'collections.publishers.list-publishers.tab-title'
       )
     );
+  }
+
+  onApplyFilter(searchText: string): void {
+    this.logger.debug('Setting collection search text:', searchText);
+    this.queryParameterService.updateQueryParam([
+      {
+        name: QUERY_PARAM_FILTER_TEXT,
+        value: searchText?.length > 0 ? searchText : null
+      }
+    ]);
   }
 }

@@ -37,6 +37,7 @@ import {
 } from '@app/collections/collections.fixtures';
 
 describe('Publisher Reducer', () => {
+  const SEARCH_TEXT = 'Some text';
   const PUBLISHERS = [PUBLISHER_1, PUBLISHER_2, PUBLISHER_3];
   const PUBLISHER = PUBLISHER_3;
   const SERIES_LIST = [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5];
@@ -83,6 +84,7 @@ describe('Publisher Reducer', () => {
       state = reducer(
         { ...initialState, busy: false, publishers: PUBLISHERS },
         loadPublisherList({
+          searchText: SEARCH_TEXT,
           page: 3,
           size: 25,
           sortBy: 'name',

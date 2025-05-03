@@ -44,6 +44,7 @@ export class PublisherEffects {
       switchMap(action =>
         this.publisherService
           .loadPublishers({
+            searchText: action.searchText,
             page: action.page,
             size: action.size,
             sortBy: action.sortBy,

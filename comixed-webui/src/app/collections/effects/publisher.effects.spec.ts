@@ -49,6 +49,7 @@ import { LoadPublisherListResponse } from '@app/collections/models/net/load-publ
 import { LoadPublisherDetailResponse } from '@app/collections/models/net/load-publisher-detail-response';
 
 describe('PublisherEffects', () => {
+  const SEARCH_TEXT = 'some text';
   const PAGE_NUMBER = 1;
   const PAGE_SIZE = 25;
   const SORT_BY = 'name';
@@ -107,6 +108,7 @@ describe('PublisherEffects', () => {
         publishers: PUBLISHERS
       } as LoadPublisherListResponse;
       const action = loadPublisherList({
+        searchText: SEARCH_TEXT,
         page: PAGE_NUMBER,
         size: PAGE_SIZE,
         sortBy: SORT_BY,
@@ -120,6 +122,7 @@ describe('PublisherEffects', () => {
       actions$ = hot('-a', { a: action });
       publisherService.loadPublishers
         .withArgs({
+          searchText: SEARCH_TEXT,
           page: PAGE_NUMBER,
           size: PAGE_SIZE,
           sortBy: SORT_BY,
@@ -134,6 +137,7 @@ describe('PublisherEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = loadPublisherList({
+        searchText: SEARCH_TEXT,
         page: PAGE_NUMBER,
         size: PAGE_SIZE,
         sortBy: SORT_BY,
@@ -144,6 +148,7 @@ describe('PublisherEffects', () => {
       actions$ = hot('-a', { a: action });
       publisherService.loadPublishers
         .withArgs({
+          searchText: SEARCH_TEXT,
           page: PAGE_NUMBER,
           size: PAGE_SIZE,
           sortBy: SORT_BY,
@@ -158,6 +163,7 @@ describe('PublisherEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = loadPublisherList({
+        searchText: SEARCH_TEXT,
         page: PAGE_NUMBER,
         size: PAGE_SIZE,
         sortBy: SORT_BY,
@@ -168,6 +174,7 @@ describe('PublisherEffects', () => {
       actions$ = hot('-a', { a: action });
       publisherService.loadPublishers
         .withArgs({
+          searchText: SEARCH_TEXT,
           page: PAGE_NUMBER,
           size: PAGE_SIZE,
           sortBy: SORT_BY,

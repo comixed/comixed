@@ -34,6 +34,7 @@ import org.springframework.data.domain.Pageable;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PublisherDetailServiceTest {
+  private static final String TEST_FILTER_TEXT = "The filter text";
   private static final int TEST_PAGE_INDEX = 32;
   private static final int TEST_PAGE_SIZE = 25;
   private static final long TEST_PUBLISHER_COUNT = 475L;
@@ -57,7 +58,7 @@ public class PublisherDetailServiceTest {
     Mockito.when(publisherDetailRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(publisherDetailPage);
 
-    doGetAllPublishersTest("name", "asc");
+    doGetAllPublishers("name", "asc");
   }
 
   @Test
@@ -65,7 +66,7 @@ public class PublisherDetailServiceTest {
     Mockito.when(publisherDetailRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(publisherDetailPage);
 
-    doGetAllPublishersTest("name", "desc");
+    doGetAllPublishers("name", "desc");
   }
 
   @Test
@@ -73,7 +74,7 @@ public class PublisherDetailServiceTest {
     Mockito.when(publisherDetailRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(publisherDetailPage);
 
-    doGetAllPublishersTest("issue-count", "asc");
+    doGetAllPublishers("issue-count", "asc");
   }
 
   @Test
@@ -81,7 +82,7 @@ public class PublisherDetailServiceTest {
     Mockito.when(publisherDetailRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(publisherDetailPage);
 
-    doGetAllPublishersTest("issue-count", "desc");
+    doGetAllPublishers("issue-count", "desc");
   }
 
   @Test
@@ -89,7 +90,7 @@ public class PublisherDetailServiceTest {
     Mockito.when(publisherDetailRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(publisherDetailPage);
 
-    doGetAllPublishersTest("series-count", "asc");
+    doGetAllPublishers("series-count", "asc");
   }
 
   @Test
@@ -97,7 +98,7 @@ public class PublisherDetailServiceTest {
     Mockito.when(publisherDetailRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(publisherDetailPage);
 
-    doGetAllPublishersTest("series-count", "desc");
+    doGetAllPublishers("series-count", "desc");
   }
 
   @Test
@@ -105,7 +106,7 @@ public class PublisherDetailServiceTest {
     Mockito.when(publisherDetailRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(publisherDetailPage);
 
-    doGetAllPublishersTest("series-counts", "asc");
+    doGetAllPublishers("series-counts", "asc");
   }
 
   @Test
@@ -113,16 +114,18 @@ public class PublisherDetailServiceTest {
     Mockito.when(publisherDetailRepository.findAll(pageableArgumentCaptor.capture()))
         .thenReturn(publisherDetailPage);
 
-    doGetAllPublishersTest("series-counts", "desc");
+    doGetAllPublishers("series-counts", "desc");
   }
 
   @Test
   public void testGetAllPublishers_unsorted() {
-    Mockito.when(publisherDetailRepository.findAll(pageableArgumentCaptor.capture()))
+    Mockito.when(
+            publisherDetailRepository.findAllFiltered(
+                Mockito.anyString(), pageableArgumentCaptor.capture()))
         .thenReturn(publisherDetailPage);
 
     final List<PublisherDetail> result =
-        service.getAllPublishers(TEST_PAGE_INDEX, TEST_PAGE_SIZE, "", "");
+        service.getAllPublishers(TEST_FILTER_TEXT, TEST_PAGE_INDEX, TEST_PAGE_SIZE, "", "");
 
     assertNotNull(result);
     assertSame(publisherDetailList, result);
@@ -132,25 +135,40 @@ public class PublisherDetailServiceTest {
     assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
     assertFalse(pageable.getSort().isSorted());
 
-    Mockito.verify(publisherDetailRepository, Mockito.times(1)).findAll(pageable);
+    Mockito.verify(publisherDetailRepository, Mockito.times(1))
+        .findAllFiltered(String.format("%%%s%%", TEST_FILTER_TEXT), pageable);
   }
 
   @Test
   public void testGetPublisherCount() {
     Mockito.when(publisherDetailRepository.getPublisherCount()).thenReturn(TEST_PUBLISHER_COUNT);
 
-    final long result = service.getPublisherCount();
+    final long result = service.getPublisherCount("");
 
     assertEquals(TEST_PUBLISHER_COUNT, result);
 
     Mockito.verify(publisherDetailRepository, Mockito.times(1)).getPublisherCount();
   }
 
-  private void doGetAllPublishersTest(final String sortField, final String sortDirection) {
+  @Test
+  public void getPublisherCountWithFilter() {
+    Mockito.when(publisherDetailRepository.getPublisherCountWithFilter(Mockito.anyString()))
+        .thenReturn(TEST_PUBLISHER_COUNT);
+
+    final long result = service.getPublisherCount(TEST_FILTER_TEXT);
+
+    assertEquals(TEST_PUBLISHER_COUNT, result);
+
+    Mockito.verify(publisherDetailRepository, Mockito.times(1))
+        .getPublisherCountWithFilter(String.format("%%%s%%", TEST_FILTER_TEXT));
+  }
+
+  private void doGetAllPublishers(final String sortField, final String sortDirection) {
     List<PublisherDetail> result;
     Pageable pageable;
 
-    result = service.getAllPublishers(TEST_PAGE_INDEX, TEST_PAGE_SIZE, sortField, sortDirection);
+    result =
+        service.getAllPublishers("", TEST_PAGE_INDEX, TEST_PAGE_SIZE, sortField, sortDirection);
 
     assertNotNull(result);
     assertSame(publisherDetailList, result);

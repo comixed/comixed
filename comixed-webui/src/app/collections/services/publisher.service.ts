@@ -35,6 +35,7 @@ export class PublisherService {
   constructor(private logger: LoggerService, private http: HttpClient) {}
 
   loadPublishers(args: {
+    searchText: string;
     page: number;
     size: number;
     sortBy: string;
@@ -42,6 +43,7 @@ export class PublisherService {
   }): Observable<any> {
     this.logger.debug('Loading all publishers');
     return this.http.post(interpolate(LOAD_PUBLISHERS_URL), {
+      searchText: args.searchText,
       page: args.page,
       size: args.size,
       sortBy: args.sortBy,
