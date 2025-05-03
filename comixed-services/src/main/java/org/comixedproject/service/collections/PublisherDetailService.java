@@ -37,6 +37,7 @@ public class PublisherDetailService {
   /**
    * Returns the list of all publishers.
    *
+   * @param filterText optional filter text
    * @param pageIndex the page index
    * @param pageSize the page size
    * @param sortBy the optional sort field
@@ -45,11 +46,20 @@ public class PublisherDetailService {
    */
   @Transactional(readOnly = true)
   public List<PublisherDetail> getAllPublishers(
-      final int pageIndex, final int pageSize, final String sortBy, final String sortDirection) {
-    return this.publisherDetailRepository
-        .findAll(PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)))
-        .stream()
-        .toList();
+      final String filterText,
+      final int pageIndex,
+      final int pageSize,
+      final String sortBy,
+      final String sortDirection) {
+    var pageRequest = PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection));
+    if (StringUtils.hasLength(filterText)) {
+      return this.publisherDetailRepository
+          .findAllFiltered(String.format("%%%s%%", filterText), pageRequest)
+          .stream()
+          .toList();
+    } else {
+      return this.publisherDetailRepository.findAll(pageRequest).stream().toList();
+    }
   }
 
   /**
@@ -58,8 +68,13 @@ public class PublisherDetailService {
    * @return the publisher count
    */
   @Transactional(readOnly = true)
-  public long getPublisherCount() {
-    return this.publisherDetailRepository.getPublisherCount();
+  public long getPublisherCount(final String filterText) {
+    if (StringUtils.hasLength(filterText)) {
+      return this.publisherDetailRepository.getPublisherCountWithFilter(
+          String.format("%%%s%%", filterText));
+    } else {
+      return this.publisherDetailRepository.getPublisherCount();
+    }
   }
 
   private Sort doCreateSort(final String sortBy, final String sortDirection) {

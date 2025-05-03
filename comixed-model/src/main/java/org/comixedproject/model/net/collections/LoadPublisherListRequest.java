@@ -30,6 +30,10 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 public class LoadPublisherListRequest {
+  @JsonProperty("searchText")
+  @Getter
+  private String searchText;
+
   @JsonProperty("page")
   @Getter
   private int page;

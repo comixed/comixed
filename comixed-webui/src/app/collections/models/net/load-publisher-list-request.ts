@@ -17,6 +17,7 @@
  */
 
 export interface LoadPublisherListRequest {
+  searchText: string;
   page: number;
   size: number;
   sortBy: string;

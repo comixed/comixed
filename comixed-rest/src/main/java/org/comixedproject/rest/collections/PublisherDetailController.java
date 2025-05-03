@@ -53,14 +53,21 @@ public class PublisherDetailController {
   @Timed(value = "comixed.publishers.load-list")
   public LoadPublisherListResponse loadPublisherList(
       @RequestBody final LoadPublisherListRequest request) {
+    final String searchText = request.getSearchText();
     final int page = request.getPage();
     final int size = request.getSize();
     final String sortBy = request.getSortBy();
     final String sortDirection = request.getSortDirection();
-    log.info("Getting all publishers");
+    log.info(
+        "Getting all publishers: search text={} page={} size={} sort by={} sort dir={}",
+        searchText,
+        page,
+        size,
+        sortBy,
+        sortDirection);
     return new LoadPublisherListResponse(
-        this.publisherDetailService.getAllPublishers(page, size, sortBy, sortDirection),
-        this.publisherDetailService.getPublisherCount());
+        this.publisherDetailService.getAllPublishers(searchText, page, size, sortBy, sortDirection),
+        this.publisherDetailService.getPublisherCount(searchText));
   }
 
   /**

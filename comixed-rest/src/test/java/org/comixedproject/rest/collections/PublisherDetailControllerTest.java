@@ -45,6 +45,7 @@ class PublisherDetailControllerTest {
   private static final String TEST_SORT_DIRECTION = "asc";
   private static final long TEST_SERIES_COUNT = 921L;
   private static final long TEST_PUBLISHER_COUNT = 73L;
+  private static final String TEST_FILTER_TEXT = "The filter text";
 
   @InjectMocks private PublisherDetailController controller;
   @Mock private ComicBookService comicBookService;
@@ -56,21 +57,23 @@ class PublisherDetailControllerTest {
   void loadPublisherList() {
     Mockito.when(
             publisherDetailService.getAllPublishers(
-                TEST_PAGE_NUMBER, TEST_PAGE_SIZE, "name", "asc"))
+                TEST_FILTER_TEXT, TEST_PAGE_NUMBER, TEST_PAGE_SIZE, "name", "asc"))
         .thenReturn(publisherDetailList);
-    Mockito.when(publisherDetailService.getPublisherCount()).thenReturn(TEST_PUBLISHER_COUNT);
+    Mockito.when(publisherDetailService.getPublisherCount(TEST_FILTER_TEXT))
+        .thenReturn(TEST_PUBLISHER_COUNT);
 
     final LoadPublisherListResponse result =
         controller.loadPublisherList(
-            new LoadPublisherListRequest(TEST_PAGE_NUMBER, TEST_PAGE_SIZE, "name", "asc"));
+            new LoadPublisherListRequest(
+                TEST_FILTER_TEXT, TEST_PAGE_NUMBER, TEST_PAGE_SIZE, "name", "asc"));
 
     assertNotNull(result);
     assertSame(publisherDetailList, result.getPublishers());
     assertEquals(TEST_PUBLISHER_COUNT, result.getTotal());
 
     Mockito.verify(publisherDetailService, Mockito.times(1))
-        .getAllPublishers(TEST_PAGE_NUMBER, TEST_PAGE_SIZE, "name", "asc");
-    Mockito.verify(publisherDetailService, Mockito.times(1)).getPublisherCount();
+        .getAllPublishers(TEST_FILTER_TEXT, TEST_PAGE_NUMBER, TEST_PAGE_SIZE, "name", "asc");
+    Mockito.verify(publisherDetailService, Mockito.times(1)).getPublisherCount(TEST_FILTER_TEXT);
   }
 
   @Test
