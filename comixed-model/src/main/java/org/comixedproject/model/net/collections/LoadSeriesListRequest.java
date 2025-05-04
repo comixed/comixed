@@ -26,6 +26,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoadSeriesListRequest {
+  @JsonProperty("searchText")
+  @Getter
+  private String searchText;
+
   @JsonProperty("pageIndex")
   @Getter
   private int pageIndex;

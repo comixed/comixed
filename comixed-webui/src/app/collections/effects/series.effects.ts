@@ -44,6 +44,7 @@ export class SeriesEffects {
       switchMap(action =>
         this.seriesService
           .loadSeries({
+            searchText: action.searchText,
             pageIndex: action.pageIndex,
             pageSize: action.pageSize,
             sortBy: action.sortBy,

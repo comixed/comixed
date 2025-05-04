@@ -20,7 +20,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PublisherListPageComponent } from './publisher-list-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -39,13 +38,12 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { USER_ADMIN } from '@app/user/user.fixtures';
 import { TitleService } from '@app/core/services/title.service';
-import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import { QUERY_PARAM_FILTER_TEXT } from '@app/core';
 import { MatIconModule } from '@angular/material/icon';
+import { FilterTextFormComponent } from '@app/collections/components/filter-text-form/filter-text-form.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 describe('PublisherListPageComponent', () => {
-  const FILTER_TEXT = 'the text';
   const initialState = {
     [PUBLISHER_FEATURE_KEY]: initialPublisherState,
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER_ADMIN }
@@ -57,16 +55,15 @@ describe('PublisherListPageComponent', () => {
   let storeDispatchSpy: jasmine.Spy;
   let translateService: TranslateService;
   let titleService: TitleService;
-  let queryParameterService: QueryParameterService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PublisherListPageComponent],
+      declarations: [PublisherListPageComponent, FilterTextFormComponent],
       imports: [
         NoopAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
-        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
+        RouterModule.forRoot([]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatToolbarModule,
@@ -87,8 +84,6 @@ describe('PublisherListPageComponent', () => {
     translateService = TestBed.inject(TranslateService);
     titleService = TestBed.inject(TitleService);
     spyOn(titleService, 'setTitle');
-    queryParameterService = TestBed.inject(QueryParameterService);
-    spyOn(queryParameterService, 'updateQueryParam');
     fixture.detectChanges();
   });
 
@@ -103,38 +98,6 @@ describe('PublisherListPageComponent', () => {
 
     it('updates the tab title', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
-    });
-  });
-
-  describe('applying a filter', () => {
-    describe('adding a filter', () => {
-      beforeEach(() => {
-        component.onApplyFilter(FILTER_TEXT);
-      });
-
-      it('updates the query parameters', () => {
-        expect(queryParameterService.updateQueryParam).toHaveBeenCalledWith([
-          {
-            name: QUERY_PARAM_FILTER_TEXT,
-            value: FILTER_TEXT
-          }
-        ]);
-      });
-    });
-
-    describe('clearing a filter', () => {
-      beforeEach(() => {
-        component.onApplyFilter('');
-      });
-
-      it('updates the query parameters', () => {
-        expect(queryParameterService.updateQueryParam).toHaveBeenCalledWith([
-          {
-            name: QUERY_PARAM_FILTER_TEXT,
-            value: null
-          }
-        ]);
-      });
     });
   });
 });

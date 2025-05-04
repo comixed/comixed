@@ -43,6 +43,7 @@ import { LoadSeriesDetailRequest } from '@app/collections/models/net/load-series
 import { LoadSeriesListRequest } from '@app/collections/models/net/load-series-list-request';
 
 describe('SeriesService', () => {
+  const SEARCH_TEXT = 'Some text';
   const PAGE_INDEX = 3;
   const PAGE_SIZE = 25;
   const SORT_BY = 'publisher';
@@ -73,6 +74,7 @@ describe('SeriesService', () => {
     const serviceResponse = { series: SERIES_LIST } as LoadSeriesListResponse;
     service
       .loadSeries({
+        searchText: SEARCH_TEXT,
         pageIndex: PAGE_INDEX,
         pageSize: PAGE_SIZE,
         sortBy: SORT_BY,
@@ -83,6 +85,7 @@ describe('SeriesService', () => {
     const req = httpMock.expectOne(interpolate(LOAD_SERIES_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
+      searchText: SEARCH_TEXT,
       pageIndex: PAGE_INDEX,
       pageSize: PAGE_SIZE,
       sortBy: SORT_BY,

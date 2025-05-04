@@ -46,6 +46,7 @@ public class SeriesDetailServiceTest {
   private static final String TEST_VOLUME = "2022";
   private static final Long TEST_ISSUE_COUNT = 29L;
   private static final int TEST_SERIES_COUNT = 237;
+  private static final String TEST_FILTER_TEXT = "some text";
 
   @InjectMocks private SeriesDetailService service;
   @Mock private SeriesDetailsRepository seriesDetailsRepository;
@@ -119,7 +120,7 @@ public class SeriesDetailServiceTest {
     for (int index = 0; index < 2; index++) {
       final List<SeriesDetail> result =
           service.getSeriesList(
-              TEST_PAGE_INDEX, TEST_PAGE_SIZE, publisher, index == 0 ? "asc" : "desc");
+              "", TEST_PAGE_INDEX, TEST_PAGE_SIZE, publisher, index == 0 ? "asc" : "desc");
 
       assertNotNull(result);
       assertSame(seriesDetailList, result);
@@ -139,7 +140,7 @@ public class SeriesDetailServiceTest {
         .thenReturn(seriesDetailPage);
 
     final List<SeriesDetail> result =
-        service.getSeriesList(TEST_PAGE_INDEX, TEST_PAGE_SIZE, "", "");
+        service.getSeriesList("", TEST_PAGE_INDEX, TEST_PAGE_SIZE, "", "");
 
     assertNotNull(result);
     assertSame(seriesDetailList, result);
@@ -156,11 +157,24 @@ public class SeriesDetailServiceTest {
   public void testLoadSeriesCount() {
     Mockito.when(seriesDetailsRepository.getSeriesCount()).thenReturn(TEST_SERIES_COUNT);
 
-    final int result = service.getSeriesCount();
+    final int result = service.getSeriesCount("");
 
     assertEquals(TEST_SERIES_COUNT, result);
 
     Mockito.verify(seriesDetailsRepository, Mockito.times(1)).getSeriesCount();
+  }
+
+  @Test
+  public void TestLoadSeriesCountWithFilter() {
+    Mockito.when(seriesDetailsRepository.getFilteredSeriesCount(Mockito.anyString()))
+        .thenReturn(TEST_SERIES_COUNT);
+
+    final int result = service.getSeriesCount(TEST_FILTER_TEXT);
+
+    assertEquals(TEST_SERIES_COUNT, result);
+
+    Mockito.verify(seriesDetailsRepository, Mockito.times(1))
+        .getFilteredSeriesCount(String.format("%%%s%%", TEST_FILTER_TEXT));
   }
 
   @Test

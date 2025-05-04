@@ -37,6 +37,7 @@ import {
 } from '@app/collections/collections.fixtures';
 
 describe('Series Reducer', () => {
+  const SEARCH_TEXT = 'Some text';
   const PAGE_INDEX = 3;
   const PAGE_SIZE = 25;
   const SORT_BY = 'publisher';
@@ -80,6 +81,7 @@ describe('Series Reducer', () => {
       state = reducer(
         { ...state, busy: false },
         loadSeriesList({
+          searchText: SEARCH_TEXT,
           pageIndex: PAGE_INDEX,
           pageSize: PAGE_SIZE,
           sortBy: SORT_BY,

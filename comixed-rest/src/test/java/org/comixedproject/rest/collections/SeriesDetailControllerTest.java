@@ -44,6 +44,7 @@ public class SeriesDetailControllerTest {
   private static final String TEST_PUBLISHER = "Publisher Name";
   private static final String TEST_SERIES = "SeriesDetail Name";
   private static final String TEST_VOLUME = "2022";
+  private static final String TEST_FILTER_TEXT = "some text";
 
   @InjectMocks private SeriesDetailController controller;
   @Mock private SeriesDetailService seriesDetailService;
@@ -54,19 +55,28 @@ public class SeriesDetailControllerTest {
   public void testLoadSeriesList() {
     Mockito.when(
             seriesDetailService.getSeriesList(
-                Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
+                Mockito.anyString(),
+                Mockito.anyInt(),
+                Mockito.anyInt(),
+                Mockito.anyString(),
+                Mockito.anyString()))
         .thenReturn(seriesDetailList);
 
     final LoadSeriesListResponse result =
         controller.loadSeriesList(
             new LoadSeriesListRequest(
-                TEST_PAGE_INDEX, TEST_PAGE_SIZE, TEST_SORT_BY, TEST_SORT_DIRECTION));
+                TEST_FILTER_TEXT,
+                TEST_PAGE_INDEX,
+                TEST_PAGE_SIZE,
+                TEST_SORT_BY,
+                TEST_SORT_DIRECTION));
 
     assertNotNull(result);
     assertSame(seriesDetailList, result.getSeriesDetails());
 
     Mockito.verify(seriesDetailService, Mockito.times(1))
-        .getSeriesList(TEST_PAGE_INDEX, TEST_PAGE_SIZE, TEST_SORT_BY, TEST_SORT_DIRECTION);
+        .getSeriesList(
+            TEST_FILTER_TEXT, TEST_PAGE_INDEX, TEST_PAGE_SIZE, TEST_SORT_BY, TEST_SORT_DIRECTION);
   }
 
   @Test
