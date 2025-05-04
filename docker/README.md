@@ -9,16 +9,40 @@ Installation is simple:
 This pulls the latest version. Or you can replace **latest** with a specific version if you wish.
 
 # Initial Run
-## Where To Place Your Comics
+## Required Subdirectories
 
-It's recommended that you select a subdirectory that's decided solely to your library. This directory will hold both
-the comic files as well as the database files (assuming you use the embedded database). It will also be the location
-where you will place new comics in order to import them into your library.
+It's recommended that you select a subdirectory that's decided solely to your comic library. This directory will hold
+both the comic files as well as the location where you will place new comics in order to import them into your library.
 
 For this document, we will assume that directory is **/Users/reader/comics**.
 
-Beneath this directory, we want to have the actual comic files organized under a directory named **library** and the
-database files under a directory named **database**.
+In this subdirectory you'll need to create the following subdirectories:
+
+1. ```library``` - where your managed comic files will live,
+1. ```config``` - where you will place your **application.properties** file (see below), and
+1. ```imports``` - the directory where you'll place comics to be imported.
+
+
+## Creating Your Configuration File
+
+The heart of your configuration is the **application.properties** file. This is where you will define things like what
+type of database is used and how to connect to it, batch processing details, etc. You can download a copy of the file
+[here](../comixed-app/src/main/resources/application.properties).
+
+In this file, change:
+
+```properties
+comixed.images.cache.location=${user.home}/.comixed/image-cache
+```
+
+to:
+
+```properties
+comixed.images.cache.location=/config/image-cache
+```
+
+Also, configure the **external** database to be used. See [this file](../QUICKSTART.md) for details on how to setup
+a database.
 
 ## Starting The Docker Image For The First Time
 
@@ -31,14 +55,26 @@ the latest version:
 
 Then create the container:
 
-``` 
-  $ docker create --name comixed \
+```
+  $ docker build --name comixed \
       -it -p 7171:7171/tcp \
       -v /Users/reader/comixed/library:/library \
       -v /Users/reader/comixed/imports:/imports \
       -v /Users/reader/comixed/config:/config \
       comixed/comixed:latest
 ```
+
+**NOTE:** On Linux, if using SELinux, you'll need to use the slightly different command below:
+
+``` 
+  $ docker build --name comixed \
+      -it -p 7171:7171/tcp \
+      -v /Users/reader/comixed/library:/library:z \
+      -v /Users/reader/comixed/imports:/imports:z \
+      -v /Users/reader/comixed/config:/config:z \
+      comixed/comixed:latest
+```
+
 
 This command line:
 1. creates a runnable container named "comixed" in Docker,
@@ -60,13 +96,11 @@ To give administrators greater control over files created and controlled by Comi
 ## Database Setup
 
 By default, ComiXed uses an embedded [H2](https://www.h2database.com/html/main.html) database.
-However, this is not a supported database for long term
-us. It's highly recommended to use an external database.
+However, this is not a supported database for long term us. It's highly recommended to use an external database.
 
-To use a different database, you need to setup an external
-configuration file that can be edited to provide the container
-with the **JDBC URL**, **username** and **password** to log
-into that database.
+To use a different database, you need to setup an external configuration file that can be edited to provide the container
+with the **JDBC URL**, **username** and **password** to log into that database. There are example blocks for the
+currently supported set of databases.
 
 Currently, ComiXed ships with support for the following databases:
 
@@ -88,6 +122,8 @@ Now rename the file to ```application.properties```, and you can then follow
 [the configuration documentation](../CONFIGURATION.md) to
 customize your container.
 
+**NOTE:** Setting up the database is beyond the scope of this page. However, you'll need to ensure that, whatever type
+of dataase you choose, the server needs to allow access from the container's IP network.
 
 
 ## Starting Your Container
