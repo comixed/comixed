@@ -17,6 +17,7 @@
  */
 
 export interface LoadSeriesListRequest {
+  searchText: string;
   pageIndex: number;
   pageSize: number;
   sortBy: string;

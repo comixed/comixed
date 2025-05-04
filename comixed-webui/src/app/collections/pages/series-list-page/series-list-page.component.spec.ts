@@ -45,10 +45,11 @@ import {
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { TitleService } from '@app/core/services/title.service';
-import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { Series } from '@app/collections/models/series';
-import { SERIES_1 } from '@app/collections/collections.fixtures';
 import { RouterModule } from '@angular/router';
+import { FilterTextFormComponent } from '@app/collections/components/filter-text-form/filter-text-form.component';
+import { MatIconModule } from '@angular/material/icon';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('SeriesListPageComponent', () => {
   const initialState = {
@@ -65,10 +66,12 @@ describe('SeriesListPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SeriesListPageComponent],
+      declarations: [SeriesListPageComponent, FilterTextFormComponent],
       imports: [
         NoopAnimationsModule,
         RouterModule.forRoot([]),
+        FormsModule,
+        ReactiveFormsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatDialogModule,
@@ -79,7 +82,8 @@ describe('SeriesListPageComponent', () => {
         MatButtonModule,
         MatPaginatorModule,
         MatInputModule,
-        MatFormFieldModule
+        MatFormFieldModule,
+        MatIconModule
       ],
       providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();

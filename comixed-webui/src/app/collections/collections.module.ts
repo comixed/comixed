@@ -50,6 +50,7 @@ import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { PublisherIssuesPageComponent } from '@app/collections/pages/publisher-issues-page/publisher-issues-page.component';
 import { SeriesIssuePageComponent } from '@app/collections/pages/series-issue-page/series-issue-page.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FilterTextFormComponent } from '@app/collections/components/filter-text-form/filter-text-form.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     PublisherListPageComponent,
     PublisherSeriesPageComponent,
     PublisherIssuesPageComponent,
+    FilterTextFormComponent,
     SeriesDetailNamePipe
   ],
   imports: [

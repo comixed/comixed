@@ -24,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -39,6 +40,10 @@ public interface SeriesDetailsRepository extends JpaRepository<SeriesDetail, Ser
       "SELECT s FROM SeriesDetail s WHERE LENGTH(s.id.publisher) > 0 AND LENGTH(s.id.series) > 0 AND LENGTH(s.id.volume) > 0")
   Page<SeriesDetail> findAll(Pageable pageable);
 
+  @Query(
+      "SELECT s FROM SeriesDetail s WHERE LENGTH(s.id.publisher) > 0 AND s.id.series ILIKE :filterText AND LENGTH(s.id.volume) > 0")
+  Page<SeriesDetail> findAllFiltered(@Param("filterText") String filterText, Pageable pageable);
+
   /**
    * Returns the number of unique series in the database.
    *
@@ -47,4 +52,14 @@ public interface SeriesDetailsRepository extends JpaRepository<SeriesDetail, Ser
   @Query(
       "SELECT COUNT(s) FROM SeriesDetail s WHERE LENGTH(s.id.publisher) > 0 AND LENGTH(s.id.series) > 0 AND LENGTH(s.id.volume) > 0")
   int getSeriesCount();
+
+  /**
+   * Returns the number of filtered unique series in the database.
+   *
+   * @param filterText the optional filter text
+   * @return the series count
+   */
+  @Query(
+      "SELECT COUNT(s) FROM SeriesDetail s WHERE LENGTH(s.id.publisher) > 0 AND s.id.series ILIKE :filterText AND LENGTH(s.id.volume) > 0")
+  int getFilteredSeriesCount(@Param("filterText") String filterText);
 }

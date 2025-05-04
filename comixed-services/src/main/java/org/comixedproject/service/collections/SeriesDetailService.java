@@ -45,26 +45,51 @@ public class SeriesDetailService {
   /**
    * Returns the list of all series and volumes.
    *
+   * @param searchText optional search text
+   * @param pageIndex the page index
+   * @param pageSize the page size
+   * @param sortBy the optional sort field
+   * @param sortDirection the optional sort direction
    * @return the list of series
    */
   @Transactional(readOnly = true)
   public List<SeriesDetail> getSeriesList(
-      final int pageIndex, final int pageSize, final String sortBy, final String sortDirection) {
-    log.debug("Loading series list");
-    return this.seriesDetailsRepository
-        .findAll(PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)))
-        .stream()
-        .toList();
+      final String searchText,
+      final int pageIndex,
+      final int pageSize,
+      final String sortBy,
+      final String sortDirection) {
+    if (StringUtils.hasLength(searchText)) {
+      log.debug("Filtering series list");
+      return this.seriesDetailsRepository
+          .findAllFiltered(
+              String.format("%%%s%%", searchText),
+              PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)))
+          .stream()
+          .toList();
+    } else {
+      log.debug("Loading series list");
+      return this.seriesDetailsRepository
+          .findAll(PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)))
+          .stream()
+          .toList();
+    }
   }
 
   /**
    * Returns the number of series in the database.
    *
+   * @param filterText optional filter text
    * @return the series count
    */
   @Transactional
-  public int getSeriesCount() {
-    return this.seriesDetailsRepository.getSeriesCount();
+  public int getSeriesCount(final String filterText) {
+    if (StringUtils.hasLength(filterText)) {
+      return this.seriesDetailsRepository.getFilteredSeriesCount(
+          String.format("%%%s%%", filterText));
+    } else {
+      return this.seriesDetailsRepository.getSeriesCount();
+    }
   }
 
   /**
