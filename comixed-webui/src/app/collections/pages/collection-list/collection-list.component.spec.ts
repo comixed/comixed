@@ -20,8 +20,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { CollectionListComponent } from './collection-list.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import {
   DISPLAYABLE_COMIC_1,
@@ -48,10 +47,10 @@ import {
   COMIC_LIST_FEATURE_KEY,
   initialState as initialComicListState
 } from '@app/comic-books/reducers/comic-list.reducer';
-import { QUERY_PARAM_FILTER_TEXT } from '@app/core';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { FilterTextFormComponent } from '@app/collections/components/filter-text-form/filter-text-form.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('CollectionListComponent', () => {
   const COMIC_LIST = [
@@ -80,12 +79,12 @@ describe('CollectionListComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [CollectionListComponent],
+        declarations: [CollectionListComponent, FilterTextFormComponent],
         imports: [
           NoopAnimationsModule,
-          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
           FormsModule,
           ReactiveFormsModule,
+          RouterModule.forRoot([]),
           LoggerModule.forRoot(),
           TranslateModule.forRoot(),
           MatTableModule,
@@ -209,36 +208,6 @@ describe('CollectionListComponent', () => {
         'collections',
         'publishers',
         COLLECTION_NAME
-      ]);
-    });
-  });
-
-  describe('applying search text', () => {
-    beforeEach(() => {
-      component.onApplyFilter(SEARCH_TEXT);
-    });
-
-    it('updates the filter text', () => {
-      expect(queryParameterService.updateQueryParam).toHaveBeenCalledWith([
-        {
-          name: QUERY_PARAM_FILTER_TEXT,
-          value: SEARCH_TEXT
-        }
-      ]);
-    });
-  });
-
-  describe('clearing the search text', () => {
-    beforeEach(() => {
-      component.onApplyFilter('');
-    });
-
-    it('updates the filter text', () => {
-      expect(queryParameterService.updateQueryParam).toHaveBeenCalledWith([
-        {
-          name: QUERY_PARAM_FILTER_TEXT,
-          value: null
-        }
       ]);
     });
   });

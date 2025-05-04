@@ -70,7 +70,6 @@ export class PublisherListPageComponent
   publisherStateSubscription: Subscription;
   userSubscription: Subscription;
   totalPublishers = 0;
-  filterTextForm: FormGroup;
 
   dataSource = new MatTableDataSource<Publisher>([]);
   pageIndex = 0;
@@ -84,7 +83,6 @@ export class PublisherListPageComponent
     private store: Store<any>,
     private titleService: TitleService,
     private translateService: TranslateService,
-    private formBuilder: FormBuilder,
     public queryParameterService: QueryParameterService
   ) {
     this.logger.trace('Subscribing to language change updates');
@@ -105,9 +103,6 @@ export class PublisherListPageComponent
         );
       }
     );
-    this.filterTextForm = this.formBuilder.group({
-      filterTextInput: ['']
-    });
     this.logger.trace('Subscribing to publisher list updates');
     this.publisherListSubscription = this.store
       .select(selectPublisherList)
@@ -175,15 +170,5 @@ export class PublisherListPageComponent
         'collections.publishers.list-publishers.tab-title'
       )
     );
-  }
-
-  onApplyFilter(searchText: string): void {
-    this.logger.debug('Setting collection search text:', searchText);
-    this.queryParameterService.updateQueryParam([
-      {
-        name: QUERY_PARAM_FILTER_TEXT,
-        value: searchText?.length > 0 ? searchText : null
-      }
-    ]);
   }
 }

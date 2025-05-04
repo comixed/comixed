@@ -34,8 +34,6 @@ import { CollectionEntry } from '@app/collections/models/collection-entry';
 import { loadCollectionList } from '@app/collections/actions/collection-list.actions';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { filter } from 'rxjs/operators';
-import { QUERY_PARAM_FILTER_TEXT } from '@app/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   ComicTagType,
   comicTagTypeFromString
@@ -56,7 +54,6 @@ export class CollectionListComponent implements OnInit, OnDestroy {
   totalEntriesSubscription: Subscription;
   totalEntries = 0;
   dataSource = new MatTableDataSource<CollectionEntry>([]);
-  filterTextForm: FormGroup;
 
   readonly displayedColumns = ['tag-value', 'comic-count'];
   langChangeSubscription: Subscription;
@@ -69,10 +66,8 @@ export class CollectionListComponent implements OnInit, OnDestroy {
     private router: Router,
     private translateService: TranslateService,
     private titleService: TitleService,
-    private formBuilder: FormBuilder,
     public queryParameterService: QueryParameterService
   ) {
-    this.filterTextForm = this.formBuilder.group({ filterTextInput: [''] });
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.routableTypeName = params.collectionType;
       this.collectionType = comicTagTypeFromString(this.routableTypeName);
@@ -85,10 +80,6 @@ export class CollectionListComponent implements OnInit, OnDestroy {
     });
     this.queryParamSubscription = this.activatedRoute.queryParams.subscribe(
       () => {
-        this.filterTextForm.controls['filterTextInput'].setValue(
-          this.queryParameterService.filterText$.value || ''
-        );
-        this.filterTextForm.markAsUntouched();
         this.store.dispatch(
           loadCollectionList({
             tagType: this.collectionType,
@@ -142,16 +133,6 @@ export class CollectionListComponent implements OnInit, OnDestroy {
       'collections',
       this.routableTypeName,
       entry.tagValue
-    ]);
-  }
-
-  onApplyFilter(searchText: string): void {
-    this.logger.debug('Setting collection search text:', searchText);
-    this.queryParameterService.updateQueryParam([
-      {
-        name: QUERY_PARAM_FILTER_TEXT,
-        value: searchText?.length > 0 ? searchText : null
-      }
     ]);
   }
 

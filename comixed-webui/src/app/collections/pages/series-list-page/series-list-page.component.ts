@@ -74,7 +74,6 @@ export class SeriesListPageComponent implements OnDestroy, AfterViewInit {
     private titleService: TitleService,
     private translateService: TranslateService,
     private activatedRoute: ActivatedRoute,
-    private router: Router,
     public queryParameterService: QueryParameterService
   ) {
     this.logger.trace('Subscribing to language change updates');
@@ -87,6 +86,7 @@ export class SeriesListPageComponent implements OnDestroy, AfterViewInit {
         this.logger.trace('Loading series list');
         this.store.dispatch(
           loadSeriesList({
+            searchText: this.queryParameterService.filterText$.value,
             pageIndex: this.queryParameterService.pageIndex$.value,
             pageSize: this.queryParameterService.pageSize$.value,
             sortBy: this.queryParameterService.sortBy$.value,

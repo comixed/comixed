@@ -35,6 +35,7 @@ export class SeriesService {
   constructor(private logger: LoggerService, private http: HttpClient) {}
 
   loadSeries(args: {
+    searchText: string;
     pageIndex: number;
     pageSize: number;
     sortBy: string;
@@ -42,6 +43,7 @@ export class SeriesService {
   }): Observable<any> {
     this.logger.debug('Loading series:', args);
     return this.http.post(interpolate(LOAD_SERIES_URL), {
+      searchText: args.searchText,
       pageIndex: args.pageIndex,
       pageSize: args.pageSize,
       sortBy: args.sortBy,

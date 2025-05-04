@@ -48,6 +48,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 
 describe('SeriesEffects', () => {
+  const SEARCH_TEXT = 'some text';
   const PAGE_INDEX = 3;
   const PAGE_SIZE = 25;
   const SORT_BY = 'publisher';
@@ -108,6 +109,7 @@ describe('SeriesEffects', () => {
         totalSeries: SERIES_LIST.length
       } as LoadSeriesListResponse;
       const action = loadSeriesList({
+        searchText: SEARCH_TEXT,
         pageIndex: PAGE_INDEX,
         pageSize: PAGE_INDEX,
         sortBy: SORT_BY,
@@ -121,6 +123,7 @@ describe('SeriesEffects', () => {
       actions$ = hot('-a', { a: action });
       seriesService.loadSeries
         .withArgs({
+          searchText: SEARCH_TEXT,
           pageIndex: PAGE_INDEX,
           pageSize: PAGE_INDEX,
           sortBy: SORT_BY,
@@ -135,6 +138,7 @@ describe('SeriesEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = loadSeriesList({
+        searchText: SEARCH_TEXT,
         pageIndex: PAGE_INDEX,
         pageSize: PAGE_INDEX,
         sortBy: SORT_BY,
@@ -145,6 +149,7 @@ describe('SeriesEffects', () => {
       actions$ = hot('-a', { a: action });
       seriesService.loadSeries
         .withArgs({
+          searchText: SEARCH_TEXT,
           pageIndex: PAGE_INDEX,
           pageSize: PAGE_INDEX,
           sortBy: SORT_BY,
@@ -159,6 +164,7 @@ describe('SeriesEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = loadSeriesList({
+        searchText: SEARCH_TEXT,
         pageIndex: PAGE_INDEX,
         pageSize: PAGE_INDEX,
         sortBy: SORT_BY,
@@ -169,6 +175,7 @@ describe('SeriesEffects', () => {
       actions$ = hot('-a', { a: action });
       seriesService.loadSeries
         .withArgs({
+          searchText: SEARCH_TEXT,
           pageIndex: PAGE_INDEX,
           pageSize: PAGE_INDEX,
           sortBy: SORT_BY,

@@ -56,13 +56,15 @@ public class SeriesDetailController {
   @Timed(value = "comixed.series.load-list")
   public LoadSeriesListResponse loadSeriesList(@RequestBody final LoadSeriesListRequest request) {
     log.info("Loading series: {}", request);
+    final String searchText = request.getSearchText();
     final int pageIndex = request.getPageIndex();
     final int pageSize = request.getPageSize();
     final String sortBy = request.getSortBy();
     final String sortDirection = request.getSortDirection();
     return new LoadSeriesListResponse(
-        this.seriesDetailService.getSeriesList(pageIndex, pageSize, sortBy, sortDirection),
-        this.seriesDetailService.getSeriesCount());
+        this.seriesDetailService.getSeriesList(
+            searchText, pageIndex, pageSize, sortBy, sortDirection),
+        this.seriesDetailService.getSeriesCount(searchText));
   }
 
   /**
