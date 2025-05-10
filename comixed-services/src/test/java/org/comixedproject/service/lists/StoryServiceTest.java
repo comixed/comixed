@@ -19,159 +19,91 @@
 package org.comixedproject.service.lists;
 
 import static junit.framework.TestCase.*;
-import static org.comixedproject.state.lists.StoryStateHandler.HEADER_STORY;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.lists.PublishStoryListUpdateAction;
-import org.comixedproject.model.lists.Story;
-import org.comixedproject.model.lists.StoryState;
-import org.comixedproject.repositories.lists.StoryRepository;
+import org.comixedproject.model.lists.ScrapedStory;
+import org.comixedproject.repositories.lists.ScrapedStoryRepository;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicDetailService;
-import org.comixedproject.state.lists.StoryEvent;
-import org.comixedproject.state.lists.StoryStateHandler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHeaders;
-import org.springframework.statemachine.state.State;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StoryServiceTest {
-  private static final StoryState TEST_STORY_STATE = StoryState.STABLE;
   private static final String TEST_STORY_NAME = "The Story Name";
   private static final String TEST_PUBLISHER = "The Publisher";
-  private static final long TEST_STORY_ID = 27L;
 
   @InjectMocks private StoryService service;
-  @Mock private StoryRepository storyRepository;
+  @Mock private ScrapedStoryRepository scrapedStoryRepository;
   @Mock private ComicBookService comicBookService;
-  @Mock private ComicDetailService comicDetailService;
-  @Mock private StoryStateHandler storyStateHandler;
-  @Mock private State<StoryState, StoryEvent> state;
-  @Mock private Message<StoryEvent> message;
-  @Mock private MessageHeaders messageHeaders;
-  @Mock private Story story;
-  @Mock private Story savedStory;
   @Mock private PublishStoryListUpdateAction publishStoryListUpdateAction;
-  @Mock private Set<Story> storySet;
+  @Mock private ScrapedStory story;
 
-  @Captor private ArgumentCaptor<Story> storyArgumentCaptor;
+  @Captor private ArgumentCaptor<ScrapedStory> storyArgumentCaptor;
 
   @Before
   public void setUp() {
-    Mockito.when(message.getHeaders()).thenReturn(messageHeaders);
-    Mockito.when(messageHeaders.get(HEADER_STORY, Story.class)).thenReturn(story);
-
     Mockito.when(story.getName()).thenReturn(TEST_STORY_NAME);
     Mockito.when(story.getPublisher()).thenReturn(TEST_PUBLISHER);
   }
 
   @Test
-  public void testAfterPropertiesSet() throws Exception {
-    service.afterPropertiesSet();
-
-    Mockito.verify(storyStateHandler, Mockito.times(1)).addListener(service);
-  }
-
-  @Test
-  public void testOnStoryStateChange() throws PublishingException {
-    Mockito.when(state.getId()).thenReturn(TEST_STORY_STATE);
-    Mockito.when(storyRepository.save(Mockito.any(Story.class))).thenReturn(savedStory);
-
-    service.onStoryStateChange(state, message);
-
-    Mockito.verify(story, Mockito.times(1)).setStoryState(TEST_STORY_STATE);
-    Mockito.verify(story, Mockito.times(1)).setModifiedOn(Mockito.any(Date.class));
-    Mockito.verify(storyRepository, Mockito.times(1)).save(story);
-    Mockito.verify(publishStoryListUpdateAction, Mockito.times(1)).publish(savedStory);
-  }
-
-  @Test
-  public void testOnStoryStateChangePublishingException() throws PublishingException {
-    Mockito.when(state.getId()).thenReturn(TEST_STORY_STATE);
-    Mockito.when(storyRepository.save(Mockito.any(Story.class))).thenReturn(savedStory);
-    Mockito.doThrow(PublishingException.class)
-        .when(publishStoryListUpdateAction)
-        .publish(Mockito.any(Story.class));
-
-    service.onStoryStateChange(state, message);
-
-    Mockito.verify(story, Mockito.times(1)).setStoryState(TEST_STORY_STATE);
-    Mockito.verify(story, Mockito.times(1)).setModifiedOn(Mockito.any(Date.class));
-    Mockito.verify(storyRepository, Mockito.times(1)).save(story);
-    Mockito.verify(publishStoryListUpdateAction, Mockito.times(1)).publish(savedStory);
-  }
-
-  @Test
   public void testLoadAll() {
-    final List<Story> stories = new ArrayList<>();
+    final List<ScrapedStory> stories = new ArrayList<>();
     stories.add(story);
-    final Set<String> distinctStories = new HashSet<>();
-    distinctStories.add(TEST_STORY_NAME);
-    final String otherStory = String.format("Other story %d", System.currentTimeMillis());
-    distinctStories.add(otherStory);
 
-    Mockito.when(storyRepository.findAll()).thenReturn(stories);
-    Mockito.when(comicDetailService.getAllSeries()).thenReturn(distinctStories);
+    Mockito.when(scrapedStoryRepository.findAll()).thenReturn(stories);
 
     final Set<String> result = service.loadAll();
 
     assertNotNull(result);
     assertTrue(result.contains(TEST_STORY_NAME));
-    assertTrue(result.contains(otherStory));
 
-    Mockito.verify(storyRepository, Mockito.times(1)).findAll();
-    Mockito.verify(comicDetailService, Mockito.times(1)).getAllSeries();
+    Mockito.verify(scrapedStoryRepository, Mockito.times(1)).findAll();
   }
 
   @Test
   public void testFindByName() {
-    final List<Story> stories = new ArrayList<>();
+    final List<ScrapedStory> stories = new ArrayList<>();
     stories.add(story);
-    Mockito.when(storyRepository.findByName(Mockito.anyString())).thenReturn(stories);
+    Mockito.when(scrapedStoryRepository.findByName(Mockito.anyString())).thenReturn(stories);
 
     final List<String> publishers = new ArrayList<>();
     publishers.add(TEST_PUBLISHER);
     Mockito.when(comicBookService.getAllPublishersForStory(Mockito.anyString()))
         .thenReturn(publishers);
 
-    final Set<Story> result = service.findByName(TEST_STORY_NAME);
+    final Set<ScrapedStory> result = service.findByName(TEST_STORY_NAME);
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
     assertTrue(result.contains(story));
-    assertTrue(result.contains(new Story(TEST_STORY_NAME, TEST_PUBLISHER)));
+    assertTrue(result.contains(new ScrapedStory(TEST_STORY_NAME, TEST_PUBLISHER)));
 
-    Mockito.verify(storyRepository, Mockito.times(1)).findByName(TEST_STORY_NAME);
+    Mockito.verify(scrapedStoryRepository, Mockito.times(1)).findByName(TEST_STORY_NAME);
   }
 
   @Test
-  public void testCreateStory() throws StoryException {
-    Mockito.when(storyRepository.save(storyArgumentCaptor.capture())).thenReturn(story);
-    Mockito.when(story.getId()).thenReturn(TEST_STORY_ID);
-    Mockito.when(storyRepository.getById(Mockito.anyLong())).thenReturn(savedStory);
+  public void testCreateStory() throws StoryException, PublishingException {
+    Mockito.when(scrapedStoryRepository.save(storyArgumentCaptor.capture())).thenReturn(story);
 
-    final Story result = service.createStory(story);
+    final ScrapedStory result = service.createStory(story);
 
     assertNotNull(result);
-    assertSame(savedStory, result);
+    assertSame(story, result);
 
-    final Story model = storyArgumentCaptor.getValue();
+    final ScrapedStory model = storyArgumentCaptor.getValue();
     assertNotNull(model);
     assertEquals(TEST_STORY_NAME, model.getName());
     assertEquals(TEST_PUBLISHER, model.getPublisher());
 
-    Mockito.verify(storyRepository, Mockito.times(1)).save(model);
-    Mockito.verify(storyStateHandler, Mockito.times(1)).fireEvent(story, StoryEvent.saved);
-    Mockito.verify(storyRepository, Mockito.times(1)).getById(TEST_STORY_ID);
+    Mockito.verify(scrapedStoryRepository, Mockito.times(1)).save(model);
+    Mockito.verify(publishStoryListUpdateAction, Mockito.times(1)).publish(result);
   }
 }

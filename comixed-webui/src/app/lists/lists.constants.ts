@@ -29,8 +29,6 @@ export const REMOVE_SELECTED_COMIC_BOOKS_FROM_READING_LIST_URL = `${API_ROOT_URL
 export const DOWNLOAD_READING_LIST_URL = `${API_ROOT_URL}/lists/reading/\${id}/download`;
 export const UPLOAD_READING_LIST_URL = `${API_ROOT_URL}/lists/reading/upload`;
 export const DELETE_READING_LISTS_URL = `${API_ROOT_URL}/lists/reading/delete`;
-export const LOAD_ALL_STORY_NAMES_URL = `${API_ROOT_URL}/lists/stories/names`;
-export const LOAD_STORIES_FOR_NAME_URL = `${API_ROOT_URL}/lists/stories?name=\${name}`;
 
 export const READING_LIST_TEMPLATE: ReadingList = {
   id: null,

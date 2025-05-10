@@ -18,70 +18,30 @@
 
 package org.comixedproject.service.lists;
 
-import static org.comixedproject.state.lists.StoryStateHandler.HEADER_STORY;
-
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.lists.PublishStoryListUpdateAction;
-import org.comixedproject.model.lists.Story;
-import org.comixedproject.model.lists.StoryState;
-import org.comixedproject.repositories.lists.StoryRepository;
+import org.comixedproject.model.lists.ScrapedStory;
+import org.comixedproject.repositories.lists.ScrapedStoryRepository;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicDetailService;
-import org.comixedproject.state.lists.StoryEvent;
-import org.comixedproject.state.lists.StoryStateChangeListener;
-import org.comixedproject.state.lists.StoryStateHandler;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.Message;
-import org.springframework.statemachine.state.State;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * <code>StoryService</code> provides business methods for working with instances of {@link Story}.
+ * <code>StoryService</code> provides business methods for working with instances of {@link
+ * ScrapedStory}.
  *
  * @author Darryl L. Pierce
  */
 @Service
 @Log4j2
-public class StoryService implements InitializingBean, StoryStateChangeListener {
-  @Autowired private StoryStateHandler storyStateHandler;
-  @Autowired private StoryRepository storyRepository;
+public class StoryService {
+  @Autowired private ScrapedStoryRepository scrapedStoryRepository;
   @Autowired private ComicBookService comicBookService;
-  @Autowired private ComicDetailService comicDetailService;
   @Autowired private PublishStoryListUpdateAction publishStoryListUpdateAction;
-
-  @Override
-  public void afterPropertiesSet() throws Exception {
-    log.trace("Suscribing to story state changes");
-    this.storyStateHandler.addListener(this);
-  }
-
-  @Override
-  public void onStoryStateChange(
-      final State<StoryState, StoryEvent> state, final Message<StoryEvent> message) {
-    log.trace("Fetching story from message headers");
-    final var story = message.getHeaders().get(HEADER_STORY, Story.class);
-    if (story == null) {
-      return;
-    }
-    log.trace("Updating story state: [{}] =>  {}", story.getId(), state.getId());
-    story.setStoryState(state.getId());
-    log.trace("Updating last modified date");
-    story.setModifiedOn(new Date());
-    log.trace("Saving updated reading list");
-    final Story savedStory = this.storyRepository.save(story);
-    try {
-      log.trace("Publishing changes");
-      this.publishStoryListUpdateAction.publish(savedStory);
-    } catch (PublishingException error) {
-      log.error("Failed to publish update", error);
-    }
-  }
 
   /**
    * Retrieves all stories. Merges defined stories with tagged stories.
@@ -91,19 +51,12 @@ public class StoryService implements InitializingBean, StoryStateChangeListener 
   @Transactional
   public Set<String> loadAll() {
     final Set<String> result = new HashSet<>();
-    this.storyRepository
+    this.scrapedStoryRepository
         .findAll()
         .forEach(
             story -> {
               log.trace("Adding defined story: {}", story.getName());
               result.add(story.getName());
-            });
-    this.comicDetailService
-        .getAllSeries()
-        .forEach(
-            story -> {
-              log.trace("Adding story tag: {}", story);
-              result.add(story);
             });
     return result;
   }
@@ -114,9 +67,9 @@ public class StoryService implements InitializingBean, StoryStateChangeListener 
    * @param name the name
    * @return the list of stories
    */
-  public Set<Story> findByName(final String name) {
-    Set<Story> result = new HashSet<>();
-    this.storyRepository
+  public Set<ScrapedStory> findByName(final String name) {
+    Set<ScrapedStory> result = new HashSet<>();
+    this.scrapedStoryRepository
         .findByName(name)
         .forEach(
             story -> {
@@ -128,7 +81,7 @@ public class StoryService implements InitializingBean, StoryStateChangeListener 
         .forEach(
             publisher -> {
               log.trace("Adding tagged story publisher: {}", publisher);
-              result.add(new Story(name, publisher));
+              result.add(new ScrapedStory(name, publisher));
             });
     return result;
   }
@@ -141,18 +94,21 @@ public class StoryService implements InitializingBean, StoryStateChangeListener 
    * @throws StoryException if an error occurs
    */
   @Transactional
-  public Story createStory(final Story source) throws StoryException {
+  public ScrapedStory createStory(final ScrapedStory source) throws StoryException {
     log.trace("Copying story to new model");
-    final Story story =
-        this.storyRepository.save(new Story(source.getName(), source.getPublisher()));
-    log.trace("Firing event: story saved");
-    this.storyStateHandler.fireEvent(story, StoryEvent.saved);
-    log.trace("Returning saved story");
-    return this.doGetStory(story.getId());
+    final ScrapedStory story =
+        this.scrapedStoryRepository.save(new ScrapedStory(source.getName(), source.getPublisher()));
+    log.trace("Publishing story list update: id={} name={}", story.getId(), story.getName());
+    try {
+      this.publishStoryListUpdateAction.publish(story);
+    } catch (PublishingException error) {
+      log.error("Failed to publish story list update", error);
+    }
+    return story;
   }
 
-  private Story doGetStory(final long id) throws StoryException {
-    final Story result = this.storyRepository.getById(id);
+  private ScrapedStory doGetStory(final long id) throws StoryException {
+    final ScrapedStory result = this.scrapedStoryRepository.getById(id);
     if (result == null) throw new StoryException("No such story: id=" + id);
     return result;
   }

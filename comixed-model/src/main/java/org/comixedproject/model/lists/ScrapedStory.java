@@ -19,7 +19,6 @@
 package org.comixedproject.model.lists;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
@@ -32,15 +31,15 @@ import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.views.View;
 
 /**
- * <code>Story</code> represents a crossover event or long running story.
+ * <code>ScrapedStory</code> holds the details for a story scraped from a metadata source.
  *
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "stories")
+@Table(name = "scraped_stories")
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class Story {
+public class ScrapedStory {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
@@ -70,13 +69,6 @@ public class Story {
   @Setter
   private String referenceId;
 
-  @Column(name = "story_state", nullable = false, updatable = true)
-  @Enumerated(EnumType.STRING)
-  @JsonIgnore
-  @Getter
-  @Setter
-  private StoryState storyState = StoryState.CREATED;
-
   @Column(name = "publisher", length = 128, nullable = false, updatable = false)
   @JsonProperty("publisher")
   @JsonView(View.StoryList.class)
@@ -90,7 +82,7 @@ public class Story {
   @JsonProperty("entries")
   @JsonView(View.StoryList.class)
   @Getter
-  private List<StoryEntry> entries = new ArrayList<>();
+  private List<ScrapedStoryEntry> entries = new ArrayList<>();
 
   @Column(name = "created_on", nullable = false, updatable = false)
   @JsonProperty("createdOn")
@@ -111,7 +103,7 @@ public class Story {
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    final Story story = (Story) o;
+    final ScrapedStory story = (ScrapedStory) o;
     return name.equals(story.name) && publisher.equals(story.publisher);
   }
 

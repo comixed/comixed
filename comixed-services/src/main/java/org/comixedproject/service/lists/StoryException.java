@@ -18,11 +18,11 @@
 
 package org.comixedproject.service.lists;
 
-import org.comixedproject.model.lists.Story;
+import org.comixedproject.model.lists.ScrapedStory;
 
 /**
  * <code>StoryException</code> is thrown when an exception occurs while working with a {@link
- * Story}.
+ * ScrapedStory}.
  *
  * @author Darryl L. Pierce
  */

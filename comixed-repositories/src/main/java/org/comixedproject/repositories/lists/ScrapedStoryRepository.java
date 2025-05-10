@@ -19,26 +19,27 @@
 package org.comixedproject.repositories.lists;
 
 import java.util.List;
-import org.comixedproject.model.lists.Story;
+import org.comixedproject.model.lists.ScrapedStory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
- * <code>StoryRepository</code> provides persistence methods for instances of {@link Story}.
+ * <code>ScrapedStoryRepository</code> provides persistence methods for instances of {@link
+ * ScrapedStory}.
  *
  * @author Darryl L. Pierce
  */
 @Repository
-public interface StoryRepository extends JpaRepository<Story, Long> {
+public interface ScrapedStoryRepository extends JpaRepository<ScrapedStory, Long> {
   /**
    * Finds all stories that have the given name.
    *
    * @param name the name
    * @return the stories
    */
-  List<Story> findByName(String name);
+  List<ScrapedStory> findByName(String name);
 
   /**
    * Returns the story with the specified record id.
@@ -46,6 +47,6 @@ public interface StoryRepository extends JpaRepository<Story, Long> {
    * @param id the record id
    * @return the story
    */
-  @Query("SELECT s FROM Story s WHERE s.id = :id")
-  Story getById(@Param("id") long id);
+  @Query("SELECT s FROM ScrapedStory s WHERE s.id = :id")
+  ScrapedStory getById(@Param("id") long id);
 }

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="021_906_rename_stories_to_scraped_stories.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="stories"/>
+        </preConditions>
+
+        <createTable tableName="scraped_stories">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="story_name" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="publisher" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="metadata_source_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="reference_id" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="last_modified_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="scraped_stories" indexName="scraped_story_name_idx">
+            <column name="story_name"/>
+        </createIndex>
+
+        <addUniqueConstraint tableName="scraped_stories" columnNames="metadata_source_id,reference_id"
+                             constraintName="scraped_story_unique_metadata_source_and_reference"/>
+
+        <addForeignKeyConstraint baseTableName="scraped_stories" baseColumnNames="metadata_source_id"
+                                 constraintName="scraped_story_metadata_source_fk"
+                                 referencedTableName="metadata_sources"
+                                 referencedColumnNames="id"/>
+
+        <createTable tableName="scraped_story_entries">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="scraped_story_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="series" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="volume" type="varchar(4)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="issue_number" type="varchar(16)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="reading_order" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint tableName="scraped_story_entries" columnNames="scraped_story_id,reading_order"
+                             constraintName="scraped_story_entry_unique_story_and_reading_order"/>
+
+        <addUniqueConstraint tableName="scraped_story_entries" columnNames="scraped_story_id,series,volume,issue_number"
+                             constraintName="scraped_story_entry_unique_series_volume_issue_number"/>
+
+        <addForeignKeyConstraint baseTableName="scraped_story_entries" baseColumnNames="scraped_story_id"
+                                 constraintName="scraped_story_entry_story_fk"
+                                 referencedTableName="scraped_stories"
+                                 referencedColumnNames="id"/>
+
+        <sql>INSERT INTO scraped_stories(id, story_name, publisher, metadata_source_id, reference_id, created_on,
+                                         last_modified_on)
+             SELECT id, story_name, publisher, metadata_source_id, reference_id, created_on, last_modified_on
+             FROM stories;</sql>
+
+        <sql>INSERT INTO scraped_story_entries(id, scraped_story_id, series, volume, issue_number, reading_order)
+             SELECT id, story_id, series, volume, issue_number, reading_order
+             FROM story_entries;</sql>
+
+        <dropTable tableName="story_entries"/>
+
+        <dropTable tableName="stories"/>
+
+    </changeSet>
+</databaseChangeLog>

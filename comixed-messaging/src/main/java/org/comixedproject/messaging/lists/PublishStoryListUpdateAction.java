@@ -21,18 +21,18 @@ package org.comixedproject.messaging.lists;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.AbstractPublishAction;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.lists.Story;
+import org.comixedproject.model.lists.ScrapedStory;
 import org.comixedproject.views.View;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>PublishStoryListUpdateAction</code> publishes the update to a {@link Story}.
+ * <code>PublishStoryListUpdateAction</code> publishes the update to a {@link ScrapedStory}.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class PublishStoryListUpdateAction extends AbstractPublishAction<Story> {
+public class PublishStoryListUpdateAction extends AbstractPublishAction<ScrapedStory> {
   /** Topic which receives story list updates. */
   public static final String STORY_LIST_UPDATE_TOPIC = "/topic/story-list.update";
 
@@ -40,7 +40,7 @@ public class PublishStoryListUpdateAction extends AbstractPublishAction<Story> {
   public static final String STORY_UPDATE_TOPIC = "/topic/story-list.%d.update";
 
   @Override
-  public void publish(final Story story) throws PublishingException {
+  public void publish(final ScrapedStory story) throws PublishingException {
     log.trace("Publishing story list update");
     this.doPublish(STORY_LIST_UPDATE_TOPIC, story, View.StoryList.class);
     log.trace("Publishing story update");

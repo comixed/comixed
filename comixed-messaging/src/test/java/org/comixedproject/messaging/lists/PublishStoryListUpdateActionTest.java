@@ -22,7 +22,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.lists.Story;
+import org.comixedproject.model.lists.ScrapedStory;
 import org.comixedproject.views.View;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class PublishStoryListUpdateActionTest {
   @Mock private SimpMessagingTemplate messagingTemplate;
   @Mock private ObjectMapper objectMapper;
   @Mock private ObjectWriter objectWriter;
-  @Mock private Story story;
+  @Mock private ScrapedStory story;
 
   @Before
   public void setUp() throws JsonProcessingException {

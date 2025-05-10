@@ -18,7 +18,6 @@
 
 import { ReadingList } from './models/reading-list';
 import { USER_READER } from '../user/user.fixtures';
-import { Story } from '@app/lists/models/story';
 
 export const READING_LIST_1: ReadingList = {
   id: 1,
@@ -68,49 +67,4 @@ export const READING_LIST_5: ReadingList = {
   createdOn: new Date().getTime(),
   lastModifiedOn: new Date().getTime(),
   entryIds: []
-};
-
-export const STORY_1: Story = {
-  id: 1,
-  name: 'Story 1',
-  publisher: 'Publisher 1',
-  entries: [],
-  createdOn: new Date().getTime(),
-  modifiedOn: new Date().getTime()
-};
-
-export const STORY_2: Story = {
-  id: 2,
-  name: 'Story 1',
-  publisher: 'Publisher 2',
-  entries: [],
-  createdOn: new Date().getTime(),
-  modifiedOn: new Date().getTime()
-};
-
-export const STORY_3: Story = {
-  id: 3,
-  name: 'Story 1',
-  publisher: 'Publisher 3',
-  entries: [],
-  createdOn: new Date().getTime(),
-  modifiedOn: new Date().getTime()
-};
-
-export const STORY_4: Story = {
-  id: 4,
-  name: 'Story 1',
-  publisher: 'Publisher 4',
-  entries: [],
-  createdOn: new Date().getTime(),
-  modifiedOn: new Date().getTime()
-};
-
-export const STORY_5: Story = {
-  id: 5,
-  name: 'Story 1',
-  publisher: 'Publisher 5',
-  entries: [],
-  createdOn: new Date().getTime(),
-  modifiedOn: new Date().getTime()
 };

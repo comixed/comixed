@@ -87,7 +87,7 @@ public class ComicBookServiceTest {
       new Date(System.currentTimeMillis() - 30L * 24L * 60L * 60L * 24L);
   private static final String TEST_NOTES = "These are the comic book's notes...";
   private static final ComicState TEST_STATE = ComicState.CHANGED;
-  private static final String TEST_STORY_NAME = "The Story Name";
+  private static final String TEST_STORY_NAME = "The ScrapedStory Name";
   private static final long TEST_COMIC_COUNT = 239L;
   private static final String TEST_SEARCH_TERMS = "The search terms";
   private static final int TEST_BATCH_CHUNK_SIZE = 25;
