@@ -23,8 +23,6 @@
         <dropForeignKeyConstraint baseTableName="comic_metadata_sources"
                                   constraintName="comic_metadata_sources_comic_book_fk"/>
 
-        <dropForeignKeyConstraint baseTableName="story_entries" constraintName="story_entries_comic_book_fk"/>
-
         <renameTable oldTableName="comic_books" newTableName="old_comic_books"/>
 
         <createTable tableName="comic_books">

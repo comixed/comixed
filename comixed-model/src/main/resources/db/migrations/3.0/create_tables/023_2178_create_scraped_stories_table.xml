@@ -3,24 +3,20 @@
 <databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
-    <changeSet id="023_2178_create_stories_table.xml" author="mcpierce">
+    <changeSet id="023_2178_create_scraped_stories_table.xml" author="mcpierce">
 
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="stories"/>
+                <tableExists tableName="scraped_stories"/>
             </not>
         </preConditions>
 
-        <createTable tableName="stories">
-            <column name="story_id" type="bigint" autoIncrement="true">
-                <constraints primaryKey="true" primaryKeyName="stories_v3_pk"/>
+        <createTable tableName="scraped_stories">
+            <column name="scraped_story_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="scraped_stories_v3_pk"/>
             </column>
 
             <column name="story_name" type="varchar(256)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="story_state" type="varchar(32)">
                 <constraints nullable="false"/>
             </column>
 
@@ -45,22 +41,22 @@
             </column>
         </createTable>
 
-        <addForeignKeyConstraint baseTableName="stories" baseColumnNames="metadata_source_id"
-                                 constraintName="story_metadata_source_fk"
+        <addForeignKeyConstraint baseTableName="scraped_stories" baseColumnNames="metadata_source_id"
+                                 constraintName="scraped_story_metadata_source_fk"
                                  referencedTableName="metadata_sources"
                                  referencedColumnNames="metadata_source_id"/>
 
-        <createIndex tableName="stories" indexName="story_metadata_source_and_reference_idx">
+        <createIndex tableName="scraped_stories" indexName="scraped_story_metadata_source_and_reference_idx">
             <column name="metadata_source_id"/>
             <column name="reference_id"/>
         </createIndex>
 
-        <createIndex tableName="stories" indexName="story_name_idx">
+        <createIndex tableName="scraped_stories" indexName="scraped_story_name_idx">
             <column name="story_name"/>
         </createIndex>
 
-        <addUniqueConstraint tableName="stories" columnNames="metadata_source_id,reference_id"
-                             constraintName="story_unique_metadata_source_and_reference"/>
+        <addUniqueConstraint tableName="scraped_stories" columnNames="metadata_source_id,reference_id"
+                             constraintName="scraped_story_unique_metadata_source_and_reference"/>
 
     </changeSet>
 </databaseChangeLog>

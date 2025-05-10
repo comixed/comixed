@@ -24,7 +24,7 @@ import static org.junit.Assert.assertNotNull;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.List;
-import org.comixedproject.model.lists.Story;
+import org.comixedproject.model.lists.ScrapedStory;
 import org.comixedproject.repositories.RepositoryContext;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -48,15 +48,15 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
   TransactionalTestExecutionListener.class,
   DbUnitTestExecutionListener.class
 })
-public class StoryRepositoryTest {
+public class ScrapedStoryRepositoryTest {
   private static final String TEST_STORY_NAME = "Age Of Ultron";
 
-  @Autowired private StoryRepository repository;
+  @Autowired private ScrapedStoryRepository repository;
 
   @Test
   @Ignore
   public void testFindAll() {
-    final List<Story> result = repository.findAll();
+    final List<ScrapedStory> result = repository.findAll();
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
@@ -65,7 +65,7 @@ public class StoryRepositoryTest {
   @Test
   @Ignore
   public void testFindByName() {
-    final List<Story> result = repository.findByName(TEST_STORY_NAME);
+    final List<ScrapedStory> result = repository.findByName(TEST_STORY_NAME);
 
     assertNotNull(result);
     assertFalse(result.isEmpty());

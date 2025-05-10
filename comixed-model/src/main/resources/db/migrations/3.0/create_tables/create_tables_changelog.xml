@@ -28,8 +28,8 @@
     <include file="/db/migrations/3.0/create_tables/020_2178_create_read_comic_books_table.xml"/>
     <include file="/db/migrations/3.0/create_tables/021_2178_create_reading_lists_table.xml"/>
     <include file="/db/migrations/3.0/create_tables/022_2178_create_reading_list_entries_table.xml"/>
-    <include file="/db/migrations/3.0/create_tables/023_2178_create_stories_table.xml"/>
-    <include file="/db/migrations/3.0/create_tables/024_2178_create_story_entries_table.xml"/>
+    <include file="/db/migrations/3.0/create_tables/023_2178_create_scraped_stories_table.xml"/>
+    <include file="/db/migrations/3.0/create_tables/024_2178_create_scraped_story_entries_table.xml"/>
     <include file="/db/migrations/3.0/create_tables/025_2178_create_comic_tags_table.xml"/>
 
 </databaseChangeLog>
