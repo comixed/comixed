@@ -78,27 +78,5 @@
       "effect-failure": "Failed to remove comics from reading list.",
       "effect-success": "Removed comics from reading list: {name}"
     }
-  },
-  "story-list": {
-    "label": {
-      "entry-count": "# Of Entries",
-      "publisher": "Published By",
-      "story-name": "Story Name"
-    },
-    "load-stories-for-name": {
-      "effect-failure": "Failed to load stories for {name}."
-    },
-    "load-story-names": {
-      "effect-failure": "Failed to load all story names."
-    },
-    "page-title": "All Story Names",
-    "tab-title": "All Story Names",
-    "tooltip": {
-      "scrape-story": "Scrape this story."
-    }
-  },
-  "story-list-for-name": {
-    "page-title": "Stories With The Name \"{name}\"",
-    "tab-title": "Stories Named: \"{name}\""
   }
 }
