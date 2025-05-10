@@ -47,19 +47,10 @@ import { DownloadReadingListEffects } from '@app/lists/effects/download-reading-
 import { uploadReadingListFeature } from '@app/lists/reducers/upload-reading-list.reducer';
 import { UploadReadingListEffects } from '@app/lists/effects/upload-reading-list.effects';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { storyListFeature } from '@app/lists/reducers/story-list.reducer';
-import { StoryListEffects } from '@app/lists/effects/story-list.effects';
-import { StoryNameListPageComponent } from './pages/story-name-list-page/story-name-list-page.component';
-import { StoryListForNamePageComponent } from './pages/story-list-for-name-page/story-list-for-name-page.component';
 import { ComicBooksModule } from '@app/comic-books/comic-books.module';
 
 @NgModule({
-  declarations: [
-    ReadingListsPageComponent,
-    ReadingListDetailPageComponent,
-    StoryNameListPageComponent,
-    StoryListForNamePageComponent
-  ],
+  declarations: [ReadingListsPageComponent, ReadingListDetailPageComponent],
   imports: [
     CommonModule,
     ListsRouting,
@@ -69,14 +60,12 @@ import { ComicBooksModule } from '@app/comic-books/comic-books.module';
     StoreModule.forFeature(readingListEntriesFeature),
     StoreModule.forFeature(downloadReadingListFeature),
     StoreModule.forFeature(uploadReadingListFeature),
-    StoreModule.forFeature(storyListFeature),
     EffectsModule.forFeature([
       ReadingListsEffects,
       ReadingListDetailEffects,
       ReadingListEntriesEffects,
       DownloadReadingListEffects,
-      UploadReadingListEffects,
-      StoryListEffects
+      UploadReadingListEffects
     ]),
     MatToolbarModule,
     MatPaginatorModule,

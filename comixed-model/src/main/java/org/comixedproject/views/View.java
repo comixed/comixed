@@ -110,7 +110,7 @@ public interface View {
   public interface StoryList {}
 
   /** Used when retrieving a story. */
-  public interface StoryDetail {}
+  public interface StoryDetail extends StoryList {}
 
   /** Used when retrieving a list of metadata sources. */
   public interface MetadataSourceList {}

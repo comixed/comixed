@@ -23,49 +23,31 @@ import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import java.util.Objects;
 import lombok.*;
-import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.views.View;
 
 /**
- * <code>StoryEntry</code> represents a single entry in a {@link Story}.
+ * <code>ScrapedStoryEntry</code> represents a single entry in a {@link ScrapedStory}.
  *
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "story_entries")
+@Table(name = "scraped_story_entries")
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class StoryEntry {
+public class ScrapedStoryEntry {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "story_entry_id")
-  @JsonProperty("storyEntryId")
+  @Column(name = "scraped_story_entry_id")
+  @JsonProperty("scrapedStoryEntryId")
   @JsonView(View.StoryList.class)
   @Getter
-  private Long storyEntryId;
+  private Long scrapedStoryEntryId;
 
   @ManyToOne
-  @JoinColumn(name = "story_id", nullable = false, updatable = false)
+  @JoinColumn(name = "scraped_story_id", nullable = false, updatable = false)
   @NonNull
   @Getter
-  private Story story;
-
-  @Column(
-      name = "story_entry_state",
-      nullable = false,
-      updatable = true,
-      columnDefinition = "VARCHAR(32)")
-  @Enumerated(EnumType.STRING)
-  @NonNull
-  @Getter
-  @Setter
-  private StoryEntryState storyEntryState = StoryEntryState.DEFINED;
-
-  @Column(name = "reading_order", nullable = false, updatable = false)
-  @JsonProperty("readingOrder")
-  @JsonView(View.StoryList.class)
-  @Getter
-  private int readingOrder;
+  private ScrapedStory story;
 
   @Column(name = "series", length = 128, nullable = false, updatable = true)
   @JsonProperty("series")
@@ -88,22 +70,19 @@ public class StoryEntry {
   @Setter
   private String issueNumber;
 
-  @ManyToOne(cascade = CascadeType.DETACH)
-  @JoinColumn(name = "comic_book_id", nullable = true, updatable = false)
+  @Column(name = "reading_order", nullable = false, updatable = false)
+  @JsonProperty("readingOrder")
   @JsonView(View.StoryList.class)
-  @JsonProperty("comicBook")
   @Getter
-  @Setter
-  private ComicBook comicBook;
+  private int readingOrder;
 
   @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    final StoryEntry that = (StoryEntry) o;
+    final ScrapedStoryEntry that = (ScrapedStoryEntry) o;
     return readingOrder == that.readingOrder
         && story.equals(that.story)
-        && storyEntryState.equals(that.storyEntryState)
         && series.equals(that.series)
         && volume.equals(that.volume)
         && issueNumber.equals(that.issueNumber);
@@ -111,6 +90,6 @@ public class StoryEntry {
 
   @Override
   public int hashCode() {
-    return Objects.hash(story, storyEntryState, readingOrder, series, volume, issueNumber);
+    return Objects.hash(story, readingOrder, series, volume, issueNumber);
   }
 }

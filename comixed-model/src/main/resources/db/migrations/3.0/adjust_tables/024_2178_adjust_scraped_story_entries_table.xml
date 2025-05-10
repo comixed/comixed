@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="024_2178_adjust_scraped_story_entries_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="scraped_story_entries"/>
+            <not>
+                <columnExists tableName="scraped_story_entries" columnName="scraped_story_entry_id"/>
+            </not>
+        </preConditions>
+
+        <renameTable oldTableName="scraped_story_entries" newTableName="old_scraped_story_entries"/>
+
+        <createTable tableName="scraped_story_entries">
+            <column name="scraped_story_entry_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="scraped_story_entries_v3_pk"/>
+            </column>
+
+            <column name="scraped_story_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="series" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="volume" type="varchar(4)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="issue_number" type="varchar(16)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="comic_book_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="reading_order" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <sql>INSERT INTO scraped_story_entries(scraped_story_entry_id, scraped_story_id, reading_order, series, volume,
+                                               issue_number)
+             SELECT id,
+                    scraped_story_id,
+                    reading_order,
+                    series,
+                    volume,
+                    issue_number
+             FROM old_scraped_story_entries</sql>
+
+        <dropTable tableName="old_scraped_story_entries"/>
+
+        <addForeignKeyConstraint baseTableName="scraped_story_entries" baseColumnNames="scraped_story_id"
+                                 constraintName="scraped_story_entry_story_fk"
+                                 referencedTableName="scraped_stories"
+                                 referencedColumnNames="scraped_story_id"/>
+
+        <addForeignKeyConstraint baseTableName="scraped_story_entries" baseColumnNames="comic_book_id"
+                                 constraintName="scraped_story_entry_comic_book_fk"
+                                 referencedTableName="comic_books"
+                                 referencedColumnNames="comic_book_id"/>
+
+        <createIndex tableName="scraped_story_entries" indexName="scraped_story_entry_comic_book_idx">
+            <column name="comic_book_id"/>
+        </createIndex>
+
+        <addUniqueConstraint tableName="scraped_story_entries" columnNames="scraped_story_id, reading_order"
+                             constraintName="scraped_story_entry_unique_scraped_story_and_reading_order"/>
+
+    </changeSet>
+</databaseChangeLog>

@@ -333,19 +333,6 @@
 </button>
 
 <button
-  *ngIf="!!user"
-  mat-button
-  class="menu-button"
-  routerLink="/lists/stories/names"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>auto_stories</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.story-names" | translate }}
-  </mat-label>
-</button>
-
-<button
   *ngFor="let list of readingLists"
   mat-button
   class="menu-button"
