@@ -81,17 +81,8 @@ ${this.translateService.instant('build-details.label.build-host', {
 ${this.translateService.instant('build-details.label.build-version', {
   version: this.details.buildVersion
 })}
-${this.translateService.instant('build-details.label.commit-id', {
-  id: this.details.commitId
-})}
 ${this.translateService.instant('build-details.label.commit-time', {
   time: this.details.commitTime
-})}
-${this.translateService.instant('build-details.label.commit-message')}
-${this.details.commitMessage}
-${this.translateService.instant('build-details.label.commit-user', {
-  name: this.details.commitUser,
-  email: this.details.commitEmail
 })}
 ${this.translateService.instant('build-details.label.dirty', {
   name: this.details.dirty
