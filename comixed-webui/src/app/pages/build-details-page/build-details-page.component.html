@@ -1,8 +1,8 @@
 <h2>{{ "build-details.page-title" | translate }}</h2>
 
 <div class="cx-centered-horiz">
-  <mat-card appearance="outlined">
-    <mat-card-content class="cx-padding-50">
+  <mat-card>
+    <mat-card-content class="cx-padding-15">
       <div>
         {{
           "build-details.label.branch" | translate: { name: details?.branch }
@@ -28,22 +28,8 @@
       </div>
       <div>
         {{
-          "build-details.label.commit-id" | translate: { id: details?.commitId }
-        }}
-      </div>
-      <div>
-        {{
           "build-details.label.commit-time"
             | translate: { time: details?.commitTime | date: "long" }
-        }}
-      </div>
-      <div>{{ "build-details.label.commit-message" | translate }}</div>
-      <div [innerText]="details?.commitMessage"></div>
-      <div>
-        {{
-          "build-details.label.commit-user"
-            | translate
-              : { name: details?.commitUser, email: details?.commitEmail }
         }}
       </div>
       <div>

@@ -55,35 +55,11 @@ public class BuildDetails {
   @Setter
   private String buildVersion;
 
-  @JsonProperty("commitId")
-  @JsonView(View.ReleaseDetails.class)
-  @Getter
-  @Setter
-  private String commitId;
-
   @JsonProperty("commitTime")
   @JsonView(View.ReleaseDetails.class)
   @Getter
   @Setter
   private Date commitTime;
-
-  @JsonProperty("commitMessage")
-  @JsonView(View.ReleaseDetails.class)
-  @Getter
-  @Setter
-  private String commitMessage;
-
-  @JsonProperty("commitUser")
-  @JsonView(View.ReleaseDetails.class)
-  @Getter
-  @Setter
-  private String commitUser;
-
-  @JsonProperty("commitEmail")
-  @JsonView(View.ReleaseDetails.class)
-  @Getter
-  @Setter
-  private String commitEmail;
 
   @JsonProperty("dirty")
   @JsonView(View.ReleaseDetails.class)
