@@ -59,25 +59,9 @@ public class ReleaseService {
   @Setter
   private String buildVersion;
 
-  @Value("${build-details.commit.id:UNKNOWN}")
-  @Setter
-  private String commitId;
-
   @Value("${build-details.commit.time:19700101000000}")
   @Setter
   private String commitTime;
-
-  @Value("${build-details.commit.message.short:UNKNOWN}")
-  @Setter
-  private String commitMessage;
-
-  @Value("${build-details.commit.user.name:UNKNOWN}")
-  @Setter
-  private String commitUser;
-
-  @Value("${build-details.commit.user.email:UNKNOWN}")
-  @Setter
-  private String commitEmail;
 
   @Value("${build-details.dirty:UNKNOWN}")
   @Setter
@@ -109,12 +93,8 @@ public class ReleaseService {
       if (StringUtils.hasLength(this.buildTime))
         this.buildDetails.setBuildTime(dateParser.parse(this.buildTime));
       this.buildDetails.setBuildVersion(this.buildVersion);
-      this.buildDetails.setCommitId(this.commitId);
       if (StringUtils.hasLength(this.commitTime))
         this.buildDetails.setCommitTime(dateParser.parse(this.commitTime));
-      this.buildDetails.setCommitMessage(this.commitMessage);
-      this.buildDetails.setCommitUser(this.commitUser);
-      this.buildDetails.setCommitEmail(this.commitEmail);
       this.buildDetails.setDirty(Boolean.valueOf(this.dirty));
       this.buildDetails.setRemoteOriginURL(this.remoteOriginURL);
       this.buildDetails.setJdbcUrl(this.jdbcUrl);

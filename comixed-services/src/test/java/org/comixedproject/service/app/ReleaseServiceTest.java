@@ -39,12 +39,7 @@ public class ReleaseServiceTest {
   private static final String TEST_BUILD_TIME = "20190831083412";
   private static final String TEST_BUILD_VERSION = "1.0.1-2";
   private static final String TEST_NEWER_VERSION = "1.0.1-3";
-  private static final String TEST_COMMIT_ID = "3cbdbaee42d2b6bde342fce32ecd61905d8d12d4";
   private static final String TEST_COMMIT_TIME = "20190831083101";
-  private static final String TEST_COMMIT_MESSAGE =
-      "[Issue #189] Moved build metadata into build-details.properties.";
-  private static final String TEST_COMMIT_EMAIL = "mcpierce@gmail.com";
-  private static final String TEST_COMMIT_USER = "Darryl L. Pierce";
   private static final String TEST_COMMIT_DIRTY = Boolean.TRUE.toString();
   private static final String TEST_REMOTE_ORIGIN_URL = "git@github.com:mcpierce/comixed.git";
   private static final String TEST_DATASOURCE_URL = "jdbc:mysql://localhost:3306/comixed";
@@ -59,11 +54,7 @@ public class ReleaseServiceTest {
     ReflectionTestUtils.setField(service, "buildHost", TEST_BUILD_HOST);
     ReflectionTestUtils.setField(service, "buildTime", TEST_BUILD_TIME);
     ReflectionTestUtils.setField(service, "buildVersion", TEST_BUILD_VERSION);
-    ReflectionTestUtils.setField(service, "commitId", TEST_COMMIT_ID);
     ReflectionTestUtils.setField(service, "commitTime", TEST_COMMIT_TIME);
-    ReflectionTestUtils.setField(service, "commitMessage", TEST_COMMIT_MESSAGE);
-    ReflectionTestUtils.setField(service, "commitUser", TEST_COMMIT_USER);
-    ReflectionTestUtils.setField(service, "commitEmail", TEST_COMMIT_EMAIL);
     ReflectionTestUtils.setField(service, "dirty", TEST_COMMIT_DIRTY);
     ReflectionTestUtils.setField(service, "remoteOriginURL", TEST_REMOTE_ORIGIN_URL);
     ReflectionTestUtils.setField(service, "jdbcUrl", TEST_DATASOURCE_URL);
@@ -79,11 +70,7 @@ public class ReleaseServiceTest {
     assertEquals(TEST_BUILD_HOST, result.getBuildHost());
     assertNotNull(TEST_BUILD_TIME, result.getBuildTime());
     assertEquals(TEST_BUILD_VERSION, result.getBuildVersion());
-    assertEquals(TEST_COMMIT_ID, result.getCommitId());
     assertNotNull(TEST_COMMIT_TIME, result.getCommitTime());
-    assertEquals(TEST_COMMIT_MESSAGE, result.getCommitMessage());
-    assertEquals(TEST_COMMIT_EMAIL, result.getCommitEmail());
-    assertEquals(TEST_COMMIT_USER, result.getCommitUser());
     assertEquals(Boolean.parseBoolean(TEST_COMMIT_DIRTY), result.isDirty());
     assertEquals(TEST_REMOTE_ORIGIN_URL, result.getRemoteOriginURL());
     assertEquals(System.getProperty("java.runtime.version"), result.getJavaVersion());
