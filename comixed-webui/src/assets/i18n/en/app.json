@@ -6,18 +6,16 @@
   },
   "build-details": {
     "label": {
-      "branch": "The code was built from a branch named {name}",
-      "build-host": "Code was built on a machine named {name}.",
-      "build-time": "The code was built on {time}.",
-      "build-version": "The code was marked with a Build version of {version}.",
-      "commit-id": "The latest commit hash on the source branch is {id}.",
+      "branch": "Source Branch Name: {name}",
+      "build-host": "Build Machine Name: {name}.",
+      "build-time": "Build Date & Time: {time}.",
+      "build-version": "ComiXed Release Version: {version}.",
       "commit-message": "Commit Message",
-      "commit-time": "This commit was created on {time}.",
-      "commit-user": "Commit was created by {name} <{email}>",
-      "dirty": "The branch {dirty, select, true{contains} other{does not contain}} uncommitted changes.",
-      "java-runtime": "Using Java {version} ({vendor}) running on {osName} v{osVersion} ({osArch})",
-      "jdbc-url": "The database URL being used is {url}",
-      "remote-origin-url": "This branch is tracking the remote branch {url}"
+      "commit-time": "Last Commit Date & Time: {time}.",
+      "dirty": "Branch Status: {dirty, select, true{Dirty} other{Clean}}",
+      "java-runtime": "Runtime JVM: {version} ({vendor}) running on {osName} v{osVersion} ({osArch})",
+      "jdbc-url": "Database URL: {url}",
+      "remote-origin-url": "Remote Branch: {url}"
     },
     "load-current-effect-failure": "Failed to load the current release's details.",
     "load-latest-effect-failure": "Failed to load the latest release's details.",
