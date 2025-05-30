@@ -91,7 +91,7 @@ public class ComiXedSecurityConfiguration {
    */
   @Bean
   public SecurityFilterChain opdsSecurityFilterChain(final HttpSecurity http) throws Exception {
-    http.securityMatcher("/opds/**")
+    http.securityMatcher("/opds/**", "/reader/v1/**")
         .authorizeHttpRequests(authz -> authz.anyRequest().hasRole("READER"))
         .httpBasic(Customizer.withDefaults());
     http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);

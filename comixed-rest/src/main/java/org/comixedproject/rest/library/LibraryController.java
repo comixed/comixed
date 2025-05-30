@@ -52,8 +52,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * <code>LibraryController</code> provides REST APIs for working with groups of {@link ComicBook}
- * objects.
+ * <code>LibraryReaderController</code> provides REST APIs for working with groups of {@link
+ * ComicBook} objects.
  *
  * @author Darryl L. Pierce
  */
