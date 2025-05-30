@@ -64,6 +64,7 @@ public class ComicDetailService {
    * @param unread the unread flag
    * @return the publishers
    */
+  @Transactional
   public Set<String> getAllPublishers(final String email, final boolean unread) {
     if (unread) {
       log.debug("Loading all publishers with unread comics: email={}", email);
@@ -83,6 +84,7 @@ public class ComicDetailService {
    * @param unread the unread flag
    * @return the series
    */
+  @Transactional
   public Set<String> getAllSeriesForPublisher(
       final String publisher, final String email, final boolean unread) {
     if (unread) {
@@ -107,6 +109,7 @@ public class ComicDetailService {
    * @param unread the unread flag
    * @return the volumes
    */
+  @Transactional
   public Set<String> getAllVolumesForPublisherAndSeries(
       final String publisher, final String series, final String email, final boolean unread) {
     if (unread) {
@@ -131,6 +134,7 @@ public class ComicDetailService {
    *
    * @return the series list
    */
+  @Transactional
   public Set<String> getAllSeries() {
     log.debug("Loading all series");
     return this.comicDetailRepository.getAllSeries();
@@ -143,6 +147,7 @@ public class ComicDetailService {
    * @param unread the unread flag
    * @return the series
    */
+  @Transactional
   public Set<String> getAllSeries(final String email, final boolean unread) {
     if (unread) {
       log.debug("Loading all series with unread comics: email={}", email);
@@ -162,6 +167,7 @@ public class ComicDetailService {
    * @param unread the unread flag
    * @return the volumes
    */
+  @Transactional
   public Set<String> getAllPublishersForSeries(
       final String series, final String email, final boolean unread) {
     if (unread) {
@@ -187,6 +193,7 @@ public class ComicDetailService {
    * @param unread the unread flag
    * @return the comic details
    */
+  @Transactional
   public List<ComicDetail> getAllComicBooksForPublisherAndSeriesAndVolume(
       final String publisher,
       final String series,
@@ -483,5 +490,11 @@ public class ComicDetailService {
     if (result == null)
       throw new ComicDetailException("Comic detail not found for comic book id: " + comicBookId);
     return result;
+  }
+
+  @Transactional
+  public List<ComicDetail> getAllComicsForReadingList(
+      final String email, final Long readingListId) {
+    return this.comicDetailRepository.getAllComicsForReadingList(email, readingListId);
   }
 }

@@ -207,12 +207,12 @@ public class ComicBookService {
   public DownloadDocument getComicContent(final long comicBookId) throws ComicBookException {
     final ComicBook comicBook = this.doGetComic(comicBookId);
     final String filename = comicBook.getComicDetail().getFilename();
-    final String baseFilenaem = FilenameUtils.getName(filename);
+    final String baseFilename = FilenameUtils.getName(filename);
 
     try {
       final byte[] content = FileUtils.readFileToByteArray(new File(filename));
       return new DownloadDocument(
-          baseFilenaem,
+          baseFilename,
           this.fileTypeAdaptor.getMimeTypeFor(new ByteArrayInputStream(content)),
           content);
     } catch (IOException error) {

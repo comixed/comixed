@@ -387,4 +387,9 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
       "UPDATE ComicDetail d SET d.filename = :updatedFilename WHERE d.comicDetailId = :comicDetailId")
   void updateFilename(
       @Param("comicDetailId") Long comicDetailId, @Param("updatedFilename") String updatedFilename);
+
+  @Query(
+      "SELECT d FROM ComicDetail d WHERE d.comicBook.comicBookId IN (SELECT l.entryIds FROM ReadingList l WHERE l.readingListId = :readingListId)")
+  List<ComicDetail> getAllComicsForReadingList(
+      @Param("email") String email, @Param("readingListId") Long readingListId);
 }

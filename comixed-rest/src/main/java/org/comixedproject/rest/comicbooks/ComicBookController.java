@@ -41,7 +41,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * <code>ComicBookController</code> provides REST endpoints for instances of {@link ComicBook}.
+ * <code>ComicBookReaderController</code> provides REST endpoints for instances of {@link
+ * ComicBook}.
  *
  * @author Darryl L. Pierce
  */

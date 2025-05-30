@@ -37,6 +37,7 @@ public class ComiXedMvcWebConfiguration implements WebMvcConfigurer {
   @Override
   public void addCorsMappings(final CorsRegistry registry) {
     registry.addMapping("/opds/**").allowedOriginPatterns("*").allowCredentials(true);
+    registry.addMapping("/reader/v1/**").allowedOriginPatterns("*").allowCredentials(true);
   }
 
   @Override
