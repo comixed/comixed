@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Objects;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FileUtils;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.reader.ReaderUtil;
@@ -281,6 +282,7 @@ public class DirectoryReaderService {
             this.createTitle(comicDetail),
             String.format(rootUrl, comicDetail.getComicId()));
     result.setFilename(comicDetail.getBaseFilename());
+    result.setFileSize(FileUtils.sizeOf(comicDetail.getFile()));
     result.setDirectory(false);
     result.setCoverUrl(String.format(rootUrl, comicDetail.getComicId()));
     return result;

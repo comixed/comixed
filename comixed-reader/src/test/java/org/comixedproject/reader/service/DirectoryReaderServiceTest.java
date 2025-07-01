@@ -21,6 +21,7 @@ package org.comixedproject.reader.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -55,6 +56,8 @@ class DirectoryReaderServiceTest {
   private static final Long TEST_COMIC_ID = 921L;
   private static final String TEST_FILENAME = "The Filename";
   private static final String TEST_BASE_FILENAME = "The Base Filename";
+  private static final String TEST_COMIC_FILENAME = "src/test/resources/example.cbz";
+  private static final File TEST_COMIC_FILE = new File(TEST_COMIC_FILENAME);
 
   @InjectMocks private DirectoryReaderService service;
   @Mock private ComicDetailService comicDetailService;
@@ -73,6 +76,7 @@ class DirectoryReaderServiceTest {
     Mockito.when(comicDetail.getSeries()).thenReturn(TEST_SERIES);
     Mockito.when(comicDetail.getVolume()).thenReturn(TEST_VOLUME);
     Mockito.when(comicDetail.getFilename()).thenReturn(TEST_FILENAME);
+    Mockito.when(comicDetail.getFile()).thenReturn(TEST_COMIC_FILE);
     Mockito.when(comicDetail.getBaseFilename()).thenReturn(TEST_BASE_FILENAME);
     comicDetailList.add(comicDetail);
   }

@@ -51,6 +51,11 @@ public class DirectoryEntry {
   @Setter
   private String filename = "";
 
+  @JsonProperty("fileSize")
+  @Getter
+  @Setter
+  private Long fileSize = 0L;
+
   @JsonProperty("directory")
   @Getter
   @Setter
