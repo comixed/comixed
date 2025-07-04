@@ -585,6 +585,7 @@ public class DisplayableComicService {
       case "cover-date" -> fieldName = "coverDate";
       case "comic-count" -> fieldName = "comicCount";
       case "tag-value" -> fieldName = "value";
+      case "store-date" -> fieldName = "storeDate";
       default -> fieldName = "comicDetailId";
     }
 
