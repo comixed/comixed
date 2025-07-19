@@ -4208,6 +4208,11 @@ cookie@~0.4.1:
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.4.2.tgz#0e41f24de5ecf317947c82fc789e06a884824432"
   integrity sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA==
 
+cookie@~0.7.2:
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.7.2.tgz#556369c472a2ba910f2979891b526b3436237ed7"
+  integrity sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==
+
 copy-anything@^2.0.1:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/copy-anything/-/copy-anything-2.0.3.tgz#842407ba02466b0df844819bbe3baebbe5d45d87"
@@ -4812,17 +4817,16 @@ engine.io@~6.1.0:
     engine.io-parser "~5.0.3"
     ws "~8.2.3"
 
-engine.io@~6.5.2:
-  version "6.5.5"
-  resolved "https://registry.yarnpkg.com/engine.io/-/engine.io-6.5.5.tgz#430b80d8840caab91a50e9e23cb551455195fc93"
-  integrity sha512-C5Pn8Wk+1vKBoHghJODM63yk8MvrO9EWZUfkAt5HAqIgPE4/8FF0PEGHXtEd40l223+cE5ABWuPzm38PHFXfMA==
+engine.io@~6.6.0:
+  version "6.6.4"
+  resolved "https://registry.yarnpkg.com/engine.io/-/engine.io-6.6.4.tgz#0a89a3e6b6c1d4b0c2a2a637495e7c149ec8d8ee"
+  integrity sha512-ZCkIjSYNDyGn0R6ewHDtXgns/Zre/NT6Agvq1/WobF7JXgFff4SeDroKiCO3fNJreU9YG429Sc81o4w5ok/W5g==
   dependencies:
-    "@types/cookie" "^0.4.1"
     "@types/cors" "^2.8.12"
     "@types/node" ">=10.0.0"
     accepts "~1.3.4"
     base64id "2.0.0"
-    cookie "~0.4.1"
+    cookie "~0.7.2"
     cors "~2.8.5"
     debug "~4.3.1"
     engine.io-parser "~5.2.1"
@@ -8745,19 +8749,6 @@ socket.io-parser@~4.2.4:
     "@socket.io/component-emitter" "~3.1.0"
     debug "~4.3.1"
 
-socket.io@^4:
-  version "4.7.5"
-  resolved "https://registry.yarnpkg.com/socket.io/-/socket.io-4.7.5.tgz#56eb2d976aef9d1445f373a62d781a41c7add8f8"
-  integrity sha512-DmeAkF6cwM9jSfmp6Dr/5/mfMwb5Z5qRrSXLpo3Fq5SqyU8CMF15jIN4ZhfSwu35ksM1qmHZDQ/DK5XTccSTvA==
-  dependencies:
-    accepts "~1.3.4"
-    base64id "~2.0.0"
-    cors "~2.8.5"
-    debug "~4.3.2"
-    engine.io "~6.5.2"
-    socket.io-adapter "~2.5.2"
-    socket.io-parser "~4.2.4"
-
 socket.io@^4.2.0:
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/socket.io/-/socket.io-4.4.1.tgz#cd6de29e277a161d176832bb24f64ee045c56ab8"
@@ -8769,6 +8760,19 @@ socket.io@^4.2.0:
     engine.io "~6.1.0"
     socket.io-adapter "~2.3.3"
     socket.io-parser "~4.0.4"
+
+socket.io@^4.8.0:
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/socket.io/-/socket.io-4.8.1.tgz#fa0eaff965cc97fdf4245e8d4794618459f7558a"
+  integrity sha512-oZ7iUCxph8WYRHHcjBEc9unw3adt5CmSNlppj/5Q4k2RIrhl8Z5yY2Xr4j9zj0+wzVZ0bxmYoGSzKJnRl6A4yg==
+  dependencies:
+    accepts "~1.3.4"
+    base64id "~2.0.0"
+    cors "~2.8.5"
+    debug "~4.3.2"
+    engine.io "~6.6.0"
+    socket.io-adapter "~2.5.2"
+    socket.io-parser "~4.2.4"
 
 sockjs-client@^1.5.0:
   version "1.5.0"
