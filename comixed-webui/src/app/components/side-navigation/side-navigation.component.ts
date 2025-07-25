@@ -32,6 +32,7 @@ import { BLOCKED_PAGES_ENABLED } from '@app/admin/admin.constants';
 import { getFeatureEnabled } from '@app/admin/actions/feature-enabled.actions';
 import { hasFeature, isFeatureEnabled } from '@app/admin';
 import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.selectors';
+import { selectComicBookSelectionState } from '@app/comic-books/selectors/comic-book-selection.selectors';
 
 @Component({
   selector: 'cx-side-navigation',
@@ -48,6 +49,7 @@ export class SideNavigationComponent implements OnDestroy {
   libraryStateSubscription$: Subscription;
   libraryState: LibraryState;
   lastReadUnreadCountSubscription$: Subscription;
+  selectedComicsSubscription$: Subscription;
   totalComicBooks$ = new BehaviorSubject<number>(0);
   selectedComicBooks$ = new BehaviorSubject<number>(0);
   unprocessedComicBooks$ = new BehaviorSubject<number>(0);
@@ -95,6 +97,9 @@ export class SideNavigationComponent implements OnDestroy {
       .subscribe(comicBooksRead =>
         this.readComicBooks$.next(comicBooksRead.length)
       );
+    this.selectedComicsSubscription$ = this.store
+      .select(selectComicBookSelectionState)
+      .subscribe(state => this.selectedComicBooks$.next(state.ids.length));
     this.readingListsSubscription$ = this.store
       .select(selectUserReadingLists)
       .subscribe(lists => (this.readingLists = lists));
@@ -119,6 +124,8 @@ export class SideNavigationComponent implements OnDestroy {
     this.lastReadUnreadCountSubscription$.unsubscribe();
     this.logger.trace('Unsubscribing from reading list updates');
     this.readingListsSubscription$.unsubscribe();
+    this.logger.trace('Unsubscribing from selected comic book updates');
+    this.selectedComicsSubscription$.unsubscribe();
     this.logger.trace('Unsubscribing from feature enabled updates');
     this.featureEnabledSubscription$.unsubscribe();
   }
