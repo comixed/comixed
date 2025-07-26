@@ -23,6 +23,7 @@ import static org.comixedproject.service.admin.ConfigurationService.CFG_METADATA
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.codec.binary.StringUtils;
 import org.comixedproject.model.metadata.MetadataCache;
 import org.comixedproject.model.metadata.MetadataCacheEntry;
 import org.comixedproject.repositories.metadata.MetadataCacheRepository;
@@ -103,7 +104,8 @@ public class MetadataCacheService implements InitializingBean, ConfigurationChan
       final MetadataCacheEntry cachedValue = new MetadataCacheEntry();
       cachedValue.setMetadataCache(entry);
       cachedValue.setEntryNumber(index);
-      cachedValue.setEntryValue(value);
+      final byte[] valueBytes = StringUtils.getBytesUtf16(value);
+      cachedValue.setEntryValue(StringUtils.newStringUtf8(valueBytes));
       entry.getEntries().add(index, cachedValue);
     }
 
