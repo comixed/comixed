@@ -16,7 +16,7 @@
   <url>http://maven.apache.org</url>
   <properties>
     <sonar.skip>true</sonar.skip>
-    <winsw.version>2.9.0</winsw.version>
+    <winsw.version>1.9</winsw.version>
   </properties>
   <dependencies>
     <dependency>
@@ -96,11 +96,6 @@
               <outputDirectory>${project.build.directory}/lib</outputDirectory>
             </configuration>
           </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
           <execution>
             <id>winsw</id>
             <phase>generate-resources</phase>
