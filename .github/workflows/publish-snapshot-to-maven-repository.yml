@@ -1,8 +1,9 @@
-name: Publish Maven artifacts
+name: Publish Maven snapshot artifacts
 
 on:
-  release:
-    types: [released]
+  push:
+    branches:
+      - 'main'
 
 jobs:
   publish:
@@ -20,9 +21,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 21
-          server-id: ossrh
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_PASSWORD
+          server-id: central
+          server-username: NEXUS_USERNAME
+          server-password: NEXUS_PASSWORD
 
       - name: Install secret key
         run: |
@@ -37,5 +38,5 @@ jobs:
             -Dgpg.passphrase=${{ secrets.GPG_PASSWORD }} \
             clean deploy -DskipTests -Prelease
         env:
-          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+          MAVEN_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}

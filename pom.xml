@@ -10,45 +10,36 @@
     <version>3.5.5</version>
   </parent>
   <name>comixed</name>
+  <description>A digital comic book management system.</description>
   <url>http://www.comixedproject.org</url>
+  <licenses>
+    <license>
+      <name>GPLv3</name>
+      <url>https://www.gnu.org/licenses/gpl-3.0.en.html</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Darryl L. Pierce</name>
+      <email>mcpierce@gmail.com</email>
+      <organization>The ComiXed Project</organization>
+      <organizationUrl>http://www.comixedproject.org</organizationUrl>
+      <roles>
+        <role>leadership</role>
+        <role>contributor</role>
+      </roles>
+    </developer>
+  </developers>
   <scm>
     <connection>scm:git:git@github.com:comixed/comixed.git</connection>
     <developerConnection>scm:git:git@github.com:comixed/comixed.git</developerConnection>
     <url>scm:git:git@github.com:comixed/comixed.git</url>
     <tag>master</tag>
   </scm>
-  <distributionManagement>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <name>Snapshot Repository OSSRH</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-    <repository>
-      <id>ossrh</id>
-      <name>Central Repository OSSRH</name>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-  </distributionManagement>
   <issueManagement>
     <system>GitHub</system>
     <url>https://github.com/comixed/comixed/issues</url>
   </issueManagement>
-  <repositories>
-    <repository>
-      <id>oss.sonatype.org-snapshot</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>Jenkins</id>
-      <url>https://repo.jenkins-ci.org/artifactory/releases</url>
-    </repository>
-  </repositories>
   <properties>
     <assembly.name>local</assembly.name>
     <maven-git-code-format.version>5.1</maven-git-code-format.version>
@@ -182,6 +173,33 @@
               </execution>
             </executions>
           </plugin>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.8.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                    <autoPublish>true</autoPublish>
+                    <waitForPublishCompletion>true</waitForPublishCompletion>
+                    <excludeArtifacts>
+                      <artifact>comixed-adaptors</artifact>
+                      <artifact>comixed-app</artifact>
+                      <artifact>comixed-auth</artifact>
+                      <artifact>comixed-batch</artifact>
+                      <artifact>comixed-http</artifact>
+                      <artifact>comixed-messaging</artifact>
+                      <artifact>comixed-opds</artifact>
+                      <artifact>comixed-reader</artifact>
+                      <artifact>comixed-release</artifact>
+                      <artifact>comixed-repositories</artifact>
+                      <artifact>comixed-rest</artifact>
+                      <artifact>comixed-services</artifact>
+                      <artifact>comixed-state</artifact>
+                      <artifact>comixed-webui</artifact>
+                    </excludeArtifacts>
+                </configuration>
+            </plugin>
         </plugins>
       </build>
     </profile>
@@ -361,26 +379,6 @@
               <includes>comixed-release-*</includes>
             </fileset>
           </filesets>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.6.13</version>
-        <extensions>true</extensions>
-        <executions>
-          <execution>
-            <id>default-deploy</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>deploy</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <serverId>ossrh</serverId>
-          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-          <autoReleaseAfterClose>true</autoReleaseAfterClose>
         </configuration>
       </plugin>
       <plugin>
