@@ -1,0 +1,47 @@
+name: Publish Maven snapshot artifacts
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Cache Maven artifacts
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+
+      - name: Setup build environment
+        uses: actions/setup-java@v1
+        with:
+          java-version: 21
+          server-id: central
+          server-username: ${{ secrets.NEXUS_USERNAME }}
+          server-password: ${{ secrets.NEXUS_PASSWORD }}
+      - name: Setup Maven environment
+        uses: s4u/maven-settings-action@v4.0.0
+        with:
+          servers: |
+            [{
+                "id":"central",
+                "username": "${{ secrets.NEXUS_USERNAME }}",
+                "password": "${{ secrets.NEXUS_PASSWORD }}"
+            }]
+
+      - name: Install secret key
+        run: |
+          cat <(echo -e "${{ secrets.GPG_PRIVATE_KEY }}") | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
+
+      - name: Publish package
+        run: |
+          mvn \
+            --batch-mode \
+            -Dgpg.passphrase=${{ secrets.GPG_PASSWORD }} \
+            clean deploy -DskipTests -Prelease
