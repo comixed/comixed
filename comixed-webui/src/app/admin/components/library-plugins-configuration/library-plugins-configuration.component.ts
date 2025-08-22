@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
@@ -42,7 +42,8 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'cx-library-plugins-configuration',
   templateUrl: './library-plugins-configuration.component.html',
-  styleUrls: ['./library-plugins-configuration.component.scss']
+  styleUrls: ['./library-plugins-configuration.component.scss'],
+  standalone: false
 })
 export class LibraryPluginsConfigurationComponent implements OnInit, OnDestroy {
   readonly displayedColumns = ['name', 'language', 'property-count'];
@@ -53,14 +54,15 @@ export class LibraryPluginsConfigurationComponent implements OnInit, OnDestroy {
   currentPluginSubscription: Subscription;
   dialogRef: MatDialogRef<LibraryPluginSetupComponent, any>;
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store,
-    private dialog: MatDialog,
-    private alertService: AlertService,
-    private translateService: TranslateService,
-    public queryParameterService: QueryParameterService
-  ) {
+  queryParameterService = inject(QueryParameterService);
+
+  logger = inject(LoggerService);
+  store = inject(Store);
+  dialog = inject(MatDialog);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
+  constructor() {
     this.logger.trace('Subscription to library plugin list state updates');
     this.libraryPluginStateSubscription = this.store
       .select(selectLibraryPluginState)

@@ -20,7 +20,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Issue } from '@app/collections/models/issue';
 
 @Pipe({
-  name: 'seriesDetailName'
+  name: 'seriesDetailName',
+  standalone: false
 })
 export class SeriesDetailNamePipe implements PipeTransform {
   transform(issue: Issue): string {

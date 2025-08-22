@@ -36,30 +36,28 @@ describe('ComicDetailCardComponent', () => {
   let fixture: ComponentFixture<ComicDetailCardComponent>;
   let store: MockStore<any>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [ComicDetailCardComponent],
-        imports: [
-          NoopAnimationsModule,
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          MatCardModule,
-          MatGridListModule,
-          MatChipsModule,
-          MatTooltipModule
-        ],
-        providers: [provideMockStore({ initialState })]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [ComicDetailCardComponent],
+      imports: [
+        NoopAnimationsModule,
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatCardModule,
+        MatGridListModule,
+        MatChipsModule,
+        MatTooltipModule
+      ],
+      providers: [provideMockStore({ initialState })]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(ComicDetailCardComponent);
-      component = fixture.componentInstance;
-      component.comic = COMIC_DETAIL_3;
-      store = TestBed.inject(MockStore);
-      spyOn(store, 'dispatch');
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(ComicDetailCardComponent);
+    component = fixture.componentInstance;
+    component.comic = COMIC_DETAIL_3;
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

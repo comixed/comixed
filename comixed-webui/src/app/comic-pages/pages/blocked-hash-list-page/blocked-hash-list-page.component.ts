@@ -56,7 +56,8 @@ import {
 @Component({
   selector: 'cx-blocked-hash-list',
   templateUrl: './blocked-hash-list-page.component.html',
-  styleUrls: ['./blocked-hash-list-page.component.scss']
+  styleUrls: ['./blocked-hash-list-page.component.scss'],
+  standalone: false
 })
 export class BlockedHashListPageComponent
   implements OnInit, AfterViewInit, OnDestroy

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -38,7 +38,8 @@ import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@app/core';
 @Component({
   selector: 'cx-publisher-series-page',
   templateUrl: './publisher-series-page.component.html',
-  styleUrls: ['./publisher-series-page.component.scss']
+  styleUrls: ['./publisher-series-page.component.scss'],
+  standalone: false
 })
 export class PublisherSeriesPageComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -62,14 +63,14 @@ export class PublisherSeriesPageComponent implements OnInit, OnDestroy {
   pageSize = PAGE_SIZE_DEFAULT;
   name: string;
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private activatedRoute: ActivatedRoute,
-    private titleService: TitleService,
-    private translateService: TranslateService,
-    public queryParameterService: QueryParameterService
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+  activatedRoute = inject(ActivatedRoute);
+  titleService = inject(TitleService);
+  translateService = inject(TranslateService);
+  queryParameterService = inject(QueryParameterService);
+
+  constructor() {
     this.logger.trace('Subscribing to parameter updates');
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.name = params['name'];

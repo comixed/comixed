@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -72,7 +72,8 @@ import { selectUser } from '@app/user/selectors/user.selectors';
 @Component({
   selector: 'cx-user-reading-list-page',
   templateUrl: './reading-list-detail-page.component.html',
-  styleUrls: ['./reading-list-detail-page.component.scss']
+  styleUrls: ['./reading-list-detail-page.component.scss'],
+  standalone: false
 })
 export class ReadingListDetailPageComponent implements OnDestroy {
   dataSource = new MatTableDataSource<SelectableListItem<DisplayableComic>>([]);
@@ -96,18 +97,18 @@ export class ReadingListDetailPageComponent implements OnDestroy {
   comics: DisplayableComic[] = [];
   email: string | null = null;
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private webSocketService: WebSocketService,
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private formBuilder: UntypedFormBuilder,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService,
-    private titleService: TitleService,
-    private queryParameterService: QueryParameterService
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+  webSocketService = inject(WebSocketService);
+  activatedRoute = inject(ActivatedRoute);
+  router = inject(Router);
+  formBuilder = inject(UntypedFormBuilder);
+  confirmationService = inject(ConfirmationService);
+  translateService = inject(TranslateService);
+  titleService = inject(TitleService);
+  queryParameterService = inject(QueryParameterService);
+
+  constructor() {
     this.logger.trace('Subscribing to parameter updates');
     this.paramsSubscription = this.activatedRoute.params.subscribe(params => {
       if (!!params.id) {

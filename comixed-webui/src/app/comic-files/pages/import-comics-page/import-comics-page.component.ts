@@ -19,6 +19,7 @@
 import {
   AfterViewInit,
   Component,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild
@@ -69,7 +70,8 @@ import { getFeatureEnabled } from '@app/admin/actions/feature-enabled.actions';
 @Component({
   selector: 'cx-import-comics',
   templateUrl: './import-comics-page.component.html',
-  styleUrls: ['./import-comics-page.component.scss']
+  styleUrls: ['./import-comics-page.component.scss'],
+  standalone: false
 })
 export class ImportComicsPageComponent
   implements OnInit, OnDestroy, AfterViewInit
@@ -107,16 +109,16 @@ export class ImportComicsPageComponent
   featureEnabledSubscription$: Subscription;
   blockedPagesEnabled = false;
 
-  constructor(
-    private logger: LoggerService,
-    private title: Title,
-    private store: Store<any>,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService,
-    private titleService: TitleService,
-    private router: Router,
-    public queryParameterService: QueryParameterService
-  ) {
+  logger = inject(LoggerService);
+  title = inject(Title);
+  store = inject(Store);
+  confirmationService = inject(ConfirmationService);
+  translateService = inject(TranslateService);
+  titleService = inject(TitleService);
+  router = inject(Router);
+  queryParameterService = inject(QueryParameterService);
+
+  constructor() {
     this.translateSubscription$ = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );

@@ -151,79 +151,77 @@ describe('ReadingListDetailPageComponent', () => {
     'Subscription.unsubscribe(removals)'
   );
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [
-          ReadingListDetailPageComponent,
-          ComicListViewComponent,
-          ComicCoverUrlPipe,
-          ComicTitlePipe
-        ],
-        imports: [
-          NoopAnimationsModule,
-          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-          FormsModule,
-          ReactiveFormsModule,
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          MatDialogModule,
-          MatToolbarModule,
-          MatIconModule,
-          MatTooltipModule,
-          MatFormFieldModule,
-          MatTableModule,
-          MatSortModule,
-          MatPaginatorModule,
-          MatIconModule,
-          MatCardModule,
-          MatMenuModule,
-          MatInputModule,
-          MatCheckboxModule
-        ],
-        providers: [
-          provideMockStore({ initialState }),
-          {
-            provide: ActivatedRoute,
-            useValue: {
-              params: new BehaviorSubject<{}>({
-                id: READING_LIST.readingListId
-              }),
-              queryParams: new BehaviorSubject<{}>({}),
-              snapshot: {} as ActivatedRouteSnapshot
-            }
-          },
-          ConfirmationService,
-          {
-            provide: WebSocketService,
-            useValue: {
-              subscribe: jasmine.createSpy('WebSocketService.subscribe()'),
-              unsubscribe: jasmine.createSpy('WebSocketService.unsubscribe()')
-            }
-          },
-          TitleService,
-          QueryParameterService
-        ]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        ReadingListDetailPageComponent,
+        ComicListViewComponent,
+        ComicCoverUrlPipe,
+        ComicTitlePipe
+      ],
+      imports: [
+        NoopAnimationsModule,
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+        FormsModule,
+        ReactiveFormsModule,
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatDialogModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatFormFieldModule,
+        MatTableModule,
+        MatSortModule,
+        MatPaginatorModule,
+        MatIconModule,
+        MatCardModule,
+        MatMenuModule,
+        MatInputModule,
+        MatCheckboxModule
+      ],
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            params: new BehaviorSubject<{}>({
+              id: READING_LIST.readingListId
+            }),
+            queryParams: new BehaviorSubject<{}>({}),
+            snapshot: {} as ActivatedRouteSnapshot
+          }
+        },
+        ConfirmationService,
+        {
+          provide: WebSocketService,
+          useValue: {
+            subscribe: jasmine.createSpy('WebSocketService.subscribe()'),
+            unsubscribe: jasmine.createSpy('WebSocketService.unsubscribe()')
+          }
+        },
+        TitleService,
+        QueryParameterService
+      ]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(ReadingListDetailPageComponent);
-      component = fixture.componentInstance;
-      store = TestBed.inject(MockStore);
-      dispatchSpy = spyOn(store, 'dispatch');
-      activatedRoute = TestBed.inject(ActivatedRoute);
-      router = TestBed.inject(Router);
-      spyOn(router, 'navigateByUrl');
-      spyOn(router, 'navigate');
-      confirmationService = TestBed.inject(ConfirmationService);
-      webSocketService = TestBed.inject(
-        WebSocketService
-      ) as jasmine.SpyObj<WebSocketService>;
-      titleService = TestBed.inject(TitleService);
-      spyOn(titleService, 'setTitle');
-      translateService = TestBed.inject(TranslateService);
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(ReadingListDetailPageComponent);
+    component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
+    dispatchSpy = spyOn(store, 'dispatch');
+    activatedRoute = TestBed.inject(ActivatedRoute);
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigateByUrl');
+    spyOn(router, 'navigate');
+    confirmationService = TestBed.inject(ConfirmationService);
+    webSocketService = TestBed.inject(
+      WebSocketService
+    ) as jasmine.SpyObj<WebSocketService>;
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
+    translateService = TestBed.inject(TranslateService);
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

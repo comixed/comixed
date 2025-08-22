@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -32,7 +32,8 @@ import { LoadSeriesListRequest } from '@app/collections/models/net/load-series-l
   providedIn: 'root'
 })
 export class SeriesService {
-  constructor(private logger: LoggerService, private http: HttpClient) {}
+  logger = inject(LoggerService);
+  http = inject(HttpClient);
 
   loadSeries(args: {
     searchText: string;

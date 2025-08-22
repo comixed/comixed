@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 
 const AUTH_TOKEN_KEY = 'comixed.auth-token';
@@ -25,7 +25,7 @@ const AUTH_TOKEN_KEY = 'comixed.auth-token';
   providedIn: 'root'
 })
 export class TokenService {
-  constructor(private logger: LoggerService) {}
+  logger = inject(LoggerService);
 
   /** Stores an authentication token. */
   setAuthToken(token: string): void {

@@ -1,7 +1,5 @@
-<div
-  *ngIf="showComicDetailPopup"
-  class="cx-hover cx-centered cx-width-25 cx-border-primary-1"
->
+@if (showComicDetailPopup) {
+<div class="cx-hover cx-centered cx-width-25 cx-border-primary-1">
   <mat-card
     appearance="outlined"
     (click)="showComicDetailPopup = false"
@@ -10,12 +8,11 @@
     <mat-card-title class="cx-text-nowrap">
       {{ selectedComic | comicTitle }}
     </mat-card-title>
-    <mat-card-subtitle
-      *ngIf="!!selectedComic.title && selectedComic.title.length > 0"
-      class="cx-text-nowrap"
-    >
+    @if (!!selectedComic.title && selectedComic.title.length > 0) {
+    <mat-card-subtitle class="cx-text-nowrap">
       {{ selectedComic.title }}
     </mat-card-subtitle>
+    }
     <mat-card-content class="cx-padding-5">
       <img
         loading="lazy"
@@ -27,14 +24,15 @@
     </mat-card-content>
   </mat-card>
 </div>
-
-<div id="comic-detail-filter" *ngIf="showComicFilterPopup">
+} @if (showComicFilterPopup) {
+<div id="comic-detail-filter">
   <cx-comic-list-filter
     [coverYears]="coverYears"
     [coverMonths]="coverMonths"
     (closeFilter)="showComicFilterPopup = false"
   ></cx-comic-list-filter>
 </div>
+}
 
 <mat-paginator
   class="cx-height-100"
@@ -53,8 +51,8 @@
   "
 ></mat-paginator>
 
+@if (!!dataSource) {
 <mat-table
-  *ngIf="!!dataSource"
   [dataSource]="dataSource"
   matSort
   [matSortActive]="queryParameterService.sortBy$ | async"
@@ -65,14 +63,15 @@
 >
   <ng-container matColumnDef="action">
     <mat-header-cell *matHeaderCellDef>
+      @if (showFilter) {
       <mat-icon
-        *ngIf="showFilter"
         (click)="onFilterComics(); $event.stopPropagation()"
         (keyup)="onFilterComics(); $event.stopPropagation()"
         [matTooltip]="'comic-detail-list-view.tooltip.filter-list' | translate"
       >
         filter_list
       </mat-icon>
+      }
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <mat-icon
@@ -84,7 +83,6 @@
       </mat-icon>
     </mat-cell>
   </ng-container>
-
   <ng-container matColumnDef="selection">
     <mat-header-cell *matHeaderCellDef>
       <mat-checkbox
@@ -107,7 +105,6 @@
       ></mat-checkbox>
     </mat-cell>
   </ng-container>
-
   <ng-container matColumnDef="thumbnail">
     <mat-header-cell *matHeaderCellDef>
       {{ "comic-detail-list-view.label.thumbnail" | translate }}
@@ -126,7 +123,6 @@
       </span>
     </mat-cell>
   </ng-container>
-
   <ng-container matColumnDef="extra-field">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ extraFieldTitle | translate }}
@@ -137,7 +133,6 @@
       </span>
     </mat-cell>
   </ng-container>
-
   <ng-container matColumnDef="archive-type">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "comic-detail-list-view.label.archive-type" | translate }}
@@ -148,7 +143,6 @@
       </span>
     </mat-cell>
   </ng-container>
-
   <ng-container matColumnDef="comic-state">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "comic-detail-list-view.label.comic-state" | translate }}
@@ -163,7 +157,6 @@
       </mat-icon>
     </mat-cell>
   </ng-container>
-
   <ng-container matColumnDef="comic-type">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "comic-detail-list-view.label.comic-type" | translate }}
@@ -177,7 +170,6 @@
       </span>
     </mat-cell>
   </ng-container>
-
   <ng-container matColumnDef="publisher">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "comic-detail-list-view.label.publisher" | translate }}
@@ -197,7 +189,6 @@
       </span>
     </mat-cell>
   </ng-container>
-
   <ng-container matColumnDef="series">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "comic-detail-list-view.label.series" | translate }}
@@ -208,7 +199,6 @@
       </span>
     </mat-cell>
   </ng-container>
-
   <ng-container matColumnDef="volume">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "comic-detail-list-view.label.volume" | translate }}
@@ -231,7 +221,6 @@
       </span>
     </mat-cell>
   </ng-container>
-
   <ng-container matColumnDef="issue-number">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "comic-detail-list-view.label.issue-number" | translate }}
@@ -247,7 +236,6 @@
       </span>
     </mat-cell>
   </ng-container>
-
   <ng-container matColumnDef="page-count">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "comic-detail-list-view.label.page-count" | translate }}
@@ -258,40 +246,36 @@
       </span>
     </mat-cell>
   </ng-container>
-
   <ng-container matColumnDef="cover-date">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "comic-detail-list-view.label.cover-date" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap cx-padding-5">
-        {{ entry.item.coverDate | date: "mediumDate" }}
+        {{ entry.item.coverDate | date : "mediumDate" }}
       </span>
     </mat-cell>
   </ng-container>
-
   <ng-container matColumnDef="store-date">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "comic-detail-list-view.label.store-date" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap cx-padding-5">
-        {{ entry.item.storeDate | date: "mediumDate" }}
+        {{ entry.item.storeDate | date : "mediumDate" }}
       </span>
     </mat-cell>
   </ng-container>
-
   <ng-container matColumnDef="added-date">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "comic-detail-list-view.label.added-date" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap cx-padding-5">
-        {{ entry.item.addedDate | date: "mediumDate" }}
+        {{ entry.item.addedDate | date : "mediumDate" }}
       </span>
     </mat-cell>
   </ng-container>
-
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row
     *matRowDef="let row; columns: displayedColumns"
@@ -307,6 +291,7 @@
     </td>
   </tr>
 </mat-table>
+}
 
 <!-- context menu items -->
 
@@ -316,20 +301,19 @@
       {{ "library.context-menu.single-comic-menu" | translate }}
     </mat-label>
   </button>
-  <button
-    *ngIf="selectedIds.length > 0"
-    mat-menu-item
-    [matMenuTriggerFor]="selectedComicsMenu"
-  >
+  @if (selectedIds.length > 0) {
+  <button mat-menu-item [matMenuTriggerFor]="selectedComicsMenu">
     <mat-label>
       {{ "library.context-menu.multiple-comics-menu" | translate }}
     </mat-label>
   </button>
-  <button *ngIf="isAdmin" mat-menu-item (click)="onOrganizeEntireLibrary()">
+  } @if (isAdmin) {
+  <button mat-menu-item (click)="onOrganizeEntireLibrary()">
     <mat-label>
       {{ "library.context-menu.organize-entire-library" | translate }}
     </mat-label>
   </button>
+  }
 </mat-menu>
 
 <mat-menu #currentComicMenu="matMenu">
@@ -341,50 +325,34 @@
   <button mat-menu-item [matMenuTriggerFor]="currentComicConvertMenu">
     <mat-label>{{ "library.context-menu.convert" | translate }}</mat-label>
   </button>
-  <button
-    *ngIf="libraryPluginlist?.length > 0"
-    mat-menu-item
-    [matMenuTriggerFor]="currentComicPluginMenu"
-  >
+  @if (libraryPluginlist?.length > 0) {
+  <button mat-menu-item [matMenuTriggerFor]="currentComicPluginMenu">
     <mat-label>
       {{ "library.context-menu.plugin-menu" | translate }}
     </mat-label>
   </button>
-  <button
-    *ngIf="!isRead(selectedComic)"
-    mat-menu-item
-    (click)="onMarkOneAsRead(true)"
-  >
+  } @if (!isRead(selectedComic)) {
+  <button mat-menu-item (click)="onMarkOneAsRead(true)">
     <mat-label>{{ "library.context-menu.mark-as-read" | translate }}</mat-label>
   </button>
-  <button
-    *ngIf="isRead(selectedComic)"
-    mat-menu-item
-    (click)="onMarkOneAsRead(false)"
-  >
+  } @if (isRead(selectedComic)) {
+  <button mat-menu-item (click)="onMarkOneAsRead(false)">
     <mat-label>
       {{ "library.context-menu.mark-as-unread" | translate }}
     </mat-label>
   </button>
-  <button
-    *ngIf="!isDeleted(selectedComic)"
-    mat-menu-item
-    (click)="onMarkOneAsDeleted(true)"
-  >
+  } @if (!isDeleted(selectedComic)) {
+  <button mat-menu-item (click)="onMarkOneAsDeleted(true)">
     <mat-label>{{ "library.context-menu.delete-one" | translate }}</mat-label>
   </button>
-  <button
-    *ngIf="isDeleted(selectedComic)"
-    mat-menu-item
-    (click)="onMarkOneAsDeleted(false)"
-  >
+  } @if (isDeleted(selectedComic)) {
+  <button mat-menu-item (click)="onMarkOneAsDeleted(false)">
     <mat-label>
       {{ "library.context-menu.undelete-one" | translate }}
     </mat-label>
   </button>
-
+  } @if (isAdmin) {
   <button
-    *ngIf="isAdmin"
     mat-menu-item
     (click)="onUpdateSingleComicBookMetadata(selectedComic)"
   >
@@ -392,16 +360,13 @@
       {{ "library.context-menu.update-metadata-one" | translate }}
     </mat-label>
   </button>
-
-  <button
-    *ngIf="isAdmin"
-    mat-menu-item
-    (click)="onRescanSingleComicBook(selectedComic)"
-  >
+  } @if (isAdmin) {
+  <button mat-menu-item (click)="onRescanSingleComicBook(selectedComic)">
     <mat-label>
       {{ "library.context-menu.rescan-one" | translate }}
     </mat-label>
   </button>
+  }
 </mat-menu>
 
 <mat-menu #currentComicConvertMenu="matMenu">
@@ -418,32 +383,28 @@
 </mat-menu>
 
 <mat-menu #currentComicPluginMenu="matMenu">
+  @for (plugin of libraryPluginlist; track plugin) {
   <button
-    *ngFor="let plugin of libraryPluginlist"
     mat-menu-item
     (click)="onRunLibraryPluginSingleOnComicBook(plugin, selectedComic)"
   >
     <mat-label>{{ plugin.name }}</mat-label>
   </button>
+  }
 </mat-menu>
 
 <mat-menu #currentComicReadingListsMenu="matMenu">
-  <button
-    *ngIf="readingLists?.length === 0"
-    mat-menu-item
-    routerLink="/lists/reading/new"
-  >
+  @if (readingLists?.length === 0) {
+  <button mat-menu-item routerLink="/lists/reading/new">
     <mat-label>
       {{ "library.context-menu.create-reading-list" | translate }}
     </mat-label>
   </button>
-  <button
-    mat-menu-item
-    *ngFor="let list of readingLists"
-    (click)="onAddOneToReadingList(list)"
-  >
+  } @for (list of readingLists; track list) {
+  <button mat-menu-item (click)="onAddOneToReadingList(list)">
     <mat-label>{{ list.name }}</mat-label>
   </button>
+  }
 </mat-menu>
 
 <mat-menu #selectedComicsMenu="matMenu">
@@ -462,62 +423,50 @@
   <button mat-menu-item [matMenuTriggerFor]="selectedMarkAsMenu">
     <mat-label>{{ "library.context-menu.mark-as" | translate }}</mat-label>
   </button>
-  <button
-    *ngIf="libraryPluginlist?.length > 0"
-    mat-menu-item
-    [matMenuTriggerFor]="selectedComicsPluginMenu"
-  >
+  @if (libraryPluginlist?.length > 0) {
+  <button mat-menu-item [matMenuTriggerFor]="selectedComicsPluginMenu">
     <mat-label>
       {{ "library.context-menu.multiple-comics-plugin-menu" | translate }}
     </mat-label>
   </button>
+  }
   <button mat-menu-item (click)="onEditMultipleComics()">
     <mat-label>
       {{ "library.context-menu.edit-multiple-comics" | translate }}
     </mat-label>
   </button>
 
-  <button *ngIf="isAdmin" mat-menu-item (click)="onScrapeComics(selectedIds)">
+  @if (isAdmin) {
+  <button mat-menu-item (click)="onScrapeComics(selectedIds)">
     <mat-label>
       {{ "library.context-menu.scrape-comics-selected" | translate }}
     </mat-label>
   </button>
-
-  <button
-    *ngIf="isAdmin"
-    mat-menu-item
-    (click)="onBatchScrapeComics(selectedIds)"
-  >
+  } @if (isAdmin) {
+  <button mat-menu-item (click)="onBatchScrapeComics(selectedIds)">
     <mat-label>
       {{ "library.context-menu.batch-scrape-selected" | translate }}
     </mat-label>
   </button>
-
-  <button
-    *ngIf="isAdmin"
-    mat-menu-item
-    (click)="onUpdateSelectedComicBooksMetadata()"
-  >
+  } @if (isAdmin) {
+  <button mat-menu-item (click)="onUpdateSelectedComicBooksMetadata()">
     <mat-label>
       {{ "library.context-menu.update-metadata-selected" | translate }}
     </mat-label>
   </button>
-
-  <button
-    *ngIf="isAdmin"
-    mat-menu-item
-    (click)="onOrganizeSelectedComicBooks()"
-  >
+  } @if (isAdmin) {
+  <button mat-menu-item (click)="onOrganizeSelectedComicBooks()">
     <mat-label>
       {{ "library.context-menu.organize-selected" | translate }}
     </mat-label>
   </button>
-
-  <button *ngIf="isAdmin" mat-menu-item (click)="onRescanSelectedComicBooks()">
+  } @if (isAdmin) {
+  <button mat-menu-item (click)="onRescanSelectedComicBooks()">
     <mat-label>
       {{ "library.context-menu.rescan-selected" | translate }}
     </mat-label>
   </button>
+  }
 </mat-menu>
 
 <mat-menu #selectedMarkAsMenu="matMenu">
@@ -555,13 +504,14 @@
 </mat-menu>
 
 <mat-menu #selectedComicsPluginMenu="matMenu">
+  @for (plugin of libraryPluginlist; track plugin) {
   <button
-    *ngFor="let plugin of libraryPluginlist"
     mat-menu-item
     (click)="onRunLibraryPluginOnSelectedComicBooks(plugin)"
   >
     <mat-label>{{ plugin.name }}</mat-label>
   </button>
+  }
 </mat-menu>
 
 <mat-menu #selectedComicsReadingListsMenu="matMenu">
@@ -570,11 +520,9 @@
       {{ "library.context-menu.create-reading-list" | translate }}
     </mat-label>
   </button>
-  <button
-    mat-menu-item
-    *ngFor="let list of readingLists"
-    (click)="onAddSelectedToReadingList(list)"
-  >
+  @for (list of readingLists; track list) {
+  <button mat-menu-item (click)="onAddSelectedToReadingList(list)">
     <mat-label>{{ list.name }}</mat-label>
   </button>
+  }
 </mat-menu>

@@ -29,18 +29,16 @@ describe('ComicPageComponent', () => {
   let component: ComicPageComponent;
   let fixture: ComponentFixture<ComicPageComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [ComicPageComponent],
-        imports: [LoggerModule.forRoot(), MatCardModule]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [ComicPageComponent],
+      imports: [LoggerModule.forRoot(), MatCardModule]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(ComicPageComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(ComicPageComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

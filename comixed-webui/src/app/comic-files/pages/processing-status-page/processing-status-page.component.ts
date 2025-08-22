@@ -19,6 +19,7 @@
 import {
   AfterViewInit,
   Component,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild
@@ -38,7 +39,8 @@ import { TitleService } from '@app/core/services/title.service';
 @Component({
   selector: 'cx-processing-status-page',
   templateUrl: './processing-status-page.component.html',
-  styleUrls: ['./processing-status-page.component.scss']
+  styleUrls: ['./processing-status-page.component.scss'],
+  standalone: false
 })
 export class ProcessingStatusPageComponent
   implements AfterViewInit, OnInit, OnDestroy
@@ -53,13 +55,13 @@ export class ProcessingStatusPageComponent
   comicImportStateSubscription: Subscription;
   landChangeSubscription: Subscription;
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private translateService: TranslateService,
-    private titleService: TitleService,
-    public queryParameterService: QueryParameterService
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+  translateService = inject(TranslateService);
+  titleService = inject(TitleService);
+  queryParameterService = inject(QueryParameterService);
+
+  constructor() {
     this.landChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );

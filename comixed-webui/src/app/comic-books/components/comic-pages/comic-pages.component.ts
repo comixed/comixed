@@ -20,6 +20,7 @@ import {
   AfterViewInit,
   Component,
   EventEmitter,
+  inject,
   Input,
   Output,
   ViewChild
@@ -40,7 +41,8 @@ import { setBlockedStateForHash } from '@app/comic-pages/actions/blocked-hashes.
 @Component({
   selector: 'cx-comic-pages',
   templateUrl: './comic-pages.component.html',
-  styleUrls: ['./comic-pages.component.scss']
+  styleUrls: ['./comic-pages.component.scss'],
+  standalone: false
 })
 export class ComicPagesComponent implements AfterViewInit {
   @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
@@ -62,12 +64,10 @@ export class ComicPagesComponent implements AfterViewInit {
   contextMenuX = '';
   contextMenuY = '';
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService
-  ) {}
+  logger = inject(LoggerService);
+  store = inject(Store);
+  confirmationService = inject(ConfirmationService);
+  translateService = inject(TranslateService);
 
   get pages(): ComicPage[] {
     return this.dataSource.data;

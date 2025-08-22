@@ -19,6 +19,7 @@
 import {
   AfterViewInit,
   Component,
+  inject,
   Input,
   OnDestroy,
   ViewChild
@@ -60,7 +61,8 @@ export const NO_MATCH_TEXT = 'scraping.text.no-match';
 @Component({
   selector: 'cx-scraping-volume-selection',
   templateUrl: './comic-scraping-volume-selection.html',
-  styleUrls: ['./comic-scraping-volume-selection.scss']
+  styleUrls: ['./comic-scraping-volume-selection.scss'],
+  standalone: false
 })
 export class ComicScrapingVolumeSelectionComponent
   implements OnDestroy, AfterViewInit
@@ -96,12 +98,12 @@ export class ComicScrapingVolumeSelectionComponent
   autoSelectExactMatch = false;
   currentVolume: VolumeMetadata | null;
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+  confirmationService = inject(ConfirmationService);
+  translateService = inject(TranslateService);
+
+  constructor() {
     this.issueSubscription = this.store
       .select(selectScrapingIssueMetadata)
       .subscribe(issue => (this.issue = issue));

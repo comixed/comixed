@@ -19,6 +19,7 @@
 import {
   AfterViewInit,
   Component,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild
@@ -64,7 +65,8 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
 @Component({
   selector: 'cx-user-accounts-page',
   templateUrl: './user-accounts-page.component.html',
-  styleUrl: './user-accounts-page.component.scss'
+  styleUrl: './user-accounts-page.component.scss',
+  standalone: false
 })
 export class UserAccountsPageComponent
   implements OnInit, OnDestroy, AfterViewInit
@@ -86,16 +88,15 @@ export class UserAccountsPageComponent
     'first-login-date',
     'last-login-date'
   ];
+  queryParameterService = inject(QueryParameterService);
+  logger = inject(LoggerService);
+  store = inject(Store);
+  translateService = inject(TranslateService);
+  titleService = inject(TitleService);
+  formBuilder = inject(FormBuilder);
+  confirmationService = inject(ConfirmationService);
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store,
-    private translateService: TranslateService,
-    private titleService: TitleService,
-    private formBuilder: FormBuilder,
-    private confirmationService: ConfirmationService,
-    public queryParameterService: QueryParameterService
-  ) {
+  constructor() {
     this.logger.trace('Subscribing to language change updates');
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()

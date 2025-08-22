@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
@@ -34,21 +34,21 @@ import { QueryParameterService } from '@app/core/services/query-parameter.servic
 @Component({
   selector: 'cx-configuration-page',
   templateUrl: './configuration-page.component.html',
-  styleUrls: ['./configuration-page.component.scss']
+  styleUrls: ['./configuration-page.component.scss'],
+  standalone: false
 })
 export class ConfigurationPageComponent implements OnInit, OnDestroy {
   configStateSubscription: Subscription;
   langChangeSubscription: Subscription;
   optionSubscription: Subscription;
   options: ConfigurationOption[] = [];
+  queryParameterService = inject(QueryParameterService);
+  logger = inject(LoggerService);
+  store = inject(Store);
+  titleService = inject(TitleService);
+  translateService = inject(TranslateService);
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private titleService: TitleService,
-    private translateService: TranslateService,
-    public queryParameterService: QueryParameterService
-  ) {
+  constructor() {
     this.configStateSubscription = this.store
       .select(selectConfigurationOptionListState)
       .subscribe(state => {

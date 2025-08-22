@@ -1,7 +1,9 @@
 <mat-card appearance="outlined">
-  <mat-card-title *ngIf="!!title" class="cx-text-nowrap" [matTooltip]="title">
+  @if (!!title) {
+  <mat-card-title class="cx-text-nowrap" [matTooltip]="title">
     {{ title }}
   </mat-card-title>
+  }
   <mat-card-subtitle
     class="cx-text-nowrap"
     [matTooltip]="subtitle"
@@ -14,8 +16,8 @@
       class="cx-detail-card cx-padding-2 cx-margin-2"
       [class.cx-detail-card-selected]="selected"
     >
+      @if (!!imageUrl) {
       <img
-        *ngIf="!!imageUrl"
         loading="lazy"
         [class.cx-detail-card-blurred]="blurred"
         [src]="imageUrl"
@@ -27,38 +29,44 @@
         (click)="onCoverClicked()"
         (contextmenu)="onContextMenu($event)"
       />
-      <mat-chip-listbox *ngIf="showActions">
+      } @if (showActions) {
+      <mat-chip-listbox>
+        @if (detailLink) {
         <mat-basic-chip
-          *ngIf="detailLink"
           [routerLink]="detailLink"
           [matTooltip]="'text.view-details' | translate"
         >
           <mat-icon>info</mat-icon>
         </mat-basic-chip>
-        <mat-basic-chip *ngIf="isRead">
+        } @if (isRead) {
+        <mat-basic-chip>
           <mat-icon>bookmark</mat-icon>
         </mat-basic-chip>
+        } @if (comicChanged && isAdmin) {
         <mat-basic-chip
-          *ngIf="comicChanged && isAdmin"
           [matTooltip]="'comic-book.text.comic-changed' | translate"
           (click)="onUpdateComicInfo(comic)"
         >
           <mat-icon>sync_alt</mat-icon>
         </mat-basic-chip>
+        } @if (deleted) {
         <mat-basic-chip
-          *ngIf="deleted"
           [matTooltip]="'comic-book.text.comic-marked-for-deletion' | translate"
         >
           <mat-icon>deleted</mat-icon>
         </mat-basic-chip>
+        }
       </mat-chip-listbox>
+      }
     </div>
-    <div *ngIf="!!description" [innerHTML]="description"></div>
+    @if (!!description) {
+    <div [innerHTML]="description"></div>
+    } @if (busy) {
     <mat-progress-spinner
-      *ngIf="busy"
       class="comic-detail-card-busy-indicator"
       diameter="100"
       mode="indeterminate"
     ></mat-progress-spinner>
+    }
   </mat-card-content>
 </mat-card>

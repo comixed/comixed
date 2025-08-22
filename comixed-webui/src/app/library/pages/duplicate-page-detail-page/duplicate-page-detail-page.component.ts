@@ -19,6 +19,7 @@
 import {
   AfterViewInit,
   Component,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild
@@ -51,7 +52,8 @@ import { selectBlockedHashesList } from '@app/comic-pages/selectors/blocked-hash
 @Component({
   selector: 'cx-duplicate-page-detail-page',
   templateUrl: './duplicate-page-detail-page.component.html',
-  styleUrls: ['./duplicate-page-detail-page.component.scss']
+  styleUrls: ['./duplicate-page-detail-page.component.scss'],
+  standalone: false
 })
 export class DuplicatePageDetailPageComponent
   implements OnInit, OnDestroy, AfterViewInit
@@ -76,16 +78,16 @@ export class DuplicatePageDetailPageComponent
     'added-date'
   ];
 
-  constructor(
-    private logger: LoggerService,
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private store: Store<any>,
-    private titleService: TitleService,
-    private translateService: TranslateService,
-    private confirmationService: ConfirmationService,
-    public queryParameterService: QueryParameterService
-  ) {
+  logger = inject(LoggerService);
+  activatedRoute = inject(ActivatedRoute);
+  router = inject(Router);
+  store = inject(Store);
+  titleService = inject(TitleService);
+  translateService = inject(TranslateService);
+  confirmationService = inject(ConfirmationService);
+  queryParameterService = inject(QueryParameterService);
+
+  constructor() {
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.hash = params.hash;
       this.logger.trace('Loading duplicate page detail:', this.hash);

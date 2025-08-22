@@ -22,11 +22,10 @@ import { MetricDetail } from '@app/admin/models/metric-detail';
 @Component({
   selector: 'cx-metric-details',
   templateUrl: './server-metric-details.component.html',
-  styleUrls: ['./server-metric-details.component.scss']
+  styleUrls: ['./server-metric-details.component.scss'],
+  standalone: false
 })
 export class ServerMetricDetailsComponent {
   @Input()
   metricDetail: MetricDetail = null;
-
-  constructor() {}
 }

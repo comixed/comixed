@@ -41,32 +41,30 @@ describe('ComicDetailsDialogComponent', () => {
   let component: ComicDetailsDialogComponent;
   let fixture: ComponentFixture<ComicDetailsDialogComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [
-          ComicDetailsDialogComponent,
-          ComicPageComponent,
-          ComicTitlePipe,
-          ComicDetailCoverUrlPipe
-        ],
-        imports: [
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          MatDialogModule,
-          MatCardModule
-        ],
-        providers: [
-          provideMockStore({ initialState }),
-          { provide: MAT_DIALOG_DATA, useValue: {} }
-        ]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        ComicDetailsDialogComponent,
+        ComicPageComponent,
+        ComicTitlePipe,
+        ComicDetailCoverUrlPipe
+      ],
+      imports: [
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatDialogModule,
+        MatCardModule
+      ],
+      providers: [
+        provideMockStore({ initialState }),
+        { provide: MAT_DIALOG_DATA, useValue: {} }
+      ]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(ComicDetailsDialogComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(ComicDetailsDialogComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

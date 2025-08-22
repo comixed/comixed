@@ -17,12 +17,15 @@
           [placeholder]="'user.login-user.email-placeholder' | translate"
         />
         <mat-error>
-          <span *ngIf="controls.email.errors?.required">
+          @if (controls.email.errors?.required) {
+          <span>
             {{ "validation.field-required" | translate }}
           </span>
-          <span *ngIf="controls.email.errors?.email">
+          } @if (controls.email.errors?.email) {
+          <span>
             {{ "validation.email-required" | translate }}
           </span>
+          }
         </mat-error>
       </mat-form-field>
       <mat-form-field class="cx-width-100" required>
@@ -35,10 +38,12 @@
           [placeholder]="'user.login-user.password-placeholder' | translate"
         />
         <mat-error>
-          <span *ngIf="controls.password.errors?.required">
+          @if (controls.password.errors?.required) {
+          <span>
             {{ "validation.field-required" | translate }}
           </span>
-          <span *ngIf="!!controls.password.errors?.minlength">
+          } @if (!!controls.password.errors?.minlength) {
+          <span>
             {{
               "validation.value-too-short"
                 | translate
@@ -47,7 +52,8 @@
                     }
             }}
           </span>
-          <span *ngIf="!!controls.password.errors?.maxlength">
+          } @if (!!controls.password.errors?.maxlength) {
+          <span>
             {{
               "validation.value-too-long"
                 | translate
@@ -56,6 +62,7 @@
                     }
             }}
           </span>
+          }
         </mat-error>
       </mat-form-field>
       <button

@@ -11,7 +11,8 @@
   </button>
 </div>
 
-<div *ngIf="showUserForm">
+@if (showUserForm) {
+<div>
   <form [formGroup]="editUserForm">
     <mat-card appearance="outlined">
       <mat-card-content class="cx-padding-left-15 cx-padding-right-15">
@@ -24,12 +25,15 @@
             [placeholder]="'user-accounts.placeholder.email' | translate"
           />
           <mat-error>
-            <span *ngIf="controls.email.errors?.required">
+            @if (controls.email.errors?.required) {
+            <span>
               {{ "validation.field-required" | translate }}
             </span>
-            <span *ngIf="controls.email.errors?.email">
+            } @if (controls.email.errors?.email) {
+            <span>
               {{ "validation.email-required" | translate }}
             </span>
+            }
           </mat-error>
         </mat-form-field>
         <mat-form-field class="cx-width-100" required>
@@ -48,10 +52,12 @@
             (keyup)="onPasswordChanged()"
           />
           <mat-error>
-            <span *ngIf="controls.password.errors?.required">
+            @if (controls.password.errors?.required) {
+            <span>
               {{ "validation.field-required" | translate }}
             </span>
-            <span *ngIf="!!controls.password.errors?.minlength">
+            } @if (!!controls.password.errors?.minlength) {
+            <span>
               {{
                 "validation.value-too-short"
                   | translate
@@ -61,7 +67,8 @@
                       }
               }}
             </span>
-            <span *ngIf="!!controls.password.errors?.maxlength">
+            } @if (!!controls.password.errors?.maxlength) {
+            <span>
               {{
                 "validation.value-too-long"
                   | translate
@@ -71,6 +78,7 @@
                       }
               }}
             </span>
+            }
           </mat-error>
         </mat-form-field>
         <mat-form-field class="cx-width-100" required>
@@ -84,12 +92,15 @@
             "
           />
           <mat-error>
-            <span *ngIf="controls.passwordVerify.errors?.required">
+            @if (controls.passwordVerify.errors?.required) {
+            <span>
               {{ "validation.field-required" | translate }}
             </span>
-            <span *ngIf="editUserForm.errors?.passwordsDontMatch">
+            } @if (editUserForm.errors?.passwordsDontMatch) {
+            <span>
               {{ "validation.password-mismatch" | translate }}
             </span>
+            }
           </mat-error>
         </mat-form-field>
       </mat-card-content>
@@ -105,9 +116,8 @@
           <mat-label>{{ "button.save" | translate }}</mat-label>
           <mat-icon>person</mat-icon>
         </button>
-
+        @if (!!user?.comixedUserId) {
         <button
-          *ngIf="!!user?.comixedUserId"
           id="cx-delete-user-button"
           class="cx-toolbar-button cx-margin-left-5"
           mat-raised-button
@@ -119,7 +129,7 @@
           <mat-label>{{ "button.delete" | translate }}</mat-label>
           <mat-icon>person_remove</mat-icon>
         </button>
-
+        }
         <button
           id="cx-close-user-form-button"
           class="cx-toolbar-button cx-margin-left-5"
@@ -135,6 +145,7 @@
     </mat-card>
   </form>
 </div>
+}
 
 <h2>{{ "user-accounts.page-title" | translate }}</h2>
 
@@ -161,18 +172,15 @@
       {{ "user-accounts.label.roles" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <mat-icon
-        *ngIf="isAdmin(entry)"
-        [matTooltip]="'user-accounts.tooltip.admin' | translate"
-      >
+      @if (isAdmin(entry)) {
+      <mat-icon [matTooltip]="'user-accounts.tooltip.admin' | translate">
         supervisor_account
       </mat-icon>
-      <mat-icon
-        *ngIf="isReader(entry)"
-        [matTooltip]="'user-accounts.tooltip.reader' | translate"
-      >
+      } @if (isReader(entry)) {
+      <mat-icon [matTooltip]="'user-accounts.tooltip.reader' | translate">
         person
       </mat-icon>
+      }
     </mat-cell>
   </ng-container>
 
@@ -182,7 +190,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.firstLoginDate | date: "medium" }}
+        {{ entry.firstLoginDate | date : "medium" }}
       </span>
     </mat-cell>
   </ng-container>
@@ -193,7 +201,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.lastLoginDate | date: "medium" }}
+        {{ entry.lastLoginDate | date : "medium" }}
       </span>
     </mat-cell>
   </ng-container>

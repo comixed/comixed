@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { WebSocketService } from '@app/messaging';
@@ -33,11 +33,11 @@ import { filter } from 'rxjs/operators';
 export class ProcessComicsService {
   processComicsSubscription: Subscription;
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private webSocketService: WebSocketService
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+  webSocketService = inject(WebSocketService);
+
+  constructor() {
     this.store
       .select(selectMessagingState)
       .pipe(filter(state => !!state))

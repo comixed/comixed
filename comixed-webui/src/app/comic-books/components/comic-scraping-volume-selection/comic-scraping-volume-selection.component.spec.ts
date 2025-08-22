@@ -83,42 +83,40 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
   let confirmationService: ConfirmationService;
   let spyOnStoreDispatch: jasmine.Spy;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [
-          ComicScrapingVolumeSelectionComponent,
-          VolumeMetadataTitlePipe
-        ],
-        imports: [
-          NoopAnimationsModule,
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          MatDialogModule,
-          MatTableModule,
-          MatSortModule,
-          MatToolbarModule,
-          MatIconModule,
-          MatFormFieldModule,
-          MatPaginatorModule,
-          MatTooltipModule,
-          MatInputModule
-        ],
-        providers: [provideMockStore({ initialState }), ConfirmationService]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        ComicScrapingVolumeSelectionComponent,
+        VolumeMetadataTitlePipe
+      ],
+      imports: [
+        NoopAnimationsModule,
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatDialogModule,
+        MatTableModule,
+        MatSortModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatPaginatorModule,
+        MatTooltipModule,
+        MatInputModule
+      ],
+      providers: [provideMockStore({ initialState }), ConfirmationService]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(ComicScrapingVolumeSelectionComponent);
-      component = fixture.componentInstance;
-      component.comicSeriesName = SCRAPING_VOLUME.name;
-      component.comicVolume = SCRAPING_VOLUME.startYear;
-      component.comicIssueNumber = ISSUE_NUMBER;
-      component.skipCache = SKIP_CACHE;
-      store = TestBed.inject(MockStore);
-      spyOnStoreDispatch = spyOn(store, 'dispatch');
-      confirmationService = TestBed.inject(ConfirmationService);
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(ComicScrapingVolumeSelectionComponent);
+    component = fixture.componentInstance;
+    component.comicSeriesName = SCRAPING_VOLUME.name;
+    component.comicVolume = SCRAPING_VOLUME.startYear;
+    component.comicIssueNumber = ISSUE_NUMBER;
+    component.skipCache = SKIP_CACHE;
+    store = TestBed.inject(MockStore);
+    spyOnStoreDispatch = spyOn(store, 'dispatch');
+    confirmationService = TestBed.inject(ConfirmationService);
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

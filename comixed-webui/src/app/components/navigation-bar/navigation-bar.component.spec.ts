@@ -80,40 +80,38 @@ describe('NavigationBarComponent', () => {
   let translateService: TranslateService;
   let logger: LoggerService;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [NavigationBarComponent],
-        imports: [
-          NoopAnimationsModule,
-          RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
-          TranslateModule.forRoot(),
-          LoggerModule.forRoot(),
-          GravatarModule,
-          MatMenuModule,
-          MatIconModule,
-          MatToolbarModule,
-          MatTooltipModule,
-          MatFormFieldModule,
-          MatDividerModule,
-          MatSelectModule,
-          MatDialogModule
-        ],
-        providers: [provideMockStore({ initialState })]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [NavigationBarComponent],
+      imports: [
+        NoopAnimationsModule,
+        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
+        TranslateModule.forRoot(),
+        LoggerModule.forRoot(),
+        GravatarModule,
+        MatMenuModule,
+        MatIconModule,
+        MatToolbarModule,
+        MatTooltipModule,
+        MatFormFieldModule,
+        MatDividerModule,
+        MatSelectModule,
+        MatDialogModule
+      ],
+      providers: [provideMockStore({ initialState })]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(NavigationBarComponent);
-      component = fixture.componentInstance;
-      store = TestBed.inject(MockStore);
-      spyOn(store, 'dispatch');
-      router = TestBed.inject(Router);
-      spyOn(router, 'navigateByUrl');
-      confirmationService = TestBed.inject(ConfirmationService);
-      translateService = TestBed.inject(TranslateService);
-      logger = TestBed.inject(LoggerService);
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(NavigationBarComponent);
+    component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigateByUrl');
+    confirmationService = TestBed.inject(ConfirmationService);
+    translateService = TestBed.inject(TranslateService);
+    logger = TestBed.inject(LoggerService);
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

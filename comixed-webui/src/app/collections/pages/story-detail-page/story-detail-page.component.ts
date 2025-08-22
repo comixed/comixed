@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import { Subscription } from 'rxjs';
 import { ReadingList } from '@app/lists/models/reading-list';
@@ -48,7 +48,8 @@ import { SCRAPE_STORY_PARAMETER } from '@app/collections/collections.constants';
 @Component({
   selector: 'cx-story-detail',
   templateUrl: './story-detail-page.component.html',
-  styleUrl: './story-detail-page.component.scss'
+  styleUrl: './story-detail-page.component.scss',
+  standalone: false
 })
 export class StoryDetailPageComponent implements OnInit, OnDestroy {
   comics: DisplayableComic[] = [];
@@ -75,14 +76,14 @@ export class StoryDetailPageComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
   showCovers = false;
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private activatedRoute: ActivatedRoute,
-    private translateService: TranslateService,
-    private titleService: TitleService,
-    public queryParameterService: QueryParameterService
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+  activatedRoute = inject(ActivatedRoute);
+  translateService = inject(TranslateService);
+  titleService = inject(TitleService);
+  queryParameterService = inject(QueryParameterService);
+
+  constructor() {
     this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
       params => {
         this.doLoadComicDetails();

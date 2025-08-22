@@ -1,4 +1,5 @@
-<mat-toolbar *ngIf="isAdmin" color="accent">
+@if (isAdmin) {
+<mat-toolbar color="accent">
   <button
     id="save-comic-changes"
     class="cx-toolbar-button cx-margin-left-5"
@@ -20,6 +21,7 @@
     <mat-icon>undo</mat-icon>
   </button>
 </mat-toolbar>
+}
 
 <form [formGroup]="comicBookForm">
   <mat-form-field appearance="fill" class="cx-width-25" required>
@@ -49,12 +51,11 @@
       formControlName="comicType"
       (selectionChange)="onComicTypeSelected($event.value)"
     >
-      <mat-option
-        *ngFor="let option of comicTypeOptions"
-        [value]="option.value"
-      >
+      @for (option of comicTypeOptions; track option) {
+      <mat-option [value]="option.value">
         {{ option.label | translate }}
       </mat-option>
+      }
     </mat-select>
   </mat-form-field>
 
@@ -65,12 +66,11 @@
       formControlName="imprint"
       (selectionChange)="onImprintSelected($event.value)"
     >
-      <mat-option
-        *ngFor="let option of imprintOptions"
-        [value]="option.value.name"
-      >
+      @for (option of imprintOptions; track option) {
+      <mat-option [value]="option.value.name">
         {{ option.label }}
       </mat-option>
+      }
     </mat-select>
   </mat-form-field>
 

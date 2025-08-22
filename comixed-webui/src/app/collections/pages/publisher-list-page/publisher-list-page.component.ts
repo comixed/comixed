@@ -19,6 +19,7 @@
 import {
   AfterViewInit,
   Component,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild
@@ -41,19 +42,15 @@ import { TitleService } from '@app/core/services/title.service';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import {
-  PAGE_SIZE_DEFAULT,
-  PAGE_SIZE_OPTIONS,
-  QUERY_PARAM_FILTER_TEXT
-} from '@app/core';
+import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@app/core';
 import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
 import { ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'cx-publisher-list-page',
   templateUrl: './publisher-list-page.component.html',
-  styleUrls: ['./publisher-list-page.component.scss']
+  styleUrls: ['./publisher-list-page.component.scss'],
+  standalone: false
 })
 export class PublisherListPageComponent
   implements OnInit, OnDestroy, AfterViewInit
@@ -77,14 +74,14 @@ export class PublisherListPageComponent
   sortBy = 'name';
   sortDirection: SortDirection = 'asc';
 
-  constructor(
-    private logger: LoggerService,
-    private activatedRoute: ActivatedRoute,
-    private store: Store<any>,
-    private titleService: TitleService,
-    private translateService: TranslateService,
-    public queryParameterService: QueryParameterService
-  ) {
+  logger = inject(LoggerService);
+  activatedRoute = inject(ActivatedRoute);
+  store = inject(Store);
+  titleService = inject(TitleService);
+  translateService = inject(TranslateService);
+  queryParameterService = inject(QueryParameterService);
+
+  constructor() {
     this.logger.trace('Subscribing to language change updates');
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()

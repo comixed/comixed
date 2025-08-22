@@ -21,7 +21,8 @@ import { ComicFile } from '@app/comic-files/models/comic-file';
 import { API_ROOT_URL } from '@app/core';
 
 @Pipe({
-  name: 'comicFileCoverUrl'
+  name: 'comicFileCoverUrl',
+  standalone: false
 })
 export class ComicFileCoverUrlPipe implements PipeTransform {
   transform(comicFile: ComicFile): string {

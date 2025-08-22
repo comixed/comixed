@@ -7,11 +7,13 @@
   (toggleAccountBar)="accountBar.toggle($event)"
 ></cx-navigation-bar>
 
-<div *ngIf="busy" id="cx-busy-overlay">
+@if (busy) {
+<div id="cx-busy-overlay">
   <div class="cx-centered cx-position-absolute">
     <img [src]="busyIconURL" alt="Busy, please wait..." />
   </div>
 </div>
+}
 
 <mat-sidenav-container
   id="app-primary-space"
@@ -33,11 +35,12 @@
     mode="over"
     position="end"
   >
+    @if (!!user) {
     <cx-edit-account-bar
-      *ngIf="!!user"
       [user]="user"
       (closeSidebar)="accountBar.close()"
     ></cx-edit-account-bar>
+    }
   </mat-sidenav>
 
   <mat-sidenav-content #sidebar>

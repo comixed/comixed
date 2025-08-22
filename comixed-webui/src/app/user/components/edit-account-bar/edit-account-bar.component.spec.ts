@@ -58,37 +58,35 @@ describe('EditAccountBarComponent', () => {
   let translateService: TranslateService;
   let confirmationService: ConfirmationService;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [EditAccountBarComponent],
-        imports: [
-          NoopAnimationsModule,
-          FormsModule,
-          ReactiveFormsModule,
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          GravatarModule,
-          MatDialogModule,
-          MatIconModule,
-          MatToolbarModule,
-          MatCardModule,
-          MatFormFieldModule,
-          MatInputModule,
-          MatTableModule
-        ],
-        providers: [provideMockStore({ initialState }), ConfirmationService]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [EditAccountBarComponent],
+      imports: [
+        NoopAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        GravatarModule,
+        MatDialogModule,
+        MatIconModule,
+        MatToolbarModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatTableModule
+      ],
+      providers: [provideMockStore({ initialState }), ConfirmationService]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(EditAccountBarComponent);
-      component = fixture.componentInstance;
-      store = TestBed.inject(MockStore);
-      spyOn(store, 'dispatch');
-      translateService = TestBed.inject(TranslateService);
-      confirmationService = TestBed.inject(ConfirmationService);
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(EditAccountBarComponent);
+    component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    translateService = TestBed.inject(TranslateService);
+    confirmationService = TestBed.inject(ConfirmationService);
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

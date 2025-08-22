@@ -20,6 +20,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  inject,
   Input,
   ViewChild
 } from '@angular/core';
@@ -35,7 +36,8 @@ import { yearsPerRow } from '@angular/material/datepicker';
 @Component({
   selector: 'cx-comics-by-year-chart',
   templateUrl: './comics-by-year-chart.component.html',
-  styleUrls: ['./comics-by-year-chart.component.scss']
+  styleUrls: ['./comics-by-year-chart.component.scss'],
+  standalone: false
 })
 export class ComicsByYearChartComponent implements AfterViewInit {
   @ViewChild('container') container: ElementRef;
@@ -52,7 +54,7 @@ export class ComicsByYearChartComponent implements AfterViewInit {
   publishersToShow = 5;
   protected readonly yearsPerRow = yearsPerRow;
 
-  constructor(private logger: LoggerService) {}
+  logger = inject(LoggerService);
 
   @Input() set libraryState(libraryState: LibraryState) {
     this.logger.trace('Library state updated');

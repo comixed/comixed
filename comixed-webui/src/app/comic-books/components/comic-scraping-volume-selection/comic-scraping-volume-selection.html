@@ -22,11 +22,12 @@
       </button>
     </mat-toolbar>
 
+    @if (dataSource.data?.length > 0) {
     <mat-paginator
-      *ngIf="dataSource.data?.length > 0"
       [pageSizeOptions]="pageSizeOptions"
       showFirstLastButtons="true"
     ></mat-paginator>
+    }
 
     <mat-table
       aria-label="ComicBook files available for import"
@@ -48,9 +49,13 @@
             [matTooltip]="'scraping.tooltip.select-scraping-issue' | translate"
             (click)="onDecision(true, entry.item)"
           >
-            <mat-icon *ngIf="entry.sortOrder === 2">thumb_up</mat-icon>
-            <mat-icon *ngIf="entry.sortOrder === 1">thumbs_up_down</mat-icon>
-            <mat-icon *ngIf="entry.sortOrder === 0">thumb_down</mat-icon>
+            @if (entry.sortOrder === 2) {
+            <mat-icon>thumb_up</mat-icon>
+            } @if (entry.sortOrder === 1) {
+            <mat-icon>thumbs_up_down</mat-icon>
+            } @if (entry.sortOrder === 0) {
+            <mat-icon>thumb_down</mat-icon>
+            }
           </button>
         </mat-cell>
       </ng-container>
@@ -133,14 +138,15 @@
     </mat-table>
   </div>
 
-  <div id="scraping-volume-cover-container" *ngIf="!!issue">
+  @if (!!issue) {
+  <div id="scraping-volume-cover-container">
     <mat-card class="cx-width-100" appearance="outlined">
       <mat-card-content class="cx-padding-5">
         <h2 class="cx-width-100 cx-align-content-center">
           <strong>{{ issue | issueMetadataTitle }}</strong>
         </h2>
         <h3 class="cx-width-100 cx-align-content-center">
-          {{ issue.coverDate | date: "MMM yyyy" }}
+          {{ issue.coverDate | date : "MMM yyyy" }}
         </h3>
         <img
           loading="lazy"
@@ -164,4 +170,5 @@
       </mat-card-actions>
     </mat-card>
   </div>
+  }
 </div>

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -43,7 +43,8 @@ import { Clipboard } from '@angular/cdk/clipboard';
 @Component({
   selector: 'cx-comic-detail-edit',
   templateUrl: './comic-detail-edit.component.html',
-  styleUrls: ['./comic-detail-edit.component.scss']
+  styleUrls: ['./comic-detail-edit.component.scss'],
+  standalone: false
 })
 export class ComicDetailEditComponent implements OnInit, OnDestroy {
   @Input() isAdmin = false;
@@ -55,14 +56,14 @@ export class ComicDetailEditComponent implements OnInit, OnDestroy {
   imprints: Imprint[];
   readonly comicTypeOptions = COMIC_TYPE_SELECTION_OPTIONS;
 
-  constructor(
-    private logger: LoggerService,
-    private formBuilder: UntypedFormBuilder,
-    private store: Store<any>,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService,
-    private clipboard: Clipboard
-  ) {
+  logger = inject(LoggerService);
+  formBuilder = inject(UntypedFormBuilder);
+  store = inject(Store);
+  confirmationService = inject(ConfirmationService);
+  translateService = inject(TranslateService);
+  clipboard = inject(Clipboard);
+
+  constructor() {
     this.logger.trace('Building comic book details form');
     this.comicBookForm = this.formBuilder.group({
       comicType: ['', Validators.required],

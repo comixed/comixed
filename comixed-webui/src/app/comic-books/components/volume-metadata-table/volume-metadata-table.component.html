@@ -37,9 +37,13 @@
           'comic-book.tooltip.match-' + element.sortOrder | translate
         "
       >
-        <mat-icon *ngIf="element.sortOrder === 2">thumb_up</mat-icon>
-        <mat-icon *ngIf="element.sortOrder === 1">thumbs_up_down</mat-icon>
-        <mat-icon *ngIf="element.sortOrder === 0">thumb_down</mat-icon>
+        @if (element.sortOrder === 2) {
+        <mat-icon>thumb_up</mat-icon>
+        } @if (element.sortOrder === 1) {
+        <mat-icon>thumbs_up_down</mat-icon>
+        } @if (element.sortOrder === 0) {
+        <mat-icon>thumb_down</mat-icon>
+        }
       </span>
     </mat-cell>
   </ng-container>

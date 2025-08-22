@@ -20,7 +20,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 
 @Pipe({
-  name: 'volumeMetadataTitle'
+  name: 'volumeMetadataTitle',
+  standalone: false
 })
 export class VolumeMetadataTitlePipe implements PipeTransform {
   transform(volume: VolumeMetadata): string {

@@ -67,28 +67,26 @@ describe('SideNavigationComponent', () => {
   let fixture: ComponentFixture<SideNavigationComponent>;
   let store: MockStore;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [SideNavigationComponent],
-        imports: [
-          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          MatListModule,
-          MatIconModule,
-          MatFormFieldModule
-        ],
-        providers: [provideMockStore({ initialState })]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [SideNavigationComponent],
+      imports: [
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatListModule,
+        MatIconModule,
+        MatFormFieldModule
+      ],
+      providers: [provideMockStore({ initialState })]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(SideNavigationComponent);
-      component = fixture.componentInstance;
-      store = TestBed.inject(MockStore);
-      spyOn(store, 'dispatch');
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(SideNavigationComponent);
+    component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

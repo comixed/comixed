@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { WS_ROOT_URL } from '@app/core';
@@ -37,12 +37,10 @@ import SockJS from 'sockjs-client';
   providedIn: 'root'
 })
 export class WebSocketService {
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private tokenService: TokenService,
-    private stompService: StompService
-  ) {}
+  logger = inject(LoggerService);
+  store = inject(Store);
+  tokenService = inject(TokenService);
+  stompService = inject(StompService);
 
   connect(): Observable<any> {
     return new Observable(() => {

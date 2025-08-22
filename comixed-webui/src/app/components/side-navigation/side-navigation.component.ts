@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, inject, Input, OnDestroy } from '@angular/core';
 import { User } from '@app/user/models/user';
 import { isAdmin } from '@app/user/user.functions';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -37,7 +37,8 @@ import { selectComicBookSelectionState } from '@app/comic-books/selectors/comic-
 @Component({
   selector: 'cx-side-navigation',
   templateUrl: './side-navigation.component.html',
-  styleUrls: ['./side-navigation.component.scss']
+  styleUrls: ['./side-navigation.component.scss'],
+  standalone: false
 })
 export class SideNavigationComponent implements OnDestroy {
   isAdmin = false;
@@ -61,7 +62,10 @@ export class SideNavigationComponent implements OnDestroy {
   readingListsSubscription$: Subscription;
   readingLists: ReadingList[] = [];
 
-  constructor(private logger: LoggerService, private store: Store<any>) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+
+  constructor() {
     this.featureEnabledSubscription$ = this.store
       .select(selectFeatureEnabledState)
       .subscribe(state => {

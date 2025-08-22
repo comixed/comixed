@@ -4,7 +4,8 @@
 @use 'sass:map';
 @use './app/app.component' as appComponent;
 
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 @mixin create-dark-theme() {
   $theme: map.deep-merge(

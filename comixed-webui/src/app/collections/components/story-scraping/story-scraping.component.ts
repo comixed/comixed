@@ -19,6 +19,7 @@
 import {
   AfterViewInit,
   Component,
+  inject,
   Input,
   OnDestroy,
   OnInit,
@@ -54,7 +55,8 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
 @Component({
   selector: 'cx-story-scraping',
   templateUrl: './story-scraping.component.html',
-  styleUrl: './story-scraping.component.scss'
+  styleUrl: './story-scraping.component.scss',
+  standalone: false
 })
 export class StoryScrapingComponent
   implements OnInit, OnDestroy, AfterViewInit
@@ -74,16 +76,15 @@ export class StoryScrapingComponent
   dataSource = new MatTableDataSource<StoryMetadata>([]);
   imageUrl: string | null = null;
   imageTitle: string | null = null;
+  queryParameterService = inject(QueryParameterService);
   protected readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
+  logger = inject(LoggerService);
+  store = inject(Store);
+  formBuilder = inject(FormBuilder);
+  confirmationService = inject(ConfirmationService);
+  translateService = inject(TranslateService);
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store,
-    private formBuilder: FormBuilder,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService,
-    public queryParameterService: QueryParameterService
-  ) {
+  constructor() {
     this.logger.trace('Creating story scraping form');
     this.storyScrapingForm = this.formBuilder.group({
       metadataSource: [null, [Validators.required]],

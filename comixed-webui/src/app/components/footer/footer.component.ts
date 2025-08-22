@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { User } from '@app/user/models/user';
@@ -28,7 +28,8 @@ import { selectBatchProcessList } from '@app/admin/selectors/batch-processes.sel
 @Component({
   selector: 'cx-footer',
   templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.scss']
+  styleUrls: ['./footer.component.scss'],
+  standalone: false
 })
 export class FooterComponent {
   libraryStateSubscription: Subscription;
@@ -41,7 +42,8 @@ export class FooterComponent {
   deletedCount = 0;
   batchJobs = 0;
 
-  constructor(private logger: LoggerService, private store: Store<any>) {}
+  logger = inject(LoggerService);
+  store = inject(Store<any>);
 
   private _user: User = null;
 

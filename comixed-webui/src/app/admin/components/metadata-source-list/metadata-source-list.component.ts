@@ -19,6 +19,7 @@
 import {
   AfterViewInit,
   Component,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild
@@ -55,7 +56,8 @@ import { deleteMetadataSource } from '@app/comic-metadata/actions/metadata-sourc
 @Component({
   selector: 'cx-metadata-source-list',
   templateUrl: './metadata-source-list.component.html',
-  styleUrls: ['./metadata-source-list.component.scss']
+  styleUrls: ['./metadata-source-list.component.scss'],
+  standalone: false
 })
 export class MetadataSourceListComponent
   implements OnInit, OnDestroy, AfterViewInit
@@ -77,14 +79,14 @@ export class MetadataSourceListComponent
   showConfigPopup = false;
   configurationOptionList: ConfigurationOption[];
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService,
-    private formBuilder: FormBuilder,
-    private dialog: MatDialog
-  ) {
+  private logger = inject(LoggerService);
+  private store = inject(Store);
+  private confirmationService = inject(ConfirmationService);
+  private translateService = inject(TranslateService);
+  private formBuilder = inject(FormBuilder);
+  private dialog = inject(MatDialog);
+
+  constructor() {
     this.sourcesSubscription = this.store
       .select(selectMetadataSourceList)
       .subscribe(sources => (this.dataSource.data = sources));

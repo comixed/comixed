@@ -130,72 +130,70 @@ describe('StoryDetailPageComponent', () => {
   let translateService: TranslateService;
   let queryParameterService: QueryParameterService;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [
-          StoryDetailPageComponent,
-          StoryScrapingComponent,
-          ComicListViewComponent,
-          ComicTitlePipe,
-          ComicCoverUrlPipe,
-          ArchiveTypePipe,
-          CoverDateFilterPipe
-        ],
-        imports: [
-          NoopAnimationsModule,
-          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          MatDialogModule,
-          MatMenuModule,
-          MatIconModule,
-          MatPaginatorModule,
-          MatFormFieldModule,
-          MatTooltipModule,
-          MatToolbarModule,
-          MatSelectModule,
-          MatOptionModule,
-          MatDividerModule,
-          MatSortModule,
-          MatPaginatorModule,
-          MatInputModule,
-          MatTableModule,
-          MatCheckboxModule
-        ],
-        providers: [
-          provideMockStore({ initialState }),
-          {
-            provide: ActivatedRoute,
-            useValue: {
-              params: new BehaviorSubject<{}>({
-                collectionType: ComicTagType.CHARACTER,
-                collectionName: 'Batman'
-              }),
-              queryParams: new BehaviorSubject<{}>({}),
-              snapshot: {} as ActivatedRouteSnapshot
-            }
-          },
-          TitleService,
-          QueryParameterService
-        ]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        StoryDetailPageComponent,
+        StoryScrapingComponent,
+        ComicListViewComponent,
+        ComicTitlePipe,
+        ComicCoverUrlPipe,
+        ArchiveTypePipe,
+        CoverDateFilterPipe
+      ],
+      imports: [
+        NoopAnimationsModule,
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatDialogModule,
+        MatMenuModule,
+        MatIconModule,
+        MatPaginatorModule,
+        MatFormFieldModule,
+        MatTooltipModule,
+        MatToolbarModule,
+        MatSelectModule,
+        MatOptionModule,
+        MatDividerModule,
+        MatSortModule,
+        MatPaginatorModule,
+        MatInputModule,
+        MatTableModule,
+        MatCheckboxModule
+      ],
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            params: new BehaviorSubject<{}>({
+              collectionType: ComicTagType.CHARACTER,
+              collectionName: 'Batman'
+            }),
+            queryParams: new BehaviorSubject<{}>({}),
+            snapshot: {} as ActivatedRouteSnapshot
+          }
+        },
+        TitleService,
+        QueryParameterService
+      ]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(StoryDetailPageComponent);
-      component = fixture.componentInstance;
-      store = TestBed.inject(MockStore);
-      storeDispatch = spyOn(store, 'dispatch');
-      activatedRoute = TestBed.inject(ActivatedRoute);
-      router = TestBed.inject(Router);
-      spyOn(router, 'navigateByUrl');
-      titleService = TestBed.inject(TitleService);
-      spyOn(titleService, 'setTitle');
-      translateService = TestBed.inject(TranslateService);
-      queryParameterService = TestBed.inject(QueryParameterService);
-      spyOn(queryParameterService, 'updateQueryParam');
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(StoryDetailPageComponent);
+    component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
+    storeDispatch = spyOn(store, 'dispatch');
+    activatedRoute = TestBed.inject(ActivatedRoute);
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigateByUrl');
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
+    translateService = TestBed.inject(TranslateService);
+    queryParameterService = TestBed.inject(QueryParameterService);
+    spyOn(queryParameterService, 'updateQueryParam');
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

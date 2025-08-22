@@ -26,7 +26,8 @@
   </button>
 </div>
 
-<mat-toolbar *ngIf="showUploadRow">
+@if (showUploadRow) {
+<mat-toolbar>
   <input
     id="fileUpload"
     type="file"
@@ -34,6 +35,7 @@
     (click)="$event.stopPropagation()"
   />
 </mat-toolbar>
+}
 
 <mat-paginator
   class="cx-height-100"
@@ -112,7 +114,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.item.createdOn | date: "medium" }}
+        {{ entry.item.createdOn | date : "medium" }}
       </span>
     </mat-cell>
   </ng-container>

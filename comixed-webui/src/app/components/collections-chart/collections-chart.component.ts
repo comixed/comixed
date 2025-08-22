@@ -21,6 +21,7 @@ import {
   Component,
   ElementRef,
   HostListener,
+  inject,
   Input,
   ViewChild
 } from '@angular/core';
@@ -37,7 +38,8 @@ import { comicTagTypeFromString } from '@app/comic-books/models/comic-tag-type';
 @Component({
   selector: 'cx-collections-chart',
   templateUrl: './collections-chart.component.html',
-  styleUrls: ['./collections-chart.component.scss']
+  styleUrls: ['./collections-chart.component.scss'],
+  standalone: false
 })
 export class CollectionsChartComponent implements AfterViewInit {
   @ViewChild('container') container: ElementRef;
@@ -47,7 +49,8 @@ export class CollectionsChartComponent implements AfterViewInit {
   chartHeight$ = new BehaviorSubject<number>(0);
   chartWidth$ = new BehaviorSubject<number>(0);
 
-  constructor(private logger: LoggerService, private router: Router) {}
+  logger = inject(LoggerService);
+  router = inject(Router);
 
   private _libraryState: LibraryState = null;
 

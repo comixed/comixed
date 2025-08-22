@@ -19,6 +19,7 @@
 import {
   AfterViewInit,
   Component,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild
@@ -50,7 +51,8 @@ import { QueryParameterService } from '@app/core/services/query-parameter.servic
 @Component({
   selector: 'cx-reading-lists-page',
   templateUrl: './reading-lists-page.component.html',
-  styleUrls: ['./reading-lists-page.component.scss']
+  styleUrls: ['./reading-lists-page.component.scss'],
+  standalone: false
 })
 export class ReadingListsPageComponent
   implements OnInit, AfterViewInit, OnDestroy
@@ -75,14 +77,14 @@ export class ReadingListsPageComponent
   hasSelections = false;
   allSelected = false;
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService,
-    private titleService: TitleService,
-    public queryParameterService: QueryParameterService
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+  confirmationService = inject(ConfirmationService);
+  translateService = inject(TranslateService);
+  titleService = inject(TitleService);
+  queryParameterService = inject(QueryParameterService);
+
+  constructor() {
     this.logger.trace('Subscribing to reading list state updates');
     this.readingListStateSubscription = this.store
       .select(selectUserReadingListsState)

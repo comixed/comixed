@@ -20,6 +20,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild
@@ -33,7 +34,8 @@ import { loadComicsReadStatistics } from '@app/actions/comics-read-statistics.ac
 @Component({
   selector: 'cx-comics-read-chart',
   templateUrl: './comics-read-chart.component.html',
-  styleUrls: ['./comics-read-chart.component.scss']
+  styleUrls: ['./comics-read-chart.component.scss'],
+  standalone: false
 })
 export class ComicsReadChartComponent
   implements OnInit, OnDestroy, AfterViewInit
@@ -46,7 +48,10 @@ export class ComicsReadChartComponent
   chartHeight$ = new BehaviorSubject<number>(0);
   chartWidth$ = new BehaviorSubject<number>(0);
 
-  constructor(private logger: LoggerService, private store: Store) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+
+  constructor() {
     this.logger.debug('Subscribing to comics read statistics updates');
     this.comicsReadStatisticsDataSubscription = this.store
       .select(selectComicsReadStatisticsData)

@@ -20,7 +20,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { LibraryPlugin } from '@app/library-plugins/models/library-plugin';
 
 @Pipe({
-  name: 'pluginTitle'
+  name: 'pluginTitle',
+  standalone: false
 })
 export class PluginTitlePipe implements PipeTransform {
   transform(plugin: LibraryPlugin): string {

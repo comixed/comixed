@@ -28,10 +28,8 @@
   </button>
 </div>
 
-<div
-  *ngIf="showPopup"
-  class="cx-hover cx-centered cx-width-25 cx-border-primary-1"
->
+@if (showPopup) {
+<div class="cx-hover cx-centered cx-width-25 cx-border-primary-1">
   <mat-card
     appearance="outlined"
     (click)="showPopup = false"
@@ -40,13 +38,13 @@
     <mat-card-title class="cx-text-nowrap">
       {{
         "duplicate-pages.show-popup.title"
-          | translate: { hash: popupPage?.hash }
+          | translate : { hash: popupPage?.hash }
       }}
     </mat-card-title>
     <mat-card-subtitle class="cx-text-nowrap">
       {{
         "duplicate-pages.show-popup.subtitle"
-          | translate: { count: popupPage?.comicCount }
+          | translate : { count: popupPage?.comicCount }
       }}
     </mat-card-subtitle>
     <mat-card-content class="cx-padding-5">
@@ -60,11 +58,13 @@
     </mat-card-content>
   </mat-card>
 </div>
+}
 
 <h2>
   {{
     "duplicate-pages.list-page.page-title"
-      | translate: {count: totalPages, selected: selectedCount, unblockedOnly}
+      | translate
+        : { count: totalPages, selected: selectedCount, unblockedOnly }
   }}
 </h2>
 
@@ -165,22 +165,23 @@
   <ng-container matColumnDef="actions">
     <mat-header-cell *matHeaderCellDef></mat-header-cell>
     <mat-cell *matCellDef="let row">
+      @if (!isBlocked(row)) {
       <button
-        *ngIf="!isBlocked(row)"
         mat-icon-button
         [matTooltip]="'duplicate-pages.tooltip.block-page' | translate"
         (click)="onBlockPage(row); $event.stopPropagation()"
       >
         <mat-icon>block</mat-icon>
       </button>
+      } @if (isBlocked(row)) {
       <button
-        *ngIf="isBlocked(row)"
         mat-icon-button
         [matTooltip]="'duplicate-pages.tooltip.unblock-page' | translate"
         (click)="onUnblockPage(row); $event.stopPropagation()"
       >
         <mat-icon>remove_circle_outline</mat-icon>
       </button>
+      }
     </mat-cell>
   </ng-container>
 

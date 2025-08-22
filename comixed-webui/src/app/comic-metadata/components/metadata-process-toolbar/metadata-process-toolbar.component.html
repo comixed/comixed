@@ -5,12 +5,15 @@
     class="cx-toolbar-button"
     mat-icon-button
     [matTooltip]="
-      'metadata-update.tooltip.skip-cache' | translate: { skip: skipCache }
+      'metadata-update.tooltip.skip-cache' | translate : { skip: skipCache }
     "
     (click)="onToggleSkipCache()"
   >
-    <mat-icon *ngIf="skipCache">check_box</mat-icon>
-    <mat-icon *ngIf="!skipCache">check_box_outline_blank</mat-icon>
+    @if (skipCache) {
+    <mat-icon>check_box</mat-icon>
+    } @if (!skipCache) {
+    <mat-icon>check_box_outline_blank</mat-icon>
+    }
   </button>
   <button
     id="start-metadata-batch-process-button"

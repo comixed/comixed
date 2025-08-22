@@ -25,7 +25,8 @@ import {
 import { ComicPage } from '@app/comic-books/models/comic-page';
 
 @Pipe({
-  name: 'comicPageUrl'
+  name: 'comicPageUrl',
+  standalone: false
 })
 export class ComicPageUrlPipe implements PipeTransform {
   transform(page: ComicPage): string {

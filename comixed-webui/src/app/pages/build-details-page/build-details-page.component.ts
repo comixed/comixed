@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
@@ -31,20 +31,21 @@ import { Clipboard } from '@angular/cdk/clipboard';
 @Component({
   selector: 'cx-build-details',
   templateUrl: './build-details-page.component.html',
-  styleUrls: ['./build-details-page.component.scss']
+  styleUrls: ['./build-details-page.component.scss'],
+  standalone: false
 })
 export class BuildDetailsPageComponent implements OnInit, OnDestroy {
   detailsSubscription: Subscription;
   details: CurrentRelease;
   langChangeSubscription: Subscription;
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private translateService: TranslateService,
-    private titleService: TitleService,
-    private clipboard: Clipboard
-  ) {
+  private logger = inject(LoggerService);
+  private store = inject(Store);
+  private translateService = inject(TranslateService);
+  private titleService = inject(TitleService);
+  private clipboard = inject(Clipboard);
+
+  constructor() {
     this.detailsSubscription = this.store
       .select(selectReleaseDetailsState)
       .subscribe(state => {

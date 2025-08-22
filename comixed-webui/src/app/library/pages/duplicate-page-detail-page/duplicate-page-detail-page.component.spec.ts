@@ -82,57 +82,55 @@ describe('DuplicatePageDetailPageComponent', () => {
   let translateService: TranslateService;
   let confirmationService: ConfirmationService;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [
-          DuplicatePageDetailPageComponent,
-          ComicPageComponent,
-          PageHashUrlPipe
-        ],
-        imports: [
-          NoopAnimationsModule,
-          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          MatToolbarModule,
-          MatIconModule,
-          MatTableModule,
-          MatCardModule,
-          MatDialogModule,
-          MatTooltipModule,
-          MatButtonModule,
-          MatSortModule
-        ],
-        providers: [
-          provideMockStore({ initialState }),
-          {
-            provide: ActivatedRoute,
-            useValue: {
-              params: new BehaviorSubject<{}>({})
-            }
-          },
-          ConfirmationService,
-          {
-            provide: QueryParameterService,
-            useValue: {}
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        DuplicatePageDetailPageComponent,
+        ComicPageComponent,
+        PageHashUrlPipe
+      ],
+      imports: [
+        NoopAnimationsModule,
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatToolbarModule,
+        MatIconModule,
+        MatTableModule,
+        MatCardModule,
+        MatDialogModule,
+        MatTooltipModule,
+        MatButtonModule,
+        MatSortModule
+      ],
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            params: new BehaviorSubject<{}>({})
           }
-        ]
-      }).compileComponents();
+        },
+        ConfirmationService,
+        {
+          provide: QueryParameterService,
+          useValue: {}
+        }
+      ]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(DuplicatePageDetailPageComponent);
-      component = fixture.componentInstance;
-      activatedRoute = TestBed.inject(ActivatedRoute);
-      router = TestBed.inject(Router);
-      store = TestBed.inject(MockStore);
-      spyOn(store, 'dispatch');
-      titleService = TestBed.inject(TitleService);
-      setTitleSpy = spyOn(titleService, 'setTitle');
-      translateService = TestBed.inject(TranslateService);
-      confirmationService = TestBed.inject(ConfirmationService);
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(DuplicatePageDetailPageComponent);
+    component = fixture.componentInstance;
+    activatedRoute = TestBed.inject(ActivatedRoute);
+    router = TestBed.inject(Router);
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    titleService = TestBed.inject(TitleService);
+    setTitleSpy = spyOn(titleService, 'setTitle');
+    translateService = TestBed.inject(TranslateService);
+    confirmationService = TestBed.inject(ConfirmationService);
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

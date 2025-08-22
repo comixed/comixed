@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, inject, OnDestroy } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Series } from '@app/collections/models/series';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -35,13 +35,14 @@ import { isAdmin } from '@app/user/user.functions';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { PAGE_SIZE_OPTIONS } from '@app/core';
 import { setBusyState } from '@app/core/actions/busy.actions';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { loadSeriesList } from '@app/collections/actions/series.actions';
 
 @Component({
   selector: 'cx-series-list-page',
   templateUrl: './series-list-page.component.html',
-  styleUrls: ['./series-list-page.component.scss']
+  styleUrls: ['./series-list-page.component.scss'],
+  standalone: false
 })
 export class SeriesListPageComponent implements OnDestroy, AfterViewInit {
   dataSource = new MatTableDataSource<Series>([]);
@@ -68,14 +69,14 @@ export class SeriesListPageComponent implements OnDestroy, AfterViewInit {
 
   selectedSeries: Series;
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private titleService: TitleService,
-    private translateService: TranslateService,
-    private activatedRoute: ActivatedRoute,
-    public queryParameterService: QueryParameterService
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+  titleService = inject(TitleService);
+  translateService = inject(TranslateService);
+  activatedRoute = inject(ActivatedRoute);
+  queryParameterService = inject(QueryParameterService);
+
+  constructor() {
     this.logger.trace('Subscribing to language change updates');
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()

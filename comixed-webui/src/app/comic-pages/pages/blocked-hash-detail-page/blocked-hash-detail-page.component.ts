@@ -45,7 +45,8 @@ import {
 @Component({
   selector: 'cx-blocked-hash-detail-page',
   templateUrl: './blocked-hash-detail-page.component.html',
-  styleUrls: ['./blocked-hash-detail-page.component.scss']
+  styleUrls: ['./blocked-hash-detail-page.component.scss'],
+  standalone: false
 })
 export class BlockedHashDetailPageComponent implements OnDestroy {
   paramsSubscription: Subscription;

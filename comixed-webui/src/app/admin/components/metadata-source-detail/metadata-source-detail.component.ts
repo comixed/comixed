@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Inject, Input } from '@angular/core';
+import { Component, inject, Inject, Input } from '@angular/core';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import {
   AbstractControl,
@@ -36,17 +36,19 @@ import { saveMetadataSource } from '@app/comic-metadata/actions/metadata-source.
 @Component({
   selector: 'cx-metadata-source-detail',
   templateUrl: './metadata-source-detail.component.html',
-  styleUrls: ['./metadata-source-detail.component.scss']
+  styleUrls: ['./metadata-source-detail.component.scss'],
+  standalone: false
 })
 export class MetadataSourceDetailComponent {
   sourceForm: UntypedFormGroup;
 
+  logger = inject(LoggerService);
+  store = inject(Store);
+  formBuilder = inject(UntypedFormBuilder);
+  confirmationService = inject(ConfirmationService);
+  translateService = inject(TranslateService);
+
   constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private formBuilder: UntypedFormBuilder,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService,
     @Inject(MAT_DIALOG_DATA) public data: { source: MetadataSource }
   ) {
     this.sourceForm = this.formBuilder.group({

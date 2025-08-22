@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Inject } from '@angular/core';
+import { Component, inject, Inject } from '@angular/core';
 import {
   LibraryPlugin,
   LibraryPluginProperty
@@ -40,19 +40,19 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'cx-library-plugin-setup',
   templateUrl: './library-plugin-setup.component.html',
-  styleUrls: ['./library-plugin-setup.component.scss']
+  styleUrls: ['./library-plugin-setup.component.scss'],
+  standalone: false
 })
 export class LibraryPluginSetupComponent {
   pluginFormGroup: FormGroup;
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store,
-    private formBuilder: FormBuilder,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService,
-    @Inject(MAT_DIALOG_DATA) public plugin: LibraryPlugin
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+  formBuilder = inject(FormBuilder);
+  confirmationService = inject(ConfirmationService);
+  translateService = inject(TranslateService);
+
+  constructor(@Inject(MAT_DIALOG_DATA) public plugin: LibraryPlugin) {
     this.logger.trace('Setting up the plugin form group');
     this.pluginFormGroup = this.formBuilder.group({
       filename: [''],

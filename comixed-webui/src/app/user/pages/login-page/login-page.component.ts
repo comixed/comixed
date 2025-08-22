@@ -16,7 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  inject,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import {
   AbstractControl,
@@ -43,7 +49,8 @@ import { loadInitialUserAccount } from '@app/user/actions/initial-user-account.a
 @Component({
   selector: 'cx-login',
   templateUrl: './login-page.component.html',
-  styleUrls: ['./login-page.component.scss']
+  styleUrls: ['./login-page.component.scss'],
+  standalone: false
 })
 export class LoginPageComponent implements OnInit, OnDestroy, AfterViewInit {
   loginForm: UntypedFormGroup;
@@ -53,14 +60,14 @@ export class LoginPageComponent implements OnInit, OnDestroy, AfterViewInit {
   busy = false;
   private;
 
-  constructor(
-    private logger: LoggerService,
-    private formBuilder: UntypedFormBuilder,
-    private store: Store<UserModuleState>,
-    private titleService: TitleService,
-    private translateService: TranslateService,
-    private router: Router
-  ) {
+  logger = inject(LoggerService);
+  formBuilder = inject(UntypedFormBuilder);
+  store = inject(Store);
+  titleService = inject(TitleService);
+  translateService = inject(TranslateService);
+  router = inject(Router);
+
+  constructor() {
     this.logger.trace('Creating the login form');
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],

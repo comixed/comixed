@@ -1,7 +1,7 @@
 <div #container class="cx-width-100 cx-height-100 cx-padding-5">
   <h2>{{ "home.title.comics-by-year-and-publisher-chart" | translate }}</h2>
+  @if ((data$ | async)?.value?.length > 0) {
   <ngx-charts-heat-map
-    *ngIf="(data$ | async)?.value?.length > 0"
     [view]="[chartWidth$ | async, chartHeight$ | async]"
     scheme="vivid"
     [results]="data$ | async"
@@ -9,6 +9,7 @@
     [yAxis]="true"
     [legend]="true"
   ></ngx-charts-heat-map>
+  }
   <div class="cx-horizontal-container">
     <mat-form-field class="cx-grow-0" appearance="fill">
       <mat-label>{{ "text.number-of-publishers" | translate }}</mat-label>
@@ -18,12 +19,12 @@
         [disabled]="publisherOptions.length === 0"
         (selectionChange)="onShowData(startYear, endYear, $event.value)"
       >
-        <mat-option
-          *ngFor="let publisher of publisherOptions; index as publisherIndex"
-          [value]="publisherIndex + 1"
-        >
+        @for (publisher of publisherOptions; track publisher; let publisherIndex
+        = $index) {
+        <mat-option [value]="publisherIndex + 1">
           {{ publisherIndex + 1 }}
         </mat-option>
+        }
       </mat-select>
     </mat-form-field>
     <div class="cx-horizontal-container">
@@ -37,9 +38,11 @@
             onShowData($event.value, endYear, publishersToShow)
           "
         >
-          <mat-option *ngFor="let year of yearOptions" [value]="year">
+          @for (year of yearOptions; track year) {
+          <mat-option [value]="year">
             {{ year }}
           </mat-option>
+          }
         </mat-select>
       </mat-form-field>
       <mat-form-field class="cx-grow-0" appearance="fill">
@@ -52,9 +55,11 @@
             onShowData(startYear, $event.value, publishersToShow)
           "
         >
-          <mat-option *ngFor="let year of yearOptions" [value]="year">
+          @for (year of yearOptions; track year) {
+          <mat-option [value]="year">
             {{ year }}
           </mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </div>

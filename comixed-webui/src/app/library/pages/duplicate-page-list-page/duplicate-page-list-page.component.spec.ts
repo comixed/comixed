@@ -148,69 +148,67 @@ describe('DuplicatePageListPageComponent', () => {
   let confirmationService: ConfirmationService;
   let queryParameterService: QueryParameterService;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [
-          DuplicatePageListPageComponent,
-          PageHashUrlPipe,
-          YesNoPipe
-        ],
-        imports: [
-          NoopAnimationsModule,
-          RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          MatIconModule,
-          MatPaginatorModule,
-          MatToolbarModule,
-          MatPaginatorModule,
-          MatTooltipModule,
-          MatTableModule,
-          MatCheckboxModule,
-          MatSortModule
-        ],
-        providers: [
-          provideMockStore({ initialState }),
-          {
-            provide: WebSocketService,
-            useValue: {
-              subscribe: jasmine.createSpy('WebSocketService.subscribe()'),
-              send: jasmine.createSpy('WebSocketService.send()'),
-              requestResponse: jasmine.createSpy(
-                'WebSocketService.requestResponse()'
-              )
-            }
-          },
-          ConfirmationService,
-          {
-            provide: QueryParameterService,
-            useValue: {
-              pageSize$: new BehaviorSubject<number>(PAGE_SIZE_DEFAULT),
-              pageIndex$: new BehaviorSubject<number>(0),
-              sortBy$: new BehaviorSubject<string>(null),
-              sortDirection$: new BehaviorSubject<SortDirection>('')
-            }
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        DuplicatePageListPageComponent,
+        PageHashUrlPipe,
+        YesNoPipe
+      ],
+      imports: [
+        NoopAnimationsModule,
+        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatIconModule,
+        MatPaginatorModule,
+        MatToolbarModule,
+        MatPaginatorModule,
+        MatTooltipModule,
+        MatTableModule,
+        MatCheckboxModule,
+        MatSortModule
+      ],
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: WebSocketService,
+          useValue: {
+            subscribe: jasmine.createSpy('WebSocketService.subscribe()'),
+            send: jasmine.createSpy('WebSocketService.send()'),
+            requestResponse: jasmine.createSpy(
+              'WebSocketService.requestResponse()'
+            )
           }
-        ]
-      }).compileComponents();
+        },
+        ConfirmationService,
+        {
+          provide: QueryParameterService,
+          useValue: {
+            pageSize$: new BehaviorSubject<number>(PAGE_SIZE_DEFAULT),
+            pageIndex$: new BehaviorSubject<number>(0),
+            sortBy$: new BehaviorSubject<string>(null),
+            sortDirection$: new BehaviorSubject<SortDirection>('')
+          }
+        }
+      ]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(DuplicatePageListPageComponent);
-      component = fixture.componentInstance;
-      store = TestBed.inject(MockStore);
-      spyOn(store, 'dispatch');
-      webSocketService = TestBed.inject(
-        WebSocketService
-      ) as jasmine.SpyObj<WebSocketService>;
-      titleService = TestBed.inject(TitleService);
-      setTitleSpy = spyOn(titleService, 'setTitle');
-      translateService = TestBed.inject(TranslateService);
-      confirmationService = TestBed.inject(ConfirmationService);
-      component.pageUpdatesSubscription = null;
-      queryParameterService = TestBed.inject(QueryParameterService);
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(DuplicatePageListPageComponent);
+    component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    webSocketService = TestBed.inject(
+      WebSocketService
+    ) as jasmine.SpyObj<WebSocketService>;
+    titleService = TestBed.inject(TitleService);
+    setTitleSpy = spyOn(titleService, 'setTitle');
+    translateService = TestBed.inject(TranslateService);
+    confirmationService = TestBed.inject(ConfirmationService);
+    component.pageUpdatesSubscription = null;
+    queryParameterService = TestBed.inject(QueryParameterService);
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

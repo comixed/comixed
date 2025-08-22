@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
@@ -30,7 +30,8 @@ import {
   providedIn: 'root'
 })
 export class MetricsService {
-  constructor(private logger: LoggerService, private http: HttpClient) {}
+  logger = inject(LoggerService);
+  http = inject(HttpClient);
 
   loadMetricList(): Observable<any> {
     this.logger.debug('Loading the metric list');

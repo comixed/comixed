@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subscription } from 'rxjs';
@@ -61,12 +61,12 @@ export class ComicBookSelectionService {
   selectionUpdateSubscription: Subscription;
   email: string | null = null;
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private webSocketService: WebSocketService,
-    private http: HttpClient
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+  webSocketService = inject(WebSocketService);
+  http = inject(HttpClient);
+
+  constructor() {
     this.store.select(selectUser).subscribe(user => {
       this.email = user?.email;
       this.doSubscribeToSelectionUpdates();

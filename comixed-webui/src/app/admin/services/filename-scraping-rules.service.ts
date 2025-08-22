@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -33,7 +33,8 @@ import { FilenameScrapingRule } from '@app/admin/models/filename-scraping-rule';
   providedIn: 'root'
 })
 export class FilenameScrapingRulesService {
-  constructor(private logger: LoggerService, private http: HttpClient) {}
+  logger = inject(LoggerService);
+  http = inject(HttpClient);
 
   load(): Observable<any> {
     this.logger.trace('Loading filename scraping rules');

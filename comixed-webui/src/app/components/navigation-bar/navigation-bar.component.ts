@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { User } from '@app/user/models/user';
 import { LoggerLevel, LoggerService } from '@angular-ru/cdk/logger';
 import { Router } from '@angular/router';
@@ -50,7 +50,8 @@ import { QueryParameterService } from '@app/core/services/query-parameter.servic
 @Component({
   selector: 'cx-navigation-bar',
   templateUrl: './navigation-bar.component.html',
-  styleUrls: ['./navigation-bar.component.scss']
+  styleUrls: ['./navigation-bar.component.scss'],
+  standalone: false
 })
 export class NavigationBarComponent {
   @Output() toggleSidebar = new EventEmitter<boolean>();
@@ -80,14 +81,14 @@ export class NavigationBarComponent {
   latestRelease: LatestRelease;
   darkMode = false;
 
-  constructor(
-    private logger: LoggerService,
-    private router: Router,
-    private store: Store<any>,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService,
-    private queryParameterService: QueryParameterService
-  ) {
+  logger = inject(LoggerService);
+  router = inject(Router);
+  store = inject(Store);
+  confirmationService = inject(ConfirmationService);
+  translateService = inject(TranslateService);
+  queryParameterService = inject(QueryParameterService);
+
+  constructor() {
     this.translateService.onLangChange.subscribe(language => {
       this.logger.debug('Active language changed:', language.lang);
       this.currentLanguage = language.lang;

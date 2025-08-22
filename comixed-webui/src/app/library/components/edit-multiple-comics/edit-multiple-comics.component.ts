@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   UntypedFormBuilder,
@@ -38,7 +38,8 @@ import { ComicType } from '@app/comic-books/models/comic-type';
 @Component({
   selector: 'cx-edit-multiple-comics',
   templateUrl: './edit-multiple-comics.component.html',
-  styleUrls: ['./edit-multiple-comics.component.scss']
+  styleUrls: ['./edit-multiple-comics.component.scss'],
+  standalone: false
 })
 export class EditMultipleComicsComponent implements OnInit, OnDestroy {
   detailsForm: UntypedFormGroup;
@@ -53,12 +54,11 @@ export class EditMultipleComicsComponent implements OnInit, OnDestroy {
     } as SelectionOption<ComicType>
   ].concat(COMIC_TYPE_SELECTION_OPTIONS);
 
-  constructor(
-    private logger: LoggerService,
-    private formBuilder: UntypedFormBuilder,
-    private store: Store<any>,
-    @Inject(MAT_DIALOG_DATA) comicBooks: ComicDetail[]
-  ) {
+  logger = inject(LoggerService);
+  formBuilder = inject(UntypedFormBuilder);
+  store = inject(Store);
+
+  constructor(@Inject(MAT_DIALOG_DATA) comicBooks: ComicDetail[]) {
     this.detailsForm = this.formBuilder.group({
       publisher: ['', [Validators.required, Validators.maxLength(255)]],
       series: ['', [Validators.required, Validators.maxLength(255)]],

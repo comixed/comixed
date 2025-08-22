@@ -61,40 +61,38 @@ xdescribe('HomePageComponent', () => {
   let titleService: TitleService;
   let store: MockStore<any>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [
-          HomePageComponent,
-          CollectionsChartComponent,
-          ComicStateChartComponent,
-          ComicsByYearChartComponent,
-          ComicsReadChartComponent
-        ],
-        imports: [
-          NoopAnimationsModule,
-          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          MatToolbarModule,
-          MatSelectModule,
-          MatFormFieldModule,
-          MatGridListModule,
-          MatProgressBarModule,
-          NgxChartsModule
-        ],
-        providers: [TitleService, provideMockStore({ initialState })]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        HomePageComponent,
+        CollectionsChartComponent,
+        ComicStateChartComponent,
+        ComicsByYearChartComponent,
+        ComicsReadChartComponent
+      ],
+      imports: [
+        NoopAnimationsModule,
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatToolbarModule,
+        MatSelectModule,
+        MatFormFieldModule,
+        MatGridListModule,
+        MatProgressBarModule,
+        NgxChartsModule
+      ],
+      providers: [TitleService, provideMockStore({ initialState })]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(HomePageComponent);
-      component = fixture.componentInstance;
-      translateService = TestBed.inject(TranslateService);
-      titleService = TestBed.inject(TitleService);
-      spyOn(titleService, 'setTitle');
-      store = TestBed.inject(MockStore);
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(HomePageComponent);
+    component = fixture.componentInstance;
+    translateService = TestBed.inject(TranslateService);
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
+    store = TestBed.inject(MockStore);
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

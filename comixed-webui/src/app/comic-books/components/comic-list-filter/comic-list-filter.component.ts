@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -38,7 +38,8 @@ import {
 @Component({
   selector: 'cx-comic-list-filter',
   templateUrl: './comic-list-filter.component.html',
-  styleUrls: ['./comic-list-filter.component.scss']
+  styleUrls: ['./comic-list-filter.component.scss'],
+  standalone: false
 })
 export class ComicListFilterComponent {
   @Output() closeFilter = new EventEmitter<void>();
@@ -73,12 +74,12 @@ export class ComicListFilterComponent {
     } as ListItem<string>;
   });
 
-  constructor(
-    private logger: LoggerService,
-    private formBuilder: FormBuilder,
-    private activatedRoute: ActivatedRoute,
-    public queryParameterService: QueryParameterService
-  ) {
+  logger = inject(LoggerService);
+  formBuilder = inject(FormBuilder);
+  activatedRoute = inject(ActivatedRoute);
+  queryParameterService = inject(QueryParameterService);
+
+  constructor() {
     this.logger.trace('Creating the comic list filter form group');
     this.filterForm = this.formBuilder.group({
       filterText: [''],

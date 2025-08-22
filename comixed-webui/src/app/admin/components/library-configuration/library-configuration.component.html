@@ -42,10 +42,12 @@
           </th>
         </thead>
         <tbody id="file-renaming-details">
-          <tr *ngFor="let option of comicVariableOptions">
+          @for (option of comicVariableOptions; track option) {
+          <tr>
             <td>{{ option.label }}</td>
             <td>{{ option.value | translate }}</td>
           </tr>
+          }
         </tbody>
         <thead id="page-renaming-header">
           <th scope="col">
@@ -56,10 +58,12 @@
           </th>
         </thead>
         <tbody id="page-renaming-details">
-          <tr *ngFor="let option of pageVariableOptions">
+          @for (option of pageVariableOptions; track option) {
+          <tr>
             <td>{{ option.label }}</td>
             <td>{{ option.value | translate }}</td>
           </tr>
+          }
         </tbody>
       </table>
     </div>

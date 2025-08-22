@@ -122,57 +122,55 @@ describe('AppComponent', () => {
   let store: MockStore<any>;
   let logger: LoggerService;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [
-          AppComponent,
-          NavigationBarComponent,
-          SideNavigationComponent,
-          FooterComponent
-        ],
-        imports: [
-          NoopAnimationsModule,
-          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-          TranslateModule.forRoot(),
-          LoggerModule.forRoot(),
-          MatToolbarModule,
-          MatDialogModule,
-          MatMenuModule,
-          MatIconModule,
-          MatTooltipModule,
-          MatFormFieldModule,
-          MatDividerModule,
-          MatSelectModule,
-          MatSidenavModule,
-          MatListModule
-        ],
-        providers: [
-          provideMockStore({ initialState }),
-          {
-            provide: WebSocketService,
-            useValue: {
-              send: jasmine.createSpy('WebSocketService.send()'),
-              subscribe: jasmine.createSpy('WebSocketService.subscribe()')
-            }
-          },
-          AlertService
-        ]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        AppComponent,
+        NavigationBarComponent,
+        SideNavigationComponent,
+        FooterComponent
+      ],
+      imports: [
+        NoopAnimationsModule,
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+        TranslateModule.forRoot(),
+        LoggerModule.forRoot(),
+        MatToolbarModule,
+        MatDialogModule,
+        MatMenuModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatFormFieldModule,
+        MatDividerModule,
+        MatSelectModule,
+        MatSidenavModule,
+        MatListModule
+      ],
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: WebSocketService,
+          useValue: {
+            send: jasmine.createSpy('WebSocketService.send()'),
+            subscribe: jasmine.createSpy('WebSocketService.subscribe()')
+          }
+        },
+        AlertService
+      ]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(AppComponent);
-      component = fixture.componentInstance;
-      webSocketService = TestBed.inject(
-        WebSocketService
-      ) as jasmine.SpyObj<WebSocketService>;
-      alertService = TestBed.inject(AlertService);
-      spyOn(alertService, 'info');
-      store = TestBed.inject(MockStore);
-      spyOn(store, 'dispatch');
-      fixture.detectChanges();
-      logger = TestBed.inject(LoggerService);
-    })
-  );
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
+    webSocketService = TestBed.inject(
+      WebSocketService
+    ) as jasmine.SpyObj<WebSocketService>;
+    alertService = TestBed.inject(AlertService);
+    spyOn(alertService, 'info');
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    fixture.detectChanges();
+    logger = TestBed.inject(LoggerService);
+  }));
 
   it('should create the app', () => {
     expect(component).toBeTruthy();
