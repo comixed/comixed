@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -37,7 +37,8 @@ import { UpdatePluginRequest } from '@app/library-plugins/models/net/update-plug
   providedIn: 'root'
 })
 export class LibraryPluginService {
-  constructor(private http: HttpClient, private logger: LoggerService) {}
+  http = inject(HttpClient);
+  logger = inject(LoggerService);
 
   loadAll(): Observable<any> {
     this.logger.trace('Loading all library plugins');

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Observable } from 'rxjs';
@@ -33,7 +33,8 @@ import {
   providedIn: 'root'
 })
 export class HashSelectionService {
-  constructor(private logger: LoggerService, private http: HttpClient) {}
+  logger = inject(LoggerService);
+  http = inject(HttpClient);
 
   loadSelections(): Observable<any> {
     this.logger.trace('Loading all hash selections');

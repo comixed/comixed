@@ -21,7 +21,8 @@ import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Pipe({
-  name: 'coverDateFilter'
+  name: 'coverDateFilter',
+  standalone: false
 })
 export class CoverDateFilterPipe implements PipeTransform {
   transform(comicBooks: ComicDetail[], filter: CoverDateFilter): ComicDetail[] {

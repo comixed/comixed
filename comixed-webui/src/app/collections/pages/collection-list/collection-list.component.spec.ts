@@ -76,73 +76,71 @@ describe('CollectionListComponent', () => {
   let translateService: TranslateService;
   let queryParameterService: jasmine.SpyObj<QueryParameterService>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [CollectionListComponent, FilterTextFormComponent],
-        imports: [
-          NoopAnimationsModule,
-          FormsModule,
-          ReactiveFormsModule,
-          RouterModule.forRoot([]),
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          MatTableModule,
-          MatSortModule,
-          MatToolbarModule,
-          MatPaginatorModule,
-          MatFormFieldModule,
-          MatInputModule,
-          MatIconModule
-        ],
-        providers: [
-          provideMockStore({ initialState }),
-          TitleService,
-          {
-            provide: ActivatedRoute,
-            useValue: {
-              params: new BehaviorSubject<{}>({
-                collectionType: 'stories'
-              }),
-              queryParams: new BehaviorSubject<{}>({})
-            }
-          },
-          {
-            provide: QueryParameterService,
-            useValue: {
-              updateQueryParam: jasmine.createSpy(
-                'QueryParameterService.updateQueryParam()'
-              ),
-              coverYear$: new BehaviorSubject<CoverDateFilter>({
-                year: null,
-                month: null
-              }),
-              pageSize$: new BehaviorSubject<number>(10),
-              pageIndex$: new BehaviorSubject<number>(3),
-              filterText$: new BehaviorSubject<number>(3),
-              sortBy$: new BehaviorSubject<string>(null),
-              sortDirection$: new BehaviorSubject<string>(null)
-            }
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [CollectionListComponent, FilterTextFormComponent],
+      imports: [
+        NoopAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        RouterModule.forRoot([]),
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatTableModule,
+        MatSortModule,
+        MatToolbarModule,
+        MatPaginatorModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule
+      ],
+      providers: [
+        provideMockStore({ initialState }),
+        TitleService,
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            params: new BehaviorSubject<{}>({
+              collectionType: 'stories'
+            }),
+            queryParams: new BehaviorSubject<{}>({})
           }
-        ]
-      }).compileComponents();
+        },
+        {
+          provide: QueryParameterService,
+          useValue: {
+            updateQueryParam: jasmine.createSpy(
+              'QueryParameterService.updateQueryParam()'
+            ),
+            coverYear$: new BehaviorSubject<CoverDateFilter>({
+              year: null,
+              month: null
+            }),
+            pageSize$: new BehaviorSubject<number>(10),
+            pageIndex$: new BehaviorSubject<number>(3),
+            filterText$: new BehaviorSubject<number>(3),
+            sortBy$: new BehaviorSubject<string>(null),
+            sortDirection$: new BehaviorSubject<string>(null)
+          }
+        }
+      ]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(CollectionListComponent);
-      component = fixture.componentInstance;
-      store = TestBed.inject(MockStore);
-      activatedRoute = TestBed.inject(ActivatedRoute);
-      router = TestBed.inject(Router);
-      spyOn(router, 'navigate');
-      spyOn(router, 'navigateByUrl');
-      titleService = TestBed.inject(TitleService);
-      spyOn(titleService, 'setTitle');
-      translateService = TestBed.inject(TranslateService);
-      queryParameterService = TestBed.inject(
-        QueryParameterService
-      ) as jasmine.SpyObj<QueryParameterService>;
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(CollectionListComponent);
+    component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
+    activatedRoute = TestBed.inject(ActivatedRoute);
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigate');
+    spyOn(router, 'navigateByUrl');
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
+    translateService = TestBed.inject(TranslateService);
+    queryParameterService = TestBed.inject(
+      QueryParameterService
+    ) as jasmine.SpyObj<QueryParameterService>;
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

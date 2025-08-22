@@ -86,39 +86,37 @@ describe('ComicScrapingComponent', () => {
   let storeDispatchSpy: jasmine.Spy<any>;
   let confirmationService: ConfirmationService;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [ComicScrapingComponent],
-        imports: [
-          NoopAnimationsModule,
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          FormsModule,
-          ReactiveFormsModule,
-          MatDialogModule,
-          MatFormFieldModule,
-          MatToolbarModule,
-          MatIconModule,
-          MatInputModule,
-          MatSelectModule,
-          MatTooltipModule
-        ],
-        providers: [provideMockStore({ initialState }), ConfirmationService]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [ComicScrapingComponent],
+      imports: [
+        NoopAnimationsModule,
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        FormsModule,
+        ReactiveFormsModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatInputModule,
+        MatSelectModule,
+        MatTooltipModule
+      ],
+      providers: [provideMockStore({ initialState }), ConfirmationService]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(ComicScrapingComponent);
-      component = fixture.componentInstance;
-      component.maximumRecords = MAXIMUM_RECORDS;
-      component.skipCache = SKIP_CACHE;
-      component.matchPublisher = MATCH_PUBLISHER;
-      component.comic = COMIC;
-      store = TestBed.inject(MockStore);
-      storeDispatchSpy = spyOn(store, 'dispatch');
-      confirmationService = TestBed.inject(ConfirmationService);
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(ComicScrapingComponent);
+    component = fixture.componentInstance;
+    component.maximumRecords = MAXIMUM_RECORDS;
+    component.skipCache = SKIP_CACHE;
+    component.matchPublisher = MATCH_PUBLISHER;
+    component.comic = COMIC;
+    store = TestBed.inject(MockStore);
+    storeDispatchSpy = spyOn(store, 'dispatch');
+    confirmationService = TestBed.inject(ConfirmationService);
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

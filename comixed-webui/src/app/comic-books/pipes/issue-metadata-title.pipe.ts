@@ -20,7 +20,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { IssueMetadata } from '@app/comic-metadata/models/issue-metadata';
 
 @Pipe({
-  name: 'issueMetadataTitle'
+  name: 'issueMetadataTitle',
+  standalone: false
 })
 export class IssueMetadataTitlePipe implements PipeTransform {
   transform(issue: IssueMetadata): string {

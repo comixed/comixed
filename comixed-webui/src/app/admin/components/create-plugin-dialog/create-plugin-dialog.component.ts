@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { loadPluginLanguages } from '@app/library-plugins/actions/plugin-language.actions';
@@ -35,7 +35,8 @@ import { createLibraryPlugin } from '@app/library-plugins/actions/library-plugin
 @Component({
   selector: 'cx-create-plugin-dialog',
   templateUrl: './create-plugin-dialog.component.html',
-  styleUrls: ['./create-plugin-dialog.component.scss']
+  styleUrls: ['./create-plugin-dialog.component.scss'],
+  standalone: false
 })
 export class CreatePluginDialogComponent implements OnInit, OnDestroy {
   pluginLanguageStateSubscription: Subscription;
@@ -44,13 +45,13 @@ export class CreatePluginDialogComponent implements OnInit, OnDestroy {
   pluginLanguageList: PluginLanguage[] = [];
   pluginForm: FormGroup;
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store,
-    private formBuilder: FormBuilder,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+  formBuilder = inject(FormBuilder);
+  confirmationService = inject(ConfirmationService);
+  translateService = inject(TranslateService);
+
+  constructor() {
     this.logger.trace('Subscribing to plugin language state updates');
     this.pluginLanguageStateSubscription = this.store
       .select(selectPluginLanguageState)

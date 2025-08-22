@@ -19,6 +19,7 @@
 import {
   AfterViewInit,
   Component,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild
@@ -49,7 +50,8 @@ import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 @Component({
   selector: 'cx-batch-process-list-page',
   templateUrl: './batch-process-list-page.component.html',
-  styleUrls: ['./batch-process-list-page.component.scss']
+  styleUrls: ['./batch-process-list-page.component.scss'],
+  standalone: false
 })
 export class BatchProcessListPageComponent
   implements OnInit, OnDestroy, AfterViewInit
@@ -79,15 +81,14 @@ export class BatchProcessListPageComponent
   detail: BatchProcessDetail | null = null;
   anySelected = false;
   allSelected = false;
+  queryParameterService = inject(QueryParameterService);
+  logger = inject(LoggerService);
+  store = inject(Store);
+  translateService = inject(TranslateService);
+  titleService = inject(TitleService);
+  confirmationService = inject(ConfirmationService);
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private translateService: TranslateService,
-    private titleService: TitleService,
-    private confirmationService: ConfirmationService,
-    public queryParameterService: QueryParameterService
-  ) {
+  constructor() {
     this.logger.debug('Subscribing to batch process state updates');
     this.batchProcessStateSubscription = this.store
       .select(selectBatchProcessesState)

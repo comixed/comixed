@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
@@ -36,7 +36,8 @@ import {
 @Component({
   selector: 'cx-health-metrics',
   templateUrl: './server-metrics.component.html',
-  styleUrls: ['./server-metrics.component.scss']
+  styleUrls: ['./server-metrics.component.scss'],
+  standalone: false
 })
 export class ServerMetricsComponent implements OnInit, OnDestroy {
   metricStateSubscription: Subscription;
@@ -45,7 +46,10 @@ export class ServerMetricsComponent implements OnInit, OnDestroy {
   metricDetailsSubscription: Subscription;
   metricDetail: MetricDetail;
 
-  constructor(private logger: LoggerService, private store: Store<any>) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+
+  constructor() {
     this.logger.trace('Subscribing to metric state updates');
     this.metricStateSubscription = this.store
       .select(selectMetricsState)

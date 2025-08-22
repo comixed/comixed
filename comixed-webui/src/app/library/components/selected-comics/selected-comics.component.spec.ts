@@ -43,21 +43,19 @@ describe('SelectedComicsComponent', () => {
   let fixture: ComponentFixture<SelectedComicsComponent>;
   let dialog: MatDialog;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [SelectedComicsComponent],
-        imports: [NoopAnimationsModule, LoggerModule.forRoot(), MatDialogModule]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [SelectedComicsComponent],
+      imports: [NoopAnimationsModule, LoggerModule.forRoot(), MatDialogModule]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(SelectedComicsComponent);
-      component = fixture.componentInstance;
-      spyOn(component.selectionChanged, 'emit');
-      dialog = TestBed.inject(MatDialog);
-      spyOn(dialog, 'open');
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(SelectedComicsComponent);
+    component = fixture.componentInstance;
+    spyOn(component.selectionChanged, 'emit');
+    dialog = TestBed.inject(MatDialog);
+    spyOn(dialog, 'open');
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

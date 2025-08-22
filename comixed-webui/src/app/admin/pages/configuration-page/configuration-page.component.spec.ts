@@ -117,57 +117,55 @@ describe('ConfigurationPageComponent', () => {
   let titleService: TitleService;
   let setTitleSpy: jasmine.Spy;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [
-          ConfigurationPageComponent,
-          ServerMetricsComponent,
-          ServerMetricDetailsComponent,
-          LibraryConfigurationComponent,
-          ServerRuntimeComponent,
-          FilenameScrapingRulesConfigurationComponent,
-          MetadataSourceListComponent,
-          MetadataSourceDetailComponent,
-          LibraryPluginsConfigurationComponent
-        ],
-        imports: [
-          NoopAnimationsModule,
-          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-          FormsModule,
-          ReactiveFormsModule,
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          MatFormFieldModule,
-          MatInputModule,
-          MatIconModule,
-          MatButtonModule,
-          MatToolbarModule,
-          MatDialogModule,
-          MatTabsModule,
-          MatCardModule,
-          MatExpansionModule,
-          MatTableModule,
-          MatTooltipModule,
-          MatCheckboxModule,
-          DragDropModule,
-          MatSelectModule,
-          MatSortModule,
-          MatSnackBarModule
-        ],
-        providers: [provideMockStore({ initialState }), TitleService]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        ConfigurationPageComponent,
+        ServerMetricsComponent,
+        ServerMetricDetailsComponent,
+        LibraryConfigurationComponent,
+        ServerRuntimeComponent,
+        FilenameScrapingRulesConfigurationComponent,
+        MetadataSourceListComponent,
+        MetadataSourceDetailComponent,
+        LibraryPluginsConfigurationComponent
+      ],
+      imports: [
+        NoopAnimationsModule,
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+        FormsModule,
+        ReactiveFormsModule,
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        MatButtonModule,
+        MatToolbarModule,
+        MatDialogModule,
+        MatTabsModule,
+        MatCardModule,
+        MatExpansionModule,
+        MatTableModule,
+        MatTooltipModule,
+        MatCheckboxModule,
+        DragDropModule,
+        MatSelectModule,
+        MatSortModule,
+        MatSnackBarModule
+      ],
+      providers: [provideMockStore({ initialState }), TitleService]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(ConfigurationPageComponent);
-      component = fixture.componentInstance;
-      store = TestBed.inject(MockStore);
-      spyOn(store, 'dispatch');
-      translateService = TestBed.inject(TranslateService);
-      titleService = TestBed.inject(TitleService);
-      setTitleSpy = spyOn(titleService, 'setTitle');
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(ConfigurationPageComponent);
+    component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    translateService = TestBed.inject(TranslateService);
+    titleService = TestBed.inject(TitleService);
+    setTitleSpy = spyOn(titleService, 'setTitle');
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

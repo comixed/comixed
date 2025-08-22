@@ -25,12 +25,11 @@
           formControlName="coverYear"
           [disabled]="queryParameterService.filterText$.value?.length > 0"
         >
-          <mat-option
-            *ngFor="let option of displayableCoverYears"
-            [value]="option.value"
-          >
+          @for (option of displayableCoverYears; track option) {
+          <mat-option [value]="option.value">
             {{ option.label | translate }}
           </mat-option>
+          }
         </mat-select>
       </mat-form-field>
       <mat-form-field class="cx-filter-field-input">
@@ -42,12 +41,11 @@
           formControlName="coverMonth"
           [disabled]="queryParameterService.filterText$.value?.length > 0"
         >
-          <mat-option
-            *ngFor="let option of displayableCoverMonths"
-            [value]="option.value"
-          >
+          @for (option of displayableCoverMonths; track option) {
+          <mat-option [value]="option.value">
             {{ option.label | translate }}
           </mat-option>
+          }
         </mat-select>
       </mat-form-field>
       <mat-form-field class="cx-filter-field-input">
@@ -59,12 +57,11 @@
           formControlName="archiveType"
           [disabled]="queryParameterService.filterText$.value?.length > 0"
         >
-          <mat-option
-            *ngFor="let option of archiveTypeOptions"
-            [value]="option.value"
-          >
+          @for (option of archiveTypeOptions; track option) {
+          <mat-option [value]="option.value">
             {{ option.label | translate }}
           </mat-option>
+          }
         </mat-select>
       </mat-form-field>
       <mat-form-field class="cx-filter-field-input">
@@ -76,12 +73,11 @@
           formControlName="comicType"
           [disabled]="queryParameterService.filterText$.value?.length > 0"
         >
-          <mat-option
-            *ngFor="let option of comicTypeOptions"
-            [value]="option.value"
-          >
+          @for (option of comicTypeOptions; track option) {
+          <mat-option [value]="option.value">
             {{ option.label | translate }}
           </mat-option>
+          }
         </mat-select>
       </mat-form-field>
       <mat-form-field class="cx-filter-field-input">
@@ -93,12 +89,11 @@
           formControlName="pageCount"
           [disabled]="queryParameterService.filterText$.value?.length > 0"
         >
-          <mat-option
-            *ngFor="let option of pageCountOptions"
-            [value]="option.value"
-          >
+          @for (option of pageCountOptions; track option) {
+          <mat-option [value]="option.value">
             {{ option.label | translate }}
           </mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </mat-card-content>

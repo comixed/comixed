@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subscription } from 'rxjs';
@@ -44,12 +44,12 @@ export class BatchProcessesService {
   messagingSubscription: Subscription;
   processListUpdateSubscription: Subscription;
 
-  constructor(
-    private logger: LoggerService,
-    private http: HttpClient,
-    private store: Store,
-    private webSocketService: WebSocketService
-  ) {
+  logger = inject(LoggerService);
+  http = inject(HttpClient);
+  store = inject(Store);
+  webSocketService = inject(WebSocketService);
+
+  constructor() {
     this.messagingSubscription = this.store
       .select(selectMessagingState)
       .pipe(filter(state => !!state))

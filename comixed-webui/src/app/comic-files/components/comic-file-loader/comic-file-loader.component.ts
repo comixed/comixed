@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User } from '@app/user/models/user';
@@ -33,7 +33,8 @@ import { Store } from '@ngrx/store';
 @Component({
   selector: 'cx-comic-file-loader',
   templateUrl: './comic-file-loader.component.html',
-  styleUrls: ['./comic-file-loader.component.scss']
+  styleUrls: ['./comic-file-loader.component.scss'],
+  standalone: false
 })
 export class ComicFileLoaderComponent {
   @Output() closeForm = new EventEmitter<void>();
@@ -47,11 +48,11 @@ export class ComicFileLoaderComponent {
     { label: 'comic-files.label.maximum-1000-files', value: 1000 }
   ];
 
-  constructor(
-    private logger: LoggerService,
-    private formBuilder: FormBuilder,
-    private store: Store<any>
-  ) {
+  logger = inject(LoggerService);
+  formBuilder = inject(FormBuilder);
+  store = inject(Store);
+
+  constructor() {
     this.loadFilesForm = this.formBuilder.group({
       rootDirectory: ['', Validators.required],
       maximum: ['', Validators.required]

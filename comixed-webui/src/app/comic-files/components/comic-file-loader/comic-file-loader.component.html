@@ -13,12 +13,11 @@
           class="cx-width-100"
           formControlName="maximum"
         >
-          <mat-option
-            *ngFor="let option of maximumOptions"
-            [value]="option.value"
-          >
+          @for (option of maximumOptions; track option) {
+          <mat-option [value]="option.value">
             {{ option.label | translate }}
           </mat-option>
+          }
         </mat-select>
       </mat-form-field>
       <div class="cx-50"></div>

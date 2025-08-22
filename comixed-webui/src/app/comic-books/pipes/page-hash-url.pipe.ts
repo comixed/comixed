@@ -21,7 +21,8 @@ import { interpolate } from '@app/core';
 import { PAGE_URL_FROM_HASH } from '@app/comic-books/comic-books.constants';
 
 @Pipe({
-  name: 'pageHashUrl'
+  name: 'pageHashUrl',
+  standalone: false
 })
 export class PageHashUrlPipe implements PipeTransform {
   transform(hash: string): string {

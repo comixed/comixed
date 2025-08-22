@@ -8,7 +8,8 @@
   }}
 </h2>
 
-<div *ngIf="isAdmin && !showStoryScraping" class="cx-fab-container-bottom-left">
+@if (isAdmin && !showStoryScraping) {
+<div class="cx-fab-container-bottom-left">
   <button
     id="show-scraping-form-button"
     mat-fab
@@ -19,9 +20,8 @@
     <mat-icon>find_replace</mat-icon>
   </button>
 </div>
-
+} @if (!showStoryScraping) {
 <cx-comic-list-view
-  *ngIf="!showStoryScraping"
   class="cx-width-100"
   [isAdmin]="isAdmin"
   [comics]="comics"
@@ -33,8 +33,6 @@
   [readingLists]="readingLists"
   (selectAll)="onSelectAll($event)"
 ></cx-comic-list-view>
-
-<cx-story-scraping
-  *ngIf="showStoryScraping"
-  [storyName]="storyName"
-></cx-story-scraping>
+} @if (showStoryScraping) {
+<cx-story-scraping [storyName]="storyName"></cx-story-scraping>
+}

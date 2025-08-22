@@ -20,7 +20,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { TEXT_NO, TEXT_YES } from '@app/core';
 
 @Pipe({
-  name: 'yesNo'
+  name: 'yesNo',
+  standalone: false
 })
 export class YesNoPipe implements PipeTransform {
   transform(value: boolean): string {

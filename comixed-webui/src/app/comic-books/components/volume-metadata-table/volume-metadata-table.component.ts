@@ -20,6 +20,7 @@ import {
   AfterViewInit,
   Component,
   EventEmitter,
+  inject,
   Input,
   Output,
   ViewChild
@@ -41,7 +42,8 @@ import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@app/core';
 @Component({
   selector: 'cx-volume-metadata-table',
   templateUrl: './volume-metadata-table.component.html',
-  styleUrls: ['./volume-metadata-table.component.scss']
+  styleUrls: ['./volume-metadata-table.component.scss'],
+  standalone: false
 })
 export class VolumeMetadataTableComponent implements AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
@@ -66,7 +68,7 @@ export class VolumeMetadataTableComponent implements AfterViewInit {
   selectedVolume: VolumeMetadata;
   @Output() volumeSelected = new EventEmitter<VolumeMetadata>();
 
-  constructor(private logger: LoggerService) {}
+  logger = inject(LoggerService);
 
   @Input() set volumes(volumes: VolumeMetadata[]) {
     this.dataSource.data = volumes.map(volume => {

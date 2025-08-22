@@ -22,7 +22,8 @@ import { User } from '@app/user/models/user';
 @Component({
   selector: 'cx-user-card',
   templateUrl: './user-card.component.html',
-  styleUrls: ['./user-card.component.scss']
+  styleUrls: ['./user-card.component.scss'],
+  standalone: false
 })
 export class UserCardComponent {
   @Input() user: User;

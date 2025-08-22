@@ -21,7 +21,8 @@
   </button>
 </div>
 
-<div *ngIf="!!health" class="cx-detail-card-container">
+@if (!!health) {
+<div class="cx-detail-card-container">
   <div id="server-status-card" class="cx-grow-1">
     <mat-card appearance="outlined">
       <mat-card-title>
@@ -30,7 +31,7 @@
       <mat-card-content>
         <div>
           {{
-            "server-health.text.status" | translate: { status: health.status }
+            "server-health.text.status" | translate : { status: health.status }
           }}
         </div>
       </mat-card-content>
@@ -45,7 +46,7 @@
         <div>
           {{
             "server-health.text.status"
-              | translate: { status: health.components.db.status }
+              | translate : { status: health.components.db.status }
           }}
         </div>
       </mat-card-content>
@@ -60,7 +61,7 @@
         <div>
           {{
             "server-health.text.status"
-              | translate: { status: health.components.ping.status }
+              | translate : { status: health.components.ping.status }
           }}
         </div>
       </mat-card-content>
@@ -75,7 +76,7 @@
         <div>
           {{
             "server-health.text.status"
-              | translate: { status: health.components.diskSpace.status }
+              | translate : { status: health.components.diskSpace.status }
           }}
         </div>
         <div>
@@ -85,7 +86,7 @@
                 : {
                     size:
                       health.components.diskSpace.details.free / (1024 * 1024)
-                      | number: "1.0-2"
+                      | number : "1.0-2"
                   }
           }}
         </div>
@@ -96,7 +97,7 @@
                 : {
                     size:
                       health.components.diskSpace.details.total / (1024 * 1024)
-                      | number: "1.0-2"
+                      | number : "1.0-2"
                   }
           }}
         </div>
@@ -107,7 +108,7 @@
                 : {
                     size:
                       health.components.diskSpace.details.threshold /
-                        (1024 * 1024) | number: "1.0-2"
+                        (1024 * 1024) | number : "1.0-2"
                   }
           }}
         </div>
@@ -122,3 +123,4 @@
     </mat-card>
   </div>
 </div>
+}

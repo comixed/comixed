@@ -1,13 +1,16 @@
 <h2>
-  <span *ngIf="scrapingVolumes.length === 0">
+  @if (scrapingVolumes.length === 0) {
+  <span>
     {{ "scraping-series-page.page-title-with-form" | translate }}
   </span>
-  <span *ngIf="scrapingVolumes.length > 0">
+  } @if (scrapingVolumes.length > 0) {
+  <span>
     {{
       "scraping-series-page.page-title-with-volumes"
-        | translate: { count: scrapingVolumes.length }
+        | translate : { count: scrapingVolumes.length }
     }}
   </span>
+  }
 </h2>
 
 <ng-template #scrapingNotice>
@@ -34,12 +37,15 @@
       class="cx-toolbar-button cx-margin-left-5"
       mat-icon-button
       [matTooltip]="
-        'scraping.tooltip.skip-cache' | translate: { enabled: skipCache }
+        'scraping.tooltip.skip-cache' | translate : { enabled: skipCache }
       "
       (click)="onSkipCacheToggle()"
     >
-      <mat-icon *ngIf="skipCache">block</mat-icon>
-      <mat-icon *ngIf="!skipCache">remove_circle_outline</mat-icon>
+      @if (skipCache) {
+      <mat-icon>block</mat-icon>
+      } @if (!skipCache) {
+      <mat-icon>remove_circle_outline</mat-icon>
+      }
     </button>
     <button
       id="match-publisher-button"
@@ -47,12 +53,15 @@
       mat-icon-button
       [matTooltip]="
         'scraping.tooltip.match-publisher'
-          | translate: { enabled: matchPublisher }
+          | translate : { enabled: matchPublisher }
       "
       (click)="onMatchPublisherToggle()"
     >
-      <mat-icon *ngIf="matchPublisher">join_inner</mat-icon>
-      <mat-icon *ngIf="!matchPublisher">join_full</mat-icon>
+      @if (matchPublisher) {
+      <mat-icon>join_inner</mat-icon>
+      } @if (!matchPublisher) {
+      <mat-icon>join_full</mat-icon>
+      }
     </button>
     <button
       id="cx-fetch-issues-button"
@@ -76,13 +85,14 @@
         [value]="metadataSource?.metadataSourceId"
         (selectionChange)="onMetadataSourceSelected($event.value)"
       >
+        @for (source of metadataSourceList; track source) {
         <mat-option
           [disabled]="scrapingVolumes.length > 0"
-          *ngFor="let source of metadataSourceList"
           [value]="source.metadataSourceId"
         >
           {{ source.name }}
         </mat-option>
+        }
       </mat-select>
     </mat-form-field>
     <mat-form-field class="cx-width-50">
@@ -95,12 +105,11 @@
         (selectionChange)="onMaximumRecordsChanged($event.value)"
         required
       >
-        <mat-option
-          *ngFor="let option of maximumRecordsOptions"
-          [value]="option.value"
-        >
+        @for (option of maximumRecordsOptions; track option) {
+        <mat-option [value]="option.value">
           {{ option.label | translate }}
         </mat-option>
+        }
       </mat-select>
     </mat-form-field>
     <mat-form-field class="cx-width-25">
@@ -139,7 +148,8 @@
     ></cx-volume-metadata-table>
   </div>
 
-  <div id="scraping-volumes-cover-container" *ngIf="!!selectedVolume">
+  @if (!!selectedVolume) {
+  <div id="scraping-volumes-cover-container">
     <mat-card appearance="outlined" class="cx-width-100 cx-padding-5">
       <mat-card-title
         class="cx-text-nowrap cx-align-content-center"
@@ -174,4 +184,5 @@
       </mat-card-actions>
     </mat-card>
   </div>
+  }
 </div>

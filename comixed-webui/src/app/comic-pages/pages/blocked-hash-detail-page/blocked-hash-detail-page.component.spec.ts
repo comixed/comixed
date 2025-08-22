@@ -68,39 +68,37 @@ describe('BlockedHashDetailPageComponent', () => {
   let router: Router;
   let confirmationService: ConfirmationService;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [
-          BlockedHashDetailPageComponent,
-          BlockedHashThumbnailUrlPipe
-        ],
-        imports: [
-          NoopAnimationsModule,
-          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-          FormsModule,
-          ReactiveFormsModule,
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          MatDialogModule,
-          MatCardModule,
-          MatFormFieldModule,
-          MatInputModule,
-          MatIconModule
-        ],
-        providers: [provideMockStore({ initialState }), ConfirmationService]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        BlockedHashDetailPageComponent,
+        BlockedHashThumbnailUrlPipe
+      ],
+      imports: [
+        NoopAnimationsModule,
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+        FormsModule,
+        ReactiveFormsModule,
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatDialogModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule
+      ],
+      providers: [provideMockStore({ initialState }), ConfirmationService]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(BlockedHashDetailPageComponent);
-      component = fixture.componentInstance;
-      store = TestBed.inject(MockStore);
-      spyOn(store, 'dispatch');
-      router = TestBed.inject(Router);
-      spyOn(router, 'navigateByUrl');
-      confirmationService = TestBed.inject(ConfirmationService);
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(BlockedHashDetailPageComponent);
+    component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigateByUrl');
+    confirmationService = TestBed.inject(ConfirmationService);
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

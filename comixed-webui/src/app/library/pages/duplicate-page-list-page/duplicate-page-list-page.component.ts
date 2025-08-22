@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, inject, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
@@ -72,7 +72,8 @@ import {
 @Component({
   selector: 'cx-duplicate-page-list-page',
   templateUrl: './duplicate-page-list-page.component.html',
-  styleUrls: ['./duplicate-page-list-page.component.scss']
+  styleUrls: ['./duplicate-page-list-page.component.scss'],
+  standalone: false
 })
 export class DuplicatePageListPageComponent
   implements OnDestroy, AfterViewInit
@@ -108,16 +109,16 @@ export class DuplicatePageListPageComponent
   ];
   protected readonly PAGE_SIZE_OPTIONS = PAGE_SIZE_OPTIONS;
 
-  constructor(
-    private logger: LoggerService,
-    private activatedRoute: ActivatedRoute,
-    private store: Store<any>,
-    private titleService: TitleService,
-    private translateService: TranslateService,
-    private confirmationService: ConfirmationService,
-    private webSocketService: WebSocketService,
-    public queryParameterService: QueryParameterService
-  ) {
+  logger = inject(LoggerService);
+  activatedRoute = inject(ActivatedRoute);
+  store = inject(Store);
+  titleService = inject(TitleService);
+  translateService = inject(TranslateService);
+  confirmationService = inject(ConfirmationService);
+  webSocketService = inject(WebSocketService);
+  queryParameterService = inject(QueryParameterService);
+
+  constructor() {
     this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
       params =>
         this.store.dispatch(

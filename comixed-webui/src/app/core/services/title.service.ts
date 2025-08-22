@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { TranslateService } from '@ngx-translate/core';
@@ -25,11 +25,9 @@ import { TranslateService } from '@ngx-translate/core';
   providedIn: 'root'
 })
 export class TitleService {
-  constructor(
-    private logger: LoggerService,
-    private title: Title,
-    private translateService: TranslateService
-  ) {}
+  logger = inject(LoggerService);
+  title = inject(Title);
+  translateService = inject(TranslateService);
 
   /**
    * Sets the page title.

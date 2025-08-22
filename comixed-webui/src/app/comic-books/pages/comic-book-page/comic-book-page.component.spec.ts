@@ -126,64 +126,62 @@ describe('ComicBookPageComponent', () => {
   let confirmationService: ConfirmationService;
   let webSocketService: jasmine.SpyObj<WebSocketService>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [
-          ComicBookPageComponent,
-          ComicDetailEditComponent,
-          ComicStoryComponent,
-          ComicPagesComponent,
-          ComicScrapingComponent,
-          ComicTitlePipe,
-          ComicPageUrlPipe
-        ],
-        imports: [
-          NoopAnimationsModule,
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          RouterTestingModule,
-          MatCardModule,
-          MatToolbarModule,
-          MatDialogModule,
-          MatIconModule,
-          MatExpansionModule,
-          MatGridListModule,
-          MatTabsModule
-        ],
-        providers: [
-          provideMockStore({ initialState }),
-          {
-            provide: MatDialogRef,
-            useValue: {}
-          },
-          ConfirmationService,
-          ComicTitlePipe,
-          TitleService,
-          {
-            provide: WebSocketService,
-            useValue: {
-              subscribe: jasmine.createSpy('WebSocketService.subscribe()'),
-              unsubscribe: jasmine.createSpy('WebSocketService.unsubscribe()')
-            }
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        ComicBookPageComponent,
+        ComicDetailEditComponent,
+        ComicStoryComponent,
+        ComicPagesComponent,
+        ComicScrapingComponent,
+        ComicTitlePipe,
+        ComicPageUrlPipe
+      ],
+      imports: [
+        NoopAnimationsModule,
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        RouterTestingModule,
+        MatCardModule,
+        MatToolbarModule,
+        MatDialogModule,
+        MatIconModule,
+        MatExpansionModule,
+        MatGridListModule,
+        MatTabsModule
+      ],
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: MatDialogRef,
+          useValue: {}
+        },
+        ConfirmationService,
+        ComicTitlePipe,
+        TitleService,
+        {
+          provide: WebSocketService,
+          useValue: {
+            subscribe: jasmine.createSpy('WebSocketService.subscribe()'),
+            unsubscribe: jasmine.createSpy('WebSocketService.unsubscribe()')
           }
-        ]
-      }).compileComponents();
+        }
+      ]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(ComicBookPageComponent);
-      component = fixture.componentInstance;
-      store = TestBed.inject(MockStore);
-      spyOn(store, 'dispatch');
-      translateService = TestBed.inject(TranslateService);
-      titleService = TestBed.inject(TitleService);
-      spyOn(titleService, 'setTitle');
-      confirmationService = TestBed.inject(ConfirmationService);
-      webSocketService = TestBed.inject(
-        WebSocketService
-      ) as jasmine.SpyObj<WebSocketService>;
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(ComicBookPageComponent);
+    component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    translateService = TestBed.inject(TranslateService);
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
+    confirmationService = TestBed.inject(ConfirmationService);
+    webSocketService = TestBed.inject(
+      WebSocketService
+    ) as jasmine.SpyObj<WebSocketService>;
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

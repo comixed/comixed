@@ -1,9 +1,9 @@
-<h4 class="section-title" *ngIf="!!user">
+@if (!!user) {
+<h4 class="section-title">
   {{ "navigation.heading.comics" | translate }}
 </h4>
-
+} @if (!!user) {
 <button
-  *ngIf="!!user"
   mat-button
   class="menu-button"
   routerLink="/home"
@@ -14,11 +14,10 @@
     {{ "navigation.option.home" | translate }}
   </mat-label>
 </button>
-
-<mat-divider *ngIf="!!user"></mat-divider>
-
+} @if (!!user) {
+<mat-divider></mat-divider>
+} @if (!!user) {
 <button
-  *ngIf="!!user"
   mat-button
   class="menu-button"
   routerLink="/library/all"
@@ -34,9 +33,8 @@
     </span>
   </mat-label>
 </button>
-
+} @if (!!user) {
 <button
-  *ngIf="!!user"
   mat-button
   class="menu-button"
   routerLink="/library/selected"
@@ -52,9 +50,8 @@
     </span>
   </mat-label>
 </button>
-
+} @if (isAdmin) {
 <button
-  *ngIf="isAdmin"
   mat-button
   class="menu-button"
   routerLink="/library/unprocessed"
@@ -67,9 +64,8 @@
     ({{ unprocessedComicBooks$ | async | number }})
   </mat-label>
 </button>
-
+} @if (!!user) {
 <button
-  *ngIf="!!user"
   mat-button
   class="menu-button"
   routerLink="/library/unread"
@@ -81,9 +77,8 @@
     ({{ readComicBooks$ | async | number }})
   </mat-label>
 </button>
-
+} @if (isAdmin) {
 <button
-  *ngIf="isAdmin"
   mat-button
   class="menu-button"
   routerLink="/library/unscraped"
@@ -95,9 +90,8 @@
     ({{ unscrapedComicBooks$ | async | number }})
   </mat-label>
 </button>
-
+} @if (isAdmin) {
 <button
-  *ngIf="isAdmin"
   mat-button
   class="menu-button"
   routerLink="/library/changed"
@@ -109,9 +103,8 @@
     ({{ changedComicBooks$ | async | number }})
   </mat-label>
 </button>
-
+} @if (isAdmin) {
 <button
-  *ngIf="isAdmin"
   mat-button
   class="menu-button"
   routerLink="/library/deleted"
@@ -123,9 +116,8 @@
     ({{ deletedComicBooks$ | async | number }})
   </mat-label>
 </button>
-
+} @if (isAdmin) {
 <button
-  *ngIf="isAdmin"
   mat-button
   class="menu-button"
   routerLink="/library/duplicates/comics"
@@ -137,9 +129,8 @@
     ({{ duplicateComicBooks$ | async | number }})
   </mat-label>
 </button>
-
+} @if (isAdmin) {
 <button
-  *ngIf="isAdmin"
   mat-button
   class="menu-button"
   routerLink="/library/duplicates/pages"
@@ -150,9 +141,8 @@
     {{ "navigation.option.duplicate-pages" | translate }}
   </mat-label>
 </button>
-
+} @if (isAdmin && blockedPagesEnabled) {
 <button
-  *ngIf="isAdmin && blockedPagesEnabled"
   mat-button
   class="menu-button"
   routerLink="/library/pages/blocked"
@@ -163,9 +153,8 @@
     {{ "navigation.option.blocked-hashes" | translate }}
   </mat-label>
 </button>
-
+} @if (isAdmin) {
 <button
-  *ngIf="isAdmin"
   mat-button
   class="menu-button"
   routerLink="/library/pages/deleted"
@@ -176,9 +165,8 @@
     {{ "navigation.option.deleted-pages" | translate }}
   </mat-label>
 </button>
-
+} @if (isAdmin) {
 <button
-  *ngIf="isAdmin"
   mat-button
   class="menu-button"
   routerLink="/library/import"
@@ -189,9 +177,8 @@
     {{ "navigation.option.import-comic-books" | translate }}
   </mat-label>
 </button>
-
+} @if (isAdmin) {
 <button
-  *ngIf="isAdmin"
   mat-button
   class="menu-button"
   routerLink="/library/processing"
@@ -202,9 +189,8 @@
     {{ "navigation.option.processing-comic-books" | translate }}
   </mat-label>
 </button>
-
+} @if (isAdmin) {
 <button
-  *ngIf="isAdmin"
   mat-button
   class="menu-button"
   routerLink="/metadata/scraping/issues"
@@ -215,9 +201,8 @@
     {{ "navigation.option.metadata-scraping" | translate }}
   </mat-label>
 </button>
-
+} @if (isAdmin) {
 <button
-  *ngIf="isAdmin"
   mat-button
   class="menu-button"
   routerLink="/metadata/process"
@@ -228,15 +213,14 @@
     {{ "navigation.option.metadata-batch-process" | translate }}
   </mat-label>
 </button>
-
-<mat-divider *ngIf="!!user"></mat-divider>
-
-<h4 class="section-title" *ngIf="!!user">
+} @if (!!user) {
+<mat-divider></mat-divider>
+} @if (!!user) {
+<h4 class="section-title">
   {{ "navigation.heading.collections" | translate }}
 </h4>
-
+} @if (!!user) {
 <button
-  *ngIf="!!user"
   mat-button
   class="menu-button"
   routerLink="/library/collections/publishers"
@@ -247,9 +231,8 @@
     {{ "navigation.option.publisher-collection" | translate }}
   </mat-label>
 </button>
-
+} @if (!!user) {
 <button
-  *ngIf="!!user"
   mat-button
   class="menu-button"
   routerLink="/library/collections/series"
@@ -260,9 +243,8 @@
     {{ "navigation.option.series-collection" | translate }}
   </mat-label>
 </button>
-
+} @if (!!user) {
 <button
-  *ngIf="!!user"
   mat-button
   class="menu-button"
   routerLink="/library/collections/characters"
@@ -273,9 +255,8 @@
     {{ "navigation.option.character-collection" | translate }}
   </mat-label>
 </button>
-
+} @if (!!user) {
 <button
-  *ngIf="!!user"
   mat-button
   class="menu-button"
   routerLink="/library/collections/teams"
@@ -286,9 +267,8 @@
     {{ "navigation.option.team-collection" | translate }}
   </mat-label>
 </button>
-
+} @if (!!user) {
 <button
-  *ngIf="!!user"
   mat-button
   class="menu-button"
   routerLink="/library/collections/locations"
@@ -299,9 +279,8 @@
     {{ "navigation.option.location-collection" | translate }}
   </mat-label>
 </button>
-
+} @if (!!user) {
 <button
-  *ngIf="!!user"
   mat-button
   class="menu-button"
   routerLink="/library/collections/stories"
@@ -312,15 +291,14 @@
     {{ "navigation.option.story-collection" | translate }}
   </mat-label>
 </button>
-
-<mat-divider *ngIf="!!user"></mat-divider>
-
-<h4 class="section-title" *ngIf="!!user">
+} @if (!!user) {
+<mat-divider></mat-divider>
+} @if (!!user) {
+<h4 class="section-title">
   {{ "navigation.heading.reading-lists" | translate }}
 </h4>
-
+} @if (!!user) {
 <button
-  *ngIf="!!user"
   mat-button
   class="menu-button"
   routerLink="/lists/reading/all"
@@ -331,9 +309,8 @@
     {{ "navigation.heading.reading-lists" | translate }}
   </mat-label>
 </button>
-
+} @for (list of readingLists; track list) {
 <button
-  *ngFor="let list of readingLists"
   mat-button
   class="menu-button"
   [routerLink]="['/lists', 'reading', list.readingListId]"
@@ -344,15 +321,14 @@
     {{ list.name }}
   </mat-label>
 </button>
-
-<mat-divider *ngIf="isAdmin"></mat-divider>
-
-<h4 class="section-title" *ngIf="isAdmin">
+} @if (isAdmin) {
+<mat-divider></mat-divider>
+} @if (isAdmin) {
+<h4 class="section-title">
   {{ "navigation.heading.admin" | translate }}
 </h4>
-
+} @if (isAdmin) {
 <button
-  *ngIf="isAdmin"
   mat-button
   class="menu-button"
   routerLink="/admin/accounts"
@@ -363,9 +339,8 @@
     {{ "navigation.option.user-accounts" | translate }}
   </mat-label>
 </button>
-
+} @if (isAdmin) {
 <button
-  *ngIf="isAdmin"
   mat-button
   class="menu-button"
   routerLink="/admin/configuration"
@@ -376,9 +351,8 @@
     {{ "navigation.option.configuration" | translate }}
   </mat-label>
 </button>
-
+} @if (isAdmin) {
 <button
-  *ngIf="isAdmin"
   mat-button
   class="menu-button"
   routerLink="/admin/processes"
@@ -389,8 +363,9 @@
     {{ "navigation.option.batch-processes" | translate }}
   </mat-label>
 </button>
-
-<mat-divider *ngIf="!!user"></mat-divider>
+} @if (!!user) {
+<mat-divider></mat-divider>
+}
 
 <h4 class="section-title">
   {{ "navigation.heading.system-status" | translate }}

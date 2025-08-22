@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -35,7 +35,8 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
 @Component({
   selector: 'cx-server-runtime',
   templateUrl: './server-runtime.component.html',
-  styleUrls: ['./server-runtime.component.scss']
+  styleUrls: ['./server-runtime.component.scss'],
+  standalone: false
 })
 export class ServerRuntimeComponent implements OnInit, OnDestroy {
   shuttingDown = false;
@@ -43,12 +44,12 @@ export class ServerRuntimeComponent implements OnInit, OnDestroy {
   health: ServerHealth;
   runtimeSubscription: Subscription;
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store<any>);
+  confirmationService = inject(ConfirmationService);
+  translateService = inject(TranslateService);
+
+  constructor() {
     this.serverHealthSubscription = this.store
       .select(selectServerRuntimeHealth)
       .subscribe(health => (this.health = health));

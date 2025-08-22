@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -33,7 +33,8 @@ import { SaveConfigurationOptionsRequest } from '@app/admin/models/net/save-conf
   providedIn: 'root'
 })
 export class ConfigurationService {
-  constructor(private logger: LoggerService, private http: HttpClient) {}
+  logger = inject(LoggerService);
+  http = inject(HttpClient);
 
   loadAll(): Observable<any> {
     this.logger.debug('Loading configuration options');

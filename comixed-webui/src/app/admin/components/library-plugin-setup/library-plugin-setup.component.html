@@ -15,10 +15,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="let sourceProperty of properties.controls; let i = index"
-            [formGroupName]="i"
-          >
+          @for (sourceProperty of properties.controls; track sourceProperty; let
+          i = $index) {
+          <tr [formGroupName]="i">
             <td>
               <mat-form-field class="cx-width-100">
                 <input
@@ -41,6 +40,7 @@
               </mat-form-field>
             </td>
           </tr>
+          }
         </tbody>
       </table>
     </mat-card-content>

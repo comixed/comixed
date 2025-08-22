@@ -117,36 +117,34 @@ describe('LibraryConfigurationComponent', () => {
   let spyOnStoreDispatch: jasmine.Spy;
   let confirmationService: ConfirmationService;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [LibraryConfigurationComponent],
-        imports: [
-          NoopAnimationsModule,
-          FormsModule,
-          ReactiveFormsModule,
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          MatFormFieldModule,
-          MatInputModule,
-          MatExpansionModule,
-          MatDialogModule,
-          MatCheckboxModule,
-          MatToolbarModule,
-          MatIconModule,
-          MatTooltipModule
-        ],
-        providers: [provideMockStore({ initialState }), ConfirmationService]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [LibraryConfigurationComponent],
+      imports: [
+        NoopAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatFormFieldModule,
+        MatInputModule,
+        MatExpansionModule,
+        MatDialogModule,
+        MatCheckboxModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatTooltipModule
+      ],
+      providers: [provideMockStore({ initialState }), ConfirmationService]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(LibraryConfigurationComponent);
-      component = fixture.componentInstance;
-      store = TestBed.inject(MockStore);
-      spyOnStoreDispatch = spyOn(store, 'dispatch');
-      confirmationService = TestBed.inject(ConfirmationService);
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(LibraryConfigurationComponent);
+    component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
+    spyOnStoreDispatch = spyOn(store, 'dispatch');
+    confirmationService = TestBed.inject(ConfirmationService);
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

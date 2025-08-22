@@ -58,42 +58,36 @@ describe('ComicPagesComponent', () => {
   let store: MockStore<any>;
   let confirmationService: ConfirmationService;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [
-          ComicPagesComponent,
-          ComicPageComponent,
-          ComicPageUrlPipe
-        ],
-        imports: [
-          RouterTestingModule.withRoutes([
-            {
-              path: '**',
-              redirectTo: ''
-            }
-          ]),
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          MatCardModule,
-          MatMenuModule,
-          MatDialogModule,
-          MatTableModule,
-          DragDropModule,
-          MatSortModule
-        ],
-        providers: [provideMockStore({ initialState }), ConfirmationService]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [ComicPagesComponent, ComicPageComponent, ComicPageUrlPipe],
+      imports: [
+        RouterTestingModule.withRoutes([
+          {
+            path: '**',
+            redirectTo: ''
+          }
+        ]),
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatCardModule,
+        MatMenuModule,
+        MatDialogModule,
+        MatTableModule,
+        DragDropModule,
+        MatSortModule
+      ],
+      providers: [provideMockStore({ initialState }), ConfirmationService]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(ComicPagesComponent);
-      component = fixture.componentInstance;
-      component.pages = COMIC.pages;
-      store = TestBed.inject(MockStore);
-      spyOn(store, 'dispatch');
-      confirmationService = TestBed.inject(ConfirmationService);
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(ComicPagesComponent);
+    component = fixture.componentInstance;
+    component.pages = COMIC.pages;
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    confirmationService = TestBed.inject(ConfirmationService);
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -16,10 +16,12 @@
           formControlName="name"
         />
         <mat-error>
-          <span *ngIf="controls.name.errors?.required">
+          @if (controls.name.errors?.required) {
+          <span>
             {{ "validation.field-required" | translate }}
           </span>
-          <span *ngIf="!!controls.name.errors?.minlength">
+          } @if (!!controls.name.errors?.minlength) {
+          <span>
             {{
               "validation.value-too-short"
                 | translate
@@ -28,7 +30,8 @@
                     }
             }}
           </span>
-          <span *ngIf="!!controls.name.errors?.maxlength">
+          } @if (!!controls.name.errors?.maxlength) {
+          <span>
             {{
               "validation.value-too-long"
                 | translate
@@ -37,6 +40,7 @@
                     }
             }}
           </span>
+          }
         </mat-error>
       </mat-form-field>
       <mat-form-field class="cx-width-100">
@@ -61,23 +65,21 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="let sourceProperty of properties.controls; let i = index"
-            [formGroupName]="i"
-          >
+          @for (sourceProperty of properties.controls; track sourceProperty; let
+          i = $index) {
+          <tr [formGroupName]="i">
             <td>
               <mat-form-field class="cx-width-100" required>
                 <mat-icon
                   matPrefix
                   [matTooltip]="
                     'metadata-source.tooltip.delete-property'
-                      | translate: { name: sourceProperty.value.propertyName }
+                      | translate : { name: sourceProperty.value.propertyName }
                   "
                   (click)="onDeleteProperty(sourceProperty.value.propertyName)"
                 >
                   delete
                 </mat-icon>
-
                 <input
                   [id]="'property-name-' + i"
                   matInput
@@ -97,6 +99,7 @@
               </mat-form-field>
             </td>
           </tr>
+          }
         </tbody>
       </table>
     </mat-card-content>

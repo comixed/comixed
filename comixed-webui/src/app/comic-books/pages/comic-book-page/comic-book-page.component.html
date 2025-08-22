@@ -1,10 +1,11 @@
-<div *ngIf="!comicBook" class="cx-overlay cx-width-100 cx-height-100">
+@if (!comicBook) {
+<div class="cx-overlay cx-width-100 cx-height-100">
   <div class="cx-centered cx-position-absolute">
     <img src="/assets/img/book.png" alt="Loading comic book..." />
   </div>
 </div>
-
-<div *ngIf="!!comicBook" class="cx-fab-container-bottom-left cx-z-index-99">
+} @if (!!comicBook) {
+<div class="cx-fab-container-bottom-left cx-z-index-99">
   <div class="cx-horizontal-container">
     <button
       id="previous-comic-button"
@@ -17,7 +18,6 @@
     >
       <mat-icon>arrow_back</mat-icon>
     </button>
-
     <button
       id="next-comic-button"
       class="cx-toolbar-button"
@@ -29,7 +29,6 @@
     >
       <mat-icon>arrow_forward</mat-icon>
     </button>
-
     <button
       id="toggle-page-view-button"
       class="cx-toolbar-button"
@@ -38,16 +37,14 @@
       [matTooltip]="'comic-book.tooltip.toggle-page-view' | translate"
       (click)="queryParameterService.onTogglePagesAsGrid()"
     >
-      <mat-icon *ngIf="queryParameterService.pagesAsGrid$ | async">
-        grid_view
-      </mat-icon>
-      <mat-icon *ngIf="(queryParameterService.pagesAsGrid$ | async) === false">
-        list_view
-      </mat-icon>
+      @if (queryParameterService.pagesAsGrid$ | async) {
+      <mat-icon>grid_view</mat-icon>
+      } @if ((queryParameterService.pagesAsGrid$ | async) === false) {
+      <mat-icon>list_view</mat-icon>
+      }
     </button>
-
+    @if (isAdmin) {
     <button
-      *ngIf="isAdmin"
       id="save-page-order-button"
       class="cx-toolbar-button"
       mat-fab
@@ -57,7 +54,7 @@
     >
       <mat-icon>save</mat-icon>
     </button>
-
+    }
     <button
       id="update-comic-info-button"
       class="cx-toolbar-button"
@@ -69,7 +66,6 @@
     >
       <mat-icon>sync_alt</mat-icon>
     </button>
-
     <button
       id="download-comic-button"
       class="cx-toolbar-button"
@@ -80,9 +76,8 @@
     >
       <mat-icon>arrow_downward</mat-icon>
     </button>
-
+    @if (!isRead) {
     <button
-      *ngIf="!isRead"
       id="mark-as-read-button"
       class="cx-toolbar-button"
       mat-fab
@@ -92,9 +87,8 @@
     >
       <mat-icon>turned_in_not</mat-icon>
     </button>
-
+    } @if (isRead) {
     <button
-      *ngIf="isRead"
       id="mark-as-unread-button"
       class="cx-toolbar-button"
       mat-fab
@@ -104,9 +98,8 @@
     >
       <mat-icon>turned_in</mat-icon>
     </button>
-
+    } @if (isAdmin && !isDeleted) {
     <button
-      *ngIf="isAdmin && !isDeleted"
       id="delete-button"
       class="cx-toolbar-button"
       mat-fab
@@ -116,9 +109,8 @@
     >
       <mat-icon>delete</mat-icon>
     </button>
-
+    } @if (isAdmin && isDeleted) {
     <button
-      *ngIf="isAdmin && isDeleted"
       id="undelete-button"
       class="cx-toolbar-button"
       mat-fab
@@ -128,20 +120,17 @@
     >
       <mat-icon>restore_from_trash</mat-icon>
     </button>
+    }
   </div>
 </div>
-
-<h1 *ngIf="!!comicBook">
+} @if (!!comicBook) {
+<h1>
   {{ comicBook?.detail | comicTitle }}
 </h1>
-
-<h2
-  *ngIf="
-    comicBook?.detail?.publisher?.length > 0 &&
-    comicBook?.detail?.series?.length > 0 &&
-    comicBook?.detail?.volume?.length > 0
-  "
->
+} @if ( comicBook?.detail?.publisher?.length > 0 &&
+comicBook?.detail?.series?.length > 0 && comicBook?.detail?.volume?.length > 0 )
+{
+<h2>
   <a
     [routerLink]="[
       '/library/collections/publishers',
@@ -165,12 +154,12 @@
   >
     {{
       "comic-book.navigation-link.series"
-        | translate: { volume: comicBook.detail.volume }
+        | translate : { volume: comicBook.detail.volume }
     }}
   </a>
 </h2>
-
-<div *ngIf="!!comicBook" id="comic-detail-container">
+} @if (!!comicBook) {
+<div id="comic-detail-container">
   <div id="comic-cover-container">
     <mat-card appearance="outlined" class="cx-padding-0">
       <mat-card-title
@@ -179,12 +168,11 @@
       >
         {{ comicBook.detail.title }}
       </mat-card-title>
-      <mat-card-subtitle
-        *ngIf="!!comicBook?.detail?.coverDate"
-        class="cx-align-content-center"
-      >
-        {{ comicBook.detail.coverDate | date: "MMM yyyy" }}
+      @if (!!comicBook?.detail?.coverDate) {
+      <mat-card-subtitle class="cx-align-content-center">
+        {{ comicBook.detail.coverDate | date : "MMM yyyy" }}
       </mat-card-subtitle>
+      }
       <mat-card-content>
         <cx-comic-page
           [imageUrl]="comicBook.pages[pageIndex] | comicPageUrl"
@@ -246,12 +234,10 @@
           (pagesChanged)="onPagesChanged($event)"
         ></cx-comic-pages>
       </mat-tab>
-      <mat-tab
-        *ngIf="isAdmin"
-        [label]="'comic-book.label.comic-scraping' | translate"
-      >
+      @if (isAdmin) {
+      <mat-tab [label]="'comic-book.label.comic-scraping' | translate">
+        @if (!!comicBook && volumes.length === 0) {
         <cx-comic-scraping
-          *ngIf="!!comicBook && volumes.length === 0"
           class="cx-width-100"
           [comic]="comicBook"
           [previousMetadataSource]="comicBook.metadata?.metadataSource"
@@ -271,8 +257,8 @@
             })
           "
         ></cx-comic-scraping>
+        } @if (volumes.length > 0) {
         <cx-scraping-volume-selection
-          *ngIf="volumes.length > 0"
           [comicBook]="comicBook"
           [metadataSource]="metadataSource"
           [comicSeriesName]="scrapingSeriesName"
@@ -282,7 +268,10 @@
           [pageSize]="pageSize"
           [volumes]="volumes"
         ></cx-scraping-volume-selection>
+        }
       </mat-tab>
+      }
     </mat-tab-group>
   </div>
 </div>
+}

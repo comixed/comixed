@@ -16,7 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  inject,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -75,7 +81,8 @@ import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.s
 @Component({
   selector: 'cx-comic-book-page',
   templateUrl: './comic-book-page.component.html',
-  styleUrls: ['./comic-book-page.component.scss']
+  styleUrls: ['./comic-book-page.component.scss'],
+  standalone: false
 })
 export class ComicBookPageComponent
   implements OnInit, OnDestroy, AfterViewInit
@@ -108,17 +115,17 @@ export class ComicBookPageComponent
   readComicBookList: number[] = [];
   messagingStarted = false;
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private activatedRoute: ActivatedRoute,
-    private titleService: TitleService,
-    private translateService: TranslateService,
-    private comicTitlePipe: ComicTitlePipe,
-    private confirmationService: ConfirmationService,
-    private webSocketService: WebSocketService,
-    public queryParameterService: QueryParameterService
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+  activatedRoute = inject(ActivatedRoute);
+  titleService = inject(TitleService);
+  translateService = inject(TranslateService);
+  comicTitlePipe = inject(ComicTitlePipe);
+  confirmationService = inject(ConfirmationService);
+  webSocketService = inject(WebSocketService);
+  queryParameterService = inject(QueryParameterService);
+
+  constructor() {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );

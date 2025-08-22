@@ -2,21 +2,23 @@
   [selectedIds]="selectedIds"
 ></cx-metadata-process-toolbar>
 
-<h2 *ngIf="processState?.active">
-  {{ "metadata-process.page-title" | translate: { count: selectedIds.length } }}
+@if (processState?.active) {
+<h2>
+  {{
+    "metadata-process.page-title" | translate : { count: selectedIds.length }
+  }}
 </h2>
-
+} @if (processState?.active) {
 <cx-metadata-process-status
-  *ngIf="processState?.active"
   class="cx-width-100 cx-height-100"
   [processState]="processState"
 ></cx-metadata-process-status>
-
+} @if (!processState || !processState.active) {
 <cx-comic-list-view
-  *ngIf="!processState || !processState.active"
   class="cx-width-100"
   [comics]="comics"
   [coverYears]="coverYears"
   [coverMonths]="coverMonths"
   [selectedIds]="selectedIds"
 ></cx-comic-list-view>
+}

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
@@ -31,7 +31,8 @@ import { selectUser } from '@app/user/selectors/user.selectors';
 @Component({
   selector: 'cx-home',
   templateUrl: './home-page.component.html',
-  styleUrls: ['./home-page.component.scss']
+  styleUrls: ['./home-page.component.scss'],
+  standalone: false
 })
 export class HomePageComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
@@ -43,12 +44,12 @@ export class HomePageComponent implements OnInit, OnDestroy {
   user: User;
   lastRead: number[] = [];
 
-  constructor(
-    private logger: LoggerService,
-    private titleService: TitleService,
-    private translateService: TranslateService,
-    private store: Store<any>
-  ) {
+  logger = inject(LoggerService);
+  titleService = inject(TitleService);
+  translateService = inject(TranslateService);
+  store = inject(Store);
+
+  constructor() {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );

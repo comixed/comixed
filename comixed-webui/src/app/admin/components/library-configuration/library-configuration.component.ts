@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
@@ -30,16 +30,16 @@ import { ConfigurationOption } from '@app/admin/models/configuration-option';
 import { getConfigurationOption } from '@app/admin';
 import {
   BLOCKED_PAGES_ENABLED,
-  LIBRARY_DONT_MOVE_UNSCRAPED_COMICS,
   CREATE_EXTERNAL_METADATA_FILES,
   LIBRARY_COMIC_RENAMING_RULE,
   LIBRARY_DELETE_EMPTY_DIRECTORIES,
+  LIBRARY_DELETE_PURGED_COMIC_FILES,
+  LIBRARY_DONT_MOVE_UNSCRAPED_COMICS,
   LIBRARY_NO_RECREATE_COMICS,
   LIBRARY_PAGE_RENAMING_RULE,
   LIBRARY_ROOT_DIRECTORY,
-  SKIP_INTERNAL_METADATA_FILES,
   LIBRARY_STRIP_HTML_FROM_METADATA,
-  LIBRARY_DELETE_PURGED_COMIC_FILES
+  SKIP_INTERNAL_METADATA_FILES
 } from '@app/admin/admin.constants';
 import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
@@ -48,7 +48,8 @@ import { purgeLibrary } from '@app/library/actions/purge-library.actions';
 @Component({
   selector: 'cx-library-configuration',
   templateUrl: './library-configuration.component.html',
-  styleUrls: ['./library-configuration.component.scss']
+  styleUrls: ['./library-configuration.component.scss'],
+  standalone: false
 })
 export class LibraryConfigurationComponent {
   @Input() libraryConfigurationForm: UntypedFormGroup;
@@ -95,13 +96,13 @@ export class LibraryConfigurationComponent {
     { label: '$INDEX', value: 'configuration.text.page-renaming-rule-index' }
   ];
 
-  constructor(
-    private logger: LoggerService,
-    private formBuilder: UntypedFormBuilder,
-    private store: Store<any>,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService
-  ) {
+  logger = inject(LoggerService);
+  formBuilder = inject(UntypedFormBuilder);
+  store = inject(Store<any>);
+  confirmationService = inject(ConfirmationService);
+  translateService = inject(TranslateService);
+
+  constructor() {
     this.libraryConfigurationForm = this.formBuilder.group({
       deletePurgedComicFilesDirectories: ['', []],
       deleteEmptyDirectories: ['', []],

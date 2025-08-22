@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Observable } from 'rxjs';
@@ -31,7 +31,8 @@ import { LoadDuplicatePageListRequest } from '@app/library/models/net/load-dupli
   providedIn: 'root'
 })
 export class DuplicatePageService {
-  constructor(private logger: LoggerService, private http: HttpClient) {}
+  logger = inject(LoggerService);
+  http = inject(HttpClient);
 
   loadDuplicatePages(args: {
     page: number;

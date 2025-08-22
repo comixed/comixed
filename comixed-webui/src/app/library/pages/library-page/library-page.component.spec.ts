@@ -158,93 +158,91 @@ describe('LibraryPageComponent', () => {
   let confirmationService: ConfirmationService;
   let router: Router;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [
-          LibraryPageComponent,
-          ComicListViewComponent,
-          ArchiveTypePipe,
-          CoverDateFilterPipe,
-          ComicCoverUrlPipe,
-          ComicTitlePipe
-        ],
-        imports: [
-          NoopAnimationsModule,
-          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          MatSidenavModule,
-          MatToolbarModule,
-          MatIconModule,
-          MatTreeModule,
-          MatPaginatorModule,
-          MatFormFieldModule,
-          MatTooltipModule,
-          MatDialogModule,
-          MatMenuModule,
-          MatFormFieldModule,
-          MatSelectModule,
-          MatOptionModule,
-          MatDividerModule,
-          MatSortModule,
-          MatInputModule,
-          MatTableModule,
-          MatCheckboxModule
-        ],
-        providers: [
-          provideMockStore({ initialState }),
-          {
-            provide: ActivatedRoute,
-            useValue: {
-              data: new BehaviorSubject<{}>({}),
-              snapshot: {} as ActivatedRouteSnapshot,
-              queryParams: new BehaviorSubject<{}>({}),
-              params: new BehaviorSubject<{}>({})
-            }
-          },
-          TitleService,
-          {
-            provide: QueryParameterService,
-            useValue: {
-              pageSize$: new BehaviorSubject<number>(10),
-              pageIndex$: new BehaviorSubject<number>(0),
-              coverYear$: new BehaviorSubject<CoverDateFilter>({
-                year: null,
-                month: null
-              }),
-              archiveType$: new BehaviorSubject<ArchiveType>(null),
-              filterText$: new BehaviorSubject<string>(null),
-              comicType$: new BehaviorSubject<ComicType>(null),
-              pageCount$: new BehaviorSubject<number | null>(null),
-              sortBy$: new BehaviorSubject<ComicType>(null),
-              sortDirection$: new BehaviorSubject<ComicType>(null),
-              updateQueryParam: jasmine.createSpy(
-                'QueryParameterService.updateQueryParam()'
-              )
-            }
-          },
-          ConfirmationService
-        ]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        LibraryPageComponent,
+        ComicListViewComponent,
+        ArchiveTypePipe,
+        CoverDateFilterPipe,
+        ComicCoverUrlPipe,
+        ComicTitlePipe
+      ],
+      imports: [
+        NoopAnimationsModule,
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatSidenavModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatTreeModule,
+        MatPaginatorModule,
+        MatFormFieldModule,
+        MatTooltipModule,
+        MatDialogModule,
+        MatMenuModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatOptionModule,
+        MatDividerModule,
+        MatSortModule,
+        MatInputModule,
+        MatTableModule,
+        MatCheckboxModule
+      ],
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            data: new BehaviorSubject<{}>({}),
+            snapshot: {} as ActivatedRouteSnapshot,
+            queryParams: new BehaviorSubject<{}>({}),
+            params: new BehaviorSubject<{}>({})
+          }
+        },
+        TitleService,
+        {
+          provide: QueryParameterService,
+          useValue: {
+            pageSize$: new BehaviorSubject<number>(10),
+            pageIndex$: new BehaviorSubject<number>(0),
+            coverYear$: new BehaviorSubject<CoverDateFilter>({
+              year: null,
+              month: null
+            }),
+            archiveType$: new BehaviorSubject<ArchiveType>(null),
+            filterText$: new BehaviorSubject<string>(null),
+            comicType$: new BehaviorSubject<ComicType>(null),
+            pageCount$: new BehaviorSubject<number | null>(null),
+            sortBy$: new BehaviorSubject<ComicType>(null),
+            sortDirection$: new BehaviorSubject<ComicType>(null),
+            updateQueryParam: jasmine.createSpy(
+              'QueryParameterService.updateQueryParam()'
+            )
+          }
+        },
+        ConfirmationService
+      ]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(LibraryPageComponent);
-      component = fixture.componentInstance;
-      store = TestBed.inject(MockStore);
-      spyOn(store, 'dispatch');
-      translateService = TestBed.inject(TranslateService);
-      titleService = TestBed.inject(TitleService);
-      spyOn(titleService, 'setTitle');
-      activatedRoute = TestBed.inject(ActivatedRoute);
-      queryParameterService = TestBed.inject(
-        QueryParameterService
-      ) as jasmine.SpyObj<QueryParameterService>;
-      confirmationService = TestBed.inject(ConfirmationService);
-      router = TestBed.inject(Router);
-      spyOn(router, 'navigate');
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(LibraryPageComponent);
+    component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    translateService = TestBed.inject(TranslateService);
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
+    activatedRoute = TestBed.inject(ActivatedRoute);
+    queryParameterService = TestBed.inject(
+      QueryParameterService
+    ) as jasmine.SpyObj<QueryParameterService>;
+    confirmationService = TestBed.inject(ConfirmationService);
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigate');
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

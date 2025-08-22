@@ -20,6 +20,7 @@ import {
   Component,
   EventEmitter,
   HostListener,
+  inject,
   Input,
   OnDestroy,
   OnInit,
@@ -62,7 +63,8 @@ import { METADATA_RECORD_LIMITS } from '@app/comic-metadata/comic-metadata.const
 @Component({
   selector: 'cx-comic-scraping',
   templateUrl: './comic-scraping.component.html',
-  styleUrls: ['./comic-scraping.component.scss']
+  styleUrls: ['./comic-scraping.component.scss'],
+  standalone: false
 })
 export class ComicScrapingComponent implements OnInit, OnDestroy {
   @Input() skipCache = false;
@@ -83,13 +85,13 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
   _preferredMetadataSource: MetadataSource | null = null;
   _selectedMetadataSource: MetadataSource | null = null;
 
-  constructor(
-    private logger: LoggerService,
-    private formBuilder: UntypedFormBuilder,
-    private store: Store<any>,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService
-  ) {
+  logger = inject(LoggerService);
+  formBuilder = inject(UntypedFormBuilder);
+  store = inject(Store);
+  confirmationService = inject(ConfirmationService);
+  translateService = inject(TranslateService);
+
+  constructor() {
     this.comicForm = this.formBuilder.group({
       publisher: [''],
       series: ['', [Validators.required]],

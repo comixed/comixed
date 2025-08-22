@@ -220,17 +220,14 @@ describe('QueryParameterService', () => {
         service.onFilterTextChanged(FILTER_TEXT);
       });
 
-      it(
-        'updates the URL',
-        waitForAsync(() => {
-          setTimeout(function () {
-            expect(router.navigate).toHaveBeenCalledWith([], {
-              relativeTo: activatedRoute,
-              queryParams: { [QUERY_PARAM_FILTER_TEXT]: FILTER_TEXT }
-            });
-          }, 1000);
-        })
-      );
+      it('updates the URL', waitForAsync(() => {
+        setTimeout(function () {
+          expect(router.navigate).toHaveBeenCalledWith([], {
+            relativeTo: activatedRoute,
+            queryParams: { [QUERY_PARAM_FILTER_TEXT]: FILTER_TEXT }
+          });
+        }, 1000);
+      }));
     });
   });
 
@@ -240,17 +237,14 @@ describe('QueryParameterService', () => {
         service.onFilterTextChanged('');
       });
 
-      it(
-        'updates the URL',
-        waitForAsync(() => {
-          setTimeout(function () {
-            expect(router.navigate).toHaveBeenCalledWith([], {
-              relativeTo: activatedRoute,
-              queryParams: { [QUERY_PARAM_FILTER_TEXT]: null }
-            });
-          }, 1000);
-        })
-      );
+      it('updates the URL', waitForAsync(() => {
+        setTimeout(function () {
+          expect(router.navigate).toHaveBeenCalledWith([], {
+            relativeTo: activatedRoute,
+            queryParams: { [QUERY_PARAM_FILTER_TEXT]: null }
+          });
+        }, 1000);
+      }));
     });
   });
 

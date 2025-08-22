@@ -4,9 +4,11 @@
     [value]="metricDetail?.name"
     (selectionChange)="onMetricNameSelected($event.value)"
   >
-    <mat-option *ngFor="let name of metricList?.names" [value]="name">
+    @for (name of metricList?.names; track name) {
+    <mat-option [value]="name">
       {{ name }}
     </mat-option>
+    }
   </mat-select>
   <input matInput readonly hidden />
 </mat-form-field>

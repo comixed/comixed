@@ -1,17 +1,14 @@
-<div
-  *ngIf="showPopup && !!popupComicDetail"
-  class="cx-hover cx-centered cx-width-25 cx-border-primary-1"
->
+@if (showPopup && !!popupComicDetail) {
+<div class="cx-hover cx-centered cx-width-25 cx-border-primary-1">
   <mat-card appearance="outlined">
     <mat-card-title class="cx-text-nowrap">
       {{ popupComicDetail | comicTitle }}
     </mat-card-title>
-    <mat-card-subtitle
-      *ngIf="!!popupComicDetail.title && popupComicDetail?.title.length > 0"
-      class="cx-text-nowrap"
-    >
+    @if (!!popupComicDetail.title && popupComicDetail?.title.length > 0) {
+    <mat-card-subtitle class="cx-text-nowrap">
       {{ popupComicDetail.title }}
     </mat-card-subtitle>
+    }
     <mat-card-content class="cx-padding-5">
       <img
         loading="lazy"
@@ -23,12 +20,13 @@
     </mat-card-content>
   </mat-card>
 </div>
+}
 
 <h2>{{ "scraping-issues-page.page-title" | translate }}</h2>
 
-<div *ngIf="!started" class="cx-width-100 cx-align-content-center">
+@if (!started) {
+<div class="cx-width-100 cx-align-content-center">
   <p>{{ "scraping-page.inactive.page-content" | translate }}</p>
-
   <button
     id="cx-show-all-comics-button"
     class="cx-action-button"
@@ -42,13 +40,13 @@
     </mat-label>
   </button>
 </div>
-
-<div *ngIf="started" class="cx-horizontal-container cx-width-100">
+} @if (started) {
+<div class="cx-horizontal-container cx-width-100">
   <div class="cx-width-25">
     <h3>
       {{
         "scraping.current-comic.title"
-          | translate: { count: multiBookScrapingState?.totalComics }
+          | translate : { count: multiBookScrapingState?.totalComics }
       }}
     </h3>
     <mat-card>
@@ -74,10 +72,8 @@
       </mat-card-content>
     </mat-card>
   </div>
-  <div
-    *ngIf="!!currentComicBook && scrapingVolumes.length === 0"
-    class="cx-width-75"
-  >
+  @if (!!currentComicBook && scrapingVolumes.length === 0) {
+  <div class="cx-width-75">
     <cx-comic-scraping
       [comic]="currentComicBook"
       [metadataSource]="metadataSource"
@@ -87,7 +83,6 @@
       [multiMode]="true"
       (scrape)="onScrape($event)"
     ></cx-comic-scraping>
-
     <h4>{{ "scraping.comic-book-queue.title" | translate }}</h4>
     <mat-paginator
       showFirstLastButtons="true"
@@ -120,7 +115,6 @@
           </button>
         </mat-cell>
       </ng-container>
-
       <ng-container matColumnDef="thumbnail">
         <mat-header-cell *matHeaderCellDef>
           {{ "comic-book.label.thumbnail" | translate }}
@@ -141,35 +135,30 @@
           </span>
         </mat-cell>
       </ng-container>
-
       <ng-container matColumnDef="publisher">
         <mat-header-cell *matHeaderCellDef>
           {{ "comic-book.label.publisher" | translate }}
         </mat-header-cell>
         <mat-cell *matCellDef="let entry">{{ entry.publisher }}</mat-cell>
       </ng-container>
-
       <ng-container matColumnDef="series">
         <mat-header-cell *matHeaderCellDef>
           {{ "comic-book.label.series" | translate }}
         </mat-header-cell>
         <mat-cell *matCellDef="let entry">{{ entry.series }}</mat-cell>
       </ng-container>
-
       <ng-container matColumnDef="volume">
         <mat-header-cell *matHeaderCellDef>
           {{ "comic-book.label.volume" | translate }}
         </mat-header-cell>
         <mat-cell *matCellDef="let entry">{{ entry.volume }}</mat-cell>
       </ng-container>
-
       <ng-container matColumnDef="issue-number">
         <mat-header-cell *matHeaderCellDef>
           {{ "comic-book.label.issue-number" | translate }}
         </mat-header-cell>
         <mat-cell *matCellDef="let entry">{{ entry.issueNumber }}</mat-cell>
       </ng-container>
-
       <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
       <mat-row
         *matRowDef="let row; columns: displayColumns"
@@ -181,7 +170,8 @@
       ></mat-row>
     </mat-table>
   </div>
-  <div *ngIf="scrapingVolumes.length > 0" class="cx-width-75">
+  } @if (scrapingVolumes.length > 0) {
+  <div class="cx-width-75">
     <cx-scraping-volume-selection
       [comicBook]="currentComicBook"
       [metadataSource]="metadataSource"
@@ -194,4 +184,6 @@
       [volumes]="scrapingVolumes"
     ></cx-scraping-volume-selection>
   </div>
+  }
 </div>
+}

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -44,7 +44,8 @@ import { FILENAME_SCRAPING_RULE_TEMPLATE } from '@app/admin/admin.constants';
 @Component({
   selector: 'cx-scraping-rules-configuration',
   templateUrl: './filename-scraping-rules-configuration.component.html',
-  styleUrls: ['./filename-scraping-rules-configuration.component.scss']
+  styleUrls: ['./filename-scraping-rules-configuration.component.scss'],
+  standalone: false
 })
 export class FilenameScrapingRulesConfigurationComponent
   implements OnInit, OnDestroy
@@ -66,13 +67,13 @@ export class FilenameScrapingRulesConfigurationComponent
     'date-format'
   ];
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private translateService: TranslateService,
-    private titleService: TitleService,
-    private confirmationService: ConfirmationService
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store<any>);
+  translateService = inject(TranslateService);
+  titleService = inject(TitleService);
+  confirmationService = inject(ConfirmationService);
+
+  constructor() {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );

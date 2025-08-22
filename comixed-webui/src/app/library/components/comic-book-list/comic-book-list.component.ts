@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
@@ -24,7 +24,8 @@ import { ComicDetail } from '@app/comic-books/models/comic-detail';
 @Component({
   selector: 'cx-comic-book-list',
   templateUrl: './comic-book-list.component.html',
-  styleUrls: ['./comic-book-list.component.scss']
+  styleUrls: ['./comic-book-list.component.scss'],
+  standalone: false
 })
 export class ComicBookListComponent {
   @Input()
@@ -39,5 +40,5 @@ export class ComicBookListComponent {
     'store-date'
   ];
 
-  constructor(private logger: LoggerService) {}
+  logger = inject(LoggerService);
 }

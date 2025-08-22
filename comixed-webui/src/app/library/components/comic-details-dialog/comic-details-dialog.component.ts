@@ -23,7 +23,8 @@ import { ComicBook } from '@app/comic-books/models/comic-book';
 @Component({
   selector: 'cx-comic-details-dialog',
   templateUrl: './comic-details-dialog.component.html',
-  styleUrls: ['./comic-details-dialog.component.scss']
+  styleUrls: ['./comic-details-dialog.component.scss'],
+  standalone: false
 })
 export class ComicDetailsDialogComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public comicBook: ComicBook) {}

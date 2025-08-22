@@ -21,6 +21,7 @@ import {
   Component,
   EventEmitter,
   HostListener,
+  inject,
   Input,
   OnDestroy,
   OnInit,
@@ -91,7 +92,8 @@ import { loadReadingLists } from '@app/lists/actions/reading-lists.actions';
 @Component({
   selector: 'cx-comic-list-view',
   templateUrl: './comic-list-view.component.html',
-  styleUrls: ['./comic-list-view.component.scss']
+  styleUrls: ['./comic-list-view.component.scss'],
+  standalone: false
 })
 export class ComicListViewComponent
   implements OnInit, OnDestroy, AfterViewInit
@@ -136,16 +138,16 @@ export class ComicListViewComponent
   libraryPluginListSubscription: Subscription;
   libraryPluginlist: LibraryPlugin[] = [];
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService,
-    private dialog: MatDialog,
-    public queryParameterService: QueryParameterService
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+  router = inject(Router);
+  activatedRoute = inject(ActivatedRoute);
+  confirmationService = inject(ConfirmationService);
+  translateService = inject(TranslateService);
+  dialog = inject(MatDialog);
+  queryParameterService = inject(QueryParameterService);
+
+  constructor() {
     this.logger.trace('Subscribing to query parameter updates');
     this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
       () => this.applyFilters()

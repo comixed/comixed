@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -49,7 +49,8 @@ import {
 @Component({
   selector: 'cx-collection-detail',
   templateUrl: './collection-detail.component.html',
-  styleUrls: ['./collection-detail.component.scss']
+  styleUrls: ['./collection-detail.component.scss'],
+  standalone: false
 })
 export class CollectionDetailComponent implements OnInit, OnDestroy {
   comics: DisplayableComic[] = [];
@@ -76,16 +77,15 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
   isAdmin = false;
   langChangeSubscription: Subscription;
   showCovers = false;
+  queryParameterService = inject(QueryParameterService);
+  logger = inject(LoggerService);
+  store = inject(Store);
+  activatedRoute = inject(ActivatedRoute);
+  router = inject(Router);
+  translateService = inject(TranslateService);
+  titleService = inject(TitleService);
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private translateService: TranslateService,
-    private titleService: TitleService,
-    public queryParameterService: QueryParameterService
-  ) {
+  constructor() {
     this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
       () => this.doLoadComicDetails()
     );

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { MatDialog } from '@angular/material/dialog';
@@ -26,12 +26,14 @@ import { ComicDetail } from '@app/comic-books/models/comic-detail';
 @Component({
   selector: 'cx-selected-comics',
   templateUrl: './selected-comics.component.html',
-  styleUrls: ['./selected-comics.component.scss']
+  styleUrls: ['./selected-comics.component.scss'],
+  standalone: false
 })
 export class SelectedComicsComponent {
   @Output() selectionChanged = new EventEmitter<ComicDetail>();
 
-  constructor(private logger: LoggerService, public dialog: MatDialog) {}
+  logger = inject(LoggerService);
+  dialog = inject(MatDialog);
 
   private _comics: ComicDetail[] = [];
 

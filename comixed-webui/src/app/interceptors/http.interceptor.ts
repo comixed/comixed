@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   HttpErrorResponse,
   HttpEvent,
@@ -38,12 +38,10 @@ import { logoutUser } from '@app/user/actions/user.actions';
 
 @Injectable()
 export class HttpInterceptor implements HttpInterceptor {
-  constructor(
-    private logger: LoggerService,
-    private tokenService: TokenService,
-    private store: Store<any>,
-    private router: Router
-  ) {}
+  logger = inject(LoggerService);
+  tokenService = inject(TokenService);
+  store = inject(Store);
+  router = inject(Router);
 
   intercept(
     request: HttpRequest<unknown>,

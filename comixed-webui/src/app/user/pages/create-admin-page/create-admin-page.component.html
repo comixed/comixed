@@ -1,13 +1,7 @@
 <h2>{{ "create-admin-account.page-title" | translate }}</h2>
 
 <div
-  class="
-    cx-width-50
-    cx-position-absolute
-    cx-border-primary-1
-    cx-centered
-    cx-padding-5
-  "
+  class="cx-width-50 cx-position-absolute cx-border-primary-1 cx-centered cx-padding-5"
 >
   <div class="cx-padding-5">
     {{ "create-admin-account.text.description" | translate }}
@@ -25,12 +19,15 @@
             [placeholder]="'create-admin-account.placeholder.email' | translate"
           />
           <mat-error>
-            <span *ngIf="controls.email.errors?.required">
+            @if (controls.email.errors?.required) {
+            <span>
               {{ "validation.field-required" | translate }}
             </span>
-            <span *ngIf="controls.email.errors?.email">
+            } @if (controls.email.errors?.email) {
+            <span>
               {{ "validation.email-required" | translate }}
             </span>
+            }
           </mat-error>
         </mat-form-field>
         <mat-form-field class="cx-width-100" required>
@@ -44,10 +41,12 @@
             "
           />
           <mat-error>
-            <span *ngIf="controls.password.errors?.required">
+            @if (controls.password.errors?.required) {
+            <span>
               {{ "validation.field-required" | translate }}
             </span>
-            <span *ngIf="!!controls.password.errors?.minlength">
+            } @if (!!controls.password.errors?.minlength) {
+            <span>
               {{
                 "validation.value-too-short"
                   | translate
@@ -57,7 +56,8 @@
                       }
               }}
             </span>
-            <span *ngIf="!!controls.password.errors?.maxlength">
+            } @if (!!controls.password.errors?.maxlength) {
+            <span>
               {{
                 "validation.value-too-long"
                   | translate
@@ -67,6 +67,7 @@
                       }
               }}
             </span>
+            }
           </mat-error>
         </mat-form-field>
         <mat-form-field class="cx-width-100" required>
@@ -80,12 +81,15 @@
             "
           />
           <mat-error>
-            <span *ngIf="controls.passwordVerify.errors?.required">
+            @if (controls.passwordVerify.errors?.required) {
+            <span>
               {{ "validation.field-required" | translate }}
             </span>
-            <span *ngIf="createAdminForm.errors?.passwordsDontMatch">
+            } @if (createAdminForm.errors?.passwordsDontMatch) {
+            <span>
               {{ "validation.password-mismatch" | translate }}
             </span>
+            }
           </mat-error>
         </mat-form-field>
         <button

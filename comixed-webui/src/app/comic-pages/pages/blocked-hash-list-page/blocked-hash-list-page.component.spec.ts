@@ -78,48 +78,43 @@ describe('BlockedHashListPageComponent', () => {
   let titleService: TitleService;
   let translateService: TranslateService;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [
-          BlockedHashListPageComponent,
-          BlockedHashThumbnailUrlPipe
-        ],
-        imports: [
-          NoopAnimationsModule,
-          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          MatToolbarModule,
-          MatTableModule,
-          MatPaginatorModule,
-          MatCheckboxModule,
-          MatDialogModule,
-          MatIconModule,
-          MatTooltipModule,
-          MatSortModule,
-          MatDividerModule
-        ],
-        providers: [
-          provideMockStore({ initialState }),
-          ConfirmationService,
-          TitleService
-        ]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [BlockedHashListPageComponent, BlockedHashThumbnailUrlPipe],
+      imports: [
+        NoopAnimationsModule,
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatToolbarModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatSortModule,
+        MatDividerModule
+      ],
+      providers: [
+        provideMockStore({ initialState }),
+        ConfirmationService,
+        TitleService
+      ]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(BlockedHashListPageComponent);
-      component = fixture.componentInstance;
-      router = TestBed.inject(Router);
-      spyOn(router, 'navigate');
-      store = TestBed.inject(MockStore);
-      spyOn(store, 'dispatch');
-      confirmationService = TestBed.inject(ConfirmationService);
-      titleService = TestBed.inject(TitleService);
-      spyOn(titleService, 'setTitle');
-      translateService = TestBed.inject(TranslateService);
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(BlockedHashListPageComponent);
+    component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigate');
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    confirmationService = TestBed.inject(ConfirmationService);
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
+    translateService = TestBed.inject(TranslateService);
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

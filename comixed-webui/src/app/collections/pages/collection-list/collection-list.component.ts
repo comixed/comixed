@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -42,7 +42,8 @@ import {
 @Component({
   selector: 'cx-collection-list',
   templateUrl: './collection-list.component.html',
-  styleUrls: ['./collection-list.component.scss']
+  styleUrls: ['./collection-list.component.scss'],
+  standalone: false
 })
 export class CollectionListComponent implements OnInit, OnDestroy {
   paramSubscription: Subscription;
@@ -57,17 +58,16 @@ export class CollectionListComponent implements OnInit, OnDestroy {
 
   readonly displayedColumns = ['tag-value', 'comic-count'];
   langChangeSubscription: Subscription;
+  queryParameterService = inject(QueryParameterService);
+  logger = inject(LoggerService);
+  store = inject(Store);
+  activatedRoute = inject(ActivatedRoute);
+  router = inject(Router);
+  translateService = inject(TranslateService);
+  titleService = inject(TitleService);
   protected readonly filter = filter;
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private translateService: TranslateService,
-    private titleService: TitleService,
-    public queryParameterService: QueryParameterService
-  ) {
+  constructor() {
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.routableTypeName = params.collectionType;
       this.collectionType = comicTagTypeFromString(this.routableTypeName);

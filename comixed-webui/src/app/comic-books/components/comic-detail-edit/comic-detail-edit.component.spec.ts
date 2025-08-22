@@ -66,50 +66,48 @@ describe('ComicDetailEditComponent', () => {
   let confirmationService: ConfirmationService;
   let clipboard: Clipboard;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [ComicDetailEditComponent, ComicCoverUrlPipe],
-        imports: [
-          NoopAnimationsModule,
-          FormsModule,
-          ReactiveFormsModule,
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          RouterTestingModule.withRoutes([
-            {
-              path: '*',
-              redirectTo: ''
-            }
-          ]),
-          MatGridListModule,
-          MatDialogModule,
-          MatToolbarModule,
-          MatIconModule,
-          MatDatepickerModule,
-          MatInputModule,
-          MatNativeDateModule,
-          MatTooltipModule,
-          MatSelectModule
-        ],
-        providers: [
-          provideMockStore({ initialState }),
-          ConfirmationService,
-          Clipboard
-        ]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [ComicDetailEditComponent, ComicCoverUrlPipe],
+      imports: [
+        NoopAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        RouterTestingModule.withRoutes([
+          {
+            path: '*',
+            redirectTo: ''
+          }
+        ]),
+        MatGridListModule,
+        MatDialogModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatDatepickerModule,
+        MatInputModule,
+        MatNativeDateModule,
+        MatTooltipModule,
+        MatSelectModule
+      ],
+      providers: [
+        provideMockStore({ initialState }),
+        ConfirmationService,
+        Clipboard
+      ]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(ComicDetailEditComponent);
-      component = fixture.componentInstance;
-      component.comicBook = COMIC;
-      store = TestBed.inject(MockStore);
-      spyOn(store, 'dispatch');
-      confirmationService = TestBed.inject(ConfirmationService);
-      clipboard = TestBed.inject(Clipboard);
-      spyOn(clipboard, 'copy');
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(ComicDetailEditComponent);
+    component = fixture.componentInstance;
+    component.comicBook = COMIC;
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    confirmationService = TestBed.inject(ConfirmationService);
+    clipboard = TestBed.inject(Clipboard);
+    spyOn(clipboard, 'copy');
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

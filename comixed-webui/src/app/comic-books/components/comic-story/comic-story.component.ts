@@ -27,7 +27,8 @@ import { ComicTag } from '@app/comic-books/models/comic-tag';
 @Component({
   selector: 'cx-comic-story',
   templateUrl: './comic-story.component.html',
-  styleUrls: ['./comic-story.component.scss']
+  styleUrls: ['./comic-story.component.scss'],
+  standalone: false
 })
 export class ComicStoryComponent {
   credits: ComicTag[] = [];

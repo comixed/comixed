@@ -28,19 +28,17 @@ describe('UserCardComponent', () => {
   let component: UserCardComponent;
   let fixture: ComponentFixture<UserCardComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [UserCardComponent],
-        imports: [LoggerModule.forRoot(), GravatarModule]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [UserCardComponent],
+      imports: [LoggerModule.forRoot(), GravatarModule]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(UserCardComponent);
-      component = fixture.componentInstance;
-      component.user = USER;
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(UserCardComponent);
+    component = fixture.componentInstance;
+    component.user = USER;
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

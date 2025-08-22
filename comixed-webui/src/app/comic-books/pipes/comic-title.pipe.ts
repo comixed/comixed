@@ -22,7 +22,8 @@ import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Pipe({
-  name: 'comicTitle'
+  name: 'comicTitle',
+  standalone: false
 })
 export class ComicTitlePipe implements PipeTransform {
   transform(comic: DisplayableComic | ComicDetail): string {

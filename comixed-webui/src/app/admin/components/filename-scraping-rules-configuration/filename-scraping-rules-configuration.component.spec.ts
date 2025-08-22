@@ -73,43 +73,41 @@ describe('FilenameScrapingRulesConfigurationComponent', () => {
   let titleService: TitleService;
   let confirmationService: ConfirmationService;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [FilenameScrapingRulesConfigurationComponent],
-        imports: [
-          NoopAnimationsModule,
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          DragDropModule,
-          MatTableModule,
-          MatInputModule,
-          MatButtonModule,
-          MatIconModule,
-          MatToolbarModule,
-          MatDialogModule,
-          MatTooltipModule
-        ],
-        providers: [
-          provideMockStore({ initialState }),
-          TitleService,
-          ConfirmationService
-        ]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [FilenameScrapingRulesConfigurationComponent],
+      imports: [
+        NoopAnimationsModule,
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        DragDropModule,
+        MatTableModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatToolbarModule,
+        MatDialogModule,
+        MatTooltipModule
+      ],
+      providers: [
+        provideMockStore({ initialState }),
+        TitleService,
+        ConfirmationService
+      ]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(
-        FilenameScrapingRulesConfigurationComponent
-      );
-      component = fixture.componentInstance;
-      store = TestBed.inject(MockStore);
-      spyOn(store, 'dispatch');
-      translateService = TestBed.inject(TranslateService);
-      titleService = TestBed.inject(TitleService);
-      spyOn(titleService, 'setTitle');
-      confirmationService = TestBed.inject(ConfirmationService);
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(
+      FilenameScrapingRulesConfigurationComponent
+    );
+    component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    translateService = TestBed.inject(TranslateService);
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
+    confirmationService = TestBed.inject(ConfirmationService);
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

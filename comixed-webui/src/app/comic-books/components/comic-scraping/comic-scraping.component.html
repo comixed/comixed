@@ -8,9 +8,9 @@
   >
     <mat-icon>upload_file</mat-icon>
   </button>
+  @if (!multiMode) {
   <button
     id="save-comic-changes"
-    *ngIf="!multiMode"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
     [matTooltip]="'comic-book.tooltip.save-changes' | translate"
@@ -19,9 +19,9 @@
   >
     <mat-icon>save</mat-icon>
   </button>
+  } @if (!multiMode) {
   <button
     id="undo-comic-changes"
-    *ngIf="!multiMode"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
     [matTooltip]="'comic-book.tooltip.undo-changes' | translate"
@@ -30,40 +30,51 @@
   >
     <mat-icon>undo</mat-icon>
   </button>
+  }
   <div class="cx-spacer"></div>
+  @if (multiMode) {
   <button
-    *ngIf="multiMode"
     id="auto-select-exact-match-button"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
     [matTooltip]="'scraping.tooltip.auto-select-exact-match' | translate"
     (click)="onToggleAutoSelectExactMatch()"
   >
-    <mat-icon *ngIf="autoSelectExactMatch">radio_button_checked</mat-icon>
-    <mat-icon *ngIf="!autoSelectExactMatch">radio_button_unchecked</mat-icon>
+    @if (autoSelectExactMatch) {
+    <mat-icon>radio_button_checked</mat-icon>
+    } @if (!autoSelectExactMatch) {
+    <mat-icon>radio_button_unchecked</mat-icon>
+    }
   </button>
+  } @if (multiMode) {
   <button
-    *ngIf="multiMode"
     id="confirm-before-scraping-button"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
     [matTooltip]="'scraping.tooltip.confirm-each-scrape' | translate"
     (click)="onToggleConfirmBeforeScrape()"
   >
-    <mat-icon *ngIf="confirmBeforeScraping">radio_button_checked</mat-icon>
-    <mat-icon *ngIf="!confirmBeforeScraping">radio_button_unchecked</mat-icon>
+    @if (confirmBeforeScraping) {
+    <mat-icon>radio_button_checked</mat-icon>
+    } @if (!confirmBeforeScraping) {
+    <mat-icon>radio_button_unchecked</mat-icon>
+    }
   </button>
+  }
   <button
     id="skip-cache-button"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
     [matTooltip]="
-      'scraping.tooltip.skip-cache' | translate: { enabled: skipCache }
+      'scraping.tooltip.skip-cache' | translate : { enabled: skipCache }
     "
     (click)="onSkipCacheToggle()"
   >
-    <mat-icon *ngIf="skipCache">block</mat-icon>
-    <mat-icon *ngIf="!skipCache">remove_circle_outline</mat-icon>
+    @if (skipCache) {
+    <mat-icon>block</mat-icon>
+    } @if (!skipCache) {
+    <mat-icon>remove_circle_outline</mat-icon>
+    }
   </button>
   <button
     id="match-publisher-button"
@@ -71,12 +82,15 @@
     mat-icon-button
     [matTooltip]="
       'scraping.tooltip.match-publisher'
-        | translate: { enabled: matchPublisher }
+        | translate : { enabled: matchPublisher }
     "
     (click)="onMatchPublisherToggle()"
   >
-    <mat-icon *ngIf="matchPublisher">join_inner</mat-icon>
-    <mat-icon *ngIf="!matchPublisher">join_full</mat-icon>
+    @if (matchPublisher) {
+    <mat-icon>join_inner</mat-icon>
+    } @if (!matchPublisher) {
+    <mat-icon>join_full</mat-icon>
+    }
   </button>
   <button
     id="scrape-comic-button"
@@ -89,7 +103,8 @@
     <mat-icon>find_replace</mat-icon>
   </button>
 </mat-toolbar>
-<form *ngIf="!!comic" [formGroup]="comicForm">
+@if (!!comic) {
+<form [formGroup]="comicForm">
   <mat-form-field class="cx-width-25" appearance="fill">
     <mat-label>{{ "comic-book.label.metadata-source" | translate }}</mat-label>
     <mat-select
@@ -97,12 +112,11 @@
       (selectionChange)="onMetadataSourceChosen($event.value)"
       required
     >
-      <mat-option
-        *ngFor="let source of metadataSourceList"
-        [value]="source.value.metadataSourceId"
-      >
+      @for (source of metadataSourceList; track source) {
+      <mat-option [value]="source.value.metadataSourceId">
         {{ source.label }}
       </mat-option>
+      }
     </mat-select>
   </mat-form-field>
   <mat-form-field class="cx-width-25">
@@ -141,12 +155,11 @@
       (selectionChange)="onMaximumRecordsChanged($event.value)"
       required
     >
-      <mat-option
-        *ngFor="let option of maximumRecordsOptions"
-        [value]="option.value"
-      >
+      @for (option of maximumRecordsOptions; track option) {
+      <mat-option [value]="option.value">
         {{ option.label | translate }}
       </mat-option>
+      }
     </mat-select>
   </mat-form-field>
   <mat-form-field class="cx-width-25">
@@ -170,9 +183,11 @@
     <mat-hint>
       {{ "comic-book.hint.required-for-scraping" | translate }}
     </mat-hint>
-    <mat-error *ngIf="comicForm.controls.series.errors?.required">
+    @if (comicForm.controls.series.errors?.required) {
+    <mat-error>
       {{ "validation.field-required" | translate }}
     </mat-error>
+    }
   </mat-form-field>
   <mat-form-field class="cx-width-25">
     <mat-label>{{ "comic-book.label.volume" | translate }}</mat-label>
@@ -199,8 +214,11 @@
     <mat-hint>
       {{ "comic-book.hint.required-for-scraping" | translate }}
     </mat-hint>
-    <mat-error *ngIf="comicForm.controls.issueNumber.errors?.required">
+    @if (comicForm.controls.issueNumber.errors?.required) {
+    <mat-error>
       {{ "validation.field-required" | translate }}
     </mat-error>
+    }
   </mat-form-field>
 </form>
+}

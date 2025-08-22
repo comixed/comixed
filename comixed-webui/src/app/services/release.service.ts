@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { interpolate } from '@app/core';
@@ -33,7 +33,8 @@ import { LoggerService } from '@angular-ru/cdk/logger';
   providedIn: 'root'
 })
 export class ReleaseService {
-  constructor(private logger: LoggerService, private http: HttpClient) {}
+  logger = inject(LoggerService);
+  http = inject(HttpClient);
 
   /**
    * Loads the current build details for the server.

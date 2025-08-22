@@ -116,57 +116,55 @@ describe('ImportComicsPageComponent', () => {
   let dialog: MatDialog;
   let router: Router;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [
-          ImportComicsPageComponent,
-          ComicFileLoaderComponent,
-          ComicFileCoverUrlPipe
-        ],
-        imports: [
-          NoopAnimationsModule,
-          RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
-          ReactiveFormsModule,
-          FormsModule,
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          MatDialogModule,
-          MatButtonModule,
-          MatCheckboxModule,
-          MatIconModule,
-          MatInputModule,
-          MatSelectModule,
-          MatTableModule,
-          MatCardModule,
-          MatTooltipModule,
-          MatToolbarModule,
-          MatMenuModule,
-          MatPaginatorModule,
-          MatSortModule
-        ],
-        providers: [
-          provideMockStore({ initialState }),
-          ConfirmationService,
-          TitleService
-        ]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        ImportComicsPageComponent,
+        ComicFileLoaderComponent,
+        ComicFileCoverUrlPipe
+      ],
+      imports: [
+        NoopAnimationsModule,
+        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
+        ReactiveFormsModule,
+        FormsModule,
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatDialogModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatIconModule,
+        MatInputModule,
+        MatSelectModule,
+        MatTableModule,
+        MatCardModule,
+        MatTooltipModule,
+        MatToolbarModule,
+        MatMenuModule,
+        MatPaginatorModule,
+        MatSortModule
+      ],
+      providers: [
+        provideMockStore({ initialState }),
+        ConfirmationService,
+        TitleService
+      ]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(ImportComicsPageComponent);
-      component = fixture.componentInstance;
-      store = TestBed.inject(MockStore);
-      spyOnStoreDispatch = spyOn(store, 'dispatch');
-      confirmationService = TestBed.inject(ConfirmationService);
-      titleService = TestBed.inject(TitleService);
-      spyOn(titleService, 'setTitle');
-      translateService = TestBed.inject(TranslateService);
-      dialog = TestBed.inject(MatDialog);
-      spyOn(dialog, 'open');
-      router = TestBed.inject(Router);
-      spyOn(router, 'navigateByUrl');
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(ImportComicsPageComponent);
+    component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
+    spyOnStoreDispatch = spyOn(store, 'dispatch');
+    confirmationService = TestBed.inject(ConfirmationService);
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
+    translateService = TestBed.inject(TranslateService);
+    dialog = TestBed.inject(MatDialog);
+    spyOn(dialog, 'open');
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigateByUrl');
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

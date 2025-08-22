@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, inject, Input, OnDestroy } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { ConfirmationService } from '@tragically-slick/confirmation';
@@ -32,19 +32,20 @@ import { filter } from 'rxjs/operators';
 @Component({
   selector: 'cx-metadata-process-toolbar',
   templateUrl: './metadata-process-toolbar.component.html',
-  styleUrls: ['./metadata-process-toolbar.component.scss']
+  styleUrls: ['./metadata-process-toolbar.component.scss'],
+  standalone: false
 })
 export class MetadataProcessToolbarComponent implements OnDestroy {
   @Input() selectedIds: number[] = [];
   userSubscription: Subscription;
   skipCache = false;
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+  confirmationService = inject(ConfirmationService);
+  translateService = inject(TranslateService);
+
+  constructor() {
     this.logger.trace('Subscribing to user updates');
     this.userSubscription = this.store
       .select(selectUser)

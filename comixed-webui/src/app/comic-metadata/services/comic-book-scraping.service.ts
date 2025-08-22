@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
@@ -65,12 +65,12 @@ import { ScrapeStoryRequest } from '@app/comic-metadata/models/net/scrape-story-
 export class ComicBookScrapingService {
   subscription: Subscription;
 
-  constructor(
-    private logger: LoggerService,
-    private http: HttpClient,
-    private store: Store<any>,
-    private webSocketService: WebSocketService
-  ) {
+  logger = inject(LoggerService);
+  http = inject(HttpClient);
+  store = inject(Store);
+  webSocketService = inject(WebSocketService);
+
+  constructor() {
     this.store.select(selectMessagingState).subscribe(state => {
       if (state.started && !this.subscription) {
         this.logger.trace('Subscribing to remote library state updates');

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Observable } from 'rxjs';
 import { ComicFile } from '@app/comic-files/models/comic-file';
@@ -35,7 +35,8 @@ import { FilenameMetadataRequest } from '@app/comic-files/models/net/filename-me
   providedIn: 'root'
 })
 export class ComicImportService {
-  constructor(private logger: LoggerService, private http: HttpClient) {}
+  logger = inject(LoggerService);
+  http = inject(HttpClient);
 
   /**
    * Loads comic files in the specified file system.

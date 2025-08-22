@@ -20,6 +20,7 @@ import {
   AfterViewInit,
   Component,
   EventEmitter,
+  inject,
   Input,
   OnDestroy,
   Output,
@@ -54,7 +55,8 @@ import { MatSort } from '@angular/material/sort';
 @Component({
   selector: 'cx-edit-account-bar',
   templateUrl: './edit-account-bar.component.html',
-  styleUrls: ['./edit-account-bar.component.scss']
+  styleUrls: ['./edit-account-bar.component.scss'],
+  standalone: false
 })
 export class EditAccountBarComponent implements OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
@@ -70,13 +72,13 @@ export class EditAccountBarComponent implements OnDestroy, AfterViewInit {
 
   readonly maxRecordsOptions = ['', '100', '500', '1000', '5000'];
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private formBuilder: UntypedFormBuilder,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+  formBuilder = inject(UntypedFormBuilder);
+  confirmationService = inject(ConfirmationService);
+  translateService = inject(TranslateService);
+
+  constructor() {
     this.userForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: [''],

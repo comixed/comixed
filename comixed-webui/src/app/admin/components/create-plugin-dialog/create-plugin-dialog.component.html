@@ -21,12 +21,11 @@
           formControlName="language"
           [disabled]="pluginLanguageState?.busy"
         >
-          <mat-option
-            *ngFor="let option of pluginLanguageList"
-            [value]="option.name"
-          >
+          @for (option of pluginLanguageList; track option) {
+          <mat-option [value]="option.name">
             {{ option.name }}
           </mat-option>
+          }
         </mat-select>
         <input matInput hidden />
       </mat-form-field>

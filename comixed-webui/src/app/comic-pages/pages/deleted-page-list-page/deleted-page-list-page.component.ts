@@ -47,7 +47,8 @@ import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'cx-deleted-page-list-page',
   templateUrl: './deleted-page-list-page.component.html',
-  styleUrls: ['./deleted-page-list-page.component.scss']
+  styleUrls: ['./deleted-page-list-page.component.scss'],
+  standalone: false
 })
 export class DeletedPageListPageComponent
   implements OnInit, OnDestroy, AfterViewInit

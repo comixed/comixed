@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -64,7 +64,8 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'cx-scraping-issues-page',
   templateUrl: './scraping-issues-page.component.html',
-  styleUrls: ['./scraping-issues-page.component.scss']
+  styleUrls: ['./scraping-issues-page.component.scss'],
+  standalone: false
 })
 export class ScrapingIssuesPageComponent implements OnInit, OnDestroy {
   readonly displayColumns = [
@@ -104,14 +105,14 @@ export class ScrapingIssuesPageComponent implements OnInit, OnDestroy {
   protected readonly selectMetadataSourceListState =
     selectMetadataSourceListState;
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private titleService: TitleService,
-    private translateService: TranslateService,
-    private activatedRoute: ActivatedRoute,
-    public queryParameterService: QueryParameterService
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+  titleService = inject(TitleService);
+  translateService = inject(TranslateService);
+  activatedRoute = inject(ActivatedRoute);
+  queryParameterService = inject(QueryParameterService);
+
+  constructor() {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );

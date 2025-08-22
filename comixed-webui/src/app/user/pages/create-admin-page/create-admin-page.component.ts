@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { TitleService } from '@app/core/services/title.service';
@@ -44,7 +44,8 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
 @Component({
   selector: 'cx-create-admin-page',
   templateUrl: './create-admin-page.component.html',
-  styleUrls: ['./create-admin-page.component.scss']
+  styleUrls: ['./create-admin-page.component.scss'],
+  standalone: false
 })
 export class CreateAdminPageComponent implements OnInit, OnDestroy {
   initialUserSubscription: Subscription;
@@ -52,15 +53,15 @@ export class CreateAdminPageComponent implements OnInit, OnDestroy {
 
   createAdminForm: FormGroup;
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store,
-    private formBuilder: FormBuilder,
-    private titleService: TitleService,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService,
-    private router: Router
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+  formBuilder = inject(FormBuilder);
+  titleService = inject(TitleService);
+  confirmationService = inject(ConfirmationService);
+  translateService = inject(TranslateService);
+  router = inject(Router);
+
+  constructor() {
     this.logger.trace('Creating admin form');
     this.createAdminForm = this.formBuilder.group(
       {

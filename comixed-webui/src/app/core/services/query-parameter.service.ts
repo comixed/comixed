@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { BehaviorSubject } from 'rxjs';
@@ -70,11 +70,11 @@ export class QueryParameterService {
   comicType$ = new BehaviorSubject<ComicType>(null);
   pagesAsGrid$ = new BehaviorSubject<boolean>(false);
 
-  constructor(
-    private logger: LoggerService,
-    private activatedRoute: ActivatedRoute,
-    private router: Router
-  ) {
+  logger = inject(LoggerService);
+  activatedRoute = inject(ActivatedRoute);
+  router = inject(Router);
+
+  constructor() {
     this.onFilterTextChanged = debounce(this.onFilterTextChanged, 500);
     this.logger.trace('Subscribing to query parameter updates');
     this.activatedRoute.queryParams.subscribe(params => {

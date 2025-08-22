@@ -20,7 +20,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { MetricDetail } from '@app/admin/models/metric-detail';
 
 @Pipe({
-  name: 'metricMeasurement'
+  name: 'metricMeasurement',
+  standalone: false
 })
 export class MetricMeasurementPipe implements PipeTransform {
   transform(detail: MetricDetail, name: string): string {

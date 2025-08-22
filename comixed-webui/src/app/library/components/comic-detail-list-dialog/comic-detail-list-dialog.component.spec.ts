@@ -67,61 +67,59 @@ describe('ComicDetailListDialogComponent', () => {
   let component: ComicDetailListDialogComponent;
   let fixture: ComponentFixture<ComicDetailListDialogComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [
-          ComicDetailListDialogComponent,
-          ComicDetailCardComponent,
-          ComicListViewComponent,
-          ComicTitlePipe,
-          ComicCoverUrlPipe
-        ],
-        imports: [
-          NoopAnimationsModule,
-          RouterTestingModule.withRoutes([
-            {
-              path: '**',
-              redirectTo: ''
-            }
-          ]),
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          MatDialogModule,
-          MatMenuModule,
-          MatFormFieldModule,
-          MatIconModule,
-          MatSelectModule,
-          MatToolbarModule,
-          MatPaginatorModule,
-          MatDividerModule,
-          MatCardModule,
-          MatExpansionModule,
-          MatGridListModule,
-          MatTooltipModule,
-          MatSortModule,
-          MatTableModule,
-          MatCheckboxModule
-        ],
-        providers: [
-          provideMockStore({ initialState }),
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        ComicDetailListDialogComponent,
+        ComicDetailCardComponent,
+        ComicListViewComponent,
+        ComicTitlePipe,
+        ComicCoverUrlPipe
+      ],
+      imports: [
+        NoopAnimationsModule,
+        RouterTestingModule.withRoutes([
           {
-            provide: MatDialogRef,
-            useValue: {}
-          },
-          {
-            provide: MAT_DIALOG_DATA,
-            useValue: COMICS
+            path: '**',
+            redirectTo: ''
           }
-        ]
-      }).compileComponents();
+        ]),
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatDialogModule,
+        MatMenuModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatSelectModule,
+        MatToolbarModule,
+        MatPaginatorModule,
+        MatDividerModule,
+        MatCardModule,
+        MatExpansionModule,
+        MatGridListModule,
+        MatTooltipModule,
+        MatSortModule,
+        MatTableModule,
+        MatCheckboxModule
+      ],
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: MatDialogRef,
+          useValue: {}
+        },
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: COMICS
+        }
+      ]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(ComicDetailListDialogComponent);
-      component = fixture.componentInstance;
-      component.comics = COMICS;
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(ComicDetailListDialogComponent);
+    component = fixture.componentInstance;
+    component.comics = COMICS;
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

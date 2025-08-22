@@ -1,5 +1,6 @@
 <div id="app-footer" class="cx-horizontal-container mat-toolbar mat-primary">
-  <div *ngIf="!!user" class="cx-grow-75p">
+  @if (!!user) {
+  <div class="cx-grow-75p">
     <span class="cx-text-nowrap cx-padding-left-15">
       {{
         "app.system-status"
@@ -15,6 +16,7 @@
       }}
     </span>
   </div>
+  }
   <div class="cx-grow-25p">
     <span class="cx-text-nowrap cx-padding-right-15">
       Copyright &copy; 2017-2025,

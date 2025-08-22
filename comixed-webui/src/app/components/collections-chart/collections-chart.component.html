@@ -1,7 +1,5 @@
-<div
-  *ngIf="!!libraryState"
-  class="cx-width-100 cx-height-100 cx-vertical-container"
->
+@if (!!libraryState) {
+<div class="cx-width-100 cx-height-100 cx-vertical-container">
   <div class="cx-grow-0">
     <h2>
       {{ "home.title.comic-collections-chart" | translate }}
@@ -33,13 +31,13 @@
         [value]="currentCollection"
         (selectionChange)="onSwitchCollection($event.value)"
       >
-        <mat-option
-          *ngFor="let option of collectionData; let i = index"
-          [value]="i"
-        >
+        @for (option of collectionData; track option; let i = $index) {
+        <mat-option [value]="i">
           {{ "home.label." + option.title | translate }}
         </mat-option>
+        }
       </mat-select>
     </mat-form-field>
   </div>
 </div>
+}

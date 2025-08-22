@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   Router,
@@ -37,11 +37,11 @@ export class UserGuard {
   hasUser = false;
   delayed$ = new Subject<boolean>();
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private router: Router
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+  router = inject(Router);
+
+  constructor() {
     this.store
       .select(selectUserState)
       .pipe(filter(state => !!state && !state.initializing))

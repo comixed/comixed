@@ -57,37 +57,35 @@ describe('LoginPageComponent', () => {
   let titleService: TitleService;
   let router: Router;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [LoginPageComponent],
-        imports: [
-          NoopAnimationsModule,
-          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-          FormsModule,
-          ReactiveFormsModule,
-          TranslateModule.forRoot(),
-          LoggerModule.forRoot(),
-          MatCardModule,
-          MatFormFieldModule,
-          MatInputModule,
-          MatIconModule
-        ],
-        providers: [provideMockStore({ initialState })]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [LoginPageComponent],
+      imports: [
+        NoopAnimationsModule,
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+        FormsModule,
+        ReactiveFormsModule,
+        TranslateModule.forRoot(),
+        LoggerModule.forRoot(),
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule
+      ],
+      providers: [provideMockStore({ initialState })]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(LoginPageComponent);
-      component = fixture.componentInstance;
-      store = TestBed.inject(MockStore);
-      spyOn(store, 'dispatch');
-      translateService = TestBed.inject(TranslateService);
-      titleService = TestBed.inject(TitleService);
-      spyOn(titleService, 'setTitle');
-      router = TestBed.inject(Router);
-      spyOn(router, 'navigateByUrl');
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(LoginPageComponent);
+    component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    translateService = TestBed.inject(TranslateService);
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigateByUrl');
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

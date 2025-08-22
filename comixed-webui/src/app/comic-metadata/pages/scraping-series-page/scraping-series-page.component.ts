@@ -16,7 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  inject,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
 import { FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
@@ -57,7 +63,8 @@ import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'cx-scraping-series-page',
   templateUrl: './scraping-series-page.component.html',
-  styleUrls: ['./scraping-series-page.component.scss']
+  styleUrls: ['./scraping-series-page.component.scss'],
+  standalone: false
 })
 export class ScrapingSeriesPageComponent implements OnInit, OnDestroy {
   readonly maximumRecordsOptions = METADATA_RECORD_LIMITS;
@@ -85,16 +92,16 @@ export class ScrapingSeriesPageComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
   selectedVolume: VolumeMetadata;
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private activatedRoute: ActivatedRoute,
-    private formBuilder: UntypedFormBuilder,
-    private translateService: TranslateService,
-    private titleService: TitleService,
-    private confirmationService: ConfirmationService,
-    private dialog: MatDialog
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+  activatedRoute = inject(ActivatedRoute);
+  formBuilder = inject(UntypedFormBuilder);
+  translateService = inject(TranslateService);
+  titleService = inject(TitleService);
+  confirmationService = inject(ConfirmationService);
+  dialog = inject(MatDialog);
+
+  constructor() {
     this.logger.trace('Loading page parameters');
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.logger.debug('Route parameters:', params);

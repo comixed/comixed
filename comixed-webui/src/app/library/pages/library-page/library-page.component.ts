@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
@@ -65,7 +65,8 @@ import { ComicListState } from '@app/comic-books/reducers/comic-list.reducer';
 @Component({
   selector: 'cx-library-page',
   templateUrl: './library-page.component.html',
-  styleUrls: ['./library-page.component.scss']
+  styleUrls: ['./library-page.component.scss'],
+  standalone: false
 })
 export class LibraryPageComponent implements OnInit, OnDestroy {
   comicListStateSubscription: Subscription;
@@ -120,14 +121,14 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     }
   ];
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private titleService: TitleService,
-    private translateService: TranslateService,
-    private activatedRoute: ActivatedRoute,
-    private queryParameterService: QueryParameterService
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+  titleService = inject(TitleService);
+  translateService = inject(TranslateService);
+  activatedRoute = inject(ActivatedRoute);
+  queryParameterService = inject(QueryParameterService);
+
+  constructor() {
     this.dataSubscription = this.activatedRoute.data.subscribe(data => {
       this.selectedOnly = !!data.selected && data.selected === true;
       this.unreadOnly = !!data.unread && data.unread === true;

@@ -1,5 +1,7 @@
 <mat-card appearance="outlined" class="cx-width-100">
-  <mat-card-title *ngIf="!!page">{{ page?.filename }}</mat-card-title>
+  @if (!!page) {
+  <mat-card-title>{{ page?.filename }}</mat-card-title>
+  }
   <mat-card-content>
     <div class="cx-detail-card cx-padding-2 cx-margin-2">
       <img
@@ -15,17 +17,14 @@
     </div>
   </mat-card-content>
   <mat-card-footer class="cx-padding-left-15">
-    <mat-icon
-      *ngIf="page?.blocked"
-      [matTooltip]="'comic-book.tooltip.blocked-hash' | translate"
-    >
+    @if (page?.blocked) {
+    <mat-icon [matTooltip]="'comic-book.tooltip.blocked-hash' | translate">
       block
     </mat-icon>
-    <mat-icon
-      *ngIf="page?.deleted"
-      [matTooltip]="'comic-book.tooltip.deleted-page' | translate"
-    >
+    } @if (page?.deleted) {
+    <mat-icon [matTooltip]="'comic-book.tooltip.deleted-page' | translate">
       deleted
     </mat-icon>
+    }
   </mat-card-footer>
 </mat-card>

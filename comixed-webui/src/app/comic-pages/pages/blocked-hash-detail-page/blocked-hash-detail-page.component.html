@@ -5,7 +5,7 @@
 </div>
 
 <h2>
-  {{ "blocked-hash.page-title" | translate: { hash: hash } }}
+  {{ "blocked-hash.page-title" | translate : { hash: hash } }}
 </h2>
 
 <div class="cx-horizontal-container">
@@ -18,7 +18,8 @@
   </div>
 
   <div class="cx-grow-1">
-    <form *ngIf="!!blockedPage" [formGroup]="blockedPageForm">
+    @if (!!blockedPage) {
+    <form [formGroup]="blockedPageForm">
       <mat-form-field class="cx-width-100">
         <mat-label>{{ "blocked-hash.label.label" | translate }}</mat-label>
         <input
@@ -66,5 +67,6 @@
         </button>
       </div>
     </form>
+    }
   </div>
 </div>

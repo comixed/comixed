@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
@@ -34,12 +34,10 @@ export const ALERT_VERT_POSITION = 'top';
   providedIn: 'root'
 })
 export class AlertService {
-  constructor(
-    private logger: LoggerService,
-    private translateService: TranslateService,
-    private snackbar: MatSnackBar,
-    private router: Router
-  ) {}
+  logger = inject(LoggerService);
+  translateService = inject(TranslateService);
+  snackbar = inject(MatSnackBar);
+  router = inject(Router);
 
   /** Shows an information alert. */
   info(message: string): void {

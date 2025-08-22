@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>
   {{
     "library.edit-multiple-comics.title"
-      | translate: { count: this.comics.length }
+      | translate : { count: this.comics.length }
   }}
 </h2>
 
@@ -10,7 +10,7 @@
     <p>
       {{
         "library.edit-multiple-comics.header"
-          | translate: { count: this.comics.length }
+          | translate : { count: this.comics.length }
       }}
     </p>
   </div>
@@ -34,9 +34,11 @@
         [placeholder]="'comic-book.placeholder.series' | translate"
         required
       />
-      <mat-error *ngIf="detailsForm.controls.series.errors?.required">
+      @if (detailsForm.controls.series.errors?.required) {
+      <mat-error>
         {{ "validation.field-required" | translate }}
       </mat-error>
+      }
     </mat-form-field>
     <mat-form-field class="cx-width-25">
       <mat-label>{{ "comic-book.label.volume" | translate }}</mat-label>
@@ -56,9 +58,11 @@
         [placeholder]="'comic-book.placeholder.issue-number' | translate"
         required
       />
-      <mat-error *ngIf="detailsForm.controls.issueNumber.errors?.required">
+      @if (detailsForm.controls.issueNumber.errors?.required) {
+      <mat-error>
         {{ "validation.field-required" | translate }}
       </mat-error>
+      }
     </mat-form-field>
     <mat-form-field class="cx-width-25">
       <mat-label>{{ "comic-book.label.imprint" | translate }}</mat-label>
@@ -67,12 +71,11 @@
         formControlName="imprint"
         (selectionChange)="onImprintSelected($event.value)"
       >
-        <mat-option
-          *ngFor="let option of imprintOptions"
-          [value]="option.value.name"
-        >
+        @for (option of imprintOptions; track option) {
+        <mat-option [value]="option.value.name">
           {{ option.label }}
         </mat-option>
+        }
       </mat-select>
     </mat-form-field>
     <mat-form-field class="cx-width-25">
@@ -82,12 +85,11 @@
         formControlName="comicType"
         (selectionChange)="onComicTypeSelected($event.value)"
       >
-        <mat-option
-          *ngFor="let option of comicTypeOptions"
-          [value]="option.value"
-        >
+        @for (option of comicTypeOptions; track option) {
+        <mat-option [value]="option.value">
           {{ option.label | translate }}
         </mat-option>
+        }
       </mat-select>
     </mat-form-field>
   </form>

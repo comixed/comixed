@@ -68,20 +68,18 @@ describe('FooterComponent', () => {
   const selectionsSubscription = jasmine.createSpyObj(['unsubscribe']);
   const jobsSubscription = jasmine.createSpyObj(['unsubscribe']);
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [FooterComponent],
-        imports: [LoggerModule.forRoot()],
-        providers: [provideMockStore({ initialState })]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [FooterComponent],
+      imports: [LoggerModule.forRoot()],
+      providers: [provideMockStore({ initialState })]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(FooterComponent);
-      component = fixture.componentInstance;
-      store = TestBed.inject(MockStore);
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(FooterComponent);
+    component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

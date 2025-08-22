@@ -109,51 +109,49 @@ describe('ScrapingIssuesPageComponent', () => {
   let store: MockStore<any>;
   let queryParameterService: jasmine.SpyObj<QueryParameterService>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [
-          ScrapingIssuesPageComponent,
-          SelectedComicsComponent,
-          ComicScrapingComponent
-        ],
-        imports: [
-          RouterModule.forRoot([{ path: '**', redirectTo: '' }]),
-          FormsModule,
-          ReactiveFormsModule,
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          MatDialogModule,
-          MatFormFieldModule,
-          MatToolbarModule,
-          MatIconModule,
-          MatSelectModule
-        ],
-        providers: [
-          provideMockStore({ initialState }),
-          {
-            provide: QueryParameterService,
-            useValue: {
-              pageSize$: new BehaviorSubject(PAGE_SIZE),
-              pageIndex$: new BehaviorSubject(PAGE_NUMBER)
-            }
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        ScrapingIssuesPageComponent,
+        SelectedComicsComponent,
+        ComicScrapingComponent
+      ],
+      imports: [
+        RouterModule.forRoot([{ path: '**', redirectTo: '' }]),
+        FormsModule,
+        ReactiveFormsModule,
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatDialogModule,
+        MatFormFieldModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatSelectModule
+      ],
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: QueryParameterService,
+          useValue: {
+            pageSize$: new BehaviorSubject(PAGE_SIZE),
+            pageIndex$: new BehaviorSubject(PAGE_NUMBER)
           }
-        ]
-      }).compileComponents();
+        }
+      ]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(ScrapingIssuesPageComponent);
-      component = fixture.componentInstance;
-      translateService = TestBed.inject(TranslateService);
-      titleService = TestBed.inject(TitleService);
-      spyOn(titleService, 'setTitle');
-      store = TestBed.inject(MockStore);
-      spyOn(store, 'dispatch');
-      queryParameterService = TestBed.inject(
-        QueryParameterService
-      ) as jasmine.SpyObj<QueryParameterService>;
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(ScrapingIssuesPageComponent);
+    component = fixture.componentInstance;
+    translateService = TestBed.inject(TranslateService);
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    queryParameterService = TestBed.inject(
+      QueryParameterService
+    ) as jasmine.SpyObj<QueryParameterService>;
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

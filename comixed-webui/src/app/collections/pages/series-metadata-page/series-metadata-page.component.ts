@@ -19,6 +19,7 @@
 import {
   AfterViewInit,
   Component,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild
@@ -47,7 +48,8 @@ import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 @Component({
   selector: 'cx-series-metadata-page',
   templateUrl: './series-metadata-page.component.html',
-  styleUrls: ['./series-metadata-page.component.scss']
+  styleUrls: ['./series-metadata-page.component.scss'],
+  standalone: false
 })
 export class SeriesMetadataPageComponent
   implements OnInit, OnDestroy, AfterViewInit
@@ -85,14 +87,14 @@ export class SeriesMetadataPageComponent
   inLibrary = 0;
   totalIssues = 0;
 
-  constructor(
-    private logger: LoggerService,
-    private activatedRoute: ActivatedRoute,
-    private store: Store<any>,
-    private titleService: TitleService,
-    private translateService: TranslateService,
-    public queryParameterService: QueryParameterService
-  ) {
+  logger = inject(LoggerService);
+  activatedRoute = inject(ActivatedRoute);
+  store = inject(Store);
+  titleService = inject(TitleService);
+  translateService = inject(TranslateService);
+  queryParameterService = inject(QueryParameterService);
+
+  constructor() {
     this.logger.trace('Subscribing to parameter updates');
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.publisher = params['publisher'];

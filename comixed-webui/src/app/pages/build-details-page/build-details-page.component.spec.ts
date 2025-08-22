@@ -46,30 +46,28 @@ describe('BuildDetailsPageComponent', () => {
   let translateService: TranslateService;
   let clipboard: Clipboard;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [BuildDetailsPageComponent],
-        imports: [
-          LoggerModule.forRoot(),
-          TranslateModule.forRoot(),
-          MatCardModule,
-          MatIconModule,
-          MatTooltipModule,
-          ClipboardModule
-        ],
-        providers: [provideMockStore({ initialState }), TitleService]
-      }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [BuildDetailsPageComponent],
+      imports: [
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatCardModule,
+        MatIconModule,
+        MatTooltipModule,
+        ClipboardModule
+      ],
+      providers: [provideMockStore({ initialState }), TitleService]
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(BuildDetailsPageComponent);
-      component = fixture.componentInstance;
-      titleService = TestBed.inject(TitleService);
-      spyOn(titleService, 'setTitle');
-      translateService = TestBed.inject(TranslateService);
-      clipboard = TestBed.inject(Clipboard);
-      fixture.detectChanges();
-    })
-  );
+    fixture = TestBed.createComponent(BuildDetailsPageComponent);
+    component = fixture.componentInstance;
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
+    translateService = TestBed.inject(TranslateService);
+    clipboard = TestBed.inject(Clipboard);
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

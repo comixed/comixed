@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { FileSaverService } from 'ngx-filesaver';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { DownloadDocument } from '@app/core/models/download-document';
@@ -25,10 +25,8 @@ import { DownloadDocument } from '@app/core/models/download-document';
   providedIn: 'root'
 })
 export class FileDownloadService {
-  constructor(
-    private logger: LoggerService,
-    private fileSaverService: FileSaverService
-  ) {}
+  logger = inject(LoggerService);
+  fileSaverService = inject(FileSaverService);
 
   saveFile(args: { document: DownloadDocument }): void {
     this.logger.trace('Extracting document content');
