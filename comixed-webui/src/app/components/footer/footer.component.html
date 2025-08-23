@@ -1,21 +1,21 @@
 <div id="app-footer" class="cx-horizontal-container mat-toolbar mat-primary">
   @if (!!user) {
-  <div class="cx-grow-75p">
-    <span class="cx-text-nowrap cx-padding-left-15">
-      {{
-        "app.system-status"
-          | translate
-            : {
-                unscrapedCount: unscrapedCount,
-                comicCount: comicCount,
-                readCount: readCount,
-                selectedCount: selectedCount,
-                deletedCount: deletedCount,
-                batchJobs: batchJobs
-              }
-      }}
-    </span>
-  </div>
+    <div class="cx-grow-75p">
+      <span class="cx-text-nowrap cx-padding-left-15">
+        {{
+          "app.system-status"
+            | translate
+              : {
+                  unscrapedCount: unscrapedCount,
+                  comicCount: comicCount,
+                  readCount: readCount,
+                  selectedCount: selectedCount,
+                  deletedCount: deletedCount,
+                  batchJobs: batchJobs
+                }
+        }}
+      </span>
+    </div>
   }
   <div class="cx-grow-25p">
     <span class="cx-text-nowrap cx-padding-right-15">

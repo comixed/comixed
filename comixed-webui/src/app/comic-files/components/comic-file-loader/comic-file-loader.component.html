@@ -14,9 +14,9 @@
           formControlName="maximum"
         >
           @for (option of maximumOptions; track option) {
-          <mat-option [value]="option.value">
-            {{ option.label | translate }}
-          </mat-option>
+            <mat-option [value]="option.value">
+              {{ option.label | translate }}
+            </mat-option>
           }
         </mat-select>
       </mat-form-field>

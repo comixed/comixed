@@ -1,29 +1,29 @@
 <div class="cx-vertical-container cx-height-100 cx-overflow-y-scroll">
   @for (comic of comics; track comic) {
-  <div class="cx-vertical-container">
-    <mat-card
-      appearance="outlined"
-      class="cx-width-100"
-      (click)="onSelectionChanged(comic)"
-    >
-      <mat-card-title>
-        <button
-          mat-icon-button
-          [matTooltip]="'scraping.tooltip.show-comic-details' | translate"
-          (click)="onShowComicDetails(comic, $event)"
-        >
-          <mat-icon>details</mat-icon>
-        </button>
-        <span class="cx-width-100 cx-text-nowrap">
-          {{ comic | comicTitle }}
-        </span>
-      </mat-card-title>
-      <mat-card-subtitle>
-        <span class="cx-width-100 cx-text-nowrap">
-          {{ comic.baseFilename }}
-        </span>
-      </mat-card-subtitle>
-    </mat-card>
-  </div>
+    <div class="cx-vertical-container">
+      <mat-card
+        appearance="outlined"
+        class="cx-width-100"
+        (click)="onSelectionChanged(comic)"
+      >
+        <mat-card-title>
+          <button
+            mat-icon-button
+            [matTooltip]="'scraping.tooltip.show-comic-details' | translate"
+            (click)="onShowComicDetails(comic, $event)"
+          >
+            <mat-icon>details</mat-icon>
+          </button>
+          <span class="cx-width-100 cx-text-nowrap">
+            {{ comic | comicTitle }}
+          </span>
+        </mat-card-title>
+        <mat-card-subtitle>
+          <span class="cx-width-100 cx-text-nowrap">
+            {{ comic.baseFilename }}
+          </span>
+        </mat-card-subtitle>
+      </mat-card>
+    </div>
   }
 </div>

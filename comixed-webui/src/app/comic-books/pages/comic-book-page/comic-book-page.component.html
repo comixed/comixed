@@ -1,277 +1,290 @@
 @if (!comicBook) {
-<div class="cx-overlay cx-width-100 cx-height-100">
-  <div class="cx-centered cx-position-absolute">
-    <img src="/assets/img/book.png" alt="Loading comic book..." />
+  <div class="cx-overlay cx-width-100 cx-height-100">
+    <div class="cx-centered cx-position-absolute">
+      <img src="/assets/img/book.png" alt="Loading comic book..." />
+    </div>
   </div>
-</div>
-} @if (!!comicBook) {
-<div class="cx-fab-container-bottom-left cx-z-index-99">
-  <div class="cx-horizontal-container">
-    <button
-      id="previous-comic-button"
-      class="cx-toolbar-button"
-      mat-fab
-      color="accent"
-      [matTooltip]="'comic-book.tooltip.go-to-previous-comic' | translate"
-      [disabled]="!comicBook.previousIssueId"
-      [routerLink]="['/comics', comicBook.previousIssueId]"
-    >
-      <mat-icon>arrow_back</mat-icon>
-    </button>
-    <button
-      id="next-comic-button"
-      class="cx-toolbar-button"
-      mat-fab
-      color="accent"
-      [disabled]="!comicBook.nextIssueId"
-      [matTooltip]="'comic-book.tooltip.go-to-next-comic' | translate"
-      [routerLink]="['/comics', comicBook.nextIssueId]"
-    >
-      <mat-icon>arrow_forward</mat-icon>
-    </button>
-    <button
-      id="toggle-page-view-button"
-      class="cx-toolbar-button"
-      mat-fab
-      color="primary"
-      [matTooltip]="'comic-book.tooltip.toggle-page-view' | translate"
-      (click)="queryParameterService.onTogglePagesAsGrid()"
-    >
-      @if (queryParameterService.pagesAsGrid$ | async) {
-      <mat-icon>grid_view</mat-icon>
-      } @if ((queryParameterService.pagesAsGrid$ | async) === false) {
-      <mat-icon>list_view</mat-icon>
-      }
-    </button>
-    @if (isAdmin) {
-    <button
-      id="save-page-order-button"
-      class="cx-toolbar-button"
-      mat-fab
-      color="warn"
-      [matTooltip]="'comic-book.tooltip.save-page-order' | translate"
-      (click)="onSavePageOrder()"
-    >
-      <mat-icon>save</mat-icon>
-    </button>
-    }
-    <button
-      id="update-comic-info-button"
-      class="cx-toolbar-button"
-      mat-fab
-      color="warn"
-      [matTooltip]="'comic-book.tooltip.update-comic-info' | translate"
-      [disabled]="!isAdmin || !hasChangedState"
-      (click)="onUpdateMetadata()"
-    >
-      <mat-icon>sync_alt</mat-icon>
-    </button>
-    <button
-      id="download-comic-button"
-      class="cx-toolbar-button"
-      mat-fab
-      color="accent"
-      [matTooltip]="'comic-book.tooltip.download-comic' | translate"
-      (click)="onDownloadComicFile()"
-    >
-      <mat-icon>arrow_downward</mat-icon>
-    </button>
-    @if (!isRead) {
-    <button
-      id="mark-as-read-button"
-      class="cx-toolbar-button"
-      mat-fab
-      color="warn"
-      [matTooltip]="'comic-book.tooltip.mark-read' | translate"
-      (click)="setReadState(true)"
-    >
-      <mat-icon>turned_in_not</mat-icon>
-    </button>
-    } @if (isRead) {
-    <button
-      id="mark-as-unread-button"
-      class="cx-toolbar-button"
-      mat-fab
-      color="warn"
-      [matTooltip]="'comic-book.tooltip.mark-unread' | translate"
-      (click)="setReadState(false)"
-    >
-      <mat-icon>turned_in</mat-icon>
-    </button>
-    } @if (isAdmin && !isDeleted) {
-    <button
-      id="delete-button"
-      class="cx-toolbar-button"
-      mat-fab
-      color="warn"
-      [matTooltip]="'comic-book.tooltip.delete-comic' | translate"
-      (click)="onDeleteComicBook(true)"
-    >
-      <mat-icon>delete</mat-icon>
-    </button>
-    } @if (isAdmin && isDeleted) {
-    <button
-      id="undelete-button"
-      class="cx-toolbar-button"
-      mat-fab
-      color="warn"
-      [matTooltip]="'comic-book.tooltip.undelete-comic' | translate"
-      (click)="onDeleteComicBook(false)"
-    >
-      <mat-icon>restore_from_trash</mat-icon>
-    </button>
-    }
-  </div>
-</div>
-} @if (!!comicBook) {
-<h1>
-  {{ comicBook?.detail | comicTitle }}
-</h1>
-} @if ( comicBook?.detail?.publisher?.length > 0 &&
-comicBook?.detail?.series?.length > 0 && comicBook?.detail?.volume?.length > 0 )
-{
-<h2>
-  <a
-    [routerLink]="[
-      '/library/collections/publishers',
-      comicBook.detail.publisher,
-      'issues'
-    ]"
-  >
-    {{ comicBook.detail.publisher }}
-  </a>
-  &nbsp;/&nbsp;
-  <a
-    [routerLink]="[
-      '/library/collections/publishers',
-      comicBook.detail.publisher,
-      'series',
-      comicBook.detail.series,
-      'volumes',
-      comicBook.detail.volume,
-      'issues'
-    ]"
-  >
-    {{
-      "comic-book.navigation-link.series"
-        | translate : { volume: comicBook.detail.volume }
-    }}
-  </a>
-</h2>
-} @if (!!comicBook) {
-<div id="comic-detail-container">
-  <div id="comic-cover-container">
-    <mat-card appearance="outlined" class="cx-padding-0">
-      <mat-card-title
-        class="cx-text-nowrap cx-align-content-center"
-        [matTooltip]="comicBook.detail.title"
+}
+@if (!!comicBook) {
+  <div class="cx-fab-container-bottom-left cx-z-index-99">
+    <div class="cx-horizontal-container">
+      <button
+        id="previous-comic-button"
+        class="cx-toolbar-button"
+        mat-fab
+        color="accent"
+        [matTooltip]="'comic-book.tooltip.go-to-previous-comic' | translate"
+        [disabled]="!comicBook.previousIssueId"
+        [routerLink]="['/comics', comicBook.previousIssueId]"
       >
-        {{ comicBook.detail.title }}
-      </mat-card-title>
-      @if (!!comicBook?.detail?.coverDate) {
-      <mat-card-subtitle class="cx-align-content-center">
-        {{ comicBook.detail.coverDate | date : "MMM yyyy" }}
-      </mat-card-subtitle>
-      }
-      <mat-card-content>
-        <cx-comic-page
-          [imageUrl]="comicBook.pages[pageIndex] | comicPageUrl"
-        ></cx-comic-page>
-      </mat-card-content>
-      <mat-card-footer class="cx-align-content-center">
-        <div>
-          <button
-            id="previous-page-button"
-            mat-icon-button
-            (click)="pageIndex = pageIndex - 1"
-            [disabled]="pageIndex === 0"
-            [matTooltip]="
-              'comic-book.tooltip.show-previous-comic-page' | translate
-            "
-          >
-            <mat-icon>navigate_before</mat-icon>
-          </button>
-          {{
-            "comic-book.label.page-title"
-              | translate
-                : { which: pageIndex + 1, count: comicBook.pages.length }
-          }}
-          <button
-            id="next-page-button"
-            mat-icon-button
-            (click)="pageIndex = pageIndex + 1"
-            [disabled]="pageIndex === comicBook.pages.length - 1"
-            [matTooltip]="'comic-book.tooltip.show-next-comic-page' | translate"
-          >
-            <mat-icon>navigate_next</mat-icon>
-          </button>
-        </div>
-      </mat-card-footer>
-    </mat-card>
-  </div>
-  <div id="comic-tab-container">
-    <mat-tab-group
-      animationDuration="0ms"
-      color="primary"
-      [selectedIndex]="queryParameterService.currentTab$ | async"
-      (selectedTabChange)="queryParameterService.onTabChange($event.index)"
-    >
-      <mat-tab [label]="'comic-book.label.comic-overview' | translate">
-        <cx-comic-detail-edit
-          [comicBook]="comicBook"
-          [isAdmin]="isAdmin"
-        ></cx-comic-detail-edit>
-      </mat-tab>
-      <mat-tab [label]="'comic-book.label.comic-story' | translate">
-        <cx-comic-story [comic]="comicBook"></cx-comic-story>
-      </mat-tab>
-      <mat-tab [label]="'comic-book.label.comic-pages' | translate">
-        <cx-comic-pages
-          class="cx-width-100"
-          [pages]="comicBook?.pages"
-          [showPagesAsGrid]="queryParameterService.pagesAsGrid$ | async"
-          [isAdmin]="isAdmin"
-          (pagesChanged)="onPagesChanged($event)"
-        ></cx-comic-pages>
-      </mat-tab>
-      @if (isAdmin) {
-      <mat-tab [label]="'comic-book.label.comic-scraping' | translate">
-        @if (!!comicBook && volumes.length === 0) {
-        <cx-comic-scraping
-          class="cx-width-100"
-          [comic]="comicBook"
-          [previousMetadataSource]="comicBook.metadata?.metadataSource"
-          [skipCache]="skipCache"
-          [matchPublisher]="matchPublisher"
-          [maximumRecords]="maximumRecords"
-          (scrape)="
-            onLoadScrapingVolumes({
-              metadataSource: $event.metadataSource,
-              publisher: $event.publisher,
-              series: $event.series,
-              volume: $event.volume,
-              issueNumber: $event.issueNumber,
-              maximumRecords: $event.maximumRecords,
-              skipCache: $event.skipCache,
-              matchPublisher: $event.matchPublisher
-            })
-          "
-        ></cx-comic-scraping>
-        } @if (volumes.length > 0) {
-        <cx-scraping-volume-selection
-          [comicBook]="comicBook"
-          [metadataSource]="metadataSource"
-          [comicSeriesName]="scrapingSeriesName"
-          [comicVolume]="scrapingVolume"
-          [comicIssueNumber]="scrapingIssueNumber"
-          [skipCache]="skipCache"
-          [pageSize]="pageSize"
-          [volumes]="volumes"
-        ></cx-scraping-volume-selection>
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <button
+        id="next-comic-button"
+        class="cx-toolbar-button"
+        mat-fab
+        color="accent"
+        [disabled]="!comicBook.nextIssueId"
+        [matTooltip]="'comic-book.tooltip.go-to-next-comic' | translate"
+        [routerLink]="['/comics', comicBook.nextIssueId]"
+      >
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+      <button
+        id="toggle-page-view-button"
+        class="cx-toolbar-button"
+        mat-fab
+        color="primary"
+        [matTooltip]="'comic-book.tooltip.toggle-page-view' | translate"
+        (click)="queryParameterService.onTogglePagesAsGrid()"
+      >
+        @if (queryParameterService.pagesAsGrid$ | async) {
+          <mat-icon>grid_view</mat-icon>
         }
-      </mat-tab>
+        @if ((queryParameterService.pagesAsGrid$ | async) === false) {
+          <mat-icon>list_view</mat-icon>
+        }
+      </button>
+      @if (isAdmin) {
+        <button
+          id="save-page-order-button"
+          class="cx-toolbar-button"
+          mat-fab
+          color="warn"
+          [matTooltip]="'comic-book.tooltip.save-page-order' | translate"
+          (click)="onSavePageOrder()"
+        >
+          <mat-icon>save</mat-icon>
+        </button>
       }
-    </mat-tab-group>
+      <button
+        id="update-comic-info-button"
+        class="cx-toolbar-button"
+        mat-fab
+        color="warn"
+        [matTooltip]="'comic-book.tooltip.update-comic-info' | translate"
+        [disabled]="!isAdmin || !hasChangedState"
+        (click)="onUpdateMetadata()"
+      >
+        <mat-icon>sync_alt</mat-icon>
+      </button>
+      <button
+        id="download-comic-button"
+        class="cx-toolbar-button"
+        mat-fab
+        color="accent"
+        [matTooltip]="'comic-book.tooltip.download-comic' | translate"
+        (click)="onDownloadComicFile()"
+      >
+        <mat-icon>arrow_downward</mat-icon>
+      </button>
+      @if (!isRead) {
+        <button
+          id="mark-as-read-button"
+          class="cx-toolbar-button"
+          mat-fab
+          color="warn"
+          [matTooltip]="'comic-book.tooltip.mark-read' | translate"
+          (click)="setReadState(true)"
+        >
+          <mat-icon>turned_in_not</mat-icon>
+        </button>
+      }
+      @if (isRead) {
+        <button
+          id="mark-as-unread-button"
+          class="cx-toolbar-button"
+          mat-fab
+          color="warn"
+          [matTooltip]="'comic-book.tooltip.mark-unread' | translate"
+          (click)="setReadState(false)"
+        >
+          <mat-icon>turned_in</mat-icon>
+        </button>
+      }
+      @if (isAdmin && !isDeleted) {
+        <button
+          id="delete-button"
+          class="cx-toolbar-button"
+          mat-fab
+          color="warn"
+          [matTooltip]="'comic-book.tooltip.delete-comic' | translate"
+          (click)="onDeleteComicBook(true)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      }
+      @if (isAdmin && isDeleted) {
+        <button
+          id="undelete-button"
+          class="cx-toolbar-button"
+          mat-fab
+          color="warn"
+          [matTooltip]="'comic-book.tooltip.undelete-comic' | translate"
+          (click)="onDeleteComicBook(false)"
+        >
+          <mat-icon>restore_from_trash</mat-icon>
+        </button>
+      }
+    </div>
   </div>
-</div>
+}
+@if (!!comicBook) {
+  <h1>
+    {{ comicBook?.detail | comicTitle }}
+  </h1>
+}
+@if (
+  comicBook?.detail?.publisher?.length > 0 &&
+  comicBook?.detail?.series?.length > 0 &&
+  comicBook?.detail?.volume?.length > 0
+) {
+  <h2>
+    <a
+      [routerLink]="[
+        '/library/collections/publishers',
+        comicBook.detail.publisher,
+        'issues'
+      ]"
+    >
+      {{ comicBook.detail.publisher }}
+    </a>
+    &nbsp;/&nbsp;
+    <a
+      [routerLink]="[
+        '/library/collections/publishers',
+        comicBook.detail.publisher,
+        'series',
+        comicBook.detail.series,
+        'volumes',
+        comicBook.detail.volume,
+        'issues'
+      ]"
+    >
+      {{
+        "comic-book.navigation-link.series"
+          | translate: { volume: comicBook.detail.volume }
+      }}
+    </a>
+  </h2>
+}
+@if (!!comicBook) {
+  <div id="comic-detail-container">
+    <div id="comic-cover-container">
+      <mat-card appearance="outlined" class="cx-padding-0">
+        <mat-card-title
+          class="cx-text-nowrap cx-align-content-center"
+          [matTooltip]="comicBook.detail.title"
+        >
+          {{ comicBook.detail.title }}
+        </mat-card-title>
+        @if (!!comicBook?.detail?.coverDate) {
+          <mat-card-subtitle class="cx-align-content-center">
+            {{ comicBook.detail.coverDate | date: "MMM yyyy" }}
+          </mat-card-subtitle>
+        }
+        <mat-card-content>
+          <cx-comic-page
+            [imageUrl]="comicBook.pages[pageIndex] | comicPageUrl"
+          ></cx-comic-page>
+        </mat-card-content>
+        <mat-card-footer class="cx-align-content-center">
+          <div>
+            <button
+              id="previous-page-button"
+              mat-icon-button
+              (click)="pageIndex = pageIndex - 1"
+              [disabled]="pageIndex === 0"
+              [matTooltip]="
+                'comic-book.tooltip.show-previous-comic-page' | translate
+              "
+            >
+              <mat-icon>navigate_before</mat-icon>
+            </button>
+            {{
+              "comic-book.label.page-title"
+                | translate
+                  : { which: pageIndex + 1, count: comicBook.pages.length }
+            }}
+            <button
+              id="next-page-button"
+              mat-icon-button
+              (click)="pageIndex = pageIndex + 1"
+              [disabled]="pageIndex === comicBook.pages.length - 1"
+              [matTooltip]="
+                'comic-book.tooltip.show-next-comic-page' | translate
+              "
+            >
+              <mat-icon>navigate_next</mat-icon>
+            </button>
+          </div>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+    <div id="comic-tab-container">
+      <mat-tab-group
+        animationDuration="0ms"
+        color="primary"
+        [selectedIndex]="queryParameterService.currentTab$ | async"
+        (selectedTabChange)="queryParameterService.onTabChange($event.index)"
+      >
+        <mat-tab [label]="'comic-book.label.comic-overview' | translate">
+          <cx-comic-detail-edit
+            [comicBook]="comicBook"
+            [isAdmin]="isAdmin"
+          ></cx-comic-detail-edit>
+        </mat-tab>
+        <mat-tab [label]="'comic-book.label.comic-story' | translate">
+          <cx-comic-story [comic]="comicBook"></cx-comic-story>
+        </mat-tab>
+        <mat-tab [label]="'comic-book.label.comic-pages' | translate">
+          <cx-comic-pages
+            class="cx-width-100"
+            [pages]="comicBook?.pages"
+            [showPagesAsGrid]="queryParameterService.pagesAsGrid$ | async"
+            [isAdmin]="isAdmin"
+            (pagesChanged)="onPagesChanged($event)"
+          ></cx-comic-pages>
+        </mat-tab>
+        @if (isAdmin) {
+          <mat-tab [label]="'comic-book.label.comic-scraping' | translate">
+            @if (!!comicBook && volumes.length === 0) {
+              <cx-comic-scraping
+                class="cx-width-100"
+                [comic]="comicBook"
+                [previousMetadataSource]="comicBook.metadata?.metadataSource"
+                [skipCache]="skipCache"
+                [matchPublisher]="matchPublisher"
+                [maximumRecords]="maximumRecords"
+                (scrape)="
+                  onLoadScrapingVolumes({
+                    metadataSource: $event.metadataSource,
+                    publisher: $event.publisher,
+                    series: $event.series,
+                    volume: $event.volume,
+                    issueNumber: $event.issueNumber,
+                    maximumRecords: $event.maximumRecords,
+                    skipCache: $event.skipCache,
+                    matchPublisher: $event.matchPublisher
+                  })
+                "
+              ></cx-comic-scraping>
+            }
+            @if (volumes.length > 0) {
+              <cx-scraping-volume-selection
+                [comicBook]="comicBook"
+                [metadataSource]="metadataSource"
+                [comicSeriesName]="scrapingSeriesName"
+                [comicVolume]="scrapingVolume"
+                [comicIssueNumber]="scrapingIssueNumber"
+                [skipCache]="skipCache"
+                [pageSize]="pageSize"
+                [volumes]="volumes"
+              ></cx-scraping-volume-selection>
+            }
+          </mat-tab>
+        }
+      </mat-tab-group>
+    </div>
+  </div>
 }

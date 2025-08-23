@@ -1,37 +1,38 @@
 @if (!libraryState) {
-<div class="cx-width-100">
-  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-  <h2>{{ "home.title.loading-comics" | translate }}</h2>
-</div>
+  <div class="cx-width-100">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <h2>{{ "home.title.loading-comics" | translate }}</h2>
+  </div>
 }
 
 <h1>{{ "home.title.comic-statistics" | translate }}</h1>
 
 @if (!!libraryState) {
-<div class="cx-width-100 cx-centered-horiz cx-vertical-container">
-  <div class="cx-width-90 cx-padding-5 cx-horizontal-container">
-    <cx-collections-chart
-      class="cx-width-50"
-      [libraryState]="libraryState"
-    ></cx-collections-chart>
-    <cx-comic-state-chart
-      class="cx-width-50"
-      [libraryState]="libraryState"
-    ></cx-comic-state-chart>
+  <div class="cx-width-100 cx-centered-horiz cx-vertical-container">
+    <div class="cx-width-90 cx-padding-5 cx-horizontal-container">
+      <cx-collections-chart
+        class="cx-width-50"
+        [libraryState]="libraryState"
+      ></cx-collections-chart>
+      <cx-comic-state-chart
+        class="cx-width-50"
+        [libraryState]="libraryState"
+      ></cx-comic-state-chart>
+    </div>
+    <div class="cx-width-90 cx-padding-5">
+      <cx-comics-by-year-chart
+        class="cx-width-100 cx-height-100"
+        [libraryState]="libraryState"
+      ></cx-comics-by-year-chart>
+    </div>
   </div>
-  <div class="cx-width-90 cx-padding-5">
-    <cx-comics-by-year-chart
-      class="cx-width-100 cx-height-100"
-      [libraryState]="libraryState"
-    ></cx-comics-by-year-chart>
+}
+@if (lastRead.length > 0) {
+  <div class="cx-width-100 cx-centered-horiz">
+    <div class="cx-width-90 cx-border-primary-1 cx-padding-5">
+      <cx-comics-read-chart
+        class="cx-width-100 cx-height-100"
+      ></cx-comics-read-chart>
+    </div>
   </div>
-</div>
-} @if (lastRead.length > 0) {
-<div class="cx-width-100 cx-centered-horiz">
-  <div class="cx-width-90 cx-border-primary-1 cx-padding-5">
-    <cx-comics-read-chart
-      class="cx-width-100 cx-height-100"
-    ></cx-comics-read-chart>
-  </div>
-</div>
 }

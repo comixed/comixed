@@ -9,71 +9,76 @@
     <mat-icon>upload_file</mat-icon>
   </button>
   @if (!multiMode) {
-  <button
-    id="save-comic-changes"
-    class="cx-toolbar-button cx-margin-left-5"
-    mat-icon-button
-    [matTooltip]="'comic-book.tooltip.save-changes' | translate"
-    [disabled]="!comicForm.valid"
-    (click)="onSaveChanges()"
-  >
-    <mat-icon>save</mat-icon>
-  </button>
-  } @if (!multiMode) {
-  <button
-    id="undo-comic-changes"
-    class="cx-toolbar-button cx-margin-left-5"
-    mat-icon-button
-    [matTooltip]="'comic-book.tooltip.undo-changes' | translate"
-    [disabled]="comicForm.untouched"
-    (click)="onUndoChanges()"
-  >
-    <mat-icon>undo</mat-icon>
-  </button>
+    <button
+      id="save-comic-changes"
+      class="cx-toolbar-button cx-margin-left-5"
+      mat-icon-button
+      [matTooltip]="'comic-book.tooltip.save-changes' | translate"
+      [disabled]="!comicForm.valid"
+      (click)="onSaveChanges()"
+    >
+      <mat-icon>save</mat-icon>
+    </button>
+  }
+  @if (!multiMode) {
+    <button
+      id="undo-comic-changes"
+      class="cx-toolbar-button cx-margin-left-5"
+      mat-icon-button
+      [matTooltip]="'comic-book.tooltip.undo-changes' | translate"
+      [disabled]="comicForm.untouched"
+      (click)="onUndoChanges()"
+    >
+      <mat-icon>undo</mat-icon>
+    </button>
   }
   <div class="cx-spacer"></div>
   @if (multiMode) {
-  <button
-    id="auto-select-exact-match-button"
-    class="cx-toolbar-button cx-margin-left-5"
-    mat-icon-button
-    [matTooltip]="'scraping.tooltip.auto-select-exact-match' | translate"
-    (click)="onToggleAutoSelectExactMatch()"
-  >
-    @if (autoSelectExactMatch) {
-    <mat-icon>radio_button_checked</mat-icon>
-    } @if (!autoSelectExactMatch) {
-    <mat-icon>radio_button_unchecked</mat-icon>
-    }
-  </button>
-  } @if (multiMode) {
-  <button
-    id="confirm-before-scraping-button"
-    class="cx-toolbar-button cx-margin-left-5"
-    mat-icon-button
-    [matTooltip]="'scraping.tooltip.confirm-each-scrape' | translate"
-    (click)="onToggleConfirmBeforeScrape()"
-  >
-    @if (confirmBeforeScraping) {
-    <mat-icon>radio_button_checked</mat-icon>
-    } @if (!confirmBeforeScraping) {
-    <mat-icon>radio_button_unchecked</mat-icon>
-    }
-  </button>
+    <button
+      id="auto-select-exact-match-button"
+      class="cx-toolbar-button cx-margin-left-5"
+      mat-icon-button
+      [matTooltip]="'scraping.tooltip.auto-select-exact-match' | translate"
+      (click)="onToggleAutoSelectExactMatch()"
+    >
+      @if (autoSelectExactMatch) {
+        <mat-icon>radio_button_checked</mat-icon>
+      }
+      @if (!autoSelectExactMatch) {
+        <mat-icon>radio_button_unchecked</mat-icon>
+      }
+    </button>
+  }
+  @if (multiMode) {
+    <button
+      id="confirm-before-scraping-button"
+      class="cx-toolbar-button cx-margin-left-5"
+      mat-icon-button
+      [matTooltip]="'scraping.tooltip.confirm-each-scrape' | translate"
+      (click)="onToggleConfirmBeforeScrape()"
+    >
+      @if (confirmBeforeScraping) {
+        <mat-icon>radio_button_checked</mat-icon>
+      }
+      @if (!confirmBeforeScraping) {
+        <mat-icon>radio_button_unchecked</mat-icon>
+      }
+    </button>
   }
   <button
     id="skip-cache-button"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
     [matTooltip]="
-      'scraping.tooltip.skip-cache' | translate : { enabled: skipCache }
+      'scraping.tooltip.skip-cache' | translate: { enabled: skipCache }
     "
     (click)="onSkipCacheToggle()"
   >
     @if (skipCache) {
-    <mat-icon>block</mat-icon>
-    } @if (!skipCache) {
-    <mat-icon>remove_circle_outline</mat-icon>
+      <mat-icon>block</mat-icon>
+    }
+    @if (!skipCache) {
+      <mat-icon>remove_circle_outline</mat-icon>
     }
   </button>
   <button
@@ -82,14 +87,15 @@
     mat-icon-button
     [matTooltip]="
       'scraping.tooltip.match-publisher'
-        | translate : { enabled: matchPublisher }
+        | translate: { enabled: matchPublisher }
     "
     (click)="onMatchPublisherToggle()"
   >
     @if (matchPublisher) {
-    <mat-icon>join_inner</mat-icon>
-    } @if (!matchPublisher) {
-    <mat-icon>join_full</mat-icon>
+      <mat-icon>join_inner</mat-icon>
+    }
+    @if (!matchPublisher) {
+      <mat-icon>join_full</mat-icon>
     }
   </button>
   <button
@@ -104,121 +110,123 @@
   </button>
 </mat-toolbar>
 @if (!!comic) {
-<form [formGroup]="comicForm">
-  <mat-form-field class="cx-width-25" appearance="fill">
-    <mat-label>{{ "comic-book.label.metadata-source" | translate }}</mat-label>
-    <mat-select
-      [value]="metadataSource?.metadataSourceId"
-      (selectionChange)="onMetadataSourceChosen($event.value)"
-      required
-    >
-      @for (source of metadataSourceList; track source) {
-      <mat-option [value]="source.value.metadataSourceId">
-        {{ source.label }}
-      </mat-option>
+  <form [formGroup]="comicForm">
+    <mat-form-field class="cx-width-25" appearance="fill">
+      <mat-label>
+        {{ "comic-book.label.metadata-source" | translate }}
+      </mat-label>
+      <mat-select
+        [value]="metadataSource?.metadataSourceId"
+        (selectionChange)="onMetadataSourceChosen($event.value)"
+        required
+      >
+        @for (source of metadataSourceList; track source) {
+          <mat-option [value]="source.value.metadataSourceId">
+            {{ source.label }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="cx-width-25">
+      <mat-label>
+        {{ "comic-book.label.metadata-source-id" | translate }}
+      </mat-label>
+      <input
+        id="metadata-source-id-input"
+        #referenceId
+        type="number"
+        matInput
+        formControlName="referenceId"
+        [placeholder]="'comic-book.placeholder.metadata-source-id' | translate"
+      />
+      <button
+        id="scrape-with-metadata-source-id-button"
+        mat-icon-button
+        matSuffix
+        [disabled]="!this.metadataSource || referenceId.size === 0"
+        [matTooltip]="'scraping.tooltip.use-metadata-source-id' | translate"
+        (click)="onScrapeWithReferenceId()"
+      >
+        <mat-icon>find_replace</mat-icon>
+      </button>
+      <mat-hint>
+        {{ "comic-book.hint.useful-for-scraping" | translate }}
+      </mat-hint>
+    </mat-form-field>
+    <mat-form-field class="cx-width-50" appearance="fill">
+      <mat-label>
+        {{ "comic-book.label.metadata-load-limit" | translate }}
+      </mat-label>
+      <mat-select
+        id="maximum-records-select"
+        [(value)]="maximumRecords"
+        (selectionChange)="onMaximumRecordsChanged($event.value)"
+        required
+      >
+        @for (option of maximumRecordsOptions; track option) {
+          <mat-option [value]="option.value">
+            {{ option.label | translate }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="cx-width-25">
+      <mat-label>{{ "comic-book.label.publisher" | translate }}</mat-label>
+      <input
+        id="publisher-input"
+        matInput
+        formControlName="publisher"
+        [placeholder]="'comic-book.placeholder.publisher' | translate"
+      />
+    </mat-form-field>
+    <mat-form-field class="cx-width-50">
+      <mat-label>{{ "comic-book.label.series" | translate }}</mat-label>
+      <input
+        id="series-input"
+        matInput
+        formControlName="series"
+        [placeholder]="'comic-book.placeholder.series' | translate"
+        required
+      />
+      <mat-hint>
+        {{ "comic-book.hint.required-for-scraping" | translate }}
+      </mat-hint>
+      @if (comicForm.controls.series.errors?.required) {
+        <mat-error>
+          {{ "validation.field-required" | translate }}
+        </mat-error>
       }
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field class="cx-width-25">
-    <mat-label>
-      {{ "comic-book.label.metadata-source-id" | translate }}
-    </mat-label>
-    <input
-      id="metadata-source-id-input"
-      #referenceId
-      type="number"
-      matInput
-      formControlName="referenceId"
-      [placeholder]="'comic-book.placeholder.metadata-source-id' | translate"
-    />
-    <button
-      id="scrape-with-metadata-source-id-button"
-      mat-icon-button
-      matSuffix
-      [disabled]="!this.metadataSource || referenceId.size === 0"
-      [matTooltip]="'scraping.tooltip.use-metadata-source-id' | translate"
-      (click)="onScrapeWithReferenceId()"
-    >
-      <mat-icon>find_replace</mat-icon>
-    </button>
-    <mat-hint>
-      {{ "comic-book.hint.useful-for-scraping" | translate }}
-    </mat-hint>
-  </mat-form-field>
-  <mat-form-field class="cx-width-50" appearance="fill">
-    <mat-label>
-      {{ "comic-book.label.metadata-load-limit" | translate }}
-    </mat-label>
-    <mat-select
-      id="maximum-records-select"
-      [(value)]="maximumRecords"
-      (selectionChange)="onMaximumRecordsChanged($event.value)"
-      required
-    >
-      @for (option of maximumRecordsOptions; track option) {
-      <mat-option [value]="option.value">
-        {{ option.label | translate }}
-      </mat-option>
+    </mat-form-field>
+    <mat-form-field class="cx-width-25">
+      <mat-label>{{ "comic-book.label.volume" | translate }}</mat-label>
+      <input
+        id="volume-input"
+        matInput
+        formControlName="volume"
+        [placeholder]="'comic-book.placeholder.volume' | translate"
+      />
+    </mat-form-field>
+    <mat-form-field class="cx-width-25">
+      <mat-label>{{ "comic-book.label.imprint" | translate }}</mat-label>
+      <input matInput id="imprint-input" formControlName="imprint" readonly />
+    </mat-form-field>
+    <mat-form-field class="cx-width-25">
+      <mat-label>{{ "comic-book.label.issue-number" | translate }}</mat-label>
+      <input
+        id="issue-number-input"
+        matInput
+        formControlName="issueNumber"
+        [placeholder]="'comic-book.placeholder.issue-number' | translate"
+        required
+      />
+      <mat-hint>
+        {{ "comic-book.hint.required-for-scraping" | translate }}
+      </mat-hint>
+      @if (comicForm.controls.issueNumber.errors?.required) {
+        <mat-error>
+          {{ "validation.field-required" | translate }}
+        </mat-error>
       }
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field class="cx-width-25">
-    <mat-label>{{ "comic-book.label.publisher" | translate }}</mat-label>
-    <input
-      id="publisher-input"
-      matInput
-      formControlName="publisher"
-      [placeholder]="'comic-book.placeholder.publisher' | translate"
-    />
-  </mat-form-field>
-  <mat-form-field class="cx-width-50">
-    <mat-label>{{ "comic-book.label.series" | translate }}</mat-label>
-    <input
-      id="series-input"
-      matInput
-      formControlName="series"
-      [placeholder]="'comic-book.placeholder.series' | translate"
-      required
-    />
-    <mat-hint>
-      {{ "comic-book.hint.required-for-scraping" | translate }}
-    </mat-hint>
-    @if (comicForm.controls.series.errors?.required) {
-    <mat-error>
-      {{ "validation.field-required" | translate }}
-    </mat-error>
-    }
-  </mat-form-field>
-  <mat-form-field class="cx-width-25">
-    <mat-label>{{ "comic-book.label.volume" | translate }}</mat-label>
-    <input
-      id="volume-input"
-      matInput
-      formControlName="volume"
-      [placeholder]="'comic-book.placeholder.volume' | translate"
-    />
-  </mat-form-field>
-  <mat-form-field class="cx-width-25">
-    <mat-label>{{ "comic-book.label.imprint" | translate }}</mat-label>
-    <input matInput id="imprint-input" formControlName="imprint" readonly />
-  </mat-form-field>
-  <mat-form-field class="cx-width-25">
-    <mat-label>{{ "comic-book.label.issue-number" | translate }}</mat-label>
-    <input
-      id="issue-number-input"
-      matInput
-      formControlName="issueNumber"
-      [placeholder]="'comic-book.placeholder.issue-number' | translate"
-      required
-    />
-    <mat-hint>
-      {{ "comic-book.hint.required-for-scraping" | translate }}
-    </mat-hint>
-    @if (comicForm.controls.issueNumber.errors?.required) {
-    <mat-error>
-      {{ "validation.field-required" | translate }}
-    </mat-error>
-    }
-  </mat-form-field>
-</form>
+    </mat-form-field>
+  </form>
 }

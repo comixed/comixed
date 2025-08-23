@@ -151,6 +151,17 @@ export class UserAccountsPageComponent
   confirmationService = inject(ConfirmationService);
 
   constructor() {
+    this.logger.trace('Creating the user form');
+    this.editUserForm = this.formBuilder.group(
+      {
+        id: [],
+        email: ['', [Validators.email, Validators.required]],
+        admin: [''],
+        password: [''],
+        passwordVerify: ['']
+      },
+      { validators: passwordVerifyValidator }
+    );
     this.logger.trace('Subscribing to language change updates');
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -169,17 +180,6 @@ export class UserAccountsPageComponent
     this.userSubscription = this.store
       .select(selectManageUsersCurrent)
       .subscribe(user => (this.user = user));
-    this.logger.trace('Creating the user form');
-    this.editUserForm = this.formBuilder.group(
-      {
-        id: [],
-        email: ['', [Validators.email, Validators.required]],
-        admin: [''],
-        password: [''],
-        passwordVerify: ['']
-      },
-      { validators: passwordVerifyValidator }
-    );
   }
 
   get users(): User[] {

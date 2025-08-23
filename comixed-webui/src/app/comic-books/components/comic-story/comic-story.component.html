@@ -14,19 +14,19 @@
   <mat-expansion-panel [disabled]="credits.length === 0">
     <mat-expansion-panel-header>
       <mat-panel-title>
-        {{ "comic-book.label.credits" | translate : { count: credits.length } }}
+        {{ "comic-book.label.credits" | translate: { count: credits.length } }}
       </mat-panel-title>
     </mat-expansion-panel-header>
     <div class="comic-story-cards cx-width-100">
       @for (credit of credits; track credit) {
-      <div class="comic-story-card">
-        <cx-comic-detail-card
-          [comic]="comic.detail"
-          [title]="credit.value"
-          [subtitle]="credit.type"
-          imageUrl="/assets/img/credit.png"
-        ></cx-comic-detail-card>
-      </div>
+        <div class="comic-story-card">
+          <cx-comic-detail-card
+            [comic]="comic.detail"
+            [title]="credit.value"
+            [subtitle]="credit.type"
+            imageUrl="/assets/img/credit.png"
+          ></cx-comic-detail-card>
+        </div>
       }
     </div>
   </mat-expansion-panel>
@@ -35,44 +35,44 @@
       <mat-panel-title>
         {{
           "comic-book.label.characters"
-            | translate : { count: characters.length }
+            | translate: { count: characters.length }
         }}
       </mat-panel-title>
     </mat-expansion-panel-header>
     <div class="comic-story-cards cx-width-100">
       @for (character of characters; track character) {
-      <div class="comic-story-card">
-        <cx-comic-detail-card
-          [comic]="comic.detail"
-          [title]="character.value"
-          [routerLink]="[
-            '/library',
-            'collections',
-            'characters',
-            character.value
-          ]"
-          imageUrl="/assets/img/character.png"
-        ></cx-comic-detail-card>
-      </div>
+        <div class="comic-story-card">
+          <cx-comic-detail-card
+            [comic]="comic.detail"
+            [title]="character.value"
+            [routerLink]="[
+              '/library',
+              'collections',
+              'characters',
+              character.value
+            ]"
+            imageUrl="/assets/img/character.png"
+          ></cx-comic-detail-card>
+        </div>
       }
     </div>
   </mat-expansion-panel>
   <mat-expansion-panel [disabled]="teams.length === 0">
     <mat-expansion-panel-header>
       <mat-panel-title>
-        {{ "comic-book.label.teams" | translate : { count: teams.length } }}
+        {{ "comic-book.label.teams" | translate: { count: teams.length } }}
       </mat-panel-title>
     </mat-expansion-panel-header>
     <div class="comic-story-cards cx-width-100">
       @for (team of teams; track team) {
-      <div class="comic-story-card">
-        <cx-comic-detail-card
-          [comic]="comic.detail"
-          [title]="team.value"
-          [routerLink]="['/library', 'collections', 'teams', team.value]"
-          imageUrl="/assets/img/team.png"
-        ></cx-comic-detail-card>
-      </div>
+        <div class="comic-story-card">
+          <cx-comic-detail-card
+            [comic]="comic.detail"
+            [title]="team.value"
+            [routerLink]="['/library', 'collections', 'teams', team.value]"
+            imageUrl="/assets/img/team.png"
+          ></cx-comic-detail-card>
+        </div>
       }
     </div>
   </mat-expansion-panel>
@@ -80,44 +80,44 @@
     <mat-expansion-panel-header>
       <mat-panel-title>
         {{
-          "comic-book.label.locations" | translate : { count: locations.length }
+          "comic-book.label.locations" | translate: { count: locations.length }
         }}
       </mat-panel-title>
     </mat-expansion-panel-header>
     <div class="comic-story-cards cx-width-100">
       @for (location of locations; track location) {
-      <div class="comic-story-card">
-        <cx-comic-detail-card
-          [comic]="comic.detail"
-          [title]="location.value"
-          [routerLink]="[
-            '/library',
-            'collections',
-            'locations',
-            location.value
-          ]"
-          imageUrl="/assets/img/location.png"
-        ></cx-comic-detail-card>
-      </div>
+        <div class="comic-story-card">
+          <cx-comic-detail-card
+            [comic]="comic.detail"
+            [title]="location.value"
+            [routerLink]="[
+              '/library',
+              'collections',
+              'locations',
+              location.value
+            ]"
+            imageUrl="/assets/img/location.png"
+          ></cx-comic-detail-card>
+        </div>
       }
     </div>
   </mat-expansion-panel>
   <mat-expansion-panel [disabled]="stories.length === 0">
     <mat-expansion-panel-header>
       <mat-panel-title>
-        {{ "comic-book.label.stories" | translate : { count: stories.length } }}
+        {{ "comic-book.label.stories" | translate: { count: stories.length } }}
       </mat-panel-title>
     </mat-expansion-panel-header>
     <div class="comic-story-cards cx-width-100">
       @for (story of stories; track story) {
-      <div class="comic-story-card">
-        <cx-comic-detail-card
-          [comic]="comic.detail"
-          [title]="story.value"
-          [routerLink]="['/library', 'collections', 'stories', story.value]"
-          imageUrl="/assets/img/story.png"
-        ></cx-comic-detail-card>
-      </div>
+        <div class="comic-story-card">
+          <cx-comic-detail-card
+            [comic]="comic.detail"
+            [title]="story.value"
+            [routerLink]="['/library', 'collections', 'stories', story.value]"
+            imageUrl="/assets/img/story.png"
+          ></cx-comic-detail-card>
+        </div>
       }
     </div>
   </mat-expansion-panel>

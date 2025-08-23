@@ -1,14 +1,14 @@
 <div #container class="cx-width-100 cx-height-100 cx-padding-5">
   <h2>{{ "home.title.comics-by-year-and-publisher-chart" | translate }}</h2>
   @if ((data$ | async)?.value?.length > 0) {
-  <ngx-charts-heat-map
-    [view]="[chartWidth$ | async, chartHeight$ | async]"
-    scheme="vivid"
-    [results]="data$ | async"
-    [xAxis]="true"
-    [yAxis]="true"
-    [legend]="true"
-  ></ngx-charts-heat-map>
+    <ngx-charts-heat-map
+      [view]="[chartWidth$ | async, chartHeight$ | async]"
+      scheme="vivid"
+      [results]="data$ | async"
+      [xAxis]="true"
+      [yAxis]="true"
+      [legend]="true"
+    ></ngx-charts-heat-map>
   }
   <div class="cx-horizontal-container">
     <mat-form-field class="cx-grow-0" appearance="fill">
@@ -19,11 +19,14 @@
         [disabled]="publisherOptions.length === 0"
         (selectionChange)="onShowData(startYear, endYear, $event.value)"
       >
-        @for (publisher of publisherOptions; track publisher; let publisherIndex
-        = $index) {
-        <mat-option [value]="publisherIndex + 1">
-          {{ publisherIndex + 1 }}
-        </mat-option>
+        @for (
+          publisher of publisherOptions;
+          track publisher;
+          let publisherIndex = $index
+        ) {
+          <mat-option [value]="publisherIndex + 1">
+            {{ publisherIndex + 1 }}
+          </mat-option>
         }
       </mat-select>
     </mat-form-field>
@@ -39,9 +42,9 @@
           "
         >
           @for (year of yearOptions; track year) {
-          <mat-option [value]="year">
-            {{ year }}
-          </mat-option>
+            <mat-option [value]="year">
+              {{ year }}
+            </mat-option>
           }
         </mat-select>
       </mat-form-field>
@@ -56,9 +59,9 @@
           "
         >
           @for (year of yearOptions; track year) {
-          <mat-option [value]="year">
-            {{ year }}
-          </mat-option>
+            <mat-option [value]="year">
+              {{ year }}
+            </mat-option>
           }
         </mat-select>
       </mat-form-field>

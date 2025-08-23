@@ -3,22 +3,24 @@
 ></cx-metadata-process-toolbar>
 
 @if (processState?.active) {
-<h2>
-  {{
-    "metadata-process.page-title" | translate : { count: selectedIds.length }
-  }}
-</h2>
-} @if (processState?.active) {
-<cx-metadata-process-status
-  class="cx-width-100 cx-height-100"
-  [processState]="processState"
-></cx-metadata-process-status>
-} @if (!processState || !processState.active) {
-<cx-comic-list-view
-  class="cx-width-100"
-  [comics]="comics"
-  [coverYears]="coverYears"
-  [coverMonths]="coverMonths"
-  [selectedIds]="selectedIds"
-></cx-comic-list-view>
+  <h2>
+    {{
+      "metadata-process.page-title" | translate: { count: selectedIds.length }
+    }}
+  </h2>
+}
+@if (processState?.active) {
+  <cx-metadata-process-status
+    class="cx-width-100 cx-height-100"
+    [processState]="processState"
+  ></cx-metadata-process-status>
+}
+@if (!processState || !processState.active) {
+  <cx-comic-list-view
+    class="cx-width-100"
+    [comics]="comics"
+    [coverYears]="coverYears"
+    [coverMonths]="coverMonths"
+    [selectedIds]="selectedIds"
+  ></cx-comic-list-view>
 }

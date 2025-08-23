@@ -11,43 +11,45 @@
   <span id="cx-logo">ComiXed</span>
 
   @if (isAdmin && !!latestRelease && latestRelease.newer) {
-  <button
-    id="view-latest-release-button"
-    mat-icon-button
-    [matTooltip]="
-      'menu.tooltip.new-release-available'
-        | translate
-          : {
-              version: latestRelease.version,
-              released: latestRelease.updated | date : 'mediumDate'
-            }
-    "
-    [disabled]="checkingLatestVersion"
-    (click)="onViewLatestRelease()"
-  >
-    <mat-icon>new_releases</mat-icon>
-  </button>
+    <button
+      id="view-latest-release-button"
+      mat-icon-button
+      [matTooltip]="
+        'menu.tooltip.new-release-available'
+          | translate
+            : {
+                version: latestRelease.version,
+                released: latestRelease.updated | date: 'mediumDate'
+              }
+      "
+      [disabled]="checkingLatestVersion"
+      (click)="onViewLatestRelease()"
+    >
+      <mat-icon>new_releases</mat-icon>
+    </button>
   }
 
   <div class="cx-spacer"></div>
 
   @if (!!user) {
-  <button
-    class="cx-toolbar-button cx-padding-5"
-    mat-icon-button
-    [matTooltip]="'navigation.tooltip.account' | translate"
-    (click)="onToggleAccountBar()"
-  >
-    <img loading="lazy" ngxGravatar [alt]="user.email" [email]="user.email" />
-  </button>
-  } &nbsp; @if (!!user) {
-  <a
-    class="cx-toolbar-link cx-padding-right-5"
-    routerLinkActive="cx-toolbar-link-active"
-    (click)="onToggleAccountBar()"
-  >
-    {{ user.email }}
-  </a>
+    <button
+      class="cx-toolbar-button cx-padding-5"
+      mat-icon-button
+      [matTooltip]="'navigation.tooltip.account' | translate"
+      (click)="onToggleAccountBar()"
+    >
+      <img loading="lazy" ngxGravatar [alt]="user.email" [email]="user.email" />
+    </button>
+  }
+  &nbsp;
+  @if (!!user) {
+    <a
+      class="cx-toolbar-link cx-padding-right-5"
+      routerLinkActive="cx-toolbar-link-active"
+      (click)="onToggleAccountBar()"
+    >
+      {{ user.email }}
+    </a>
   }
 
   <button
@@ -78,9 +80,10 @@
     (click)="onToggleDarkMode(!darkMode)"
   >
     @if (!darkMode) {
-    <mat-icon>light_mode</mat-icon>
-    } @if (darkMode) {
-    <mat-icon>dark_mode</mat-icon>
+      <mat-icon>light_mode</mat-icon>
+    }
+    @if (darkMode) {
+      <mat-icon>dark_mode</mat-icon>
     }
   </button>
 
@@ -95,24 +98,26 @@
 
 <mat-menu #mainMenu="matMenu">
   @if (!user) {
-  <button mat-menu-item (click)="onLogin()">
-    <mat-icon>login</mat-icon>
-    <mat-label>{{ "button.login" | translate }}</mat-label>
-  </button>
-  } @if (!!user) {
-  <mat-divider></mat-divider>
+    <button mat-menu-item (click)="onLogin()">
+      <mat-icon>login</mat-icon>
+      <mat-label>{{ "button.login" | translate }}</mat-label>
+    </button>
+  }
+  @if (!!user) {
+    <mat-divider></mat-divider>
   }
   <button mat-menu-item (click)="openWikiPage()">
     <mat-icon>help_center</mat-icon>
     <mat-label>{{ "menu.help" | translate }}</mat-label>
   </button>
   @if (!!user) {
-  <mat-divider></mat-divider>
-  } @if (!!user) {
-  <button mat-menu-item (click)="onLogout()">
-    <mat-icon>logout</mat-icon>
-    <mat-label>{{ "button.logout" | translate }}</mat-label>
-  </button>
+    <mat-divider></mat-divider>
+  }
+  @if (!!user) {
+    <button mat-menu-item (click)="onLogout()">
+      <mat-icon>logout</mat-icon>
+      <mat-label>{{ "button.logout" | translate }}</mat-label>
+    </button>
   }
 </mat-menu>
 
@@ -129,26 +134,28 @@
 
 <mat-menu #languageMenu="matMenu">
   @for (option of languages; track option) {
-  <button mat-menu-item (click)="onSelectLanguage(option.value)">
-    @if (currentLanguage === option.value) {
-    <mat-icon>check_box</mat-icon>
-    } @if (currentLanguage !== option.value) {
-    <mat-icon>check_box_outline_blank</mat-icon>
-    }
-    <mat-label>{{ option.label }}</mat-label>
-  </button>
+    <button mat-menu-item (click)="onSelectLanguage(option.value)">
+      @if (currentLanguage === option.value) {
+        <mat-icon>check_box</mat-icon>
+      }
+      @if (currentLanguage !== option.value) {
+        <mat-icon>check_box_outline_blank</mat-icon>
+      }
+      <mat-label>{{ option.label }}</mat-label>
+    </button>
   }
 </mat-menu>
 
 <mat-menu #loggingMenu="matMenu">
   @for (option of loggingOptions; track option) {
-  <button mat-menu-item (click)="onSetLogging(option)">
-    @if (isCurrentLoggingLevel(option)) {
-    <mat-icon>radio_button_checked</mat-icon>
-    } @if (!isCurrentLoggingLevel(option)) {
-    <mat-icon>radio_button_unchecked</mat-icon>
-    }
-    <mat-label>{{ "menu.logging-menu." + option | translate }}</mat-label>
-  </button>
+    <button mat-menu-item (click)="onSetLogging(option)">
+      @if (isCurrentLoggingLevel(option)) {
+        <mat-icon>radio_button_checked</mat-icon>
+      }
+      @if (!isCurrentLoggingLevel(option)) {
+        <mat-icon>radio_button_unchecked</mat-icon>
+      }
+      <mat-label>{{ "menu.logging-menu." + option | translate }}</mat-label>
+    </button>
   }
 </mat-menu>

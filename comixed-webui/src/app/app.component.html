@@ -8,11 +8,11 @@
 ></cx-navigation-bar>
 
 @if (busy) {
-<div id="cx-busy-overlay">
-  <div class="cx-centered cx-position-absolute">
-    <img [src]="busyIconURL" alt="Busy, please wait..." />
+  <div id="cx-busy-overlay">
+    <div class="cx-centered cx-position-absolute">
+      <img [src]="busyIconURL" alt="Busy, please wait..." />
+    </div>
   </div>
-</div>
 }
 
 <mat-sidenav-container
@@ -36,10 +36,10 @@
     position="end"
   >
     @if (!!user) {
-    <cx-edit-account-bar
-      [user]="user"
-      (closeSidebar)="accountBar.close()"
-    ></cx-edit-account-bar>
+      <cx-edit-account-bar
+        [user]="user"
+        (closeSidebar)="accountBar.close()"
+      ></cx-edit-account-bar>
     }
   </mat-sidenav>
 

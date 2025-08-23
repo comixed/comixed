@@ -23,10 +23,10 @@
     </mat-toolbar>
 
     @if (dataSource.data?.length > 0) {
-    <mat-paginator
-      [pageSizeOptions]="pageSizeOptions"
-      showFirstLastButtons="true"
-    ></mat-paginator>
+      <mat-paginator
+        [pageSizeOptions]="pageSizeOptions"
+        showFirstLastButtons="true"
+      ></mat-paginator>
     }
 
     <mat-table
@@ -50,11 +50,13 @@
             (click)="onDecision(true, entry.item)"
           >
             @if (entry.sortOrder === 2) {
-            <mat-icon>thumb_up</mat-icon>
-            } @if (entry.sortOrder === 1) {
-            <mat-icon>thumbs_up_down</mat-icon>
-            } @if (entry.sortOrder === 0) {
-            <mat-icon>thumb_down</mat-icon>
+              <mat-icon>thumb_up</mat-icon>
+            }
+            @if (entry.sortOrder === 1) {
+              <mat-icon>thumbs_up_down</mat-icon>
+            }
+            @if (entry.sortOrder === 0) {
+              <mat-icon>thumb_down</mat-icon>
             }
           </button>
         </mat-cell>
@@ -139,36 +141,36 @@
   </div>
 
   @if (!!issue) {
-  <div id="scraping-volume-cover-container">
-    <mat-card class="cx-width-100" appearance="outlined">
-      <mat-card-content class="cx-padding-5">
-        <h2 class="cx-width-100 cx-align-content-center">
-          <strong>{{ issue | issueMetadataTitle }}</strong>
-        </h2>
-        <h3 class="cx-width-100 cx-align-content-center">
-          {{ issue.coverDate | date : "MMM yyyy" }}
-        </h3>
-        <img
-          loading="lazy"
-          [src]="issue.coverUrl"
-          width="100%"
-          height="auto"
-          [alt]="issue | issueMetadataTitle"
-        />
-      </mat-card-content>
-      <mat-card-actions>
-        <button
-          mat-raised-button
-          color="accent"
-          [matTooltip]="'scraping.tooltip.select-scraping-issue' | translate"
-          (click)="onDecision(true, selectedVolume)"
-          (keyup)="onDecision(true, selectedVolume)"
-        >
-          <mat-icon>thumb_up</mat-icon>
-          <mat-label>{{ "button.scrape" | translate }}</mat-label>
-        </button>
-      </mat-card-actions>
-    </mat-card>
-  </div>
+    <div id="scraping-volume-cover-container">
+      <mat-card class="cx-width-100" appearance="outlined">
+        <mat-card-content class="cx-padding-5">
+          <h2 class="cx-width-100 cx-align-content-center">
+            <strong>{{ issue | issueMetadataTitle }}</strong>
+          </h2>
+          <h3 class="cx-width-100 cx-align-content-center">
+            {{ issue.coverDate | date: "MMM yyyy" }}
+          </h3>
+          <img
+            loading="lazy"
+            [src]="issue.coverUrl"
+            width="100%"
+            height="auto"
+            [alt]="issue | issueMetadataTitle"
+          />
+        </mat-card-content>
+        <mat-card-actions>
+          <button
+            mat-raised-button
+            color="accent"
+            [matTooltip]="'scraping.tooltip.select-scraping-issue' | translate"
+            (click)="onDecision(true, selectedVolume)"
+            (keyup)="onDecision(true, selectedVolume)"
+          >
+            <mat-icon>thumb_up</mat-icon>
+            <mat-label>{{ "button.scrape" | translate }}</mat-label>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
   }
 </div>

@@ -1,8 +1,8 @@
 <mat-card appearance="outlined">
   @if (!!title) {
-  <mat-card-title class="cx-text-nowrap" [matTooltip]="title">
-    {{ title }}
-  </mat-card-title>
+    <mat-card-title class="cx-text-nowrap" [matTooltip]="title">
+      {{ title }}
+    </mat-card-title>
   }
   <mat-card-subtitle
     class="cx-text-nowrap"
@@ -17,56 +17,63 @@
       [class.cx-detail-card-selected]="selected"
     >
       @if (!!imageUrl) {
-      <img
-        loading="lazy"
-        [class.cx-detail-card-blurred]="blurred"
-        [src]="imageUrl"
-        [style.width]="'100%'"
-        [style.height]="'auto'"
-        [alt]="title"
-        [matTooltip]="coverTooltip"
-        [matTooltipDisabled]="!coverTooltip"
-        (click)="onCoverClicked()"
-        (contextmenu)="onContextMenu($event)"
-      />
-      } @if (showActions) {
-      <mat-chip-listbox>
-        @if (detailLink) {
-        <mat-basic-chip
-          [routerLink]="detailLink"
-          [matTooltip]="'text.view-details' | translate"
-        >
-          <mat-icon>info</mat-icon>
-        </mat-basic-chip>
-        } @if (isRead) {
-        <mat-basic-chip>
-          <mat-icon>bookmark</mat-icon>
-        </mat-basic-chip>
-        } @if (comicChanged && isAdmin) {
-        <mat-basic-chip
-          [matTooltip]="'comic-book.text.comic-changed' | translate"
-          (click)="onUpdateComicInfo(comic)"
-        >
-          <mat-icon>sync_alt</mat-icon>
-        </mat-basic-chip>
-        } @if (deleted) {
-        <mat-basic-chip
-          [matTooltip]="'comic-book.text.comic-marked-for-deletion' | translate"
-        >
-          <mat-icon>deleted</mat-icon>
-        </mat-basic-chip>
-        }
-      </mat-chip-listbox>
+        <img
+          loading="lazy"
+          [class.cx-detail-card-blurred]="blurred"
+          [src]="imageUrl"
+          [style.width]="'100%'"
+          [style.height]="'auto'"
+          [alt]="title"
+          [matTooltip]="coverTooltip"
+          [matTooltipDisabled]="!coverTooltip"
+          (click)="onCoverClicked()"
+          (contextmenu)="onContextMenu($event)"
+        />
+      }
+      @if (showActions) {
+        <mat-chip-listbox>
+          @if (detailLink) {
+            <mat-basic-chip
+              [routerLink]="detailLink"
+              [matTooltip]="'text.view-details' | translate"
+            >
+              <mat-icon>info</mat-icon>
+            </mat-basic-chip>
+          }
+          @if (isRead) {
+            <mat-basic-chip>
+              <mat-icon>bookmark</mat-icon>
+            </mat-basic-chip>
+          }
+          @if (comicChanged && isAdmin) {
+            <mat-basic-chip
+              [matTooltip]="'comic-book.text.comic-changed' | translate"
+              (click)="onUpdateComicInfo(comic)"
+            >
+              <mat-icon>sync_alt</mat-icon>
+            </mat-basic-chip>
+          }
+          @if (deleted) {
+            <mat-basic-chip
+              [matTooltip]="
+                'comic-book.text.comic-marked-for-deletion' | translate
+              "
+            >
+              <mat-icon>deleted</mat-icon>
+            </mat-basic-chip>
+          }
+        </mat-chip-listbox>
       }
     </div>
     @if (!!description) {
-    <div [innerHTML]="description"></div>
-    } @if (busy) {
-    <mat-progress-spinner
-      class="comic-detail-card-busy-indicator"
-      diameter="100"
-      mode="indeterminate"
-    ></mat-progress-spinner>
+      <div [innerHTML]="description"></div>
+    }
+    @if (busy) {
+      <mat-progress-spinner
+        class="comic-detail-card-busy-indicator"
+        diameter="100"
+        mode="indeterminate"
+      ></mat-progress-spinner>
     }
   </mat-card-content>
 </mat-card>

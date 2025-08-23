@@ -1,15 +1,16 @@
 <h2>
   @if (scrapingVolumes.length === 0) {
-  <span>
-    {{ "scraping-series-page.page-title-with-form" | translate }}
-  </span>
-  } @if (scrapingVolumes.length > 0) {
-  <span>
-    {{
-      "scraping-series-page.page-title-with-volumes"
-        | translate : { count: scrapingVolumes.length }
-    }}
-  </span>
+    <span>
+      {{ "scraping-series-page.page-title-with-form" | translate }}
+    </span>
+  }
+  @if (scrapingVolumes.length > 0) {
+    <span>
+      {{
+        "scraping-series-page.page-title-with-volumes"
+          | translate: { count: scrapingVolumes.length }
+      }}
+    </span>
   }
 </h2>
 
@@ -37,14 +38,15 @@
       class="cx-toolbar-button cx-margin-left-5"
       mat-icon-button
       [matTooltip]="
-        'scraping.tooltip.skip-cache' | translate : { enabled: skipCache }
+        'scraping.tooltip.skip-cache' | translate: { enabled: skipCache }
       "
       (click)="onSkipCacheToggle()"
     >
       @if (skipCache) {
-      <mat-icon>block</mat-icon>
-      } @if (!skipCache) {
-      <mat-icon>remove_circle_outline</mat-icon>
+        <mat-icon>block</mat-icon>
+      }
+      @if (!skipCache) {
+        <mat-icon>remove_circle_outline</mat-icon>
       }
     </button>
     <button
@@ -53,14 +55,15 @@
       mat-icon-button
       [matTooltip]="
         'scraping.tooltip.match-publisher'
-          | translate : { enabled: matchPublisher }
+          | translate: { enabled: matchPublisher }
       "
       (click)="onMatchPublisherToggle()"
     >
       @if (matchPublisher) {
-      <mat-icon>join_inner</mat-icon>
-      } @if (!matchPublisher) {
-      <mat-icon>join_full</mat-icon>
+        <mat-icon>join_inner</mat-icon>
+      }
+      @if (!matchPublisher) {
+        <mat-icon>join_full</mat-icon>
       }
     </button>
     <button
@@ -86,12 +89,12 @@
         (selectionChange)="onMetadataSourceSelected($event.value)"
       >
         @for (source of metadataSourceList; track source) {
-        <mat-option
-          [disabled]="scrapingVolumes.length > 0"
-          [value]="source.metadataSourceId"
-        >
-          {{ source.name }}
-        </mat-option>
+          <mat-option
+            [disabled]="scrapingVolumes.length > 0"
+            [value]="source.metadataSourceId"
+          >
+            {{ source.name }}
+          </mat-option>
         }
       </mat-select>
     </mat-form-field>
@@ -106,9 +109,9 @@
         required
       >
         @for (option of maximumRecordsOptions; track option) {
-        <mat-option [value]="option.value">
-          {{ option.label | translate }}
-        </mat-option>
+          <mat-option [value]="option.value">
+            {{ option.label | translate }}
+          </mat-option>
         }
       </mat-select>
     </mat-form-field>
@@ -149,40 +152,40 @@
   </div>
 
   @if (!!selectedVolume) {
-  <div id="scraping-volumes-cover-container">
-    <mat-card appearance="outlined" class="cx-width-100 cx-padding-5">
-      <mat-card-title
-        class="cx-text-nowrap cx-align-content-center"
-        [matTooltip]="selectedVolume | volumeMetadataTitle"
-      >
-        {{ selectedVolume | volumeMetadataTitle }}
-      </mat-card-title>
-      <mat-card-subtitle class="cx-text-nowrap cx-align-content-center">
-        {{ selectedVolume.publisher }}
-      </mat-card-subtitle>
-      <mat-card-content>
-        <img
-          loading="lazy"
-          [src]="selectedVolume.imageUrl"
-          width="100%"
-          height="auto"
-          [alt]="selectedVolume | volumeMetadataTitle"
-        />
-      </mat-card-content>
-      <mat-card-actions>
-        <button
-          id="cx-scrape-series-button"
-          class="cx-toolbar-button cx-margin-left-5"
-          mat-raised-button
-          color="accent"
-          (click)="onVolumeChosen(selectedVolume)"
-          [disabled]="!selectedVolume"
+    <div id="scraping-volumes-cover-container">
+      <mat-card appearance="outlined" class="cx-width-100 cx-padding-5">
+        <mat-card-title
+          class="cx-text-nowrap cx-align-content-center"
+          [matTooltip]="selectedVolume | volumeMetadataTitle"
         >
-          <mat-label>{{ "button.scrape" | translate }}</mat-label>
-          <mat-icon>cloud_download</mat-icon>
-        </button>
-      </mat-card-actions>
-    </mat-card>
-  </div>
+          {{ selectedVolume | volumeMetadataTitle }}
+        </mat-card-title>
+        <mat-card-subtitle class="cx-text-nowrap cx-align-content-center">
+          {{ selectedVolume.publisher }}
+        </mat-card-subtitle>
+        <mat-card-content>
+          <img
+            loading="lazy"
+            [src]="selectedVolume.imageUrl"
+            width="100%"
+            height="auto"
+            [alt]="selectedVolume | volumeMetadataTitle"
+          />
+        </mat-card-content>
+        <mat-card-actions>
+          <button
+            id="cx-scrape-series-button"
+            class="cx-toolbar-button cx-margin-left-5"
+            mat-raised-button
+            color="accent"
+            (click)="onVolumeChosen(selectedVolume)"
+            [disabled]="!selectedVolume"
+          >
+            <mat-label>{{ "button.scrape" | translate }}</mat-label>
+            <mat-icon>cloud_download</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
   }
 </div>

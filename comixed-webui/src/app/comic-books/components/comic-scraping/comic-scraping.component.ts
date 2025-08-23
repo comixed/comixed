@@ -152,9 +152,8 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
         if (sources.length === 1) {
           this._preferredMetadataSource = sources[0];
         } else {
-          this._preferredMetadataSource = sources.find(
-            entry => entry.preferred
-          );
+          this._preferredMetadataSource =
+            sources.find(entry => entry.preferred) || null;
         }
         this.metadataSourceList = sources.map(source => {
           return { label: source.name, value: source };

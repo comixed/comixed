@@ -1,6 +1,6 @@
 <mat-card appearance="outlined" class="cx-width-100">
   @if (!!page) {
-  <mat-card-title>{{ page?.filename }}</mat-card-title>
+    <mat-card-title>{{ page?.filename }}</mat-card-title>
   }
   <mat-card-content>
     <div class="cx-detail-card cx-padding-2 cx-margin-2">
@@ -18,13 +18,14 @@
   </mat-card-content>
   <mat-card-footer class="cx-padding-left-15">
     @if (page?.blocked) {
-    <mat-icon [matTooltip]="'comic-book.tooltip.blocked-hash' | translate">
-      block
-    </mat-icon>
-    } @if (page?.deleted) {
-    <mat-icon [matTooltip]="'comic-book.tooltip.deleted-page' | translate">
-      deleted
-    </mat-icon>
+      <mat-icon [matTooltip]="'comic-book.tooltip.blocked-hash' | translate">
+        block
+      </mat-icon>
+    }
+    @if (page?.deleted) {
+      <mat-icon [matTooltip]="'comic-book.tooltip.deleted-page' | translate">
+        deleted
+      </mat-icon>
     }
   </mat-card-footer>
 </mat-card>
