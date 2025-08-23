@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
@@ -38,8 +38,8 @@ import {
   saveBlockedHash
 } from '@app/comic-pages/actions/blocked-hashes.actions';
 import {
-  selectBlockedHashesState,
-  selectBlockedHashDetail
+  selectBlockedHashDetail,
+  selectBlockedHashesState
 } from '@app/comic-pages/selectors/blocked-hashes.selectors';
 
 @Component({
@@ -58,15 +58,15 @@ export class BlockedHashDetailPageComponent implements OnDestroy {
 
   blockedPageForm: UntypedFormGroup;
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private formBuilder: UntypedFormBuilder,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+  activatedRoute = inject(ActivatedRoute);
+  router = inject(Router);
+  formBuilder = inject(UntypedFormBuilder);
+  confirmationService = inject(ConfirmationService);
+  translateService = inject(TranslateService);
+
+  constructor() {
     this.paramsSubscription = this.activatedRoute.params.subscribe(params => {
       this.hash = params.hash;
       this.logger.debug('Received blocked page hash:', this.hash);

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   loadStoryCandidates,
@@ -36,6 +36,12 @@ import { of } from 'rxjs';
 
 @Injectable()
 export class ScrapeStoryEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  comicBookScrapingService = inject(ComicBookScrapingService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   loadStoryCandidates$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadStoryCandidates),
@@ -74,7 +80,6 @@ export class ScrapeStoryEffects {
       })
     );
   });
-
   scrapeStory$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(scrapeStoryMetadata),
@@ -116,12 +121,4 @@ export class ScrapeStoryEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private comicBookScrapingService: ComicBookScrapingService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

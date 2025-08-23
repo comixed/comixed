@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ConfigurationService } from '@app/admin/services/configuration.service';
 import { AlertService } from '@app/core/services/alert.service';
@@ -33,6 +33,12 @@ import { of } from 'rxjs';
 
 @Injectable()
 export class ConfigurationOptionListEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  configurationService = inject(ConfigurationService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   loadAll$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadConfigurationOptions),
@@ -65,12 +71,4 @@ export class ConfigurationOptionListEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private configurationService: ConfigurationService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

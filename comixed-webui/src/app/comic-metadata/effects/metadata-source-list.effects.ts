@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
 import * as MetadataSourceListActions from '../actions/metadata-source-list.actions';
@@ -34,6 +34,12 @@ import { setChosenMetadataSource } from '@app/comic-metadata/actions/single-book
 
 @Injectable()
 export class MetadataSourceListEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  metadataSourceService = inject(MetadataSourceService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   loadMetadataSources$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(MetadataSourceListActions.loadMetadataSources),
@@ -67,12 +73,4 @@ export class MetadataSourceListEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private metadataSourceService: MetadataSourceService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

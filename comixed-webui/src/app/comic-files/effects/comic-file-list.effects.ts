@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -25,9 +25,9 @@ import { ComicImportService } from '@app/comic-files/services/comic-import.servi
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  loadComicFileListSuccess,
+  loadComicFileListFailure,
   loadComicFileLists,
-  loadComicFileListFailure
+  loadComicFileListSuccess
 } from '@app/comic-files/actions/comic-file-list.actions';
 import { LoadComicFilesResponse } from '@app/library/models/net/load-comic-files-response';
 import { saveUserPreference } from '@app/user/actions/user.actions';
@@ -38,6 +38,12 @@ import {
 
 @Injectable()
 export class ComicFileListEffects {
+  private logger = inject(LoggerService);
+  private actions$ = inject(Actions);
+  private comicImportService = inject(ComicImportService);
+  private alertService = inject(AlertService);
+  private translateService = inject(TranslateService);
+
   loadComicFiles$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadComicFileLists),
@@ -97,12 +103,4 @@ export class ComicFileListEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private comicImportService: ComicImportService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

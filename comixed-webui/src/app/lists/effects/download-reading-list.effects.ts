@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   downloadReadingList,
@@ -34,6 +34,13 @@ import { of } from 'rxjs';
 
 @Injectable()
 export class DownloadReadingListEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  readingListService = inject(ReadingListService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+  fileDownloadService = inject(FileDownloadService);
+
   downloadReadingList$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(downloadReadingList),
@@ -66,13 +73,4 @@ export class DownloadReadingListEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private readingListService: ReadingListService,
-    private alertService: AlertService,
-    private translateService: TranslateService,
-    private fileDownloadService: FileDownloadService
-  ) {}
 }

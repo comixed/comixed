@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   loadPluginLanguages,
@@ -33,6 +33,12 @@ import { of } from 'rxjs';
 
 @Injectable()
 export class PluginLanguageEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  pluginLanguageService = inject(PluginLanguageService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   loadPluginLanguages$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadPluginLanguages),
@@ -63,12 +69,4 @@ export class PluginLanguageEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private pluginLanguageService: PluginLanguageService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

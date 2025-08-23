@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   deleteCompletedBatchJobs,
@@ -39,6 +39,12 @@ import { BatchProcessDetail } from '@app/admin/models/batch-process-detail';
 
 @Injectable()
 export class BatchProcessesEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  batchProcessService = inject(BatchProcessesService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   loadBatchProcessList$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadBatchProcessList),
@@ -69,7 +75,6 @@ export class BatchProcessesEffects {
       })
     );
   });
-
   deleteCompletedJobs$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(deleteCompletedBatchJobs),
@@ -107,7 +112,6 @@ export class BatchProcessesEffects {
       })
     );
   });
-
   deleteSelectedJobs$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(deleteSelectedBatchJobs),
@@ -147,12 +151,4 @@ export class BatchProcessesEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private batchProcessService: BatchProcessesService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

@@ -19,6 +19,7 @@
 import {
   AfterViewInit,
   Component,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild
@@ -63,15 +64,15 @@ export class DeletedPageListPageComponent
   deletedPageListSubscription: Subscription;
   dataSource = new MatTableDataSource<DeletedPage>([]);
 
-  constructor(
-    private logger: LoggerService,
-    private store: Store<any>,
-    private translationService: TranslateService,
-    private titleService: TitleService,
-    private activatedRoute: ActivatedRoute,
-    public queryParameterService: QueryParameterService,
-    private dialog: MatDialog
-  ) {
+  logger = inject(LoggerService);
+  store = inject(Store);
+  translationService = inject(TranslateService);
+  titleService = inject(TitleService);
+  activatedRoute = inject(ActivatedRoute);
+  queryParameterService = inject(QueryParameterService);
+  dialog = inject(MatDialog);
+
+  constructor() {
     this.langChangeSubscription =
       this.translationService.onLangChange.subscribe(() =>
         this.loadTranslations()

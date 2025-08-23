@@ -101,7 +101,7 @@ describe('ReadingListEntriesEffects', () => {
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.adSelectedComicBooksToReadingList$).toBeObservable(
+      expect(effects.addSelectedComicBooksToReadingList$).toBeObservable(
         expected
       );
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
@@ -120,7 +120,7 @@ describe('ReadingListEntriesEffects', () => {
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.adSelectedComicBooksToReadingList$).toBeObservable(
+      expect(effects.addSelectedComicBooksToReadingList$).toBeObservable(
         expected
       );
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
@@ -138,7 +138,7 @@ describe('ReadingListEntriesEffects', () => {
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.adSelectedComicBooksToReadingList$).toBeObservable(
+      expect(effects.addSelectedComicBooksToReadingList$).toBeObservable(
         expected
       );
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));

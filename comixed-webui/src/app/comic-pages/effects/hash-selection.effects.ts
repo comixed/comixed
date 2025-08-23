@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
@@ -36,6 +36,12 @@ import { of } from 'rxjs';
 
 @Injectable()
 export class HashSelectionEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  hashSelectionService = inject(HashSelectionService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   loadHashSelections$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadHashSelections),
@@ -66,7 +72,6 @@ export class HashSelectionEffects {
       })
     );
   });
-
   addAllHashes$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(addAllHashesToSelection),
@@ -95,7 +100,6 @@ export class HashSelectionEffects {
       })
     );
   });
-
   addSelection$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(addHashSelection),
@@ -124,7 +128,6 @@ export class HashSelectionEffects {
       })
     );
   });
-
   removeSelection$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(removeHashSelection),
@@ -155,7 +158,6 @@ export class HashSelectionEffects {
       })
     );
   });
-
   clearSelections$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(clearHashSelections),
@@ -184,12 +186,4 @@ export class HashSelectionEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private hashSelectionService: HashSelectionService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

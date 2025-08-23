@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import {
@@ -37,6 +37,12 @@ import { LIBRARY_ORGANIZATION_CONFIG_URL } from '@app/library/library.constants'
 
 @Injectable()
 export class OrganizeLibraryEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  libraryService = inject(LibraryService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   organizeLibrary$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(startLibraryOrganization),
@@ -75,7 +81,6 @@ export class OrganizeLibraryEffects {
       })
     );
   });
-
   organizeEntireLibrary$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(startEntireLibraryOrganization),
@@ -114,12 +119,4 @@ export class OrganizeLibraryEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private libraryService: LibraryService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

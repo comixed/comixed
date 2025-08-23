@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
@@ -34,6 +34,12 @@ import { resetComicFileList } from '@app/comic-files/actions/comic-file-list.act
 
 @Injectable()
 export class ImportComicFilesEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  comicImportService = inject(ComicImportService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   sendComicFiles$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(sendComicFiles),
@@ -76,12 +82,4 @@ export class ImportComicFilesEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private comicImportService: ComicImportService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

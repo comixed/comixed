@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { AlertService } from '@app/core/services/alert.service';
@@ -33,6 +33,12 @@ import { LibraryService } from '@app/library/services/library.service';
 
 @Injectable()
 export class UpdateMetadataEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  libraryService = inject(LibraryService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   updateSingleComicBookMetadata$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(updateSingleComicBookMetadata),
@@ -61,7 +67,6 @@ export class UpdateMetadataEffects {
       catchError(error => this.doGeneralFailure(error))
     );
   });
-
   updateSelectedComicBooksMetadata$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(updateSelectedComicBooksMetadata),
@@ -83,14 +88,6 @@ export class UpdateMetadataEffects {
       catchError(error => this.doGeneralFailure(error))
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private libraryService: LibraryService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 
   private doServiceFailure(error: any) {
     this.logger.error('Service failure:', error);

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -33,6 +33,12 @@ import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class RunLibraryPluginEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  libraryPluginService = inject(LibraryPluginService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   runLibraryPluginOnOneComicBook$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(runLibraryPluginOnOneComicBook),
@@ -80,7 +86,6 @@ export class RunLibraryPluginEffects {
       })
     );
   });
-
   runLibraryPluginOnSelectedComicBooks$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(runLibraryPluginOnSelectedComicBooks),
@@ -125,12 +130,4 @@ export class RunLibraryPluginEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private libraryPluginService: LibraryPluginService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

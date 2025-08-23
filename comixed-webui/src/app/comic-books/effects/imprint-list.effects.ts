@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   imprintsLoaded,
@@ -33,6 +33,12 @@ import { of } from 'rxjs';
 
 @Injectable()
 export class ImprintListEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  imprintService = inject(ImprintService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   loadAll$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadImprints),
@@ -59,12 +65,4 @@ export class ImprintListEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private imprintService: ImprintService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

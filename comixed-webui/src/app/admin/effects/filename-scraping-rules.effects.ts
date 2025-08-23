@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   downloadFilenameScrapingRules,
@@ -44,6 +44,12 @@ import { FileDownloadService } from '@app/core/services/file-download.service';
 
 @Injectable()
 export class FilenameScrapingRulesEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  filenameScrapingRuleService = inject(FilenameScrapingRulesService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   load$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadFilenameScrapingRules),
@@ -76,7 +82,6 @@ export class FilenameScrapingRulesEffects {
       })
     );
   });
-
   save$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(saveFilenameScrapingRules),
@@ -116,41 +121,6 @@ export class FilenameScrapingRulesEffects {
       })
     );
   });
-
-  downloadFile$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(downloadFilenameScrapingRules),
-      tap(() => this.logger.trace('Downloading filename scraping rules file')),
-      switchMap(() =>
-        this.filenameScrapingRuleService.downloadFile().pipe(
-          tap(response => this.logger.debug('Response received:', response)),
-          tap((response: DownloadDocument) =>
-            this.fileDownloadService.saveFile({ document: response })
-          ),
-          map((response: DownloadDocument) =>
-            downloadFilenameScrapingRulesSuccess({ document: response })
-          ),
-          catchError(error => {
-            this.logger.error('Service failure:', error);
-            this.alertService.error(
-              this.translateService.instant(
-                'filename-scraping-rules.download-file.effect-failure'
-              )
-            );
-            return of(downloadFilenameScrapingRulesFailure());
-          })
-        )
-      ),
-      catchError(error => {
-        this.logger.error('General failure:', error);
-        this.alertService.error(
-          this.translateService.instant('app.general-effect-failure')
-        );
-        return of(downloadFilenameScrapingRulesFailure());
-      })
-    );
-  });
-
   uploadFile$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(uploadFilenameScrapingRules),
@@ -190,13 +160,38 @@ export class FilenameScrapingRulesEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private filenameScrapingRuleService: FilenameScrapingRulesService,
-    private alertService: AlertService,
-    private translateService: TranslateService,
-    private fileDownloadService: FileDownloadService
-  ) {}
+  fileDownloadService = inject(FileDownloadService);
+  downloadFile$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(downloadFilenameScrapingRules),
+      tap(() => this.logger.trace('Downloading filename scraping rules file')),
+      switchMap(() =>
+        this.filenameScrapingRuleService.downloadFile().pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          tap((response: DownloadDocument) =>
+            this.fileDownloadService.saveFile({ document: response })
+          ),
+          map((response: DownloadDocument) =>
+            downloadFilenameScrapingRulesSuccess({ document: response })
+          ),
+          catchError(error => {
+            this.logger.error('Service failure:', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'filename-scraping-rules.download-file.effect-failure'
+              )
+            );
+            return of(downloadFilenameScrapingRulesFailure());
+          })
+        )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(downloadFilenameScrapingRulesFailure());
+      })
+    );
+  });
 }

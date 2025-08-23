@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   createLibraryPlugin,
@@ -42,6 +42,12 @@ import { of } from 'rxjs';
 
 @Injectable()
 export class LibraryPluginEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  pluginService = inject(LibraryPluginService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   loadLibraryPluginList$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadLibraryPlugins),
@@ -72,7 +78,6 @@ export class LibraryPluginEffects {
       })
     );
   });
-
   createLibraryPlugin$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(createLibraryPlugin),
@@ -119,7 +124,6 @@ export class LibraryPluginEffects {
       })
     );
   });
-
   updateLibraryPlugin$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(updateLibraryPlugin),
@@ -159,7 +163,6 @@ export class LibraryPluginEffects {
       })
     );
   });
-
   deleteLibraryPlugin$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(deleteLibraryPlugin),
@@ -199,12 +202,4 @@ export class LibraryPluginEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private pluginService: LibraryPluginService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

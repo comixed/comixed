@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { BlockedHashService } from '@app/comic-pages/services/blocked-hash.service';
@@ -32,6 +32,12 @@ import { of } from 'rxjs';
 
 @Injectable()
 export class DeleteBlockedPagesEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  blockedHashService = inject(BlockedHashService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   deleteEntries$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(deleteBlockedPages),
@@ -68,12 +74,4 @@ export class DeleteBlockedPagesEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private blockedHashService: BlockedHashService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

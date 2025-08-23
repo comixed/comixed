@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   deleteComicBooksFailure,
@@ -35,6 +35,12 @@ import { of } from 'rxjs';
 
 @Injectable()
 export class DeleteComicBooksEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  comicService = inject(ComicBookService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   deleteSingleComicBook$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(deleteSingleComicBook),
@@ -69,7 +75,6 @@ export class DeleteComicBooksEffects {
       })
     );
   });
-
   undeleteSingleComicBook$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(undeleteSingleComicBook),
@@ -96,7 +101,6 @@ export class DeleteComicBooksEffects {
       catchError(error => this.doGeneralFailure(error))
     );
   });
-
   deleteSelectedComicBooks$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(deleteSelectedComicBooks),
@@ -121,7 +125,6 @@ export class DeleteComicBooksEffects {
       catchError(error => this.doGeneralFailure(error))
     );
   });
-
   undeleteSelectedComicBooks$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(undeleteSelectedComicBooks),
@@ -146,14 +149,6 @@ export class DeleteComicBooksEffects {
       catchError(error => this.doGeneralFailure(error))
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private comicService: ComicBookService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 
   private doServiceFailure(error: any, deleted: boolean) {
     this.logger.error('Service failure:', error);
