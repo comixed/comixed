@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   markSelectedComicBooksRead,
@@ -33,6 +33,12 @@ import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class ReadComicBooksEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  readComicBooksService = inject(ReadComicBooksService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   setSingleComicBookReadState$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(markSingleComicBookRead),
@@ -71,7 +77,6 @@ export class ReadComicBooksEffects {
       catchError(error => this.doGeneralFailure(error))
     );
   });
-
   setSelectedComicBooksReadState$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(markSelectedComicBooksRead),
@@ -104,14 +109,6 @@ export class ReadComicBooksEffects {
       catchError(error => this.doGeneralFailure(error))
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private readComicBooksService: ReadComicBooksService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 
   private doServiceFailure(error: any, read: boolean, errorMessage: string) {
     this.logger.error('Service failure:', error);

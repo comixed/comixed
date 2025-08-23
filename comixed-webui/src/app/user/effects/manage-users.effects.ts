@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -40,6 +40,12 @@ import { User } from '@app/user/models/user';
 
 @Injectable()
 export class ManageUsersEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  userService = inject(UserService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   loadUserAccountList$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadUserAccountList),
@@ -70,7 +76,6 @@ export class ManageUsersEffects {
       })
     );
   });
-
   saveUserAccount$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(saveUserAccount),
@@ -117,7 +122,6 @@ export class ManageUsersEffects {
       })
     );
   });
-
   deleteUserAccount$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(deleteUserAccount),
@@ -159,12 +163,4 @@ export class ManageUsersEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private userService: UserService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

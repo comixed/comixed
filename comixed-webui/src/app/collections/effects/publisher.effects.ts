@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
@@ -37,6 +37,12 @@ import { LoadPublisherDetailResponse } from '@app/collections/models/net/load-pu
 
 @Injectable()
 export class PublisherEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  publisherService = inject(PublisherService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   loadPublishers$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadPublisherList),
@@ -78,7 +84,6 @@ export class PublisherEffects {
       })
     );
   });
-
   loadPublisherDetail$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadPublisherDetail),
@@ -121,12 +126,4 @@ export class PublisherEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private publisherService: PublisherService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

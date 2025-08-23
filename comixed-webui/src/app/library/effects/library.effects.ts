@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { AlertService } from '@app/core/services/alert.service';
@@ -36,6 +36,12 @@ import { RemoteLibraryState } from '@app/library/models/net/remote-library-state
 
 @Injectable()
 export class LibraryEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  libraryService = inject(LibraryService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   loadLibraryState$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadLibraryState),
@@ -66,7 +72,6 @@ export class LibraryEffects {
       })
     );
   });
-
   editMultipleComics$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(editMultipleComics),
@@ -107,12 +112,4 @@ export class LibraryEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private libraryService: LibraryService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

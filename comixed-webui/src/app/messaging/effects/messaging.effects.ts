@@ -16,13 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
-  startMessagingSuccess,
   messagingStopped,
   startMessaging,
+  startMessagingSuccess,
   stopMessaging
 } from '@app/messaging/actions/messaging.actions';
 import { WebSocketService } from '@app/messaging/services/web-socket.service';
@@ -31,6 +31,10 @@ import { of } from 'rxjs';
 
 @Injectable()
 export class MessagingEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  webSocketService = inject(WebSocketService);
+
   startMessaging$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(startMessaging),
@@ -44,7 +48,6 @@ export class MessagingEffects {
       })
     );
   });
-
   stopMessaging$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(stopMessaging),
@@ -58,10 +61,4 @@ export class MessagingEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private webSocketService: WebSocketService
-  ) {}
 }

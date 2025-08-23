@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -47,6 +47,12 @@ import { LoadMultiBookScrapingResponse } from '@app/comic-metadata/models/net/lo
 
 @Injectable()
 export class MultiBookScrapingEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  comicBookScrapingService = inject(ComicBookScrapingService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   startMultiBookScraping$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(startMultiBookScraping),
@@ -84,7 +90,6 @@ export class MultiBookScrapingEffects {
       })
     );
   });
-
   loadMultiBookScrapingPage$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadMultiBookScrapingPage),
@@ -130,7 +135,6 @@ export class MultiBookScrapingEffects {
       })
     );
   });
-
   removeMultiBookComic$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(multiBookScrapingRemoveBook),
@@ -183,7 +187,6 @@ export class MultiBookScrapingEffects {
       })
     );
   });
-
   multiBookScrapeComic$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(multiBookScrapeComic),
@@ -234,7 +237,6 @@ export class MultiBookScrapingEffects {
       })
     );
   });
-
   batchScrapeComicBooks$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(batchScrapeComicBooks),
@@ -270,12 +272,4 @@ export class MultiBookScrapingEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private comicBookScrapingService: ComicBookScrapingService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

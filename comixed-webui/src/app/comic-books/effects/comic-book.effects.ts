@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { TranslateService } from '@ngx-translate/core';
@@ -46,6 +46,12 @@ import { FileDownloadService } from '@app/core/services/file-download.service';
 
 @Injectable()
 export class ComicBookEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  comicService = inject(ComicBookService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   loadOne$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadComicBook),
@@ -76,7 +82,6 @@ export class ComicBookEffects {
       })
     );
   });
-
   saveOne$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(updateComicBook),
@@ -114,7 +119,6 @@ export class ComicBookEffects {
       })
     );
   });
-
   updatePageDeletion$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(updatePageDeletion),
@@ -160,7 +164,6 @@ export class ComicBookEffects {
       })
     );
   });
-
   savePageOrder$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(savePageOrder),
@@ -201,7 +204,7 @@ export class ComicBookEffects {
       })
     );
   });
-
+  fileDownloadService = inject(FileDownloadService);
   downloadComicBook$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(downloadComicBook),
@@ -235,13 +238,4 @@ export class ComicBookEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private comicService: ComicBookService,
-    private alertService: AlertService,
-    private translateService: TranslateService,
-    private fileDownloadService: FileDownloadService
-  ) {}
 }

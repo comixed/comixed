@@ -19,6 +19,7 @@
 import {
   AfterViewInit,
   Component,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild
@@ -40,7 +41,6 @@ import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { TitleService } from '@app/core/services/title.service';
 import { setBusyState } from '@app/core/actions/busy.actions';
-import { ConfirmationService } from '@tragically-slick/confirmation';
 import { MatSort } from '@angular/material/sort';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
@@ -49,9 +49,10 @@ import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@app/core';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { PREFERENCE_PAGE_SIZE } from '@app/comic-files/comic-file.constants';
 import {
-  selectBlockedHashesState,
-  selectBlockedHashesList
+  selectBlockedHashesList,
+  selectBlockedHashesState
 } from '@app/comic-pages/selectors/blocked-hashes.selectors';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-blocked-hash-list',
@@ -82,17 +83,16 @@ export class BlockedHashListPageComponent
   ];
   hasSelections = false;
   allSelected = false;
+  queryParameterService = inject(QueryParameterService);
+  logger = inject(LoggerService);
+  store = inject(Store<any>);
+  router = inject(Router);
+  confirmationService = inject(ConfirmationService);
+  translateService = inject(TranslateService);
+  titleService = inject(TitleService);
   private _blockedHashes: BlockedHash[] = [];
 
-  constructor(
-    public queryParameterService: QueryParameterService,
-    private logger: LoggerService,
-    private store: Store<any>,
-    private router: Router,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService,
-    private titleService: TitleService
-  ) {
+  constructor() {
     this.hashStateSubscription = this.store
       .select(selectBlockedHashesState)
       .subscribe(state => {

@@ -16,16 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions } from '@ngrx/effects';
 import { ProcessComicsService } from '@app/services/process-comics.service';
 import { LoggerService } from '@angular-ru/cdk/logger';
 
 @Injectable()
 export class ImportCountEffects {
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private importCountService: ProcessComicsService
-  ) {}
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  importCountService = inject(ProcessComicsService);
 }

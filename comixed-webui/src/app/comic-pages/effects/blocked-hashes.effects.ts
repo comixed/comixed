@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { BlockedHashService } from '@app/comic-pages/services/blocked-hash.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -55,6 +55,12 @@ import { loadHashSelectionsSuccess } from '@app/comic-pages/actions/hash-selecti
 
 @Injectable()
 export class BlockedHashesEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  blockedHashService = inject(BlockedHashService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   loadAll$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadBlockedHashList),
@@ -116,7 +122,6 @@ export class BlockedHashesEffects {
       })
     );
   });
-
   save$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(saveBlockedHash),
@@ -154,7 +159,6 @@ export class BlockedHashesEffects {
       })
     );
   });
-
   markPagesWithHash$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(markPagesWithHash),
@@ -199,41 +203,6 @@ export class BlockedHashesEffects {
       })
     );
   });
-
-  downloadFile$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(downloadBlockedHashesFile),
-      tap(action => this.logger.debug('download blocked pages file:', action)),
-      switchMap(action =>
-        this.blockedHashService.downloadFile().pipe(
-          tap(response => this.logger.debug('Response received:', response)),
-          tap((response: DownloadDocument) =>
-            this.fileDownloadService.saveFile({ document: response })
-          ),
-          map((response: DownloadDocument) =>
-            downloadBlockedHashesFileSuccess({ document: response })
-          ),
-          catchError(error => {
-            this.logger.error('Service failure:', error);
-            this.alertService.error(
-              this.translateService.instant(
-                'blocked-hash-list.download-file.effect-failure'
-              )
-            );
-            return of(downloadBlockedHashesFileFailure());
-          })
-        )
-      ),
-      catchError(error => {
-        this.logger.error('General failure:', error);
-        this.alertService.error(
-          this.translateService.instant('app.general-effect-failure')
-        );
-        return of(downloadBlockedHashesFileFailure());
-      })
-    );
-  });
-
   uploadFile$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(uploadBlockedHashesFile),
@@ -273,7 +242,6 @@ export class BlockedHashesEffects {
       })
     );
   });
-
   setBlockedStateForSelections$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(setBlockedStateForSelectedHashes),
@@ -318,7 +286,6 @@ export class BlockedHashesEffects {
       })
     );
   });
-
   setBlockedState$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(setBlockedStateForHash),
@@ -358,13 +325,38 @@ export class BlockedHashesEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private blockedHashService: BlockedHashService,
-    private alertService: AlertService,
-    private translateService: TranslateService,
-    private fileDownloadService: FileDownloadService
-  ) {}
+  fileDownloadService = inject(FileDownloadService);
+  downloadFile$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(downloadBlockedHashesFile),
+      tap(action => this.logger.debug('download blocked pages file:', action)),
+      switchMap(action =>
+        this.blockedHashService.downloadFile().pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          tap((response: DownloadDocument) =>
+            this.fileDownloadService.saveFile({ document: response })
+          ),
+          map((response: DownloadDocument) =>
+            downloadBlockedHashesFileSuccess({ document: response })
+          ),
+          catchError(error => {
+            this.logger.error('Service failure:', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'blocked-hash-list.download-file.effect-failure'
+              )
+            );
+            return of(downloadBlockedHashesFileFailure());
+          })
+        )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(downloadBlockedHashesFileFailure());
+      })
+    );
+  });
 }

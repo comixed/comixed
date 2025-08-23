@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   rescanComicBooksFailure,
@@ -33,6 +33,12 @@ import { of } from 'rxjs';
 
 @Injectable()
 export class RescanComicsEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  libraryService = inject(LibraryService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   rescanSingleComicBook$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(rescanSingleComicBook),
@@ -56,7 +62,6 @@ export class RescanComicsEffects {
       catchError(error => this.doGeneralFailure(error))
     );
   });
-
   rescanSelectedComicBooks$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(rescanSelectedComicBooks),
@@ -78,14 +83,6 @@ export class RescanComicsEffects {
       catchError(error => this.doGeneralFailure(error))
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private libraryService: LibraryService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 
   private doServiceFailure(error: any) {
     this.logger.error('Service failure:', error);

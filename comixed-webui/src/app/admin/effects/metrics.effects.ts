@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   loadMetricDetails,
@@ -37,6 +37,12 @@ import { MetricDetail } from '@app/admin/models/metric-detail';
 
 @Injectable()
 export class MetricsEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  metricsService = inject(MetricsService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   loadMetricList$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadMetricList),
@@ -65,7 +71,6 @@ export class MetricsEffects {
       })
     );
   });
-
   loadMetricDetail$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadMetricDetails),
@@ -97,12 +102,4 @@ export class MetricsEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private metricsService: MetricsService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

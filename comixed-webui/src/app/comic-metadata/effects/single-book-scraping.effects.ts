@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   clearMetadataCache,
@@ -50,6 +50,12 @@ import {
 
 @Injectable()
 export class SingleBookScrapingEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  metadataService = inject(ComicBookScrapingService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   loadScrapingVolumes$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadVolumeMetadata),
@@ -91,7 +97,6 @@ export class SingleBookScrapingEffects {
       })
     );
   });
-
   loadScrapingIssue$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadIssueMetadata),
@@ -129,7 +134,6 @@ export class SingleBookScrapingEffects {
       })
     );
   });
-
   scrapeSingleComicBook$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(scrapeSingleComicBook),
@@ -177,7 +181,6 @@ export class SingleBookScrapingEffects {
       })
     );
   });
-
   startMetadataUpdateProcess$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(startMetadataUpdateProcess),
@@ -222,7 +225,6 @@ export class SingleBookScrapingEffects {
       })
     );
   });
-
   clearCache$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(clearMetadataCache),
@@ -258,12 +260,4 @@ export class SingleBookScrapingEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private metadataService: ComicBookScrapingService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

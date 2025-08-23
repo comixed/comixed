@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions } from '@ngrx/effects';
 
 @Injectable()
 export class AppEffects {
-  constructor(private actions$: Actions) {}
+  actions$ = inject(Actions);
 }

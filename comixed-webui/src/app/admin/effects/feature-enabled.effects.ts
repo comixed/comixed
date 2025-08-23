@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
@@ -33,6 +33,12 @@ import { of } from 'rxjs';
 
 @Injectable()
 export class FeatureEnabledEffects {
+  actions$ = inject(Actions);
+  logger = inject(LoggerService);
+  configurationService = inject(ConfigurationService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   getFeatureEnabled$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(getFeatureEnabled),
@@ -68,12 +74,4 @@ export class FeatureEnabledEffects {
       })
     );
   });
-
-  constructor(
-    private actions$: Actions,
-    private logger: LoggerService,
-    private configurationService: ConfigurationService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

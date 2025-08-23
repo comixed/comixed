@@ -16,12 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
-  scrapeMetadataFromFilenameSuccess,
   scrapeMetadataFromFilename,
-  scrapeMetadataFromFilenameFailure
+  scrapeMetadataFromFilenameFailure,
+  scrapeMetadataFromFilenameSuccess
 } from '../actions/scrape-metadata.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from '@app/core/services/alert.service';
@@ -33,6 +33,12 @@ import { of } from 'rxjs';
 
 @Injectable()
 export class ScrapeMetadataEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  comicImportService = inject(ComicImportService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   scrapeFilename$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(scrapeMetadataFromFilename),
@@ -76,12 +82,4 @@ export class ScrapeMetadataEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private comicImportService: ComicImportService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import {
@@ -48,6 +48,9 @@ import { setReadComicBooks } from '@app/user/actions/read-comic-books.actions';
 
 @Injectable()
 export class UserEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  userService = inject(UserService);
   loadCurrentUser$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadCurrentUser),
@@ -71,70 +74,6 @@ export class UserEffects {
       })
     );
   });
-
-  loginUser$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(loginUser),
-      tap(action => this.logger.debug('Effect: logging in user:', action)),
-      switchMap(action =>
-        this.userService
-          .loginUser({ email: action.email, password: action.password })
-          .pipe(
-            tap(response => this.logger.debug('Received response:', response)),
-            tap((response: LoginResponse) =>
-              this.tokenService.setAuthToken(response.token)
-            ),
-            mergeMap((response: LoginResponse) => [
-              loginUserSuccess(),
-              loadCurrentUser()
-            ]),
-            catchError(error => {
-              this.logger.error('Service failure:', error);
-              this.tokenService.clearAuthToken();
-              this.alertService.error(
-                this.translateService.instant('user.login-user.effect-failure')
-              );
-              return of(loginUserFailure());
-            })
-          )
-      ),
-      catchError(error => {
-        this.logger.error('General failure:', error);
-        this.tokenService.clearAuthToken();
-        this.alertService.error(
-          this.translateService.instant('app.general-effect-failure')
-        );
-        return of(loginUserFailure());
-      })
-    );
-  });
-
-  logoutUser$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(logoutUser),
-      tap(action => this.logger.trace('Logout out user:', action)),
-      // we clear the auth token before calling the logout endpoint so that we don't get re-authenticated
-      // tap(() => this.tokenService.clearAuthToken()),
-      switchMap(() => {
-        this.tokenService.clearAuthToken();
-        this.userService.logoutUser().subscribe(() => {
-          this.alertService.info(
-            this.translateService.instant('user.logout-user.effect-success')
-          );
-          this.router.navigateByUrl('/');
-        });
-        return of(logoutUserSuccess());
-      }),
-      catchError(error => {
-        this.logger.error('General failure:', error);
-        this.alertService.error(
-          this.translateService.instant('app,.general-effect-failure')
-        );
-        return of(logoutUserFailure());
-      })
-    );
-  });
-
   saveUserPreference$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(saveUserPreference),
@@ -159,7 +98,8 @@ export class UserEffects {
       })
     );
   });
-
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
   saveCurrentUser$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(saveCurrentUser),
@@ -197,14 +137,67 @@ export class UserEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private userService: UserService,
-    private alertService: AlertService,
-    private translateService: TranslateService,
-    private tokenService: TokenService,
-    private router: Router
-  ) {}
+  tokenService = inject(TokenService);
+  loginUser$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(loginUser),
+      tap(action => this.logger.debug('Effect: logging in user:', action)),
+      switchMap(action =>
+        this.userService
+          .loginUser({ email: action.email, password: action.password })
+          .pipe(
+            tap(response => this.logger.debug('Received response:', response)),
+            tap((response: LoginResponse) =>
+              this.tokenService.setAuthToken(response.token)
+            ),
+            mergeMap((response: LoginResponse) => [
+              loginUserSuccess(),
+              loadCurrentUser()
+            ]),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.tokenService.clearAuthToken();
+              this.alertService.error(
+                this.translateService.instant('user.login-user.effect-failure')
+              );
+              return of(loginUserFailure());
+            })
+          )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.tokenService.clearAuthToken();
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(loginUserFailure());
+      })
+    );
+  });
+  router = inject(Router);
+  logoutUser$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(logoutUser),
+      tap(action => this.logger.trace('Logout out user:', action)),
+      // we clear the auth token before calling the logout endpoint so that we don't get re-authenticated
+      // tap(() => this.tokenService.clearAuthToken()),
+      switchMap(() => {
+        this.tokenService.clearAuthToken();
+        this.userService.logoutUser().subscribe(() => {
+          this.alertService.info(
+            this.translateService.instant('user.logout-user.effect-success')
+          );
+          this.router.navigateByUrl('/');
+        });
+        return of(logoutUserSuccess());
+      }),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app,.general-effect-failure')
+        );
+        return of(logoutUserFailure());
+      })
+    );
+  });
 }

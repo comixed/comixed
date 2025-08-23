@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   clearMetadataSource,
@@ -41,6 +41,12 @@ import { metadataSourcesLoaded } from '@app/comic-metadata/actions/metadata-sour
 
 @Injectable()
 export class MetadataSourceEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  metadataSourceService = inject(MetadataSourceService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   loadOne$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadMetadataSource),
@@ -71,7 +77,6 @@ export class MetadataSourceEffects {
       })
     );
   });
-
   save$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(saveMetadataSource),
@@ -112,7 +117,6 @@ export class MetadataSourceEffects {
       })
     );
   });
-
   delete$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(deleteMetadataSource),
@@ -153,12 +157,4 @@ export class MetadataSourceEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private metadataSourceService: MetadataSourceService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, HostBinding, OnInit } from '@angular/core';
+import { Component, HostBinding, inject, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LoggerLevel, LoggerService } from '@angular-ru/cdk/logger';
 import { selectUser } from '@app/user/selectors/user.selectors';
@@ -70,13 +70,13 @@ export class AppComponent implements OnInit {
   busyIcon = BusyIcon.DEFAULT;
   appMessagingSubscription: Subscription | null = null;
 
-  constructor(
-    private logger: LoggerService,
-    private translateService: TranslateService,
-    private store: Store<any>,
-    private webSocketService: WebSocketService,
-    private alertService: AlertService
-  ) {
+  logger = inject(LoggerService);
+  translateService = inject(TranslateService);
+  store = inject(Store);
+  webSocketService = inject(WebSocketService);
+  alertService = inject(AlertService);
+
+  constructor() {
     this.logger.level = LoggerLevel.INFO;
     this.translateService.use('en');
     this.logger.trace('Subscribing to user changes');

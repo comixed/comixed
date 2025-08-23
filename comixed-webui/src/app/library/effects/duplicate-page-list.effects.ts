@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   loadDuplicatePageList,
@@ -33,6 +33,12 @@ import { LoadDuplicatePageListResponse } from '@app/library/models/net/load-dupl
 
 @Injectable()
 export class DuplicatePageListEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  duplicatePageService = inject(DuplicatePageService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   loadComicsWithDuplicatePages$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadDuplicatePageList),
@@ -78,12 +84,4 @@ export class DuplicatePageListEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private duplicatePageService: DuplicatePageService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

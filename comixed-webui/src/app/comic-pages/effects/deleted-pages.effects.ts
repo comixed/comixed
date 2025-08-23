@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   deletedPagesLoaded,
@@ -33,6 +33,12 @@ import { of } from 'rxjs';
 
 @Injectable()
 export class DeletedPagesEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  deletedPagesService = inject(DeletedPagesService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   loadedDeletedPages$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadDeletedPages),
@@ -63,12 +69,4 @@ export class DeletedPagesEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private deletedPagesService: DeletedPagesService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

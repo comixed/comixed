@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   duplicatePageDetailLoaded,
@@ -33,6 +33,12 @@ import { of } from 'rxjs';
 
 @Injectable()
 export class DuplicatePageDetailEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  duplicatePageService = inject(DuplicatePageService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   loadDuplicatePageDetail$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadDuplicatePageDetail),
@@ -68,12 +74,4 @@ export class DuplicatePageDetailEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private duplicatePageService: DuplicatePageService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }

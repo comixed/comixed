@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ReleaseService } from '@app/services/release.service';
@@ -37,6 +37,12 @@ import { LatestRelease } from '@app/models/latest-release';
 
 @Injectable()
 export class ReleaseEffects {
+  logger = inject(LoggerService);
+  actions$ = inject(Actions);
+  buildDetailsService = inject(ReleaseService);
+  alertService = inject(AlertService);
+  translateService = inject(TranslateService);
+
   loadCurrentRelease$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadCurrentReleaseDetails),
@@ -69,7 +75,6 @@ export class ReleaseEffects {
       })
     );
   });
-
   loadLatestRelease$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadLatestReleaseDetails),
@@ -102,12 +107,4 @@ export class ReleaseEffects {
       })
     );
   });
-
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private buildDetailsService: ReleaseService,
-    private alertService: AlertService,
-    private translateService: TranslateService
-  ) {}
 }
