@@ -28,7 +28,7 @@ import { Subscription } from 'rxjs';
 import { ComicFile } from '@app/comic-files/models/comic-file';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { filter } from 'rxjs/operators';
 import { getUserPreference } from '@app/user';
@@ -46,9 +46,27 @@ import { User } from '@app/user/models/user';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { PAGE_SIZE_DEFAULT } from '@app/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatMenuTrigger } from '@angular/material/menu';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import {
+  MatMenuTrigger,
+  MatMenu,
+  MatMenuContent,
+  MatMenuItem
+} from '@angular/material/menu';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow,
+  MatNoDataRow
+} from '@angular/material/table';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import {
@@ -66,12 +84,58 @@ import { selectFeatureEnabledState } from '@app/admin/selectors/feature-enabled.
 import { hasFeature, isFeatureEnabled } from '@app/admin';
 import { BLOCKED_PAGES_ENABLED } from '@app/admin/admin.constants';
 import { getFeatureEnabled } from '@app/admin/actions/feature-enabled.actions';
+import { MatFabButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import {
+  MatCardTitle,
+  MatCardSubtitle,
+  MatCard,
+  MatCardContent
+} from '@angular/material/card';
+import { ComicFileLoaderComponent } from '../../components/comic-file-loader/comic-file-loader.component';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatLabel } from '@angular/material/form-field';
+import { AsyncPipe, DecimalPipe } from '@angular/common';
+import { ComicFileCoverUrlPipe } from '../../pipes/comic-file-cover-url.pipe';
 
 @Component({
   selector: 'cx-import-comics',
   templateUrl: './import-comics-page.component.html',
   styleUrls: ['./import-comics-page.component.scss'],
-  standalone: false
+  imports: [
+    MatFabButton,
+    MatTooltip,
+    MatIcon,
+    MatCardTitle,
+    MatCardSubtitle,
+    MatCard,
+    MatCardContent,
+    ComicFileLoaderComponent,
+    MatPaginator,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCheckbox,
+    MatCellDef,
+    MatCell,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatNoDataRow,
+    MatMenu,
+    MatMenuContent,
+    MatMenuItem,
+    MatLabel,
+    AsyncPipe,
+    DecimalPipe,
+    TranslateModule,
+    ComicFileCoverUrlPipe
+  ]
 })
 export class ImportComicsPageComponent
   implements OnInit, OnDestroy, AfterViewInit

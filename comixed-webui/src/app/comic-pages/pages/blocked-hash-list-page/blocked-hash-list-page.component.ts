@@ -27,21 +27,33 @@ import {
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
-import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow
+} from '@angular/material/table';
+import { Router, RouterLink } from '@angular/router';
 import {
   downloadBlockedHashesFile,
   loadBlockedHashList,
   markPagesWithHash,
   uploadBlockedHashesFile
 } from '@app/comic-pages/actions/blocked-hashes.actions';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { deleteBlockedPages } from '@app/comic-pages/actions/delete-blocked-pages.actions';
 import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { TitleService } from '@app/core/services/title.service';
 import { setBusyState } from '@app/core/actions/busy.actions';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
 import { MatPaginator } from '@angular/material/paginator';
@@ -53,12 +65,41 @@ import {
   selectBlockedHashesState
 } from '@app/comic-pages/selectors/blocked-hashes.selectors';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import { MatFabButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { AsyncPipe, DatePipe } from '@angular/common';
+import { BlockedHashThumbnailUrlPipe } from '../../pipes/blocked-hash-thumbnail-url.pipe';
 
 @Component({
   selector: 'cx-blocked-hash-list',
   templateUrl: './blocked-hash-list-page.component.html',
   styleUrls: ['./blocked-hash-list-page.component.scss'],
-  standalone: false
+  imports: [
+    MatFabButton,
+    MatTooltip,
+    MatIcon,
+    MatPaginator,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCheckbox,
+    MatCellDef,
+    MatCell,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    RouterLink,
+    AsyncPipe,
+    DatePipe,
+    TranslateModule,
+    BlockedHashThumbnailUrlPipe
+  ]
 })
 export class BlockedHashListPageComponent
   implements OnInit, AfterViewInit, OnDestroy

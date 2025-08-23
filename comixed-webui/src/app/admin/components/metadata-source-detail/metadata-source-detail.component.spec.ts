@@ -55,7 +55,6 @@ describe('MetadataSourceDetailComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MetadataSourceDetailComponent],
       imports: [
         NoopAnimationsModule,
         FormsModule,
@@ -69,7 +68,8 @@ describe('MetadataSourceDetailComponent', () => {
         MatDialogModule,
         MatIconModule,
         MatCardModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        MetadataSourceDetailComponent
       ],
       providers: [
         provideMockStore({ initialState }),

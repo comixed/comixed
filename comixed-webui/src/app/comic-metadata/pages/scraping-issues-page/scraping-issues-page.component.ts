@@ -20,7 +20,7 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import {
   MATCH_PUBLISHER_PREFERENCE,
   MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
@@ -57,15 +57,71 @@ import {
 } from '@app/comic-metadata/actions/multi-book-scraping.actions';
 import { MultiBookScrapingState } from '@app/comic-metadata/reducers/multi-book-scraping.reducer';
 import { selectMetadataSourceListState } from '@app/comic-metadata/selectors/metadata-source-list.selectors';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow
+} from '@angular/material/table';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import {
+  MatCard,
+  MatCardTitle,
+  MatCardSubtitle,
+  MatCardContent
+} from '@angular/material/card';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatLabel } from '@angular/material/form-field';
+import { MatTooltip } from '@angular/material/tooltip';
+import { ComicScrapingComponent } from '../../../comic-books/components/comic-scraping/comic-scraping.component';
+import { MatPaginator } from '@angular/material/paginator';
+import { ComicScrapingVolumeSelectionComponent } from '../../../comic-books/components/comic-scraping-volume-selection/comic-scraping-volume-selection.component';
+import { AsyncPipe } from '@angular/common';
+import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
+import { ComicDetailCoverUrlPipe } from '@app/comic-books/pipes/comic-detail-cover-url.pipe';
 
 @Component({
   selector: 'cx-scraping-issues-page',
   templateUrl: './scraping-issues-page.component.html',
   styleUrls: ['./scraping-issues-page.component.scss'],
-  standalone: false
+  imports: [
+    MatCard,
+    MatCardTitle,
+    MatCardSubtitle,
+    MatCardContent,
+    MatButton,
+    RouterLink,
+    MatIcon,
+    MatLabel,
+    MatTooltip,
+    ComicScrapingComponent,
+    MatPaginator,
+    MatTable,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    MatIconButton,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    ComicScrapingVolumeSelectionComponent,
+    AsyncPipe,
+    TranslateModule,
+    ComicTitlePipe,
+    ComicDetailCoverUrlPipe
+  ]
 })
 export class ScrapingIssuesPageComponent implements OnInit, OnDestroy {
   readonly displayColumns = [

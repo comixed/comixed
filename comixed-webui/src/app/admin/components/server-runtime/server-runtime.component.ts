@@ -17,7 +17,7 @@
  */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
@@ -31,12 +31,26 @@ import {
 } from '@app/admin/actions/server-runtime.actions';
 import { ServerHealth } from '@app/admin/models/server-health';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import { MatFabButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MatCard, MatCardTitle, MatCardContent } from '@angular/material/card';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'cx-server-runtime',
   templateUrl: './server-runtime.component.html',
   styleUrls: ['./server-runtime.component.scss'],
-  standalone: false
+  imports: [
+    MatFabButton,
+    MatTooltip,
+    MatIcon,
+    MatCard,
+    MatCardTitle,
+    MatCardContent,
+    DecimalPipe,
+    TranslateModule
+  ]
 })
 export class ServerRuntimeComponent implements OnInit, OnDestroy {
   shuttingDown = false;

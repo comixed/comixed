@@ -27,22 +27,72 @@ import {
 } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { MatMenuTrigger } from '@angular/material/menu';
+import {
+  MatMenuTrigger,
+  MatMenu,
+  MatMenuContent,
+  MatMenuItem
+} from '@angular/material/menu';
 import { ComicPage } from '@app/comic-books/models/comic-page';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { updatePageDeletion } from '@app/comic-books/actions/comic-book.actions';
-import { MatTableDataSource } from '@angular/material/table';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow
+} from '@angular/material/table';
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  CdkDropList,
+  CdkDrag
+} from '@angular/cdk/drag-drop';
 import * as _ from 'lodash';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { setBlockedStateForHash } from '@app/comic-pages/actions/blocked-hashes.actions';
+import { ComicPageComponent } from '../comic-page/comic-page.component';
+import { MatIcon } from '@angular/material/icon';
+import { MatLabel } from '@angular/material/form-field';
+import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
 
 @Component({
   selector: 'cx-comic-pages',
   templateUrl: './comic-pages.component.html',
   styleUrls: ['./comic-pages.component.scss'],
-  standalone: false
+  imports: [
+    ComicPageComponent,
+    MatTable,
+    CdkDropList,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCellDef,
+    MatCell,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    CdkDrag,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuContent,
+    MatMenuItem,
+    MatIcon,
+    MatLabel,
+    TranslateModule,
+    ComicPageUrlPipe
+  ]
 })
 export class ComicPagesComponent implements AfterViewInit {
   @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;

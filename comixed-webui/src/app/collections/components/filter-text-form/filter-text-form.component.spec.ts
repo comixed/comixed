@@ -34,13 +34,13 @@ describe('FilterTextFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [FilterTextFormComponent],
       imports: [
         FormsModule,
         ReactiveFormsModule,
         RouterModule.forRoot([]),
         LoggerModule.forRoot(),
-        TranslateModule.forRoot()
+        TranslateModule.forRoot(),
+        FilterTextFormComponent
       ],
       providers: [QueryParameterService]
     }).compileComponents();

@@ -132,15 +132,6 @@ describe('StoryDetailPageComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        StoryDetailPageComponent,
-        StoryScrapingComponent,
-        ComicListViewComponent,
-        ComicTitlePipe,
-        ComicCoverUrlPipe,
-        ArchiveTypePipe,
-        CoverDateFilterPipe
-      ],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
@@ -160,7 +151,14 @@ describe('StoryDetailPageComponent', () => {
         MatPaginatorModule,
         MatInputModule,
         MatTableModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        StoryDetailPageComponent,
+        StoryScrapingComponent,
+        ComicListViewComponent,
+        ComicTitlePipe,
+        ComicCoverUrlPipe,
+        ArchiveTypePipe,
+        CoverDateFilterPipe
       ],
       providers: [
         provideMockStore({ initialState }),

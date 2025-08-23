@@ -58,12 +58,12 @@ describe('BatchProcessDetailDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [BatchProcessDetailPageComponent],
       imports: [
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatListModule,
-        MatDialogModule
+        MatDialogModule,
+        BatchProcessDetailPageComponent
       ],
       providers: [
         provideMockStore({ initialState }),

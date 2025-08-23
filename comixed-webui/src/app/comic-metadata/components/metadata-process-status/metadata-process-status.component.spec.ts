@@ -34,11 +34,11 @@ describe('MetadataProcessStatusComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MetadataProcessStatusComponent],
       imports: [
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
-        MatProgressBarModule
+        MatProgressBarModule,
+        MetadataProcessStatusComponent
       ]
     }).compileComponents();
 

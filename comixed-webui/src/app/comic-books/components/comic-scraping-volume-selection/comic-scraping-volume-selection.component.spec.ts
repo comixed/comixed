@@ -85,10 +85,6 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        ComicScrapingVolumeSelectionComponent,
-        VolumeMetadataTitlePipe
-      ],
       imports: [
         NoopAnimationsModule,
         LoggerModule.forRoot(),
@@ -101,7 +97,9 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
         MatFormFieldModule,
         MatPaginatorModule,
         MatTooltipModule,
-        MatInputModule
+        MatInputModule,
+        ComicScrapingVolumeSelectionComponent,
+        VolumeMetadataTitlePipe
       ],
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();

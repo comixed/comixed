@@ -44,7 +44,6 @@ describe('CollectionsChartComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CollectionsChartComponent],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
@@ -52,7 +51,8 @@ describe('CollectionsChartComponent', () => {
         TranslateModule.forRoot(),
         NgxChartsModule,
         MatFormFieldModule,
-        MatSelectModule
+        MatSelectModule,
+        CollectionsChartComponent
       ]
     }).compileComponents();
 

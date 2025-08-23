@@ -23,12 +23,29 @@ import {
   CreditTags
 } from '@app/comic-books/models/comic-tag-type';
 import { ComicTag } from '@app/comic-books/models/comic-tag';
+import {
+  MatAccordion,
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle
+} from '@angular/material/expansion';
+import { ComicDetailCardComponent } from '../comic-detail-card/comic-detail-card.component';
+import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'cx-comic-story',
   templateUrl: './comic-story.component.html',
   styleUrls: ['./comic-story.component.scss'],
-  standalone: false
+  imports: [
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    ComicDetailCardComponent,
+    RouterLink,
+    TranslateModule
+  ]
 })
 export class ComicStoryComponent {
   credits: ComicTag[] = [];

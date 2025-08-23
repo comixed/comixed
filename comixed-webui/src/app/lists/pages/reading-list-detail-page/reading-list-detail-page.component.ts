@@ -21,7 +21,7 @@ import { Subscription } from 'rxjs';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   createReadingList,
   loadReadingList,
@@ -37,10 +37,11 @@ import { ReadingList } from '@app/lists/models/reading-list';
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators
+  Validators,
+  ReactiveFormsModule
 } from '@angular/forms';
 import { filter } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { removeSelectedComicBooksFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import {
@@ -68,12 +69,28 @@ import { selectComicList } from '@app/comic-books/selectors/comic-list.selectors
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import { interpolate } from '@app/core';
 import { selectUser } from '@app/user/selectors/user.selectors';
+import { MatFabButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { ComicListViewComponent } from '../../../comic-books/components/comic-list-view/comic-list-view.component';
 
 @Component({
   selector: 'cx-user-reading-list-page',
   templateUrl: './reading-list-detail-page.component.html',
   styleUrls: ['./reading-list-detail-page.component.scss'],
-  standalone: false
+  imports: [
+    MatFabButton,
+    RouterLink,
+    MatTooltip,
+    MatIcon,
+    ReactiveFormsModule,
+    MatFormField,
+    MatInput,
+    ComicListViewComponent,
+    TranslateModule
+  ]
 })
 export class ReadingListDetailPageComponent implements OnDestroy {
   dataSource = new MatTableDataSource<SelectableListItem<DisplayableComic>>([]);

@@ -56,12 +56,6 @@ import { hashSelectionFeature } from '@app/comic-pages/reducers/hash-selection.r
 import { HashSelectionEffects } from '@app/comic-pages/effects/hash-selection.effects';
 
 @NgModule({
-  declarations: [
-    BlockedHashListPageComponent,
-    BlockedHashDetailPageComponent,
-    DeletedPageListPageComponent,
-    BlockedHashThumbnailUrlPipe
-  ],
   imports: [
     CommonModule,
     ComicPagesRouting,
@@ -92,7 +86,11 @@ import { HashSelectionEffects } from '@app/comic-pages/effects/hash-selection.ef
     MatTooltipModule,
     ComicBooksModule,
     MatSortModule,
-    MatDividerModule
+    MatDividerModule,
+    BlockedHashListPageComponent,
+    BlockedHashDetailPageComponent,
+    DeletedPageListPageComponent,
+    BlockedHashThumbnailUrlPipe
   ],
   exports: [CommonModule]
 })

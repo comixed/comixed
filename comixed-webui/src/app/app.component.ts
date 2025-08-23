@@ -50,12 +50,31 @@ import { selectMessagingState } from '@app/messaging/selectors/messaging.selecto
 import { WebSocketService } from '@app/messaging';
 import { AlertService } from '@app/core/services/alert.service';
 import { filter } from 'rxjs/operators';
+import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
+import {
+  MatSidenavContainer,
+  MatSidenav,
+  MatSidenavContent
+} from '@angular/material/sidenav';
+import { SideNavigationComponent } from './components/side-navigation/side-navigation.component';
+import { EditAccountBarComponent } from './user/components/edit-account-bar/edit-account-bar.component';
+import { RouterOutlet } from '@angular/router';
+import { FooterComponent } from './components/footer/footer.component';
 
 @Component({
   selector: 'cx-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  standalone: false
+  imports: [
+    NavigationBarComponent,
+    MatSidenavContainer,
+    MatSidenav,
+    SideNavigationComponent,
+    EditAccountBarComponent,
+    MatSidenavContent,
+    RouterOutlet,
+    FooterComponent
+  ]
 })
 export class AppComponent implements OnInit {
   @HostBinding('class') currentTheme: 'lite-theme' | 'dark-theme' =

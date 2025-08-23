@@ -150,11 +150,6 @@ describe('DuplicatePageListPageComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        DuplicatePageListPageComponent,
-        PageHashUrlPipe,
-        YesNoPipe
-      ],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
@@ -167,7 +162,10 @@ describe('DuplicatePageListPageComponent', () => {
         MatTooltipModule,
         MatTableModule,
         MatCheckboxModule,
-        MatSortModule
+        MatSortModule,
+        DuplicatePageListPageComponent,
+        PageHashUrlPipe,
+        YesNoPipe
       ],
       providers: [
         provideMockStore({ initialState }),

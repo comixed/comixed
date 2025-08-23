@@ -53,7 +53,6 @@ describe('CreatePluginDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CreatePluginDialogComponent],
       imports: [
         NoopAnimationsModule,
         FormsModule,
@@ -65,7 +64,8 @@ describe('CreatePluginDialogComponent', () => {
         MatFormFieldModule,
         MatSelectModule,
         MatIconModule,
-        MatInputModule
+        MatInputModule,
+        CreatePluginDialogComponent
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();

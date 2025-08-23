@@ -50,7 +50,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ComicBooksModule } from '@app/comic-books/comic-books.module';
 
 @NgModule({
-  declarations: [ReadingListsPageComponent, ReadingListDetailPageComponent],
   imports: [
     CommonModule,
     ListsRouting,
@@ -80,7 +79,9 @@ import { ComicBooksModule } from '@app/comic-books/comic-books.module';
     MatInputModule,
     LibraryModule,
     MatCheckboxModule,
-    ComicBooksModule
+    ComicBooksModule,
+    ReadingListsPageComponent,
+    ReadingListDetailPageComponent
   ],
   exports: [CommonModule]
 })

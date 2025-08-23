@@ -25,7 +25,7 @@ describe('ServerMetricDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ServerMetricDetailsComponent]
+      imports: [ServerMetricDetailsComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ServerMetricDetailsComponent);

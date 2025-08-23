@@ -24,7 +24,19 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow
+} from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -33,26 +45,57 @@ import {
   deleteReadingLists,
   loadReadingLists
 } from '@app/lists/actions/reading-lists.actions';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import {
   selectUserReadingLists,
   selectUserReadingListsState
 } from '@app/lists/selectors/reading-lists.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { MatPaginator } from '@angular/material/paginator';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { uploadReadingList } from '@app/lists/actions/upload-reading-list.actions';
 import { selectUploadReadingListState } from '@app/lists/selectors/upload-reading-list.selectors';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { TitleService } from '@app/core/services/title.service';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { MatFabButton } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { AsyncPipe, DecimalPipe, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'cx-reading-lists-page',
   templateUrl: './reading-lists-page.component.html',
   styleUrls: ['./reading-lists-page.component.scss'],
-  standalone: false
+  imports: [
+    MatFabButton,
+    RouterLink,
+    MatTooltip,
+    MatIcon,
+    MatToolbar,
+    MatPaginator,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCheckbox,
+    MatCellDef,
+    MatCell,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    AsyncPipe,
+    DecimalPipe,
+    DatePipe,
+    TranslateModule
+  ]
 })
 export class ReadingListsPageComponent
   implements OnInit, AfterViewInit, OnDestroy

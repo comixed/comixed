@@ -65,7 +65,6 @@ describe('CreateAdminPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CreateAdminPageComponent],
       imports: [
         NoopAnimationsModule,
         FormsModule,
@@ -77,7 +76,8 @@ describe('CreateAdminPageComponent', () => {
         MatFormFieldModule,
         MatCardModule,
         MatIconModule,
-        MatInputModule
+        MatInputModule,
+        CreateAdminPageComponent
       ],
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();

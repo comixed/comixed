@@ -137,12 +137,6 @@ describe('ComicListViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        ComicListViewComponent,
-        ComicListFilterComponent,
-        ComicCoverUrlPipe,
-        ComicTitlePipe
-      ],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
@@ -156,7 +150,11 @@ describe('ComicListViewComponent', () => {
         MatCheckboxModule,
         MatIconModule,
         MatPaginatorModule,
-        MatTooltipModule
+        MatTooltipModule,
+        ComicListViewComponent,
+        ComicListFilterComponent,
+        ComicCoverUrlPipe,
+        ComicTitlePipe
       ],
       providers: [
         provideMockStore({ initialState }),

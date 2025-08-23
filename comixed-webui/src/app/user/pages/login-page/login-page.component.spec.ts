@@ -59,7 +59,6 @@ describe('LoginPageComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [LoginPageComponent],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
@@ -70,7 +69,8 @@ describe('LoginPageComponent', () => {
         MatCardModule,
         MatFormFieldModule,
         MatInputModule,
-        MatIconModule
+        MatIconModule,
+        LoginPageComponent
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();

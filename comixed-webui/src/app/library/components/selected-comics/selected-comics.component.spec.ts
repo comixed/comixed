@@ -45,8 +45,12 @@ describe('SelectedComicsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [SelectedComicsComponent],
-      imports: [NoopAnimationsModule, LoggerModule.forRoot(), MatDialogModule]
+      imports: [
+        NoopAnimationsModule,
+        LoggerModule.forRoot(),
+        MatDialogModule,
+        SelectedComicsComponent
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SelectedComicsComponent);

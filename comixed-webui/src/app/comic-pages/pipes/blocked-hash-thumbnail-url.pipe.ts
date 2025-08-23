@@ -19,10 +19,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { API_ROOT_URL } from '@app/core';
 
-@Pipe({
-  name: 'blockedHashThumbnailUrl',
-  standalone: false
-})
+@Pipe({ name: 'blockedHashThumbnailUrl' })
 export class BlockedHashThumbnailUrlPipe implements PipeTransform {
   transform(hash: string): string {
     return `${API_ROOT_URL}/pages/blocked/${hash}/content`;

@@ -111,11 +111,6 @@ describe('ScrapingIssuesPageComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        ScrapingIssuesPageComponent,
-        SelectedComicsComponent,
-        ComicScrapingComponent
-      ],
       imports: [
         RouterModule.forRoot([{ path: '**', redirectTo: '' }]),
         FormsModule,
@@ -126,7 +121,10 @@ describe('ScrapingIssuesPageComponent', () => {
         MatFormFieldModule,
         MatToolbarModule,
         MatIconModule,
-        MatSelectModule
+        MatSelectModule,
+        ScrapingIssuesPageComponent,
+        SelectedComicsComponent,
+        ComicScrapingComponent
       ],
       providers: [
         provideMockStore({ initialState }),

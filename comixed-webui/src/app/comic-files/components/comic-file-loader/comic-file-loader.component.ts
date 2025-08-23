@@ -18,7 +18,12 @@
 
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { User } from '@app/user/models/user';
 import { getUserPreference } from '@app/user';
 import {
@@ -29,12 +34,40 @@ import {
 } from '@app/library/library.constants';
 import { loadComicFileLists } from '@app/comic-files/actions/comic-file-list.actions';
 import { Store } from '@ngrx/store';
+import {
+  MatCard,
+  MatCardTitle,
+  MatCardContent,
+  MatCardActions
+} from '@angular/material/card';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'cx-comic-file-loader',
   templateUrl: './comic-file-loader.component.html',
   styleUrls: ['./comic-file-loader.component.scss'],
-  standalone: false
+  imports: [
+    ReactiveFormsModule,
+    MatCard,
+    MatCardTitle,
+    MatCardContent,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatInput,
+    MatCardActions,
+    MatButton,
+    MatTooltip,
+    MatIcon,
+    TranslateModule
+  ]
 })
 export class ComicFileLoaderComponent {
   @Output() closeForm = new EventEmitter<void>();

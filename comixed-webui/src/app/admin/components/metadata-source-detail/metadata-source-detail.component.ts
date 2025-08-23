@@ -23,21 +23,55 @@ import {
   UntypedFormArray,
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators
+  Validators,
+  ReactiveFormsModule
 } from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { MetadataSourceProperty } from '@app/comic-metadata/models/metadata-source-property';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { saveMetadataSource } from '@app/comic-metadata/actions/metadata-source.actions';
+import {
+  MatCard,
+  MatCardTitle,
+  MatCardContent,
+  MatCardActions
+} from '@angular/material/card';
+import {
+  MatFormField,
+  MatLabel,
+  MatError,
+  MatPrefix
+} from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'cx-metadata-source-detail',
   templateUrl: './metadata-source-detail.component.html',
   styleUrls: ['./metadata-source-detail.component.scss'],
-  standalone: false
+  imports: [
+    ReactiveFormsModule,
+    MatCard,
+    MatCardTitle,
+    MatCardContent,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    MatCheckbox,
+    MatIcon,
+    MatPrefix,
+    MatTooltip,
+    MatCardActions,
+    MatButton,
+    TranslateModule
+  ]
 })
 export class MetadataSourceDetailComponent {
   sourceForm: UntypedFormGroup;

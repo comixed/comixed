@@ -26,7 +26,7 @@ import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { setMultipleComicBookByPublisherSeriesAndVolumeSelectionState } from '@app/comic-books/actions/comic-book-selection.actions';
 import { TitleService } from '@app/core/services/title.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { isAdmin } from '@app/user/user.functions';
 import { loadComicsByFilter } from '@app/comic-books/actions/comic-list.actions';
@@ -36,12 +36,13 @@ import {
   selectComicListState
 } from '@app/comic-books/selectors/comic-list.selectors';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
+import { ComicListViewComponent } from '../../../comic-books/components/comic-list-view/comic-list-view.component';
 
 @Component({
   selector: 'cx-series-issue-page',
   templateUrl: './series-issue-page.component.html',
   styleUrl: './series-issue-page.component.scss',
-  standalone: false
+  imports: [ComicListViewComponent, TranslateModule]
 })
 export class SeriesIssuePageComponent implements OnInit, OnDestroy {
   paramSubscription: Subscription;

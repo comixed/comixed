@@ -52,12 +52,6 @@ import { ComicFileLoaderComponent } from './components/comic-file-loader/comic-f
 import { ProcessingStatusPageComponent } from './pages/processing-status-page/processing-status-page.component';
 
 @NgModule({
-  declarations: [
-    ImportComicsPageComponent,
-    ComicFileCoverUrlPipe,
-    ComicFileLoaderComponent,
-    ProcessingStatusPageComponent
-  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -88,7 +82,11 @@ import { ProcessingStatusPageComponent } from './pages/processing-status-page/pr
     ComicBooksModule,
     FlexLayoutModule,
     MatMenuModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    ImportComicsPageComponent,
+    ComicFileCoverUrlPipe,
+    ComicFileLoaderComponent,
+    ProcessingStatusPageComponent
   ],
   exports: [CommonModule]
 })

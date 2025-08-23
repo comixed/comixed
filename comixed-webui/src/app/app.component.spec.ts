@@ -124,12 +124,6 @@ describe('AppComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        AppComponent,
-        NavigationBarComponent,
-        SideNavigationComponent,
-        FooterComponent
-      ],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
@@ -144,7 +138,11 @@ describe('AppComponent', () => {
         MatDividerModule,
         MatSelectModule,
         MatSidenavModule,
-        MatListModule
+        MatListModule,
+        NavigationBarComponent,
+        SideNavigationComponent,
+        FooterComponent,
+        AppComponent
       ],
       providers: [
         provideMockStore({ initialState }),

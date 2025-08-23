@@ -160,14 +160,6 @@ describe('LibraryPageComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        LibraryPageComponent,
-        ComicListViewComponent,
-        ArchiveTypePipe,
-        CoverDateFilterPipe,
-        ComicCoverUrlPipe,
-        ComicTitlePipe
-      ],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
@@ -189,7 +181,13 @@ describe('LibraryPageComponent', () => {
         MatSortModule,
         MatInputModule,
         MatTableModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        LibraryPageComponent,
+        ComicListViewComponent,
+        ArchiveTypePipe,
+        CoverDateFilterPipe,
+        ComicCoverUrlPipe,
+        ComicTitlePipe
       ],
       providers: [
         provideMockStore({ initialState }),

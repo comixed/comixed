@@ -45,14 +45,14 @@ describe('ComicsByYearChartComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ComicsByYearChartComponent],
       imports: [
         NoopAnimationsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         NgxChartsModule,
         MatFormFieldModule,
-        MatSelectModule
+        MatSelectModule,
+        ComicsByYearChartComponent
       ]
     }).compileComponents();
 

@@ -36,7 +36,6 @@ describe('ComicListFilterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ComicListFilterComponent],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
@@ -49,7 +48,8 @@ describe('ComicListFilterComponent', () => {
         MatFormFieldModule,
         MatOptionModule,
         MatIconModule,
-        MatInputModule
+        MatInputModule,
+        ComicListFilterComponent
       ]
     }).compileComponents();
 

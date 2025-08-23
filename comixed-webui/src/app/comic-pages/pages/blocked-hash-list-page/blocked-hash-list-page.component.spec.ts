@@ -80,7 +80,6 @@ describe('BlockedHashListPageComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [BlockedHashListPageComponent, BlockedHashThumbnailUrlPipe],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
@@ -94,7 +93,9 @@ describe('BlockedHashListPageComponent', () => {
         MatIconModule,
         MatTooltipModule,
         MatSortModule,
-        MatDividerModule
+        MatDividerModule,
+        BlockedHashListPageComponent,
+        BlockedHashThumbnailUrlPipe
       ],
       providers: [
         provideMockStore({ initialState }),

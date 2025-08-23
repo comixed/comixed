@@ -54,12 +54,6 @@ import { readComicBooksFeature } from '@app/user/reducers/read-comic-books.reduc
 import { ReadComicBooksEffects } from '@app/user/effects/read-comic-books-effects.service';
 
 @NgModule({
-  declarations: [
-    LoginPageComponent,
-    UserCardComponent,
-    EditAccountBarComponent,
-    CreateAdminPageComponent
-  ],
   exports: [EditAccountBarComponent],
   imports: [
     CommonModule,
@@ -87,7 +81,11 @@ import { ReadComicBooksEffects } from '@app/user/effects/read-comic-books-effect
     MatSortModule,
     MatTooltipModule,
     MatToolbarModule,
-    MatSelectModule
+    MatSelectModule,
+    LoginPageComponent,
+    UserCardComponent,
+    EditAccountBarComponent,
+    CreateAdminPageComponent
   ],
   providers: [UserService, provideHttpClient(withInterceptorsFromDi())]
 })

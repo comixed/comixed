@@ -25,10 +25,10 @@ import {
   ViewChild
 } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { Store } from '@ngrx/store';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { loadDuplicatePageDetail } from '@app/library/actions/duplicate-page-detail.actions';
 import {
@@ -36,24 +36,64 @@ import {
   selectDuplicatePageDetailState
 } from '@app/library/selectors/duplicate-page-detail.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow
+} from '@angular/material/table';
 import { DuplicatePage } from '@app/library/models/duplicate-page';
 import { filter } from 'rxjs/operators';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import {
   loadBlockedHashList,
   setBlockedStateForHash
 } from '@app/comic-pages/actions/blocked-hashes.actions';
 import { selectBlockedHashesList } from '@app/comic-pages/selectors/blocked-hashes.selectors';
+import { MatFabButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { ComicPageComponent } from '../../../comic-books/components/comic-page/comic-page.component';
+import { AsyncPipe, DatePipe } from '@angular/common';
+import { PageHashUrlPipe } from '../../../comic-books/pipes/page-hash-url.pipe';
 
 @Component({
   selector: 'cx-duplicate-page-detail-page',
   templateUrl: './duplicate-page-detail-page.component.html',
   styleUrls: ['./duplicate-page-detail-page.component.scss'],
-  standalone: false
+  imports: [
+    MatFabButton,
+    MatTooltip,
+    MatIcon,
+    ComicPageComponent,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCellDef,
+    MatCell,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    RouterLink,
+    AsyncPipe,
+    DatePipe,
+    PageHashUrlPipe,
+    TranslateModule
+  ]
 })
 export class DuplicatePageDetailPageComponent
   implements OnInit, OnDestroy, AfterViewInit

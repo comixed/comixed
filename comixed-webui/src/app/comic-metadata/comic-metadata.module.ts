@@ -57,13 +57,6 @@ import { scrapeStoryFeature } from '@app/comic-metadata/reducers/scrape-story.re
 import { ScrapeStoryEffects } from '@app/comic-metadata/effects/scrape-story.effects';
 
 @NgModule({
-  declarations: [
-    ScrapingIssuesPageComponent,
-    MetadataProcessPageComponent,
-    MetadataProcessToolbarComponent,
-    MetadataProcessStatusComponent,
-    ScrapingSeriesPageComponent
-  ],
   imports: [
     CommonModule,
     ComicMetadataRouting,
@@ -98,7 +91,12 @@ import { ScrapeStoryEffects } from '@app/comic-metadata/effects/scrape-story.eff
     MatCardModule,
     ComicBooksModule,
     MatDialogContent,
-    MatDialogContainer
+    MatDialogContainer,
+    ScrapingIssuesPageComponent,
+    MetadataProcessPageComponent,
+    MetadataProcessToolbarComponent,
+    MetadataProcessStatusComponent,
+    ScrapingSeriesPageComponent
   ],
   exports: [CommonModule]
 })

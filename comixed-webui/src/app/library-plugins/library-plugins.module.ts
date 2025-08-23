@@ -30,7 +30,6 @@ import { RunLibraryPluginEffects } from '@app/library-plugins/effects/run-librar
 import { PluginTitlePipe } from './pipes/plugin-title.pipe';
 
 @NgModule({
-  declarations: [PluginTitlePipe],
   exports: [PluginTitlePipe],
   imports: [
     CommonModule,
@@ -42,7 +41,8 @@ import { PluginTitlePipe } from './pipes/plugin-title.pipe';
       LibraryPluginEffects,
       PluginLanguageEffects,
       RunLibraryPluginEffects
-    ])
+    ]),
+    PluginTitlePipe
   ]
 })
 export class LibraryPluginsModule {}

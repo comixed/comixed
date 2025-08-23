@@ -30,8 +30,7 @@ describe('UserCardComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [UserCardComponent],
-      imports: [LoggerModule.forRoot(), GravatarModule]
+      imports: [LoggerModule.forRoot(), GravatarModule, UserCardComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(UserCardComponent);

@@ -45,11 +45,6 @@ describe('VolumeMetadataTableComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        VolumeMetadataTableComponent,
-        IssueMetadataTitlePipe,
-        VolumeMetadataTitlePipe
-      ],
       imports: [
         NoopAnimationsModule,
         LoggerModule.forRoot(),
@@ -59,7 +54,10 @@ describe('VolumeMetadataTableComponent', () => {
         MatTableModule,
         MatPaginatorModule,
         MatInputModule,
-        MatIconModule
+        MatIconModule,
+        VolumeMetadataTableComponent,
+        IssueMetadataTitlePipe,
+        VolumeMetadataTitlePipe
       ]
     }).compileComponents();
   });

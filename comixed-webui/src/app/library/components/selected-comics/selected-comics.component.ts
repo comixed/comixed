@@ -22,12 +22,27 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { MatDialog } from '@angular/material/dialog';
 import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { MatCard, MatCardTitle, MatCardSubtitle } from '@angular/material/card';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'cx-selected-comics',
   templateUrl: './selected-comics.component.html',
   styleUrls: ['./selected-comics.component.scss'],
-  standalone: false
+  imports: [
+    MatCard,
+    MatCardTitle,
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
+    MatCardSubtitle,
+    ComicTitlePipe,
+    TranslateModule
+  ]
 })
 export class SelectedComicsComponent {
   @Output() selectionChanged = new EventEmitter<ComicDetail>();

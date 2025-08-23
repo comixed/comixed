@@ -32,12 +32,25 @@ import { BehaviorSubject } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { LibraryState } from '@app/library/reducers/library.reducer';
 import { yearsPerRow } from '@angular/material/datepicker';
+import { HeatMapModule } from '@swimlane/ngx-charts';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { AsyncPipe } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'cx-comics-by-year-chart',
   templateUrl: './comics-by-year-chart.component.html',
   styleUrls: ['./comics-by-year-chart.component.scss'],
-  standalone: false
+  imports: [
+    HeatMapModule,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    AsyncPipe,
+    TranslateModule
+  ]
 })
 export class ComicsByYearChartComponent implements AfterViewInit {
   @ViewChild('container') container: ElementRef;

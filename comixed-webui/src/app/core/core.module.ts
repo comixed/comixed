@@ -35,7 +35,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { YesNoPipe } from './pipes/yes-no.pipe';
 
 @NgModule({
-  declarations: [YesNoPipe],
   imports: [
     CommonModule,
     TranslateModule.forRoot(),
@@ -47,7 +46,8 @@ import { YesNoPipe } from './pipes/yes-no.pipe';
     MatFormFieldModule,
     MatCardModule,
     RouterModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    YesNoPipe
   ],
   exports: [
     MatSnackBarModule,

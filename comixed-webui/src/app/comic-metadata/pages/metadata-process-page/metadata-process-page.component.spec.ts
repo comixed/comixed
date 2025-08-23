@@ -78,14 +78,6 @@ describe('MetadataProcessPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        MetadataProcessPageComponent,
-        MetadataProcessStatusComponent,
-        MetadataProcessToolbarComponent,
-        ComicListViewComponent,
-        ComicCoverUrlPipe,
-        ComicTitlePipe
-      ],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
@@ -100,7 +92,13 @@ describe('MetadataProcessPageComponent', () => {
         MatToolbarModule,
         MatCheckboxModule,
         MatTooltipModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        MetadataProcessPageComponent,
+        MetadataProcessStatusComponent,
+        MetadataProcessToolbarComponent,
+        ComicListViewComponent,
+        ComicCoverUrlPipe,
+        ComicTitlePipe
       ],
       providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();

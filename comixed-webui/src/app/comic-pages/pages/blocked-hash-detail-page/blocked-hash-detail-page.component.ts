@@ -24,14 +24,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators
+  Validators,
+  ReactiveFormsModule
 } from '@angular/forms';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { isAdmin } from '@app/user/user.functions';
 import { filter } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import {
   loadBlockedHashDetail,
@@ -41,12 +42,27 @@ import {
   selectBlockedHashDetail,
   selectBlockedHashesState
 } from '@app/comic-pages/selectors/blocked-hashes.selectors';
+import { MatFabButton, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { BlockedHashThumbnailUrlPipe } from '../../pipes/blocked-hash-thumbnail-url.pipe';
 
 @Component({
   selector: 'cx-blocked-hash-detail-page',
   templateUrl: './blocked-hash-detail-page.component.html',
   styleUrls: ['./blocked-hash-detail-page.component.scss'],
-  standalone: false
+  imports: [
+    MatFabButton,
+    MatIcon,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatButton,
+    TranslateModule,
+    BlockedHashThumbnailUrlPipe
+  ]
 })
 export class BlockedHashDetailPageComponent implements OnDestroy {
   paramsSubscription: Subscription;

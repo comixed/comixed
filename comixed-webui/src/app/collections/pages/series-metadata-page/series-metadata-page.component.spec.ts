@@ -93,7 +93,6 @@ describe('SeriesMetadataPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SeriesMetadataPageComponent, SeriesDetailNamePipe],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
@@ -104,7 +103,9 @@ describe('SeriesMetadataPageComponent', () => {
         MatTableModule,
         MatIconModule,
         MatInputModule,
-        MatTooltipModule
+        MatTooltipModule,
+        SeriesMetadataPageComponent,
+        SeriesDetailNamePipe
       ],
       providers: [
         provideMockStore({ initialState }),

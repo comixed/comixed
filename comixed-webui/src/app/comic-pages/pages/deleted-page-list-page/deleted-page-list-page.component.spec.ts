@@ -86,7 +86,6 @@ describe('DeletedPageListPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DeletedPageListPageComponent, PageHashUrlPipe],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([]),
@@ -96,7 +95,9 @@ describe('DeletedPageListPageComponent', () => {
         MatToolbarModule,
         MatPaginatorModule,
         MatSortModule,
-        MatDialogModule
+        MatDialogModule,
+        DeletedPageListPageComponent,
+        PageHashUrlPipe
       ],
       providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();

@@ -66,7 +66,6 @@ describe('SeriesListPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SeriesListPageComponent, FilterTextFormComponent],
       imports: [
         NoopAnimationsModule,
         RouterModule.forRoot([]),
@@ -83,7 +82,9 @@ describe('SeriesListPageComponent', () => {
         MatPaginatorModule,
         MatInputModule,
         MatFormFieldModule,
-        MatIconModule
+        MatIconModule,
+        SeriesListPageComponent,
+        FilterTextFormComponent
       ],
       providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();

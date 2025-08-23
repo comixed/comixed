@@ -107,7 +107,6 @@ describe('ScrapingSeriesPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ScrapingSeriesPageComponent, VolumeMetadataTableComponent],
       imports: [
         NoopAnimationsModule,
         FormsModule,
@@ -125,7 +124,9 @@ describe('ScrapingSeriesPageComponent', () => {
         MatCheckboxModule,
         MatInputModule,
         MatTooltipModule,
-        MatButtonModule
+        MatButtonModule,
+        ScrapingSeriesPageComponent,
+        VolumeMetadataTableComponent
       ],
       providers: [
         provideMockStore({ initialState }),

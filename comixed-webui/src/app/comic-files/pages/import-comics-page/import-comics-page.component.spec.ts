@@ -118,11 +118,6 @@ describe('ImportComicsPageComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        ImportComicsPageComponent,
-        ComicFileLoaderComponent,
-        ComicFileCoverUrlPipe
-      ],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
@@ -142,7 +137,10 @@ describe('ImportComicsPageComponent', () => {
         MatToolbarModule,
         MatMenuModule,
         MatPaginatorModule,
-        MatSortModule
+        MatSortModule,
+        ImportComicsPageComponent,
+        ComicFileLoaderComponent,
+        ComicFileCoverUrlPipe
       ],
       providers: [
         provideMockStore({ initialState }),

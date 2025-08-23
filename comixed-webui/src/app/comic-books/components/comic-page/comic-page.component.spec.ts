@@ -31,8 +31,7 @@ describe('ComicPageComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicPageComponent],
-      imports: [LoggerModule.forRoot(), MatCardModule]
+      imports: [LoggerModule.forRoot(), MatCardModule, ComicPageComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicPageComponent);

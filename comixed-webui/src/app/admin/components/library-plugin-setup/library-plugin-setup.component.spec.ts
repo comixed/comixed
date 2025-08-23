@@ -52,7 +52,6 @@ describe('LibraryPluginSetupComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [LibraryPluginSetupComponent, PluginTitlePipe],
       imports: [
         NoopAnimationsModule,
         FormsModule,
@@ -65,7 +64,9 @@ describe('LibraryPluginSetupComponent', () => {
         MatCardModule,
         MatInputModule,
         MatButtonModule,
-        MatIconModule
+        MatIconModule,
+        LibraryPluginSetupComponent,
+        PluginTitlePipe
       ],
       providers: [
         provideMockStore({ initialState }),

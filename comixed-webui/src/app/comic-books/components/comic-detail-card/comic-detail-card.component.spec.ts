@@ -38,7 +38,6 @@ describe('ComicDetailCardComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicDetailCardComponent],
       imports: [
         NoopAnimationsModule,
         LoggerModule.forRoot(),
@@ -46,7 +45,8 @@ describe('ComicDetailCardComponent', () => {
         MatCardModule,
         MatGridListModule,
         MatChipsModule,
-        MatTooltipModule
+        MatTooltipModule,
+        ComicDetailCardComponent
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();

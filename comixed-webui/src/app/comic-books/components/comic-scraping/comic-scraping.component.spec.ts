@@ -88,7 +88,6 @@ describe('ComicScrapingComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicScrapingComponent],
       imports: [
         NoopAnimationsModule,
         LoggerModule.forRoot(),
@@ -101,7 +100,8 @@ describe('ComicScrapingComponent', () => {
         MatIconModule,
         MatInputModule,
         MatSelectModule,
-        MatTooltipModule
+        MatTooltipModule,
+        ComicScrapingComponent
       ],
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();

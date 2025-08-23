@@ -33,12 +33,29 @@ import { getFeatureEnabled } from '@app/admin/actions/feature-enabled.actions';
 import { hasFeature, isFeatureEnabled } from '@app/admin';
 import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.selectors';
 import { selectComicBookSelectionState } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import { MatButton } from '@angular/material/button';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
+import { MatLabel } from '@angular/material/form-field';
+import { MatDivider } from '@angular/material/divider';
+import { AsyncPipe, DecimalPipe } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'cx-side-navigation',
   templateUrl: './side-navigation.component.html',
   styleUrls: ['./side-navigation.component.scss'],
-  standalone: false
+  imports: [
+    MatButton,
+    RouterLink,
+    RouterLinkActive,
+    MatIcon,
+    MatLabel,
+    MatDivider,
+    AsyncPipe,
+    DecimalPipe,
+    TranslateModule
+  ]
 })
 export class SideNavigationComponent implements OnDestroy {
   isAdmin = false;

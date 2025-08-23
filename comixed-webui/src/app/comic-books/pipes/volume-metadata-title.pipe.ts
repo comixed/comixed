@@ -19,10 +19,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 
-@Pipe({
-  name: 'volumeMetadataTitle',
-  standalone: false
-})
+@Pipe({ name: 'volumeMetadataTitle' })
 export class VolumeMetadataTitlePipe implements PipeTransform {
   transform(volume: VolumeMetadata): string {
     return `${volume.name} v${volume.startYear}`;

@@ -25,7 +25,20 @@ import {
   selectLibraryPluginList,
   selectLibraryPluginState
 } from '@app/library-plugins/selectors/library-plugin.selectors';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow,
+  MatNoDataRow
+} from '@angular/material/table';
 import { LibraryPlugin } from '@app/library-plugins/models/library-plugin';
 import {
   loadLibraryPlugins,
@@ -37,13 +50,37 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CreatePluginDialogComponent } from '@app/admin/components/create-plugin-dialog/create-plugin-dialog.component';
 import { LibraryPluginSetupComponent } from '@app/admin/components/library-plugin-setup/library-plugin-setup.component';
 import { AlertService } from '@app/core/services/alert.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { MatFabButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'cx-library-plugins-configuration',
   templateUrl: './library-plugins-configuration.component.html',
   styleUrls: ['./library-plugins-configuration.component.scss'],
-  standalone: false
+  imports: [
+    MatFabButton,
+    MatTooltip,
+    MatIcon,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCellDef,
+    MatCell,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatNoDataRow,
+    AsyncPipe,
+    TranslateModule
+  ]
 })
 export class LibraryPluginsConfigurationComponent implements OnInit, OnDestroy {
   readonly displayedColumns = ['name', 'language', 'property-count'];

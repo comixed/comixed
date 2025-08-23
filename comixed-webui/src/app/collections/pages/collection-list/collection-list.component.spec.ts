@@ -78,7 +78,6 @@ describe('CollectionListComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [CollectionListComponent, FilterTextFormComponent],
       imports: [
         NoopAnimationsModule,
         FormsModule,
@@ -92,7 +91,9 @@ describe('CollectionListComponent', () => {
         MatPaginatorModule,
         MatFormFieldModule,
         MatInputModule,
-        MatIconModule
+        MatIconModule,
+        CollectionListComponent,
+        FilterTextFormComponent
       ],
       providers: [
         provideMockStore({ initialState }),

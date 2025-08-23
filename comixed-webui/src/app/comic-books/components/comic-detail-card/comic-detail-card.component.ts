@@ -23,12 +23,36 @@ import { ComicSelectEvent } from '@app/comic-books/models/event/comic-select-eve
 import { UpdateComicInfoEvent } from '@app/comic-books/models/event/update-comic-info-event';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import {
+  MatCard,
+  MatCardTitle,
+  MatCardSubtitle,
+  MatCardContent
+} from '@angular/material/card';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatChipListbox, MatChip } from '@angular/material/chips';
+import { RouterLink } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'cx-comic-detail-card',
   templateUrl: './comic-detail-card.component.html',
   styleUrls: ['./comic-detail-card.component.scss'],
-  standalone: false
+  imports: [
+    MatCard,
+    MatCardTitle,
+    MatTooltip,
+    MatCardSubtitle,
+    MatCardContent,
+    MatChipListbox,
+    MatChip,
+    RouterLink,
+    MatIcon,
+    MatProgressSpinner,
+    TranslateModule
+  ]
 })
 export class ComicDetailCardComponent {
   @Input() comic: ComicDetail;

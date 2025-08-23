@@ -21,7 +21,7 @@ import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { TitleService } from '@app/core/services/title.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { selectMetadataUpdateProcessState } from '@app/comic-metadata/selectors/metadata-update-process.selectors';
 import { MetadataUpdateProcessState } from '@app/comic-metadata/reducers/metadata-update-process.reducer';
 import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
@@ -39,12 +39,20 @@ import {
   selectComicList
 } from '@app/comic-books/selectors/comic-list.selectors';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
+import { MetadataProcessToolbarComponent } from '../../components/metadata-process-toolbar/metadata-process-toolbar.component';
+import { MetadataProcessStatusComponent } from '../../components/metadata-process-status/metadata-process-status.component';
+import { ComicListViewComponent } from '../../../comic-books/components/comic-list-view/comic-list-view.component';
 
 @Component({
   selector: 'cx-metadata-process-page',
   templateUrl: './metadata-process-page.component.html',
   styleUrls: ['./metadata-process-page.component.scss'],
-  standalone: false
+  imports: [
+    MetadataProcessToolbarComponent,
+    MetadataProcessStatusComponent,
+    ComicListViewComponent,
+    TranslateModule
+  ]
 })
 export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
   comics: DisplayableComic[] = [];

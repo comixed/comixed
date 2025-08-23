@@ -60,7 +60,6 @@ describe('EditAccountBarComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [EditAccountBarComponent],
       imports: [
         NoopAnimationsModule,
         FormsModule,
@@ -74,7 +73,8 @@ describe('EditAccountBarComponent', () => {
         MatCardModule,
         MatFormFieldModule,
         MatInputModule,
-        MatTableModule
+        MatTableModule,
+        EditAccountBarComponent
       ],
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();

@@ -69,14 +69,14 @@ describe('SideNavigationComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [SideNavigationComponent],
       imports: [
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatListModule,
         MatIconModule,
-        MatFormFieldModule
+        MatFormFieldModule,
+        SideNavigationComponent
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();

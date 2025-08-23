@@ -26,10 +26,23 @@ import {
 } from '@angular/core';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import { ComicBook } from '@app/comic-books/models/comic-book';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow,
+  MatNoDataRow
+} from '@angular/material/table';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { IssueMetadata } from '@app/comic-metadata/models/issue-metadata';
 import { Store } from '@ngrx/store';
 import {
@@ -42,13 +55,31 @@ import {
   selectScrapingIssueMetadata,
   selectSingleBookScrapingState
 } from '@app/comic-metadata/selectors/single-book-scraping.selectors';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { BusyIcon, setBusyStateWithIcon } from '@app/core/actions/busy.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { PAGE_SIZE_OPTIONS } from '@app/core';
 import { multiBookScrapeComic } from '@app/comic-metadata/actions/multi-book-scraping.actions';
+import { MatToolbar } from '@angular/material/toolbar';
+import {
+  MatFormField,
+  MatPrefix,
+  MatLabel
+} from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import {
+  MatCard,
+  MatCardContent,
+  MatCardActions
+} from '@angular/material/card';
+import { DatePipe } from '@angular/common';
+import { IssueMetadataTitlePipe } from '@app/comic-books/pipes/issue-metadata-title.pipe';
+import { VolumeMetadataTitlePipe } from '../../pipes/volume-metadata-title.pipe';
 
 export const MATCHABILITY = 'matchability';
 export const EXACT_MATCH = 2;
@@ -62,7 +93,38 @@ export const NO_MATCH_TEXT = 'scraping.text.no-match';
   selector: 'cx-scraping-volume-selection',
   templateUrl: './comic-scraping-volume-selection.html',
   styleUrls: ['./comic-scraping-volume-selection.scss'],
-  standalone: false
+  imports: [
+    MatToolbar,
+    MatFormField,
+    MatInput,
+    MatIcon,
+    MatPrefix,
+    MatIconButton,
+    MatTooltip,
+    MatPaginator,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCellDef,
+    MatCell,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatNoDataRow,
+    MatCard,
+    MatCardContent,
+    MatCardActions,
+    MatButton,
+    MatLabel,
+    DatePipe,
+    TranslateModule,
+    IssueMetadataTitlePipe,
+    VolumeMetadataTitlePipe
+  ]
 })
 export class ComicScrapingVolumeSelectionComponent
   implements OnDestroy, AfterViewInit

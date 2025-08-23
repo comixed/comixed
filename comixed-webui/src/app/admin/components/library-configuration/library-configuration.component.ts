@@ -20,10 +20,11 @@ import { Component, inject, Input } from '@angular/core';
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators
+  Validators,
+  ReactiveFormsModule
 } from '@angular/forms';
 import { ListItem } from '@app/core/models/ui/list-item';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ConfigurationOption } from '@app/admin/models/configuration-option';
@@ -44,12 +45,28 @@ import {
 import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { purgeLibrary } from '@app/library/actions/purge-library.actions';
+import { MatFabButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatFormField, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 
 @Component({
   selector: 'cx-library-configuration',
   templateUrl: './library-configuration.component.html',
   styleUrls: ['./library-configuration.component.scss'],
-  standalone: false
+  imports: [
+    MatFabButton,
+    MatTooltip,
+    MatIcon,
+    ReactiveFormsModule,
+    MatCheckbox,
+    MatFormField,
+    MatInput,
+    MatError,
+    TranslateModule
+  ]
 })
 export class LibraryConfigurationComponent {
   @Input() libraryConfigurationForm: UntypedFormGroup;

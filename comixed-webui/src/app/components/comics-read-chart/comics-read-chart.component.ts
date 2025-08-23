@@ -30,12 +30,15 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { selectComicsReadStatisticsData } from '@app/selectors/comics-read-statistics.selectors';
 import { loadComicsReadStatistics } from '@app/actions/comics-read-statistics.actions';
+import { PieChartModule } from '@swimlane/ngx-charts';
+import { AsyncPipe } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'cx-comics-read-chart',
   templateUrl: './comics-read-chart.component.html',
   styleUrls: ['./comics-read-chart.component.scss'],
-  standalone: false
+  imports: [PieChartModule, AsyncPipe, TranslateModule]
 })
 export class ComicsReadChartComponent
   implements OnInit, OnDestroy, AfterViewInit
