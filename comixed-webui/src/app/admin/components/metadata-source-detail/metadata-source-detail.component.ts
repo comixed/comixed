@@ -16,33 +16,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, Inject, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import {
   AbstractControl,
+  ReactiveFormsModule,
   UntypedFormArray,
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators,
-  ReactiveFormsModule
+  Validators
 } from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { MetadataSourceProperty } from '@app/comic-metadata/models/metadata-source-property';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { saveMetadataSource } from '@app/comic-metadata/actions/metadata-source.actions';
 import {
   MatCard,
-  MatCardTitle,
+  MatCardActions,
   MatCardContent,
-  MatCardActions
+  MatCardTitle
 } from '@angular/material/card';
 import {
+  MatError,
   MatFormField,
   MatLabel,
-  MatError,
   MatPrefix
 } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -81,10 +81,9 @@ export class MetadataSourceDetailComponent {
   formBuilder = inject(UntypedFormBuilder);
   confirmationService = inject(ConfirmationService);
   translateService = inject(TranslateService);
+  data = inject<{ source: MetadataSource }>(MAT_DIALOG_DATA);
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { source: MetadataSource }
-  ) {
+  constructor() {
     this.sourceForm = this.formBuilder.group({
       name: [
         '',

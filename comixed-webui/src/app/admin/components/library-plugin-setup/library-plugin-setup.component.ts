@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   LibraryPlugin,
   LibraryPluginProperty
@@ -27,21 +27,21 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   FormBuilder,
   FormGroup,
+  ReactiveFormsModule,
   UntypedFormArray,
-  Validators,
-  ReactiveFormsModule
+  Validators
 } from '@angular/forms';
 import {
   setCurrentLibraryPlugin,
   updateLibraryPlugin
 } from '@app/library-plugins/actions/library-plugin.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   MatCard,
-  MatCardTitle,
+  MatCardActions,
   MatCardContent,
-  MatCardActions
+  MatCardTitle
 } from '@angular/material/card';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -76,8 +76,9 @@ export class LibraryPluginSetupComponent {
   formBuilder = inject(FormBuilder);
   confirmationService = inject(ConfirmationService);
   translateService = inject(TranslateService);
+  plugin = inject<LibraryPlugin>(MAT_DIALOG_DATA);
 
-  constructor(@Inject(MAT_DIALOG_DATA) public plugin: LibraryPlugin) {
+  constructor() {
     this.logger.trace('Setting up the plugin form group');
     this.pluginFormGroup = this.formBuilder.group({
       filename: [''],

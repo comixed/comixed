@@ -87,8 +87,9 @@ export class EditMultipleComicsComponent implements OnInit, OnDestroy {
   logger = inject(LoggerService);
   formBuilder = inject(UntypedFormBuilder);
   store = inject(Store);
+  comicBooks = inject<ComicDetail[]>(MAT_DIALOG_DATA);
 
-  constructor(@Inject(MAT_DIALOG_DATA) comicBooks: ComicDetail[]) {
+  constructor() {
     this.detailsForm = this.formBuilder.group({
       publisher: ['', [Validators.required, Validators.maxLength(255)]],
       series: ['', [Validators.required, Validators.maxLength(255)]],
@@ -119,7 +120,6 @@ export class EditMultipleComicsComponent implements OnInit, OnDestroy {
           })
         );
       });
-    this.comics = comicBooks;
   }
 
   private _comics: ComicDetail[] = [];

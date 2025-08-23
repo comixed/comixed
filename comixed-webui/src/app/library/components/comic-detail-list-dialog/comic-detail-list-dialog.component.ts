@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
@@ -35,9 +35,11 @@ export class ComicDetailListDialogComponent {
 
   logger = inject(LoggerService);
 
-  constructor(@Inject(MAT_DIALOG_DATA) public _comics: ComicDetail[]) {
-    this.comics = _comics;
+  constructor() {
+    this.comics = this._comics;
   }
+
+  private _comics = inject<ComicDetail[]>(MAT_DIALOG_DATA);
 
   get comics(): ComicDetail[] {
     return this.dataSource.data.map(entry => entry.item);
