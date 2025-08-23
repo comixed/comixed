@@ -59,7 +59,7 @@
 <h2>
   {{
     "blocked-hash-list.page-title"
-      | translate : { selected: selectedHashes.length, count: entries.length }
+      | translate: { selected: selectedHashes.length, count: entries.length }
   }}
 </h2>
 
@@ -153,7 +153,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-text-nowrap">
-        {{ entry.item.createdOn | date : "mediumDate" }}
+        {{ entry.item.createdOn | date: "mediumDate" }}
       </span>
     </mat-cell>
   </ng-container>

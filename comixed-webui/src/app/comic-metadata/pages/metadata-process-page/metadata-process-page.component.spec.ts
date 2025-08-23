@@ -60,6 +60,10 @@ import {
   COMIC_LIST_FEATURE_KEY,
   initialState as initialComicListState
 } from '@app/comic-books/reducers/comic-list.reducer';
+import {
+  initialState as initialLibraryPluginInState,
+  LIBRARY_PLUGIN_FEATURE_KEY
+} from '@app/library-plugins/reducers/library-plugin.reducer';
 
 describe('MetadataProcessPageComponent', () => {
   const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
@@ -67,7 +71,8 @@ describe('MetadataProcessPageComponent', () => {
   const initialState = {
     [COMIC_LIST_FEATURE_KEY]: initialComicListState,
     [USER_FEATURE_KEY]: initialUserState,
-    [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState
+    [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
+    [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginInState
   };
 
   let component: MetadataProcessPageComponent;

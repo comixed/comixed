@@ -18,13 +18,14 @@
         />
         <mat-error>
           @if (controls.email.errors?.required) {
-          <span>
-            {{ "validation.field-required" | translate }}
-          </span>
-          } @if (controls.email.errors?.email) {
-          <span>
-            {{ "validation.email-required" | translate }}
-          </span>
+            <span>
+              {{ "validation.field-required" | translate }}
+            </span>
+          }
+          @if (controls.email.errors?.email) {
+            <span>
+              {{ "validation.email-required" | translate }}
+            </span>
           }
         </mat-error>
       </mat-form-field>
@@ -39,29 +40,33 @@
         />
         <mat-error>
           @if (controls.password.errors?.required) {
-          <span>
-            {{ "validation.field-required" | translate }}
-          </span>
-          } @if (!!controls.password.errors?.minlength) {
-          <span>
-            {{
-              "validation.value-too-short"
-                | translate
-                  : {
-                      length: controls.password.errors.minlength.requiredLength
-                    }
-            }}
-          </span>
-          } @if (!!controls.password.errors?.maxlength) {
-          <span>
-            {{
-              "validation.value-too-long"
-                | translate
-                  : {
-                      length: controls.password.errors.maxlength.requiredLength
-                    }
-            }}
-          </span>
+            <span>
+              {{ "validation.field-required" | translate }}
+            </span>
+          }
+          @if (!!controls.password.errors?.minlength) {
+            <span>
+              {{
+                "validation.value-too-short"
+                  | translate
+                    : {
+                        length:
+                          controls.password.errors.minlength.requiredLength
+                      }
+              }}
+            </span>
+          }
+          @if (!!controls.password.errors?.maxlength) {
+            <span>
+              {{
+                "validation.value-too-long"
+                  | translate
+                    : {
+                        length:
+                          controls.password.errors.maxlength.requiredLength
+                      }
+              }}
+            </span>
           }
         </mat-error>
       </mat-form-field>

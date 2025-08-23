@@ -5,7 +5,7 @@
 </div>
 
 <h2>
-  {{ "blocked-hash.page-title" | translate : { hash: hash } }}
+  {{ "blocked-hash.page-title" | translate: { hash: hash } }}
 </h2>
 
 <div class="cx-horizontal-container">
@@ -19,54 +19,54 @@
 
   <div class="cx-grow-1">
     @if (!!blockedPage) {
-    <form [formGroup]="blockedPageForm">
-      <mat-form-field class="cx-width-100">
-        <mat-label>{{ "blocked-hash.label.label" | translate }}</mat-label>
-        <input
-          id="label-input"
-          matInput
-          class="cx-width-100"
-          formControlName="label"
-          [placeholder]="
-            'blocked-hash.placeholder.blocked-hash-label' | translate
-          "
-        />
-      </mat-form-field>
-      <mat-form-field class="cx-width-100">
-        <mat-label>{{ "blocked-hash.label.hash" | translate }}</mat-label>
-        <input
-          id="hash-input"
-          readonly
-          matInput
-          class="cx-width-100"
-          formControlName="hash"
-        />
-      </mat-form-field>
-      <div class="cx-action-button-container-horizontal">
-        <button
-          id="save-button"
-          mat-raised-button
-          color="accent"
-          class="cx-action-button"
-          [disabled]="!blockedPageForm.valid || !blockedPageForm.dirty"
-          (click)="onSave()"
-        >
-          <mat-icon>save</mat-icon>
-          <mat-label>{{ "button.save" | translate }}</mat-label>
-        </button>
-        <button
-          id="reset-button"
-          mat-raised-button
-          color="warn"
-          class="cx-action-button"
-          [disabled]="!blockedPageForm.dirty"
-          (click)="onReset()"
-        >
-          <mat-icon>save</mat-icon>
-          <mat-label>{{ "button.reset" | translate }}</mat-label>
-        </button>
-      </div>
-    </form>
+      <form [formGroup]="blockedPageForm">
+        <mat-form-field class="cx-width-100">
+          <mat-label>{{ "blocked-hash.label.label" | translate }}</mat-label>
+          <input
+            id="label-input"
+            matInput
+            class="cx-width-100"
+            formControlName="label"
+            [placeholder]="
+              'blocked-hash.placeholder.blocked-hash-label' | translate
+            "
+          />
+        </mat-form-field>
+        <mat-form-field class="cx-width-100">
+          <mat-label>{{ "blocked-hash.label.hash" | translate }}</mat-label>
+          <input
+            id="hash-input"
+            readonly
+            matInput
+            class="cx-width-100"
+            formControlName="hash"
+          />
+        </mat-form-field>
+        <div class="cx-action-button-container-horizontal">
+          <button
+            id="save-button"
+            mat-raised-button
+            color="accent"
+            class="cx-action-button"
+            [disabled]="!blockedPageForm.valid || !blockedPageForm.dirty"
+            (click)="onSave()"
+          >
+            <mat-icon>save</mat-icon>
+            <mat-label>{{ "button.save" | translate }}</mat-label>
+          </button>
+          <button
+            id="reset-button"
+            mat-raised-button
+            color="warn"
+            class="cx-action-button"
+            [disabled]="!blockedPageForm.dirty"
+            (click)="onReset()"
+          >
+            <mat-icon>save</mat-icon>
+            <mat-label>{{ "button.reset" | translate }}</mat-label>
+          </button>
+        </div>
+      </form>
     }
   </div>
 </div>

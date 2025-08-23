@@ -1,22 +1,23 @@
 <div class="cx-fab-container-bottom-right">
   @if (!!detail && !blockedHashes.includes(detail.hash)) {
-  <button
-    id="block-page-button"
-    mat-fab
-    [matTooltip]="'duplicate-pages.tooltip.block-page' | translate"
-    (click)="onBlockPage()"
-  >
-    <mat-icon>block</mat-icon>
-  </button>
-  } @if (!!detail && blockedHashes.includes(detail.hash)) {
-  <button
-    id="unblock-page-button"
-    mat-fab
-    [matTooltip]="'duplicate-pages.tooltip.unblock-page' | translate"
-    (click)="onUnblockPage()"
-  >
-    <mat-icon>remove_circle_outline</mat-icon>
-  </button>
+    <button
+      id="block-page-button"
+      mat-fab
+      [matTooltip]="'duplicate-pages.tooltip.block-page' | translate"
+      (click)="onBlockPage()"
+    >
+      <mat-icon>block</mat-icon>
+    </button>
+  }
+  @if (!!detail && blockedHashes.includes(detail.hash)) {
+    <button
+      id="unblock-page-button"
+      mat-fab
+      [matTooltip]="'duplicate-pages.tooltip.unblock-page' | translate"
+      (click)="onUnblockPage()"
+    >
+      <mat-icon>remove_circle_outline</mat-icon>
+    </button>
   }
 </div>
 
@@ -26,7 +27,7 @@
   </div>
   <div class="cx-grow-1 cx-padding-5">
     <h2>
-      {{ "duplicate-page-detail.page-title" | translate : { hash: hash } }}
+      {{ "duplicate-page-detail.page-title" | translate: { hash: hash } }}
     </h2>
     <mat-table
       [dataSource]="dataSource"
@@ -70,7 +71,7 @@
           {{ "comic-book.label.cover-date" | translate }}
         </mat-header-cell>
         <mat-cell *matCellDef="let entry">
-          {{ entry.coverDate | date : "mediumDate" }}
+          {{ entry.coverDate | date: "mediumDate" }}
         </mat-cell>
       </ng-container>
 
@@ -79,7 +80,7 @@
           {{ "comic-book.label.added-date" | translate }}
         </mat-header-cell>
         <mat-cell *matCellDef="let entry">
-          {{ entry.coverDate | date : "mediumDate" }}
+          {{ entry.coverDate | date: "mediumDate" }}
         </mat-cell>
       </ng-container>
 

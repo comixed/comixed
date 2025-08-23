@@ -26,9 +26,9 @@
           [disabled]="queryParameterService.filterText$.value?.length > 0"
         >
           @for (option of displayableCoverYears; track option) {
-          <mat-option [value]="option.value">
-            {{ option.label | translate }}
-          </mat-option>
+            <mat-option [value]="option.value">
+              {{ option.label | translate }}
+            </mat-option>
           }
         </mat-select>
       </mat-form-field>
@@ -42,9 +42,9 @@
           [disabled]="queryParameterService.filterText$.value?.length > 0"
         >
           @for (option of displayableCoverMonths; track option) {
-          <mat-option [value]="option.value">
-            {{ option.label | translate }}
-          </mat-option>
+            <mat-option [value]="option.value">
+              {{ option.label | translate }}
+            </mat-option>
           }
         </mat-select>
       </mat-form-field>
@@ -58,9 +58,9 @@
           [disabled]="queryParameterService.filterText$.value?.length > 0"
         >
           @for (option of archiveTypeOptions; track option) {
-          <mat-option [value]="option.value">
-            {{ option.label | translate }}
-          </mat-option>
+            <mat-option [value]="option.value">
+              {{ option.label | translate }}
+            </mat-option>
           }
         </mat-select>
       </mat-form-field>
@@ -74,9 +74,9 @@
           [disabled]="queryParameterService.filterText$.value?.length > 0"
         >
           @for (option of comicTypeOptions; track option) {
-          <mat-option [value]="option.value">
-            {{ option.label | translate }}
-          </mat-option>
+            <mat-option [value]="option.value">
+              {{ option.label | translate }}
+            </mat-option>
           }
         </mat-select>
       </mat-form-field>
@@ -90,9 +90,9 @@
           [disabled]="queryParameterService.filterText$.value?.length > 0"
         >
           @for (option of pageCountOptions; track option) {
-          <mat-option [value]="option.value">
-            {{ option.label | translate }}
-          </mat-option>
+            <mat-option [value]="option.value">
+              {{ option.label | translate }}
+            </mat-option>
           }
         </mat-select>
       </mat-form-field>

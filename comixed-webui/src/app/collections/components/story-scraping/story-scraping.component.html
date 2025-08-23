@@ -5,14 +5,15 @@
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
     [matTooltip]="
-      'scraping.tooltip.skip-cache' | translate : { enabled: skipCache }
+      'scraping.tooltip.skip-cache' | translate: { enabled: skipCache }
     "
     (click)="skipCache = !skipCache"
   >
     @if (skipCache) {
-    <mat-icon>block</mat-icon>
-    } @if (!skipCache) {
-    <mat-icon>remove_circle_outline</mat-icon>
+      <mat-icon>block</mat-icon>
+    }
+    @if (!skipCache) {
+      <mat-icon>remove_circle_outline</mat-icon>
     }
   </button>
 
@@ -46,9 +47,9 @@
               [value]="metadataSource?.metadataSourceId"
             >
               @for (source of metadataSources; track source) {
-              <mat-option [value]="source.metadataSourceId">
-                {{ source.name }}
-              </mat-option>
+                <mat-option [value]="source.metadataSourceId">
+                  {{ source.name }}
+                </mat-option>
               }
             </mat-select>
             <input matInput hidden />
@@ -79,9 +80,9 @@
             </mat-label>
             <mat-select formControlName="maxRecords">
               @for (option of maxRecordsOptions; track option) {
-              <mat-option [value]="option.value">
-                {{ option.label | translate }}
-              </mat-option>
+                <mat-option [value]="option.value">
+                  {{ option.label | translate }}
+                </mat-option>
               }
             </mat-select>
             <input matInput hidden />
@@ -101,22 +102,22 @@
     </form>
 
     @if (imageUrl?.length > 0) {
-    <div class="cx-width-100">
-      <mat-card>
-        <mat-card-title class="cx-align-content-center cx-text-nowrap">
-          {{ imageTitle }}
-        </mat-card-title>
-        <mat-card-content>
-          <img
-            loading="lazy"
-            [src]="imageUrl"
-            [alt]="imageUrl"
-            width="100%"
-            height="auto"
-          />
-        </mat-card-content>
-      </mat-card>
-    </div>
+      <div class="cx-width-100">
+        <mat-card>
+          <mat-card-title class="cx-align-content-center cx-text-nowrap">
+            {{ imageTitle }}
+          </mat-card-title>
+          <mat-card-content>
+            <img
+              loading="lazy"
+              [src]="imageUrl"
+              [alt]="imageUrl"
+              width="100%"
+              height="auto"
+            />
+          </mat-card-content>
+        </mat-card>
+      </div>
     }
   </div>
 

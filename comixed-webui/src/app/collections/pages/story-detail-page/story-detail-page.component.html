@@ -9,30 +9,32 @@
 </h2>
 
 @if (isAdmin && !showStoryScraping) {
-<div class="cx-fab-container-bottom-left">
-  <button
-    id="show-scraping-form-button"
-    mat-fab
-    color="primary"
-    [matTooltip]="'story-detail.button.scrape-story' | translate"
-    (click)="onShowStoryScraping()"
-  >
-    <mat-icon>find_replace</mat-icon>
-  </button>
-</div>
-} @if (!showStoryScraping) {
-<cx-comic-list-view
-  class="cx-width-100"
-  [isAdmin]="isAdmin"
-  [comics]="comics"
-  [totalComics]="totalComics"
-  [coverYears]="coverYears"
-  [coverMonths]="coverMonths"
-  [selectedIds]="selectedIds"
-  [comicBooksRead]="lastReadDates"
-  [readingLists]="readingLists"
-  (selectAll)="onSelectAll($event)"
-></cx-comic-list-view>
-} @if (showStoryScraping) {
-<cx-story-scraping [storyName]="storyName"></cx-story-scraping>
+  <div class="cx-fab-container-bottom-left">
+    <button
+      id="show-scraping-form-button"
+      mat-fab
+      color="primary"
+      [matTooltip]="'story-detail.button.scrape-story' | translate"
+      (click)="onShowStoryScraping()"
+    >
+      <mat-icon>find_replace</mat-icon>
+    </button>
+  </div>
+}
+@if (!showStoryScraping) {
+  <cx-comic-list-view
+    class="cx-width-100"
+    [isAdmin]="isAdmin"
+    [comics]="comics"
+    [totalComics]="totalComics"
+    [coverYears]="coverYears"
+    [coverMonths]="coverMonths"
+    [selectedIds]="selectedIds"
+    [comicBooksRead]="lastReadDates"
+    [readingLists]="readingLists"
+    (selectAll)="onSelectAll($event)"
+  ></cx-comic-list-view>
+}
+@if (showStoryScraping) {
+  <cx-story-scraping [storyName]="storyName"></cx-story-scraping>
 }

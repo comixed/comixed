@@ -1,26 +1,26 @@
 @if (isAdmin) {
-<mat-toolbar color="accent">
-  <button
-    id="save-comic-changes"
-    class="cx-toolbar-button cx-margin-left-5"
-    mat-icon-button
-    [matTooltip]="'comic-book.tooltip.save-changes' | translate"
-    [disabled]="!comicBookForm.valid"
-    (click)="onSaveChanges()"
-  >
-    <mat-icon>save</mat-icon>
-  </button>
-  <button
-    id="undo-comic-changes"
-    class="cx-toolbar-button cx-margin-left-5"
-    mat-icon-button
-    [matTooltip]="'comic-book.tooltip.undo-changes' | translate"
-    [disabled]="comicBookForm.untouched"
-    (click)="onUndoChanges()"
-  >
-    <mat-icon>undo</mat-icon>
-  </button>
-</mat-toolbar>
+  <mat-toolbar color="accent">
+    <button
+      id="save-comic-changes"
+      class="cx-toolbar-button cx-margin-left-5"
+      mat-icon-button
+      [matTooltip]="'comic-book.tooltip.save-changes' | translate"
+      [disabled]="!comicBookForm.valid"
+      (click)="onSaveChanges()"
+    >
+      <mat-icon>save</mat-icon>
+    </button>
+    <button
+      id="undo-comic-changes"
+      class="cx-toolbar-button cx-margin-left-5"
+      mat-icon-button
+      [matTooltip]="'comic-book.tooltip.undo-changes' | translate"
+      [disabled]="comicBookForm.untouched"
+      (click)="onUndoChanges()"
+    >
+      <mat-icon>undo</mat-icon>
+    </button>
+  </mat-toolbar>
 }
 
 <form [formGroup]="comicBookForm">
@@ -52,9 +52,9 @@
       (selectionChange)="onComicTypeSelected($event.value)"
     >
       @for (option of comicTypeOptions; track option) {
-      <mat-option [value]="option.value">
-        {{ option.label | translate }}
-      </mat-option>
+        <mat-option [value]="option.value">
+          {{ option.label | translate }}
+        </mat-option>
       }
     </mat-select>
   </mat-form-field>
@@ -67,9 +67,9 @@
       (selectionChange)="onImprintSelected($event.value)"
     >
       @for (option of imprintOptions; track option) {
-      <mat-option [value]="option.value.name">
-        {{ option.label }}
-      </mat-option>
+        <mat-option [value]="option.value.name">
+          {{ option.label }}
+        </mat-option>
       }
     </mat-select>
   </mat-form-field>

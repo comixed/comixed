@@ -209,8 +209,8 @@ export class ComicScrapingVolumeSelectionComponent
         volume.startYear === this.comicVolume
           ? EXACT_MATCH
           : volume.name.toUpperCase() === this.comicSeriesName.toUpperCase()
-          ? NEAR_MATCH
-          : NO_MATCH;
+            ? NEAR_MATCH
+            : NO_MATCH;
       return {
         item: volume,
         sortOrder

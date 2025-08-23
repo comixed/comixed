@@ -4,7 +4,7 @@
     mat-fab
     [matTooltip]="
       'collections.series-detail.tooltip.show-publisher'
-        | translate : { publisher: publisher }
+        | translate: { publisher: publisher }
     "
     [routerLink]="['/library/collections/publishers', publisher, 'series']"
   >
@@ -33,22 +33,22 @@
 <h2>
   {{
     "collections.series-detail.page-title"
-      | translate : { publisher: publisher, name: name, volume: volume }
+      | translate: { publisher: publisher, name: name, volume: volume }
   }}
 </h2>
 
 @if (dataSource.data.length > 0) {
-<h3>
-  {{
-    "collections.series-detail.page-title-percentage"
-      | translate
-        : {
-            percentage: percentageComplete | number : "1.0-2",
-            inLibrary: inLibrary,
-            totalIssues: totalIssues
-          }
-  }}
-</h3>
+  <h3>
+    {{
+      "collections.series-detail.page-title-percentage"
+        | translate
+          : {
+              percentage: percentageComplete | number: "1.0-2",
+              inLibrary: inLibrary,
+              totalIssues: totalIssues
+            }
+    }}
+  </h3>
 }
 
 <mat-paginator
@@ -110,7 +110,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.coverDate | date : medium }}
+        {{ entry.coverDate | date: medium }}
       </span>
     </mat-cell>
   </ng-container>
@@ -121,7 +121,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.storeDate | date : medium }}
+        {{ entry.storeDate | date: medium }}
       </span>
     </mat-cell>
   </ng-container>
@@ -132,14 +132,14 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       @if (entry.found) {
-      <mat-icon
-        [matTooltip]="
-          'collections.series-detail.text.found-in-library'
-            | translate : { exists: true }
-        "
-      >
-        check
-      </mat-icon>
+        <mat-icon
+          [matTooltip]="
+            'collections.series-detail.text.found-in-library'
+              | translate: { exists: true }
+          "
+        >
+          check
+        </mat-icon>
       }
     </mat-cell>
   </ng-container>

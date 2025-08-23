@@ -12,139 +12,143 @@
 </div>
 
 @if (showUserForm) {
-<div>
-  <form [formGroup]="editUserForm">
-    <mat-card appearance="outlined">
-      <mat-card-content class="cx-padding-left-15 cx-padding-right-15">
-        <mat-form-field class="cx-width-100" required>
-          <input
-            id="cx-login-email"
-            matInput
-            type="email"
-            formControlName="email"
-            [placeholder]="'user-accounts.placeholder.email' | translate"
-          />
-          <mat-error>
-            @if (controls.email.errors?.required) {
-            <span>
-              {{ "validation.field-required" | translate }}
-            </span>
-            } @if (controls.email.errors?.email) {
-            <span>
-              {{ "validation.email-required" | translate }}
-            </span>
-            }
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field class="cx-width-100" required>
-          <mat-checkbox id="cx-admin" formControlName="admin">
-            {{ "user-accounts.label.admin" | translate }}
-          </mat-checkbox>
-          <input matInput hidden />
-        </mat-form-field>
-        <mat-form-field class="cx-width-100" required>
-          <input
-            id="cx-login-password"
-            matInput
-            type="password"
-            formControlName="password"
-            [placeholder]="'user-accounts.placeholder.password' | translate"
-            (keyup)="onPasswordChanged()"
-          />
-          <mat-error>
-            @if (controls.password.errors?.required) {
-            <span>
-              {{ "validation.field-required" | translate }}
-            </span>
-            } @if (!!controls.password.errors?.minlength) {
-            <span>
-              {{
-                "validation.value-too-short"
-                  | translate
-                    : {
-                        length:
-                          controls.password.errors.minlength.requiredLength
-                      }
-              }}
-            </span>
-            } @if (!!controls.password.errors?.maxlength) {
-            <span>
-              {{
-                "validation.value-too-long"
-                  | translate
-                    : {
-                        length:
-                          controls.password.errors.maxlength.requiredLength
-                      }
-              }}
-            </span>
-            }
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field class="cx-width-100" required>
-          <input
-            id="cx-login-password-verification"
-            matInput
-            type="password"
-            formControlName="passwordVerify"
-            [placeholder]="
-              'user-accounts.placeholder.password-validation' | translate
-            "
-          />
-          <mat-error>
-            @if (controls.passwordVerify.errors?.required) {
-            <span>
-              {{ "validation.field-required" | translate }}
-            </span>
-            } @if (editUserForm.errors?.passwordsDontMatch) {
-            <span>
-              {{ "validation.password-mismatch" | translate }}
-            </span>
-            }
-          </mat-error>
-        </mat-form-field>
-      </mat-card-content>
-      <mat-card-actions>
-        <button
-          id="cx-login-submit-button"
-          class="cx-toolbar-button cx-margin-left-5"
-          mat-raised-button
-          color="primary"
-          (click)="onSaveAccount()"
-          [disabled]="!editUserForm.valid"
-        >
-          <mat-label>{{ "button.save" | translate }}</mat-label>
-          <mat-icon>person</mat-icon>
-        </button>
-        @if (!!user?.comixedUserId) {
-        <button
-          id="cx-delete-user-button"
-          class="cx-toolbar-button cx-margin-left-5"
-          mat-raised-button
-          color="warn"
-          [disabled]="users.length <= 1"
-          [matTooltip]="'user-accounts.button.delete-user' | translate"
-          (click)="onDeleteUser()"
-        >
-          <mat-label>{{ "button.delete" | translate }}</mat-label>
-          <mat-icon>person_remove</mat-icon>
-        </button>
-        }
-        <button
-          id="cx-close-user-form-button"
-          class="cx-toolbar-button cx-margin-left-5"
-          mat-raised-button
-          color="accent"
-          [matTooltip]="'user-accounts.button.close-user-form' | translate"
-          (click)="showUserForm = false"
-        >
-          <mat-label>{{ "button.close" | translate }}</mat-label>
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-card-actions>
-    </mat-card>
-  </form>
-</div>
+  <div>
+    <form [formGroup]="editUserForm">
+      <mat-card appearance="outlined">
+        <mat-card-content class="cx-padding-left-15 cx-padding-right-15">
+          <mat-form-field class="cx-width-100" required>
+            <input
+              id="cx-login-email"
+              matInput
+              type="email"
+              formControlName="email"
+              [placeholder]="'user-accounts.placeholder.email' | translate"
+            />
+            <mat-error>
+              @if (controls.email.errors?.required) {
+                <span>
+                  {{ "validation.field-required" | translate }}
+                </span>
+              }
+              @if (controls.email.errors?.email) {
+                <span>
+                  {{ "validation.email-required" | translate }}
+                </span>
+              }
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="cx-width-100" required>
+            <mat-checkbox id="cx-admin" formControlName="admin">
+              {{ "user-accounts.label.admin" | translate }}
+            </mat-checkbox>
+            <input matInput hidden />
+          </mat-form-field>
+          <mat-form-field class="cx-width-100" required>
+            <input
+              id="cx-login-password"
+              matInput
+              type="password"
+              formControlName="password"
+              [placeholder]="'user-accounts.placeholder.password' | translate"
+              (keyup)="onPasswordChanged()"
+            />
+            <mat-error>
+              @if (controls.password.errors?.required) {
+                <span>
+                  {{ "validation.field-required" | translate }}
+                </span>
+              }
+              @if (!!controls.password.errors?.minlength) {
+                <span>
+                  {{
+                    "validation.value-too-short"
+                      | translate
+                        : {
+                            length:
+                              controls.password.errors.minlength.requiredLength
+                          }
+                  }}
+                </span>
+              }
+              @if (!!controls.password.errors?.maxlength) {
+                <span>
+                  {{
+                    "validation.value-too-long"
+                      | translate
+                        : {
+                            length:
+                              controls.password.errors.maxlength.requiredLength
+                          }
+                  }}
+                </span>
+              }
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="cx-width-100" required>
+            <input
+              id="cx-login-password-verification"
+              matInput
+              type="password"
+              formControlName="passwordVerify"
+              [placeholder]="
+                'user-accounts.placeholder.password-validation' | translate
+              "
+            />
+            <mat-error>
+              @if (controls.passwordVerify.errors?.required) {
+                <span>
+                  {{ "validation.field-required" | translate }}
+                </span>
+              }
+              @if (editUserForm.errors?.passwordsDontMatch) {
+                <span>
+                  {{ "validation.password-mismatch" | translate }}
+                </span>
+              }
+            </mat-error>
+          </mat-form-field>
+        </mat-card-content>
+        <mat-card-actions>
+          <button
+            id="cx-login-submit-button"
+            class="cx-toolbar-button cx-margin-left-5"
+            mat-raised-button
+            color="primary"
+            (click)="onSaveAccount()"
+            [disabled]="!editUserForm.valid"
+          >
+            <mat-label>{{ "button.save" | translate }}</mat-label>
+            <mat-icon>person</mat-icon>
+          </button>
+          @if (!!user?.comixedUserId) {
+            <button
+              id="cx-delete-user-button"
+              class="cx-toolbar-button cx-margin-left-5"
+              mat-raised-button
+              color="warn"
+              [disabled]="users.length <= 1"
+              [matTooltip]="'user-accounts.button.delete-user' | translate"
+              (click)="onDeleteUser()"
+            >
+              <mat-label>{{ "button.delete" | translate }}</mat-label>
+              <mat-icon>person_remove</mat-icon>
+            </button>
+          }
+          <button
+            id="cx-close-user-form-button"
+            class="cx-toolbar-button cx-margin-left-5"
+            mat-raised-button
+            color="accent"
+            [matTooltip]="'user-accounts.button.close-user-form' | translate"
+            (click)="showUserForm = false"
+          >
+            <mat-label>{{ "button.close" | translate }}</mat-label>
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </form>
+  </div>
 }
 
 <h2>{{ "user-accounts.page-title" | translate }}</h2>
@@ -173,13 +177,14 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       @if (isAdmin(entry)) {
-      <mat-icon [matTooltip]="'user-accounts.tooltip.admin' | translate">
-        supervisor_account
-      </mat-icon>
-      } @if (isReader(entry)) {
-      <mat-icon [matTooltip]="'user-accounts.tooltip.reader' | translate">
-        person
-      </mat-icon>
+        <mat-icon [matTooltip]="'user-accounts.tooltip.admin' | translate">
+          supervisor_account
+        </mat-icon>
+      }
+      @if (isReader(entry)) {
+        <mat-icon [matTooltip]="'user-accounts.tooltip.reader' | translate">
+          person
+        </mat-icon>
       }
     </mat-cell>
   </ng-container>
@@ -190,7 +195,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.firstLoginDate | date : "medium" }}
+        {{ entry.firstLoginDate | date: "medium" }}
       </span>
     </mat-cell>
   </ng-container>
@@ -201,7 +206,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.lastLoginDate | date : "medium" }}
+        {{ entry.lastLoginDate | date: "medium" }}
       </span>
     </mat-cell>
   </ng-container>

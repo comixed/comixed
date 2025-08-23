@@ -151,9 +151,12 @@ describe('ComicScrapingComponent', () => {
   });
 
   describe('loading the metadata sources', () => {
+    beforeEach(() => {
+      component._preferredMetadataSource = null;
+    });
+
     describe('receiving no sources', () => {
       beforeEach(() => {
-        component._preferredMetadataSource = null;
         store.setState({
           ...initialState,
           [METADATA_SOURCE_LIST_FEATURE_KEY]: {
@@ -161,16 +164,15 @@ describe('ComicScrapingComponent', () => {
             sources: []
           }
         });
+      });
 
-        it('leaves the selected source as null', () => {
-          expect(component._preferredMetadataSource).toBeNull();
-        });
+      it('leaves the selected source as null', () => {
+        expect(component._preferredMetadataSource).toBeNull();
       });
     });
 
     describe('receiving a single source', () => {
       beforeEach(() => {
-        component._preferredMetadataSource = null;
         store.setState({
           ...initialState,
           [METADATA_SOURCE_LIST_FEATURE_KEY]: {
@@ -187,7 +189,6 @@ describe('ComicScrapingComponent', () => {
 
     describe('receiving multiple sources', () => {
       beforeEach(() => {
-        component._preferredMetadataSource = null;
         store.setState({
           ...initialState,
           [METADATA_SOURCE_LIST_FEATURE_KEY]: {

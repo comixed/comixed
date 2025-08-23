@@ -51,6 +51,10 @@ import {
   COMIC_LIST_FEATURE_KEY,
   initialState as initialComicListState
 } from '@app/comic-books/reducers/comic-list.reducer';
+import {
+  initialState as initialLibraryPluginState,
+  LIBRARY_PLUGIN_FEATURE_KEY
+} from '@app/library-plugins/reducers/library-plugin.reducer';
 
 describe('SeriesIssuePageComponent', () => {
   const PUBLISHER_NAME = 'The Publisher';
@@ -59,7 +63,8 @@ describe('SeriesIssuePageComponent', () => {
   const initialState = {
     [COMIC_LIST_FEATURE_KEY]: initialComicListState,
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
-    [USER_FEATURE_KEY]: initialUserState
+    [USER_FEATURE_KEY]: initialUserState,
+    [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState
   };
 
   let component: SeriesIssuePageComponent;

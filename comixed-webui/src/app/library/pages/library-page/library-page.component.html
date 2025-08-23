@@ -1,22 +1,23 @@
 <h2>
-  {{ "library.page-title." + pageContent | translate : { filtered: filtered } }}
+  {{ "library.page-title." + pageContent | translate: { filtered: filtered } }}
 </h2>
 
 <div class="cx-fab-container-bottom-left">
   @if (unreadOnly) {
-  <button
-    id="toggle-unread-only-flag"
-    mat-fab
-    color="primary"
-    [matTooltip]="'library.tooltip.toggle-unread-comics' | translate"
-    (click)="onToggleUnreadOnly()"
-  >
-    @if (showReadOnly) {
-    <mat-icon>mark_chat_read</mat-icon>
-    } @if (!showReadOnly) {
-    <mat-icon>mark_chat_unread</mat-icon>
-    }
-  </button>
+    <button
+      id="toggle-unread-only-flag"
+      mat-fab
+      color="primary"
+      [matTooltip]="'library.tooltip.toggle-unread-comics' | translate"
+      (click)="onToggleUnreadOnly()"
+    >
+      @if (showReadOnly) {
+        <mat-icon>mark_chat_read</mat-icon>
+      }
+      @if (!showReadOnly) {
+        <mat-icon>mark_chat_unread</mat-icon>
+      }
+    </button>
   }
 </div>
 

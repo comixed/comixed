@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>
   {{
     "library.edit-multiple-comics.title"
-      | translate : { count: this.comics.length }
+      | translate: { count: this.comics.length }
   }}
 </h2>
 
@@ -10,7 +10,7 @@
     <p>
       {{
         "library.edit-multiple-comics.header"
-          | translate : { count: this.comics.length }
+          | translate: { count: this.comics.length }
       }}
     </p>
   </div>
@@ -35,9 +35,9 @@
         required
       />
       @if (detailsForm.controls.series.errors?.required) {
-      <mat-error>
-        {{ "validation.field-required" | translate }}
-      </mat-error>
+        <mat-error>
+          {{ "validation.field-required" | translate }}
+        </mat-error>
       }
     </mat-form-field>
     <mat-form-field class="cx-width-25">
@@ -59,9 +59,9 @@
         required
       />
       @if (detailsForm.controls.issueNumber.errors?.required) {
-      <mat-error>
-        {{ "validation.field-required" | translate }}
-      </mat-error>
+        <mat-error>
+          {{ "validation.field-required" | translate }}
+        </mat-error>
       }
     </mat-form-field>
     <mat-form-field class="cx-width-25">
@@ -72,9 +72,9 @@
         (selectionChange)="onImprintSelected($event.value)"
       >
         @for (option of imprintOptions; track option) {
-        <mat-option [value]="option.value.name">
-          {{ option.label }}
-        </mat-option>
+          <mat-option [value]="option.value.name">
+            {{ option.label }}
+          </mat-option>
         }
       </mat-select>
     </mat-form-field>
@@ -86,9 +86,9 @@
         (selectionChange)="onComicTypeSelected($event.value)"
       >
         @for (option of comicTypeOptions; track option) {
-        <mat-option [value]="option.value">
-          {{ option.label | translate }}
-        </mat-option>
+          <mat-option [value]="option.value">
+            {{ option.label | translate }}
+          </mat-option>
         }
       </mat-select>
     </mat-form-field>

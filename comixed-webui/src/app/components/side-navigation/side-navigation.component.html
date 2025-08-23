@@ -1,370 +1,405 @@
 @if (!!user) {
-<h4 class="section-title">
-  {{ "navigation.heading.comics" | translate }}
-</h4>
-} @if (!!user) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/home"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>home</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.home" | translate }}
-  </mat-label>
-</button>
-} @if (!!user) {
-<mat-divider></mat-divider>
-} @if (!!user) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/library/all"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>local_library</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    <span class="cx-align-left">
-      {{ "navigation.option.all-comics" | translate }}
-    </span>
-    <span class="cx-align-right">
-      ({{ totalComicBooks$ | async | number }})
-    </span>
-  </mat-label>
-</button>
-} @if (!!user) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/library/selected"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>check_circle</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    <span class="cx-align-left">
-      {{ "navigation.option.selected-comics" | translate }}
-    </span>
-    <span class="cx-align-right">
-      ({{ selectedComicBooks$ | async | number }})
-    </span>
-  </mat-label>
-</button>
-} @if (isAdmin) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/library/unprocessed"
-  [queryParams]="queryParams"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>incomplete_circle</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.unprocessed-comics" | translate }}
-    ({{ unprocessedComicBooks$ | async | number }})
-  </mat-label>
-</button>
-} @if (!!user) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/library/unread"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>read_more</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.read-comics" | translate }}
-    ({{ readComicBooks$ | async | number }})
-  </mat-label>
-</button>
-} @if (isAdmin) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/library/unscraped"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>cloud_download</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.unscraped-comics" | translate }}
-    ({{ unscrapedComicBooks$ | async | number }})
-  </mat-label>
-</button>
-} @if (isAdmin) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/library/changed"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>cloud_download</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.changed-comics" | translate }}
-    ({{ changedComicBooks$ | async | number }})
-  </mat-label>
-</button>
-} @if (isAdmin) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/library/deleted"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>delete_sweep</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.deleted-comics" | translate }}
-    ({{ deletedComicBooks$ | async | number }})
-  </mat-label>
-</button>
-} @if (isAdmin) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/library/duplicates/comics"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>dynamic_feed</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.duplicate-comics" | translate }}
-    ({{ duplicateComicBooks$ | async | number }})
-  </mat-label>
-</button>
-} @if (isAdmin) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/library/duplicates/pages"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>control_point_duplicate</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.duplicate-pages" | translate }}
-  </mat-label>
-</button>
-} @if (isAdmin && blockedPagesEnabled) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/library/pages/blocked"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>block</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.blocked-hashes" | translate }}
-  </mat-label>
-</button>
-} @if (isAdmin) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/library/pages/deleted"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>delete_sweep</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.deleted-pages" | translate }}
-  </mat-label>
-</button>
-} @if (isAdmin) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/library/import"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>publish</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.import-comic-books" | translate }}
-  </mat-label>
-</button>
-} @if (isAdmin) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/library/processing"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>publish</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.processing-comic-books" | translate }}
-  </mat-label>
-</button>
-} @if (isAdmin) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/metadata/scraping/issues"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>data_object</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.metadata-scraping" | translate }}
-  </mat-label>
-</button>
-} @if (isAdmin) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/metadata/process"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>batch_prediction</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.metadata-batch-process" | translate }}
-  </mat-label>
-</button>
-} @if (!!user) {
-<mat-divider></mat-divider>
-} @if (!!user) {
-<h4 class="section-title">
-  {{ "navigation.heading.collections" | translate }}
-</h4>
-} @if (!!user) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/library/collections/publishers"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>business</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.publisher-collection" | translate }}
-  </mat-label>
-</button>
-} @if (!!user) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/library/collections/series"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>auto_stories</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.series-collection" | translate }}
-  </mat-label>
-</button>
-} @if (!!user) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/library/collections/characters"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>person_outline</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.character-collection" | translate }}
-  </mat-label>
-</button>
-} @if (!!user) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/library/collections/teams"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>people</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.team-collection" | translate }}
-  </mat-label>
-</button>
-} @if (!!user) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/library/collections/locations"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>place</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.location-collection" | translate }}
-  </mat-label>
-</button>
-} @if (!!user) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/library/collections/stories"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>layers</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.story-collection" | translate }}
-  </mat-label>
-</button>
-} @if (!!user) {
-<mat-divider></mat-divider>
-} @if (!!user) {
-<h4 class="section-title">
-  {{ "navigation.heading.reading-lists" | translate }}
-</h4>
-} @if (!!user) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/lists/reading/all"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>library_add</mat-icon>
-  <mat-label class="cx-text-nowrap">
+  <h4 class="section-title">
+    {{ "navigation.heading.comics" | translate }}
+  </h4>
+}
+@if (!!user) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/home"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>home</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.home" | translate }}
+    </mat-label>
+  </button>
+}
+@if (!!user) {
+  <mat-divider></mat-divider>
+}
+@if (!!user) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/library/all"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>local_library</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      <span class="cx-align-left">
+        {{ "navigation.option.all-comics" | translate }}
+      </span>
+      <span class="cx-align-right">
+        ({{ totalComicBooks$ | async | number }})
+      </span>
+    </mat-label>
+  </button>
+}
+@if (!!user) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/library/selected"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>check_circle</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      <span class="cx-align-left">
+        {{ "navigation.option.selected-comics" | translate }}
+      </span>
+      <span class="cx-align-right">
+        ({{ selectedComicBooks$ | async | number }})
+      </span>
+    </mat-label>
+  </button>
+}
+@if (isAdmin) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/library/unprocessed"
+    [queryParams]="queryParams"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>incomplete_circle</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.unprocessed-comics" | translate }}
+      ({{ unprocessedComicBooks$ | async | number }})
+    </mat-label>
+  </button>
+}
+@if (!!user) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/library/unread"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>read_more</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.read-comics" | translate }}
+      ({{ readComicBooks$ | async | number }})
+    </mat-label>
+  </button>
+}
+@if (isAdmin) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/library/unscraped"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>cloud_download</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.unscraped-comics" | translate }}
+      ({{ unscrapedComicBooks$ | async | number }})
+    </mat-label>
+  </button>
+}
+@if (isAdmin) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/library/changed"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>cloud_download</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.changed-comics" | translate }}
+      ({{ changedComicBooks$ | async | number }})
+    </mat-label>
+  </button>
+}
+@if (isAdmin) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/library/deleted"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>delete_sweep</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.deleted-comics" | translate }}
+      ({{ deletedComicBooks$ | async | number }})
+    </mat-label>
+  </button>
+}
+@if (isAdmin) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/library/duplicates/comics"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>dynamic_feed</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.duplicate-comics" | translate }}
+      ({{ duplicateComicBooks$ | async | number }})
+    </mat-label>
+  </button>
+}
+@if (isAdmin) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/library/duplicates/pages"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>control_point_duplicate</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.duplicate-pages" | translate }}
+    </mat-label>
+  </button>
+}
+@if (isAdmin && blockedPagesEnabled) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/library/pages/blocked"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>block</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.blocked-hashes" | translate }}
+    </mat-label>
+  </button>
+}
+@if (isAdmin) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/library/pages/deleted"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>delete_sweep</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.deleted-pages" | translate }}
+    </mat-label>
+  </button>
+}
+@if (isAdmin) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/library/import"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>publish</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.import-comic-books" | translate }}
+    </mat-label>
+  </button>
+}
+@if (isAdmin) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/library/processing"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>publish</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.processing-comic-books" | translate }}
+    </mat-label>
+  </button>
+}
+@if (isAdmin) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/metadata/scraping/issues"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>data_object</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.metadata-scraping" | translate }}
+    </mat-label>
+  </button>
+}
+@if (isAdmin) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/metadata/process"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>batch_prediction</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.metadata-batch-process" | translate }}
+    </mat-label>
+  </button>
+}
+@if (!!user) {
+  <mat-divider></mat-divider>
+}
+@if (!!user) {
+  <h4 class="section-title">
+    {{ "navigation.heading.collections" | translate }}
+  </h4>
+}
+@if (!!user) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/library/collections/publishers"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>business</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.publisher-collection" | translate }}
+    </mat-label>
+  </button>
+}
+@if (!!user) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/library/collections/series"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>auto_stories</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.series-collection" | translate }}
+    </mat-label>
+  </button>
+}
+@if (!!user) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/library/collections/characters"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>person_outline</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.character-collection" | translate }}
+    </mat-label>
+  </button>
+}
+@if (!!user) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/library/collections/teams"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>people</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.team-collection" | translate }}
+    </mat-label>
+  </button>
+}
+@if (!!user) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/library/collections/locations"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>place</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.location-collection" | translate }}
+    </mat-label>
+  </button>
+}
+@if (!!user) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/library/collections/stories"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>layers</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.story-collection" | translate }}
+    </mat-label>
+  </button>
+}
+@if (!!user) {
+  <mat-divider></mat-divider>
+}
+@if (!!user) {
+  <h4 class="section-title">
     {{ "navigation.heading.reading-lists" | translate }}
-  </mat-label>
-</button>
-} @for (list of readingLists; track list) {
-<button
-  mat-button
-  class="menu-button"
-  [routerLink]="['/lists', 'reading', list.readingListId]"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>format_list_numbered_rtl</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ list.name }}
-  </mat-label>
-</button>
-} @if (isAdmin) {
-<mat-divider></mat-divider>
-} @if (isAdmin) {
-<h4 class="section-title">
-  {{ "navigation.heading.admin" | translate }}
-</h4>
-} @if (isAdmin) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/admin/accounts"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>manage_accounts</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.user-accounts" | translate }}
-  </mat-label>
-</button>
-} @if (isAdmin) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/admin/configuration"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>settings</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.configuration" | translate }}
-  </mat-label>
-</button>
-} @if (isAdmin) {
-<button
-  mat-button
-  class="menu-button"
-  routerLink="/admin/processes"
-  routerLinkActive="active-nav-button"
->
-  <mat-icon>batch_prediction</mat-icon>
-  <mat-label class="cx-text-nowrap">
-    {{ "navigation.option.batch-processes" | translate }}
-  </mat-label>
-</button>
-} @if (!!user) {
-<mat-divider></mat-divider>
+  </h4>
+}
+@if (!!user) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/lists/reading/all"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>library_add</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.heading.reading-lists" | translate }}
+    </mat-label>
+  </button>
+}
+@for (list of readingLists; track list) {
+  <button
+    mat-button
+    class="menu-button"
+    [routerLink]="['/lists', 'reading', list.readingListId]"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>format_list_numbered_rtl</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ list.name }}
+    </mat-label>
+  </button>
+}
+@if (isAdmin) {
+  <mat-divider></mat-divider>
+}
+@if (isAdmin) {
+  <h4 class="section-title">
+    {{ "navigation.heading.admin" | translate }}
+  </h4>
+}
+@if (isAdmin) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/admin/accounts"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>manage_accounts</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.user-accounts" | translate }}
+    </mat-label>
+  </button>
+}
+@if (isAdmin) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/admin/configuration"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>settings</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.configuration" | translate }}
+    </mat-label>
+  </button>
+}
+@if (isAdmin) {
+  <button
+    mat-button
+    class="menu-button"
+    routerLink="/admin/processes"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>batch_prediction</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.batch-processes" | translate }}
+    </mat-label>
+  </button>
+}
+@if (!!user) {
+  <mat-divider></mat-divider>
 }
 
 <h4 class="section-title">

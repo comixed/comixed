@@ -120,9 +120,9 @@ export class VolumeMetadataTableComponent implements AfterViewInit {
         volume.startYear === this.volume
           ? EXACT_MATCH
           : (!this.publisher || this.publisher === volume.publisher) &&
-            volume.name === this.series
-          ? NEAR_MATCH
-          : NO_MATCH;
+              volume.name === this.series
+            ? NEAR_MATCH
+            : NO_MATCH;
       return {
         item: volume,
         sortOrder

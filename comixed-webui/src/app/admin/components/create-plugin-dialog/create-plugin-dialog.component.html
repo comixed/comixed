@@ -22,9 +22,9 @@
           [disabled]="pluginLanguageState?.busy"
         >
           @for (option of pluginLanguageList; track option) {
-          <mat-option [value]="option.name">
-            {{ option.name }}
-          </mat-option>
+            <mat-option [value]="option.name">
+              {{ option.name }}
+            </mat-option>
           }
         </mat-select>
         <input matInput hidden />

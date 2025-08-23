@@ -27,14 +27,14 @@
 </div>
 
 @if (showUploadRow) {
-<mat-toolbar>
-  <input
-    id="fileUpload"
-    type="file"
-    (change)="onFileSelected($event.target.files[0])"
-    (click)="$event.stopPropagation()"
-  />
-</mat-toolbar>
+  <mat-toolbar>
+    <input
+      id="fileUpload"
+      type="file"
+      (change)="onFileSelected($event.target.files[0])"
+      (click)="$event.stopPropagation()"
+    />
+  </mat-toolbar>
 }
 
 <mat-paginator
@@ -114,7 +114,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.item.createdOn | date : "medium" }}
+        {{ entry.item.createdOn | date: "medium" }}
       </span>
     </mat-cell>
   </ng-container>

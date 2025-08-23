@@ -15,31 +15,34 @@
           </tr>
         </thead>
         <tbody>
-          @for (sourceProperty of properties.controls; track sourceProperty; let
-          i = $index) {
-          <tr [formGroupName]="i">
-            <td>
-              <mat-form-field class="cx-width-100">
-                <input
-                  [id]="'property-name-' + i"
-                  matInput
-                  class="cx-width-100"
-                  formControlName="propertyName"
-                  readonly
-                />
-              </mat-form-field>
-            </td>
-            <td>
-              <mat-form-field class="cx-width-100" required>
-                <input
-                  [id]="'property-value-' + i"
-                  matInput
-                  class="cx-width-100"
-                  formControlName="propertyValue"
-                />
-              </mat-form-field>
-            </td>
-          </tr>
+          @for (
+            sourceProperty of properties.controls;
+            track sourceProperty;
+            let i = $index
+          ) {
+            <tr [formGroupName]="i">
+              <td>
+                <mat-form-field class="cx-width-100">
+                  <input
+                    [id]="'property-name-' + i"
+                    matInput
+                    class="cx-width-100"
+                    formControlName="propertyName"
+                    readonly
+                  />
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field class="cx-width-100" required>
+                  <input
+                    [id]="'property-value-' + i"
+                    matInput
+                    class="cx-width-100"
+                    formControlName="propertyValue"
+                  />
+                </mat-form-field>
+              </td>
+            </tr>
           }
         </tbody>
       </table>

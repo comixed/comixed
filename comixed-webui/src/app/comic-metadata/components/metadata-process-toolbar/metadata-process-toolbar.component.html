@@ -5,14 +5,15 @@
     class="cx-toolbar-button"
     mat-icon-button
     [matTooltip]="
-      'metadata-update.tooltip.skip-cache' | translate : { skip: skipCache }
+      'metadata-update.tooltip.skip-cache' | translate: { skip: skipCache }
     "
     (click)="onToggleSkipCache()"
   >
     @if (skipCache) {
-    <mat-icon>check_box</mat-icon>
-    } @if (!skipCache) {
-    <mat-icon>check_box_outline_blank</mat-icon>
+      <mat-icon>check_box</mat-icon>
+    }
+    @if (!skipCache) {
+      <mat-icon>check_box_outline_blank</mat-icon>
     }
   </button>
   <button
