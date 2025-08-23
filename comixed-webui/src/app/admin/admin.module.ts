@@ -74,23 +74,6 @@ import { BatchProcessDetailPageComponent } from '@app/admin/pages/batch-process-
 import { UserAccountsPageComponent } from '@app/admin/pages/user-accounts-page/user-accounts-page.component';
 
 @NgModule({
-  declarations: [
-    ConfigurationPageComponent,
-    LibraryConfigurationComponent,
-    FilenameScrapingRulesConfigurationComponent,
-    ServerRuntimeComponent,
-    MetadataSourceListComponent,
-    MetadataSourceDetailComponent,
-    ServerMetricsComponent,
-    ServerMetricDetailsComponent,
-    MetricMeasurementPipe,
-    BatchProcessListPageComponent,
-    LibraryPluginsConfigurationComponent,
-    CreatePluginDialogComponent,
-    LibraryPluginSetupComponent,
-    BatchProcessDetailPageComponent,
-    UserAccountsPageComponent
-  ],
   imports: [
     CommonModule,
     CoreModule,
@@ -131,7 +114,22 @@ import { UserAccountsPageComponent } from '@app/admin/pages/user-accounts-page/u
     MatCheckboxModule,
     MatSelectModule,
     MatListModule,
-    LibraryPluginsModule
+    LibraryPluginsModule,
+    ConfigurationPageComponent,
+    LibraryConfigurationComponent,
+    FilenameScrapingRulesConfigurationComponent,
+    ServerRuntimeComponent,
+    MetadataSourceListComponent,
+    MetadataSourceDetailComponent,
+    ServerMetricsComponent,
+    ServerMetricDetailsComponent,
+    MetricMeasurementPipe,
+    BatchProcessListPageComponent,
+    LibraryPluginsConfigurationComponent,
+    CreatePluginDialogComponent,
+    LibraryPluginSetupComponent,
+    BatchProcessDetailPageComponent,
+    UserAccountsPageComponent
   ],
   exports: [CommonModule, CoreModule]
 })

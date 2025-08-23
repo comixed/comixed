@@ -19,10 +19,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { MetricDetail } from '@app/admin/models/metric-detail';
 
-@Pipe({
-  name: 'metricMeasurement',
-  standalone: false
-})
+@Pipe({ name: 'metricMeasurement' })
 export class MetricMeasurementPipe implements PipeTransform {
   transform(detail: MetricDetail, name: string): string {
     const measurement = detail.measurements.find(

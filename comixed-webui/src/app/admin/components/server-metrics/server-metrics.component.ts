@@ -32,12 +32,25 @@ import {
   loadMetricDetails,
   loadMetricList
 } from '@app/admin/actions/metrics.actions';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { MatInput } from '@angular/material/input';
+import { ServerMetricDetailsComponent } from '../server-metric-details/server-metric-details.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'cx-health-metrics',
   templateUrl: './server-metrics.component.html',
   styleUrls: ['./server-metrics.component.scss'],
-  standalone: false
+  imports: [
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatInput,
+    ServerMetricDetailsComponent,
+    TranslateModule
+  ]
 })
 export class ServerMetricsComponent implements OnInit, OnDestroy {
   metricStateSubscription: Subscription;

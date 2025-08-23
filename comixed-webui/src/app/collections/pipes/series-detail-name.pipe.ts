@@ -19,10 +19,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Issue } from '@app/collections/models/issue';
 
-@Pipe({
-  name: 'seriesDetailName',
-  standalone: false
-})
+@Pipe({ name: 'seriesDetailName' })
 export class SeriesDetailNamePipe implements PipeTransform {
   transform(issue: Issue): string {
     return `${issue.publisher} : ${issue.series} V${issue.volume}`;

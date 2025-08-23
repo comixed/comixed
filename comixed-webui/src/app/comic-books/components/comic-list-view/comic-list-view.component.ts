@@ -27,16 +27,29 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow,
+  MatNoDataRow
+} from '@angular/material/table';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { Store } from '@ngrx/store';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import {
   convertSelectedComicBooks,
   convertSingleComicBook
@@ -88,12 +101,62 @@ import {
 import { batchScrapeComicBooks } from '@app/comic-metadata/actions/multi-book-scraping.actions';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import { loadReadingLists } from '@app/lists/actions/reading-lists.actions';
+import {
+  MatCard,
+  MatCardTitle,
+  MatCardSubtitle,
+  MatCardContent
+} from '@angular/material/card';
+import { ComicListFilterComponent } from '../comic-list-filter/comic-list-filter.component';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatLabel } from '@angular/material/form-field';
+import { AsyncPipe, DatePipe } from '@angular/common';
+import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
+import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 
 @Component({
   selector: 'cx-comic-list-view',
   templateUrl: './comic-list-view.component.html',
   styleUrls: ['./comic-list-view.component.scss'],
-  standalone: false
+  imports: [
+    MatCard,
+    MatCardTitle,
+    MatCardSubtitle,
+    MatCardContent,
+    ComicListFilterComponent,
+    MatPaginator,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatIcon,
+    MatTooltip,
+    MatCellDef,
+    MatCell,
+    MatMenuTrigger,
+    MatCheckbox,
+    MatSortHeader,
+    RouterLink,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatNoDataRow,
+    MatMenu,
+    MatMenuItem,
+    MatLabel,
+    AsyncPipe,
+    DatePipe,
+    TranslateModule,
+    ComicCoverUrlPipe,
+    ComicTitlePipe
+  ]
 })
 export class ComicListViewComponent
   implements OnInit, OnDestroy, AfterViewInit

@@ -53,7 +53,6 @@ describe('MetadataProcessToolbarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MetadataProcessToolbarComponent],
       imports: [
         NoopAnimationsModule,
         LoggerModule.forRoot(),
@@ -61,7 +60,8 @@ describe('MetadataProcessToolbarComponent', () => {
         MatDialogModule,
         MatTooltipModule,
         MatToolbarModule,
-        MatIconModule
+        MatIconModule,
+        MetadataProcessToolbarComponent
       ],
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();

@@ -26,7 +26,20 @@ import {
 } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow,
+  MatNoDataRow
+} from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import {
   selectBatchProcessesState,
@@ -39,19 +52,48 @@ import {
   deleteSelectedBatchJobs,
   loadBatchProcessList
 } from '@app/admin/actions/batch-processes.actions';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { BatchProcessDetail } from '@app/admin/models/batch-process-detail';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
+import { MatFabButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { RouterLink } from '@angular/router';
+import { AsyncPipe, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'cx-batch-process-list-page',
   templateUrl: './batch-process-list-page.component.html',
   styleUrls: ['./batch-process-list-page.component.scss'],
-  standalone: false
+  imports: [
+    MatFabButton,
+    MatTooltip,
+    MatIcon,
+    MatPaginator,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCheckbox,
+    MatCellDef,
+    MatCell,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    RouterLink,
+    MatNoDataRow,
+    AsyncPipe,
+    DatePipe,
+    TranslateModule
+  ]
 })
 export class BatchProcessListPageComponent
   implements OnInit, OnDestroy, AfterViewInit

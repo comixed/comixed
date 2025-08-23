@@ -43,17 +43,15 @@ describe('ComicDetailsDialogComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        ComicDetailsDialogComponent,
-        ComicPageComponent,
-        ComicTitlePipe,
-        ComicDetailCoverUrlPipe
-      ],
       imports: [
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatDialogModule,
-        MatCardModule
+        MatCardModule,
+        ComicDetailsDialogComponent,
+        ComicPageComponent,
+        ComicTitlePipe,
+        ComicDetailCoverUrlPipe
       ],
       providers: [
         provideMockStore({ initialState }),

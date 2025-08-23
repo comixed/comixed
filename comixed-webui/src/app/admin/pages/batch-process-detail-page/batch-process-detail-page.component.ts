@@ -34,15 +34,16 @@ import {
   loadBatchProcessList,
   setBatchProcessDetail
 } from '@app/admin/actions/batch-processes.actions';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TitleService } from '@app/core/services/title.service';
+import { DatePipe, KeyValuePipe } from '@angular/common';
 
 @Component({
   selector: 'cx-batch-process-detail-page',
   templateUrl: './batch-process-detail-page.component.html',
   styleUrls: ['./batch-process-detail-page.component.scss'],
-  standalone: false
+  imports: [DatePipe, KeyValuePipe, TranslateModule]
 })
 export class BatchProcessDetailPageComponent implements OnInit, OnDestroy {
   paramSubscription: Subscription;

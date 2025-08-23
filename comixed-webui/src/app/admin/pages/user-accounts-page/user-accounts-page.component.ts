@@ -25,7 +25,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { TitleService } from '@app/core/services/title.service';
 import { Store } from '@ngrx/store';
@@ -35,9 +35,21 @@ import {
   selectManageUsersState
 } from '@app/user/selectors/manage-users.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow
+} from '@angular/material/table';
 import { User } from '@app/user/models/user';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import {
   deleteUserAccount,
   loadUserAccountList,
@@ -49,7 +61,8 @@ import {
   AbstractControl,
   FormBuilder,
   FormGroup,
-  Validators
+  Validators,
+  ReactiveFormsModule
 } from '@angular/forms';
 import {
   MAX_PASSWORD_LENGTH,
@@ -61,12 +74,53 @@ import {
   passwordVerifyValidator
 } from '@app/user/user.functions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import { MatFabButton, MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import {
+  MatCard,
+  MatCardContent,
+  MatCardActions
+} from '@angular/material/card';
+import { MatFormField, MatError, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { AsyncPipe, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'cx-user-accounts-page',
   templateUrl: './user-accounts-page.component.html',
   styleUrl: './user-accounts-page.component.scss',
-  standalone: false
+  imports: [
+    MatFabButton,
+    MatTooltip,
+    MatIcon,
+    ReactiveFormsModule,
+    MatCard,
+    MatCardContent,
+    MatFormField,
+    MatInput,
+    MatError,
+    MatCheckbox,
+    MatCardActions,
+    MatButton,
+    MatLabel,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCellDef,
+    MatCell,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    AsyncPipe,
+    DatePipe,
+    TranslateModule
+  ]
 })
 export class UserAccountsPageComponent
   implements OnInit, OnDestroy, AfterViewInit

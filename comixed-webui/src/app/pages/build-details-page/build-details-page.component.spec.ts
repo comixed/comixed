@@ -48,14 +48,14 @@ describe('BuildDetailsPageComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [BuildDetailsPageComponent],
       imports: [
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatCardModule,
         MatIconModule,
         MatTooltipModule,
-        ClipboardModule
+        ClipboardModule,
+        BuildDetailsPageComponent
       ],
       providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();

@@ -26,7 +26,20 @@ import {
   ViewChild
 } from '@angular/core';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow,
+  MatNoDataRow
+} from '@angular/material/table';
 import {
   EXACT_MATCH,
   MATCHABILITY,
@@ -34,16 +47,45 @@ import {
   NO_MATCH
 } from '@app/comic-books/components/comic-scraping-volume-selection/comic-scraping-volume-selection.component';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@app/core';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
+import { IssueMetadataTitlePipe } from '@app/comic-books/pipes/issue-metadata-title.pipe';
 
 @Component({
   selector: 'cx-volume-metadata-table',
   templateUrl: './volume-metadata-table.component.html',
   styleUrls: ['./volume-metadata-table.component.scss'],
-  standalone: false
+  imports: [
+    MatToolbar,
+    MatFormField,
+    MatInput,
+    MatPaginator,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCellDef,
+    MatCell,
+    MatTooltip,
+    MatIcon,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatNoDataRow,
+    TranslateModule,
+    IssueMetadataTitlePipe
+  ]
 })
 export class VolumeMetadataTableComponent implements AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;

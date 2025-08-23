@@ -70,8 +70,7 @@ describe('FooterComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [FooterComponent],
-      imports: [LoggerModule.forRoot()],
+      imports: [LoggerModule.forRoot(), FooterComponent],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();
 

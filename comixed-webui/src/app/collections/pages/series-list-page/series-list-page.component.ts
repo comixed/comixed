@@ -17,7 +17,20 @@
  */
 
 import { AfterViewInit, Component, inject, OnDestroy } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow,
+  MatNoDataRow
+} from '@angular/material/table';
 import { Series } from '@app/collections/models/series';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
@@ -29,20 +42,51 @@ import {
   selectSeriesState,
   selectSeriesTotal
 } from '@app/collections/selectors/series.selectors';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { isAdmin } from '@app/user/user.functions';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { PAGE_SIZE_OPTIONS } from '@app/core';
 import { setBusyState } from '@app/core/actions/busy.actions';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { loadSeriesList } from '@app/collections/actions/series.actions';
+import { FilterTextFormComponent } from '../../components/filter-text-form/filter-text-form.component';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import { MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatLabel } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'cx-series-list-page',
   templateUrl: './series-list-page.component.html',
   styleUrls: ['./series-list-page.component.scss'],
-  standalone: false
+  imports: [
+    FilterTextFormComponent,
+    MatPaginator,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCellDef,
+    MatCell,
+    RouterLink,
+    MatButton,
+    MatTooltip,
+    MatLabel,
+    MatIcon,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatNoDataRow,
+    AsyncPipe,
+    TranslateModule
+  ]
 })
 export class SeriesListPageComponent implements OnDestroy, AfterViewInit {
   dataSource = new MatTableDataSource<Series>([]);

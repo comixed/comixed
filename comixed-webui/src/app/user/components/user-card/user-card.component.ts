@@ -18,12 +18,13 @@
 
 import { Component, Input } from '@angular/core';
 import { User } from '@app/user/models/user';
+import { GravatarModule } from 'ngx-gravatar';
 
 @Component({
   selector: 'cx-user-card',
   templateUrl: './user-card.component.html',
   styleUrls: ['./user-card.component.scss'],
-  standalone: false
+  imports: [GravatarModule]
 })
 export class UserCardComponent {
   @Input() user: User;

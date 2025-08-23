@@ -34,7 +34,8 @@ import {
   AbstractControl,
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators
+  Validators,
+  ReactiveFormsModule
 } from '@angular/forms';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { selectUserState } from '@app/user/selectors/user.selectors';
@@ -46,17 +47,69 @@ import {
   saveCurrentUser,
   saveUserPreference
 } from '@app/user/actions/user.actions';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { passwordVerifyValidator } from '@app/user/user.functions';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow
+} from '@angular/material/table';
 import { Preference } from '@app/user/models/preference';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import { GravatarModule } from 'ngx-gravatar';
+import {
+  MatCard,
+  MatCardContent,
+  MatCardActions
+} from '@angular/material/card';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'cx-edit-account-bar',
   templateUrl: './edit-account-bar.component.html',
   styleUrls: ['./edit-account-bar.component.scss'],
-  standalone: false
+  imports: [
+    GravatarModule,
+    ReactiveFormsModule,
+    MatCard,
+    MatCardContent,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    MatCardActions,
+    MatButton,
+    MatIcon,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCellDef,
+    MatCell,
+    MatIconButton,
+    MatTooltip,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    DatePipe,
+    TranslateModule
+  ]
 })
 export class EditAccountBarComponent implements OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;

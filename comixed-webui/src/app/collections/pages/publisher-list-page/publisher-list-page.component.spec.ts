@@ -58,7 +58,6 @@ describe('PublisherListPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PublisherListPageComponent, FilterTextFormComponent],
       imports: [
         NoopAnimationsModule,
         FormsModule,
@@ -72,7 +71,9 @@ describe('PublisherListPageComponent', () => {
         MatTableModule,
         MatSortModule,
         MatInputModule,
-        MatIconModule
+        MatIconModule,
+        PublisherListPageComponent,
+        FilterTextFormComponent
       ],
       providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();

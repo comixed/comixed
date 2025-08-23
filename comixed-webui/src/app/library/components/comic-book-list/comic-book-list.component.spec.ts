@@ -49,14 +49,15 @@ describe('ComicBookListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ComicBookListComponent, ComicTitlePipe],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatTableModule,
-        MatTooltipModule
+        MatTooltipModule,
+        ComicBookListComponent,
+        ComicTitlePipe
       ]
     }).compileComponents();
 

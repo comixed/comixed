@@ -53,12 +53,12 @@ xdescribe('ComicsReadChartComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ComicsReadChartComponent],
       imports: [
         NoopAnimationsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
-        NgxChartsModule
+        NgxChartsModule,
+        ComicsReadChartComponent
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();

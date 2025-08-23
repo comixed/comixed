@@ -23,10 +23,11 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators
+  Validators,
+  ReactiveFormsModule
 } from '@angular/forms';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngrx/store';
 import { updateComicBook } from '@app/comic-books/actions/comic-book.actions';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
@@ -39,12 +40,44 @@ import { ComicType } from '@app/comic-books/models/comic-type';
 import { COMIC_TYPE_SELECTION_OPTIONS } from '@app/comic-books/comic-books.constants';
 import { ComicMetadataSource } from '@app/comic-books/models/comic-metadata-source';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import {
+  MatFormField,
+  MatLabel,
+  MatSuffix
+} from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatSelect, MatOption } from '@angular/material/select';
+import {
+  MatDatepickerInput,
+  MatDatepickerToggle,
+  MatDatepicker
+} from '@angular/material/datepicker';
 
 @Component({
   selector: 'cx-comic-detail-edit',
   templateUrl: './comic-detail-edit.component.html',
   styleUrls: ['./comic-detail-edit.component.scss'],
-  standalone: false
+  imports: [
+    MatToolbar,
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatSelect,
+    MatOption,
+    MatDatepickerInput,
+    MatDatepickerToggle,
+    MatSuffix,
+    MatDatepicker,
+    TranslateModule
+  ]
 })
 export class ComicDetailEditComponent implements OnInit, OnDestroy {
   @Input() isAdmin = false;

@@ -63,13 +63,6 @@ xdescribe('HomePageComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        HomePageComponent,
-        CollectionsChartComponent,
-        ComicStateChartComponent,
-        ComicsByYearChartComponent,
-        ComicsReadChartComponent
-      ],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
@@ -80,7 +73,12 @@ xdescribe('HomePageComponent', () => {
         MatFormFieldModule,
         MatGridListModule,
         MatProgressBarModule,
-        NgxChartsModule
+        NgxChartsModule,
+        HomePageComponent,
+        CollectionsChartComponent,
+        ComicStateChartComponent,
+        ComicsByYearChartComponent,
+        ComicsReadChartComponent
       ],
       providers: [TitleService, provideMockStore({ initialState })]
     }).compileComponents();

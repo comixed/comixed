@@ -25,14 +25,32 @@ import { selectReleaseDetailsState } from '@app/selectors/release.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { loadCurrentReleaseDetails } from '@app/actions/release.actions';
 import { TitleService } from '@app/core/services/title.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Clipboard } from '@angular/cdk/clipboard';
+import {
+  MatCard,
+  MatCardContent,
+  MatCardActions
+} from '@angular/material/card';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'cx-build-details',
   templateUrl: './build-details-page.component.html',
   styleUrls: ['./build-details-page.component.scss'],
-  standalone: false
+  imports: [
+    MatCard,
+    MatCardContent,
+    MatCardActions,
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
+    DatePipe,
+    TranslateModule
+  ]
 })
 export class BuildDetailsPageComponent implements OnInit, OnDestroy {
   detailsSubscription: Subscription;

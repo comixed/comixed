@@ -50,7 +50,6 @@ describe('ProcessingStatusPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ProcessingStatusPageComponent],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
@@ -59,7 +58,8 @@ describe('ProcessingStatusPageComponent', () => {
         MatProgressBarModule,
         MatTableModule,
         MatSortModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        ProcessingStatusPageComponent
       ],
       providers: [
         provideMockStore({ initialState }),

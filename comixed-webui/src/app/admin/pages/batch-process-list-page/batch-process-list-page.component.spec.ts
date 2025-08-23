@@ -72,7 +72,6 @@ describe('BatchProcessListPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [BatchProcessListPageComponent],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
@@ -85,7 +84,8 @@ describe('BatchProcessListPageComponent', () => {
         MatDialogModule,
         MatListModule,
         MatIconModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        BatchProcessListPageComponent
       ],
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();

@@ -28,20 +28,45 @@ import {
   FormBuilder,
   FormGroup,
   UntypedFormArray,
-  Validators
+  Validators,
+  ReactiveFormsModule
 } from '@angular/forms';
 import {
   setCurrentLibraryPlugin,
   updateLibraryPlugin
 } from '@app/library-plugins/actions/library-plugin.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import {
+  MatCard,
+  MatCardTitle,
+  MatCardContent,
+  MatCardActions
+} from '@angular/material/card';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { PluginTitlePipe } from '../../../library-plugins/pipes/plugin-title.pipe';
 
 @Component({
   selector: 'cx-library-plugin-setup',
   templateUrl: './library-plugin-setup.component.html',
   styleUrls: ['./library-plugin-setup.component.scss'],
-  standalone: false
+  imports: [
+    ReactiveFormsModule,
+    MatCard,
+    MatCardTitle,
+    MatCardContent,
+    MatFormField,
+    MatInput,
+    MatCardActions,
+    MatButton,
+    MatIcon,
+    MatLabel,
+    TranslateModule,
+    PluginTitlePipe
+  ]
 })
 export class LibraryPluginSetupComponent {
   pluginFormGroup: FormGroup;

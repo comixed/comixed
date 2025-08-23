@@ -17,11 +17,18 @@
  */
 
 import { Component, inject, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogClose
+} from '@angular/material/dialog';
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators
+  Validators,
+  ReactiveFormsModule
 } from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
@@ -34,12 +41,35 @@ import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics'
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { COMIC_TYPE_SELECTION_OPTIONS } from '@app/comic-books/comic-books.constants';
 import { ComicType } from '@app/comic-books/models/comic-type';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'cx-edit-multiple-comics',
   templateUrl: './edit-multiple-comics.component.html',
   styleUrls: ['./edit-multiple-comics.component.scss'],
-  standalone: false
+  imports: [
+    MatDialogTitle,
+    CdkScrollable,
+    MatDialogContent,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    MatSelect,
+    MatOption,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose,
+    MatIcon,
+    TranslateModule
+  ]
 })
 export class EditMultipleComicsComponent implements OnInit, OnDestroy {
   detailsForm: UntypedFormGroup;

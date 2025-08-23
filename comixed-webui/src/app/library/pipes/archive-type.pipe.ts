@@ -20,10 +20,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
-@Pipe({
-  name: 'archiveType',
-  standalone: false
-})
+@Pipe({ name: 'archiveType' })
 export class ArchiveTypePipe implements PipeTransform {
   transform(
     comicBooks: ComicDetail[],

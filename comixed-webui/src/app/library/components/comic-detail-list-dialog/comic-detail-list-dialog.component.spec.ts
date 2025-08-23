@@ -69,13 +69,6 @@ describe('ComicDetailListDialogComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        ComicDetailListDialogComponent,
-        ComicDetailCardComponent,
-        ComicListViewComponent,
-        ComicTitlePipe,
-        ComicCoverUrlPipe
-      ],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([
@@ -100,7 +93,12 @@ describe('ComicDetailListDialogComponent', () => {
         MatTooltipModule,
         MatSortModule,
         MatTableModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        ComicDetailListDialogComponent,
+        ComicDetailCardComponent,
+        ComicListViewComponent,
+        ComicTitlePipe,
+        ComicCoverUrlPipe
       ],
       providers: [
         provideMockStore({ initialState }),

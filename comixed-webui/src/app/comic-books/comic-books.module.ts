@@ -78,27 +78,6 @@ import { ComicListEffects } from '@app/comic-books/effects/comic-list.effects';
 import { ComicDetailCoverUrlPipe } from '@app/comic-books/pipes/comic-detail-cover-url.pipe';
 
 @NgModule({
-  declarations: [
-    ComicBookPageComponent,
-    ComicScrapingComponent,
-    ComicDetailEditComponent,
-    ComicPagesComponent,
-    ComicPageComponent,
-    ComicScrapingVolumeSelectionComponent,
-    ComicStoryComponent,
-    ComicDetailCardComponent,
-    ComicCoverUrlPipe,
-    ComicDetailCoverUrlPipe,
-    ComicPageUrlPipe,
-    ComicTitlePipe,
-    PageHashUrlPipe,
-    CoverDateFilterPipe,
-    VolumeMetadataTableComponent,
-    IssueMetadataTitlePipe,
-    ComicListViewComponent,
-    ComicListFilterComponent,
-    VolumeMetadataTitlePipe
-  ],
   imports: [
     CommonModule,
     ComicBooksRouting,
@@ -139,7 +118,26 @@ import { ComicDetailCoverUrlPipe } from '@app/comic-books/pipes/comic-detail-cov
     DragDropModule,
     MatCheckboxModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    ComicBookPageComponent,
+    ComicScrapingComponent,
+    ComicDetailEditComponent,
+    ComicPagesComponent,
+    ComicPageComponent,
+    ComicScrapingVolumeSelectionComponent,
+    ComicStoryComponent,
+    ComicDetailCardComponent,
+    ComicCoverUrlPipe,
+    ComicDetailCoverUrlPipe,
+    ComicPageUrlPipe,
+    ComicTitlePipe,
+    PageHashUrlPipe,
+    CoverDateFilterPipe,
+    VolumeMetadataTableComponent,
+    IssueMetadataTitlePipe,
+    ComicListViewComponent,
+    ComicListFilterComponent,
+    VolumeMetadataTitlePipe
   ],
   exports: [
     CommonModule,

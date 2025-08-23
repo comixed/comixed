@@ -20,7 +20,7 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { TitleService } from '@app/core/services/title.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { selectInitialUserAccountState } from '@app/user/selectors/initial-user-account.selectors';
@@ -32,7 +32,8 @@ import {
   AbstractControl,
   FormBuilder,
   FormGroup,
-  Validators
+  Validators,
+  ReactiveFormsModule
 } from '@angular/forms';
 import {
   MAX_PASSWORD_LENGTH,
@@ -40,12 +41,28 @@ import {
 } from '@app/user/user.constants';
 import { passwordVerifyValidator } from '@app/user/user.functions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatFormField, MatError, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'cx-create-admin-page',
   templateUrl: './create-admin-page.component.html',
   styleUrls: ['./create-admin-page.component.scss'],
-  standalone: false
+  imports: [
+    ReactiveFormsModule,
+    MatCard,
+    MatCardContent,
+    MatFormField,
+    MatInput,
+    MatError,
+    MatButton,
+    MatLabel,
+    MatIcon,
+    TranslateModule
+  ]
 })
 export class CreateAdminPageComponent implements OnInit, OnDestroy {
   initialUserSubscription: Subscription;

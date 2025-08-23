@@ -73,7 +73,6 @@ describe('ReadingListsPageComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ReadingListsPageComponent],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
@@ -85,7 +84,8 @@ describe('ReadingListsPageComponent', () => {
         MatTableModule,
         MatTooltipModule,
         MatDialogModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        ReadingListsPageComponent
       ],
       providers: [
         provideMockStore({ initialState }),

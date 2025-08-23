@@ -53,10 +53,6 @@ describe('LibraryPluginsConfigurationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        LibraryPluginsConfigurationComponent,
-        CreatePluginDialogComponent
-      ],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
@@ -68,7 +64,9 @@ describe('LibraryPluginsConfigurationComponent', () => {
         MatTableModule,
         MatTooltipModule,
         MatSortModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        LibraryPluginsConfigurationComponent,
+        CreatePluginDialogComponent
       ],
       providers: [provideMockStore({ initialState }), AlertService]
     }).compileComponents();

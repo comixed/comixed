@@ -71,7 +71,6 @@ describe('PublisherIssuesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PublisherIssuesPageComponent, ComicListViewComponent],
       imports: [
         NoopAnimationsModule,
         LoggerModule.forRoot(),
@@ -81,7 +80,9 @@ describe('PublisherIssuesComponent', () => {
         MatTableModule,
         MatCheckboxModule,
         MatSortModule,
-        MatFormFieldModule
+        MatFormFieldModule,
+        PublisherIssuesPageComponent,
+        ComicListViewComponent
       ],
       providers: [
         provideMockStore({ initialState }),

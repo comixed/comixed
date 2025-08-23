@@ -68,7 +68,6 @@ describe('ComicDetailEditComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicDetailEditComponent, ComicCoverUrlPipe],
       imports: [
         NoopAnimationsModule,
         FormsModule,
@@ -89,7 +88,9 @@ describe('ComicDetailEditComponent', () => {
         MatInputModule,
         MatNativeDateModule,
         MatTooltipModule,
-        MatSelectModule
+        MatSelectModule,
+        ComicDetailEditComponent,
+        ComicCoverUrlPipe
       ],
       providers: [
         provideMockStore({ initialState }),

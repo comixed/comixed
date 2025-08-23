@@ -73,17 +73,6 @@ import { ComicBookListComponent } from './components/comic-book-list/comic-book-
 import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
 
 @NgModule({
-  declarations: [
-    LibraryPageComponent,
-    SelectedComicsComponent,
-    ComicDetailsDialogComponent,
-    ArchiveTypePipe,
-    DuplicatePageListPageComponent,
-    ComicDetailListDialogComponent,
-    DuplicatePageDetailPageComponent,
-    EditMultipleComicsComponent,
-    ComicBookListComponent
-  ],
   providers: [],
   imports: [
     CommonModule,
@@ -131,7 +120,16 @@ import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
     OverlayModule,
     MatMenuModule,
     MatProgressBarModule,
-    MatDividerModule
+    MatDividerModule,
+    LibraryPageComponent,
+    SelectedComicsComponent,
+    ComicDetailsDialogComponent,
+    ArchiveTypePipe,
+    DuplicatePageListPageComponent,
+    ComicDetailListDialogComponent,
+    DuplicatePageDetailPageComponent,
+    EditMultipleComicsComponent,
+    ComicBookListComponent
   ],
   exports: [CommonModule, CoreModule, ArchiveTypePipe]
 })

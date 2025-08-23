@@ -43,7 +43,6 @@ describe('ComicFileLoaderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ComicFileLoaderComponent],
       imports: [
         NoopAnimationsModule,
         FormsModule,
@@ -55,7 +54,8 @@ describe('ComicFileLoaderComponent', () => {
         MatButtonModule,
         MatIconModule,
         MatSelectModule,
-        MatTooltipModule
+        MatTooltipModule,
+        ComicFileLoaderComponent
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();

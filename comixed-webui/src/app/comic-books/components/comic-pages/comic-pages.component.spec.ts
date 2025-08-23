@@ -60,7 +60,6 @@ describe('ComicPagesComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicPagesComponent, ComicPageComponent, ComicPageUrlPipe],
       imports: [
         RouterTestingModule.withRoutes([
           {
@@ -75,7 +74,10 @@ describe('ComicPagesComponent', () => {
         MatDialogModule,
         MatTableModule,
         DragDropModule,
-        MatSortModule
+        MatSortModule,
+        ComicPagesComponent,
+        ComicPageComponent,
+        ComicPageUrlPipe
       ],
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();

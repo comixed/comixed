@@ -119,17 +119,6 @@ describe('ConfigurationPageComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        ConfigurationPageComponent,
-        ServerMetricsComponent,
-        ServerMetricDetailsComponent,
-        LibraryConfigurationComponent,
-        ServerRuntimeComponent,
-        FilenameScrapingRulesConfigurationComponent,
-        MetadataSourceListComponent,
-        MetadataSourceDetailComponent,
-        LibraryPluginsConfigurationComponent
-      ],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
@@ -152,7 +141,16 @@ describe('ConfigurationPageComponent', () => {
         DragDropModule,
         MatSelectModule,
         MatSortModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        ConfigurationPageComponent,
+        ServerMetricsComponent,
+        ServerMetricDetailsComponent,
+        LibraryConfigurationComponent,
+        ServerRuntimeComponent,
+        FilenameScrapingRulesConfigurationComponent,
+        MetadataSourceListComponent,
+        MetadataSourceDetailComponent,
+        LibraryPluginsConfigurationComponent
       ],
       providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();

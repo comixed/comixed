@@ -67,7 +67,6 @@ describe('EditMultipleComicsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EditMultipleComicsComponent],
       imports: [
         NoopAnimationsModule,
         FormsModule,
@@ -79,7 +78,8 @@ describe('EditMultipleComicsComponent', () => {
         MatSelectModule,
         MatDialogModule,
         MatIconModule,
-        MatInputModule
+        MatInputModule,
+        EditMultipleComicsComponent
       ],
       providers: [
         provideMockStore({ initialState }),

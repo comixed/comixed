@@ -82,7 +82,6 @@ describe('NavigationBarComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [NavigationBarComponent],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
@@ -96,7 +95,8 @@ describe('NavigationBarComponent', () => {
         MatFormFieldModule,
         MatDividerModule,
         MatSelectModule,
-        MatDialogModule
+        MatDialogModule,
+        NavigationBarComponent
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();

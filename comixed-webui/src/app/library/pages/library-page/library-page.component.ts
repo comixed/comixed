@@ -21,7 +21,7 @@ import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { TitleService } from '@app/core/services/title.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import {
@@ -61,12 +61,22 @@ import {
 } from '@app/comic-books/selectors/comic-list.selectors';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import { ComicListState } from '@app/comic-books/reducers/comic-list.reducer';
+import { MatFabButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { ComicListViewComponent } from '../../../comic-books/components/comic-list-view/comic-list-view.component';
 
 @Component({
   selector: 'cx-library-page',
   templateUrl: './library-page.component.html',
   styleUrls: ['./library-page.component.scss'],
-  standalone: false
+  imports: [
+    MatFabButton,
+    MatTooltip,
+    MatIcon,
+    ComicListViewComponent,
+    TranslateModule
+  ]
 })
 export class LibraryPageComponent implements OnInit, OnDestroy {
   comicListStateSubscription: Subscription;

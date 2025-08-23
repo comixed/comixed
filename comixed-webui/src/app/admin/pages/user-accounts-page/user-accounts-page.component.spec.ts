@@ -63,7 +63,6 @@ describe('UserAccountsPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [UserAccountsPageComponent],
       imports: [
         NoopAnimationsModule,
         FormsModule,
@@ -78,7 +77,8 @@ describe('UserAccountsPageComponent', () => {
         MatButtonModule,
         MatInputModule,
         MatCheckboxModule,
-        MatFormField
+        MatFormField,
+        UserAccountsPageComponent
       ],
       providers: [
         provideMockStore({ initialState }),

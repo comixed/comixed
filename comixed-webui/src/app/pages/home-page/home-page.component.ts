@@ -17,7 +17,7 @@
  */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
 import { TitleService } from '@app/core/services/title.service';
@@ -27,12 +27,24 @@ import { LibraryState } from '@app/library/reducers/library.reducer';
 import { filter } from 'rxjs/operators';
 import { User } from '@app/user/models/user';
 import { selectUser } from '@app/user/selectors/user.selectors';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { CollectionsChartComponent } from '../../components/collections-chart/collections-chart.component';
+import { ComicStateChartComponent } from '../../components/comic-state-chart/comic-state-chart.component';
+import { ComicsByYearChartComponent } from '../../components/comics-by-year-chart/comics-by-year-chart.component';
+import { ComicsReadChartComponent } from '../../components/comics-read-chart/comics-read-chart.component';
 
 @Component({
   selector: 'cx-home',
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.scss'],
-  standalone: false
+  imports: [
+    MatProgressBar,
+    CollectionsChartComponent,
+    ComicStateChartComponent,
+    ComicsByYearChartComponent,
+    ComicsReadChartComponent,
+    TranslateModule
+  ]
 })
 export class HomePageComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;

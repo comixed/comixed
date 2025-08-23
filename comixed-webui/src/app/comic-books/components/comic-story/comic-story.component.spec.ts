@@ -40,7 +40,6 @@ describe('ComicStoryComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicStoryComponent, ComicDetailCardComponent],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
@@ -50,7 +49,9 @@ describe('ComicStoryComponent', () => {
         MatCardModule,
         MatChipsModule,
         MatTooltipModule,
-        MatIconModule
+        MatIconModule,
+        ComicStoryComponent,
+        ComicDetailCardComponent
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();

@@ -22,12 +22,13 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
+import { ComicListViewComponent } from '../../../comic-books/components/comic-list-view/comic-list-view.component';
 
 @Component({
   selector: 'cx-comics-with-duplicate-page',
   templateUrl: './comic-detail-list-dialog.component.html',
   styleUrls: ['./comic-detail-list-dialog.component.scss'],
-  standalone: false
+  imports: [ComicListViewComponent]
 })
 export class ComicDetailListDialogComponent {
   dataSource = new MatTableDataSource<SelectableListItem<ComicDetail>>([]);

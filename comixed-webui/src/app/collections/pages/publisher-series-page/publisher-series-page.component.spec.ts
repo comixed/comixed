@@ -54,7 +54,6 @@ describe('PublisherSeriesPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PublisherSeriesPageComponent],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
@@ -65,7 +64,8 @@ describe('PublisherSeriesPageComponent', () => {
         MatToolbarModule,
         MatSortModule,
         MatFormFieldModule,
-        MatInputModule
+        MatInputModule,
+        PublisherSeriesPageComponent
       ],
       providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();

@@ -128,15 +128,6 @@ describe('ComicBookPageComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        ComicBookPageComponent,
-        ComicDetailEditComponent,
-        ComicStoryComponent,
-        ComicPagesComponent,
-        ComicScrapingComponent,
-        ComicTitlePipe,
-        ComicPageUrlPipe
-      ],
       imports: [
         NoopAnimationsModule,
         LoggerModule.forRoot(),
@@ -148,7 +139,14 @@ describe('ComicBookPageComponent', () => {
         MatIconModule,
         MatExpansionModule,
         MatGridListModule,
-        MatTabsModule
+        MatTabsModule,
+        ComicBookPageComponent,
+        ComicDetailEditComponent,
+        ComicStoryComponent,
+        ComicPagesComponent,
+        ComicScrapingComponent,
+        ComicTitlePipe,
+        ComicPageUrlPipe
       ],
       providers: [
         provideMockStore({ initialState }),

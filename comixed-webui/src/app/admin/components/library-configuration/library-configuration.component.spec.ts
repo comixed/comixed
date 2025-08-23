@@ -119,7 +119,6 @@ describe('LibraryConfigurationComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [LibraryConfigurationComponent],
       imports: [
         NoopAnimationsModule,
         FormsModule,
@@ -133,7 +132,8 @@ describe('LibraryConfigurationComponent', () => {
         MatCheckboxModule,
         MatToolbarModule,
         MatIconModule,
-        MatTooltipModule
+        MatTooltipModule,
+        LibraryConfigurationComponent
       ],
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();

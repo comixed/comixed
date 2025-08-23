@@ -21,8 +21,20 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { MatTableDataSource } from '@angular/material/table';
-import { TranslateService } from '@ngx-translate/core';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow
+} from '@angular/material/table';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import {
@@ -38,12 +50,34 @@ import {
   ComicTagType,
   comicTagTypeFromString
 } from '@app/comic-books/models/comic-tag-type';
+import { FilterTextFormComponent } from '../../components/filter-text-form/filter-text-form.component';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import { AsyncPipe, DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'cx-collection-list',
   templateUrl: './collection-list.component.html',
   styleUrls: ['./collection-list.component.scss'],
-  standalone: false
+  imports: [
+    FilterTextFormComponent,
+    MatPaginator,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCellDef,
+    MatCell,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    AsyncPipe,
+    DecimalPipe,
+    TranslateModule
+  ]
 })
 export class CollectionListComponent implements OnInit, OnDestroy {
   paramSubscription: Subscription;

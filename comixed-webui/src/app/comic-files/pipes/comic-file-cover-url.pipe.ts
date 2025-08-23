@@ -20,10 +20,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { ComicFile } from '@app/comic-files/models/comic-file';
 import { API_ROOT_URL } from '@app/core';
 
-@Pipe({
-  name: 'comicFileCoverUrl',
-  standalone: false
-})
+@Pipe({ name: 'comicFileCoverUrl' })
 export class ComicFileCoverUrlPipe implements PipeTransform {
   transform(comicFile: ComicFile): string {
     return `${API_ROOT_URL}/files/import/cover?filename=${encodeURIComponent(

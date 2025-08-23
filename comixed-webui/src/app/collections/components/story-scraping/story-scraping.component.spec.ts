@@ -67,7 +67,6 @@ describe('StoryScrapingComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [StoryScrapingComponent],
       imports: [
         NoopAnimationsModule,
         FormsModule,
@@ -84,7 +83,8 @@ describe('StoryScrapingComponent', () => {
         MatPaginatorModule,
         MatSelectModule,
         MatButtonModule,
-        MatTooltipModule
+        MatTooltipModule,
+        StoryScrapingComponent
       ],
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();

@@ -27,7 +27,7 @@ import { Subscription } from 'rxjs';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { BusyIcon, setBusyStateWithIcon } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import {
@@ -52,7 +52,7 @@ import {
   selectSingleBookScrapingState
 } from '@app/comic-metadata/selectors/single-book-scraping.selectors';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import {
   comicBookLoaded,
@@ -77,12 +77,55 @@ import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { markSingleComicBookRead } from '@app/user/actions/read-comic-books.actions';
 import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.selectors';
+import { MatFabButton, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import {
+  MatCard,
+  MatCardTitle,
+  MatCardSubtitle,
+  MatCardContent,
+  MatCardFooter
+} from '@angular/material/card';
+import { ComicPageComponent } from '../../components/comic-page/comic-page.component';
+import { MatTabGroup, MatTab } from '@angular/material/tabs';
+import { ComicDetailEditComponent } from '../../components/comic-detail-edit/comic-detail-edit.component';
+import { ComicStoryComponent } from '../../components/comic-story/comic-story.component';
+import { ComicPagesComponent } from '../../components/comic-pages/comic-pages.component';
+import { ComicScrapingComponent } from '../../components/comic-scraping/comic-scraping.component';
+import { ComicScrapingVolumeSelectionComponent } from '../../components/comic-scraping-volume-selection/comic-scraping-volume-selection.component';
+import { AsyncPipe, DatePipe } from '@angular/common';
+import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
 
 @Component({
   selector: 'cx-comic-book-page',
   templateUrl: './comic-book-page.component.html',
   styleUrls: ['./comic-book-page.component.scss'],
-  standalone: false
+  imports: [
+    MatFabButton,
+    MatTooltip,
+    RouterLink,
+    MatIcon,
+    MatCard,
+    MatCardTitle,
+    MatCardSubtitle,
+    MatCardContent,
+    ComicPageComponent,
+    MatCardFooter,
+    MatIconButton,
+    MatTabGroup,
+    MatTab,
+    ComicDetailEditComponent,
+    ComicStoryComponent,
+    ComicPagesComponent,
+    ComicScrapingComponent,
+    ComicScrapingVolumeSelectionComponent,
+    AsyncPipe,
+    DatePipe,
+    TranslateModule,
+    ComicPageUrlPipe,
+    ComicTitlePipe
+  ]
 })
 export class ComicBookPageComponent
   implements OnInit, OnDestroy, AfterViewInit

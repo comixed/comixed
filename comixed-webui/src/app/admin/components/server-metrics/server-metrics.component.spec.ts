@@ -42,14 +42,15 @@ describe('ServerMetricsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ServerMetricsComponent, ServerMetricDetailsComponent],
       imports: [
         NoopAnimationsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatFormFieldModule,
         MatSelectModule,
-        MatInputModule
+        MatInputModule,
+        ServerMetricsComponent,
+        ServerMetricDetailsComponent
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();

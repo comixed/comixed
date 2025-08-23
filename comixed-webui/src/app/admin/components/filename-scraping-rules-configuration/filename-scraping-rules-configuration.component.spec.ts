@@ -75,7 +75,6 @@ describe('FilenameScrapingRulesConfigurationComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [FilenameScrapingRulesConfigurationComponent],
       imports: [
         NoopAnimationsModule,
         LoggerModule.forRoot(),
@@ -87,7 +86,8 @@ describe('FilenameScrapingRulesConfigurationComponent', () => {
         MatIconModule,
         MatToolbarModule,
         MatDialogModule,
-        MatTooltipModule
+        MatTooltipModule,
+        FilenameScrapingRulesConfigurationComponent
       ],
       providers: [
         provideMockStore({ initialState }),

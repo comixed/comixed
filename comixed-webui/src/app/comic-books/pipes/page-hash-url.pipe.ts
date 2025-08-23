@@ -20,10 +20,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { interpolate } from '@app/core';
 import { PAGE_URL_FROM_HASH } from '@app/comic-books/comic-books.constants';
 
-@Pipe({
-  name: 'pageHashUrl',
-  standalone: false
-})
+@Pipe({ name: 'pageHashUrl' })
 export class PageHashUrlPipe implements PipeTransform {
   transform(hash: string): string {
     return interpolate(PAGE_URL_FROM_HASH, { hash });

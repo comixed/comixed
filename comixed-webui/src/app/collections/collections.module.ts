@@ -56,20 +56,6 @@ import { StoryScrapingComponent } from '@app/collections/components/story-scrapi
 import { StoryDetailPageComponent } from '@app/collections/pages/story-detail-page/story-detail-page.component';
 
 @NgModule({
-  declarations: [
-    CollectionListComponent,
-    CollectionDetailComponent,
-    SeriesListPageComponent,
-    SeriesIssuePageComponent,
-    SeriesMetadataPageComponent,
-    PublisherListPageComponent,
-    PublisherSeriesPageComponent,
-    PublisherIssuesPageComponent,
-    FilterTextFormComponent,
-    StoryDetailPageComponent,
-    StoryScrapingComponent,
-    SeriesDetailNamePipe
-  ],
   imports: [
     CommonModule,
     CollectionsRouting,
@@ -97,7 +83,19 @@ import { StoryDetailPageComponent } from '@app/collections/pages/story-detail-pa
     MatTabGroup,
     ReactiveFormsModule,
     MatCardModule,
-    NgOptimizedImage
+    NgOptimizedImage,
+    CollectionListComponent,
+    CollectionDetailComponent,
+    SeriesListPageComponent,
+    SeriesIssuePageComponent,
+    SeriesMetadataPageComponent,
+    PublisherListPageComponent,
+    PublisherSeriesPageComponent,
+    PublisherIssuesPageComponent,
+    FilterTextFormComponent,
+    StoryDetailPageComponent,
+    StoryScrapingComponent,
+    SeriesDetailNamePipe
   ],
   exports: [CommonModule]
 })

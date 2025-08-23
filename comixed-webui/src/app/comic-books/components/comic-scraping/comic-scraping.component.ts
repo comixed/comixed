@@ -28,9 +28,14 @@ import {
 } from '@angular/core';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { Store } from '@ngrx/store';
-import { FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
+import {
+  FormGroup,
+  UntypedFormBuilder,
+  Validators,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { MetadataEvent } from '@app/comic-metadata/models/event/metadata-event';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import {
@@ -59,12 +64,40 @@ import { selectMetadataSourceList } from '@app/comic-metadata/selectors/metadata
 import { loadMetadataSources } from '@app/comic-metadata/actions/metadata-source-list.actions';
 import { selectSingleBookScrapingState } from '@app/comic-metadata/selectors/single-book-scraping.selectors';
 import { METADATA_RECORD_LIMITS } from '@app/comic-metadata/comic-metadata.constants';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import {
+  MatFormField,
+  MatLabel,
+  MatSuffix,
+  MatHint,
+  MatError
+} from '@angular/material/form-field';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { MatInput } from '@angular/material/input';
 
 @Component({
   selector: 'cx-comic-scraping',
   templateUrl: './comic-scraping.component.html',
   styleUrls: ['./comic-scraping.component.scss'],
-  standalone: false
+  imports: [
+    MatToolbar,
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatInput,
+    MatSuffix,
+    MatHint,
+    MatError,
+    TranslateModule
+  ]
 })
 export class ComicScrapingComponent implements OnInit, OnDestroy {
   @Input() skipCache = false;

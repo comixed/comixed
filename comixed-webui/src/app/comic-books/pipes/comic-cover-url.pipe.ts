@@ -24,10 +24,7 @@ import {
 import { interpolate } from '@app/core';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
-@Pipe({
-  name: 'comicCoverUrl',
-  standalone: false
-})
+@Pipe({ name: 'comicCoverUrl' })
 export class ComicCoverUrlPipe implements PipeTransform {
   transform(comic: DisplayableComic): string {
     if (!!comic) {

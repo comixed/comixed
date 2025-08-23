@@ -153,12 +153,6 @@ describe('ReadingListDetailPageComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        ReadingListDetailPageComponent,
-        ComicListViewComponent,
-        ComicCoverUrlPipe,
-        ComicTitlePipe
-      ],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
@@ -178,7 +172,11 @@ describe('ReadingListDetailPageComponent', () => {
         MatCardModule,
         MatMenuModule,
         MatInputModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        ReadingListDetailPageComponent,
+        ComicListViewComponent,
+        ComicCoverUrlPipe,
+        ComicTitlePipe
       ],
       providers: [
         provideMockStore({ initialState }),

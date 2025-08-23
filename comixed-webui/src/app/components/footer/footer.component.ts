@@ -24,12 +24,13 @@ import { selectLibraryState } from '@app/library/selectors/library.selectors';
 import { selectComicBookSelectionState } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { Subscription } from 'rxjs';
 import { selectBatchProcessList } from '@app/admin/selectors/batch-processes.selectors';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'cx-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],
-  standalone: false
+  imports: [TranslateModule]
 })
 export class FooterComponent {
   libraryStateSubscription: Subscription;

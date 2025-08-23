@@ -50,14 +50,14 @@ describe('ServerRuntimeComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ServerRuntimeComponent],
       imports: [
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatDialogModule,
         MatIconModule,
         MatToolbarModule,
-        MatTooltipModule
+        MatTooltipModule,
+        ServerRuntimeComponent
       ],
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();

@@ -43,12 +43,12 @@ describe('ComicStateChartComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ComicStateChartComponent],
       imports: [
         NoopAnimationsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
-        NgxChartsModule
+        NgxChartsModule,
+        ComicStateChartComponent
       ]
     }).compileComponents();
 
