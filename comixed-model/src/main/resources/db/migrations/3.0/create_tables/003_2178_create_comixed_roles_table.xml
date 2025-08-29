@@ -17,9 +17,12 @@
             </column>
 
             <column name="name" type="varchar(32)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <addUniqueConstraint tableName="comixed_roles" columnNames="name"
+                             constraintName="comixed_roles_unique_name"/>
 
         <insert tableName="comixed_roles">
             <column name="comixed_role_id" value="1"/>

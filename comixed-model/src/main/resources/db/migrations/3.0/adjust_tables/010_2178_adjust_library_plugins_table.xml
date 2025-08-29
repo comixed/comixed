@@ -27,7 +27,7 @@
             </column>
 
             <column name="unique_name" type="varchar(64)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
 
             <column name="language" type="varchar(32)">
@@ -46,6 +46,9 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <addUniqueConstraint tableName="library_plugins" columnNames="unique_name"
+                             constraintName="library_plugins_unique_unique_name"/>
 
         <sql>INSERT INTO library_plugins(library_plugin_id, name, unique_name, language, version, filename,
                                          admin_only)

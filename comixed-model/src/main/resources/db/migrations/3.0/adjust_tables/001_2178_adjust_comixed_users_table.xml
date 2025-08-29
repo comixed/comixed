@@ -23,7 +23,7 @@
             </column>
 
             <column name="email" type="varchar(256)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
 
             <column name="password_hash" type="varchar(64)">
@@ -38,6 +38,8 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <addUniqueConstraint tableName="comixed_users" columnNames="email" constraintName="comixed_users_unique_email"/>
 
         <sql>INSERT INTO comixed_users(comixed_user_id, email, password_hash, created_on, last_logged_on)
              SELECT id, email, password_hash, created_on, last_logged_on

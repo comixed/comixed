@@ -24,9 +24,12 @@
             </column>
 
             <column name="comic_detail_id" type="bigint">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <addUniqueConstraint tableName="read_comic_books" columnNames="comic_detail_id"
+                             constraintName="read_comic_books_unique_comic_detail"/>
 
         <sql>INSERT INTO read_comic_books(read_comic_book_id, comixed_user_id, comic_detail_id)
              SELECT id, comixed_user_id, comic_detail_id

@@ -27,13 +27,16 @@
             </column>
 
             <column name="adaptor_name" type="varchar(255)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
 
             <column name="preferred_source" type="boolean" defaultValue="false">
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <addUniqueConstraint tableName="metadata_sources" columnNames="adaptor_name"
+                             constraintName="metadata_sources_unique_adaptor_name"/>
 
         <sql>INSERT INTO metadata_sources(metadata_source_id, adaptor_name, preferred_source)
              SELECT id, adaptor_name, preferred_source
