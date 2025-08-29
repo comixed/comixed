@@ -24,13 +24,16 @@
             </column>
 
             <column name="property_name" type="varchar(32)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
 
             <column name="property_value" type="varchar(256)">
                 <constraints nullable="true"/>
             </column>
         </createTable>
+
+        <addUniqueConstraint tableName="metadata_source_properties" columnNames="property_name"
+                             constraintName="metadata_source_properties_unique_property_name"/>
 
         <sql>INSERT INTO metadata_source_properties(metadata_source_property_id, metadata_source_id, property_name,
                                                     property_value)

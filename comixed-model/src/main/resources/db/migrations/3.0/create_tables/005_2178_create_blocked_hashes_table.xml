@@ -17,7 +17,7 @@
             </column>
 
             <column name="hash_value" type="varchar(32)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
 
             <column name="label" type="varchar(128)">
@@ -32,6 +32,9 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <addUniqueConstraint tableName="blocked_hashes" columnNames="hash_value"
+                             constraintName="blocked_hash_unique_hash"/>
 
     </changeSet>
 </databaseChangeLog>

@@ -17,7 +17,7 @@
             </column>
 
             <column name="comic_book_id" type="bigint">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
 
             <column name="metadata_source_id" type="bigint">
@@ -28,6 +28,9 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <addUniqueConstraint tableName="comic_metadata_sources" columnNames="comic_book_id"
+                             constraintName="comic_metadata_sources_unique_comic_book"/>
 
         <addForeignKeyConstraint baseTableName="comic_metadata_sources" baseColumnNames="comic_book_id"
                                  constraintName="comic_metadata_source_comic_book_fk"

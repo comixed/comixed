@@ -20,11 +20,11 @@
             </column>
 
             <column name="rule_name" type="varchar(128)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
 
             <column name="rule" type="varchar(256)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
 
             <column name="priority" type="int">
@@ -55,6 +55,11 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <addUniqueConstraint tableName="filename_scraping_rules" columnNames="rule_name"
+                             constraintName="filename_scraping_rules_unique_rule_name"/>
+        <addUniqueConstraint tableName="filename_scraping_rules" columnNames="rule"
+                             constraintName="filename_scraping_rules_unique_rule"/>
 
         <sql>INSERT INTO filename_scraping_rules(filename_scraping_rule_id, rule_name, rule, priority, series_position,
                                                  volume_position, issue_number_position, cover_date_position,

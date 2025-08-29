@@ -61,7 +61,7 @@
             </column>
 
             <column name="filename" type="varchar(768)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
 
             <column name="title" type="varchar(255)">
@@ -92,6 +92,9 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <addUniqueConstraint tableName="comic_details" columnNames="filename"
+                             constraintName="comic_details_unique_filename"/>
 
         <addForeignKeyConstraint baseTableName="comic_details" baseColumnNames="comic_book_id"
                                  constraintName="comic_detail_comic_book_fk"

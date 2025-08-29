@@ -20,13 +20,16 @@
             </column>
 
             <column name="imprint_name" type="varchar(128)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
 
             <column name="publisher" type="varchar(128)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <addUniqueConstraint tableName="imprints" columnNames="imprint_name"
+                             constraintName="imprints_unique_imprint_name"/>
 
         <sql>INSERT INTO imprints(imprint_id, imprint_name, publisher)
              SELECT id, imprint_name, publisher
