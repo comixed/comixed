@@ -57,7 +57,7 @@
              SELECT id,
                     story_name,
                     publisher,
-                    description,
+                    '',
                     metadata_source_id,
                     reference_id,
                     created_on,
