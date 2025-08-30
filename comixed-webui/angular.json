@@ -28,7 +28,8 @@
               "includePaths": ["src"]
             },
             "outputPath": {
-              "base": "target/classes/static"
+              "base": "target/classes/static",
+              "browser": ""
             },
             "index": "src/index.html",
             "polyfills": ["src/polyfills.ts"],
