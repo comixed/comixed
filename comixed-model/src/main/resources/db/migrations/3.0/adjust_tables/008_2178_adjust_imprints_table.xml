@@ -37,5 +37,10 @@
 
         <dropTable tableName="old_imprints"/>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"imprints"', 'imprint_id')),
+                          (SELECT (MAX("imprint_id") + 1) FROM "imprints"), FALSE);
+        </sql>
+
     </changeSet>
 </databaseChangeLog>

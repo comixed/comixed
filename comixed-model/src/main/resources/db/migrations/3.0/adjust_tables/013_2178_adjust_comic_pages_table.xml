@@ -86,5 +86,10 @@
             <column name="page_state"/>
         </createIndex>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"comic_pages"', 'comic_page_id')),
+                          (SELECT (MAX("comic_page_id") + 1) FROM "comic_pages"), FALSE);
+        </sql>
+
     </changeSet>
 </databaseChangeLog>

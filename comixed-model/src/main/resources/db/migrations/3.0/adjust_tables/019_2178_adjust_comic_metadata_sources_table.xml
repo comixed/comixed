@@ -56,5 +56,10 @@
             <column name="comic_book_id"/>
         </createIndex>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"comic_metadata_sources"', 'comic_metadata_source_id')),
+                          (SELECT (MAX("comic_metadata_source_id") + 1) FROM "comic_metadata_sources"), FALSE);
+        </sql>
+
     </changeSet>
 </databaseChangeLog>

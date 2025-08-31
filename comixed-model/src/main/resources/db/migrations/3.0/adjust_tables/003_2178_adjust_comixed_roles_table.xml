@@ -33,5 +33,10 @@
 
         <dropTable tableName="old_comixed_roles"/>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"comixed_roles"', 'comixed_role_id')),
+                          (SELECT (MAX("comixed_role_id") + 1) FROM "comixed_roles"), FALSE);
+        </sql>
+
     </changeSet>
 </databaseChangeLog>

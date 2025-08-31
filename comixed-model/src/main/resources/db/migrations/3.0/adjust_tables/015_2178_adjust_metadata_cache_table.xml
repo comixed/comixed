@@ -50,5 +50,10 @@
                              constraintName="metadata_cache_unique_metadata_source_and_cache_key"
                              columnNames="metadata_source, cache_key"/>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"metadata_cache"', 'metadata_cache_id')),
+                          (SELECT (MAX("metadata_cache_id") + 1) FROM "metadata_cache"), FALSE);
+        </sql>
+
     </changeSet>
 </databaseChangeLog>

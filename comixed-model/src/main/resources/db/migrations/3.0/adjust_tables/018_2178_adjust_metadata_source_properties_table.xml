@@ -46,5 +46,11 @@
             <column name="metadata_source_id"/>
         </createIndex>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"metadata_source_properties"',
+                                                         'metadata_source_property_id')),
+                          (SELECT (MAX("metadata_source_property_id") + 1) FROM "metadata_source_properties"), FALSE);
+        </sql>
+
     </changeSet>
 </databaseChangeLog>

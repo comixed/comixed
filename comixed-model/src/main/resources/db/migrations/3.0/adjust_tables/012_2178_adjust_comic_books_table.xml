@@ -133,5 +133,10 @@
             <column name="target_archive_type"/>
         </createIndex>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"comic_books"', 'comic_book_id')),
+                          (SELECT (MAX("comic_book_id") + 1) FROM "comic_books"), FALSE);
+        </sql>
+
     </changeSet>
 </databaseChangeLog>

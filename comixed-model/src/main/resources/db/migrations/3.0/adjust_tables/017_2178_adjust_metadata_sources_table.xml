@@ -44,5 +44,10 @@
 
         <dropTable tableName="old_metadata_sources"/>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"metadata_sources"', 'metadata_source_id')),
+                          (SELECT (MAX("metadata_source_id") + 1) FROM "metadata_sources"), FALSE);
+        </sql>
+
     </changeSet>
 </databaseChangeLog>

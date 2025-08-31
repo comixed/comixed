@@ -43,5 +43,10 @@
                              columnNames="reading_list_id, comic_detail_id"
                              constraintName="reading_list_entry_unique_reading_list_and_comic_details"/>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"reading_list_entries"', 'reading_list_entry_id')),
+                          (SELECT (MAX("reading_list_entry_id") + 1) FROM "reading_list_entries"), FALSE);
+        </sql>
+
     </changeSet>
 </databaseChangeLog>

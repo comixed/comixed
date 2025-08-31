@@ -83,5 +83,10 @@
         <addUniqueConstraint tableName="scraped_stories" columnNames="metadata_source_id,reference_id"
                              constraintName="scraped_story_unique_metadata_source_and_reference"/>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"scraped_stories"', 'scraped_story_id')),
+                          (SELECT (MAX("scraped_story_id") + 1) FROM "scraped_stories"), FALSE);
+        </sql>
+
     </changeSet>
 </databaseChangeLog>

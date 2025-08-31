@@ -64,5 +64,10 @@
         <addUniqueConstraint tableName="scraped_story_entries" columnNames="scraped_story_id, reading_order"
                              constraintName="scraped_story_entry_unique_scraped_story_and_reading_order"/>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"scraped_story_entries"', 'scraped_story_entry_id')),
+                          (SELECT (MAX("scraped_story_entry_id") + 1) FROM "scraped_story_entries"), FALSE);
+        </sql>
+
     </changeSet>
 </databaseChangeLog>

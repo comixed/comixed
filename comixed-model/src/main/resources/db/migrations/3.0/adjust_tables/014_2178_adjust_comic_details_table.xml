@@ -212,5 +212,10 @@
             <column name="volume"/>
         </createIndex>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"comic_details"', 'comic_detail_id')),
+                          (SELECT (MAX("comic_detail_id") + 1) FROM "comic_details"), FALSE);
+        </sql>
+
     </changeSet>
 </databaseChangeLog>

@@ -38,5 +38,10 @@
 
         <dropTable tableName="old_configuration_options"/>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"configuration_options"', 'configuration_option_id')),
+                          (SELECT (MAX("configuration_option_id") + 1) FROM "configuration_options"), FALSE);
+        </sql>
+
     </changeSet>
 </databaseChangeLog>

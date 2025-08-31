@@ -59,5 +59,10 @@
 
         <dropTable tableName="old_library_plugins"/>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"library_plugins"', 'library_plugin_id')),
+                          (SELECT (MAX("library_plugin_id") + 1) FROM "library_plugins"), FALSE);
+        </sql>
+
     </changeSet>
 </databaseChangeLog>

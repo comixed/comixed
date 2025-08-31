@@ -78,5 +78,10 @@
 
         <dropTable tableName="old_filename_scraping_rules"/>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"filename_scraping_rules"', 'filename_scraping_rule_id')),
+                          (SELECT (MAX("filename_scraping_rule_id") + 1) FROM "filename_scraping_rules"), FALSE);
+        </sql>
+
     </changeSet>
 </databaseChangeLog>

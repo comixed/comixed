@@ -45,6 +45,11 @@
              SELECT id, email, password_hash, created_on, last_logged_on
              FROM old_comixed_users</sql>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"comixed_users"', 'comixed_user_id')),
+                          (SELECT (MAX("comixed_user_id") + 1) FROM "comixed_users"), FALSE);
+        </sql>
+
         <dropTable tableName="old_comixed_users"/>
 
     </changeSet>
