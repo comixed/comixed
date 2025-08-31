@@ -67,5 +67,10 @@
                              constraintName="library_plugin_property_unique_plugin_and_property_name"
                              columnNames="library_plugin_id, property_name"/>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"library_plugin_properties"', 'library_plugin_property_id')),
+                          (SELECT (MAX("library_plugin_property_id") + 1) FROM "library_plugin_properties"), FALSE);
+        </sql>
+
     </changeSet>
 </databaseChangeLog>

@@ -45,5 +45,10 @@
 
         <dropTable tableName="old_blocked_hashes"/>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"blocked_hashes"', 'blocked_hash_id')),
+                          (SELECT (MAX("blocked_hash_id") + 1) FROM "blocked_hashes"), FALSE);
+        </sql>
+
     </changeSet>
 </databaseChangeLog>

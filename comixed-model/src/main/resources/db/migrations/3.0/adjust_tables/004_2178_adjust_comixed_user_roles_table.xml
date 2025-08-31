@@ -47,5 +47,10 @@
         <addUniqueConstraint tableName="comixed_user_roles" columnNames="comixed_user_id,comixed_role_id"
                              constraintName="comixed_user_roles_unique_comixed_user_and_role"/>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"comixed_user_roles"', 'comixed_user_role_id')),
+                          (SELECT (MAX("comixed_user_role_id") + 1) FROM "comixed_user_roles"), FALSE);
+        </sql>
+
     </changeSet>
 </databaseChangeLog>

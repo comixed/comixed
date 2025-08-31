@@ -58,5 +58,10 @@
             <column name="comixed_user_id"/>
         </createIndex>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"read_comic_books"', 'read_comic_book_id')),
+                          (SELECT (MAX("read_comic_book_id") + 1) FROM "read_comic_books"), FALSE);
+        </sql>
+
     </changeSet>
 </databaseChangeLog>

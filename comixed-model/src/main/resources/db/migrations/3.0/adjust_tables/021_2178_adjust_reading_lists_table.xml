@@ -73,5 +73,10 @@
         <addUniqueConstraint tableName="reading_lists" columnNames="owner_id, name_key"
                              constraintName="reading_list_unique_owner_name"/>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"reading_lists"', 'reading_list_id')),
+                          (SELECT (MAX("reading_list_id") + 1) FROM "reading_lists"), FALSE);
+        </sql>
+
     </changeSet>
 </databaseChangeLog>

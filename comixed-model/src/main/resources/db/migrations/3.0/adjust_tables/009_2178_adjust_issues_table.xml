@@ -62,5 +62,10 @@
 
         <dropTable tableName="old_issues"/>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"issues"', 'issue_id')),
+                          (SELECT (MAX("issue_id") + 1) FROM "issues"), FALSE);
+        </sql>
+
     </changeSet>
 </databaseChangeLog>

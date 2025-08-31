@@ -43,5 +43,10 @@
                              constraintName="comixed_user_preferences_unique_preference_name"
                              columnNames="comixed_user_id, preference_name"/>
 
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"comixed_user_preferences"', 'comixed_user_preference_id')),
+                          (SELECT (MAX("comixed_user_preference_id") + 1) FROM "comixed_user_preferences"), FALSE);
+        </sql>
+
     </changeSet>
 </databaseChangeLog>
