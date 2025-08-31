@@ -46,7 +46,7 @@ import org.springframework.stereotype.Component;
 public class JwtTokenUtil {
   private static final String ROLE_PREFIX = "ROLE_";
 
-  @Value("${comixed.auth.jwt-signing-key}")
+  @Value("${comixed.auth.jwt-signing-key:comixed-project}")
   String signingKey;
 
   @Autowired private ComiXedUserRepository userRepository;
