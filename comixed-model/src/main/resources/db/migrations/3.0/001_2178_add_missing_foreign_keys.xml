@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="001_2178_add_missing_foreign_keys-1" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="comic_page_comic_book_fk"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint baseTableName="comic_pages" baseColumnNames="comic_book_id"
+                                 constraintName="comic_pages_comic_book_fk"
+                                 referencedTableName="comic_books"
+                                 referencedColumnNames="comic_book_id"/>
+
+    </changeSet>
+
+    <changeSet id="001_2178_add_missing_foreign_keys-2" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="reading_list_entry_comic_detail_fk"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint baseTableName="reading_list_entries" baseColumnNames="comic_detail_id"
+                                 constraintName="reading_list_entry_comic_detail_fk"
+                                 referencedTableName="comic_details"
+                                 referencedColumnNames="comic_detail_id"/>
+
+    </changeSet>
+</databaseChangeLog>
