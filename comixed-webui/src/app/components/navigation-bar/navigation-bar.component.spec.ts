@@ -155,7 +155,7 @@ describe('NavigationBarComponent', () => {
     });
   });
 
-  describe('when an admin reader is logged in', () => {
+  describe('when a reader is logged in', () => {
     beforeEach(() => {
       component.isAdmin = true;
       component.user = USER_READER;

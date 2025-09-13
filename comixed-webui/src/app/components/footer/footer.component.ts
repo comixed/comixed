@@ -25,6 +25,7 @@ import { selectComicBookSelectionState } from '@app/comic-books/selectors/comic-
 import { Subscription } from 'rxjs';
 import { selectBatchProcessList } from '@app/admin/selectors/batch-processes.selectors';
 import { TranslateModule } from '@ngx-translate/core';
+import { isAdmin } from '@app/user/user.functions';
 
 @Component({
   selector: 'cx-footer',
@@ -79,5 +80,9 @@ export class FooterComponent {
       this.jobsSubscription?.unsubscribe();
       this.readCount = 0;
     }
+  }
+
+  get isAdmin(): boolean {
+    return isAdmin(this.user);
   }
 }
