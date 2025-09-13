@@ -32,7 +32,8 @@ import {
   READ_COMIC_BOOK_1,
   READ_COMIC_BOOK_2,
   READ_COMIC_BOOK_3,
-  USER_ADMIN
+  USER_ADMIN,
+  USER_READER
 } from '@app/user/user.fixtures';
 import {
   BATCH_PROCESS_DETAIL_1,
@@ -132,6 +133,18 @@ describe('FooterComponent', () => {
 
     it('sets the read count', () => {
       expect(component.readCount).toEqual(COMICS_READ_ENTRIES.length);
+    });
+  });
+
+  describe('the admin flag', () => {
+    it('sets it to true for an admin', () => {
+      component.user = USER_ADMIN;
+      expect(component.isAdmin).toBeTrue();
+    });
+
+    it('sets it to false for a reader', () => {
+      component.user = USER_READER;
+      expect(component.isAdmin).toBeFalse();
     });
   });
 });

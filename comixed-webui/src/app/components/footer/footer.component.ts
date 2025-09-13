@@ -25,12 +25,14 @@ import { selectComicBookSelectionState } from '@app/comic-books/selectors/comic-
 import { Subscription } from 'rxjs';
 import { selectBatchProcessList } from '@app/admin/selectors/batch-processes.selectors';
 import { TranslateModule } from '@ngx-translate/core';
+import { isAdmin } from '@app/user/user.functions';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'cx-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],
-  imports: [TranslateModule]
+  imports: [RouterModule, TranslateModule]
 })
 export class FooterComponent {
   libraryStateSubscription: Subscription;
@@ -79,5 +81,9 @@ export class FooterComponent {
       this.jobsSubscription?.unsubscribe();
       this.readCount = 0;
     }
+  }
+
+  get isAdmin(): boolean {
+    return isAdmin(this.user);
   }
 }
