@@ -13,9 +13,9 @@
     <include file="/db/migrations/3.0/create_tables/create_tables_changelog.xml"/>
 
     <!-- create views -->
-
     <include file="/db/migrations/3.0/create_views/create_views_changelog.xml"/>
 
     <!-- v3.0 migrations -->
+    <include file="/db/migrations/3.0/001_2178_add_missing_foreign_keys.xml"/>
 
 </databaseChangeLog>
