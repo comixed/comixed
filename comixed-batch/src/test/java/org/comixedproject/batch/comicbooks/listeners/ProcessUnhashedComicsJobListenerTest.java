@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicpages.listeners;
+package org.comixedproject.batch.comicbooks.listeners;
 
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
@@ -29,10 +29,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.core.*;
 
 @ExtendWith(MockitoExtension.class)
-class LoadPageHashesJobListenerTest {
+class ProcessUnhashedComicsJobListenerTest {
   private static final String TEST_JOB_NAME = "The job name";
 
-  @InjectMocks private LoadPageHashesJobListener listener;
+  @InjectMocks private ProcessUnhashedComicsJobListener listener;
   @Mock private JobInstance jobInstance;
   @Mock private JobExecution jobExecution;
   @Mock private PublishBatchProcessDetailUpdateAction publishBatchProcessDetailUpdateAction;

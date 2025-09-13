@@ -257,37 +257,6 @@ public class ComicPageService {
     return this.comicPageRepository.save(page);
   }
 
-  /*
-   * Returns if there are any page records without a page hash.
-   *
-   * @return true if there are pages without hashes
-   */
-  @Transactional
-  public boolean hasPagesWithoutHash() {
-    return this.comicPageRepository.getPagesWithoutHashesCount() > 0L;
-  }
-
-  /**
-   * Loads a set of pages that do not have a page hash.
-   *
-   * @param size the record count
-   * @return the records
-   */
-  @Transactional
-  public List<ComicPage> getPagesWithoutHash(final int size) {
-    log.debug("Loading pages without a hash");
-    return this.comicPageRepository.findPagesWithoutHash(PageRequest.of(0, size));
-  }
-
-  /**
-   * Returns the number of pages without a hash.
-   *
-   * @return the record count
-   */
-  public long getPagesWithoutHashCount() {
-    return this.comicPageRepository.getPagesWithoutHashesCount();
-  }
-
   /**
    * Returns the total number of pages.
    *

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicpages.listeners;
+package org.comixedproject.batch.comicbooks.listeners;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
@@ -27,14 +27,14 @@ import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>LoadPageHashesJobListener</code> sends job updates while loading page hashes.
+ * <code>ProcessUnhashedComicsJobListener</code> sends job updates while loading page hashes.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @JobScope
 @Log4j2
-public class LoadPageHashesJobListener extends AbstractBatchProcessListener
+public class ProcessUnhashedComicsJobListener extends AbstractBatchProcessListener
     implements JobExecutionListener {
   @Override
   public void beforeJob(final JobExecution jobExecution) {
