@@ -44,6 +44,7 @@ import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.comixedproject.repositories.comicbooks.ComicBookRepository;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
 import org.comixedproject.repositories.comicbooks.ComicTagRepository;
+import org.comixedproject.repositories.comicpages.ComicPageRepository;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +82,8 @@ public class ComicBookService {
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
   @Autowired private ApplicationEventPublisher applicationEventPublisher;
   @Autowired private ComicTagRepository comicTagRepository;
+
+  @Autowired private ComicPageRepository comicPageRepository;
 
   /**
    * Retrieves a single comic by id. It is expected that this comic exists.
@@ -989,5 +992,37 @@ public class ComicBookService {
   public long getSeriesCountForPublisher(final String name) {
     log.debug("Loading the number of series for publisher={}", name);
     return this.comicDetailRepository.getSeriesCountForPublisher(name);
+  }
+
+  /**
+   * Loads a set of comic books containing pages that do not have a page hash.
+   *
+   * @param size the record count
+   * @return the records
+   */
+  @Transactional
+  public List<ComicBook> findComicsWithUnhashedPages(final int size) {
+    log.debug("Loading pages without a hash");
+    return this.comicBookRepository.findComicsWithUnhashedPages(PageRequest.of(0, size));
+  }
+
+  /**
+   * Returns the number of comic books with unhashed pages.
+   *
+   * @return the comic count
+   */
+  @Transactional
+  public long findComicsWithUnhashedPagesCount() {
+    return this.comicBookRepository.findComicsWithUnhashedPagesCount();
+  }
+
+  /*
+   * Returns if there are any comic books with unhashed pages.
+   *
+   * @return true if there are comic books with unhashed pages
+   */
+  @Transactional
+  public boolean hasComicsWithUnashedPages() {
+    return this.comicBookRepository.findComicsWithUnhashedPagesCount() > 0L;
   }
 }

@@ -16,15 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicpages;
+package org.comixedproject.batch.comicbooks;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicpages.listeners.LoadPageHashChunkListener;
-import org.comixedproject.batch.comicpages.listeners.LoadPageHashesJobListener;
-import org.comixedproject.batch.comicpages.processors.LoadPageHashProcessor;
-import org.comixedproject.batch.comicpages.readers.LoadPageHashReader;
-import org.comixedproject.batch.comicpages.writers.LoadPageHashWriter;
-import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.batch.comicbooks.listeners.ProcessUnhashedComicsChunkListener;
+import org.comixedproject.batch.comicbooks.listeners.ProcessUnhashedComicsJobListener;
+import org.comixedproject.batch.comicbooks.processors.ProcessUnhashedComicsProcessor;
+import org.comixedproject.batch.comicbooks.readers.ProcessUnhashedComicsReader;
+import org.comixedproject.batch.comicbooks.writers.ProcessUnhashedComicsWriter;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -38,29 +38,31 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * <code>LoadPageHashesConfiguration</code> defines a batch job that loads the hashes for comic
- * pages.
+ * <code>ProcessUnhashedComicsConfiguration</code> defines a batch job that loads the hashes for
+ * comic pages.
  *
  * @author Darryl L. Pierce
  */
 @Configuration
 @Log4j2
-public class LoadPageHashesConfiguration {
-  public static final String LOAD_PAGE_HASHES_JOB = "loadPageHashesJob";
-  public static final String JOB_LOAD_PAGE_HASHES_STARTED = "job.load-page-hashes.started";
+public class ProcessUnhashedComicsConfiguration {
+  public static final String PROCESS_UNHASHED_COMICS_JOB = "processUnhashedComicsJob";
+  public static final String PROCESS_UNHASHED_COMICS_STEP = "processUnhashedComicsStep";
+  public static final String JOB_PROCESS_UNHASHED_COMICS_STARTED =
+      "job.process-unhashed-comics.started";
 
   @Value("${comixed.batch.load-page-hashes.chunk-size:10}")
   private int chunkSize;
 
-  @Bean(name = LOAD_PAGE_HASHES_JOB)
+  @Bean(name = PROCESS_UNHASHED_COMICS_JOB)
   public Job loadPageHashesJob(
       final JobRepository jobRepository,
-      final LoadPageHashesJobListener listener,
-      @Qualifier("loadPageHashStep") final Step loadPageHashStep) {
-    return new JobBuilder(LOAD_PAGE_HASHES_JOB, jobRepository)
+      final ProcessUnhashedComicsJobListener listener,
+      @Qualifier(PROCESS_UNHASHED_COMICS_STEP) final Step processUnhashedComicsStep) {
+    return new JobBuilder(PROCESS_UNHASHED_COMICS_JOB, jobRepository)
         .incrementer(new RunIdIncrementer())
         .listener(listener)
-        .start(loadPageHashStep)
+        .start(processUnhashedComicsStep)
         .build();
   }
 
@@ -75,16 +77,16 @@ public class LoadPageHashesConfiguration {
    * @param chunkListener the chunk listener
    * @return the step
    */
-  @Bean(name = "loadPageHashStep")
-  public Step loadPageHashStep(
+  @Bean(name = PROCESS_UNHASHED_COMICS_STEP)
+  public Step processUnhashedComicsStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
-      final LoadPageHashReader reader,
-      final LoadPageHashProcessor processor,
-      final LoadPageHashWriter writer,
-      final LoadPageHashChunkListener chunkListener) {
-    return new StepBuilder("loadPageHashStep", jobRepository)
-        .<ComicPage, ComicPage>chunk(this.chunkSize, platformTransactionManager)
+      final ProcessUnhashedComicsReader reader,
+      final ProcessUnhashedComicsProcessor processor,
+      final ProcessUnhashedComicsWriter writer,
+      final ProcessUnhashedComicsChunkListener chunkListener) {
+    return new StepBuilder(PROCESS_UNHASHED_COMICS_STEP, jobRepository)
+        .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

@@ -22,9 +22,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -40,8 +38,6 @@ public class UpdateMetadataReader extends AbstractComicReader {
   @Value("${comixed.batch.update-metadata.chunk-size:10}")
   @Getter
   private int chunkSize;
-
-  @Autowired private ComicBookService comicBookService;
 
   @Override
   protected List<ComicBook> doLoadComics() {

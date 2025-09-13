@@ -16,12 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicpages.writers;
+package org.comixedproject.batch.comicbooks.writers;
 
 import java.util.ArrayList;
-import org.comixedproject.model.comicpages.ComicPage;
-import org.comixedproject.state.comicpages.ComicPageEvent;
-import org.comixedproject.state.comicpages.ComicPageStateHandler;
+import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,20 +31,20 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.item.Chunk;
 
 @ExtendWith(MockitoExtension.class)
-class LoadPageHashWriterTest {
-  @InjectMocks private LoadPageHashWriter writer;
-  @Mock private ComicPageStateHandler comicPageStateHandler;
-  @Mock private ComicPage page;
+class ProcessUnhashedComicsWriterTest {
+  @InjectMocks private ProcessUnhashedComicsWriter writer;
+  @Mock private ComicStateHandler comicStateHandler;
+  @Mock private ComicBook comicBook;
 
-  private Chunk<ComicPage> pageList = new Chunk<>(new ArrayList<>());
+  private Chunk<ComicBook> comicBookList = new Chunk<>(new ArrayList<>());
 
   @Test
   void write() throws Exception {
-    pageList.add(page);
+    comicBookList.add(comicBook);
 
-    writer.write(pageList);
+    writer.write(comicBookList);
 
-    Mockito.verify(comicPageStateHandler, Mockito.times(pageList.size()))
-        .fireEvent(page, ComicPageEvent.savePage);
+    Mockito.verify(comicStateHandler, Mockito.times(comicBookList.size()))
+        .fireEvent(comicBook, ComicEvent.metadataUpdated);
   }
 }

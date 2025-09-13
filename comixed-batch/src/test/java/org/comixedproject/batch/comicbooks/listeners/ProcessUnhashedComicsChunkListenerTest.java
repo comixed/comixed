@@ -16,17 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicpages.listeners;
+package org.comixedproject.batch.comicbooks.listeners;
 
 import static junit.framework.TestCase.*;
-import static org.comixedproject.batch.comicpages.LoadPageHashesConfiguration.LOAD_PAGE_HASHES_JOB;
+import static org.comixedproject.batch.comicbooks.ProcessUnhashedComicsConfiguration.PROCESS_UNHASHED_COMICS_JOB;
 
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
 import org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAction;
 import org.comixedproject.model.batch.BatchProcessDetail;
 import org.comixedproject.model.messaging.batch.ProcessComicBooksStatus;
-import org.comixedproject.service.comicpages.ComicPageService;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,14 +37,14 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.scope.context.StepContext;
 
 @ExtendWith(MockitoExtension.class)
-class LoadPageHashChunkListenerTest {
+class ProcessUnhashedComicsChunkListenerTest {
   private static final long TEST_PAGE_COUNT = 717L;
   private static final long TEST_PAGE_WITHOUT_HASH_COUNT = TEST_PAGE_COUNT / 2L;
 
-  @InjectMocks private LoadPageHashChunkListener listener;
+  @InjectMocks private ProcessUnhashedComicsChunkListener listener;
   @Mock private PublishProcessComicBooksStatusAction publishProcessComicBooksStatusAction;
   @Mock private PublishBatchProcessDetailUpdateAction publishBatchProcessDetailUpdateAction;
-  @Mock private ComicPageService comicPageService;
+  @Mock private ComicBookService comicBookService;
   @Mock private ChunkContext chunkContext;
   @Mock private StepContext stepContext;
   @Mock private StepExecution stepExecution;
@@ -57,12 +57,12 @@ class LoadPageHashChunkListenerTest {
 
   @BeforeEach
   public void setUp() throws PublishingException {
-    Mockito.when(comicPageService.getCount()).thenReturn(TEST_PAGE_COUNT);
-    Mockito.when(comicPageService.getPagesWithoutHashCount())
+    Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_PAGE_COUNT);
+    Mockito.when(comicBookService.findComicsWithUnhashedPagesCount())
         .thenReturn(TEST_PAGE_WITHOUT_HASH_COUNT);
 
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
-    Mockito.when(jobInstance.getJobName()).thenReturn(LOAD_PAGE_HASHES_JOB);
+    Mockito.when(jobInstance.getJobName()).thenReturn(PROCESS_UNHASHED_COMICS_JOB);
     Mockito.when(jobExecution.getJobInstance()).thenReturn(jobInstance);
     Mockito.when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);
