@@ -651,4 +651,23 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   @Modifying
   @Query("UPDATE ComicBook c SET c.organizing = false WHERE c.comicBookId = :comicBookId")
   void clearOrganizingFlag(@Param("comicBookId") Long comicBookId);
+
+  /**
+   * Returns a set of comic book records that have unhashed pages.
+   *
+   * @param pageable the page size
+   * @return the comic books
+   */
+  @Query(
+      "SELECT c FROM ComicBook c WHERE c.comicBookId IN (SELECT p.comicBook.comicBookId FROM ComicPage p WHERE p.hash IS NULL OR LENGTH(p.hash) = 0)")
+  List<ComicBook> findComicsWithUnhashedPages(Pageable pageable);
+
+  /**
+   * Returns the number of comic book that have unhashed pages.
+   *
+   * @return the number of comics
+   */
+  @Query(
+      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicBookId IN (SELECT p.comicBook.comicBookId FROM ComicPage p WHERE p.hash IS NULL OR LENGTH(p.hash) = 0)")
+  long findComicsWithUnhashedPagesCount();
 }

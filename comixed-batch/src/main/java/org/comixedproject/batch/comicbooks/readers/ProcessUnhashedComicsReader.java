@@ -16,33 +16,32 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicpages.listeners;
+package org.comixedproject.batch.comicbooks.readers;
 
+import java.util.List;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
-import org.comixedproject.model.batch.BatchProcessDetail;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobExecutionListener;
-import org.springframework.batch.core.configuration.annotation.JobScope;
+import org.comixedproject.model.comicbooks.ComicBook;
+import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>LoadPageHashesJobListener</code> sends job updates while loading page hashes.
+ * <code>ProcessUnhashedComicsReader</code> loads pages that do not have a hash.
  *
  * @author Darryl L. Pierce
  */
+@StepScope
 @Component
-@JobScope
 @Log4j2
-public class LoadPageHashesJobListener extends AbstractBatchProcessListener
-    implements JobExecutionListener {
-  @Override
-  public void beforeJob(final JobExecution jobExecution) {
-    this.doPublishBatchProcessDetail(BatchProcessDetail.from(jobExecution));
-  }
+public class ProcessUnhashedComicsReader extends AbstractComicReader {
+  @Value("${comixed.batch.mark-blocked-pages.chunk-size:1}")
+  @Getter
+  private int chunkSize;
 
   @Override
-  public void afterJob(final JobExecution jobExecution) {
-    this.doPublishBatchProcessDetail(BatchProcessDetail.from(jobExecution));
+  protected List<ComicBook> doLoadComics() {
+    log.trace("Loading pages without a hash");
+    return this.comicBookService.findComicsWithUnhashedPages(this.chunkSize);
   }
 }

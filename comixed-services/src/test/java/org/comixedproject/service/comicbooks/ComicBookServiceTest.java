@@ -1442,4 +1442,57 @@ class ComicBookServiceTest {
     Mockito.verify(comicDetailRepository, Mockito.times(1))
         .getSeriesCountForPublisher(TEST_PUBLISHER);
   }
+
+  @Test
+  void findComicsWithUnhashedPages() {
+    Mockito.when(comicBookRepository.findComicsWithUnhashedPages(pageableCaptor.capture()))
+        .thenReturn(comicBookList);
+
+    final List<ComicBook> result = service.findComicsWithUnhashedPages(TEST_MAXIMUM_COMICS);
+
+    assertNotNull(result);
+    assertSame(comicBookList, result);
+
+    final Pageable pageable = pageableCaptor.getValue();
+    assertNotNull(pageable);
+    assertEquals(0, pageable.getPageNumber());
+    assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsWithUnhashedPages(pageable);
+  }
+
+  @Test
+  void findComicsWithUnhashedPagesCount() {
+    Mockito.when(comicBookRepository.findComicsWithUnhashedPagesCount())
+        .thenReturn(TEST_COMIC_COUNT);
+
+    final long result = service.findComicsWithUnhashedPagesCount();
+
+    assertEquals(TEST_COMIC_COUNT, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsWithUnhashedPagesCount();
+  }
+
+  @Test
+  void hasComicsWithUnhashedPagesCount_withNoSuchComics() {
+    Mockito.when(comicBookRepository.findComicsWithUnhashedPagesCount()).thenReturn(0L);
+
+    final boolean result = service.hasComicsWithUnashedPages();
+
+    assertFalse(result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsWithUnhashedPagesCount();
+  }
+
+  @Test
+  void hasComicsWithUnhashedPagesCount_withComics() {
+    Mockito.when(comicBookRepository.findComicsWithUnhashedPagesCount())
+        .thenReturn(TEST_COMIC_COUNT);
+
+    final boolean result = service.hasComicsWithUnashedPages();
+
+    assertTrue(result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsWithUnhashedPagesCount();
+  }
 }

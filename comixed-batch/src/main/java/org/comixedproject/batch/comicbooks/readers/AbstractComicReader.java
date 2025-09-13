@@ -23,8 +23,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.item.ItemReader;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * <code>AbstractComicReader</code> provides a foundation for building new {@link ItemReader}
@@ -34,6 +36,8 @@ import org.springframework.batch.item.ItemReader;
  */
 @Log4j2
 public abstract class AbstractComicReader implements ItemReader<ComicBook>, StepExecutionListener {
+  @Autowired ComicBookService comicBookService;
+
   @Getter String batchName;
   @Getter @Setter List<ComicBook> comicBookList = null;
 

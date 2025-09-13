@@ -18,12 +18,12 @@
 
 package org.comixedproject.batch.initiators;
 
-import static org.comixedproject.batch.comicpages.LoadPageHashesConfiguration.JOB_LOAD_PAGE_HASHES_STARTED;
-import static org.comixedproject.batch.comicpages.LoadPageHashesConfiguration.LOAD_PAGE_HASHES_JOB;
+import static org.comixedproject.batch.comicbooks.ProcessUnhashedComicsConfiguration.JOB_PROCESS_UNHASHED_COMICS_STARTED;
+import static org.comixedproject.batch.comicbooks.ProcessUnhashedComicsConfiguration.PROCESS_UNHASHED_COMICS_JOB;
 import static org.junit.Assert.*;
 
 import org.comixedproject.service.batch.BatchProcessesService;
-import org.comixedproject.service.comicpages.ComicPageService;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,13 +43,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class LoadPageHashesInitiatorTest {
-  @InjectMocks private LoadPageHashesInitiator initiator;
-  @Mock private ComicPageService comicPageService;
+class ProcessUnhashedComicsInitiatorTest {
+  @InjectMocks private ProcessUnhashedComicsInitiator initiator;
+  @Mock private ComicBookService comicBookService;
   @Mock private BatchProcessesService batchProcessesService;
 
   @Mock
-  @Qualifier(value = LOAD_PAGE_HASHES_JOB)
+  @Qualifier(value = PROCESS_UNHASHED_COMICS_JOB)
   private Job loadPageHashesJob;
 
   @Mock
@@ -66,7 +66,7 @@ class LoadPageHashesInitiatorTest {
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
           JobRestartException {
-    Mockito.when(comicPageService.hasPagesWithoutHash()).thenReturn(true);
+    Mockito.when(comicBookService.hasComicsWithUnashedPages()).thenReturn(true);
     Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(false);
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
@@ -78,7 +78,7 @@ class LoadPageHashesInitiatorTest {
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
           JobRestartException {
-    Mockito.when(comicPageService.hasPagesWithoutHash()).thenReturn(false);
+    Mockito.when(comicBookService.hasComicsWithUnashedPages()).thenReturn(false);
 
     initiator.execute();
 
@@ -108,7 +108,7 @@ class LoadPageHashesInitiatorTest {
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
-    assertNotNull(jobParameters.getLong(JOB_LOAD_PAGE_HASHES_STARTED));
+    assertNotNull(jobParameters.getLong(JOB_PROCESS_UNHASHED_COMICS_STARTED));
 
     Mockito.verify(jobLauncher, Mockito.times(1)).run(loadPageHashesJob, jobParameters);
   }
@@ -126,7 +126,7 @@ class LoadPageHashesInitiatorTest {
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
-    assertNotNull(jobParameters.getLong(JOB_LOAD_PAGE_HASHES_STARTED));
+    assertNotNull(jobParameters.getLong(JOB_PROCESS_UNHASHED_COMICS_STARTED));
 
     Mockito.verify(jobLauncher, Mockito.times(1)).run(loadPageHashesJob, jobParameters);
   }

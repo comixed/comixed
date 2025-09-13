@@ -137,9 +137,6 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
   @Query("SELECT COUNT(p) FROM ComicPage p WHERE p.hash IS NULL OR LENGTH(p.hash) = 0")
   long getPagesWithoutHashesCount();
 
-  @Query("SELECT p FROM ComicPage p WHERE p.hash IS NULL OR LENGTH(p.hash) = 0")
-  List<ComicPage> findPagesWithoutHash(Pageable pageable);
-
   @Query(
       "SELECT p FROM ComicPage p WHERE p.pageState != 'DELETED' AND p.hash IN (SELECT b.hash FROM BlockedHash b)")
   List<ComicPage> getUnmarkedWithBlockedHash(Pageable pageable);

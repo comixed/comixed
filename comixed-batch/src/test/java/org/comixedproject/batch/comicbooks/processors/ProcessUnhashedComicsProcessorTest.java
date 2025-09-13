@@ -16,17 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicpages.processors;
+package org.comixedproject.batch.comicbooks.processors;
 
 import static org.junit.Assert.assertNotEquals;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,17 +43,22 @@ import org.mockito.quality.Strictness;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class LoadPageHashProcessorTest {
+class ProcessUnhashedComicsProcessorTest {
   private static final String TEST_IMAGE_PATH = "src/test/resources/example.jpg";
+  private static final String TEST_BASE_FILENAME = "comic-book.cbz";
+
   private byte[] imageContent;
   private static final Integer TEST_PAGE_NUMBER = 17;
   private static final String TEST_PAGE_HASH = "OICU812";
 
-  @InjectMocks private LoadPageHashProcessor processor;
+  @InjectMocks private ProcessUnhashedComicsProcessor processor;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
   @Mock private ComicPage page;
+  @Mock private ComicDetail comicDetail;
   @Mock private ComicBook comicBook;
+
+  private List<ComicPage> pageList = new ArrayList<>();
 
   @BeforeEach
   public void setUp() throws AdaptorException, IOException {
@@ -59,8 +67,13 @@ class LoadPageHashProcessorTest {
         .thenReturn(TEST_PAGE_HASH);
     Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))
         .thenReturn(imageContent);
+    Mockito.when(comicBook.getPages()).thenReturn(pageList);
+    Mockito.when(comicDetail.getBaseFilename()).thenReturn(TEST_BASE_FILENAME);
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(page.getComicBook()).thenReturn(comicBook);
     Mockito.when(page.getPageNumber()).thenReturn(TEST_PAGE_NUMBER);
+    pageList.add(null);
+    pageList.add(page);
   }
 
   @Test
@@ -68,7 +81,7 @@ class LoadPageHashProcessorTest {
     Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))
         .thenThrow(AdaptorException.class);
 
-    processor.process(page);
+    processor.process(comicBook);
 
     Mockito.verify(genericUtilitiesAdaptor, Mockito.never()).createHash(Mockito.any(byte[].class));
     Mockito.verify(page, Mockito.never()).setHash(TEST_PAGE_HASH);
@@ -76,7 +89,7 @@ class LoadPageHashProcessorTest {
 
   @Test
   void process() {
-    processor.process(page);
+    processor.process(comicBook);
 
     assertNotEquals(-1, page.getWidth().intValue());
     assertNotEquals(-1, page.getHeight().intValue());
