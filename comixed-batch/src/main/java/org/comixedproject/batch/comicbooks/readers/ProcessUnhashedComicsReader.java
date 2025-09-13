@@ -16,32 +16,32 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicpages.readers;
+package org.comixedproject.batch.comicbooks.readers;
 
 import java.util.List;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>LoadPageHashReader</code> loads pages that do not have a hash.
+ * <code>ProcessUnhashedComicsReader</code> loads pages that do not have a hash.
  *
  * @author Darryl L. Pierce
  */
 @StepScope
 @Component
 @Log4j2
-public class LoadPageHashReader extends AbstractPageReader {
+public class ProcessUnhashedComicsReader extends AbstractComicReader {
   @Value("${comixed.batch.mark-blocked-pages.chunk-size:1}")
   @Getter
   private int chunkSize;
 
   @Override
-  protected List<ComicPage> doLoadPages() {
+  protected List<ComicBook> doLoadComics() {
     log.trace("Loading pages without a hash");
-    return this.comicPageService.getPagesWithoutHash(this.chunkSize);
+    return this.comicBookService.findComicsWithUnhashedPages(this.chunkSize);
   }
 }

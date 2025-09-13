@@ -16,21 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicpages.writers;
+package org.comixedproject.batch.comicbooks.writers;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.state.comicpages.ComicPageEvent;
+import org.comixedproject.state.comicbooks.ComicEvent;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>LoadPageHashWriter</code> writes a page after its hash has been set.
+ * <code>ProcessUnhashedComicsWriter</code> writes a page after its hash has been set.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class LoadPageHashWriter extends AbstractPageWriter {
-  public LoadPageHashWriter() {
-    super(ComicPageEvent.savePage);
+public class ProcessUnhashedComicsWriter extends AbstractComicBookWriter {
+  public ProcessUnhashedComicsWriter() {
+    super(ComicEvent.pagesHashesLoaded);
   }
 }

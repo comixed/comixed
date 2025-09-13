@@ -28,6 +28,8 @@ public enum ComicEvent {
   readyForProcessing,
   // the file entries have been loaded
   fileContentsLoaded,
+  // the page hashes were loaded
+  pagesHashesLoaded,
   // rescan a comic,
   rescanComic,
   // the metadata within the physical comic file has been updated

@@ -329,35 +329,6 @@ class ComicPageServiceTest {
   }
 
   @Test
-  void hasPagesWithoutHash_recordsFound() {
-    Mockito.when(comicPageRepository.getPagesWithoutHashesCount()).thenReturn(TEST_MAX_ENTRIES);
-
-    assertTrue(service.hasPagesWithoutHash());
-
-    Mockito.verify(comicPageRepository, Mockito.times(1)).getPagesWithoutHashesCount();
-  }
-
-  @Test
-  void hasPagesWithoutHash_noRecordsFound() {
-    Mockito.when(comicPageRepository.getPagesWithoutHashesCount()).thenReturn(0L);
-
-    assertFalse(service.hasPagesWithoutHash());
-
-    Mockito.verify(comicPageRepository, Mockito.times(1)).getPagesWithoutHashesCount();
-  }
-
-  @Test
-  void getPagesWithoutHashesCount() {
-    Mockito.when(comicPageRepository.getPagesWithoutHashesCount()).thenReturn(TEST_MAX_ENTRIES);
-
-    final long result = service.getPagesWithoutHashCount();
-
-    assertEquals(TEST_MAX_ENTRIES, result);
-
-    Mockito.verify(comicPageRepository, Mockito.times(1)).getPagesWithoutHashesCount();
-  }
-
-  @Test
   void getCount() {
     Mockito.when(comicPageRepository.count()).thenReturn(TEST_MAX_ENTRIES);
 

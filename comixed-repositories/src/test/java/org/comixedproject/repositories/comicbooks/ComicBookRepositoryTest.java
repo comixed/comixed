@@ -50,6 +50,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = RepositoryContext.class)
@@ -338,5 +339,19 @@ public class ComicBookRepositoryTest {
 
     assertNotNull(after);
     assertFalse(after.isOrganizing());
+  }
+
+  @Test
+  @Transactional
+  public void testLoadComicsWithUnhashedPages() {
+    final List<ComicBook> result = repository.findComicsWithUnhashedPages(PageRequest.of(0, 10));
+
+    assertNotNull(result);
+    assertTrue(
+        result.stream()
+            .allMatch(
+                entry ->
+                    entry.getPages().stream()
+                        .anyMatch(page -> !StringUtils.hasLength(page.getHash()))));
   }
 }

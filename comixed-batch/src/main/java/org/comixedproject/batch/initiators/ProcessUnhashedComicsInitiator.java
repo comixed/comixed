@@ -18,12 +18,12 @@
 
 package org.comixedproject.batch.initiators;
 
-import static org.comixedproject.batch.comicpages.LoadPageHashesConfiguration.JOB_LOAD_PAGE_HASHES_STARTED;
-import static org.comixedproject.batch.comicpages.LoadPageHashesConfiguration.LOAD_PAGE_HASHES_JOB;
+import static org.comixedproject.batch.comicbooks.ProcessUnhashedComicsConfiguration.JOB_PROCESS_UNHASHED_COMICS_STARTED;
+import static org.comixedproject.batch.comicbooks.ProcessUnhashedComicsConfiguration.PROCESS_UNHASHED_COMICS_JOB;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.service.batch.BatchProcessesService;
-import org.comixedproject.service.comicpages.ComicPageService;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersInvalidException;
@@ -37,7 +37,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>LoadPageHashesInitiator</code> periodically checks for any page that does not have a
+ * <code>ProcessUnhashedComicsInitiator</code> periodically checks for any page that does not have a
  * defined hash. If any are found, and if the <code>library.blocked-pages-enabled</code> feature is
  * enabled, then it spawns a batch job to load those hashes.
  *
@@ -45,12 +45,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class LoadPageHashesInitiator {
-  @Autowired private ComicPageService comicPageService;
+public class ProcessUnhashedComicsInitiator {
+  @Autowired private ComicBookService comicBookService;
   @Autowired private BatchProcessesService batchProcessesService;
 
   @Autowired
-  @Qualifier(value = LOAD_PAGE_HASHES_JOB)
+  @Qualifier(value = PROCESS_UNHASHED_COMICS_JOB)
   private Job loadPageHashesJob;
 
   @Autowired
@@ -60,14 +60,14 @@ public class LoadPageHashesInitiator {
   @Scheduled(fixedDelayString = "${comixed.batch.load-page-hashes.period:60000}")
   public void execute() {
     log.trace("Checking for pages without hashes");
-    if (this.comicPageService.hasPagesWithoutHash()
-        && !this.batchProcessesService.hasActiveExecutions(LOAD_PAGE_HASHES_JOB)) {
+    if (this.comicBookService.hasComicsWithUnashedPages()
+        && !this.batchProcessesService.hasActiveExecutions(PROCESS_UNHASHED_COMICS_JOB)) {
       try {
         log.trace("Starting batch job: load page hashes");
         this.jobLauncher.run(
             this.loadPageHashesJob,
             new JobParametersBuilder()
-                .addLong(JOB_LOAD_PAGE_HASHES_STARTED, System.currentTimeMillis())
+                .addLong(JOB_PROCESS_UNHASHED_COMICS_STARTED, System.currentTimeMillis())
                 .toJobParameters());
       } catch (JobExecutionAlreadyRunningException
           | JobRestartException

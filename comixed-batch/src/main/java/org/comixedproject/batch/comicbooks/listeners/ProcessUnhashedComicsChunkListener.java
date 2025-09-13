@@ -16,25 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicpages.listeners;
+package org.comixedproject.batch.comicbooks.listeners;
 
 import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicbooks.listeners.AbstractBatchProcessChunkListener;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>LoadPageHashChunkListener</code> sends notifications as the page hash job processes each
- * chunk of data.
+ * <code>ProcessUnhashedComicsChunkListener</code> sends notifications as the page hash job
+ * processes each chunk of data.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @StepScope
 @Log4j2
-public class LoadPageHashChunkListener extends AbstractBatchProcessChunkListener {
+public class ProcessUnhashedComicsChunkListener extends AbstractBatchProcessChunkListener {
   @Override
   protected String getStepName() {
     return LOAD_PAGE_HASH_STEP;
@@ -42,16 +41,17 @@ public class LoadPageHashChunkListener extends AbstractBatchProcessChunkListener
 
   @Override
   protected boolean isActive() {
-    return this.comicPageService.getPagesWithoutHashCount() > 0;
+    return this.comicBookService.findComicsWithUnhashedPagesCount() > 0;
   }
 
   @Override
   protected long getProcessedElements() {
-    return this.comicPageService.getCount() - this.comicPageService.getPagesWithoutHashCount();
+    return this.comicBookService.getComicBookCount()
+        - this.comicBookService.findComicsWithUnhashedPagesCount();
   }
 
   @Override
   protected long getTotalElements() {
-    return this.comicPageService.getCount();
+    return this.comicBookService.getComicBookCount();
   }
 }

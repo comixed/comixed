@@ -18,7 +18,7 @@
 
 package org.comixedproject.batch.initiators;
 
-import static org.comixedproject.batch.comicpages.LoadPageHashesConfiguration.LOAD_PAGE_HASHES_JOB;
+import static org.comixedproject.batch.comicbooks.ProcessUnhashedComicsConfiguration.PROCESS_UNHASHED_COMICS_JOB;
 import static org.comixedproject.batch.library.OrganizeLibraryConfiguration.*;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_COMIC_RENAMING_RULE;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY;
@@ -58,7 +58,7 @@ class OrganizeLibraryInitiatorTest {
   @Mock private BatchProcessesService batchProcessesService;
 
   @Mock
-  @Qualifier(value = LOAD_PAGE_HASHES_JOB)
+  @Qualifier(value = PROCESS_UNHASHED_COMICS_JOB)
   private Job loadPageHashesJob;
 
   @Mock
