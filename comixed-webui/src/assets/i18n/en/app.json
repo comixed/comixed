@@ -2,7 +2,14 @@
   "app": {
     "general-effect-failure": "A general error has occurred.",
     "logged-in": "Logged in: {email}",
-    "system-status": "Total: {comicCount} | Unscraped: {unscrapedCount} | Read: {readCount} | Selected: {selectedCount} | Removed: {deletedCount} | Jobs: {batchJobs}"
+    "system-status": {
+      "batch-jobs": "Jobs: {count}",
+      "comic-count": "Comics: {count}",
+      "deleted-count": "Deleted: {count}",
+      "read-count": "Read: {count}",
+      "selected-count": "Selected: {count}",
+      "unscraped-count": "Unscraped: {count}"
+    }
   },
   "build-details": {
     "label": {
