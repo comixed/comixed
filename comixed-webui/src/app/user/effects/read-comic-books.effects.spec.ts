@@ -98,14 +98,14 @@ describe('ReadComicBooksEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
       const action = markSingleComicBookRead({
-        comicBookId: COMIC_DETAIL.comicId,
+        comicBookId: COMIC_DETAIL.comicBookId,
         read: READ
       });
       const outcome = markSelectedComicBooksReadSuccess();
 
       actions$ = hot('-a', { a: action });
       readComicBooksService.setSingleReadState
-        .withArgs({ comicBookId: COMIC_DETAIL.comicId, read: READ })
+        .withArgs({ comicBookId: COMIC_DETAIL.comicBookId, read: READ })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -116,14 +116,14 @@ describe('ReadComicBooksEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = markSingleComicBookRead({
-        comicBookId: COMIC_DETAIL.comicId,
+        comicBookId: COMIC_DETAIL.comicBookId,
         read: READ
       });
       const outcome = markSelectedComicBooksReadFailed();
 
       actions$ = hot('-a', { a: action });
       readComicBooksService.setSingleReadState
-        .withArgs({ comicBookId: COMIC_DETAIL.comicId, read: READ })
+        .withArgs({ comicBookId: COMIC_DETAIL.comicBookId, read: READ })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -133,14 +133,14 @@ describe('ReadComicBooksEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = markSingleComicBookRead({
-        comicBookId: COMIC_DETAIL.comicId,
+        comicBookId: COMIC_DETAIL.comicBookId,
         read: READ
       });
       const outcome = markSelectedComicBooksReadFailed();
 
       actions$ = hot('-a', { a: action });
       readComicBooksService.setSingleReadState
-        .withArgs({ comicBookId: COMIC_DETAIL.comicId, read: READ })
+        .withArgs({ comicBookId: COMIC_DETAIL.comicBookId, read: READ })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });

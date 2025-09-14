@@ -205,7 +205,7 @@ describe('DisplayableComicService', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         comicUpdated({
           comic: {
-            comicBookId: COMIC_ADDED.detail.comicId,
+            comicBookId: COMIC_ADDED.detail.comicBookId,
             comicDetailId: COMIC_ADDED.detail.comicDetailId,
             archiveType: COMIC_ADDED.detail.archiveType,
             comicState: COMIC_ADDED.detail.comicState,
@@ -232,7 +232,7 @@ describe('DisplayableComicService', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         comicRemoved({
           comic: {
-            comicBookId: COMIC_REMOVED.detail.comicId,
+            comicBookId: COMIC_REMOVED.detail.comicBookId,
             comicDetailId: COMIC_REMOVED.detail.comicDetailId,
             archiveType: COMIC_REMOVED.detail.archiveType,
             comicState: COMIC_REMOVED.detail.comicState,

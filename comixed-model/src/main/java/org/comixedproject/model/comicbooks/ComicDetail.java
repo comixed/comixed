@@ -326,7 +326,7 @@ public class ComicDetail implements PublicationDetail {
    *
    * @return the comic book id
    */
-  @JsonProperty("comicId")
+  @JsonProperty("comicBookId")
   @JsonView({
     View.ComicListView.class,
     View.LastReadList.class,

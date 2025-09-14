@@ -23,7 +23,7 @@ import { ComicType } from '@app/comic-books/models/comic-type';
 
 export interface ComicDetail {
   comicDetailId: number;
-  comicId: number;
+  comicBookId: number;
   filename: string;
   baseFilename: string;
   missing: boolean;

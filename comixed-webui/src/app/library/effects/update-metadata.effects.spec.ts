@@ -85,13 +85,13 @@ describe('UpdateMetadataEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
       const action = updateSingleComicBookMetadata({
-        comicBookId: COMIC_DETAIL.comicId
+        comicBookId: COMIC_DETAIL.comicBookId
       });
       const outcome = updateSelectedComicBooksMetadataSuccess();
 
       actions$ = hot('-a', { a: action });
       libraryService.updateSingleComicBookMetadata
-        .withArgs({ comicBookId: COMIC_DETAIL.comicId })
+        .withArgs({ comicBookId: COMIC_DETAIL.comicBookId })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -102,13 +102,13 @@ describe('UpdateMetadataEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = updateSingleComicBookMetadata({
-        comicBookId: COMIC_DETAIL.comicId
+        comicBookId: COMIC_DETAIL.comicBookId
       });
       const outcome = updateSelectedComicBooksMetadataFailure();
 
       actions$ = hot('-a', { a: action });
       libraryService.updateSingleComicBookMetadata
-        .withArgs({ comicBookId: COMIC_DETAIL.comicId })
+        .withArgs({ comicBookId: COMIC_DETAIL.comicBookId })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -118,13 +118,13 @@ describe('UpdateMetadataEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = updateSingleComicBookMetadata({
-        comicBookId: COMIC_DETAIL.comicId
+        comicBookId: COMIC_DETAIL.comicBookId
       });
       const outcome = updateSelectedComicBooksMetadataFailure();
 
       actions$ = hot('-a', { a: action });
       libraryService.updateSingleComicBookMetadata
-        .withArgs({ comicBookId: COMIC_DETAIL.comicId })
+        .withArgs({ comicBookId: COMIC_DETAIL.comicBookId })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });

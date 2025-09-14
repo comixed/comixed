@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.views.View;
 
 /**
@@ -52,5 +52,5 @@ public class LoadMultiBookScrapingResponse {
   @JsonProperty("comicBooks")
   @JsonView(View.ComicListView.class)
   @Getter
-  private List<ComicBook> comicBooks;
+  private List<DisplayableComic> comicBooks;
 }

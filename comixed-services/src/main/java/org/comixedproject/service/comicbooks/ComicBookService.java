@@ -901,22 +901,6 @@ public class ComicBookService {
     return this.comicBookRepository.getRecreatingCount();
   }
 
-  @Transactional
-  public List<ComicBook> loadByComicBookId(
-      final List<Long> comicDetailIds, final int pageSize, final int pageNumber) {
-    final int offset = pageSize * pageNumber;
-    if (offset > comicDetailIds.size()) {
-      return this.comicBookRepository.loadByComicDetailId(comicDetailIds);
-    }
-
-    int endOffset = offset + pageSize;
-    if (endOffset > comicDetailIds.size()) {
-      endOffset = comicDetailIds.size();
-    }
-
-    return this.comicBookRepository.loadByComicDetailId(comicDetailIds.subList(offset, endOffset));
-  }
-
   /**
    * Returns a subset of comic filenames based on whether they were previously marked as missing.
    *

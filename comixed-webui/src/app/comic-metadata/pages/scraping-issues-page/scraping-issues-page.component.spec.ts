@@ -43,15 +43,19 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
   COMIC_BOOK_3,
-  COMIC_BOOK_4,
-  COMIC_BOOK_5
+  DISPLAYABLE_COMIC_1,
+  DISPLAYABLE_COMIC_2,
+  DISPLAYABLE_COMIC_3,
+  DISPLAYABLE_COMIC_4,
+  DISPLAYABLE_COMIC_5
 } from '@app/comic-books/comic-books.fixtures';
 import { loadVolumeMetadata } from '@app/comic-metadata/actions/single-book-scraping.actions';
 import { TitleService } from '@app/core/services/title.service';
-import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
+import {
+  METADATA_SOURCE_1,
+  SCRAPING_VOLUME_1
+} from '@app/comic-metadata/comic-metadata.fixtures';
 import { loadComicBook } from '@app/comic-books/actions/comic-book.actions';
 import {
   COMIC_BOOK_FEATURE_KEY,
@@ -72,17 +76,17 @@ import {
 import { RouterModule } from '@angular/router';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { BehaviorSubject } from 'rxjs';
-import { PAGE_SIZE_DEFAULT } from '@app/core';
 
 describe('ScrapingIssuesPageComponent', () => {
   const USER = USER_READER;
+  const DISPLAYABLE_COMIC = DISPLAYABLE_COMIC_3;
   const COMIC_BOOK = COMIC_BOOK_3;
   const COMIC_BOOKS = [
-    COMIC_BOOK_1,
-    COMIC_BOOK_2,
-    COMIC_BOOK_3,
-    COMIC_BOOK_4,
-    COMIC_BOOK_5
+    DISPLAYABLE_COMIC_1,
+    DISPLAYABLE_COMIC_2,
+    DISPLAYABLE_COMIC_3,
+    DISPLAYABLE_COMIC_4,
+    DISPLAYABLE_COMIC_5
   ];
   const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
@@ -168,16 +172,16 @@ describe('ScrapingIssuesPageComponent', () => {
   describe('when the comic is changed', () => {
     beforeEach(() => {
       component.currentComicBook = null;
-      component.onSelectionChanged(COMIC_BOOK.detail);
+      component.onSelectionChanged(DISPLAYABLE_COMIC);
     });
 
-    it('clears the current comic', () => {
+    it('updates the current comic', () => {
       expect(component.currentComicBook).toBeNull();
     });
 
-    it('load the comic book', () => {
+    it('loads the comic book', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        loadComicBook({ id: COMIC_BOOK.detail.comicId })
+        loadComicBook({ id: DISPLAYABLE_COMIC.comicBookId })
       );
     });
   });
@@ -187,13 +191,13 @@ describe('ScrapingIssuesPageComponent', () => {
       component.metadataSource = METADATA_SOURCE;
       component.onScrape({
         metadataSource: METADATA_SOURCE,
-        publisher: COMIC_BOOK.detail.publisher,
-        series: COMIC_BOOK.detail.series,
+        publisher: DISPLAYABLE_COMIC.publisher,
+        series: DISPLAYABLE_COMIC.series,
         maximumRecords: MAXIMUM_RECORDS,
         skipCache: SKIP_CACHE,
         matchPublisher: MATCH_PUBLISHER,
-        issueNumber: COMIC_BOOK.detail.issueNumber,
-        volume: COMIC_BOOK.detail.volume
+        issueNumber: DISPLAYABLE_COMIC.issueNumber,
+        volume: DISPLAYABLE_COMIC.volume
       });
     });
 
@@ -201,8 +205,8 @@ describe('ScrapingIssuesPageComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         loadVolumeMetadata({
           metadataSource: METADATA_SOURCE,
-          publisher: COMIC_BOOK.detail.publisher,
-          series: COMIC_BOOK.detail.series,
+          publisher: DISPLAYABLE_COMIC.publisher,
+          series: DISPLAYABLE_COMIC.series,
           maximumRecords: MAXIMUM_RECORDS,
           skipCache: SKIP_CACHE,
           matchPublisher: MATCH_PUBLISHER
@@ -214,12 +218,12 @@ describe('ScrapingIssuesPageComponent', () => {
   describe('showing the cover of different comic in a popup', () => {
     beforeEach(() => {
       component.showPopup = false;
-      component.popupComicDetail;
-      component.onShowPopup(true, COMIC_BOOK.detail);
+      component.popupComic;
+      component.onShowPopup(true, DISPLAYABLE_COMIC);
     });
 
     it('sets the comic to show', () => {
-      expect(component.popupComicDetail).toBe(COMIC_BOOK.detail);
+      expect(component.popupComic).toBe(DISPLAYABLE_COMIC);
     });
 
     it('shows the popup', () => {
@@ -229,13 +233,13 @@ describe('ScrapingIssuesPageComponent', () => {
 
   describe('removing a comic book from the queue', () => {
     beforeEach(() => {
-      component.onRemoveComicBook(COMIC_BOOK.detail);
+      component.onRemoveComicBook(DISPLAYABLE_COMIC);
     });
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         multiBookScrapingRemoveBook({
-          comicBook: COMIC_BOOK,
+          comicBook: DISPLAYABLE_COMIC,
           pageSize: PAGE_SIZE
         })
       );
@@ -244,12 +248,40 @@ describe('ScrapingIssuesPageComponent', () => {
 
   describe('selecting a different comic book from the queue', () => {
     beforeEach(() => {
-      component.onSelectComicBook(COMIC_BOOK.detail);
+      component.onSelectComicBook(DISPLAYABLE_COMIC);
     });
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        multiBookScrapingSetCurrentBook({ comicBook: COMIC_BOOK })
+        multiBookScrapingSetCurrentBook({ comicBook: DISPLAYABLE_COMIC })
+      );
+    });
+  });
+
+  describe('when the multibook current comic is changed', () => {
+    beforeEach(() => {
+      component.scrapingVolumes = [SCRAPING_VOLUME_1];
+      component.currentVolume = SCRAPING_VOLUME_1.id;
+      store.setState({
+        ...initialState,
+        [MULTI_BOOK_SCRAPING_FEATURE_KEY]: {
+          ...initialState,
+          currentComicBook: DISPLAYABLE_COMIC
+        }
+      });
+    });
+
+    it('clears the list of scraping volumes', () => {
+      expect(component.scrapingVolumes).toEqual([]);
+    });
+
+    it('clears the current volume', () => {
+      expect(component.currentVolume).toBeNull();
+    });
+
+    it('loads the comic book', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        loadComicBook({ id: DISPLAYABLE_COMIC.comicBookId })
       );
     });
   });

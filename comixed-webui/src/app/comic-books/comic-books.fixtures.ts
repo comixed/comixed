@@ -52,6 +52,8 @@ export const IMPRINT_3: Imprint = {
 export const DISPLAYABLE_COMIC_1: DisplayableComic = {
   comicBookId: 1,
   comicDetailId: 101,
+  filename: '/library/comicbook1.cbz',
+  baseFilename: 'comicbook1.cbz',
   archiveType: ArchiveType.CBZ,
   comicState: ComicState.STABLE,
   comicType: ComicType.ISSUE,
@@ -73,6 +75,8 @@ export const DISPLAYABLE_COMIC_1: DisplayableComic = {
 export const DISPLAYABLE_COMIC_2: DisplayableComic = {
   comicBookId: 2,
   comicDetailId: 102,
+  filename: '/library/comicbook2.cbz',
+  baseFilename: 'comicbook2.cbz',
   archiveType: ArchiveType.CBZ,
   comicState: ComicState.STABLE,
   comicType: ComicType.ISSUE,
@@ -94,6 +98,8 @@ export const DISPLAYABLE_COMIC_2: DisplayableComic = {
 export const DISPLAYABLE_COMIC_3: DisplayableComic = {
   comicBookId: 3,
   comicDetailId: 103,
+  filename: '/library/comicbook3.cbz',
+  baseFilename: 'comicbook3.cbz',
   archiveType: ArchiveType.CBZ,
   comicState: ComicState.STABLE,
   comicType: ComicType.ISSUE,
@@ -115,6 +121,8 @@ export const DISPLAYABLE_COMIC_3: DisplayableComic = {
 export const DISPLAYABLE_COMIC_4: DisplayableComic = {
   comicBookId: 4,
   comicDetailId: 104,
+  filename: '/library/comicbook4.cbz',
+  baseFilename: 'comicbook4.cbz',
   archiveType: ArchiveType.CBZ,
   comicState: ComicState.STABLE,
   comicType: ComicType.ISSUE,
@@ -136,6 +144,8 @@ export const DISPLAYABLE_COMIC_4: DisplayableComic = {
 export const DISPLAYABLE_COMIC_5: DisplayableComic = {
   comicBookId: 5,
   comicDetailId: 105,
+  filename: '/library/comicbook5.cbz',
+  baseFilename: 'comicbook5.cbz',
   archiveType: ArchiveType.CBZ,
   comicState: ComicState.STABLE,
   comicType: ComicType.ISSUE,
@@ -156,7 +166,7 @@ export const DISPLAYABLE_COMIC_5: DisplayableComic = {
 
 export const COMIC_DETAIL_1: ComicDetail = {
   comicDetailId: 101,
-  comicId: 1,
+  comicBookId: 1,
   filename: '/Users/comixedreader/Documents/library/comicfile1.cbz',
   baseFilename: 'comicfile1.cbz',
   missing: false,
@@ -194,7 +204,7 @@ export const COMIC_DETAIL_1: ComicDetail = {
 
 export const COMIC_DETAIL_2: ComicDetail = {
   comicDetailId: 102,
-  comicId: 2,
+  comicBookId: 2,
   comicState: ComicState.STABLE,
   comicType: ComicType.ISSUE,
   archiveType: ArchiveType.CBR,
@@ -224,7 +234,7 @@ export const COMIC_DETAIL_2: ComicDetail = {
 
 export const COMIC_DETAIL_3: ComicDetail = {
   comicDetailId: 103,
-  comicId: 3,
+  comicBookId: 3,
   archiveType: ArchiveType.CB7,
   filename: '/Users/comixedreader/Documents/library/comicfile3.cbz',
   baseFilename: 'comicfile3.cbz',
@@ -254,7 +264,7 @@ export const COMIC_DETAIL_3: ComicDetail = {
 
 export const COMIC_DETAIL_4: ComicDetail = {
   comicDetailId: 104,
-  comicId: 4,
+  comicBookId: 4,
   filename: '/Users/comixedreader/Documents/library/comicfile4.cbz',
   baseFilename: 'comicfile4.cbz',
   missing: false,
@@ -284,7 +294,7 @@ export const COMIC_DETAIL_4: ComicDetail = {
 
 export const COMIC_DETAIL_5: ComicDetail = {
   comicDetailId: 15,
-  comicId: 5,
+  comicBookId: 5,
   archiveType: ArchiveType.CBZ,
   filename: '/Users/comixedreader/Documents/library/comicfile5.cbz',
   baseFilename: 'comicfile1.cbz',

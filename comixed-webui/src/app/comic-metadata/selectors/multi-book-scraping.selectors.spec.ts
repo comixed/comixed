@@ -26,22 +26,22 @@ import {
   selectMultiBookScrapingState
 } from './multi-book-scraping.selectors';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
-  COMIC_BOOK_3,
-  COMIC_BOOK_4,
-  COMIC_BOOK_5
+  DISPLAYABLE_COMIC_1,
+  DISPLAYABLE_COMIC_2,
+  DISPLAYABLE_COMIC_3,
+  DISPLAYABLE_COMIC_4,
+  DISPLAYABLE_COMIC_5
 } from '@app/comic-books/comic-books.fixtures';
 import { MultiBookScrapingProcessStatus } from '@app/comic-metadata/models/multi-book-scraping-process-status';
 import { PAGE_SIZE_DEFAULT } from '@app/core';
 
 describe('MultiBookScraping Selectors', () => {
   const COMIC_BOOKS = [
-    COMIC_BOOK_1,
-    COMIC_BOOK_2,
-    COMIC_BOOK_3,
-    COMIC_BOOK_4,
-    COMIC_BOOK_5
+    DISPLAYABLE_COMIC_1,
+    DISPLAYABLE_COMIC_2,
+    DISPLAYABLE_COMIC_3,
+    DISPLAYABLE_COMIC_4,
+    DISPLAYABLE_COMIC_5
   ];
   const CURRENT_COMIC_BOOK =
     COMIC_BOOKS[Math.floor(Math.random() * COMIC_BOOKS.length)];
