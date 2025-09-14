@@ -33,7 +33,12 @@ import {
   COMIC_BOOK_2,
   COMIC_BOOK_3,
   COMIC_BOOK_4,
-  COMIC_BOOK_5
+  COMIC_BOOK_5,
+  DISPLAYABLE_COMIC_1,
+  DISPLAYABLE_COMIC_2,
+  DISPLAYABLE_COMIC_3,
+  DISPLAYABLE_COMIC_4,
+  DISPLAYABLE_COMIC_5
 } from '@app/comic-books/comic-books.fixtures';
 import { ScrapeMultiBookComicResponse } from '@app/comic-metadata/models/net/scrape-multi-book-comic-response';
 import {
@@ -72,16 +77,16 @@ describe('MultiBookScrapingEffects', () => {
   const VOLUME_ID = SCRAPING_VOLUME_1.id;
   const ISSUE_NUMBER = '27';
   const COMIC_BOOKS = [
-    COMIC_BOOK_1,
-    COMIC_BOOK_2,
-    COMIC_BOOK_3,
-    COMIC_BOOK_4,
-    COMIC_BOOK_5
+    DISPLAYABLE_COMIC_1,
+    DISPLAYABLE_COMIC_2,
+    DISPLAYABLE_COMIC_3,
+    DISPLAYABLE_COMIC_4,
+    DISPLAYABLE_COMIC_5
   ];
   const PAGE_SIZE = 25;
   const PAGE_NUMBER = 3;
   const TOTAL_COMICS = 100;
-  const COMIC_BOOK = COMIC_BOOK_4;
+  const COMIC_BOOK = DISPLAYABLE_COMIC_1;
   const METADATA_SOURCE = METADATA_SOURCE_1;
 
   let actions$: Observable<any>;

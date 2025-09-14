@@ -198,12 +198,12 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
     this.logger.debug('Loading comic form:', comic);
     this._comic = comic;
     this.logger.debug('Loading form fields');
-    this.comicForm.controls.referenceId.setValue(comic.metadata?.referenceId);
-    this.comicForm.controls.publisher.setValue(comic.detail.publisher);
-    this.comicForm.controls.series.setValue(comic.detail.series);
-    this.comicForm.controls.volume.setValue(comic.detail.volume);
-    this.comicForm.controls.issueNumber.setValue(comic.detail.issueNumber);
-    this.comicForm.controls.imprint.setValue(comic.detail.imprint);
+    this.comicForm.controls.referenceId.setValue(comic?.metadata?.referenceId);
+    this.comicForm.controls.publisher.setValue(comic?.detail.publisher);
+    this.comicForm.controls.series.setValue(comic?.detail.series);
+    this.comicForm.controls.volume.setValue(comic?.detail.volume);
+    this.comicForm.controls.issueNumber.setValue(comic?.detail.issueNumber);
+    this.comicForm.controls.imprint.setValue(comic?.detail.imprint);
     this.comicForm.updateValueAndValidity();
   }
 

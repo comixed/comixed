@@ -23,12 +23,13 @@ import {
 } from '@app/library/library.constants';
 import { interpolate } from '@app/core';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Pipe({ name: 'comicDetailCoverUrl' })
 export class ComicDetailCoverUrlPipe implements PipeTransform {
-  transform(comic: ComicDetail): string {
+  transform(comic: ComicDetail | DisplayableComic): string {
     if (!!comic) {
-      return interpolate(GET_COMIC_COVER_URL, { id: comic.comicId });
+      return interpolate(GET_COMIC_COVER_URL, { id: comic.comicBookId });
     }
     return MISSING_COMIC_IMAGE_URL;
   }

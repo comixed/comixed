@@ -16,11 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ComicBook } from '@app/comic-books/models/comic-book';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 export interface RemoveMultiBookComicResponse {
   pageSize: number;
   pageNumber: number;
   totalComics: number;
-  comicBooks: ComicBook[];
+  comicBooks: DisplayableComic[];
 }

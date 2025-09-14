@@ -27,7 +27,10 @@ import {
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { COMIC_BOOK_4 } from '@app/comic-books/comic-books.fixtures';
+import {
+  COMIC_BOOK_4,
+  DISPLAYABLE_COMIC_1
+} from '@app/comic-books/comic-books.fixtures';
 import {
   initialState as initialScrapingState,
   SINGLE_BOOK_SCRAPING_FEATURE_KEY
@@ -70,7 +73,7 @@ describe('ComicScrapingVolumeSelectionComponent', () => {
   ];
   const SKIP_CACHE = Math.random() > 0.5;
   const ISSUE_NUMBER = '27';
-  const COMIC_BOOK = COMIC_BOOK_4;
+  const COMIC_BOOK = DISPLAYABLE_COMIC_1;
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const PAGE_SIZE = 25;
   const initialState = {

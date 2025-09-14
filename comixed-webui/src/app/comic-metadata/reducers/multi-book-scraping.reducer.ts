@@ -36,19 +36,19 @@ import {
   startMultiBookScrapingSuccess
 } from '../actions/multi-book-scraping.actions';
 import { MultiBookScrapingProcessStatus } from '@app/comic-metadata/models/multi-book-scraping-process-status';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { PAGE_SIZE_DEFAULT } from '@app/core';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 export const MULTI_BOOK_SCRAPING_FEATURE_KEY = 'multi_book_scraping_state';
 
 export interface MultiBookScrapingState {
   busy: boolean;
   status: MultiBookScrapingProcessStatus;
-  comicBooks: ComicBook[];
+  comicBooks: DisplayableComic[];
   pageSize: number;
   pageNumber: number;
   totalComics: number;
-  currentComicBook: ComicBook;
+  currentComicBook: DisplayableComic;
 }
 
 export const initialState: MultiBookScrapingState = {
@@ -61,7 +61,7 @@ export const initialState: MultiBookScrapingState = {
   currentComicBook: null
 };
 
-function getCurrentComicBook(comicBooks): ComicBook {
+function getCurrentComicBook(comicBooks): DisplayableComic {
   if (comicBooks?.length > 0) {
     return comicBooks[0];
   }

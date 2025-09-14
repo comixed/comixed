@@ -35,10 +35,12 @@ import org.comixedproject.metadata.model.IssueMetadata;
 import org.comixedproject.metadata.model.StoryMetadata;
 import org.comixedproject.metadata.model.VolumeMetadata;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.model.net.metadata.*;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicSelectionService;
+import org.comixedproject.service.library.DisplayableComicService;
 import org.comixedproject.service.metadata.MetadataCacheService;
 import org.comixedproject.service.metadata.MetadataService;
 import org.comixedproject.views.View;
@@ -64,6 +66,7 @@ public class ComicBookScrapingController {
   @Autowired private MetadataService metadataService;
   @Autowired private MetadataCacheService metadataCacheService;
   @Autowired private ComicBookService comicBookService;
+  @Autowired private DisplayableComicService displayableComicService;
   @Autowired private ComicSelectionService comicSelectionService;
 
   @Autowired
@@ -270,12 +273,12 @@ public class ComicBookScrapingController {
       final String email = principal.getName();
       final List<Long> selectedIds =
           this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
-      final List<Long> comicDetailIds =
+      final List<Long> comicBookIds =
           this.comicSelectionService.decodeSelections(
               session.getAttribute(MULTI_BOOK_SCRAPING_SELECTIONS));
 
       if (!selectedIds.isEmpty()) {
-        comicDetailIds.addAll(selectedIds);
+        comicBookIds.addAll(selectedIds);
 
         this.comicSelectionService.clearSelectedComicBooks(email, selectedIds);
         session.setAttribute(
@@ -284,13 +287,13 @@ public class ComicBookScrapingController {
 
       session.setAttribute(
           MULTI_BOOK_SCRAPING_SELECTIONS,
-          this.comicSelectionService.encodeSelections(comicDetailIds));
+          this.comicSelectionService.encodeSelections(comicBookIds));
 
       final int pageSize = request.getPageSize();
-      final List<ComicBook> comicBooks =
-          this.comicBookService.loadByComicBookId(comicDetailIds, pageSize, 0);
+      final List<DisplayableComic> comicBooks =
+          this.displayableComicService.loadComicsById(pageSize, 0, "", "", comicBookIds);
 
-      return new StartMultiBookScrapingResponse(pageSize, 0, comicDetailIds.size(), comicBooks);
+      return new StartMultiBookScrapingResponse(pageSize, 0, comicBookIds.size(), comicBooks);
     } catch (ComicBookSelectionException error) {
       throw new MetadataException("Failed to start multi-book scraping", error);
     }
@@ -325,8 +328,8 @@ public class ComicBookScrapingController {
         this.comicSelectionService.decodeSelections(
             session.getAttribute(MULTI_BOOK_SCRAPING_SELECTIONS));
 
-    final List<ComicBook> comicBooks =
-        this.comicBookService.loadByComicBookId(comicBookIds, pageSize, pageNumber);
+    final List<DisplayableComic> comicBooks =
+        this.displayableComicService.loadComicsById(pageSize, 0, "", "", comicBookIds);
 
     return new LoadMultiBookScrapingResponse(pageSize, pageNumber, comicBookIds.size(), comicBooks);
   }
@@ -487,7 +490,7 @@ public class ComicBookScrapingController {
       throws ComicBookSelectionException {
     log.debug(
         "Removing scraped comic book id from multi-book scraping selections: id={}", comicBookId);
-    final List<Long> comicDetailIds =
+    final List<Long> comicBookIds =
         this.comicSelectionService
             .decodeSelections(session.getAttribute(MULTI_BOOK_SCRAPING_SELECTIONS))
             .stream()
@@ -495,13 +498,12 @@ public class ComicBookScrapingController {
             .collect(Collectors.toList());
     log.debug("Updating multi-book scraping selections");
     session.setAttribute(
-        MULTI_BOOK_SCRAPING_SELECTIONS,
-        this.comicSelectionService.encodeSelections(comicDetailIds));
+        MULTI_BOOK_SCRAPING_SELECTIONS, this.comicSelectionService.encodeSelections(comicBookIds));
 
     log.debug("Loading page of comic books still to be scraped");
-    final List<ComicBook> comicBooks =
-        this.comicBookService.loadByComicBookId(comicDetailIds, pageSize, pageNumber);
+    final List<DisplayableComic> comicBooks =
+        this.displayableComicService.loadComicsById(pageSize, 0, "", "", comicBookIds);
     return new StartMultiBookScrapingResponse(
-        pageSize, pageNumber, comicDetailIds.size(), comicBooks);
+        pageSize, pageNumber, comicBookIds.size(), comicBooks);
   }
 }

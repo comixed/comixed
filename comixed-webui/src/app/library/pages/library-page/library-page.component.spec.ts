@@ -137,7 +137,7 @@ describe('LibraryPageComponent', () => {
       archiveType: ArchiveType.CBZ
     }
   ];
-  const IDS = COMIC_DETAILS.map(entry => entry.comicId);
+  const IDS = COMIC_DETAILS.map(entry => entry.comicBookId);
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [LIBRARY_FEATURE_KEY]: initialLibraryState,

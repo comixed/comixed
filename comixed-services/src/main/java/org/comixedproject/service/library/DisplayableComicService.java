@@ -308,7 +308,7 @@ public class DisplayableComicService {
    * @param idList the id list
    * @return the comics
    */
-  @Transactional
+  @Transactional(readOnly = true)
   public List<DisplayableComic> loadComicsById(
       final Integer pageSize,
       final Integer pageIndex,
