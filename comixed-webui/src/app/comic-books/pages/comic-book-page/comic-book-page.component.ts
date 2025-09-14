@@ -175,7 +175,7 @@ export class ComicBookPageComponent
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.unsubscribeFromUpdates();
       this.comicId = +params.comicId;
-      this.logger.trace('ComicBook id parameter:', params.comicId);
+      this.logger.trace('ComicBook id parameter:', params.comicBookId);
       this.store.dispatch(loadComicBook({ id: this.comicId }));
     });
     this.subscribeToUpdates();

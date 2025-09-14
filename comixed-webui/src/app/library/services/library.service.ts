@@ -94,7 +94,7 @@ export class LibraryService {
   setRead(args: { comicBooks: ComicDetail[]; read: boolean }): Observable<any> {
     this.logger.trace('Setting comic read state:', args);
     return this.http.put(interpolate(SET_READ_STATE_URL), {
-      ids: args.comicBooks.map(comic => comic.comicId),
+      ids: args.comicBooks.map(comic => comic.comicBookId),
       read: args.read
     } as SetComicReadRequest);
   }

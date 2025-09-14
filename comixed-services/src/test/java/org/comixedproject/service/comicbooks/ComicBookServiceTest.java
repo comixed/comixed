@@ -143,7 +143,7 @@ class ComicBookServiceTest {
   private Set<String> comicFilenameList = new HashSet<>();
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     Mockito.when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicBook.getComicBookId()).thenReturn(TEST_COMIC_BOOK_ID);
@@ -1306,46 +1306,6 @@ class ComicBookServiceTest {
     assertEquals(TEST_COMIC_COUNT, result);
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).getRecreatingCount();
-  }
-
-  @Test
-  void loadByComicBookIdForPageAndSize() {
-    Mockito.when(comicBookRepository.loadByComicDetailId(Mockito.anyList()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result =
-        service.loadByComicBookId(idList, TEST_PAGE_SIZE, TEST_PAGE_NUMBER);
-
-    assertNotNull(result);
-    assertSame(comicBookList, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).loadByComicDetailId(idList);
-  }
-
-  @Test
-  void loadByComicBookId_pageTooBig() {
-    Mockito.when(comicBookRepository.loadByComicDetailId(Mockito.anyList()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result = service.loadByComicBookId(idList, idList.size() + 1, 0);
-
-    assertNotNull(result);
-    assertSame(comicBookList, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).loadByComicDetailId(idList);
-  }
-
-  @Test
-  void loadByComicBookId_pageAndSizeNotEnoughComics() {
-    Mockito.when(comicBookRepository.loadByComicDetailId(Mockito.anyList()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result = service.loadByComicBookId(idList, idList.size(), 1);
-
-    assertNotNull(result);
-    assertSame(comicBookList, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).loadByComicDetailId(idList);
   }
 
   @Test

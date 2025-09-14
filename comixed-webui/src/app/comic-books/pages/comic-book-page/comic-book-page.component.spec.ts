@@ -125,7 +125,7 @@ describe('ComicBookPageComponent', () => {
   let titleService: TitleService;
   let confirmationService: ConfirmationService;
   let webSocketService: jasmine.SpyObj<WebSocketService>;
-
+  4;
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [

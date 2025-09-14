@@ -1,21 +1,21 @@
-@if (showPopup && !!popupComicDetail) {
+@if (showPopup && !!popupComic) {
   <div class="cx-hover cx-centered cx-width-25 cx-border-primary-1">
     <mat-card appearance="outlined">
       <mat-card-title class="cx-text-nowrap">
-        {{ popupComicDetail | comicTitle }}
+        {{ popupComic | comicTitle }}
       </mat-card-title>
-      @if (!!popupComicDetail.title && popupComicDetail?.title.length > 0) {
+      @if (!!popupComic.title && popupComic?.title.length > 0) {
         <mat-card-subtitle class="cx-text-nowrap">
-          {{ popupComicDetail.title }}
+          {{ popupComic.title }}
         </mat-card-subtitle>
       }
       <mat-card-content class="cx-padding-5">
         <img
           loading="lazy"
-          [src]="popupComicDetail | comicDetailCoverUrl"
+          [src]="popupComic | comicDetailCoverUrl"
           width="100%"
           height="auto"
-          [alt]="popupComicDetail | comicTitle"
+          [alt]="popupComic | comicTitle"
         />
       </mat-card-content>
     </mat-card>
@@ -59,16 +59,16 @@
         </mat-card-title>
         <mat-card-subtitle
           class="cx-text-nowrap cx-align-content-center"
-          [matTooltip]="currentComicBook?.detail.baseFilename"
+          [matTooltip]="currentComicBook?.baseFilename"
         >
-          {{ currentComicBook?.detail.baseFilename }}
+          {{ currentComicBook?.baseFilename }}
         </mat-card-subtitle>
         <mat-card-content>
           <img
             [style.width]="'100%'"
             [style.height]="'auto'"
-            [alt]="currentComicBook?.detail | comicTitle"
-            [src]="currentComicBook?.detail | comicDetailCoverUrl"
+            [alt]="currentComicBook.detail | comicTitle"
+            [src]="currentComicBook.detail | comicDetailCoverUrl"
           />
         </mat-card-content>
       </mat-card>

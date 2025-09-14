@@ -19,12 +19,11 @@
 import { TestBed } from '@angular/core/testing';
 import { ComicBookScrapingService } from './comic-book-scraping.service';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
-  COMIC_BOOK_3,
-  COMIC_BOOK_4,
-  COMIC_BOOK_5,
-  COMIC_DETAIL_1
+  COMIC_DETAIL_1,
+  DISPLAYABLE_COMIC_1,
+  DISPLAYABLE_COMIC_2,
+  DISPLAYABLE_COMIC_3,
+  DISPLAYABLE_COMIC_4
 } from '@app/comic-books/comic-books.fixtures';
 import {
   HttpTestingController,
@@ -98,14 +97,13 @@ describe('ComicBookScrapingService', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
   const VOLUME_ID = SCRAPING_VOLUME_1.id;
   const ISSUE_NUMBER = '27';
-  const COMIC_BOOK = COMIC_BOOK_4;
+  const COMIC_BOOK = DISPLAYABLE_COMIC_1;
   const COMIC_DETAIL = COMIC_DETAIL_1;
   const COMIC_BOOKS = [
-    COMIC_BOOK_1,
-    COMIC_BOOK_2,
-    COMIC_BOOK_3,
-    COMIC_BOOK_4,
-    COMIC_BOOK_5
+    DISPLAYABLE_COMIC_1,
+    DISPLAYABLE_COMIC_2,
+    DISPLAYABLE_COMIC_3,
+    DISPLAYABLE_COMIC_4
   ];
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const SCRAPING_VOLUME = SCRAPING_VOLUME_1;

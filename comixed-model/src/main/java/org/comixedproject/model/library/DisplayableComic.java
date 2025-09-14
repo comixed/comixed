@@ -23,6 +23,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicType;
@@ -38,7 +39,7 @@ import org.comixedproject.views.View;
 public class DisplayableComic {
   @Id
   @Column(name = "comic_book_id")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicListView.class})
   @Getter
   private Long comicBookId;
 
@@ -46,6 +47,11 @@ public class DisplayableComic {
   @JsonView({View.ComicDetailsView.class})
   @Getter
   private Long comicDetailId;
+
+  @Column(name = "filename")
+  @JsonView({View.ComicDetailsView.class})
+  @Getter
+  private String filename;
 
   @Column(name = "archive_type", columnDefinition = "VARCHAR(4)")
   @JsonView({View.ComicDetailsView.class})
@@ -75,25 +81,25 @@ public class DisplayableComic {
   private ComicType comicType;
 
   @Column(name = "publisher")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicListView.class})
   @Getter
   @Setter
   private String publisher;
 
   @Column(name = "series")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicListView.class})
   @Getter
   @Setter
   private String series;
 
   @Column(name = "volume")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicListView.class})
   @Getter
   @Setter
   private String volume;
 
   @Column(name = "issue_number")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicListView.class})
   @Getter
   private String issueNumber;
 
@@ -154,4 +160,10 @@ public class DisplayableComic {
   @Getter
   @Setter
   private Date addedDate;
+
+  @Transient
+  @JsonView({View.ComicListView.class})
+  public String getBaseFilename() {
+    return FilenameUtils.getName(this.filename);
+  }
 }
