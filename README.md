@@ -43,6 +43,7 @@ To achieve this goal, the project will:
 ## What The Project Will Not Do
  * It is not a comic reading application.
     * For that, we recommend applications like [Chunky](http://chunkyreader.com/) (iOS), [YACReader](https://www.yacreader.com/) (iOS), [Librera](https://play.google.com/store/apps/details?id=com.foobnix.pdf.reader) (Android)
+    * There is a project in the works, [Variant](https://github.com/comixed/variant), to provide a reader that takes advantage of ComiXed's feature set.
 
 ## Supported Comic Formats
 
