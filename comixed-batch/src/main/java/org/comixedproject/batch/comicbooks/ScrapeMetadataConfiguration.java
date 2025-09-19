@@ -23,7 +23,7 @@ import org.comixedproject.batch.comicbooks.listeners.ScrapeMetadataChunkListener
 import org.comixedproject.batch.comicbooks.listeners.ScrapeMetadataJobListener;
 import org.comixedproject.batch.comicbooks.processors.ScrapeMetadataProcessor;
 import org.comixedproject.batch.comicbooks.readers.ScrapeMetadataReader;
-import org.comixedproject.batch.writers.NoopWriter;
+import org.comixedproject.batch.comicbooks.writers.ScrapeMetadataWriter;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -92,7 +92,7 @@ public class ScrapeMetadataConfiguration {
       final PlatformTransactionManager platformTransactionManager,
       final ScrapeMetadataReader reader,
       final ScrapeMetadataProcessor processor,
-      final NoopWriter<ComicBook> writer,
+      final ScrapeMetadataWriter writer,
       final ScrapeMetadataChunkListener chunkListener) {
     return new StepBuilder("scrapeMetadataStep", jobRepository)
         .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
