@@ -158,7 +158,8 @@
                    archive_type="CBZ"
                    sort_name="My First Comic"
                    description="This is a comicBook book's description"
-                   added_date="2017-06-16 15:21:00"/>
+                   added_date="2017-06-16 15:21:00"
+                   last_modified_date="2017-06-16 15:21:00"/>
     <comic_details comic_detail_id="2001"
                    comic_book_id="1001"
                    comic_state="STABLE"
@@ -173,7 +174,8 @@
                    issue_number="513"
                    description="This is a comicBook book's description"
                    cover_date="2017-02-28"
-                   added_date="2017-06-15 15:20:00"/>
+                   added_date="2017-06-15 15:20:00"
+                   last_modified_date="2017-06-15 15:20:00"/>
     <comic_details comic_detail_id="2002"
                    comic_book_id="1002"
                    comic_state="STABLE"
@@ -187,7 +189,8 @@
                    issue_number="512"
                    description="This is a comicBook book's description"
                    cover_date="2017-01-31"
-                   added_date="2017-06-14 15:20:00"/>
+                   added_date="2017-06-14 15:20:00"
+                   last_modified_date="2017-06-14 15:20:00"/>
     <comic_details comic_detail_id="2003"
                    comic_book_id="1003"
                    comic_state="STABLE"
@@ -201,7 +204,8 @@
                    issue_number="512"
                    description="This is a comicBook book's description"
                    cover_date="1965-01-31"
-                   added_date="2017-06-13 15:20:00"/>
+                   added_date="2017-06-13 15:20:00"
+                   last_modified_date="2017-06-13 15:20:00"/>
     <comic_details comic_detail_id="2004"
                    comic_book_id="1004"
                    comic_state="STABLE"
@@ -215,7 +219,8 @@
                    issue_number="514"
                    description="This is a comicBook book's description"
                    cover_date="2017-03-31"
-                   added_date="2017-06-15 15:20:00"/>
+                   added_date="2017-06-15 15:20:00"
+                   last_modified_date="2017-06-15 15:20:00"/>
     <comic_details comic_detail_id="2005"
                    comic_book_id="1005"
                    comic_state="STABLE"
@@ -229,7 +234,8 @@
                    issue_number="250"
                    description="This is a comicBook book's description"
                    cover_date="2016-02-28"
-                   added_date="2017-06-15 15:20:10"/>
+                   added_date="2017-06-15 15:20:10"
+                   last_modified_date="2017-06-15 15:20:10"/>
     <comic_details comic_detail_id="2006"
                    comic_book_id="1006"
                    comic_state="STABLE"
@@ -243,7 +249,8 @@
                    issue_number="249"
                    description="This is a comicBook book's description"
                    cover_date="2015-02-28"
-                   added_date="2017-06-15 15:20:20"/>
+                   added_date="2017-06-15 15:20:20"
+                   last_modified_date="2017-06-15 15:20:20"/>
     <comic_details comic_detail_id="2010"
                    comic_book_id="1010"
                    comic_state="DELETED"
@@ -257,7 +264,8 @@
                    issue_number="249"
                    description="This is a comicBook book's description"
                    cover_date="2015-02-28"
-                   added_date="2017-06-15 15:20:20"/>
+                   added_date="2017-06-15 15:20:20"
+                   last_modified_date="2017-06-15 15:20:20"/>
     <comic_details comic_detail_id="2020"
                    comic_book_id="1020"
                    comic_state="STABLE"
@@ -271,6 +279,7 @@
                    issue_number="19"
                    description="This is a comicBook book's description"
                    added_date="2019-04-24 09:35:00"
+                   last_modified_date="2019-04-24 09:35:00"
                    cover_date="2017-02-31"/>
     <comic_details comic_detail_id="2021"
                    comic_book_id="1021"
@@ -285,7 +294,8 @@
                    issue_number="19"
                    description="This is a comicBook book's description"
                    cover_date="2017-02-31"
-                   added_date="2019-04-24 09:36:00"/>
+                   added_date="2019-04-24 09:36:00"
+                   last_modified_date="2019-04-24 09:36:00"/>
     <comic_details comic_detail_id="3000"
                    comic_book_id="2000"
                    comic_state="STABLE"
@@ -299,7 +309,8 @@
                    issue_number="19"
                    description="This is a comicBook book's description"
                    cover_date="2017-02-31"
-                   added_date="2019-04-24 09:36:00"/>
+                   added_date="2019-04-24 09:36:00"
+                   last_modified_date="2019-04-24 09:36:00"/>
     <comic_tags comic_detail_id="2000"
                 tag_type="CHARACTER"
                 tag_value="Captain America"/>

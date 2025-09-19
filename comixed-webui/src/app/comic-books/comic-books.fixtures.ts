@@ -199,7 +199,8 @@ export const COMIC_DETAIL_1: ComicDetail = {
   storeDate: new Date().getTime(),
   publishedYear: 2019,
   publishedMonth: 3,
-  addedDate: new Date().getTime()
+  addedDate: new Date().getTime(),
+  lastModifiedDate: new Date().getTime()
 };
 
 export const COMIC_DETAIL_2: ComicDetail = {
@@ -229,7 +230,8 @@ export const COMIC_DETAIL_2: ComicDetail = {
   storeDate: new Date().getTime(),
   publishedYear: 2018,
   publishedMonth: 3,
-  addedDate: new Date().getTime()
+  addedDate: new Date().getTime(),
+  lastModifiedDate: new Date().getTime()
 };
 
 export const COMIC_DETAIL_3: ComicDetail = {
@@ -259,7 +261,8 @@ export const COMIC_DETAIL_3: ComicDetail = {
   storeDate: new Date().getTime(),
   publishedYear: 1953,
   publishedMonth: 3,
-  addedDate: new Date().getTime()
+  addedDate: new Date().getTime(),
+  lastModifiedDate: new Date().getTime()
 };
 
 export const COMIC_DETAIL_4: ComicDetail = {
@@ -289,7 +292,8 @@ export const COMIC_DETAIL_4: ComicDetail = {
   storeDate: new Date().getTime(),
   publishedYear: 1972,
   publishedMonth: 3,
-  addedDate: new Date().getTime()
+  addedDate: new Date().getTime(),
+  lastModifiedDate: new Date().getTime()
 };
 
 export const COMIC_DETAIL_5: ComicDetail = {
@@ -321,7 +325,8 @@ export const COMIC_DETAIL_5: ComicDetail = {
   storeDate: new Date().getTime(),
   publishedYear: 2000,
   publishedMonth: 3,
-  addedDate: new Date().getTime()
+  addedDate: new Date().getTime(),
+  lastModifiedDate: new Date().getTime()
 };
 
 export const COMIC_BOOK_1: ComicBook = {

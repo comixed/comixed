@@ -193,9 +193,13 @@ public class ComicBookService {
     log.trace("Updating the imprint");
     this.imprintService.update(comicBook);
 
-    log.trace("Standardizing the comic filename");
     final ComicDetail detail = comicBook.getComicDetail();
+
+    log.trace("Standardizing the comic filename");
     detail.setFilename(comicFileAdaptor.standardizeFilename(detail.getFilename()));
+
+    log.trace("Setting last modified date");
+    detail.setLastModifiedDate(new Date());
 
     return this.comicBookRepository.saveAndFlush(comicBook);
   }
