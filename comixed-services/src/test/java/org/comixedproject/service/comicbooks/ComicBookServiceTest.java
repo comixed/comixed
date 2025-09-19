@@ -50,11 +50,7 @@ import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -140,6 +136,8 @@ class ComicBookServiceTest {
   @Captor private ArgumentCaptor<PageRequest> pageRequestCaptor;
   @Captor private ArgumentCaptor<Limit> previousComicBookLimitArgumentCaptor;
   @Captor private ArgumentCaptor<Limit> nextComicBookLimitArgumentCaptor;
+  @Captor private ArgumentCaptor<Date> dateArgumentCaptor;
+
   private Set<String> comicFilenameList = new HashSet<>();
 
   @BeforeEach
@@ -374,6 +372,7 @@ class ComicBookServiceTest {
 
   @Test
   void save() {
+    Mockito.doNothing().when(comicDetail).setLastModifiedDate(dateArgumentCaptor.capture());
     Mockito.when(comicBookRepository.saveAndFlush(Mockito.any(ComicBook.class)))
         .thenReturn(savedComicBook);
 
@@ -382,7 +381,11 @@ class ComicBookServiceTest {
     assertNotNull(result);
     assertSame(savedComicBook, result);
 
+    final Date lastModifiedDate = dateArgumentCaptor.getValue();
+    assertNotNull(lastModifiedDate);
+
     Mockito.verify(comicFileAdaptor, Mockito.times(1)).standardizeFilename(TEST_COMIC_FILENAME);
+    Mockito.verify(comicDetail, Mockito.times(1)).setLastModifiedDate(lastModifiedDate);
     Mockito.verify(comicBookRepository, Mockito.times(1)).saveAndFlush(comicBook);
   }
 

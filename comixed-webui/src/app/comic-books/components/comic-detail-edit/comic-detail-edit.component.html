@@ -120,8 +120,14 @@
   </mat-form-field>
 
   <mat-form-field appearance="fill" class="cx-width-25">
-    <mat-label>{{ "comic-book.label.filesize" | translate }}</mat-label>
-    <input matInput formControlName="fileSize" readonly />
+    <mat-label>
+      {{ "comic-book.label.last-modified-date" | translate }}
+    </mat-label>
+    <input
+      matInput
+      [value]="comicBook.detail.lastModifiedDate | date: 'medium'"
+      readonly
+    />
   </mat-form-field>
 
   <mat-form-field appearance="fill" class="cx-width-25">

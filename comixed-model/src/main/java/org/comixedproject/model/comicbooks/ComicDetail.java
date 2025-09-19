@@ -314,6 +314,21 @@ public class ComicDetail implements PublicationDetail {
   @Setter
   private Date addedDate = new Date();
 
+  @Column(name = "last_modified_date", updatable = true, nullable = false)
+  @CreatedDate
+  @JsonProperty("lastModifiedDate")
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
+  @JsonView({
+    View.ComicListView.class,
+    View.DuplicatePageDetail.class,
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class
+  })
+  @Temporal(TemporalType.TIMESTAMP)
+  @Getter
+  @Setter
+  private Date lastModifiedDate = new Date();
+
   @ElementCollection
   @CollectionTable(name = "read_comic_books", joinColumns = @JoinColumn(name = "comic_detail_id"))
   @Column(name = "comixed_user_id")

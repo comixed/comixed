@@ -45,6 +45,7 @@
       "imprint": "Imprint",
       "issue-details": "Issue Details",
       "issue-number": "Issue #",
+      "last-modified-date": "Last Modified",
       "last-read-date": "Last Read",
       "locations": "Locations In This Issue ({count})",
       "metadata-load-limit": "Maximum Records",

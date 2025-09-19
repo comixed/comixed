@@ -49,4 +49,5 @@ export interface ComicDetail {
   publishedMonth: number;
   storeDate: number;
   addedDate: number;
+  lastModifiedDate: number;
 }
