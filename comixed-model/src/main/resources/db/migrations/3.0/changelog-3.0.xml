@@ -18,5 +18,6 @@
     <!-- v3.0 migrations -->
     <include file="/db/migrations/3.0/001_2178_add_missing_foreign_keys.xml"/>
     <include file="/db/migrations/3.0/002_2178_add_filename_to_displayable_comics_view.xml"/>
+    <include file="/db/migrations/3.0/003_2448_add_last_modified_date_to_comic_details.xml"/>
 
 </databaseChangeLog>

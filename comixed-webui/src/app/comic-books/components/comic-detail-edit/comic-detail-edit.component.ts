@@ -21,13 +21,13 @@ import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import {
+  ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators,
-  ReactiveFormsModule
+  Validators
 } from '@angular/forms';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngrx/store';
 import { updateComicBook } from '@app/comic-books/actions/comic-book.actions';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
@@ -50,18 +50,20 @@ import {
   MatSuffix
 } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatSelect, MatOption } from '@angular/material/select';
+import { MatOption, MatSelect } from '@angular/material/select';
 import {
+  MatDatepicker,
   MatDatepickerInput,
-  MatDatepickerToggle,
-  MatDatepicker
+  MatDatepickerToggle
 } from '@angular/material/datepicker';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'cx-comic-detail-edit',
   templateUrl: './comic-detail-edit.component.html',
   styleUrls: ['./comic-detail-edit.component.scss'],
   imports: [
+    CommonModule,
     MatToolbar,
     MatIconButton,
     MatTooltip,
