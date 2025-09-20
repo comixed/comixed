@@ -228,5 +228,20 @@
         </mat-error>
       }
     </mat-form-field>
+    <mat-form-field class="cx-width-25">
+      <mat-label>
+        {{ "comic-book.label.last-scraped-date" | translate }}
+      </mat-label>
+      <input
+        id="last-modifier-date-input"
+        [value]="
+          !!comic.metadata
+            ? (comic.metadata?.lastModifiedDate | date: 'medium')
+            : ('text.never' | translate)
+        "
+        matInput
+        readonly
+      />
+    </mat-form-field>
   </form>
 }

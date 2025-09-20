@@ -216,6 +216,10 @@ class MetadataServiceTest {
 
     Mockito.when(scrapedStoryService.getForName(Mockito.anyString()))
         .thenReturn(scrapedStoryFromDatabase);
+
+    Mockito.when(comicBook.getMetadata()).thenReturn(comicMetadataSource);
+    Mockito.when(savedComicBook.getMetadata()).thenReturn(comicMetadataSource);
+    Mockito.when(loadedComicBook.getMetadata()).thenReturn(comicMetadataSource);
   }
 
   private String addPadding(final String value) {
@@ -1111,6 +1115,7 @@ class MetadataServiceTest {
     Mockito.verify(loadedComicDetail, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
     Mockito.verify(loadedComicDetail, Mockito.times(1)).setWebAddress(TEST_WEB_ADDRESS);
     Mockito.verify(imprintService, Mockito.times(1)).update(comicBook);
+    Mockito.verify(comicMetadataSource, Mockito.times(1)).setLastModifiedDate(Mockito.any());
   }
 
   @Test

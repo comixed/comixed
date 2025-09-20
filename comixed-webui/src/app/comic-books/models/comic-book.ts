@@ -29,5 +29,5 @@ export interface ComicBook {
   blockedPageCount: number;
   nextIssueId: number;
   previousIssueId: number;
-  lastModifiedOn: number;
+  lastModifiedDate: number;
 }

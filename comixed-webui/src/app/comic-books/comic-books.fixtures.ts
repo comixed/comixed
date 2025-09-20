@@ -335,7 +335,7 @@ export const COMIC_BOOK_1: ComicBook = {
   pages: [PAGE_1, PAGE_2, PAGE_3, PAGE_4],
   duplicatePageCount: 0,
   blockedPageCount: 0,
-  lastModifiedOn: 0,
+  lastModifiedDate: 0,
   nextIssueId: null,
   previousIssueId: null,
   metadata: null
@@ -347,7 +347,7 @@ export const COMIC_BOOK_2: ComicBook = {
   pages: [PAGE_1],
   duplicatePageCount: 0,
   blockedPageCount: 0,
-  lastModifiedOn: 0,
+  lastModifiedDate: 0,
   nextIssueId: null,
   previousIssueId: null,
   metadata: null
@@ -359,7 +359,7 @@ export const COMIC_BOOK_3: ComicBook = {
   pages: [PAGE_1],
   duplicatePageCount: 0,
   blockedPageCount: 0,
-  lastModifiedOn: 0,
+  lastModifiedDate: 0,
   nextIssueId: null,
   previousIssueId: null,
   metadata: null
@@ -371,7 +371,7 @@ export const COMIC_BOOK_4: ComicBook = {
   pages: [PAGE_1],
   duplicatePageCount: 0,
   blockedPageCount: 0,
-  lastModifiedOn: 0,
+  lastModifiedDate: 0,
   nextIssueId: null,
   previousIssueId: null,
   metadata: null
@@ -383,7 +383,7 @@ export const COMIC_BOOK_5: ComicBook = {
   pages: [PAGE_1],
   duplicatePageCount: 0,
   blockedPageCount: 0,
-  lastModifiedOn: 0,
+  lastModifiedDate: 0,
   nextIssueId: null,
   previousIssueId: null,
   metadata: null
