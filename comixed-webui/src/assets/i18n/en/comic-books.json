@@ -47,6 +47,7 @@
       "issue-number": "Issue #",
       "last-modified-date": "Last Modified",
       "last-read-date": "Last Read",
+      "last-scraped-date": "Metadata Last Modified",
       "locations": "Locations In This Issue ({count})",
       "metadata-load-limit": "Maximum Records",
       "metadata-source": "Metadata Source",

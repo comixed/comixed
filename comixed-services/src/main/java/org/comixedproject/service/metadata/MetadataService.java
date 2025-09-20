@@ -420,6 +420,8 @@ public class MetadataService {
                   "ComicBook metadata scraped using ComiXed & %s.", metadataAdaptor.getSource()));
       log.trace("Checking for imprint");
       this.imprintService.update(comicBook);
+      log.trace("Setting the comic metadata source last modified date");
+      comicBook.getMetadata().setLastModifiedDate(new Date());
       log.trace("Updating comicBook state: scraped");
       this.comicStateHandler.fireEvent(comicBook, ComicEvent.scraped);
     }

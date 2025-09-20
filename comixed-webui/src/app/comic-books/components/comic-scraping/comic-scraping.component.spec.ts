@@ -137,7 +137,8 @@ describe('ComicScrapingComponent', () => {
           ...COMIC,
           metadata: {
             metadataSource: PREFERRED_METADATA_SOURCE,
-            referenceId: REFERENCE_ID
+            referenceId: REFERENCE_ID,
+            lastModifiedDate: new Date().getTime()
           }
         };
       });
@@ -543,7 +544,8 @@ describe('ComicScrapingComponent', () => {
       ...COMIC,
       metadata: {
         metadataSource: OTHER_METADATA_SOURCE,
-        referenceId: REFERENCE_ID
+        referenceId: REFERENCE_ID,
+        lastModifiedDate: new Date().getTime()
       }
     };
 
