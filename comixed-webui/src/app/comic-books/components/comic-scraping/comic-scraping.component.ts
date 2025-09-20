@@ -77,12 +77,14 @@ import {
 } from '@angular/material/form-field';
 import { MatSelect, MatOption } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'cx-comic-scraping',
   templateUrl: './comic-scraping.component.html',
   styleUrls: ['./comic-scraping.component.scss'],
   imports: [
+    CommonModule,
     MatToolbar,
     MatIconButton,
     MatTooltip,
