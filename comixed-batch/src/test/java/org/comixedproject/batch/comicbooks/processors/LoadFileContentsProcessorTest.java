@@ -25,6 +25,7 @@ import java.util.List;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.content.*;
+import org.comixedproject.batch.ComicCheckOutManager;
 import org.comixedproject.metadata.MetadataAdaptorProvider;
 import org.comixedproject.metadata.adaptors.MetadataAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -52,6 +53,7 @@ class LoadFileContentsProcessorTest {
   private static final String TEST_REFERENCE_ID = "The reference id";
 
   @InjectMocks private LoadFileContentsProcessor processor;
+  @Mock private ComicCheckOutManager comicCheckOutManager;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private ContentAdaptorRegistry contentAdaptorRegistry;
   @Mock private ComicInfoXmlFilenameContentAdaptor comicInfoXmlFilenameContentAdaptor;
