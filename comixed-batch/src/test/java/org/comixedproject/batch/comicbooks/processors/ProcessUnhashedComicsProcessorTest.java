@@ -28,6 +28,7 @@ import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
+import org.comixedproject.batch.ComicCheckOutManager;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicpages.ComicPage;
@@ -52,6 +53,7 @@ class ProcessUnhashedComicsProcessorTest {
   private static final String TEST_PAGE_HASH = "OICU812";
 
   @InjectMocks private ProcessUnhashedComicsProcessor processor;
+  @Mock private ComicCheckOutManager comicCheckOutManager;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
   @Mock private ComicPage page;
