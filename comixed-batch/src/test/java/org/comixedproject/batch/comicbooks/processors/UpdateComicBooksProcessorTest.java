@@ -22,6 +22,7 @@ import static junit.framework.TestCase.assertNull;
 import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.*;
 
 import org.apache.commons.lang.math.RandomUtils;
+import org.comixedproject.batch.ComicCheckOutManager;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicType;
@@ -50,6 +51,7 @@ class UpdateComicBooksProcessorTest {
       ComicType.values()[RandomUtils.nextInt(ComicType.values().length)].name();
 
   @InjectMocks private UpdateComicBooksProcessor processor;
+  @Mock private ComicCheckOutManager comicCheckOutManager;
   @Mock private StepExecution stepExecution;
   @Mock private JobExecution jobExecution;
   @Mock private JobParameters jobParameters;

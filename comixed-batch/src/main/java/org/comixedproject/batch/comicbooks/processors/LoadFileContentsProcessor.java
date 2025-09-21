@@ -26,6 +26,7 @@ import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.content.ContentAdaptor;
 import org.comixedproject.adaptors.content.ContentAdaptorRegistry;
 import org.comixedproject.adaptors.content.ContentAdaptorRules;
+import org.comixedproject.batch.ComicCheckOutManager;
 import org.comixedproject.metadata.MetadataAdaptorProvider;
 import org.comixedproject.metadata.adaptors.MetadataAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -52,6 +53,7 @@ public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, Comic
   @Autowired private ContentAdaptorRegistry contentAdaptorRegistry;
   @Autowired private MetadataService metadataService;
   @Autowired private MetadataSourceService metadataSourceService;
+  @Autowired private ComicCheckOutManager comicCheckOutManager;
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
@@ -62,6 +64,7 @@ public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, Comic
     final ContentAdaptorRules rules = new ContentAdaptorRules();
     log.debug("Loading comicBook file contents: id={} rules={}", comicBook.getComicBookId(), rules);
     try {
+      this.comicCheckOutManager.checkOut(comicBook.getComicBookId());
       this.comicBookAdaptor.load(comicBook, rules);
       log.trace("Sorting comicBook pages");
       comicBook.getPages().sort((o1, o2) -> o1.getFilename().compareTo(o2.getFilename()));
@@ -108,6 +111,8 @@ public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, Comic
     } catch (Throwable error) {
       log.error("Error loading comic file content", error);
       return comicBook;
+    } finally {
+      this.comicCheckOutManager.checkIn(comicBook.getComicBookId());
     }
   }
 }
