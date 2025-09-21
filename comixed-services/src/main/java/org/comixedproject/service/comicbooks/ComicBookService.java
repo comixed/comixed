@@ -333,16 +333,6 @@ public class ComicBookService {
   }
 
   /**
-   * Retrieves unprocessed comics that have had their contents processed.
-   *
-   * @return the comics
-   */
-  public List<ComicBook> findProcessedComics() {
-    log.trace("Loading unprocessed comics that are fully processed");
-    return this.comicBookRepository.findProcessedComics();
-  }
-
-  /**
    * Prepares a set of comic books for rescanning.
    *
    * @param ids the comic ids

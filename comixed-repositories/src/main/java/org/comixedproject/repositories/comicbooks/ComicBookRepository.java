@@ -148,15 +148,6 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   int findUnprocessedComicsWithoutContentCount();
 
   /**
-   * Returns unprocessed comics that have been fully processed.
-   *
-   * @return the list of comics
-   */
-  @Query(
-      "SELECT c FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true")
-  List<ComicBook> findProcessedComics();
-
-  /**
    * Returns comics that are waiting to have their metadata update flag set.
    *
    * @param pageable the page request
@@ -558,7 +549,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
 
   @Modifying
   @Query(
-      "UPDATE ComicBook c SET c.organizing = true WHERE c.comicBookId IN (:ids) AND c.organizing IS FALSE")
+      "UPDATE ComicBook c SET c.organizing = true WHERE c.comicBookId IN (:ids) AND c.organizing IS FALSE AND c.comicBookId NOT IN (SELECT d.comicBook.comicBookId FROM ComicDetail d WHERE d.comicState = 'UNPROCESSED')")
   void markForOrganizationById(@Param("ids") List<Long> ids);
 
   @Modifying
@@ -567,7 +558,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
 
   @Modifying
   @Query(
-      "UPDATE ComicBook c SET c.targetArchiveType = :archiveType, c.renamePages = :renamePages, c.deletePages = :deletePages WHERE c.comicBookId IN (:ids)")
+      "UPDATE ComicBook c SET c.targetArchiveType = :archiveType, c.renamePages = :renamePages, c.deletePages = :deletePages WHERE c.comicBookId IN (:ids) AND c.comicBookId NOT IN (SELECT d.comicBook.comicBookId FROM ComicDetail d WHERE d.comicState = 'UNPROCESSED')")
   void markForRecreationById(
       @Param("ids") List<Long> ids,
       @Param("archiveType") final ArchiveType archiveType,
@@ -588,7 +579,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
 
   @Modifying
   @Query(
-      "UPDATE ComicBook c SET c.updateMetadata = true WHERE c.comicBookId IN (:ids) AND c.updateMetadata IS FALSE")
+      "UPDATE ComicBook c SET c.updateMetadata = true WHERE c.comicBookId IN (:ids) AND c.updateMetadata IS FALSE AND c.comicBookId NOT IN (SELECT d.comicBook.comicBookId FROM ComicDetail d WHERE d.comicState = 'UNPROCESSED')")
   void prepareForMetadataUpdate(@Param("ids") List<Long> ids);
 
   @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.updateMetadata IS TRUE")
@@ -599,7 +590,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
 
   @Modifying
   @Query(
-      "UPDATE ComicBook c SET c.batchScraping = true WHERE c.comicBookId IN (:ids) AND c.batchScraping IS FALSE AND c.metadata IS NOT NULL")
+      "UPDATE ComicBook c SET c.batchScraping = true WHERE c.comicBookId IN (:ids) AND c.batchScraping IS FALSE AND c.metadata IS NOT NULL AND c.comicBookId NOT IN (SELECT d.comicBook.comicBookId FROM ComicDetail d WHERE d.comicState = 'UNPROCESSED')")
   void prepareForBatchScraping(@Param("ids") List<Long> ids);
 
   /**
@@ -659,7 +650,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the comic books
    */
   @Query(
-      "SELECT c FROM ComicBook c WHERE c.comicBookId IN (SELECT p.comicBook.comicBookId FROM ComicPage p WHERE p.hash IS NULL OR LENGTH(p.hash) = 0)")
+      "SELECT c FROM ComicBook c WHERE c.comicBookId IN (SELECT p.comicBook.comicBookId FROM ComicPage p WHERE p.hash IS NULL OR LENGTH(p.hash) = 0) AND c.comicBookId NOT IN (SELECT d.comicBook.comicBookId FROM ComicDetail d WHERE d.comicState = 'UNPROCESSED')")
   List<ComicBook> findComicsWithUnhashedPages(Pageable pageable);
 
   /**

@@ -509,18 +509,6 @@ class ComicBookServiceTest {
   }
 
   @Test
-  void findProcessedComics() {
-    Mockito.when(comicBookRepository.findProcessedComics()).thenReturn(comicBookList);
-
-    final List<ComicBook> result = service.findProcessedComics();
-
-    assertNotNull(result);
-    assertSame(comicBookList, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findProcessedComics();
-  }
-
-  @Test
   void prepareForRescan() {
     for (long index = 0L; index < 25L; index++) idList.add(index + 100);
 
