@@ -24,6 +24,7 @@ import static junit.framework.TestCase.assertSame;
 import java.io.File;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
+import org.comixedproject.batch.ComicCheckOutManager;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
@@ -45,6 +46,7 @@ class RecreateComicFileProcessorTest {
   private static final String TEST_PAGE_RENAMING_RULE = "The page renaming rule";
 
   @InjectMocks private RecreateComicFileProcessor processor;
+  @Mock private ComicCheckOutManager comicCheckOutManager;
   @Mock private ConfigurationService configurationService;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private File comicFile;

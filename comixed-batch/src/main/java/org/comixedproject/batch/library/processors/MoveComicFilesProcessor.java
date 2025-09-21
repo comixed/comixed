@@ -28,6 +28,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.adaptors.file.FileAdaptor;
+import org.comixedproject.batch.ComicCheckOutManager;
 import org.comixedproject.model.library.OrganizingComic;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.springframework.batch.core.ExitStatus;
@@ -54,6 +55,7 @@ public class MoveComicFilesProcessor
   @Autowired private FileAdaptor fileAdaptor;
   @Autowired private ComicFileAdaptor comicFileAdaptor;
   @Autowired private ComicBookAdaptor comicBookAdaptor;
+  @Autowired private ComicCheckOutManager comicCheckOutManager;
 
   JobParameters jobParameters;
 
@@ -77,6 +79,7 @@ public class MoveComicFilesProcessor
     final String renamingRule = this.jobParameters.getString(ORGANIZE_LIBRARY_JOB_RENAMING_RULE);
 
     try {
+      this.comicCheckOutManager.checkOut(comic.getComicBookId());
       log.trace("Creating target directory (if needed)");
       this.fileAdaptor.createDirectory(targetDirectory);
       log.trace("Getting comicBook extension");
@@ -119,6 +122,8 @@ public class MoveComicFilesProcessor
       }
     } catch (Exception error) {
       log.error("Failed to move comics", error);
+    } finally {
+      this.comicCheckOutManager.checkIn(comic.getComicBookId());
     }
 
     return comic;

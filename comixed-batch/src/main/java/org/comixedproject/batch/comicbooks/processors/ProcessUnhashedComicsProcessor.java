@@ -25,6 +25,7 @@ import javax.imageio.ImageIO;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
+import org.comixedproject.batch.ComicCheckOutManager;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +43,11 @@ import org.springframework.util.StringUtils;
 public class ProcessUnhashedComicsProcessor implements ItemProcessor<ComicBook, ComicBook> {
   @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
+  @Autowired private ComicCheckOutManager comicCheckOutManager;
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
+    this.comicCheckOutManager.checkOut(comicBook.getComicBookId());
     log.debug(
         "Loading page hashes for comic book: {}", comicBook.getComicDetail().getBaseFilename());
     comicBook.getPages().stream()
@@ -65,6 +68,7 @@ public class ProcessUnhashedComicsProcessor implements ItemProcessor<ComicBook, 
                 log.error("Failed to set page details", error);
               }
             });
+    this.comicCheckOutManager.checkIn(comicBook.getComicBookId());
 
     return comicBook;
   }
