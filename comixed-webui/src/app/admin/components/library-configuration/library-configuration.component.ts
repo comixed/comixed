@@ -30,6 +30,7 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { ConfigurationOption } from '@app/admin/models/configuration-option';
 import { getConfigurationOption } from '@app/admin';
 import {
+  BATCH_COMIC_LOCK,
   BLOCKED_PAGES_ENABLED,
   CREATE_EXTERNAL_METADATA_FILES,
   LIBRARY_COMIC_RENAMING_RULE,
@@ -127,6 +128,7 @@ export class LibraryConfigurationComponent {
       createExternalMetadataFile: ['', []],
       skipInternalMetadataFile: ['', []],
       blockedPagesEnabled: ['', []],
+      batchComicLock: ['', []],
       rootDirectory: ['', [Validators.required]],
       comicRenamingRule: ['', []],
       noRecreateComics: ['', []],
@@ -148,6 +150,9 @@ export class LibraryConfigurationComponent {
     );
     this.libraryConfigurationForm.controls.stripHtmlFromMetadata.setValue(
       getConfigurationOption(options, LIBRARY_STRIP_HTML_FROM_METADATA, '')
+    );
+    this.libraryConfigurationForm.controls.batchComicLock.setValue(
+      getConfigurationOption(options, BATCH_COMIC_LOCK, '')
     );
     this.libraryConfigurationForm.controls.deletePurgedComicFilesDirectories.setValue(
       getConfigurationOption(
@@ -193,6 +198,10 @@ export class LibraryConfigurationComponent {
     );
     this.libraryConfigurationForm.controls.blockedPagesEnabled.setValue(
       getConfigurationOption(options, BLOCKED_PAGES_ENABLED, `${false}`) ===
+        `${true}`
+    );
+    this.libraryConfigurationForm.controls.batchComicLock.setValue(
+      getConfigurationOption(options, BATCH_COMIC_LOCK, `${false}`) ===
         `${true}`
     );
     this.libraryConfigurationForm.controls.stripHtmlFromMetadata.setValue(
@@ -282,6 +291,10 @@ export class LibraryConfigurationComponent {
       {
         name: LIBRARY_STRIP_HTML_FROM_METADATA,
         value: `${this.libraryConfigurationForm.controls.stripHtmlFromMetadata.value}`
+      },
+      {
+        name: BATCH_COMIC_LOCK,
+        value: `${this.libraryConfigurationForm.controls.batchComicLock.value}`
       }
     ];
   }
