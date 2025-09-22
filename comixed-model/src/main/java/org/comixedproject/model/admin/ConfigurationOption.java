@@ -18,9 +18,7 @@
 
 package org.comixedproject.model.admin;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import java.util.Date;
 import java.util.Objects;
@@ -36,6 +34,9 @@ import org.comixedproject.views.View;
 @Table(name = "configuration_options")
 @NoArgsConstructor
 @RequiredArgsConstructor
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "configurationOptionId")
 public class ConfigurationOption {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

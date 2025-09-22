@@ -18,9 +18,13 @@
 
 package org.comixedproject.batch;
 
+import static org.comixedproject.service.admin.ConfigurationService.CFG_EXCLUSIVE_COMIC_LOCK;
+
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.service.admin.ConfigurationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -34,24 +38,28 @@ import org.springframework.stereotype.Component;
 public class ComicCheckOutManager {
   private static final Object MUTEX = new Object();
 
+  @Autowired private ConfigurationService configurationService;
+
   Set<Long> catalog = new ConcurrentSkipListSet<>();
 
   public void checkOut(final Long comicBookId) {
-    synchronized (MUTEX) {
-      boolean done = false;
-      while (!done) {
-        if (this.catalog.contains(comicBookId)) {
-          log.info("Waiting for comic to be checked in: id={}", comicBookId);
-          try {
-            MUTEX.wait(1000L);
-          } catch (InterruptedException error) {
-            throw new RuntimeException("Interrupted waiting for comic checkin", error);
+    if (this.configurationService.isFeatureEnabled(CFG_EXCLUSIVE_COMIC_LOCK)) {
+      synchronized (MUTEX) {
+        boolean done = false;
+        while (!done) {
+          if (this.catalog.contains(comicBookId)) {
+            log.info("Waiting for comic to be checked in: id={}", comicBookId);
+            try {
+              MUTEX.wait(1000L);
+            } catch (InterruptedException error) {
+              throw new RuntimeException("Interrupted waiting for comic checkin", error);
+            }
+          } else {
+            log.info("Checking out comic book: id={}", comicBookId);
+            this.catalog.add(comicBookId);
+            done = true;
+            MUTEX.notifyAll();
           }
-        } else {
-          log.info("Checking out comic book: id={}", comicBookId);
-          this.catalog.add(comicBookId);
-          done = true;
-          MUTEX.notifyAll();
         }
       }
     }

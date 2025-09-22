@@ -59,6 +59,7 @@ public class ConfigurationService {
       "library.metadata.create-external-files";
   public static final String CFG_MANAGE_BLOCKED_PAGES = "library.blocked-pages-enabled";
   public static final String CFG_STRIP_HTML_FROM_METADATA = "library.strip-html-from-metadata";
+  public static final String CFG_EXCLUSIVE_COMIC_LOCK = "batch.comic-lock";
 
   @Autowired private ConfigurationRepository configurationRepository;
 
