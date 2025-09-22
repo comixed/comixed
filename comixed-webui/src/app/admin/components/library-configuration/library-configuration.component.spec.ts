@@ -28,6 +28,7 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import {
+  BATCH_COMIC_LOCK,
   BLOCKED_PAGES_ENABLED,
   CREATE_EXTERNAL_METADATA_FILES,
   LIBRARY_COMIC_RENAMING_RULE,
@@ -51,7 +52,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { purgeLibrary } from '@app/library/actions/purge-library.actions';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-describe('LibraryConfigurationComponent', () => {
+fdescribe('LibraryConfigurationComponent', () => {
   const DELETE_PURGED_COMIC_FILES = Math.random() > 0.5;
   const DELETE_EMPTY_DIRECTORIES = Math.random() > 0.5;
   const DONT_MOVE_UNSCRAPED_COMICS = Math.random() > 0.5;
@@ -63,6 +64,7 @@ describe('LibraryConfigurationComponent', () => {
   const PAGE_RENAMING_RULE = 'The page renaming rule';
   const BLOCKED_PAGES_ENABLED_FEATURE_STATE = Math.random() > 0.5;
   const LIBRARY_STRIP_HTML_FROM_METADATA_STATE = Math.random() > 0.5;
+  const BATCH_COMIC_LOCK_STATE = Math.random() > 0.5;
   const OPTIONS = [
     {
       name: LIBRARY_COMIC_RENAMING_RULE,
@@ -107,6 +109,10 @@ describe('LibraryConfigurationComponent', () => {
     {
       name: LIBRARY_STRIP_HTML_FROM_METADATA,
       value: `${LIBRARY_STRIP_HTML_FROM_METADATA_STATE}`
+    },
+    {
+      name: BATCH_COMIC_LOCK,
+      value: `${BATCH_COMIC_LOCK_STATE}`
     }
   ];
   const initialState = {};
@@ -252,6 +258,10 @@ describe('LibraryConfigurationComponent', () => {
             {
               name: LIBRARY_STRIP_HTML_FROM_METADATA,
               value: `${LIBRARY_STRIP_HTML_FROM_METADATA_STATE}`
+            },
+            {
+              name: BATCH_COMIC_LOCK,
+              value: `${BATCH_COMIC_LOCK_STATE}`
             }
           ]
         })

@@ -23,9 +23,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.concurrent.TimeUnit;
 import net.jodah.concurrentunit.Waiter;
+import org.comixedproject.service.admin.ConfigurationService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,17 +36,37 @@ class ComicCheckOutManagerTest {
   private static final long TEST_COMIC_BOOK_ID = 717L;
 
   @InjectMocks private ComicCheckOutManager manager;
+  @Mock private ConfigurationService configurationService;
+
+  @Test
+  void checkOut_featureDisabled() {
+    Mockito.when(
+            configurationService.isFeatureEnabled(ConfigurationService.CFG_EXCLUSIVE_COMIC_LOCK))
+        .thenReturn(false);
+
+    manager.checkOut(TEST_COMIC_BOOK_ID);
+
+    assertFalse(manager.catalog.contains(TEST_COMIC_BOOK_ID));
+  }
 
   @Test
   void checkOut() {
+    Mockito.when(
+            configurationService.isFeatureEnabled(ConfigurationService.CFG_EXCLUSIVE_COMIC_LOCK))
+        .thenReturn(true);
+
     manager.checkOut(TEST_COMIC_BOOK_ID);
 
     assertTrue(manager.catalog.contains(TEST_COMIC_BOOK_ID));
   }
 
   @Test
-  void checkOut_alreadyClaimed() throws InterruptedException {
+  void checkOut_alreadyClaimed() {
     final Waiter waiter = new Waiter();
+
+    Mockito.when(
+            configurationService.isFeatureEnabled(ConfigurationService.CFG_EXCLUSIVE_COMIC_LOCK))
+        .thenReturn(true);
 
     manager.checkOut(TEST_COMIC_BOOK_ID);
 

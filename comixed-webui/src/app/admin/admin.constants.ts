@@ -55,6 +55,7 @@ export const METADATA_SCRAPING_ERROR_THRESHOLD =
 export const BLOCKED_PAGES_ENABLED = 'library.blocked-pages-enabled';
 export const LIBRARY_STRIP_HTML_FROM_METADATA =
   'library.strip-html-from-metadata';
+export const BATCH_COMIC_LOCK = 'batch.comic-lock';
 
 export const LOAD_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
 export const SAVE_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;

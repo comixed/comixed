@@ -53,6 +53,7 @@
   },
   "configuration": {
     "label": {
+      "batch-comic-lock": "Batches have exclusive access to comics",
       "blocked-pages-enabled": "Manage blocked pages",
       "comic-renaming-rule": "Comic Renaming Rule",
       "comic-variable-description": "Description Of File Renaming Variable",
