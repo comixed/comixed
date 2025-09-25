@@ -28,7 +28,6 @@ import {
   loadComicsForCollection,
   loadComicsForReadingList,
   loadComicsSuccess,
-  loadDuplicateComics,
   loadReadComics,
   loadUnreadComics,
   resetComicList
@@ -70,7 +69,6 @@ export const reducer = createReducer(
   on(loadUnreadComics, state => ({ ...state, busy: true })),
   on(loadReadComics, state => ({ ...state, busy: true })),
   on(loadComicsForReadingList, state => ({ ...state, busy: true })),
-  on(loadDuplicateComics, state => ({ ...state, busy: true })),
   on(loadComicsSuccess, (state, action) => ({
     ...state,
     busy: false,

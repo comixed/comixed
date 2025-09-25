@@ -1,4 +1,19 @@
 {
+  "duplicate-comic-list": {
+    "label": {
+      "comic-count": "#",
+      "cover-date": "Cover Date",
+      "issue-number": "Issue #",
+      "publisher": "Publisher",
+      "series": "Series",
+      "volume": "Volume"
+    },
+    "load-list": {
+      "effect-failure": "Failed to load duplicate comics..."
+    },
+    "page-title": "Duplicate Comics ({total, plural, =1{One Duplicate} other{# Duplicates}})",
+    "tab-title": "Duplicate Comics"
+  },
   "duplicate-page-detail": {
     "block-page": {
       "confirmation-message": "Are you sure you want to block all pages like this one?",
@@ -81,7 +96,6 @@
       "tab-title": "All Comics",
       "tab-title-changed": "Changed Comics",
       "tab-title-deleted": "Marked For Removal",
-      "tab-title-duplicates": "Duplicate Comics",
       "tab-title-selected": "Selected Comics",
       "tab-title-unread": "Unread Comics",
       "tab-title-unprocessed": "Unprocessed Comics",
@@ -188,7 +202,6 @@
       "all": "All Comics{filtered, select, true{ [Filtered]} other{}}",
       "changed-only": "Changed Comics{filtered, select, true{ [Filtered]} other{}}",
       "deleted-only": "Marked For Removal{filtered, select, true{ [Filtered]} other{}}",
-      "duplicates-only": "Duplicate Comics{filtered, select, true{ [Filtered]} other{}}",
       "read-only": "Read Comics{filtered, select, true{ [Filtered]} other{}}",
       "selected-only": "Selected Comics{filtered, select, true{ [Filtered]} other{}}",
       "unprocessed-only": "Unprocessed Comics{filtered, select, true{ [Filtered]} other{}}",

@@ -29,7 +29,6 @@ import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.comixedproject.model.net.library.RemoteLibraryState;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,7 +51,7 @@ class RemoteLibraryStateServiceTest {
   @InjectMocks private RemoteLibraryStateService service;
   @Mock private ComicStateHandler comicStateHandler;
   @Mock private ComicBookService comicBookService;
-  @Mock private ComicDetailService comicDetailService;
+  @Mock private DuplicateComicService duplicateComicService;
   @Mock private List<RemoteLibrarySegmentState> publisherState;
   @Mock private List<RemoteLibrarySegmentState> seriesState;
   @Mock private List<RemoteLibrarySegmentState> charactersState;
@@ -71,7 +70,7 @@ class RemoteLibraryStateServiceTest {
   public void setUp() {
     Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_COMIC_COUNT);
     Mockito.when(comicBookService.getDeletedComicCount()).thenReturn(TEST_DELETED_COMIC_COUNT);
-    Mockito.when(comicDetailService.getDuplicateComicBookCount())
+    Mockito.when(duplicateComicService.getDuplicateComicBookCount())
         .thenReturn(TEST_DUPLICATE_COMIC_COUNT);
     Mockito.when(comicBookService.getPublishersState()).thenReturn(publisherState);
     Mockito.when(comicBookService.getSeriesState()).thenReturn(seriesState);

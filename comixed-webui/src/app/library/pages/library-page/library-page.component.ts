@@ -21,7 +21,7 @@ import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { TitleService } from '@app/core/services/title.service';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import {
@@ -41,14 +41,12 @@ import { QueryParameterService } from '@app/core/services/query-parameter.servic
 import { ComicState } from '@app/comic-books/models/comic-state';
 import {
   setComicBookSelectionByUnreadState,
-  setDuplicateComicBooksSelectionState,
   setMultipleComicBookByFilterSelectionState
 } from '@app/comic-books/actions/comic-book-selection.actions';
 import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { selectReadComicBooksList } from '@app/user/selectors/read-comic-books.selectors';
 import {
   loadComicsByFilter,
-  loadDuplicateComics,
   loadReadComics,
   loadUnreadComics
 } from '@app/comic-books/actions/comic-list.actions';
@@ -107,7 +105,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   changedOnly = false;
   deletedOnly = false;
   unprocessedOnly = false;
-  duplicatesOnly = false;
   lastReadDatesSubscription: Subscription;
   comicBooksRead: number[] = [];
   readingListsSubscription: Subscription;
@@ -146,7 +143,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       this.changedOnly = !!data.changed && data.changed === true;
       this.deletedOnly = !!data.deleted && data.deleted === true;
       this.unprocessedOnly = !!data.unprocessed && data.unprocessed === true;
-      this.duplicatesOnly = !!data.duplicates && data.duplicates === true;
       this.showUpdateMetadata = !this.unprocessedOnly && !this.deletedOnly;
       this.showOrganize =
         !this.unreadOnly && !this.unscrapedOnly && !this.deletedOnly;
@@ -169,9 +165,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       }
       if (this.unprocessedOnly) {
         this.pageContent = 'unprocessed-only';
-      }
-      if (this.duplicatesOnly) {
-        this.pageContent = 'duplicates-only';
       }
     });
     this.comicListStateSubscription = this.store
@@ -253,17 +246,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
               })
             );
           }
-        } else if (this.duplicatesOnly) {
-          this.logger.debug('Loading duplicate comics');
-          this.pageContent = 'duplicates-only';
-          this.store.dispatch(
-            loadDuplicateComics({
-              pageSize: this.queryParameterService.pageSize$.value,
-              pageIndex: this.queryParameterService.pageIndex$.value,
-              sortBy: this.queryParameterService.sortBy$.value,
-              sortDirection: this.queryParameterService.sortDirection$.value
-            })
-          );
         } else {
           this.store.dispatch(
             loadComicsByFilter({
@@ -321,13 +303,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   onSetAllComicsSelectedState(selected: boolean) {
-    if (this.duplicatesOnly) {
-      this.logger.debug(
-        'Setting all duplicate comic books selected state:',
-        selected
-      );
-      this.store.dispatch(setDuplicateComicBooksSelectionState({ selected }));
-    } else if (this.unreadOnly) {
+    if (this.unreadOnly) {
       this.logger.debug(
         'Setting all comic books selected state based on read state:',
         selected,
@@ -393,10 +369,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     } else if (this.unreadOnly) {
       this.titleService.setTitle(
         this.translateService.instant('library.all-comics.tab-title-unread')
-      );
-    } else if (this.duplicatesOnly) {
-      this.titleService.setTitle(
-        this.translateService.instant('library.all-comics.tab-title-duplicates')
       );
     } else {
       this.titleService.setTitle(

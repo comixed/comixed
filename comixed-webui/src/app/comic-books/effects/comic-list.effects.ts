@@ -25,7 +25,6 @@ import {
   loadComicsForCollection,
   loadComicsForReadingList,
   loadComicsSuccess,
-  loadDuplicateComics,
   loadReadComics,
   loadUnreadComics
 } from '../actions/comic-list.actions';
@@ -187,29 +186,7 @@ export class ComicListEffects {
       catchError(error => this.doGeneralFailure(error))
     );
   });
-  loadDuplicateComicsDetails$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(loadDuplicateComics),
-      tap(action =>
-        this.logger.debug('Loading duplicate comic book details:', action)
-      ),
-      switchMap(action =>
-        this.displayableComicService
-          .loadDuplicateComics({
-            pageSize: action.pageSize,
-            pageIndex: action.pageIndex,
-            sortBy: action.sortBy,
-            sortDirection: action.sortDirection
-          })
-          .pipe(
-            tap(response => this.logger.debug('Response received:', response)),
-            map((response: LoadComicsResponse) => this.doSuccess(response)),
-            catchError(error => this.doServiceFailure(error))
-          )
-      ),
-      catchError(error => this.doGeneralFailure(error))
-    );
-  });
+
   alertService = inject(AlertService);
   translateService = inject(TranslateService);
 

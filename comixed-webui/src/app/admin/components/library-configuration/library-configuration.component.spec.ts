@@ -52,7 +52,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { purgeLibrary } from '@app/library/actions/purge-library.actions';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-fdescribe('LibraryConfigurationComponent', () => {
+describe('LibraryConfigurationComponent', () => {
   const DELETE_PURGED_COMIC_FILES = Math.random() > 0.5;
   const DELETE_EMPTY_DIRECTORIES = Math.random() > 0.5;
   const DONT_MOVE_UNSCRAPED_COMICS = Math.random() > 0.5;
