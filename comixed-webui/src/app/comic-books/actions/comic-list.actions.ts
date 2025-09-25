@@ -97,16 +97,6 @@ export const loadComicsForReadingList = createAction(
   }>()
 );
 
-export const loadDuplicateComics = createAction(
-  '[Comic Detail List] Loads duplicate comic books',
-  props<{
-    pageSize: number;
-    pageIndex: number;
-    sortBy: string;
-    sortDirection: string;
-  }>()
-);
-
 export const loadComicsSuccess = createAction(
   '[Comic List] A page worth of comics were loaded',
   props<{

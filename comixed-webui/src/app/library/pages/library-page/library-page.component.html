@@ -32,7 +32,7 @@
   [selectedIds]="selectedIds"
   [readingLists]="readingLists"
   [unreadOnly]="unreadOnly"
-  [showFilter]="!(unreadOnly || selectedOnly || duplicatesOnly)"
+  [showFilter]="!(unreadOnly || selectedOnly)"
   (selectAll)="onSetAllComicsSelectedState($event)"
   (filtered)="filtered = $event"
   (showing)="showing = $event"

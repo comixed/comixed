@@ -439,29 +439,4 @@ class DisplayableComicControllerTest {
             TEST_SORT_DIRECTION);
     Mockito.verify(readingListService, Mockito.times(1)).getEntryCount(TEST_READING_LIST_ID);
   }
-
-  @Test
-  void loadDuplicateComics() {
-    Mockito.when(
-            displayableComicService.loadDuplicateComics(
-                Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(comicList);
-    Mockito.when(displayableComicService.getDuplicateComicCount()).thenReturn(TEST_FILTERED_COUNT);
-
-    final LoadComicsResponse result =
-        controller.loadDuplicateComics(
-            new LoadDuplicateComicsRequest(
-                TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION));
-
-    assertNotNull(result);
-    assertSame(comicList, result.getComics());
-    assertEquals(Collections.emptyList(), result.getCoverYears());
-    assertEquals(Collections.emptyList(), result.getCoverMonths());
-    assertEquals(TEST_FILTERED_COUNT, result.getFilteredCount());
-    assertEquals(TEST_FILTERED_COUNT, result.getTotalCount());
-
-    Mockito.verify(displayableComicService, Mockito.times(1))
-        .loadDuplicateComics(TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION);
-    Mockito.verify(displayableComicService, Mockito.times(1)).getDuplicateComicCount();
-  }
 }

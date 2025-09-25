@@ -21,5 +21,6 @@
     <include file="/db/migrations/3.0/003_2448_add_last_modified_date_to_comic_details.xml"/>
     <include file="/db/migrations/3.0/004_2427_add_last_updated_date_to_comic_metadata_sources.xml"/>
     <include file="/db/migrations/3.0/005_2444_add_batch_comic_lock_feature_flag.xml"/>
+    <include file="/db/migrations/3.0/006_2459_add_duplicate_comics_view.xml"/>
 
 </databaseChangeLog>

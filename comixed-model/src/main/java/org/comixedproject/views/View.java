@@ -43,6 +43,9 @@ public interface View {
   /** Used when viewing the details of comics. */
   public interface ComicDetailsView extends ComicListView {}
 
+  /** Used when viewing a list of duplicate comics. */
+  public interface DuplicateComicListView {}
+
   /** Used when viewing a list of deleted comics. */
   public interface DeletedComicList {}
 

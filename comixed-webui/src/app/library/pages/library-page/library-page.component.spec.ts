@@ -82,7 +82,6 @@ import {
 } from '@app/comic-books/reducers/comic-book-selection.reducer';
 import {
   setComicBookSelectionByUnreadState,
-  setDuplicateComicBooksSelectionState,
   setMultipleComicBookByFilterSelectionState
 } from '@app/comic-books/actions/comic-book-selection.actions';
 import {
@@ -97,7 +96,6 @@ import {
 } from '@app/user/reducers/read-comic-books.reducer';
 import {
   loadComicsByFilter,
-  loadDuplicateComics,
   loadReadComics,
   loadUnreadComics
 } from '@app/comic-books/actions/comic-list.actions';
@@ -318,16 +316,6 @@ describe('LibraryPageComponent', () => {
         expect(component.deletedOnly).toBeTrue();
       });
     });
-
-    describe('when showing duplicate comics', () => {
-      beforeEach(() => {
-        (activatedRoute.data as BehaviorSubject<{}>).next({ duplicates: true });
-      });
-
-      it('sets the duplicate only flag', () => {
-        expect(component.duplicatesOnly).toBeTrue();
-      });
-    });
   });
 
   describe('when the language changes', () => {
@@ -376,12 +364,6 @@ describe('LibraryPageComponent', () => {
 
     it('updates the page title for deleted comics', () => {
       component.deletedOnly = true;
-      translateService.use('fr');
-      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
-    });
-
-    it('updates the page title for duplicate comics', () => {
-      component.duplicatesOnly = true;
       translateService.use('fr');
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
@@ -445,26 +427,6 @@ describe('LibraryPageComponent', () => {
             series: null,
             volume: null,
             pageCount: null,
-            sortBy: null,
-            sortDirection: null
-          })
-        );
-      });
-    });
-
-    describe('for duplicate comics', () => {
-      beforeEach(() => {
-        component.duplicatesOnly = true;
-        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
-          foo: 'bar'
-        });
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          loadDuplicateComics({
-            pageSize: PAGE_SIZE,
-            pageIndex: 0,
             sortBy: null,
             sortDirection: null
           })
@@ -578,21 +540,6 @@ describe('LibraryPageComponent', () => {
 
   describe('selecting all displayable comics', () => {
     const SELECTED = Math.random() > 0.5;
-
-    describe('for duplicate comic books', () => {
-      beforeEach(() => {
-        component.duplicatesOnly = true;
-        component.onSetAllComicsSelectedState(SELECTED);
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          setDuplicateComicBooksSelectionState({
-            selected: SELECTED
-          })
-        );
-      });
-    });
 
     describe('for read comic books', () => {
       beforeEach(() => {
