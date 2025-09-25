@@ -307,33 +307,4 @@ public class DisplayableComicController {
     return new LoadComicsResponse(
         comics, Collections.emptyList(), Collections.emptyList(), filterCount, filterCount);
   }
-
-  /**
-   * Loads duplicate comic books.
-   *
-   * @param request the request body
-   * @return the entries
-   */
-  @PostMapping(
-      value = "/api/comics/duplicates",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-  @Timed(value = "comixed.comic-book.load-duplicate-comics")
-  @PreAuthorize("hasRole('ADMIN')")
-  @JsonView(View.ComicDetailsView.class)
-  public LoadComicsResponse loadDuplicateComics(
-      @RequestBody() final LoadDuplicateComicsRequest request) {
-    final int pageSize = request.getPageSize();
-    final int pageIndex = request.getPageIndex();
-    final String sortBy = request.getSortBy();
-    final String sortDirection = request.getSortDirection();
-    log.info("Loading duplicate comic book details: {}", request);
-    final List<DisplayableComic> comics =
-        this.displayableComicService.loadDuplicateComics(
-            pageSize, pageIndex, sortBy, sortDirection);
-
-    final long filterCount = this.displayableComicService.getDuplicateComicCount();
-    return new LoadComicsResponse(
-        comics, Collections.emptyList(), Collections.emptyList(), filterCount, filterCount);
-  }
 }

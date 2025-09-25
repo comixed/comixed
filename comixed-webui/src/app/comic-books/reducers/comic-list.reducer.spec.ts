@@ -37,7 +37,6 @@ import {
   loadComicsForCollection,
   loadComicsForReadingList,
   loadComicsSuccess,
-  loadDuplicateComics,
   loadReadComics,
   loadUnreadComics,
   resetComicList
@@ -255,24 +254,6 @@ describe('ComicList Reducer', () => {
         { ...state, busy: false },
         loadComicsForReadingList({
           readingListId: READING_LIST_ID,
-          pageSize: PAGE_SIZE,
-          pageIndex: PAGE_INDEX,
-          sortBy: SORT_BY,
-          sortDirection: SORT_DIRECTION
-        })
-      );
-    });
-
-    it('sets the busy flag', () => {
-      expect(state.busy).toBeTrue();
-    });
-  });
-
-  describe('loading duplicate comic books', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, busy: false },
-        loadDuplicateComics({
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
           sortBy: SORT_BY,

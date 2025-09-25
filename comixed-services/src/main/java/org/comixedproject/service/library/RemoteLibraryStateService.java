@@ -45,6 +45,7 @@ import org.springframework.stereotype.Service;
 public class RemoteLibraryStateService implements InitializingBean, ComicStateChangeListener {
   @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private ComicBookService comicBookService;
+  @Autowired private DuplicateComicService duplicateComicService;
   @Autowired private ComicDetailService comicDetailService;
   @Autowired private PublishRemoteLibraryUpdateAction publishRemoteLibraryUpdateAction;
 
@@ -77,7 +78,7 @@ public class RemoteLibraryStateService implements InitializingBean, ComicStateCh
             this.comicBookService.getComicBookCount(),
             this.comicBookService.getUnscrapedComicCount(),
             this.comicBookService.getDeletedComicCount(),
-            this.comicDetailService.getDuplicateComicBookCount());
+            this.duplicateComicService.getDuplicateComicBookCount());
     result.setPublishers(this.comicBookService.getPublishersState());
     result.setSeries(this.comicBookService.getSeriesState());
     result.setCharacters(this.comicBookService.getCharactersState());

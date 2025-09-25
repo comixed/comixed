@@ -649,16 +649,4 @@ class ComicDetailServiceTest {
     Mockito.verify(comicDetailRepository, Mockito.times(1))
         .getFilterCountWithFiltering(TEST_TAG_TYPE, "%" + TEST_FILTER_TEXT + "%");
   }
-
-  @Test
-  void getDuplicateComicBookCount() {
-    Mockito.when(comicDetailRepository.getDuplicateComicBookCount())
-        .thenReturn(TEST_TOTAL_COMIC_COUNT);
-
-    final long result = service.getDuplicateComicBookCount();
-
-    assertEquals(TEST_TOTAL_COMIC_COUNT, result);
-
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).getDuplicateComicBookCount();
-  }
 }

@@ -37,7 +37,6 @@ import {
   LOAD_COMICS_BY_ID_URL,
   LOAD_COMICS_FOR_COLLECTION_URL,
   LOAD_COMICS_FOR_READING_LIST_URL,
-  LOAD_DUPLICATE_COMICS_URL,
   LOAD_READ_COMICS_URL,
   LOAD_SELECTED_COMICS_URL,
   LOAD_UNREAD_COMICS_URL
@@ -48,7 +47,6 @@ import { LoadComicsByIdRequest } from '@app/comic-books/models/net/load-comics-b
 import { LoadComicsForCollectionRequest } from '@app/comic-books/models/net/load-comics-for-collection-request';
 import { LoadComicsByReadStateRequest } from '@app/comic-books/models/net/load-comics-by-read-state-request';
 import { LoadComicsForListRequest } from '@app/comic-books/models/net/load-comics-for-list-request';
-import { LoadDuplicateComicsRequest } from '@app/comic-books/models/net/load-duplicate-comics-request';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import {
@@ -234,24 +232,6 @@ export class DisplayableComicService {
         sortDirection: args.sortDirection
       } as LoadComicsForListRequest
     );
-  }
-
-  loadDuplicateComics(args: {
-    sortDirection: string;
-    pageIndex: number;
-    pageSize: number;
-    sortBy: string;
-  }): Observable<any> {
-    this.logger.debug(
-      'Loading duplicate comic book details for reading list:',
-      args
-    );
-    return this.http.post(interpolate(LOAD_DUPLICATE_COMICS_URL), {
-      pageSize: args.pageSize,
-      pageIndex: args.pageIndex,
-      sortBy: args.sortBy,
-      sortDirection: args.sortDirection
-    } as LoadDuplicateComicsRequest);
   }
 
   private doConvertToDisplayableComic(detail: ComicDetail): DisplayableComic {

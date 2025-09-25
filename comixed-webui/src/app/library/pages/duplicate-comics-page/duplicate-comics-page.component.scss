@@ -1,0 +1,34 @@
+@use 'variables' as *;
+
+.mat-column-publisher {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+  resize: none;
+}
+
+.mat-column-series {
+}
+
+.mat-column-volume {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-issue-number {
+  width: $cx-column-smallish;
+  max-width: $cx-column-smallish;
+  resize: none;
+}
+
+.mat-column-cover-date {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-comic-count {
+  width: $cx-column-smallish;
+  max-width: $cx-column-smallish;
+  resize: none;
+}

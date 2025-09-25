@@ -59,6 +59,7 @@ export const UPDATE_SINGLE_COMIC_BOOK_METADATA_URL = `${API_ROOT_URL}/library/me
 export const UPDATE_SELECTED_COMIC_BOOKS_METADATA_URL = `${API_ROOT_URL}/library/metadata/update/selected`;
 export const PURGE_LIBRARY_URL = `${API_ROOT_URL}/library/purge`;
 export const EDIT_MULTIPLE_COMICS_URL = `${API_ROOT_URL}/library/comics/edit`;
+export const LOAD_DUPLICATE_COMICS_URL = `${API_ROOT_URL}/library/duplicates`;
 
 // import options
 export const IMPORT_ROOT_DIRECTORY_PREFERENCE =
@@ -69,14 +70,14 @@ export const IMPORT_MAXIMUM_RESULTS_PREFERENCE =
 export const IMPORT_MAXIMUM_RESULTS_DEFAULT = 0;
 export const SKIP_CACHE_PREFERENCE = 'preference.scraping.skip-cache';
 export const MATCH_PUBLISHER_PREFERENCE = 'preference.scraping.match-publisher';
+
 export const MAXIMUM_SCRAPING_RECORDS_PREFERENCE =
   'preference.scraping.maximum-records';
-
 export const SORT_FIELD_PREFERENCE = 'preference.sort-field';
 export const SHOW_COMIC_COVERS_PREFERENCE = 'show-comic-covers';
+
 export const DUPLICATE_PAGES_UNBLOCKED_PAGES_ONLY =
   'preference.duplicate-pages.unblocked-only';
-
 // messaging
 export const COMIC_LIST_UPDATE_TOPIC = '/topic/comic-list.update';
 export const COMIC_LIST_REMOVAL_TOPIC = '/topic/comic-list.removal';

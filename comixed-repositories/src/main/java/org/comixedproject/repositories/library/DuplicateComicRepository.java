@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2024, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export interface LoadDuplicateComicDetailsRequest {
-  pageSize: number;
-  pageIndex: number;
-  sortBy: string;
-  sortDirection: string;
-}
+package org.comixedproject.repositories.library;
+
+import org.comixedproject.model.library.DuplicateComic;
+import org.comixedproject.model.library.DuplicateComicId;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+/**
+ * <code>DuplicateComicRepository</code> provides methods for working with {@link DuplicateComic}
+ * records.
+ *
+ * @author Darryl L. Pierce
+ */
+@Repository
+public interface DuplicateComicRepository extends JpaRepository<DuplicateComic, DuplicateComicId> {}

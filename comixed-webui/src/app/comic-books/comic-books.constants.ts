@@ -28,7 +28,6 @@ export const LOAD_COMICS_FOR_COLLECTION_URL = `${API_ROOT_URL}/comics/collection
 export const LOAD_UNREAD_COMICS_URL = `${API_ROOT_URL}/comics/unread`;
 export const LOAD_READ_COMICS_URL = `${API_ROOT_URL}/comics/read`;
 export const LOAD_COMICS_FOR_READING_LIST_URL = `${API_ROOT_URL}/comics/lists/\${readingListId}`;
-export const LOAD_DUPLICATE_COMICS_URL = `${API_ROOT_URL}/comics/duplicates`;
 
 export const LOAD_COMIC_BOOK_SELECTIONS_URL = `${API_ROOT_URL}/comics/selections`;
 export const ADD_SINGLE_COMIC_SELECTION_URL = `${API_ROOT_URL}/comics/selections/\${comicBookId}`;
