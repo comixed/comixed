@@ -17,14 +17,14 @@
  */
 
 import {
-  DUPLICATE_COMIC_FEATURE_KEY,
+  DUPLICATE_COMICS_FEATURE_KEY,
   DuplicateComicState
-} from '../reducers/duplicate-comic.reducer';
+} from '../reducers/duplicate-comics.reducer';
 import {
   selectDuplicateComicList,
   selectDuplicateComicState,
   selectDuplicateComicTotal
-} from './duplicate-comic.selectors';
+} from './duplicate-comics.selectors';
 import {
   DUPLICATE_COMIC_1,
   DUPLICATE_COMIC_2,
@@ -33,7 +33,7 @@ import {
   DUPLICATE_COMIC_5
 } from '@app/library/library.fixtures';
 
-describe('DuplicateComic Selectors', () => {
+describe('DuplicateComics Selectors', () => {
   const DUPLICATE_COMIC_LIST = [
     DUPLICATE_COMIC_1,
     DUPLICATE_COMIC_2,
@@ -51,7 +51,7 @@ describe('DuplicateComic Selectors', () => {
   it('should select the feature state', () => {
     expect(
       selectDuplicateComicState({
-        [DUPLICATE_COMIC_FEATURE_KEY]: state
+        [DUPLICATE_COMICS_FEATURE_KEY]: state
       })
     ).toEqual(state);
   });
@@ -59,7 +59,7 @@ describe('DuplicateComic Selectors', () => {
   it('should select the duplicate comic list', () => {
     expect(
       selectDuplicateComicList({
-        [DUPLICATE_COMIC_FEATURE_KEY]: state
+        [DUPLICATE_COMICS_FEATURE_KEY]: state
       })
     ).toEqual(state.entries);
   });
@@ -67,7 +67,7 @@ describe('DuplicateComic Selectors', () => {
   it('should select the duplicate comic totals', () => {
     expect(
       selectDuplicateComicTotal({
-        [DUPLICATE_COMIC_FEATURE_KEY]: state
+        [DUPLICATE_COMICS_FEATURE_KEY]: state
       })
     ).toEqual(state.total);
   });

@@ -50,7 +50,7 @@ public class DuplicateComicService {
    * @return the comics
    */
   @Transactional
-  public List<DuplicateComic> loadDuplicateComics(
+  public List<DuplicateComic> loadDuplicateComicsList(
       final int pageSize, final int pageIndex, final String sortBy, final String sortDirection) {
     log.debug(
         "Loading a page of duplicate comics: index={} size={} sort by={} direction={}",
@@ -62,6 +62,15 @@ public class DuplicateComicService {
         .findAll(PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)))
         .stream()
         .toList();
+  }
+
+  /**
+   * Returns the list of comic book ids for duplicate comics.
+   *
+   * @return the comic book ids
+   */
+  public List<Long> getDuplicateComicIds() {
+    return this.duplicateComicRepository.getDuplicateComicIds();
   }
 
   /**

@@ -42,22 +42,23 @@ class DuplicateComicServiceTest {
   @Mock private Page<DuplicateComic> duplicateComicPage;
   @Mock private Stream<DuplicateComic> duplicatePageStream;
   @Mock private List<DuplicateComic> duplicatePageList;
+  @Mock private List<Long> duplicateComicIds;
 
   @Captor private ArgumentCaptor<PageRequest> pageRequestArgumentCaptor;
 
   @Test
-  void loadDuplicateComics() {
-    doLoadDuplicateComics("publisher");
-    doLoadDuplicateComics("series");
-    doLoadDuplicateComics("volume");
-    doLoadDuplicateComics("issue-number");
-    doLoadDuplicateComics("cover-date");
-    doLoadDuplicateComics("comic-count");
-    doLoadDuplicateComics("farkle");
-    doLoadDuplicateComics("");
+  void loadDuplicateComicsList() {
+    doLoadDuplicateComicsList("publisher");
+    doLoadDuplicateComicsList("series");
+    doLoadDuplicateComicsList("volume");
+    doLoadDuplicateComicsList("issue-number");
+    doLoadDuplicateComicsList("cover-date");
+    doLoadDuplicateComicsList("comic-count");
+    doLoadDuplicateComicsList("farkle");
+    doLoadDuplicateComicsList("");
   }
 
-  private void doLoadDuplicateComics(final String sortField) {
+  private void doLoadDuplicateComicsList(final String sortField) {
     for (int sort = 0; sort < 3; sort++) {
       String sortDirection;
       switch (sort) {
@@ -72,7 +73,8 @@ class DuplicateComicServiceTest {
       Mockito.when(duplicatePageStream.toList()).thenReturn(duplicatePageList);
 
       final List<DuplicateComic> result =
-          service.loadDuplicateComics(TEST_PAGE_SIZE, TEST_PAGE_NUMBER, sortField, sortDirection);
+          service.loadDuplicateComicsList(
+              TEST_PAGE_SIZE, TEST_PAGE_NUMBER, sortField, sortDirection);
 
       assertSame(duplicatePageList, result);
 
@@ -82,6 +84,18 @@ class DuplicateComicServiceTest {
 
       assertNotNull(pageRequest);
     }
+  }
+
+  @Test
+  void getDuplicateComicIds() {
+    Mockito.when(duplicateComicRepository.getDuplicateComicIds()).thenReturn(duplicateComicIds);
+
+    final List<Long> result = service.getDuplicateComicIds();
+
+    assertNotNull(result);
+    assertSame(duplicateComicIds, result);
+
+    Mockito.verify(duplicateComicRepository, Mockito.times(1)).getDuplicateComicIds();
   }
 
   @Test

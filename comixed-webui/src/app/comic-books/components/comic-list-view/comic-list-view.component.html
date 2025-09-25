@@ -88,16 +88,18 @@
     </ng-container>
     <ng-container matColumnDef="selection">
       <mat-header-cell *matHeaderCellDef>
-        <mat-checkbox
-          color="primary"
-          [disabled]="dataSource.data.length === 0 || selectionState.busy"
-          [checked]="
-            selectedIds.length > 0 && selectedIds.length === totalComics
-          "
-          (change)="selectAll.emit($event.checked)"
-          (keyup)="selectAll.emit($event.checked)"
-          (click)="$event.stopPropagation()"
-        ></mat-checkbox>
+        @if (showSelectAll) {
+          <mat-checkbox
+            color="primary"
+            [disabled]="dataSource.data.length === 0 || selectionState.busy"
+            [checked]="
+              selectedIds.length > 0 && selectedIds.length === totalComics
+            "
+            (change)="selectAll.emit($event.checked)"
+            (keyup)="selectAll.emit($event.checked)"
+            (click)="$event.stopPropagation()"
+          ></mat-checkbox>
+        }
       </mat-header-cell>
       <mat-cell *matCellDef="let entry">
         <mat-checkbox
