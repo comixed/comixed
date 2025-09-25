@@ -17,27 +17,30 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DuplicateComicsPageComponent } from './duplicate-comics-page.component';
+import { DuplicateComicsListPageComponent } from './duplicate-comics-list-page.component';
 import {
-  DUPLICATE_COMIC_FEATURE_KEY,
+  DUPLICATE_COMICS_FEATURE_KEY,
   initialState as initialDuplicateComicState
-} from '@app/library/reducers/duplicate-comic.reducer';
+} from '@app/library/reducers/duplicate-comics.reducer';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
+import { DUPLICATE_COMIC_1 } from '@app/library/library.fixtures';
+import { formatDate } from '@angular/common';
 
-describe('DuplicateComicsPageComponent', () => {
+describe('DuplicateComicsListPageComponent', () => {
   const initialState = {
-    [DUPLICATE_COMIC_FEATURE_KEY]: initialDuplicateComicState
+    [DUPLICATE_COMICS_FEATURE_KEY]: initialDuplicateComicState
   };
 
-  let component: DuplicateComicsPageComponent;
-  let fixture: ComponentFixture<DuplicateComicsPageComponent>;
+  let component: DuplicateComicsListPageComponent;
+  let fixture: ComponentFixture<DuplicateComicsListPageComponent>;
   let store: MockStore;
   let translateService: TranslateService;
   let titleService: TitleService;
+  let router: Router;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -45,18 +48,20 @@ describe('DuplicateComicsPageComponent', () => {
         RouterModule.forRoot([]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
-        DuplicateComicsPageComponent
+        DuplicateComicsListPageComponent
       ],
       providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DuplicateComicsPageComponent);
+    fixture = TestBed.createComponent(DuplicateComicsListPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
     store = TestBed.inject(MockStore);
     translateService = TestBed.inject(TranslateService);
     titleService = TestBed.inject(TitleService);
     spyOn(titleService, 'setTitle');
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigate');
   });
 
   it('should create', () => {
@@ -70,6 +75,25 @@ describe('DuplicateComicsPageComponent', () => {
 
     it('updates the tab title', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('selecting a duplicated comic', () => {
+    const ENTRY = DUPLICATE_COMIC_1;
+
+    beforeEach(() => {
+      component.onLoadDuplicateComics(ENTRY);
+    });
+
+    it('navigates to the details page', () => {
+      expect(router.navigate).toHaveBeenCalledWith([
+        '/library/duplicates',
+        ENTRY.publisher,
+        ENTRY.series,
+        ENTRY.volume,
+        ENTRY.issueNumber,
+        formatDate(new Date(ENTRY.coverDate), 'yyyy-MM-dd', component.locale)
+      ]);
     });
   });
 });

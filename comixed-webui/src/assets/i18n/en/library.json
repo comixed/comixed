@@ -1,4 +1,8 @@
 {
+  "duplicate-comic-detail": {
+    "page-title": "Duplicate Comic Details",
+    "tab-title": "Duplicate Comic Details"
+  },
   "duplicate-comic-list": {
     "label": {
       "comic-count": "#",
@@ -13,6 +17,14 @@
     },
     "page-title": "Duplicate Comics ({total, plural, =1{One Duplicate} other{# Duplicates}})",
     "tab-title": "Duplicate Comics"
+  },
+  "duplicate-comics": {
+    "load-duplicate-comics": {
+      "effect-failure": "Failed to load duplicate comics..."
+    },
+    "text": {
+      "no-comics-loaded": "No duplicate comics found..."
+    }
   },
   "duplicate-page-detail": {
     "block-page": {

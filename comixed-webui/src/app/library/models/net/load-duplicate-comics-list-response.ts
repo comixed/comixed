@@ -16,14 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export interface LoadDuplicateComicsRequest {
-  publisher: string;
-  series: string;
-  volume: string;
-  issueNumber: string;
-  coverDate: number;
-  pageIndex: number;
-  pageSize: number;
-  sortBy: string;
-  sortDirection: string;
+import { DuplicateComic } from '@app/library/models/duplicate-comic';
+
+export interface LoadDuplicateComicsListResponse {
+  comics: DuplicateComic[];
+  totalCount: number;
 }

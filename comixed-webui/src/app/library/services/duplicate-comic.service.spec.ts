@@ -20,8 +20,8 @@ import { TestBed } from '@angular/core/testing';
 
 import { DuplicateComicService } from './duplicate-comic.service';
 import { interpolate } from '@app/core';
-import { LoadDuplicateComicsRequest } from '@app/library/models/net/load-duplicate-comics-request';
-import { LoadDuplicateComicsResponse } from '@app/library/models/net/load-duplicate-comics-response';
+import { LoadDuplicateComicsListRequest } from '@app/library/models/net/load-duplicate-comics-list-request';
+import { LoadDuplicateComicsListResponse } from '@app/library/models/net/load-duplicate-comics-list-response';
 import {
   DUPLICATE_COMIC_1,
   DUPLICATE_COMIC_2,
@@ -29,7 +29,10 @@ import {
   DUPLICATE_COMIC_4,
   DUPLICATE_COMIC_5
 } from '@app/library/library.fixtures';
-import { LOAD_DUPLICATE_COMICS_URL } from '@app/library/library.constants';
+import {
+  LOAD_DUPLICATE_COMIC_LIST_URL,
+  LOAD_DUPLICATE_COMICS_URL
+} from '@app/library/library.constants';
 import {
   HttpTestingController,
   provideHttpClientTesting
@@ -39,14 +42,30 @@ import {
   provideHttpClient,
   withInterceptorsFromDi
 } from '@angular/common/http';
+import {
+  DISPLAYABLE_COMIC_1,
+  DISPLAYABLE_COMIC_2,
+  DISPLAYABLE_COMIC_3,
+  DISPLAYABLE_COMIC_4,
+  DISPLAYABLE_COMIC_5
+} from '@app/comic-books/comic-books.fixtures';
+import { LoadComicsResponse } from '@app/comic-books/models/net/load-comics-response';
+import { LoadDuplicateComicsRequest } from '@app/library/models/net/load-duplicate-comics-request';
 
 describe('DuplicateComicService', () => {
-  const COMIC_LIST = [
+  const DUPLICATE_COMICS_LIST = [
     DUPLICATE_COMIC_1,
     DUPLICATE_COMIC_2,
     DUPLICATE_COMIC_3,
     DUPLICATE_COMIC_4,
     DUPLICATE_COMIC_5
+  ];
+  const COMIC_LIST = [
+    DISPLAYABLE_COMIC_1,
+    DISPLAYABLE_COMIC_2,
+    DISPLAYABLE_COMIC_3,
+    DISPLAYABLE_COMIC_4,
+    DISPLAYABLE_COMIC_5
   ];
   const PAGE_SIZE = 25;
   const PAGE_INDEX = 4;
@@ -73,16 +92,50 @@ describe('DuplicateComicService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('can load duplicate comics', () => {
+  it('can load the list of duplicate comics', () => {
+    const serviceResponse = {
+      comics: DUPLICATE_COMICS_LIST,
+      totalCount: DUPLICATE_COMICS_LIST.length
+    } as LoadDuplicateComicsListResponse;
+
+    service
+      .loadDuplicateComicList({
+        pageSize: PAGE_SIZE,
+        pageIndex: PAGE_INDEX,
+        sortBy: SORT_BY,
+        sortDirection: SORT_DIRECTION
+      })
+      .subscribe(response => expect(response).toEqual(serviceResponse));
+
+    const req = httpMock.expectOne(interpolate(LOAD_DUPLICATE_COMIC_LIST_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      pageSize: PAGE_SIZE,
+      pageIndex: PAGE_INDEX,
+      sortBy: SORT_BY,
+      sortDirection: SORT_DIRECTION
+    } as LoadDuplicateComicsListRequest);
+    req.flush(serviceResponse);
+  });
+
+  it('can load a duplicated comic', () => {
     const serviceResponse = {
       comics: COMIC_LIST,
-      totalCount: COMIC_LIST.length
-    } as LoadDuplicateComicsResponse;
+      coverMonths: [],
+      coverYears: [],
+      totalCount: COMIC_LIST.length,
+      filteredCount: COMIC_LIST.length
+    } as LoadComicsResponse;
 
     service
       .loadDuplicateComics({
-        pageSize: PAGE_SIZE,
+        publisher: DUPLICATE_COMIC_1.publisher,
+        series: DUPLICATE_COMIC_1.series,
+        volume: DUPLICATE_COMIC_1.volume,
+        issueNumber: DUPLICATE_COMIC_1.issueNumber,
+        coverDate: DUPLICATE_COMIC_1.coverDate,
         pageIndex: PAGE_INDEX,
+        pageSize: PAGE_SIZE,
         sortBy: SORT_BY,
         sortDirection: SORT_DIRECTION
       })
@@ -91,8 +144,13 @@ describe('DuplicateComicService', () => {
     const req = httpMock.expectOne(interpolate(LOAD_DUPLICATE_COMICS_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      pageSize: PAGE_SIZE,
+      publisher: DUPLICATE_COMIC_1.publisher,
+      series: DUPLICATE_COMIC_1.series,
+      volume: DUPLICATE_COMIC_1.volume,
+      issueNumber: DUPLICATE_COMIC_1.issueNumber,
+      coverDate: DUPLICATE_COMIC_1.coverDate,
       pageIndex: PAGE_INDEX,
+      pageSize: PAGE_SIZE,
       sortBy: SORT_BY,
       sortDirection: SORT_DIRECTION
     } as LoadDuplicateComicsRequest);

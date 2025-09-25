@@ -29,6 +29,7 @@ import org.comixedproject.opds.OPDSUtils;
 import org.comixedproject.service.comicbooks.ComicBookSelectionException;
 import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.comixedproject.service.library.DisplayableComicService;
+import org.comixedproject.service.library.DuplicateComicService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ public class ComicBookSelectionController {
   @Autowired private UserService userService;
   @Autowired private OPDSUtils opdsUtils;
   @Autowired private DisplayableComicService displayableComicService;
+  @Autowired private DuplicateComicService duplicateComicService;
 
   /**
    * Loads the user's comic book selections.
@@ -370,7 +372,7 @@ public class ComicBookSelectionController {
     final List<Long> selections =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
-    final List<Long> idList = this.displayableComicService.getDuplicateComicIds();
+    final List<Long> idList = this.duplicateComicService.getDuplicateComicIds();
     if (selected) {
       log.info("Selecting ids for duplicate comic books");
       selections.addAll(idList);

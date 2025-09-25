@@ -19,10 +19,14 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { interpolate } from '@app/core';
-import { LoadDuplicateComicsRequest } from '@app/library/models/net/load-duplicate-comics-request';
+import { LoadDuplicateComicsListRequest } from '@app/library/models/net/load-duplicate-comics-list-request';
 import { HttpClient } from '@angular/common/http';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { LOAD_DUPLICATE_COMICS_URL } from '@app/library/library.constants';
+import {
+  LOAD_DUPLICATE_COMIC_LIST_URL,
+  LOAD_DUPLICATE_COMICS_URL
+} from '@app/library/library.constants';
+import { LoadDuplicateComicsRequest } from '@app/library/models/net/load-duplicate-comics-request';
 
 @Injectable({
   providedIn: 'root'
@@ -31,16 +35,41 @@ export class DuplicateComicService {
   logger = inject(LoggerService);
   http = inject(HttpClient);
 
-  loadDuplicateComics(args: {
+  loadDuplicateComicList(args: {
     sortDirection: string;
     pageIndex: number;
     pageSize: number;
     sortBy: string;
   }): Observable<any> {
-    this.logger.debug('Loading duplicate comic books:', args);
-    return this.http.post(interpolate(LOAD_DUPLICATE_COMICS_URL), {
+    this.logger.debug('Loading a list of duplicate comic books:', args);
+    return this.http.post(interpolate(LOAD_DUPLICATE_COMIC_LIST_URL), {
       pageSize: args.pageSize,
       pageIndex: args.pageIndex,
+      sortBy: args.sortBy,
+      sortDirection: args.sortDirection
+    } as LoadDuplicateComicsListRequest);
+  }
+
+  loadDuplicateComics(args: {
+    publisher: string;
+    series: string;
+    volume: string;
+    issueNumber: string;
+    coverDate: number;
+    pageIndex: number;
+    pageSize: number;
+    sortBy: string;
+    sortDirection: string;
+  }): Observable<any> {
+    this.logger.debug('Loading a duplicated comic book:', args);
+    return this.http.post(LOAD_DUPLICATE_COMICS_URL, {
+      publisher: args.publisher,
+      series: args.series,
+      volume: args.volume,
+      issueNumber: args.issueNumber,
+      coverDate: args.coverDate,
+      pageIndex: args.pageIndex,
+      pageSize: args.pageSize,
       sortBy: args.sortBy,
       sortDirection: args.sortDirection
     } as LoadDuplicateComicsRequest);

@@ -19,7 +19,7 @@
 import { createAction, props } from '@ngrx/store';
 import { DuplicateComic } from '@app/library/models/duplicate-comic';
 
-export const loadDuplicateComics = createAction(
+export const loadDuplicateComicList = createAction(
   '[Duplicate Comics] Load the list of duplicate comics',
   props<{
     pageSize: number;
@@ -29,7 +29,7 @@ export const loadDuplicateComics = createAction(
   }>()
 );
 
-export const loadDuplicateComicsSuccess = createAction(
+export const loadDuplicateComicListSuccess = createAction(
   '[Duplicate Comics] Successfully loaded duplicate comics',
   props<{
     entries: DuplicateComic[];
@@ -37,6 +37,29 @@ export const loadDuplicateComicsSuccess = createAction(
   }>()
 );
 
-export const loadDuplicateComicsFailure = createAction(
+export const loadDuplicateComicListFailure = createAction(
   '[Duplicate Comics] Failed to load duplicate comics'
+);
+
+export const loadDuplicateComics = createAction(
+  '[Duplicate Comics] Load a single set of duplicate comics',
+  props<{
+    publisher: string;
+    series: string;
+    volume: string;
+    issueNumber: string;
+    coverDate: number;
+    pageIndex: number;
+    pageSize: number;
+    sortBy: string;
+    sortDirection: string;
+  }>()
+);
+
+export const loadDuplicateComicsSuccess = createAction(
+  '[Duplicate Comics] Successfully loaded the set of duplicate comics'
+);
+
+export const loadDuplicateComicsFailure = createAction(
+  '[Duplicate Comics] Failed to load the set of duplicate comics'
 );

@@ -528,8 +528,6 @@ describe('DuplicatePageListPageComponent', () => {
       });
 
       it('only shows unblocked entries', () => {
-        console.log('*** data:', component.dataSource.data);
-        console.log('*** hashes:', component.blockedHashList);
         expect(
           component.dataSource.data.some(entry =>
             BLOCKED_HASHES.map(hash => hash.hash).includes(entry.item.hash)

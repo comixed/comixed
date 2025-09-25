@@ -59,7 +59,8 @@ export const UPDATE_SINGLE_COMIC_BOOK_METADATA_URL = `${API_ROOT_URL}/library/me
 export const UPDATE_SELECTED_COMIC_BOOKS_METADATA_URL = `${API_ROOT_URL}/library/metadata/update/selected`;
 export const PURGE_LIBRARY_URL = `${API_ROOT_URL}/library/purge`;
 export const EDIT_MULTIPLE_COMICS_URL = `${API_ROOT_URL}/library/comics/edit`;
-export const LOAD_DUPLICATE_COMICS_URL = `${API_ROOT_URL}/library/duplicates`;
+export const LOAD_DUPLICATE_COMIC_LIST_URL = `${API_ROOT_URL}/library/duplicates/list`;
+export const LOAD_DUPLICATE_COMICS_URL = `${API_ROOT_URL}/library/duplicates/load`;
 
 // import options
 export const IMPORT_ROOT_DIRECTORY_PREFERENCE =

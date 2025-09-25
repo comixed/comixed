@@ -20,11 +20,14 @@ import { createFeature, createReducer, on } from '@ngrx/store';
 import {
   loadDuplicateComics,
   loadDuplicateComicsFailure,
+  loadDuplicateComicList,
+  loadDuplicateComicListFailure,
+  loadDuplicateComicListSuccess,
   loadDuplicateComicsSuccess
-} from '../actions/duplicate-comic.actions';
+} from '../actions/duplicate-comics.actions';
 import { DuplicateComic } from '@app/library/models/duplicate-comic';
 
-export const DUPLICATE_COMIC_FEATURE_KEY = 'duplicate_comic_state';
+export const DUPLICATE_COMICS_FEATURE_KEY = 'duplicate_comics_state';
 
 export interface DuplicateComicState {
   busy: boolean;
@@ -40,17 +43,20 @@ export const initialState: DuplicateComicState = {
 
 export const reducer = createReducer(
   initialState,
-  on(loadDuplicateComics, state => ({ ...state, busy: true })),
-  on(loadDuplicateComicsSuccess, (state, action) => ({
+  on(loadDuplicateComicList, state => ({ ...state, busy: true })),
+  on(loadDuplicateComicListSuccess, (state, action) => ({
     ...state,
     busy: false,
     entries: action.entries,
     total: action.total
   })),
+  on(loadDuplicateComicListFailure, state => ({ ...state, busy: false })),
+  on(loadDuplicateComics, state => ({ ...state, busy: true })),
+  on(loadDuplicateComicsSuccess, state => ({ ...state, busy: false })),
   on(loadDuplicateComicsFailure, state => ({ ...state, busy: false }))
 );
 
-export const duplicateComicFeature = createFeature({
-  name: DUPLICATE_COMIC_FEATURE_KEY,
+export const duplicateComicsFeature = createFeature({
+  name: DUPLICATE_COMICS_FEATURE_KEY,
   reducer
 });

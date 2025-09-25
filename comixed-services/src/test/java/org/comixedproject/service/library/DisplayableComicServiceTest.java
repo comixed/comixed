@@ -20,6 +20,7 @@ package org.comixedproject.service.library;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
@@ -63,6 +64,8 @@ class DisplayableComicServiceTest {
   private static final String TEST_PUBLISHER = "The Publisher";
   private static final String TEST_SERIES = "The Series";
   private static final String TEST_VOLUME = "2025";
+  private static final String TEST_ISSUE_NUMBER = "129";
+  private static final Date TEST_COVER_DATE = new Date();
   private static final Integer TEST_PAGE_COUNT = 77;
   private static final String TEST_SORT_BY = "series";
   private static final String TEST_SORT_DIRECTION = "asc";
@@ -499,7 +502,58 @@ class DisplayableComicServiceTest {
   }
 
   @Test
-  void CreateExample() {
+  void loadComics() {
+    Mockito.when(
+            displayableComicRepository.loadComics(
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                pageableArgumentCaptor.capture()))
+        .thenReturn(comicList);
+
+    final List<DisplayableComic> result =
+        service.loadComics(
+            TEST_PUBLISHER,
+            TEST_SERIES,
+            TEST_VOLUME,
+            TEST_ISSUE_NUMBER,
+            TEST_COVER_DATE,
+            TEST_PAGE_INDEX,
+            TEST_PAGE_SIZE,
+            TEST_SORT_BY,
+            TEST_SORT_DIRECTION);
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+
+    final Pageable pageable = pageableArgumentCaptor.getValue();
+    assertEquals(TEST_PAGE_INDEX, pageable.getPageNumber());
+    assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
+
+    Mockito.verify(displayableComicRepository, Mockito.times(1))
+        .loadComics(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER, pageable);
+  }
+
+  @Test
+  void getComicCount() {
+    Mockito.when(
+            displayableComicRepository.getComicCount(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(TEST_COMIC_COUNT);
+
+    final long result =
+        service.getComicCount(
+            TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_COVER_DATE);
+
+    assertEquals(TEST_COMIC_COUNT, result);
+
+    Mockito.verify(displayableComicRepository, Mockito.times(1))
+        .getComicCount(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
+  }
+
+  @Test
+  void createExample() {
 
     final Example<DisplayableComic> result =
         service.doCreateExample(
@@ -531,14 +585,14 @@ class DisplayableComicServiceTest {
   }
 
   @Test
-  void CreateSort_noFields() {
+  void createSort_noFields() {
     final Sort result = service.doCreateSort(null, null);
 
     assertSame(Sort.unsorted(), result);
   }
 
   @Test
-  void CreateSort() {
+  void createSort() {
     final String[][] fields =
         new String[][] {
           {"unknown", "comicDetailId"},

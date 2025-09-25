@@ -18,9 +18,11 @@
 
 package org.comixedproject.repositories.library;
 
+import java.util.List;
 import org.comixedproject.model.library.DuplicateComic;
 import org.comixedproject.model.library.DuplicateComicId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -30,4 +32,13 @@ import org.springframework.stereotype.Repository;
  * @author Darryl L. Pierce
  */
 @Repository
-public interface DuplicateComicRepository extends JpaRepository<DuplicateComic, DuplicateComicId> {}
+public interface DuplicateComicRepository extends JpaRepository<DuplicateComic, DuplicateComicId> {
+  /**
+   * Returns the list of comic book ids for all duplicated comic books.
+   *
+   * @return the comic book ids
+   */
+  @Query(
+      "SELECT DISTINCT d.comicBookId FROM DuplicateComic dc JOIN DisplayableComic d ON d.publisher = dc.id.publisher AND d.series = dc.id.series AND d.volume = dc.id.volume AND d.issueNumber = dc.id.issueNumber AND d.coverDate = dc.id.coverDate ")
+  List<Long> getDuplicateComicIds();
+}

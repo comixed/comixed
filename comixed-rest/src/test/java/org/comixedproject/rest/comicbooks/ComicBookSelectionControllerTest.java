@@ -283,36 +283,6 @@ class ComicBookSelectionControllerTest {
   }
 
   @Test
-  void addDuplicateComicBooksToSelections() throws ComicBookSelectionException {
-    Mockito.when(displayableComicService.getDuplicateComicIds()).thenReturn(selectedIds);
-
-    controller.addDuplicateComicBooksSelection(
-        httpSession, principal, new DuplicateComicBooksSelectionRequest(true));
-
-    Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
-    Mockito.verify(displayableComicService, Mockito.times(1)).getDuplicateComicIds();
-    Mockito.verify(selectedIds, Mockito.times(1)).addAll(selectedIds);
-    Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(selectedIds);
-    Mockito.verify(httpSession, Mockito.times(1))
-        .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
-  }
-
-  @Test
-  void removeDuplicateComicBooksToSelections() throws ComicBookSelectionException {
-    Mockito.when(displayableComicService.getDuplicateComicIds()).thenReturn(selectedIds);
-
-    controller.addDuplicateComicBooksSelection(
-        httpSession, principal, new DuplicateComicBooksSelectionRequest(false));
-
-    Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
-    Mockito.verify(displayableComicService, Mockito.times(1)).getDuplicateComicIds();
-    Mockito.verify(selectedIds, Mockito.times(1)).removeAll(selectedIds);
-    Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(selectedIds);
-    Mockito.verify(httpSession, Mockito.times(1))
-        .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
-  }
-
-  @Test
   void addUnreadComicBooksSelection_selectingRead()
       throws ComicBookSelectionException, ComiXedUserException {
     controller.addUnreadComicBooksSelection(

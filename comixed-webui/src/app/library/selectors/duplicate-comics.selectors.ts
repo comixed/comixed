@@ -16,9 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { DuplicateComic } from '@app/library/models/duplicate-comic';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import {
+  DUPLICATE_COMICS_FEATURE_KEY,
+  DuplicateComicState
+} from '../reducers/duplicate-comics.reducer';
 
-export interface LoadDuplicateComicsResponse {
-  comics: DuplicateComic[];
-  totalCount: number;
-}
+export const selectDuplicateComicState =
+  createFeatureSelector<DuplicateComicState>(DUPLICATE_COMICS_FEATURE_KEY);
+
+export const selectDuplicateComicList = createSelector(
+  selectDuplicateComicState,
+  state => state.entries
+);
+
+export const selectDuplicateComicTotal = createSelector(
+  selectDuplicateComicState,
+  state => state.total
+);
