@@ -27,13 +27,13 @@ import org.comixedproject.model.library.DuplicateComic;
 import org.comixedproject.views.View;
 
 /**
- * <code>LoadDuplicateComicsResponse</code> represents the response payload when loading a page
+ * <code>LoadDuplicateComicsListResponse</code> represents the response payload when loading a page
  * worth of duplicate comics.
  *
  * @author Darryl L. Pierce
  */
 @AllArgsConstructor
-public class LoadDuplicateComicsResponse {
+public class LoadDuplicateComicsListResponse {
   @JsonProperty("comics")
   @JsonView(View.DuplicateComicListView.class)
   @Getter

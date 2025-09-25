@@ -118,7 +118,7 @@ public interface DisplayableComicRepository extends JpaRepository<DisplayableCom
   List<DisplayableComic> loadReadComics(@Param("ids") Set<Long> ids, Pageable pageable);
 
   /**
-   * Retutnrs comics for the specified reading list.
+   * Returns comics for the specified reading list.
    *
    * @param listId the reading list id
    * @param pageable the request
@@ -127,15 +127,6 @@ public interface DisplayableComicRepository extends JpaRepository<DisplayableCom
   @Query(
       "SELECT d FROM DisplayableComic d WHERE d.comicDetailId IN (SELECT l.entryIds FROM ReadingList l WHERE l.readingListId = :listId)")
   List<DisplayableComic> loadComicsForList(@Param("listId") Long listId, Pageable pageable);
-
-  /**
-   * Returns the comic ids for all duplicate comics.
-   *
-   * @return the comic ids
-   */
-  @Query(
-      "SELECT d.comicDetailId FROM DisplayableComic d JOIN (SELECT c.publisher AS publisher, c.series AS series, c.volume AS volume, c.issueNumber AS issueNumber, c.coverDate as coverDate FROM ComicDetail c WHERE c.publisher IS NOT NULL AND LENGTH(c.publisher) > 0 AND c.series IS NOT NULL AND LENGTH(c.series) > 0 AND c.volume IS NOT NULL AND LENGTH(c.volume) > 0 AND c.issueNumber IS NOT NULL AND LENGTH(c.issueNumber) > 0 AND c.coverDate IS NOT NULL GROUP BY c.publisher, c.series, c.volume, c.issueNumber, c.coverDate HAVING count(*) > 1) g ON g.publisher = d.publisher AND g.series = d.series AND g.volume = d.volume AND g.issueNumber = d.issueNumber AND g.coverDate = d.coverDate")
-  List<Long> getDuplicateComicIds();
 
   /**
    * Returns all comic ids for a given publisher.
@@ -168,4 +159,40 @@ public interface DisplayableComicRepository extends JpaRepository<DisplayableCom
   @Query(
       "SELECT d.comicDetailId FROM DisplayableComic d WHERE d.comicDetailId IN (SELECT t.comicDetail.comicDetailId FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue)")
   List<Long> getIdsByTagTypeAndValue(ComicTagType tagType, String tagValue);
+
+  /**
+   * Loads the comics with the given metadata values.
+   *
+   * @param publisher the publisher
+   * @param series the series
+   * @param volume the volume
+   * @param issueNumber the issue number
+   * @param pageable the page request
+   * @return the comics
+   */
+  @Query(
+      "SELECT d FROM DisplayableComic d WHERE d.publisher = :publisher AND d.series = :series AND d.volume = :volume AND d.issueNumber = :issueNumber")
+  List<DisplayableComic> loadComics(
+      @Param("publisher") String publisher,
+      @Param("series") String series,
+      @Param("volume") String volume,
+      @Param("issueNumber") String issueNumber,
+      Pageable pageable);
+
+  /**
+   * Returns the number of comics with the given metadata values.
+   *
+   * @param publisher the publisher
+   * @param series the series
+   * @param volume the volume
+   * @param issueNumber the issue number
+   * @return the comics
+   */
+  @Query(
+      "SELECT COUNT(d) FROM DisplayableComic d WHERE d.publisher = :publisher AND d.series = :series AND d.volume = :volume AND d.issueNumber = :issueNumber")
+  long getComicCount(
+      @Param("publisher") String publisher,
+      @Param("series") String series,
+      @Param("volume") String volume,
+      @Param("issueNumber") String issueNumber);
 }

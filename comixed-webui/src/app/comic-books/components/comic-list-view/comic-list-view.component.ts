@@ -174,6 +174,7 @@ export class ComicListViewComponent
   @Input() usePopups = true;
   @Input() showAction = true;
   @Input() showSelection = true;
+  @Input() showSelectAll = true;
   @Input() showThumbnail = true;
   @Input() showArchiveType = true;
   @Input() showComicState = true;

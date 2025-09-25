@@ -16,14 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import {
   selectDuplicateComicList,
   selectDuplicateComicState,
   selectDuplicateComicTotal
-} from '@app/library/selectors/duplicate-comic.selectors';
+} from '@app/library/selectors/duplicate-comics.selectors';
 import { Subscription } from 'rxjs';
 import {
   MatCell,
@@ -42,8 +42,13 @@ import { DuplicateComic } from '@app/library/models/duplicate-comic';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import { loadDuplicateComics } from '@app/library/actions/duplicate-comic.actions';
-import { AsyncPipe, CommonModule, DecimalPipe } from '@angular/common';
+import { loadDuplicateComicList } from '@app/library/actions/duplicate-comics.actions';
+import {
+  AsyncPipe,
+  CommonModule,
+  DecimalPipe,
+  formatDate
+} from '@angular/common';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -70,10 +75,10 @@ import { TitleService } from '@app/core/services/title.service';
     CommonModule,
     MatHeaderCellDef
   ],
-  templateUrl: './duplicate-comics-page.component.html',
-  styleUrl: './duplicate-comics-page.component.scss'
+  templateUrl: './duplicate-comics-list-page.component.html',
+  styleUrl: './duplicate-comics-list-page.component.scss'
 })
-export class DuplicateComicsPageComponent implements OnInit, OnDestroy {
+export class DuplicateComicsListPageComponent implements OnInit, OnDestroy {
   readonly displayedColumns = [
     'publisher',
     'series',
@@ -90,6 +95,7 @@ export class DuplicateComicsPageComponent implements OnInit, OnDestroy {
   queryParameterService = inject(QueryParameterService);
   router = inject(Router);
   activatedRoute = inject(ActivatedRoute);
+  locale = inject(LOCALE_ID);
 
   langChangeSubscription: Subscription;
   duplicateComicStateSubscription: Subscription;
@@ -140,10 +146,22 @@ export class DuplicateComicsPageComponent implements OnInit, OnDestroy {
     this.doLoadComics();
   }
 
+  onLoadDuplicateComics(entry: DuplicateComic) {
+    this.logger.info('Loading duplicate comics:', entry);
+    this.router.navigate([
+      '/library/duplicates',
+      entry.publisher,
+      entry.series,
+      entry.volume,
+      entry.issueNumber,
+      formatDate(new Date(entry.coverDate), 'yyyy-MM-dd', this.locale)
+    ]);
+  }
+
   private doLoadComics() {
     this.logger.debug('Loading duplicate comics');
     this.store.dispatch(
-      loadDuplicateComics({
+      loadDuplicateComicList({
         pageSize: this.queryParameterService.pageSize$.value,
         pageIndex: this.queryParameterService.pageIndex$.value,
         sortBy: this.queryParameterService.sortBy$.value,

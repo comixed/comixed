@@ -20,12 +20,15 @@ import {
   DuplicateComicState,
   initialState,
   reducer
-} from './duplicate-comic.reducer';
+} from './duplicate-comics.reducer';
 import {
+  loadDuplicateComicList,
+  loadDuplicateComicListFailure,
+  loadDuplicateComicListSuccess,
   loadDuplicateComics,
   loadDuplicateComicsFailure,
   loadDuplicateComicsSuccess
-} from '@app/library/actions/duplicate-comic.actions';
+} from '@app/library/actions/duplicate-comics.actions';
 import {
   DUPLICATE_COMIC_1,
   DUPLICATE_COMIC_2,
@@ -34,7 +37,7 @@ import {
   DUPLICATE_COMIC_5
 } from '@app/library/library.fixtures';
 
-describe('DuplicateComic Reducer', () => {
+describe('DuplicateComics Reducer', () => {
   const DUPLICATE_COMIC_LIST = [
     DUPLICATE_COMIC_1,
     DUPLICATE_COMIC_2,
@@ -78,7 +81,7 @@ describe('DuplicateComic Reducer', () => {
           ...state,
           busy: false
         },
-        loadDuplicateComics({
+        loadDuplicateComicList({
           pageSize: PAGE_SIZE,
           pageIndex: PAGE_INDEX,
           sortBy: SORT_BY,
@@ -100,7 +103,7 @@ describe('DuplicateComic Reducer', () => {
             entries: [],
             total: 0
           },
-          loadDuplicateComicsSuccess({
+          loadDuplicateComicListSuccess({
             entries: DUPLICATE_COMIC_LIST,
             total: DUPLICATE_COMIC_LIST.length
           })
@@ -129,8 +132,51 @@ describe('DuplicateComic Reducer', () => {
             entries: [],
             total: 0
           },
-          loadDuplicateComicsFailure()
+          loadDuplicateComicListFailure()
         );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+    });
+  });
+
+  describe('loading a set of duplicate comics', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: false },
+        loadDuplicateComics({
+          publisher: DUPLICATE_COMIC_1.publisher,
+          series: DUPLICATE_COMIC_1.series,
+          volume: DUPLICATE_COMIC_1.volume,
+          issueNumber: DUPLICATE_COMIC_1.issueNumber,
+          coverDate: DUPLICATE_COMIC_1.coverDate,
+          pageIndex: PAGE_INDEX,
+          pageSize: PAGE_SIZE,
+          sortBy: SORT_BY,
+          sortDirection: SORT_DIRECTION
+        })
+      );
+    });
+
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer({ ...state, busy: true }, loadDuplicateComicsSuccess());
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer({ ...state, busy: true }, loadDuplicateComicsFailure());
       });
 
       it('clears the busy flag', () => {
