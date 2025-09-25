@@ -47,7 +47,7 @@ import { Subscription } from 'rxjs';
 import {
   COMIC_LIST_REMOVAL_TOPIC,
   COMIC_LIST_UPDATE_TOPIC,
-  LOAD_DUPLICATE_COMICS_URL
+  LOAD_DUPLICATE_COMIC_LIST_URL
 } from '@app/library/library.constants';
 import { interpolate } from '@app/core';
 import {
@@ -66,7 +66,7 @@ import { LoadComicsByIdRequest } from '@app/comic-books/models/net/load-comics-b
 import { LoadComicsForCollectionRequest } from '@app/comic-books/models/net/load-comics-for-collection-request';
 import { LoadComicsByReadStateRequest } from '@app/comic-books/models/net/load-comics-by-read-state-request';
 import { LoadComicsForListRequest } from '@app/comic-books/models/net/load-comics-for-list-request';
-import { LoadDuplicateComicsRequest } from '@app/library/models/net/load-duplicate-comics-request';
+import { LoadDuplicateComicsListRequest } from '@app/library/models/net/load-duplicate-comics-list-request';
 import {
   comicRemoved,
   comicUpdated

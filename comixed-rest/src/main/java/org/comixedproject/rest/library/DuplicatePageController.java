@@ -51,7 +51,7 @@ public class DuplicatePageController {
    * @return the duplicate page list
    */
   @PostMapping(
-      value = "/api/library/pages/duplicates",
+      value = "/api/library/pages/duplicates/load",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.DuplicatePageList.class)

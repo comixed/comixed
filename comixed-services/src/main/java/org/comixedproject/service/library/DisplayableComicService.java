@@ -18,8 +18,11 @@
 
 package org.comixedproject.service.library;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicState;
@@ -52,6 +55,8 @@ public class DisplayableComicService {
   @Autowired private DisplayableComicRepository displayableComicRepository;
   @Autowired private ObjectFactory<DisplayableComicExampleBuilder> exampleBuilderObjectFactory;
   @Autowired private ReadingListService readingListService;
+
+  private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
   /**
    * Loads comics filtered by the optional fields values provided.
@@ -497,16 +502,6 @@ public class DisplayableComicService {
     }
   }
 
-  /**
-   * Loads the set of comic ids for all duplicate comics.
-   *
-   * @return the ids
-   */
-  @Transactional
-  public List<Long> getDuplicateComicIds() {
-    return this.displayableComicRepository.getDuplicateComicIds();
-  }
-
   Example<DisplayableComic> doCreateExample(
       final Integer coverYear,
       final Integer coverMonth,
@@ -562,5 +557,58 @@ public class DisplayableComicService {
       direction = Sort.Direction.ASC;
     }
     return Sort.by(direction, fieldName);
+  }
+
+  /**
+   * Loads the list of comics with the given attributes.
+   *
+   * @param publisher the publisher
+   * @param series the series
+   * @param volume the volume
+   * @param issueNumber the issue number
+   * @param coverDate the cover date
+   * @param pageIndex the page number
+   * @param pageSize the page size
+   * @param sortBy the sort field
+   * @param sortDirection the sort direction
+   * @return the comics
+   */
+  @Transactional
+  public List<DisplayableComic> loadComics(
+      @NonNull final String publisher,
+      @NonNull final String series,
+      @NonNull final String volume,
+      @NonNull final String issueNumber,
+      @NonNull final Date coverDate,
+      final int pageIndex,
+      final int pageSize,
+      final String sortBy,
+      final String sortDirection) {
+    return this.displayableComicRepository.loadComics(
+        publisher,
+        series,
+        volume,
+        issueNumber,
+        PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
+  }
+
+  /**
+   * Returns the number of comics matching the provided parameters.
+   *
+   * @param publisher the publisher
+   * @param series the series
+   * @param volume the volume
+   * @param issueNumber the issue number
+   * @param coverDate the cover date
+   * @return the count
+   */
+  @Transactional
+  public long getComicCount(
+      @NonNull final String publisher,
+      @NonNull final String series,
+      @NonNull final String volume,
+      @NonNull final String issueNumber,
+      @NonNull final Date coverDate) {
+    return this.displayableComicRepository.getComicCount(publisher, series, volume, issueNumber);
   }
 }
