@@ -469,21 +469,6 @@ public class ComicDetailService {
     return Sort.by(direction, fieldName);
   }
 
-  /**
-   * Returns the number of duplicate comic book entries.
-   *
-   * @return the count
-   */
-  @Transactional
-  public long getDuplicateComicBookCount() {
-    log.debug("Load the duplicate comic detail count");
-    Long result = this.comicDetailRepository.getDuplicateComicBookCount();
-    if (result == null) {
-      result = 0L;
-    }
-    return result;
-  }
-
   @Transactional
   public ComicDetail getByComicBookId(final Long comicBookId) throws ComicDetailException {
     final ComicDetail result = this.comicDetailRepository.findByComicBookId(comicBookId);

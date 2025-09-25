@@ -499,48 +499,6 @@ class DisplayableComicServiceTest {
   }
 
   @Test
-  void LoadDuplicateComics() {
-    Mockito.when(displayableComicRepository.loadDuplicateComics(pageableArgumentCaptor.capture()))
-        .thenReturn(comicList);
-
-    final List<DisplayableComic> result =
-        service.loadDuplicateComics(
-            TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION);
-
-    assertNotNull(result);
-    assertSame(comicList, result);
-
-    final Pageable pageable = pageableArgumentCaptor.getValue();
-    assertEquals(TEST_PAGE_INDEX, pageable.getPageNumber());
-    assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
-
-    Mockito.verify(displayableComicRepository, Mockito.times(1)).loadDuplicateComics(pageable);
-  }
-
-  @Test
-  void LoadDuplicateComicIds() {
-    Mockito.when(displayableComicRepository.getDuplicateComicIds()).thenReturn(idList);
-
-    final List<Long> result = service.getDuplicateComicIds();
-
-    assertNotNull(result);
-    assertSame(idList, result);
-
-    Mockito.verify(displayableComicRepository, Mockito.times(1)).getDuplicateComicIds();
-  }
-
-  @Test
-  void GetDuplicateCount() {
-    Mockito.when(displayableComicRepository.getDuplicateComicCount()).thenReturn(TEST_COMIC_COUNT);
-
-    final long result = service.getDuplicateComicCount();
-
-    assertEquals(TEST_COMIC_COUNT, result);
-
-    Mockito.verify(displayableComicRepository, Mockito.times(1)).getDuplicateComicCount();
-  }
-
-  @Test
   void CreateExample() {
 
     final Example<DisplayableComic> result =

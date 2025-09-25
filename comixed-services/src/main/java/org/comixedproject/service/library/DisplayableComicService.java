@@ -498,28 +498,6 @@ public class DisplayableComicService {
   }
 
   /**
-   * Loads duplicate comics to display.
-   *
-   * @param pageSize the page size
-   * @param pageIndex the page index
-   * @param sortBy the sort field
-   * @param sortDirection the sort direction
-   * @return the comics
-   */
-  @Transactional
-  public List<DisplayableComic> loadDuplicateComics(
-      final int pageSize, final int pageIndex, final String sortBy, final String sortDirection) {
-    log.debug(
-        "Loading a page of duplicate comics: index={} size={} sort by={} direction={}",
-        pageIndex,
-        pageSize,
-        sortBy,
-        sortDirection);
-    return this.displayableComicRepository.loadDuplicateComics(
-        PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
-  }
-
-  /**
    * Loads the set of comic ids for all duplicate comics.
    *
    * @return the ids
@@ -527,16 +505,6 @@ public class DisplayableComicService {
   @Transactional
   public List<Long> getDuplicateComicIds() {
     return this.displayableComicRepository.getDuplicateComicIds();
-  }
-
-  /**
-   * Returns the number of duplicate comics.
-   *
-   * @return the count
-   */
-  @Transactional
-  public long getDuplicateComicCount() {
-    return this.displayableComicRepository.getDuplicateComicCount();
   }
 
   Example<DisplayableComic> doCreateExample(

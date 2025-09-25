@@ -1,0 +1,98 @@
+<h2>
+  {{ "duplicate-comic-list.page-title" | translate: { total: totalEntries } }}
+</h2>
+
+<mat-paginator
+  showFirstLastButtons="true"
+  class="cx-height-100"
+  [length]="totalEntries"
+  [pageIndex]="queryParameterService.pageIndex$ | async"
+  [pageSize]="queryParameterService.pageSize$ | async"
+  [pageSizeOptions]="queryParameterService.pageSizeOptions"
+  (page)="
+    queryParameterService.onPageChange(
+      $event.pageSize,
+      $event.pageIndex,
+      $event.previousPageIndex
+    )
+  "
+></mat-paginator>
+
+<mat-table
+  [dataSource]="dataSource"
+  matSort
+  [matSortActive]="queryParameterService.sortBy$ | async"
+  [matSortDirection]="queryParameterService.sortDirection$ | async"
+  (matSortChange)="
+    queryParameterService.onSortChange($event.active, $event.direction)
+  "
+>
+  <ng-container matColumnDef="publisher">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "duplicate-comic-list.label.publisher" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.publisher }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="series">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "duplicate-comic-list.label.series" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.series }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="volume">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "duplicate-comic-list.label.volume" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.volume }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="issue-number">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "duplicate-comic-list.label.issue-number" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.issueNumber }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="cover-date">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "duplicate-comic-list.label.cover-date" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.coverDate | date }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="comic-count">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "duplicate-comic-list.label.comic-count" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.count | number }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+</mat-table>
