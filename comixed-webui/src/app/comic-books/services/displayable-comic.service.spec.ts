@@ -46,7 +46,8 @@ import { READING_LIST_3 } from '@app/lists/lists.fixtures';
 import { Subscription } from 'rxjs';
 import {
   COMIC_LIST_REMOVAL_TOPIC,
-  COMIC_LIST_UPDATE_TOPIC
+  COMIC_LIST_UPDATE_TOPIC,
+  LOAD_DUPLICATE_COMICS_URL
 } from '@app/library/library.constants';
 import { interpolate } from '@app/core';
 import {
@@ -54,7 +55,6 @@ import {
   LOAD_COMICS_BY_ID_URL,
   LOAD_COMICS_FOR_COLLECTION_URL,
   LOAD_COMICS_FOR_READING_LIST_URL,
-  LOAD_DUPLICATE_COMICS_URL,
   LOAD_READ_COMICS_URL,
   LOAD_SELECTED_COMICS_URL,
   LOAD_UNREAD_COMICS_URL
@@ -66,7 +66,7 @@ import { LoadComicsByIdRequest } from '@app/comic-books/models/net/load-comics-b
 import { LoadComicsForCollectionRequest } from '@app/comic-books/models/net/load-comics-for-collection-request';
 import { LoadComicsByReadStateRequest } from '@app/comic-books/models/net/load-comics-by-read-state-request';
 import { LoadComicsForListRequest } from '@app/comic-books/models/net/load-comics-for-list-request';
-import { LoadDuplicateComicsRequest } from '@app/comic-books/models/net/load-duplicate-comics-request';
+import { LoadDuplicateComicsRequest } from '@app/library/models/net/load-duplicate-comics-request';
 import {
   comicRemoved,
   comicUpdated
@@ -505,32 +505,6 @@ describe('DisplayableComicService', () => {
       sortBy: SORT_BY,
       sortDirection: SORT_DIRECTION
     } as LoadComicsForListRequest);
-    req.flush(serviceResponse);
-  });
-
-  it('can load duplicate comics', () => {
-    const serviceResponse = {
-      comics: COMIC_LIST,
-      totalCount: TOTAL_COUNT,
-      filteredCount: FILTERED_COUNT
-    } as LoadComicsResponse;
-    service
-      .loadDuplicateComics({
-        pageSize: PAGE_SIZE,
-        pageIndex: PAGE_INDEX,
-        sortBy: SORT_BY,
-        sortDirection: SORT_DIRECTION
-      })
-      .subscribe(response => expect(response).toEqual(serviceResponse));
-
-    const req = httpMock.expectOne(interpolate(LOAD_DUPLICATE_COMICS_URL));
-    expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({
-      pageSize: PAGE_SIZE,
-      pageIndex: PAGE_INDEX,
-      sortBy: SORT_BY,
-      sortDirection: SORT_DIRECTION
-    } as LoadDuplicateComicsRequest);
     req.flush(serviceResponse);
   });
 });

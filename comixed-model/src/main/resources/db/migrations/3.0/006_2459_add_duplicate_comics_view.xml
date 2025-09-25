@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="006_2459_add_duplicate_comics_view.xml" author="mcpierce">
+
+        <createView replaceIfExists="true" viewName="duplicate_comics_view">
+            SELECT DISTINCT d.publisher    as publisher,
+                            d.series       as series,
+                            d.volume       as volume,
+                            d.issue_number as issue_number,
+                            d.cover_date   as cover_date,
+                            COUNT(*) as count
+            FROM comic_details d
+            WHERE publisher IS NOT NULL
+              AND LENGTH (publisher)
+                > 0
+              AND series IS NOT NULL
+              AND LENGTH (series)
+                > 0
+              AND volume IS NOT NULL
+              AND LENGTH (volume)
+                > 0
+              AND issue_number IS NOT NULL
+              AND LENGTH (issue_number)
+                > 0
+              AND cover_date IS NOT NULL
+            GROUP BY d.publisher, d.series, d.volume, d.issue_number, d.cover_date
+            HAVING COUNT (*) > 1
+        </createView>
+
+    </changeSet>
+</databaseChangeLog>

@@ -129,25 +129,6 @@ public interface DisplayableComicRepository extends JpaRepository<DisplayableCom
   List<DisplayableComic> loadComicsForList(@Param("listId") Long listId, Pageable pageable);
 
   /**
-   * Returns comics that are duplicates.
-   *
-   * @param pageable the request
-   * @return the comics
-   */
-  @Query(
-      "SELECT d FROM DisplayableComic d JOIN (SELECT c.publisher AS publisher, c.series AS series, c.volume AS volume, c.issueNumber AS issueNumber, c.coverDate as coverDate FROM ComicDetail c WHERE c.publisher IS NOT NULL AND LENGTH(c.publisher) > 0 AND c.series IS NOT NULL AND LENGTH(c.series) > 0 AND c.volume IS NOT NULL AND LENGTH(c.volume) > 0 AND c.issueNumber IS NOT NULL AND LENGTH(c.issueNumber) > 0 AND c.coverDate IS NOT NULL GROUP BY c.publisher, c.series, c.volume, c.issueNumber, c.coverDate HAVING count(*) > 1) g ON g.publisher = d.publisher AND g.series = d.series AND g.volume = d.volume AND g.issueNumber = d.issueNumber AND g.coverDate = d.coverDate")
-  List<DisplayableComic> loadDuplicateComics(Pageable pageable);
-
-  /**
-   * Returns the number of duplicate comics.
-   *
-   * @return the comics
-   */
-  @Query(
-      "SELECT COALESCE(SUM(COALESCE(total, 0)), 0) FROM (SELECT count(*) AS total FROM DisplayableComic d WHERE d.publisher IS NOT NULL AND LENGTH(d.publisher) > 0 AND d.series IS NOT NULL AND LENGTH(d.series) > 0 AND d.volume IS NOT NULL AND LENGTH(d.volume) > 0 AND d.issueNumber IS NOT NULL AND LENGTH(d.issueNumber) > 0 AND d.coverDate IS NOT NULL GROUP BY d.publisher, d.series, d.volume, d.issueNumber, d.coverDate HAVING count(*) > 1)")
-  long getDuplicateComicCount();
-
-  /**
    * Returns the comic ids for all duplicate comics.
    *
    * @return the comic ids
