@@ -125,7 +125,7 @@ export class ComicPagesComponent implements AfterViewInit {
 
   @Input()
   set pages(pages: ComicPage[]) {
-    this.dataSource.data = _.cloneDeep(pages).sort(
+    this.dataSource.data = _.cloneDeep(pages.filter(entry => !!entry)).sort(
       (left, right) => left.pageNumber - right.pageNumber
     );
     this.dataSource.data.forEach((entry, index) => (entry.index = index));
