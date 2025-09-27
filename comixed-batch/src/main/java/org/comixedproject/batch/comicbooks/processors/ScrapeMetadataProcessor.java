@@ -78,6 +78,11 @@ public class ScrapeMetadataProcessor
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
+    if (comicBook.isFileContentsLoaded() == false || comicBook.isPurging()) {
+      log.debug("Comic not ready for batch scraping: id={}", comicBook.getComicBookId());
+      return null;
+    }
+
     if (this.isInFailedState()) {
       log.debug(
           "Abort scraping: error threshold exceeded ({} > {})",

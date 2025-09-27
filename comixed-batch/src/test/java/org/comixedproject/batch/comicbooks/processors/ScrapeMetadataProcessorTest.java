@@ -75,6 +75,8 @@ class ScrapeMetadataProcessorTest {
     Mockito.when(metadata.getReferenceId()).thenReturn(TEST_REFERENCE_NUMBER);
     Mockito.when(comicBook.getMetadata()).thenReturn(metadata);
     Mockito.when(comicBook.getComicBookId()).thenReturn(TEST_COMIC_BOOK_ID);
+    Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(true);
+    Mockito.when(comicBook.isPurging()).thenReturn(false);
     Mockito.when(jobExecutionContext.getJobParameters()).thenReturn(jobParameters);
     Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecutionContext);
     Mockito.when(comicBookService.save(Mockito.any(ComicBook.class))).thenReturn(savedComicBook);
@@ -89,6 +91,20 @@ class ScrapeMetadataProcessorTest {
 
     Mockito.verify(metadataService, Mockito.times(1))
         .scrapeComic(TEST_METADATA_SOURCE_ID, TEST_COMIC_BOOK_ID, TEST_REFERENCE_NUMBER, false);
+  }
+
+  @Test
+  void process_fileContentsNotLoaded() {
+    Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(false);
+
+    assertNull(processor.process(comicBook));
+  }
+
+  @Test
+  void process_isPurging() {
+    Mockito.when(comicBook.isPurging()).thenReturn(true);
+
+    assertNull(processor.process(comicBook));
   }
 
   @Test

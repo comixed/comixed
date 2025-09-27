@@ -48,6 +48,10 @@ public class PurgeMarkedComicsProcessor implements ItemProcessor<ComicBook, Comi
 
   @Override
   public ComicBook process(final ComicBook comicBook) throws Exception {
+    if (comicBook.isFileContentsLoaded() == false) {
+      log.debug("Comic not ready for purging: id={}", comicBook.getComicBookId());
+      return null;
+    }
     try {
       log.debug("Removing comic book from all reading lists: id={}", comicBook.getComicBookId());
       this.readingListService.deleteEntriesForComicBook(comicBook);

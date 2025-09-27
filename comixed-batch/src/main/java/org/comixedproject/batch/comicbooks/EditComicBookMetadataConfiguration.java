@@ -19,9 +19,9 @@
 package org.comixedproject.batch.comicbooks;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicbooks.processors.UpdateComicBooksProcessor;
-import org.comixedproject.batch.comicbooks.readers.UpdateComicBooksReader;
-import org.comixedproject.batch.comicbooks.writers.UpdateComicBooksWriter;
+import org.comixedproject.batch.comicbooks.processors.EditComicMetadataProcessor;
+import org.comixedproject.batch.comicbooks.readers.EditComicMetadataReader;
+import org.comixedproject.batch.comicbooks.writers.EditComicMetadataWriter;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -36,44 +36,48 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * <code>UpdateComicBooksConfiguration</code> defines the process for updating the details for
+ * <code>EditComicBookMetadataConfiguration</code> defines the process for editing the metadata for
  * multiple comics.
  *
  * @author Darryl L. Pierce
  */
 @Configuration
 @Log4j2
-public class UpdateComicBooksConfiguration {
-  public static final String UPDATE_COMIC_BOOKS_JOB = "updateComicBooksJob";
-  public static final String UPDATE_COMIC_BOOKS_JOB_TIME_STARTED = "job.update-comic.time-started";
-  public static final String UPDATE_COMIC_BOOKS_JOB_PUBLISHER = "job.update-comic.publisher";
-  public static final String UPDATE_COMIC_BOOKS_JOB_SERIES = "job.update-comic.series";
-  public static final String UPDATE_COMIC_BOOKS_JOB_VOLUME = "job.update-comic.volume";
-  public static final String UPDATE_COMIC_BOOKS_JOB_ISSUE_NUMBER = "job.update-comic.issue-number";
-  public static final String UPDATE_COMIC_BOOKS_JOB_IMPRINT = "job.update-comic.imprint";
-  public static final String UPDATE_COMIC_BOOKS_JOB_COMIC_TYPE = "job.update-comic.comic-type";
+public class EditComicBookMetadataConfiguration {
+  public static final String EDIT_COMIC_METADATA_JOB = "editComicMetadataJob";
+  public static final String EDIT_COMIC_METADATA_JOB_TIME_STARTED =
+      "job.edit-comic-metadata.time-started";
+  public static final String EDIT_COMIC_METADATA_JOB_PUBLISHER =
+      "job.edit-comic-metadata.publisher";
+  public static final String EDIT_COMIC_METADATA_JOB_SERIES = "job.edit-comic-metadata.series";
+  public static final String EDIT_COMIC_METADATA_JOB_VOLUME = "job.edit-comic-metadata.volume";
+  public static final String EDIT_COMIC_METADATA_JOB_ISSUE_NUMBER =
+      "job.edit-comic-metadata.issue-number";
+  public static final String EDIT_COMIC_METADATA_JOB_IMPRINT = "job.edit-comic-metadata.imprint";
+  public static final String EDIT_COMIC_METADATA_JOB_COMIC_TYPE =
+      "job.edit-comic-metadata.comic-type";
 
   @Value("${comixed.batch.update-comic-metadata.chunk-size:1}")
   private int chunkSize;
 
-  @Bean(name = UPDATE_COMIC_BOOKS_JOB)
-  public Job updateComicBooksJob(
+  @Bean(name = EDIT_COMIC_METADATA_JOB)
+  public Job editComicMetadataJob(
       final JobRepository jobRepository,
-      @Qualifier("updateComicBooksStep") final Step updateComicBooksStep) {
-    return new JobBuilder(UPDATE_COMIC_BOOKS_JOB, jobRepository)
+      @Qualifier("editComicMetadataStep") final Step editComicMetadataStep) {
+    return new JobBuilder(EDIT_COMIC_METADATA_JOB, jobRepository)
         .incrementer(new RunIdIncrementer())
-        .start(updateComicBooksStep)
+        .start(editComicMetadataStep)
         .build();
   }
 
-  @Bean(name = "updateComicBooksStep")
-  public Step updateComicBooksStep(
+  @Bean(name = "editComicMetadataStep")
+  public Step editComicMetadataStep(
       final JobRepository jobRepository,
       final PlatformTransactionManager platformTransactionManager,
-      final UpdateComicBooksReader reader,
-      final UpdateComicBooksProcessor processor,
-      final UpdateComicBooksWriter writer) {
-    return new StepBuilder("updateComicBooksStep", jobRepository)
+      final EditComicMetadataReader reader,
+      final EditComicMetadataProcessor processor,
+      final EditComicMetadataWriter writer) {
+    return new StepBuilder("editComicMetadataStep", jobRepository)
         .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
         .reader(reader)
         .processor(processor)

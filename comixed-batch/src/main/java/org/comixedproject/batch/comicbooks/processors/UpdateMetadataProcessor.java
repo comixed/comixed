@@ -45,6 +45,14 @@ public class UpdateMetadataProcessor implements ItemProcessor<ComicBook, ComicBo
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
+    if (comicBook.isFileContentsLoaded() == false
+        || comicBook.isPurging()
+        || comicBook.isBatchMetadataUpdate()
+        || comicBook.isEditDetails()) {
+      log.debug("Comic not ready for metadata update, skipping: id={}", comicBook.getComicBookId());
+      return null;
+    }
+
     if (this.configurationService.isFeatureEnabled(
         ConfigurationService.CREATE_EXTERNAL_METADATA_FILE)) {
       log.debug("Creating external metadata file for comic: id={}", comicBook.getComicBookId());
