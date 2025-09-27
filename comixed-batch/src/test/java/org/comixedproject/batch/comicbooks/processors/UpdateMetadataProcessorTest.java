@@ -18,8 +18,7 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.*;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_NO_COMICINFO_ENTRY;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_NO_RECREATE_COMICS;
 import static org.comixedproject.service.admin.ConfigurationService.CREATE_EXTERNAL_METADATA_FILE;
@@ -55,8 +54,40 @@ class UpdateMetadataProcessorTest {
 
   @BeforeEach
   public void setUp() {
+    Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(true);
+    Mockito.when(comicBook.isPurging()).thenReturn(false);
+    Mockito.when(comicBook.isBatchMetadataUpdate()).thenReturn(false);
+    Mockito.when(comicBook.isEditDetails()).thenReturn(false);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicDetail.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
+  }
+
+  @Test
+  void process_fileContentsNotLoaded() {
+    Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(false);
+
+    assertNull(processor.process(comicBook));
+  }
+
+  @Test
+  void process_isPurging() {
+    Mockito.when(comicBook.isPurging()).thenReturn(true);
+
+    assertNull(processor.process(comicBook));
+  }
+
+  @Test
+  void process_batchMetadataUpdate() {
+    Mockito.when(comicBook.isBatchMetadataUpdate()).thenReturn(true);
+
+    assertNull(processor.process(comicBook));
+  }
+
+  @Test
+  void process_isEditDetails() {
+    Mockito.when(comicBook.isEditDetails()).thenReturn(true);
+
+    assertNull(processor.process(comicBook));
   }
 
   @Test

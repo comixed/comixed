@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2022, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,32 +16,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.readers;
+package org.comixedproject.state.comicbooks.actions;
 
-import java.util.List;
-import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.beans.factory.annotation.Value;
+import org.comixedproject.model.comicbooks.ComicState;
+import org.comixedproject.state.comicbooks.ComicEvent;
+import org.springframework.statemachine.StateContext;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>UpdateComicBooksReader</code> reads comics that are to be updated.
+ * <code>UndeleteComicAction</code> handles updating a comic after it has been undeleted.
  *
  * @author Darryl L. Pierce
  */
 @Component
-@StepScope
 @Log4j2
-public class UpdateComicBooksReader extends AbstractComicReader {
-  @Value("${comixed.batch.update-comic-metadata.chunk-size:1}")
-  @Getter
-  private int chunkSize;
-
+public class UndeleteComicAction extends AbstractComicAction {
   @Override
-  protected List<ComicBook> doLoadComics() {
-    log.trace("Fetching comics to be edited");
-    return this.comicBookService.findComicsWithEditDetails(this.chunkSize);
+  public void execute(final StateContext<ComicState, ComicEvent> context) {
+    final ComicBook comicBook = this.fetchComic(context);
+    log.trace("Clearing the purging flag");
+    comicBook.setPurging(false);
   }
 }

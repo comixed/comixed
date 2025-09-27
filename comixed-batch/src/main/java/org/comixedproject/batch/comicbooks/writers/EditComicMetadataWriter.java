@@ -24,15 +24,15 @@ import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>UpdateComicBooksWriter</code> writes the comic books after they've been updated.
+ * <code>EditComicMetadataWriter</code> writes the comic books after they've been updated.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @StepScope
 @Log4j2
-public class UpdateComicBooksWriter extends AbstractComicBookWriter {
-  public UpdateComicBooksWriter() {
+public class EditComicMetadataWriter extends AbstractComicBookWriter {
+  public EditComicMetadataWriter() {
     super(ComicEvent.detailsUpdated);
   }
 }
