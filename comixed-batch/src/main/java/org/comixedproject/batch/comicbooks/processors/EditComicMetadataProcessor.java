@@ -18,7 +18,7 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.*;
+import static org.comixedproject.batch.comicbooks.EditComicBookMetadataConfiguration.*;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.ComicCheckOutManager;
@@ -42,7 +42,7 @@ import org.springframework.util.StringUtils;
 @Component
 @StepScope
 @Log4j2
-public class UpdateComicBooksProcessor
+public class EditComicMetadataProcessor
     implements ItemProcessor<ComicBook, ComicBook>, StepExecutionListener {
   @Autowired private ComicCheckOutManager comicCheckOutManager;
 
@@ -50,13 +50,20 @@ public class UpdateComicBooksProcessor
 
   @Override
   public ComicBook process(final ComicBook comicBook) throws Exception {
+    if (comicBook.isFileContentsLoaded() == false
+        || comicBook.isPurging()
+        || comicBook.isBatchMetadataUpdate()) {
+      log.debug(
+          "Comic book not ready for metadata update, skipping: id={}", comicBook.getComicBookId());
+      return null;
+    }
     log.trace("Loading job parameters");
-    final String publisher = this.jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_PUBLISHER);
-    final String series = this.jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_SERIES);
-    final String volume = this.jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_VOLUME);
-    final String issueNumber = this.jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_ISSUE_NUMBER);
-    final String imprint = this.jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_IMPRINT);
-    final String comicType = this.jobParameters.getString(UPDATE_COMIC_BOOKS_JOB_COMIC_TYPE);
+    final String publisher = this.jobParameters.getString(EDIT_COMIC_METADATA_JOB_PUBLISHER);
+    final String series = this.jobParameters.getString(EDIT_COMIC_METADATA_JOB_SERIES);
+    final String volume = this.jobParameters.getString(EDIT_COMIC_METADATA_JOB_VOLUME);
+    final String issueNumber = this.jobParameters.getString(EDIT_COMIC_METADATA_JOB_ISSUE_NUMBER);
+    final String imprint = this.jobParameters.getString(EDIT_COMIC_METADATA_JOB_IMPRINT);
+    final String comicType = this.jobParameters.getString(EDIT_COMIC_METADATA_JOB_COMIC_TYPE);
 
     this.comicCheckOutManager.checkOut(comicBook.getComicBookId());
 

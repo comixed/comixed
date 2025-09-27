@@ -361,12 +361,10 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param pageable the page request
    * @return the comics
    */
-  @Query(
-      "SELECT c FROM ComicBook c WHERE c.purging = true AND c.comicDetail.comicState = 'DELETED'")
+  @Query("SELECT c FROM ComicBook c WHERE c.purging = true")
   List<ComicBook> findComicsMarkedForPurging(Pageable pageable);
 
-  @Query(
-      "SELECT COUNT(c) FROM ComicBook c WHERE c.purging IS TRUE AND c.comicDetail.comicState = 'DELETED'")
+  @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.purging IS TRUE")
   long findComicsToPurgeCount();
 
   /**

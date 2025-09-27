@@ -18,7 +18,7 @@
 
 package org.comixedproject.rest.library;
 
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.*;
+import static org.comixedproject.batch.comicbooks.EditComicBookMetadataConfiguration.*;
 import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -71,8 +71,8 @@ public class LibraryController {
   private JobLauncher jobLauncher;
 
   @Autowired
-  @Qualifier(UPDATE_COMIC_BOOKS_JOB)
-  private Job updateComicBooksJob;
+  @Qualifier(EDIT_COMIC_METADATA_JOB)
+  private Job editComicMetadataJob;
 
   /**
    * Retrieves the current state of the library.
@@ -338,16 +338,16 @@ public class LibraryController {
     this.comicBookService.updateMultipleComics(ids);
     log.trace("Launching update comics batch process");
     this.jobLauncher.run(
-        this.updateComicBooksJob,
+        this.editComicMetadataJob,
         new JobParametersBuilder()
-            .addLong(UPDATE_COMIC_BOOKS_JOB_TIME_STARTED, System.currentTimeMillis())
-            .addString(UPDATE_COMIC_BOOKS_JOB_PUBLISHER, request.getPublisher())
-            .addString(UPDATE_COMIC_BOOKS_JOB_SERIES, request.getSeries())
-            .addString(UPDATE_COMIC_BOOKS_JOB_VOLUME, request.getVolume())
-            .addString(UPDATE_COMIC_BOOKS_JOB_ISSUE_NUMBER, request.getIssueNumber())
-            .addString(UPDATE_COMIC_BOOKS_JOB_IMPRINT, request.getImprint())
+            .addLong(EDIT_COMIC_METADATA_JOB_TIME_STARTED, System.currentTimeMillis())
+            .addString(EDIT_COMIC_METADATA_JOB_PUBLISHER, request.getPublisher())
+            .addString(EDIT_COMIC_METADATA_JOB_SERIES, request.getSeries())
+            .addString(EDIT_COMIC_METADATA_JOB_VOLUME, request.getVolume())
+            .addString(EDIT_COMIC_METADATA_JOB_ISSUE_NUMBER, request.getIssueNumber())
+            .addString(EDIT_COMIC_METADATA_JOB_IMPRINT, request.getImprint())
             .addString(
-                UPDATE_COMIC_BOOKS_JOB_COMIC_TYPE,
+                EDIT_COMIC_METADATA_JOB_COMIC_TYPE,
                 request.getComicType() != null ? request.getComicType().name() : "")
             .toJobParameters());
   }

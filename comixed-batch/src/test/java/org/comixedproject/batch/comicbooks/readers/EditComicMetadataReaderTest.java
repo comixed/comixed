@@ -36,10 +36,10 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class UpdateComicBooksReaderTest {
+class EditComicMetadataReaderTest {
   private static final int MAX_RECORDS = 25;
 
-  @InjectMocks private UpdateComicBooksReader reader;
+  @InjectMocks private EditComicMetadataReader reader;
   @Mock private ComicBookService comicBookService;
   @Mock private ComicBook comicBook;
 

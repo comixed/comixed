@@ -20,6 +20,7 @@ package org.comixedproject.batch.comicbooks.processors;
 
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.File;
 import org.comixedproject.adaptors.file.FileAdaptor;
@@ -54,10 +55,18 @@ class PurgeMarkedComicsProcessorTest {
   public void setUp() {
     Mockito.when(comicDetail.getFile()).thenReturn(comicFile);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(true);
     Mockito.when(
             configurationService.isFeatureEnabled(
                 ConfigurationService.CFG_DELETE_PURGED_COMIC_FILES))
         .thenReturn(false);
+  }
+
+  @Test
+  void process_fileContentsNotLoaded() throws Exception {
+    Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(false);
+
+    assertNull(processor.process(comicBook));
   }
 
   @Test

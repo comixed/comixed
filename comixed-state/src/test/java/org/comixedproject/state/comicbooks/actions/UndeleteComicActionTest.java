@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2022, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,35 +16,41 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.writers;
+package org.comixedproject.state.comicbooks.actions;
 
-import java.util.ArrayList;
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.comicbooks.ComicEvent;
-import org.comixedproject.state.comicbooks.ComicStateHandler;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.batch.item.Chunk;
+import org.springframework.messaging.MessageHeaders;
+import org.springframework.statemachine.StateContext;
 
 @ExtendWith(MockitoExtension.class)
-class UpdateComicBooksWriterTest {
-  @InjectMocks private UpdateComicBooksWriter writer;
-  @Mock private ComicStateHandler comicStateHandler;
+class UndeleteComicActionTest {
+  @InjectMocks private UndeleteComicAction action;
+  @Mock private StateContext<ComicState, ComicEvent> context;
+  @Mock private MessageHeaders messageHeaders;
   @Mock private ComicBook comicBook;
 
-  private Chunk<ComicBook> comicBookList = new Chunk<>(new ArrayList<>());
+  @BeforeEach
+  void setUp() {
+    Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
+    Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
+        .thenReturn(comicBook);
+  }
 
   @Test
-  void write() {
-    for (int index = 0; index < 25; index++) comicBookList.add(comicBook);
+  void execute() {
+    action.execute(context);
 
-    writer.write(comicBookList);
-
-    Mockito.verify(comicStateHandler, Mockito.times(comicBookList.size()))
-        .fireEvent(comicBook, ComicEvent.detailsUpdated);
+    Mockito.verify(comicBook, Mockito.times(1)).setPurging(false);
   }
 }

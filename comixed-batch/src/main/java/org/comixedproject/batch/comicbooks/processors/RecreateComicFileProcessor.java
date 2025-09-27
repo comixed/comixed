@@ -46,6 +46,14 @@ public class RecreateComicFileProcessor implements ItemProcessor<ComicBook, Comi
 
   @Override
   public ComicBook process(final ComicBook comicBook) throws Exception {
+    if (comicBook.isFileContentsLoaded() == false
+        || comicBook.isPurging()
+        || comicBook.isBatchMetadataUpdate()
+        || comicBook.isEditDetails()
+        || comicBook.isUpdateMetadata()) {
+      log.debug("Comic book not ready for recreating, skipping: id={}", comicBook.getComicBookId());
+      return null;
+    }
     log.debug("Getting target archive adaptor: id={}", comicBook.getComicBookId());
     this.comicCheckOutManager.checkOut(comicBook.getComicBookId());
     if (comicBook.getComicDetail().getFile().exists()

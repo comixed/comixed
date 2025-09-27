@@ -53,6 +53,14 @@ public class RemoveDeletedComicBooksProcessor
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
+    if (comicBook.isFileContentsLoaded() == false
+        || comicBook.isPurging()
+        || comicBook.isBatchMetadataUpdate()
+        || comicBook.isEditDetails()
+        || comicBook.getTargetArchiveType() != null
+        || comicBook.isUpdateMetadata()) {
+      log.debug("Comic not ready for removal, skipping: id={}", comicBook.getComicBookId());
+    }
     log.debug("Removing comicBook from database: id={}", comicBook.getComicBookId());
     this.comicBookService.deleteComicBook(comicBook);
     if (Boolean.parseBoolean(

@@ -20,6 +20,7 @@ package org.comixedproject.batch.comicbooks.processors;
 
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.File;
 import org.comixedproject.adaptors.AdaptorException;
@@ -59,12 +60,52 @@ class RecreateComicFileProcessorTest {
     Mockito.when(comicFile.isFile()).thenReturn(true);
     Mockito.when(comicDetail.getFile()).thenReturn(comicFile);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(true);
+    Mockito.when(comicBook.isPurging()).thenReturn(false);
+    Mockito.when(comicBook.isBatchMetadataUpdate()).thenReturn(false);
+    Mockito.when(comicBook.isEditDetails()).thenReturn(false);
+    Mockito.when(comicBook.isUpdateMetadata()).thenReturn(false);
     Mockito.when(comicBook.getTargetArchiveType()).thenReturn(TEST_TARGET_ARCHIVE);
     Mockito.when(comicBook.isDeletePages()).thenReturn(false);
     Mockito.when(
             configurationService.getOptionValue(
                 ConfigurationService.CFG_LIBRARY_PAGE_RENAMING_RULE, ""))
         .thenReturn(TEST_PAGE_RENAMING_RULE);
+  }
+
+  @Test
+  void process_fileContentsNotLoaded() throws Exception {
+    Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(false);
+
+    assertNull(processor.process(comicBook));
+  }
+
+  @Test
+  void process_isPurging() throws Exception {
+    Mockito.when(comicBook.isPurging()).thenReturn(true);
+
+    assertNull(processor.process(comicBook));
+  }
+
+  @Test
+  void process_isBatchMetadataUpdate() throws Exception {
+    Mockito.when(comicBook.isBatchMetadataUpdate()).thenReturn(true);
+
+    assertNull(processor.process(comicBook));
+  }
+
+  @Test
+  void process_isEditDetails() throws Exception {
+    Mockito.when(comicBook.isEditDetails()).thenReturn(true);
+
+    assertNull(processor.process(comicBook));
+  }
+
+  @Test
+  void process_isUpdateMetadata() throws Exception {
+    Mockito.when(comicBook.isUpdateMetadata()).thenReturn(true);
+
+    assertNull(processor.process(comicBook));
   }
 
   @Test

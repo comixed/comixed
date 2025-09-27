@@ -19,7 +19,7 @@
 package org.comixedproject.rest.library;
 
 import static junit.framework.TestCase.*;
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.*;
+import static org.comixedproject.batch.comicbooks.EditComicBookMetadataConfiguration.*;
 import static org.comixedproject.rest.comicbooks.ComicBookSelectionController.LIBRARY_SELECTIONS;
 import static org.junit.Assert.assertThrows;
 
@@ -85,8 +85,8 @@ class LibraryControllerTest {
   @Mock private Principal principal;
 
   @Mock
-  @Qualifier(UPDATE_COMIC_BOOKS_JOB)
-  private Job updateComicBooksJob;
+  @Qualifier(EDIT_COMIC_METADATA_JOB)
+  private Job editComicMetadataJob;
 
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
@@ -283,13 +283,13 @@ class LibraryControllerTest {
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
     assertNotNull(jobParameters);
-    assertTrue(jobParameters.getParameters().containsKey(UPDATE_COMIC_BOOKS_JOB_PUBLISHER));
-    assertTrue(jobParameters.getParameters().containsKey(UPDATE_COMIC_BOOKS_JOB_SERIES));
-    assertTrue(jobParameters.getParameters().containsKey(UPDATE_COMIC_BOOKS_JOB_VOLUME));
-    assertTrue(jobParameters.getParameters().containsKey(UPDATE_COMIC_BOOKS_JOB_ISSUE_NUMBER));
-    assertTrue(jobParameters.getParameters().containsKey(UPDATE_COMIC_BOOKS_JOB_IMPRINT));
+    assertTrue(jobParameters.getParameters().containsKey(EDIT_COMIC_METADATA_JOB_PUBLISHER));
+    assertTrue(jobParameters.getParameters().containsKey(EDIT_COMIC_METADATA_JOB_SERIES));
+    assertTrue(jobParameters.getParameters().containsKey(EDIT_COMIC_METADATA_JOB_VOLUME));
+    assertTrue(jobParameters.getParameters().containsKey(EDIT_COMIC_METADATA_JOB_ISSUE_NUMBER));
+    assertTrue(jobParameters.getParameters().containsKey(EDIT_COMIC_METADATA_JOB_IMPRINT));
 
     Mockito.verify(comicBookService, Mockito.times(1)).updateMultipleComics(idList);
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(updateComicBooksJob, jobParameters);
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(editComicMetadataJob, jobParameters);
   }
 }

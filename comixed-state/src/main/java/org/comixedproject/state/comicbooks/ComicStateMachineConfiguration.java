@@ -51,6 +51,7 @@ public class ComicStateMachineConfiguration
   @Autowired private MarkComicAsMissingAction markComicAsMissingAction;
   @Autowired private MarkComicAsFoundGuard markComicAsFoundGuard;
   @Autowired private MarkComicAsFoundAction markComicAsFoundAction;
+  @Autowired private UndeleteComicAction undeleteComicAction;
 
   @Override
   public void configure(final StateMachineStateConfigurer<ComicState, ComicEvent> states)
@@ -263,6 +264,7 @@ public class ComicStateMachineConfiguration
         .source(ComicState.DELETED)
         .target(ComicState.CHANGED)
         .event(ComicEvent.undeleteComic)
+        .action(undeleteComicAction)
         // the comic record was actually deleted
         .and()
         .withExternal()
