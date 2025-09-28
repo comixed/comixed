@@ -49,9 +49,7 @@ public class BatchConfiguration {
    */
   @Bean(name = "jobTaskExecutor")
   public TaskExecutor jobTaskExecutor() {
-    final SimpleAsyncTaskExecutor result = new SimpleAsyncTaskExecutor("CX-Jarvis");
-    result.setConcurrencyLimit(this.batchThreadPoolSize);
-    return result;
+    return this.doCreateTaskExecutor("CX-Jarvis");
   }
 
   /**
@@ -61,7 +59,14 @@ public class BatchConfiguration {
    */
   @Bean(name = "stepTaskExecutor")
   public TaskExecutor stepTaskExecutor() {
-    return new SimpleAsyncTaskExecutor("CX-Alfred");
+    return this.doCreateTaskExecutor("CX-Jarvis");
+  }
+
+  private SimpleAsyncTaskExecutor doCreateTaskExecutor(String name) {
+    final SimpleAsyncTaskExecutor result = new SimpleAsyncTaskExecutor(name);
+    result.setConcurrencyLimit(this.batchThreadPoolSize);
+    result.setVirtualThreads(true);
+    return result;
   }
 
   /**
