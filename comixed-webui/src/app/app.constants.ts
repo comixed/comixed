@@ -45,5 +45,5 @@ export const LATEST_RELEASE_TARGET = '_cx_latest_release';
 // messaging constants
 
 export const APP_MESSAGING_TOPIC = '/topic/app-message.update';
-export const PROCESS_COMIC_BOOKS_TOPIC = '/topic/process-comic-books.status';
+export const PROCESS_COMIC_BOOKS_TOPIC = '/topic/load-comic-books.status';
 export const BATCH_PROCESS_DETAIL_UPDATE_TOPIC = `/topic/batch-process-detail.update.\${jobId}`;

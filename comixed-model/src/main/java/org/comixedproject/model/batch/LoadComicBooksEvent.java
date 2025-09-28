@@ -22,11 +22,11 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 /**
- * <code>ProcessComicBooksEvent</code> is fired to start processing imported comic books.
+ * <code>LoadComicBooksEvent</code> is fired to start processing imported comic books.
  *
  * @author Darryl L. Pierce
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ProcessComicBooksEvent {
-  public static final ProcessComicBooksEvent instance = new ProcessComicBooksEvent();
+public final class LoadComicBooksEvent {
+  public static final LoadComicBooksEvent instance = new LoadComicBooksEvent();
 }

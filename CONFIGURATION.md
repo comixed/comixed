@@ -19,8 +19,8 @@ needs of the server administrator.
 | comixed.batch.update-comic-metadata.chunk-size    | The number of comics to process at a time       | Count    |
 | comixed.batch.add-cover-to-image-cache.schedule   | The schedule for caching cover images           | Schedule |
 | comixed.batch.add-cover-to-image-cache.chunk-size | The number of pages to process at a time        | Count    |
-| comixed.batch.process-comic-books.period          | The time between checking for comics to process | Delay    |
-| comixed.batch.process-comic-books.chunk-size      | The number of comics to process at a time       | Count    |
+| comixed.batch.load-comic-books.period             | The time between checking for comics to process | Delay    |
+| comixed.batch.load-comic-books.chunk-size         | The number of comics to process at a time       | Count    |
 | comixed.batch.load-page-hashes.period             | The time between checking for comics to process | Delay    |
 | comixed.batch.load-page-hashes.chunk-size         | The number of comics to process at a time       | Count    |
 | comixed.batch.mark-blocked-pages.period           | The time between checking for pages to process  | Delay    |

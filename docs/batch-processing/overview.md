@@ -7,7 +7,7 @@ the ComiXed library.
 
 | Priority | Name                         | Description                                                                         |
 |----------|------------------------------|-------------------------------------------------------------------------------------|
-| 1        | **processComicBooksJob**     | Load the contents of the comic file                                                 |
+| 1        | **loadComicBooksJob**     | Load the contents of the comic file                                                 |
 | 2        | **purgeLibraryJob**          | Deletes the records (and potentially the files) for comics removed from the library |
 | 3        | **scrapeMetadataJob**        | Performs batch scraping of comic                                                    |
 | 4        | **editComicMetadataJob**     | Performs a mass update of metadata for comics                                       |

@@ -35,7 +35,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class PublishProcessComicBooksStatusAction
     extends AbstractPublishAction<ProcessComicBooksStatus> {
-  static final String PROCESS_COMIC_BOOKS_STATUS_TOPIC = "/topic/process-comic-books.status";
+  static final String PROCESS_COMIC_BOOKS_STATUS_TOPIC = "/topic/load-comic-books.status";
 
   @Override
   public void publish(final ProcessComicBooksStatus subject) throws PublishingException {

@@ -28,7 +28,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
-import org.comixedproject.model.batch.ProcessComicBooksEvent;
+import org.comixedproject.model.batch.LoadComicBooksEvent;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicfiles.ComicFile;
 import org.comixedproject.model.comicfiles.ComicFileGroup;
@@ -185,6 +185,6 @@ public class ComicFileService {
       }
     }
     log.debug("Initiating processing");
-    this.applicationEventPublisher.publishEvent(ProcessComicBooksEvent.instance);
+    this.applicationEventPublisher.publishEvent(LoadComicBooksEvent.instance);
   }
 }

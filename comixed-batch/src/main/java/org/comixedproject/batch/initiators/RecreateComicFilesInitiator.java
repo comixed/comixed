@@ -48,6 +48,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class RecreateComicFilesInitiator {
+  private static final Object MUTEX = new Object();
+
   @Autowired private ComicBookService comicBookService;
   @Autowired private BatchProcessesService batchProcessesService;
 
@@ -71,21 +73,23 @@ public class RecreateComicFilesInitiator {
   }
 
   private void doExecute() {
-    log.trace("Checking for comic files to be recreated");
-    if (this.comicBookService.findComicsToRecreateCount() > 0L
-        && !this.batchProcessesService.hasActiveExecutions(RECREATE_COMIC_FILES_JOB)) {
-      try {
-        log.trace("Starting batch job: organize comic files");
-        this.jobLauncher.run(
-            this.recreateComicFilesJob,
-            new JobParametersBuilder()
-                .addLong(RECREATE_COMIC_FILES_JOB_TIME_STARTED, System.currentTimeMillis())
-                .toJobParameters());
-      } catch (JobExecutionAlreadyRunningException
-          | JobRestartException
-          | JobInstanceAlreadyCompleteException
-          | JobParametersInvalidException error) {
-        log.error("Failed to run import comic files job", error);
+    synchronized (MUTEX) {
+      log.trace("Checking for comic files to be recreated");
+      if (this.comicBookService.findComicsToRecreateCount() > 0L
+          && !this.batchProcessesService.hasActiveExecutions(RECREATE_COMIC_FILES_JOB)) {
+        try {
+          log.trace("Starting batch job: organize comic files");
+          this.jobLauncher.run(
+              this.recreateComicFilesJob,
+              new JobParametersBuilder()
+                  .addLong(RECREATE_COMIC_FILES_JOB_TIME_STARTED, System.currentTimeMillis())
+                  .toJobParameters());
+        } catch (JobExecutionAlreadyRunningException
+            | JobRestartException
+            | JobInstanceAlreadyCompleteException
+            | JobParametersInvalidException error) {
+          log.error("Failed to run import comic files job", error);
+        }
       }
     }
   }

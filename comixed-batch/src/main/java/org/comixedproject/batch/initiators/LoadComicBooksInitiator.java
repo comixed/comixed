@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */ package org.comixedproject.batch.initiators;
 
-import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.*;
+import static org.comixedproject.batch.comicbooks.LoadComicBooksConfiguration.*;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.batch.ProcessComicBooksEvent;
+import org.comixedproject.model.batch.LoadComicBooksEvent;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.Job;
@@ -37,27 +37,29 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ProcessComicBooksInitiator</code> provides an initiator that periodically scans the library
+ * <code>LoadComicBooksInitiator</code> provides an initiator that periodically scans the library
  * for unprocessed comic books and starts a batch job to process them.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class ProcessComicBooksInitiator {
+public class LoadComicBooksInitiator {
+  private static final Object MUTEX = new Object();
+
   @Autowired private ComicBookService comicBookService;
   @Autowired private BatchProcessesService batchProcessesService;
 
   @Autowired
-  @Qualifier(value = PROCESS_COMIC_BOOKS_JOB)
-  private Job processComicBooksJob;
+  @Qualifier(value = LOAD_COMIC_BOOKS_JOB)
+  private Job loadComicBooksJob;
 
   @Autowired
   @Qualifier("batchJobLauncher")
   private JobLauncher jobLauncher;
 
   /** Checks for unprocessed comics not in a group and kicks off a new batch job to process them. */
-  @Scheduled(fixedDelayString = "${comixed.batch.process-comic-books.period:60000}")
+  @Scheduled(fixedDelayString = "${comixed.batch.load-comic-books.period:60000}")
   public void execute() {
     this.doExecute();
   }
@@ -69,30 +71,27 @@ public class ProcessComicBooksInitiator {
    */
   @EventListener()
   @Async
-  public void execute(ProcessComicBooksEvent event) {
+  public void execute(LoadComicBooksEvent event) {
     this.doExecute();
   }
 
   private void doExecute() {
-    log.debug("Looking for unprocessed comic books");
-    final long unprocessedComicBookCount = this.comicBookService.getUnprocessedComicBookCount();
-    if (unprocessedComicBookCount == 0L) {
-      log.debug("No comic books to be processed");
-      return;
-    }
-    if (!this.batchProcessesService.hasActiveExecutions(PROCESS_COMIC_BOOKS_JOB)) {
-      log.info("Starting process comics job");
-      try {
-        this.jobLauncher.run(
-            this.processComicBooksJob,
-            new JobParametersBuilder()
-                .addLong(PROCESS_COMIC_BOOKS_STARTED_JOB, System.currentTimeMillis())
-                .toJobParameters());
-      } catch (JobExecutionAlreadyRunningException
-          | JobRestartException
-          | JobInstanceAlreadyCompleteException
-          | JobParametersInvalidException error) {
-        log.error("Failed to start batch job processing comics", error);
+    synchronized (MUTEX) {
+      if (!this.batchProcessesService.hasActiveExecutions(LOAD_COMIC_BOOKS_JOB)
+          && this.comicBookService.getUnprocessedComicBookCount() > 0) {
+        log.info("Starting process comics job");
+        try {
+          this.jobLauncher.run(
+              this.loadComicBooksJob,
+              new JobParametersBuilder()
+                  .addLong(LOAD_COMIC_BOOKS_JOB_STARTED, System.currentTimeMillis())
+                  .toJobParameters());
+        } catch (JobExecutionAlreadyRunningException
+            | JobRestartException
+            | JobInstanceAlreadyCompleteException
+            | JobParametersInvalidException error) {
+          log.error("Failed to start batch job processing comics", error);
+        }
       }
     }
   }

@@ -18,7 +18,7 @@
 
 package org.comixedproject.batch.comicbooks.listeners;
 
-import static org.comixedproject.batch.comicbooks.ProcessComicBooksConfiguration.PROCESS_COMIC_BOOKS_JOB;
+import static org.comixedproject.batch.comicbooks.LoadComicBooksConfiguration.LOAD_COMIC_BOOKS_JOB;
 
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
@@ -31,8 +31,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.core.*;
 
 @ExtendWith(MockitoExtension.class)
-class ProcessComicBooksJobListenerTest {
-  @InjectMocks private ProcessComicBooksJobListener listener;
+class loadComicBooksJobListenerTest {
+  @InjectMocks private LoadComicBooksJobListener listener;
   @Mock private JobInstance jobInstance;
   @Mock private JobExecution jobExecution;
   @Mock private PublishBatchProcessDetailUpdateAction publishBatchProcessDetailUpdateAction;
@@ -43,7 +43,7 @@ class ProcessComicBooksJobListenerTest {
   @BeforeEach
   public void setUp() throws PublishingException {
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
-    Mockito.when(jobInstance.getJobName()).thenReturn(PROCESS_COMIC_BOOKS_JOB);
+    Mockito.when(jobInstance.getJobName()).thenReturn(LOAD_COMIC_BOOKS_JOB);
     Mockito.when(jobExecution.getJobInstance()).thenReturn(jobInstance);
     Mockito.when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);

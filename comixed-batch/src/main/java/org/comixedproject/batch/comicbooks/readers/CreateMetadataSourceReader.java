@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class CreateMetadataSourceReader extends AbstractComicReader {
-  @Value("${comixed.batch.process-comic-books.chunk-size:10}")
+  @Value("${comixed.batch.load-comic-books.chunk-size:10}")
   @Getter
   private int chunkSize;
 
