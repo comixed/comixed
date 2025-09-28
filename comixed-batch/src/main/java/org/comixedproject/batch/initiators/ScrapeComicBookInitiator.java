@@ -48,6 +48,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class ScrapeComicBookInitiator {
+  private static final Object MUTEX = new Object();
   public static final long DEFAULT_ERROR_THRESHOLD = 10L;
 
   @Autowired private ComicBookService comicBookService;
@@ -74,27 +75,29 @@ public class ScrapeComicBookInitiator {
   }
 
   private void doExecute() {
-    log.trace("Checking for comic files to import");
-    if (this.comicBookService.getBatchScrapingCount() > 0L
-        && !this.batchProcessesService.hasActiveExecutions(SCRAPE_METADATA_JOB)) {
-      try {
-        final Long errorThreshold =
-            Long.parseLong(
-                this.configurationService.getOptionValue(
-                    CFG_METADATA_SCRAPING_ERROR_THRESHOLD,
-                    String.valueOf(DEFAULT_ERROR_THRESHOLD)));
-        log.trace("Starting batch job: batch scraping");
-        this.jobLauncher.run(
-            this.batchScrapingJob,
-            new JobParametersBuilder()
-                .addLong(SCRAPE_METADATA_JOB_TIME_STARTED, System.currentTimeMillis())
-                .addLong(SCRAPE_METADATA_JOB_ERROR_THRESHOLD, errorThreshold)
-                .toJobParameters());
-      } catch (JobExecutionAlreadyRunningException
-          | JobRestartException
-          | JobInstanceAlreadyCompleteException
-          | JobParametersInvalidException error) {
-        log.error("Failed to run batch scraping job", error);
+    synchronized (MUTEX) {
+      log.trace("Checking for comic files to import");
+      if (this.comicBookService.getBatchScrapingCount() > 0L
+          && !this.batchProcessesService.hasActiveExecutions(SCRAPE_METADATA_JOB)) {
+        try {
+          final Long errorThreshold =
+              Long.parseLong(
+                  this.configurationService.getOptionValue(
+                      CFG_METADATA_SCRAPING_ERROR_THRESHOLD,
+                      String.valueOf(DEFAULT_ERROR_THRESHOLD)));
+          log.trace("Starting batch job: batch scraping");
+          this.jobLauncher.run(
+              this.batchScrapingJob,
+              new JobParametersBuilder()
+                  .addLong(SCRAPE_METADATA_JOB_TIME_STARTED, System.currentTimeMillis())
+                  .addLong(SCRAPE_METADATA_JOB_ERROR_THRESHOLD, errorThreshold)
+                  .toJobParameters());
+        } catch (JobExecutionAlreadyRunningException
+            | JobRestartException
+            | JobInstanceAlreadyCompleteException
+            | JobParametersInvalidException error) {
+          log.error("Failed to run batch scraping job", error);
+        }
       }
     }
   }

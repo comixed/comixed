@@ -51,6 +51,8 @@ import org.springframework.util.StringUtils;
 @Component
 @Log4j2
 public class OrganizeLibraryInitiator {
+  private static final Object MUTEX = new Object();
+
   @Autowired private OrganizingComicService organizingComicService;
   @Autowired private ConfigurationService configurationService;
   @Autowired private BatchProcessesService batchProcessesService;
@@ -75,37 +77,39 @@ public class OrganizeLibraryInitiator {
   }
 
   private void doExecute() {
-    log.trace("Checking for comic files to be organized");
-    if (this.organizingComicService.loadComicCount() > 0L
-        && !this.batchProcessesService.hasActiveExecutions(ORGANIZE_LIBRARY_JOB)) {
-      log.trace("Loading configured root directory");
-      final String rootDirectory =
-          this.configurationService.getOptionValue(CFG_LIBRARY_ROOT_DIRECTORY);
-      if (!StringUtils.hasLength(rootDirectory)) {
-        log.error("Cannot organize comic files: no root directory defined");
-        return;
-      }
-      log.trace("Loading configured renaming rule");
-      final String renamingRule =
-          this.configurationService.getOptionValue(CFG_LIBRARY_COMIC_RENAMING_RULE);
-      if (!StringUtils.hasLength(renamingRule)) {
-        log.error("Cannot organize comic files: no renaming rule defined");
-        return;
-      }
-      try {
-        log.trace("Starting batch job: organize comic files");
-        this.jobLauncher.run(
-            this.libraryOrganizationJob,
-            new JobParametersBuilder()
-                .addLong(ORGANIZE_LIBRARY_JOB_TIME_STARTED, System.currentTimeMillis())
-                .addString(ORGANIZE_LIBRARY_JOB_TARGET_DIRECTORY, rootDirectory)
-                .addString(ORGANIZE_LIBRARY_JOB_RENAMING_RULE, renamingRule)
-                .toJobParameters());
-      } catch (JobExecutionAlreadyRunningException
-          | JobRestartException
-          | JobInstanceAlreadyCompleteException
-          | JobParametersInvalidException error) {
-        log.error("Failed to run import comic files job", error);
+    synchronized (MUTEX) {
+      log.trace("Checking for comic files to be organized");
+      if (this.organizingComicService.loadComicCount() > 0L
+          && !this.batchProcessesService.hasActiveExecutions(ORGANIZE_LIBRARY_JOB)) {
+        log.trace("Loading configured root directory");
+        final String rootDirectory =
+            this.configurationService.getOptionValue(CFG_LIBRARY_ROOT_DIRECTORY);
+        if (!StringUtils.hasLength(rootDirectory)) {
+          log.error("Cannot organize comic files: no root directory defined");
+          return;
+        }
+        log.trace("Loading configured renaming rule");
+        final String renamingRule =
+            this.configurationService.getOptionValue(CFG_LIBRARY_COMIC_RENAMING_RULE);
+        if (!StringUtils.hasLength(renamingRule)) {
+          log.error("Cannot organize comic files: no renaming rule defined");
+          return;
+        }
+        try {
+          log.trace("Starting batch job: organize comic files");
+          this.jobLauncher.run(
+              this.libraryOrganizationJob,
+              new JobParametersBuilder()
+                  .addLong(ORGANIZE_LIBRARY_JOB_TIME_STARTED, System.currentTimeMillis())
+                  .addString(ORGANIZE_LIBRARY_JOB_TARGET_DIRECTORY, rootDirectory)
+                  .addString(ORGANIZE_LIBRARY_JOB_RENAMING_RULE, renamingRule)
+                  .toJobParameters());
+        } catch (JobExecutionAlreadyRunningException
+            | JobRestartException
+            | JobInstanceAlreadyCompleteException
+            | JobParametersInvalidException error) {
+          log.error("Failed to run import comic files job", error);
+        }
       }
     }
   }

@@ -28,7 +28,7 @@ import java.util.List;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
-import org.comixedproject.model.batch.ProcessComicBooksEvent;
+import org.comixedproject.model.batch.LoadComicBooksEvent;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicfiles.ComicFileGroup;
@@ -198,7 +198,7 @@ class ComicFileServiceTest {
     Mockito.verify(comicDetailService, Mockito.times(1)).filenameFound(TEST_COMIC_ARCHIVE);
     Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
     Mockito.verify(applicationEventPublisher, Mockito.times(1))
-        .publishEvent(ProcessComicBooksEvent.instance);
+        .publishEvent(LoadComicBooksEvent.instance);
   }
 
   @Test
@@ -215,7 +215,7 @@ class ComicFileServiceTest {
     Mockito.verify(comicStateHandler, Mockito.times(1))
         .fireEvent(comicBook, ComicEvent.readyForProcessing);
     Mockito.verify(applicationEventPublisher, Mockito.times(1))
-        .publishEvent(ProcessComicBooksEvent.instance);
+        .publishEvent(LoadComicBooksEvent.instance);
   }
 
   @Test
@@ -233,7 +233,7 @@ class ComicFileServiceTest {
         .loadFilenameMetadata(Mockito.anyString());
     Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
     Mockito.verify(applicationEventPublisher, Mockito.times(1))
-        .publishEvent(ProcessComicBooksEvent.instance);
+        .publishEvent(LoadComicBooksEvent.instance);
   }
 
   @Test
@@ -259,6 +259,6 @@ class ComicFileServiceTest {
     Mockito.verify(comicStateHandler, Mockito.times(1))
         .fireEvent(comicBook, ComicEvent.readyForProcessing);
     Mockito.verify(applicationEventPublisher, Mockito.times(1))
-        .publishEvent(ProcessComicBooksEvent.instance);
+        .publishEvent(LoadComicBooksEvent.instance);
   }
 }

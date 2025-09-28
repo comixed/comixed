@@ -57,12 +57,12 @@ public class RecreateComicFilesConfiguration {
       final JobRepository jobRepository,
       final RecreatingComicFilesJobListener listener,
       @Qualifier("recreateComicFileStep") final Step recreateComicFileStep,
-      @Qualifier("processComicBooksJobStep") final Step processComicBooksJobStep) {
+      @Qualifier("loadComicBooksStep") final Step loadComicBooksStep) {
     return new JobBuilder(RECREATE_COMIC_FILES_JOB, jobRepository)
         .incrementer(new RunIdIncrementer())
         .listener(listener)
         .start(recreateComicFileStep)
-        .next(processComicBooksJobStep)
+        .next(loadComicBooksStep)
         .build();
   }
 

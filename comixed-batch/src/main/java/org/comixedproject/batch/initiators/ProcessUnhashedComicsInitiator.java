@@ -46,6 +46,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class ProcessUnhashedComicsInitiator {
+  private static final Object MUTEX = new Object();
+
   @Autowired private ComicBookService comicBookService;
   @Autowired private BatchProcessesService batchProcessesService;
 
@@ -59,21 +61,23 @@ public class ProcessUnhashedComicsInitiator {
 
   @Scheduled(fixedDelayString = "${comixed.batch.load-page-hashes.period:60000}")
   public void execute() {
-    log.trace("Checking for pages without hashes");
-    if (this.comicBookService.hasComicsWithUnashedPages()
-        && !this.batchProcessesService.hasActiveExecutions(PROCESS_UNHASHED_COMICS_JOB)) {
-      try {
-        log.trace("Starting batch job: load page hashes");
-        this.jobLauncher.run(
-            this.loadPageHashesJob,
-            new JobParametersBuilder()
-                .addLong(JOB_PROCESS_UNHASHED_COMICS_STARTED, System.currentTimeMillis())
-                .toJobParameters());
-      } catch (JobExecutionAlreadyRunningException
-          | JobRestartException
-          | JobInstanceAlreadyCompleteException
-          | JobParametersInvalidException error) {
-        log.error("Failed to run load page hash job", error);
+    synchronized (MUTEX) {
+      log.trace("Checking for pages without hashes");
+      if (this.comicBookService.hasComicsWithUnashedPages()
+          && !this.batchProcessesService.hasActiveExecutions(PROCESS_UNHASHED_COMICS_JOB)) {
+        try {
+          log.trace("Starting batch job: load page hashes");
+          this.jobLauncher.run(
+              this.loadPageHashesJob,
+              new JobParametersBuilder()
+                  .addLong(JOB_PROCESS_UNHASHED_COMICS_STARTED, System.currentTimeMillis())
+                  .toJobParameters());
+        } catch (JobExecutionAlreadyRunningException
+            | JobRestartException
+            | JobInstanceAlreadyCompleteException
+            | JobParametersInvalidException error) {
+          log.error("Failed to run load page hash job", error);
+        }
       }
     }
   }

@@ -48,6 +48,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class PurgeLibraryInitiator {
+  private static final Object MUTEX = new Object();
+
   @Autowired private ComicBookService comicBookService;
   @Autowired private BatchProcessesService batchProcessesService;
 
@@ -71,21 +73,23 @@ public class PurgeLibraryInitiator {
   }
 
   private void doExecute() {
-    log.trace("Checking for comic files to be purged");
-    if (this.comicBookService.findComicsToPurgeCount() > 0L
-        && !this.batchProcessesService.hasActiveExecutions(PURGE_LIBRARY_JOB)) {
-      try {
-        log.trace("Starting batch job: purge library");
-        this.jobLauncher.run(
-            this.purgeLibraryJob,
-            new JobParametersBuilder()
-                .addLong(PURGE_LIBRARY_JOB_TIME_STARTED, System.currentTimeMillis())
-                .toJobParameters());
-      } catch (JobExecutionAlreadyRunningException
-          | JobRestartException
-          | JobInstanceAlreadyCompleteException
-          | JobParametersInvalidException error) {
-        log.error("Failed to run purge comic files job", error);
+    synchronized (MUTEX) {
+      log.trace("Checking for comic files to be purged");
+      if (this.comicBookService.findComicsToPurgeCount() > 0L
+          && !this.batchProcessesService.hasActiveExecutions(PURGE_LIBRARY_JOB)) {
+        try {
+          log.trace("Starting batch job: purge library");
+          this.jobLauncher.run(
+              this.purgeLibraryJob,
+              new JobParametersBuilder()
+                  .addLong(PURGE_LIBRARY_JOB_TIME_STARTED, System.currentTimeMillis())
+                  .toJobParameters());
+        } catch (JobExecutionAlreadyRunningException
+            | JobRestartException
+            | JobInstanceAlreadyCompleteException
+            | JobParametersInvalidException error) {
+          log.error("Failed to run purge comic files job", error);
+        }
       }
     }
   }

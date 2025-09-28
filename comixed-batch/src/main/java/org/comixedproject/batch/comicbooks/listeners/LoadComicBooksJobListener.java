@@ -27,15 +27,15 @@ import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ProcessComicBooksJobListener</code> relays overall job state during the comic processing
- * batch process.
+ * <code>loadComicBooksJobListener</code> relays overall job state during the comic processing batch
+ * process.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @JobScope
 @Log4j2
-public class ProcessComicBooksJobListener extends AbstractBatchProcessListener
+public class LoadComicBooksJobListener extends AbstractBatchProcessListener
     implements JobExecutionListener {
   @Override
   public void beforeJob(final JobExecution jobExecution) {

@@ -46,6 +46,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class MarkBlockedPagesInitiator {
+  private static final Object MUTEX = new Object();
+
   @Autowired private ConfigurationService configurationService;
   @Autowired private ComicPageService comicPageService;
   @Autowired private BatchProcessesService batchProcessesService;
@@ -60,26 +62,28 @@ public class MarkBlockedPagesInitiator {
 
   @Scheduled(fixedDelayString = "${comixed.batch.mark-blocked-pages.period:60000}")
   public void execute() {
-    if (!this.configurationService.isFeatureEnabled(
-        ConfigurationService.CFG_MANAGE_BLOCKED_PAGES)) {
-      log.trace("Skipping batch since managing blocked pages is disabled");
-      return;
-    }
-    log.trace("Checking for pages with blocked hash");
-    if (this.comicPageService.getUnmarkedWithBlockedHashCount() > 0L
-        && !this.batchProcessesService.hasActiveExecutions(MARK_BLOCKED_PAGES_JOB)) {
-      try {
-        log.trace("Starting batch job: mark pages with blocked hash");
-        this.jobLauncher.run(
-            this.markBlockedPagesJob,
-            new JobParametersBuilder()
-                .addLong(JOB_MARK_BLOCKED_PAGES_STARTED, System.currentTimeMillis())
-                .toJobParameters());
-      } catch (JobExecutionAlreadyRunningException
-          | JobRestartException
-          | JobInstanceAlreadyCompleteException
-          | JobParametersInvalidException error) {
-        log.error("Failed to run load page hash job", error);
+    synchronized (MUTEX) {
+      if (!this.configurationService.isFeatureEnabled(
+          ConfigurationService.CFG_MANAGE_BLOCKED_PAGES)) {
+        log.trace("Skipping batch since managing blocked pages is disabled");
+        return;
+      }
+      log.trace("Checking for pages with blocked hash");
+      if (this.comicPageService.getUnmarkedWithBlockedHashCount() > 0L
+          && !this.batchProcessesService.hasActiveExecutions(MARK_BLOCKED_PAGES_JOB)) {
+        try {
+          log.trace("Starting batch job: mark pages with blocked hash");
+          this.jobLauncher.run(
+              this.markBlockedPagesJob,
+              new JobParametersBuilder()
+                  .addLong(JOB_MARK_BLOCKED_PAGES_STARTED, System.currentTimeMillis())
+                  .toJobParameters());
+        } catch (JobExecutionAlreadyRunningException
+            | JobRestartException
+            | JobInstanceAlreadyCompleteException
+            | JobParametersInvalidException error) {
+          log.error("Failed to run load page hash job", error);
+        }
       }
     }
   }

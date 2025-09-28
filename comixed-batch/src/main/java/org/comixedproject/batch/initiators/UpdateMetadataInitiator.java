@@ -48,6 +48,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class UpdateMetadataInitiator {
+  private static final Object MUTEX = new Object();
+
   @Autowired private ComicBookService comicBookService;
   @Autowired private BatchProcessesService batchProcessesService;
 
@@ -71,21 +73,23 @@ public class UpdateMetadataInitiator {
   }
 
   private void doExecute() {
-    log.trace("Checking for pending metadata updates");
-    if (this.comicBookService.getUpdateMetadataCount() > 0L
-        && !this.batchProcessesService.hasActiveExecutions(UPDATE_METADATA_JOB)) {
-      try {
-        log.trace("Starting batch job: update metadata");
-        this.jobLauncher.run(
-            this.updateMetadataJob,
-            new JobParametersBuilder()
-                .addLong(UPDATE_METADATA_JOB_TIME_STARTED, System.currentTimeMillis())
-                .toJobParameters());
-      } catch (JobExecutionAlreadyRunningException
-          | JobRestartException
-          | JobInstanceAlreadyCompleteException
-          | JobParametersInvalidException error) {
-        log.error("Failed to run update metadata job", error);
+    synchronized (MUTEX) {
+      log.trace("Checking for pending metadata updates");
+      if (this.comicBookService.getUpdateMetadataCount() > 0L
+          && !this.batchProcessesService.hasActiveExecutions(UPDATE_METADATA_JOB)) {
+        try {
+          log.trace("Starting batch job: update metadata");
+          this.jobLauncher.run(
+              this.updateMetadataJob,
+              new JobParametersBuilder()
+                  .addLong(UPDATE_METADATA_JOB_TIME_STARTED, System.currentTimeMillis())
+                  .toJobParameters());
+        } catch (JobExecutionAlreadyRunningException
+            | JobRestartException
+            | JobInstanceAlreadyCompleteException
+            | JobParametersInvalidException error) {
+          log.error("Failed to run update metadata job", error);
+        }
       }
     }
   }

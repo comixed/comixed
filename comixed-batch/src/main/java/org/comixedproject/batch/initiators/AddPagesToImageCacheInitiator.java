@@ -44,6 +44,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class AddPagesToImageCacheInitiator {
+  private static final Object MUTEX = new Object();
+
   @Autowired private PageCacheService pageCacheService;
   @Autowired private ComicPageService comicPageService;
   @Autowired private BatchProcessesService batchProcessesService;
@@ -59,26 +61,28 @@ public class AddPagesToImageCacheInitiator {
   /** Starts a batch process to add pages to the image cache. */
   @Scheduled(cron = "${comixed.batch.add-cover-to-image-cache.schedule:0 0 * * * *}")
   public void execute() {
-    try {
-      log.debug("Preparing to process uncached cover pages");
-      this.pageCacheService.prepareCoverPagesWithoutCacheEntries();
-      if (this.comicPageService.findPagesNeedingCacheEntriesCount() > 0L
-          && !this.batchProcessesService.hasActiveExecutions(
-              AddPagesToImageCacheConfiguration.ADD_PAGES_TO_IMAGE_CACHE_JOB)) {
-        log.debug("Starting process: add pages to image cache");
-        this.jobLauncher.run(
-            addPagesToImageCacheJob,
-            new JobParametersBuilder()
-                .addLong(
-                    AddPagesToImageCacheConfiguration.PARAM_ADD_IMAGE_CACHE_ENTRIES_STARTED,
-                    System.currentTimeMillis())
-                .toJobParameters());
+    synchronized (MUTEX) {
+      try {
+        log.debug("Preparing to process uncached cover pages");
+        this.pageCacheService.prepareCoverPagesWithoutCacheEntries();
+        if (this.comicPageService.findPagesNeedingCacheEntriesCount() > 0L
+            && !this.batchProcessesService.hasActiveExecutions(
+                AddPagesToImageCacheConfiguration.ADD_PAGES_TO_IMAGE_CACHE_JOB)) {
+          log.debug("Starting process: add pages to image cache");
+          this.jobLauncher.run(
+              addPagesToImageCacheJob,
+              new JobParametersBuilder()
+                  .addLong(
+                      AddPagesToImageCacheConfiguration.PARAM_ADD_IMAGE_CACHE_ENTRIES_STARTED,
+                      System.currentTimeMillis())
+                  .toJobParameters());
+        }
+      } catch (JobExecutionAlreadyRunningException
+          | JobInstanceAlreadyCompleteException
+          | JobParametersInvalidException
+          | JobRestartException error) {
+        log.error("Failed to start batch process", error);
       }
-    } catch (JobExecutionAlreadyRunningException
-        | JobInstanceAlreadyCompleteException
-        | JobParametersInvalidException
-        | JobRestartException error) {
-      log.error("Failed to start batch process", error);
     }
   }
 }
