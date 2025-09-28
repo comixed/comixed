@@ -37,7 +37,7 @@ Where is ComiXed running?
  - [ ] Windows
  - [ ] Linux (any distro)
  - [ ] MacOS
- - [ ] Docker
+ - [ ] Docker (if checked, please select the host OS as well)
 
 **Database**
 What database is ComiXed using?
