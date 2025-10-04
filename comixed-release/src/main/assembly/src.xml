@@ -42,6 +42,7 @@
         <include>README.md</include>
         <include>CHANGELOG.md</include>
         <include>UPGRADING.md</include>
+        <include>NOTES.md</include>
       </includes>
     </fileSet>
     <fileSet>
