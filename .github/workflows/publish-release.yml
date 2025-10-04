@@ -39,7 +39,7 @@ jobs:
 
   build-windows-installer:
     name: Build Windows installer
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     steps:
       - name: Checkout
@@ -56,7 +56,7 @@ jobs:
       - name: Create the release artifact
         run: mvn package -DskipTests -D"assembly.name=GA" -Pci
       - name: Create the Windows installer
-        uses: joncloud/makensis-action@v3.6
+        uses: joncloud/makensis-action@v5.0
         with:
           script-file: comixed-release/src/main/windows/comixed.nsi
           arguments: "/V3"
