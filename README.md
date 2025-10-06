@@ -4,7 +4,8 @@ An application for managing digital comics.
 ## Status
 [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=comixed)](https://sonarcloud.io/dashboard?id=comixed)\
 [![Latest Release](https://github.com/comixed/comixed/actions/workflows/publish-release.yml/badge.svg)](https://actions-badge.atrox.dev/comixed/comixed/goto?ref=master)\
-[![Docker Release](https://github.com/comixed/comixed/actions/workflows/publish-to-docker-hub.yml/badge.svg)](https://actions-badge.atrox.dev/comixed/comixed/goto?ref=master)
+[![Docker Release](https://github.com/comixed/comixed/actions/workflows/publish-to-docker-hub.yml/badge.svg)](https://actions-badge.atrox.dev/comixed/comixed/goto?ref=master)\
+[![Github All Releases](https://img.shields.io/github/downloads/comixed/comixed/total.svg)](https://github.com/comixed/comixed/releases)
 
 ## Project Roadmap And Vision Statement
 The goals for this project are simple. It seeks to be the ultimate management tool for digital comic books.
