@@ -56,7 +56,7 @@ the latest version:
 Then create the container:
 
 ```
-  $ docker build --name comixed \
+  $ docker create --name comixed \
       -it -p 7171:7171/tcp \
       -v /Users/reader/comixed/library:/library \
       -v /Users/reader/comixed/imports:/imports \
@@ -67,7 +67,7 @@ Then create the container:
 **NOTE:** On Linux, if using SELinux, you'll need to use the slightly different command below:
 
 ``` 
-  $ docker build --name comixed \
+  $ docker create --name comixed \
       -it -p 7171:7171/tcp \
       -v /Users/reader/comixed/library:/library:z \
       -v /Users/reader/comixed/imports:/imports:z \
