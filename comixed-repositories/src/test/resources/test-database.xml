@@ -392,6 +392,7 @@
                 tag_value="Prelude To Civil War II"/>
     <comic_pages comic_page_id="1000"
                  comic_book_id="1000"
+                 page_type="FRONT_COVER"
                  page_state="STABLE"
                  filename="frontpage.jpg"
                  page_number="0"
@@ -401,6 +402,7 @@
                  adding_to_cache="true"/>
     <comic_pages comic_page_id="1001"
                  comic_book_id="1000"
+                 page_type="OTHER"
                  page_state="STABLE"
                  filename="page1.jpg"
                  page_number="1"
@@ -411,6 +413,7 @@
     <comic_pages comic_page_id="1002"
                  comic_book_id="1000"
                  page_state="STABLE"
+                 page_type="STORY"
                  filename="page2.jpg"
                  page_number="2"
                  file_hash="EF0123456789ABCDEF0123456789ABCD"
@@ -419,6 +422,7 @@
                  adding_to_cache="false"/>
     <comic_pages comic_page_id="1003"
                  comic_book_id="1000"
+                 page_type="BACK_COVER"
                  page_state="STABLE"
                  filename="page3.jpg"
                  page_number="3"
@@ -428,6 +432,7 @@
                  adding_to_cache="false"/>
     <comic_pages comic_page_id="1004"
                  comic_book_id="1000"
+                 page_type="INNER_COVER"
                  page_state="STABLE"
                  filename="backpage.jpg"
                  page_number="4"
@@ -437,6 +442,7 @@
                  adding_to_cache="false"/>
     <comic_pages comic_page_id="2000"
                  comic_book_id="1001"
+                 page_type="EDITORIAL"
                  page_state="STABLE"
                  filename="frontpage.jpg"
                  page_number="0"
@@ -446,6 +452,7 @@
                  adding_to_cache="false"/>
     <comic_pages comic_page_id="2001"
                  comic_book_id="1001"
+                 page_type="ROUNDUP"
                  page_state="STABLE"
                  filename="page1.jpg"
                  page_number="1"
@@ -455,6 +462,7 @@
                  adding_to_cache="false"/>
     <comic_pages comic_page_id="2002"
                  comic_book_id="1001"
+                 page_type="LETTERS"
                  page_state="STABLE"
                  filename="page2.jpg"
                  page_number="2"
@@ -464,6 +472,7 @@
                  adding_to_cache="false"/>
     <comic_pages comic_page_id="2003"
                  comic_book_id="1001"
+                 page_type="ADVERTISEMENT"
                  page_state="STABLE"
                  filename="backcover.jpg"
                  page_number="4"
@@ -473,6 +482,7 @@
                  adding_to_cache="false"/>
     <comic_pages comic_page_id="2102"
                  comic_book_id="1001"
+                 page_type="PREVIEW"
                  page_state="STABLE"
                  filename="frontpage.jpg"
                  page_number="1"
@@ -482,6 +492,7 @@
                  adding_to_cache="false"/>
     <comic_pages comic_page_id="3000"
                  comic_book_id="1002"
+                 page_type="OTHER"
                  page_state="STABLE"
                  filename="frontpage.jpg"
                  page_number="0"
@@ -491,6 +502,7 @@
                  adding_to_cache="true"/>
     <comic_pages comic_page_id="3001"
                  comic_book_id="1002"
+                 page_type="STORY"
                  page_state="DELETED"
                  filename="page1.jpg"
                  page_number="1"
@@ -500,6 +512,7 @@
                  adding_to_cache="true"/>
     <comic_pages comic_page_id="3002"
                  comic_book_id="1002"
+                 page_type="STORY"
                  page_state="DELETED"
                  filename="page1.jpg"
                  page_number="2"
@@ -509,6 +522,7 @@
                  adding_to_cache="false"/>
     <comic_pages comic_page_id="3003"
                  comic_book_id="1002"
+                 page_type="STORY"
                  page_state="DELETED"
                  filename="backpage.jpg"
                  page_number="3"
@@ -518,6 +532,7 @@
                  adding_to_cache="true"/>
     <comic_pages comic_page_id="3004"
                  comic_book_id="1003"
+                 page_type="STORY"
                  page_state="STABLE"
                  filename="frontpage.jpg"
                  page_number="0"
@@ -527,6 +542,7 @@
                  adding_to_cache="false"/>
     <comic_pages comic_page_id="3005"
                  comic_book_id="1003"
+                 page_type="STORY"
                  page_state="STABLE"
                  filename="page1.jpg"
                  page_number="1"
@@ -536,6 +552,7 @@
                  adding_to_cache="false"/>
     <comic_pages comic_page_id="3006"
                  comic_book_id="1003"
+                 page_type="STORY"
                  page_state="STABLE"
                  filename="page2.jpg"
                  page_number="2"
@@ -545,6 +562,7 @@
                  adding_to_cache="true"/>
     <comic_pages comic_page_id="3007"
                  comic_book_id="1003"
+                 page_type="STORY"
                  page_state="STABLE"
                  filename="page3.jpg"
                  page_number="3"
@@ -553,6 +571,7 @@
                  adding_to_cache="false"/>
     <comic_pages comic_page_id="3008"
                  comic_book_id="1003"
+                 page_type="STORY"
                  page_state="STABLE"
                  filename="backpage.jpg"
                  page_number="4"

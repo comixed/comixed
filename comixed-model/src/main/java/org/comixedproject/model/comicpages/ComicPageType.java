@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,19 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ComicBook } from '@app/comic-books/models/comic-book';
-import { PageType } from '@app/comic-books/models/page-type';
+package org.comixedproject.model.comicpages;
 
-export interface ComicPage {
-  comicPageId: number;
-  comic?: ComicBook;
-  filename: string;
-  hash: string;
-  pageNumber: number;
-  pageType: PageType;
-  width: number;
-  height: number;
-  deleted: boolean;
-  blocked: boolean;
-  index: number;
+/**
+ * <code>ComicPageType</code> represents the type of page for a {@link ComicPage}.
+ *
+ * @author Darryl L. Pierce
+ */
+public enum ComicPageType {
+  FRONT_COVER,
+  BACK_COVER,
+  INNER_COVER,
+  ROUNDUP,
+  EDITORIAL,
+  LETTERS,
+  ADVERTISEMENT,
+  PREVIEW,
+  STORY,
+  OTHER;
 }

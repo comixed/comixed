@@ -185,7 +185,20 @@
       "dimensions": "Dimensions",
       "filename": "Filename",
       "page-number": "Page #",
+      "page-type": "Type",
       "thumbnail": "Thumbnail"
+    },
+    "text": {
+      "FRONT_COVER": "Front Cover",
+      "BACK_COVER": "Back Cover",
+      "INNER_COVER": "Inner Cover",
+      "ROUNDUP": "Roundup",
+      "EDITORIAL": "Editorial",
+      "LETTERS": "Letters",
+      "ADVERTISEMENT": "Advertisement",
+      "PREVIEW": "Preview",
+      "STORY": "Story",
+      "OTHER": "Other"
     },
     "update-page-deletion": {
       "confirmation-message": "Are you sure you want to {deleted, select, true{mark} other{unmark}} this page?",

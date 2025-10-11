@@ -20,14 +20,9 @@ import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicPage } from '@app/comic-books/models/comic-page';
 import { PageContextMenuEvent } from '@app/comic-books/models/event/page-context-menu-event';
-import {
-  MatCard,
-  MatCardTitle,
-  MatCardContent,
-  MatCardFooter
-} from '@angular/material/card';
-import { MatIcon } from '@angular/material/icon';
-import { MatTooltip } from '@angular/material/tooltip';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
 
 /** Displays a page from a comic. Provides events for when the page is clicked. */
@@ -35,15 +30,7 @@ import { TranslateModule } from '@ngx-translate/core';
   selector: 'cx-comic-page',
   templateUrl: './comic-page.component.html',
   styleUrls: ['./comic-page.component.scss'],
-  imports: [
-    MatCard,
-    MatCardTitle,
-    MatCardContent,
-    MatCardFooter,
-    MatIcon,
-    MatTooltip,
-    TranslateModule
-  ]
+  imports: [MatCardModule, MatIconModule, MatTooltipModule, TranslateModule]
 })
 export class ComicPageComponent {
   @Input() page: ComicPage;
