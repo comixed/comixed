@@ -54,6 +54,15 @@ public class ComicPage {
   @NonNull
   private ComicBook comicBook;
 
+  @Column(name = "page_type", nullable = false, updatable = true, columnDefinition = "VARCHAR(32)")
+  @Enumerated(EnumType.STRING)
+  @JsonProperty("pageType")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  @Setter
+  @NonNull
+  private ComicPageType pageType = ComicPageType.STORY;
+
   @Column(name = "page_state", nullable = false, updatable = true, columnDefinition = "VARCHAR(32)")
   @Enumerated(EnumType.STRING)
   @Getter
@@ -137,6 +146,7 @@ public class ComicPage {
     final ComicPage page = (ComicPage) o;
     return isBlocked() == page.isBlocked()
         && Objects.equals(getComicBook(), page.getComicBook())
+        && getPageType() == page.getPageType()
         && getPageState() == page.getPageState()
         && Objects.equals(getFilename(), page.getFilename())
         && Objects.equals(getHash(), page.getHash())
@@ -151,6 +161,7 @@ public class ComicPage {
     return Objects.hash(
         getComicPageId(),
         getComicBook(),
+        getPageType(),
         getPageState(),
         getFilename(),
         getHash(),

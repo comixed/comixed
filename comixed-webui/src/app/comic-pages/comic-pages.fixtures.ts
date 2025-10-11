@@ -20,6 +20,7 @@ import { BlockedHash } from './models/blocked-hash';
 import { DownloadDocument } from '@app/core/models/download-document';
 import { ComicPage } from '@app/comic-books/models/comic-page';
 import { DeletedPage } from '@app/comic-pages/models/deleted-page';
+import { PageType } from '@app/comic-books/models/page-type';
 
 export const BLOCKED_HASH_1: BlockedHash = {
   blockedHashId: 1,
@@ -72,6 +73,7 @@ export const PAGE_1: ComicPage = {
   filename: 'firstpage.png',
   hash: 'abcdef1234567890',
   pageNumber: 1,
+  pageType: PageType.STORY,
   width: 1080,
   height: 1920,
   deleted: false,
@@ -84,6 +86,7 @@ export const PAGE_2: ComicPage = {
   filename: 'firstpage.png',
   hash: 'abcdef1234567891',
   pageNumber: 2,
+  pageType: PageType.STORY,
   width: 1080,
   height: 1920,
   deleted: false,
@@ -96,6 +99,7 @@ export const PAGE_3: ComicPage = {
   filename: 'firstpage.png',
   hash: 'abcdef1234567892',
   pageNumber: 3,
+  pageType: PageType.STORY,
   width: 1080,
   height: 1920,
   deleted: false,
@@ -108,6 +112,7 @@ export const PAGE_4: ComicPage = {
   filename: 'firstpage.png',
   hash: 'abcdef1234567893',
   pageNumber: 4,
+  pageType: PageType.STORY,
   width: 1080,
   height: 1920,
   deleted: false,

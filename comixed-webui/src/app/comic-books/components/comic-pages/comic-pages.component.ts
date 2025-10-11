@@ -28,32 +28,32 @@ import {
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import {
-  MatMenuTrigger,
   MatMenu,
   MatMenuContent,
-  MatMenuItem
+  MatMenuItem,
+  MatMenuTrigger
 } from '@angular/material/menu';
 import { ComicPage } from '@app/comic-books/models/comic-page';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { updatePageDeletion } from '@app/comic-books/actions/comic-book.actions';
 import {
-  MatTableDataSource,
-  MatTable,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderCell,
-  MatCellDef,
   MatCell,
-  MatHeaderRowDef,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
   MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
   MatRowDef,
-  MatRow
+  MatTable,
+  MatTableDataSource
 } from '@angular/material/table';
 import {
+  CdkDrag,
   CdkDragDrop,
-  moveItemInArray,
   CdkDropList,
-  CdkDrag
+  moveItemInArray
 } from '@angular/cdk/drag-drop';
 import * as _ from 'lodash';
 import { ConfirmationService } from '@tragically-slick/confirmation';
@@ -107,6 +107,7 @@ export class ComicPagesComponent implements AfterViewInit {
     'page-number',
     'thumbnail',
     'filename',
+    'page-type',
     'dimensions'
   ];
   dataSource = new MatTableDataSource<ComicPage>([]);

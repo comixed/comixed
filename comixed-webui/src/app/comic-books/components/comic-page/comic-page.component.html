@@ -1,6 +1,9 @@
 <mat-card appearance="outlined" class="cx-width-100">
   @if (!!page) {
     <mat-card-title>{{ page?.filename }}</mat-card-title>
+    <mat-card-subtitle>
+      {{ "comic-page.text." + page?.pageType | translate }}
+    </mat-card-subtitle>
   }
   <mat-card-content>
     <div class="cx-detail-card cx-padding-2 cx-margin-2">

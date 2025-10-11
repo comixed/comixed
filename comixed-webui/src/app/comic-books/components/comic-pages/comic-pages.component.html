@@ -51,6 +51,16 @@
         <span class="cx-text-nowrap">{{ page.filename }}</span>
       </mat-cell>
     </ng-container>
+    <ng-container matColumnDef="page-type">
+      <mat-header-cell *matHeaderCellDef>
+        {{ "comic-page.label.page-type" | translate }}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let page">
+        <span class="cx-text-nowrap">
+          {{ "comic-page.text." + page.pageType | translate }}
+        </span>
+      </mat-cell>
+    </ng-container>
     <ng-container matColumnDef="dimensions">
       <mat-header-cell *matHeaderCellDef>
         {{ "comic-page.label.dimensions" | translate }}

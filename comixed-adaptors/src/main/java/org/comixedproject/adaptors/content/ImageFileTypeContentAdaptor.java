@@ -23,6 +23,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.archive.model.ArchiveEntryType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.model.comicpages.ComicPageType;
 
 /**
  * <code>ImageFileTypeContentAdaptor</code> provides an implementation of {@link
@@ -56,6 +57,10 @@ public class ImageFileTypeContentAdaptor implements FileTypeContentAdaptor {
       var page = new ComicPage();
       page.setFilename(filename);
       page.setComicBook(comicBook);
+      if (comicBook.getPages().isEmpty()) {
+        page.setPageType(ComicPageType.FRONT_COVER);
+      }
+      log.trace("Adding page of type: {}", page.getPageType());
       comicBook.getPages().add(page);
       page.setPageNumber(comicBook.getPages().size());
     }
