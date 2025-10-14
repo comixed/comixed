@@ -18,7 +18,7 @@
 
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicImportService } from '@app/comic-files/services/comic-import.service';
@@ -27,7 +27,8 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   loadComicFileListFailure,
   loadComicFileLists,
-  loadComicFileListSuccess
+  loadComicFileListSuccess,
+  loadComicFilesFromSession
 } from '@app/comic-files/actions/comic-file-list.actions';
 import { LoadComicFilesResponse } from '@app/library/models/net/load-comic-files-response';
 import { saveUserPreference } from '@app/user/actions/user.actions';
@@ -43,7 +44,36 @@ export class ComicFileListEffects {
   private comicImportService = inject(ComicImportService);
   private alertService = inject(AlertService);
   private translateService = inject(TranslateService);
-
+  loadComicFilesFromSession$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(loadComicFilesFromSession),
+      tap(() => this.logger.trace('Loading comic files from user session')),
+      switchMap(() =>
+        this.comicImportService.loadComicFilesFromSession().pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          map((response: LoadComicFilesResponse) =>
+            loadComicFileListSuccess({ groups: response.groups })
+          ),
+          catchError(error => {
+            this.logger.error('Service failure', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'comic-files.load-comic-files.effect-failure'
+              )
+            );
+            return of(loadComicFileListFailure());
+          })
+        )
+      ),
+      catchError(error => {
+        this.logger.error('General failure', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(loadComicFileListFailure());
+      })
+    );
+  });
   loadComicFiles$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadComicFileLists),
