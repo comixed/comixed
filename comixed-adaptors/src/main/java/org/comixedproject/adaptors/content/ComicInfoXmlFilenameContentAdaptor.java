@@ -32,7 +32,9 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicTag;
 import org.comixedproject.model.comicbooks.ComicTagType;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.metadata.ComicInfo;
+import org.comixedproject.model.metadata.PageInfo;
 import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
 import org.springframework.util.StringUtils;
 
@@ -135,6 +137,32 @@ public class ComicInfoXmlFilenameContentAdaptor implements FilenameContentAdapto
       this.commandSeparatedList(comicInfo.getCoverArtist())
           .forEach(
               name -> detail.getTags().add(new ComicTag(detail, ComicTagType.COVER, trim(name))));
+      log.debug("Loading page metadata");
+      for (int index = 0; index < comicInfo.getPages().size(); index++) {
+        final PageInfo pageInfo = comicInfo.getPages().get(index);
+        // only extract data if we can match the filename to the entry
+        if (Objects.nonNull(pageInfo) && StringUtils.hasLength(pageInfo.getFilename())) {
+          final Optional<ComicPage> optionalPage =
+              comicBook.getPages().stream()
+                  .filter(
+                      comicPage ->
+                          Objects.nonNull(comicPage)
+                              && comicPage.getFilename().equals(pageInfo.getFilename()))
+                  .findFirst();
+          if (optionalPage.isPresent()) {
+            final ComicPage page = optionalPage.get();
+            page.setPageNumber(pageInfo.getPageNumber());
+            if (Objects.nonNull(pageInfo.getImageType())) {
+              page.setPageType(pageInfo.getImageType().getComicPageType());
+            }
+            page.setWidth(pageInfo.getImageWidth());
+            page.setHeight(pageInfo.getImageHeight());
+            page.setHash(pageInfo.getImageHash());
+          } else {
+            log.warn("No comic page found for comic page: " + pageInfo.getPageNumber());
+          }
+        }
+      }
     } catch (IOException error) {
       throw new ContentAdaptorException("Failed to load ComicInfo.xml", error);
     }

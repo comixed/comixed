@@ -19,18 +19,25 @@
 package org.comixedproject.adaptors.content;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.model.comicpages.ComicPageType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class ComicInfoXmlFilenameContentAdaptorTest extends BaseContentAdaptorTest {
   private static final String TEST_COMICINFO_FILE_COMPLETE =
       "src/test/resources/ComicInfo-complete.xml";
@@ -47,6 +54,7 @@ class ComicInfoXmlFilenameContentAdaptorTest extends BaseContentAdaptorTest {
   private static final String TEST_DESCRIPTION = "Test summary <em>inner tag</em>";
   private static final String TEST_METADATA_SOURCE_NAME = "ComicVine";
   private static final String TEST_METADATA_REFERENCE_ID = "12971";
+  private static final String TEST_PAGE_FILENAME = "page-%d.png";
 
   @InjectMocks ComicInfoXmlFilenameContentAdaptor adaptor;
 
@@ -57,6 +65,11 @@ class ComicInfoXmlFilenameContentAdaptorTest extends BaseContentAdaptorTest {
   void setup() {
     comicBook.setComicDetail(
         new ComicDetail(comicBook, TEST_COMICINFO_FILE_COMPLETE, ArchiveType.CBZ));
+    for (int index = 0; index < 31; index++) {
+      final ComicPage page = mock(ComicPage.class);
+      comicBook.getPages().add(page);
+      Mockito.when(page.getFilename()).thenReturn(String.format(TEST_PAGE_FILENAME, index));
+    }
   }
 
   @Test
@@ -91,6 +104,19 @@ class ComicInfoXmlFilenameContentAdaptorTest extends BaseContentAdaptorTest {
 
     assertEquals(TEST_METADATA_SOURCE_NAME, comicBook.getMetadataSourceName());
     assertEquals(TEST_METADATA_REFERENCE_ID, comicBook.getMetadataReferenceId());
+
+    for (int index = 0; index < comicBook.getPages().size(); index++) {
+      final ComicPage comicPage = comicBook.getPages().get(index);
+      Mockito.verify(comicPage, Mockito.times(1)).setPageNumber(index);
+      Mockito.verify(comicPage, Mockito.times(1)).setHeight(1966);
+      if (index == 3) {
+        Mockito.verify(comicPage, Mockito.times(1)).setWidth(2560);
+      } else {
+        Mockito.verify(comicPage, Mockito.times(1)).setWidth(1280);
+      }
+      Mockito.verify(comicPage, Mockito.times(1)).setPageType(Mockito.any(ComicPageType.class));
+      Mockito.verify(comicPage, Mockito.times(1)).setHash(Mockito.anyString());
+    }
   }
 
   @Test

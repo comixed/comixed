@@ -1,73 +1,97 @@
 <?xml version="1.0"?>
-<ComicInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <Title> Test Title </Title>
-  <Series> Test Series </Series>
-  <AlternateSeries> Test Alternate Series </AlternateSeries>
-  <Number> 24 </Number>
-  <Volume> 2011 </Volume>
-  <Summary> Test summary &lt;em&gt;inner tag&lt;/em&gt; </Summary>
-  <Notes> Test notes </Notes>
-  <Year>2013</Year>
-  <Month>12</Month>
-  <Writer> Test Writer1 , Test Writer2 </Writer>
-  <Penciller> Test Penciller1 , Test Penciller2 </Penciller>
-  <Inker> Test Inker1 , Test Inker2 </Inker>
-  <Colorist> Test Colorist1 , Test Colorist2 </Colorist>
-  <Letterer> Test Letterer1 , Test Letterer2 </Letterer>
-  <CoverArtist> Test CoverArtist1 , Test CoverArtist2 </CoverArtist>
-  <Editor> Test Editor1 , Test Editor2 </Editor>
-  <Publisher> Test Publisher </Publisher>
-  <Web>http://comicvine.gamespot.com/foo/71765-12971/</Web>
-  <PageCount>20</PageCount>
-  <Characters> Chareacter1 , Character2 </Characters>
-  <Teams> Test Team 1 , Test Team 2 </Teams>
-  <Locations> Test Location 1 , Test Location 2 </Locations>
-  <MetadataSource>
-    <Name>ComicVine</Name>
-    <ReferenceId> 12971 </ReferenceId>
-  </MetadataSource>
-  <Pages>
-    <Page Image="0" ImageSize="762694" ImageWidth="1440"
-      ImageHeight="2214" Type="FrontCover" />
-    <Page Image="1" ImageSize="736690" ImageWidth="1440"
-      ImageHeight="2214" />
-    <Page Image="2" ImageSize="713093" ImageWidth="1440"
-      ImageHeight="2214" />
-    <Page Image="3" ImageSize="620017" ImageWidth="1440"
-      ImageHeight="2214" />
-    <Page Image="4" ImageSize="1379962" ImageWidth="2880"
-      ImageHeight="2213" />
-    <Page Image="5" ImageSize="748871" ImageWidth="1440"
-      ImageHeight="2214" />
-    <Page Image="6" ImageSize="863017" ImageWidth="1440"
-      ImageHeight="2214" />
-    <Page Image="7" ImageSize="1597046" ImageWidth="2880"
-      ImageHeight="2213" />
-    <Page Image="8" ImageSize="640363" ImageWidth="1440"
-      ImageHeight="2214" />
-    <Page Image="9" ImageSize="597280" ImageWidth="1440"
-      ImageHeight="2214" />
-    <Page Image="10" ImageSize="565942" ImageWidth="1440"
-      ImageHeight="2214" />
-    <Page Image="11" ImageSize="626838" ImageWidth="1440"
-      ImageHeight="2214" />
-    <Page Image="12" ImageSize="809706" ImageWidth="1440"
-      ImageHeight="2214" />
-    <Page Image="13" ImageSize="665441" ImageWidth="1440"
-      ImageHeight="2214" />
-    <Page Image="14" ImageSize="668657" ImageWidth="1440"
-      ImageHeight="2214" />
-    <Page Image="15" ImageSize="695300" ImageWidth="1440"
-      ImageHeight="2214" />
-    <Page Image="16" ImageSize="1021125" ImageWidth="2880"
-      ImageHeight="2213" />
-    <Page Image="17" ImageSize="972152" ImageWidth="1440"
-      ImageHeight="2214" />
-    <Page Image="18" ImageSize="510149" ImageWidth="1440"
-      ImageHeight="2214" />
-    <Page Image="19" ImageSize="672544" ImageWidth="1440"
-      ImageHeight="2214" />
-  </Pages>
+<ComicInfo
+>
+    <Title>Test Title</Title>
+    <Series>Test Series</Series>
+    <AlternateSeries>Test Alternate Series</AlternateSeries>
+    <Number>24</Number>
+    <Volume>2011</Volume>
+    <Summary>Test summary &lt;em&gt;inner tag&lt;/em&gt;</Summary>
+    <Notes>Test notes</Notes>
+    <Year>2013</Year>
+    <Month>12</Month>
+    <Writer>Test Writer1 , Test Writer2</Writer>
+    <Penciller>Test Penciller1 , Test Penciller2</Penciller>
+    <Inker>Test Inker1 , Test Inker2</Inker>
+    <Colorist>Test Colorist1 , Test Colorist2</Colorist>
+    <Letterer>Test Letterer1 , Test Letterer2</Letterer>
+    <CoverArtist>Test CoverArtist1 , Test CoverArtist2</CoverArtist>
+    <Editor>Test Editor1 , Test Editor2</Editor>
+    <Publisher>Test Publisher</Publisher>
+    <Web>http://comicvine.gamespot.com/foo/71765-12971/</Web>
+    <PageCount>20</PageCount>
+    <Characters>Character1 , Character2</Characters>
+    <Teams>Test Team 1 , Test Team 2</Teams>
+    <Locations>Test Location 1 , Test Location 2</Locations>
+    <MetadataSource>
+        <Name>ComicVine</Name>
+        <ReferenceId>12971</ReferenceId>
+    </MetadataSource>
+    <Pages>
+        <Page Image="0" ImageSize="628012" ImageWidth="1280" ImageHeight="1966" Type="FrontCover" Filename="page-0.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="1" ImageSize="662605" ImageWidth="1280" ImageHeight="1966" Filename="page-1.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="2" ImageSize="879713" ImageWidth="1280" ImageHeight="1966" Filename="page-2.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="3" ImageSize="1717761" ImageWidth="2560" ImageHeight="1966" Filename="page-3.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="4" ImageSize="717765" ImageWidth="1280" ImageHeight="1966" Filename="page-4.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="5" ImageSize="727433" ImageWidth="1280" ImageHeight="1966" Filename="page-5.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="6" ImageSize="819209" ImageWidth="1280" ImageHeight="1966" Filename="page-6.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="7" ImageSize="739381" ImageWidth="1280" ImageHeight="1966" Filename="page-7.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="8" ImageSize="755878" ImageWidth="1280" ImageHeight="1966" Filename="page-8.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="9" ImageSize="700246" ImageWidth="1280" ImageHeight="1966" Filename="page-9.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="10" ImageSize="747419" ImageWidth="1280" ImageHeight="1966" Filename="page-10.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="11" ImageSize="684624" ImageWidth="1280" ImageHeight="1966" Filename="page-11.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="12" ImageSize="650971" ImageWidth="1280" ImageHeight="1966" Filename="page-12.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="13" ImageSize="603854" ImageWidth="1280" ImageHeight="1966" Filename="page-13.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="14" ImageSize="770996" ImageWidth="1280" ImageHeight="1966" Filename="page-14.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="15" ImageSize="737056" ImageWidth="1280" ImageHeight="1966" Filename="page-15.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="16" ImageSize="677279" ImageWidth="1280" ImageHeight="1966" Filename="page-16.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="17" ImageSize="544141" ImageWidth="1280" ImageHeight="1966" Filename="page-17.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="18" ImageSize="759604" ImageWidth="1280" ImageHeight="1966" Filename="page-18.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="19" ImageSize="708056" ImageWidth="1280" ImageHeight="1966" Filename="page-19.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="20" ImageSize="754171" ImageWidth="1280" ImageHeight="1966" Filename="page-20.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="21" ImageSize="726356" ImageWidth="1280" ImageHeight="1966" Filename="page-21.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="22" ImageSize="721789" ImageWidth="1280" ImageHeight="1966" Type="InnerCover"
+              Filename="page-22.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="23" ImageSize="957631" ImageWidth="1280" ImageHeight="1966" Type="Roundup" Filename="page-23.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="24" ImageSize="602891" ImageWidth="1280" ImageHeight="1966" Type="Advertisement"
+              Filename="page-24.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="25" ImageSize="637186" ImageWidth="1280" ImageHeight="1966" Type="Editorial" Filename="page-25.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="26" ImageSize="554198" ImageWidth="1280" ImageHeight="1966" Type="Letters" Filename="page-26.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="27" ImageSize="518172" ImageWidth="1280" ImageHeight="1966" Type="Preview" Filename="page-27.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="28" ImageSize="625025" ImageWidth="1280" ImageHeight="1966" Type="BackCover" Filename="page-28.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="29" ImageSize="786456" ImageWidth="1280" ImageHeight="1966" Type="Other" Filename="page-29.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+        <Page Image="30" ImageSize="245185" ImageWidth="1280" ImageHeight="1966" Type="Deleted" Filename="page-30.png"
+              ImageHash="0123456789ABCDEF0123456789ABCDEF"/>
+    </Pages>
 </ComicInfo>
 

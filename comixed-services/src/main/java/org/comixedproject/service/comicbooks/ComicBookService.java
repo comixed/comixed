@@ -198,6 +198,9 @@ public class ComicBookService {
     log.trace("Standardizing the comic filename");
     detail.setFilename(comicFileAdaptor.standardizeFilename(detail.getFilename()));
 
+    log.trace("Updating the page numbers");
+    comicBook.updatePageNumbers();
+
     log.trace("Setting last modified date");
     detail.setLastModifiedDate(new Date());
 
