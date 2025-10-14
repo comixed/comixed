@@ -563,14 +563,16 @@ public class ComicBookService {
     log.trace("Applying order");
     for (int index = 0; index < comicBook.getPages().size(); index++) {
       final ComicPage page = comicBook.getPages().get(index);
-      final Optional<PageOrderEntry> position =
-          entryList.stream()
-              .filter(pageOrderEntry -> pageOrderEntry.getFilename().equals(page.getFilename()))
-              .findFirst();
-      if (position.isEmpty())
-        throw new ComicBookException("No such order entry: filename=" + page.getFilename());
-      log.trace("Applying position");
-      page.setPageNumber(position.get().getPosition());
+      if (Objects.nonNull(page)) {
+        final Optional<PageOrderEntry> position =
+            entryList.stream()
+                .filter(pageOrderEntry -> pageOrderEntry.getFilename().equals(page.getFilename()))
+                .findFirst();
+        if (position.isEmpty())
+          throw new ComicBookException("No such order entry: filename=" + page.getFilename());
+        log.trace("Applying position");
+        page.setPageNumber(position.get().getPosition());
+      }
     }
 
     log.trace("Firing event: details updated");
