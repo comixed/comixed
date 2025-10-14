@@ -2,17 +2,18 @@ package org.comixedproject.adaptors.content;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import org.comixedproject.model.comicbooks.*;
+import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.metadata.ComicInfo;
 import org.comixedproject.model.metadata.MetadataSource;
+import org.comixedproject.model.metadata.PageType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +42,7 @@ class ComicMetadataWriterTest {
 
   private byte[] contentByte = "The encoded content".getBytes();
   private Set<ComicTag> tags = new HashSet<>();
+  private List<ComicPage> comicPages = new ArrayList<>();
 
   @BeforeEach
   void setUp() throws JsonProcessingException {
@@ -56,6 +58,16 @@ class ComicMetadataWriterTest {
     Mockito.when(metadataSource.getAdaptorName()).thenReturn(TEST_METADATA_SOURCE_NAME);
     Mockito.when(comicMetadataSource.getMetadataSource()).thenReturn(metadataSource);
     Mockito.when(comicMetadataSource.getReferenceId()).thenReturn(TEST_METADATA_REFERENCE_ID);
+    for (int index = 0; index < PageType.values().length; index++) {
+      final ComicPage page = mock(ComicPage.class);
+      Mockito.when(page.getPageNumber()).thenReturn(index);
+      Mockito.when(page.getPageType()).thenReturn(PageType.values()[index].getComicPageType());
+      Mockito.when(page.getWidth()).thenReturn(index * 2048);
+      Mockito.when(page.getHeight()).thenReturn(index * 1024);
+      Mockito.when(page.getHash()).thenReturn(Integer.toString(index));
+      comicPages.add(page);
+    }
+    Mockito.when(comicBook.getPages()).thenReturn(comicPages);
   }
 
   @Test

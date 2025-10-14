@@ -27,6 +27,8 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.*;
 import org.comixedproject.model.metadata.ComicInfo;
 import org.comixedproject.model.metadata.ComicInfoMetadataSource;
+import org.comixedproject.model.metadata.PageInfo;
+import org.comixedproject.model.metadata.PageType;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
@@ -158,6 +160,21 @@ public class ComicMetadataWriter implements InitializingBean {
           new ComicInfoMetadataSource(
               metadata.getMetadataSource().getAdaptorName(), metadata.getReferenceId()));
     }
+    comicBook
+        .getPages()
+        .forEach(
+            page -> {
+              final PageInfo pageInfo = new PageInfo();
+              pageInfo.setFilename(page.getFilename());
+              pageInfo.setPageNumber(page.getPageNumber());
+              pageInfo.setImageType(PageType.getFor(page.getPageType()));
+              if (StringUtils.hasLength(page.getHash())) {
+                pageInfo.setImageHash(page.getHash());
+                pageInfo.setImageWidth(page.getWidth());
+                pageInfo.setImageHeight(page.getHeight());
+              }
+              comicInfo.getPages().add(pageInfo);
+            });
     try {
       log.trace("Generating ComicInfo.xml data");
       return this.xmlConverter.getObjectMapper().writeValueAsBytes(comicInfo);

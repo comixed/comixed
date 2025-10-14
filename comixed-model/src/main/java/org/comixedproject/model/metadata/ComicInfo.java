@@ -19,6 +19,8 @@
 package org.comixedproject.model.metadata;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -140,6 +142,10 @@ public class ComicInfo {
   @Getter
   @Setter
   private ComicInfoMetadataSource metadata;
+
+  @JsonProperty("Pages")
+  @Getter
+  private List<PageInfo> pages = new ArrayList<>();
 
   @Override
   public boolean equals(final Object o) {
