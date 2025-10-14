@@ -32,6 +32,7 @@ import {
   loadComicFileListFailure,
   loadComicFileLists,
   loadComicFileListSuccess,
+  loadComicFilesFromSession,
   resetComicFileList,
   setComicFilesSelectedState
 } from '@app/comic-files/actions/comic-file-list.actions';
@@ -71,6 +72,19 @@ describe('ComicFileList Reducer', () => {
 
     it('has an empty set of selections', () => {
       expect(state.selections).toEqual([]);
+    });
+  });
+
+  describe('loading files from the user session', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, loading: false },
+        loadComicFilesFromSession()
+      );
+    });
+
+    it('sets the loading flag', () => {
+      expect(state.loading).toBeTrue();
     });
   });
 

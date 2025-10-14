@@ -19,19 +19,20 @@
 package org.comixedproject.rest.comicfiles;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.annotation.Timed;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.comixedproject.adaptors.AdaptorException;
+import org.comixedproject.model.comicfiles.ComicFileGroup;
 import org.comixedproject.model.metadata.FilenameMetadata;
-import org.comixedproject.model.net.comicfiles.FilenameMetadataRequest;
-import org.comixedproject.model.net.comicfiles.FilenameMetadataResponse;
-import org.comixedproject.model.net.comicfiles.GetAllComicsUnderRequest;
-import org.comixedproject.model.net.comicfiles.ImportComicFilesRequest;
-import org.comixedproject.model.net.comicfiles.LoadComicFilesResponse;
+import org.comixedproject.model.net.comicfiles.*;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.service.metadata.FilenameScrapingRuleService;
 import org.comixedproject.views.View;
@@ -53,8 +54,36 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Log4j2
 public class ComicFileController {
+  static final String COMIC_FILES = "comic.files";
+
   @Autowired private ComicFileService comicFileService;
   @Autowired private FilenameScrapingRuleService filenameScrapingRuleService;
+  @Autowired private ObjectMapper objectMapper;
+
+  /**
+   * Loads the cached list of comic files.
+   *
+   * @param session the user session
+   * @return the comic files
+   */
+  @GetMapping(value = "/api/files/session", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.comic-file.load-comic-files-session")
+  @JsonView(View.ComicFileList.class)
+  public LoadComicFilesResponse loadComicFilesFromSession(final HttpSession session) {
+    log.info("Loading comic files from user session");
+    final Object encodedComicFiles = session.getAttribute(COMIC_FILES);
+    if (Objects.isNull(encodedComicFiles)) {
+      log.debug("No comic files found in session");
+      return null;
+    }
+    try {
+      return new LoadComicFilesResponse(
+          this.objectMapper.readValue(encodedComicFiles.toString(), List.class));
+    } catch (JsonProcessingException error) {
+      log.error("Failed to parse comic files from session", error);
+      return null;
+    }
+  }
 
   /**
    * Retrieves all comic files under the specified directory.
@@ -69,10 +98,11 @@ public class ComicFileController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @Timed(value = "comixed.comic-file.load")
+  @Timed(value = "comixed.comic-file.load-comic-files")
   @JsonView(View.ComicFileList.class)
   public LoadComicFilesResponse loadComicFiles(
-      @RequestBody() final GetAllComicsUnderRequest request) throws IOException {
+      final HttpSession session, @RequestBody() final GetAllComicsUnderRequest request)
+      throws IOException {
     String directory = request.getDirectory();
     Integer maximum = request.getMaximum();
 
@@ -81,7 +111,11 @@ public class ComicFileController {
         directory,
         maximum > 0 ? maximum : "UNLIMITED");
 
-    return new LoadComicFilesResponse(this.comicFileService.getAllComicsUnder(directory, maximum));
+    final List<ComicFileGroup> files = this.comicFileService.getAllComicsUnder(directory, maximum);
+
+    session.setAttribute(COMIC_FILES, this.objectMapper.writeValueAsString(files));
+
+    return new LoadComicFilesResponse(files);
   }
 
   /**

@@ -39,6 +39,7 @@ import {
   ROOT_DIRECTORY
 } from '@app/comic-files/comic-file.fixtures';
 import {
+  LOAD_COMIC_FILES_FROM_SESSION_URL,
   LOAD_COMIC_FILES_URL,
   SCRAPE_FILENAME_URL,
   SEND_COMIC_FILES_URL
@@ -87,6 +88,21 @@ describe('ComicImportService', () => {
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  it('can load comic files from the session', () => {
+    const serviceResponse = {
+      groups: GROUPS
+    } as LoadComicFilesResponse;
+    service
+      .loadComicFilesFromSession()
+      .subscribe(response => expect(response).toEqual(serviceResponse));
+
+    const req = httpMock.expectOne(
+      interpolate(LOAD_COMIC_FILES_FROM_SESSION_URL)
+    );
+    expect(req.request.method).toEqual('GET');
+    req.flush(serviceResponse);
   });
 
   it('can load comic files', () => {

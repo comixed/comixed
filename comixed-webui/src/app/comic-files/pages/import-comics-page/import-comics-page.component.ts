@@ -28,7 +28,7 @@ import { Subscription } from 'rxjs';
 import { ComicFile } from '@app/comic-files/models/comic-file';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { filter } from 'rxjs/operators';
 import { getUserPreference } from '@app/user';
@@ -48,29 +48,30 @@ import { PAGE_SIZE_DEFAULT } from '@app/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import {
-  MatMenuTrigger,
   MatMenu,
   MatMenuContent,
-  MatMenuItem
+  MatMenuItem,
+  MatMenuTrigger
 } from '@angular/material/menu';
 import {
-  MatTableDataSource,
-  MatTable,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderCell,
-  MatCellDef,
   MatCell,
-  MatHeaderRowDef,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
   MatHeaderRow,
-  MatRowDef,
+  MatHeaderRowDef,
+  MatNoDataRow,
   MatRow,
-  MatNoDataRow
+  MatRowDef,
+  MatTable,
+  MatTableDataSource
 } from '@angular/material/table';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import {
   clearComicFileSelections,
+  loadComicFilesFromSession,
   resetComicFileList,
   setComicFilesSelectedState
 } from '@app/comic-files/actions/comic-file-list.actions';
@@ -88,10 +89,10 @@ import { MatFabButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import {
-  MatCardTitle,
-  MatCardSubtitle,
   MatCard,
-  MatCardContent
+  MatCardContent,
+  MatCardSubtitle,
+  MatCardTitle
 } from '@angular/material/card';
 import { ComicFileLoaderComponent } from '../../components/comic-file-loader/comic-file-loader.component';
 import { MatCheckbox } from '@angular/material/checkbox';
@@ -270,6 +271,8 @@ export class ImportComicsPageComponent
   }
 
   ngOnInit(): void {
+    this.logger.debug('Loading comic files from session');
+    this.store.dispatch(loadComicFilesFromSession());
     this.loadTranslations();
   }
 

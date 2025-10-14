@@ -25,6 +25,7 @@ import { interpolate } from '@app/core';
 import { LoadComicFilesRequest } from '@app/library/models/net/load-comic-files-request';
 import { ImportComicFilesRequest } from '@app/library/models/net/import-comic-files-request';
 import {
+  LOAD_COMIC_FILES_FROM_SESSION_URL,
   LOAD_COMIC_FILES_URL,
   SCRAPE_FILENAME_URL,
   SEND_COMIC_FILES_URL
@@ -37,6 +38,14 @@ import { FilenameMetadataRequest } from '@app/comic-files/models/net/filename-me
 export class ComicImportService {
   logger = inject(LoggerService);
   http = inject(HttpClient);
+
+  /**
+   * Loads comic files from the user's session.
+   */
+  loadComicFilesFromSession(): Observable<any> {
+    this.logger.debug('Load comic files from user session');
+    return this.http.get(interpolate(LOAD_COMIC_FILES_FROM_SESSION_URL));
+  }
 
   /**
    * Loads comic files in the specified file system.
