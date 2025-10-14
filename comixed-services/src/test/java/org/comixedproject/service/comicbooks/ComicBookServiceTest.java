@@ -820,16 +820,26 @@ class ComicBookServiceTest {
   }
 
   @Test
-  void savePageOrder_containsGap() {
+  void savePageOrder_containsGap() throws ComicBookException {
     List<PageOrderEntry> entryList = new ArrayList<>();
+    List<ComicPage> pageList = new ArrayList<>();
     for (int index = 0; index < 25; index++) {
-      entryList.add(new PageOrderEntry(String.format("filename-%d", index), index + 1));
+      entryList.add(new PageOrderEntry(String.format("filename-%d", index), index));
+      if (index % 2 == 0) {
+        final String filename = String.format("filename-%d", index);
+        final ComicPage page = new ComicPage();
+        page.setFilename(filename);
+        pageList.add(page);
+      }
     }
 
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    Mockito.when(comicBook.getPages()).thenReturn(pageList);
 
-    assertThrows(
-        ComicBookException.class, () -> service.savePageOrder(TEST_COMIC_BOOK_ID, entryList));
+    service.savePageOrder(TEST_COMIC_BOOK_ID, entryList);
+
+    Mockito.verify(comicStateHandler, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.detailsUpdated);
   }
 
   @Test
