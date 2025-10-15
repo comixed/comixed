@@ -18,21 +18,19 @@
 
 package org.comixedproject.model.comicbooks;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicpages.ComicPage;
-import org.comixedproject.model.comicpages.ComicPageState;
+import org.comixedproject.model.comicpages.ComicPageType;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
 
@@ -240,7 +238,7 @@ public class ComicBook {
         .filter(Objects::nonNull)
         .forEach(
             page -> {
-              if (page.getPageState() == ComicPageState.DELETED) {
+              if (page.getPageType() == ComicPageType.DELETED) {
                 log.trace("Removing page: {}", page.getComicPageId());
                 this.pages.remove(page);
               }

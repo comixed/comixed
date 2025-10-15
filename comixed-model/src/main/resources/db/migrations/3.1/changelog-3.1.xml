@@ -7,5 +7,6 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <include file="/db/migrations/3.1/001_2475_add_page_type_to_comic_pages.xml"/>
+    <include file="/db/migrations/3.1/002_2476_remove_comic_pages_page_state.xml"/>
 
 </databaseChangeLog>

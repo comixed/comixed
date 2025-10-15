@@ -42,7 +42,7 @@ public enum PageType {
   Preview(PREVIEW),
   Story(STORY),
   Other(OTHER),
-  Deleted(DELETE);
+  Deleted(DELETED);
 
   @Getter private ComicPageType comicPageType;
 

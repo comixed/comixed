@@ -31,12 +31,12 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.ComicPage;
-import org.comixedproject.model.comicpages.ComicPageState;
+import org.comixedproject.model.comicpages.ComicPageType;
 import org.comixedproject.repositories.comicpages.ComicPageRepository;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.state.comicpages.ComicPageEvent;
-import org.comixedproject.state.comicpages.ComicPageStateHandler;
+import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.PageRequest;
@@ -52,8 +52,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class ComicPageService {
   @Autowired private ComicPageRepository comicPageRepository;
-  @Autowired private ComicPageStateHandler comicPageStateHandler;
   @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
   /**
@@ -139,7 +139,7 @@ public class ComicPageService {
    */
   public List<ComicPage> getUnmarkedWithHash(final String hash) {
     log.trace("Fetching unmarked pages with hash: {}", hash);
-    return this.comicPageRepository.findByHashAndPageState(hash, ComicPageState.STABLE);
+    return this.comicPageRepository.getNotDeletedWithHash(hash);
   }
 
   /**
@@ -151,7 +151,7 @@ public class ComicPageService {
   @Transactional
   public List<ComicPage> getMarkedWithHash(final String hash) {
     log.trace("Fetching marked pages with hash: {}", hash);
-    return this.comicPageRepository.findByHashAndPageState(hash, ComicPageState.DELETED);
+    return this.comicPageRepository.getDeletedWithHash(hash);
   }
 
   /**
@@ -160,21 +160,15 @@ public class ComicPageService {
    * @param idList the page id list
    * @param deleted the deleted state
    */
+  @Transactional
   public void updatePageDeletion(final List<Long> idList, final boolean deleted) {
     log.trace("Updating page deletion state");
     for (int index = 0; index < idList.size(); index++) {
       long id = idList.get(index);
       log.trace("Loading page: id={}", id);
       final ComicPage page = this.comicPageRepository.getById(id);
-      if (page != null) {
-        if (deleted) {
-          log.trace("Marking page for deletion");
-          this.comicPageStateHandler.fireEvent(page, ComicPageEvent.markForDeletion);
-        } else {
-          log.trace("Unmarking page for deletion");
-          this.comicPageStateHandler.fireEvent(page, ComicPageEvent.unmarkForDeletion);
-        }
-      }
+      page.setPageType(deleted ? ComicPageType.DELETED : ComicPageType.STORY);
+      this.comicStateHandler.fireEvent(page.getComicBook(), ComicEvent.detailsUpdated);
     }
   }
 
@@ -290,8 +284,10 @@ public class ComicPageService {
           this.comicPageRepository
               .getPagesWithHash(hash)
               .forEach(
-                  page ->
-                      this.comicPageStateHandler.fireEvent(page, ComicPageEvent.markForDeletion));
+                  page -> {
+                    page.setPageType(ComicPageType.DELETED);
+                    this.comicPageRepository.saveAndFlush(page);
+                  });
         });
   }
 
@@ -304,8 +300,10 @@ public class ComicPageService {
           this.comicPageRepository
               .getPagesWithHash(hash)
               .forEach(
-                  page ->
-                      this.comicPageStateHandler.fireEvent(page, ComicPageEvent.unmarkForDeletion));
+                  page -> {
+                    page.setPageType(ComicPageType.STORY);
+                    this.comicPageRepository.saveAndFlush(page);
+                  });
         });
   }
 

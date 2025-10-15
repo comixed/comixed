@@ -18,7 +18,10 @@
 
 package org.comixedproject.adaptors.comicbooks;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Optional;
 import lombok.NonNull;
@@ -34,7 +37,10 @@ import org.comixedproject.adaptors.archive.model.ArchiveEntryType;
 import org.comixedproject.adaptors.archive.model.ArchiveReadHandle;
 import org.comixedproject.adaptors.archive.model.ArchiveWriteHandle;
 import org.comixedproject.adaptors.archive.model.ComicArchiveEntry;
-import org.comixedproject.adaptors.content.*;
+import org.comixedproject.adaptors.content.ComicMetadataWriter;
+import org.comixedproject.adaptors.content.ContentAdaptor;
+import org.comixedproject.adaptors.content.ContentAdaptorException;
+import org.comixedproject.adaptors.content.ContentAdaptorRules;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
@@ -167,10 +173,6 @@ public class ComicBookAdaptor {
       final ArchiveWriteHandle writeHandle =
           destinationArchive.openArchiveForWrite(temporaryFilename);
 
-      log.trace("Writing comic book metadata");
-      destinationArchive.writeEntry(
-          writeHandle, "ComicInfo.xml", this.comicMetadataWriter.createContent(comicBook));
-
       log.trace("Writing comic book pages");
       final int length = String.valueOf(comicBook.getPages().size()).length();
       for (int index = 0; index < comicBook.getPages().size(); index++) {
@@ -185,8 +187,14 @@ public class ComicBookAdaptor {
           }
           log.trace("Writing comic book page content: {}", pageFilename);
           destinationArchive.writeEntry(writeHandle, pageFilename, content);
+          log.trace("Updating the page filename: {}", pageFilename);
+          page.setFilename(pageFilename);
         }
       }
+
+      log.trace("Writing comic book metadata");
+      destinationArchive.writeEntry(
+          writeHandle, "ComicInfo.xml", this.comicMetadataWriter.createContent(comicBook));
 
       log.trace("Closing archives");
       sourceArchive.closeArchiveForRead(readHandle);

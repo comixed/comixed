@@ -34,5 +34,5 @@ public enum ComicPageType {
   PREVIEW,
   STORY,
   OTHER,
-  DELETE;
+  DELETED;
 }

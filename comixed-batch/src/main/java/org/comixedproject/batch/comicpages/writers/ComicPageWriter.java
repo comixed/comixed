@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,18 +19,29 @@
 package org.comixedproject.batch.comicpages.writers;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.state.comicpages.ComicPageEvent;
+import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicStateHandler;
+import org.springframework.batch.item.Chunk;
+import org.springframework.batch.item.ItemWriter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>UnmarkPageWithHashWriter</code> writes pages that have had their deleted flag cleared.
+ * <code>ComicPageWriter</code> handles updating comic pages after batch processing.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class UnmarkPageWithHashWriter extends AbstractPageWriter {
-  public UnmarkPageWithHashWriter() {
-    super(ComicPageEvent.unmarkForDeletion);
+public class ComicPageWriter implements ItemWriter<ComicPage> {
+  @Autowired private ComicStateHandler comicStateHandler;
+
+  @Override
+  public void write(final Chunk<? extends ComicPage> pages) throws Exception {
+    pages.forEach(
+        page -> {
+          this.comicStateHandler.fireEvent(page.getComicBook(), ComicEvent.detailsUpdated);
+        });
   }
 }

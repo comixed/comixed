@@ -18,12 +18,7 @@
 
 package org.comixedproject.repositories.comicpages;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
@@ -32,7 +27,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.comixedproject.model.comicpages.ComicPage;
-import org.comixedproject.model.comicpages.ComicPageState;
+import org.comixedproject.model.comicpages.ComicPageType;
 import org.comixedproject.model.comicpages.DeletedPageAndComic;
 import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.repositories.RepositoryContext;
@@ -102,40 +97,36 @@ public class ComicPageRepositoryTest {
   }
 
   @Test
-  public void testFindByHashAndPageStateWantNotDeleted() {
-    final List<ComicPage> result =
-        repository.findByHashAndPageState(TEST_NOT_DELETED_HASH, ComicPageState.STABLE);
+  public void testFindByHashAndDeletedStateWantNotDeleted() {
+    final List<ComicPage> result = repository.getNotDeletedWithHash(TEST_NOT_DELETED_HASH);
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
     assertEquals(TEST_NOT_DELETED_HASH, result.get(0).getHash());
-    assertNotSame(ComicPageState.DELETED, result.get(0).getPageState());
+    assertNotEquals(ComicPageType.DELETED, result.get(0).getPageType());
   }
 
   @Test
-  public void testFindByHashAndPageStateNotDeletedWantsDeleted() {
-    final List<ComicPage> result =
-        repository.findByHashAndPageState(TEST_NOT_DELETED_HASH, ComicPageState.DELETED);
+  public void testFindByHashAndDeletedStateNotDeletedWantsDeleted() {
+    final List<ComicPage> result = repository.getDeletedWithHash(TEST_NOT_DELETED_HASH);
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
   }
 
   @Test
-  public void testFindByHashAndPageStateDeleted() {
-    final List<ComicPage> result =
-        repository.findByHashAndPageState(TEST_DELETED_HASH, ComicPageState.DELETED);
+  public void testFindByHashAndDeletedStateDeleted() {
+    final List<ComicPage> result = repository.getDeletedWithHash(TEST_DELETED_HASH);
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
     assertEquals(TEST_DELETED_HASH, result.get(0).getHash());
-    assertSame(ComicPageState.DELETED, result.get(0).getPageState());
+    assertEquals(ComicPageType.DELETED, result.get(0).getPageType());
   }
 
   @Test
-  public void testFindByHashAndPageStateDeletedWantsNotDeleted() {
-    final List<ComicPage> result =
-        repository.findByHashAndPageState(TEST_DELETED_HASH, ComicPageState.STABLE);
+  public void testFindByHashAndDeletedStateDeletedWantsNotDeleted() {
+    final List<ComicPage> result = repository.getNotDeletedWithHash(TEST_DELETED_HASH);
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
