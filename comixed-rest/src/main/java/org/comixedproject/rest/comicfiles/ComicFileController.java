@@ -167,7 +167,8 @@ public class ComicFileController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.comic-file.batch.import-files")
-  public void importComicFiles(@RequestBody() ImportComicFilesRequest request)
+  public void importComicFiles(
+      final HttpSession session, @RequestBody() ImportComicFilesRequest request)
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
@@ -176,6 +177,9 @@ public class ComicFileController {
 
     log.info("Importing comic files");
     this.comicFileService.importComicFiles(filenames);
+
+    log.debug("Cleared comic files list");
+    session.removeAttribute(COMIC_FILES);
   }
 
   /**

@@ -184,9 +184,11 @@ class ComicFileControllerTest {
           JobParametersInvalidException,
           JobRestartException {
     controller.importComicFiles(
+        session,
         new ImportComicFilesRequest(filenameList, TEST_SKIP_METADATA, TEST_SKIP_BLOCKING_PAGES));
 
     Mockito.verify(comicFileService, Mockito.times(1)).importComicFiles(filenameList);
+    Mockito.verify(session, Mockito.times(1)).removeAttribute(COMIC_FILES);
   }
 
   @Test
