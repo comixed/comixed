@@ -25,28 +25,32 @@ export const COMIC_FILE_1: ComicFile = {
   id: 1,
   filename: '/Users/comixed/Documents/comics/existing-comic-file.cbz',
   baseFilename: 'existing-comic-file',
-  size: 65535
+  size: 65535,
+  selected: false
 };
 
 export const COMIC_FILE_2: ComicFile = {
   id: 2,
   filename: '/Users/comixed/Documents/comics/another-comic-file.cbz',
   baseFilename: 'another-comic-file',
-  size: 32767
+  size: 32767,
+  selected: false
 };
 
 export const COMIC_FILE_3: ComicFile = {
   id: 3,
   filename: '/Users/comixed/Documents/comics/this-comic-file.cbz',
   baseFilename: 'this-comic-file',
-  size: 46787
+  size: 46787,
+  selected: false
 };
 
 export const COMIC_FILE_4: ComicFile = {
   id: 4,
   filename: '/Users/comixed/Documents/comics/that-comic-file.cbz',
   baseFilename: 'that-comic-file',
-  size: 56213
+  size: 56213,
+  selected: false
 };
 
 export const PROCESSING_COMIC_STATUS_1: ProcessingComicStatus = {

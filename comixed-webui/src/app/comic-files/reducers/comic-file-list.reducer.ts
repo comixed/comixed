@@ -19,37 +19,35 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 import { ComicFile } from '@app/comic-files/models/comic-file';
 import {
-  clearComicFileSelections,
   loadComicFileListFailure,
   loadComicFileLists,
   loadComicFileListSuccess,
   loadComicFilesFromSession,
-  resetComicFileList,
-  setComicFilesSelectedState
+  toggleComicFileSelections,
+  toggleComicFileSelectionsFailure,
+  toggleComicFileSelectionsSuccess
 } from '@app/comic-files/actions/comic-file-list.actions';
 import { ComicFileGroup } from '@app/comic-files/models/comic-file-group';
 
 export const COMIC_FILE_LIST_FEATURE_KEY = 'comic_file_list';
 
 export interface ComicFileListState {
-  loading: boolean;
+  busy: boolean;
   groups: ComicFileGroup[];
   files: ComicFile[];
-  selections: ComicFile[];
 }
 
 export const initialState: ComicFileListState = {
-  loading: false,
+  busy: false,
   groups: [],
-  files: [],
-  selections: []
+  files: []
 };
 
 export const reducer = createReducer(
   initialState,
 
-  on(loadComicFilesFromSession, state => ({ ...state, loading: true })),
-  on(loadComicFileLists, state => ({ ...state, loading: true })),
+  on(loadComicFilesFromSession, state => ({ ...state, busy: true })),
+  on(loadComicFileLists, state => ({ ...state, busy: true })),
   on(loadComicFileListSuccess, (state, action) => {
     const groups = action.groups;
     const files = action.groups
@@ -57,37 +55,30 @@ export const reducer = createReducer(
       .reduce((accumulator, entries) => accumulator.concat(entries), []);
     return {
       ...state,
-      loading: false,
+      busy: false,
       groups,
-      files,
-      selections: []
+      files
     };
   }),
   on(loadComicFileListFailure, state => ({
     ...state,
-    loading: false,
-    files: [],
-    selections: []
+    busy: false,
+    files: []
   })),
-  on(resetComicFileList, state => ({
-    ...state,
-    files: [],
-    groups: [],
-    selections: []
-  })),
-  on(setComicFilesSelectedState, (state, action) => {
-    let selections = state.selections.filter(file => {
-      return action.files.every(entry => entry.id !== file.id);
-    });
-    if (action.selected) {
-      selections = selections.concat(action.files);
-    }
-    return { ...state, selections };
+  on(toggleComicFileSelections, state => ({ ...state, busy: true })),
+  on(toggleComicFileSelectionsSuccess, (state, action) => {
+    const groups = action.groups;
+    const files = action.groups
+      .map(entry => entry.files)
+      .reduce((accumulator, entries) => accumulator.concat(entries), []);
+    return {
+      ...state,
+      busy: false,
+      groups,
+      files
+    };
   }),
-  on(clearComicFileSelections, state => ({
-    ...state,
-    selections: []
-  }))
+  on(toggleComicFileSelectionsFailure, state => ({ ...state, busy: false }))
 );
 
 export const comicFileListFeature = createFeature({

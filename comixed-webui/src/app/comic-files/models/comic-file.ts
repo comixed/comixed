@@ -21,4 +21,5 @@ export interface ComicFile {
   filename: string;
   baseFilename: string;
   size: number;
+  selected: boolean;
 }

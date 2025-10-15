@@ -33,15 +33,11 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import {
-  sendComicFilesSuccess,
   sendComicFiles,
-  sendComicFilesFailure
+  sendComicFilesFailure,
+  sendComicFilesSuccess
 } from '@app/comic-files/actions/import-comic-files.actions';
 import { hot } from 'jasmine-marbles';
-import {
-  clearComicFileSelections,
-  resetComicFileList
-} from '@app/comic-files/actions/comic-file-list.actions';
 
 describe('ImportComicFilesEffects', () => {
   const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];
@@ -95,8 +91,7 @@ describe('ImportComicFilesEffects', () => {
         skipMetadata: SKIP_METADATA,
         skipBlockingPages: SKIP_BLOCKING_PAGES
       });
-      const outcome1 = sendComicFilesSuccess();
-      const outcome2 = resetComicFileList();
+      const outcome = sendComicFilesSuccess();
 
       actions$ = hot('-a', { a: action });
       comicImportService.sendComicFiles
@@ -107,10 +102,7 @@ describe('ImportComicFilesEffects', () => {
         })
         .and.returnValue(of(serviceResponse));
 
-      const expected = hot('-(bc)', {
-        b: outcome1,
-        c: outcome2
-      });
+      const expected = hot('-b', { b: outcome });
       expect(effects.sendComicFiles$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });

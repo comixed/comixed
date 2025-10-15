@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.comixedproject.views.View;
@@ -34,6 +35,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @RequiredArgsConstructor
+@NoArgsConstructor
 public class ComicFileGroup {
   @JsonProperty("directory")
   @JsonView(View.ComicFileList.class)

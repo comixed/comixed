@@ -75,12 +75,7 @@ import {
   PREFERENCE_SKIP_METADATA
 } from '@app/comic-files/comic-file.constants';
 import { Router } from '@angular/router';
-import { ComicFile } from '@app/comic-files/models/comic-file';
-import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
-import {
-  clearComicFileSelections,
-  setComicFilesSelectedState
-} from '@app/comic-files/actions/comic-file-list.actions';
+import { toggleComicFileSelections } from '@app/comic-files/actions/comic-file-list.actions';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import {
   FEATURE_ENABLED_FEATURE_KEY,
@@ -91,7 +86,15 @@ import { BLOCKED_PAGES_ENABLED } from '@app/admin/admin.constants';
 
 describe('ImportComicsPageComponent', () => {
   const USER = USER_READER;
-  const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];
+  const FILES = [
+    { ...COMIC_FILE_1, selected: true },
+    { ...COMIC_FILE_2, selected: true },
+    {
+      ...COMIC_FILE_3,
+      selected: true
+    },
+    { ...COMIC_FILE_4, selected: true }
+  ];
   const FILE = COMIC_FILE_3;
   const PAGE_SIZE = 400;
   const SKIP_METADATA = Math.random() > 0.5;
@@ -214,27 +217,8 @@ describe('ImportComicsPageComponent', () => {
   });
 
   describe('when loading files', () => {
-    describe('when loading starts', () => {
-      beforeEach(() => {
-        store.setState({
-          ...initialState,
-          [COMIC_FILE_LIST_FEATURE_KEY]: {
-            ...initialComicFileListState,
-            loading: true
-          }
-        });
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          setBusyState({ enabled: true })
-        );
-      });
-    });
-
     describe('when loading stops', () => {
       beforeEach(() => {
-        component.selectedFiles = FILES;
         component.allSelected = false;
         component.anySelected = false;
         store.setState({
@@ -376,10 +360,7 @@ describe('ImportComicsPageComponent', () => {
   });
 
   describe('sorting records', () => {
-    const ITEM = {
-      item: COMIC_FILE_3,
-      selected: Math.random() > 0.5
-    } as SelectableListItem<ComicFile>;
+    const ITEM = { ...COMIC_FILE_3, selected: Math.random() > 0.5 };
 
     it('can sort by selected state', () => {
       expect(
@@ -390,53 +371,50 @@ describe('ImportComicsPageComponent', () => {
     it('can sort by selected filename', () => {
       expect(
         component.dataSource.sortingDataAccessor(ITEM, 'filename')
-      ).toEqual(ITEM.item.filename);
+      ).toEqual(ITEM.filename);
     });
 
     it('can sort by selected base filename', () => {
       expect(
         component.dataSource.sortingDataAccessor(ITEM, 'base-filename')
-      ).toEqual(ITEM.item.baseFilename);
+      ).toEqual(ITEM.baseFilename);
     });
 
     it('can sort by selected size', () => {
       expect(component.dataSource.sortingDataAccessor(ITEM, 'size')).toEqual(
-        ITEM.item.size
+        ITEM.size
       );
     });
 
     it('can sort by default', () => {
       expect(component.dataSource.sortingDataAccessor(ITEM, 'unknown')).toEqual(
-        ITEM.item.id
+        ITEM.id
       );
     });
   });
 
   describe('selecting comic files', () => {
-    beforeEach(() => {
-      component.files = FILES;
-      component.selectedFiles = FILES;
-    });
-
     describe('it can select all', () => {
       beforeEach(() => {
-        component.onToggleAllSelected(true);
+        component.onSelectAll(true);
       });
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setComicFilesSelectedState({ selected: true, files: FILES })
+          toggleComicFileSelections({ filename: '', selected: true })
         );
       });
     });
 
     describe('it can deselect all', () => {
       beforeEach(() => {
-        component.onToggleAllSelected(false);
+        component.onSelectAll(false);
       });
 
       it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(clearComicFileSelections());
+        expect(store.dispatch).toHaveBeenCalledWith(
+          toggleComicFileSelections({ filename: '', selected: false })
+        );
       });
     });
 
@@ -449,7 +427,10 @@ describe('ImportComicsPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setComicFilesSelectedState({ files: [FILE], selected: SELECTED })
+          toggleComicFileSelections({
+            filename: FILE.filename,
+            selected: SELECTED
+          })
         );
       });
     });

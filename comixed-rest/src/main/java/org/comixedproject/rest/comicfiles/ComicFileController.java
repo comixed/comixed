@@ -20,6 +20,7 @@ package org.comixedproject.rest.comicfiles;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
@@ -69,20 +70,17 @@ public class ComicFileController {
   @GetMapping(value = "/api/files/session", produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.comic-file.load-comic-files-session")
   @JsonView(View.ComicFileList.class)
-  public LoadComicFilesResponse loadComicFilesFromSession(final HttpSession session) {
+  public LoadComicFilesResponse loadComicFilesFromSession(final HttpSession session)
+      throws JsonProcessingException {
     log.info("Loading comic files from user session");
-    final Object encodedComicFiles = session.getAttribute(COMIC_FILES);
-    if (Objects.isNull(encodedComicFiles)) {
-      log.debug("No comic files found in session");
+    if (session.getAttribute(COMIC_FILES) == null) {
       return null;
     }
-    try {
-      return new LoadComicFilesResponse(
-          this.objectMapper.readValue(encodedComicFiles.toString(), List.class));
-    } catch (JsonProcessingException error) {
-      log.error("Failed to parse comic files from session", error);
+    final List<ComicFileGroup> comicFiles = this.doLoadComicFileSelections(session);
+    if (Objects.isNull(comicFiles)) {
       return null;
     }
+    return new LoadComicFilesResponse(comicFiles);
   }
 
   /**
@@ -153,6 +151,40 @@ public class ComicFileController {
   }
 
   /**
+   * Toggles comic file selections.
+   *
+   * @param session the session
+   * @param request the request
+   * @return the comic file groups
+   * @throws JsonProcessingException if an error occurs updating the session
+   */
+  @PostMapping(
+      value = "/api/files/import/selections",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.comic-file.selection-toggle")
+  @JsonView(View.ComicFileList.class)
+  public LoadComicFilesResponse toggleComicFileSelections(
+      final HttpSession session, @RequestBody final ToggleComicFileSelectionsRequest request)
+      throws JsonProcessingException {
+    final List<ComicFileGroup> comicFiles = this.doLoadComicFileSelections(session);
+    if (Objects.nonNull(comicFiles)) {
+      final String filename = request.getFilename();
+      final boolean selected = request.isSelected();
+
+      log.info("Toggling comic files selections: filename={}, selected={}", filename, selected);
+      this.comicFileService.toggleComicFileSelections(comicFiles, filename, selected);
+      log.debug("Updating comic files in session");
+      session.setAttribute(COMIC_FILES, this.objectMapper.writeValueAsString(comicFiles));
+      return new LoadComicFilesResponse(comicFiles);
+    } else {
+      log.info("No comic files to toggle...");
+      return null;
+    }
+  }
+
+  /**
    * Begins the process of enqueueing comic files for import.
    *
    * @param request the request body
@@ -201,5 +233,16 @@ public class ComicFileController {
     final FilenameMetadata info = this.filenameScrapingRuleService.loadFilenameMetadata(filename);
     return new FilenameMetadataResponse(
         info.isFound(), info.getSeries(), info.getVolume(), info.getIssueNumber());
+  }
+
+  private List<ComicFileGroup> doLoadComicFileSelections(final HttpSession session)
+      throws JsonProcessingException {
+    final Object encodedComicFiles = session.getAttribute(COMIC_FILES);
+    if (Objects.isNull(encodedComicFiles)) {
+      log.debug("No comic files found in session");
+      return null;
+    }
+    return this.objectMapper.readValue(
+        encodedComicFiles.toString(), new TypeReference<List<ComicFileGroup>>() {});
   }
 }

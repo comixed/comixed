@@ -17,7 +17,7 @@
     color="primary"
     [disabled]="allSelected || showFinderForm"
     [matTooltip]="'comic-files.tooltip.select-all' | translate"
-    (click)="onSelectAll()"
+    (click)="onSelectAll(true)"
   >
     <mat-icon>check_box</mat-icon>
   </button>
@@ -28,7 +28,7 @@
     color="primary"
     [disabled]="!anySelected || showFinderForm"
     [matTooltip]="'comic-files.tooltip.deselect-all' | translate"
-    (click)="onDeselectAll()"
+    (click)="onSelectAll(false)"
   >
     <mat-icon>check_box_outline_blank</mat-icon>
   </button>
@@ -107,7 +107,7 @@
   {{
     "comic-files.page-title"
       | translate
-        : { count: dataSource.data.length, selected: selectedFiles.length }
+        : { count: dataSource.data.length, selected: selectedFileCount }
   }}
 </h2>
 
@@ -140,8 +140,8 @@
       <mat-checkbox
         [disabled]="!dataSource.data.length"
         [checked]="allSelected"
-        (change)="onToggleAllSelected($event.checked)"
-        (keyup)="onToggleAllSelected($event.checked)"
+        (change)="onSelectAll($event.checked)"
+        (keyup)="onSelectAll($event.checked)"
         (click)="$event.stopPropagation()"
       ></mat-checkbox>
     </mat-header-cell>
@@ -149,8 +149,8 @@
       <span class="cx-width-100 cx-text-nowrap">
         <mat-checkbox
           [checked]="entry.selected"
-          (change)="onSelectEntry(entry.item, $event.checked)"
-          (keyup)="onSelectEntry(entry.item, $event.checked)"
+          (change)="onSelectEntry(entry, $event.checked)"
+          (keyup)="onSelectEntry(entry, $event.checked)"
           (click)="$event.stopPropagation()"
         ></mat-checkbox>
       </span>
@@ -165,11 +165,11 @@
       <span class="cx-width-100">
         <img
           loading="lazy"
-          [src]="entry.item | comicFileCoverUrl"
-          [alt]="entry.item.baseFilename"
+          [src]="entry | comicFileCoverUrl"
+          [alt]="entry.baseFilename"
           width="100%"
           height="auto"
-          (mouseenter)="onShowPopup(true, entry.item)"
+          (mouseenter)="onShowPopup(true, entry)"
           (mouseleave)="onShowPopup(false, null)"
         />
       </span>
@@ -181,11 +181,8 @@
       {{ "comic-files.label.filename" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <span
-        class="cx-width-100 cx-text-nowrap"
-        [matTooltip]="entry.item.filename"
-      >
-        {{ entry.item.filename }}
+      <span class="cx-width-100 cx-text-nowrap" [matTooltip]="entry.filename">
+        {{ entry.filename }}
       </span>
     </mat-cell>
   </ng-container>
@@ -197,9 +194,9 @@
     <mat-cell *matCellDef="let entry">
       <span
         class="cx-width-100 cx-text-nowrap"
-        [matTooltip]="entry.item.baseFilename"
+        [matTooltip]="entry.baseFilename"
       >
-        {{ entry.item.baseFilename }}
+        {{ entry.baseFilename }}
       </span>
     </mat-cell>
   </ng-container>
@@ -210,7 +207,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.item.size / 1024 | number: "1.0-0" }}
+        {{ entry.size / 1024 | number: "1.0-0" }}
       </span>
     </mat-cell>
   </ng-container>

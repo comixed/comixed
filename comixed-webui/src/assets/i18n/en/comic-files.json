@@ -73,6 +73,9 @@
       "file-size": "{size} bytes",
       "selected-for-import": "This file will be imported."
     },
+    "toggle-selections": {
+      "effect-failure": "Failed to update comic file selections..."
+    },
     "tooltip": {
       "close-form": "Close the find files form...",
       "deselect-all": "Clear the comic file selections (shift+ctrl+a).",

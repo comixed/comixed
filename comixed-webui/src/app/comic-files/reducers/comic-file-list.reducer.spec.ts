@@ -28,13 +28,13 @@ import {
   ROOT_DIRECTORY
 } from '@app/comic-files/comic-file.fixtures';
 import {
-  clearComicFileSelections,
   loadComicFileListFailure,
   loadComicFileLists,
   loadComicFileListSuccess,
   loadComicFilesFromSession,
-  resetComicFileList,
-  setComicFilesSelectedState
+  toggleComicFileSelections,
+  toggleComicFileSelectionsFailure,
+  toggleComicFileSelectionsSuccess
 } from '@app/comic-files/actions/comic-file-list.actions';
 import { ComicFileGroup } from '@app/comic-files/models/comic-file-group';
 
@@ -62,54 +62,47 @@ describe('ComicFileList Reducer', () => {
       state = reducer({ ...state }, {} as any);
     });
 
-    it('clears the loading flag', () => {
-      expect(state.loading).toBeFalse();
+    it('clears the busy flag', () => {
+      expect(state.busy).toBeFalse();
     });
 
     it('has an empty set of files', () => {
       expect(state.files).toEqual([]);
     });
-
-    it('has an empty set of selections', () => {
-      expect(state.selections).toEqual([]);
-    });
   });
 
   describe('loading files from the user session', () => {
     beforeEach(() => {
-      state = reducer(
-        { ...state, loading: false },
-        loadComicFilesFromSession()
-      );
+      state = reducer({ ...state, busy: false }, loadComicFilesFromSession());
     });
 
-    it('sets the loading flag', () => {
-      expect(state.loading).toBeTrue();
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
     });
   });
 
   describe('loading files in a directory', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, loading: false },
+        { ...state, busy: false },
         loadComicFileLists({ directory: ROOT_DIRECTORY, maximum: 100 })
       );
     });
 
-    it('sets the loading flag', () => {
-      expect(state.loading).toBeTrue();
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
     });
 
     describe('success', () => {
       beforeEach(() => {
         state = reducer(
-          { ...state, loading: true, groups: [], files: [], selections: FILES },
+          { ...state, busy: true, groups: [], files: [] },
           loadComicFileListSuccess({ groups: GROUPS })
         );
       });
 
-      it('clears the loading flag', () => {
-        expect(state.loading).toBeFalse();
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
       });
 
       it('sets the comic file groups', () => {
@@ -119,96 +112,78 @@ describe('ComicFileList Reducer', () => {
       it('sets the comic files', () => {
         expect(state.files).toEqual([COMIC_FILE_1, COMIC_FILE_3, COMIC_FILE_2]);
       });
+    });
 
-      it('clears any previous selections', () => {
-        expect(state.selections).toEqual([]);
+    describe('failure', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, busy: true, files: FILES },
+          loadComicFileListFailure()
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+
+      it('clears the comic files', () => {
+        expect(state.files).toEqual([]);
+      });
+    });
+  });
+
+  describe('toggling selections', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: false },
+        toggleComicFileSelections({
+          filename: COMIC_FILE_1.filename,
+          selected: Math.random() > 0.5
+        })
+      );
+    });
+
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        state = reducer(
+          {
+            ...state,
+            busy: true,
+            groups: GROUPS,
+            files: []
+          },
+          toggleComicFileSelectionsSuccess({ groups: GROUPS })
+        );
+      });
+
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
+      });
+
+      it('sets the comic file groups', () => {
+        expect(state.groups).toEqual(GROUPS);
+      });
+
+      it('sets the comic files', () => {
+        expect(state.files).toEqual([COMIC_FILE_1, COMIC_FILE_3, COMIC_FILE_2]);
       });
     });
 
     describe('failure', () => {
       beforeEach(() => {
         state = reducer(
-          { ...state, loading: true, files: FILES, selections: FILES },
-          loadComicFileListFailure()
+          { ...state, busy: true },
+          toggleComicFileSelectionsFailure()
         );
       });
 
-      it('clears the loading flag', () => {
-        expect(state.loading).toBeFalse();
+      it('clears the busy flag', () => {
+        expect(state.busy).toBeFalse();
       });
-
-      it('clears the comic files', () => {
-        expect(state.files).toEqual([]);
-      });
-
-      it('clears any previous selections', () => {
-        expect(state.selections).toEqual([]);
-      });
-    });
-  });
-
-  describe('clearing the list of comic files', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, files: FILES, selections: FILES, groups: GROUPS },
-        resetComicFileList()
-      );
-    });
-
-    it('clears the list of comic files', () => {
-      expect(state.files).toEqual([]);
-    });
-
-    it('clears the groups', () => {
-      expect(state.groups).toEqual([]);
-    });
-
-    it('clears the list of selections', () => {
-      expect(state.selections).toEqual([]);
-    });
-  });
-
-  describe('selecting comic files', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, selections: [FILES[0]] },
-        setComicFilesSelectedState({ files: FILES, selected: true })
-      );
-    });
-
-    it('adds the comics to the selection list', () => {
-      FILES.forEach(file => expect(state.selections).toContain(file));
-    });
-  });
-
-  describe('deselecting comic files', () => {
-    const DESELECTED_FILE = FILES[0];
-
-    beforeEach(() => {
-      state = reducer(
-        { ...state, selections: FILES },
-        setComicFilesSelectedState({
-          files: [DESELECTED_FILE],
-          selected: false
-        })
-      );
-    });
-
-    it('removes the comics from the selection list', () => {
-      expect(state.selections).not.toContain(DESELECTED_FILE);
-    });
-  });
-
-  describe('clearing the selections', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, files: FILES, selections: FILES },
-        clearComicFileSelections()
-      );
-    });
-
-    it('clears the selections', () => {
-      expect(state.selections).toEqual([]);
     });
   });
 });

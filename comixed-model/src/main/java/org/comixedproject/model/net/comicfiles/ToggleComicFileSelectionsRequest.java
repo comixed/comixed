@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,10 +16,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ComicFile } from '../../models/comic-file';
+package org.comixedproject.model.net.comicfiles;
 
-export interface ComicFileContextMenuEvent {
-  file: ComicFile;
-  x: string;
-  y: string;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+/**
+ * <code>ToggleComicFileSelectionsRequest</code> contains the request body when toggling comic file
+ * selections.
+ *
+ * @author Darryl L. Pierce
+ */
+@NoArgsConstructor
+@AllArgsConstructor
+public class ToggleComicFileSelectionsRequest {
+  @JsonProperty("filename")
+  @Getter
+  private String filename;
+
+  @JsonProperty("selected")
+  @Getter
+  private boolean selected;
 }

@@ -28,7 +28,10 @@ import {
   loadComicFileListFailure,
   loadComicFileLists,
   loadComicFileListSuccess,
-  loadComicFilesFromSession
+  loadComicFilesFromSession,
+  toggleComicFileSelections,
+  toggleComicFileSelectionsFailure,
+  toggleComicFileSelectionsSuccess
 } from '@app/comic-files/actions/comic-file-list.actions';
 import { LoadComicFilesResponse } from '@app/library/models/net/load-comic-files-response';
 import { saveUserPreference } from '@app/user/actions/user.actions';
@@ -44,6 +47,7 @@ export class ComicFileListEffects {
   private comicImportService = inject(ComicImportService);
   private alertService = inject(AlertService);
   private translateService = inject(TranslateService);
+
   loadComicFilesFromSession$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadComicFilesFromSession),
@@ -74,6 +78,7 @@ export class ComicFileListEffects {
       })
     );
   });
+
   loadComicFiles$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadComicFileLists),
@@ -130,6 +135,44 @@ export class ComicFileListEffects {
           this.translateService.instant('app.general-effect-failure')
         );
         return of(loadComicFileListFailure());
+      })
+    );
+  });
+
+  toggleComicFileSelections$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(toggleComicFileSelections),
+      tap(action =>
+        this.logger.trace('Toggling comic file selections:', action)
+      ),
+      switchMap(action =>
+        this.comicImportService
+          .toggleComicFileSelections({
+            filename: action.filename,
+            selected: action.selected
+          })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map((response: LoadComicFilesResponse) =>
+              toggleComicFileSelectionsSuccess({ groups: response.groups })
+            ),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'comic-files.toggle-selections.effect-failure'
+                )
+              );
+              return of(toggleComicFileSelectionsFailure());
+            })
+          )
+      ),
+      catchError(error => {
+        this.logger.error('General; failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(toggleComicFileSelectionsFailure());
       })
     );
   });

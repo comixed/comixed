@@ -28,9 +28,11 @@ import {
   LOAD_COMIC_FILES_FROM_SESSION_URL,
   LOAD_COMIC_FILES_URL,
   SCRAPE_FILENAME_URL,
-  SEND_COMIC_FILES_URL
+  SEND_COMIC_FILES_URL,
+  TOGGLE_COMIC_FILE_SELECTIONS_URL
 } from '@app/comic-files/comic-file.constants';
 import { FilenameMetadataRequest } from '@app/comic-files/models/net/filename-metadata-request';
+import { ToggleComicFileSelectionsRequest } from '@app/comic-files/models/net/toggle-comic-file-selections-request';
 
 @Injectable({
   providedIn: 'root'
@@ -61,6 +63,17 @@ export class ComicImportService {
       directory: args.directory,
       maximum: args.maximum
     } as LoadComicFilesRequest);
+  }
+
+  toggleComicFileSelections(args: {
+    filename: string;
+    selected: boolean;
+  }): Observable<any> {
+    this.logger.debug('Toggling comic file selections:', args);
+    return this.http.post(interpolate(TOGGLE_COMIC_FILE_SELECTIONS_URL), {
+      filename: args.filename,
+      selected: args.selected
+    } as ToggleComicFileSelectionsRequest);
   }
 
   /**

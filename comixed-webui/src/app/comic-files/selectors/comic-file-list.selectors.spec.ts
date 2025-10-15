@@ -23,8 +23,7 @@ import {
 import {
   selectComicFileGroups,
   selectComicFileListState,
-  selectComicFiles,
-  selectComicFileSelections
+  selectComicFiles
 } from './comic-file-list.selectors';
 import {
   COMIC_FILE_1,
@@ -50,10 +49,9 @@ describe('ComicFileList Selectors', () => {
 
   beforeEach(() => {
     state = {
-      loading: Math.random() > 0.5,
+      busy: Math.random() > 0.5,
       groups: GROUPS,
-      files: FILES,
-      selections: FILES
+      files: FILES
     };
   });
 
@@ -79,13 +77,5 @@ describe('ComicFileList Selectors', () => {
         [COMIC_FILE_LIST_FEATURE_KEY]: state
       })
     ).toEqual(state.files);
-  });
-
-  it('should select the selected comic files', () => {
-    expect(
-      selectComicFileSelections({
-        [COMIC_FILE_LIST_FEATURE_KEY]: state
-      })
-    ).toEqual(state.selections);
   });
 });

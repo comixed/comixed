@@ -19,7 +19,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
-import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import {
   sendComicFiles,
@@ -30,7 +30,6 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicImportService } from '@app/comic-files/services/comic-import.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
-import { resetComicFileList } from '@app/comic-files/actions/comic-file-list.actions';
 
 @Injectable()
 export class ImportComicFilesEffects {
@@ -61,7 +60,7 @@ export class ImportComicFilesEffects {
                 )
               )
             ),
-            mergeMap(() => [sendComicFilesSuccess(), resetComicFileList()]),
+            map(() => sendComicFilesSuccess()),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(
