@@ -35,8 +35,7 @@ import { getUserPreference } from '@app/user';
 import { Title } from '@angular/platform-browser';
 import {
   selectComicFileListState,
-  selectComicFiles,
-  selectComicFileSelections
+  selectComicFiles
 } from '@app/comic-files/selectors/comic-file-list.selectors';
 import { selectImportComicFilesState } from '@app/comic-files/selectors/import-comic-files.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
@@ -67,13 +66,10 @@ import {
   MatTable,
   MatTableDataSource
 } from '@angular/material/table';
-import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import {
-  clearComicFileSelections,
   loadComicFilesFromSession,
-  resetComicFileList,
-  setComicFilesSelectedState
+  toggleComicFileSelections
 } from '@app/comic-files/actions/comic-file-list.actions';
 import { Router } from '@angular/router';
 import { saveUserPreference } from '@app/user/actions/user.actions';
@@ -152,7 +148,7 @@ export class ImportComicsPageComponent
     'base-filename',
     'size'
   ];
-  dataSource = new MatTableDataSource<SelectableListItem<ComicFile>>([]);
+  dataSource = new MatTableDataSource<ComicFile>([]);
   langChangeSubscription: Subscription;
   filesSubscription$: Subscription;
   files: ComicFile[];
@@ -161,8 +157,7 @@ export class ImportComicsPageComponent
   user: User;
   comicFileListStateSubscription$: Subscription;
   sendComicFilesStateSubscription$: Subscription;
-  selectedFilesSubscription$: Subscription;
-  selectedFiles: ComicFile[] = [];
+  selectedFileCount = 0;
   pageSize = PAGE_SIZE_DEFAULT;
   showFinderForm = false;
   allSelected = false;
@@ -210,21 +205,17 @@ export class ImportComicsPageComponent
       .select(selectComicFiles)
       .subscribe(files => {
         this.files = files;
-        this.updateDataSource();
+        this.dataSource.data = files;
         this.updateSelectionState();
         this.showFinderForm = false;
-      });
-    this.selectedFilesSubscription$ = this.store
-      .select(selectComicFileSelections)
-      .subscribe(selectedFiles => {
-        this.selectedFiles = selectedFiles;
-        this.updateDataSource();
-        this.updateSelectionState();
+        this.selectedFileCount = this.files.filter(
+          file => file.selected
+        ).length;
       });
     this.comicFileListStateSubscription$ = this.store
       .select(selectComicFileListState)
       .subscribe(state =>
-        this.store.dispatch(setBusyState({ enabled: state.loading }))
+        this.store.dispatch(setBusyState({ enabled: state.busy }))
       );
     this.sendComicFilesStateSubscription$ = this.store
       .select(selectImportComicFilesState)
@@ -258,16 +249,14 @@ export class ImportComicsPageComponent
         case 'selected':
           return `${data.selected}`;
         case 'base-filename':
-          return data.item.baseFilename;
+          return data.baseFilename;
         case 'filename':
-          return data.item.filename;
+          return data.filename;
         case 'size':
-          return data.item.size;
+          return data.size;
       }
-      return data.item.id;
+      return data.id;
     };
-    this.logger.debug('Resetting the list of comic files');
-    this.store.dispatch(resetComicFileList());
   }
 
   ngOnInit(): void {
@@ -283,8 +272,6 @@ export class ImportComicsPageComponent
     this.userSubscription$.unsubscribe();
     this.logger.trace('Unsubscribing from comic file updates');
     this.filesSubscription$.unsubscribe();
-    this.logger.trace('Unsubscribing from selected comic file updates');
-    this.selectedFilesSubscription$.unsubscribe();
     this.logger.trace('Unsubscribing from comic file list state updates');
     this.comicFileListStateSubscription$.unsubscribe();
     this.logger.trace('Unsubscribing from send comic file state updates');
@@ -298,13 +285,13 @@ export class ImportComicsPageComponent
       title: this.translateService.instant('comic-files.confirm-start-title'),
       message: this.translateService.instant(
         'comic-files.confirm-start-message',
-        { count: this.selectedFiles.length }
+        { count: this.selectedFileCount }
       ),
       confirm: () => {
         this.logger.debug('Starting import');
         this.store.dispatch(
           sendComicFiles({
-            files: this.selectedFiles,
+            files: this.files.filter(entry => entry.selected),
             skipMetadata: this.skipMetadata,
             skipBlockingPages: this.skipBlockingPages
           })
@@ -313,33 +300,19 @@ export class ImportComicsPageComponent
     });
   }
 
-  onToggleAllSelected(selected: boolean): void {
-    if (selected) {
-      this.onSelectAll();
-    } else {
-      this.onDeselectAll();
-    }
-  }
-
-  onSelectAll(): void {
-    this.logger.debug('Firing action: select all comic files');
+  onSelectAll(selected: boolean): void {
     this.store.dispatch(
-      setComicFilesSelectedState({
-        files: this.files,
-        selected: true
+      toggleComicFileSelections({
+        filename: '',
+        selected: selected
       })
     );
-  }
-
-  onDeselectAll(): void {
-    this.logger.debug('Deselecting all comic files');
-    this.store.dispatch(clearComicFileSelections());
   }
 
   onSelectEntry(file: ComicFile, selected: boolean): void {
     this.logger.debug('Selecting comic file:', file);
     this.store.dispatch(
-      setComicFilesSelectedState({ selected, files: [file] })
+      toggleComicFileSelections({ filename: file.filename, selected })
     );
   }
 
@@ -385,14 +358,5 @@ export class ImportComicsPageComponent
   private updateSelectionState(): void {
     this.allSelected = this.dataSource.data.every(entry => entry.selected);
     this.anySelected = this.dataSource.data.some(entry => entry.selected);
-  }
-
-  private updateDataSource() {
-    this.dataSource.data = this.files.map(file => {
-      return {
-        item: file,
-        selected: this.selectedFiles.map(entry => entry.id).includes(file.id)
-      };
-    });
   }
 }

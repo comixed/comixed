@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
@@ -186,5 +187,28 @@ public class ComicFileService {
     }
     log.debug("Initiating processing");
     this.applicationEventPublisher.publishEvent(LoadComicBooksEvent.instance);
+  }
+
+  /**
+   * Toggles the selected state for comic files.
+   *
+   * @param groups the comic file groups
+   * @param filename the filename
+   * @param selected the selected state
+   */
+  public void toggleComicFileSelections(
+      final List<ComicFileGroup> groups, final String filename, final boolean selected) {
+    if (StringUtils.isBlank(filename)) {
+      log.debug("Toggling all comic files: selected={}", selected);
+      groups.forEach(group -> group.getFiles().forEach(file -> file.setSelected(selected)));
+    } else {
+      log.debug("Toggling file: {} selected={}", filename, selected);
+      groups.forEach(
+          group ->
+              group.getFiles().stream()
+                  .filter(file -> file.getFilename().equals(filename))
+                  .findFirst()
+                  .ifPresent(file -> file.setSelected(selected)));
+    }
   }
 }

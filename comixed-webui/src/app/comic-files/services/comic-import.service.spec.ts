@@ -42,12 +42,14 @@ import {
   LOAD_COMIC_FILES_FROM_SESSION_URL,
   LOAD_COMIC_FILES_URL,
   SCRAPE_FILENAME_URL,
-  SEND_COMIC_FILES_URL
+  SEND_COMIC_FILES_URL,
+  TOGGLE_COMIC_FILE_SELECTIONS_URL
 } from '@app/comic-files/comic-file.constants';
 import { COMIC_DETAIL_2 } from '@app/comic-books/comic-books.fixtures';
 import { FilenameMetadataResponse } from '@app/comic-files/models/net/filename-metadata-response';
 import { FilenameMetadataRequest } from '@app/comic-files/models/net/filename-metadata-request';
 import { ComicFileGroup } from '@app/comic-files/models/comic-file-group';
+import { ToggleComicFileSelectionsRequest } from '@app/comic-files/models/net/toggle-comic-file-selections-request';
 
 describe('ComicImportService', () => {
   const GROUPS: ComicFileGroup[] = [
@@ -69,6 +71,7 @@ describe('ComicImportService', () => {
   const VOLUME = COMIC_DETAIL_2.volume;
   const ISSUE_NUMBER = COMIC_DETAIL_2.issueNumber;
   const COVER_DATE = COMIC_DETAIL_2.coverDate;
+  const SELECTED = Math.random() > 0.5;
 
   let service: ComicImportService;
   let httpMock: HttpTestingController;
@@ -119,6 +122,25 @@ describe('ComicImportService', () => {
       directory: ROOT_DIRECTORY,
       maximum: MAXIMUM
     } as LoadComicFilesRequest);
+    req.flush(serviceResponse);
+  });
+
+  it('can load comic files', () => {
+    const serviceResponse = {
+      groups: GROUPS
+    } as LoadComicFilesResponse;
+    service
+      .toggleComicFileSelections({ filename: '', selected: SELECTED })
+      .subscribe(response => expect(response).toEqual(serviceResponse));
+
+    const req = httpMock.expectOne(
+      interpolate(TOGGLE_COMIC_FILE_SELECTIONS_URL)
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      filename: '',
+      selected: SELECTED
+    } as ToggleComicFileSelectionsRequest);
     req.flush(serviceResponse);
   });
 

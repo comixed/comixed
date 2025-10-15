@@ -37,7 +37,10 @@ import {
   loadComicFileListFailure,
   loadComicFileLists,
   loadComicFileListSuccess,
-  loadComicFilesFromSession
+  loadComicFilesFromSession,
+  toggleComicFileSelections,
+  toggleComicFileSelectionsFailure,
+  toggleComicFileSelectionsSuccess
 } from '@app/comic-files/actions/comic-file-list.actions';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import {
@@ -59,6 +62,8 @@ describe('ComicFileListEffects', () => {
       files: [COMIC_FILE_2]
     }
   ];
+  const FILENAME = COMIC_FILE_1.filename;
+  const SELECTED = Math.random() > 0.5;
 
   let actions$: Observable<any>;
   let effects: ComicFileListEffects;
@@ -83,6 +88,9 @@ describe('ComicFileListEffects', () => {
             ),
             loadComicFiles: jasmine.createSpy(
               'ComicFileService.loadComicFiles()'
+            ),
+            toggleComicFileSelections: jasmine.createSpy(
+              'ComicFileService.toggleComicFileSelections()'
             ),
             sendComicFiles: jasmine.createSpy(
               'ComicFileService.sendComicFiles()'
@@ -205,6 +213,69 @@ describe('ComicFileListEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.loadComicFiles$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('toggling comic file selections', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = { groups: GROUPS } as LoadComicFilesResponse;
+      const action = toggleComicFileSelections({
+        filename: FILENAME,
+        selected: SELECTED
+      });
+      const outcome = toggleComicFileSelectionsSuccess({ groups: GROUPS });
+
+      actions$ = hot('-a', { a: action });
+      comicImportService.toggleComicFileSelections
+        .withArgs({
+          filename: FILENAME,
+          selected: SELECTED
+        })
+        .and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.toggleComicFileSelections$).toBeObservable(expected);
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = toggleComicFileSelections({
+        filename: FILENAME,
+        selected: SELECTED
+      });
+      const outcome = toggleComicFileSelectionsFailure();
+
+      actions$ = hot('-a', { a: action });
+      comicImportService.toggleComicFileSelections
+        .withArgs({
+          filename: FILENAME,
+          selected: SELECTED
+        })
+        .and.returnValue(throwError(() => serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.toggleComicFileSelections$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = toggleComicFileSelections({
+        filename: FILENAME,
+        selected: SELECTED
+      });
+      const outcome = toggleComicFileSelectionsFailure();
+
+      actions$ = hot('-a', { a: action });
+      comicImportService.toggleComicFileSelections
+        .withArgs({
+          filename: FILENAME,
+          selected: SELECTED
+        })
+        .and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.toggleComicFileSelections$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

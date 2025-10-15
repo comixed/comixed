@@ -20,6 +20,7 @@ import { API_ROOT_URL } from '../core';
 
 export const LOAD_COMIC_FILES_FROM_SESSION_URL = `${API_ROOT_URL}/files/session`;
 export const LOAD_COMIC_FILES_URL = `${API_ROOT_URL}/files/contents`;
+export const TOGGLE_COMIC_FILE_SELECTIONS_URL = `${API_ROOT_URL}/files/import/selections`;
 export const SEND_COMIC_FILES_URL = `${API_ROOT_URL}/files/import`;
 export const SCRAPE_FILENAME_URL = `${API_ROOT_URL}/files/metadata`;
 

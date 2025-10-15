@@ -21,6 +21,7 @@ package org.comixedproject.model.comicfiles;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.views.View;
 
@@ -51,6 +52,12 @@ public class ComicFile {
   @JsonView(View.ComicFileList.class)
   @Getter
   private long size;
+
+  @JsonProperty("selected")
+  @JsonView(View.ComicFileList.class)
+  @Getter
+  @Setter
+  private boolean selected = false;
 
   public ComicFile(final String filename, final long size) {
     this.filename = filename.replace("\\", "/");
