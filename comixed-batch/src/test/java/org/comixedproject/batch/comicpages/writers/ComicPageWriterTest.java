@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2024, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,10 @@
 package org.comixedproject.batch.comicpages.writers;
 
 import java.util.ArrayList;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.ComicPage;
-import org.comixedproject.state.comicpages.ComicPageEvent;
-import org.comixedproject.state.comicpages.ComicPageStateHandler;
+import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,20 +32,23 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.item.Chunk;
 
 @ExtendWith(MockitoExtension.class)
-class UnmarkPageWithHashWriterTest {
-  @InjectMocks private UnmarkPageWithHashWriter writer;
-  @Mock private ComicPageStateHandler comicPageStateHandler;
+class ComicPageWriterTest {
+  @InjectMocks private ComicPageWriter writer;
+  @Mock private ComicStateHandler comicStateHandler;
+
   @Mock private ComicPage page;
+  @Mock private ComicBook comicBook;
 
   private Chunk<ComicPage> pageList = new Chunk<>(new ArrayList<>());
 
   @Test
   void write() throws Exception {
+    Mockito.when(page.getComicBook()).thenReturn(comicBook);
     pageList.add(page);
 
     writer.write(pageList);
 
-    Mockito.verify(comicPageStateHandler, Mockito.times(pageList.size()))
-        .fireEvent(page, ComicPageEvent.unmarkForDeletion);
+    Mockito.verify(comicStateHandler, Mockito.times(pageList.size()))
+        .fireEvent(comicBook, ComicEvent.detailsUpdated);
   }
 }

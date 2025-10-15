@@ -63,13 +63,6 @@ public class ComicPage {
   @NonNull
   private ComicPageType pageType = ComicPageType.STORY;
 
-  @Column(name = "page_state", nullable = false, updatable = true, columnDefinition = "VARCHAR(32)")
-  @Enumerated(EnumType.STRING)
-  @Getter
-  @Setter
-  @NonNull
-  private ComicPageState pageState = ComicPageState.STABLE;
-
   @Column(name = "filename", length = 1024, updatable = true, nullable = false)
   @JsonProperty("filename")
   @JsonView({View.ComicListView.class})
@@ -134,9 +127,9 @@ public class ComicPage {
 
   @Transient
   @JsonProperty("deleted")
-  @JsonView({View.ComicListView.class})
+  @JsonView({View.ComicDetailsView.class})
   public boolean isDeleted() {
-    return ComicPageState.DELETED.equals(this.pageState);
+    return pageType == ComicPageType.DELETED;
   }
 
   @Override
@@ -147,7 +140,6 @@ public class ComicPage {
     return isBlocked() == page.isBlocked()
         && Objects.equals(getComicBook(), page.getComicBook())
         && getPageType() == page.getPageType()
-        && getPageState() == page.getPageState()
         && Objects.equals(getFilename(), page.getFilename())
         && Objects.equals(getHash(), page.getHash())
         && Objects.equals(getPageNumber(), page.getPageNumber())
@@ -162,7 +154,6 @@ public class ComicPage {
         getComicPageId(),
         getComicBook(),
         getPageType(),
-        getPageState(),
         getFilename(),
         getHash(),
         getPageNumber(),

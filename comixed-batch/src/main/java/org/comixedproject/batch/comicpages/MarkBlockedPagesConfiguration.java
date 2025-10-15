@@ -22,7 +22,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.comicpages.listeners.MarkBlockedPagesChunkListener;
 import org.comixedproject.batch.comicpages.listeners.MarkBlockedPagesJobListener;
 import org.comixedproject.batch.comicpages.readers.MarkBlockedPagesReader;
-import org.comixedproject.batch.comicpages.writers.MarkBlockedPagesWriter;
+import org.comixedproject.batch.comicpages.writers.ComicPageWriter;
 import org.comixedproject.batch.processors.NoopProcessor;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.springframework.batch.core.Job;
@@ -89,7 +89,7 @@ public class MarkBlockedPagesConfiguration {
       final PlatformTransactionManager platformTransactionManager,
       final MarkBlockedPagesReader reader,
       final NoopProcessor<ComicPage> processor,
-      final MarkBlockedPagesWriter writer,
+      final ComicPageWriter writer,
       final MarkBlockedPagesChunkListener chunkListener) {
     return new StepBuilder("markBlockedPagesStep", jobRepository)
         .<ComicPage, ComicPage>chunk(this.chunkSize, platformTransactionManager)

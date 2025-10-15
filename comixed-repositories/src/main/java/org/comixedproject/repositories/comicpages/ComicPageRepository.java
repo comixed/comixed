@@ -21,7 +21,6 @@ package org.comixedproject.repositories.comicpages;
 import java.util.List;
 import java.util.Set;
 import org.comixedproject.model.comicpages.ComicPage;
-import org.comixedproject.model.comicpages.ComicPageState;
 import org.comixedproject.model.comicpages.DeletedPageAndComic;
 import org.comixedproject.model.library.DuplicatePage;
 import org.springframework.data.domain.Pageable;
@@ -68,13 +67,22 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
   long getDuplicatePageCount();
 
   /**
-   * Returns the list of pages that have the given hash and state flag value.
+   * Returns the list of pages that have the given hash and are marked for deletion.
    *
    * @param hash the page hash
-   * @param state the state
    * @return the pages
    */
-  List<ComicPage> findByHashAndPageState(String hash, ComicPageState state);
+  @Query("SELECT p FROM ComicPage p WHERE p.hash = :hash AND p.pageType = 'DELETED'")
+  List<ComicPage> getDeletedWithHash(@Param("hash") String hash);
+
+  /**
+   * Returns the list of pages that have the given hash and are not marked for deletion.
+   *
+   * @param hash the page hash
+   * @return the pages
+   */
+  @Query("SELECT p FROM ComicPage p WHERE p.hash = :hash AND p.pageType != 'DELETED'")
+  List<ComicPage> getNotDeletedWithHash(@Param("hash") String hash);
 
   /**
    * Loads all pages marked for deletion along with their owning comic.
@@ -82,7 +90,7 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
    * @return the page list
    */
   @Query(
-      "SELECT new org.comixedproject.model.comicpages.DeletedPageAndComic(p.hash, p.comicBook) FROM ComicPage p WHERE p.pageState = 'DELETED'")
+      "SELECT new org.comixedproject.model.comicpages.DeletedPageAndComic(p.hash, p.comicBook) FROM ComicPage p WHERE p.pageType = 'DELETED'")
   List<DeletedPageAndComic> loadAllDeletedPages();
 
   /**
@@ -138,11 +146,11 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
   long getPagesWithoutHashesCount();
 
   @Query(
-      "SELECT p FROM ComicPage p WHERE p.pageState != 'DELETED' AND p.hash IN (SELECT b.hash FROM BlockedHash b)")
+      "SELECT p FROM ComicPage p WHERE p.pageType != 'DELETED' AND p.hash IN (SELECT b.hash FROM BlockedHash b)")
   List<ComicPage> getUnmarkedWithBlockedHash(Pageable pageable);
 
   @Query(
-      "SELECT count(p) FROM ComicPage p WHERE p.pageState != 'DELETED' AND p.hash IN (SELECT b.hash FROM BlockedHash b)")
+      "SELECT count(p) FROM ComicPage p WHERE p.pageType != 'DELETED' AND p.hash IN (SELECT b.hash FROM BlockedHash b)")
   long getUnmarkedWithBlockedHashCount();
 
   @Query("SELECT p FROM ComicPage p WHERE p.hash ilike :hash")
