@@ -180,7 +180,7 @@ public class ComicStateMachineConfiguration
         .and()
         .withExternal()
         .source(ComicState.CHANGED)
-        .target(ComicState.STABLE)
+        .target(ComicState.CHANGED)
         .event(ComicEvent.metadataUpdated)
         .action(metadataUpdatedAction)
         // the comic archive was recreated
