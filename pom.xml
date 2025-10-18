@@ -3,7 +3,7 @@
   <groupId>org.comixedproject</groupId>
   <artifactId>comixed</artifactId>
   <packaging>pom</packaging>
-  <version>3.0.0</version>
+  <version>3.0.1</version>
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -410,7 +410,7 @@
         <artifactId>gitlog-maven-plugin</artifactId>
         <version>1.14.0</version>
         <configuration>
-          <reportTitle>Changelog for ComiXed v3.0.0</reportTitle>
+          <reportTitle>Changelog for ComiXed v3.0.1</reportTitle>
           <verbose>false</verbose>
           <outputDirectory>${project.basedir}</outputDirectory>
           <generateMarkdownChangeLog>true</generateMarkdownChangeLog>

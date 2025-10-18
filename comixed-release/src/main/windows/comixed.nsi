@@ -1,5 +1,5 @@
 !define NAME "ComiXed"
-!define VERSION "3.0.0"
+!define VERSION "3.0.1"
 !define SLUG "${NAME} ${VERSION}"
 
 Name "${NAME}"
@@ -21,7 +21,7 @@ File ..\assembly\scripts\run.bat
 File ..\assembly\scripts\dbbackup.bat
 File ..\assembly\scripts\dbrestore.bat
 File ..\assembly\scripts\dbtool.bat
-File ..\..\..\..\comixed-app\target\comixed-app-3.0.0.jar
+File ..\..\..\..\comixed-app\target\comixed-app-3.0.1.jar
 File ..\..\..\target\classes\org\comixedproject\modules\windows_agent_installer\comixed-service.exe
 File .\comixed-service.xml
 
