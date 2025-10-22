@@ -162,7 +162,7 @@ class BatchProcessesServiceTest {
     assertNotNull(result);
     assertEquals(TEST_INSTANCE_COUNT, result.size());
 
-    Mockito.verify(jobRepository, Mockito.times(1)).deleteJobExecution(jobExecution);
+    Mockito.verify(jobRepository, Mockito.times(1)).deleteJobInstance(jobInstance);
   }
 
   @Test
@@ -176,7 +176,7 @@ class BatchProcessesServiceTest {
     assertNotNull(result);
     assertEquals(TEST_INSTANCE_COUNT, result.size());
 
-    Mockito.verify(jobRepository, Mockito.times(1)).deleteJobExecution(jobExecution);
+    Mockito.verify(jobRepository, Mockito.times(1)).deleteJobInstance(jobInstance);
   }
 
   @Test

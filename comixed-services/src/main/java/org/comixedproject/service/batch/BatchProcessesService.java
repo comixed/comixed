@@ -126,14 +126,15 @@ public class BatchProcessesService {
             jobName, 0, (int) this.jobExplorer.getJobInstanceCount(jobName));
     for (int whichInstance = 0; whichInstance < jobInstances.size(); whichInstance++) {
       final JobInstance jobInstance = jobInstances.get(whichInstance);
-      final List<JobExecution> jobExecutions = this.jobExplorer.getJobExecutions(jobInstance);
-      for (int whichExecution = 0; whichExecution < jobExecutions.size(); whichExecution++) {
-        final JobExecution jobExecution = jobExecutions.get(whichExecution);
-        if (Objects.nonNull(jobExecution.getExitStatus())
-            && DELETABLE_JOB_STATUSES.contains(jobExecution.getExitStatus().getExitCode())) {
-          log.trace("Deleting job execution: {}", jobExecution.getJobId());
-          this.jobRepository.deleteJobExecution(jobExecution);
-        }
+      if (this.jobExplorer.getJobExecutions(jobInstance).stream()
+          .filter(execution -> Objects.nonNull(execution.getExitStatus()))
+          .filter(
+              execution ->
+                  !DELETABLE_JOB_STATUSES.contains(execution.getExitStatus().getExitCode()))
+          .toList()
+          .isEmpty()) {
+        log.debug("Deleting job instance: id={}", jobInstance.getId());
+        this.jobRepository.deleteJobInstance(jobInstance);
       }
     }
   }
