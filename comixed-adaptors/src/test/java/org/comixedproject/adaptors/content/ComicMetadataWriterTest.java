@@ -29,6 +29,7 @@ class ComicMetadataWriterTest {
   private static final String TEST_METADATA_SOURCE_NAME = "ComicVine";
   private static final String TEST_METADATA_REFERENCE_ID = "12971";
   private static final Date TEST_COVER_DATE = new Date();
+  private static final Date TEST_LAST_SCRAPED_DATE = new Date();
 
   @InjectMocks private ComicMetadataWriter writer;
   @Mock private ObjectMapper objectMapper;
@@ -58,6 +59,7 @@ class ComicMetadataWriterTest {
     Mockito.when(metadataSource.getAdaptorName()).thenReturn(TEST_METADATA_SOURCE_NAME);
     Mockito.when(comicMetadataSource.getMetadataSource()).thenReturn(metadataSource);
     Mockito.when(comicMetadataSource.getReferenceId()).thenReturn(TEST_METADATA_REFERENCE_ID);
+    Mockito.when(comicMetadataSource.getLastScrapedDate()).thenReturn(TEST_LAST_SCRAPED_DATE);
     for (int index = 0; index < PageType.values().length; index++) {
       final ComicPage page = mock(ComicPage.class);
       Mockito.when(page.getPageNumber()).thenReturn(index);

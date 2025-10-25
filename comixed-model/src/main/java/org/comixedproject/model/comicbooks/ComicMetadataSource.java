@@ -67,13 +67,13 @@ public class ComicMetadataSource {
   @NonNull
   private String referenceId;
 
-  @Column(name = "last_modified_date", nullable = false, updatable = true)
-  @JsonProperty("lastModifiedDate")
+  @Column(name = "last_scraped_date", nullable = false, updatable = true)
+  @JsonProperty("lastScrapedDate")
   @JsonView({View.ComicListView.class})
   @Getter
   @Setter
   @NonNull
-  private Date lastModifiedDate = new Date();
+  private Date lastScrapedDate;
 
   @Override
   public boolean equals(final Object o) {

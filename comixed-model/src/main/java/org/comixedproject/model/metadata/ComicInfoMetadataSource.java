@@ -43,6 +43,11 @@ public class ComicInfoMetadataSource {
   @Setter
   private String referenceId;
 
+  @JsonProperty("LastScraped")
+  @Getter
+  @Setter
+  private String lastScrapedDate;
+
   @Override
   public int hashCode() {
     return Objects.hash(name, referenceId);

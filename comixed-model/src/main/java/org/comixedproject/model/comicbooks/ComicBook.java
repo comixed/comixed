@@ -180,6 +180,7 @@ public class ComicBook {
 
   @Transient @Getter @Setter private String metadataSourceName;
   @Transient @Getter @Setter private String metadataReferenceId;
+  @Transient @Getter @Setter private Date lastScrapedDate;
 
   public int getIndexFor(ComicPage page) {
     if (this.pages.contains(page)) return this.pages.indexOf(page);

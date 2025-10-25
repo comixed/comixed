@@ -21,6 +21,7 @@ package org.comixedproject.batch.comicbooks.processors;
 import static junit.framework.TestCase.*;
 import static junit.framework.TestCase.assertFalse;
 
+import java.util.Date;
 import java.util.List;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
@@ -51,6 +52,7 @@ class LoadFileContentsProcessorTest {
   private static final String TEST_PROVIDER_NAME = "Provider Name";
   private static final String TEST_WEB_ADDRESS = "The metadata web reference";
   private static final String TEST_REFERENCE_ID = "The reference id";
+  private static final Date TEST_LAST_SCRAPED_DATE = new Date();
 
   @InjectMocks private LoadFileContentsProcessor processor;
   @Mock private ComicCheckOutManager comicCheckOutManager;
@@ -76,6 +78,7 @@ class LoadFileContentsProcessorTest {
   public void setUp() throws ContentAdaptorException, AdaptorException {
     Mockito.doNothing().when(comicBook).setMetadata(comicMetadataSourceArgumentCaptor.capture());
     Mockito.when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME);
+    Mockito.when(comicBook.getLastScrapedDate()).thenReturn(TEST_LAST_SCRAPED_DATE);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(false);
     Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.anyString()))
@@ -142,6 +145,7 @@ class LoadFileContentsProcessorTest {
     assertNotNull(comicMetadataSource);
     assertSame(metadataSource, comicMetadataSource.getMetadataSource());
     assertEquals(TEST_REFERENCE_ID, comicMetadataSource.getReferenceId());
+    assertSame(TEST_LAST_SCRAPED_DATE, comicMetadataSource.getLastScrapedDate());
 
     Mockito.verify(comicBookAdaptor, Mockito.times(1))
         .load(comicBook, comicBookContentAdaptorRulesArgumentCaptor.getValue());
