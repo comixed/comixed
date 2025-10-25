@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="003_2473_added_last_scraped_date.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="comic_metadata_sources" columnName="last_scraped_date"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="comic_metadata_sources">
+            <column name="last_scraped_date" type="date"/>
+        </addColumn>
+
+        <sql>UPDATE comic_metadata_sources
+             SET last_scraped_date=last_modified_date</sql>
+
+        <sql>UPDATE comic_details
+             SET comic_state='CHANGED'
+             WHERE comic_state = 'STABLE'
+               AND comic_book_id IN (SELECT comic_book_id FROM comic_metadata_sources)</sql>
+
+        <dropColumn tableName="comic_metadata_sources" columnName="last_modified_date"/>
+
+    </changeSet>
+</databaseChangeLog>
