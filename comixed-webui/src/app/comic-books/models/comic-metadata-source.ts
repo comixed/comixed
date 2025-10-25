@@ -21,5 +21,5 @@ import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 export interface ComicMetadataSource {
   metadataSource: MetadataSource;
   referenceId: string;
-  lastModifiedDate: number;
+  lastScrapedDate: number;
 }

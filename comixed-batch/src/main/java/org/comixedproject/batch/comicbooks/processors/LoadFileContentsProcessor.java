@@ -19,6 +19,7 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import java.io.File;
+import java.util.Date;
 import java.util.Objects;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
@@ -94,15 +95,22 @@ public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, Comic
           final MetadataSource source =
               this.metadataSourceService.getByAdaptorName(provider.getName());
           final String referenceId = adaptor.getReferenceId(metadataWebAddress);
+          Date lastScrapedDate = comicBook.getLastScrapedDate();
+          if (Objects.isNull(lastScrapedDate)) {
+            // if no last scraped date is available, then use the last modified date instead.
+            lastScrapedDate = comicBook.getLastModifiedOn();
+          }
           log.debug(
               "Setting metadata source: source={} reference id={}",
               source.getAdaptorName(),
               referenceId);
           if (Objects.isNull(comicBook.getMetadata())) {
-            comicBook.setMetadata(new ComicMetadataSource(comicBook, source, referenceId));
+            comicBook.setMetadata(
+                new ComicMetadataSource(comicBook, source, referenceId, lastScrapedDate));
           } else {
             comicBook.getMetadata().setMetadataSource(source);
             comicBook.getMetadata().setReferenceId(referenceId);
+            comicBook.getMetadata().setLastScrapedDate(lastScrapedDate);
           }
         }
       }

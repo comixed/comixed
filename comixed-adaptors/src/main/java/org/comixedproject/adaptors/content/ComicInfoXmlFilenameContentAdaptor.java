@@ -18,12 +18,15 @@
 
 package org.comixedproject.adaptors.content;
 
+import static java.util.Calendar.*;
 import static org.apache.commons.lang3.StringUtils.trim;
 import static org.apache.commons.lang3.StringUtils.truncate;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
@@ -48,6 +51,7 @@ import org.springframework.util.StringUtils;
 public class ComicInfoXmlFilenameContentAdaptor implements FilenameContentAdaptor {
   @Getter private ArchiveEntryType archiveEntryType = ArchiveEntryType.FILE;
 
+  private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
   private MappingJackson2XmlHttpMessageConverter xmlConverter;
 
   public ComicInfoXmlFilenameContentAdaptor() {
@@ -94,6 +98,10 @@ public class ComicInfoXmlFilenameContentAdaptor implements FilenameContentAdapto
         log.debug("Loading comic metadata source details");
         comicBook.setMetadataSourceName(comicInfo.getMetadata().getName());
         comicBook.setMetadataReferenceId(trim(comicInfo.getMetadata().getReferenceId()));
+        if (StringUtils.hasLength(comicInfo.getMetadata().getLastScrapedDate())) {
+          comicBook.setLastScrapedDate(
+              this.dateFormat.parse(comicInfo.getMetadata().getLastScrapedDate()));
+        }
       }
       final ComicDetail detail = comicBook.getComicDetail();
       detail.setWebAddress(comicInfo.getWeb());
@@ -163,7 +171,7 @@ public class ComicInfoXmlFilenameContentAdaptor implements FilenameContentAdapto
           }
         }
       }
-    } catch (IOException error) {
+    } catch (IOException | ParseException error) {
       throw new ContentAdaptorException("Failed to load ComicInfo.xml", error);
     }
   }

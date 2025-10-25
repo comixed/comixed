@@ -26,6 +26,7 @@
     <MetadataSource>
         <Name>ComicVine</Name>
         <ReferenceId>12971</ReferenceId>
+        <LastScraped>2025-07-17</LastScraped>
     </MetadataSource>
     <Pages>
         <Page Image="0" ImageSize="628012" ImageWidth="1280" ImageHeight="1966" Type="FrontCover" Filename="page-0.png"
