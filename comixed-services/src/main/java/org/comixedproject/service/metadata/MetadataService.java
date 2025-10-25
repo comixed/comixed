@@ -408,7 +408,8 @@ public class MetadataService {
       log.trace("Creating comicBook metadata record");
       if (Objects.isNull(comicBook.getMetadata())) {
         comicBook.setMetadata(
-            new ComicMetadataSource(comicBook, metadataSource, trim(issueDetails.getSourceId())));
+            new ComicMetadataSource(
+                comicBook, metadataSource, trim(issueDetails.getSourceId()), new Date()));
       } else {
         comicBook.getMetadata().setMetadataSource(metadataSource);
         comicBook.getMetadata().setReferenceId(trim(issueDetails.getSourceId()));
@@ -421,7 +422,7 @@ public class MetadataService {
       log.trace("Checking for imprint");
       this.imprintService.update(comicBook);
       log.trace("Setting the comic metadata source last modified date");
-      comicBook.getMetadata().setLastModifiedDate(new Date());
+      comicBook.getMetadata().setLastScrapedDate(new Date());
       log.trace("Updating comicBook state: scraped");
       this.comicStateHandler.fireEvent(comicBook, ComicEvent.scraped);
     }
@@ -519,7 +520,8 @@ public class MetadataService {
               } else {
                 log.trace("Creating comic metadata source", comicBook.getComicBookId());
                 comicBook.setMetadata(
-                    new ComicMetadataSource(comicBook, metadataSource, trim(issue.getSourceId())));
+                    new ComicMetadataSource(
+                        comicBook, metadataSource, trim(issue.getSourceId()), new Date()));
               }
               log.debug("Firing comic book event: id={}", comicBook.getComicBookId());
               this.comicStateHandler.fireEvent(comicBook, ComicEvent.detailsUpdated);

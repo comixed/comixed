@@ -39,7 +39,7 @@
                             comic_book_id="1000"
                             metadata_source_id="1000"
                             reference_id="1000"
-                            last_modified_date="[now]"/>
+                            last_scraped_date="[now]"/>
     <comic_books comic_book_id="1001"
                  file_contents_loaded="true"
                  update_metadata="true"

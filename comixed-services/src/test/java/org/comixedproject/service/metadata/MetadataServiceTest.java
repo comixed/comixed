@@ -1115,7 +1115,7 @@ class MetadataServiceTest {
     Mockito.verify(loadedComicDetail, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
     Mockito.verify(loadedComicDetail, Mockito.times(1)).setWebAddress(TEST_WEB_ADDRESS);
     Mockito.verify(imprintService, Mockito.times(1)).update(comicBook);
-    Mockito.verify(comicMetadataSource, Mockito.times(1)).setLastModifiedDate(Mockito.any());
+    Mockito.verify(comicMetadataSource, Mockito.times(1)).setLastScrapedDate(Mockito.any());
   }
 
   @Test

@@ -20,6 +20,7 @@ package org.comixedproject.adaptors.content;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.stream.Collectors;
@@ -39,6 +40,8 @@ import org.springframework.util.StringUtils;
 @Log4j2
 public class ComicMetadataWriter implements InitializingBean {
   @Autowired MappingJackson2XmlHttpMessageConverter xmlConverter;
+
+  private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
   @Override
   public void afterPropertiesSet() throws Exception {
@@ -158,7 +161,9 @@ public class ComicMetadataWriter implements InitializingBean {
       log.debug("Adding metadata source details");
       comicInfo.setMetadata(
           new ComicInfoMetadataSource(
-              metadata.getMetadataSource().getAdaptorName(), metadata.getReferenceId()));
+              metadata.getMetadataSource().getAdaptorName(),
+              metadata.getReferenceId(),
+              this.dateFormat.format(metadata.getLastScrapedDate())));
     }
     comicBook
         .getPages()
