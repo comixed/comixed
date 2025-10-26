@@ -18,6 +18,7 @@
 
 export enum ComicState {
   ADDED = 'ADDED',
+  DISCOVERED = 'DISCOVERED',
   UNPROCESSED = 'UNPROCESSED',
   STABLE = 'STABLE',
   CHANGED = 'CHANGED',

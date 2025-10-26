@@ -1450,7 +1450,7 @@ class ComicBookServiceTest {
   void hasComicsWithUnhashedPagesCount_withNoSuchComics() {
     Mockito.when(comicBookRepository.findComicsWithUnhashedPagesCount()).thenReturn(0L);
 
-    final boolean result = service.hasComicsWithUnashedPages();
+    final boolean result = service.hasComicsWithUnhashedPages();
 
     assertFalse(result);
 
@@ -1462,7 +1462,7 @@ class ComicBookServiceTest {
     Mockito.when(comicBookRepository.findComicsWithUnhashedPagesCount())
         .thenReturn(TEST_COMIC_COUNT);
 
-    final boolean result = service.hasComicsWithUnashedPages();
+    final boolean result = service.hasComicsWithUnhashedPages();
 
     assertTrue(result);
 

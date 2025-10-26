@@ -24,6 +24,10 @@ package org.comixedproject.state.comicbooks;
  * @author Darryl L. Pierce
  */
 public enum ComicEvent {
+  // the comic was discovered
+  comicDiscovered,
+  // the discovered comic was imported
+  imported,
   // the comic book was created
   readyForProcessing,
   // the file entries have been loaded
@@ -47,6 +51,7 @@ public enum ComicEvent {
   // some detail of the comic was changed
   detailsUpdated,
   metadataCleared,
+  // a file in the library was deleted from disk
   markAsMissing,
   markAsFound,
   markedForRemoval,

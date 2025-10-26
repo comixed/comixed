@@ -34,22 +34,24 @@ import org.comixedproject.service.admin.ConfigurationChangedListener;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicDetailService;
+import org.comixedproject.service.comicfiles.ComicFileService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 /**
- * <code>MissingFileScanner</code> performs checks for missing comic files, updating the library.
+ * <code>LibraryScannerService</code> monitors the library directory, processing changes.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class MissingFileScanner implements InitializingBean, ConfigurationChangedListener {
+public class LibraryScannerService implements InitializingBean, ConfigurationChangedListener {
   @Autowired private ConfigurationService configurationService;
   @Autowired private ComicBookService comicBookService;
   @Autowired private ComicDetailService comicDetailService;
+  @Autowired private ComicFileService comicFileService;
 
   private static final Object SEMAPHORE = new Object();
 
@@ -117,7 +119,7 @@ public class MissingFileScanner implements InitializingBean, ConfigurationChange
         new Thread() {
           @Override
           public void run() {
-            MissingFileScanner.this.processEvents();
+            LibraryScannerService.this.processEvents();
           }
         };
     processingThread.start();
@@ -167,17 +169,28 @@ public class MissingFileScanner implements InitializingBean, ConfigurationChange
     final Path dir = (Path) key.watchable();
     final Path name = Path.of(((WatchEvent<Path>) event).context().toString());
     final String filename = dir.resolve(name).toString();
-    if (event.kind() != OVERFLOW && this.comicDetailService.filenameFound(filename)) {
-      if (event.kind() == ENTRY_CREATE || event.kind() == ENTRY_MODIFY) {
-        log.trace("File found: {}", filename);
-        this.comicBookService.markComicAsFound(filename);
-      } else if (event.kind() == ENTRY_DELETE) {
-        log.trace("File deleted: {}", filename);
-        this.comicBookService.markComicAsMissing(filename);
-      } else {
-        log.trace("Not a library file: {}", filename);
-      }
+    if (event.kind() == ENTRY_CREATE || event.kind() == ENTRY_MODIFY) {
+      this.doFileFound(filename);
+    } else if (event.kind() == ENTRY_DELETE) {
+      this.doFileDeleted(filename);
+    } else {
+      log.debug("Unhandled watch event: {}", event.kind());
     }
+  }
+
+  private void doFileFound(final String filename) {
+    if (this.comicDetailService.filenameFound(filename)) {
+      log.debug("Missing file found: {}", filename);
+      this.comicBookService.markComicAsFound(filename);
+    } else {
+      log.debug("Comic book discovered: {}", filename);
+      this.comicFileService.discoverComicFile(filename);
+    }
+  }
+
+  private void doFileDeleted(final String filename) {
+    log.debug("File deleted: {}", filename);
+    this.comicBookService.markComicAsMissing(filename);
   }
 
   private void scanLibrary() {

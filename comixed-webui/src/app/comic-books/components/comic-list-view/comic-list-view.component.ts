@@ -28,18 +28,18 @@ import {
   Output
 } from '@angular/core';
 import {
-  MatTableDataSource,
-  MatTable,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderCell,
-  MatCellDef,
   MatCell,
-  MatHeaderRowDef,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
   MatHeaderRow,
-  MatRowDef,
+  MatHeaderRowDef,
+  MatNoDataRow,
   MatRow,
-  MatNoDataRow
+  MatRowDef,
+  MatTable,
+  MatTableDataSource
 } from '@angular/material/table';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
@@ -49,7 +49,7 @@ import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   convertSelectedComicBooks,
   convertSingleComicBook
@@ -103,16 +103,16 @@ import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import { loadReadingLists } from '@app/lists/actions/reading-lists.actions';
 import {
   MatCard,
-  MatCardTitle,
+  MatCardContent,
   MatCardSubtitle,
-  MatCardContent
+  MatCardTitle
 } from '@angular/material/card';
 import { ComicListFilterComponent } from '../comic-list-filter/comic-list-filter.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatLabel } from '@angular/material/form-field';
 import { AsyncPipe, DatePipe } from '@angular/common';
@@ -302,6 +302,8 @@ export class ComicListViewComponent
     switch (comicState) {
       case ComicState.ADDED:
         return 'add';
+      case ComicState.DISCOVERED:
+        return 'file_present';
       case ComicState.UNPROCESSED:
         return 'bolt';
       case ComicState.STABLE:

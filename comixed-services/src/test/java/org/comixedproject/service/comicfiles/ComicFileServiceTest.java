@@ -210,7 +210,7 @@ class ComicFileServiceTest {
   }
 
   @Test
-  void imporComicFiles() throws AdaptorException {
+  void importComicFiles() throws AdaptorException {
     Mockito.when(comicDetailService.filenameFound(Mockito.anyString())).thenReturn(false);
 
     service.importComicFiles(filenameList);
@@ -268,6 +268,19 @@ class ComicFileServiceTest {
         .fireEvent(comicBook, ComicEvent.readyForProcessing);
     Mockito.verify(applicationEventPublisher, Mockito.times(1))
         .publishEvent(LoadComicBooksEvent.instance);
+  }
+
+  @Test
+  void discoverComicFile() throws AdaptorException {
+    Mockito.when(comicDetailService.filenameFound(Mockito.anyString())).thenReturn(false);
+
+    service.discoverComicFile(TEST_ARCHIVE_FILENAME);
+
+    Mockito.verify(comicBookAdaptor, Mockito.times(1)).createComic(TEST_ARCHIVE_FILENAME);
+    Mockito.verify(filenameScrapingRuleService, Mockito.times(1))
+        .loadFilenameMetadata(TEST_ARCHIVE_FILENAME);
+    Mockito.verify(comicStateHandler, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.comicDiscovered);
   }
 
   @Test

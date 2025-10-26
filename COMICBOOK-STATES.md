@@ -6,8 +6,10 @@ This diagram describes the state changes for comics as events occur.
 
 ```mermaid
 stateDiagram-v2
-   [*] --> ADDED: Comic book objected created
-   ADDED --> UNPROCESSED: Record inserted into the ComicBooks table
+   [*] --> CREATED: Comic book objected created
+   CREATED --> DISCOVERED: A comic book was discovered
+   DISCOVERED --> UNPROCESSED: A discovered comic was imported
+   CREATED --> UNPROCESSED: Record inserted into the ComicBooks table
    UNPROCESSED --> STABLE: Contents of comic file are loaded
    STABLE --> CHANGED: The metadata for the comic changed
    STABLE --> CHANGED: The page state changed

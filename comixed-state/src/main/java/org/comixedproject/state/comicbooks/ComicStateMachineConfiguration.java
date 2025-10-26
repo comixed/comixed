@@ -67,7 +67,19 @@ public class ComicStateMachineConfiguration
   public void configure(final StateMachineTransitionConfigurer<ComicState, ComicEvent> transitions)
       throws Exception {
     transitions
+        // a comic book was discovered
+        .withExternal()
+        .source(ComicState.CREATED)
+        .target(ComicState.DISCOVERED)
+        .event(ComicEvent.comicDiscovered)
+        // a discovered comic book was imported
+        .and()
+        .withExternal()
+        .source(ComicState.DISCOVERED)
+        .target(ComicState.UNPROCESSED)
+        .event(ComicEvent.imported)
         // created
+        .and()
         .withExternal()
         .source(ComicState.CREATED)
         .target(ComicState.UNPROCESSED)
