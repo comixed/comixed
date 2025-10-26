@@ -63,7 +63,7 @@ public class ProcessUnhashedComicsInitiator {
   public void execute() {
     synchronized (MUTEX) {
       log.trace("Checking for pages without hashes");
-      if (this.comicBookService.hasComicsWithUnashedPages()
+      if (this.comicBookService.hasComicsWithUnhashedPages()
           && !this.batchProcessesService.hasActiveExecutions(PROCESS_UNHASHED_COMICS_JOB)) {
         try {
           log.trace("Starting batch job: load page hashes");

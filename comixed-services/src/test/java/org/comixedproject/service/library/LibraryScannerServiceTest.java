@@ -30,6 +30,7 @@ import java.util.Set;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicDetailService;
+import org.comixedproject.service.comicfiles.ComicFileService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +44,7 @@ import org.mockito.quality.Strictness;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class MissingFileScannerTest {
+class LibraryScannerServiceTest {
   private static final String TEST_ROOT_DIRECTORY =
       new File("target/test-classes").getAbsolutePath();
   private static final String TEST_COMIC_FILENAME =
@@ -51,10 +52,11 @@ class MissingFileScannerTest {
   private static final String TEST_MISSING_COMIC_FILENAME = TEST_COMIC_FILENAME + "-not-found";
   private static final String TEST_RELATIVE_FILENAME = "example.cbz";
 
-  @InjectMocks private MissingFileScanner scanner;
+  @InjectMocks private LibraryScannerService scanner;
   @Mock private ConfigurationService configurationService;
   @Mock private ComicBookService comicBookService;
   @Mock private ComicDetailService comicDetailService;
+  @Mock private ComicFileService comicFileService;
   @Mock private WatchService watchService;
   @Mock private WatchKey key;
   @Mock private Path watchEventPath;
@@ -66,7 +68,7 @@ class MissingFileScannerTest {
   private Set<String> notMissingComicDetailSet = new HashSet<>();
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     Mockito.when(configurationService.getOptionValue(Mockito.anyString()))
         .thenReturn(TEST_ROOT_DIRECTORY);
     missingComicDetailSet.add(TEST_COMIC_FILENAME);
@@ -84,7 +86,7 @@ class MissingFileScannerTest {
   }
 
   @AfterEach
-  public void tearDown() throws IOException {
+  void tearDown() throws IOException {
     if (scanner.watchService != null) {
       scanner.stopWatching();
     }
@@ -151,14 +153,25 @@ class MissingFileScannerTest {
   }
 
   @Test
-  void processWatchEvent_notInLibrary() {
+  void processWatchEvent_entrycreate_notInLibrary() {
+    Mockito.when(watchEvent.kind()).thenReturn(ENTRY_CREATE);
     Mockito.when(comicDetailService.filenameFound(Mockito.anyString())).thenReturn(false);
 
     scanner.processWatchEvent(key, watchEvent);
 
     Mockito.verify(comicDetailService, Mockito.times(1)).filenameFound(TEST_COMIC_FILENAME);
-    Mockito.verify(comicBookService, Mockito.never()).markComicAsFound(Mockito.anyString());
-    Mockito.verify(comicBookService, Mockito.never()).markComicAsMissing(Mockito.anyString());
+    Mockito.verify(comicFileService, Mockito.times(1)).discoverComicFile(TEST_COMIC_FILENAME);
+  }
+
+  @Test
+  void processWatchEvent_entrycreate_inLibrary() {
+    Mockito.when(watchEvent.kind()).thenReturn(ENTRY_CREATE);
+    Mockito.when(comicDetailService.filenameFound(Mockito.anyString())).thenReturn(true);
+
+    scanner.processWatchEvent(key, watchEvent);
+
+    Mockito.verify(comicDetailService, Mockito.times(1)).filenameFound(TEST_COMIC_FILENAME);
+    Mockito.verify(comicBookService, Mockito.times(1)).markComicAsFound(TEST_COMIC_FILENAME);
   }
 
   @Test
@@ -167,7 +180,6 @@ class MissingFileScannerTest {
 
     scanner.processWatchEvent(key, watchEvent);
 
-    Mockito.verify(comicDetailService, Mockito.times(1)).filenameFound(TEST_COMIC_FILENAME);
     Mockito.verify(comicBookService, Mockito.times(1)).markComicAsMissing(TEST_COMIC_FILENAME);
   }
 

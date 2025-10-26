@@ -109,6 +109,7 @@
       "state-ADDED": "Unchanged",
       "state-CHANGED": "Changed",
       "state-DELETED": "Marked For Deletion",
+      "state-DISCOVERED": "Discovered",
       "state-REMOVED": "Removed",
       "state-STABLE": "Unchanged",
       "state-UNPROCESSED": "Unprocessed"

@@ -164,29 +164,39 @@ public class ComicFileService {
     for (int index = 0; index < filenames.size(); index++) {
       final String filename = filenames.get(index);
       if (!this.comicDetailService.filenameFound(filename)) {
-        try {
-          log.debug("Creating comicBook: filename={}", filename);
-          final ComicBook comicBook = this.comicBookAdaptor.createComic(filename);
-          log.trace("Scraping comicBook filename");
-          final FilenameMetadata metadata =
-              this.filenameScrapingRuleService.loadFilenameMetadata(
-                  comicBook.getComicDetail().getBaseFilename());
-          if (metadata.isFound()) {
-            log.trace("Scraping rule applied");
-            comicBook.getComicDetail().setSeries(metadata.getSeries());
-            comicBook.getComicDetail().setVolume(metadata.getVolume());
-            comicBook.getComicDetail().setIssueNumber(metadata.getIssueNumber());
-            comicBook.getComicDetail().setCoverDate(metadata.getCoverDate());
-          }
-          log.debug("Firing new comic book event: {}", filename);
-          this.comicStateHandler.fireEvent(comicBook, ComicEvent.readyForProcessing);
-        } catch (AdaptorException error) {
-          log.error("Failed to create comic for file: " + filename, error);
-        }
+        doImportComicFile(filename, ComicEvent.readyForProcessing);
       }
     }
     log.debug("Initiating processing");
     this.applicationEventPublisher.publishEvent(LoadComicBooksEvent.instance);
+  }
+
+  @Transactional
+  public void discoverComicFile(final String filename) {
+    log.debug("Adding discovered comic file: {}", filename);
+    this.doImportComicFile(filename, ComicEvent.comicDiscovered);
+  }
+
+  private void doImportComicFile(final String filename, final ComicEvent event) {
+    try {
+      log.debug("Creating comicBook: filename={}", filename);
+      final ComicBook comicBook = this.comicBookAdaptor.createComic(filename);
+      log.trace("Scraping comicBook filename");
+      final FilenameMetadata metadata =
+          this.filenameScrapingRuleService.loadFilenameMetadata(
+              comicBook.getComicDetail().getBaseFilename());
+      if (metadata.isFound()) {
+        log.trace("Scraping rule applied");
+        comicBook.getComicDetail().setSeries(metadata.getSeries());
+        comicBook.getComicDetail().setVolume(metadata.getVolume());
+        comicBook.getComicDetail().setIssueNumber(metadata.getIssueNumber());
+        comicBook.getComicDetail().setCoverDate(metadata.getCoverDate());
+      }
+      log.debug("Firing new comic book event: {}:{}", event, filename);
+      this.comicStateHandler.fireEvent(comicBook, event);
+    } catch (AdaptorException error) {
+      log.error("Failed to create comic for file: " + filename, error);
+    }
   }
 
   /**

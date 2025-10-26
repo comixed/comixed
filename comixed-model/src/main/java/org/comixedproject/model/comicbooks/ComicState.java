@@ -24,6 +24,8 @@ package org.comixedproject.model.comicbooks;
  * @author Darryl L. Pierce
  */
 public enum ComicState {
+  // the comic book was discovered, but not imported
+  DISCOVERED,
   // the comic book object was created
   CREATED,
   // the comic is unprocessed and needs to be loaded

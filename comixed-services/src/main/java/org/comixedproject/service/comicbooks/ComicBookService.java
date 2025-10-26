@@ -44,7 +44,6 @@ import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.comixedproject.repositories.comicbooks.ComicBookRepository;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
 import org.comixedproject.repositories.comicbooks.ComicTagRepository;
-import org.comixedproject.repositories.comicpages.ComicPageRepository;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,8 +81,6 @@ public class ComicBookService {
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
   @Autowired private ApplicationEventPublisher applicationEventPublisher;
   @Autowired private ComicTagRepository comicTagRepository;
-
-  @Autowired private ComicPageRepository comicPageRepository;
 
   /**
    * Retrieves a single comic by id. It is expected that this comic exists.
@@ -944,7 +941,7 @@ public class ComicBookService {
   public void markComicAsMissing(final String filename) {
     final ComicBook comicBook = this.comicBookRepository.findByFilename(filename);
     if (Objects.nonNull(comicBook)) {
-      log.debug("Marking comic book as missing: id={}", comicBook.getComicBookId());
+      log.debug("Processing missing comic file: {} [{}]", filename, comicBook.getComicBookId());
       this.comicStateHandler.fireEvent(comicBook, ComicEvent.markAsMissing);
     }
   }
@@ -1015,7 +1012,7 @@ public class ComicBookService {
    * @return true if there are comic books with unhashed pages
    */
   @Transactional
-  public boolean hasComicsWithUnashedPages() {
+  public boolean hasComicsWithUnhashedPages() {
     return this.comicBookRepository.findComicsWithUnhashedPagesCount() > 0L;
   }
 }

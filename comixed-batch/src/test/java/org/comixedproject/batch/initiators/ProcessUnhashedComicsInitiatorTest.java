@@ -66,7 +66,7 @@ class ProcessUnhashedComicsInitiatorTest {
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
           JobRestartException {
-    Mockito.when(comicBookService.hasComicsWithUnashedPages()).thenReturn(true);
+    Mockito.when(comicBookService.hasComicsWithUnhashedPages()).thenReturn(true);
     Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(false);
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
@@ -78,7 +78,7 @@ class ProcessUnhashedComicsInitiatorTest {
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
           JobRestartException {
-    Mockito.when(comicBookService.hasComicsWithUnashedPages()).thenReturn(false);
+    Mockito.when(comicBookService.hasComicsWithUnhashedPages()).thenReturn(false);
 
     initiator.execute();
 
