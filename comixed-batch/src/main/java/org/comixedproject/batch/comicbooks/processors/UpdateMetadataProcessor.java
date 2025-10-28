@@ -45,6 +45,10 @@ public class UpdateMetadataProcessor implements ItemProcessor<ComicBook, ComicBo
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
+    if (comicBook.getComicDetail().isMissing()) {
+      log.debug("Comic file is missing, skipping: id={}", comicBook.getComicBookId());
+      return null;
+    }
     if (comicBook.isFileContentsLoaded() == false
         || comicBook.isPurging()
         || comicBook.isBatchMetadataUpdate()

@@ -47,6 +47,10 @@ public class ProcessUnhashedComicsProcessor implements ItemProcessor<ComicBook, 
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
+    if (comicBook.getComicDetail().isMissing()) {
+      log.debug("Comic file is missing, skipping: id={}", comicBook.getComicBookId());
+      return null;
+    }
     this.comicCheckOutManager.checkOut(comicBook.getComicBookId());
     log.debug(
         "Loading page hashes for comic book: {}", comicBook.getComicDetail().getBaseFilename());

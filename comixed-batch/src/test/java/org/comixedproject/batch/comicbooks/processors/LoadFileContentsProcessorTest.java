@@ -19,13 +19,15 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import static junit.framework.TestCase.*;
-import static junit.framework.TestCase.assertFalse;
 
 import java.util.Date;
 import java.util.List;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.adaptors.content.*;
+import org.comixedproject.adaptors.content.ComicInfoXmlFilenameContentAdaptor;
+import org.comixedproject.adaptors.content.ContentAdaptorException;
+import org.comixedproject.adaptors.content.ContentAdaptorRegistry;
+import org.comixedproject.adaptors.content.ContentAdaptorRules;
 import org.comixedproject.batch.ComicCheckOutManager;
 import org.comixedproject.metadata.MetadataAdaptorProvider;
 import org.comixedproject.metadata.adaptors.MetadataAdaptor;
@@ -78,6 +80,7 @@ class LoadFileContentsProcessorTest {
   public void setUp() throws ContentAdaptorException, AdaptorException {
     Mockito.doNothing().when(comicBook).setMetadata(comicMetadataSourceArgumentCaptor.capture());
     Mockito.when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME);
+    Mockito.when(comicDetail.isMissing()).thenReturn(false);
     Mockito.when(comicBook.getLastScrapedDate()).thenReturn(TEST_LAST_SCRAPED_DATE);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(false);
@@ -97,6 +100,13 @@ class LoadFileContentsProcessorTest {
         .load(Mockito.any(ComicBook.class), comicBookContentAdaptorRulesArgumentCaptor.capture());
     Mockito.when(metadataAdaptorProvider.create()).thenReturn(metadataAdaptor);
     Mockito.when(metadataAdaptor.getReferenceId(Mockito.anyString())).thenReturn(TEST_REFERENCE_ID);
+  }
+
+  @Test
+  void process_missing() {
+    Mockito.when(comicDetail.isMissing()).thenReturn(true);
+
+    assertNull(processor.process(comicBook));
   }
 
   @Test
