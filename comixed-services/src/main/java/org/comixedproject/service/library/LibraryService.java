@@ -30,6 +30,7 @@ import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,6 +69,7 @@ public class LibraryService {
    * @param ids the comics
    */
   @Transactional
+  @Async
   public void updateMetadata(final List<Long> ids) {
     log.debug("Preparing {} comic book(s) for metadata update", ids.size());
     this.comicBookService.prepareForMetadataUpdate(ids);
