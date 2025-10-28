@@ -59,7 +59,15 @@ class UpdateMetadataProcessorTest {
     Mockito.when(comicBook.isBatchMetadataUpdate()).thenReturn(false);
     Mockito.when(comicBook.isEditDetails()).thenReturn(false);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(comicDetail.isMissing()).thenReturn(false);
     Mockito.when(comicDetail.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
+  }
+
+  @Test
+  void process_missing() {
+    Mockito.when(comicDetail.isMissing()).thenReturn(true);
+
+    assertNull(processor.process(comicBook));
   }
 
   @Test

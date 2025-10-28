@@ -46,6 +46,10 @@ public class RecreateComicFileProcessor implements ItemProcessor<ComicBook, Comi
 
   @Override
   public ComicBook process(final ComicBook comicBook) throws Exception {
+    if (comicBook.getComicDetail().isMissing()) {
+      log.debug("Comic file is missing, skipping: id={}", comicBook.getComicBookId());
+      return null;
+    }
     if (comicBook.isFileContentsLoaded() == false
         || comicBook.isPurging()
         || comicBook.isBatchMetadataUpdate()

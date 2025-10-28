@@ -57,6 +57,10 @@ public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, Comic
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
+    if (comicBook.getComicDetail().isMissing()) {
+      log.debug("Comic file missing, skipping: id={}", comicBook.getComicBookId());
+      return null;
+    }
     if (comicBook.isFileContentsLoaded()) {
       log.debug("Comic book contents already loaded: id={}", comicBook.getComicBookId());
       return comicBook;
