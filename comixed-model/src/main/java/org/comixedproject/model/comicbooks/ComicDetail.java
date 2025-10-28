@@ -23,12 +23,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import java.io.File;
-import java.util.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.archives.ArchiveType;
@@ -389,6 +388,10 @@ public class ComicDetail implements PublicationDetail {
       }
     }
     this.issueNumber = issueNumber;
+  }
+
+  public boolean isMissing() {
+    return this.missing || !this.getFile().exists();
   }
 
   @Override

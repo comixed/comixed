@@ -19,6 +19,7 @@
 package org.comixedproject.batch.comicbooks.readers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -42,6 +43,8 @@ public class ProcessUnhashedComicsReader extends AbstractComicReader {
   @Override
   protected List<ComicBook> doLoadComics() {
     log.trace("Loading pages without a hash");
-    return this.comicBookService.findComicsWithUnhashedPages(this.chunkSize);
+    return this.comicBookService.findComicsWithUnhashedPages(this.chunkSize).stream()
+        .filter(entry -> !entry.getComicDetail().isMissing())
+        .collect(Collectors.toList());
   }
 }

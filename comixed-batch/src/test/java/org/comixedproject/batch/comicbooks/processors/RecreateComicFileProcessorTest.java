@@ -58,6 +58,7 @@ class RecreateComicFileProcessorTest {
   public void setUp() {
     Mockito.when(comicFile.exists()).thenReturn(true);
     Mockito.when(comicFile.isFile()).thenReturn(true);
+    Mockito.when(comicDetail.isMissing()).thenReturn(false);
     Mockito.when(comicDetail.getFile()).thenReturn(comicFile);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicBook.isFileContentsLoaded()).thenReturn(true);
@@ -71,6 +72,13 @@ class RecreateComicFileProcessorTest {
             configurationService.getOptionValue(
                 ConfigurationService.CFG_LIBRARY_PAGE_RENAMING_RULE, ""))
         .thenReturn(TEST_PAGE_RENAMING_RULE);
+  }
+
+  @Test
+  void process_missing() throws Exception {
+    Mockito.when(comicDetail.isMissing()).thenReturn(true);
+
+    assertNull(processor.process(comicBook));
   }
 
   @Test

@@ -19,6 +19,7 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -71,11 +72,18 @@ class ProcessUnhashedComicsProcessorTest {
         .thenReturn(imageContent);
     Mockito.when(comicBook.getPages()).thenReturn(pageList);
     Mockito.when(comicDetail.getBaseFilename()).thenReturn(TEST_BASE_FILENAME);
+    Mockito.when(comicDetail.isMissing()).thenReturn(false);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(page.getComicBook()).thenReturn(comicBook);
     Mockito.when(page.getPageNumber()).thenReturn(TEST_PAGE_NUMBER);
     pageList.add(null);
     pageList.add(page);
+  }
+
+  @Test
+  void process_missing() {
+    Mockito.when(comicDetail.isMissing()).thenReturn(true);
+    assertNull(processor.process(comicBook));
   }
 
   @Test
