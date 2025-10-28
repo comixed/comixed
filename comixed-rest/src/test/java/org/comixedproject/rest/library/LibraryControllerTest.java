@@ -33,9 +33,13 @@ import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.net.admin.ClearImageCacheResponse;
 import org.comixedproject.model.net.comicbooks.ConvertComicsRequest;
 import org.comixedproject.model.net.comicbooks.EditMultipleComicsRequest;
-import org.comixedproject.model.net.library.*;
+import org.comixedproject.model.net.library.PurgeLibraryRequest;
+import org.comixedproject.model.net.library.RemoteLibraryState;
 import org.comixedproject.service.admin.ConfigurationService;
-import org.comixedproject.service.comicbooks.*;
+import org.comixedproject.service.comicbooks.ComicBookException;
+import org.comixedproject.service.comicbooks.ComicBookSelectionException;
+import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
 import org.comixedproject.service.library.RemoteLibraryStateService;
@@ -80,13 +84,14 @@ class LibraryControllerTest {
   @Mock private JobExecution jobExecution;
   @Mock private EditMultipleComicsRequest editMultipleComicsRequest;
   @Mock private RemoteLibraryState remoteLibraryState;
-  @Mock private List selectedIds;
   @Mock private HttpSession httpSession;
   @Mock private Principal principal;
 
   @Mock
   @Qualifier(EDIT_COMIC_METADATA_JOB)
   private Job editComicMetadataJob;
+
+  private List<Long> selectedIds = new ArrayList<>();
 
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
@@ -97,6 +102,7 @@ class LibraryControllerTest {
     Mockito.when(comicSelectionService.decodeSelections(TEST_ENCODED_IDS)).thenReturn(selectedIds);
     Mockito.when(comicSelectionService.encodeSelections(Mockito.anyList()))
         .thenReturn(TEST_REENCODED_IDS);
+    selectedIds.add(TEST_COMIC_BOOK_ID);
   }
 
   @Test

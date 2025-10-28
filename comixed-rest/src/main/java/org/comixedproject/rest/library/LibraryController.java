@@ -37,7 +37,10 @@ import org.comixedproject.model.net.comicbooks.EditMultipleComicsRequest;
 import org.comixedproject.model.net.library.PurgeLibraryRequest;
 import org.comixedproject.model.net.library.RemoteLibraryState;
 import org.comixedproject.service.admin.ConfigurationService;
-import org.comixedproject.service.comicbooks.*;
+import org.comixedproject.service.comicbooks.ComicBookException;
+import org.comixedproject.service.comicbooks.ComicBookSelectionException;
+import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicSelectionService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
 import org.comixedproject.service.library.RemoteLibraryStateService;
@@ -302,7 +305,7 @@ public class LibraryController {
     final List<Long> selectedComicBookIds =
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
     log.info("Updating the metadata for {} comic(s): email={}", selectedComicBookIds.size(), email);
-    this.libraryService.updateMetadata(selectedComicBookIds);
+    this.libraryService.updateMetadata(new ArrayList<>(selectedComicBookIds));
     this.comicSelectionService.clearSelectedComicBooks(email, selectedComicBookIds);
     session.setAttribute(
         LIBRARY_SELECTIONS, this.comicSelectionService.encodeSelections(selectedComicBookIds));
