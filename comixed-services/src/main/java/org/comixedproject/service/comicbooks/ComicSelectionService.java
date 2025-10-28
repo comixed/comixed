@@ -41,6 +41,7 @@ import org.comixedproject.service.library.DisplayableComicService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 /**
@@ -203,7 +204,8 @@ public class ComicSelectionService {
     this.doPublishSelectionUpdateForUser(email, selections);
   }
 
-  private void doPublishSelectionUpdateForUser(final String email, final List<Long> selections) {
+  @Async
+  protected void doPublishSelectionUpdateForUser(final String email, final List<Long> selections) {
     try {
       final ComiXedUser user = this.userService.findByEmail(email);
       this.publishComicBookSelectionStateAction.publish(
