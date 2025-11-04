@@ -144,7 +144,6 @@ class RecreateComicFileProcessorTest {
     assertNotNull(result);
     assertSame(comicBook, result);
 
-    Mockito.verify(comicBook, Mockito.never()).removeDeletedPages();
     Mockito.verify(comicBookAdaptor, Mockito.times(1))
         .save(comicBook, TEST_TARGET_ARCHIVE, false, TEST_PAGE_RENAMING_RULE);
   }
@@ -158,7 +157,6 @@ class RecreateComicFileProcessorTest {
     assertNotNull(result);
     assertSame(comicBook, result);
 
-    Mockito.verify(comicBook, Mockito.never()).removeDeletedPages();
     Mockito.verify(comicBookAdaptor, Mockito.never())
         .save(Mockito.any(), Mockito.any(), Mockito.anyBoolean(), Mockito.anyString());
   }
@@ -172,7 +170,6 @@ class RecreateComicFileProcessorTest {
     assertNotNull(result);
     assertSame(comicBook, result);
 
-    Mockito.verify(comicBook, Mockito.never()).removeDeletedPages();
     Mockito.verify(comicBookAdaptor, Mockito.never())
         .save(Mockito.any(), Mockito.any(), Mockito.anyBoolean(), Mockito.anyString());
   }
@@ -184,7 +181,6 @@ class RecreateComicFileProcessorTest {
     assertNotNull(result);
     assertSame(comicBook, result);
 
-    Mockito.verify(comicBook, Mockito.never()).removeDeletedPages();
     Mockito.verify(comicBookAdaptor, Mockito.times(1))
         .save(comicBook, TEST_TARGET_ARCHIVE, false, TEST_PAGE_RENAMING_RULE);
   }
