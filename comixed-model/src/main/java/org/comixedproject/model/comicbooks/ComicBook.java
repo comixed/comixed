@@ -20,17 +20,13 @@ package org.comixedproject.model.comicbooks;
 
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicpages.ComicPage;
-import org.comixedproject.model.comicpages.ComicPageType;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
 
@@ -227,23 +223,17 @@ public class ComicBook {
   }
 
   public void updatePageNumbers() {
+    Collections.sort(
+        this.pages,
+        new Comparator<ComicPage>() {
+          @Override
+          public int compare(final ComicPage o1, final ComicPage o2) {
+            return o1.getPageNumber().compareTo(o2.getPageNumber());
+          }
+        });
     for (int index = 0; index < this.pages.size(); index++) {
       this.pages.get(index).setPageNumber(index);
     }
-  }
-
-  /** Removes pages that are marked for deletion. */
-  public void removeDeletedPages() {
-    List<ComicPage> pages = new ArrayList<>(this.pages);
-    pages.stream()
-        .filter(Objects::nonNull)
-        .forEach(
-            page -> {
-              if (page.getPageType() == ComicPageType.DELETED) {
-                log.trace("Removing page: {}", page.getComicPageId());
-                this.pages.remove(page);
-              }
-            });
   }
 
   @Override
