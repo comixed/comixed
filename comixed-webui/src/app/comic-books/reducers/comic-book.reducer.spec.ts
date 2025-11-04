@@ -121,7 +121,13 @@ describe('ComicBook Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, saving: false, saved: true },
-        updateComicBook({ comicBook: COMIC })
+        updateComicBook({
+          comicBookId: COMIC.comicBookId,
+          publisher: COMIC.detail.publisher,
+          series: COMIC.detail.series,
+          volume: COMIC.detail.volume,
+          issueNumber: COMIC.detail.issueNumber
+        })
       );
     });
 

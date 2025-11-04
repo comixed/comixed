@@ -30,12 +30,12 @@ import { ComicBook } from '@app/comic-books/models/comic-book';
 import { Store } from '@ngrx/store';
 import {
   FormGroup,
+  ReactiveFormsModule,
   UntypedFormBuilder,
-  Validators,
-  ReactiveFormsModule
+  Validators
 } from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MetadataEvent } from '@app/comic-metadata/models/event/metadata-event';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import {
@@ -69,13 +69,13 @@ import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import {
+  MatError,
   MatFormField,
-  MatLabel,
-  MatSuffix,
   MatHint,
-  MatError
+  MatLabel,
+  MatSuffix
 } from '@angular/material/form-field';
-import { MatSelect, MatOption } from '@angular/material/select';
+import { MatOption, MatSelect } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
 
@@ -327,9 +327,16 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
         'comic-book.save-changes.confirmation-message'
       ),
       confirm: () => {
-        const comic = this.encodeForm();
-        this.logger.debug('Saving changes to comic:', comic);
-        this.store.dispatch(updateComicBook({ comicBook: comic }));
+        this.logger.debug('Saving changes to comic:', this.comic.comicBookId);
+        this.store.dispatch(
+          updateComicBook({
+            comicBookId: this.comic.comicBookId,
+            publisher: this.comicForm.controls.publisher.value,
+            series: this.comicForm.controls.series.value,
+            volume: this.comicForm.controls.volume.value,
+            issueNumber: this.comicForm.controls.issueNumber.value
+          })
+        );
       }
     });
   }
@@ -408,20 +415,5 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
         autoSelectExactMatch: !this.autoSelectExactMatch
       })
     );
-  }
-
-  encodeForm(): ComicBook {
-    this.logger.debug('Encoding comic');
-    return {
-      ...this.comic,
-      detail: {
-        ...this.comic.detail,
-        comicDetailId: undefined,
-        publisher: this.comicForm.controls.publisher.value,
-        series: this.comicForm.controls.series.value,
-        volume: this.comicForm.controls.volume.value,
-        issueNumber: this.comicForm.controls.issueNumber.value
-      }
-    } as ComicBook;
   }
 }

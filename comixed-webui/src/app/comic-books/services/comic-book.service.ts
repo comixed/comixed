@@ -40,6 +40,8 @@ import { MarkPagesDeletedRequest } from '@app/comic-books/models/net/mark-pages-
 import { PageOrderEntry } from '@app/comic-books/models/net/page-order-entry';
 import { SavePageOrderRequest } from '@app/comic-books/models/net/save-page-order-request';
 import { ComicBook } from '@app/comic-books/models/comic-book';
+import { ComicType } from '@app/comic-books/models/comic-type';
+import { UpdateComicBookRequest } from '@app/comic-books/models/net/update-comic-book-request';
 
 @Injectable({
   providedIn: 'root'
@@ -63,11 +65,34 @@ export class ComicBookService {
    *
    * @param args.comic the comic
    */
-  updateOne(args: { comicBook: ComicBook }): Observable<any> {
+  updateOne(args: {
+    comicBookId: number;
+    comicType?: ComicType;
+    publisher: string;
+    series: string;
+    volume: string;
+    issueNumber: string;
+    imprint?: string;
+    sortName?: string;
+    title?: string;
+    coverDate?: number;
+    storeDate?: number;
+  }): Observable<any> {
     this.logger.debug('Service: updating one comic:', args);
     return this.http.put(
-      interpolate(UPDATE_COMIC_URL, { id: args.comicBook.comicBookId }),
-      args.comicBook
+      interpolate(UPDATE_COMIC_URL, { id: args.comicBookId }),
+      {
+        comicType: args.comicType,
+        publisher: args.publisher,
+        series: args.series,
+        volume: args.volume,
+        issueNumber: args.issueNumber,
+        imprint: args.imprint,
+        sortName: args.sortName,
+        title: args.title,
+        coverDate: args.coverDate,
+        storeDate: args.storeDate
+      } as UpdateComicBookRequest
     );
   }
 

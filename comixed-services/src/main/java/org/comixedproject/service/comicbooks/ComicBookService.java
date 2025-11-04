@@ -36,6 +36,7 @@ import org.comixedproject.model.collections.SeriesDetail;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
+import org.comixedproject.model.comicbooks.ComicType;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.comicbooks.PageOrderEntry;
@@ -142,33 +143,64 @@ public class ComicBookService {
   }
 
   /**
-   * Updates a comic record.
+   * Updates a comic record. If optional fields are null then they are not updated.
    *
    * @param id the comic id
-   * @param update the updated comic data
+   * @param comicType the optional comic type
+   * @param publisher the publisher
+   * @param series the series
+   * @param volume the volume
+   * @param issueNumber the issue number
+   * @param imprint the optional imprint
+   * @param sortName the optional sort name
+   * @param title the optional title
+   * @param coverDate the optional cover date
+   * @param storeDate the optional store date
    * @return the updated comic
    * @throws ComicBookException if the id is invalid
    */
   @Transactional
   @CachePut(key = "#result.comicBookId")
-  public ComicBook updateComic(final long id, final ComicBook update) throws ComicBookException {
+  public ComicBook updateComic(
+      final long id,
+      final ComicType comicType,
+      final String publisher,
+      final String series,
+      final String volume,
+      final String issueNumber,
+      final String imprint,
+      final String sortName,
+      final String title,
+      final Date coverDate,
+      final Date storeDate)
+      throws ComicBookException {
     log.debug("Updating comic: id={}", id);
     final var comic = this.doGetComic(id);
 
     log.trace("Updating the comic fields");
 
-    comic.getComicDetail().setComicType(update.getComicDetail().getComicType());
-    comic.getComicDetail().setPublisher(update.getComicDetail().getPublisher());
-    comic.getComicDetail().setSeries(update.getComicDetail().getSeries());
-    comic.getComicDetail().setVolume(update.getComicDetail().getVolume());
-    comic.getComicDetail().setIssueNumber(update.getComicDetail().getIssueNumber());
-    comic.getComicDetail().setImprint(update.getComicDetail().getImprint());
-    comic.getComicDetail().setSortName(update.getComicDetail().getSortName());
-    comic.getComicDetail().setTitle(update.getComicDetail().getTitle());
-    comic.getComicDetail().setDescription(update.getComicDetail().getDescription());
-    comic.getComicDetail().setCoverDate(update.getComicDetail().getCoverDate());
-    comic.getComicDetail().setStoreDate(update.getComicDetail().getStoreDate());
-    comic.getComicDetail().setNotes(update.getComicDetail().getNotes());
+    if (Objects.nonNull(comicType)) {
+      comic.getComicDetail().setComicType(comicType);
+    }
+    comic.getComicDetail().setPublisher(publisher);
+    comic.getComicDetail().setSeries(series);
+    comic.getComicDetail().setVolume(volume);
+    comic.getComicDetail().setIssueNumber(issueNumber);
+    if (Objects.nonNull(imprint)) {
+      comic.getComicDetail().setImprint(imprint);
+    }
+    if (Objects.nonNull(sortName)) {
+      comic.getComicDetail().setSortName(sortName);
+    }
+    if (Objects.nonNull(title)) {
+      comic.getComicDetail().setTitle(title);
+    }
+    if (Objects.nonNull(coverDate)) {
+      comic.getComicDetail().setCoverDate(coverDate);
+    }
+    if (Objects.nonNull(storeDate)) {
+      comic.getComicDetail().setStoreDate(storeDate);
+    }
 
     this.imprintService.update(comic);
 

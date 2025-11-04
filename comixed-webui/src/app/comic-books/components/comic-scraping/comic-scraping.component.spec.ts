@@ -386,7 +386,13 @@ describe('ComicScrapingComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          updateComicBook({ comicBook: component.encodeForm() })
+          updateComicBook({
+            comicBookId: COMIC.comicBookId,
+            publisher: COMIC.detail.publisher,
+            series: COMIC.detail.series,
+            volume: COMIC.detail.volume,
+            issueNumber: COMIC.detail.issueNumber
+          })
         );
       });
     });
@@ -409,7 +415,13 @@ describe('ComicScrapingComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          updateComicBook({ comicBook: component.encodeForm() })
+          updateComicBook({
+            comicBookId: COMIC.comicBookId,
+            publisher: COMIC.detail.publisher,
+            series: COMIC.detail.series,
+            volume: COMIC.detail.volume,
+            issueNumber: COMIC.detail.issueNumber
+          })
         );
       });
     });

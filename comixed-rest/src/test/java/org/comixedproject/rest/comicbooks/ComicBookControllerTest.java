@@ -48,6 +48,17 @@ class ComicBookControllerTest {
   private static final Object TEST_ENCODED_SELECTIONS = "The encoded selection ids";
   private static final String TEST_REENCODED_SELECTIONS = "The re-encoded selection ids";
   private static final String TEST_EMAIL = "user@comixedproject.org";
+  private static final ComicType TEST_COMIC_TYPE = ComicType.TRADEPAPERBACK;
+  private static final String TEST_PUBLISHER = "The Publisher";
+  private static final String TEST_SERIES = "The Series";
+  private static final String TEST_VOLUME = "2025";
+  private static final String TEST_ISSUE_NUMBER = "20";
+  private static final String TEST_IMPRINT = "The Imprint";
+  private static final String TEST_SORTABLE_NAME = "The Sortable Name";
+  private static final String TEST_TITLE = "The Title";
+  private static final Date TEST_COVER_DATE = new Date();
+  private static final Date TEST_STORE_DATE = new Date();
+  private static final String TEST_NOTES = "The Notes";
 
   @InjectMocks private ComicBookController controller;
   @Mock private ComicBookService comicBookService;
@@ -103,15 +114,52 @@ class ComicBookControllerTest {
 
   @Test
   void updateComic() throws ComicBookException {
-    Mockito.when(comicBookService.updateComic(Mockito.anyLong(), Mockito.any(ComicBook.class)))
+    Mockito.when(
+            comicBookService.updateComic(
+                Mockito.anyLong(),
+                Mockito.any(ComicType.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.any(Date.class),
+                Mockito.any(Date.class)))
         .thenReturn(comicBook);
 
-    final ComicBook result = controller.updateComic(TEST_COMIC_ID, comicBook);
+    final ComicBook result =
+        controller.updateComic(
+            TEST_COMIC_ID,
+            new UpdateComicBookRequest(
+                TEST_COMIC_TYPE,
+                TEST_PUBLISHER,
+                TEST_SERIES,
+                TEST_VOLUME,
+                TEST_ISSUE_NUMBER,
+                TEST_IMPRINT,
+                TEST_SORTABLE_NAME,
+                TEST_TITLE,
+                TEST_COVER_DATE,
+                TEST_STORE_DATE));
 
     assertNotNull(result);
     assertSame(comicBook, result);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).updateComic(TEST_COMIC_ID, comicBook);
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .updateComic(
+            TEST_COMIC_ID,
+            TEST_COMIC_TYPE,
+            TEST_PUBLISHER,
+            TEST_SERIES,
+            TEST_VOLUME,
+            TEST_ISSUE_NUMBER,
+            TEST_IMPRINT,
+            TEST_SORTABLE_NAME,
+            TEST_TITLE,
+            TEST_COVER_DATE,
+            TEST_STORE_DATE);
   }
 
   @Test

@@ -87,28 +87,42 @@ export class ComicBookEffects {
       ofType(updateComicBook),
       tap(action => this.logger.debug('Effect: update comic:', action)),
       switchMap(action =>
-        this.comicService.updateOne({ comicBook: action.comicBook }).pipe(
-          tap(response => this.logger.debug('Response received:', response)),
-          tap(() =>
-            this.alertService.info(
-              this.translateService.instant(
-                'comic-book.save-changes.effect-success'
-              )
-            )
-          ),
-          map((response: ComicBook) =>
-            comicBookUpdated({ comicBook: response })
-          ),
-          catchError(error => {
-            this.logger.error('Service failure:', error);
-            this.alertService.error(
-              this.translateService.instant(
-                'comic-book.save-changes.effect-failure'
-              )
-            );
-            return of(updateComicBookFailed());
+        this.comicService
+          .updateOne({
+            comicBookId: action.comicBookId,
+            comicType: action.comicType,
+            publisher: action.publisher,
+            series: action.series,
+            volume: action.volume,
+            issueNumber: action.issueNumber,
+            imprint: action.imprint,
+            sortName: action.sortName,
+            title: action.title,
+            coverDate: action.coverDate,
+            storeDate: action.storeDate
           })
-        )
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            tap(() =>
+              this.alertService.info(
+                this.translateService.instant(
+                  'comic-book.save-changes.effect-success'
+                )
+              )
+            ),
+            map((response: ComicBook) =>
+              comicBookUpdated({ comicBook: response })
+            ),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'comic-book.save-changes.effect-failure'
+                )
+              );
+              return of(updateComicBookFailed());
+            })
+          )
       ),
       catchError(error => {
         this.logger.error('General failure:', error);

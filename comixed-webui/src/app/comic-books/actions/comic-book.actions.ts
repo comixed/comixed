@@ -20,6 +20,7 @@ import { createAction, props } from '@ngrx/store';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ComicPage } from '@app/comic-books/models/comic-page';
 import { PageOrderEntry } from '@app/comic-books/models/net/page-order-entry';
+import { ComicType } from '@app/comic-books/models/comic-type';
 
 export const loadComicBook = createAction(
   '[Comic Book] Loads a single comic',
@@ -37,7 +38,19 @@ export const loadComicBookFailed = createAction(
 
 export const updateComicBook = createAction(
   '[Comic Book] Update a comic',
-  props<{ comicBook: ComicBook }>()
+  props<{
+    comicBookId: number;
+    comicType?: ComicType;
+    publisher: string;
+    series: string;
+    volume: string;
+    issueNumber: string;
+    imprint?: string;
+    sortName?: string;
+    title?: string;
+    storeDate?: number;
+    coverDate?: number;
+  }>()
 );
 
 export const comicBookUpdated = createAction(

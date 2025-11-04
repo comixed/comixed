@@ -56,6 +56,7 @@ import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
 import { MarkPagesDeletedRequest } from '@app/comic-books/models/net/mark-pages-deleted-request';
 import { SavePageOrderRequest } from '@app/comic-books/models/net/save-page-order-request';
 import { DownloadDocument } from '@app/core/models/download-document';
+import { UpdateComicBookRequest } from '@app/comic-books/models/net/update-comic-book-request';
 
 describe('ComicBookService', () => {
   const COMIC_DETAIL = COMIC_DETAIL_2;
@@ -105,14 +106,37 @@ describe('ComicBookService', () => {
 
   it('can update a single comic', () => {
     service
-      .updateOne({ comicBook: COMIC_BOOK })
+      .updateOne({
+        comicBookId: COMIC_BOOK.comicBookId,
+        comicType: COMIC_BOOK.detail.comicType,
+        publisher: COMIC_BOOK.detail.publisher,
+        series: COMIC_BOOK.detail.series,
+        volume: COMIC_BOOK.detail.volume,
+        issueNumber: COMIC_BOOK.detail.issueNumber,
+        imprint: COMIC_BOOK.detail.imprint,
+        sortName: COMIC_BOOK.detail.sortName,
+        title: COMIC_BOOK.detail.title,
+        coverDate: COMIC_BOOK.detail.coverDate,
+        storeDate: COMIC_BOOK.detail.storeDate
+      })
       .subscribe(response => expect(response).toEqual(COMIC_BOOK_2));
 
     const req = httpMock.expectOne(
       interpolate(UPDATE_COMIC_URL, { id: COMIC_BOOK.comicBookId })
     );
     expect(req.request.method).toEqual('PUT');
-    expect(req.request.body).toEqual(COMIC_BOOK);
+    expect(req.request.body).toEqual({
+      comicType: COMIC_BOOK.detail.comicType,
+      publisher: COMIC_BOOK.detail.publisher,
+      series: COMIC_BOOK.detail.series,
+      volume: COMIC_BOOK.detail.volume,
+      issueNumber: COMIC_BOOK.detail.issueNumber,
+      imprint: COMIC_BOOK.detail.imprint,
+      sortName: COMIC_BOOK.detail.sortName,
+      title: COMIC_BOOK.detail.title,
+      coverDate: COMIC_BOOK.detail.coverDate,
+      storeDate: COMIC_BOOK.detail.storeDate
+    } as UpdateComicBookRequest);
     req.flush(COMIC_BOOK_2);
   });
 

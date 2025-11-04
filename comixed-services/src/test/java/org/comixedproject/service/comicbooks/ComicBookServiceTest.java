@@ -328,7 +328,20 @@ class ComicBookServiceTest {
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     assertThrows(
-        ComicBookException.class, () -> service.updateComic(TEST_COMIC_BOOK_ID, incomingComicBook));
+        ComicBookException.class,
+        () ->
+            service.updateComic(
+                TEST_COMIC_BOOK_ID,
+                TEST_COMIC_TYPE,
+                TEST_PUBLISHER,
+                TEST_SERIES,
+                TEST_VOLUME,
+                TEST_ISSUE_NUMBER,
+                TEST_IMPRINT,
+                TEST_SORTABLE_NAME,
+                TEST_TITLE,
+                TEST_COVER_DATE,
+                TEST_STORE_DATE));
   }
 
   @Test
@@ -347,7 +360,19 @@ class ComicBookServiceTest {
     Mockito.when(incomingComicDetail.getStoreDate()).thenReturn(TEST_STORE_DATE);
     Mockito.when(incomingComicDetail.getNotes()).thenReturn(TEST_NOTES);
 
-    final ComicBook result = service.updateComic(TEST_COMIC_BOOK_ID, incomingComicBook);
+    final ComicBook result =
+        service.updateComic(
+            TEST_COMIC_BOOK_ID,
+            TEST_COMIC_TYPE,
+            TEST_PUBLISHER,
+            TEST_SERIES,
+            TEST_VOLUME,
+            TEST_ISSUE_NUMBER,
+            TEST_IMPRINT,
+            TEST_SORTABLE_NAME,
+            TEST_TITLE,
+            TEST_COVER_DATE,
+            TEST_STORE_DATE);
 
     assertNotNull(result);
     assertSame(comicBook, result);
@@ -361,10 +386,8 @@ class ComicBookServiceTest {
     Mockito.verify(comicDetail, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
     Mockito.verify(comicDetail, Mockito.times(1)).setSortName(TEST_SORTABLE_NAME);
     Mockito.verify(comicDetail, Mockito.times(1)).setTitle(TEST_TITLE);
-    Mockito.verify(comicDetail, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
     Mockito.verify(comicDetail, Mockito.times(1)).setCoverDate(TEST_COVER_DATE);
     Mockito.verify(comicDetail, Mockito.times(1)).setStoreDate(TEST_STORE_DATE);
-    Mockito.verify(comicDetail, Mockito.times(1)).setNotes(TEST_NOTES);
     Mockito.verify(comicStateHandler, Mockito.times(1))
         .fireEvent(comicBook, ComicEvent.detailsUpdated);
     Mockito.verify(imprintService, Mockito.times(1)).update(comicBook);
