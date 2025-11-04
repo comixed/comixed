@@ -188,7 +188,7 @@ public class ComicBookController {
    * Updates a comicBook with all incoming data.
    *
    * @param id the comicBook id
-   * @param comicBook the source comicBook
+   * @param request the request body
    * @return the updated comicBook
    * @throws ComicBookException if the id is invalid
    */
@@ -198,11 +198,23 @@ public class ComicBookController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.comic-book.metadata.update")
   @JsonView(ComicDetailsView.class)
-  public ComicBook updateComic(@PathVariable("id") long id, @RequestBody() ComicBook comicBook)
+  public ComicBook updateComic(
+      @PathVariable("id") long id, @RequestBody() UpdateComicBookRequest request)
       throws ComicBookException {
-    log.info("Updating comicBook: id={}", id, comicBook);
+    log.info("Updating comicBook: id={}", id, request);
 
-    return this.comicBookService.updateComic(id, comicBook);
+    return this.comicBookService.updateComic(
+        id,
+        request.getComicType(),
+        request.getPublisher(),
+        request.getSeries(),
+        request.getVolume(),
+        request.getIssueNumber(),
+        request.getImprint(),
+        request.getSortName(),
+        request.getTitle(),
+        request.getCoverDate(),
+        request.getStoreDate());
   }
 
   /**

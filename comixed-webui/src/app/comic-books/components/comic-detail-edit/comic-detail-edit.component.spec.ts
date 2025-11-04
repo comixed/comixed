@@ -215,7 +215,19 @@ describe('ComicDetailEditComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        updateComicBook({ comicBook: component.comicBook })
+        updateComicBook({
+          comicBookId: COMIC.comicBookId,
+          comicType: COMIC.detail.comicType,
+          publisher: COMIC.detail.publisher,
+          series: COMIC.detail.series,
+          volume: COMIC.detail.volume,
+          issueNumber: COMIC.detail.issueNumber,
+          imprint: COMIC.detail.imprint,
+          sortName: COMIC.detail.sortName,
+          title: COMIC.detail.title,
+          coverDate: COMIC.detail.storeDate,
+          storeDate: COMIC.detail.coverDate
+        })
       );
     });
   });

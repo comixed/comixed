@@ -172,6 +172,7 @@ export class ComicDetailEditComponent implements OnInit, OnDestroy {
     this.comicBookForm.controls.volume.setValue(comic.detail.volume);
     this.comicBookForm.controls.issueNumber.setValue(comic.detail.issueNumber);
     this.comicBookForm.controls.imprint.setValue(comic.detail.imprint);
+    this.comicBookForm.controls.sortName.setValue(comic.detail.sortName);
     this.comicBookForm.controls.title.setValue(comic.detail.title);
     if (!!comic.detail.coverDate) {
       this.comicBookForm.controls.coverDate.setValue(
@@ -225,9 +226,22 @@ export class ComicDetailEditComponent implements OnInit, OnDestroy {
         'comic-book.save-changes.confirmation-message'
       ),
       confirm: () => {
-        const comicBook = this.comicBook;
-        this.logger.debug('Saving changes to comic:', comicBook);
-        this.store.dispatch(updateComicBook({ comicBook }));
+        this.logger.debug('Saving changes to comic:', this.comicBook);
+        this.store.dispatch(
+          updateComicBook({
+            comicBookId: this.comicBook.comicBookId,
+            comicType: this.comicBookForm.controls.comicType.value,
+            publisher: this.comicBookForm.controls.publisher.value,
+            series: this.comicBookForm.controls.series.value,
+            volume: this.comicBookForm.controls.volume.value,
+            issueNumber: this.comicBookForm.controls.issueNumber.value,
+            imprint: this.comicBookForm.controls.imprint.value,
+            sortName: this.comicBookForm.controls.sortName.value,
+            title: this.comicBookForm.controls.title.value,
+            storeDate: this.comicBookForm.controls.storeDate.value?.getTime(),
+            coverDate: this.comicBookForm.controls.coverDate.value?.getTime()
+          })
+        );
       }
     });
   }
