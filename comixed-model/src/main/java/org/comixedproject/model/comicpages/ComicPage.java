@@ -89,6 +89,7 @@ public class ComicPage {
   @JsonView({View.ComicDetailsView.class})
   @Getter
   @Setter
+  @NonNull
   private Integer width = -1;
 
   @Column(name = "height", nullable = false, updatable = true)
@@ -96,6 +97,7 @@ public class ComicPage {
   @JsonView({View.ComicDetailsView.class})
   @Getter
   @Setter
+  @NonNull
   private Integer height = -1;
 
   @Column(name = "adding_to_cache", updatable = true)

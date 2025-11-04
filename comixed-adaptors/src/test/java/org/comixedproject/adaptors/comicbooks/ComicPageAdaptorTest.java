@@ -21,13 +21,12 @@ package org.comixedproject.adaptors.comicbooks;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.comicpages.ComicPage;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,20 +36,16 @@ class ComicPageAdaptorTest {
   private static final String TEST_FILENAME = "oldname3.png";
   private static final String TEST_EXPECTED_PAGE_NAME = "page-0004.png";
   private static final int TEST_PAGE_COUNT_LENGTH = 4;
+  private static final String TEST_PAGE_EXTENSION = FilenameUtils.getExtension(TEST_FILENAME);
 
   @InjectMocks private ComicPageAdaptor adaptor;
   @Mock private ComicPage page;
-
-  @BeforeEach
-  void setUp() {
-    Mockito.when(page.getFilename()).thenReturn(TEST_FILENAME);
-  }
 
   @Test
   void createFilenameFromRule() {
     final String result =
         adaptor.createFilenameFromRule(
-            page, TEST_RENAMING_RULE, TEST_PAGE_INDEX, TEST_PAGE_COUNT_LENGTH);
+            TEST_PAGE_EXTENSION, TEST_RENAMING_RULE, TEST_PAGE_INDEX, TEST_PAGE_COUNT_LENGTH);
 
     assertNotNull(result);
     assertEquals(TEST_EXPECTED_PAGE_NAME, result);

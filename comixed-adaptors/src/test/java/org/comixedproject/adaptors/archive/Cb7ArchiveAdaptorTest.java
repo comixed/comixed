@@ -45,7 +45,7 @@ class Cb7ArchiveAdaptorTest {
   }
 
   @Test
-  void GetEntries() throws ArchiveAdaptorException {
+  void getEntries() throws ArchiveAdaptorException {
     final Cb7ArchiveReadHandle archiveHandle = adaptor.openArchiveForRead(TEST_ZIP_FILENAME);
     final List<ComicArchiveEntry> entries = adaptor.getEntries(archiveHandle);
     adaptor.closeArchiveForRead(archiveHandle);
