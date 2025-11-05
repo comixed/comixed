@@ -16,8 +16,4 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export interface ImportComicFilesRequest {
-  filenames: string[];
-  skipMetadata: boolean;
-  skipBlockingPages: boolean;
-}
+export interface ImportComicFilesRequest {}

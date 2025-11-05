@@ -23,6 +23,7 @@ import {
   loadComicFileLists,
   loadComicFileListSuccess,
   loadComicFilesFromSession,
+  resetComicFileList,
   toggleComicFileSelections,
   toggleComicFileSelectionsFailure,
   toggleComicFileSelectionsSuccess
@@ -46,6 +47,7 @@ export const initialState: ComicFileListState = {
 export const reducer = createReducer(
   initialState,
 
+  on(resetComicFileList, state => ({ ...state, files: [], groups: [] })),
   on(loadComicFilesFromSession, state => ({ ...state, busy: true })),
   on(loadComicFileLists, state => ({ ...state, busy: true })),
   on(loadComicFileListSuccess, (state, action) => {

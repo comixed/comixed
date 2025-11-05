@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import lombok.extern.log4j.Log4j2;
@@ -204,10 +205,20 @@ public class ComicFileController {
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
-          JobRestartException {
-    final List<String> filenames = request.getFilenames();
+          JobRestartException,
+          JsonProcessingException {
+    final List<String> filenames = new ArrayList<>();
+    this.doLoadComicFileSelections(session)
+        .forEach(
+            comicFileGroup -> {
+              filenames.addAll(
+                  comicFileGroup.getFiles().stream()
+                      .filter(entry -> entry.isSelected())
+                      .map(entry -> entry.getFilename())
+                      .toList());
+            });
 
-    log.info("Importing comic files");
+    log.info("Importing {} comic file(s)", filenames.size());
     this.comicFileService.importComicFiles(filenames);
 
     log.debug("Cleared comic files list");

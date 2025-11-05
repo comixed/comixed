@@ -16,22 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createAction, props } from '@ngrx/store';
-import { ComicFile } from '@app/comic-files/models/comic-file';
+import { createAction } from '@ngrx/store';
 
-export const sendComicFiles = createAction(
-  '[Import ComicBook Files] Begin importing the selected comic files',
-  props<{
-    files: ComicFile[];
-    skipMetadata: boolean;
-    skipBlockingPages: boolean;
-  }>()
+export const importComicFiles = createAction(
+  '[Import Comic Files] Begin importing the selected comic files'
 );
 
-export const sendComicFilesSuccess = createAction(
-  '[Import ComicBook Files] Importing comic files has started'
+export const importComicFilesSuccess = createAction(
+  '[Import Comic Files] Importing comic files has started'
 );
 
-export const sendComicFilesFailure = createAction(
-  '[Import ComicBook Files] Failed to begin importing comic files'
+export const importComicFilesFailure = createAction(
+  '[Import Comic Files] Failed to begin importing comic files'
 );

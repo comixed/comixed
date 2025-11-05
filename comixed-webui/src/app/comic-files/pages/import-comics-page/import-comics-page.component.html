@@ -33,35 +33,6 @@
     <mat-icon>check_box_outline_blank</mat-icon>
   </button>
   <button
-    id="skip-metadata-button"
-    class="cx-margin-right-5"
-    mat-fab
-    [color]="skipMetadata ? 'warn' : 'accent'"
-    [disabled]="showFinderForm"
-    [matTooltip]="
-      'comic-files.tooltip.skip-metadata' | translate: { skipMetadata }
-    "
-    (click)="onSkipMetadata(!skipMetadata)"
-  >
-    <mat-icon>description</mat-icon>
-  </button>
-  @if (blockedPagesEnabled) {
-    <button
-      id="skip-blocking-pages-button"
-      class="cx-margin-right-5"
-      mat-fab
-      [color]="skipBlockingPages ? 'warn' : 'accent'"
-      [disabled]="showFinderForm"
-      [matTooltip]="
-        'comic-files.tooltip.skip-blocking-pages'
-          | translate: { skipBlockingPages }
-      "
-      (click)="onSkipBlockingPages(!skipBlockingPages)"
-    >
-      <mat-icon>block</mat-icon>
-    </button>
-  }
-  <button
     id="start-import-button"
     class="cx-margin-right-5"
     mat-fab

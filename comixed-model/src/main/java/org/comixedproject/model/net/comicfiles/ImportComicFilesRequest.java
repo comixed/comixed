@@ -18,13 +18,7 @@
 
 package org.comixedproject.model.net.comicfiles;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * <code>ImportComicFilesRequest</code> represents the payload for a request to import comics into
@@ -33,20 +27,4 @@ import lombok.Setter;
  * @author Darryl L. Pierce
  */
 @NoArgsConstructor
-@AllArgsConstructor
-public class ImportComicFilesRequest {
-  @JsonProperty("filenames")
-  @Getter
-  @Setter
-  private List<String> filenames = new ArrayList<>();
-
-  @JsonProperty("skipMetadata")
-  @Getter
-  @Setter
-  private Boolean skipMetadata;
-
-  @JsonProperty("skipBlockingPages")
-  @Getter
-  @Setter
-  private Boolean skipBlockingPages;
-}
+public class ImportComicFilesRequest {}

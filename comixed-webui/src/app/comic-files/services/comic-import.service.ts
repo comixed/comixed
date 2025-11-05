@@ -19,7 +19,6 @@
 import { inject, Injectable } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Observable } from 'rxjs';
-import { ComicFile } from '@app/comic-files/models/comic-file';
 import { HttpClient } from '@angular/common/http';
 import { interpolate } from '@app/core';
 import { LoadComicFilesRequest } from '@app/library/models/net/load-comic-files-request';
@@ -78,21 +77,13 @@ export class ComicImportService {
 
   /**
    * Sends the supplied comic files to the backend to be imported.
-   * @param args.files the comic files
-   * @param args.ignoreMetadata flag to ignore metadata
-   * @param args.deleteBlockedPages flag to mark blocked pages as deleted
    */
-  sendComicFiles(args: {
-    files: ComicFile[];
-    skipMetadata: boolean;
-    skipBlockingPages: boolean;
-  }): Observable<any> {
-    this.logger.debug('Sending comic files:', args);
-    return this.http.post(interpolate(SEND_COMIC_FILES_URL), {
-      filenames: args.files.map(file => file.filename),
-      skipMetadata: args.skipMetadata,
-      skipBlockingPages: args.skipBlockingPages
-    } as ImportComicFilesRequest);
+  sendComicFiles(): Observable<any> {
+    this.logger.debug('Sending comic files');
+    return this.http.post(
+      interpolate(SEND_COMIC_FILES_URL),
+      {} as ImportComicFilesRequest
+    );
   }
 
   scrapeFilename(args: { filename: string }): Observable<any> {

@@ -32,6 +32,7 @@ import {
   loadComicFileLists,
   loadComicFileListSuccess,
   loadComicFilesFromSession,
+  resetComicFileList,
   toggleComicFileSelections,
   toggleComicFileSelectionsFailure,
   toggleComicFileSelectionsSuccess
@@ -68,6 +69,23 @@ describe('ComicFileList Reducer', () => {
 
     it('has an empty set of files', () => {
       expect(state.files).toEqual([]);
+    });
+  });
+
+  describe('resetting the comic file list', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, files: FILES, groups: GROUPS },
+        resetComicFileList()
+      );
+    });
+
+    it('clears the list of comic files', () => {
+      expect(state.files).toEqual([]);
+    });
+
+    it('clears the group list', () => {
+      expect(state.groups).toEqual([]);
     });
   });
 
