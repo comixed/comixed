@@ -27,9 +27,9 @@ import {
   COMIC_FILE_3
 } from '@app/comic-files/comic-file.fixtures';
 import {
-  sendComicFiles,
-  sendComicFilesFailure,
-  sendComicFilesSuccess
+  importComicFiles,
+  importComicFilesFailure,
+  importComicFilesSuccess
 } from '@app/comic-files/actions/import-comic-files.actions';
 
 describe('ImportComicFiles Reducer', () => {
@@ -55,14 +55,7 @@ describe('ImportComicFiles Reducer', () => {
 
   describe('sending comic files', () => {
     beforeEach(() => {
-      state = reducer(
-        { ...state, sending: false },
-        sendComicFiles({
-          files: FILES,
-          skipMetadata: SKIP_METADATA,
-          skipBlockingPages: SKIP_BLOCKING_PAGES
-        })
-      );
+      state = reducer({ ...state, sending: false }, importComicFiles());
     });
 
     it('sets the sending flag', () => {
@@ -71,7 +64,7 @@ describe('ImportComicFiles Reducer', () => {
 
     describe('success', () => {
       beforeEach(() => {
-        state = reducer({ ...state, sending: true }, sendComicFilesSuccess());
+        state = reducer({ ...state, sending: true }, importComicFilesSuccess());
       });
 
       it('clears the sending flag', () => {
@@ -81,7 +74,7 @@ describe('ImportComicFiles Reducer', () => {
 
     describe('failure', () => {
       beforeEach(() => {
-        state = reducer({ ...state, sending: true }, sendComicFilesFailure());
+        state = reducer({ ...state, sending: true }, importComicFilesFailure());
       });
 
       it('clears the sending flag', () => {

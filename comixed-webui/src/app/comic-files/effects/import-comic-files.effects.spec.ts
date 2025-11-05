@@ -33,11 +33,12 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import {
-  sendComicFiles,
-  sendComicFilesFailure,
-  sendComicFilesSuccess
+  importComicFiles,
+  importComicFilesFailure,
+  importComicFilesSuccess
 } from '@app/comic-files/actions/import-comic-files.actions';
 import { hot } from 'jasmine-marbles';
+import { resetComicFileList } from '@app/comic-files/actions/comic-file-list.actions';
 
 describe('ImportComicFilesEffects', () => {
   const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];
@@ -83,47 +84,30 @@ describe('ImportComicFilesEffects', () => {
     expect(effects).toBeTruthy();
   });
 
-  describe('sending comic files', () => {
+  describe('importing comic files', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
-      const action = sendComicFiles({
-        files: FILES,
-        skipMetadata: SKIP_METADATA,
-        skipBlockingPages: SKIP_BLOCKING_PAGES
-      });
-      const outcome = sendComicFilesSuccess();
+      const action = importComicFiles();
+      const outcome1 = importComicFilesSuccess();
+      const outcome2 = resetComicFileList();
 
       actions$ = hot('-a', { a: action });
-      comicImportService.sendComicFiles
-        .withArgs({
-          files: FILES,
-          skipMetadata: SKIP_METADATA,
-          skipBlockingPages: SKIP_BLOCKING_PAGES
-        })
-        .and.returnValue(of(serviceResponse));
+      comicImportService.sendComicFiles.and.returnValue(of(serviceResponse));
 
-      const expected = hot('-b', { b: outcome });
+      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
       expect(effects.sendComicFiles$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = sendComicFiles({
-        files: FILES,
-        skipMetadata: SKIP_METADATA,
-        skipBlockingPages: SKIP_BLOCKING_PAGES
-      });
-      const outcome = sendComicFilesFailure();
+      const action = importComicFiles();
+      const outcome = importComicFilesFailure();
 
       actions$ = hot('-a', { a: action });
-      comicImportService.sendComicFiles
-        .withArgs({
-          files: FILES,
-          skipMetadata: SKIP_METADATA,
-          skipBlockingPages: SKIP_BLOCKING_PAGES
-        })
-        .and.returnValue(throwError(serviceResponse));
+      comicImportService.sendComicFiles.and.returnValue(
+        throwError(serviceResponse)
+      );
 
       const expected = hot('-b', { b: outcome });
       expect(effects.sendComicFiles$).toBeObservable(expected);
@@ -131,21 +115,11 @@ describe('ImportComicFilesEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = sendComicFiles({
-        files: FILES,
-        skipMetadata: SKIP_METADATA,
-        skipBlockingPages: SKIP_BLOCKING_PAGES
-      });
-      const outcome = sendComicFilesFailure();
+      const action = importComicFiles();
+      const outcome = importComicFilesFailure();
 
       actions$ = hot('-a', { a: action });
-      comicImportService.sendComicFiles
-        .withArgs({
-          files: FILES,
-          skipMetadata: SKIP_METADATA,
-          skipBlockingPages: SKIP_BLOCKING_PAGES
-        })
-        .and.throwError('expected');
+      comicImportService.sendComicFiles.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.sendComicFiles$).toBeObservable(expected);

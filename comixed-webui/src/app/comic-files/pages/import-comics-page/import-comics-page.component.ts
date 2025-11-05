@@ -31,7 +31,6 @@ import { Store } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { filter } from 'rxjs/operators';
-import { getUserPreference } from '@app/user';
 import { Title } from '@angular/platform-browser';
 import {
   selectComicFileListState,
@@ -39,7 +38,7 @@ import {
 } from '@app/comic-files/selectors/comic-file-list.selectors';
 import { selectImportComicFilesState } from '@app/comic-files/selectors/import-comic-files.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
-import { sendComicFiles } from '@app/comic-files/actions/import-comic-files.actions';
+import { importComicFiles } from '@app/comic-files/actions/import-comic-files.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { User } from '@app/user/models/user';
 import { ConfirmationService } from '@tragically-slick/confirmation';
@@ -72,11 +71,6 @@ import {
   toggleComicFileSelections
 } from '@app/comic-files/actions/comic-file-list.actions';
 import { Router } from '@angular/router';
-import { saveUserPreference } from '@app/user/actions/user.actions';
-import {
-  PREFERENCE_SKIP_BLOCKING_PAGES,
-  PREFERENCE_SKIP_METADATA
-} from '@app/comic-files/comic-file.constants';
 import { selectFeatureEnabledState } from '@app/admin/selectors/feature-enabled.selectors';
 import { hasFeature, isFeatureEnabled } from '@app/admin';
 import { BLOCKED_PAGES_ENABLED } from '@app/admin/admin.constants';
@@ -162,8 +156,6 @@ export class ImportComicsPageComponent
   showFinderForm = false;
   allSelected = false;
   anySelected = false;
-  skipMetadata = false;
-  skipBlockingPages = false;
   showCoverPopup = false;
   comicFile: ComicFile = null;
   featureEnabledSubscription$: Subscription;
@@ -188,18 +180,6 @@ export class ImportComicsPageComponent
       .subscribe(user => {
         this.user = user;
         this.logger.debug('User updated:', user);
-        this.skipMetadata =
-          getUserPreference(
-            user.preferences,
-            PREFERENCE_SKIP_METADATA,
-            `${false}`
-          ) === `${true}`;
-        this.skipBlockingPages =
-          getUserPreference(
-            user.preferences,
-            PREFERENCE_SKIP_BLOCKING_PAGES,
-            `${false}`
-          ) === `${true}`;
       });
     this.filesSubscription$ = this.store
       .select(selectComicFiles)
@@ -289,13 +269,7 @@ export class ImportComicsPageComponent
       ),
       confirm: () => {
         this.logger.debug('Starting import');
-        this.store.dispatch(
-          sendComicFiles({
-            files: this.files.filter(entry => entry.selected),
-            skipMetadata: this.skipMetadata,
-            skipBlockingPages: this.skipBlockingPages
-          })
-        );
+        this.store.dispatch(importComicFiles());
       }
     });
   }
@@ -316,16 +290,6 @@ export class ImportComicsPageComponent
     );
   }
 
-  onSkipMetadata(skipMetadata: boolean): void {
-    this.logger.debug('Setting skip metadata:', skipMetadata);
-    this.store.dispatch(
-      saveUserPreference({
-        name: PREFERENCE_SKIP_METADATA,
-        value: `${skipMetadata}`
-      })
-    );
-  }
-
   onShowPopup(showPopup: boolean, comicFile: ComicFile): void {
     if (showPopup) {
       this.logger.debug('Showing comic file cover:', comicFile);
@@ -336,16 +300,6 @@ export class ImportComicsPageComponent
       this.comicFile = null;
       this.showCoverPopup = false;
     }
-  }
-
-  onSkipBlockingPages(skipBlockingPages: boolean): void {
-    this.logger.debug('Setting skip skipBlockingPages:', skipBlockingPages);
-    this.store.dispatch(
-      saveUserPreference({
-        name: PREFERENCE_SKIP_BLOCKING_PAGES,
-        value: `${skipBlockingPages}`
-      })
-    );
   }
 
   private loadTranslations(): void {

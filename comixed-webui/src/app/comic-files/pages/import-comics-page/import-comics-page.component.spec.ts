@@ -36,9 +36,7 @@ import {
   COMIC_FILE_3,
   COMIC_FILE_4
 } from '@app/comic-files/comic-file.fixtures';
-import { sendComicFiles } from '@app/comic-files/actions/import-comic-files.actions';
-import { USER_ADMIN, USER_READER } from '@app/user/user.fixtures';
-import { User } from '@app/user/models/user';
+import { USER_READER } from '@app/user/user.fixtures';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -70,19 +68,15 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { ComicFileLoaderComponent } from '@app/comic-files/components/comic-file-loader/comic-file-loader.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatSortModule } from '@angular/material/sort';
-import {
-  PREFERENCE_SKIP_BLOCKING_PAGES,
-  PREFERENCE_SKIP_METADATA
-} from '@app/comic-files/comic-file.constants';
 import { Router } from '@angular/router';
 import { toggleComicFileSelections } from '@app/comic-files/actions/comic-file-list.actions';
-import { saveUserPreference } from '@app/user/actions/user.actions';
 import {
   FEATURE_ENABLED_FEATURE_KEY,
   initialState as initialFeatureEnabledState
 } from '@app/admin/reducers/feature-enabled.reducer';
 import { getFeatureEnabled } from '@app/admin/actions/feature-enabled.actions';
 import { BLOCKED_PAGES_ENABLED } from '@app/admin/admin.constants';
+import { importComicFiles } from '@app/comic-files/actions/import-comic-files.actions';
 
 describe('ImportComicsPageComponent', () => {
   const USER = USER_READER;
@@ -97,8 +91,6 @@ describe('ImportComicsPageComponent', () => {
   ];
   const FILE = COMIC_FILE_3;
   const PAGE_SIZE = 400;
-  const SKIP_METADATA = Math.random() > 0.5;
-  const SKIP_BLOCKING_PAGES = Math.random() > 0.5;
   const BLOCKED_PAGES_ENABLED_FEATURE_ENABLED = Math.random() > 0.5;
 
   const initialState = {
@@ -181,41 +173,6 @@ describe('ImportComicsPageComponent', () => {
     });
   });
 
-  describe('loading user preferences', () => {
-    beforeEach(() => {
-      component.skipMetadata = !SKIP_METADATA;
-      component.skipBlockingPages = !SKIP_BLOCKING_PAGES;
-      const user = {
-        ...USER_ADMIN,
-        preferences: [
-          {
-            name: PREFERENCE_SKIP_METADATA,
-            value: `${SKIP_METADATA}`
-          },
-          {
-            name: PREFERENCE_SKIP_BLOCKING_PAGES,
-            value: `${SKIP_BLOCKING_PAGES}`
-          }
-        ]
-      } as User;
-      store.setState({
-        ...initialState,
-        [USER_FEATURE_KEY]: {
-          ...initialUserState,
-          user
-        }
-      });
-    });
-
-    it('sets the skip metadata flag', () => {
-      expect(component.skipMetadata).toEqual(SKIP_METADATA);
-    });
-
-    it('sets the skip blocking pages flag', () => {
-      expect(component.skipBlockingPages).toEqual(SKIP_BLOCKING_PAGES);
-    });
-  });
-
   describe('when loading files', () => {
     describe('when loading stops', () => {
       beforeEach(() => {
@@ -292,69 +249,12 @@ describe('ImportComicsPageComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirm: Confirmation) => confirm.confirm()
       );
+
+      component.onStartImport();
     });
 
-    describe('not skipping metadata', () => {
-      beforeEach(() => {
-        component.skipMetadata = false;
-        component.onStartImport();
-      });
-
-      it('confirms with the user', () => {
-        expect(confirmationService.confirm).toHaveBeenCalled();
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          sendComicFiles({
-            files: FILES,
-            skipMetadata: false,
-            skipBlockingPages: false
-          })
-        );
-      });
-    });
-
-    describe('skipping metadata', () => {
-      beforeEach(() => {
-        component.skipMetadata = true;
-        component.onStartImport();
-      });
-
-      it('confirms with the user', () => {
-        expect(confirmationService.confirm).toHaveBeenCalled();
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          sendComicFiles({
-            files: FILES,
-            skipMetadata: true,
-            skipBlockingPages: false
-          })
-        );
-      });
-    });
-
-    describe('skipping blcoking pages', () => {
-      beforeEach(() => {
-        component.skipBlockingPages = true;
-        component.onStartImport();
-      });
-
-      it('confirms with the user', () => {
-        expect(confirmationService.confirm).toHaveBeenCalled();
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          sendComicFiles({
-            files: FILES,
-            skipMetadata: false,
-            skipBlockingPages: true
-          })
-        );
-      });
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(importComicFiles());
     });
   });
 
@@ -432,36 +332,6 @@ describe('ImportComicsPageComponent', () => {
           })
         );
       });
-    });
-  });
-
-  describe('toggling the skip metadata flag', () => {
-    beforeEach(() => {
-      component.onSkipMetadata(SKIP_METADATA);
-    });
-
-    it('saves the user preference', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        saveUserPreference({
-          name: PREFERENCE_SKIP_METADATA,
-          value: `${SKIP_METADATA}`
-        })
-      );
-    });
-  });
-
-  describe('toggling the skip blocking pages flag', () => {
-    beforeEach(() => {
-      component.onSkipBlockingPages(SKIP_BLOCKING_PAGES);
-    });
-
-    it('saves the user preference', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        saveUserPreference({
-          name: PREFERENCE_SKIP_BLOCKING_PAGES,
-          value: `${SKIP_BLOCKING_PAGES}`
-        })
-      );
     });
   });
 

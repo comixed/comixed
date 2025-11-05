@@ -19,17 +19,18 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import {
-  sendComicFiles,
-  sendComicFilesFailure,
-  sendComicFilesSuccess
+  importComicFiles,
+  importComicFilesFailure,
+  importComicFilesSuccess
 } from '@app/comic-files/actions/import-comic-files.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicImportService } from '@app/comic-files/services/comic-import.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
+import { resetComicFileList } from '@app/comic-files/actions/comic-file-list.actions';
 
 @Injectable()
 export class ImportComicFilesEffects {
@@ -41,43 +42,36 @@ export class ImportComicFilesEffects {
 
   sendComicFiles$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(sendComicFiles),
+      ofType(importComicFiles),
       tap(action => this.logger.debug('Effect: send comic files:', action)),
       switchMap(action =>
-        this.comicImportService
-          .sendComicFiles({
-            files: action.files,
-            skipMetadata: action.skipMetadata,
-            skipBlockingPages: action.skipBlockingPages
-          })
-          .pipe(
-            tap(response => this.logger.debug('Response received:', response)),
-            tap(() =>
-              this.alertService.info(
-                this.translateService.instant(
-                  'comic-files.import-comic-files.effect-success',
-                  { count: action.files.length }
-                )
+        this.comicImportService.sendComicFiles().pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          tap(() =>
+            this.alertService.info(
+              this.translateService.instant(
+                'comic-files.import-comic-files.effect-success'
               )
-            ),
-            map(() => sendComicFilesSuccess()),
-            catchError(error => {
-              this.logger.error('Service failure:', error);
-              this.alertService.error(
-                this.translateService.instant(
-                  'comic-files.import-comic-files.effect-failure'
-                )
-              );
-              return of(sendComicFilesFailure());
-            })
-          )
+            )
+          ),
+          mergeMap(() => [importComicFilesSuccess(), resetComicFileList()]),
+          catchError(error => {
+            this.logger.error('Service failure:', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'comic-files.import-comic-files.effect-failure'
+              )
+            );
+            return of(importComicFilesFailure());
+          })
+        )
       ),
       catchError(error => {
         this.logger.error('General failure:', error);
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(sendComicFilesFailure());
+        return of(importComicFilesFailure());
       })
     );
   });

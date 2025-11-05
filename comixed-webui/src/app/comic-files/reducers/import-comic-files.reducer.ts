@@ -18,9 +18,9 @@
 
 import { createFeature, createReducer, on } from '@ngrx/store';
 import {
-  sendComicFilesSuccess,
-  sendComicFiles,
-  sendComicFilesFailure
+  importComicFilesSuccess,
+  importComicFiles,
+  importComicFilesFailure
 } from '@app/comic-files/actions/import-comic-files.actions';
 
 export const IMPORT_COMIC_FILES_FEATURE_KEY = 'import_comic_files_state';
@@ -36,9 +36,9 @@ export const initialState: ImportComicFilesState = {
 export const reducer = createReducer(
   initialState,
 
-  on(sendComicFiles, state => ({ ...state, sending: true })),
-  on(sendComicFilesSuccess, state => ({ ...state, sending: false })),
-  on(sendComicFilesFailure, state => ({ ...state, sending: false }))
+  on(importComicFiles, state => ({ ...state, sending: true })),
+  on(importComicFilesSuccess, state => ({ ...state, sending: false })),
+  on(importComicFilesFailure, state => ({ ...state, sending: false }))
 );
 
 export const comicFilesFeature = createFeature({

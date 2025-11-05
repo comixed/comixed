@@ -26,6 +26,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.apache.commons.lang.math.RandomUtils;
@@ -36,6 +37,7 @@ import org.comixedproject.model.metadata.FilenameMetadata;
 import org.comixedproject.model.net.comicfiles.*;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.service.metadata.FilenameScrapingRuleService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -66,12 +68,23 @@ class ComicFileControllerTest {
   @Mock private ComicFileService comicFileService;
   @Mock private FilenameScrapingRuleService filenameScrapingRuleService;
   @Mock private ObjectMapper objectMapper;
-  @Mock private List<ComicFileGroup> comicFileGroupList;
-  @Mock private List<String> filenameList;
   @Mock private FilenameMetadata filenameMetadata;
   @Mock private HttpSession session;
 
   @Captor private ArgumentCaptor<TypeReference> typeReferenceArgumentCaptor;
+  @Captor private ArgumentCaptor<List<String>> filenameListArgumentCaptor;
+
+  private List<ComicFileGroup> comicFileGroupList = new ArrayList<>();
+  private ComicFileGroup comicFileGroup = new ComicFileGroup();
+
+  @BeforeEach
+  void setUp() {
+    for (int index = 0; index < 25; index++) {
+      comicFileGroup
+          .getFiles()
+          .add(new ComicFile(String.format("comicfile-%d.cbz", index), 1024 * index));
+    }
+  }
 
   @Test
   void loadComicFilesFromSession() throws JsonProcessingException {
@@ -221,10 +234,20 @@ class ComicFileControllerTest {
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
           JobParametersInvalidException,
-          JobRestartException {
-    controller.importComicFiles(
-        session,
-        new ImportComicFilesRequest(filenameList, TEST_SKIP_METADATA, TEST_SKIP_BLOCKING_PAGES));
+          JobRestartException,
+          JsonProcessingException {
+    comicFileGroupList.add(comicFileGroup);
+
+    Mockito.when(session.getAttribute(COMIC_FILES)).thenReturn(TEST_ENCODED_COMIC_FILES);
+    Mockito.when(objectMapper.readValue(Mockito.anyString(), typeReferenceArgumentCaptor.capture()))
+        .thenReturn(comicFileGroupList);
+    Mockito.doNothing()
+        .when(comicFileService)
+        .importComicFiles(filenameListArgumentCaptor.capture());
+
+    controller.importComicFiles(session, new ImportComicFilesRequest());
+
+    final List<String> filenameList = filenameListArgumentCaptor.getValue();
 
     Mockito.verify(comicFileService, Mockito.times(1)).importComicFiles(filenameList);
     Mockito.verify(session, Mockito.times(1)).removeAttribute(COMIC_FILES);

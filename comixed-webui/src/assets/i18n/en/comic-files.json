@@ -20,8 +20,8 @@
     "import-comic-files": {
       "confirmation-message": "Are you sure you want to import the selected {count, plural, =1{comic} other{# comics}}?",
       "confirmation-title": "Import Selected Comics",
-      "effect-failure": "Failed to send comic files for import.",
-      "effect-success": "Submitted {count, plural, =1{one comic file} other{# comic files}} for import."
+      "effect-failure": "Failed to import comic files.",
+      "effect-success": "Import comic files started...."
     },
     "label": {
       "base-filename": "Filename",
@@ -82,8 +82,6 @@
       "find-files": "Load files under this directory (shift+ctrl+f).",
       "select-all": "Select all comic files for import (ctrl+a).",
       "show-finder-form": "Find comic files to import...",
-      "skip-blocking-pages": "Skip marked blocked pages as deleted (currently {skipBlockingPages, select, true{ON} other{OFF}})",
-      "skip-metadata": "Skip processing metadata (currently {skipMetadata, select, true{ON} other{OFF}})",
       "start-import": "Start importing the selected comic files (ctrl+i).",
       "toggle-file-lookup-form": "Toggle the comic file lookup form."
     }

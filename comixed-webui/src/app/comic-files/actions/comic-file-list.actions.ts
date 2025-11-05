@@ -19,6 +19,10 @@
 import { createAction, props } from '@ngrx/store';
 import { ComicFileGroup } from '@app/comic-files/models/comic-file-group';
 
+export const resetComicFileList = createAction(
+  '[Comic File List] Reset the local list of comic files'
+);
+
 export const loadComicFilesFromSession = createAction('[Comic File List]');
 
 export const loadComicFileLists = createAction(
