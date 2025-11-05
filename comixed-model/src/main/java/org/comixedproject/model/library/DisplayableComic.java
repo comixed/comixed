@@ -48,6 +48,11 @@ public class DisplayableComic {
   @Getter
   private Long comicDetailId;
 
+  @Column(name = "reference_id")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  private String referenceId;
+
   @Column(name = "filename")
   @JsonView({View.ComicDetailsView.class})
   @Getter
@@ -85,6 +90,12 @@ public class DisplayableComic {
   @Getter
   @Setter
   private String publisher;
+
+  @Column(name = "imprint")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  @Setter
+  private String imprint;
 
   @Column(name = "series")
   @JsonView({View.ComicListView.class})

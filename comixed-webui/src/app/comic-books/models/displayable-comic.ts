@@ -23,6 +23,7 @@ import { ComicType } from '@app/comic-books/models/comic-type';
 export interface DisplayableComic {
   comicBookId: number;
   comicDetailId: number;
+  referenceId: string;
   filename: string;
   baseFilename: string;
   archiveType: ArchiveType;
@@ -30,6 +31,7 @@ export interface DisplayableComic {
   unscraped: boolean;
   comicType: ComicType;
   publisher: string;
+  imprint: string;
   series: string;
   volume: string;
   issueNumber: string;

@@ -56,7 +56,6 @@ import {
   METADATA_SOURCE_1,
   SCRAPING_VOLUME_1
 } from '@app/comic-metadata/comic-metadata.fixtures';
-import { loadComicBook } from '@app/comic-books/actions/comic-book.actions';
 import {
   COMIC_BOOK_FEATURE_KEY,
   initialState as initialComicBookState
@@ -176,13 +175,7 @@ describe('ScrapingIssuesPageComponent', () => {
     });
 
     it('updates the current comic', () => {
-      expect(component.currentComicBook).toBeNull();
-    });
-
-    it('loads the comic book', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        loadComicBook({ id: DISPLAYABLE_COMIC.comicBookId })
-      );
+      expect(component.currentComicBook).toBe(DISPLAYABLE_COMIC);
     });
   });
 
@@ -277,12 +270,6 @@ describe('ScrapingIssuesPageComponent', () => {
 
     it('clears the current volume', () => {
       expect(component.currentVolume).toBeNull();
-    });
-
-    it('loads the comic book', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        loadComicBook({ id: DISPLAYABLE_COMIC.comicBookId })
-      );
     });
   });
 });
