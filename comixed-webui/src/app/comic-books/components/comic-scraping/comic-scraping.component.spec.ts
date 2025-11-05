@@ -21,7 +21,7 @@ import { ComicScrapingComponent } from './comic-scraping.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { COMIC_BOOK_2 } from '@app/comic-books/comic-books.fixtures';
+import { DISPLAYABLE_COMIC_4 } from '@app/comic-books/comic-books.fixtures';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -57,15 +57,15 @@ import {
   initialState as initialMetadataSourceListState,
   METADATA_SOURCE_LIST_FEATURE_KEY
 } from '@app/comic-metadata/reducers/metadata-source-list.reducer';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import {
   initialState as initialMetadataState,
   SINGLE_BOOK_SCRAPING_FEATURE_KEY
 } from '@app/comic-metadata/reducers/single-book-scraping.reducer';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 describe('ComicScrapingComponent', () => {
-  const COMIC = COMIC_BOOK_2;
+  const COMIC = DISPLAYABLE_COMIC_4;
   const SKIP_CACHE = Math.random() > 0.5;
   const MATCH_PUBLISHER = Math.random() > 0.5;
   const MAXIMUM_RECORDS = 100;
@@ -135,11 +135,7 @@ describe('ComicScrapingComponent', () => {
       beforeEach(() => {
         component.comic = {
           ...COMIC,
-          metadata: {
-            metadataSource: PREFERRED_METADATA_SOURCE,
-            referenceId: REFERENCE_ID,
-            lastScrapedDate: new Date().getTime()
-          }
+          referenceId: REFERENCE_ID
         };
       });
 
@@ -253,10 +249,10 @@ describe('ComicScrapingComponent', () => {
       it('emits an event', () => {
         expect(component.scrape.emit).toHaveBeenCalledWith({
           metadataSource: OTHER_METADATA_SOURCE,
-          publisher: COMIC.detail.publisher,
-          series: COMIC.detail.series,
-          volume: COMIC.detail.volume,
-          issueNumber: COMIC.detail.issueNumber,
+          publisher: COMIC.publisher,
+          series: COMIC.series,
+          volume: COMIC.volume,
+          issueNumber: COMIC.issueNumber,
           maximumRecords: MAXIMUM_RECORDS,
           skipCache: SKIP_CACHE,
           matchPublisher: MATCH_PUBLISHER
@@ -281,10 +277,10 @@ describe('ComicScrapingComponent', () => {
       it('emits an event', () => {
         expect(component.scrape.emit).toHaveBeenCalledWith({
           metadataSource: OTHER_METADATA_SOURCE,
-          publisher: COMIC.detail.publisher,
-          series: COMIC.detail.series,
-          volume: COMIC.detail.volume,
-          issueNumber: COMIC.detail.issueNumber,
+          publisher: COMIC.publisher,
+          series: COMIC.series,
+          volume: COMIC.volume,
+          issueNumber: COMIC.issueNumber,
           maximumRecords: MAXIMUM_RECORDS,
           skipCache: SKIP_CACHE,
           matchPublisher: MATCH_PUBLISHER
@@ -388,10 +384,10 @@ describe('ComicScrapingComponent', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           updateComicBook({
             comicBookId: COMIC.comicBookId,
-            publisher: COMIC.detail.publisher,
-            series: COMIC.detail.series,
-            volume: COMIC.detail.volume,
-            issueNumber: COMIC.detail.issueNumber
+            publisher: COMIC.publisher,
+            series: COMIC.series,
+            volume: COMIC.volume,
+            issueNumber: COMIC.issueNumber
           })
         );
       });
@@ -417,10 +413,10 @@ describe('ComicScrapingComponent', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           updateComicBook({
             comicBookId: COMIC.comicBookId,
-            publisher: COMIC.detail.publisher,
-            series: COMIC.detail.series,
-            volume: COMIC.detail.volume,
-            issueNumber: COMIC.detail.issueNumber
+            publisher: COMIC.publisher,
+            series: COMIC.series,
+            volume: COMIC.volume,
+            issueNumber: COMIC.issueNumber
           })
         );
       });
@@ -434,28 +430,24 @@ describe('ComicScrapingComponent', () => {
         [SCRAPE_METADATA_FEATURE_KEY]: {
           ...initialScrapeMetadataState,
           found: true,
-          series: COMIC.detail.series,
-          volume: COMIC.detail.volume,
-          issueNumber: COMIC.detail.issueNumber
+          series: COMIC.series,
+          volume: COMIC.volume,
+          issueNumber: COMIC.issueNumber
         }
       });
     });
 
     it('sets the series', () => {
-      expect(component.comicForm.controls.series.value).toEqual(
-        COMIC.detail.series
-      );
+      expect(component.comicForm.controls.series.value).toEqual(COMIC.series);
     });
 
     it('sets the volume', () => {
-      expect(component.comicForm.controls.volume.value).toEqual(
-        COMIC.detail.volume
-      );
+      expect(component.comicForm.controls.volume.value).toEqual(COMIC.volume);
     });
 
     it('sets the issue number', () => {
       expect(component.comicForm.controls.issueNumber.value).toEqual(
-        COMIC.detail.issueNumber
+        COMIC.issueNumber
       );
     });
   });
@@ -472,7 +464,7 @@ describe('ComicScrapingComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          scrapeMetadataFromFilename({ filename: COMIC.detail.baseFilename })
+          scrapeMetadataFromFilename({ filename: COMIC.baseFilename })
         );
       });
     });
@@ -491,7 +483,7 @@ describe('ComicScrapingComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          scrapeMetadataFromFilename({ filename: COMIC.detail.baseFilename })
+          scrapeMetadataFromFilename({ filename: COMIC.baseFilename })
         );
       });
     });
@@ -546,7 +538,7 @@ describe('ComicScrapingComponent', () => {
     });
 
     it('requires a valid form', () => {
-      component.comic = { detail: {} } as ComicBook;
+      component.comic = {} as DisplayableComic;
       expect(component.readyToScrape).toBeFalse();
     });
   });
@@ -554,11 +546,7 @@ describe('ComicScrapingComponent', () => {
   describe('scraping a comic using the reference id', () => {
     const SCRAPING_COMIC = {
       ...COMIC,
-      metadata: {
-        metadataSource: OTHER_METADATA_SOURCE,
-        referenceId: REFERENCE_ID,
-        lastScrapedDate: new Date().getTime()
-      }
+      referenceId: REFERENCE_ID
     };
 
     beforeEach(() => {

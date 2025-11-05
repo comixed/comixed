@@ -76,7 +76,7 @@
     @if (!!currentComicBook && scrapingVolumes.length === 0) {
       <div class="cx-width-75">
         <cx-comic-scraping
-          [comic]="loadedComicBook"
+          [comic]="currentComicBook"
           [metadataSource]="metadataSource"
           [skipCache]="skipCache"
           [matchPublisher]="matchPublisher"

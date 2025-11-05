@@ -9,5 +9,6 @@
     <include file="/db/migrations/3.1/001_2475_add_page_type_to_comic_pages.xml"/>
     <include file="/db/migrations/3.1/002_2476_remove_comic_pages_page_state.xml"/>
     <include file="/db/migrations/3.1/003_2473_added_last_scraped_date.xml"/>
+    <include file="/db/migrations/3.1/004_2508_add_reference_id_and_imprint_to_displayable_comics_view.xml"/>
 
 </databaseChangeLog>

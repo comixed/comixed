@@ -78,6 +78,7 @@ import {
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Component({
   selector: 'cx-comic-scraping',
@@ -190,22 +191,22 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
     this._preferredMetadataSource = source;
   }
 
-  private _comic: ComicBook;
+  private _comic: DisplayableComic;
 
-  get comic(): ComicBook {
+  get comic(): DisplayableComic {
     return this._comic;
   }
 
-  @Input() set comic(comic: ComicBook) {
+  @Input() set comic(comic: DisplayableComic) {
     this.logger.debug('Loading comic form:', comic);
     this._comic = comic;
     this.logger.debug('Loading form fields');
-    this.comicForm.controls.referenceId.setValue(comic?.metadata?.referenceId);
-    this.comicForm.controls.publisher.setValue(comic?.detail.publisher);
-    this.comicForm.controls.series.setValue(comic?.detail.series);
-    this.comicForm.controls.volume.setValue(comic?.detail.volume);
-    this.comicForm.controls.issueNumber.setValue(comic?.detail.issueNumber);
-    this.comicForm.controls.imprint.setValue(comic?.detail.imprint);
+    this.comicForm.controls.referenceId.setValue(comic?.referenceId);
+    this.comicForm.controls.publisher.setValue(comic?.publisher);
+    this.comicForm.controls.series.setValue(comic?.series);
+    this.comicForm.controls.volume.setValue(comic?.volume);
+    this.comicForm.controls.issueNumber.setValue(comic?.issueNumber);
+    this.comicForm.controls.imprint.setValue(comic?.imprint);
     this.comicForm.updateValueAndValidity();
   }
 
@@ -349,7 +350,7 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
   }
 
   onScrapeFilename(): void {
-    const filename = this.comic.detail.baseFilename;
+    const filename = this.comic.baseFilename;
     this.logger.debug('Scraping the comic filename:', filename);
     this.store.dispatch(scrapeMetadataFromFilename({ filename }));
   }

@@ -17,11 +17,14 @@
  */
 
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import * as fromMultiBookScraping from '../reducers/multi-book-scraping.reducer';
+import {
+  MULTI_BOOK_SCRAPING_FEATURE_KEY,
+  MultiBookScrapingState
+} from '../reducers/multi-book-scraping.reducer';
 
 export const selectMultiBookScrapingState =
-  createFeatureSelector<fromMultiBookScraping.MultiBookScrapingState>(
-    fromMultiBookScraping.MULTI_BOOK_SCRAPING_FEATURE_KEY
+  createFeatureSelector<MultiBookScrapingState>(
+    MULTI_BOOK_SCRAPING_FEATURE_KEY
   );
 
 export const selectMultiBookScrapingList = createSelector(

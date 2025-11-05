@@ -39,7 +39,6 @@ import {
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
-import { selectComicBook } from '@app/comic-books/selectors/comic-book.selectors';
 import {
   selectMultiBookScrapingCurrent,
   selectMultiBookScrapingList,
@@ -86,8 +85,6 @@ import { AsyncPipe } from '@angular/common';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { ComicDetailCoverUrlPipe } from '@app/comic-books/pipes/comic-detail-cover-url.pipe';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
-import { ComicBook } from '@app/comic-books/models/comic-book';
-import { loadComicBook } from '@app/comic-books/actions/comic-book.actions';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -142,9 +139,7 @@ export class ScrapingIssuesPageComponent implements OnInit, OnDestroy {
   comicBooks: DisplayableComic[] = [];
   dataSource = new MatTableDataSource<DisplayableComic>();
   multiBookCurrentComicDetailSubscription: Subscription;
-  currentComicBookSubscription: Subscription;
   currentComicBook: DisplayableComic = null;
-  loadedComicBook: ComicBook = null;
   metadataSourceSubscription: Subscription;
   metadataSource: MetadataSource;
   pageChangedSubscription: Subscription;
@@ -226,9 +221,6 @@ export class ScrapingIssuesPageComponent implements OnInit, OnDestroy {
       .pipe(filter(comicBook => !!comicBook))
       .subscribe(currentComicBook => {
         this.currentComicBook = currentComicBook;
-        this.store.dispatch(
-          loadComicBook({ id: currentComicBook.comicBookId })
-        );
         this.scrapingVolumes = [];
         this.currentVolume = null;
       });
@@ -237,9 +229,6 @@ export class ScrapingIssuesPageComponent implements OnInit, OnDestroy {
       .subscribe(metadataSource => {
         this.metadataSource = metadataSource;
       });
-    this.currentComicBookSubscription = this.store
-      .select(selectComicBook)
-      .subscribe(comicBook => (this.loadedComicBook = comicBook));
     this.scrapingStateSubscription = this.store
       .select(selectSingleBookScrapingState)
       .subscribe(state => {
@@ -282,15 +271,13 @@ export class ScrapingIssuesPageComponent implements OnInit, OnDestroy {
     this.multiBookListSubscription.unsubscribe();
     this.multiBookCurrentComicDetailSubscription.unsubscribe();
     this.metadataSourceSubscription.unsubscribe();
-    this.currentComicBookSubscription.unsubscribe();
     this.scrapingVolumeSubscription.unsubscribe();
     this.pageChangedSubscription.unsubscribe();
   }
 
   onSelectionChanged(comicBook: DisplayableComic): void {
     this.logger.trace('Selected comic changed:', comicBook);
-    this.currentComicBook = null;
-    this.store.dispatch(loadComicBook({ id: comicBook.comicBookId }));
+    this.currentComicBook = comicBook;
   }
 
   onScrape(event: MetadataEvent): void {
