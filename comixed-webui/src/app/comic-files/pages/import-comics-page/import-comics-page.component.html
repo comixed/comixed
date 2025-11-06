@@ -82,6 +82,24 @@
   }}
 </h2>
 
+<mat-form-field class="cx-width-100" appearance="fill">
+  <mat-label class="cx-text-nowrap">
+    {{ "comic-files.label.filter-options" | translate }}
+  </mat-label>
+  <mat-select
+    [value]="currentPath"
+    (selectionChange)="onChangeCurrentPath($event.value)"
+    [placeholder]="'comic-files.text.all-directories' | translate"
+  >
+    @for (option of pathOptions$ | async; track option) {
+      <mat-option [value]="option.value">
+        {{ option.label | translate }}
+      </mat-option>
+    }
+  </mat-select>
+  <input matInput readonly hidden />
+</mat-form-field>
+
 <mat-paginator
   class="cx-height-100"
   showFirstLastButtons="true"
@@ -108,13 +126,14 @@
 >
   <ng-container matColumnDef="selection">
     <mat-header-cell *matHeaderCellDef mat-sort-header>
-      <mat-checkbox
-        [disabled]="!dataSource.data.length"
-        [checked]="allSelected"
-        (change)="onSelectAll($event.checked)"
-        (keyup)="onSelectAll($event.checked)"
-        (click)="$event.stopPropagation()"
-      ></mat-checkbox>
+      @if (!currentPath) {
+        <mat-checkbox
+          [disabled]="!dataSource.data.length"
+          [checked]="allSelected"
+          (change)="onSelectAll($event.checked)"
+          (click)="$event.stopPropagation()"
+        ></mat-checkbox>
+      }
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">

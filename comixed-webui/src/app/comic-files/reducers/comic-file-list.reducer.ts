@@ -26,7 +26,8 @@ import {
   resetComicFileList,
   toggleComicFileSelections,
   toggleComicFileSelectionsFailure,
-  toggleComicFileSelectionsSuccess
+  toggleComicFileSelectionsSuccess,
+  updateCurrentPath
 } from '@app/comic-files/actions/comic-file-list.actions';
 import { ComicFileGroup } from '@app/comic-files/models/comic-file-group';
 
@@ -36,12 +37,14 @@ export interface ComicFileListState {
   busy: boolean;
   groups: ComicFileGroup[];
   files: ComicFile[];
+  currentPath: string | null;
 }
 
 export const initialState: ComicFileListState = {
   busy: false,
   groups: [],
-  files: []
+  files: [],
+  currentPath: null
 };
 
 export const reducer = createReducer(
@@ -66,6 +69,10 @@ export const reducer = createReducer(
     ...state,
     busy: false,
     files: []
+  })),
+  on(updateCurrentPath, (state, action) => ({
+    ...state,
+    currentPath: action.path
   })),
   on(toggleComicFileSelections, state => ({ ...state, busy: true })),
   on(toggleComicFileSelectionsSuccess, (state, action) => {

@@ -22,18 +22,25 @@ import {
   ComicFileListState
 } from '@app/comic-files/reducers/comic-file-list.reducer';
 
-/** Selects the comic list feature state. */
 export const selectComicFileListState =
   createFeatureSelector<ComicFileListState>(COMIC_FILE_LIST_FEATURE_KEY);
 
-/** Selects the loaded comic file groups. */
 export const selectComicFileGroups = createSelector(
   selectComicFileListState,
   state => state.groups
 );
 
-/** Selects the loaded comic files. */
 export const selectComicFiles = createSelector(
   selectComicFileListState,
   state => state.files
+);
+
+export const selectComicGroups = createSelector(
+  selectComicFileListState,
+  state => state.groups
+);
+
+export const selectComicFilesCurrentPath = createSelector(
+  selectComicFileListState,
+  state => state.currentPath
 );
