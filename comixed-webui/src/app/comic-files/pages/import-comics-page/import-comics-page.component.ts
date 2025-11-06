@@ -24,7 +24,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { ComicFile } from '@app/comic-files/models/comic-file';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
@@ -34,7 +34,9 @@ import { filter } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
 import {
   selectComicFileListState,
-  selectComicFiles
+  selectComicFiles,
+  selectComicFilesCurrentPath,
+  selectComicGroups
 } from '@app/comic-files/selectors/comic-file-list.selectors';
 import { selectImportComicFilesState } from '@app/comic-files/selectors/import-comic-files.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
@@ -68,7 +70,8 @@ import {
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import {
   loadComicFilesFromSession,
-  toggleComicFileSelections
+  toggleComicFileSelections,
+  updateCurrentPath
 } from '@app/comic-files/actions/comic-file-list.actions';
 import { Router } from '@angular/router';
 import { selectFeatureEnabledState } from '@app/admin/selectors/feature-enabled.selectors';
@@ -86,9 +89,13 @@ import {
 } from '@angular/material/card';
 import { ComicFileLoaderComponent } from '../../components/comic-file-loader/comic-file-loader.component';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { MatLabel } from '@angular/material/form-field';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { ComicFileCoverUrlPipe } from '../../pipes/comic-file-cover-url.pipe';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { ComicFileGroup } from '@app/comic-files/models/comic-file-group';
+import { SelectionOption } from '@app/core/models/ui/selection-option';
+import { MatInput } from '@angular/material/input';
 
 @Component({
   selector: 'cx-import-comics',
@@ -125,7 +132,11 @@ import { ComicFileCoverUrlPipe } from '../../pipes/comic-file-cover-url.pipe';
     AsyncPipe,
     DecimalPipe,
     TranslateModule,
-    ComicFileCoverUrlPipe
+    ComicFileCoverUrlPipe,
+    MatSelect,
+    MatOption,
+    MatFormField,
+    MatInput
   ]
 })
 export class ImportComicsPageComponent
@@ -146,6 +157,8 @@ export class ImportComicsPageComponent
   langChangeSubscription: Subscription;
   filesSubscription$: Subscription;
   files: ComicFile[];
+  groupsSubscription$: Subscription;
+  groups: ComicFileGroup[];
   translateSubscription$: Subscription;
   userSubscription$: Subscription;
   user: User;
@@ -160,6 +173,9 @@ export class ImportComicsPageComponent
   comicFile: ComicFile = null;
   featureEnabledSubscription$: Subscription;
   blockedPagesEnabled = false;
+  currentPathSubscription$: Subscription;
+  currentPath: string | null = null;
+  pathOptions$ = new BehaviorSubject<SelectionOption<string>[]>([]);
 
   logger = inject(LoggerService);
   title = inject(Title);
@@ -185,18 +201,33 @@ export class ImportComicsPageComponent
       .select(selectComicFiles)
       .subscribe(files => {
         this.files = files;
-        this.dataSource.data = files;
-        this.updateSelectionState();
+        this.updateDisplayedFilesAndSelections();
         this.showFinderForm = false;
         this.selectedFileCount = this.files.filter(
           file => file.selected
         ).length;
       });
+    this.groupsSubscription$ = this.store
+      .select(selectComicGroups)
+      .subscribe(groups => {
+        this.groups = groups;
+        this.updateDisplayedFilesAndSelections();
+      });
     this.comicFileListStateSubscription$ = this.store
       .select(selectComicFileListState)
-      .subscribe(state =>
-        this.store.dispatch(setBusyState({ enabled: state.busy }))
-      );
+      .subscribe(state => {
+        this.store.dispatch(setBusyState({ enabled: state.busy }));
+        this.pathOptions$.next(
+          [{ label: 'comic-files.text.all-directories', value: null }].concat(
+            state.groups.map(group => {
+              return {
+                label: group.directory,
+                value: group.directory
+              } as SelectionOption<string>;
+            })
+          )
+        );
+      });
     this.sendComicFilesStateSubscription$ = this.store
       .select(selectImportComicFilesState)
       .subscribe(state =>
@@ -216,6 +247,12 @@ export class ImportComicsPageComponent
             BLOCKED_PAGES_ENABLED
           );
         }
+      });
+    this.currentPathSubscription$ = this.store
+      .select(selectComicFilesCurrentPath)
+      .subscribe(path => {
+        this.currentPath = path;
+        this.updateDisplayedFilesAndSelections();
       });
   }
 
@@ -252,12 +289,16 @@ export class ImportComicsPageComponent
     this.userSubscription$.unsubscribe();
     this.logger.trace('Unsubscribing from comic file updates');
     this.filesSubscription$.unsubscribe();
+    this.logger.trace('Unsubscribing from comic group updates');
+    this.groupsSubscription$.unsubscribe();
     this.logger.trace('Unsubscribing from comic file list state updates');
     this.comicFileListStateSubscription$.unsubscribe();
     this.logger.trace('Unsubscribing from send comic file state updates');
     this.sendComicFilesStateSubscription$.unsubscribe();
     this.logger.trace('Unsubscribing from feature enabled updates');
     this.featureEnabledSubscription$.unsubscribe();
+    this.logger.trace('Unsubscribing from current path updates');
+    this.currentPathSubscription$.unsubscribe();
   }
 
   onStartImport(): void {
@@ -302,6 +343,11 @@ export class ImportComicsPageComponent
     }
   }
 
+  onChangeCurrentPath(path: string | null): void {
+    this.logger.debug('Changing current path:', path);
+    this.store.dispatch(updateCurrentPath({ path }));
+  }
+
   private loadTranslations(): void {
     this.logger.trace('Loading page title');
     this.titleService.setTitle(
@@ -309,7 +355,16 @@ export class ImportComicsPageComponent
     );
   }
 
-  private updateSelectionState(): void {
+  private updateDisplayedFilesAndSelections(): void {
+    if (!!this.currentPath) {
+      this.logger.info('Showing comic files from group:', this.currentPath);
+      this.dataSource.data =
+        this.groups.find(group => group.directory === this.currentPath)
+          ?.files || [];
+    } else {
+      this.logger.info('Showing all comic files');
+      this.dataSource.data = this.files;
+    }
     this.allSelected = this.dataSource.data.every(entry => entry.selected);
     this.anySelected = this.dataSource.data.some(entry => entry.selected);
   }

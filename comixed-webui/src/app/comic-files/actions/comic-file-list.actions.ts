@@ -39,6 +39,13 @@ export const loadComicFileListFailure = createAction(
   '[Comic File List] Failed to load comic files in a file system'
 );
 
+export const updateCurrentPath = createAction(
+  '[Comic File List] Set the current path to be shown',
+  props<{
+    path: string | null;
+  }>()
+);
+
 export const toggleComicFileSelections = createAction(
   '[Comic File List] Toggle comic file selections',
   props<{

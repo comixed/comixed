@@ -23,7 +23,9 @@ import {
 import {
   selectComicFileGroups,
   selectComicFileListState,
-  selectComicFiles
+  selectComicFiles,
+  selectComicFilesCurrentPath,
+  selectComicGroups
 } from './comic-file-list.selectors';
 import {
   COMIC_FILE_1,
@@ -51,7 +53,8 @@ describe('ComicFileList Selectors', () => {
     state = {
       busy: Math.random() > 0.5,
       groups: GROUPS,
-      files: FILES
+      files: FILES,
+      currentPath: GROUPS[0].directory
     };
   });
 
@@ -77,5 +80,21 @@ describe('ComicFileList Selectors', () => {
         [COMIC_FILE_LIST_FEATURE_KEY]: state
       })
     ).toEqual(state.files);
+  });
+
+  it('should select the comic groups', () => {
+    expect(
+      selectComicGroups({
+        [COMIC_FILE_LIST_FEATURE_KEY]: state
+      })
+    ).toEqual(state.groups);
+  });
+
+  it('should select the current path filter', () => {
+    expect(
+      selectComicFilesCurrentPath({
+        [COMIC_FILE_LIST_FEATURE_KEY]: state
+      })
+    ).toEqual(state.currentPath);
   });
 });

@@ -35,7 +35,8 @@ import {
   resetComicFileList,
   toggleComicFileSelections,
   toggleComicFileSelectionsFailure,
-  toggleComicFileSelectionsSuccess
+  toggleComicFileSelectionsSuccess,
+  updateCurrentPath
 } from '@app/comic-files/actions/comic-file-list.actions';
 import { ComicFileGroup } from '@app/comic-files/models/comic-file-group';
 
@@ -146,6 +147,34 @@ describe('ComicFileList Reducer', () => {
 
       it('clears the comic files', () => {
         expect(state.files).toEqual([]);
+      });
+    });
+  });
+
+  describe('setting the comic file group filter', () => {
+    describe('using a specific value', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, currentPath: null },
+          updateCurrentPath({ path: GROUPS[0].directory })
+        );
+      });
+
+      it('sets the path', () => {
+        expect(state.currentPath).toEqual(GROUPS[0].directory);
+      });
+    });
+
+    describe('clearing the current value', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, currentPath: GROUPS[0].directory },
+          updateCurrentPath({ path: null })
+        );
+      });
+
+      it('sets the path', () => {
+        expect(state.currentPath).toBeNull();
       });
     });
   });

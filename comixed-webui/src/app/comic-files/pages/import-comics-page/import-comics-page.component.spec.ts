@@ -69,7 +69,10 @@ import { ComicFileLoaderComponent } from '@app/comic-files/components/comic-file
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatSortModule } from '@angular/material/sort';
 import { Router } from '@angular/router';
-import { toggleComicFileSelections } from '@app/comic-files/actions/comic-file-list.actions';
+import {
+  toggleComicFileSelections,
+  updateCurrentPath
+} from '@app/comic-files/actions/comic-file-list.actions';
 import {
   FEATURE_ENABLED_FEATURE_KEY,
   initialState as initialFeatureEnabledState
@@ -77,6 +80,7 @@ import {
 import { getFeatureEnabled } from '@app/admin/actions/feature-enabled.actions';
 import { BLOCKED_PAGES_ENABLED } from '@app/admin/admin.constants';
 import { importComicFiles } from '@app/comic-files/actions/import-comic-files.actions';
+import { ComicFileGroup } from '@app/comic-files/models/comic-file-group';
 
 describe('ImportComicsPageComponent', () => {
   const USER = USER_READER;
@@ -88,6 +92,16 @@ describe('ImportComicsPageComponent', () => {
       selected: true
     },
     { ...COMIC_FILE_4, selected: true }
+  ];
+  const GROUPS: ComicFileGroup[] = [
+    {
+      directory: 'directory1',
+      files: [COMIC_FILE_1, COMIC_FILE_3]
+    },
+    {
+      directory: 'directory2',
+      files: [COMIC_FILE_2, COMIC_FILE_4]
+    }
   ];
   const FILE = COMIC_FILE_3;
   const PAGE_SIZE = 400;
@@ -417,6 +431,91 @@ describe('ImportComicsPageComponent', () => {
         expect(component.blockedPagesEnabled).toEqual(
           BLOCKED_PAGES_ENABLED_FEATURE_ENABLED
         );
+      });
+    });
+  });
+
+  describe('changing the current path filter', () => {
+    describe('setting a value', () => {
+      beforeEach(() => {
+        component.onChangeCurrentPath(GROUPS[0].directory);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          updateCurrentPath({ path: GROUPS[0].directory })
+        );
+      });
+    });
+
+    describe('clearing the path', () => {
+      beforeEach(() => {
+        component.onChangeCurrentPath(null);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          updateCurrentPath({ path: null })
+        );
+      });
+    });
+  });
+
+  describe('updating displayed comic files', () => {
+    describe('when a current path is set', () => {
+      beforeEach(() => {
+        component.currentPath = GROUPS[0].directory;
+        component.dataSource.data = [];
+        store.setState({
+          ...initialState,
+          [COMIC_FILE_LIST_FEATURE_KEY]: {
+            ...initialComicFileListState,
+            loading: false,
+            groups: GROUPS
+          }
+        });
+      });
+
+      it('updates the data', () => {
+        expect(component.dataSource.data).not.toEqual([]);
+      });
+    });
+
+    describe('when a current path is invalid', () => {
+      beforeEach(() => {
+        component.currentPath = GROUPS[0].directory.substring(1);
+        component.dataSource.data = [];
+        store.setState({
+          ...initialState,
+          [COMIC_FILE_LIST_FEATURE_KEY]: {
+            ...initialComicFileListState,
+            loading: false,
+            groups: GROUPS
+          }
+        });
+      });
+
+      it('updates the data', () => {
+        expect(component.dataSource.data).toEqual([]);
+      });
+    });
+
+    describe('when no current path is set', () => {
+      beforeEach(() => {
+        component.currentPath = null;
+        component.dataSource.data = [];
+        store.setState({
+          ...initialState,
+          [COMIC_FILE_LIST_FEATURE_KEY]: {
+            ...initialComicFileListState,
+            loading: false,
+            files: FILES
+          }
+        });
+      });
+
+      it('updates the data', () => {
+        expect(component.dataSource.data).not.toEqual([]);
       });
     });
   });

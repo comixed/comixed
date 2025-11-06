@@ -27,6 +27,7 @@
       "base-filename": "Filename",
       "filename": "Location",
       "filesize": "Size (kb)",
+      "filter-options": "Filter By Directory",
       "maximum-10-files": "10 files",
       "maximum-50-files": "50 files",
       "maximum-100-files": "100 files",
@@ -70,6 +71,7 @@
     },
     "tab-title": "Import Comics",
     "text": {
+      "all-directories": "Show all directories...",
       "file-size": "{size} bytes",
       "selected-for-import": "This file will be imported."
     },
