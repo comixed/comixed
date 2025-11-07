@@ -39,4 +39,8 @@ public class ToggleComicFileSelectionsRequest {
   @JsonProperty("selected")
   @Getter
   private boolean selected;
+
+  @JsonProperty("single")
+  @Getter
+  private boolean single;
 }

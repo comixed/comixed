@@ -64,6 +64,7 @@ describe('ComicFileListEffects', () => {
   ];
   const FILENAME = COMIC_FILE_1.filename;
   const SELECTED = Math.random() > 0.5;
+  const SINGLE = Math.random() > 0.5;
 
   let actions$: Observable<any>;
   let effects: ComicFileListEffects;
@@ -222,7 +223,8 @@ describe('ComicFileListEffects', () => {
       const serviceResponse = { groups: GROUPS } as LoadComicFilesResponse;
       const action = toggleComicFileSelections({
         filename: FILENAME,
-        selected: SELECTED
+        selected: SELECTED,
+        single: SINGLE
       });
       const outcome = toggleComicFileSelectionsSuccess({ groups: GROUPS });
 
@@ -230,7 +232,8 @@ describe('ComicFileListEffects', () => {
       comicImportService.toggleComicFileSelections
         .withArgs({
           filename: FILENAME,
-          selected: SELECTED
+          selected: SELECTED,
+          single: SINGLE
         })
         .and.returnValue(of(serviceResponse));
 
@@ -242,7 +245,8 @@ describe('ComicFileListEffects', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = toggleComicFileSelections({
         filename: FILENAME,
-        selected: SELECTED
+        selected: SELECTED,
+        single: SINGLE
       });
       const outcome = toggleComicFileSelectionsFailure();
 
@@ -250,7 +254,8 @@ describe('ComicFileListEffects', () => {
       comicImportService.toggleComicFileSelections
         .withArgs({
           filename: FILENAME,
-          selected: SELECTED
+          selected: SELECTED,
+          single: SINGLE
         })
         .and.returnValue(throwError(() => serviceResponse));
 
@@ -262,7 +267,8 @@ describe('ComicFileListEffects', () => {
     it('fires an action on general failure', () => {
       const action = toggleComicFileSelections({
         filename: FILENAME,
-        selected: SELECTED
+        selected: SELECTED,
+        single: SINGLE
       });
       const outcome = toggleComicFileSelectionsFailure();
 
@@ -270,7 +276,8 @@ describe('ComicFileListEffects', () => {
       comicImportService.toggleComicFileSelections
         .withArgs({
           filename: FILENAME,
-          selected: SELECTED
+          selected: SELECTED,
+          single: SINGLE
         })
         .and.throwError('expected');
 

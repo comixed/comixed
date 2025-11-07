@@ -173,9 +173,14 @@ public class ComicFileController {
     if (Objects.nonNull(comicFiles)) {
       final String filename = request.getFilename();
       final boolean selected = request.isSelected();
+      final boolean single = request.isSingle();
 
-      log.info("Toggling comic files selections: filename={}, selected={}", filename, selected);
-      this.comicFileService.toggleComicFileSelections(comicFiles, filename, selected);
+      log.info(
+          "Toggling comic files selections: filename={}, selected={} single={}",
+          filename,
+          selected,
+          single);
+      this.comicFileService.toggleComicFileSelections(comicFiles, filename, selected, single);
       log.debug("Updating comic files in session");
       session.setAttribute(COMIC_FILES, this.objectMapper.writeValueAsString(comicFiles));
       return new LoadComicFilesResponse(comicFiles);

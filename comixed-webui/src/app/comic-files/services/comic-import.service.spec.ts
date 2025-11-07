@@ -69,6 +69,7 @@ describe('ComicImportService', () => {
   const ISSUE_NUMBER = COMIC_DETAIL_2.issueNumber;
   const COVER_DATE = COMIC_DETAIL_2.coverDate;
   const SELECTED = Math.random() > 0.5;
+  const SINGLE = Math.random() > 0.5;
 
   let service: ComicImportService;
   let httpMock: HttpTestingController;
@@ -127,7 +128,11 @@ describe('ComicImportService', () => {
       groups: GROUPS
     } as LoadComicFilesResponse;
     service
-      .toggleComicFileSelections({ filename: '', selected: SELECTED })
+      .toggleComicFileSelections({
+        filename: '',
+        selected: SELECTED,
+        single: SINGLE
+      })
       .subscribe(response => expect(response).toEqual(serviceResponse));
 
     const req = httpMock.expectOne(
@@ -136,7 +141,8 @@ describe('ComicImportService', () => {
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
       filename: '',
-      selected: SELECTED
+      selected: SELECTED,
+      single: SINGLE
     } as ToggleComicFileSelectionsRequest);
     req.flush(serviceResponse);
   });

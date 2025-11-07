@@ -19,4 +19,5 @@
 export interface ToggleComicFileSelectionsRequest {
   filename: string;
   selected: boolean;
+  single: boolean;
 }

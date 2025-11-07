@@ -288,7 +288,7 @@ class ComicFileServiceTest {
     comicFileGroup.getFiles().add(new ComicFile(TEST_COMIC_ARCHIVE, TEST_FILE_SIZE));
     comicFileGroup.getFiles().get(0).setSelected(!TEST_SELECTED);
 
-    service.toggleComicFileSelections(comicFileGroupList, "", TEST_SELECTED);
+    service.toggleComicFileSelections(comicFileGroupList, "", TEST_SELECTED, false);
 
     assertEquals(TEST_SELECTED, comicFileGroup.getFiles().get(0).isSelected());
   }
@@ -298,7 +298,18 @@ class ComicFileServiceTest {
     comicFileGroup.getFiles().add(new ComicFile(TEST_COMIC_ARCHIVE, TEST_FILE_SIZE));
     comicFileGroup.getFiles().get(0).setSelected(!TEST_SELECTED);
 
-    service.toggleComicFileSelections(comicFileGroupList, TEST_COMIC_ARCHIVE, TEST_SELECTED);
+    service.toggleComicFileSelections(comicFileGroupList, TEST_COMIC_ARCHIVE, TEST_SELECTED, true);
+
+    assertEquals(TEST_SELECTED, comicFileGroup.getFiles().get(0).isSelected());
+  }
+
+  @Test
+  void toggleComicFileSelections_specificDirectory() {
+    comicFileGroup.getFiles().add(new ComicFile(TEST_COMIC_ARCHIVE, TEST_FILE_SIZE));
+    comicFileGroup.getFiles().get(0).setSelected(!TEST_SELECTED);
+
+    service.toggleComicFileSelections(
+        comicFileGroupList, comicFileGroup.getDirectory(), TEST_SELECTED, false);
 
     assertEquals(TEST_SELECTED, comicFileGroup.getFiles().get(0).isSelected());
   }
@@ -309,7 +320,7 @@ class ComicFileServiceTest {
     comicFileGroup.getFiles().get(0).setSelected(!TEST_SELECTED);
 
     service.toggleComicFileSelections(
-        comicFileGroupList, TEST_COMIC_ARCHIVE.substring(1), TEST_SELECTED);
+        comicFileGroupList, TEST_COMIC_ARCHIVE.substring(1), TEST_SELECTED, true);
 
     assertEquals(!TEST_SELECTED, comicFileGroup.getFiles().get(0).isSelected());
   }

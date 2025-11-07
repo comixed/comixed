@@ -59,10 +59,9 @@ class ComicFileControllerTest {
   private static final String TEST_SERIES = "The Series";
   private static final String TEST_VOLUME = "The Volume";
   private static final String TEST_ISSUE_NUMBER = "983a";
-  private static final Boolean TEST_SKIP_METADATA = RandomUtils.nextBoolean();
-  private static final Boolean TEST_SKIP_BLOCKING_PAGES = RandomUtils.nextBoolean();
   private static final String TEST_ENCODED_COMIC_FILES = "The encoded comic file list";
   private static final boolean TEST_SELECTED = RandomUtils.nextBoolean();
+  private static final boolean TEST_SINGLE = RandomUtils.nextBoolean();
 
   @InjectMocks private ComicFileController controller;
   @Mock private ComicFileService comicFileService;
@@ -173,11 +172,12 @@ class ComicFileControllerTest {
 
     Mockito.doNothing()
         .when(comicFileService)
-        .toggleComicFileSelections(Mockito.anyList(), Mockito.anyString(), Mockito.anyBoolean());
+        .toggleComicFileSelections(
+            Mockito.anyList(), Mockito.anyString(), Mockito.anyBoolean(), Mockito.anyBoolean());
 
     final LoadComicFilesResponse result =
         controller.toggleComicFileSelections(
-            session, new ToggleComicFileSelectionsRequest("", TEST_SELECTED));
+            session, new ToggleComicFileSelectionsRequest("", TEST_SELECTED, TEST_SINGLE));
 
     assertNotNull(result);
     assertSame(comicFileGroupList, result.getGroups());
@@ -186,7 +186,7 @@ class ComicFileControllerTest {
     assertNotNull(typeReference);
 
     Mockito.verify(comicFileService, Mockito.times(1))
-        .toggleComicFileSelections(comicFileGroupList, "", TEST_SELECTED);
+        .toggleComicFileSelections(comicFileGroupList, "", TEST_SELECTED, TEST_SINGLE);
   }
 
   @Test

@@ -82,7 +82,7 @@
   }}
 </h2>
 
-<mat-form-field class="cx-width-100" appearance="fill">
+<mat-form-field class="cx-width-100" appearance="outline">
   <mat-label class="cx-text-nowrap">
     {{ "comic-files.label.filter-options" | translate }}
   </mat-label>
@@ -126,14 +126,12 @@
 >
   <ng-container matColumnDef="selection">
     <mat-header-cell *matHeaderCellDef mat-sort-header>
-      @if (!currentPath) {
-        <mat-checkbox
-          [disabled]="!dataSource.data.length"
-          [checked]="allSelected"
-          (change)="onSelectAll($event.checked)"
-          (click)="$event.stopPropagation()"
-        ></mat-checkbox>
-      }
+      <mat-checkbox
+        [disabled]="!dataSource.data.length"
+        [checked]="allSelected"
+        (change)="onSelectAll($event.checked)"
+        (click)="$event.stopPropagation()"
+      ></mat-checkbox>
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">

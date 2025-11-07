@@ -277,7 +277,7 @@ describe('ImportComicsPageComponent', () => {
 
     it('can sort by selected state', () => {
       expect(
-        component.dataSource.sortingDataAccessor(ITEM, 'selected')
+        component.dataSource.sortingDataAccessor(ITEM, 'selection')
       ).toEqual(`${ITEM.selected}`);
     });
 
@@ -309,24 +309,68 @@ describe('ImportComicsPageComponent', () => {
   describe('selecting comic files', () => {
     describe('it can select all', () => {
       beforeEach(() => {
+        component.currentPath = '';
         component.onSelectAll(true);
       });
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          toggleComicFileSelections({ filename: '', selected: true })
+          toggleComicFileSelections({
+            filename: '',
+            selected: true,
+            single: false
+          })
+        );
+      });
+    });
+
+    describe('it can select all with a current path', () => {
+      beforeEach(() => {
+        component.currentPath = GROUPS[0].directory;
+        component.onSelectAll(true);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          toggleComicFileSelections({
+            filename: GROUPS[0].directory,
+            selected: true,
+            single: false
+          })
         );
       });
     });
 
     describe('it can deselect all', () => {
       beforeEach(() => {
+        component.currentPath = '';
         component.onSelectAll(false);
       });
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          toggleComicFileSelections({ filename: '', selected: false })
+          toggleComicFileSelections({
+            filename: '',
+            selected: false,
+            single: false
+          })
+        );
+      });
+    });
+
+    describe('it can deselect all with a current path', () => {
+      beforeEach(() => {
+        component.currentPath = GROUPS[0].directory;
+        component.onSelectAll(false);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          toggleComicFileSelections({
+            filename: GROUPS[0].directory,
+            selected: false,
+            single: false
+          })
         );
       });
     });
@@ -342,7 +386,8 @@ describe('ImportComicsPageComponent', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           toggleComicFileSelections({
             filename: FILE.filename,
-            selected: SELECTED
+            selected: SELECTED,
+            single: true
           })
         );
       });

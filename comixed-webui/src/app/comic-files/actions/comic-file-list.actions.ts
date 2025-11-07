@@ -51,6 +51,7 @@ export const toggleComicFileSelections = createAction(
   props<{
     filename: string;
     selected: boolean;
+    single: boolean;
   }>()
 );
 

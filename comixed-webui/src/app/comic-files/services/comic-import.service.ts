@@ -67,11 +67,13 @@ export class ComicImportService {
   toggleComicFileSelections(args: {
     filename: string;
     selected: boolean;
+    single: boolean;
   }): Observable<any> {
     this.logger.debug('Toggling comic file selections:', args);
     return this.http.post(interpolate(TOGGLE_COMIC_FILE_SELECTIONS_URL), {
       filename: args.filename,
-      selected: args.selected
+      selected: args.selected,
+      single: args.single
     } as ToggleComicFileSelectionsRequest);
   }
 
