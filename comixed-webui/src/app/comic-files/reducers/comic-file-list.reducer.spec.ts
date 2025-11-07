@@ -52,6 +52,7 @@ describe('ComicFileList Reducer', () => {
     }
   ];
   const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3];
+  const TEST_SINGLE = Math.random() > 0.5;
 
   let state: ComicFileListState;
 
@@ -185,7 +186,8 @@ describe('ComicFileList Reducer', () => {
         { ...state, busy: false },
         toggleComicFileSelections({
           filename: COMIC_FILE_1.filename,
-          selected: Math.random() > 0.5
+          selected: Math.random() > 0.5,
+          single: TEST_SINGLE
         })
       );
     });

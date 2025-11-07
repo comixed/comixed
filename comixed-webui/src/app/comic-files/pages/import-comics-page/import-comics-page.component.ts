@@ -263,7 +263,7 @@ export class ImportComicsPageComponent
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
       switch (sortHeaderId) {
-        case 'selected':
+        case 'selection':
           return `${data.selected}`;
         case 'base-filename':
           return data.baseFilename;
@@ -318,8 +318,9 @@ export class ImportComicsPageComponent
   onSelectAll(selected: boolean): void {
     this.store.dispatch(
       toggleComicFileSelections({
-        filename: '',
-        selected: selected
+        filename: this.currentPath,
+        selected: selected,
+        single: false
       })
     );
   }
@@ -327,7 +328,11 @@ export class ImportComicsPageComponent
   onSelectEntry(file: ComicFile, selected: boolean): void {
     this.logger.debug('Selecting comic file:', file);
     this.store.dispatch(
-      toggleComicFileSelections({ filename: file.filename, selected })
+      toggleComicFileSelections({
+        filename: file.filename,
+        selected,
+        single: true
+      })
     );
   }
 

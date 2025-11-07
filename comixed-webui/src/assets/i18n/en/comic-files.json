@@ -44,7 +44,7 @@
         "no-files-loaded": "No comic files loaded..."
       }
     },
-    "page-title": "Import Comics: {selected, plural, =1{One} other{#}} Of {count, plural, =1{One Comic} other{# Comics}} Selected",
+    "page-title": "Import Comics: {count, plural, =1{One} other{#}} Shown, {selected, plural, =1{One Comic} other{# Comics}} Selected",
     "placeholder": {
       "root-directory": "Root Directory To Search..."
     },

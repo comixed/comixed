@@ -149,7 +149,8 @@ export class ComicFileListEffects {
         this.comicImportService
           .toggleComicFileSelections({
             filename: action.filename,
-            selected: action.selected
+            selected: action.selected,
+            single: action.single
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),

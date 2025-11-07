@@ -200,25 +200,39 @@ public class ComicFileService {
   }
 
   /**
-   * Toggles the selected state for comic files.
+   * Toggles the selected state for comic files. If the single file flag is set then the filename is
+   * the file to toggole. Otherwise, it is the group of files to toggle.
    *
    * @param groups the comic file groups
-   * @param filename the filename
+   * @param path the path
    * @param selected the selected state
+   * @param single the single file flag
    */
   public void toggleComicFileSelections(
-      final List<ComicFileGroup> groups, final String filename, final boolean selected) {
-    if (StringUtils.isBlank(filename)) {
+      final List<ComicFileGroup> groups,
+      final String path,
+      final boolean selected,
+      final boolean single) {
+    if (StringUtils.isBlank(path)) {
       log.debug("Toggling all comic files: selected={}", selected);
       groups.forEach(group -> group.getFiles().forEach(file -> file.setSelected(selected)));
     } else {
-      log.debug("Toggling file: {} selected={}", filename, selected);
-      groups.forEach(
-          group ->
-              group.getFiles().stream()
-                  .filter(file -> file.getFilename().equals(filename))
-                  .findFirst()
-                  .ifPresent(file -> file.setSelected(selected)));
+      if (single) {
+        log.debug("Toggling file: {} selected={}", path, selected);
+        groups.forEach(
+            group ->
+                group.getFiles().stream()
+                    .filter(file -> file.getFilename().equals(path))
+                    .findFirst()
+                    .ifPresent(file -> file.setSelected(selected)));
+      } else {
+        final Optional<ComicFileGroup> group =
+            groups.stream().filter(entry -> entry.getDirectory().equals(path)).findFirst();
+        if (group.isPresent()) {
+          log.debug("Toggling all files in group: {} selected={}", path, selected);
+          group.get().getFiles().forEach(file -> file.setSelected(selected));
+        }
+      }
     }
   }
 }
