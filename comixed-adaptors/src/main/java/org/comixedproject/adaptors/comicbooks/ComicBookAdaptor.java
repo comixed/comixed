@@ -250,7 +250,7 @@ public class ComicBookAdaptor {
               comicBook.getComicDetail().getFilename(),
               directory
                   + File.separator
-                  + FilenameUtils.removeExtension(comicBook.getComicDetail().getFilename()),
+                  + FilenameUtils.getBaseName(comicBook.getComicDetail().getFilename()),
               0,
               targetArchiveType.getExtension());
       log.trace("Updating filename: {}", newComicDetailFilename);
