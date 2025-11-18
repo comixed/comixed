@@ -18,13 +18,9 @@
 
 package org.comixedproject.batch;
 
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.Step;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.TaskExecutorJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
-import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.core.step.job.DefaultJobParametersExtractor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -87,25 +83,5 @@ public class BatchConfiguration {
     taskExecutorJobLauncher.setTaskExecutor(taskExecutor);
     taskExecutorJobLauncher.afterPropertiesSet();
     return taskExecutorJobLauncher;
-  }
-
-  /**
-   * Returns the step that launches the processing batch job.
-   *
-   * @param jobRepository the step factory
-   * @param loadComicBooksJob the job
-   * @param jobLauncher the job launcher
-   * @return the step the step
-   */
-  @Bean(name = "loadComicBooksStep")
-  public Step loadComicBooksStep(
-      final JobRepository jobRepository,
-      final @Qualifier("loadComicBooksJob") Job loadComicBooksJob,
-      final @Qualifier("batchJobLauncher") JobLauncher jobLauncher) {
-    return new StepBuilder("loadComicBooksStep", jobRepository)
-        .job(loadComicBooksJob)
-        .parametersExtractor(new DefaultJobParametersExtractor())
-        .launcher(jobLauncher)
-        .build();
   }
 }
