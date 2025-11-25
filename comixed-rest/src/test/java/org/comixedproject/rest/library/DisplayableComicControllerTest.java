@@ -44,6 +44,8 @@ import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
+import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,6 +55,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.messaging.Message;
+import org.springframework.statemachine.state.State;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -79,6 +83,14 @@ class DisplayableComicControllerTest {
   private static final ComicTagType TEST_TAG_TYPE =
       ComicTagType.values()[RandomUtils.nextInt(ComicTagType.values().length)];
   private static final String TEST_TAG_VALUE = "tag.value";
+  public static final DisplayableComicController.TagTypeAndValue TEST_TAG_VALUE_AND_TYPE_KEY =
+      new DisplayableComicController.TagTypeAndValue(
+          TEST_TAG_TYPE,
+          TEST_TAG_VALUE,
+          TEST_PAGE_SIZE,
+          TEST_PAGE_INDEX,
+          TEST_SORT_BY,
+          TEST_SORT_DIRECTION);
   private static final String TEST_EMAIL = "reader@comixedproject.org";
   private static final int TEST_READ_COMIC_COUNT = 275;
   private static final long TEST_READING_LIST_ID = 293L;
@@ -89,6 +101,7 @@ class DisplayableComicControllerTest {
   @Mock private ComicSelectionService comicSelectionService;
   @Mock private UserService userService;
   @Mock private ReadingListService readingListService;
+  @Mock private ComicStateHandler comicStateHandler;
 
   @Mock private LoadComicsByFilterRequest filteredRequest;
   @Mock private List<DisplayableComic> comicList;
@@ -100,6 +113,9 @@ class DisplayableComicControllerTest {
   @Mock private Principal principal;
   @Mock private ComiXedUser user;
   @Mock private Set<Long> comicBooksRead;
+  @Mock private State<ComicState, ComicEvent> state;
+  @Mock private Message<ComicEvent> message;
+  @Mock private LoadComicsResponse loadComicsResponse;
 
   @BeforeEach
   void setUp() throws ComicBookSelectionException, ComiXedUserException {
@@ -134,6 +150,24 @@ class DisplayableComicControllerTest {
     Mockito.when(comicBooksRead.size()).thenReturn(TEST_READ_COMIC_COUNT);
     Mockito.when(user.getReadComicBooks()).thenReturn(comicBooksRead);
     Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
+  }
+
+  @Test
+  void afterPropertiesSet() {
+    controller.afterPropertiesSet();
+
+    Mockito.verify(comicStateHandler, Mockito.times(1)).addListener(controller);
+  }
+
+  @Test
+  void onComicStateChange() {
+    controller.filterCache.put(filteredRequest, loadComicsResponse);
+    controller.tagAndValueCache.put(TEST_TAG_VALUE_AND_TYPE_KEY, loadComicsResponse);
+
+    controller.onComicStateChange(state, message);
+
+    assertTrue(controller.filterCache.isEmpty());
+    assertTrue(controller.tagAndValueCache.isEmpty());
   }
 
   @Test
@@ -225,6 +259,34 @@ class DisplayableComicControllerTest {
   }
 
   @Test
+  void loadComicsByFilter_cached() {
+    controller.filterCache.put(filteredRequest, loadComicsResponse);
+
+    final LoadComicsResponse result = controller.loadComicsByFilter(filteredRequest);
+
+    assertNotNull(result);
+    assertSame(loadComicsResponse, result);
+
+    Mockito.verify(displayableComicService, Mockito.never())
+        .loadComicsByFilter(
+            Mockito.any(),
+            Mockito.any(),
+            Mockito.any(),
+            Mockito.any(),
+            Mockito.any(),
+            Mockito.any(),
+            Mockito.any(),
+            Mockito.any(),
+            Mockito.any(),
+            Mockito.any(),
+            Mockito.any(),
+            Mockito.any(),
+            Mockito.any(),
+            Mockito.any(),
+            Mockito.any());
+  }
+
+  @Test
   void loadComicsBySelectedState() throws ComicBookSelectionException {
     Mockito.when(
             displayableComicService.loadComicsById(
@@ -302,6 +364,36 @@ class DisplayableComicControllerTest {
         .getCoverYearsForTagTypeAndValue(TEST_TAG_TYPE, TEST_TAG_VALUE);
     Mockito.verify(displayableComicService, Mockito.times(1))
         .getComicCountForTagTypeAndValue(TEST_TAG_TYPE, TEST_TAG_VALUE);
+  }
+
+  @Test
+  void loadComicsByTagTypeAndValue_cached() {
+    controller.tagAndValueCache.put(TEST_TAG_VALUE_AND_TYPE_KEY, loadComicsResponse);
+
+    final LoadComicsResponse result =
+        controller.loadComicsByTagTypeAndValue(
+            new LoadComicsForCollectionRequest(
+                TEST_PAGE_SIZE, TEST_PAGE_INDEX, TEST_SORT_BY, TEST_SORT_DIRECTION),
+            TEST_TAG_TYPE,
+            TEST_TAG_VALUE);
+
+    assertNotNull(result);
+    assertSame(loadComicsResponse, result);
+
+    Mockito.verify(displayableComicService, Mockito.never())
+        .loadComicsByTagTypeAndValue(
+            Mockito.anyInt(),
+            Mockito.anyInt(),
+            Mockito.any(),
+            Mockito.any(),
+            Mockito.any(),
+            Mockito.any());
+    Mockito.verify(displayableComicService, Mockito.never())
+        .getCoverYearsForTagTypeAndValue(Mockito.any(), Mockito.any());
+    Mockito.verify(displayableComicService, Mockito.never())
+        .getCoverYearsForTagTypeAndValue(Mockito.any(), Mockito.any());
+    Mockito.verify(displayableComicService, Mockito.never())
+        .getComicCountForTagTypeAndValue(Mockito.any(), Mockito.any());
   }
 
   @Test
