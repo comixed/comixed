@@ -19,6 +19,7 @@
 package org.comixedproject.model.net.library;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -94,6 +95,47 @@ public class LoadComicsByFilterRequest {
   @JsonProperty("sortDirection")
   @Getter
   private String sortDirection;
+
+  @Override
+  public boolean equals(final Object o) {
+    if (o == null || getClass() != o.getClass()) return false;
+    final LoadComicsByFilterRequest that = (LoadComicsByFilterRequest) o;
+    return getPageSize() == that.getPageSize()
+        && getPageIndex() == that.getPageIndex()
+        && Objects.equals(getCoverYear(), that.getCoverYear())
+        && Objects.equals(getCoverMonth(), that.getCoverMonth())
+        && getArchiveType() == that.getArchiveType()
+        && getComicType() == that.getComicType()
+        && getComicState() == that.getComicState()
+        && Objects.equals(getUnscrapedState(), that.getUnscrapedState())
+        && Objects.equals(getSearchText(), that.getSearchText())
+        && Objects.equals(getPublisher(), that.getPublisher())
+        && Objects.equals(getSeries(), that.getSeries())
+        && Objects.equals(getVolume(), that.getVolume())
+        && Objects.equals(getPageCount(), that.getPageCount())
+        && Objects.equals(getSortBy(), that.getSortBy())
+        && Objects.equals(getSortDirection(), that.getSortDirection());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(
+        getPageSize(),
+        getPageIndex(),
+        getCoverYear(),
+        getCoverMonth(),
+        getArchiveType(),
+        getComicType(),
+        getComicState(),
+        getUnscrapedState(),
+        getSearchText(),
+        getPublisher(),
+        getSeries(),
+        getVolume(),
+        getPageCount(),
+        getSortBy(),
+        getSortDirection());
+  }
 
   @Override
   public String toString() {
