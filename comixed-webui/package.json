@@ -83,7 +83,7 @@
     "ngx-gravatar": "^13.0.0",
     "ngx-translate-messageformat-compiler": "^7.1.0",
     "ngx-translate-multi-http-loader": "^20.0.0",
-    "node-forge": "^1.3.0",
+    "node-forge": "^1.3.2",
     "normalize-url": "^8.0.2",
     "nth-check": "^2.0.1",
     "object-path": "^0.11.8",
