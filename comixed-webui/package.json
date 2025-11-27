@@ -37,7 +37,7 @@
     "@angular-ru/cdk": "^18.11.0",
     "@angular/animations": "^20.2.1",
     "@angular/cdk": "^20.2.0",
-    "@angular/common": "^20.2.1",
+    "@angular/common": "^20.3.14",
     "@angular/compiler": "^20.2.1",
     "@angular/core": "^20.2.1",
     "@angular/forms": "^20.2.1",
