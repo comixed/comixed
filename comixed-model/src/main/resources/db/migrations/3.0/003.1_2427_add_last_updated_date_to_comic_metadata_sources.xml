@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="003.1_2427_add_last_updated_date_to_comic_metadata_sources.xml" author="mcpierce">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="comic_metadata_sources" columnName="last_modified_date"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="comic_metadata_sources">
+            <column name="last_modified_date" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <sql>UPDATE comic_metadata_sources
+             SET last_modified_date='1970-01-01 00:00:00';</sql>
+
+        <addNotNullConstraint tableName="comic_metadata_sources" columnName="last_modified_date"
+                              columnDataType="datetime"/>
+    </changeSet>
+</databaseChangeLog>
