@@ -201,7 +201,7 @@ describe('ComicListViewComponent', () => {
     beforeEach(() => {
       component.comics = COMIC_BOOKS;
       component.dataSource.data.forEach(entry => (entry.selected = true));
-      component.selectedIds = [COMIC_BOOKS[0].comicBookId];
+      component.selectedIds = [COMIC_BOOKS[0].comicDetailId];
     });
 
     it('only marks the comics with the selected id', () => {
@@ -491,7 +491,7 @@ describe('ComicListViewComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           markSingleComicBookRead({
-            comicBookId: COMIC_BOOK.comicBookId,
+            comicDetailId: COMIC_BOOK.comicDetailId,
             read: true
           })
         );
@@ -506,7 +506,7 @@ describe('ComicListViewComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           markSingleComicBookRead({
-            comicBookId: COMIC_BOOK.comicBookId,
+            comicDetailId: COMIC_BOOK.comicDetailId,
             read: false
           })
         );

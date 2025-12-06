@@ -414,9 +414,9 @@ public class ComicBookSelectionController {
         this.comicSelectionService.decodeSelections(session.getAttribute(LIBRARY_SELECTIONS));
 
     if (selected) {
-      selections.addAll(this.userService.getComicBookIdsForUser(email, unread));
+      selections.addAll(this.userService.getComicDetailIdsForUser(email, unread));
     } else {
-      selections.removeAll(this.userService.getComicBookIdsForUser(email, unread));
+      selections.removeAll(this.userService.getComicDetailIdsForUser(email, unread));
     }
     this.comicSelectionService.publishSelections(email, selections);
     session.setAttribute(

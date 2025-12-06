@@ -430,7 +430,7 @@ export class ComicListViewComponent
   onMarkOneAsRead(read: boolean): void {
     this.store.dispatch(
       markSingleComicBookRead({
-        comicBookId: this.selectedComic.comicBookId,
+        comicDetailId: this.selectedComic.comicDetailId,
         read
       })
     );
@@ -701,7 +701,7 @@ export class ComicListViewComponent
     this.dataSource.data = this.comics.map(comic => {
       return {
         item: comic,
-        selected: this.selectedIds.includes(comic.comicBookId)
+        selected: this.selectedIds.includes(comic.comicDetailId)
       };
     });
     this.showing.emit(this.dataSource.filteredData.length);

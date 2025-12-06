@@ -45,7 +45,7 @@ class ReadComicBooksControllerTest {
   private static final String TEST_EMAIL = "reader@comixedproject.org";
   private static final String TEST_ENCODED_IDS = "The encoded selected ids";
   private static final String TEST_REENCODED_IDS = "The re-encoded selected ids";
-  private static final long TESTS_COMIC_ID = 129L;
+  private static final long TEST_COMIC_DETAIL_ID = 129L;
 
   @InjectMocks private ReadComicBooksController controller;
   @Mock private ReadComicBooksService readComicBooksService;
@@ -72,15 +72,15 @@ class ReadComicBooksControllerTest {
 
     assertThrows(
         ReadComicBooksException.class,
-        () -> controller.markSingleComicBookRead(principal, TESTS_COMIC_ID));
+        () -> controller.markSingleComicBookRead(principal, TEST_COMIC_DETAIL_ID));
   }
 
   @Test
   void markComicBookAsRead() throws ReadComicBooksException {
-    controller.markSingleComicBookRead(principal, TESTS_COMIC_ID);
+    controller.markSingleComicBookRead(principal, TEST_COMIC_DETAIL_ID);
 
     Mockito.verify(readComicBooksService, Mockito.times(1))
-        .markComicBookAsRead(TEST_EMAIL, TESTS_COMIC_ID);
+        .markComicBookAsRead(TEST_EMAIL, TEST_COMIC_DETAIL_ID);
   }
 
   @Test
@@ -91,15 +91,15 @@ class ReadComicBooksControllerTest {
 
     assertThrows(
         ReadComicBooksException.class,
-        () -> controller.unmarkSingleComicBookRead(principal, TESTS_COMIC_ID));
+        () -> controller.unmarkSingleComicBookRead(principal, TEST_COMIC_DETAIL_ID));
   }
 
   @Test
   void unmarkComicBookAsRead() throws ReadComicBooksException {
-    controller.unmarkSingleComicBookRead(principal, TESTS_COMIC_ID);
+    controller.unmarkSingleComicBookRead(principal, TEST_COMIC_DETAIL_ID);
 
     Mockito.verify(readComicBooksService, Mockito.times(1))
-        .unmarkComicBookAsRead(TEST_EMAIL, TESTS_COMIC_ID);
+        .unmarkComicBookAsRead(TEST_EMAIL, TEST_COMIC_DETAIL_ID);
   }
 
   @Test

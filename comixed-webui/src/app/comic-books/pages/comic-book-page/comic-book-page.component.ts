@@ -314,7 +314,10 @@ export class ComicBookPageComponent
   setReadState(read: boolean): void {
     this.logger.debug('Marking comic read status:', read);
     this.store.dispatch(
-      markSingleComicBookRead({ comicBookId: this.comicBook.comicBookId, read })
+      markSingleComicBookRead({
+        comicDetailId: this.comicBook.detail.comicDetailId,
+        read
+      })
     );
   }
 

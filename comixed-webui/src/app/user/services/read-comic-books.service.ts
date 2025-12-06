@@ -34,14 +34,14 @@ export class ReadComicBooksService {
   http = inject(HttpClient);
 
   setSingleReadState(args: {
-    comicBookId: number;
+    comicDetailId: number;
     read: boolean;
   }): Observable<any> {
     if (args.read) {
       this.logger.debug('Service: marking comic book as read:', args);
       return this.http.put(
         interpolate(SET_COMIC_BOOK_READ_STATE_URL, {
-          comicBookId: args.comicBookId
+          comicDetailId: args.comicDetailId
         }),
         {}
       );
@@ -49,7 +49,7 @@ export class ReadComicBooksService {
       this.logger.debug('Service: markin comic book as unread:', args);
       return this.http.delete(
         interpolate(SET_COMIC_BOOK_READ_STATE_URL, {
-          comicBookId: args.comicBookId
+          comicDetailId: args.comicDetailId
         })
       );
     }

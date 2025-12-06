@@ -36,7 +36,7 @@ import org.comixedproject.model.net.user.ComicsReadStatistic;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.users.ComiXedRoleRepository;
 import org.comixedproject.repositories.users.ComiXedUserRepository;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,7 +54,7 @@ public class UserService {
 
   @Autowired private ComiXedUserRepository userRepository;
   @Autowired private ComiXedRoleRepository roleRepository;
-  @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicDetailService comicDetailService;
   @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
   @Autowired private PublishCurrentUserAction publishCurrentUserAction;
 
@@ -330,7 +330,7 @@ public class UserService {
   }
 
   @Transactional
-  public Collection<Long> getComicBookIdsForUser(final String email, final boolean unread)
+  public Collection<Long> getComicDetailIdsForUser(final String email, final boolean unread)
       throws ComiXedUserException {
     final ComiXedUser user = this.doGetByEmail(email);
     if (!unread) {
@@ -339,7 +339,7 @@ public class UserService {
     }
 
     log.debug("Returning comic ids not read by {}", email);
-    final List<Long> idList = this.comicBookService.getAllIds();
+    final List<Long> idList = this.comicDetailService.getAllIds();
     idList.removeAll(user.getReadComicBooks());
     return idList;
   }

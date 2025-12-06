@@ -26,6 +26,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -39,5 +40,11 @@ public class ComiXedWebSocketAuthenticationConfiguration
   public void configureClientInboundChannel(final ChannelRegistration registration) {
     log.trace("Configuring websocket inbound channel");
     registration.interceptors(webSocketChannelTokenInterceptor);
+  }
+
+  @Override
+  public void configureWebSocketTransport(final WebSocketTransportRegistration registry) {
+    registry.setMessageSizeLimit(2 * 64 * 1024);
+    registry.setSendBufferSizeLimit(2 * 512 * 1024);
   }
 }

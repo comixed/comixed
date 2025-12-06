@@ -51,7 +51,7 @@ export class ReadComicBooksEffects {
       switchMap(action =>
         this.readComicBooksService
           .setSingleReadState({
-            comicBookId: action.comicBookId,
+            comicDetailId: action.comicDetailId,
             read: action.read
           })
           .pipe(

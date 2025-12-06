@@ -38,7 +38,7 @@ import org.mockito.quality.Strictness;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class ReadComicBooksServiceTest {
   private static final String TEST_EMAIL = "reader@comixedproject.org";
-  private static final Long TEST_COMIC_BOOK_ID = 717L;
+  private static final Long TEST_COMIC_DETAIL_ID = 717L;
 
   @InjectMocks private ReadComicBooksService service;
   @Mock private UserService userService;
@@ -60,16 +60,16 @@ class ReadComicBooksServiceTest {
 
     assertThrows(
         ReadComicBooksException.class,
-        () -> service.markComicBookAsRead(TEST_EMAIL, TEST_COMIC_BOOK_ID));
+        () -> service.markComicBookAsRead(TEST_EMAIL, TEST_COMIC_DETAIL_ID));
   }
 
   @Test
   void markComicBookAsRead() throws ReadComicBooksException, ComiXedUserException {
-    service.markComicBookAsRead(TEST_EMAIL, TEST_COMIC_BOOK_ID);
+    service.markComicBookAsRead(TEST_EMAIL, TEST_COMIC_DETAIL_ID);
 
     Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
     Mockito.verify(user, Mockito.times(1)).getReadComicBooks();
-    Mockito.verify(readComicBookList, Mockito.times(1)).add(TEST_COMIC_BOOK_ID);
+    Mockito.verify(readComicBookList, Mockito.times(1)).add(TEST_COMIC_DETAIL_ID);
   }
 
   @Test
@@ -79,16 +79,16 @@ class ReadComicBooksServiceTest {
 
     assertThrows(
         ReadComicBooksException.class,
-        () -> service.unmarkComicBookAsRead(TEST_EMAIL, TEST_COMIC_BOOK_ID));
+        () -> service.unmarkComicBookAsRead(TEST_EMAIL, TEST_COMIC_DETAIL_ID));
   }
 
   @Test
   void unmarkComicBookAsRead() throws ReadComicBooksException, ComiXedUserException {
-    service.unmarkComicBookAsRead(TEST_EMAIL, TEST_COMIC_BOOK_ID);
+    service.unmarkComicBookAsRead(TEST_EMAIL, TEST_COMIC_DETAIL_ID);
 
     Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
     Mockito.verify(user, Mockito.times(1)).getReadComicBooks();
-    Mockito.verify(readComicBookList, Mockito.times(1)).remove(TEST_COMIC_BOOK_ID);
+    Mockito.verify(readComicBookList, Mockito.times(1)).remove(TEST_COMIC_DETAIL_ID);
   }
 
   @Test
