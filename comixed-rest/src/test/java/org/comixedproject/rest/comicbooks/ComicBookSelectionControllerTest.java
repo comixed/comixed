@@ -75,7 +75,7 @@ class ComicBookSelectionControllerTest {
     Mockito.when(comicSelectionService.encodeSelections(Mockito.anyList()))
         .thenReturn(TEST_REENCODED_SELECTIONS);
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
-    Mockito.when(userService.getComicBookIdsForUser(Mockito.anyString(), Mockito.anyBoolean()))
+    Mockito.when(userService.getComicDetailIdsForUser(Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(comicDetailIdList);
   }
 
@@ -289,7 +289,7 @@ class ComicBookSelectionControllerTest {
         httpSession, principal, new UnreadComicBooksSelectionRequest(true, false));
 
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
-    Mockito.verify(userService, Mockito.times(1)).getComicBookIdsForUser(TEST_EMAIL, false);
+    Mockito.verify(userService, Mockito.times(1)).getComicDetailIdsForUser(TEST_EMAIL, false);
     Mockito.verify(selectedIds, Mockito.times(1)).addAll(comicDetailIdList);
     Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(selectedIds);
     Mockito.verify(httpSession, Mockito.times(1))
@@ -303,7 +303,7 @@ class ComicBookSelectionControllerTest {
         httpSession, principal, new UnreadComicBooksSelectionRequest(false, false));
 
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
-    Mockito.verify(userService, Mockito.times(1)).getComicBookIdsForUser(TEST_EMAIL, false);
+    Mockito.verify(userService, Mockito.times(1)).getComicDetailIdsForUser(TEST_EMAIL, false);
     Mockito.verify(selectedIds, Mockito.times(1)).removeAll(comicDetailIdList);
     Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(selectedIds);
     Mockito.verify(httpSession, Mockito.times(1))
@@ -317,7 +317,7 @@ class ComicBookSelectionControllerTest {
         httpSession, principal, new UnreadComicBooksSelectionRequest(true, true));
 
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
-    Mockito.verify(userService, Mockito.times(1)).getComicBookIdsForUser(TEST_EMAIL, true);
+    Mockito.verify(userService, Mockito.times(1)).getComicDetailIdsForUser(TEST_EMAIL, true);
     Mockito.verify(selectedIds, Mockito.times(1)).addAll(comicDetailIdList);
     Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(selectedIds);
     Mockito.verify(httpSession, Mockito.times(1))
@@ -331,7 +331,7 @@ class ComicBookSelectionControllerTest {
         httpSession, principal, new UnreadComicBooksSelectionRequest(false, true));
 
     Mockito.verify(httpSession, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
-    Mockito.verify(userService, Mockito.times(1)).getComicBookIdsForUser(TEST_EMAIL, true);
+    Mockito.verify(userService, Mockito.times(1)).getComicDetailIdsForUser(TEST_EMAIL, true);
     Mockito.verify(selectedIds, Mockito.times(1)).removeAll(comicDetailIdList);
     Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(selectedIds);
     Mockito.verify(httpSession, Mockito.times(1))

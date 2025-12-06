@@ -30,7 +30,6 @@ import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.batch.OrganizingLibraryEvent;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
-import org.comixedproject.model.collections.PublisherDetail;
 import org.comixedproject.model.collections.SeriesDetail;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
@@ -126,7 +125,6 @@ class ComicBookServiceTest {
   @Mock private List<String> publisherList;
   @Mock private List<RemoteLibrarySegmentState> librarySegmentList;
   @Mock private List<PublisherAndYearSegment> byPublisherAndYearList;
-  @Mock private List<PublisherDetail> publisherWithSeriesCountList;
   @Mock private List<SeriesDetail> publisherDetail;
   @Mock private List<SeriesDetail> seriesDetailList;
   @Mock private ComicBook savedComicBook;
@@ -1307,19 +1305,6 @@ class ComicBookServiceTest {
     assertEquals(TEST_COMIC_COUNT, result);
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).getUnprocessedComicBookCount();
-  }
-
-  @Test
-  void getAllIds() {
-    comicBookList.add(comicBook);
-    Mockito.when(comicBookRepository.getAllIds()).thenReturn(idList);
-
-    final List<Long> result = service.getAllIds();
-
-    assertNotNull(result);
-    assertSame(idList, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).getAllIds();
   }
 
   @Test

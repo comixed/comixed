@@ -77,12 +77,12 @@ describe('ReadComicBooksService', () => {
   describe('marking a single comic book', () => {
     it('marks them as read', () => {
       service
-        .setSingleReadState({ comicBookId: COMIC.comicBookId, read: true })
+        .setSingleReadState({ comicDetailId: COMIC.comicDetailId, read: true })
         .subscribe(response => expect(response.status).toEqual(200));
 
       const req = httpMock.expectOne(
         interpolate(SET_COMIC_BOOK_READ_STATE_URL, {
-          comicBookId: COMIC.comicBookId
+          comicDetailId: COMIC.comicDetailId
         })
       );
       expect(req.request.method).toEqual('PUT');
@@ -91,12 +91,12 @@ describe('ReadComicBooksService', () => {
 
     it('marks them as unread', () => {
       service
-        .setSingleReadState({ comicBookId: COMIC.comicBookId, read: false })
+        .setSingleReadState({ comicDetailId: COMIC.comicDetailId, read: false })
         .subscribe(response => expect(response.status).toEqual(200));
 
       const req = httpMock.expectOne(
         interpolate(SET_COMIC_BOOK_READ_STATE_URL, {
-          comicBookId: COMIC.comicBookId
+          comicDetailId: COMIC.comicDetailId
         })
       );
       expect(req.request.method).toEqual('DELETE');

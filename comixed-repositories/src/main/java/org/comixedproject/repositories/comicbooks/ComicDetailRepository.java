@@ -40,6 +40,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> {
   /**
+   * Returns all comic book record ids.
+   *
+   * @return the id list
+   */
+  @Query("SELECT c.comicDetailId FROM ComicDetail c")
+  List<Long> getAllIds();
+
+  /**
    * Returns the set of all publishers with comics that have not been read by the specified user.
    *
    * @param email the user's email

@@ -36,34 +36,55 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReadComicBooksService {
   @Autowired public UserService userService;
 
+  /**
+   * Marks a single comic book as read by the given user.
+   *
+   * @param email the user's email
+   * @param comicDetailId the comic detail id
+   * @throws ReadComicBooksException if an error occurs
+   */
   @Transactional
   @Async
-  public void markComicBookAsRead(final String email, final long comicId)
+  public void markComicBookAsRead(final String email, final long comicDetailId)
       throws ReadComicBooksException {
     try {
       final ComiXedUser user = this.userService.findByEmail(email);
-      log.debug("Adding comic book to read list: id={}", comicId);
-      user.getReadComicBooks().add(comicId);
+      log.debug("Adding comic book to read list: id={}", comicDetailId);
+      user.getReadComicBooks().add(comicDetailId);
       this.userService.save(user);
     } catch (ComiXedUserException error) {
       throw new ReadComicBooksException("Failed to mark comic book as read", error);
     }
   }
 
+  /**
+   * Unmarks a comic as read by the given user.
+   *
+   * @param email the user's email
+   * @param comicDetailId the comic detail id
+   * @throws ReadComicBooksException if an error occurs
+   */
   @Transactional
   @Async
-  public void unmarkComicBookAsRead(final String email, final long comicId)
+  public void unmarkComicBookAsRead(final String email, final long comicDetailId)
       throws ReadComicBooksException {
     try {
       final ComiXedUser user = this.userService.findByEmail(email);
-      log.debug("Removing comic book from read list: id={}", comicId);
-      user.getReadComicBooks().remove(comicId);
+      log.debug("Removing comic book from read list: id={}", comicDetailId);
+      user.getReadComicBooks().remove(comicDetailId);
       this.userService.save(user);
     } catch (ComiXedUserException error) {
       throw new ReadComicBooksException("Failed to mark comic book as read", error);
     }
   }
 
+  /**
+   * Marks the provided list of comics as read by the given user.
+   *
+   * @param email the user's email
+   * @param idList the comic detail id list
+   * @throws ReadComicBooksException if an error occurs
+   */
   @Transactional
   @Async
   public void markSelectionsAsRead(final String email, final List<Long> idList)
@@ -78,6 +99,13 @@ public class ReadComicBooksService {
     }
   }
 
+  /**
+   * Unmarks the provided list of comics as read by the given user.
+   *
+   * @param email the user's email
+   * @param idList the comic detail id list
+   * @throws ReadComicBooksException if an error occurs
+   */
   @Transactional
   @Async
   public void unmarkSelectionsAsRead(final String email, final List<Long> idList)
