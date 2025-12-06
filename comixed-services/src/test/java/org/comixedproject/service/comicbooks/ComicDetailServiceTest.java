@@ -23,6 +23,7 @@ import static junit.framework.TestCase.*;
 import java.util.*;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.collections.CollectionEntry;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
@@ -66,10 +67,15 @@ class ComicDetailServiceTest {
   @Mock private Set<Long> comicBookIdSet;
   @Mock private Example<ComicDetail> example;
   @Mock private CollectionEntry collectionEntry;
+  @Mock private ComicBook comicBook;
+
   @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
   @Captor private ArgumentCaptor<Date> startDateArgumentCaptor;
   @Captor private ArgumentCaptor<Date> endDateArgumentCaptor;
+
   private List<CollectionEntry> collectionEntryList = new ArrayList<>();
+  private final List<Long> idList = new ArrayList<>();
+  private final List<ComicBook> comicBookList = new ArrayList<>();
 
   @BeforeEach
   public void setUp() {
@@ -648,5 +654,18 @@ class ComicDetailServiceTest {
 
     Mockito.verify(comicDetailRepository, Mockito.times(1))
         .getFilterCountWithFiltering(TEST_TAG_TYPE, "%" + TEST_FILTER_TEXT + "%");
+  }
+
+  @Test
+  void getAllIds() {
+    comicBookList.add(comicBook);
+    Mockito.when(comicDetailRepository.getAllIds()).thenReturn(idList);
+
+    final List<Long> result = service.getAllIds();
+
+    assertNotNull(result);
+    assertSame(idList, result);
+
+    Mockito.verify(comicDetailRepository, Mockito.times(1)).getAllIds();
   }
 }

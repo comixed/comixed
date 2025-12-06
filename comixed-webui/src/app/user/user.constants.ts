@@ -34,7 +34,7 @@ export const LOGOUT_USER_URL = `${API_ROOT_URL}/token/destroy`;
 export const SAVE_USER_PREFERENCE_URL = `${API_ROOT_URL}/user/preferences/\${name}`;
 export const DELETE_USER_PREFERENCE_URL = `${API_ROOT_URL}/user/preferences/\${name}`;
 
-export const SET_COMIC_BOOK_READ_STATE_URL = `${API_ROOT_URL}/user/read/\${comicBookId}`;
+export const SET_COMIC_BOOK_READ_STATE_URL = `${API_ROOT_URL}/user/read/\${comicDetailId}`;
 export const SET_SELECTED_COMIC_BOOKS_READ_STATE_URL = `${API_ROOT_URL}/user/read/selected`;
 
 export const LOAD_USER_LIST_URL = `${API_ROOT_URL}/users/list`;

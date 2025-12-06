@@ -628,14 +628,6 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   @Query("SELECT c FROM ComicBook c WHERE c.batchScraping IS TRUE AND c.metadata IS NOT NULL")
   List<ComicBook> findBatchScrapingComics(Pageable pageable);
 
-  /**
-   * Returns all comic book record ids.
-   *
-   * @return the id list
-   */
-  @Query("SELECT c.comicBookId FROM ComicBook c")
-  List<Long> getAllIds();
-
   /** Sets the purging flag for all comics int he DELETED state. */
   @Modifying
   @Query("UPDATE ComicBook c SET c.purging = true WHERE c.comicDetail.comicState = 'DELETED'")

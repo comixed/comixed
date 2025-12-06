@@ -482,4 +482,15 @@ public class ComicDetailService {
       final String email, final Long readingListId) {
     return this.comicDetailRepository.getAllComicsForReadingList(email, readingListId);
   }
+
+  /**
+   * Returns all ids from the database.
+   *
+   * @return the ids
+   */
+  @Transactional
+  public List<Long> getAllIds() {
+    log.debug("Getting the list of all comic detail ids");
+    return this.comicDetailRepository.getAllIds();
+  }
 }

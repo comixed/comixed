@@ -287,7 +287,7 @@ describe('ComicBookPageComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           markSingleComicBookRead({
-            comicBookId: COMIC_BOOK.comicBookId,
+            comicDetailId: COMIC_BOOK.detail.comicDetailId,
             read: true
           })
         );
@@ -302,7 +302,7 @@ describe('ComicBookPageComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           markSingleComicBookRead({
-            comicBookId: COMIC_BOOK.comicBookId,
+            comicDetailId: COMIC_BOOK.detail.comicDetailId,
             read: false
           })
         );

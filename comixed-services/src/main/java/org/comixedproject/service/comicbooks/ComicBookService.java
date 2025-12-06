@@ -912,17 +912,6 @@ public class ComicBookService {
   }
 
   /**
-   * Returns all ids from the database.
-   *
-   * @return the ids
-   */
-  @Transactional
-  public List<Long> getAllIds() {
-    log.debug("Getting the list of all comic book ids");
-    return this.comicBookRepository.getAllIds();
-  }
-
-  /**
    * Returns the number of comic books to have their metadata updated.
    *
    * @return the count

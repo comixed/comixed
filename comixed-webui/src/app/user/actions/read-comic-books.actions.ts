@@ -32,7 +32,7 @@ export const resetReadComicBooks = createAction(
 export const markSingleComicBookRead = createAction(
   '[Comic Book Read State] Update the read state for a single comic book',
   props<{
-    comicBookId: number;
+    comicDetailId: number;
     read: boolean;
   }>()
 );
