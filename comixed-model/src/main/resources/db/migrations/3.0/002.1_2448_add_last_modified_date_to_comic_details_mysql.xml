@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="002.1_2448_add_last_modified_date_to_comic_details_mysql.xml" author="mcpierce">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="comic_details" columnName="last_modified_date"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="comic_details">
+            <column name="last_modified_date" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <sql>UPDATE comic_details
+             SET last_modified_date=NOW();</sql>
+
+        <addNotNullConstraint tableName="comic_details" columnName="last_modified_date" columnDataType="datetime"/>
+
+        <createIndex tableName="comic_details" indexName="comic_details_last_modified_date_idx">
+            <column name="last_modified_date"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

@@ -17,18 +17,15 @@
             </column>
         </addColumn>
 
-        <sql>UPDATE comic_pages cp
-             SET cp.page_type = 'FRONT_COVER'
-             WHERE cp.comic_page_id =
-                   (SELECT ss.comic_page_id
-                    FROM comic_pages ss
-                    WHERE ss.comic_book_id = cp.comic_book_id LIMIT 1);</sql>
+        <sql>UPDATE comic_pages
+             SET page_type = 'FRONT_COVER'
+             WHERE page_number in (0, 1);</sql>
 
         <sql>UPDATE comic_pages
              SET page_type = 'STORY'
              WHERE page_type IS NULL;</sql>
 
-        <addNotNullConstraint tableName="comic_pages" columnName="page_type"/>
+        <addNotNullConstraint tableName="comic_pages" columnName="page_type" columnDataType="varchar(32)"/>
 
     </changeSet>
 </databaseChangeLog>

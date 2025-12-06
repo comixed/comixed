@@ -11,19 +11,13 @@
             </not>
         </preConditions>
 
-        <addColumn tableName="comic_metadata_sources">
-            <column name="last_scraped_date" type="date"/>
-        </addColumn>
-
-        <sql>UPDATE comic_metadata_sources
-             SET last_scraped_date=last_modified_date</sql>
+        <renameColumn tableName="comic_metadata_sources" newColumnName="last_scraped_date"
+                      oldColumnName="last_modified_date" columnDataType="datetime"/>
 
         <sql>UPDATE comic_details
              SET comic_state='CHANGED'
              WHERE comic_state = 'STABLE'
                AND comic_book_id IN (SELECT comic_book_id FROM comic_metadata_sources)</sql>
-
-        <dropColumn tableName="comic_metadata_sources" columnName="last_modified_date"/>
 
     </changeSet>
 </databaseChangeLog>
