@@ -58,12 +58,12 @@ export const clearComicBookSelectionStateFailed = createAction(
 
 export const addSingleComicBookSelection = createAction(
   '[Comic Book Selection] Adds a single comic book selection',
-  props<{ comicBookId: number }>()
+  props<{ comicDetailId: number }>()
 );
 
 export const removeSingleComicBookSelection = createAction(
   '[Comic Book Selection] Removes a single comic book selection',
-  props<{ comicBookId: number }>()
+  props<{ comicDetailId: number }>()
 );
 
 export const singleComicBookSelectionUpdated = createAction(

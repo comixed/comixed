@@ -146,11 +146,11 @@ describe('ComicBookSelectionService', () => {
     const serverResponse = new HttpResponse({});
 
     service
-      .addSingleSelection({ comicBookId: ID })
+      .addSingleSelection({ comicDetailId: ID })
       .subscribe(response => expect(response).toEqual(serverResponse));
 
     const req = httpMock.expectOne(
-      interpolate(ADD_SINGLE_COMIC_SELECTION_URL, { comicBookId: ID })
+      interpolate(ADD_SINGLE_COMIC_SELECTION_URL, { comicDetailId: ID })
     );
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual({});
@@ -161,11 +161,11 @@ describe('ComicBookSelectionService', () => {
     const serverResponse = new HttpResponse({});
 
     service
-      .removeSingleSelection({ comicBookId: ID })
+      .removeSingleSelection({ comicDetailId: ID })
       .subscribe(response => expect(response).toEqual(serverResponse));
 
     const req = httpMock.expectOne(
-      interpolate(REMOVE_SINGLE_COMIC_SELECTION_URL, { comicBookId: ID })
+      interpolate(REMOVE_SINGLE_COMIC_SELECTION_URL, { comicDetailId: ID })
     );
     expect(req.request.method).toEqual('DELETE');
     req.flush(serverResponse);

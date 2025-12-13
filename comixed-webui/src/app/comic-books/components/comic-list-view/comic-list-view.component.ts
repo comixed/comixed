@@ -337,12 +337,14 @@ export class ComicListViewComponent
     if (selected) {
       this.logger.debug('Adding comic book selection:', entry.item);
       this.store.dispatch(
-        addSingleComicBookSelection({ comicBookId: entry.item.comicBookId })
+        addSingleComicBookSelection({ comicDetailId: entry.item.comicDetailId })
       );
     } else {
       this.logger.debug('Removing comic book selection:', entry.item);
       this.store.dispatch(
-        removeSingleComicBookSelection({ comicBookId: entry.item.comicBookId })
+        removeSingleComicBookSelection({
+          comicDetailId: entry.item.comicDetailId
+        })
       );
     }
   }

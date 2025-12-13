@@ -44,11 +44,11 @@ import {
   singleComicBookSelectionUpdated
 } from '@app/comic-books/actions/comic-book-selection.actions';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
-  COMIC_BOOK_3,
-  COMIC_BOOK_4,
-  COMIC_BOOK_5
+  DISPLAYABLE_COMIC_1,
+  DISPLAYABLE_COMIC_2,
+  DISPLAYABLE_COMIC_3,
+  DISPLAYABLE_COMIC_4,
+  DISPLAYABLE_COMIC_5
 } from '@app/comic-books/comic-books.fixtures';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicType } from '@app/comic-books/models/comic-type';
@@ -65,15 +65,15 @@ describe('ComicBookSelection Reducer', () => {
   const UNSCRAPED_STATE = Math.random() > 0.5;
   const SEARCH_TEXT = 'This is some text';
   const COMIC_BOOKS = [
-    COMIC_BOOK_1,
-    COMIC_BOOK_2,
-    COMIC_BOOK_3,
-    COMIC_BOOK_4,
-    COMIC_BOOK_5
+    DISPLAYABLE_COMIC_1,
+    DISPLAYABLE_COMIC_2,
+    DISPLAYABLE_COMIC_3,
+    DISPLAYABLE_COMIC_4,
+    DISPLAYABLE_COMIC_5
   ];
   const TAG_TYPE = ComicTagType.TEAM;
   const TAG_VALUE = 'Some team';
-  const IDS = COMIC_BOOKS.map(comicBook => comicBook.comicBookId);
+  const IDS = COMIC_BOOKS.map(comicBook => comicBook.comicDetailId);
   const PUBLISHER = PUBLISHER_1.name;
   const SERIES = SERIES_1.name;
   const VOLUME = '2024';
@@ -197,7 +197,7 @@ describe('ComicBookSelection Reducer', () => {
       state = reducer(
         { ...state, busy: false },
         addSingleComicBookSelection({
-          comicBookId: IDS[0]
+          comicDetailId: IDS[0]
         })
       );
     });
@@ -232,7 +232,7 @@ describe('ComicBookSelection Reducer', () => {
       state = reducer(
         { ...state, busy: false },
         removeSingleComicBookSelection({
-          comicBookId: IDS[0]
+          comicDetailId: IDS[0]
         })
       );
     });

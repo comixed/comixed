@@ -62,7 +62,7 @@ describe('ComicBookSelectionEffects', () => {
   const COMIC_STATE = ComicState.UNPROCESSED;
   const UNSCRAPED_STATE = Math.random() > 0.5;
   const SEARCH_TEXT = 'This is some text';
-  const COMIC_BOOK_ID = 65;
+  const COMIC_DETAIL_ID = 65;
   const PUBLISHER = PUBLISHER_1.name;
   const SERIES = SERIES_1.name;
   const VOLUME = '2024';
@@ -70,7 +70,7 @@ describe('ComicBookSelectionEffects', () => {
   const UNREAD_ONLY = Math.random() > 0.5;
   const TAG_TYPE = ComicTagType.TEAM;
   const TAG_VALUE = 'Some team';
-  const COMIC_BOOK_IDS = [7, 17, 65, 1, 29, 91];
+  const COMIC_DETAIL_IDS = [7, 17, 65, 1, 29, 91];
 
   let actions$: Observable<any>;
   let effects: ComicBookSelectionEffects;
@@ -142,9 +142,9 @@ describe('ComicBookSelectionEffects', () => {
 
   describe('loading the current comic book selections', () => {
     it('fires an action on success', () => {
-      const serviceResponse = [COMIC_BOOK_ID];
+      const serviceResponse = [COMIC_DETAIL_ID];
       const action = loadComicBookSelections();
-      const outcome = comicBookSelectionsLoaded({ ids: [COMIC_BOOK_ID] });
+      const outcome = comicBookSelectionsLoaded({ ids: [COMIC_DETAIL_ID] });
 
       actions$ = hot('-a', {
         a: action
@@ -193,14 +193,14 @@ describe('ComicBookSelectionEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({});
       const action = addSingleComicBookSelection({
-        comicBookId: COMIC_BOOK_ID
+        comicDetailId: COMIC_DETAIL_ID
       });
       const outcome = singleComicBookSelectionUpdated();
 
       actions$ = hot('-a', { a: action });
       comicBookSelectionService.addSingleSelection
         .withArgs({
-          comicBookId: COMIC_BOOK_ID
+          comicDetailId: COMIC_DETAIL_ID
         })
         .and.returnValue(of(serviceResponse));
 
@@ -211,14 +211,14 @@ describe('ComicBookSelectionEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = addSingleComicBookSelection({
-        comicBookId: COMIC_BOOK_ID
+        comicDetailId: COMIC_DETAIL_ID
       });
       const outcome = singleComicBookSelectionFailed();
 
       actions$ = hot('-a', { a: action });
       comicBookSelectionService.addSingleSelection
         .withArgs({
-          comicBookId: COMIC_BOOK_ID
+          comicDetailId: COMIC_DETAIL_ID
         })
         .and.returnValue(throwError(serviceResponse));
 
@@ -229,14 +229,14 @@ describe('ComicBookSelectionEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = addSingleComicBookSelection({
-        comicBookId: COMIC_BOOK_ID
+        comicDetailId: COMIC_DETAIL_ID
       });
       const outcome = singleComicBookSelectionFailed();
 
       actions$ = hot('-a', { a: action });
       comicBookSelectionService.addSingleSelection
         .withArgs({
-          comicBookId: COMIC_BOOK_ID
+          comicDetailId: COMIC_DETAIL_ID
         })
         .and.throwError('expected');
 
@@ -250,14 +250,14 @@ describe('ComicBookSelectionEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({});
       const action = removeSingleComicBookSelection({
-        comicBookId: COMIC_BOOK_ID
+        comicDetailId: COMIC_DETAIL_ID
       });
       const outcome = singleComicBookSelectionUpdated();
 
       actions$ = hot('-a', { a: action });
       comicBookSelectionService.removeSingleSelection
         .withArgs({
-          comicBookId: COMIC_BOOK_ID
+          comicDetailId: COMIC_DETAIL_ID
         })
         .and.returnValue(of(serviceResponse));
 
@@ -268,14 +268,14 @@ describe('ComicBookSelectionEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = removeSingleComicBookSelection({
-        comicBookId: COMIC_BOOK_ID
+        comicDetailId: COMIC_DETAIL_ID
       });
       const outcome = singleComicBookSelectionFailed();
 
       actions$ = hot('-a', { a: action });
       comicBookSelectionService.removeSingleSelection
         .withArgs({
-          comicBookId: COMIC_BOOK_ID
+          comicDetailId: COMIC_DETAIL_ID
         })
         .and.returnValue(throwError(serviceResponse));
 
@@ -286,14 +286,14 @@ describe('ComicBookSelectionEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = removeSingleComicBookSelection({
-        comicBookId: COMIC_BOOK_ID
+        comicDetailId: COMIC_DETAIL_ID
       });
       const outcome = singleComicBookSelectionFailed();
 
       actions$ = hot('-a', { a: action });
       comicBookSelectionService.removeSingleSelection
         .withArgs({
-          comicBookId: COMIC_BOOK_ID
+          comicDetailId: COMIC_DETAIL_ID
         })
         .and.throwError('expected');
 
@@ -475,14 +475,14 @@ describe('ComicBookSelectionEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({});
       const action = setMultipleComicBookByIdSelectionState({
-        comicBookIds: COMIC_BOOK_IDS,
+        comicBookIds: COMIC_DETAIL_IDS,
         selected: SELECTED
       });
       const outcome = setMultipleComicBookSelectionStateSuccess();
 
       actions$ = hot('-a', { a: action });
       comicBookSelectionService.setSelectedById
-        .withArgs({ comicBookIds: COMIC_BOOK_IDS, selected: SELECTED })
+        .withArgs({ comicBookIds: COMIC_DETAIL_IDS, selected: SELECTED })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -492,14 +492,14 @@ describe('ComicBookSelectionEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = setMultipleComicBookByIdSelectionState({
-        comicBookIds: COMIC_BOOK_IDS,
+        comicBookIds: COMIC_DETAIL_IDS,
         selected: SELECTED
       });
       const outcome = setMultipleComicBookSelectionStateFailure();
 
       actions$ = hot('-a', { a: action });
       comicBookSelectionService.setSelectedById
-        .withArgs({ comicBookIds: COMIC_BOOK_IDS, selected: SELECTED })
+        .withArgs({ comicBookIds: COMIC_DETAIL_IDS, selected: SELECTED })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -509,14 +509,14 @@ describe('ComicBookSelectionEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = setMultipleComicBookByIdSelectionState({
-        comicBookIds: COMIC_BOOK_IDS,
+        comicBookIds: COMIC_DETAIL_IDS,
         selected: SELECTED
       });
       const outcome = setMultipleComicBookSelectionStateFailure();
 
       actions$ = hot('-a', { a: action });
       comicBookSelectionService.setSelectedById
-        .withArgs({ comicBookIds: COMIC_BOOK_IDS, selected: SELECTED })
+        .withArgs({ comicBookIds: COMIC_DETAIL_IDS, selected: SELECTED })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
