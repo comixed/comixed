@@ -21,7 +21,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { SingleBookScrapingEffects } from './single-book-scraping.effects';
 import { ComicBookScrapingService } from '@app/comic-metadata/services/comic-book-scraping.service';
-import { COMIC_BOOK_4 } from '@app/comic-books/comic-books.fixtures';
+import { DISPLAYABLE_COMIC_4 } from '@app/comic-books/comic-books.fixtures';
 import {
   clearMetadataCache,
   clearMetadataCacheFailure,
@@ -67,7 +67,7 @@ describe('SingleBookScrapingEffects', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
   const VOLUME_ID = SCRAPING_VOLUME_1.id;
   const ISSUE_NUMBER = '27';
-  const COMIC_BOOK = COMIC_BOOK_4;
+  const COMIC = DISPLAYABLE_COMIC_4;
   const METADATA_SOURCE = METADATA_SOURCE_1;
 
   let actions$: Observable<any>;
@@ -246,12 +246,12 @@ describe('SingleBookScrapingEffects', () => {
       const action = scrapeSingleComicBook({
         metadataSource: METADATA_SOURCE,
         issueId: SCRAPING_ISSUE.id,
-        comic: COMIC_BOOK,
+        comic: COMIC,
         skipCache: SKIP_CACHE
       });
       const outcome1 = scrapeSingleComicBookSuccess();
       const outcome2 = removeSingleComicBookSelection({
-        comicBookId: COMIC_BOOK.comicBookId
+        comicDetailId: COMIC.comicDetailId
       });
 
       actions$ = hot('-a', { a: action });
@@ -269,7 +269,7 @@ describe('SingleBookScrapingEffects', () => {
       const action = scrapeSingleComicBook({
         metadataSource: METADATA_SOURCE,
         issueId: SCRAPING_ISSUE.id,
-        comic: COMIC_BOOK,
+        comic: COMIC,
         skipCache: SKIP_CACHE
       });
       const outcome = scrapeSingleComicBookFailure();
@@ -288,7 +288,7 @@ describe('SingleBookScrapingEffects', () => {
       const action = scrapeSingleComicBook({
         metadataSource: METADATA_SOURCE,
         issueId: SCRAPING_ISSUE.id,
-        comic: COMIC_BOOK,
+        comic: COMIC,
         skipCache: SKIP_CACHE
       });
       const outcome = scrapeSingleComicBookFailure();

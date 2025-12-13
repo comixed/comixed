@@ -89,21 +89,21 @@ export class ComicBookSelectionService {
     return this.http.get(interpolate(LOAD_COMIC_BOOK_SELECTIONS_URL));
   }
 
-  addSingleSelection(args: { comicBookId: number }): Observable<any> {
+  addSingleSelection(args: { comicDetailId: number }): Observable<any> {
     this.logger.debug('Setting single comic book selection state:', args);
     return this.http.put(
       interpolate(ADD_SINGLE_COMIC_SELECTION_URL, {
-        comicBookId: args.comicBookId
+        comicDetailId: args.comicDetailId
       }),
       {}
     );
   }
 
-  removeSingleSelection(args: { comicBookId: number }): Observable<any> {
+  removeSingleSelection(args: { comicDetailId: number }): Observable<any> {
     this.logger.debug('Setting single comic book selection state:', args);
     return this.http.delete(
       interpolate(REMOVE_SINGLE_COMIC_SELECTION_URL, {
-        comicBookId: args.comicBookId
+        comicDetailId: args.comicDetailId
       }),
       {}
     );

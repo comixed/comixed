@@ -260,7 +260,7 @@ export class ComicBookSelectionEffects {
       switchMap(action =>
         this.comicBookSelectionService
           .addSingleSelection({
-            comicBookId: action.comicBookId
+            comicDetailId: action.comicDetailId
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
@@ -292,7 +292,7 @@ export class ComicBookSelectionEffects {
       switchMap(action =>
         this.comicBookSelectionService
           .removeSingleSelection({
-            comicBookId: action.comicBookId
+            comicDetailId: action.comicDetailId
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),

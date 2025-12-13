@@ -87,7 +87,7 @@ export const scrapeSingleComicBook = createAction(
   props<{
     metadataSource: MetadataSource;
     issueId: string;
-    comic: ComicBook | DisplayableComic;
+    comic: DisplayableComic;
     skipCache: boolean;
   }>()
 );
