@@ -30,8 +30,8 @@ export const LOAD_READ_COMICS_URL = `${API_ROOT_URL}/comics/read`;
 export const LOAD_COMICS_FOR_READING_LIST_URL = `${API_ROOT_URL}/comics/lists/\${readingListId}`;
 
 export const LOAD_COMIC_BOOK_SELECTIONS_URL = `${API_ROOT_URL}/comics/selections`;
-export const ADD_SINGLE_COMIC_SELECTION_URL = `${API_ROOT_URL}/comics/selections/\${comicBookId}`;
-export const REMOVE_SINGLE_COMIC_SELECTION_URL = `${API_ROOT_URL}/comics/selections/\${comicBookId}`;
+export const ADD_SINGLE_COMIC_SELECTION_URL = `${API_ROOT_URL}/comics/selections/\${comicDetailId}`;
+export const REMOVE_SINGLE_COMIC_SELECTION_URL = `${API_ROOT_URL}/comics/selections/\${comicDetailId}`;
 export const SET_SELECTED_COMIC_BOOKS_BY_FILTER_URL = `${API_ROOT_URL}/comics/selections/multiple`;
 export const SET_SELECTED_COMIC_BOOKS_BY_TAG_TYPE_AND_VALUE_URL = `${API_ROOT_URL}/comics/selections/tag/\${tagType}/\${tagValue}`;
 export const SET_SELECTED_COMIC_BOOKS_BY_ID_URL = `${API_ROOT_URL}/comics/selections/ids`;

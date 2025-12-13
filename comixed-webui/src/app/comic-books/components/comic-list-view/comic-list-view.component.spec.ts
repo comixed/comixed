@@ -235,7 +235,7 @@ describe('ComicListViewComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           addSingleComicBookSelection({
-            comicBookId: ENTRY.item.comicBookId
+            comicDetailId: ENTRY.item.comicDetailId
           })
         );
       });
@@ -249,7 +249,7 @@ describe('ComicListViewComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           removeSingleComicBookSelection({
-            comicBookId: ENTRY.item.comicBookId
+            comicDetailId: ENTRY.item.comicDetailId
           })
         );
       });
