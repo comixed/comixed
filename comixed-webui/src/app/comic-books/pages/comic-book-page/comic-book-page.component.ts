@@ -96,6 +96,7 @@ import { ComicScrapingComponent } from '../../components/comic-scraping/comic-sc
 import { ComicScrapingVolumeSelectionComponent } from '../../components/comic-scraping-volume-selection/comic-scraping-volume-selection.component';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Component({
   selector: 'cx-comic-book-page',
@@ -167,6 +168,7 @@ export class ComicBookPageComponent
   confirmationService = inject(ConfirmationService);
   webSocketService = inject(WebSocketService);
   queryParameterService = inject(QueryParameterService);
+  protected displayableComic: DisplayableComic | null;
 
   constructor() {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
@@ -193,6 +195,16 @@ export class ComicBookPageComponent
       .select(selectComicBook)
       .subscribe(comic => {
         this.comicBook = comic;
+        this.displayableComic = {
+          comicBookId: comic?.comicBookId,
+          publisher: comic?.detail?.publisher,
+          imprint: comic?.detail?.imprint,
+          series: comic?.detail?.series,
+          volume: comic?.detail?.volume,
+          issueNumber: comic?.detail?.issueNumber,
+          baseFilename: comic?.detail?.baseFilename,
+          referenceId: comic?.metadata?.referenceId
+        } as DisplayableComic;
         this.doCheckIfRead();
         if (!!this.comicBook?.metadata) {
           this.logger.trace('Preselecting previous metadata source');
