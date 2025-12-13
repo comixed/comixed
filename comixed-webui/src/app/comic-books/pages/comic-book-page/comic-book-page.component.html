@@ -251,7 +251,7 @@
             @if (!!comicBook && volumes.length === 0) {
               <cx-comic-scraping
                 class="cx-width-100"
-                [comic]="comicBook"
+                [comic]="displayableComic"
                 [previousMetadataSource]="comicBook.metadata?.metadataSource"
                 [skipCache]="skipCache"
                 [matchPublisher]="matchPublisher"
