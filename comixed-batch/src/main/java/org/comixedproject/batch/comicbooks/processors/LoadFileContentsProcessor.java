@@ -72,7 +72,7 @@ public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, Comic
       this.comicCheckOutManager.checkOut(comicBook.getComicBookId());
       this.comicBookAdaptor.load(comicBook, rules);
       log.trace("Sorting comicBook pages");
-      comicBook.getPages().sort((o1, o2) -> o1.getFilename().compareTo(o2.getFilename()));
+      this.comicBookAdaptor.sortPages(comicBook);
       if (!rules.isSkipMetadata()) {
         final File metadataFile =
             new File(

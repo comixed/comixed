@@ -457,4 +457,16 @@ public class ComicBookAdaptor {
     }
     return result;
   }
+
+  /**
+   * Sorts the pages, updating the details for each page.
+   *
+   * @param comicBook the comic book
+   */
+  public void sortPages(final ComicBook comicBook) {
+    comicBook.getPages().sort((o1, o2) -> o1.getFilename().compareTo(o2.getFilename()));
+    for (var index = 0; index < comicBook.getPages().size(); index++) {
+      comicBook.getPages().get(index).setPageNumber(index);
+    }
+  }
 }
