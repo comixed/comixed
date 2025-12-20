@@ -48,7 +48,6 @@ import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicpages.ComicPage;
-import org.comixedproject.model.comicpages.ComicPageType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -172,66 +171,45 @@ public class ComicBookAdaptor {
       final ArchiveWriteHandle writeHandle =
           destinationArchive.openArchiveForWrite(temporaryFilename);
 
-      final List<ComicPage> oldPages = this.doRemoveOldPages(comicBook);
       final List<ComicArchiveEntry> sourceEntries = sourceArchive.getEntries(readHandle);
-      final int length = String.valueOf(oldPages.size()).length();
-      log.debug("Processing source archive entries");
-      for (int index = 0; index < sourceEntries.size(); index++) {
-        final ComicArchiveEntry entry = sourceEntries.get(index);
-        String entryFilename = entry.getFilename();
-        log.trace("Loading entry: {}", entryFilename);
-        final byte[] entryContent = sourceArchive.readEntry(readHandle, entryFilename);
-        final ContentAdaptor contentAdaptor =
-            this.fileTypeAdaptor.getContentAdaptorFor(entryFilename, entryContent);
-        if (contentAdaptor != null) {
-          log.trace("Entry type: {}", contentAdaptor.getArchiveEntryType());
-          if (contentAdaptor.getArchiveEntryType() == ArchiveEntryType.IMAGE) {
-            boolean includePage = true;
-            int entryPageNumber = comicBook.getPages().size();
+      final int length = String.valueOf(comicBook.getPages().size()).length();
 
-            final String entryHash = this.genericUtilitiesAdaptor.createHash(entryContent);
-            final ComicPage matchingPage =
-                this.doFindMatchingPage(oldPages, entryFilename, entryHash);
-            ComicPageType pageType = null;
-
-            if (Objects.nonNull(matchingPage)) {
-              includePage = !matchingPage.isDeleted();
-              pageType = matchingPage.getPageType();
-            } else {
-              log.debug("No matching page for: {}", entryFilename);
-            }
-
-            if (includePage) {
-              final ComicPage comicPage = new ComicPage(comicBook, entryFilename, entryPageNumber);
-
-              // adjust the page filenames
-              if (!StringUtils.isBlank(pageRenamingRule)) {
-                final String oldEntryFilename = comicPage.getFilename();
-                entryFilename =
-                    this.comicPageAdaptor.createFilenameFromRule(
-                        FilenameUtils.getExtension(oldEntryFilename),
-                        pageRenamingRule,
-                        comicPage.getPageNumber(),
-                        length);
-                log.debug("Renamed page: {} => {}", oldEntryFilename, entryFilename);
-                comicPage.setFilename(entryFilename);
-              }
-              log.trace("Writing page: {}", entryFilename);
-              destinationArchive.writeEntry(writeHandle, entryFilename, entryContent);
+      for (int index = 0; index < comicBook.getPages().size(); index++) {
+        final ComicPage page = comicBook.getPages().get(index);
+        // only process if it's not deleted
+        if (!page.isDeleted()) {
+          final Optional<ComicArchiveEntry> sourceEntry =
+              sourceEntries.stream()
+                  .filter(entry -> entry.getFilename().equals(page.getFilename()))
+                  .findFirst();
+          if (sourceEntry.isPresent()) {
+            final String entryFilename = sourceEntry.get().getFilename();
+            final byte[] entryContent = sourceArchive.readEntry(readHandle, entryFilename);
+            log.debug(
+                "Getting content adaptor for file: {}#{}",
+                comicBook.getComicDetail().getFilename(),
+                entryFilename);
+            final ContentAdaptor contentAdaptor =
+                this.fileTypeAdaptor.getContentAdaptorFor(entryFilename, entryContent);
+            if (Objects.nonNull(contentAdaptor)) {
+              log.debug("Generating page details");
+              page.setHash(this.genericUtilitiesAdaptor.createHash(entryContent));
               final BufferedImage image = ImageIO.read(new ByteArrayInputStream(entryContent));
-              comicPage.setWidth(image.getWidth());
-              comicPage.setHeight(image.getHeight());
-              comicPage.setHash(entryHash);
-              if (Objects.nonNull(pageType)) {
-                comicPage.setPageType(pageType);
+              page.setWidth(image.getWidth());
+              page.setHeight(image.getHeight());
+              if (!StringUtils.isBlank((pageRenamingRule))) {
+                final String pageFilename =
+                    this.comicPageAdaptor.createFilenameFromRule(
+                        FilenameUtils.getExtension(entryFilename),
+                        pageRenamingRule,
+                        page.getPageNumber(),
+                        length);
+                log.debug("Setting new filename: {} => {}", page.getFilename(), pageFilename);
+                page.setFilename(pageFilename);
               }
-              comicBook.getPages().add(comicPage);
             }
-          } else {
-            if (!entryFilename.equalsIgnoreCase(COMIC_INFO_XML)) {
-              log.trace("Writing non-page entry: {}", entryFilename);
-              destinationArchive.writeEntry(writeHandle, entryFilename, entryContent);
-            }
+            log.trace("Writing page: {}", entryFilename);
+            destinationArchive.writeEntry(writeHandle, page.getFilename(), entryContent);
           }
         }
       }
