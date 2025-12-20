@@ -399,6 +399,7 @@ class ComicBookAdaptorTest {
         .thenReturn(TEST_IMAGE_DATA);
     Mockito.when(fileTypeAdaptor.getContentAdaptorFor(Mockito.anyString(), Mockito.any()))
         .thenReturn(contentAdaptor);
+    Mockito.when(page.getFilename()).thenReturn(TEST_ENTRY_FILENAME, TEST_RENAMED_PAGE);
     Mockito.when(contentAdaptor.getArchiveEntryType()).thenReturn(ArchiveEntryType.IMAGE);
     Mockito.when(
             comicPageAdaptor.createFilenameFromRule(
