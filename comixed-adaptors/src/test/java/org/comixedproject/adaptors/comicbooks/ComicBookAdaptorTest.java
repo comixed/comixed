@@ -580,4 +580,11 @@ class ComicBookAdaptorTest {
     Mockito.verify(writeableArchiveAdaptor, Mockito.times(1))
         .readEntry(readHandle, TEST_EXISTING_FILE);
   }
+
+  @Test
+  void sortPages() {
+    adaptor.sortPages(comicBook);
+
+    Mockito.verify(comicBook, Mockito.atLeast(pageList.size())).getPages();
+  }
 }
