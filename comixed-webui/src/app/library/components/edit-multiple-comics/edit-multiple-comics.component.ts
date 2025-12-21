@@ -16,19 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
-  MatDialogTitle,
-  MatDialogContent,
   MatDialogActions,
-  MatDialogClose
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogTitle
 } from '@angular/material/dialog';
 import {
+  ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators,
-  ReactiveFormsModule
+  Validators
 } from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
@@ -41,10 +41,9 @@ import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics'
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { COMIC_TYPE_SELECTION_OPTIONS } from '@app/comic-books/comic-books.constants';
 import { ComicType } from '@app/comic-books/models/comic-type';
-import { CdkScrollable } from '@angular/cdk/scrolling';
-import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatSelect, MatOption } from '@angular/material/select';
+import { MatOption, MatSelect } from '@angular/material/select';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
@@ -55,7 +54,6 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrls: ['./edit-multiple-comics.component.scss'],
   imports: [
     MatDialogTitle,
-    CdkScrollable,
     MatDialogContent,
     ReactiveFormsModule,
     MatFormField,

@@ -142,7 +142,8 @@ describe('LibraryPluginEffects', () => {
         language: PLUGIN.language,
         filename: PLUGIN.filename
       });
-      const outcome = createLibraryPluginSuccess({ plugin: PLUGIN });
+      const outcome1 = createLibraryPluginSuccess({ plugin: PLUGIN });
+      const outcome2 = loadLibraryPlugins();
 
       actions$ = hot('-a', { a: action });
       pluginService.createPlugin
@@ -152,7 +153,7 @@ describe('LibraryPluginEffects', () => {
         })
         .and.returnValue(of(serviceResponse));
 
-      const expected = hot('-b', { b: outcome });
+      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
       expect(effects.createLibraryPlugin$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
@@ -203,14 +204,15 @@ describe('LibraryPluginEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = PLUGIN;
       const action = updateLibraryPlugin({ plugin: PLUGIN });
-      const outcome = updateLibraryPluginSuccess({ plugin: PLUGIN });
+      const outcome1 = updateLibraryPluginSuccess({ plugin: PLUGIN });
+      const outcome2 = loadLibraryPlugins();
 
       actions$ = hot('-a', { a: action });
       pluginService.updatePlugin
         .withArgs({ plugin: PLUGIN })
         .and.returnValue(of(serviceResponse));
 
-      const expected = hot('-b', { b: outcome });
+      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
       expect(effects.updateLibraryPlugin$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
@@ -251,14 +253,15 @@ describe('LibraryPluginEffects', () => {
       const action = deleteLibraryPlugin({
         plugin: PLUGIN
       });
-      const outcome = deleteLibraryPluginSuccess();
+      const outcome1 = deleteLibraryPluginSuccess();
+      const outcome2 = loadLibraryPlugins();
 
       actions$ = hot('-a', { a: action });
       pluginService.deletePlugin
         .withArgs({ plugin: PLUGIN })
         .and.returnValue(of(serviceResponse));
 
-      const expected = hot('-b', { b: outcome });
+      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
       expect(effects.deleteLibraryPlugin$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });

@@ -25,28 +25,28 @@ import { PluginLanguage } from '@app/library-plugins/models/plugin-language';
 import {
   FormBuilder,
   FormGroup,
-  Validators,
-  ReactiveFormsModule
+  ReactiveFormsModule,
+  Validators
 } from '@angular/forms';
 import {
   selectPluginLanguageList,
   selectPluginLanguageState
 } from '@app/library-plugins/selectors/plugin-language.selectors';
 import { PluginLanguageState } from '@app/library-plugins/reducers/plugin-language.reducer';
-import { ConfirmationService } from '@tragically-slick/confirmation';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import { createLibraryPlugin } from '@app/library-plugins/actions/library-plugin.actions';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   MatCard,
-  MatCardTitle,
+  MatCardActions,
   MatCardContent,
-  MatCardActions
+  MatCardTitle
 } from '@angular/material/card';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatSelect, MatOption } from '@angular/material/select';
+import { MatOption, MatSelect } from '@angular/material/select';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { CreatePluginDetails } from '@app/admin/models/ui/create-plugin-details';
+import { MatDialogClose } from '@angular/material/dialog';
 
 @Component({
   selector: 'cx-create-plugin-dialog',
@@ -65,7 +65,8 @@ import { MatIcon } from '@angular/material/icon';
     MatCardActions,
     MatButton,
     MatIcon,
-    TranslateModule
+    TranslateModule,
+    MatDialogClose
   ]
 })
 export class CreatePluginDialogComponent implements OnInit, OnDestroy {
@@ -78,8 +79,6 @@ export class CreatePluginDialogComponent implements OnInit, OnDestroy {
   logger = inject(LoggerService);
   store = inject(Store);
   formBuilder = inject(FormBuilder);
-  confirmationService = inject(ConfirmationService);
-  translateService = inject(TranslateService);
 
   constructor() {
     this.logger.trace('Subscribing to plugin language state updates');
@@ -115,18 +114,10 @@ export class CreatePluginDialogComponent implements OnInit, OnDestroy {
     this.store.dispatch(loadPluginLanguages());
   }
 
-  onCreatePlugin(): void {
-    this.confirmationService.confirm({
-      title: this.translateService.instant('create-plugin.confirmation-title'),
-      message: this.translateService.instant(
-        'create-plugin.confirmation-message'
-      ),
-      confirm: () => {
-        const language = this.pluginForm.controls.language.value;
-        const filename = this.pluginForm.controls.filename.value;
-        this.logger.trace('Creating plugin:', language, filename);
-        this.store.dispatch(createLibraryPlugin({ language, filename }));
-      }
-    });
+  encodeDetails(): CreatePluginDetails {
+    return {
+      language: this.pluginForm.controls.language.value,
+      filename: this.pluginForm.controls.filename.value
+    };
   }
 }

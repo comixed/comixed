@@ -19,6 +19,22 @@
     queryParameterService.onSortChange($event.active, $event.direction)
   "
 >
+  <ng-container matColumnDef="actions">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "library-plugin-list.label.actions" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <button
+        mat-icon-button
+        color="warn"
+        (click)="onDeletePlugin(entry); $event.stopPropagation()"
+        [matTooltip]="'library-plugin-list.tooltip.delete-plugin' | translate"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+
   <ng-container matColumnDef="name">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "library-plugin-list.label.name" | translate }}

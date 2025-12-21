@@ -26,21 +26,23 @@ import {
   selectLibraryPluginState
 } from '@app/library-plugins/selectors/library-plugin.selectors';
 import {
-  MatTableDataSource,
-  MatTable,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderCell,
-  MatCellDef,
   MatCell,
-  MatHeaderRowDef,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
   MatHeaderRow,
-  MatRowDef,
+  MatHeaderRowDef,
+  MatNoDataRow,
   MatRow,
-  MatNoDataRow
+  MatRowDef,
+  MatTable,
+  MatTableDataSource
 } from '@angular/material/table';
 import { LibraryPlugin } from '@app/library-plugins/models/library-plugin';
 import {
+  createLibraryPlugin,
+  deleteLibraryPlugin,
   loadLibraryPlugins,
   setCurrentLibraryPlugin
 } from '@app/library-plugins/actions/library-plugin.actions';
@@ -50,12 +52,13 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CreatePluginDialogComponent } from '@app/admin/components/create-plugin-dialog/create-plugin-dialog.component';
 import { LibraryPluginSetupComponent } from '@app/admin/components/library-plugin-setup/library-plugin-setup.component';
 import { AlertService } from '@app/core/services/alert.service';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import { MatFabButton } from '@angular/material/button';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { MatFabButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { AsyncPipe } from '@angular/common';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-library-plugins-configuration',
@@ -79,11 +82,12 @@ import { AsyncPipe } from '@angular/common';
     MatRow,
     MatNoDataRow,
     AsyncPipe,
-    TranslateModule
+    TranslateModule,
+    MatIconButton
   ]
 })
 export class LibraryPluginsConfigurationComponent implements OnInit, OnDestroy {
-  readonly displayedColumns = ['name', 'language', 'property-count'];
+  readonly displayedColumns = ['actions', 'name', 'language', 'property-count'];
 
   dataSource = new MatTableDataSource<LibraryPlugin>();
   libraryPluginStateSubscription: Subscription;
@@ -98,6 +102,7 @@ export class LibraryPluginsConfigurationComponent implements OnInit, OnDestroy {
   dialog = inject(MatDialog);
   alertService = inject(AlertService);
   translateService = inject(TranslateService);
+  confirmationService = inject(ConfirmationService);
 
   constructor() {
     this.logger.trace('Subscription to library plugin list state updates');
@@ -157,11 +162,44 @@ export class LibraryPluginsConfigurationComponent implements OnInit, OnDestroy {
 
   onShowCreatePluginForm(): void {
     this.logger.trace('Opening the creating plugin dialog');
-    this.dialog.open(CreatePluginDialogComponent);
+    const dialogRef = this.dialog.open(CreatePluginDialogComponent);
+    dialogRef.afterClosed().subscribe(pluginDetails => {
+      const language = pluginDetails.language;
+      const filename = pluginDetails.filename;
+
+      this.confirmationService.confirm({
+        title: this.translateService.instant(
+          'create-plugin.confirmation-title'
+        ),
+        message: this.translateService.instant(
+          'create-plugin.confirmation-message'
+        ),
+        confirm: () => {
+          this.logger.trace('Creating plugin:', language, filename);
+          this.store.dispatch(createLibraryPlugin({ language, filename }));
+        }
+      });
+    });
   }
 
   onSelectPlugin(libraryPlugin: LibraryPlugin): void {
     this.logger.trace('Selecting library plugin:', libraryPlugin);
     this.store.dispatch(setCurrentLibraryPlugin({ plugin: libraryPlugin }));
+  }
+
+  onDeletePlugin(plugin: LibraryPlugin): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library-plugin-list.delete-plugin.confirmation-title',
+        { name: plugin.name }
+      ),
+      message: this.translateService.instant(
+        'library-plugin-list.delete-plugin.confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.debug('Deleting plugin:', plugin);
+        this.store.dispatch(deleteLibraryPlugin({ plugin: plugin }));
+      }
+    });
   }
 }

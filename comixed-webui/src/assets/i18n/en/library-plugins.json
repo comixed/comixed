@@ -1,6 +1,6 @@
 {
   "create-plugin": {
-    "confirmation-message": "Are you sure you want to install this plugin?",
+    "confirmation-message": "Are you sure you want to install this plugins?",
     "confirmation-title": "Install Plugin",
     "form-title": "Install Plugin",
     "label": {
@@ -16,10 +16,13 @@
       "effect-success": "Installed plugin {name} v{version}..."
     },
     "delete-plugin": {
+      "confirmation-message": "Are you sure you want to delete this plugin?",
+      "confirmation-title": "Delete Plugin {name}",
       "effect-failure": "Failed to delete plugin...",
       "effect-success": "Deleted plugin: {name} v{version}"
     },
     "label": {
+      "actions": "",
       "language": "Language",
       "name": "Plugin Name",
       "property-count": "# Properties"
@@ -32,7 +35,8 @@
       "plugin-name-and-version": "{name} v{version}"
     },
     "tooltip": {
-      "create-plugin": "Install a new plugin..."
+      "create-plugin": "Install a new plugin...",
+      "delete-plugin": "Delete this plugin..."
     },
     "update-plugin": {
       "effect-failure": "Failed to update plugin: {name}...",
