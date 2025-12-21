@@ -37,7 +37,7 @@
         mat-raised-button
         color="primary"
         [disabled]="!pluginForm.valid"
-        (click)="onCreatePlugin()"
+        [mat-dialog-close]="encodeDetails()"
       >
         <mat-icon>save</mat-icon>
         <mat-label>{{ "button.save" | translate }}</mat-label>

@@ -35,9 +35,19 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSortModule } from '@angular/material/sort';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { setCurrentLibraryPlugin } from '@app/library-plugins/actions/library-plugin.actions';
+import {
+  createLibraryPlugin,
+  deleteLibraryPlugin,
+  setCurrentLibraryPlugin
+} from '@app/library-plugins/actions/library-plugin.actions';
 import { LIBRARY_PLUGIN_4 } from '@app/library-plugins/library-plugins.fixtures';
 import { AlertService } from '@app/core/services/alert.service';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
+import { of } from 'rxjs';
+import { CreatePluginDetails } from '@app/admin/models/ui/create-plugin-details';
 
 describe('LibraryPluginsConfigurationComponent', () => {
   const initialState = {
@@ -50,6 +60,7 @@ describe('LibraryPluginsConfigurationComponent', () => {
   let dialog: MatDialog;
   let store: MockStore;
   let alertService: AlertService;
+  let confirmationService: ConfirmationService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -68,18 +79,22 @@ describe('LibraryPluginsConfigurationComponent', () => {
         LibraryPluginsConfigurationComponent,
         CreatePluginDialogComponent
       ],
-      providers: [provideMockStore({ initialState }), AlertService]
+      providers: [
+        provideMockStore({ initialState }),
+        AlertService,
+        ConfirmationService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LibraryPluginsConfigurationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
     dialog = TestBed.inject(MatDialog);
-    spyOn(dialog, 'open');
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'info');
+    confirmationService = TestBed.inject(ConfirmationService);
   });
 
   it('should create', () => {
@@ -88,11 +103,31 @@ describe('LibraryPluginsConfigurationComponent', () => {
 
   describe('installing a new plugin', () => {
     beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      const dialogRef = jasmine.createSpyObj(['afterClosed']);
+      dialogRef.afterClosed.and.returnValue(
+        of({
+          filename: PLUGIN.filename,
+          language: PLUGIN.language
+        } as CreatePluginDetails)
+      );
+      spyOn(dialog, 'open').and.returnValue(dialogRef);
       component.onShowCreatePluginForm();
     });
 
-    it('opens the create plugin dialog', () => {
-      expect(dialog.open).toHaveBeenCalledWith(CreatePluginDialogComponent);
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        createLibraryPlugin({
+          language: PLUGIN.language,
+          filename: PLUGIN.filename
+        })
+      );
     });
   });
 
@@ -164,6 +199,25 @@ describe('LibraryPluginsConfigurationComponent', () => {
           expect(component.dialogRef).toBeNull();
         });
       });
+    });
+  });
+
+  describe('deleting a plugin', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(confirmation =>
+        confirmation.confirm()
+      );
+      component.onDeletePlugin(PLUGIN);
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        deleteLibraryPlugin({ plugin: PLUGIN })
+      );
     });
   });
 });

@@ -166,8 +166,8 @@ describe('LibraryPlugin Reducer', () => {
         expect(state.busy).toBeFalse();
       });
 
-      it('sets the current plugin', () => {
-        expect(state.current).toBe(PLUGIN);
+      it('clears the current plugin', () => {
+        expect(state.current).toBeNull();
       });
     });
 
@@ -215,8 +215,8 @@ describe('LibraryPlugin Reducer', () => {
         expect(state.busy).toBeFalse();
       });
 
-      it('sets the current plugin', () => {
-        expect(state.current).toBe(UPDATED_PLUGIN);
+      it('clears the current plugin', () => {
+        expect(state.current).toBeNull();
       });
     });
 

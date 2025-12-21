@@ -26,12 +26,7 @@ import {
   initialState as initialPluginLanguageState,
   PLUGIN_LANGUAGE_FEATURE_KEY
 } from '@app/library-plugins/reducers/plugin-language.reducer';
-import {
-  Confirmation,
-  ConfirmationService
-} from '@tragically-slick/confirmation';
 import { LIBRARY_PLUGIN_4 } from '@app/library-plugins/library-plugins.fixtures';
-import { createLibraryPlugin } from '@app/library-plugins/actions/library-plugin.actions';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -39,6 +34,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { CreatePluginDetails } from '@app/admin/models/ui/create-plugin-details';
 
 describe('CreatePluginDialogComponent', () => {
   const initialState = {
@@ -49,7 +45,6 @@ describe('CreatePluginDialogComponent', () => {
   let component: CreatePluginDialogComponent;
   let fixture: ComponentFixture<CreatePluginDialogComponent>;
   let store: MockStore;
-  let confirmationService: ConfirmationService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -75,34 +70,27 @@ describe('CreatePluginDialogComponent', () => {
     fixture.detectChanges();
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
-    confirmationService = TestBed.inject(ConfirmationService);
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('creating the plugin', () => {
+  describe('encoding the plugin', () => {
+    let details: CreatePluginDetails;
+
     beforeEach(() => {
-      spyOn(confirmationService, 'confirm').and.callFake(
-        (confirmation: Confirmation) => confirmation.confirm()
-      );
       component.pluginForm.controls.filename.setValue(PLUGIN.filename);
       component.pluginForm.controls.language.setValue(PLUGIN.language);
-      component.onCreatePlugin();
+      details = component.encodeDetails();
     });
 
-    it('confirms with the user', () => {
-      expect(confirmationService.confirm).toHaveBeenCalled();
+    it('returns the filename', () => {
+      expect(details.filename).toEqual(PLUGIN.filename);
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        createLibraryPlugin({
-          language: PLUGIN.language,
-          filename: PLUGIN.filename
-        })
-      );
+    it('returns the language', () => {
+      expect(details.language).toEqual(PLUGIN.language);
     });
   });
 });

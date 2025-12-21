@@ -36,7 +36,7 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { LibraryPluginService } from '@app/library-plugins/services/library-plugin.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { LibraryPlugin } from '@app/library-plugins/models/library-plugin';
 import { of } from 'rxjs';
 
@@ -101,9 +101,10 @@ export class LibraryPluginEffects {
                 )
               )
             ),
-            map((response: LibraryPlugin) =>
-              createLibraryPluginSuccess({ plugin: response })
-            ),
+            mergeMap((response: LibraryPlugin) => [
+              createLibraryPluginSuccess({ plugin: response }),
+              loadLibraryPlugins()
+            ]),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(
@@ -139,9 +140,10 @@ export class LibraryPluginEffects {
               )
             )
           ),
-          map((response: LibraryPlugin) =>
-            updateLibraryPluginSuccess({ plugin: action.plugin })
-          ),
+          mergeMap((response: LibraryPlugin) => [
+            updateLibraryPluginSuccess({ plugin: action.plugin }),
+            loadLibraryPlugins()
+          ]),
           catchError(error => {
             this.logger.error('Service failure:', error);
             this.alertService.error(
@@ -181,7 +183,7 @@ export class LibraryPluginEffects {
               )
             )
           ),
-          map(() => deleteLibraryPluginSuccess()),
+          mergeMap(() => [deleteLibraryPluginSuccess(), loadLibraryPlugins()]),
           catchError(error => {
             this.logger.error('Service failure:', error);
             this.alertService.error(
