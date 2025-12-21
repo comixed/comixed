@@ -18,9 +18,6 @@ Section ""
 
 SetOutPath $INSTDIR\bin
 File ..\assembly\scripts\run.bat
-File ..\assembly\scripts\dbbackup.bat
-File ..\assembly\scripts\dbrestore.bat
-File ..\assembly\scripts\dbtool.bat
 File ..\..\..\..\comixed-app\target\comixed-app-3.1-SNAPSHOT.jar
 File ..\..\..\target\classes\org\comixedproject\modules\windows_agent_installer\comixed-service.exe
 File .\comixed-service.xml
