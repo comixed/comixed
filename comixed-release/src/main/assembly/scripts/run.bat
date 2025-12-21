@@ -19,7 +19,7 @@ REM along with this program. If not, see <http://www.gnu.org/licenses>
 SETLOCAL
 CD /d %~dp0
 
-FOR %%f IN (comixed-app*.jar) DO SET COMIXED_JAR_FILE=%%f
+FOR %%f IN (comixed-app-3.2-SNAPSHOT.jar) DO SET COMIXED_JAR_FILE=%%f
 SET LOGFILE="%COMIXEDLOG%"
 SET CFGDIR="%USERPROFILE%\.comixed"
 
