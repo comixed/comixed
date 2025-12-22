@@ -118,6 +118,10 @@ import { MatLabel } from '@angular/material/form-field';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatIconButton } from '@angular/material/button';
+import { QUERY_PARAM_COMICS_AS_GRID } from '@app/core';
+import { ComicGridItemComponent } from '@app/comic-books/components/comic-grid-item/comic-grid-item.component';
 
 @Component({
   selector: 'cx-comic-list-view',
@@ -155,7 +159,10 @@ import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
     DatePipe,
     TranslateModule,
     ComicCoverUrlPipe,
-    ComicTitlePipe
+    ComicTitlePipe,
+    MatToolbar,
+    MatIconButton,
+    ComicGridItemComponent
   ]
 })
 export class ComicListViewComponent
@@ -164,7 +171,7 @@ export class ComicListViewComponent
   @Output() selectAll = new EventEmitter<boolean>();
   @Output() filtered = new EventEmitter<boolean>();
   @Output() showing = new EventEmitter<number>();
-
+  @Input() showGridView = false;
   @Input() isAdmin = false;
   @Input() readingLists: ReadingList[] = [];
   @Input() unreadOnly = false;
@@ -191,7 +198,6 @@ export class ComicListViewComponent
   @Input() totalComics = 0;
   @Input() coverYears: number[] = [];
   @Input() coverMonths: number[] = [];
-
   selectionStateSubscription: Subscription;
   selectionState: ComicBookSelectionState;
   showComicDetailPopup = false;
@@ -201,7 +207,6 @@ export class ComicListViewComponent
   queryParamsSubscription: Subscription;
   libraryPluginListSubscription: Subscription;
   libraryPluginlist: LibraryPlugin[] = [];
-
   logger = inject(LoggerService);
   store = inject(Store);
   router = inject(Router);
@@ -214,7 +219,10 @@ export class ComicListViewComponent
   constructor() {
     this.logger.trace('Subscribing to query parameter updates');
     this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
-      () => this.applyFilters()
+      params => {
+        this.applyFilters();
+        this.showGridView = params[QUERY_PARAM_COMICS_AS_GRID] === `${true}`;
+      }
     );
     this.logger.trace('Subscribing to selection state updates');
     this.selectionStateSubscription = this.store
@@ -277,6 +285,12 @@ export class ComicListViewComponent
   @Input() set comics(comics: DisplayableComic[]) {
     this._comics = comics;
     this.applyFilters();
+  }
+
+  onToggleGridView(toggle: boolean) {
+    this.queryParameterService.updateQueryParam([
+      { name: QUERY_PARAM_COMICS_AS_GRID, value: `${toggle}` }
+    ]);
   }
 
   ngAfterViewInit(): void {

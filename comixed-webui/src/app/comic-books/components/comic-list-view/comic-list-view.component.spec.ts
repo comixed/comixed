@@ -100,6 +100,7 @@ import {
 } from '@app/user/actions/read-comic-books.actions';
 import { batchScrapeComicBooks } from '@app/comic-metadata/actions/multi-book-scraping.actions';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
+import { QUERY_PARAM_COMICS_AS_GRID } from '@app/core';
 
 describe('ComicListViewComponent', () => {
   const COMIC_BOOKS = [
@@ -168,7 +169,10 @@ describe('ComicListViewComponent', () => {
             }),
             archiveType$: new BehaviorSubject<ArchiveType>(null),
             comicType$: new BehaviorSubject<ComicType>(null),
-            filterText$: new BehaviorSubject<string>(null)
+            filterText$: new BehaviorSubject<string>(null),
+            updateQueryParam: jasmine.createSpy(
+              'QueryParameterService.updateQueryParam()'
+            )
           }
         }
       ]
@@ -903,6 +907,32 @@ describe('ComicListViewComponent', () => {
           value: `${PAGE_SIZE}`
         })
       );
+    });
+  });
+
+  describe('toggling the grid view', () => {
+    describe('turning it on', () => {
+      beforeEach(() => {
+        component.onToggleGridView(true);
+      });
+
+      it('updates the query parameters', () => {
+        expect(queryParameterService.updateQueryParam).toHaveBeenCalledWith([
+          { name: QUERY_PARAM_COMICS_AS_GRID, value: `${true}` }
+        ]);
+      });
+    });
+
+    describe('turning it off', () => {
+      beforeEach(() => {
+        component.onToggleGridView(false);
+      });
+
+      it('updates the query parameters', () => {
+        expect(queryParameterService.updateQueryParam).toHaveBeenCalledWith([
+          { name: QUERY_PARAM_COMICS_AS_GRID, value: `${false}` }
+        ]);
+      });
     });
   });
 });

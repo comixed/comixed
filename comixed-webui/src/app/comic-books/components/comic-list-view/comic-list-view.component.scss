@@ -112,3 +112,25 @@ mat-row {
 .mat-table {
   overflow-x: scroll;
 }
+
+.cx-grid-view-container {
+  flex-grow: 1;
+  width: min(100%, max(10%, $cx-min-image-width));
+  min-width: $cx-min-image-width;
+  max-width: $cx-max-image-width;
+}
+
+#comic-grid-container {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: start;
+  width: calc(100% - $cx-margin-space);
+  margin: $cx-margin-width;
+}
+
+.comic-grid-item {
+  flex-grow: 1;
+  width: min(100%, max(10%, $cx-min-image-width));
+  min-width: $cx-min-image-width;
+  max-width: $cx-max-image-width;
+}
