@@ -16,20 +16,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import { ComicPageComponent } from '@app/comic-books/components/comic-page/comic-page.component';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import {
   MatCard,
+  MatCardActions,
   MatCardContent,
-  MatCardFooter,
+  MatCardSubtitle,
   MatCardTitle
 } from '@angular/material/card';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DatePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { ComicState } from '@app/comic-books/models/comic-state';
+import { MatIconButton } from '@angular/material/button';
+import { Store } from '@ngrx/store';
+import {
+  deleteSingleComicBook,
+  undeleteSingleComicBook
+} from '@app/comic-books/actions/delete-comic-books.actions';
+import { Router } from '@angular/router';
+import { LoggerService } from '@angular-ru/cdk/logger';
 
 @Component({
   selector: 'cx-comic-grid-item',
@@ -40,10 +51,13 @@ import { DatePipe } from '@angular/common';
     MatCardContent,
     MatCardTitle,
     ComicTitlePipe,
-    MatCardFooter,
     MatTooltip,
     TranslatePipe,
-    DatePipe
+    DatePipe,
+    MatCardActions,
+    MatIcon,
+    MatIconButton,
+    MatCardSubtitle
   ],
   templateUrl: './comic-grid-item.component.html',
   styleUrl: './comic-grid-item.component.scss'
@@ -53,4 +67,31 @@ export class ComicGridItemComponent {
   @Input() selected = false;
 
   @Output() comicClicked = new EventEmitter<DisplayableComic>();
+
+  logger = inject(LoggerService);
+  store = inject(Store);
+  router = inject(Router);
+
+  onDeleteComic(): void {
+    this.logger.info('Marking comic for deletion:', this.comic);
+    this.store.dispatch(
+      deleteSingleComicBook({ comicBookId: this.comic.comicBookId })
+    );
+  }
+
+  onUndeleteComic(): void {
+    this.logger.info('Unmarking comic for deletion:', this.comic);
+    this.store.dispatch(
+      undeleteSingleComicBook({ comicBookId: this.comic.comicBookId })
+    );
+  }
+
+  onOpenComic(): void {
+    this.logger.info('Opening comic book:', this.comic);
+    this.router.navigate(['/comics', this.comic.comicBookId]);
+  }
+
+  isDeleted(comic: DisplayableComic): boolean {
+    return comic.comicState === ComicState.DELETED;
+  }
 }

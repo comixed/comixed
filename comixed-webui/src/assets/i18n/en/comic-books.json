@@ -128,6 +128,7 @@
       "match-0": "Not a match.",
       "match-1": "Partial match.",
       "match-2": "Exact match.",
+      "open-comic": "Show the comic's details.",
       "save-changes": "Saves changes to this comic (shift+ctrl+s).",
       "save-page-order": "Save page ordering.",
       "scrape-comic": "Scrape this comic (shift+ctrl+m).",
