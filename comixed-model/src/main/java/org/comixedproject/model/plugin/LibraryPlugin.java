@@ -72,13 +72,6 @@ public class LibraryPlugin {
   @NonNull
   private String language;
 
-  @Column(name = "version", length = 16, updatable = true, nullable = false)
-  @JsonProperty("version")
-  @JsonView(View.LibraryPluginList.class)
-  @Getter
-  @NonNull
-  private String version;
-
   @Column(name = "filename", length = 1024, nullable = false, updatable = true)
   @JsonProperty("filename")
   @JsonView(View.LibraryPluginList.class)
@@ -99,6 +92,20 @@ public class LibraryPlugin {
   @Getter
   private List<LibraryPluginProperty> properties = new ArrayList<>();
 
+  @Transient
+  @JsonProperty("version")
+  @JsonView(View.LibraryPluginList.class)
+  @Getter
+  @Setter
+  private String version;
+
+  @Transient
+  @JsonProperty("pluginType")
+  @JsonView(View.LibraryPluginList.class)
+  @Getter
+  @Setter
+  private PluginType pluginType;
+
   @Override
   public String toString() {
     return "LibraryPlugin{"
@@ -110,9 +117,6 @@ public class LibraryPlugin {
         + '\''
         + ", language='"
         + language
-        + '\''
-        + ", version='"
-        + version
         + '\''
         + ", filename='"
         + filename
@@ -130,13 +134,12 @@ public class LibraryPlugin {
     return Objects.equals(name, libraryPlugin.name)
         && Objects.equals(uniqueName, libraryPlugin.uniqueName)
         && Objects.equals(language, libraryPlugin.language)
-        && Objects.equals(version, libraryPlugin.version)
         && Objects.equals(filename, libraryPlugin.filename)
         && Objects.equals(adminOnly, libraryPlugin.adminOnly);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, uniqueName, language, version, filename, adminOnly);
+    return Objects.hash(name, uniqueName, language, filename, adminOnly);
   }
 }

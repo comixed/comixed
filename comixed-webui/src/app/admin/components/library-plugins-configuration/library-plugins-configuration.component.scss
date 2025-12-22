@@ -9,6 +9,12 @@
 .mat-column-name {
 }
 
+.mat-column-plugin-type {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
 .mat-column-language {
   width: $cx-column-medium;
   max-width: $cx-column-medium;

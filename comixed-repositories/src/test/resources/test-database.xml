@@ -707,7 +707,6 @@
                      name="Test LibraryPlugin"
                      unique_name="TEST PLUGIN"
                      language="groovy"
-                     version="1.2.3"
                      admin_only="true"
                      filename="c:/Users/comixedreader/Binaries/comixed/plugins/test_plugin.groovy"/>
     <library_plugin_properties library_plugin_property_id="2000"

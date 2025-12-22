@@ -13,26 +13,29 @@
   "library-plugin-list": {
     "create-plugin": {
       "effect-failure": "Failed to install plugin...",
-      "effect-success": "Installed plugin {name} v{version}..."
+      "effect-success": "Installed plugin {name} ({language})..."
     },
     "delete-plugin": {
       "confirmation-message": "Are you sure you want to delete this plugin?",
       "confirmation-title": "Delete Plugin {name}",
       "effect-failure": "Failed to delete plugin...",
-      "effect-success": "Deleted plugin: {name} v{version}"
+      "effect-success": "Deleted plugin: {name} ({language})"
     },
     "label": {
       "actions": "",
       "language": "Language",
       "name": "Plugin Name",
+      "plugin-type": "Plugin Type",
       "property-count": "# Properties"
     },
     "load-all": {
       "effect-failure": "Failed to load the list of library plugins"
     },
     "text": {
+      "List": "Comic Lists",
       "no-plugins-found": "No library plugins found...",
-      "plugin-name-and-version": "{name} v{version}"
+      "Single": "Single Comic",
+      "Undefined": "Not Defined"
     },
     "tooltip": {
       "create-plugin": "Install a new plugin...",

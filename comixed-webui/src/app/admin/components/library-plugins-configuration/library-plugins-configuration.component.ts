@@ -16,7 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
@@ -59,6 +66,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { AsyncPipe } from '@angular/common';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import { PluginTitlePipe } from '@app/library-plugins/pipes/plugin-title.pipe';
 
 @Component({
   selector: 'cx-library-plugins-configuration',
@@ -83,12 +91,22 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
     MatNoDataRow,
     AsyncPipe,
     TranslateModule,
-    MatIconButton
+    MatIconButton,
+    PluginTitlePipe
   ]
 })
-export class LibraryPluginsConfigurationComponent implements OnInit, OnDestroy {
-  readonly displayedColumns = ['actions', 'name', 'language', 'property-count'];
+export class LibraryPluginsConfigurationComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
+  readonly displayedColumns = [
+    'actions',
+    'name',
+    'plugin-type',
+    'language',
+    'property-count'
+  ];
 
+  @ViewChild(MatSort) sort: MatSort;
   dataSource = new MatTableDataSource<LibraryPlugin>();
   libraryPluginStateSubscription: Subscription;
   libraryPluginListSubscription: Subscription;
@@ -131,7 +149,7 @@ export class LibraryPluginsConfigurationComponent implements OnInit, OnDestroy {
                 'library-plugin-setup.text.plugin-has-no-properties',
                 {
                   name: libraryPlugin.name,
-                  version: libraryPlugin.version
+                  language: libraryPlugin.language
                 }
               )
             );
@@ -144,6 +162,23 @@ export class LibraryPluginsConfigurationComponent implements OnInit, OnDestroy {
           }
         }
       });
+  }
+  ngAfterViewInit(): void {
+    this.logger.trace('Setting up sorting');
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
+      switch (sortHeaderId) {
+        case 'name':
+          return data.name;
+        case 'plugin-type':
+          return data.pluginType.toString();
+        case 'language':
+          return data.language;
+
+        default:
+          return data.filename;
+      }
+    };
   }
 
   ngOnDestroy(): void {

@@ -41,14 +41,18 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{
-          "library-plugin-list.text.plugin-name-and-version"
-            | translate
-              : {
-                  name: entry.name,
-                  version: entry.version
-                }
-        }}
+        {{ entry | pluginTitle }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="plugin-type">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "library-plugin-list.label.plugin-type" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ "library-plugin-list.text." + entry.pluginType | translate }}
       </span>
     </mat-cell>
   </ng-container>
@@ -63,7 +67,7 @@
   </ng-container>
 
   <ng-container matColumnDef="property-count">
-    <mat-header-cell mat-sort-header *matHeaderCellDef>
+    <mat-header-cell *matHeaderCellDef>
       {{ "library-plugin-list.label.property-count" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">

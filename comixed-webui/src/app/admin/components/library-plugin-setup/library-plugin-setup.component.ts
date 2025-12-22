@@ -17,10 +17,7 @@
  */
 
 import { Component, inject } from '@angular/core';
-import {
-  LibraryPlugin,
-  LibraryPluginProperty
-} from '@app/library-plugins/models/library-plugin';
+import { LibraryPlugin } from '@app/library-plugins/models/library-plugin';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -48,6 +45,7 @@ import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { PluginTitlePipe } from '../../../library-plugins/pipes/plugin-title.pipe';
+import { LibraryPluginProperty } from '@app/library-plugins/models/library-plugin-property';
 
 @Component({
   selector: 'cx-library-plugin-setup',
@@ -100,7 +98,7 @@ export class LibraryPluginSetupComponent {
         'library-plugin-setup.save.confirmation-message',
         {
           name: this.plugin.name,
-          version: this.plugin.version
+          language: this.plugin.language
         }
       ),
       confirm: () => {

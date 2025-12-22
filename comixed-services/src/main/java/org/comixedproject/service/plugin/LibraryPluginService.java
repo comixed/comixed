@@ -22,12 +22,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.messaging.plugin.PublishLibraryPluginUpdateAction;
 import org.comixedproject.model.plugin.LibraryPlugin;
 import org.comixedproject.model.plugin.LibraryPluginProperty;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.plugins.PluginRuntime;
 import org.comixedproject.plugins.PluginRuntimeException;
-import org.comixedproject.plugins.PluginRuntimeRegistry;
+import org.comixedproject.plugins.PluginRuntimeLocator;
 import org.comixedproject.repositories.plugin.LibraryPluginRepository;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.lists.ReadingListService;
@@ -55,7 +57,8 @@ public class LibraryPluginService {
 
   @Autowired private LibraryPluginRepository libraryPluginRepository;
   @Autowired private UserService userService;
-  @Autowired private PluginRuntimeRegistry pluginRuntimeRegistry;
+  @Autowired private PluginRuntimeLocator pluginRuntimeLocator;
+  @Autowired private PublishLibraryPluginUpdateAction publishLibraryPluginUpateAction;
 
   // the following are provided to the plugin runtime and are not used by this service
   @Autowired private ComicBookService comicBookService;
@@ -73,10 +76,18 @@ public class LibraryPluginService {
     try {
       final ComiXedUser user = this.userService.findByEmail(email);
       log.debug("Loading {} plugins", user.isAdmin() ? "all" : "non-admin");
-      return this.libraryPluginRepository.getAll().stream()
-          .filter(plugin -> user.isAdmin() || !plugin.getAdminOnly())
-          .toList();
-    } catch (ComiXedUserException error) {
+      final List<LibraryPlugin> plugins =
+          this.libraryPluginRepository.getAll().stream()
+              .filter(plugin -> user.isAdmin() || !plugin.getAdminOnly())
+              .filter(plugin -> this.pluginRuntimeLocator.isLanguageAvailable(plugin))
+              .toList();
+      for (int index = 0; index < plugins.size(); index++) {
+        final LibraryPlugin plugin = plugins.get(index);
+        plugin.setPluginType(this.pluginRuntimeLocator.getPluginType(plugin));
+        plugin.setVersion(this.pluginRuntimeLocator.getPluginVersion(plugin));
+      }
+      return plugins;
+    } catch (ComiXedUserException | PluginRuntimeException error) {
       throw new LibraryPluginException("Failed to load all plugins", error);
     }
   }
@@ -95,7 +106,7 @@ public class LibraryPluginService {
     try {
       log.debug("Loading libraryPlugin language runtime: {}", pluginLanguage);
       final PluginRuntime pluginRuntime =
-          this.pluginRuntimeRegistry.getPluginRuntime(pluginLanguage);
+          this.pluginRuntimeLocator.getPluginRuntime(pluginLanguage);
       log.trace("Getting libraryPlugin name");
       final String name = pluginRuntime.getName(pluginFilename);
       log.trace("Getting libraryPlugin version");
@@ -104,14 +115,16 @@ public class LibraryPluginService {
       final List<LibraryPluginProperty> properties = pluginRuntime.getProperties(pluginFilename);
       log.debug("Creating libraryPlugin: {} v{}", name, version);
       final LibraryPlugin libraryPlugin =
-          new LibraryPlugin(name, name, pluginLanguage, version, pluginFilename);
+          new LibraryPlugin(name, name, pluginLanguage, pluginFilename);
       properties.forEach(
           property -> {
             property.setPlugin(libraryPlugin);
             libraryPlugin.getProperties().add(property);
           });
       log.debug("Saving libraryPlugin");
-      return this.libraryPluginRepository.save(libraryPlugin);
+      final LibraryPlugin result = this.libraryPluginRepository.save(libraryPlugin);
+      this.doPublishUpdates();
+      return result;
     } catch (Exception error) {
       throw new LibraryPluginException("Failed to create plugin", error);
     }
@@ -152,7 +165,9 @@ public class LibraryPluginService {
               }
             });
     log.debug("Updating libraryPlugin: id={}", id);
-    return this.libraryPluginRepository.save(libraryPlugin);
+    final LibraryPlugin result = this.libraryPluginRepository.save(libraryPlugin);
+    this.doPublishUpdates();
+    return result;
   }
 
   /**
@@ -165,12 +180,7 @@ public class LibraryPluginService {
   public void deletePlugin(final long id) throws LibraryPluginException {
     log.debug("Deleting plugin: id={}", id);
     this.libraryPluginRepository.delete(this.doLoadPlugin(id));
-  }
-
-  private LibraryPlugin doLoadPlugin(final long id) throws LibraryPluginException {
-    final LibraryPlugin result = this.libraryPluginRepository.getById(id);
-    if (result == null) throw new LibraryPluginException("No such plugin: id=" + id);
-    return result;
+    this.doPublishUpdates();
   }
 
   /**
@@ -188,7 +198,7 @@ public class LibraryPluginService {
       final LibraryPlugin plugin = this.doLoadPlugin(pluginId);
       log.trace("Loading plugin runtime: {}", plugin.getLanguage());
       final PluginRuntime pluginRuntime =
-          this.pluginRuntimeRegistry.getPluginRuntime(plugin.getLanguage());
+          this.pluginRuntimeLocator.getPluginRuntime(plugin.getLanguage());
       pluginRuntime.addProperty(PROPERTY_NAME_LOG, log);
       log.trace("Adding services to runtime");
       pluginRuntime.addProperty(PROPERTY_NAME_COMIC_BOOK_SERVICE, this.comicBookService);
@@ -199,6 +209,20 @@ public class LibraryPluginService {
       pluginRuntime.execute(plugin);
     } catch (PluginRuntimeException error) {
       throw new LibraryPluginException("Failed to run plugin", error);
+    }
+  }
+
+  private LibraryPlugin doLoadPlugin(final long id) throws LibraryPluginException {
+    final LibraryPlugin result = this.libraryPluginRepository.getById(id);
+    if (result == null) throw new LibraryPluginException("No such plugin: id=" + id);
+    return result;
+  }
+
+  private void doPublishUpdates() {
+    try {
+      this.publishLibraryPluginUpateAction.publish(this.libraryPluginRepository.getAll());
+    } catch (PublishingException error) {
+      log.error("Failed to publish plugin updates", error);
     }
   }
 }

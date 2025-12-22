@@ -192,7 +192,7 @@ export class DuplicatePageListPageComponent
           user.preferences,
           DUPLICATE_PAGES_UNBLOCKED_PAGES_ONLY,
           `${false}`
-        ) == `${true}`;
+        ) === `${true}`;
     });
     this.duplicatePageListSubscription = this.store
       .select(selectDuplicatePageList)

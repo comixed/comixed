@@ -96,7 +96,7 @@ export class LibraryPluginEffects {
                   'library-plugin-list.create-plugin.effect-success',
                   {
                     name: response.name,
-                    version: response.version
+                    version: response.language
                   }
                 )
               )
@@ -178,7 +178,7 @@ export class LibraryPluginEffects {
                 'library-plugin-list.delete-plugin.effect-success',
                 {
                   name: action.plugin.name,
-                  version: action.plugin.version
+                  language: action.plugin.language
                 }
               )
             )

@@ -183,7 +183,7 @@ export class AppComponent implements OnInit {
       .select(selectMessagingState)
       .pipe(filter(state => !!state))
       .subscribe(state => {
-        if (state.started && this.appMessagingSubscription == null) {
+        if (state.started && this.appMessagingSubscription === null) {
           this.logger.debug('Subscribing from application messages');
           this.appMessagingSubscription = this.webSocketService.subscribe(
             APP_MESSAGING_TOPIC,

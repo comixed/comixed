@@ -18,11 +18,13 @@
 
 import { LibraryPlugin } from '@app/library-plugins/models/library-plugin';
 import { PluginLanguage } from '@app/library-plugins/models/plugin-language';
+import { PluginType } from '@app/library-plugins/models/plugin-type';
 
 export const LIBRARY_PLUGIN_1: LibraryPlugin = {
   libraryPluginId: 1,
   name: 'Plugin 1',
   version: '1.2.3',
+  pluginType: PluginType.Single,
   language: 'Groovy',
   adminOnly: false,
   filename: 'plugin1.cxplugin',
@@ -41,6 +43,7 @@ export const LIBRARY_PLUGIN_2: LibraryPlugin = {
   libraryPluginId: 2,
   name: 'Plugin 2',
   version: '1.2.3',
+  pluginType: PluginType.Single,
   language: 'Groovy',
   adminOnly: false,
   filename: 'plugin2.cxplugin',
@@ -59,6 +62,7 @@ export const LIBRARY_PLUGIN_3: LibraryPlugin = {
   libraryPluginId: 3,
   name: 'Plugin 3',
   version: '1.2.3',
+  pluginType: PluginType.Single,
   language: 'Groovy',
   adminOnly: false,
   filename: 'plugin3.cxplugin',
@@ -77,6 +81,7 @@ export const LIBRARY_PLUGIN_4: LibraryPlugin = {
   libraryPluginId: 4,
   name: 'Plugin 4',
   version: '1.2.3',
+  pluginType: PluginType.Single,
   language: 'Groovy',
   adminOnly: false,
   filename: 'plugin4.cxplugin',
@@ -102,6 +107,7 @@ export const LIBRARY_PLUGIN_5: LibraryPlugin = {
   libraryPluginId: 5,
   name: 'Plugin 5',
   version: '1.2.3',
+  pluginType: PluginType.Single,
   language: 'Groovy',
   adminOnly: false,
   filename: 'plugin5.cxplugin',
