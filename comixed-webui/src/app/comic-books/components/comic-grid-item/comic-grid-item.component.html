@@ -1,0 +1,33 @@
+<div [class.cx-border-primary-5]="selected">
+  <mat-card
+    (click)="comicClicked.emit(comic)"
+    [class.cx-detail-card-selected]="selected"
+  >
+    <mat-card-title>
+      <span class="cx-text-nowrap" [matTooltip]="comic | comicTitle">
+        {{ comic | comicTitle }}
+      </span>
+    </mat-card-title>
+    <mat-card-content>
+      <cx-comic-page [imageUrl]="comic | comicCoverUrl"></cx-comic-page>
+    </mat-card-content>
+    <mat-card-footer>
+      <ul class="cx-grid-item-details-list">
+        <li>
+          <span
+            class="cx-width-100 cx-text-nowrap"
+            [matTooltip]="comic.filename"
+          >
+            {{ comic.baseFilename }}
+          </span>
+        </li>
+        <li>
+          {{
+            "comic-grid-view.label.added-date"
+              | translate: { date: comic.addedDate | date: "medium" }
+          }}
+        </li>
+      </ul>
+    </mat-card-footer>
+  </mat-card>
+</div>

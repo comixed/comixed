@@ -35,281 +35,316 @@
   </div>
 }
 
-<mat-paginator
-  class="cx-height-100"
-  showFirstLastButtons="true"
-  [length]="totalComics"
-  [pageIndex]="queryParameterService.pageIndex$ | async"
-  [pageSize]="queryParameterService.pageSize$ | async"
-  [pageSizeOptions]="queryParameterService.pageSizeOptions"
-  (page)="
-    onPageChange($event.pageSize);
-    queryParameterService.onPageChange(
-      $event.pageSize,
-      $event.pageIndex,
-      $event.previousPageIndex
-    )
-  "
-></mat-paginator>
+<mat-toolbar>
+  <mat-icon
+    (click)="onToggleGridView(!showGridView)"
+    [matTooltip]="'comic-detail-list-view.tooltip.toggle-grid-view' | translate"
+  >
+    @if (showGridView) {
+      <mat-icon>grid_view</mat-icon>
+    }
+    @if ((queryParameterService.pagesAsGrid$ | async) === false) {
+      <mat-icon>list_view</mat-icon>
+    }
+  </mat-icon>
+  @if (showGridView) {
+    <mat-icon [matMenuTriggerFor]="contextMenu">more_vert</mat-icon>
+  }
+  <div class="cx-spacer"></div>
+  <mat-paginator
+    class="cx-height-100"
+    showFirstLastButtons="true"
+    [length]="totalComics"
+    [pageIndex]="queryParameterService.pageIndex$ | async"
+    [pageSize]="queryParameterService.pageSize$ | async"
+    [pageSizeOptions]="queryParameterService.pageSizeOptions"
+    (page)="
+      onPageChange($event.pageSize);
+      queryParameterService.onPageChange(
+        $event.pageSize,
+        $event.pageIndex,
+        $event.previousPageIndex
+      )
+    "
+  ></mat-paginator>
+</mat-toolbar>
 
 @if (!!dataSource) {
-  <mat-table
-    [dataSource]="dataSource"
-    matSort
-    [matSortActive]="queryParameterService.sortBy$ | async"
-    [matSortDirection]="queryParameterService.sortDirection$ | async"
-    (matSortChange)="
-      queryParameterService.onSortChange($event.active, $event.direction)
-    "
-  >
-    <ng-container matColumnDef="action">
-      <mat-header-cell *matHeaderCellDef>
-        @if (showFilter) {
+  @if (showGridView) {
+    <div id="comic-grid-container">
+      @for (entry of dataSource.data; track entry) {
+        <div class="comic-grid-item">
+          <cx-comic-grid-item
+            [comic]="entry.item"
+            [selected]="entry.selected"
+            (comicClicked)="onSetSelectedState(entry, !entry.selected)"
+          ></cx-comic-grid-item>
+        </div>
+      }
+    </div>
+  }
+
+  @if (!showGridView) {
+    <mat-table
+      [dataSource]="dataSource"
+      matSort
+      [matSortActive]="queryParameterService.sortBy$ | async"
+      [matSortDirection]="queryParameterService.sortDirection$ | async"
+      (matSortChange)="
+        queryParameterService.onSortChange($event.active, $event.direction)
+      "
+    >
+      <ng-container matColumnDef="action">
+        <mat-header-cell *matHeaderCellDef>
+          @if (showFilter) {
+            <mat-icon
+              (click)="onFilterComics(); $event.stopPropagation()"
+              (keyup)="onFilterComics(); $event.stopPropagation()"
+              [matTooltip]="
+                'comic-detail-list-view.tooltip.filter-list' | translate
+              "
+            >
+              filter_list
+            </mat-icon>
+          }
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
           <mat-icon
-            (click)="onFilterComics(); $event.stopPropagation()"
-            (keyup)="onFilterComics(); $event.stopPropagation()"
-            [matTooltip]="
-              'comic-detail-list-view.tooltip.filter-list' | translate
-            "
+            (click)="selectedComic = entry.item; $event.stopPropagation()"
+            (keyup)="selectedComic = entry.item; $event.stopPropagation()"
+            [matMenuTriggerFor]="contextMenu"
           >
-            filter_list
+            more_vert
           </mat-icon>
-        }
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <mat-icon
-          (click)="selectedComic = entry.item; $event.stopPropagation()"
-          (keyup)="selectedComic = entry.item; $event.stopPropagation()"
-          [matMenuTriggerFor]="contextMenu"
-        >
-          more_vert
-        </mat-icon>
-      </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="selection">
-      <mat-header-cell *matHeaderCellDef>
-        @if (showSelectAll) {
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="selection">
+        <mat-header-cell *matHeaderCellDef>
+          @if (showSelectAll) {
+            <mat-checkbox
+              color="primary"
+              [disabled]="dataSource.data.length === 0 || selectionState.busy"
+              [checked]="
+                selectedIds.length > 0 && selectedIds.length === totalComics
+              "
+              (change)="selectAll.emit($event.checked)"
+              (keyup)="selectAll.emit($event.checked)"
+              (click)="$event.stopPropagation()"
+            ></mat-checkbox>
+          }
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
           <mat-checkbox
             color="primary"
-            [disabled]="dataSource.data.length === 0 || selectionState.busy"
-            [checked]="
-              selectedIds.length > 0 && selectedIds.length === totalComics
-            "
-            (change)="selectAll.emit($event.checked)"
-            (keyup)="selectAll.emit($event.checked)"
-            (click)="$event.stopPropagation()"
+            [checked]="entry.selected"
+            [disabled]="selectionState.busy"
+            (change)="onSetSelectedState(entry, $event.checked)"
+            (keyup)="onSetSelectedState(entry, $event.checked)"
+            (click)="$event.stopImmediatePropagation()"
           ></mat-checkbox>
-        }
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <mat-checkbox
-          color="primary"
-          [checked]="entry.selected"
-          [disabled]="selectionState.busy"
-          (change)="onSetSelectedState(entry, $event.checked)"
-          (keyup)="onSetSelectedState(entry, $event.checked)"
-          (click)="$event.stopImmediatePropagation()"
-        ></mat-checkbox>
-      </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="thumbnail">
-      <mat-header-cell *matHeaderCellDef>
-        {{ "comic-detail-list-view.label.thumbnail" | translate }}
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <span
-          class="cx-width-100 cx-text-nowrap cx-padding-2 cx-overflow-y-clip"
-        >
-          <img
-            loading="lazy"
-            [src]="entry.item | comicCoverUrl"
-            [alt]="entry.item | comicTitle"
-            width="100%"
-            height="auto"
-            (mouseenter)="onShowPopup(true, entry.item)"
-            (mouseleave)="onShowPopup(false, null)"
-          />
-        </span>
-      </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="extra-field">
-      <mat-header-cell mat-sort-header *matHeaderCellDef>
-        {{ extraFieldTitle | translate }}
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <span class="cx-width-100 cx-text-nowrap cx-padding-5">
-          {{ entry.extraField }}
-        </span>
-      </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="archive-type">
-      <mat-header-cell mat-sort-header *matHeaderCellDef>
-        {{ "comic-detail-list-view.label.archive-type" | translate }}
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <span class="cx-width-100 cx-text-nowrap cx-padding-5">
-          {{ entry.item.archiveType }}
-        </span>
-      </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="comic-state">
-      <mat-header-cell mat-sort-header *matHeaderCellDef>
-        {{ "comic-detail-list-view.label.comic-state" | translate }}
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <mat-icon
-          [matTooltip]="
-            'comic-book.text.state-' + entry.item.comicState | translate
-          "
-        >
-          {{ getIconForState(entry.item.comicState) }}
-        </mat-icon>
-      </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="comic-type">
-      <mat-header-cell mat-sort-header *matHeaderCellDef>
-        {{ "comic-detail-list-view.label.comic-type" | translate }}
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <span
-          class="cx-width-100 cx-text-nowrap cx-padding-5"
-          [matTooltip]="entry.item.comicType"
-        >
-          {{ entry.item.comicType }}
-        </span>
-      </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="publisher">
-      <mat-header-cell mat-sort-header *matHeaderCellDef>
-        {{ "comic-detail-list-view.label.publisher" | translate }}
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <span class="cx-width-100 cx-text-nowrap cx-padding-5">
-          <a
-            [routerLink]="[
-              '/library/collections/publishers',
-              entry.item.publisher,
-              'series'
-            ]"
-            (click)="$event.stopImmediatePropagation()"
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="thumbnail">
+        <mat-header-cell *matHeaderCellDef>
+          {{ "comic-detail-list-view.label.thumbnail" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span
+            class="cx-width-100 cx-text-nowrap cx-padding-2 cx-overflow-y-clip"
           >
-            {{ entry.item.publisher }}
-          </a>
-        </span>
-      </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="series">
-      <mat-header-cell mat-sort-header *matHeaderCellDef>
-        {{ "comic-detail-list-view.label.series" | translate }}
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <span class="cx-width-100 cx-text-nowrap cx-padding-5">
-          {{ entry.item.series }}
-        </span>
-      </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="volume">
-      <mat-header-cell mat-sort-header *matHeaderCellDef>
-        {{ "comic-detail-list-view.label.volume" | translate }}
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <span class="cx-width-100 cx-text-nowrap cx-padding-5">
-          <a
-            [routerLink]="[
-              '/library/collections/publishers',
-              entry.item.publisher,
-              'series',
-              entry.item.series,
-              'volumes',
-              entry.item.volume
-            ]"
-            (click)="$event.stopImmediatePropagation()"
+            <img
+              loading="lazy"
+              [src]="entry.item | comicCoverUrl"
+              [alt]="entry.item | comicTitle"
+              width="100%"
+              height="auto"
+              (mouseenter)="onShowPopup(true, entry.item)"
+              (mouseleave)="onShowPopup(false, null)"
+            />
+          </span>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="extra-field">
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ extraFieldTitle | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span class="cx-width-100 cx-text-nowrap cx-padding-5">
+            {{ entry.extraField }}
+          </span>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="archive-type">
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ "comic-detail-list-view.label.archive-type" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span class="cx-width-100 cx-text-nowrap cx-padding-5">
+            {{ entry.item.archiveType }}
+          </span>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="comic-state">
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ "comic-detail-list-view.label.comic-state" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <mat-icon
+            [matTooltip]="
+              'comic-book.text.state-' + entry.item.comicState | translate
+            "
           >
-            {{ entry.item.volume }}
-          </a>
-        </span>
-      </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="issue-number">
-      <mat-header-cell mat-sort-header *matHeaderCellDef>
-        {{ "comic-detail-list-view.label.issue-number" | translate }}
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <span class="cx-width-100 cx-text-nowrap cx-padding-5">
-          <a
-            [routerLink]="['/comics', entry.item.comicBookId]"
-            (click)="$event.stopImmediatePropagation()"
+            {{ getIconForState(entry.item.comicState) }}
+          </mat-icon>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="comic-type">
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ "comic-detail-list-view.label.comic-type" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span
+            class="cx-width-100 cx-text-nowrap cx-padding-5"
+            [matTooltip]="entry.item.comicType"
           >
-            {{ entry.item.issueNumber }}
-          </a>
-        </span>
-      </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="page-count">
-      <mat-header-cell mat-sort-header *matHeaderCellDef>
-        {{ "comic-detail-list-view.label.page-count" | translate }}
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <span class="cx-width-100 cx-text-nowrap cx-padding-5">
-          {{ entry.item.pageCount }}
-        </span>
-      </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="cover-date">
-      <mat-header-cell mat-sort-header *matHeaderCellDef>
-        {{ "comic-detail-list-view.label.cover-date" | translate }}
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <span class="cx-width-100 cx-text-nowrap cx-padding-5">
-          {{ entry.item.coverDate | date: "mediumDate" }}
-        </span>
-      </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="store-date">
-      <mat-header-cell mat-sort-header *matHeaderCellDef>
-        {{ "comic-detail-list-view.label.store-date" | translate }}
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <span class="cx-width-100 cx-text-nowrap cx-padding-5">
-          {{ entry.item.storeDate | date: "mediumDate" }}
-        </span>
-      </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="added-date">
-      <mat-header-cell mat-sort-header *matHeaderCellDef>
-        {{ "comic-detail-list-view.label.added-date" | translate }}
-      </mat-header-cell>
-      <mat-cell *matCellDef="let entry">
-        <span class="cx-width-100 cx-text-nowrap cx-padding-5">
-          {{ entry.item.addedDate | date: "mediumDate" }}
-        </span>
-      </mat-cell>
-    </ng-container>
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row
-      *matRowDef="let row; columns: displayedColumns"
-      [class.cx-selected-row]="
-        selectedIds.includes(row.comicBookId) || row.selected
-      "
-      [class.cx-missing-comic-file]="row.item.missing"
-      [routerLink]="['/comics', row.item.comicBookId]"
-    ></mat-row>
-    <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" colspan="4">
-        {{ "comic-detail-list-view.text.no-records-found" | translate }}
-      </td>
-    </tr>
-  </mat-table>
+            {{ entry.item.comicType }}
+          </span>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="publisher">
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ "comic-detail-list-view.label.publisher" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span class="cx-width-100 cx-text-nowrap cx-padding-5">
+            <a
+              [routerLink]="[
+                '/library/collections/publishers',
+                entry.item.publisher,
+                'series'
+              ]"
+              (click)="$event.stopImmediatePropagation()"
+            >
+              {{ entry.item.publisher }}
+            </a>
+          </span>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="series">
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ "comic-detail-list-view.label.series" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span class="cx-width-100 cx-text-nowrap cx-padding-5">
+            {{ entry.item.series }}
+          </span>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="volume">
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ "comic-detail-list-view.label.volume" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span class="cx-width-100 cx-text-nowrap cx-padding-5">
+            <a
+              [routerLink]="[
+                '/library/collections/publishers',
+                entry.item.publisher,
+                'series',
+                entry.item.series,
+                'volumes',
+                entry.item.volume
+              ]"
+              (click)="$event.stopImmediatePropagation()"
+            >
+              {{ entry.item.volume }}
+            </a>
+          </span>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="issue-number">
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ "comic-detail-list-view.label.issue-number" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span class="cx-width-100 cx-text-nowrap cx-padding-5">
+            <a
+              [routerLink]="['/comics', entry.item.comicBookId]"
+              (click)="$event.stopImmediatePropagation()"
+            >
+              {{ entry.item.issueNumber }}
+            </a>
+          </span>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="page-count">
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ "comic-detail-list-view.label.page-count" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span class="cx-width-100 cx-text-nowrap cx-padding-5">
+            {{ entry.item.pageCount }}
+          </span>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="cover-date">
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ "comic-detail-list-view.label.cover-date" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span class="cx-width-100 cx-text-nowrap cx-padding-5">
+            {{ entry.item.coverDate | date: "mediumDate" }}
+          </span>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="store-date">
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ "comic-detail-list-view.label.store-date" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span class="cx-width-100 cx-text-nowrap cx-padding-5">
+            {{ entry.item.storeDate | date: "mediumDate" }}
+          </span>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="added-date">
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ "comic-detail-list-view.label.added-date" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span class="cx-width-100 cx-text-nowrap cx-padding-5">
+            {{ entry.item.addedDate | date: "mediumDate" }}
+          </span>
+        </mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        [class.cx-selected-row]="
+          selectedIds.includes(row.comicBookId) || row.selected
+        "
+        [class.cx-missing-comic-file]="row.item.missing"
+        [routerLink]="['/comics', row.item.comicBookId]"
+      ></mat-row>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">
+          {{ "comic-detail-list-view.text.no-records-found" | translate }}
+        </td>
+      </tr>
+    </mat-table>
+  }
 }
 
 <!-- context menu items -->
 
 <mat-menu #contextMenu="matMenu">
-  <button mat-menu-item [matMenuTriggerFor]="currentComicMenu">
-    <mat-label>
-      {{ "library.context-menu.single-comic-menu" | translate }}
-    </mat-label>
-  </button>
+  @if (!showGridView) {
+    <button mat-menu-item [matMenuTriggerFor]="currentComicMenu">
+      <mat-label>
+        {{ "library.context-menu.single-comic-menu" | translate }}
+      </mat-label>
+    </button>
+  }
   @if (selectedIds.length > 0) {
     <button mat-menu-item [matMenuTriggerFor]="selectedComicsMenu">
       <mat-label>

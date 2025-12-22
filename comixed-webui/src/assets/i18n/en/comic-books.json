@@ -173,12 +173,20 @@
       "no-records-found": "No comics were found..."
     },
     "tooltip": {
-      "filter-list": "Filter the list of comics."
+      "filter-list": "Filter the list of comics.",
+      "toggle-grid-view": "Toggle viewing comics as a grid..."
     }
   },
   "comic-format": {
     "load-formats": {
       "effect-failure": "Failed to load comic formats."
+    }
+  },
+  "comic-grid-view": {
+    "label": {
+      "added-date": "Added on {date}",
+      "publisher": "Published by {name}",
+      "description": "{name} V{volume} #{issueNumber}"
     }
   },
   "comic-page": {
