@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.comixedproject.model.net.plugin.PluginLanguage;
+import org.comixedproject.plugins.PluginRuntimeLocator;
 import org.comixedproject.plugins.PluginRuntimeProvider;
-import org.comixedproject.plugins.PluginRuntimeRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +41,7 @@ class PluginLanguageServiceTest {
   private static final String TEST_PLUGIN_RUNTIME_3 = "kotlin";
 
   @InjectMocks private PluginLanguageService service;
-  @Mock private PluginRuntimeRegistry pluginRuntimeRegistry;
+  @Mock private PluginRuntimeLocator pluginRuntimeLocator;
   @Mock private PluginRuntimeProvider pluginRuntime1;
   @Mock private PluginRuntimeProvider pluginRuntime2;
   @Mock private PluginRuntimeProvider pluginRuntime3;
@@ -60,7 +60,7 @@ class PluginLanguageServiceTest {
 
   @Test
   void getPluginLanguageList() {
-    Mockito.when(pluginRuntimeRegistry.getPluginRuntimeList()).thenReturn(pluginRuntimeList);
+    Mockito.when(pluginRuntimeLocator.getPluginRuntimeList()).thenReturn(pluginRuntimeList);
 
     final List<PluginLanguage> result = service.getPluginLanguageList();
 
@@ -77,6 +77,6 @@ class PluginLanguageServiceTest {
                         .collect(Collectors.toList())
                         .contains(name)));
 
-    Mockito.verify(pluginRuntimeRegistry, Mockito.times(1)).getPluginRuntimeList();
+    Mockito.verify(pluginRuntimeLocator, Mockito.times(1)).getPluginRuntimeList();
   }
 }

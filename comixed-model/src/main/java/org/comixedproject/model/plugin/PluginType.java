@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2023, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { LibraryPluginProperty } from '@app/library-plugins/models/library-plugin-property';
-import { PluginType } from '@app/library-plugins/models/plugin-type';
+package org.comixedproject.model.plugin;
 
-export interface LibraryPlugin {
-  libraryPluginId: number;
-  name: string;
-  version: string;
-  pluginType: PluginType;
-  language: string;
-  filename: string;
-  adminOnly: boolean;
-  properties: LibraryPluginProperty[];
+/**
+ * <code>PluginType</code> defines the types of behaviors a plugin performs.
+ *
+ * @author Darryl L. Pierce
+ */
+public enum PluginType {
+  /** The plugin operates on a list of comics. */
+  List,
+  /** The plugin operates on a single comic. */
+  Single,
+  /** The plugin has not declared a type. */
+  Undefined
 }

@@ -21,6 +21,7 @@ package org.comixedproject.plugins;
 import java.util.List;
 import org.comixedproject.model.plugin.LibraryPlugin;
 import org.comixedproject.model.plugin.LibraryPluginProperty;
+import org.comixedproject.model.plugin.PluginType;
 
 /**
  * <code>PluginRuntime</code> defines type for providing a runtime environment for plugins.
@@ -43,6 +44,14 @@ public interface PluginRuntime {
    * @return the version
    */
   String getVersion(String filename);
+
+  /**
+   * Returns the type of the plugin.
+   *
+   * @param filename the plugin filename
+   * @return the type
+   */
+  PluginType getPluginType(String filename);
 
   /**
    * Loads the list of properties from the plugin.

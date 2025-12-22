@@ -121,6 +121,7 @@ import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { MatToolbar } from '@angular/material/toolbar';
 import { QUERY_PARAM_COMICS_AS_GRID } from '@app/core';
 import { ComicGridItemComponent } from '@app/comic-books/components/comic-grid-item/comic-grid-item.component';
+import { PluginType } from '@app/library-plugins/models/plugin-type';
 
 @Component({
   selector: 'cx-comic-list-view',
@@ -204,7 +205,8 @@ export class ComicListViewComponent
   dataSource = new MatTableDataSource<SelectableListItem<DisplayableComic>>();
   queryParamsSubscription: Subscription;
   libraryPluginListSubscription: Subscription;
-  libraryPluginlist: LibraryPlugin[] = [];
+  comicListPluginList: LibraryPlugin[] = [];
+  comicBookPluginList: LibraryPlugin[] = [];
   logger = inject(LoggerService);
   store = inject(Store);
   router = inject(Router);
@@ -229,7 +231,15 @@ export class ComicListViewComponent
     this.logger.trace('Subscribing to library plugin list updates');
     this.libraryPluginListSubscription = this.store
       .select(selectLibraryPluginList)
-      .subscribe(list => (this.libraryPluginlist = list));
+      .subscribe(list => {
+        this.logger.debug('Library plugin update received:', list);
+        this.comicListPluginList = list.filter(
+          entry => entry.pluginType === PluginType.List
+        );
+        this.comicBookPluginList = list.filter(
+          entry => entry.pluginType === PluginType.Single
+        );
+      });
   }
 
   private _comicBooksRead: number[] = [];
@@ -636,7 +646,7 @@ export class ComicListViewComponent
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'library.run-library-plugin.confirmation-title',
-        { name: plugin.name, version: plugin.version }
+        { name: plugin.name, language: plugin.language }
       ),
       message: this.translateService.instant(
         'library.run-library-plugin.confirmation-message',
@@ -662,7 +672,7 @@ export class ComicListViewComponent
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'library.run-library-plugin.confirmation-title',
-        { name: plugin.name, version: plugin.version }
+        { name: plugin.name, language: plugin.language }
       ),
       message: this.translateService.instant(
         'library.run-library-plugin.confirmation-message',

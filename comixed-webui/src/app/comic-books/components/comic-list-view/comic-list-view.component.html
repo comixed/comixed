@@ -370,7 +370,7 @@
   <button mat-menu-item [matMenuTriggerFor]="currentComicConvertMenu">
     <mat-label>{{ "library.context-menu.convert" | translate }}</mat-label>
   </button>
-  @if (libraryPluginlist?.length > 0) {
+  @if (comicBookPluginList?.length > 0) {
     <button mat-menu-item [matMenuTriggerFor]="currentComicPluginMenu">
       <mat-label>
         {{ "library.context-menu.plugin-menu" | translate }}
@@ -436,7 +436,7 @@
 </mat-menu>
 
 <mat-menu #currentComicPluginMenu="matMenu">
-  @for (plugin of libraryPluginlist; track plugin) {
+  @for (plugin of comicBookPluginList; track plugin) {
     <button
       mat-menu-item
       (click)="onRunLibraryPluginSingleOnComicBook(plugin, selectedComic)"
@@ -474,16 +474,16 @@
   >
     <mat-label>{{ "library.context-menu.convert" | translate }}</mat-label>
   </button>
-  <button mat-menu-item [matMenuTriggerFor]="selectedMarkAsMenu">
-    <mat-label>{{ "library.context-menu.mark-as" | translate }}</mat-label>
-  </button>
-  @if (libraryPluginlist?.length > 0) {
+  @if (comicListPluginList?.length > 0) {
     <button mat-menu-item [matMenuTriggerFor]="selectedComicsPluginMenu">
       <mat-label>
-        {{ "library.context-menu.multiple-comics-plugin-menu" | translate }}
+        {{ "library.context-menu.plugin-menu" | translate }}
       </mat-label>
     </button>
   }
+  <button mat-menu-item [matMenuTriggerFor]="selectedMarkAsMenu">
+    <mat-label>{{ "library.context-menu.mark-as" | translate }}</mat-label>
+  </button>
   <button mat-menu-item (click)="onEditMultipleComics()">
     <mat-label>
       {{ "library.context-menu.edit-multiple-comics" | translate }}
@@ -562,7 +562,7 @@
 </mat-menu>
 
 <mat-menu #selectedComicsPluginMenu="matMenu">
-  @for (plugin of libraryPluginlist; track plugin) {
+  @for (plugin of comicListPluginList; track plugin) {
     <button
       mat-menu-item
       (click)="onRunLibraryPluginOnSelectedComicBooks(plugin)"

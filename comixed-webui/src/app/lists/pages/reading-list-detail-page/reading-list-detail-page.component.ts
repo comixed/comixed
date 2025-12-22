@@ -391,7 +391,7 @@ export class ReadingListDetailPageComponent implements OnDestroy {
 
   private doSubscribeToListUpdates() {
     if (!!this.email) {
-      if (this.readingListUpdateSubscription == null) {
+      if (this.readingListUpdateSubscription === null) {
         this.logger.trace('Subscribing to reading list updates');
         this.readingListUpdateSubscription = this.webSocketService.subscribe(
           interpolate(READING_LIST_UPDATES_TOPIC, {

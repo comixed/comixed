@@ -21,7 +21,7 @@ package org.comixedproject.service.plugin;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.net.plugin.PluginLanguage;
-import org.comixedproject.plugins.PluginRuntimeRegistry;
+import org.comixedproject.plugins.PluginRuntimeLocator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +33,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Log4j2
 public class PluginLanguageService {
-  @Autowired PluginRuntimeRegistry pluginRuntimeRegistry;
+  @Autowired PluginRuntimeLocator pluginRuntimeLocator;
 
   /**
    * Returns the list of all plugin languages.
@@ -42,7 +42,7 @@ public class PluginLanguageService {
    */
   public List<PluginLanguage> getPluginLanguageList() {
     log.debug("Loading the list of all plugin languages");
-    return this.pluginRuntimeRegistry.getPluginRuntimeList().stream()
+    return this.pluginRuntimeLocator.getPluginRuntimeList().stream()
         .map(entry -> new PluginLanguage(entry.getName()))
         .toList();
   }

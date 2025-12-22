@@ -16,16 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { LibraryPluginProperty } from '@app/library-plugins/models/library-plugin-property';
-import { PluginType } from '@app/library-plugins/models/plugin-type';
-
-export interface LibraryPlugin {
-  libraryPluginId: number;
+export interface LibraryPluginProperty {
   name: string;
-  version: string;
-  pluginType: PluginType;
-  language: string;
-  filename: string;
-  adminOnly: boolean;
-  properties: LibraryPluginProperty[];
+  value: string;
+  length: number;
+  required: boolean;
+  defaultValue: string;
 }

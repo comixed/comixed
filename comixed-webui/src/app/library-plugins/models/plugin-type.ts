@@ -16,16 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { LibraryPluginProperty } from '@app/library-plugins/models/library-plugin-property';
-import { PluginType } from '@app/library-plugins/models/plugin-type';
-
-export interface LibraryPlugin {
-  libraryPluginId: number;
-  name: string;
-  version: string;
-  pluginType: PluginType;
-  language: string;
-  filename: string;
-  adminOnly: boolean;
-  properties: LibraryPluginProperty[];
+export enum PluginType {
+  List = 'List',
+  Single = 'Single',
+  Undefined = 'Undefined'
 }
