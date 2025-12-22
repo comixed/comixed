@@ -8,26 +8,44 @@
         {{ comic | comicTitle }}
       </span>
     </mat-card-title>
+    <mat-card-subtitle>
+      {{
+        "comic-grid-view.label.added-date"
+          | translate: { date: comic.addedDate | date: "mediumDate" }
+      }}
+    </mat-card-subtitle>
     <mat-card-content>
       <cx-comic-page [imageUrl]="comic | comicCoverUrl"></cx-comic-page>
     </mat-card-content>
-    <mat-card-footer>
-      <ul class="cx-grid-item-details-list">
-        <li>
-          <span
-            class="cx-width-100 cx-text-nowrap"
-            [matTooltip]="comic.filename"
-          >
-            {{ comic.baseFilename }}
-          </span>
-        </li>
-        <li>
-          {{
-            "comic-grid-view.label.added-date"
-              | translate: { date: comic.addedDate | date: "medium" }
-          }}
-        </li>
-      </ul>
-    </mat-card-footer>
+    <mat-card-actions>
+      @if (isDeleted(comic)) {
+        <button
+          mat-icon-button
+          color="warn"
+          [matTooltip]="'comic-book.tooltip.undelete-comic' | translate"
+          (click)="onUndeleteComic(); $event.stopPropagation()"
+        >
+          <mat-icon>restore_from_trash</mat-icon>
+        </button>
+      }
+      @if (!isDeleted(comic)) {
+        <button
+          mat-icon-button
+          color="warn"
+          [matTooltip]="'comic-book.tooltip.delete-comic' | translate"
+          (click)="onDeleteComic(); $event.stopPropagation()"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      }
+      <button
+        mat-icon-button
+        color="primary"
+        [matTooltip]="'comic-book.tooltip.open-comic' | translate"
+        (click)="onOpenComic(); $event.stopPropagation()"
+      >
+        <mat-icon>file_open</mat-icon>
+      </button>
+    </mat-card-actions>
   </mat-card>
 </div>
