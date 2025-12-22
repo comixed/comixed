@@ -119,7 +119,6 @@ import { AsyncPipe, DatePipe } from '@angular/common';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { MatToolbar } from '@angular/material/toolbar';
-import { MatIconButton } from '@angular/material/button';
 import { QUERY_PARAM_COMICS_AS_GRID } from '@app/core';
 import { ComicGridItemComponent } from '@app/comic-books/components/comic-grid-item/comic-grid-item.component';
 
@@ -161,7 +160,6 @@ import { ComicGridItemComponent } from '@app/comic-books/components/comic-grid-i
     ComicCoverUrlPipe,
     ComicTitlePipe,
     MatToolbar,
-    MatIconButton,
     ComicGridItemComponent
   ]
 })
