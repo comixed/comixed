@@ -35,6 +35,7 @@ import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.lists.ReadingListService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -143,7 +144,6 @@ public class LibraryPluginService {
   public LibraryPlugin updatePlugin(
       final long id, final boolean adminOnly, final Map<String, String> properties)
       throws LibraryPluginException {
-    log.trace("Loading libraryPlugin: id={}", id);
     final LibraryPlugin libraryPlugin = this.doLoadPlugin(id);
     log.trace("Setting admin-only={}", adminOnly);
     libraryPlugin.setAdminOnly(adminOnly);
@@ -178,9 +178,40 @@ public class LibraryPluginService {
    */
   @Transactional
   public void deletePlugin(final long id) throws LibraryPluginException {
-    log.debug("Deleting plugin: id={}", id);
     this.libraryPluginRepository.delete(this.doLoadPlugin(id));
     this.doPublishUpdates();
+  }
+
+  /**
+   * Runs a plugin against a single comic book.
+   *
+   * @param pluginId the plugin id
+   * @param comicBookId the comic book id
+   * @throws LibraryPluginException if an error occurs
+   */
+  @Transactional
+  public void runLibraryPlugin(final long pluginId, final Long comicBookId)
+      throws LibraryPluginException {
+    try {
+      final LibraryPlugin plugin = this.doLoadPlugin(pluginId);
+      final var pluginRuntime = doPreparePluginRuntime(plugin);
+      log.debug("Running plugin with id={}", comicBookId);
+      pluginRuntime.execute(plugin, comicBookId);
+    } catch (PluginRuntimeException error) {
+      throw new LibraryPluginException("Failed to run plugin", error);
+    }
+  }
+
+  private @NonNull PluginRuntime doPreparePluginRuntime(final LibraryPlugin plugin)
+      throws PluginRuntimeException {
+    log.trace("Loading plugin runtime: {}", plugin.getLanguage());
+    final PluginRuntime pluginRuntime =
+        this.pluginRuntimeLocator.getPluginRuntime(plugin.getLanguage());
+    pluginRuntime.addProperty(PROPERTY_NAME_LOG, log);
+    log.trace("Adding services to runtime");
+    pluginRuntime.addProperty(PROPERTY_NAME_COMIC_BOOK_SERVICE, this.comicBookService);
+    pluginRuntime.addProperty(PROPERTY_NAME_READING_LIST_SERVICE, this.readingListService);
+    return pluginRuntime;
   }
 
   /**
@@ -196,23 +227,16 @@ public class LibraryPluginService {
     try {
       log.trace("Loading plugin: id={}", pluginId);
       final LibraryPlugin plugin = this.doLoadPlugin(pluginId);
-      log.trace("Loading plugin runtime: {}", plugin.getLanguage());
-      final PluginRuntime pluginRuntime =
-          this.pluginRuntimeLocator.getPluginRuntime(plugin.getLanguage());
-      pluginRuntime.addProperty(PROPERTY_NAME_LOG, log);
-      log.trace("Adding services to runtime");
-      pluginRuntime.addProperty(PROPERTY_NAME_COMIC_BOOK_SERVICE, this.comicBookService);
-      pluginRuntime.addProperty(PROPERTY_NAME_READING_LIST_SERVICE, this.readingListService);
-      log.trace("Adding comic book ids to runtime");
-      pluginRuntime.addProperty("comicBookIds", comicBookIds);
-      log.debug("Running plugin");
-      pluginRuntime.execute(plugin);
+      final var pluginRuntime = doPreparePluginRuntime(plugin);
+      log.debug("Running plugin with {} id(s)", comicBookIds.size());
+      pluginRuntime.execute(plugin, comicBookIds);
     } catch (PluginRuntimeException error) {
       throw new LibraryPluginException("Failed to run plugin", error);
     }
   }
 
   private LibraryPlugin doLoadPlugin(final long id) throws LibraryPluginException {
+    log.trace("Loading plugin: id={}", id);
     final LibraryPlugin result = this.libraryPluginRepository.getById(id);
     if (result == null) throw new LibraryPluginException("No such plugin: id=" + id);
     return result;

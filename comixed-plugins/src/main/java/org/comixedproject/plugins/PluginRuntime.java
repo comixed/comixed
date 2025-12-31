@@ -62,12 +62,20 @@ public interface PluginRuntime {
   List<LibraryPluginProperty> getProperties(String filename);
 
   /**
-   * Executes the given libraryPlugin.
+   * Executes the given plugin. The comic book id is provided as the second argument.
    *
    * @param libraryPlugin the libraryPlugin
-   * @return <code>true</code> if the libraryPlugin runs without error
+   * @param comicBookId the comic book id
    */
-  Boolean execute(LibraryPlugin libraryPlugin);
+  void execute(LibraryPlugin libraryPlugin, Long comicBookId);
+
+  /**
+   * Executes the given plugin. The list of comic book ids are provided as the second argument.
+   *
+   * @param libraryPlugin the libraryPlugin
+   * @param comicBookIds the comic book ids
+   */
+  void execute(LibraryPlugin libraryPlugin, List<Long> comicBookIds);
 
   /**
    * Defines a property for the plugin runtime.

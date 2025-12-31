@@ -172,10 +172,10 @@ class LibraryPluginControllerTest {
   }
 
   @Test
-  void runLibraryPluginOnOneComicServiceException() throws LibraryPluginException {
+  void runLibraryPlugin_oneComic_serviceException() throws LibraryPluginException {
     Mockito.doThrow(LibraryPluginException.class)
         .when(libraryPluginService)
-        .runLibraryPlugin(Mockito.anyLong(), idListArgumentCaptor.capture());
+        .runLibraryPlugin(Mockito.anyLong(), Mockito.anyLong());
 
     assertThrows(
         LibraryPluginException.class,
@@ -183,25 +183,19 @@ class LibraryPluginControllerTest {
   }
 
   @Test
-  void runLibraryPluginOnOneComic() throws LibraryPluginException {
+  void runLibraryPlugin_oneComic() throws LibraryPluginException {
     Mockito.doNothing()
         .when(libraryPluginService)
-        .runLibraryPlugin(Mockito.anyLong(), idListArgumentCaptor.capture());
+        .runLibraryPlugin(Mockito.anyLong(), Mockito.anyLong());
 
     controller.runLibraryPluginOnOneComicBook(TEST_PLUGIN_ID, TEST_COMIC_BOOK_ID);
 
-    final List<Long> idList = idListArgumentCaptor.getValue();
-
-    assertNotNull(idList);
-    assertFalse(idList.isEmpty());
-    assertEquals(1, idList.size());
-    assertTrue(idList.contains(TEST_COMIC_BOOK_ID));
-
-    Mockito.verify(libraryPluginService, Mockito.times(1)).runLibraryPlugin(TEST_PLUGIN_ID, idList);
+    Mockito.verify(libraryPluginService, Mockito.times(1))
+        .runLibraryPlugin(TEST_PLUGIN_ID, TEST_COMIC_BOOK_ID);
   }
 
   @Test
-  void runLibraryPluginOnSelectedComicBooksSelectionDecodingException()
+  void runLibraryPlugin_selectedComicBooks_selectionDecodingException()
       throws ComicBookSelectionException {
     Mockito.when(comicSelectionService.decodeSelections(TEST_ENCODED_IDS))
         .thenThrow(ComicBookSelectionException.class);
@@ -212,7 +206,7 @@ class LibraryPluginControllerTest {
   }
 
   @Test
-  void runLibraryPluginOnSelectedComicBooksServiceException() throws LibraryPluginException {
+  void runLibraryPlugin_selectedComicBooks_serviceException() throws LibraryPluginException {
     Mockito.doThrow(LibraryPluginException.class)
         .when(libraryPluginService)
         .runLibraryPlugin(Mockito.anyLong(), Mockito.anyList());
@@ -223,7 +217,7 @@ class LibraryPluginControllerTest {
   }
 
   @Test
-  void runLibraryPluginOnSelectedComicBooks() throws LibraryPluginException {
+  void runLibraryPlugin_selectedComicBooks() throws LibraryPluginException {
     controller.runLibraryPluginOnSelectedComicBooks(session, principal, TEST_PLUGIN_ID);
 
     Mockito.verify(libraryPluginService, Mockito.times(1))
