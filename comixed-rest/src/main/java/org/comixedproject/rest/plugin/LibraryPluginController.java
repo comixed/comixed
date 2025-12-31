@@ -24,7 +24,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import lombok.NonNull;
@@ -153,9 +152,7 @@ public class LibraryPluginController {
         "Running plugin on single comic book: plugin id={} comic book id={}",
         pluginId,
         comicBookId);
-    final List<Long> idList = new ArrayList<>();
-    idList.add(comicBookId);
-    this.libraryPluginService.runLibraryPlugin(pluginId, idList);
+    this.libraryPluginService.runLibraryPlugin(pluginId, comicBookId);
   }
 
   /**
