@@ -31,11 +31,18 @@ MAINTAINER The ComiXed Project "comixed-dev@freelists.org"
 
 RUN mkdir /app /ul
 WORKDIR /ul
-RUN wget -q -O comixed-release.zip https://github.com/comixed/comixed/releases/download/v3.2-SNAPSHOT/comixed-release-3.2-SNAPSHOT.zip
-RUN (cd /app; unzip /ul/*.zip)
-RUN rm *.zip
+
+# Always fetch the latest release
+RUN URL=$(wget -qO- https://api.github.com/repos/comixed/comixed/releases/latest \
+    | grep "browser_download_url.*zip" \
+    | head -n 1 \
+    | cut -d '"' -f 4) \
+    && wget -q -O comixed-release.zip "$URL"
+RUN unzip comixed-release.zip -d /app \
+    && rm comixed-release.zip
+
 WORKDIR /app
-RUN rm -r /ul
+RUN rm -rf /ul
 
 ENV PATH="$JAVA_HOME/bin:${PATH}"
 
