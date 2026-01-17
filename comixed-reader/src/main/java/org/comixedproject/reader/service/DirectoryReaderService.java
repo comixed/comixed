@@ -49,6 +49,42 @@ public class DirectoryReaderService {
   private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM yyyy");
 
   /**
+   * Returns cover date entries for each publisher.
+   *
+   * @param email the user's email
+   * @param unread the unread flag
+   * @param rootUrl the root URL
+   * @return the entries
+   */
+  public List<DirectoryEntry> getAllCoverDates(
+      final String email, final boolean unread, final String rootUrl) {
+    return this.comicDetailService.getAllCoverDates(email, unread).stream()
+        .map(
+            entry ->
+                new DirectoryEntry(
+                    ReaderUtil.generateId(String.format("publisher:%s", entry)),
+                    entry,
+                    String.format("%s/%s?unread=%s", rootUrl, ReaderUtil.urlEncode(entry), unread)))
+        .toList();
+  }
+
+  /**
+   * Returns entries for all comics with a given cover date.
+   *
+   * @param email the user's email
+   * @param unread the unread flag
+   * @param coverDate the cover date
+   * @param urlRoot the url root
+   * @return the entries
+   */
+  public List<DirectoryEntry> getAllComicsForCoverDate(
+      final String email, final boolean unread, final String coverDate, final String urlRoot) {
+    return this.comicDetailService.getAllComicsForCoverDate(coverDate, email, unread).stream()
+        .map(comicDetail -> this.doCreateDirectoryEntry(comicDetail, urlRoot))
+        .toList();
+  }
+
+  /**
    * Returns directory entries for each publisher.
    *
    * @param email the user's email

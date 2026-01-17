@@ -20,6 +20,8 @@ package org.comixedproject.service.comicbooks;
 
 import static org.comixedproject.model.comicbooks.ComicTagType.STORY;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
@@ -47,6 +49,7 @@ public class ComicDetailService {
   @Autowired private ComicDetailRepository comicDetailRepository;
 
   boolean caseSensitiveFilenames = !SystemUtils.IS_OS_WINDOWS;
+  SimpleDateFormat coverDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
   @Transactional
   public boolean filenameFound(final String filename) {
@@ -58,11 +61,60 @@ public class ComicDetailService {
   }
 
   /**
+   * Returns the set of all cover dates. Filters out comics read by the user if the flag is set.
+   *
+   * @param email the user's email
+   * @param unread the unread flag
+   * @return the entries
+   */
+  @Transactional
+  public Set<String> getAllCoverDates(final String email, final boolean unread) {
+    if (unread) {
+      log.debug("Loading all cover dates with unread comics: email={}", email);
+      return this.comicDetailRepository.getAllUnreadCoverDates(email).stream()
+          .map(entry -> this.coverDateFormat.format(entry))
+          .collect(Collectors.toSet());
+    } else {
+      log.debug("Loading all cover dates");
+      return this.comicDetailRepository.getAllCoverDates().stream()
+          .map(entry -> this.coverDateFormat.format(entry))
+          .collect(Collectors.toSet());
+    }
+  }
+
+  /**
+   * Returns the set of all cover dates. Filters out comics read by the user if the flag is set.
+   *
+   * @param coverDate the cover date
+   * @param email the user's email
+   * @param unread the unread flag
+   * @return the entries
+   */
+  @Transactional
+  public List<ComicDetail> getAllComicsForCoverDate(
+      final String coverDate, final String email, final boolean unread) {
+    try {
+      if (unread) {
+        log.debug("Loading all cover dates with unread comics: email={}", email);
+        return this.comicDetailRepository.getAllUnreadComicsForCoverDate(
+            this.coverDateFormat.parse(coverDate), email);
+      } else {
+        log.debug("Loading all cover dates");
+        return this.comicDetailRepository.getAllComicsForCoverDate(
+            this.coverDateFormat.parse(coverDate));
+      }
+    } catch (ParseException error) {
+      log.error("Failed to parse cover date", error);
+      return Collections.emptyList();
+    }
+  }
+
+  /**
    * Returns the set of all publishers. Filters out comics read by the user if the flag is set.
    *
    * @param email the user's email
    * @param unread the unread flag
-   * @return the publishers
+   * @return the entries
    */
   @Transactional
   public Set<String> getAllPublishers(final String email, final boolean unread) {
@@ -82,7 +134,7 @@ public class ComicDetailService {
    * @param publisher the publisher
    * @param email the user's email
    * @param unread the unread flag
-   * @return the series
+   * @return the entries
    */
   @Transactional
   public Set<String> getAllSeriesForPublisher(
@@ -107,7 +159,7 @@ public class ComicDetailService {
    * @param series the series
    * @param email the user's email
    * @param unread the unread flag
-   * @return the volumes
+   * @return the entries
    */
   @Transactional
   public Set<String> getAllVolumesForPublisherAndSeries(
@@ -132,7 +184,7 @@ public class ComicDetailService {
   /**
    * Returns the list of all series.
    *
-   * @return the series list
+   * @return the entries
    */
   @Transactional
   public Set<String> getAllSeries() {
@@ -145,7 +197,7 @@ public class ComicDetailService {
    *
    * @param email the user's email
    * @param unread the unread flag
-   * @return the series
+   * @return the entries
    */
   @Transactional
   public Set<String> getAllSeries(final String email, final boolean unread) {
@@ -165,7 +217,7 @@ public class ComicDetailService {
    * @param series the series name
    * @param email the user's email
    * @param unread the unread flag
-   * @return the volumes
+   * @return the entries
    */
   @Transactional
   public Set<String> getAllPublishersForSeries(
@@ -191,7 +243,7 @@ public class ComicDetailService {
    * @param volume the volume
    * @param email the user email
    * @param unread the unread flag
-   * @return the comic details
+   * @return the entries
    */
   @Transactional
   public List<ComicDetail> getAllComicBooksForPublisherAndSeriesAndVolume(
@@ -228,7 +280,7 @@ public class ComicDetailService {
    * @param tagType the tag type
    * @param email the user's email
    * @param unread the unread flag
-   * @return the comic details
+   * @return the entries
    */
   public Set<String> getAllValuesForTag(
       final ComicTagType tagType, final String email, final boolean unread) {
@@ -247,7 +299,7 @@ public class ComicDetailService {
    *
    * @param email the user's email
    * @param unread the unread flag
-   * @return the years
+   * @return the entries
    */
   public Set<Integer> getAllYears(final String email, final boolean unread) {
     if (unread) {
@@ -266,7 +318,7 @@ public class ComicDetailService {
    * @param year the year
    * @param email the user's email
    * @param unread the unread flag
-   * @return the weeks
+   * @return the entries
    */
   public Set<Integer> getAllWeeksForYear(final int year, final String email, final boolean unread) {
     final GregorianCalendar calendar = new GregorianCalendar();
@@ -300,7 +352,7 @@ public class ComicDetailService {
    * @param week the week
    * @param email the user's email
    * @param unread the unread flag
-   * @return the matching comics
+   * @return the entries
    */
   public List<ComicDetail> getComicsForYearAndWeek(
       final int year, final int week, final String email, final boolean unread) {
@@ -333,7 +385,7 @@ public class ComicDetailService {
    * Returns all comics that match the given search term.
    *
    * @param term the search term
-   * @return the matching comics
+   * @return the entries
    */
   public List<ComicDetail> getComicForSearchTerm(final String term) {
     log.debug("Loading all comics for search term: \"{}\"", term);
@@ -348,7 +400,7 @@ public class ComicDetailService {
    * @param tagValue the tag value
    * @param email the use's email
    * @param unread the unread flag
-   * @return the matching comics
+   * @return the entries
    * @deprecated See {@link
    *     org.comixedproject.service.library.DisplayableComicService#loadComicsByTagTypeAndValue(int,
    *     int, ComicTagType, String, String, String)}
@@ -370,7 +422,7 @@ public class ComicDetailService {
    * Loads a set of records by their id.
    *
    * @param ids the record ids
-   * @return the records
+   * @return the entries
    */
   public List<ComicDetail> loadComicDetailListById(final Set<Long> ids) {
     log.debug("Loading comic details by id: {}", ids);
@@ -381,7 +433,7 @@ public class ComicDetailService {
    * Returns all records that match the provided example.
    *
    * @param example the example
-   * @return the records
+   * @return the entries
    */
   public List<ComicDetail> findAllByExample(final Example<ComicDetail> example) {
     log.debug("Finding all comic details by example: {}", example);
@@ -396,7 +448,7 @@ public class ComicDetailService {
    * @param pageIndex the page number
    * @param sortBy the sort field
    * @param sortDirection the sort direction
-   * @return the collection entries
+   * @return the entries
    */
   @Transactional
   public List<CollectionEntry> loadCollectionEntries(

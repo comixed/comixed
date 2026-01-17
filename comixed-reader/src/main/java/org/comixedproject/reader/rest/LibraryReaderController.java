@@ -48,10 +48,12 @@ public class LibraryReaderController {
   public static final String TEAMS = "Teams";
   public static final String LOCATIONS = "Locations";
   public static final String STORY_ARCS = "Story Arcs";
+  public static final String COVER_DATES = "Cover Date";
   public static final String ALL_COMICS_URL = String.format("%s/all?unread=false", API_ROOT);
   public static final String UNREAD_COMICS_URL = String.format("%s/all?unread=true", API_ROOT);
   public static final String READING_LISTS_URL = String.format("%s/lists/reading", API_ROOT);
   static final String COMIC_DOWNLOAD_URL = API_ROOT + "/comics/%d/download";
+  public static final String NAVIGATION_LINK = API_ROOT + "%s?unread=%s";
 
   /**
    * Returns the root directory for the library.
@@ -93,44 +95,51 @@ public class LibraryReaderController {
         .getContents()
         .add(
             new DirectoryEntry(
+                ReaderUtil.generateId("coverdates"),
+                COVER_DATES,
+                String.format(NAVIGATION_LINK, "/coverdates", unread)));
+    result
+        .getContents()
+        .add(
+            new DirectoryEntry(
                 ReaderUtil.generateId("publishers"),
                 PUBLISHERS,
-                String.format("%s?unread=%s", API_ROOT + "/collections/publishers", unread)));
+                String.format(NAVIGATION_LINK, "/collections/publishers", unread)));
     result
         .getContents()
         .add(
             new DirectoryEntry(
                 ReaderUtil.generateId("series"),
                 SERIES,
-                String.format("%s?unread=%s", API_ROOT + "/collections/series", unread)));
+                String.format(NAVIGATION_LINK, "/collections/series", unread)));
     result
         .getContents()
         .add(
             new DirectoryEntry(
                 ReaderUtil.generateId("characters"),
                 CHARACTERS,
-                String.format("%s?unread=%s", API_ROOT + "/collections/characters", unread)));
+                String.format(NAVIGATION_LINK, "/collections/characters", unread)));
     result
         .getContents()
         .add(
             new DirectoryEntry(
                 ReaderUtil.generateId("teams"),
                 TEAMS,
-                String.format("%s?unread=%s", API_ROOT + "/collections/teams", unread)));
+                String.format(NAVIGATION_LINK, "/collections/teams", unread)));
     result
         .getContents()
         .add(
             new DirectoryEntry(
                 ReaderUtil.generateId("locations"),
                 LOCATIONS,
-                String.format("%s?unread=%s", API_ROOT + "/collections/locations", unread)));
+                String.format(NAVIGATION_LINK, "/collections/locations", unread)));
     result
         .getContents()
         .add(
             new DirectoryEntry(
                 ReaderUtil.generateId("stories"),
                 STORY_ARCS,
-                String.format("%s?unread=%s", API_ROOT + "/collections/stories", unread)));
+                String.format(NAVIGATION_LINK, "/collections/stories", unread)));
 
     return result;
   }
