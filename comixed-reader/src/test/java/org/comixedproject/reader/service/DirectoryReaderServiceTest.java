@@ -58,19 +58,20 @@ class DirectoryReaderServiceTest {
   private static final String TEST_BASE_FILENAME = "The Base Filename";
   private static final String TEST_COMIC_FILENAME = "src/test/resources/example.cbz";
   private static final File TEST_COMIC_FILE = new File(TEST_COMIC_FILENAME);
+  private static final String TEST_COVER_DATE = "2026-01-17";
 
   @InjectMocks private DirectoryReaderService service;
   @Mock private ComicDetailService comicDetailService;
   @Mock private ReadingListService readingListService;
   @Mock private ComicDetail comicDetail;
 
-  private Set<String> stringList = new HashSet<>();
+  private Set<String> stringSet = new HashSet<>();
   private List<ComicDetail> comicDetailList = new ArrayList<>();
   private List<ReadingList> readingLists = new ArrayList<>();
 
   @BeforeEach
   void setUp() {
-    stringList.add(TEST_STRING_ENTRY);
+    stringSet.add(TEST_STRING_ENTRY);
     Mockito.when(comicDetail.getComicId()).thenReturn(TEST_COMIC_ID);
     Mockito.when(comicDetail.getPublisher()).thenReturn(TEST_PUBLISHER);
     Mockito.when(comicDetail.getSeries()).thenReturn(TEST_SERIES);
@@ -82,14 +83,56 @@ class DirectoryReaderServiceTest {
   }
 
   @Test
+  void getAllCoverDates() {
+    Mockito.when(comicDetailService.getAllCoverDates(Mockito.anyString(), Mockito.anyBoolean()))
+        .thenReturn(stringSet);
+
+    final List<DirectoryEntry> result = service.getAllCoverDates(TEST_EMAIL, false, TEST_ROOT_URL);
+
+    assertNotNull(result);
+    assertEquals(stringSet.size(), result.size());
+
+    Mockito.verify(comicDetailService, Mockito.times(1)).getAllCoverDates(TEST_EMAIL, false);
+  }
+
+  @Test
+  void getAllCoverDates_unread() {
+    Mockito.when(comicDetailService.getAllCoverDates(Mockito.anyString(), Mockito.anyBoolean()))
+        .thenReturn(stringSet);
+
+    final List<DirectoryEntry> result = service.getAllCoverDates(TEST_EMAIL, true, TEST_ROOT_URL);
+
+    assertNotNull(result);
+    assertEquals(stringSet.size(), result.size());
+
+    Mockito.verify(comicDetailService, Mockito.times(1)).getAllCoverDates(TEST_EMAIL, true);
+  }
+
+  @Test
+  void getAllComicsForCoverDate() {
+    Mockito.when(
+            comicDetailService.getAllComicsForCoverDate(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
+        .thenReturn(comicDetailList);
+
+    final List<DirectoryEntry> result =
+        service.getAllComicsForCoverDate(TEST_EMAIL, false, TEST_COVER_DATE, TEST_ROOT_URL);
+
+    assertNotNull(result);
+
+    Mockito.verify(comicDetailService, Mockito.times(1))
+        .getAllComicsForCoverDate(TEST_COVER_DATE, TEST_EMAIL, false);
+  }
+
+  @Test
   void getAllPublishers() {
     Mockito.when(comicDetailService.getAllPublishers(Mockito.anyString(), Mockito.anyBoolean()))
-        .thenReturn(stringList);
+        .thenReturn(stringSet);
 
     final List<DirectoryEntry> result = service.getAllPublishers(TEST_EMAIL, false, TEST_ROOT_URL);
 
     assertNotNull(result);
-    assertEquals(stringList.size(), result.size());
+    assertEquals(stringSet.size(), result.size());
 
     Mockito.verify(comicDetailService, Mockito.times(1)).getAllPublishers(TEST_EMAIL, false);
   }
@@ -97,12 +140,12 @@ class DirectoryReaderServiceTest {
   @Test
   void getAllPublishers_unread() {
     Mockito.when(comicDetailService.getAllPublishers(Mockito.anyString(), Mockito.anyBoolean()))
-        .thenReturn(stringList);
+        .thenReturn(stringSet);
 
     final List<DirectoryEntry> result = service.getAllPublishers(TEST_EMAIL, true, TEST_ROOT_URL);
 
     assertNotNull(result);
-    assertEquals(stringList.size(), result.size());
+    assertEquals(stringSet.size(), result.size());
 
     Mockito.verify(comicDetailService, Mockito.times(1)).getAllPublishers(TEST_EMAIL, true);
   }
@@ -110,12 +153,12 @@ class DirectoryReaderServiceTest {
   @Test
   void getAllSeries() {
     Mockito.when(comicDetailService.getAllSeries(Mockito.anyString(), Mockito.anyBoolean()))
-        .thenReturn(stringList);
+        .thenReturn(stringSet);
 
     final List<DirectoryEntry> result = service.getAllSeries(TEST_EMAIL, false, TEST_ROOT_URL);
 
     assertNotNull(result);
-    assertEquals(stringList.size(), result.size());
+    assertEquals(stringSet.size(), result.size());
 
     Mockito.verify(comicDetailService, Mockito.times(1)).getAllSeries(TEST_EMAIL, false);
   }
@@ -123,12 +166,12 @@ class DirectoryReaderServiceTest {
   @Test
   void getAllSeries_unread() {
     Mockito.when(comicDetailService.getAllSeries(Mockito.anyString(), Mockito.anyBoolean()))
-        .thenReturn(stringList);
+        .thenReturn(stringSet);
 
     final List<DirectoryEntry> result = service.getAllSeries(TEST_EMAIL, true, TEST_ROOT_URL);
 
     assertNotNull(result);
-    assertEquals(stringList.size(), result.size());
+    assertEquals(stringSet.size(), result.size());
 
     Mockito.verify(comicDetailService, Mockito.times(1)).getAllSeries(TEST_EMAIL, true);
   }
@@ -138,13 +181,13 @@ class DirectoryReaderServiceTest {
     Mockito.when(
             comicDetailService.getAllPublishersForSeries(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
-        .thenReturn(stringList);
+        .thenReturn(stringSet);
 
     final List<DirectoryEntry> result =
         service.getAllPublishersForSeries(TEST_EMAIL, false, TEST_SERIES, TEST_ROOT_URL);
 
     assertNotNull(result);
-    assertEquals(stringList.size(), result.size());
+    assertEquals(stringSet.size(), result.size());
 
     Mockito.verify(comicDetailService, Mockito.times(1))
         .getAllPublishersForSeries(TEST_SERIES, TEST_EMAIL, false);
@@ -155,13 +198,13 @@ class DirectoryReaderServiceTest {
     Mockito.when(
             comicDetailService.getAllPublishersForSeries(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
-        .thenReturn(stringList);
+        .thenReturn(stringSet);
 
     final List<DirectoryEntry> result =
         service.getAllPublishersForSeries(TEST_EMAIL, true, TEST_SERIES, TEST_ROOT_URL);
 
     assertNotNull(result);
-    assertEquals(stringList.size(), result.size());
+    assertEquals(stringSet.size(), result.size());
 
     Mockito.verify(comicDetailService, Mockito.times(1))
         .getAllPublishersForSeries(TEST_SERIES, TEST_EMAIL, true);
@@ -172,13 +215,13 @@ class DirectoryReaderServiceTest {
     Mockito.when(
             comicDetailService.getAllSeriesForPublisher(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
-        .thenReturn(stringList);
+        .thenReturn(stringSet);
 
     final List<DirectoryEntry> result =
         service.getAllSeriesForPublisher(TEST_EMAIL, false, TEST_PUBLISHER, TEST_ROOT_URL);
 
     assertNotNull(result);
-    assertEquals(stringList.size(), result.size());
+    assertEquals(stringSet.size(), result.size());
 
     Mockito.verify(comicDetailService, Mockito.times(1))
         .getAllSeriesForPublisher(TEST_PUBLISHER, TEST_EMAIL, false);
@@ -189,13 +232,13 @@ class DirectoryReaderServiceTest {
     Mockito.when(
             comicDetailService.getAllSeriesForPublisher(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
-        .thenReturn(stringList);
+        .thenReturn(stringSet);
 
     final List<DirectoryEntry> result =
         service.getAllSeriesForPublisher(TEST_EMAIL, true, TEST_PUBLISHER, TEST_ROOT_URL);
 
     assertNotNull(result);
-    assertEquals(stringList.size(), result.size());
+    assertEquals(stringSet.size(), result.size());
 
     Mockito.verify(comicDetailService, Mockito.times(1))
         .getAllSeriesForPublisher(TEST_PUBLISHER, TEST_EMAIL, true);
@@ -209,14 +252,14 @@ class DirectoryReaderServiceTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyBoolean()))
-        .thenReturn(stringList);
+        .thenReturn(stringSet);
 
     final List<DirectoryEntry> result =
         service.getAllVolumesForPublisherAndSeries(
             TEST_EMAIL, false, TEST_PUBLISHER, TEST_SERIES, TEST_ROOT_URL);
 
     assertNotNull(result);
-    assertEquals(stringList.size(), result.size());
+    assertEquals(stringSet.size(), result.size());
 
     Mockito.verify(comicDetailService, Mockito.times(1))
         .getAllVolumesForPublisherAndSeries(TEST_PUBLISHER, TEST_SERIES, TEST_EMAIL, false);
@@ -230,14 +273,14 @@ class DirectoryReaderServiceTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyBoolean()))
-        .thenReturn(stringList);
+        .thenReturn(stringSet);
 
     final List<DirectoryEntry> result =
         service.getAllVolumesForPublisherAndSeries(
             TEST_EMAIL, true, TEST_PUBLISHER, TEST_SERIES, TEST_ROOT_URL);
 
     assertNotNull(result);
-    assertEquals(stringList.size(), result.size());
+    assertEquals(stringSet.size(), result.size());
 
     Mockito.verify(comicDetailService, Mockito.times(1))
         .getAllVolumesForPublisherAndSeries(TEST_PUBLISHER, TEST_SERIES, TEST_EMAIL, true);
@@ -321,7 +364,7 @@ class DirectoryReaderServiceTest {
       Mockito.when(
               comicDetailService.getAllValuesForTag(
                   Mockito.any(ComicTagType.class), Mockito.anyString(), Mockito.anyBoolean()))
-          .thenReturn(stringList);
+          .thenReturn(stringSet);
 
       final List<DirectoryEntry> result =
           service.getAllForTagType(TEST_EMAIL, false, comicTagType, TEST_ROOT_URL);
@@ -340,7 +383,7 @@ class DirectoryReaderServiceTest {
       Mockito.when(
               comicDetailService.getAllValuesForTag(
                   Mockito.any(ComicTagType.class), Mockito.anyString(), Mockito.anyBoolean()))
-          .thenReturn(stringList);
+          .thenReturn(stringSet);
 
       final List<DirectoryEntry> result =
           service.getAllForTagType(TEST_EMAIL, true, comicTagType, TEST_ROOT_URL);

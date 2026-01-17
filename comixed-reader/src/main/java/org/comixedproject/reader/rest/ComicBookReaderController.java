@@ -59,6 +59,38 @@ public class ComicBookReaderController {
   @Autowired private WebResponseEncoder webResponseEncoder;
 
   /**
+   * Returns all comics for a single cover date. If the unread parameter is present then only those
+   * cover dates with unread comics are returned.
+   *
+   * @param principal the user principal
+   * @param coverDateParam the cover date
+   * @param unreadParam the unread flag
+   * @return the entries
+   */
+  @GetMapping(
+      value = API_ROOT + "/coverdates/{coverdate}",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.reader.library.get-comics-for-cover-date")
+  public LoadDirectoryResponse getAllForCoverDate(
+      final Principal principal,
+      @PathVariable("coverdate") final String coverDateParam,
+      @RequestParam(name = "unread", required = false, defaultValue = "false")
+          final String unreadParam) {
+    final String email = principal.getName();
+    final boolean unread = Boolean.parseBoolean(unreadParam);
+    final String coverDate = ReaderUtil.urlDecode(coverDateParam);
+    log.info("Loading all comics for cover date: {} email={} unread={}", coverDate, email, unread);
+    final LoadDirectoryResponse result = new LoadDirectoryResponse();
+    result
+        .getContents()
+        .addAll(
+            directoryReaderService.getAllComicsForCoverDate(
+                email, unread, coverDate, COMIC_DOWNLOAD_URL));
+    return result;
+  }
+
+  /**
    * Returns all comics for a given publisher, series, and volume. If the unread parameter is
    * present then only those comics that are unread are returned.
    *

@@ -57,6 +57,7 @@ class ComicBookReaderControllerTest {
   private static final String TEST_VOLUME_ENCODED = ReaderUtil.urlEncode(TEST_VOLUME);
   private static final long TEST_COMIC_BOOK_ID = 129L;
   private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CBZ;
+  private static final String TEST_COVER_DATE_PARAM = "2026-01-17";
 
   @InjectMocks private ComicBookReaderController controller;
   @Mock private DirectoryReaderService directoryReaderService;
@@ -80,6 +81,50 @@ class ComicBookReaderControllerTest {
     Mockito.when(comicDetail.getBaseFilename()).thenReturn(comicFile.getName());
     Mockito.when(comicDetail.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+  }
+
+  @Test
+  void getAllForCoverDate() {
+    Mockito.when(
+            directoryReaderService.getAllComicsForCoverDate(
+                Mockito.anyString(),
+                Mockito.anyBoolean(),
+                Mockito.anyString(),
+                urlArgumentCaptor.capture()))
+        .thenReturn(directoryEntryList);
+
+    final LoadDirectoryResponse result =
+        controller.getAllForCoverDate(principal, TEST_COVER_DATE_PARAM, Boolean.FALSE.toString());
+
+    assertNotNull(result);
+    assertEquals(directoryEntryList, result.getContents());
+
+    final String url = urlArgumentCaptor.getValue();
+
+    Mockito.verify(directoryReaderService, Mockito.times(1))
+        .getAllComicsForCoverDate(TEST_EMAIL, false, TEST_COVER_DATE_PARAM, url);
+  }
+
+  @Test
+  void getAllForCoverDate_unread() {
+    Mockito.when(
+            directoryReaderService.getAllComicsForCoverDate(
+                Mockito.anyString(),
+                Mockito.anyBoolean(),
+                Mockito.anyString(),
+                urlArgumentCaptor.capture()))
+        .thenReturn(directoryEntryList);
+
+    final LoadDirectoryResponse result =
+        controller.getAllForCoverDate(principal, TEST_COVER_DATE_PARAM, Boolean.TRUE.toString());
+
+    assertNotNull(result);
+    assertEquals(directoryEntryList, result.getContents());
+
+    final String url = urlArgumentCaptor.getValue();
+
+    Mockito.verify(directoryReaderService, Mockito.times(1))
+        .getAllComicsForCoverDate(TEST_EMAIL, true, TEST_COVER_DATE_PARAM, url);
   }
 
   @Test

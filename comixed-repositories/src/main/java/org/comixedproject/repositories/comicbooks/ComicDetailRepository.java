@@ -48,6 +48,32 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
   List<Long> getAllIds();
 
   /**
+   * Returns the set of all cover dates for comics that have not been read by the specified user.
+   *
+   * @param email the user's email
+   * @return the cover dates
+   */
+  @Query(
+      "SELECT DISTINCT d.coverDate FROM ComicDetail d WHERE d.coverDate IS NOT NULL AND d.comicDetailId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb WHERE u.email = :email)")
+  Set<Date> getAllUnreadCoverDates(@Param("email") String email);
+
+  /**
+   * Returns the set of all cover dates.
+   *
+   * @return the cover dates
+   */
+  @Query("SELECT DISTINCT d.coverDate FROM ComicDetail d WHERE d.coverDate IS NOT NULL")
+  Set<Date> getAllCoverDates();
+
+  @Query(
+      "SELECT d FROM ComicDetail d WHERE d.coverDate IS NOT NULL AND d.coverDate = :coverDate AND d.comicDetailId NOT IN (SELECT rcb FROM ComiXedUser u INNER JOIN u.readComicBooks rcb WHERE u.email = :email)")
+  List<ComicDetail> getAllUnreadComicsForCoverDate(
+      @Param("coverDate") Date coverDate, @Param("email") String email);
+
+  @Query("SELECT d FROM ComicDetail d WHERE d.coverDate IS NOT NULL AND d.coverDate = :coverDate")
+  List<ComicDetail> getAllComicsForCoverDate(@Param("coverDate") Date coverDate);
+
+  /**
    * Returns the set of all publishers with comics that have not been read by the specified user.
    *
    * @param email the user's email
