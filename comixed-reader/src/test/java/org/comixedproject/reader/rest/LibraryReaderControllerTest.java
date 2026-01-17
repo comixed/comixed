@@ -50,19 +50,21 @@ class LibraryReaderControllerTest {
     final LoadDirectoryResponse result = controller.getAll(Boolean.FALSE.toString());
 
     assertNotNull(result);
-    assertEquals(6, result.getContents().size());
-    assertEquals(PUBLISHERS, result.getContents().get(0).getName());
+    assertEquals(7, result.getContents().size());
+    assertEquals(COVER_DATES, result.getContents().get(0).getName());
     assertTrue(result.getContents().get(0).getPath().contains("unread=false"));
-    assertEquals(SERIES, result.getContents().get(1).getName());
+    assertEquals(PUBLISHERS, result.getContents().get(1).getName());
     assertTrue(result.getContents().get(1).getPath().contains("unread=false"));
-    assertEquals(CHARACTERS, result.getContents().get(2).getName());
+    assertEquals(SERIES, result.getContents().get(2).getName());
     assertTrue(result.getContents().get(2).getPath().contains("unread=false"));
-    assertEquals(TEAMS, result.getContents().get(3).getName());
+    assertEquals(CHARACTERS, result.getContents().get(3).getName());
     assertTrue(result.getContents().get(3).getPath().contains("unread=false"));
-    assertEquals(LOCATIONS, result.getContents().get(4).getName());
+    assertEquals(TEAMS, result.getContents().get(4).getName());
     assertTrue(result.getContents().get(4).getPath().contains("unread=false"));
-    assertEquals(STORY_ARCS, result.getContents().get(5).getName());
+    assertEquals(LOCATIONS, result.getContents().get(5).getName());
     assertTrue(result.getContents().get(5).getPath().contains("unread=false"));
+    assertEquals(STORY_ARCS, result.getContents().get(6).getName());
+    assertTrue(result.getContents().get(6).getPath().contains("unread=false"));
   }
 
   @Test
@@ -70,18 +72,20 @@ class LibraryReaderControllerTest {
     final LoadDirectoryResponse result = controller.getAll(Boolean.TRUE.toString());
 
     assertNotNull(result);
-    assertEquals(6, result.getContents().size());
-    assertEquals(PUBLISHERS, result.getContents().get(0).getName());
+    assertEquals(7, result.getContents().size());
+    assertEquals(COVER_DATES, result.getContents().get(0).getName());
     assertTrue(result.getContents().get(0).getPath().contains("unread=true"));
-    assertEquals(SERIES, result.getContents().get(1).getName());
+    assertEquals(PUBLISHERS, result.getContents().get(1).getName());
     assertTrue(result.getContents().get(1).getPath().contains("unread=true"));
-    assertEquals(CHARACTERS, result.getContents().get(2).getName());
+    assertEquals(SERIES, result.getContents().get(2).getName());
     assertTrue(result.getContents().get(2).getPath().contains("unread=true"));
-    assertEquals(TEAMS, result.getContents().get(3).getName());
+    assertEquals(CHARACTERS, result.getContents().get(3).getName());
     assertTrue(result.getContents().get(3).getPath().contains("unread=true"));
-    assertEquals(LOCATIONS, result.getContents().get(4).getName());
+    assertEquals(TEAMS, result.getContents().get(4).getName());
     assertTrue(result.getContents().get(4).getPath().contains("unread=true"));
-    assertEquals(STORY_ARCS, result.getContents().get(5).getName());
+    assertEquals(LOCATIONS, result.getContents().get(5).getName());
     assertTrue(result.getContents().get(5).getPath().contains("unread=true"));
+    assertEquals(STORY_ARCS, result.getContents().get(6).getName());
+    assertTrue(result.getContents().get(6).getPath().contains("unread=true"));
   }
 }

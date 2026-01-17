@@ -20,6 +20,7 @@ package org.comixedproject.service.comicbooks;
 
 import static junit.framework.TestCase.*;
 
+import java.text.ParseException;
 import java.util.*;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.collections.CollectionEntry;
@@ -53,6 +54,7 @@ class ComicDetailServiceTest {
   private static final long TEST_TOTAL_COMIC_COUNT = RandomUtils.nextLong() * 30000L;
   private static final String TEST_SORT_DIRECTION = "asc";
   private static final String TEST_COMIC_FILENAME = "src/test/resources/example.cbz";
+  private static final String TEST_COVER_DATE = "2026-01-17";
   private final Set<Date> weeksList = new HashSet<>();
   private final List<String> sortFieldNames = new ArrayList<>();
   private final List<ComicDetail> comicDetailList = new ArrayList<>();
@@ -76,10 +78,13 @@ class ComicDetailServiceTest {
   private List<CollectionEntry> collectionEntryList = new ArrayList<>();
   private final List<Long> idList = new ArrayList<>();
   private final List<ComicBook> comicBookList = new ArrayList<>();
+  private Set<Date> coverDateSet = new HashSet<>();
 
   @BeforeEach
-  public void setUp() {
+  void setUp() throws ParseException {
     weeksList.add(new Date());
+
+    coverDateSet.add(service.coverDateFormat.parse(TEST_COVER_DATE));
 
     sortFieldNames.add("archive-type");
     sortFieldNames.add("comic-state");
@@ -117,6 +122,65 @@ class ComicDetailServiceTest {
     assertTrue(service.filenameFound(TEST_COMIC_FILENAME));
 
     Mockito.verify(comicDetailRepository, Mockito.times(1)).existsByFilename(TEST_COMIC_FILENAME);
+  }
+
+  @Test
+  void getAllCoverDates() {
+    Mockito.when(comicDetailRepository.getAllCoverDates()).thenReturn(coverDateSet);
+
+    final Set<String> result = service.getAllCoverDates(TEST_EMAIL, false);
+
+    assertNotNull(result);
+    assertEquals(
+        TEST_COVER_DATE, service.coverDateFormat.format(coverDateSet.stream().toList().get(0)));
+
+    Mockito.verify(comicDetailRepository, Mockito.times(1)).getAllCoverDates();
+  }
+
+  @Test
+  void getAllCoverDates_unread() {
+    Mockito.when(comicDetailRepository.getAllUnreadCoverDates(Mockito.anyString()))
+        .thenReturn(coverDateSet);
+
+    final Set<String> result = service.getAllCoverDates(TEST_EMAIL, true);
+
+    assertNotNull(result);
+    assertEquals(
+        TEST_COVER_DATE, service.coverDateFormat.format(coverDateSet.stream().toList().get(0)));
+
+    Mockito.verify(comicDetailRepository, Mockito.times(1)).getAllUnreadCoverDates(TEST_EMAIL);
+  }
+
+  @Test
+  void getAllComicsForCoverDate() throws ParseException {
+    Mockito.when(comicDetailRepository.getAllComicsForCoverDate(Mockito.any(Date.class)))
+        .thenReturn(comicDetailList);
+
+    final List<ComicDetail> result =
+        service.getAllComicsForCoverDate(TEST_COVER_DATE, TEST_EMAIL, false);
+
+    assertNotNull(result);
+    assertSame(comicDetailList, result);
+
+    Mockito.verify(comicDetailRepository, Mockito.times(1))
+        .getAllComicsForCoverDate(service.coverDateFormat.parse(TEST_COVER_DATE));
+  }
+
+  @Test
+  void getAllComicsForCoverDate_unread() throws ParseException {
+    Mockito.when(
+            comicDetailRepository.getAllUnreadComicsForCoverDate(
+                Mockito.any(Date.class), Mockito.anyString()))
+        .thenReturn(comicDetailList);
+
+    final List<ComicDetail> result =
+        service.getAllComicsForCoverDate(TEST_COVER_DATE, TEST_EMAIL, true);
+
+    assertNotNull(result);
+    assertSame(comicDetailList, result);
+
+    Mockito.verify(comicDetailRepository, Mockito.times(1))
+        .getAllUnreadComicsForCoverDate(service.coverDateFormat.parse(TEST_COVER_DATE), TEST_EMAIL);
   }
 
   @Test
