@@ -65,6 +65,7 @@ public class DirectoryReaderService {
                     ReaderUtil.generateId(String.format("publisher:%s", entry)),
                     entry,
                     String.format("%s/%s?unread=%s", rootUrl, ReaderUtil.urlEncode(entry), unread)))
+        .sorted((left, right) -> left.getName().compareTo(right.getName()))
         .toList();
   }
 
@@ -81,6 +82,7 @@ public class DirectoryReaderService {
       final String email, final boolean unread, final String coverDate, final String urlRoot) {
     return this.comicDetailService.getAllComicsForCoverDate(coverDate, email, unread).stream()
         .map(comicDetail -> this.doCreateDirectoryEntry(comicDetail, urlRoot))
+        .sorted((left, right) -> left.getName().compareTo(right.getName()))
         .toList();
   }
 
@@ -101,6 +103,7 @@ public class DirectoryReaderService {
                     ReaderUtil.generateId(String.format("publisher:%s", entry)),
                     entry,
                     String.format("%s/%s?unread=%s", rootUrl, ReaderUtil.urlEncode(entry), unread)))
+        .sorted((left, right) -> left.getName().compareTo(right.getName()))
         .toList();
   }
 
@@ -126,6 +129,7 @@ public class DirectoryReaderService {
               result.setDirectory(true);
               return result;
             })
+        .sorted((left, right) -> left.getName().compareTo(right.getName()))
         .toList();
   }
 
@@ -147,6 +151,7 @@ public class DirectoryReaderService {
                     ReaderUtil.generateId(String.format("series:%s:publisher:%s", series, entry)),
                     entry,
                     String.format("%s/%s?unread=%s", rootUrl, ReaderUtil.urlEncode(entry), unread)))
+        .sorted((left, right) -> left.getName().compareTo(right.getName()))
         .toList();
   }
 
@@ -169,6 +174,7 @@ public class DirectoryReaderService {
                         String.format("publisher:%s:series:%s", publisher, entry)),
                     entry,
                     String.format("%s/%s?unread=%s", rootUrl, ReaderUtil.urlEncode(entry), unread)))
+        .sorted((left, right) -> left.getName().compareTo(right.getName()))
         .toList();
   }
 
@@ -199,6 +205,7 @@ public class DirectoryReaderService {
                             "publisher:%s:series:%s:volume:%s", publisher, series, entry)),
                     entry,
                     String.format("%s/%s?unread=%s", rootUrl, ReaderUtil.urlEncode(entry), unread)))
+        .sorted((left, right) -> left.getName().compareTo(right.getName()))
         .toList();
   }
 
@@ -244,6 +251,7 @@ public class DirectoryReaderService {
                     ReaderUtil.generateId(String.format("reading-list:%s", list.getName())),
                     list.getName(),
                     String.format("%s/%s", urlRoot, list.getReadingListId())))
+        .sorted((left, right) -> left.getName().compareTo(right.getName()))
         .toList();
   }
 
@@ -259,6 +267,7 @@ public class DirectoryReaderService {
       final String email, final Long id, final String urlRoot) {
     return this.comicDetailService.getAllComicsForReadingList(email, id).stream()
         .map(comicDetail -> this.doCreateDirectoryEntry(comicDetail, urlRoot))
+        .sorted((left, right) -> left.getName().compareTo(right.getName()))
         .toList();
   }
 
@@ -280,6 +289,7 @@ public class DirectoryReaderService {
                     ReaderUtil.generateId(String.format("comic-tag:%s:value:%s", tagType, entry)),
                     entry,
                     String.format("%s/%s", urlRoot, ReaderUtil.urlEncode(entry))))
+        .sorted((left, right) -> left.getName().compareTo(right.getName()))
         .toList();
   }
 
@@ -301,6 +311,7 @@ public class DirectoryReaderService {
       final String urlRoot) {
     return this.comicDetailService.getAllComicsForTag(tagType, tagValue, email, unread).stream()
         .map(comicDetail -> this.doCreateDirectoryEntry(comicDetail, urlRoot))
+        .sorted((left, right) -> left.getName().compareTo(right.getName()))
         .toList();
   }
 
