@@ -63,6 +63,7 @@ describe('ComicDetailEditComponent', () => {
   let component: ComicDetailEditComponent;
   let fixture: ComponentFixture<ComicDetailEditComponent>;
   let store: MockStore<any>;
+  let spyOnStoreDispatch: jasmine.Spy;
   let confirmationService: ConfirmationService;
   let clipboard: Clipboard;
 
@@ -103,7 +104,7 @@ describe('ComicDetailEditComponent', () => {
     component = fixture.componentInstance;
     component.comicBook = COMIC;
     store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
+    spyOnStoreDispatch = spyOn(store, 'dispatch');
     confirmationService = TestBed.inject(ConfirmationService);
     clipboard = TestBed.inject(Clipboard);
     spyOn(clipboard, 'copy');
@@ -206,6 +207,7 @@ describe('ComicDetailEditComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
+      spyOnStoreDispatch.calls.reset();
       component.onSaveChanges();
     });
 
