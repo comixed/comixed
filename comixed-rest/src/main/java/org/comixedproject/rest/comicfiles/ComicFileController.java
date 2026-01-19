@@ -26,6 +26,7 @@ import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import lombok.extern.log4j.Log4j2;
@@ -75,11 +76,16 @@ public class ComicFileController {
       throws JsonProcessingException {
     log.info("Loading comic files from user session");
     if (session.getAttribute(COMIC_FILES) == null) {
-      return null;
+      return new LoadComicFilesResponse(Collections.emptyList());
     }
-    final List<ComicFileGroup> comicFiles = this.doLoadComicFileSelections(session);
+    List<ComicFileGroup> comicFiles = null;
+    try {
+      comicFiles = this.doLoadComicFileSelections(session);
+    } catch (JsonProcessingException error) {
+      log.error("Failed to parse comic files in session", error);
+    }
     if (Objects.isNull(comicFiles)) {
-      return null;
+      return new LoadComicFilesResponse(Collections.emptyList());
     }
     return new LoadComicFilesResponse(comicFiles);
   }
