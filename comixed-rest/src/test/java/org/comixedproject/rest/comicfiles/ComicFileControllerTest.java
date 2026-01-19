@@ -110,7 +110,8 @@ class ComicFileControllerTest {
 
     final LoadComicFilesResponse result = controller.loadComicFilesFromSession(session);
 
-    assertNull(result);
+    assertNotNull(result);
+    assertTrue(result.getGroups().isEmpty());
 
     Mockito.verify(session, Mockito.times(1)).getAttribute(COMIC_FILES);
     Mockito.verify(objectMapper, Mockito.never())
@@ -123,20 +124,17 @@ class ComicFileControllerTest {
     Mockito.when(objectMapper.readValue(Mockito.anyString(), typeReferenceArgumentCaptor.capture()))
         .thenThrow(JsonProcessingException.class);
 
-    assertThrows(
-        JsonProcessingException.class,
-        () -> {
-          final LoadComicFilesResponse result = controller.loadComicFilesFromSession(session);
+    final LoadComicFilesResponse result = controller.loadComicFilesFromSession(session);
 
-          assertNull(result);
+    assertNotNull(result);
+    assertTrue(result.getGroups().isEmpty());
 
-          final TypeReference<ComicFile> typeReference = typeReferenceArgumentCaptor.getValue();
-          assertNotNull(typeReference);
+    final TypeReference<ComicFile> typeReference = typeReferenceArgumentCaptor.getValue();
+    assertNotNull(typeReference);
 
-          Mockito.verify(session, Mockito.times(1)).getAttribute(COMIC_FILES);
-          Mockito.verify(objectMapper, Mockito.times(1))
-              .readValue(TEST_ENCODED_COMIC_FILES, typeReference);
-        });
+    Mockito.verify(session, Mockito.times(2)).getAttribute(COMIC_FILES);
+    Mockito.verify(objectMapper, Mockito.times(1))
+        .readValue(TEST_ENCODED_COMIC_FILES, typeReference);
   }
 
   @Test
