@@ -30,6 +30,9 @@ import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
+import { ComicMetadataSource } from '@app/comic-books/models/comic-metadata-source';
+import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
+import { ComicTag } from '@app/comic-books/models/comic-tag';
 
 export const IMPRINT_1: Imprint = {
   imprintId: 1,
@@ -49,6 +52,31 @@ export const IMPRINT_3: Imprint = {
   publisher: 'Publisher 3'
 };
 
+export const COMIC_TAG_1: ComicTag = {
+  type: ComicTagType.LOCATION,
+  value: 'New York City'
+};
+
+export const COMIC_TAG_2: ComicTag = {
+  type: ComicTagType.STORY,
+  value: 'Age Of Ultron'
+};
+
+export const COMIC_TAG_3: ComicTag = {
+  type: ComicTagType.CHARACTER,
+  value: 'Alfred Pennyworth'
+};
+
+export const COMIC_TAG_4: ComicTag = {
+  type: ComicTagType.PENCILLER,
+  value: 'Joey Pencils'
+};
+
+export const COMIC_TAG_5: ComicTag = {
+  type: ComicTagType.TEAM,
+  value: 'The Avengers'
+};
+
 export const DISPLAYABLE_COMIC_1: DisplayableComic = {
   comicBookId: 1,
   comicDetailId: 101,
@@ -58,9 +86,10 @@ export const DISPLAYABLE_COMIC_1: DisplayableComic = {
   archiveType: ArchiveType.CBZ,
   comicState: ComicState.STABLE,
   comicType: ComicType.ISSUE,
+  sortName: '',
   unscraped: false,
   publisher: 'First Publisher',
-  imprint: 'First Imprint',
+  imprint: '',
   series: 'First Series',
   volume: '2017',
   issueNumber: '1',
@@ -71,7 +100,10 @@ export const DISPLAYABLE_COMIC_1: DisplayableComic = {
   storeDate: new Date().getTime(),
   yearPublished: new Date().getFullYear(),
   monthPublished: new Date().getMonth(),
-  addedDate: new Date().getTime()
+  addedDate: new Date().getTime(),
+  lastModifiedDate: new Date().getTime(),
+  notes: '',
+  description: ''
 };
 
 export const DISPLAYABLE_COMIC_2: DisplayableComic = {
@@ -83,6 +115,7 @@ export const DISPLAYABLE_COMIC_2: DisplayableComic = {
   archiveType: ArchiveType.CBZ,
   comicState: ComicState.STABLE,
   comicType: ComicType.ISSUE,
+  sortName: '',
   unscraped: false,
   publisher: 'First Publisher',
   imprint: 'First Imprint',
@@ -96,7 +129,10 @@ export const DISPLAYABLE_COMIC_2: DisplayableComic = {
   storeDate: new Date().getTime(),
   yearPublished: new Date().getFullYear(),
   monthPublished: new Date().getMonth(),
-  addedDate: new Date().getTime()
+  addedDate: new Date().getTime(),
+  lastModifiedDate: new Date().getTime(),
+  notes: '',
+  description: ''
 };
 
 export const DISPLAYABLE_COMIC_3: DisplayableComic = {
@@ -108,6 +144,7 @@ export const DISPLAYABLE_COMIC_3: DisplayableComic = {
   archiveType: ArchiveType.CBZ,
   comicState: ComicState.STABLE,
   comicType: ComicType.ISSUE,
+  sortName: '',
   unscraped: false,
   publisher: 'First Publisher',
   imprint: 'First Imprint',
@@ -121,7 +158,10 @@ export const DISPLAYABLE_COMIC_3: DisplayableComic = {
   storeDate: new Date().getTime(),
   yearPublished: new Date().getFullYear(),
   monthPublished: new Date().getMonth(),
-  addedDate: new Date().getTime()
+  addedDate: new Date().getTime(),
+  lastModifiedDate: new Date().getTime(),
+  notes: '',
+  description: ''
 };
 
 export const DISPLAYABLE_COMIC_4: DisplayableComic = {
@@ -133,6 +173,7 @@ export const DISPLAYABLE_COMIC_4: DisplayableComic = {
   archiveType: ArchiveType.CBZ,
   comicState: ComicState.STABLE,
   comicType: ComicType.ISSUE,
+  sortName: '',
   unscraped: false,
   publisher: 'First Publisher',
   imprint: 'First Imprint',
@@ -146,7 +187,10 @@ export const DISPLAYABLE_COMIC_4: DisplayableComic = {
   storeDate: new Date().getTime(),
   yearPublished: new Date().getFullYear(),
   monthPublished: new Date().getMonth(),
-  addedDate: new Date().getTime()
+  addedDate: new Date().getTime(),
+  lastModifiedDate: new Date().getTime(),
+  notes: '',
+  description: ''
 };
 
 export const DISPLAYABLE_COMIC_5: DisplayableComic = {
@@ -158,6 +202,7 @@ export const DISPLAYABLE_COMIC_5: DisplayableComic = {
   archiveType: ArchiveType.CBZ,
   comicState: ComicState.STABLE,
   comicType: ComicType.ISSUE,
+  sortName: '',
   unscraped: false,
   publisher: 'First Publisher',
   imprint: 'First Imprint',
@@ -171,7 +216,10 @@ export const DISPLAYABLE_COMIC_5: DisplayableComic = {
   storeDate: new Date().getTime(),
   yearPublished: new Date().getFullYear(),
   monthPublished: new Date().getMonth(),
-  addedDate: new Date().getTime()
+  addedDate: new Date().getTime(),
+  lastModifiedDate: new Date().getTime(),
+  notes: '',
+  description: ''
 };
 
 export const COMIC_DETAIL_1: ComicDetail = {
@@ -339,6 +387,12 @@ export const COMIC_DETAIL_5: ComicDetail = {
   lastModifiedDate: new Date().getTime()
 };
 
+export const COMIC_METADATA_SOURCE_1: ComicMetadataSource = {
+  metadataSource: METADATA_SOURCE_1,
+  referenceId: '71765',
+  lastScrapedDate: new Date().getTime()
+};
+
 export const COMIC_BOOK_1: ComicBook = {
   comicBookId: 1,
   detail: COMIC_DETAIL_1,
@@ -348,7 +402,7 @@ export const COMIC_BOOK_1: ComicBook = {
   lastModifiedDate: 0,
   nextIssueId: null,
   previousIssueId: null,
-  metadata: null
+  metadata: COMIC_METADATA_SOURCE_1
 };
 
 export const COMIC_BOOK_2: ComicBook = {

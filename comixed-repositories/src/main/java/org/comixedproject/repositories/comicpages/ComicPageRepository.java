@@ -178,4 +178,14 @@ public interface ComicPageRepository extends JpaRepository<ComicPage, Long> {
   @Query(
       "SELECT DISTINCT p.hash FROM ComicPage p WHERE p.hash IN (SELECT d.hash FROM ComicPage d GROUP BY d.hash HAVING COUNT(*) > 1)")
   List<String> getAllDuplicateHashes();
+
+  /**
+   * Returns all pages for the given comic book.
+   *
+   * @param id the comic book id
+   * @return the pages
+   */
+  @Query(
+      "SELECT p FROM ComicPage p WHERE p.comicBook.comicBookId = :comicBookId ORDER BY p.pageNumber")
+  List<ComicPage> getAllPagesForComicBook(@Param("comicBookId") long id);
 }

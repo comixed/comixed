@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2025, The ComiXed Project.
+ * Copyright (C) 2026, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,35 +13,31 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses>
+ * along with this program. If not, see <http:/www.gnu.org/licenses>
  */
 
 package org.comixedproject.repositories.comicbooks;
 
-import java.util.List;
-import org.comixedproject.model.comicbooks.ComicDetail;
-import org.comixedproject.model.comicbooks.ComicTag;
+import org.comixedproject.model.comicbooks.ComicMetadataSource;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+/**
+ * <code>ComicMetadataSourceRepository</code> provides methods for working with persisted instances
+ * of {@link ComicMetadataSource}.
+ *
+ * @author Darryl L. Pierce
+ */
 @Repository
-public interface ComicTagRepository extends JpaRepository<ComicTag, Long> {
+public interface ComicMetadataSourceRepository extends JpaRepository<ComicMetadataSource, Long> {
   /**
-   * Deletes all tags for the given comic detail.
+   * Returns the metadata source for the given comic book id.
    *
-   * @param comicDetail the comic detail
+   * @param id the comic book id
+   * @return the source
    */
-  void deleteAllByComicDetail(ComicDetail comicDetail);
-
-  /**
-   * Returns the comic tags for the given comic book.
-   *
-   * @param comicBookId the comic book id
-   * @return the comic tags
-   */
-  @Query(
-      "SELECT t FROM ComicTag t WHERE t.comicDetail.comicBook.comicBookId = :comicBookId ORDER BY t.type, t.value")
-  List<ComicTag> getForComicBook(@Param("comicBookId") long comicBookId);
+  @Query("SELECT s FROM ComicMetadataSource s WHERE s.comicBook.comicBookId = :comicBookId")
+  ComicMetadataSource findByComicBookId(@Param("comicBookId") long id);
 }

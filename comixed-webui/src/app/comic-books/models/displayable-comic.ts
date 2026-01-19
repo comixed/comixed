@@ -30,6 +30,7 @@ export interface DisplayableComic {
   comicState: ComicState;
   unscraped: boolean;
   comicType: ComicType;
+  sortName: string;
   publisher: string;
   imprint: string;
   series: string;
@@ -43,4 +44,7 @@ export interface DisplayableComic {
   yearPublished: number;
   storeDate: number;
   addedDate: number;
+  lastModifiedDate: number;
+  notes: string;
+  description: string;
 }

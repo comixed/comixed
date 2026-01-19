@@ -34,20 +34,29 @@ import {
   updatePageDeletion,
   updatePageDeletionFailed
 } from '../actions/comic-book.actions';
-import { ComicBook } from '@app/comic-books/models/comic-book';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
+import { ComicMetadataSource } from '@app/comic-books/models/comic-metadata-source';
+import { ComicPage } from '@app/comic-books/models/comic-page';
+import { ComicTag } from '@app/comic-books/models/comic-tag';
 
 export const COMIC_BOOK_FEATURE_KEY = 'comic_book_state';
 
 export interface ComicBookState {
   loading: boolean;
-  comicBook: ComicBook;
+  details: DisplayableComic;
+  metadata: ComicMetadataSource;
+  pages: ComicPage[];
+  tags: ComicTag[];
   saving: boolean;
   saved: boolean;
 }
 
 export const initialState: ComicBookState = {
   loading: false,
-  comicBook: null,
+  details: null,
+  metadata: null,
+  pages: [],
+  tags: [],
   saving: false,
   saved: false
 };
@@ -55,24 +64,35 @@ export const initialState: ComicBookState = {
 export const reducer = createReducer(
   initialState,
 
-  on(loadComicBook, state => ({ ...state, comicBook: null, loading: true })),
+  on(loadComicBook, state => ({
+    ...state,
+    details: null,
+    metadata: null,
+    pages: [],
+    loading: true
+  })),
   on(comicBookLoaded, (state, action) => ({
     ...state,
     loading: false,
-    comicBook: action.comicBook
+    details: action.details,
+    metadata: action.metadata,
+    pages: action.pages,
+    tags: action.tags
   })),
   on(loadComicBookFailed, state => ({ ...state, loading: false })),
   on(updateComicBook, state => ({ ...state, saving: true, saved: false })),
   on(comicBookUpdated, (state, action) => {
     if (
-      !!state.comicBook &&
-      state.comicBook.comicBookId === action.comicBook.comicBookId
+      !!state.details &&
+      state.details.comicBookId === action.details.comicBookId
     ) {
       return {
         ...state,
         saving: false,
         saved: true,
-        comicBook: action.comicBook
+        details: action.details,
+        metadata: action.metadata,
+        pages: action.pages
       };
     } else {
       return state;

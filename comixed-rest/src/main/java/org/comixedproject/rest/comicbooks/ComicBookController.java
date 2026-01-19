@@ -28,11 +28,14 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicBookData;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.comicbooks.*;
 import org.comixedproject.service.comicbooks.*;
 import org.comixedproject.service.comicpages.ComicPageException;
+import org.comixedproject.service.comicpages.ComicPageService;
 import org.comixedproject.service.comicpages.PageCacheService;
+import org.comixedproject.service.library.DisplayableComicService;
 import org.comixedproject.views.View.ComicDetailsView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -53,9 +56,12 @@ public class ComicBookController {
   public static final String MISSING_COMIC_COVER_FILENAME = "/images/missing-comic.png";
 
   @Autowired private ComicBookService comicBookService;
-  @Autowired private ComicDetailService comicDetailService;
+  @Autowired private DisplayableComicService displayableComicService;
   @Autowired private ComicSelectionService comicSelectionService;
   @Autowired private PageCacheService pageCacheService;
+  @Autowired private ComicPageService comicPageService;
+  @Autowired private ComicMetadataSourceService comicMetadataSourceService;
+  @Autowired private ComicTagService comicTagService;
 
   /**
    * Retrieves a single comic for a user. The comic is populated with user-specific meta-data.
@@ -67,9 +73,13 @@ public class ComicBookController {
   @GetMapping(value = "/api/comics/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.comic-book.get-one")
   @JsonView(ComicDetailsView.class)
-  public ComicBook getComic(@PathVariable("id") long id) throws ComicBookException {
+  public ComicBookData getComic(@PathVariable("id") long id) throws ComicDetailException {
     log.info("Getting comic: id={}", id);
-    return this.comicBookService.getComic(id);
+    return new ComicBookData(
+        this.displayableComicService.getForComicBookId(id),
+        this.comicPageService.getPagesForComicBook(id),
+        this.comicMetadataSourceService.getMetadataForComicBook(id),
+        this.comicTagService.getTagsForComicBook(id));
   }
 
   /**

@@ -22,19 +22,19 @@ import { ComicContextMenuEvent } from '@app/comic-books/models/event/comic-conte
 import { ComicSelectEvent } from '@app/comic-books/models/event/comic-select-event';
 import { UpdateComicInfoEvent } from '@app/comic-books/models/event/update-comic-info-event';
 import { ComicState } from '@app/comic-books/models/comic-state';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import {
   MatCard,
-  MatCardTitle,
+  MatCardContent,
   MatCardSubtitle,
-  MatCardContent
+  MatCardTitle
 } from '@angular/material/card';
 import { MatTooltip } from '@angular/material/tooltip';
-import { MatChipListbox, MatChip } from '@angular/material/chips';
+import { MatChip, MatChipListbox } from '@angular/material/chips';
 import { RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TranslateModule } from '@ngx-translate/core';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Component({
   selector: 'cx-comic-detail-card',
@@ -55,7 +55,7 @@ import { TranslateModule } from '@ngx-translate/core';
   ]
 })
 export class ComicDetailCardComponent {
-  @Input() comic: ComicDetail;
+  @Input() comic: DisplayableComic;
   @Input() coverTooltip: string;
   @Input() title: string;
   @Input() subtitle: string = '';
@@ -101,7 +101,7 @@ export class ComicDetailCardComponent {
     });
   }
 
-  onUpdateComicInfo(comic: ComicDetail): void {
+  onUpdateComicInfo(comic: DisplayableComic): void {
     this.logger.trace('Firing update comic info event:', comic);
     this.updateComicInfo.emit({ comic });
   }

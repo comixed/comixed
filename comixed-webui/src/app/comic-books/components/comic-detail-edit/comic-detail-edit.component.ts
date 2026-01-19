@@ -17,7 +17,6 @@
  */
 
 import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ComicState } from '@app/comic-books/models/comic-state';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import {
@@ -30,7 +29,6 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngrx/store';
 import { updateComicBook } from '@app/comic-books/actions/comic-book.actions';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { Subscription } from 'rxjs';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { Imprint } from '@app/comic-books/models/imprint';
@@ -38,7 +36,6 @@ import { selectImprints } from '@app/comic-books/selectors/imprint-list.selector
 import { loadImprints } from '@app/comic-books/actions/imprint-list.actions';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { COMIC_TYPE_SELECTION_OPTIONS } from '@app/comic-books/comic-books.constants';
-import { ComicMetadataSource } from '@app/comic-books/models/comic-metadata-source';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatIconButton } from '@angular/material/button';
@@ -57,6 +54,7 @@ import {
   MatDatepickerToggle
 } from '@angular/material/datepicker';
 import { CommonModule } from '@angular/common';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Component({
   selector: 'cx-comic-detail-edit',
@@ -139,72 +137,60 @@ export class ComicDetailEditComponent implements OnInit, OnDestroy {
       });
   }
 
-  private _comicBook: ComicBook;
+  private _comicBook: DisplayableComic;
 
-  get comicBook(): ComicBook {
+  get comicBook(): DisplayableComic {
     return {
       ...this._comicBook,
-      detail: {
-        ...this._comicBook.detail,
-        comicDetailId: undefined,
-        comicType: this.comicBookForm.controls.comicType.value,
-        publisher: this.comicBookForm.controls.publisher.value,
-        series: this.comicBookForm.controls.series.value,
-        volume: this.comicBookForm.controls.volume.value,
-        issueNumber: this.comicBookForm.controls.issueNumber.value,
-        imprint: this.comicBookForm.controls.imprint.value,
-        sortName: this.comicBookForm.controls.sortName.value,
-        title: this.comicBookForm.controls.title.value,
-        coverDate: this.comicBookForm.controls.coverDate.value?.getTime(),
-        storeDate: this.comicBookForm.controls.storeDate.value?.getTime(),
-        notes: this.comicBookForm.controls.notes.value
-      } as ComicDetail,
-      metadata: {} as ComicMetadataSource,
-      pages: []
-    } as ComicBook;
+      comicDetailId: undefined,
+      comicType: this.comicBookForm.controls.comicType.value,
+      publisher: this.comicBookForm.controls.publisher.value,
+      series: this.comicBookForm.controls.series.value,
+      volume: this.comicBookForm.controls.volume.value,
+      issueNumber: this.comicBookForm.controls.issueNumber.value,
+      imprint: this.comicBookForm.controls.imprint.value,
+      sortName: this.comicBookForm.controls.sortName.value,
+      title: this.comicBookForm.controls.title.value,
+      coverDate: this.comicBookForm.controls.coverDate.value?.getTime(),
+      storeDate: this.comicBookForm.controls.storeDate.value?.getTime(),
+      notes: this.comicBookForm.controls.notes.value
+    } as DisplayableComic;
   }
 
-  @Input() set comicBook(comic: ComicBook) {
+  @Input() set comicBook(comic: DisplayableComic) {
     this._comicBook = comic;
-    this.comicBookForm.controls.comicType.setValue(comic.detail.comicType);
-    this.comicBookForm.controls.publisher.setValue(comic.detail.publisher);
-    this.comicBookForm.controls.series.setValue(comic.detail.series);
-    this.comicBookForm.controls.volume.setValue(comic.detail.volume);
-    this.comicBookForm.controls.issueNumber.setValue(comic.detail.issueNumber);
-    this.comicBookForm.controls.imprint.setValue(comic.detail.imprint);
-    this.comicBookForm.controls.sortName.setValue(comic.detail.sortName);
-    this.comicBookForm.controls.title.setValue(comic.detail.title);
-    if (!!comic.detail.coverDate) {
-      this.comicBookForm.controls.coverDate.setValue(
-        new Date(comic.detail.coverDate)
-      );
+    this.comicBookForm.controls.comicType.setValue(comic.comicType);
+    this.comicBookForm.controls.publisher.setValue(comic.publisher);
+    this.comicBookForm.controls.series.setValue(comic.series);
+    this.comicBookForm.controls.volume.setValue(comic.volume);
+    this.comicBookForm.controls.issueNumber.setValue(comic.issueNumber);
+    this.comicBookForm.controls.imprint.setValue(comic.imprint);
+    this.comicBookForm.controls.sortName.setValue(comic.sortName);
+    this.comicBookForm.controls.title.setValue(comic.title);
+    if (!!comic.coverDate) {
+      this.comicBookForm.controls.coverDate.setValue(new Date(comic.coverDate));
     } else {
       this.comicBookForm.controls.coverDate.setValue(null);
     }
-    if (!!comic.detail.storeDate) {
-      this.comicBookForm.controls.storeDate.setValue(
-        new Date(comic.detail.storeDate)
-      );
+    if (!!comic.storeDate) {
+      this.comicBookForm.controls.storeDate.setValue(new Date(comic.storeDate));
     } else {
       this.comicBookForm.controls.storeDate.setValue(null);
     }
-    this.comicBookForm.controls.comicState.setValue(comic.detail.comicState);
-    this.comicBookForm.controls.filename.setValue(comic.detail.filename);
-    this.comicBookForm.controls.archiveType.setValue(comic.detail.archiveType);
+    this.comicBookForm.controls.comicState.setValue(comic.comicState);
+    this.comicBookForm.controls.filename.setValue(comic.filename);
+    this.comicBookForm.controls.archiveType.setValue(comic.archiveType);
     this.comicBookForm.controls.fileSize.setValue(0);
-    this.comicBookForm.controls.notes.setValue(comic.detail.notes);
+    this.comicBookForm.controls.notes.setValue(comic.notes);
     this.comicBookForm.markAsUntouched();
   }
 
   get deleted(): boolean {
-    return this.comicBook.detail.comicState === ComicState.DELETED;
+    return this.comicBook.comicState === ComicState.DELETED;
   }
 
   get comicChanged(): boolean {
-    return (
-      !!this.comicBook &&
-      this.comicBook.detail.comicState === ComicState.CHANGED
-    );
+    return !!this.comicBook && this.comicBook.comicState === ComicState.CHANGED;
   }
 
   ngOnDestroy(): void {
@@ -256,11 +242,11 @@ export class ComicDetailEditComponent implements OnInit, OnDestroy {
     const imprint = this.imprints.find(entry => entry.name === name);
     this.logger.trace('Setting publisher name');
     this.comicBookForm.controls.publisher.setValue(
-      imprint?.publisher || this.comicBook.detail.publisher
+      imprint?.publisher || this.comicBook.publisher
     );
     this.logger.trace('Setting imprint name');
     this.comicBookForm.controls.imprint.setValue(
-      imprint?.name || this.comicBook.detail.imprint
+      imprint?.name || this.comicBook.imprint
     );
   }
 
@@ -270,6 +256,6 @@ export class ComicDetailEditComponent implements OnInit, OnDestroy {
   }
 
   onCopyFilenameToClipboard(): void {
-    this.clipboard.copy(this.comicBook.detail.filename);
+    this.clipboard.copy(this.comicBook.filename);
   }
 }

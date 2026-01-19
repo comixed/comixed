@@ -20,7 +20,14 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ComicStoryComponent } from './comic-story.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
-import { COMIC_BOOK_1 } from '@app/comic-books/comic-books.fixtures';
+import {
+  COMIC_TAG_1,
+  COMIC_TAG_2,
+  COMIC_TAG_3,
+  COMIC_TAG_4,
+  COMIC_TAG_5,
+  DISPLAYABLE_COMIC_1
+} from '@app/comic-books/comic-books.fixtures';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ComicDetailCardComponent } from '@app/comic-books/components/comic-detail-card/comic-detail-card.component';
@@ -32,7 +39,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 
 describe('ComicStoryComponent', () => {
-  const COMIC_BOOK = COMIC_BOOK_1;
+  const COMIC_BOOK = DISPLAYABLE_COMIC_1;
+  const TAGS = [
+    COMIC_TAG_1,
+    COMIC_TAG_2,
+    COMIC_TAG_3,
+    COMIC_TAG_4,
+    COMIC_TAG_5
+  ];
   const initialState = {};
 
   let component: ComicStoryComponent;
@@ -73,21 +87,25 @@ describe('ComicStoryComponent', () => {
       component.teams = [];
       component.locations = [];
       component.stories = [];
-      component.comic = COMIC_BOOK;
+      component.tags = TAGS;
     });
 
     it('loads the credits', () => {
       expect(component.credits).not.toEqual([]);
     });
+
     it('loads the characters', () => {
       expect(component.characters).not.toEqual([]);
     });
+
     it('loads the teams', () => {
       expect(component.teams).not.toEqual([]);
     });
+
     it('loads the locations', () => {
       expect(component.locations).not.toEqual([]);
     });
+
     it('loads the stories', () => {
       expect(component.stories).not.toEqual([]);
     });

@@ -373,4 +373,16 @@ public class ComicPageService {
     log.debug("Loading all duplicate page hashes");
     return this.comicPageRepository.getAllDuplicateHashes();
   }
+
+  /**
+   * Returns all pages for the given comic book by id.
+   *
+   * @param id the comic book id
+   * @return the pages
+   */
+  @Transactional(readOnly = true)
+  public List<ComicPage> getPagesForComicBook(final long id) {
+    log.debug("Loading all pages for comic book: id={}", id);
+    return this.comicPageRepository.getAllPagesForComicBook(id);
+  }
 }

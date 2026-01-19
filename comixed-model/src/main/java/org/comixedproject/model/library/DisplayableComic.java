@@ -85,6 +85,12 @@ public class DisplayableComic {
   @Setter
   private ComicType comicType;
 
+  @Column(name = "sort_Name")
+  @JsonView({View.ComicDetailsView.class})
+  @Getter
+  @Setter
+  private ComicType sortName;
+
   @Column(name = "publisher")
   @JsonView({View.ComicListView.class})
   @Getter
@@ -171,6 +177,12 @@ public class DisplayableComic {
   @Getter
   @Setter
   private Date addedDate;
+
+  @Column(name = "last_modified_date")
+  @JsonView({View.ComicDetailsView.class})
+  @Getter
+  @Setter
+  private Date lastModifiedDate;
 
   @Transient
   @JsonView({View.ComicListView.class})

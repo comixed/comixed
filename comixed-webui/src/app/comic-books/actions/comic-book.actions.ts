@@ -17,10 +17,12 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ComicPage } from '@app/comic-books/models/comic-page';
 import { PageOrderEntry } from '@app/comic-books/models/net/page-order-entry';
 import { ComicType } from '@app/comic-books/models/comic-type';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
+import { ComicMetadataSource } from '@app/comic-books/models/comic-metadata-source';
+import { ComicTag } from '@app/comic-books/models/comic-tag';
 
 export const loadComicBook = createAction(
   '[Comic Book] Loads a single comic',
@@ -29,7 +31,12 @@ export const loadComicBook = createAction(
 
 export const comicBookLoaded = createAction(
   '[Comic Book] A single comic was loaded',
-  props<{ comicBook: ComicBook }>()
+  props<{
+    details: DisplayableComic;
+    metadata: ComicMetadataSource;
+    pages: ComicPage[];
+    tags: ComicTag[];
+  }>()
 );
 
 export const loadComicBookFailed = createAction(
@@ -55,7 +62,11 @@ export const updateComicBook = createAction(
 
 export const comicBookUpdated = createAction(
   '[Comic Book] ComicBook updated',
-  props<{ comicBook: ComicBook }>()
+  props<{
+    details: DisplayableComic;
+    metadata: ComicMetadataSource;
+    pages: ComicPage[];
+  }>()
 );
 
 export const updateComicBookFailed = createAction(
@@ -77,7 +88,7 @@ export const updatePageDeletionFailed = createAction(
 
 export const savePageOrder = createAction(
   '[Comic Book] Save page order',
-  props<{ comicBook: ComicBook; entries: PageOrderEntry[] }>()
+  props<{ comicBookId: number; entries: PageOrderEntry[] }>()
 );
 
 export const pageOrderSaved = createAction('[Comic Book] Page order saved');
@@ -88,7 +99,7 @@ export const savePageOrderFailed = createAction(
 
 export const downloadComicBook = createAction(
   '[Comic Book] Attempt to download a comic book file',
-  props<{ comicBook: ComicBook }>()
+  props<{ comicBookId: number }>()
 );
 
 export const downloadComicBookSuccess = createAction(

@@ -24,7 +24,6 @@ import {
   OnInit
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -43,8 +42,7 @@ import {
 } from '@app/library/library.constants';
 import {
   loadVolumeMetadata,
-  resetMetadataState,
-  setChosenMetadataSource
+  resetMetadataState
 } from '@app/comic-metadata/actions/single-book-scraping.actions';
 import {
   selectChosenMetadataSource,
@@ -52,7 +50,7 @@ import {
   selectSingleBookScrapingState
 } from '@app/comic-metadata/selectors/single-book-scraping.selectors';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import {
   comicBookLoaded,
@@ -60,7 +58,7 @@ import {
   loadComicBook,
   savePageOrder
 } from '@app/comic-books/actions/comic-book.actions';
-import { selectComicBook } from '@app/comic-books/selectors/comic-book.selectors';
+import { selectComicBookState } from '@app/comic-books/selectors/comic-book.selectors';
 import { TitleService } from '@app/core/services/title.service';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
@@ -82,13 +80,13 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import {
   MatCard,
-  MatCardTitle,
-  MatCardSubtitle,
   MatCardContent,
-  MatCardFooter
+  MatCardFooter,
+  MatCardSubtitle,
+  MatCardTitle
 } from '@angular/material/card';
 import { ComicPageComponent } from '../../components/comic-page/comic-page.component';
-import { MatTabGroup, MatTab } from '@angular/material/tabs';
+import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { ComicDetailEditComponent } from '../../components/comic-detail-edit/comic-detail-edit.component';
 import { ComicStoryComponent } from '../../components/comic-story/comic-story.component';
 import { ComicPagesComponent } from '../../components/comic-pages/comic-pages.component';
@@ -97,6 +95,8 @@ import { ComicScrapingVolumeSelectionComponent } from '../../components/comic-sc
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
+import { LoadComicBookResponse } from '@app/comic-books/models/net/load-comic-book-response';
+import { ComicTag } from '@app/comic-books/models/comic-tag';
 
 @Component({
   selector: 'cx-comic-book-page',
@@ -140,7 +140,8 @@ export class ComicBookPageComponent
   messagingSubscription: Subscription;
   comicId = -1;
   pageIndex = 0;
-  comicBook: ComicBook;
+  comic: DisplayableComic | null;
+  tags: ComicTag[] = [];
   pages: ComicPage[];
   userSubscription: Subscription;
   readComicBooksSubscription: Subscription;
@@ -157,8 +158,8 @@ export class ComicBookPageComponent
   langChangeSubscription: Subscription;
   isRead = false;
   readComicBookList: number[] = [];
-  messagingStarted = false;
 
+  messagingStarted = false;
   logger = inject(LoggerService);
   store = inject(Store);
   activatedRoute = inject(ActivatedRoute);
@@ -168,7 +169,6 @@ export class ComicBookPageComponent
   confirmationService = inject(ConfirmationService);
   webSocketService = inject(WebSocketService);
   queryParameterService = inject(QueryParameterService);
-  protected displayableComic: DisplayableComic | null;
 
   constructor() {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
@@ -192,28 +192,14 @@ export class ComicBookPageComponent
         )
       );
     this.comicSubscription = this.store
-      .select(selectComicBook)
-      .subscribe(comic => {
-        this.comicBook = comic;
-        this.displayableComic = {
-          comicBookId: comic?.comicBookId,
-          publisher: comic?.detail?.publisher,
-          imprint: comic?.detail?.imprint,
-          series: comic?.detail?.series,
-          volume: comic?.detail?.volume,
-          issueNumber: comic?.detail?.issueNumber,
-          baseFilename: comic?.detail?.baseFilename,
-          referenceId: comic?.metadata?.referenceId
-        } as DisplayableComic;
+      .select(selectComicBookState)
+      .subscribe(state => {
+        // this.comicBook = comic;
+        this.comic = state.details;
+        this.metadataSource = state.metadata?.metadataSource;
+        this.pages = state.pages;
+        this.tags = state.tags;
         this.doCheckIfRead();
-        if (!!this.comicBook?.metadata) {
-          this.logger.trace('Preselecting previous metadata source');
-          this.store.dispatch(
-            setChosenMetadataSource({
-              metadataSource: this.comicBook.metadata.metadataSource
-            })
-          );
-        }
         this.loadPageTitle();
       });
     this.metadataSourceSubscription = this.store
@@ -267,11 +253,11 @@ export class ComicBookPageComponent
   }
 
   get hasChangedState(): boolean {
-    return this.comicBook.detail.comicState === ComicState.CHANGED;
+    return this.comic.comicState === ComicState.CHANGED;
   }
 
   get isDeleted(): boolean {
-    return this.comicBook.detail.comicState === ComicState.DELETED;
+    return this.comic.comicState === ComicState.DELETED;
   }
 
   ngOnInit(): void {
@@ -327,7 +313,7 @@ export class ComicBookPageComponent
     this.logger.debug('Marking comic read status:', read);
     this.store.dispatch(
       markSingleComicBookRead({
-        comicDetailId: this.comicBook.detail.comicDetailId,
+        comicDetailId: this.comic.comicDetailId,
         read
       })
     );
@@ -343,10 +329,10 @@ export class ComicBookPageComponent
         { count: 1 }
       ),
       confirm: () => {
-        this.logger.debug('Updating comic file:', this.comicBook);
+        this.logger.debug('Updating comic file:', this.comic);
         this.store.dispatch(
           updateSingleComicBookMetadata({
-            comicBookId: this.comicBook.comicBookId
+            comicBookId: this.comic.comicBookId
           })
         );
       }
@@ -368,11 +354,15 @@ export class ComicBookPageComponent
         this.logger.trace('Marking comic for deletion');
         if (deleted) {
           this.store.dispatch(
-            deleteSingleComicBook({ comicBookId: this.comicBook.comicBookId })
+            deleteSingleComicBook({
+              comicBookId: this.comic.comicBookId
+            })
           );
         } else {
           this.store.dispatch(
-            undeleteSingleComicBook({ comicBookId: this.comicBook.comicBookId })
+            undeleteSingleComicBook({
+              comicBookId: this.comic.comicBookId
+            })
           );
         }
       }
@@ -403,7 +393,7 @@ export class ComicBookPageComponent
         this.logger.trace('Firing event: save page order');
         this.store.dispatch(
           savePageOrder({
-            comicBook: this.comicBook,
+            comicBookId: this.comic.comicBookId,
             entries: this.pages.map((page, index) => {
               return {
                 index,
@@ -418,7 +408,9 @@ export class ComicBookPageComponent
 
   onDownloadComicFile(): void {
     this.logger.debug('Downloading comic file');
-    this.store.dispatch(downloadComicBook({ comicBook: this.comicBook }));
+    this.store.dispatch(
+      downloadComicBook({ comicBookId: this.comic.comicBookId })
+    );
   }
 
   private loadTranslations(): void {
@@ -426,11 +418,9 @@ export class ComicBookPageComponent
   }
 
   private loadPageTitle(): void {
-    if (!!this.comicBook) {
+    if (!!this.comic) {
       this.logger.trace('Updating page title');
-      this.titleService.setTitle(
-        this.comicTitlePipe.transform(this.comicBook.detail)
-      );
+      this.titleService.setTitle(this.comicTitlePipe.transform(this.comic));
     }
   }
 
@@ -438,19 +428,22 @@ export class ComicBookPageComponent
     if (!this.comicUpdateSubscription && this.messagingStarted) {
       const topic = interpolate(COMIC_BOOK_UPDATE_TOPIC, { id: this.comicId });
       this.logger.trace('Subscribing to comic book updates:', topic);
-      this.comicUpdateSubscription = this.webSocketService.subscribe<ComicBook>(
-        topic,
-        comic => {
-          this.logger.debug('ComicBook book update received:', comic);
-          this.store.dispatch(comicBookLoaded({ comicBook: comic }));
-        }
-      );
+      this.comicUpdateSubscription =
+        this.webSocketService.subscribe<LoadComicBookResponse>(topic, data => {
+          this.logger.debug('ComicBook book update received:', data);
+          this.store.dispatch(
+            comicBookLoaded({
+              details: data.details,
+              metadata: data.metadata,
+              pages: data.pages,
+              tags: data.tags
+            })
+          );
+        });
     }
   }
 
   private doCheckIfRead() {
-    this.isRead = this.readComicBookList.includes(
-      this.comicBook?.detail?.comicDetailId
-    );
+    this.isRead = this.readComicBookList.includes(this.comic?.comicDetailId);
   }
 }
