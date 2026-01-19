@@ -22,7 +22,15 @@ import { Observable, of, throwError } from 'rxjs';
 import { ComicBookEffects } from './comic-book.effects';
 import { ComicBookService } from '@app/comic-books/services/comic-book.service';
 import { AlertService } from '@app/core/services/alert.service';
-import { COMIC_BOOK_2 } from '@app/comic-books/comic-books.fixtures';
+import {
+  COMIC_METADATA_SOURCE_1,
+  COMIC_TAG_1,
+  COMIC_TAG_2,
+  COMIC_TAG_3,
+  COMIC_TAG_4,
+  COMIC_TAG_5,
+  DISPLAYABLE_COMIC_1
+} from '@app/comic-books/comic-books.fixtures';
 import {
   comicBookLoaded,
   comicBookUpdated,
@@ -45,16 +53,31 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
+import {
+  PAGE_1,
+  PAGE_2,
+  PAGE_3,
+  PAGE_4
+} from '@app/comic-pages/comic-pages.fixtures';
 import { DownloadDocument } from '@app/core/models/download-document';
 import { FileDownloadService } from '@app/core/services/file-download.service';
+import { LoadComicBookResponse } from '@app/comic-books/models/net/load-comic-book-response';
 
 describe('ComicBookEffects', () => {
-  const COMIC_BOOK = COMIC_BOOK_2;
+  const DETAILS = DISPLAYABLE_COMIC_1;
+  const METADATA = COMIC_METADATA_SOURCE_1;
+  const PAGES = [PAGE_1, PAGE_2, PAGE_3, PAGE_4];
+  const TAGS = [
+    COMIC_TAG_1,
+    COMIC_TAG_2,
+    COMIC_TAG_3,
+    COMIC_TAG_4,
+    COMIC_TAG_5
+  ];
   const PAGE = PAGE_1;
   const DELETED = Math.random() > 0.5;
   const DOWNLOAD_COMIC_BOOK = {
-    filename: COMIC_BOOK.detail.filename,
+    filename: DETAILS.filename,
     content: 'content',
     mediaType: 'application/octet'
   } as DownloadDocument;
@@ -113,9 +136,19 @@ describe('ComicBookEffects', () => {
 
   describe('loading a single comic', () => {
     it('fires an action on success', () => {
-      const serviceResponse = COMIC_BOOK;
-      const action = loadComicBook({ id: COMIC_BOOK.comicBookId });
-      const outcome = comicBookLoaded({ comicBook: COMIC_BOOK });
+      const serviceResponse = {
+        details: DETAILS,
+        metadata: METADATA,
+        pages: PAGES,
+        tags: TAGS
+      } as LoadComicBookResponse;
+      const action = loadComicBook({ id: DETAILS.comicBookId });
+      const outcome = comicBookLoaded({
+        details: DETAILS,
+        metadata: METADATA,
+        pages: PAGES,
+        tags: TAGS
+      });
 
       actions$ = hot('-a', { a: action });
       comicService.loadOne.and.returnValue(of(serviceResponse));
@@ -126,7 +159,7 @@ describe('ComicBookEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = loadComicBook({ id: COMIC_BOOK.comicBookId });
+      const action = loadComicBook({ id: DETAILS.comicBookId });
       const outcome = loadComicBookFailed();
 
       actions$ = hot('-a', { a: action });
@@ -138,7 +171,7 @@ describe('ComicBookEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = loadComicBook({ id: COMIC_BOOK.comicBookId });
+      const action = loadComicBook({ id: DETAILS.comicBookId });
       const outcome = loadComicBookFailed();
 
       actions$ = hot('-a', { a: action });
@@ -152,37 +185,44 @@ describe('ComicBookEffects', () => {
 
   describe('saving a single comic', () => {
     it('fires an action on success', () => {
-      const serviceResponse = COMIC_BOOK;
+      const serviceResponse = {
+        details: DETAILS,
+        metadata: METADATA,
+        pages: PAGES
+      } as LoadComicBookResponse;
       const action = updateComicBook({
-        comicBookId: COMIC_BOOK.comicBookId,
-        comicType: COMIC_BOOK.detail.comicType,
-        publisher: COMIC_BOOK.detail.publisher,
-        series: COMIC_BOOK.detail.series,
-        volume: COMIC_BOOK.detail.volume,
-        issueNumber: COMIC_BOOK.detail.issueNumber,
-        imprint: COMIC_BOOK.detail.imprint,
-        sortName: COMIC_BOOK.detail.sortName,
-        title: COMIC_BOOK.detail.title,
-        storeDate: COMIC_BOOK.detail.storeDate,
-        coverDate: COMIC_BOOK.detail.coverDate
+        comicBookId: DETAILS.comicBookId,
+        comicType: DETAILS.comicType,
+        publisher: DETAILS.publisher,
+        series: DETAILS.series,
+        volume: DETAILS.volume,
+        issueNumber: DETAILS.issueNumber,
+        imprint: DETAILS.imprint,
+        sortName: DETAILS.sortName,
+        title: DETAILS.title,
+        storeDate: DETAILS.storeDate,
+        coverDate: DETAILS.coverDate
       });
-
-      const outcome = comicBookUpdated({ comicBook: COMIC_BOOK });
+      const outcome = comicBookUpdated({
+        details: DETAILS,
+        metadata: METADATA,
+        pages: PAGES
+      });
 
       actions$ = hot('-a', { a: action });
       comicService.updateOne
         .withArgs({
-          comicBookId: COMIC_BOOK.comicBookId,
-          comicType: COMIC_BOOK.detail.comicType,
-          publisher: COMIC_BOOK.detail.publisher,
-          series: COMIC_BOOK.detail.series,
-          volume: COMIC_BOOK.detail.volume,
-          issueNumber: COMIC_BOOK.detail.issueNumber,
-          imprint: COMIC_BOOK.detail.imprint,
-          sortName: COMIC_BOOK.detail.sortName,
-          title: COMIC_BOOK.detail.title,
-          storeDate: COMIC_BOOK.detail.storeDate,
-          coverDate: COMIC_BOOK.detail.coverDate
+          comicBookId: DETAILS.comicBookId,
+          comicType: DETAILS.comicType,
+          publisher: DETAILS.publisher,
+          series: DETAILS.series,
+          volume: DETAILS.volume,
+          issueNumber: DETAILS.issueNumber,
+          imprint: DETAILS.imprint,
+          sortName: DETAILS.sortName,
+          title: DETAILS.title,
+          storeDate: DETAILS.storeDate,
+          coverDate: DETAILS.coverDate
         })
         .and.returnValue(of(serviceResponse));
 
@@ -194,17 +234,17 @@ describe('ComicBookEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = updateComicBook({
-        comicBookId: COMIC_BOOK.comicBookId,
-        comicType: COMIC_BOOK.detail.comicType,
-        publisher: COMIC_BOOK.detail.publisher,
-        series: COMIC_BOOK.detail.series,
-        volume: COMIC_BOOK.detail.volume,
-        issueNumber: COMIC_BOOK.detail.issueNumber,
-        imprint: COMIC_BOOK.detail.imprint,
-        sortName: COMIC_BOOK.detail.sortName,
-        title: COMIC_BOOK.detail.title,
-        storeDate: COMIC_BOOK.detail.storeDate,
-        coverDate: COMIC_BOOK.detail.coverDate
+        comicBookId: DETAILS.comicBookId,
+        comicType: DETAILS.comicType,
+        publisher: DETAILS.publisher,
+        series: DETAILS.series,
+        volume: DETAILS.volume,
+        issueNumber: DETAILS.issueNumber,
+        imprint: DETAILS.imprint,
+        sortName: DETAILS.sortName,
+        title: DETAILS.title,
+        storeDate: DETAILS.storeDate,
+        coverDate: DETAILS.coverDate
       });
 
       const outcome = updateComicBookFailed();
@@ -212,17 +252,17 @@ describe('ComicBookEffects', () => {
       actions$ = hot('-a', { a: action });
       comicService.updateOne
         .withArgs({
-          comicBookId: COMIC_BOOK.comicBookId,
-          comicType: COMIC_BOOK.detail.comicType,
-          publisher: COMIC_BOOK.detail.publisher,
-          series: COMIC_BOOK.detail.series,
-          volume: COMIC_BOOK.detail.volume,
-          issueNumber: COMIC_BOOK.detail.issueNumber,
-          imprint: COMIC_BOOK.detail.imprint,
-          sortName: COMIC_BOOK.detail.sortName,
-          title: COMIC_BOOK.detail.title,
-          storeDate: COMIC_BOOK.detail.storeDate,
-          coverDate: COMIC_BOOK.detail.coverDate
+          comicBookId: DETAILS.comicBookId,
+          comicType: DETAILS.comicType,
+          publisher: DETAILS.publisher,
+          series: DETAILS.series,
+          volume: DETAILS.volume,
+          issueNumber: DETAILS.issueNumber,
+          imprint: DETAILS.imprint,
+          sortName: DETAILS.sortName,
+          title: DETAILS.title,
+          storeDate: DETAILS.storeDate,
+          coverDate: DETAILS.coverDate
         })
         .and.returnValue(throwError(serviceResponse));
 
@@ -233,34 +273,34 @@ describe('ComicBookEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = updateComicBook({
-        comicBookId: COMIC_BOOK.comicBookId,
-        comicType: COMIC_BOOK.detail.comicType,
-        publisher: COMIC_BOOK.detail.publisher,
-        series: COMIC_BOOK.detail.series,
-        volume: COMIC_BOOK.detail.volume,
-        issueNumber: COMIC_BOOK.detail.issueNumber,
-        imprint: COMIC_BOOK.detail.imprint,
-        sortName: COMIC_BOOK.detail.sortName,
-        title: COMIC_BOOK.detail.title,
-        storeDate: COMIC_BOOK.detail.storeDate,
-        coverDate: COMIC_BOOK.detail.coverDate
+        comicBookId: DETAILS.comicBookId,
+        comicType: DETAILS.comicType,
+        publisher: DETAILS.publisher,
+        series: DETAILS.series,
+        volume: DETAILS.volume,
+        issueNumber: DETAILS.issueNumber,
+        imprint: DETAILS.imprint,
+        sortName: DETAILS.sortName,
+        title: DETAILS.title,
+        storeDate: DETAILS.storeDate,
+        coverDate: DETAILS.coverDate
       });
       const outcome = updateComicBookFailed();
 
       actions$ = hot('-a', { a: action });
       comicService.updateOne
         .withArgs({
-          comicBookId: COMIC_BOOK.comicBookId,
-          comicType: COMIC_BOOK.detail.comicType,
-          publisher: COMIC_BOOK.detail.publisher,
-          series: COMIC_BOOK.detail.series,
-          volume: COMIC_BOOK.detail.volume,
-          issueNumber: COMIC_BOOK.detail.issueNumber,
-          imprint: COMIC_BOOK.detail.imprint,
-          sortName: COMIC_BOOK.detail.sortName,
-          title: COMIC_BOOK.detail.title,
-          storeDate: COMIC_BOOK.detail.storeDate,
-          coverDate: COMIC_BOOK.detail.coverDate
+          comicBookId: DETAILS.comicBookId,
+          comicType: DETAILS.comicType,
+          publisher: DETAILS.publisher,
+          series: DETAILS.series,
+          volume: DETAILS.volume,
+          issueNumber: DETAILS.issueNumber,
+          imprint: DETAILS.imprint,
+          sortName: DETAILS.sortName,
+          title: DETAILS.title,
+          storeDate: DETAILS.storeDate,
+          coverDate: DETAILS.coverDate
         })
         .and.throwError('expected');
 
@@ -326,7 +366,7 @@ describe('ComicBookEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
       const action = savePageOrder({
-        comicBook: COMIC_BOOK,
+        comicBookId: DETAILS.comicBookId,
         entries: [{ index: 0, filename: PAGE.filename }]
       });
       const outcome = pageOrderSaved();
@@ -334,7 +374,7 @@ describe('ComicBookEffects', () => {
       actions$ = hot('-a', { a: action });
       comicService.savePageOrder
         .withArgs({
-          comicBook: COMIC_BOOK,
+          comicBookId: DETAILS.comicBookId,
           entries: [{ index: 0, filename: PAGE.filename }]
         })
         .and.returnValue(of(serviceResponse));
@@ -347,7 +387,7 @@ describe('ComicBookEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = savePageOrder({
-        comicBook: COMIC_BOOK,
+        comicBookId: DETAILS.comicBookId,
         entries: [{ index: 0, filename: PAGE.filename }]
       });
       const outcome = savePageOrderFailed();
@@ -355,7 +395,7 @@ describe('ComicBookEffects', () => {
       actions$ = hot('-a', { a: action });
       comicService.savePageOrder
         .withArgs({
-          comicBook: COMIC_BOOK,
+          comicBookId: DETAILS.comicBookId,
           entries: [{ index: 0, filename: PAGE.filename }]
         })
         .and.returnValue(throwError(serviceResponse));
@@ -367,7 +407,7 @@ describe('ComicBookEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = savePageOrder({
-        comicBook: COMIC_BOOK,
+        comicBookId: DETAILS.comicBookId,
         entries: [{ index: 0, filename: PAGE.filename }]
       });
       const outcome = savePageOrderFailed();
@@ -375,7 +415,7 @@ describe('ComicBookEffects', () => {
       actions$ = hot('-a', { a: action });
       comicService.savePageOrder
         .withArgs({
-          comicBook: COMIC_BOOK,
+          comicBookId: DETAILS.comicBookId,
           entries: [{ index: 0, filename: PAGE.filename }]
         })
         .and.throwError('expected');
@@ -390,13 +430,13 @@ describe('ComicBookEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = DOWNLOAD_COMIC_BOOK;
       const action = downloadComicBook({
-        comicBook: COMIC_BOOK
+        comicBookId: DETAILS.comicBookId
       });
       const outcome = downloadComicBookSuccess();
 
       actions$ = hot('-a', { a: action });
       comicService.downloadComicBook
-        .withArgs({ comicBook: COMIC_BOOK })
+        .withArgs({ comicBookId: DETAILS.comicBookId })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -409,13 +449,13 @@ describe('ComicBookEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = downloadComicBook({
-        comicBook: COMIC_BOOK
+        comicBookId: DETAILS.comicBookId
       });
       const outcome = downloadComicBookFailure();
 
       actions$ = hot('-a', { a: action });
       comicService.downloadComicBook
-        .withArgs({ comicBook: COMIC_BOOK })
+        .withArgs({ comicBookId: DETAILS.comicBookId })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -425,13 +465,13 @@ describe('ComicBookEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = downloadComicBook({
-        comicBook: COMIC_BOOK
+        comicBookId: DETAILS.comicBookId
       });
       const outcome = downloadComicBookFailure();
 
       actions$ = hot('-a', { a: action });
       comicService.downloadComicBook
-        .withArgs({ comicBook: COMIC_BOOK })
+        .withArgs({ comicBookId: DETAILS.comicBookId })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });

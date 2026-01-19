@@ -16,8 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ComicDetail } from '../comic-detail';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 export interface UpdateComicInfoEvent {
-  comic: ComicDetail;
+  comic: DisplayableComic;
 }

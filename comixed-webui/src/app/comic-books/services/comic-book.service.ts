@@ -39,7 +39,6 @@ import { ComicPage } from '@app/comic-books/models/comic-page';
 import { MarkPagesDeletedRequest } from '@app/comic-books/models/net/mark-pages-deleted-request';
 import { PageOrderEntry } from '@app/comic-books/models/net/page-order-entry';
 import { SavePageOrderRequest } from '@app/comic-books/models/net/save-page-order-request';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ComicType } from '@app/comic-books/models/comic-type';
 import { UpdateComicBookRequest } from '@app/comic-books/models/net/update-comic-book-request';
 
@@ -161,21 +160,21 @@ export class ComicBookService {
   }
 
   savePageOrder(args: {
-    comicBook: ComicBook;
+    comicBookId: number;
     entries: PageOrderEntry[];
   }): Observable<any> {
     this.logger.debug('Saving page order:', args);
     return this.http.post(
-      interpolate(SAVE_PAGE_ORDER_URL, { id: args.comicBook.comicBookId }),
+      interpolate(SAVE_PAGE_ORDER_URL, { id: args.comicBookId }),
       { entries: args.entries } as SavePageOrderRequest
     );
   }
 
-  downloadComicBook(args: { comicBook: ComicBook }): Observable<any> {
+  downloadComicBook(args: { comicBookId: number }): Observable<any> {
     this.logger.debug('Downloading comic book:', args);
     return this.http.get(
       interpolate(DOWNLOAD_COMIC_BOOK_URL, {
-        comicBookId: args.comicBook.comicBookId
+        comicBookId: args.comicBookId
       })
     );
   }

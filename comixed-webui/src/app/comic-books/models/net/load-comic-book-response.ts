@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2026, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +17,13 @@
  */
 
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
+import { ComicMetadataSource } from '@app/comic-books/models/comic-metadata-source';
+import { ComicPage } from '@app/comic-books/models/comic-page';
+import { ComicTag } from '@app/comic-books/models/comic-tag';
 
-export interface ComicContextMenuEvent {
-  comic: DisplayableComic;
-  x: number;
-  y: number;
+export interface LoadComicBookResponse {
+  details: DisplayableComic;
+  metadata: ComicMetadataSource;
+  pages: ComicPage[];
+  tags: ComicTag[];
 }

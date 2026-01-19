@@ -24,7 +24,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicBookData;
+import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.views.View;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,13 +48,15 @@ class PublishComicBookUpdateActionTest {
   @Mock private SimpMessagingTemplate messagingTemplate;
   @Mock private ObjectMapper objectMapper;
   @Mock private ObjectWriter objectWriter;
-  @Mock private ComicBook comicBook;
+  @Mock private DisplayableComic comicDetails;
+  @Mock private ComicBookData data;
 
   @BeforeEach
   public void setUp() throws JsonProcessingException {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_COMIC_AS_JSON);
-    Mockito.when(comicBook.getComicBookId()).thenReturn(TEST_COMIC_ID);
+    Mockito.when(comicDetails.getComicBookId()).thenReturn(TEST_COMIC_ID);
+    Mockito.when(data.getDetails()).thenReturn(comicDetails);
   }
 
   @Test
@@ -61,17 +64,17 @@ class PublishComicBookUpdateActionTest {
     Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
         .thenThrow(JsonProcessingException.class);
 
-    assertThrows(PublishingException.class, () -> action.publish(comicBook));
+    assertThrows(PublishingException.class, () -> action.publish(data));
   }
 
   @Test
   void publish() throws PublishingException, JsonProcessingException {
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_COMIC_AS_JSON);
 
-    action.publish(comicBook);
+    action.publish(data);
 
     Mockito.verify(objectMapper, Mockito.times(2)).writerWithView(View.ComicDetailsView.class);
-    Mockito.verify(objectWriter, Mockito.times(2)).writeValueAsString(comicBook);
+    Mockito.verify(objectWriter, Mockito.times(2)).writeValueAsString(data);
     Mockito.verify(messagingTemplate, Mockito.times(1))
         .convertAndSend(PublishComicBookUpdateAction.COMIC_LIST_UPDATE_TOPIC, TEST_COMIC_AS_JSON);
     Mockito.verify(messagingTemplate, Mockito.times(1))

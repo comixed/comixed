@@ -21,7 +21,7 @@ package org.comixedproject.messaging.comicbooks;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.AbstractPublishAction;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicBookData;
 import org.comixedproject.views.View;
 import org.springframework.stereotype.Component;
 
@@ -32,20 +32,20 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class PublishComicBookUpdateAction extends AbstractPublishAction<ComicBook> {
+public class PublishComicBookUpdateAction extends AbstractPublishAction<ComicBookData> {
   public static final String COMIC_LIST_UPDATE_TOPIC = "/topic/comic-list.update";
 
   /** Topic which receives individual comic updates in real time. */
   public static final String COMIC_BOOK_UPDATE_TOPIC = "/topic/comic-book.%d.update";
 
   @Override
-  public void publish(final ComicBook comicBook) throws PublishingException {
+  public void publish(final ComicBookData data) throws PublishingException {
     log.trace("Publishing comicBook list update");
-    this.doPublish(COMIC_LIST_UPDATE_TOPIC, comicBook, View.ComicDetailsView.class);
+    this.doPublish(COMIC_LIST_UPDATE_TOPIC, data, View.ComicDetailsView.class);
     log.trace("Publishing comicBook book update");
     this.doPublish(
-        String.format(COMIC_BOOK_UPDATE_TOPIC, comicBook.getComicBookId()),
-        comicBook,
+        String.format(COMIC_BOOK_UPDATE_TOPIC, data.getDetails().getComicBookId()),
+        data,
         View.ComicDetailsView.class);
   }
 }

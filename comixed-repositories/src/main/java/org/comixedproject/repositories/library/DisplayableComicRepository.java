@@ -195,4 +195,13 @@ public interface DisplayableComicRepository extends JpaRepository<DisplayableCom
       @Param("series") String series,
       @Param("volume") String volume,
       @Param("issueNumber") String issueNumber);
+
+  /**
+   * Returns the record for the given comic book id.
+   *
+   * @param id the comic book id
+   * @return the record
+   */
+  @Query("SELECT d FROM DisplayableComic d WHERE d.comicBookId = :comicBookId")
+  DisplayableComic getByComicBookId(@Param("comicBookId") long id);
 }

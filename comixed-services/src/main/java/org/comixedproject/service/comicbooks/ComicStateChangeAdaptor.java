@@ -22,12 +22,16 @@ import static org.comixedproject.service.comicbooks.ComicBookService.COMICBOOK_C
 import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishComicBookRemovalAction;
 import org.comixedproject.messaging.comicbooks.PublishComicBookUpdateAction;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicState;
+import org.comixedproject.model.comicbooks.*;
+import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.model.library.DisplayableComic;
+import org.comixedproject.service.library.DisplayableComicService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateChangeListener;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
@@ -51,6 +55,7 @@ public class ComicStateChangeAdaptor implements InitializingBean, ComicStateChan
   @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private PublishComicBookUpdateAction publishComicBookUpdateAction;
   @Autowired private PublishComicBookRemovalAction publishComicBookRemovalAction;
+  @Autowired private DisplayableComicService displayableComicService;
 
   @Override
   public void afterPropertiesSet() throws Exception {
@@ -78,7 +83,14 @@ public class ComicStateChangeAdaptor implements InitializingBean, ComicStateChan
       final ComicBook updated = this.comicBookService.save(comic);
       log.trace("Publishing comic  update");
       try {
-        this.publishComicBookUpdateAction.publish(updated);
+        final DisplayableComic details =
+            this.displayableComicService.getForComicBookId(updated.getComicBookId());
+        final List<ComicPage> pages = updated.getPages();
+        final ComicMetadataSource metadata = updated.getMetadata();
+        final Set<ComicTag> tags = updated.getComicDetail().getTags();
+
+        this.publishComicBookUpdateAction.publish(
+            new ComicBookData(details, pages, metadata, tags.stream().toList()));
       } catch (PublishingException error) {
         log.error("Failed to publish comic update", error);
       }

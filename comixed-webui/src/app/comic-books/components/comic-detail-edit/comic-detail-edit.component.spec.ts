@@ -22,7 +22,7 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { TranslateModule } from '@ngx-translate/core';
 import {
-  COMIC_BOOK_1,
+  DISPLAYABLE_COMIC_1,
   IMPRINT_1,
   IMPRINT_2,
   IMPRINT_3
@@ -54,7 +54,7 @@ import { ComicType } from '@app/comic-books/models/comic-type';
 import { Clipboard } from '@angular/cdk/clipboard';
 
 describe('ComicDetailEditComponent', () => {
-  const COMIC = COMIC_BOOK_1;
+  const COMIC = DISPLAYABLE_COMIC_1;
   const ENTRIES = [IMPRINT_1, IMPRINT_2, IMPRINT_3];
   const initialState = {
     [IMPRINT_LIST_FEATURE_KEY]: { ...initialImprintState, entries: ENTRIES }
@@ -120,7 +120,7 @@ describe('ComicDetailEditComponent', () => {
       beforeEach(() => {
         component.comicBook = {
           ...COMIC,
-          detail: { ...COMIC.detail, comicState: ComicState.ADDED }
+          comicState: ComicState.ADDED
         };
       });
 
@@ -137,7 +137,7 @@ describe('ComicDetailEditComponent', () => {
       beforeEach(() => {
         component.comicBook = {
           ...COMIC,
-          detail: { ...COMIC.detail, comicState: ComicState.CHANGED }
+          comicState: ComicState.CHANGED
         };
       });
 
@@ -154,7 +154,7 @@ describe('ComicDetailEditComponent', () => {
       beforeEach(() => {
         component.comicBook = {
           ...COMIC,
-          detail: { ...COMIC.detail, comicState: ComicState.STABLE }
+          comicState: ComicState.STABLE
         };
       });
 
@@ -171,7 +171,7 @@ describe('ComicDetailEditComponent', () => {
       beforeEach(() => {
         component.comicBook = {
           ...COMIC,
-          detail: { ...COMIC.detail, comicState: ComicState.DELETED }
+          comicState: ComicState.DELETED
         };
       });
 
@@ -189,7 +189,8 @@ describe('ComicDetailEditComponent', () => {
     beforeEach(() => {
       component.comicBook = {
         ...COMIC,
-        detail: { ...COMIC.detail, coverDate: null, storeDate: null }
+        coverDate: null,
+        storeDate: null
       };
     });
 
@@ -219,16 +220,16 @@ describe('ComicDetailEditComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         updateComicBook({
           comicBookId: COMIC.comicBookId,
-          comicType: COMIC.detail.comicType,
-          publisher: COMIC.detail.publisher,
-          series: COMIC.detail.series,
-          volume: COMIC.detail.volume,
-          issueNumber: COMIC.detail.issueNumber,
-          imprint: COMIC.detail.imprint,
-          sortName: COMIC.detail.sortName,
-          title: COMIC.detail.title,
-          coverDate: COMIC.detail.storeDate,
-          storeDate: COMIC.detail.coverDate
+          comicType: COMIC.comicType,
+          publisher: COMIC.publisher,
+          series: COMIC.series,
+          volume: COMIC.volume,
+          issueNumber: COMIC.issueNumber,
+          imprint: COMIC.imprint,
+          sortName: COMIC.sortName,
+          title: COMIC.title,
+          coverDate: COMIC.storeDate,
+          storeDate: COMIC.coverDate
         })
       );
     });
@@ -238,19 +239,15 @@ describe('ComicDetailEditComponent', () => {
     beforeEach(() => {
       component.comicBookForm.controls.comicType.setValue(ComicType.MANGA);
       component.comicBookForm.controls.publisher.setValue(
-        COMIC.detail.publisher.substr(1)
+        COMIC.publisher.substr(1)
       );
       component.comicBookForm.controls.imprint.setValue(
-        COMIC.detail.imprint.substr(1)
+        COMIC.imprint.substr(1)
       );
-      component.comicBookForm.controls.series.setValue(
-        COMIC.detail.series.substr(1)
-      );
-      component.comicBookForm.controls.volume.setValue(
-        COMIC.detail.volume.substr(1)
-      );
+      component.comicBookForm.controls.series.setValue(COMIC.series.substr(1));
+      component.comicBookForm.controls.volume.setValue(COMIC.volume.substr(1));
       component.comicBookForm.controls.issueNumber.setValue(
-        COMIC.detail.issueNumber.substr(1)
+        COMIC.issueNumber.substr(1)
       );
       component.comicBookForm.controls.coverDate.setValue(null);
       component.comicBookForm.controls.storeDate.setValue(null);
@@ -259,49 +256,49 @@ describe('ComicDetailEditComponent', () => {
 
     it('resets the comic type', () => {
       expect(component.comicBookForm.controls.comicType.value).toEqual(
-        COMIC.detail.comicType
+        COMIC.comicType
       );
     });
 
     it('resets the changes to the publisher', () => {
       expect(component.comicBookForm.controls.publisher.value).toEqual(
-        COMIC.detail.publisher
+        COMIC.publisher
       );
     });
 
     it('resets the changes to the imprint', () => {
       expect(component.comicBookForm.controls.imprint.value).toEqual(
-        COMIC.detail.imprint
+        COMIC.imprint
       );
     });
 
     it('resets the changes to the series', () => {
       expect(component.comicBookForm.controls.series.value).toEqual(
-        COMIC.detail.series
+        COMIC.series
       );
     });
 
     it('resets the changes to the volume', () => {
       expect(component.comicBookForm.controls.volume.value).toEqual(
-        COMIC.detail.volume
+        COMIC.volume
       );
     });
 
     it('resets the changes to the issue number', () => {
       expect(component.comicBookForm.controls.issueNumber.value).toEqual(
-        COMIC.detail.issueNumber
+        COMIC.issueNumber
       );
     });
 
     it('resets the changes to the cover date', () => {
       expect(component.comicBookForm.controls.coverDate.value).toEqual(
-        new Date(COMIC.detail.coverDate)
+        new Date(COMIC.coverDate)
       );
     });
 
     it('resets the changes to the store dater', () => {
       expect(component.comicBookForm.controls.storeDate.value).toEqual(
-        new Date(COMIC.detail.storeDate)
+        new Date(COMIC.storeDate)
       );
     });
   });
@@ -342,7 +339,7 @@ describe('ComicDetailEditComponent', () => {
 
       it('updates the publisher', () => {
         expect(component.comicBookForm.controls.publisher.value).toEqual(
-          COMIC.detail.publisher
+          COMIC.publisher
         );
       });
     });
@@ -368,7 +365,7 @@ describe('ComicDetailEditComponent', () => {
     });
 
     it('copies the filename', () => {
-      expect(clipboard.copy).toHaveBeenCalledWith(COMIC.detail.filename);
+      expect(clipboard.copy).toHaveBeenCalledWith(COMIC.filename);
     });
   });
 });

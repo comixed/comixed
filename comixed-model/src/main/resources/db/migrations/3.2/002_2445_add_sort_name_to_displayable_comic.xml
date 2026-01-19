@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="002_2445_add_sort_name_to_displayable_comic.xml" author="mcpierce">
+
+        <createView replaceIfExists="true" viewName="displayable_comics_view">
+            SELECT DISTINCT d.comic_book_id                           as comic_book_id,
+                            d.comic_detail_id                         as comic_detail_id,
+                            (SELECT reference_id
+                             FROM comic_metadata_sources m
+                             WHERE m.comic_book_id = d.comic_book_id) AS reference_id,
+                            d.filename                                as filename,
+                            d.archive_type                            as archive_type,
+                            d.comic_state                             as comic_state,
+                            CASE
+                                WHEN EXISTS(SELECT *
+                                            FROM comic_metadata_sources s
+                                            WHERE s.comic_book_id = d.comic_book_id)
+                                    THEN false
+                                ELSE true END                         AS is_unscraped,
+                            d.comic_type                              as comic_type,
+                            d.sort_name                               as sort_name,
+                            d.publisher                               as publisher,
+                            d.imprint                                 as imprint,
+                            d.series                                  as series,
+                            d.volume                                  as volume,
+                            d.issue_number                            as issue_number,
+                            d.description                             as description,
+                            d.notes                                   as notes,
+                            (SELECT RIGHT (CONCAT('0000000000', d.issue_number), 10)) as sortable_issue_number, d.title as title,(
+            SELECT COUNT(*)
+            FROM comic_pages cp
+            WHERE cp.comic_book_id = d.comic_book_id) as page_count
+                , d.cover_date as cover_date
+                , CASE WHEN d.cover_date IS NULL THEN 0 ELSE (
+            SELECT EXTRACT(MONTH FROM cover_date))
+            END
+            as month_published
+                    , CASE WHEN d.cover_date IS NULL THEN 0 ELSE (SELECT EXTRACT(YEAR FROM cover_date))
+            END
+            as year_published,
+                            d.store_date as store_date,
+                            d.added_date as added_date,
+                            d.last_modified_date as last_modified_date
+            FROM comic_details d
+        </createView>
+
+    </changeSet>
+</databaseChangeLog>

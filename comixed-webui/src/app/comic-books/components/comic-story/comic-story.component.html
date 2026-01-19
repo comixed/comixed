@@ -1,15 +1,13 @@
 <mat-accordion multi>
   <mat-expansion-panel
-    [disabled]="
-      !comic.detail.description || comic.detail.description.length === 0
-    "
+    [disabled]="!comic.description || comic.description.length === 0"
   >
     <mat-expansion-panel-header>
       <mat-panel-title>
         {{ "comic-book.label.description" | translate }}
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <div [innerHTML]="comic.detail.description"></div>
+    <div [innerHTML]="comic.description"></div>
   </mat-expansion-panel>
   <mat-expansion-panel [disabled]="credits.length === 0">
     <mat-expansion-panel-header>
@@ -21,7 +19,7 @@
       @for (credit of credits; track credit) {
         <div class="comic-story-card">
           <cx-comic-detail-card
-            [comic]="comic.detail"
+            [comic]="comic"
             [title]="credit.value"
             [subtitle]="credit.type"
             imageUrl="/assets/img/credit.png"
@@ -43,7 +41,7 @@
       @for (character of characters; track character) {
         <div class="comic-story-card">
           <cx-comic-detail-card
-            [comic]="comic.detail"
+            [comic]="comic"
             [title]="character.value"
             [routerLink]="[
               '/library',
@@ -67,7 +65,7 @@
       @for (team of teams; track team) {
         <div class="comic-story-card">
           <cx-comic-detail-card
-            [comic]="comic.detail"
+            [comic]="comic"
             [title]="team.value"
             [routerLink]="['/library', 'collections', 'teams', team.value]"
             imageUrl="/assets/img/team.png"
@@ -88,7 +86,7 @@
       @for (location of locations; track location) {
         <div class="comic-story-card">
           <cx-comic-detail-card
-            [comic]="comic.detail"
+            [comic]="comic"
             [title]="location.value"
             [routerLink]="[
               '/library',
@@ -112,7 +110,7 @@
       @for (story of stories; track story) {
         <div class="comic-story-card">
           <cx-comic-detail-card
-            [comic]="comic.detail"
+            [comic]="comic"
             [title]="story.value"
             [routerLink]="['/library', 'collections', 'stories', story.value]"
             imageUrl="/assets/img/story.png"

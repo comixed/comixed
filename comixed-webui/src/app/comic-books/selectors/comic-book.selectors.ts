@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { createFeatureSelector } from '@ngrx/store';
 import {
   COMIC_BOOK_FEATURE_KEY,
   ComicBookState
@@ -24,9 +24,4 @@ import {
 
 export const selectComicBookState = createFeatureSelector<ComicBookState>(
   COMIC_BOOK_FEATURE_KEY
-);
-
-export const selectComicBook = createSelector(
-  selectComicBookState,
-  state => state.comicBook
 );

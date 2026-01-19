@@ -20,8 +20,22 @@ import {
   COMIC_BOOK_FEATURE_KEY,
   ComicBookState
 } from '../reducers/comic-book.reducer';
-import { selectComicBook, selectComicBookState } from './comic-book.selectors';
-import { COMIC_BOOK_3 } from '@app/comic-books/comic-books.fixtures';
+import { selectComicBookState } from './comic-book.selectors';
+import {
+  COMIC_METADATA_SOURCE_1,
+  COMIC_TAG_1,
+  COMIC_TAG_2,
+  COMIC_TAG_3,
+  COMIC_TAG_4,
+  COMIC_TAG_5,
+  DISPLAYABLE_COMIC_1
+} from '@app/comic-books/comic-books.fixtures';
+import {
+  PAGE_1,
+  PAGE_2,
+  PAGE_3,
+  PAGE_4
+} from '@app/comic-pages/comic-pages.fixtures';
 
 describe('ComicBook Selectors', () => {
   let state: ComicBookState;
@@ -29,7 +43,10 @@ describe('ComicBook Selectors', () => {
   beforeEach(() => {
     state = {
       loading: Math.random() > 0.5,
-      comicBook: COMIC_BOOK_3,
+      details: DISPLAYABLE_COMIC_1,
+      metadata: COMIC_METADATA_SOURCE_1,
+      pages: [PAGE_1, PAGE_2, PAGE_3, PAGE_4],
+      tags: [COMIC_TAG_1, COMIC_TAG_2, COMIC_TAG_3, COMIC_TAG_4, COMIC_TAG_5],
       saving: Math.random() > 0.5,
       saved: Math.random() > 0.5
     };
@@ -41,11 +58,5 @@ describe('ComicBook Selectors', () => {
         [COMIC_BOOK_FEATURE_KEY]: state
       })
     ).toEqual(state);
-  });
-
-  it('should select the current comic', () => {
-    expect(selectComicBook({ [COMIC_BOOK_FEATURE_KEY]: state })).toEqual(
-      state.comicBook
-    );
   });
 });

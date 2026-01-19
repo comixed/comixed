@@ -1,11 +1,11 @@
-@if (!comicBook) {
+@if (!comic) {
   <div class="cx-overlay cx-width-100 cx-height-100">
     <div class="cx-centered cx-position-absolute">
       <img src="/assets/img/book.png" alt="Loading comic book..." />
     </div>
   </div>
 }
-@if (!!comicBook) {
+@if (!!comic) {
   <div class="cx-fab-container-bottom-left cx-z-index-99">
     <div class="cx-horizontal-container">
       <button
@@ -14,8 +14,8 @@
         mat-fab
         color="accent"
         [matTooltip]="'comic-book.tooltip.go-to-previous-comic' | translate"
-        [disabled]="!comicBook.previousIssueId"
-        [routerLink]="['/comics', comicBook.previousIssueId]"
+        [disabled]="!comicBook?.previousIssueId"
+        [routerLink]="['/comics', comic?.previousIssueId]"
       >
         <mat-icon>arrow_back</mat-icon>
       </button>
@@ -24,9 +24,9 @@
         class="cx-toolbar-button"
         mat-fab
         color="accent"
-        [disabled]="!comicBook.nextIssueId"
+        [disabled]="!comicBook?.nextIssueId"
         [matTooltip]="'comic-book.tooltip.go-to-next-comic' | translate"
-        [routerLink]="['/comics', comicBook.nextIssueId]"
+        [routerLink]="['/comics', comic?.nextIssueId]"
       >
         <mat-icon>arrow_forward</mat-icon>
       </button>
@@ -129,63 +129,63 @@
     </div>
   </div>
 }
-@if (!!comicBook) {
+@if (!!comic) {
   <h1>
-    {{ comicBook?.detail | comicTitle }}
+    {{ comic | comicTitle }}
   </h1>
 }
 @if (
-  comicBook?.detail?.publisher?.length > 0 &&
-  comicBook?.detail?.series?.length > 0 &&
-  comicBook?.detail?.volume?.length > 0
+  comic?.publisher?.length > 0 &&
+  comic?.series?.length > 0 &&
+  comic?.volume?.length > 0
 ) {
   <h2>
     <a
       [routerLink]="[
         '/library/collections/publishers',
-        comicBook.detail.publisher,
+        comic.publisher,
         'issues'
       ]"
     >
-      {{ comicBook.detail.publisher }}
+      {{ comic.publisher }}
     </a>
     &nbsp;/&nbsp;
     <a
       [routerLink]="[
         '/library/collections/publishers',
-        comicBook.detail.publisher,
+        comic.publisher,
         'series',
-        comicBook.detail.series,
+        comic.series,
         'volumes',
-        comicBook.detail.volume,
+        comic.volume,
         'issues'
       ]"
     >
       {{
         "comic-book.navigation-link.series"
-          | translate: { volume: comicBook.detail.volume }
+          | translate: { volume: comic.volume }
       }}
     </a>
   </h2>
 }
-@if (!!comicBook) {
+@if (!!comic) {
   <div id="comic-detail-container">
     <div id="comic-cover-container">
       <mat-card appearance="outlined" class="cx-padding-0">
         <mat-card-title
           class="cx-text-nowrap cx-align-content-center"
-          [matTooltip]="comicBook.detail.title"
+          [matTooltip]="comic.title"
         >
-          {{ comicBook.detail.title }}
+          {{ comic.title }}
         </mat-card-title>
-        @if (!!comicBook?.detail?.coverDate) {
+        @if (!!comic?.coverDate) {
           <mat-card-subtitle class="cx-align-content-center">
-            {{ comicBook.detail.coverDate | date: "MMM yyyy" }}
+            {{ comic.coverDate | date: "MMM yyyy" }}
           </mat-card-subtitle>
         }
         <mat-card-content>
           <cx-comic-page
-            [imageUrl]="comicBook.pages[pageIndex] | comicPageUrl"
+            [imageUrl]="pages[pageIndex] | comicPageUrl"
           ></cx-comic-page>
         </mat-card-content>
         <mat-card-footer class="cx-align-content-center">
@@ -203,14 +203,13 @@
             </button>
             {{
               "comic-book.label.page-title"
-                | translate
-                  : { which: pageIndex + 1, count: comicBook.pages.length }
+                | translate: { which: pageIndex + 1, count: pages.length }
             }}
             <button
               id="next-page-button"
               mat-icon-button
               (click)="pageIndex = pageIndex + 1"
-              [disabled]="pageIndex === comicBook.pages.length - 1"
+              [disabled]="pageIndex === pages.length - 1"
               [matTooltip]="
                 'comic-book.tooltip.show-next-comic-page' | translate
               "
@@ -230,17 +229,17 @@
       >
         <mat-tab [label]="'comic-book.label.comic-overview' | translate">
           <cx-comic-detail-edit
-            [comicBook]="comicBook"
+            [comicBook]="comic"
             [isAdmin]="isAdmin"
           ></cx-comic-detail-edit>
         </mat-tab>
         <mat-tab [label]="'comic-book.label.comic-story' | translate">
-          <cx-comic-story [comic]="comicBook"></cx-comic-story>
+          <cx-comic-story [comic]="comic" [tags]="tags"></cx-comic-story>
         </mat-tab>
         <mat-tab [label]="'comic-book.label.comic-pages' | translate">
           <cx-comic-pages
             class="cx-width-100"
-            [pages]="comicBook?.pages"
+            [pages]="pages"
             [showPagesAsGrid]="queryParameterService.pagesAsGrid$ | async"
             [isAdmin]="isAdmin"
             (pagesChanged)="onPagesChanged($event)"
@@ -248,11 +247,11 @@
         </mat-tab>
         @if (isAdmin) {
           <mat-tab [label]="'comic-book.label.comic-scraping' | translate">
-            @if (!!comicBook && volumes.length === 0) {
+            @if (!!comic && volumes.length === 0) {
               <cx-comic-scraping
                 class="cx-width-100"
-                [comic]="displayableComic"
-                [previousMetadataSource]="comicBook.metadata?.metadataSource"
+                [comic]="comic"
+                [previousMetadataSource]="comic.metadata?.metadataSource"
                 [skipCache]="skipCache"
                 [matchPublisher]="matchPublisher"
                 [maximumRecords]="maximumRecords"
@@ -272,7 +271,7 @@
             }
             @if (volumes.length > 0) {
               <cx-scraping-volume-selection
-                [comicBook]="comicBook"
+                [comicBook]="comic"
                 [metadataSource]="metadataSource"
                 [comicSeriesName]="scrapingSeriesName"
                 [comicVolume]="scrapingVolume"

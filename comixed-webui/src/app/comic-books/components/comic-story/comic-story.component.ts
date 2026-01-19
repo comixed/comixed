@@ -17,7 +17,6 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import {
   ComicTagType,
   CreditTags
@@ -32,6 +31,7 @@ import {
 import { ComicDetailCardComponent } from '../comic-detail-card/comic-detail-card.component';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 
 @Component({
   selector: 'cx-comic-story',
@@ -54,19 +54,22 @@ export class ComicStoryComponent {
   locations: ComicTag[] = [];
   stories: ComicTag[] = [];
 
-  private _comicBook: ComicBook;
+  private _comicBook: DisplayableComic;
 
-  get comic(): ComicBook {
+  get comic(): DisplayableComic {
     return this._comicBook;
   }
 
-  @Input() set comic(comic: ComicBook) {
+  @Input() set comic(comic: DisplayableComic) {
     this._comicBook = comic;
-    this.credits = this.getTags(comic.detail.tags, CreditTags);
-    this.characters = this.getTags(comic.detail.tags, [ComicTagType.CHARACTER]);
-    this.teams = this.getTags(comic.detail.tags, [ComicTagType.TEAM]);
-    this.locations = this.getTags(comic.detail.tags, [ComicTagType.LOCATION]);
-    this.stories = this.getTags(comic.detail.tags, [ComicTagType.STORY]);
+  }
+
+  @Input() set tags(tags: ComicTag[]) {
+    this.credits = this.getTags(tags, CreditTags);
+    this.characters = this.getTags(tags, [ComicTagType.CHARACTER]);
+    this.teams = this.getTags(tags, [ComicTagType.TEAM]);
+    this.locations = this.getTags(tags, [ComicTagType.LOCATION]);
+    this.stories = this.getTags(tags, [ComicTagType.STORY]);
   }
 
   private getTags(tags: ComicTag[], allowed: ComicTagType[]): ComicTag[] {

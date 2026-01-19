@@ -7,5 +7,6 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <include file="/db/migrations/3.2/001_2544_remove_plugin_version_column.xml"/>
+    <include file="/db/migrations/3.2/002_2445_add_sort_name_to_displayable_comic.xml"/>
 
 </databaseChangeLog>

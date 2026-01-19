@@ -611,4 +611,15 @@ public class DisplayableComicService {
       @NonNull final Date coverDate) {
     return this.displayableComicRepository.getComicCount(publisher, series, volume, issueNumber);
   }
+
+  /**
+   * Returns the instance for the given comic book id.
+   *
+   * @param id the comic book id
+   * @return the displayable comic
+   */
+  public DisplayableComic getForComicBookId(final long id) {
+    log.debug("Loading displayable comic book: comic book id={}", id);
+    return this.displayableComicRepository.getByComicBookId(id);
+  }
 }
