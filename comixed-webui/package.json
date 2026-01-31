@@ -68,7 +68,7 @@
     "debug": "^4",
     "deepmerge-ts": "^7.1.5",
     "engine.io": "~6",
-    "fast-xml-parser": "^5.2.5",
+    "fast-xml-parser": "^5.3.4",
     "file-saver": "^2.0.5",
     "glob-parent": "^6.0.2",
     "hosted-git-info": "^9.0.0",
