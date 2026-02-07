@@ -41,7 +41,6 @@ import org.comixedproject.adaptors.archive.model.ComicArchiveEntry;
 import org.comixedproject.adaptors.content.ComicMetadataWriter;
 import org.comixedproject.adaptors.content.ContentAdaptor;
 import org.comixedproject.adaptors.content.ContentAdaptorException;
-import org.comixedproject.adaptors.content.ContentAdaptorRules;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
@@ -88,17 +87,12 @@ public class ComicBookAdaptor {
    * Loads the contents of the specified comicBook.
    *
    * @param comicBook the comic book
-   * @param rules the content adaptor ruleset
    * @throws AdaptorException if an error occurs while loading the comic book file
    */
-  public void load(final ComicBook comicBook, final ContentAdaptorRules rules)
-      throws AdaptorException {
+  public void load(final ComicBook comicBook) throws AdaptorException {
     try {
       @NonNull final String filename = comicBook.getComicDetail().getFilename();
-      log.trace(
-          "Getting archive adaptor for comic book file: id={} rule={}",
-          comicBook.getComicBookId(),
-          rules.toString());
+      log.trace("Getting archive adaptor for comic book file: id={}", comicBook.getComicBookId());
       final ArchiveAdaptor archiveAdaptor = this.fileTypeAdaptor.getArchiveAdaptorFor(filename);
       log.trace("Opening comic book file");
       final ArchiveReadHandle readHandle = archiveAdaptor.openArchiveForRead(filename);
@@ -115,7 +109,7 @@ public class ComicBookAdaptor {
                 this.fileTypeAdaptor.getContentAdaptorFor(entry.getFilename(), content);
             if (adaptor != null) {
               log.trace("Invoking content adaptor");
-              adaptor.loadContent(comicBook, entry.getFilename(), content, rules);
+              adaptor.loadContent(comicBook, entry.getFilename(), content);
             }
           } else {
             log.trace("Content contains no data");

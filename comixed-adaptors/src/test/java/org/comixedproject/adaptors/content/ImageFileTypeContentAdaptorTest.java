@@ -43,7 +43,6 @@ class ImageFileTypeContentAdaptorTest extends BaseContentAdaptorTest {
   @Mock private ComicPage comicPage;
 
   private ComicBook comicBook = new ComicBook();
-  private ContentAdaptorRules contentAdaptorRules = new ContentAdaptorRules();
 
   @Test
   void loadContent_fileAlreadyExists() throws IOException {
@@ -52,7 +51,7 @@ class ImageFileTypeContentAdaptorTest extends BaseContentAdaptorTest {
 
     byte[] content = loadFile(TEST_JPEG_FILENAME);
 
-    adaptor.loadContent(comicBook, TEST_JPEG_FILENAME, content, contentAdaptorRules);
+    adaptor.loadContent(comicBook, TEST_JPEG_FILENAME, content);
 
     assertEquals(1, comicBook.getPageCount());
     assertNotNull(comicBook.getPages().get(0));
@@ -65,7 +64,7 @@ class ImageFileTypeContentAdaptorTest extends BaseContentAdaptorTest {
         .thenReturn(TEST_JPEG_FILENAME.substring(0, TEST_JPEG_FILENAME.length() - 2));
     comicBook.getPages().add(comicPage);
 
-    adaptor.loadContent(comicBook, TEST_JPEG_FILENAME, content, contentAdaptorRules);
+    adaptor.loadContent(comicBook, TEST_JPEG_FILENAME, content);
 
     assertEquals(2, comicBook.getPages().size());
     assertNotNull(comicBook.getPages().get(comicBook.getPages().size() - 1));
@@ -78,7 +77,7 @@ class ImageFileTypeContentAdaptorTest extends BaseContentAdaptorTest {
   void loadContent_jpg() throws IOException {
     byte[] content = loadFile(TEST_JPEG_FILENAME);
 
-    adaptor.loadContent(comicBook, TEST_JPEG_FILENAME, content, contentAdaptorRules);
+    adaptor.loadContent(comicBook, TEST_JPEG_FILENAME, content);
 
     assertEquals(1, comicBook.getPageCount());
     assertNotNull(comicBook.getPages().get(0));
@@ -89,7 +88,7 @@ class ImageFileTypeContentAdaptorTest extends BaseContentAdaptorTest {
   void loadContent_webp() throws IOException {
     byte[] content = loadFile(TEST_WEBP_FILENAME);
 
-    adaptor.loadContent(comicBook, TEST_WEBP_FILENAME, content, contentAdaptorRules);
+    adaptor.loadContent(comicBook, TEST_WEBP_FILENAME, content);
 
     assertEquals(1, comicBook.getPageCount());
     assertNotNull(comicBook.getPages().get(0));
@@ -100,7 +99,7 @@ class ImageFileTypeContentAdaptorTest extends BaseContentAdaptorTest {
   void loadContent_gif() throws IOException {
     byte[] content = loadFile(TEST_GIF_FILENAME);
 
-    adaptor.loadContent(comicBook, TEST_GIF_FILENAME, content, contentAdaptorRules);
+    adaptor.loadContent(comicBook, TEST_GIF_FILENAME, content);
 
     assertEquals(1, comicBook.getPageCount());
     assertNotNull(comicBook.getPages().get(0));
