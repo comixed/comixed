@@ -68,12 +68,11 @@ public class ComicBookController {
    *
    * @param id the comic id
    * @return the comic
-   * @throws ComicBookException if an error occurs
    */
   @GetMapping(value = "/api/comics/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @Timed(value = "comixed.comic-book.get-one")
   @JsonView(ComicDetailsView.class)
-  public ComicBookData getComic(@PathVariable("id") long id) throws ComicDetailException {
+  public ComicBookData getComic(@PathVariable("id") long id) {
     log.info("Getting comic: id={}", id);
     return new ComicBookData(
         this.displayableComicService.getForComicBookId(id),

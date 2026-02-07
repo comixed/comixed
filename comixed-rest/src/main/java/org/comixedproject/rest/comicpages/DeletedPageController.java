@@ -29,6 +29,11 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * <code>DeletedPageController</code> provides REST APIs for working with deleted pages.
+ *
+ * @author Darryl L. Pierce
+ */
 @RestController
 @Log4j2
 public class DeletedPageController {

@@ -255,6 +255,7 @@ public class ComicBookScrapingController {
    *
    * @param session the session
    * @param principal the user principal
+   * @param request the request body
    * @return the scraping state
    * @throws MetadataException if an error occurs
    */
@@ -304,7 +305,8 @@ public class ComicBookScrapingController {
    *
    * @param session the user session
    * @param request the request body
-   * @return the resonse body
+   * @return the response body
+   * @throws ComicBookSelectionException if an error occurs
    */
   @PostMapping(
       value = "/api/metadata/scraping/load",
@@ -380,8 +382,9 @@ public class ComicBookScrapingController {
    *
    * @param session the http session
    * @param comicBookId the comic book id
+   * @param pageSize the page size
    * @return the response body
-   * @throws MetadataException
+   * @throws MetadataException if an error occurs
    */
   @DeleteMapping(
       value = "/api/metadata/scraping/{comicBookId}",

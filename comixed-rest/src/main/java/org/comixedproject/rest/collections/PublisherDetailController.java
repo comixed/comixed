@@ -46,6 +46,7 @@ public class PublisherDetailController {
   /**
    * Returns a page worth of publishers to display.
    *
+   * @param request the request body
    * @return the response body
    */
   @PostMapping(value = "/api/collections/publishers")
@@ -74,6 +75,7 @@ public class PublisherDetailController {
    * Returns the details for a single publisher.
    *
    * @param name the publisher name
+   * @param request the request body
    * @return the details
    */
   @PostMapping(value = "/api/collections/publishers/{name}")

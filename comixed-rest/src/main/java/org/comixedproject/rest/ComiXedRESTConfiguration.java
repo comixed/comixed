@@ -32,6 +32,11 @@ import org.springframework.session.web.http.DefaultCookieSerializer;
  */
 @Configuration
 public class ComiXedRESTConfiguration {
+  /**
+   * Returns a cookie serializer.
+   *
+   * @return the serializer
+   */
   @Bean
   public CookieSerializer cookieSerializer() {
     DefaultCookieSerializer serializer = new DefaultCookieSerializer();

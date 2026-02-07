@@ -48,6 +48,7 @@ public class DuplicatePageController {
   /**
    * Returns the list of duplicate pages.
    *
+   * @param request the request body
    * @return the duplicate page list
    */
   @PostMapping(

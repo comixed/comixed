@@ -44,6 +44,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class TagController {
   @Autowired private ComicDetailService comicDetailService;
 
+  /**
+   * Returns comics for the provided tag type.
+   *
+   * @param request the request body
+   * @param tagType the tag type
+   * @return the comics
+   */
   @PostMapping(
       value = "/api/collections/{tagType}",
       produces = MediaType.APPLICATION_JSON_VALUE,
