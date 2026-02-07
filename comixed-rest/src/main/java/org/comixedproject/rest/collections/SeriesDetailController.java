@@ -46,6 +46,7 @@ public class SeriesDetailController {
   /**
    * Returns the list of series, sorted by the given sort field.
    *
+   * @param request the request body
    * @return the response
    */
   @PostMapping(

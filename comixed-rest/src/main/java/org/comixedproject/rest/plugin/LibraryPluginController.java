@@ -158,8 +158,9 @@ public class LibraryPluginController {
   /**
    * Runs a plugin against the selected comic books.
    *
-   * @param pluginId the plugin id
+   * @param session the session
    * @param principal the user principal
+   * @param pluginId the plugin id
    * @throws LibraryPluginException if an error occurs
    */
   @PostMapping(value = "/api/plugins/{pluginId}/comics/selected")

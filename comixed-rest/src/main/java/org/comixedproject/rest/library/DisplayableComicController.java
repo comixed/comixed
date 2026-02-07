@@ -208,6 +208,8 @@ public class DisplayableComicController implements InitializingBean, ComicStateC
    * Loads comics for a tag type and value.
    *
    * @param request the request body
+   * @param tagType the tag type
+   * @param tagValue the tag value
    * @return the response body
    */
   @PostMapping(

@@ -93,6 +93,7 @@ public class ComicFileController {
   /**
    * Retrieves all comic files under the specified directory.
    *
+   * @param session the session
    * @param request the request body
    * @return the list of comic files
    * @throws IOException if an error occurs
@@ -199,6 +200,7 @@ public class ComicFileController {
   /**
    * Begins the process of enqueueing comic files for import.
    *
+   * @param session the session
    * @param request the request body
    * @throws JobInstanceAlreadyCompleteException if an error occurs
    * @throws JobExecutionAlreadyRunningException if an error occurs
