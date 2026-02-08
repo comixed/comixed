@@ -86,7 +86,7 @@ public class DisplayableComicController implements InitializingBean, ComicStateC
   @Override
   public void onComicStateChange(
       final State<ComicState, ComicEvent> state, final Message<ComicEvent> message) {
-    log.debug("Cleaning comic caches");
+    log.debug("Clearing comic caches");
     this.filterCache.clear();
     this.tagAndValueCache.clear();
   }
