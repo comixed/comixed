@@ -152,6 +152,15 @@ export class QueryParameterService {
   }
 
   onSortChange(active: string, direction: SortDirection): void {
+    if (
+      !direction ||
+      direction.length === 0 ||
+      !active ||
+      active.length === 0
+    ) {
+      active = null;
+      direction = null;
+    }
     this.logger.debug('Changing sort:', active, direction);
     this.updateQueryParam([
       {

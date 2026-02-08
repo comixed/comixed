@@ -32,6 +32,7 @@ import {
   QUERY_PARAM_COVER_MONTH,
   QUERY_PARAM_COVER_YEAR,
   QUERY_PARAM_FILTER_TEXT,
+  QUERY_PARAM_PAGE_COUNT,
   QUERY_PARAM_PAGE_INDEX,
   QUERY_PARAM_PAGE_SIZE,
   QUERY_PARAM_PAGES_AS_GRID,
@@ -125,6 +126,38 @@ describe('QueryParameterService', () => {
           [QUERY_PARAM_SORT_BY]: SORT_FIELD,
           [QUERY_PARAM_SORT_DIRECTION]: SORT_DIRECTION
         }
+      });
+    });
+
+    describe('when no column is chosen', () => {
+      beforeEach(() => {
+        service.onSortChange('', SORT_DIRECTION);
+      });
+
+      it('updates the URL', () => {
+        expect(router.navigate).toHaveBeenCalledWith([], {
+          relativeTo: activatedRoute,
+          queryParams: {
+            [QUERY_PARAM_SORT_BY]: null,
+            [QUERY_PARAM_SORT_DIRECTION]: null
+          }
+        });
+      });
+    });
+
+    describe('when no direction is chosen', () => {
+      beforeEach(() => {
+        service.onSortChange(SORT_FIELD, '');
+      });
+
+      it('updates the URL', () => {
+        expect(router.navigate).toHaveBeenCalledWith([], {
+          relativeTo: activatedRoute,
+          queryParams: {
+            [QUERY_PARAM_SORT_BY]: null,
+            [QUERY_PARAM_SORT_DIRECTION]: null
+          }
+        });
       });
     });
   });
@@ -346,6 +379,36 @@ describe('QueryParameterService', () => {
             [QUERY_PARAM_COMIC_TYPE]: null
           }
         });
+      });
+    });
+  });
+
+  describe('when the page count changes', () => {
+    beforeEach(() => {
+      service.onPageCountChange(PAGE_SIZE);
+    });
+
+    it('updates the URL', () => {
+      expect(router.navigate).toHaveBeenCalledWith([], {
+        relativeTo: activatedRoute,
+        queryParams: {
+          [QUERY_PARAM_PAGE_COUNT]: `${PAGE_SIZE}`
+        }
+      });
+    });
+  });
+
+  describe('when the page count is cleared', () => {
+    beforeEach(() => {
+      service.onPageCountChange(null);
+    });
+
+    it('updates the URL', () => {
+      expect(router.navigate).toHaveBeenCalledWith([], {
+        relativeTo: activatedRoute,
+        queryParams: {
+          [QUERY_PARAM_PAGE_COUNT]: null
+        }
       });
     });
   });

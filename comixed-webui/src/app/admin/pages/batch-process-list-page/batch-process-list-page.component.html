@@ -39,8 +39,8 @@
 <mat-table
   [dataSource]="dataSource"
   matSort
-  [matSortActive]="queryParameterService.sortBy$ | async"
-  [matSortDirection]="queryParameterService.sortDirection$ | async"
+  [matSortActive]="(queryParameterService.sortBy$ | async) || 'job-id'"
+  [matSortDirection]="(queryParameterService.sortDirection$ | async) || 'desc'"
   (matSortChange)="
     queryParameterService.onSortChange($event.active, $event.direction)
   "
