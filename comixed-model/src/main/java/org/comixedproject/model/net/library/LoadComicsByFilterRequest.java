@@ -68,6 +68,10 @@ public class LoadComicsByFilterRequest {
   @Getter
   private Boolean unscrapedState;
 
+  @JsonProperty("missing")
+  @Getter
+  private Boolean missing;
+
   @JsonProperty("searchText")
   @Getter
   private String searchText;
@@ -108,6 +112,7 @@ public class LoadComicsByFilterRequest {
         && getComicType() == that.getComicType()
         && getComicState() == that.getComicState()
         && Objects.equals(getUnscrapedState(), that.getUnscrapedState())
+        && Objects.equals(getMissing(), that.getMissing())
         && Objects.equals(getSearchText(), that.getSearchText())
         && Objects.equals(getPublisher(), that.getPublisher())
         && Objects.equals(getSeries(), that.getSeries())
@@ -128,6 +133,7 @@ public class LoadComicsByFilterRequest {
         getComicType(),
         getComicState(),
         getUnscrapedState(),
+        getMissing(),
         getSearchText(),
         getPublisher(),
         getSeries(),
@@ -139,7 +145,7 @@ public class LoadComicsByFilterRequest {
 
   @Override
   public String toString() {
-    return "LoadComicDetailsRequest{"
+    return "LoadComicsByFilterRequest{"
         + "pageSize="
         + pageSize
         + ", pageIndex="
@@ -156,6 +162,8 @@ public class LoadComicsByFilterRequest {
         + comicState
         + ", unscrapedState="
         + unscrapedState
+        + ", missing="
+        + missing
         + ", searchText='"
         + searchText
         + '\''
@@ -168,6 +176,8 @@ public class LoadComicsByFilterRequest {
         + ", volume='"
         + volume
         + '\''
+        + ", pageCount="
+        + pageCount
         + ", sortBy='"
         + sortBy
         + '\''

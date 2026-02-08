@@ -87,6 +87,7 @@ describe('DisplayableComicService', () => {
   const COMIC_TYPE = ComicType.ISSUE;
   const COMIC_STATE = ComicState.UNPROCESSED;
   const SELECTED_STATE = Math.random() > 0.5;
+  const MISSING_STATE = Math.random() > 0.5;
   const SCRAPED_STATE = Math.random() > 0.5;
   const SEARCH_TEXT = 'This is some text';
   const SORT_BY = 'addedDate';
@@ -299,6 +300,7 @@ describe('DisplayableComicService', () => {
         comicType: COMIC_TYPE,
         comicState: COMIC_STATE,
         selected: false,
+        missing: MISSING_STATE,
         unscrapedState: SCRAPED_STATE,
         searchText: SEARCH_TEXT,
         publisher: PUBLISHER,
@@ -321,6 +323,7 @@ describe('DisplayableComicService', () => {
       comicType: COMIC_TYPE,
       comicState: COMIC_STATE,
       unscrapedState: SCRAPED_STATE,
+      missing: MISSING_STATE,
       searchText: SEARCH_TEXT,
       publisher: PUBLISHER,
       series: SERIES,
@@ -348,6 +351,7 @@ describe('DisplayableComicService', () => {
         comicType: COMIC_TYPE,
         comicState: COMIC_STATE,
         selected: true,
+        missing: MISSING_STATE,
         unscrapedState: SCRAPED_STATE,
         searchText: SEARCH_TEXT,
         publisher: PUBLISHER,

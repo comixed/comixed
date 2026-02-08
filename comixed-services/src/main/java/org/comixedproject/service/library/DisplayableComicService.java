@@ -68,6 +68,7 @@ public class DisplayableComicService {
    * @param archiveType the optional archive type
    * @param comicType the optional comic type
    * @param comicState the optional comic state
+   * @param missing the optional missing state
    * @param unscrapedState the optional unscraped state
    * @param searchText the optional search text
    * @param publisher the optional publisher
@@ -88,6 +89,7 @@ public class DisplayableComicService {
       final ComicType comicType,
       final ComicState comicState,
       final Boolean unscrapedState,
+      final Boolean missing,
       final String searchText,
       final String publisher,
       final String series,
@@ -104,6 +106,7 @@ public class DisplayableComicService {
             comicType,
             comicState,
             unscrapedState,
+            missing,
             searchText,
             publisher,
             series,
@@ -131,6 +134,7 @@ public class DisplayableComicService {
    * @param comicType the optional comic type
    * @param comicState the optional comic state
    * @param unscrapedState the optional unscraped state
+   * @param missing the optional missing flag
    * @param pageCount the optional page count
    * @param searchText the optional search text
    * @return the ids
@@ -143,6 +147,7 @@ public class DisplayableComicService {
       final ComicType comicType,
       final ComicState comicState,
       final Boolean unscrapedState,
+      final Boolean missing,
       final Integer pageCount,
       final String searchText) {
     final var displayableComicExample =
@@ -153,6 +158,7 @@ public class DisplayableComicService {
             comicType,
             comicState,
             unscrapedState,
+            missing,
             searchText,
             null,
             null,
@@ -171,6 +177,7 @@ public class DisplayableComicService {
    * @param comicType the optional comic type
    * @param comicState the optional comic state
    * @param unscrapedState the optional unscraped state
+   * @param missing the optional missing state
    * @param searchText the optional search text
    * @param publisher the optional publisher
    * @param series the optional series
@@ -184,6 +191,7 @@ public class DisplayableComicService {
       final ComicType comicType,
       final ComicState comicState,
       final Boolean unscrapedState,
+      final Boolean missing,
       final String searchText,
       final String publisher,
       final String series,
@@ -198,6 +206,7 @@ public class DisplayableComicService {
             comicType,
             comicState,
             unscrapedState,
+            missing,
             searchText,
             publisher,
             series,
@@ -217,6 +226,7 @@ public class DisplayableComicService {
    * @param comicType the optional comic type
    * @param comicState the optional comic state
    * @param unscrapedState the optional unscraped state
+   * @param missing the optional missing state
    * @param searchText the optional search text
    * @param publisher the optional publisher
    * @param series the optional series
@@ -230,6 +240,7 @@ public class DisplayableComicService {
       final ComicType comicType,
       final ComicState comicState,
       final Boolean unscrapedState,
+      final Boolean missing,
       final String searchText,
       final String publisher,
       final String series,
@@ -244,6 +255,7 @@ public class DisplayableComicService {
             comicType,
             comicState,
             unscrapedState,
+            missing,
             searchText,
             publisher,
             series,
@@ -265,6 +277,7 @@ public class DisplayableComicService {
    * @param comicType the optional comic type
    * @param comicState the optional comic state
    * @param unscrapedState the optional unscraped state
+   * @param missing the optional missing state
    * @param searchText the optional search text
    * @param publisher the optional publisher
    * @param series the optional series
@@ -280,6 +293,7 @@ public class DisplayableComicService {
       final ComicType comicType,
       final ComicState comicState,
       final Boolean unscrapedState,
+      final Boolean missing,
       final String searchText,
       final String publisher,
       final String series,
@@ -294,6 +308,7 @@ public class DisplayableComicService {
             comicType,
             comicState,
             unscrapedState,
+            missing,
             searchText,
             publisher,
             series,
@@ -509,6 +524,7 @@ public class DisplayableComicService {
       final ComicType comicType,
       final ComicState comicState,
       final Boolean unscrapedState,
+      final Boolean missing,
       final String searchText,
       final String publisher,
       final String series,
@@ -522,6 +538,7 @@ public class DisplayableComicService {
     builder.setComicType(comicType);
     builder.setComicState(comicState);
     builder.setUnscrapedState(unscrapedState);
+    builder.setMissing(missing);
     builder.setSearchText(searchText);
     builder.setPublisher(publisher);
     builder.setSeries(series);

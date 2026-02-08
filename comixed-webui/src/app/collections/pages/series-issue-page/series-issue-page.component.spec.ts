@@ -169,6 +169,7 @@ describe('SeriesIssuePageComponent', () => {
           comicType: null,
           comicState: null,
           selected: false,
+          missing: false,
           unscrapedState: false,
           searchText: null,
           publisher: PUBLISHER_NAME,

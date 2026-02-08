@@ -118,11 +118,11 @@ class ComicBookSelectionControllerTest {
         httpSession,
         principal,
         new MultipleComicBooksSelectionRequest(
-            null, null, null, null, null, false, null, null, true));
+            null, null, null, null, null, false, false, null, null, true));
 
     Mockito.verify(comicSelectionService, Mockito.times(1))
         .selectByFilter(
-            TEST_EMAIL, selectedIds, null, null, null, null, null, false, null, null, true);
+            TEST_EMAIL, selectedIds, null, null, null, null, null, false, false, null, null, true);
     Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(selectedIds);
     Mockito.verify(httpSession, Mockito.times(1))
         .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);
@@ -134,11 +134,11 @@ class ComicBookSelectionControllerTest {
         httpSession,
         principal,
         new MultipleComicBooksSelectionRequest(
-            null, null, null, null, null, false, null, null, false));
+            null, null, null, null, null, false, false, null, null, false));
 
     Mockito.verify(comicSelectionService, Mockito.times(1))
         .selectByFilter(
-            TEST_EMAIL, selectedIds, null, null, null, null, null, false, null, null, false);
+            TEST_EMAIL, selectedIds, null, null, null, null, null, false, false, null, null, false);
     Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(selectedIds);
     Mockito.verify(httpSession, Mockito.times(1))
         .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);

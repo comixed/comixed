@@ -69,6 +69,7 @@ class DisplayableComicControllerTest {
   private static final ComicType TEST_COMIC_TYPE = ComicType.MANGA;
   private static final ComicState TEST_COMIC_STATE = ComicState.STABLE;
   private static final Boolean TEST_UNSCRAPED_STATE = RandomUtils.nextBoolean();
+  private static final Boolean TEST_MISSING_STATE = RandomUtils.nextBoolean();
   private static final String TEST_SEARCH_TEXT = "The search text";
   private static final String TEST_PUBLISHER = "The Publisher";
   private static final String TEST_SERIES = "The Series";
@@ -127,6 +128,7 @@ class DisplayableComicControllerTest {
     Mockito.when(filteredRequest.getComicType()).thenReturn(TEST_COMIC_TYPE);
     Mockito.when(filteredRequest.getComicState()).thenReturn(TEST_COMIC_STATE);
     Mockito.when(filteredRequest.getUnscrapedState()).thenReturn(TEST_UNSCRAPED_STATE);
+    Mockito.when(filteredRequest.getMissing()).thenReturn(TEST_MISSING_STATE);
     Mockito.when(filteredRequest.getSearchText()).thenReturn(TEST_SEARCH_TEXT);
     Mockito.when(filteredRequest.getPublisher()).thenReturn(TEST_PUBLISHER);
     Mockito.when(filteredRequest.getSeries()).thenReturn(TEST_SERIES);
@@ -182,6 +184,7 @@ class DisplayableComicControllerTest {
                 Mockito.any(ComicType.class),
                 Mockito.any(ComicState.class),
                 Mockito.anyBoolean(),
+                Mockito.anyBoolean(),
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
@@ -196,6 +199,7 @@ class DisplayableComicControllerTest {
                 Mockito.any(ComicType.class),
                 Mockito.any(ComicState.class),
                 Mockito.anyBoolean(),
+                Mockito.anyBoolean(),
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
@@ -207,6 +211,7 @@ class DisplayableComicControllerTest {
                 Mockito.any(ArchiveType.class),
                 Mockito.any(ComicType.class),
                 Mockito.any(ComicState.class),
+                Mockito.anyBoolean(),
                 Mockito.anyBoolean(),
                 Mockito.anyString(),
                 Mockito.anyString(),
@@ -221,6 +226,7 @@ class DisplayableComicControllerTest {
                 Mockito.any(ArchiveType.class),
                 Mockito.any(ComicType.class),
                 Mockito.any(ComicState.class),
+                Mockito.anyBoolean(),
                 Mockito.anyBoolean(),
                 Mockito.anyString(),
                 Mockito.anyString(),
@@ -249,6 +255,7 @@ class DisplayableComicControllerTest {
             TEST_COMIC_TYPE,
             TEST_COMIC_STATE,
             TEST_UNSCRAPED_STATE,
+            TEST_MISSING_STATE,
             TEST_SEARCH_TEXT,
             TEST_PUBLISHER,
             TEST_SERIES,
@@ -269,6 +276,7 @@ class DisplayableComicControllerTest {
 
     Mockito.verify(displayableComicService, Mockito.never())
         .loadComicsByFilter(
+            Mockito.any(),
             Mockito.any(),
             Mockito.any(),
             Mockito.any(),

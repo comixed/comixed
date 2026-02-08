@@ -67,6 +67,7 @@ describe('ComicListEffects', () => {
   const COMIC_TYPE = ComicType.ISSUE;
   const COMIC_STATE = ComicState.UNPROCESSED;
   const SELECTED_STATE = Math.random() > 0.5;
+  const MISSING_STATE = Math.random() > 0.5;
   const SCRAPED_STATE = Math.random() > 0.5;
   const SEARCH_TEXT = 'This is some text';
   const SORT_BY = 'addedDate';
@@ -167,6 +168,7 @@ describe('ComicListEffects', () => {
         comicType: COMIC_TYPE,
         comicState: COMIC_STATE,
         selected: SELECTED_STATE,
+        missing: MISSING_STATE,
         unscrapedState: SCRAPED_STATE,
         searchText: SEARCH_TEXT,
         publisher: PUBLISHER,
@@ -195,6 +197,7 @@ describe('ComicListEffects', () => {
           comicType: COMIC_TYPE,
           comicState: COMIC_STATE,
           selected: SELECTED_STATE,
+          missing: MISSING_STATE,
           unscrapedState: SCRAPED_STATE,
           searchText: SEARCH_TEXT,
           publisher: PUBLISHER,
@@ -221,6 +224,7 @@ describe('ComicListEffects', () => {
         comicType: COMIC_TYPE,
         comicState: COMIC_STATE,
         selected: SELECTED_STATE,
+        missing: MISSING_STATE,
         unscrapedState: SCRAPED_STATE,
         searchText: SEARCH_TEXT,
         publisher: PUBLISHER,
@@ -243,6 +247,7 @@ describe('ComicListEffects', () => {
           comicType: COMIC_TYPE,
           comicState: COMIC_STATE,
           selected: SELECTED_STATE,
+          missing: MISSING_STATE,
           unscrapedState: SCRAPED_STATE,
           searchText: SEARCH_TEXT,
           publisher: PUBLISHER,
@@ -269,6 +274,7 @@ describe('ComicListEffects', () => {
         comicType: COMIC_TYPE,
         comicState: COMIC_STATE,
         selected: SELECTED_STATE,
+        missing: MISSING_STATE,
         unscrapedState: SCRAPED_STATE,
         searchText: SEARCH_TEXT,
         publisher: PUBLISHER,
@@ -291,6 +297,7 @@ describe('ComicListEffects', () => {
           comicType: COMIC_TYPE,
           comicState: COMIC_STATE,
           selected: SELECTED_STATE,
+          missing: MISSING_STATE,
           unscrapedState: SCRAPED_STATE,
           searchText: SEARCH_TEXT,
           publisher: PUBLISHER,

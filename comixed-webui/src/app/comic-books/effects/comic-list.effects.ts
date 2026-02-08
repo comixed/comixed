@@ -57,6 +57,7 @@ export class ComicListEffects {
             comicType: action.comicType,
             comicState: action.comicState,
             selected: action.selected,
+            missing: action.missing,
             unscrapedState: action.unscrapedState,
             searchText: action.searchText,
             publisher: action.publisher,

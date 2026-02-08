@@ -103,6 +103,7 @@ public class ComicSelectionService {
    * @param comicType the optional cover type
    * @param comicState the optional comic state
    * @param unscrapedState the optional unscraped state
+   * @param missing the optional missing flag
    * @param pageCount the optional page count
    * @param searchText the optional search text
    * @param adding adding or removing flag
@@ -116,6 +117,7 @@ public class ComicSelectionService {
       final ComicType comicType,
       final ComicState comicState,
       final Boolean unscrapedState,
+      final Boolean missing,
       final Integer pageCount,
       final String searchText,
       final boolean adding) {
@@ -127,6 +129,7 @@ public class ComicSelectionService {
             comicType,
             comicState,
             unscrapedState,
+            missing,
             pageCount,
             searchText);
     if (adding) {

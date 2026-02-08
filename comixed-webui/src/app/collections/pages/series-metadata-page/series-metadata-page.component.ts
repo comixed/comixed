@@ -188,6 +188,7 @@ export class SeriesMetadataPageComponent
             comicType: null,
             comicState: null,
             selected: false,
+            missing: false,
             unscrapedState: false,
             searchText: null,
             publisher: this.publisher,

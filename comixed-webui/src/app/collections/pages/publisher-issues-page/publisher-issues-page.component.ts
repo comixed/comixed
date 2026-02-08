@@ -150,6 +150,7 @@ export class PublisherIssuesPageComponent implements OnInit, OnDestroy {
         comicType: this.queryParameterService.comicType$.value,
         comicState: null,
         selected: false,
+        missing: false,
         unscrapedState: false,
         searchText: null,
         publisher: this.name,
