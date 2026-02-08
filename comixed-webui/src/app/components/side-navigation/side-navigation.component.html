@@ -27,12 +27,13 @@
     routerLinkActive="active-nav-button"
   >
     <mat-icon>local_library</mat-icon>
-    <mat-label class="cx-text-nowrap">
+    <mat-label
+      class="cx-text-nowrap"
+      [matBadge]="totalComicBooks$ | async | number"
+      matBadgePosition="after"
+    >
       <span class="cx-align-left">
         {{ "navigation.option.all-comics" | translate }}
-      </span>
-      <span class="cx-align-right">
-        ({{ totalComicBooks$ | async | number }})
       </span>
     </mat-label>
   </button>
@@ -45,12 +46,13 @@
     routerLinkActive="active-nav-button"
   >
     <mat-icon>check_circle</mat-icon>
-    <mat-label class="cx-text-nowrap">
+    <mat-label
+      class="cx-text-nowrap"
+      [matBadge]="selectedComicBooks$ | async | number"
+      matBadgePosition="after"
+    >
       <span class="cx-align-left">
         {{ "navigation.option.selected-comics" | translate }}
-      </span>
-      <span class="cx-align-right">
-        ({{ selectedComicBooks$ | async | number }})
       </span>
     </mat-label>
   </button>
@@ -64,9 +66,12 @@
     routerLinkActive="active-nav-button"
   >
     <mat-icon>incomplete_circle</mat-icon>
-    <mat-label class="cx-text-nowrap">
+    <mat-label
+      class="cx-text-nowrap"
+      [matBadge]="unprocessedComicBooks$ | async | number"
+      matBadgePosition="after"
+    >
       {{ "navigation.option.unprocessed-comics" | translate }}
-      ({{ unprocessedComicBooks$ | async | number }})
     </mat-label>
   </button>
 }
@@ -78,9 +83,12 @@
     routerLinkActive="active-nav-button"
   >
     <mat-icon>read_more</mat-icon>
-    <mat-label class="cx-text-nowrap">
+    <mat-label
+      class="cx-text-nowrap"
+      [matBadge]="readComicBooks$ | async | number"
+      matBadgePosition="after"
+    >
       {{ "navigation.option.read-comics" | translate }}
-      ({{ readComicBooks$ | async | number }})
     </mat-label>
   </button>
 }
@@ -92,9 +100,12 @@
     routerLinkActive="active-nav-button"
   >
     <mat-icon>cloud_download</mat-icon>
-    <mat-label class="cx-text-nowrap">
+    <mat-label
+      class="cx-text-nowrap"
+      [matBadge]="unscrapedComicBooks$ | async | number"
+      matBadgePosition="after"
+    >
       {{ "navigation.option.unscraped-comics" | translate }}
-      ({{ unscrapedComicBooks$ | async | number }})
     </mat-label>
   </button>
 }
@@ -106,9 +117,12 @@
     routerLinkActive="active-nav-button"
   >
     <mat-icon>cloud_download</mat-icon>
-    <mat-label class="cx-text-nowrap">
+    <mat-label
+      class="cx-text-nowrap"
+      [matBadge]="changedComicBooks$ | async | number"
+      matBadgePosition="after"
+    >
       {{ "navigation.option.changed-comics" | translate }}
-      ({{ changedComicBooks$ | async | number }})
     </mat-label>
   </button>
 }
@@ -120,9 +134,12 @@
     routerLinkActive="active-nav-button"
   >
     <mat-icon>delete_sweep</mat-icon>
-    <mat-label class="cx-text-nowrap">
+    <mat-label
+      class="cx-text-nowrap"
+      [matBadge]="deletedComicBooks$ | async | number"
+      matBadgePosition="after"
+    >
       {{ "navigation.option.deleted-comics" | translate }}
-      ({{ deletedComicBooks$ | async | number }})
     </mat-label>
   </button>
 }
@@ -147,9 +164,12 @@
     routerLinkActive="active-nav-button"
   >
     <mat-icon>dynamic_feed</mat-icon>
-    <mat-label class="cx-text-nowrap">
+    <mat-label
+      class="cx-text-nowrap"
+      [matBadge]="duplicateComicBooks$ | async | number"
+      matBadgePosition="after"
+    >
       {{ "navigation.option.duplicate-comics" | translate }}
-      ({{ duplicateComicBooks$ | async | number }})
     </mat-label>
   </button>
 }
