@@ -60,6 +60,7 @@ class DisplayableComicServiceTest {
   private static final ComicType TEST_COMIC_TYPE = ComicType.MANGA;
   private static final ComicState TEST_COMIC_STATE = ComicState.STABLE;
   private static final Boolean TEST_UNSCRAPED_STATE = RandomUtils.nextBoolean();
+  private static final Boolean TEST_MISSING_STATE = RandomUtils.nextBoolean();
   private static final String TEST_SEARCH_TEXT = "The search text";
   private static final String TEST_PUBLISHER = "The Publisher";
   private static final String TEST_SERIES = "The Series";
@@ -132,6 +133,7 @@ class DisplayableComicServiceTest {
             TEST_COMIC_TYPE,
             TEST_COMIC_STATE,
             TEST_UNSCRAPED_STATE,
+            TEST_MISSING_STATE,
             TEST_SEARCH_TEXT,
             TEST_PUBLISHER,
             TEST_SERIES,
@@ -166,6 +168,7 @@ class DisplayableComicServiceTest {
             TEST_COMIC_TYPE,
             TEST_COMIC_STATE,
             TEST_UNSCRAPED_STATE,
+            TEST_MISSING_STATE,
             TEST_SEARCH_TEXT,
             TEST_PUBLISHER,
             TEST_SERIES,
@@ -195,6 +198,7 @@ class DisplayableComicServiceTest {
             TEST_COMIC_TYPE,
             TEST_COMIC_STATE,
             TEST_UNSCRAPED_STATE,
+            TEST_MISSING_STATE,
             TEST_SEARCH_TEXT,
             TEST_PUBLISHER,
             TEST_SERIES,
@@ -221,6 +225,7 @@ class DisplayableComicServiceTest {
             TEST_COMIC_TYPE,
             TEST_COMIC_STATE,
             TEST_UNSCRAPED_STATE,
+            TEST_MISSING_STATE,
             TEST_SEARCH_TEXT,
             TEST_PUBLISHER,
             TEST_SERIES,
@@ -245,6 +250,7 @@ class DisplayableComicServiceTest {
             TEST_COMIC_TYPE,
             TEST_COMIC_STATE,
             TEST_UNSCRAPED_STATE,
+            TEST_MISSING_STATE,
             TEST_SEARCH_TEXT,
             TEST_PUBLISHER,
             TEST_SERIES,
@@ -270,6 +276,7 @@ class DisplayableComicServiceTest {
             TEST_COMIC_TYPE,
             TEST_COMIC_STATE,
             TEST_UNSCRAPED_STATE,
+            TEST_MISSING_STATE,
             TEST_SEARCH_TEXT,
             TEST_PUBLISHER,
             TEST_SERIES,
@@ -563,6 +570,7 @@ class DisplayableComicServiceTest {
             TEST_COMIC_TYPE,
             TEST_COMIC_STATE,
             TEST_UNSCRAPED_STATE,
+            TEST_MISSING_STATE,
             TEST_SEARCH_TEXT,
             TEST_PUBLISHER,
             TEST_SERIES,

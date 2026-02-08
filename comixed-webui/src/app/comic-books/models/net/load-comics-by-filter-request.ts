@@ -28,6 +28,7 @@ export interface LoadComicsByFilterRequest {
   archiveType: ArchiveType;
   comicType: ComicType;
   comicState: ComicState;
+  missing: boolean;
   unscrapedState: boolean;
   searchText: string;
   publisher: string;

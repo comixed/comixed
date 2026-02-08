@@ -186,6 +186,7 @@ class ComicSelectionServiceTest {
                 Mockito.any(ComicType.class),
                 Mockito.any(ComicState.class),
                 Mockito.anyBoolean(),
+                Mockito.anyBoolean(),
                 Mockito.anyInt(),
                 Mockito.anyString()))
         .thenReturn(comicIds);
@@ -200,6 +201,7 @@ class ComicSelectionServiceTest {
         TEST_ARCHIVE_TYPE,
         TEST_COMIC_TYPE,
         TEST_COMIC_STATE,
+        false,
         false,
         TEST_PAGE_COUNT,
         TEST_SEARCH_TEXT,
@@ -223,6 +225,7 @@ class ComicSelectionServiceTest {
             TEST_COMIC_TYPE,
             TEST_COMIC_STATE,
             false,
+            false,
             TEST_PAGE_COUNT,
             TEST_SEARCH_TEXT);
   }
@@ -241,6 +244,7 @@ class ComicSelectionServiceTest {
                 Mockito.any(ComicType.class),
                 Mockito.any(ComicState.class),
                 Mockito.anyBoolean(),
+                Mockito.anyBoolean(),
                 Mockito.anyInt(),
                 Mockito.anyString()))
         .thenReturn(comicIds);
@@ -253,6 +257,7 @@ class ComicSelectionServiceTest {
         TEST_ARCHIVE_TYPE,
         TEST_COMIC_TYPE,
         TEST_COMIC_STATE,
+        false,
         false,
         TEST_PAGE_COUNT,
         TEST_SEARCH_TEXT,
@@ -274,6 +279,7 @@ class ComicSelectionServiceTest {
             TEST_ARCHIVE_TYPE,
             TEST_COMIC_TYPE,
             TEST_COMIC_STATE,
+            false,
             false,
             TEST_PAGE_COUNT,
             TEST_SEARCH_TEXT);

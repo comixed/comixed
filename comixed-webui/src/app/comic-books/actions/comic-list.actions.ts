@@ -41,6 +41,7 @@ export const loadComicsByFilter = createAction(
     comicState: ComicState;
     selected: boolean;
     unscrapedState: boolean;
+    missing: boolean;
     searchText: string;
     publisher: string;
     series: string;

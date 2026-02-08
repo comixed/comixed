@@ -8,5 +8,6 @@
 
     <include file="/db/migrations/3.2/001_2544_remove_plugin_version_column.xml"/>
     <include file="/db/migrations/3.2/002_2445_add_sort_name_to_displayable_comic.xml"/>
+    <include file="/db/migrations/3.2/003_2466_add_is_missing_to_displayable_comic.xml"/>
 
 </databaseChangeLog>

@@ -104,6 +104,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   unscrapedOnly = false;
   changedOnly = false;
   deletedOnly = false;
+  missingOnly = false;
   unprocessedOnly = false;
   lastReadDatesSubscription: Subscription;
   comicBooksRead: number[] = [];
@@ -142,6 +143,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       this.unscrapedOnly = !!data.unscraped && data.unscraped === true;
       this.changedOnly = !!data.changed && data.changed === true;
       this.deletedOnly = !!data.deleted && data.deleted === true;
+      this.missingOnly = !!data.missing && data.missing === true;
       this.unprocessedOnly = !!data.unprocessed && data.unprocessed === true;
       this.showUpdateMetadata = !this.unprocessedOnly && !this.deletedOnly;
       this.showOrganize =
@@ -162,6 +164,9 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       }
       if (this.deletedOnly) {
         this.pageContent = 'deleted-only';
+      }
+      if (this.missingOnly) {
+        this.pageContent = 'missing-only';
       }
       if (this.unprocessedOnly) {
         this.pageContent = 'unprocessed-only';
@@ -257,6 +262,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
               comicType: this.queryParameterService.comicType$.value,
               comicState: this.targetComicState,
               selected: this.selectedOnly,
+              missing: this.missingOnly,
               unscrapedState: this.unscrapedOnly,
               searchText: this.queryParameterService.filterText$.value,
               publisher: null,
@@ -357,6 +363,10 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     } else if (this.deletedOnly) {
       this.titleService.setTitle(
         this.translateService.instant('library.all-comics.tab-title-deleted')
+      );
+    } else if (this.missingOnly) {
+      this.titleService.setTitle(
+        this.translateService.instant('library.all-comics.tab-title-missing')
       );
     } else if (this.unscrapedOnly) {
       this.titleService.setTitle(

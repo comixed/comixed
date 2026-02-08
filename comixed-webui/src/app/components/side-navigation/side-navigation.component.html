@@ -130,6 +130,19 @@
   <button
     mat-button
     class="menu-button"
+    routerLink="/library/missing"
+    routerLinkActive="active-nav-button"
+  >
+    <mat-icon>no_accounts</mat-icon>
+    <mat-label class="cx-text-nowrap">
+      {{ "navigation.option.missing-comics" | translate }}
+    </mat-label>
+  </button>
+}
+@if (isAdmin) {
+  <button
+    mat-button
+    class="menu-button"
     routerLink="/library/duplicates/comics"
     routerLinkActive="active-nav-button"
   >

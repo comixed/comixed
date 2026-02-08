@@ -60,6 +60,10 @@ public class MultipleComicBooksSelectionRequest {
   @Getter
   private Boolean unscrapedState;
 
+  @JsonProperty("missing")
+  @Getter
+  private Boolean missing;
+
   @JsonProperty("pageCount")
   @Getter
   private Integer pageCount;

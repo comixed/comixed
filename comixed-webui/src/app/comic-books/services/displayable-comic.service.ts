@@ -118,6 +118,7 @@ export class DisplayableComicService {
     comicType: ComicType;
     comicState: ComicState;
     selected: boolean;
+    missing: boolean;
     unscrapedState: boolean;
     searchText: string;
     publisher: string;
@@ -145,6 +146,7 @@ export class DisplayableComicService {
         archiveType: args.archiveType,
         comicType: args.comicType,
         comicState: args.comicState,
+        missing: args.missing,
         unscrapedState: args.unscrapedState,
         searchText: args.searchText,
         publisher: args.publisher,

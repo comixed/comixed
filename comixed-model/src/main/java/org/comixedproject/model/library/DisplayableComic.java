@@ -78,6 +78,12 @@ public class DisplayableComic {
   @Setter
   private Boolean unscraped;
 
+  @Column(name = "is_missing")
+  @JsonView({View.ComicDetailsView.class})
+  @Getter
+  @Setter
+  private Boolean missing;
+
   @Column(name = "comic_type", columnDefinition = "VARCHAR(32)")
   @JsonView({View.ComicDetailsView.class})
   @Enumerated(EnumType.STRING)
