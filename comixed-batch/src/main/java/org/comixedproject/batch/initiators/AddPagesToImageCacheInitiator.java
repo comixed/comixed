@@ -23,13 +23,13 @@ import org.comixedproject.batch.comicpages.AddPagesToImageCacheConfiguration;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicpages.ComicPageService;
 import org.comixedproject.service.comicpages.PageCacheService;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.batch.core.job.Job;
+import org.springframework.batch.core.job.parameters.InvalidJobParametersException;
+import org.springframework.batch.core.job.parameters.JobParametersBuilder;
+import org.springframework.batch.core.launch.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.launch.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.launch.JobOperator;
+import org.springframework.batch.core.launch.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -56,7 +56,7 @@ public class AddPagesToImageCacheInitiator {
 
   @Autowired
   @Qualifier("batchJobOperator")
-  private JobLauncher jobLauncher;
+  private JobOperator jobOperator;
 
   /** Starts a batch process to add pages to the image cache. */
   @Scheduled(cron = "${comixed.batch.add-cover-to-image-cache.schedule:0 0 * * * *}")
@@ -69,7 +69,7 @@ public class AddPagesToImageCacheInitiator {
             && !this.batchProcessesService.hasActiveExecutions(
                 AddPagesToImageCacheConfiguration.ADD_PAGES_TO_IMAGE_CACHE_JOB)) {
           log.debug("Starting process: add pages to image cache");
-          this.jobLauncher.run(
+          this.jobOperator.start(
               addPagesToImageCacheJob,
               new JobParametersBuilder()
                   .addLong(
@@ -78,9 +78,9 @@ public class AddPagesToImageCacheInitiator {
                   .toJobParameters());
         }
       } catch (JobExecutionAlreadyRunningException
-          | JobInstanceAlreadyCompleteException
-          | JobParametersInvalidException
-          | JobRestartException error) {
+               | JobInstanceAlreadyCompleteException
+               | InvalidJobParametersException
+               | JobRestartException error) {
         log.error("Failed to start batch process", error);
       }
     }

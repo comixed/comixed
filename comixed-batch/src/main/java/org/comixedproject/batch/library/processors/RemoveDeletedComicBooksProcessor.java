@@ -26,11 +26,11 @@ import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.ExitStatus;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.item.ExecutionContext;
-import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.core.listener.StepExecutionListener;
+import org.springframework.batch.core.step.StepExecution;
+import org.springframework.batch.infrastructure.item.ExecutionContext;
+import org.springframework.batch.infrastructure.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -77,10 +77,5 @@ public class RemoveDeletedComicBooksProcessor
   public void beforeStep(final StepExecution stepExecution) {
     log.trace("Loading job context");
     this.executionContext = stepExecution.getJobExecution().getExecutionContext();
-  }
-
-  @Override
-  public ExitStatus afterStep(final StepExecution stepExecution) {
-    return null;
   }
 }

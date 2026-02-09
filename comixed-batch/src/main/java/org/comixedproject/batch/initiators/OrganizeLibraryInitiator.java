@@ -27,13 +27,13 @@ import org.comixedproject.model.batch.OrganizingLibraryEvent;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.library.OrganizingComicService;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.batch.core.job.Job;
+import org.springframework.batch.core.job.parameters.InvalidJobParametersException;
+import org.springframework.batch.core.job.parameters.JobParametersBuilder;
+import org.springframework.batch.core.launch.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.launch.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.launch.JobOperator;
+import org.springframework.batch.core.launch.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.EventListener;
@@ -63,7 +63,7 @@ public class OrganizeLibraryInitiator {
 
   @Autowired
   @Qualifier("batchJobOperator")
-  private JobLauncher jobLauncher;
+  private JobOperator jobOperator;
 
   @Scheduled(fixedDelayString = "${comixed.batch.organize-library.period:60000}")
   public void execute() {
@@ -97,7 +97,7 @@ public class OrganizeLibraryInitiator {
         }
         try {
           log.trace("Starting batch job: organize comic files");
-          this.jobLauncher.run(
+          this.jobOperator.start(
               this.libraryOrganizationJob,
               new JobParametersBuilder()
                   .addLong(ORGANIZE_LIBRARY_JOB_TIME_STARTED, System.currentTimeMillis())
@@ -105,9 +105,9 @@ public class OrganizeLibraryInitiator {
                   .addString(ORGANIZE_LIBRARY_JOB_RENAMING_RULE, renamingRule)
                   .toJobParameters());
         } catch (JobExecutionAlreadyRunningException
-            | JobRestartException
-            | JobInstanceAlreadyCompleteException
-            | JobParametersInvalidException error) {
+                 | JobRestartException
+                 | JobInstanceAlreadyCompleteException
+                 | InvalidJobParametersException error) {
           log.error("Failed to run import comic files job", error);
         }
       }

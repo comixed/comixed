@@ -26,7 +26,12 @@ import org.comixedproject.model.batch.RecreateComicFilesEvent;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.job.Job;
+import org.springframework.batch.core.job.parameters.InvalidJobParametersException;
+import org.springframework.batch.core.job.parameters.JobParametersBuilder;
+import org.springframework.batch.core.launch.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.launch.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.launch.JobOperator;
+import org.springframework.batch.core.launch.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.EventListener;
@@ -74,15 +79,15 @@ public class RecreateComicFilesInitiator {
           && !this.batchProcessesService.hasActiveExecutions(RECREATE_COMIC_FILES_JOB)) {
         try {
           log.trace("Starting batch job: organize comic files");
-          this.jobOperator.run(
+          this.jobOperator.start(
               this.recreateComicFilesJob,
               new JobParametersBuilder()
                   .addLong(RECREATE_COMIC_FILES_JOB_TIME_STARTED, System.currentTimeMillis())
                   .toJobParameters());
         } catch (JobExecutionAlreadyRunningException
-            | JobRestartException
-            | JobInstanceAlreadyCompleteException
-            | JobParametersInvalidException error) {
+                 | JobRestartException
+                 | JobInstanceAlreadyCompleteException
+                 | InvalidJobParametersException error) {
           log.error("Failed to run import comic files job", error);
         }
       }

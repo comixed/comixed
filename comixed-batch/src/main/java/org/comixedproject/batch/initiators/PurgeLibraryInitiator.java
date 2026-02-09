@@ -25,13 +25,13 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.batch.PurgeLibraryEvent;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.batch.core.job.Job;
+import org.springframework.batch.core.job.parameters.InvalidJobParametersException;
+import org.springframework.batch.core.job.parameters.JobParametersBuilder;
+import org.springframework.batch.core.launch.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.launch.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.launch.JobOperator;
+import org.springframework.batch.core.launch.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.EventListener;
@@ -59,7 +59,7 @@ public class PurgeLibraryInitiator {
 
   @Autowired
   @Qualifier("batchJobOperator")
-  private JobLauncher jobLauncher;
+  private JobOperator jobOperator;
 
   @Scheduled(fixedDelayString = "${comixed.batch.purge-library.period:60000}")
   public void execute() {
@@ -79,15 +79,15 @@ public class PurgeLibraryInitiator {
           && !this.batchProcessesService.hasActiveExecutions(PURGE_LIBRARY_JOB)) {
         try {
           log.trace("Starting batch job: purge library");
-          this.jobLauncher.run(
+          this.jobOperator.start(
               this.purgeLibraryJob,
               new JobParametersBuilder()
                   .addLong(PURGE_LIBRARY_JOB_TIME_STARTED, System.currentTimeMillis())
                   .toJobParameters());
         } catch (JobExecutionAlreadyRunningException
-            | JobRestartException
-            | JobInstanceAlreadyCompleteException
-            | JobParametersInvalidException error) {
+                 | JobRestartException
+                 | JobInstanceAlreadyCompleteException
+                 | InvalidJobParametersException error) {
           log.error("Failed to run purge comic files job", error);
         }
       }

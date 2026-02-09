@@ -33,14 +33,14 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.batch.core.job.Job;
+import org.springframework.batch.core.job.JobExecution;
+import org.springframework.batch.core.job.parameters.InvalidJobParametersException;
+import org.springframework.batch.core.job.parameters.JobParameters;
+import org.springframework.batch.core.launch.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.launch.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.launch.JobOperator;
+import org.springframework.batch.core.launch.JobRestartException;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 @ExtendWith(MockitoExtension.class)
@@ -57,7 +57,7 @@ class MarkBlockedPagesInitiatorTest {
 
   @Mock
   @Qualifier("batchJobOperator")
-  private JobLauncher jobLauncher;
+  private JobOperator jobOperator;
 
   @Mock private JobExecution jobExecution;
 
@@ -66,13 +66,13 @@ class MarkBlockedPagesInitiatorTest {
   @BeforeEach
   public void setUp()
       throws JobInstanceAlreadyCompleteException,
-          JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
-          JobRestartException {
+      JobExecutionAlreadyRunningException,
+      InvalidJobParametersException,
+      JobRestartException {
     Mockito.when(configurationService.isFeatureEnabled(CFG_MANAGE_BLOCKED_PAGES)).thenReturn(true);
     Mockito.when(comicPageService.getUnmarkedWithBlockedHashCount()).thenReturn(1L);
     Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(false);
-    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+    Mockito.when(jobOperator.start(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
   }
 
@@ -80,7 +80,7 @@ class MarkBlockedPagesInitiatorTest {
   void execute_notManagingBlockedPages()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
+          InvalidJobParametersException,
           JobRestartException {
     Mockito.when(configurationService.isFeatureEnabled(CFG_MANAGE_BLOCKED_PAGES)).thenReturn(false);
 
@@ -88,40 +88,40 @@ class MarkBlockedPagesInitiatorTest {
 
     Mockito.verify(configurationService, Mockito.times(1))
         .isFeatureEnabled(CFG_MANAGE_BLOCKED_PAGES);
-    Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(), Mockito.any());
+    Mockito.verify(jobOperator, Mockito.never()).start(Mockito.any(Job.class), Mockito.any());
   }
 
   @Test
   void execute_noMissingHashes()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
+          InvalidJobParametersException,
           JobRestartException {
     Mockito.when(comicPageService.getUnmarkedWithBlockedHashCount()).thenReturn(0L);
 
     initiator.execute();
 
-    Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(), Mockito.any());
+    Mockito.verify(jobOperator, Mockito.never()).start(Mockito.any(Job.class), Mockito.any());
   }
 
   @Test
   void execute_hasRunningJobs()
       throws JobInstanceAlreadyCompleteException,
-          JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
-          JobRestartException {
+      JobExecutionAlreadyRunningException,
+      InvalidJobParametersException,
+      JobRestartException {
     Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(true);
 
     initiator.execute();
 
-    Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(), Mockito.any());
+    Mockito.verify(jobOperator, Mockito.never()).start(Mockito.any(Job.class), Mockito.any());
   }
 
   @Test
   void execute()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
+          InvalidJobParametersException,
           JobRestartException {
     initiator.execute();
 
@@ -129,17 +129,17 @@ class MarkBlockedPagesInitiatorTest {
 
     assertNotNull(jobParameters.getLong(JOB_MARK_BLOCKED_PAGES_STARTED));
 
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(loadPageHashesJob, jobParameters);
+    Mockito.verify(jobOperator, Mockito.times(1)).start(loadPageHashesJob, jobParameters);
   }
 
   @Test
   void execute_jobException()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
+          InvalidJobParametersException,
           JobRestartException {
-    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
-        .thenThrow(JobParametersInvalidException.class);
+    Mockito.when(jobOperator.start(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+        .thenThrow(InvalidJobParametersException.class);
 
     initiator.execute();
 
@@ -147,6 +147,6 @@ class MarkBlockedPagesInitiatorTest {
 
     assertNotNull(jobParameters.getLong(JOB_MARK_BLOCKED_PAGES_STARTED));
 
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(loadPageHashesJob, jobParameters);
+    Mockito.verify(jobOperator, Mockito.times(1)).run(loadPageHashesJob, jobParameters);
   }
 }

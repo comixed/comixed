@@ -23,11 +23,11 @@ import org.comixedproject.batch.comicbooks.processors.EditComicMetadataProcessor
 import org.comixedproject.batch.comicbooks.readers.EditComicMetadataReader;
 import org.comixedproject.batch.comicbooks.writers.EditComicMetadataWriter;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.Step;
+import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.job.parameters.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.Step;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -78,7 +78,8 @@ public class EditComicBookMetadataConfiguration {
       final EditComicMetadataProcessor processor,
       final EditComicMetadataWriter writer) {
     return new StepBuilder("editComicMetadataStep", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
+        .<ComicBook, ComicBook>chunk(this.chunkSize)
+        .transactionManager(platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

@@ -32,11 +32,11 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.job.JobExecution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.scope.context.StepContext;
-import org.springframework.batch.item.ExecutionContext;
+import org.springframework.batch.core.step.StepExecution;
+import org.springframework.batch.infrastructure.item.ExecutionContext;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -71,7 +71,7 @@ class ScrapeComicBookChunkListenerTest {
 
   @Test
   void beforeChunk() {
-    listener.beforeChunk(chunkContext);
+    listener.beforeChunk(chunkContext); // fixme
 
     Mockito.verify(chunkContext, Mockito.never()).getStepContext();
   }

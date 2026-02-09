@@ -29,7 +29,7 @@ public abstract class AbstractBatchProcessChunkListener extends AbstractBatchPro
 
 
   @Override
-  public void afterChunk(Chunk chunk) { // fixme
+  public void afterChunk(Chunk chunk) { // todo - look at migration guide
     var jobExecutionId = StepSynchronizationManager.getContext().getStepExecution().getJobExecution().getId();
   }
 

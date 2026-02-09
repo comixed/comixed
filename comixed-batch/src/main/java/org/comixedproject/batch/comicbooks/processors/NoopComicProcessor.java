@@ -21,7 +21,7 @@ package org.comixedproject.batch.comicbooks.processors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.infrastructure.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
 @Component
 @StepScope
 @Log4j2
-public class NoopComicProcessor implements ItemProcessor<ComicBook, ComicBook> {
+public class NoopComicProcessor implements ItemProcessor<ComicBook, ComicBook> {  // todo - seems to be unused at first sight. Might need to take a closer look
   @Override
   public ComicBook process(final ComicBook comicBook) {
     log.trace("Nothing to do");

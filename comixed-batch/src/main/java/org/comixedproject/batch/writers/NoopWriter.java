@@ -19,8 +19,8 @@
 package org.comixedproject.batch.writers;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.batch.item.Chunk;
-import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.infrastructure.item.Chunk;
+import org.springframework.batch.infrastructure.item.ItemWriter;
 import org.springframework.stereotype.Component;
 
 /**
@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class NoopWriter<T> implements ItemWriter<T> {
+public class NoopWriter<T> implements ItemWriter<T> { // todo - look why this is used over a Tasklet
   @Override
   public void write(final Chunk<? extends T> items) throws Exception {
     log.trace("No-op writer");

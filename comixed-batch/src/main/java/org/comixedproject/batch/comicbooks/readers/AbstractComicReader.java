@@ -24,8 +24,8 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.springframework.batch.core.StepExecutionListener;
-import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.core.listener.StepExecutionListener;
+import org.springframework.batch.infrastructure.item.ItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

@@ -19,13 +19,19 @@
 package org.comixedproject.http.websocket;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.security.config.annotation.web.messaging.MessageSecurityMetadataSourceRegistry;
-import org.springframework.security.config.annotation.web.socket.AbstractSecurityWebSocketMessageBrokerConfigurer;
+import org.springframework.security.authorization.AuthorizationManager;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.messaging.access.intercept.MessageMatcherDelegatingAuthorizationManager;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 /**
  * <code>ComiXedWebSocketSecurityConfiguration</code> provides the configuration for using
@@ -36,35 +42,52 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 @Configuration
 @EnableWebSocketMessageBroker
 @Log4j2
-public class ComiXedWebSocketSecurityConfiguration
-    extends AbstractSecurityWebSocketMessageBrokerConfigurer {
+public class ComiXedWebSocketSecurityConfiguration implements WebSocketMessageBrokerConfigurer {
 
-  @Override
-  protected void configureInbound(final MessageSecurityMetadataSourceRegistry messages) {
+  @Bean
+  public AuthorizationManager<Message<?>> messageAuthorizationManager() {
+    var messages =
+        MessageMatcherDelegatingAuthorizationManager.builder();
+
     messages
         .nullDestMatcher()
         .permitAll()
-        .simpTypeMatchers(
-            SimpMessageType.CONNECT, SimpMessageType.DISCONNECT, SimpMessageType.UNSUBSCRIBE)
+        .simpTypeMatchers(SimpMessageType.CONNECT, SimpMessageType.DISCONNECT, SimpMessageType.UNSUBSCRIBE)
         .permitAll();
+
+    return messages.build();
+  }
+
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
+        .csrf(csrf -> csrf
+            .ignoringRequestMatchers("/ws/**")
+        )
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/ws/**").permitAll()
+            .anyRequest().authenticated()
+        )
+        .headers(headers -> headers
+            .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+        );
+
+    return http.build();
   }
 
   @Override
-  protected boolean sameOriginDisabled() {
-    return true;
-  }
-
-  @Override
-  public void configureMessageBroker(final MessageBrokerRegistry registry) {
+  public void configureMessageBroker(MessageBrokerRegistry registry) {
     log.trace("Configuring websocket message broker");
     registry.enableSimpleBroker("/topic", "/queue", "/secured/user");
     registry.setApplicationDestinationPrefixes("/comixed");
     registry.setUserDestinationPrefix("/secured/user");
+
   }
 
   @Override
-  public void registerStompEndpoints(final StompEndpointRegistry registry) {
+  public void registerStompEndpoints(StompEndpointRegistry registry) {
     log.trace("Configuration STOMP endpoints");
     registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
   }
+
 }

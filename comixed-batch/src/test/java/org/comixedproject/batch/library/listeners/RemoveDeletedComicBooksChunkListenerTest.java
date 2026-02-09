@@ -38,8 +38,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.batch.core.*;
+import org.springframework.batch.core.job.JobExecution;
+import org.springframework.batch.core.job.JobInstance;
+import org.springframework.batch.core.job.parameters.JobParameters;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.scope.context.StepContext;
+import org.springframework.batch.core.step.StepExecution;
+import org.springframework.batch.infrastructure.item.Chunk;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -84,7 +89,7 @@ class RemoveDeletedComicBooksChunkListenerTest {
 
   @Test
   void beforeChunk() throws PublishingException {
-    listener.beforeChunk(chunkContext);
+    listener.beforeChunk(chunkContext); // fixme
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
 

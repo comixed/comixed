@@ -24,11 +24,10 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicMetadataSource;
 import org.comixedproject.service.metadata.MetadataService;
-import org.springframework.batch.core.ExitStatus;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.StepExecutionListener;
-import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.core.job.parameters.JobParameters;
+import org.springframework.batch.core.listener.StepExecutionListener;
+import org.springframework.batch.core.step.StepExecution;
+import org.springframework.batch.infrastructure.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -73,10 +72,5 @@ public class ScrapeComicBookProcessor
   public void beforeStep(final StepExecution stepExecution) {
     log.trace("Storing step execution reference");
     this.jobParameters = stepExecution.getJobParameters();
-  }
-
-  @Override
-  public ExitStatus afterStep(final StepExecution stepExecution) {
-    return null;
   }
 }

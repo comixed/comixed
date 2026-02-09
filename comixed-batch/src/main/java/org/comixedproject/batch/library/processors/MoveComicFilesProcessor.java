@@ -32,11 +32,11 @@ import org.comixedproject.batch.ComicCheckOutManager;
 import org.comixedproject.model.library.OrganizingComic;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.springframework.batch.core.ExitStatus;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.core.job.parameters.JobParameters;
+import org.springframework.batch.core.listener.StepExecutionListener;
+import org.springframework.batch.core.step.StepExecution;
+import org.springframework.batch.infrastructure.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -135,8 +135,4 @@ public class MoveComicFilesProcessor
     this.jobParameters = stepExecution.getJobExecution().getJobParameters();
   }
 
-  @Override
-  public ExitStatus afterStep(final StepExecution stepExecution) {
-    return null;
-  }
 }

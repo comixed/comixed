@@ -19,9 +19,10 @@
 package org.comixedproject.batch.metadata.listeners;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.batch.core.ChunkListener;
+import org.springframework.batch.core.listener.ChunkListener;
 import org.springframework.batch.core.scope.context.ChunkContext;
-import org.springframework.batch.item.ExecutionContext;
+import org.springframework.batch.infrastructure.item.Chunk;
+import org.springframework.batch.infrastructure.item.ExecutionContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -34,20 +35,26 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class ScrapeComicBookChunkListener extends AbstractMetadataUpdateProcessingListener
     implements ChunkListener {
+
+//  @Override
+//  public void afterChunk(final ChunkContext chunkContext) {
+//    final ExecutionContext executionContext =
+//        chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext();
+//    this.doPublishState(executionContext);
+//  }
+
   @Override
-  public void beforeChunk(final ChunkContext chunkContext) {
-    // nothing to do
+  public void afterChunk(Chunk chunk) {
+    // fixme
   }
 
   @Override
-  public void afterChunk(final ChunkContext chunkContext) {
-    final ExecutionContext executionContext =
-        chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext();
-    this.doPublishState(executionContext);
+  public void beforeChunk(Chunk chunk) {
+    // noop
   }
 
   @Override
-  public void afterChunkError(final ChunkContext chunkContext) {
-    // nothing to do
+  public void onChunkError(Exception exception, Chunk chunk) {
+    // noop
   }
 }
