@@ -59,7 +59,7 @@ class ScrapeComicBookInitiatorTest {
   private Job scrapeMetadataJob;
 
   @Mock
-  @Qualifier("batchJobLauncher")
+  @Qualifier("batchJobOperator")
   private JobLauncher jobLauncher;
 
   @Mock private JobExecution jobExecution;

@@ -58,7 +58,7 @@ public class PurgeLibraryInitiator {
   private Job purgeLibraryJob;
 
   @Autowired
-  @Qualifier("batchJobLauncher")
+  @Qualifier("batchJobOperator")
   private JobLauncher jobLauncher;
 
   @Scheduled(fixedDelayString = "${comixed.batch.purge-library.period:60000}")

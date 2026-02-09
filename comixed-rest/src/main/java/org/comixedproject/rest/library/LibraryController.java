@@ -70,7 +70,7 @@ public class LibraryController {
   @Autowired private ComicSelectionService comicSelectionService;
 
   @Autowired
-  @Qualifier("batchJobLauncher")
+  @Qualifier("batchJobOperator")
   private JobLauncher jobLauncher;
 
   @Autowired

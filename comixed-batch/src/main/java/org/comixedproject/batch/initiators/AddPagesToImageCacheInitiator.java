@@ -55,7 +55,7 @@ public class AddPagesToImageCacheInitiator {
   private Job addPagesToImageCacheJob;
 
   @Autowired
-  @Qualifier("batchJobLauncher")
+  @Qualifier("batchJobOperator")
   private JobLauncher jobLauncher;
 
   /** Starts a batch process to add pages to the image cache. */

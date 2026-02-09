@@ -25,13 +25,8 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.batch.RecreateComicFilesEvent;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.batch.core.job.Job;
+import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.EventListener;
@@ -58,8 +53,8 @@ public class RecreateComicFilesInitiator {
   private Job recreateComicFilesJob;
 
   @Autowired
-  @Qualifier("batchJobLauncher")
-  private JobLauncher jobLauncher;
+  @Qualifier("batchJobOperator")
+  private JobOperator jobOperator;
 
   @Scheduled(fixedDelayString = "${comixed.batch.recreate-comic-files.period:60000}")
   public void execute() {
@@ -79,7 +74,7 @@ public class RecreateComicFilesInitiator {
           && !this.batchProcessesService.hasActiveExecutions(RECREATE_COMIC_FILES_JOB)) {
         try {
           log.trace("Starting batch job: organize comic files");
-          this.jobLauncher.run(
+          this.jobOperator.run(
               this.recreateComicFilesJob,
               new JobParametersBuilder()
                   .addLong(RECREATE_COMIC_FILES_JOB_TIME_STARTED, System.currentTimeMillis())

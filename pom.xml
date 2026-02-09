@@ -7,7 +7,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.5.5</version>
+    <version>4.0.2</version>
   </parent>
   <name>comixed</name>
   <description>A digital comic book management system.</description>
@@ -44,7 +44,7 @@
     <assembly.name>local</assembly.name>
     <maven-git-code-format.version>5.1</maven-git-code-format.version>
     <git-code-format-maven-plugin.version>4.2</git-code-format-maven-plugin.version>
-    <java.version>21</java.version>
+    <java.version>25</java.version>
     <sonar.organization>comixed</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.links.scm>https://github.com/comixed/comixed</sonar.links.scm>
@@ -209,7 +209,7 @@
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-aop</artifactId>
+      <artifactId>spring-boot-starter-aspectj</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>

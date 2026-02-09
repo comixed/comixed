@@ -38,7 +38,7 @@ class PurgeLibraryInitiatorTest {
   private Job purgeLibraryJob;
 
   @Mock
-  @Qualifier("batchJobLauncher")
+  @Qualifier("batchJobOperator")
   private JobLauncher jobLauncher;
 
   @Mock private JobExecution jobExecution;

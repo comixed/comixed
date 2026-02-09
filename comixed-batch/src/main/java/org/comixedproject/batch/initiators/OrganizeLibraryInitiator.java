@@ -62,7 +62,7 @@ public class OrganizeLibraryInitiator {
   private Job libraryOrganizationJob;
 
   @Autowired
-  @Qualifier("batchJobLauncher")
+  @Qualifier("batchJobOperator")
   private JobLauncher jobLauncher;
 
   @Scheduled(fixedDelayString = "${comixed.batch.organize-library.period:60000}")

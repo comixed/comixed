@@ -58,7 +58,7 @@ public class UpdateMetadataInitiator {
   private Job updateMetadataJob;
 
   @Autowired
-  @Qualifier("batchJobLauncher")
+  @Qualifier("batchJobOperator")
   private JobLauncher jobLauncher;
 
   @Scheduled(fixedDelayString = "${comixed.batch.update-metadata.period:60000}")

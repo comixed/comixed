@@ -60,7 +60,7 @@ public class ScrapeComicBookInitiator {
   private Job batchScrapingJob;
 
   @Autowired
-  @Qualifier("batchJobLauncher")
+  @Qualifier("batchJobOperator")
   private JobLauncher jobLauncher;
 
   @Scheduled(cron = "${comixed.batch.scrape-metadata.schedule:0 0 3 * * *}")

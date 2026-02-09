@@ -2,27 +2,45 @@ package org.comixedproject.batch.comicbooks.listeners;
 
 import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
 import org.comixedproject.service.comicpages.ComicPageService;
-import org.springframework.batch.core.ChunkListener;
+import org.springframework.batch.core.listener.ChunkListener;
 import org.springframework.batch.core.scope.context.ChunkContext;
+import org.springframework.batch.core.scope.context.StepSynchronizationManager;
+import org.springframework.batch.infrastructure.item.Chunk;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractBatchProcessChunkListener extends AbstractBatchProcessListener
     implements ChunkListener {
   @Autowired protected ComicPageService comicPageService;
 
+//  @Override
+//  public void beforeChunk(final ChunkContext context) {
+//    this.doPublishChunkState(context);
+//  }
+//
+//  @Override
+//  public void afterChunk(final ChunkContext context) {
+//    this.doPublishChunkState(context);
+//  }
+//
+//  @Override
+//  public void afterChunkError(final ChunkContext context) {
+//    this.doPublishChunkState(context);
+//  }
+
+
   @Override
-  public void beforeChunk(final ChunkContext context) {
-    this.doPublishChunkState(context);
+  public void afterChunk(Chunk chunk) { // fixme
+    var jobExecutionId = StepSynchronizationManager.getContext().getStepExecution().getJobExecution().getId();
   }
 
   @Override
-  public void afterChunk(final ChunkContext context) {
-    this.doPublishChunkState(context);
+  public void beforeChunk(Chunk chunk) {
+    ChunkListener.super.beforeChunk(chunk);
   }
 
   @Override
-  public void afterChunkError(final ChunkContext context) {
-    this.doPublishChunkState(context);
+  public void onChunkError(Exception exception, Chunk chunk) {
+    ChunkListener.super.onChunkError(exception, chunk);
   }
 
   private void doPublishChunkState(ChunkContext context) {

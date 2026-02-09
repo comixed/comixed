@@ -56,7 +56,7 @@ public class ProcessUnhashedComicsInitiator {
   private Job loadPageHashesJob;
 
   @Autowired
-  @Qualifier("batchJobLauncher")
+  @Qualifier("batchJobOperator")
   private JobLauncher jobLauncher;
 
   @Scheduled(fixedDelayString = "${comixed.batch.load-page-hashes.period:60000}")

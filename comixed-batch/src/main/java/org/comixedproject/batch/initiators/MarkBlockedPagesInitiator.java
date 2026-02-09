@@ -25,13 +25,13 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicpages.ComicPageService;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.batch.core.job.Job;
+import org.springframework.batch.core.job.parameters.InvalidJobParametersException;
+import org.springframework.batch.core.job.parameters.JobParametersBuilder;
+import org.springframework.batch.core.launch.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.launch.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.launch.JobOperator;
+import org.springframework.batch.core.launch.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -57,8 +57,8 @@ public class MarkBlockedPagesInitiator {
   private Job markBlockedPagesJob;
 
   @Autowired
-  @Qualifier("batchJobLauncher")
-  private JobLauncher jobLauncher;
+  @Qualifier("batchJobOperator")
+  private JobOperator jobOperator;
 
   @Scheduled(fixedDelayString = "${comixed.batch.mark-blocked-pages.period:60000}")
   public void execute() {
@@ -73,15 +73,15 @@ public class MarkBlockedPagesInitiator {
           && !this.batchProcessesService.hasActiveExecutions(MARK_BLOCKED_PAGES_JOB)) {
         try {
           log.trace("Starting batch job: mark pages with blocked hash");
-          this.jobLauncher.run(
+          this.jobOperator.start(
               this.markBlockedPagesJob,
               new JobParametersBuilder()
                   .addLong(JOB_MARK_BLOCKED_PAGES_STARTED, System.currentTimeMillis())
                   .toJobParameters());
         } catch (JobExecutionAlreadyRunningException
-            | JobRestartException
-            | JobInstanceAlreadyCompleteException
-            | JobParametersInvalidException error) {
+                 | JobRestartException
+                 | JobInstanceAlreadyCompleteException
+                 | InvalidJobParametersException error) {
           log.error("Failed to run load page hash job", error);
         }
       }

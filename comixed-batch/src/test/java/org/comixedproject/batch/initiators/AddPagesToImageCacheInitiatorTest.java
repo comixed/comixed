@@ -56,7 +56,7 @@ class AddPagesToImageCacheInitiatorTest {
   private Job addPagesToImageCacheJob;
 
   @Mock
-  @Qualifier("batchJobLauncher")
+  @Qualifier("batchJobOperator")
   private JobLauncher jobLauncher;
 
   @Mock private JobExecution jobExecution;

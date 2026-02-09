@@ -55,7 +55,7 @@ public class LoadComicBooksInitiator {
   private Job loadComicBooksJob;
 
   @Autowired
-  @Qualifier("batchJobLauncher")
+  @Qualifier("batchJobOperator")
   private JobLauncher jobLauncher;
 
   /** Checks for unprocessed comics not in a group and kicks off a new batch job to process them. */

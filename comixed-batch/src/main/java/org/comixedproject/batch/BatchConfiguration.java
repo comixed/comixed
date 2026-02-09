@@ -18,8 +18,8 @@
 
 package org.comixedproject.batch;
 
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.launch.support.TaskExecutorJobLauncher;
+import org.springframework.batch.core.launch.JobOperator;
+import org.springframework.batch.core.launch.support.TaskExecutorJobOperator;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -73,12 +73,12 @@ public class BatchConfiguration {
    * @return the job launcher
    * @throws Exception if an error occurs
    */
-  @Bean(name = "batchJobLauncher")
-  public JobLauncher batchJobLauncher(
+  @Bean(name = "batchJobOperator")
+  public JobOperator batchJobOperator(
       final JobRepository jobRepository,
       @Qualifier("jobTaskExecutor") final TaskExecutor taskExecutor)
       throws Exception {
-    final TaskExecutorJobLauncher taskExecutorJobLauncher = new TaskExecutorJobLauncher();
+    final TaskExecutorJobOperator taskExecutorJobLauncher = new TaskExecutorJobOperator();
     taskExecutorJobLauncher.setJobRepository(jobRepository);
     taskExecutorJobLauncher.setTaskExecutor(taskExecutor);
     taskExecutorJobLauncher.afterPropertiesSet();

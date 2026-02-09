@@ -62,7 +62,7 @@ class OrganizeLibraryInitiatorTest {
   private Job loadPageHashesJob;
 
   @Mock
-  @Qualifier("batchJobLauncher")
+  @Qualifier("batchJobOperator")
   private JobLauncher jobLauncher;
 
   @Mock private JobExecution jobExecution;
