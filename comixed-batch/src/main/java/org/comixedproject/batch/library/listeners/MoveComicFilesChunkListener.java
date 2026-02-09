@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 @StepScope
 @Log4j2
-public class MoveComicFilesChunkListener extends AbstractBatchProcessChunkListener {
+public class MoveComicFilesChunkListener<I, O> extends AbstractBatchProcessChunkListener<I, O> {
   @Autowired protected OrganizingComicService organizingComicService;
 
   @Override

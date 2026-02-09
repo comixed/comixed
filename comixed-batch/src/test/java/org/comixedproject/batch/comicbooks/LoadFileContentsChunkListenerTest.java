@@ -16,12 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.listeners;
+package org.comixedproject.batch.comicbooks;
 
 import static junit.framework.TestCase.*;
 import static org.comixedproject.batch.comicbooks.LoadComicBooksConfiguration.LOAD_COMIC_BOOKS_JOB;
 import static org.comixedproject.model.messaging.batch.ProcessComicBooksStatus.*;
 
+import org.comixedproject.batch.comicbooks.listeners.LoadFileContentsChunkListener;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.batch.PublishBatchProcessDetailUpdateAction;
 import org.comixedproject.messaging.comicbooks.PublishProcessComicBooksStatusAction;
@@ -34,8 +35,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.core.*;
+import org.springframework.batch.core.job.JobExecution;
+import org.springframework.batch.core.job.JobInstance;
+import org.springframework.batch.core.job.parameters.JobParameters;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.scope.context.StepContext;
+import org.springframework.batch.core.scope.context.StepSynchronizationManager;
+import org.springframework.batch.core.step.StepExecution;
+import org.springframework.batch.infrastructure.item.Chunk;
 
 @ExtendWith(MockitoExtension.class)
 class LoadFileContentsChunkListenerTest {
@@ -43,6 +50,7 @@ class LoadFileContentsChunkListenerTest {
   private static final long TEST_PROCESSED_COMICS = 15L;
 
   @InjectMocks private LoadFileContentsChunkListener listener;
+  @Mock private Chunk<?> chunk;
   @Mock private ComicBookService comicBookService;
   @Mock private ChunkContext chunkContext;
   @Mock private StepContext stepContext;
@@ -57,7 +65,7 @@ class LoadFileContentsChunkListenerTest {
   @Captor ArgumentCaptor<BatchProcessDetail> batchProcessDetailArgumentCaptor;
 
   @BeforeEach
-  public void setUp() throws PublishingException {
+  void setUp() throws PublishingException {
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
     Mockito.when(jobInstance.getJobName()).thenReturn(LOAD_COMIC_BOOKS_JOB);
     Mockito.when(jobExecution.getJobInstance()).thenReturn(jobInstance);
@@ -66,20 +74,21 @@ class LoadFileContentsChunkListenerTest {
     Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_TOTAL_COMICS);
     Mockito.when(comicBookService.getComicsWithoutContentCount()).thenReturn(TEST_PROCESSED_COMICS);
 
-    Mockito.when(chunkContext.getStepContext()).thenReturn(stepContext);
     Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
-    Mockito.when(stepContext.getStepExecution()).thenReturn(stepExecution);
     Mockito.doNothing()
         .when(publishProcessComicBooksStatusAction)
         .publish(processComicStatusArgumentCaptor.capture());
     Mockito.doNothing()
         .when(publishBatchProcessDetailUpdateAction)
         .publish(batchProcessDetailArgumentCaptor.capture());
+
+    Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
+    StepSynchronizationManager.register(stepExecution);
   }
 
   @Test
   void beforeChunk() throws PublishingException {
-    listener.beforeChunk(chunkContext);
+    listener.beforeChunk(chunk);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
 
@@ -94,7 +103,7 @@ class LoadFileContentsChunkListenerTest {
 
   @Test
   void afterChunk() throws PublishingException {
-    listener.afterChunk(chunkContext);
+    listener.afterChunk(chunk);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
 
@@ -109,7 +118,7 @@ class LoadFileContentsChunkListenerTest {
 
   @Test
   void afterChunkError() throws PublishingException {
-    listener.afterChunkError(chunkContext);
+    listener.onChunkError(new RuntimeException(), chunk);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
 
@@ -124,7 +133,7 @@ class LoadFileContentsChunkListenerTest {
 
   @Test
   void afterChunk_publishingException() throws PublishingException {
-    listener.beforeChunk(chunkContext);
+    listener.beforeChunk(chunk);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
 

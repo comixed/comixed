@@ -18,7 +18,6 @@
 
 package org.comixedproject.metadata.adaptors;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
 import java.util.Set;
 import lombok.Getter;
@@ -31,6 +30,7 @@ import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.model.metadata.MetadataSourceProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * <code>AbstractMetadataAdaptor</code> provides a foundation for building new instances of {@link

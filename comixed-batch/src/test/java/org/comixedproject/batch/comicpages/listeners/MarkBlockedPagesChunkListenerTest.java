@@ -34,8 +34,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.core.*;
-import org.springframework.batch.core.scope.context.ChunkContext;
-import org.springframework.batch.core.scope.context.StepContext;
+import org.springframework.batch.core.job.JobExecution;
+import org.springframework.batch.core.job.JobInstance;
+import org.springframework.batch.core.job.parameters.JobParameters;
+import org.springframework.batch.core.scope.context.StepSynchronizationManager;
+import org.springframework.batch.core.step.StepExecution;
+import org.springframework.batch.infrastructure.item.Chunk;
 
 @ExtendWith(MockitoExtension.class)
 class MarkBlockedPagesChunkListenerTest {
@@ -46,8 +50,7 @@ class MarkBlockedPagesChunkListenerTest {
   @Mock private PublishProcessComicBooksStatusAction publishProcessComicBooksStatusAction;
   @Mock private PublishBatchProcessDetailUpdateAction publishBatchProcessDetailUpdateAction;
   @Mock private ComicPageService comicPageService;
-  @Mock private ChunkContext chunkContext;
-  @Mock private StepContext stepContext;
+  @Mock private Chunk chunk;
   @Mock private StepExecution stepExecution;
   @Mock private JobParameters jobParameters;
   @Mock private JobInstance jobInstance;
@@ -67,8 +70,6 @@ class MarkBlockedPagesChunkListenerTest {
     Mockito.when(jobExecution.getJobInstance()).thenReturn(jobInstance);
     Mockito.when(jobExecution.getStatus()).thenReturn(BatchStatus.COMPLETED);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);
-    Mockito.when(chunkContext.getStepContext()).thenReturn(stepContext);
-    Mockito.when(stepContext.getStepExecution()).thenReturn(stepExecution);
     Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
     Mockito.doNothing()
         .when(publishProcessComicBooksStatusAction)
@@ -76,25 +77,28 @@ class MarkBlockedPagesChunkListenerTest {
     Mockito.doNothing()
         .when(publishBatchProcessDetailUpdateAction)
         .publish(batchProcessDetailArgumentCaptor.capture());
+
+    Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
+    StepSynchronizationManager.register(stepExecution);
   }
 
   @Test
   void beforeChunk() throws PublishingException {
-    listener.beforeChunk(chunkContext);
+    listener.beforeChunk(chunk);
 
     this.doCommonChecks();
   }
 
   @Test
   void afterChunk() throws PublishingException {
-    listener.afterChunk(chunkContext);
+    listener.afterChunk(chunk);
 
     this.doCommonChecks();
   }
 
   @Test
   void afterChunkError() throws PublishingException {
-    listener.afterChunkError(chunkContext);
+    listener.onChunkError(new RuntimeException(), chunk);
 
     this.doCommonChecks();
   }

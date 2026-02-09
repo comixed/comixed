@@ -22,9 +22,7 @@ import static java.util.Calendar.*;
 import static org.apache.commons.lang3.StringUtils.trim;
 import static org.apache.commons.lang3.StringUtils.truncate;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -38,8 +36,10 @@ import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.metadata.ComicInfo;
 import org.comixedproject.model.metadata.PageInfo;
-import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
+import org.springframework.http.converter.xml.JacksonXmlHttpMessageConverter;
 import org.springframework.util.StringUtils;
+import tools.jackson.core.exc.StreamReadException;
+import tools.jackson.databind.DeserializationFeature;
 
 /**
  * <code>ComicInfoXmlFilenameContentAdaptor</code> provides an implementation of {@link
@@ -52,13 +52,15 @@ public class ComicInfoXmlFilenameContentAdaptor implements FilenameContentAdapto
   @Getter private ArchiveEntryType archiveEntryType = ArchiveEntryType.FILE;
 
   private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-  private MappingJackson2XmlHttpMessageConverter xmlConverter;
+  private final JacksonXmlHttpMessageConverter xmlConverter;
 
   public ComicInfoXmlFilenameContentAdaptor() {
-    this.xmlConverter = new MappingJackson2XmlHttpMessageConverter();
+    this.xmlConverter = new JacksonXmlHttpMessageConverter();
     this.xmlConverter
-        .getObjectMapper()
-        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        .getMapper()
+        .rebuild()
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        .build();
   }
 
   @Override
@@ -69,7 +71,7 @@ public class ComicInfoXmlFilenameContentAdaptor implements FilenameContentAdapto
     try {
       comicInfo =
           this.xmlConverter
-              .getObjectMapper()
+              .getMapper()
               .readValue(new ByteArrayInputStream(content), ComicInfo.class);
       log.trace("Setting comic metadata");
       comicBook.getComicDetail().setPublisher(trim(comicInfo.getPublisher()));
@@ -163,7 +165,7 @@ public class ComicInfoXmlFilenameContentAdaptor implements FilenameContentAdapto
           }
         }
       }
-    } catch (IOException | ParseException error) {
+    } catch (StreamReadException | ParseException error) {
       throw new ContentAdaptorException("Failed to load ComicInfo.xml", error);
     }
   }

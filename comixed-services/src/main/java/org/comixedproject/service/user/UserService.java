@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -198,10 +197,7 @@ public class UserService {
    */
   public boolean hasAdminAccounts() {
     log.debug("Checking if there are existing accounts");
-    return !this.userRepository.findAll().stream()
-        .filter(ComiXedUser::isAdmin)
-        .collect(Collectors.toList())
-        .isEmpty();
+    return this.userRepository.findAll().stream().anyMatch(ComiXedUser::isAdmin);
   }
 
   /**

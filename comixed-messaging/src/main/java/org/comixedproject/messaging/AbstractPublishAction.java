@@ -18,13 +18,13 @@
 
 package org.comixedproject.messaging;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.user.ComiXedUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * <code>AbstactPublishAction</code> provides a foundation for building new {@link PublishAction}
@@ -55,7 +55,7 @@ public abstract class AbstractPublishAction<T> implements PublishAction<T> {
           this.objectMapper.writerWithView(viewClass).writeValueAsString(subject);
       log.debug("Payload: {}", payload);
       this.messagingTemplate.convertAndSend(destination, payload);
-    } catch (JsonProcessingException error) {
+    } catch (JacksonException error) {
       throw new PublishingException(error);
     }
   }
@@ -81,7 +81,7 @@ public abstract class AbstractPublishAction<T> implements PublishAction<T> {
           this.objectMapper.writerWithView(viewClass).writeValueAsString(subject);
       log.debug("Payload: {}", payload);
       this.messagingTemplate.convertAndSendToUser(user.getEmail(), destination, payload);
-    } catch (JsonProcessingException error) {
+    } catch (JacksonException error) {
       throw new PublishingException(error);
     }
   }
@@ -108,7 +108,7 @@ public abstract class AbstractPublishAction<T> implements PublishAction<T> {
           email,
           destination,
           this.objectMapper.writerWithView(viewClass).writeValueAsString(subject));
-    } catch (JsonProcessingException error) {
+    } catch (JacksonException error) {
       throw new PublishingException(error);
     }
   }

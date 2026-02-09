@@ -33,7 +33,8 @@ import org.springframework.stereotype.Component;
 @Component
 @StepScope
 @Log4j2
-public class ProcessUnhashedComicsChunkListener extends AbstractBatchProcessChunkListener {
+public class ProcessUnhashedComicsChunkListener<I, O>
+    extends AbstractBatchProcessChunkListener<I, O> {
   @Override
   protected String getStepName() {
     return LOAD_PAGE_HASH_STEP;

@@ -21,9 +21,6 @@ package org.comixedproject.messaging.app;
 import static org.comixedproject.messaging.app.PublishApplicationMessageAction.APP_MESSAGE_TOPIC_NAME;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.messaging.ApplicationEvent;
 import org.comixedproject.views.View;
@@ -35,6 +32,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectWriter;
 
 @ExtendWith(MockitoExtension.class)
 class PublishApplicationMessageActionTest {
@@ -47,21 +47,20 @@ class PublishApplicationMessageActionTest {
   @Mock private ApplicationEvent applicationEvent;
 
   @BeforeEach
-  public void setUp() throws JsonProcessingException {
+  public void setUp() throws JacksonException {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_UPDATE_AS_JSON);
   }
 
   @Test
-  void publish_jsonProcessingException() throws JsonProcessingException {
-    Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
-        .thenThrow(JsonProcessingException.class);
+  void publish_JacksonException() throws JacksonException {
+    Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenThrow(JacksonException.class);
 
     assertThrows(PublishingException.class, () -> action.publish(applicationEvent));
   }
 
   @Test
-  void publish() throws JsonProcessingException, PublishingException {
+  void publish() throws JacksonException, PublishingException {
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_UPDATE_AS_JSON);
 
     action.publish(applicationEvent);

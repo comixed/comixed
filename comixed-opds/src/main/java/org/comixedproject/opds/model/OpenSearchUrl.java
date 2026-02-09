@@ -18,10 +18,10 @@
 
 package org.comixedproject.opds.model;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import tools.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 /**
  * <code>OpenSearchUrl</code> represents a single URL in a {@link OpenSearchDescriptor}.

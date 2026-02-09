@@ -20,9 +20,6 @@ package org.comixedproject.messaging.comicbooks;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.comicbooks.ComicBookData;
 import org.comixedproject.model.library.DisplayableComic;
@@ -37,6 +34,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectWriter;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -52,7 +52,7 @@ class PublishComicBookUpdateActionTest {
   @Mock private ComicBookData data;
 
   @BeforeEach
-  public void setUp() throws JsonProcessingException {
+  public void setUp() throws JacksonException {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_COMIC_AS_JSON);
     Mockito.when(comicDetails.getComicBookId()).thenReturn(TEST_COMIC_ID);
@@ -60,15 +60,14 @@ class PublishComicBookUpdateActionTest {
   }
 
   @Test
-  void publish_jsonProcessingException() throws JsonProcessingException {
-    Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
-        .thenThrow(JsonProcessingException.class);
+  void publish_JacksonException() throws JacksonException {
+    Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenThrow(JacksonException.class);
 
     assertThrows(PublishingException.class, () -> action.publish(data));
   }
 
   @Test
-  void publish() throws PublishingException, JsonProcessingException {
+  void publish() throws PublishingException, JacksonException {
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_COMIC_AS_JSON);
 
     action.publish(data);

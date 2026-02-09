@@ -22,9 +22,8 @@ import java.util.*;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.batch.BatchProcessDetail;
 import org.springframework.batch.core.ExitStatus;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobInstance;
-import org.springframework.batch.core.explore.JobExplorer;
+import org.springframework.batch.core.job.JobExecution;
+import org.springframework.batch.core.job.JobInstance;
 import org.springframework.batch.core.launch.NoSuchJobException;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,6 @@ import org.springframework.stereotype.Service;
 @Service
 @Log4j2
 public class BatchProcessesService {
-  @Autowired private JobExplorer jobExplorer;
   @Autowired private JobRepository jobRepository;
 
   private static final Set<String> DELETABLE_JOB_STATUSES =
@@ -64,7 +62,7 @@ public class BatchProcessesService {
    */
   public List<BatchProcessDetail> deleteCompletedJobs() {
     log.debug("Deleting inactive jobs");
-    this.jobExplorer
+    this.jobRepository
         .getJobNames()
         .forEach(
             jobName -> {
@@ -87,9 +85,9 @@ public class BatchProcessesService {
     log.debug("Deleting {} job(s) by id", jobIds.size());
     jobIds.forEach(
         jobId -> {
-          final JobExecution jobExecution = this.jobExplorer.getJobExecution(jobId);
+          final JobExecution jobExecution = this.jobRepository.getJobExecution(jobId);
           if (Objects.nonNull(jobExecution)) {
-            log.trace("Deleting job execution: id={}", jobExecution.getJobId());
+            log.trace("Deleting job execution: id={}", jobExecution.getId());
             this.jobRepository.deleteJobExecution(jobExecution);
           }
         });
@@ -104,10 +102,10 @@ public class BatchProcessesService {
    */
   public boolean hasActiveExecutions(final String jobName) {
     try {
-      final long instances = this.jobExplorer.getJobInstanceCount(jobName);
+      final long instances = this.jobRepository.getJobInstanceCount(jobName);
       final List<JobExecution> executions = new ArrayList<>();
-      this.jobExplorer.getJobInstances(jobName, 0, (int) instances).stream()
-          .map(instance -> this.jobExplorer.getJobExecutions(instance))
+      this.jobRepository.getJobInstances(jobName, 0, (int) instances).stream()
+          .map(instance -> this.jobRepository.getJobExecutions(instance))
           .forEach(executions::addAll);
       return executions.stream()
               .filter(JobExecution::isRunning)
@@ -122,12 +120,11 @@ public class BatchProcessesService {
 
   private void doDeleteInactiveJobsFor(final String jobName) throws NoSuchJobException {
     final List<JobInstance> jobInstances =
-        this.jobExplorer.getJobInstances(
-            jobName, 0, (int) this.jobExplorer.getJobInstanceCount(jobName));
+        this.jobRepository.getJobInstances(
+            jobName, 0, (int) this.jobRepository.getJobInstanceCount(jobName));
     for (int whichInstance = 0; whichInstance < jobInstances.size(); whichInstance++) {
       final JobInstance jobInstance = jobInstances.get(whichInstance);
-      if (this.jobExplorer.getJobExecutions(jobInstance).stream()
-          .filter(execution -> Objects.nonNull(execution.getExitStatus()))
+      if (this.jobRepository.getJobExecutions(jobInstance).stream()
           .filter(
               execution ->
                   !DELETABLE_JOB_STATUSES.contains(execution.getExitStatus().getExitCode()))
@@ -143,14 +140,14 @@ public class BatchProcessesService {
     final List<BatchProcessDetail> result = new ArrayList<>();
 
     log.debug("Loading batch process status records");
-    this.jobExplorer
+    this.jobRepository
         .getJobNames()
         .forEach(
             name -> {
               log.debug("Loading job instance for job: {}", name);
               try {
-                final int count = Math.toIntExact(this.jobExplorer.getJobInstanceCount(name));
-                this.jobExplorer
+                final int count = Math.toIntExact(this.jobRepository.getJobInstanceCount(name));
+                this.jobRepository
                     .getJobInstances(name, 0, count)
                     .forEach(
                         jobInstance -> {
@@ -158,11 +155,11 @@ public class BatchProcessesService {
                               "Loading job executions for instance: {}",
                               jobInstance.getInstanceId());
                           final List<JobExecution> jobExecutions =
-                              this.jobExplorer.getJobExecutions(jobInstance);
+                              this.jobRepository.getJobExecutions(jobInstance);
                           log.trace("Getting execution details");
                           jobExecutions.forEach(
                               jobExecution -> {
-                                log.trace("Adding job execution: {}", jobExecution.getJobId());
+                                log.trace("Adding job execution: {}", jobExecution.getId());
                                 result.add(BatchProcessDetail.from(jobExecution));
                               });
                         });

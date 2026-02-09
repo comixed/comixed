@@ -18,11 +18,11 @@
 
 package org.comixedproject.batch;
 
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.launch.support.TaskExecutorJobLauncher;
+import org.springframework.batch.core.launch.support.JobOperatorFactoryBean;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
@@ -73,15 +73,17 @@ public class BatchConfiguration {
    * @return the job launcher
    * @throws Exception if an error occurs
    */
-  @Bean(name = "batchJobLauncher")
-  public JobLauncher batchJobLauncher(
+  @Bean(name = "batchJobOperator")
+  public JobOperatorFactoryBean batchJobOperator(
       final JobRepository jobRepository,
-      @Qualifier("jobTaskExecutor") final TaskExecutor taskExecutor)
+      @Qualifier("jobTaskExecutor") final TaskExecutor taskExecutor,
+      final ApplicationContext applicationContext)
       throws Exception {
-    final TaskExecutorJobLauncher taskExecutorJobLauncher = new TaskExecutorJobLauncher();
-    taskExecutorJobLauncher.setJobRepository(jobRepository);
-    taskExecutorJobLauncher.setTaskExecutor(taskExecutor);
-    taskExecutorJobLauncher.afterPropertiesSet();
-    return taskExecutorJobLauncher;
+    final JobOperatorFactoryBean jobOperatorFactoryBean = new JobOperatorFactoryBean();
+    jobOperatorFactoryBean.setJobRepository(jobRepository);
+    jobOperatorFactoryBean.setTaskExecutor(taskExecutor);
+    jobOperatorFactoryBean.setApplicationContext(applicationContext);
+    jobOperatorFactoryBean.afterPropertiesSet();
+    return jobOperatorFactoryBean;
   }
 }

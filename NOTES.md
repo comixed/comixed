@@ -11,7 +11,7 @@ STEPS TO UPGRADE.
    v3.0 to ensure your database is in the right state to migrate from
    V2 to v3.
 2. If you are not running from a Docker container, you will need to
-   install Java 21.
+   install Java 25.
 3. Before you install this release, you MUST drop the batch tables with the
    following query:
     * DROP TABLE BATCH_STEP_EXECUTION_CONTEXT;

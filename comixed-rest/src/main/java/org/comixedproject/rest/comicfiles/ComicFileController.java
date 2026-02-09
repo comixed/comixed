@@ -19,9 +19,6 @@
 package org.comixedproject.rest.comicfiles;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
@@ -33,20 +30,20 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.comixedproject.adaptors.AdaptorException;
+import org.comixedproject.model.comicfiles.ComicFile;
 import org.comixedproject.model.comicfiles.ComicFileGroup;
 import org.comixedproject.model.metadata.FilenameMetadata;
 import org.comixedproject.model.net.comicfiles.*;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.service.metadata.FilenameScrapingRuleService;
 import org.comixedproject.views.View;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * <code>ComicFileController</code> allows the remote agent to query directories and import files,
@@ -73,7 +70,7 @@ public class ComicFileController {
   @Timed(value = "comixed.comic-file.load-comic-files-session")
   @JsonView(View.ComicFileList.class)
   public LoadComicFilesResponse loadComicFilesFromSession(final HttpSession session)
-      throws JsonProcessingException {
+      throws JacksonException {
     log.info("Loading comic files from user session");
     if (session.getAttribute(COMIC_FILES) == null) {
       return new LoadComicFilesResponse(Collections.emptyList());
@@ -81,7 +78,7 @@ public class ComicFileController {
     List<ComicFileGroup> comicFiles = null;
     try {
       comicFiles = this.doLoadComicFileSelections(session);
-    } catch (JsonProcessingException error) {
+    } catch (JacksonException error) {
       log.error("Failed to parse comic files in session", error);
     }
     if (Objects.isNull(comicFiles)) {
@@ -164,7 +161,7 @@ public class ComicFileController {
    * @param session the session
    * @param request the request
    * @return the comic file groups
-   * @throws JsonProcessingException if an error occurs updating the session
+   * @throws JacksonException if an error occurs updating the session
    */
   @PostMapping(
       value = "/api/files/import/selections",
@@ -174,8 +171,7 @@ public class ComicFileController {
   @Timed(value = "comixed.comic-file.selection-toggle")
   @JsonView(View.ComicFileList.class)
   public LoadComicFilesResponse toggleComicFileSelections(
-      final HttpSession session, @RequestBody final ToggleComicFileSelectionsRequest request)
-      throws JsonProcessingException {
+      final HttpSession session, @RequestBody final ToggleComicFileSelectionsRequest request) {
     final List<ComicFileGroup> comicFiles = this.doLoadComicFileSelections(session);
     if (Objects.nonNull(comicFiles)) {
       final String filename = request.getFilename();
@@ -202,10 +198,7 @@ public class ComicFileController {
    *
    * @param session the session
    * @param request the request body
-   * @throws JobInstanceAlreadyCompleteException if an error occurs
-   * @throws JobExecutionAlreadyRunningException if an error occurs
-   * @throws JobParametersInvalidException if an error occurs
-   * @throws JobRestartException if an error occurs
+   * @throws JacksonException if an error occurs
    */
   @PostMapping(
       value = "/api/files/import",
@@ -214,20 +207,15 @@ public class ComicFileController {
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.comic-file.batch.import-files")
   public void importComicFiles(
-      final HttpSession session, @RequestBody() ImportComicFilesRequest request)
-      throws JobInstanceAlreadyCompleteException,
-          JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
-          JobRestartException,
-          JsonProcessingException {
+      final HttpSession session, @RequestBody() ImportComicFilesRequest request) {
     final List<String> filenames = new ArrayList<>();
     this.doLoadComicFileSelections(session)
         .forEach(
             comicFileGroup -> {
               filenames.addAll(
                   comicFileGroup.getFiles().stream()
-                      .filter(entry -> entry.isSelected())
-                      .map(entry -> entry.getFilename())
+                      .filter(ComicFile::isSelected)
+                      .map(ComicFile::getFilename)
                       .toList());
             });
 
@@ -260,13 +248,12 @@ public class ComicFileController {
   }
 
   private List<ComicFileGroup> doLoadComicFileSelections(final HttpSession session)
-      throws JsonProcessingException {
+      throws JacksonException {
     final Object encodedComicFiles = session.getAttribute(COMIC_FILES);
     if (Objects.isNull(encodedComicFiles)) {
       log.debug("No comic files found in session");
       return null;
     }
-    return this.objectMapper.readValue(
-        encodedComicFiles.toString(), new TypeReference<List<ComicFileGroup>>() {});
+    return this.objectMapper.readValue(encodedComicFiles.toString(), new TypeReference<>() {});
   }
 }

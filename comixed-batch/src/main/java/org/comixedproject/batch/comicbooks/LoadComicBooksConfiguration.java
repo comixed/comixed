@@ -24,11 +24,10 @@ import org.comixedproject.batch.comicbooks.processors.*;
 import org.comixedproject.batch.comicbooks.readers.*;
 import org.comixedproject.batch.comicbooks.writers.*;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.Step;
+import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.Step;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,7 +63,6 @@ public class LoadComicBooksConfiguration {
       final LoadComicBooksJobListener jobListener,
       @Qualifier("loadFileContentsStep") final Step loadFileContentsStep) {
     return new JobBuilder(LOAD_COMIC_BOOKS_JOB, jobRepository)
-        .incrementer(new RunIdIncrementer())
         .listener(jobListener)
         .start(loadFileContentsStep)
         .build();
@@ -88,9 +86,10 @@ public class LoadComicBooksConfiguration {
       final LoadFileContentsReader reader,
       final LoadFileContentsProcessor processor,
       final LoadFileContentsWriter writer,
-      final LoadFileContentsChunkListener chunkListener) {
+      final LoadFileContentsChunkListener<ComicBook, ComicBook> chunkListener) {
     return new StepBuilder("loadFileContentsStep", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
+        .<ComicBook, ComicBook>chunk(this.chunkSize)
+        .transactionManager(platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

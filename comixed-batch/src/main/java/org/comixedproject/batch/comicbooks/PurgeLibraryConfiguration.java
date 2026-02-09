@@ -26,11 +26,10 @@ import org.comixedproject.batch.comicbooks.readers.RemoveComicBooksWithoutDetail
 import org.comixedproject.batch.library.writers.RemoveDeletedComicBooksWriter;
 import org.comixedproject.batch.writers.NoopWriter;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.Step;
+import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.Step;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,7 +65,6 @@ public class PurgeLibraryConfiguration {
       @Qualifier("purgeMarkedComicsStep") final Step purgeMarkedComicsStep,
       @Qualifier("removeComicBooksWithoutDetailsStep") final Step removeMalformedComicBooksStep) {
     return new JobBuilder(PURGE_LIBRARY_JOB, jobRepository)
-        .incrementer(new RunIdIncrementer())
         .start(removeMalformedComicBooksStep)
         .next(purgeMarkedComicsStep)
         .build();
@@ -90,7 +88,8 @@ public class PurgeLibraryConfiguration {
       final RemoveComicBooksWithoutDetailsProcessor processor,
       final NoopWriter<ComicBook> writer) {
     return new StepBuilder("removeComicBooksWithoutDetailsStep", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
+        .<ComicBook, ComicBook>chunk(this.chunkSize)
+        .transactionManager(platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
@@ -115,7 +114,8 @@ public class PurgeLibraryConfiguration {
       final PurgeMarkedComicsProcessor processor,
       final RemoveDeletedComicBooksWriter writer) {
     return new StepBuilder("purgeMarkedComicsStep", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
+        .<ComicBook, ComicBook>chunk(this.chunkSize)
+        .transactionManager(platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

@@ -18,13 +18,6 @@
 
 package org.comixedproject.opds;
 
-import com.fasterxml.jackson.core.io.IOContext;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.xml.XmlFactory;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
-import com.fasterxml.jackson.dataformat.xml.util.StaxUtil;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +26,12 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
+import org.springframework.http.converter.xml.JacksonXmlHttpMessageConverter;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.dataformat.xml.XmlFactory;
+import tools.jackson.dataformat.xml.XmlMapper;
+import tools.jackson.dataformat.xml.XmlWriteFeature;
+import tools.jackson.dataformat.xml.util.StaxUtil;
 
 /**
  * <code>OPDSXMLOutputConfiguration</code> Configures xmlMapper and adds support to extra namespaces
@@ -46,24 +43,26 @@ import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConve
  */
 @Configuration
 public class OPDSXMLOutputConfiguration {
+
   @Bean
-  public MappingJackson2XmlHttpMessageConverter mappingJackson2XmlHttpMessageConverter(
-      Jackson2ObjectMapperBuilder builder) {
+  public JacksonXmlHttpMessageConverter jacksonXmlHttpMessageConverter() {
 
     final String defaultNamespace = "http://www.w3.org/2005/Atom";
     final Map<String, String> otherNamespaces = new HashMap<>();
     otherNamespaces.put("opds", "http://opds-spec.org/2010/catalog");
     otherNamespaces.put("opensearch", "http://a9.com/-/spec/opensearch/1.1/");
+    XmlMapper.Builder builder =
+        XmlMapper.builder(new NamespaceXmlFactory(defaultNamespace, otherNamespaces));
 
-    final XmlMapper xmlMapper =
-        new XmlMapper(new NamespaceXmlFactory(defaultNamespace, otherNamespaces));
-    xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
-    xmlMapper.enable(ToXmlGenerator.Feature.WRITE_XML_DECLARATION);
+    builder.enable(SerializationFeature.INDENT_OUTPUT);
+    builder.enable(XmlWriteFeature.WRITE_XML_DECLARATION);
 
-    return new MappingJackson2XmlHttpMessageConverter(xmlMapper);
+    final XmlMapper xmlMapper = new XmlMapper(builder);
+
+    return new JacksonXmlHttpMessageConverter(xmlMapper);
   }
 
-  class NamespaceXmlFactory extends XmlFactory {
+  static class NamespaceXmlFactory extends XmlFactory {
 
     private final String defaultNamespace;
     private final Map<String, String> prefix2Namespace;
@@ -74,16 +73,15 @@ public class OPDSXMLOutputConfiguration {
     }
 
     @Override
-    protected XMLStreamWriter _createXmlWriter(IOContext context, OutputStream out)
-        throws IOException {
-      XMLStreamWriter writer = super._createXmlWriter(context, out);
+    protected XMLStreamWriter _createXmlWriter(OutputStream out) {
+      var writer = super._createXmlWriter(out);
       try {
         writer.setDefaultNamespace(defaultNamespace);
         for (Map.Entry<String, String> e : prefix2Namespace.entrySet()) {
           writer.setPrefix(e.getKey(), e.getValue());
         }
       } catch (XMLStreamException e) {
-        StaxUtil.throwAsGenerationException(e, null);
+        StaxUtil.throwAsWriteException(e, null);
       }
       return writer;
     }

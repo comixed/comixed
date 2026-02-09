@@ -87,10 +87,9 @@ public class ComiXedSecurityConfiguration {
    *
    * @param http the security builder
    * @return the filter chain
-   * @throws Exception if an error occurs
    */
   @Bean
-  public SecurityFilterChain opdsSecurityFilterChain(final HttpSecurity http) throws Exception {
+  public SecurityFilterChain opdsSecurityFilterChain(final HttpSecurity http) {
     http.securityMatcher("/opds/**", "/reader/v1/**")
         .authorizeHttpRequests(authz -> authz.anyRequest().hasRole("READER"))
         .httpBasic(Customizer.withDefaults());
@@ -100,7 +99,7 @@ public class ComiXedSecurityConfiguration {
   }
 
   @Bean
-  public SecurityFilterChain runtimeSecurityFilterChain(final HttpSecurity http) throws Exception {
+  public SecurityFilterChain runtimeSecurityFilterChain(final HttpSecurity http) {
     http.securityMatcher("/actuator/**")
         .cors(Customizer.withDefaults())
         .csrf(AbstractHttpConfigurer::disable)

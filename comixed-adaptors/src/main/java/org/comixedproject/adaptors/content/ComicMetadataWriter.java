@@ -18,8 +18,6 @@
 
 package org.comixedproject.adaptors.content;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -32,22 +30,30 @@ import org.comixedproject.model.metadata.PageInfo;
 import org.comixedproject.model.metadata.PageType;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.converter.xml.JacksonXmlHttpMessageConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.DeserializationFeature;
 
 @Component
 @Log4j2
 public class ComicMetadataWriter implements InitializingBean {
-  @Autowired MappingJackson2XmlHttpMessageConverter xmlConverter;
+
+  @Autowired
+  @Qualifier("xmlHttpMessageConverter")
+  private JacksonXmlHttpMessageConverter xmlConverter;
 
   private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
   @Override
   public void afterPropertiesSet() throws Exception {
     this.xmlConverter
-        .getObjectMapper()
-        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        .getMapper()
+        .rebuild()
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        .build();
   }
 
   /**
@@ -182,8 +188,8 @@ public class ComicMetadataWriter implements InitializingBean {
             });
     try {
       log.trace("Generating ComicInfo.xml data");
-      return this.xmlConverter.getObjectMapper().writeValueAsBytes(comicInfo);
-    } catch (JsonProcessingException error) {
+      return this.xmlConverter.getMapper().writeValueAsBytes(comicInfo);
+    } catch (JacksonException error) {
       throw new ContentAdaptorException("Failed to write ComicInfo.xml data", error);
     }
   }

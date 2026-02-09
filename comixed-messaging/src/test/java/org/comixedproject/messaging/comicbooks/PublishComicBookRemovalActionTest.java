@@ -20,9 +20,6 @@ package org.comixedproject.messaging.comicbooks;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.views.View;
@@ -36,6 +33,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectWriter;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -50,22 +50,21 @@ class PublishComicBookRemovalActionTest {
   @Mock private ComicBook comicBook;
 
   @BeforeEach
-  public void setUp() throws JsonProcessingException {
+  public void setUp() throws JacksonException {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_COMIC_AS_JSON);
     Mockito.when(comicBook.getComicBookId()).thenReturn(TEST_COMIC_ID);
   }
 
   @Test
-  void publish_jsonProcessingException() throws JsonProcessingException {
-    Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
-        .thenThrow(JsonProcessingException.class);
+  void publish_JacksonException() throws JacksonException {
+    Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenThrow(JacksonException.class);
 
     assertThrows(PublishingException.class, () -> action.publish(comicBook));
   }
 
   @Test
-  void publish() throws JsonProcessingException, PublishingException {
+  void publish() throws JacksonException, PublishingException {
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_COMIC_AS_JSON);
 
     action.publish(comicBook);

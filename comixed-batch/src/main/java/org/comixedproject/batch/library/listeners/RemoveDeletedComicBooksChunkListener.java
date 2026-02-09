@@ -34,7 +34,8 @@ import org.springframework.stereotype.Component;
 @Component
 @StepScope
 @Log4j2
-public class RemoveDeletedComicBooksChunkListener extends AbstractBatchProcessChunkListener {
+public class RemoveDeletedComicBooksChunkListener<I, O>
+    extends AbstractBatchProcessChunkListener<I, O> {
   @Override
   protected String getStepName() {
     return REMOVE_DELETED_COMIC_BOOKS_STEP;

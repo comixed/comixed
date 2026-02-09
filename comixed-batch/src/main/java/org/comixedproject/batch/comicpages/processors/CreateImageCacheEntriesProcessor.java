@@ -21,7 +21,7 @@ package org.comixedproject.batch.comicpages.processors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.service.comicpages.PageCacheService;
-import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.infrastructure.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

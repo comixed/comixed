@@ -26,8 +26,6 @@ import static junit.framework.TestCase.assertSame;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -68,6 +66,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.context.ApplicationEventPublisher;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -273,8 +273,7 @@ class MetadataServiceTest {
   }
 
   @Test
-  void getVolumes_skipCache()
-      throws MetadataException, JsonProcessingException, MetadataSourceException {
+  void getVolumes_skipCache() throws MetadataException, JacksonException, MetadataSourceException {
     for (int index = 0; index < 25; index++) fetchedVolumeList.add(volumeMetadata);
 
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
@@ -320,7 +319,7 @@ class MetadataServiceTest {
 
   @Test
   void getVolumes_skipCache_matchPublisher_noneFound()
-      throws MetadataException, JsonProcessingException, MetadataSourceException {
+      throws MetadataException, JacksonException, MetadataSourceException {
     for (int index = 0; index < 25; index++) fetchedVolumeList.add(volumeMetadata);
 
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
@@ -366,7 +365,7 @@ class MetadataServiceTest {
 
   @Test
   void getVolumes_skipCache_matchPublisher()
-      throws MetadataException, JsonProcessingException, MetadataSourceException {
+      throws MetadataException, JacksonException, MetadataSourceException {
     for (int index = 0; index < 25; index++) fetchedVolumeList.add(volumeMetadata);
 
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
@@ -413,7 +412,7 @@ class MetadataServiceTest {
 
   @Test
   void getVolumes_skipCacheJsonError()
-      throws MetadataException, JsonProcessingException, MetadataSourceException {
+      throws MetadataException, JacksonException, MetadataSourceException {
     for (int index = 0; index < 25; index++) fetchedVolumeList.add(volumeMetadata);
 
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
@@ -422,7 +421,7 @@ class MetadataServiceTest {
                 Mockito.anyString(), Mockito.anyInt(), Mockito.any(MetadataSource.class)))
         .thenReturn(fetchedVolumeList);
     Mockito.when(objectMapper.writeValueAsString(Mockito.any(VolumeMetadata.class)))
-        .thenThrow(JsonProcessingException.class);
+        .thenThrow(JacksonException.class);
 
     assertThrows(
         MetadataException.class,
@@ -438,7 +437,7 @@ class MetadataServiceTest {
 
   @Test
   void getVolumes_nothingCached()
-      throws MetadataException, JsonProcessingException, MetadataSourceException {
+      throws MetadataException, JacksonException, MetadataSourceException {
     for (int index = 0; index < 25; index++) fetchedVolumeList.add(volumeMetadata);
 
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
@@ -485,14 +484,14 @@ class MetadataServiceTest {
 
   @Test
   void getVolumes_cachedDataJsonException()
-      throws MetadataException, JsonProcessingException, MetadataSourceException {
+      throws MetadataException, JacksonException, MetadataSourceException {
     for (int index = 0; index < 25; index++) cachedEntryList.add(TEST_ENCODED_VALUE);
 
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
     Mockito.when(metadataCacheService.getFromCache(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(cachedEntryList);
     Mockito.when(objectMapper.readValue(Mockito.anyString(), Mockito.any(Class.class)))
-        .thenThrow(JsonProcessingException.class);
+        .thenThrow(JacksonException.class);
 
     final List<VolumeMetadata> result =
         service.getVolumes(
@@ -520,7 +519,7 @@ class MetadataServiceTest {
 
   @Test
   void getVolumes_loadedCachedData()
-      throws MetadataException, JsonProcessingException, MetadataSourceException {
+      throws MetadataException, JacksonException, MetadataSourceException {
     for (int index = 0; index < 25; index++) cachedEntryList.add(TEST_ENCODED_VALUE);
 
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
@@ -558,7 +557,7 @@ class MetadataServiceTest {
 
   @Test
   void getVolumes_loadedCachedData_matchPublisher_noneFound()
-      throws MetadataException, JsonProcessingException, MetadataSourceException {
+      throws MetadataException, JacksonException, MetadataSourceException {
     for (int index = 0; index < 25; index++) cachedEntryList.add(TEST_ENCODED_VALUE);
 
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
@@ -594,7 +593,7 @@ class MetadataServiceTest {
 
   @Test
   void getVolumes_loadedCachedData_matchPublisher()
-      throws MetadataException, JsonProcessingException, MetadataSourceException {
+      throws MetadataException, JacksonException, MetadataSourceException {
     for (int index = 0; index < 25; index++) cachedEntryList.add(TEST_ENCODED_VALUE);
 
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
@@ -664,8 +663,7 @@ class MetadataServiceTest {
   }
 
   @Test
-  void getIssue_skipCache()
-      throws MetadataException, JsonProcessingException, MetadataSourceException {
+  void getIssue_skipCache() throws MetadataException, JacksonException, MetadataSourceException {
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
     Mockito.when(
             metadataAdaptor.getIssue(
@@ -697,15 +695,14 @@ class MetadataServiceTest {
   }
 
   @Test
-  void getIssue_jsonEncoding()
-      throws MetadataException, JsonProcessingException, MetadataSourceException {
+  void getIssue_jsonEncoding() throws MetadataException, JacksonException, MetadataSourceException {
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
     Mockito.when(
             metadataAdaptor.getIssue(
                 Mockito.anyString(), Mockito.anyString(), Mockito.any(MetadataSource.class)))
         .thenReturn(issueMetadata);
     Mockito.when(objectMapper.writeValueAsString(Mockito.any(IssueMetadata.class)))
-        .thenThrow(JsonProcessingException.class);
+        .thenThrow(JacksonException.class);
 
     assertThrows(
         MetadataException.class,
@@ -714,7 +711,7 @@ class MetadataServiceTest {
 
   @Test
   void getIssue_nothingCached()
-      throws MetadataException, JsonProcessingException, MetadataSourceException {
+      throws MetadataException, JacksonException, MetadataSourceException {
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
     Mockito.when(metadataCacheService.getFromCache(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(null);
@@ -749,14 +746,14 @@ class MetadataServiceTest {
 
   @Test
   void getIssue_cachedDataJsonException()
-      throws MetadataException, JsonProcessingException, MetadataSourceException {
+      throws MetadataException, JacksonException, MetadataSourceException {
     cachedEntryList.add(TEST_ENCODED_VALUE);
 
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
     Mockito.when(metadataCacheService.getFromCache(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(cachedEntryList);
     Mockito.when(objectMapper.readValue(Mockito.anyString(), Mockito.any(Class.class)))
-        .thenThrow(JsonProcessingException.class);
+        .thenThrow(JacksonException.class);
     Mockito.when(
             metadataAdaptor.getIssue(
                 Mockito.anyString(), Mockito.anyString(), Mockito.any(MetadataSource.class)))
@@ -784,8 +781,7 @@ class MetadataServiceTest {
   }
 
   @Test
-  void getIssue_cachedData()
-      throws MetadataException, JsonProcessingException, MetadataSourceException {
+  void getIssue_cachedData() throws MetadataException, JacksonException, MetadataSourceException {
     cachedEntryList.add(TEST_ENCODED_VALUE);
 
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
@@ -843,8 +839,7 @@ class MetadataServiceTest {
   }
 
   @Test
-  void scrapeComic_skipCache()
-      throws MetadataException, ComicBookException, JsonProcessingException {
+  void scrapeComic_skipCache() throws MetadataException, ComicBookException, JacksonException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong()))
         .thenReturn(loadedComicBook, savedComicBook);
     Mockito.when(
@@ -879,7 +874,7 @@ class MetadataServiceTest {
   }
 
   @Test
-  void asyncScrapeComic() throws MetadataException, ComicBookException, JsonProcessingException {
+  void asyncScrapeComic() throws MetadataException, ComicBookException, JacksonException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong()))
         .thenReturn(loadedComicBook, savedComicBook);
     Mockito.when(
@@ -911,7 +906,7 @@ class MetadataServiceTest {
 
   @Test
   void scrapeComic_withPreviousMetadataSource()
-      throws MetadataException, ComicBookException, JsonProcessingException {
+      throws MetadataException, ComicBookException, JacksonException {
     Mockito.when(loadedComicBook.getMetadata()).thenReturn(comicMetadataSource);
     Mockito.when(comicBookService.getComic(Mockito.anyLong()))
         .thenReturn(loadedComicBook, savedComicBook);
@@ -949,8 +944,7 @@ class MetadataServiceTest {
   }
 
   @Test
-  void scrapeComic_nothingCached()
-      throws ComicBookException, MetadataException, JsonProcessingException {
+  void scrapeComic_nothingCached() throws ComicBookException, MetadataException, JacksonException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong()))
         .thenReturn(loadedComicBook, savedComicBook);
     Mockito.when(metadataCacheService.getFromCache(Mockito.anyString(), Mockito.anyString()))
@@ -987,8 +981,7 @@ class MetadataServiceTest {
   }
 
   @Test
-  void scrapeComic_cachingError()
-      throws ComicBookException, MetadataException, JsonProcessingException {
+  void scrapeComic_cachingError() throws ComicBookException, MetadataException, JacksonException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong()))
         .thenReturn(loadedComicBook, savedComicBook);
     Mockito.when(metadataCacheService.getFromCache(Mockito.anyString(), Mockito.anyString()))
@@ -997,7 +990,7 @@ class MetadataServiceTest {
             metadataAdaptor.getIssueDetails(Mockito.anyString(), Mockito.any(MetadataSource.class)))
         .thenReturn(issueDetailsMetadata);
     Mockito.when(objectMapper.writeValueAsString(Mockito.any(IssueDetailsMetadata.class)))
-        .thenThrow(JsonProcessingException.class);
+        .thenThrow(JacksonException.class);
 
     final ComicBook result =
         service.scrapeComic(TEST_METADATA_SOURCE_ID, TEST_COMIC_ID, TEST_ISSUE_ID, false);
@@ -1019,8 +1012,7 @@ class MetadataServiceTest {
   }
 
   @Test
-  void scrapeComic_cachedDate()
-      throws ComicBookException, JsonProcessingException, MetadataException {
+  void scrapeComic_cachedDate() throws ComicBookException, JacksonException, MetadataException {
     cachedEntryList.add(TEST_ENCODED_VALUE);
 
     Mockito.when(comicBookService.getComic(Mockito.anyLong()))
@@ -1050,8 +1042,7 @@ class MetadataServiceTest {
   }
 
   @Test
-  void scrapeComic_noCoverDate()
-      throws ComicBookException, JsonProcessingException, MetadataException {
+  void scrapeComic_noCoverDate() throws ComicBookException, JacksonException, MetadataException {
     cachedEntryList.add(TEST_ENCODED_VALUE);
 
     Mockito.when(comicBookService.getComic(Mockito.anyLong()))
@@ -1072,8 +1063,7 @@ class MetadataServiceTest {
   }
 
   @Test
-  void scrapeComic_noStoreDate()
-      throws ComicBookException, JsonProcessingException, MetadataException {
+  void scrapeComic_noStoreDate() throws ComicBookException, JacksonException, MetadataException {
     cachedEntryList.add(TEST_ENCODED_VALUE);
 
     Mockito.when(comicBookService.getComic(Mockito.anyLong()))

@@ -18,8 +18,6 @@
 
 package org.comixedproject.service.comicbooks;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -43,6 +41,8 @@ import org.comixedproject.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * <code>ComicSelectionService</code> provides business functions for managing a user's selection of
@@ -175,7 +175,7 @@ public class ComicSelectionService {
         final ListOfIds result =
             this.objectMapper.readValue(storeSelections.toString(), ListOfIds.class);
         return result.getIds().stream().collect(Collectors.toList());
-      } catch (JsonProcessingException error) {
+      } catch (JacksonException error) {
         throw new ComicBookSelectionException("failed to load selections from session", error);
       }
     }
@@ -192,7 +192,7 @@ public class ComicSelectionService {
     log.debug("Storing selection set");
     try {
       return this.objectMapper.writeValueAsString(new ListOfIds(new HashSet<>(selections)));
-    } catch (JsonProcessingException error) {
+    } catch (JacksonException error) {
       throw new ComicBookSelectionException("failed to save selections to session", error);
     }
   }

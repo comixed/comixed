@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 @Component
 @StepScope
 @Log4j2
-public class ScrapeMetadataChunkListener extends AbstractBatchProcessChunkListener {
+public class ScrapeMetadataChunkListener<I, O> extends AbstractBatchProcessChunkListener<I, O> {
   @Override
   protected String getStepName() {
     return SCRAPE_METADATA_STEP;
