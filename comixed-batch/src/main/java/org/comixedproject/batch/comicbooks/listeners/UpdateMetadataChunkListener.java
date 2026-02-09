@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
 @Component
 @StepScope
 @Log4j2
-public class UpdateMetadataChunkListener extends AbstractBatchProcessChunkListener {
+public class UpdateMetadataChunkListener<I, O> extends AbstractBatchProcessChunkListener<I, O> {
   @Override
   protected String getStepName() {
     return UPDATE_METADATA_STEP;

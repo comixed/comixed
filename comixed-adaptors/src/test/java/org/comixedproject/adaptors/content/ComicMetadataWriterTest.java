@@ -2,12 +2,11 @@ package org.comixedproject.adaptors.content;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import java.util.*;
 import org.comixedproject.model.comicbooks.*;
 import org.comixedproject.model.comicpages.ComicPage;
@@ -21,7 +20,10 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
+import org.springframework.http.converter.xml.JacksonXmlHttpMessageConverter;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.dataformat.xml.XmlMapper;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -32,8 +34,9 @@ class ComicMetadataWriterTest {
   private static final Date TEST_LAST_SCRAPED_DATE = new Date();
 
   @InjectMocks private ComicMetadataWriter writer;
-  @Mock private ObjectMapper objectMapper;
-  @Mock MappingJackson2XmlHttpMessageConverter xmlConverter;
+  @Mock JacksonXmlHttpMessageConverter xmlConverter;
+  @Mock XmlMapper xmlMapper;
+  @Mock XmlMapper.Builder xmlMapperBuilder;
   @Mock private ComicDetail comicDetail;
   @Mock private MetadataSource metadataSource;
   @Mock private ComicMetadataSource comicMetadataSource;
@@ -46,10 +49,14 @@ class ComicMetadataWriterTest {
   private List<ComicPage> comicPages = new ArrayList<>();
 
   @BeforeEach
-  void setUp() throws JsonProcessingException {
-    Mockito.when(objectMapper.writeValueAsBytes(metadataArgumentCaptor.capture()))
+  void setUp() {
+    Mockito.when(xmlConverter.getMapper()).thenReturn(xmlMapper);
+    when(xmlMapper.rebuild()).thenReturn(xmlMapperBuilder);
+    when(xmlMapperBuilder.configure(any(DeserializationFeature.class), Mockito.anyBoolean()))
+        .thenReturn(xmlMapperBuilder);
+    when(xmlMapperBuilder.build()).thenReturn(xmlMapper);
+    Mockito.when(xmlMapper.writeValueAsBytes(metadataArgumentCaptor.capture()))
         .thenReturn(contentByte);
-    Mockito.when(xmlConverter.getObjectMapper()).thenReturn(objectMapper);
     Mockito.when(comicDetail.getCoverDate()).thenReturn(TEST_COVER_DATE);
     for (int index = 0; index < ComicTagType.values().length; index++) {
       tags.add(new ComicTag(comicDetail, ComicTagType.values()[index], "Tag Value " + index));
@@ -76,8 +83,9 @@ class ComicMetadataWriterTest {
   void afterPropertiesSet() throws Exception {
     writer.afterPropertiesSet();
 
-    Mockito.verify(objectMapper, Mockito.times(1))
-        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    verify(xmlMapper).rebuild();
+    verify(xmlMapperBuilder).configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    verify(xmlMapperBuilder).build();
   }
 
   @Test
@@ -97,9 +105,9 @@ class ComicMetadataWriterTest {
   }
 
   @Test
-  void createContent_objectWriterException() throws IOException {
-    Mockito.when(objectMapper.writeValueAsBytes(metadataArgumentCaptor.capture()))
-        .thenThrow(JsonProcessingException.class);
+  void createContent_objectWriterException() {
+    Mockito.when(xmlMapper.writeValueAsBytes(metadataArgumentCaptor.capture()))
+        .thenThrow(JacksonException.class);
 
     assertThrows(ContentAdaptorException.class, () -> writer.createContent(comicBook));
   }

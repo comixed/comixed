@@ -21,9 +21,6 @@ package org.comixedproject.rest.comicfiles;
 import static org.comixedproject.rest.comicfiles.ComicFileController.COMIC_FILES;
 import static org.junit.Assert.*;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,10 +39,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 @ExtendWith(MockitoExtension.class)
 class ComicFileControllerTest {
@@ -86,7 +82,7 @@ class ComicFileControllerTest {
   }
 
   @Test
-  void loadComicFilesFromSession() throws JsonProcessingException {
+  void loadComicFilesFromSession() {
     Mockito.when(session.getAttribute(COMIC_FILES)).thenReturn(TEST_ENCODED_COMIC_FILES);
     Mockito.when(objectMapper.readValue(Mockito.anyString(), typeReferenceArgumentCaptor.capture()))
         .thenReturn(comicFileGroupList);
@@ -105,7 +101,7 @@ class ComicFileControllerTest {
   }
 
   @Test
-  void loadComicFilesFromSession_nothingStored() throws JsonProcessingException {
+  void loadComicFilesFromSession_nothingStored() throws JacksonException {
     Mockito.when(session.getAttribute(COMIC_FILES)).thenReturn(null);
 
     final LoadComicFilesResponse result = controller.loadComicFilesFromSession(session);
@@ -119,10 +115,10 @@ class ComicFileControllerTest {
   }
 
   @Test
-  void loadComicFilesFromSession_parsingError() throws JsonProcessingException {
+  void loadComicFilesFromSession_parsingError() throws JacksonException {
     Mockito.when(session.getAttribute(COMIC_FILES)).thenReturn(TEST_ENCODED_COMIC_FILES);
     Mockito.when(objectMapper.readValue(Mockito.anyString(), typeReferenceArgumentCaptor.capture()))
-        .thenThrow(JsonProcessingException.class);
+        .thenThrow(JacksonException.class);
 
     final LoadComicFilesResponse result = controller.loadComicFilesFromSession(session);
 
@@ -163,7 +159,7 @@ class ComicFileControllerTest {
   }
 
   @Test
-  void toggleComicFileSelections() throws JsonProcessingException {
+  void toggleComicFileSelections() throws JacksonException {
     Mockito.when(session.getAttribute(COMIC_FILES)).thenReturn(TEST_ENCODED_COMIC_FILES);
     Mockito.when(objectMapper.readValue(Mockito.anyString(), typeReferenceArgumentCaptor.capture()))
         .thenReturn(comicFileGroupList);
@@ -228,12 +224,7 @@ class ComicFileControllerTest {
   }
 
   @Test
-  void importComicFiles()
-      throws JobInstanceAlreadyCompleteException,
-          JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
-          JobRestartException,
-          JsonProcessingException {
+  void importComicFiles() throws JacksonException {
     comicFileGroupList.add(comicFileGroup);
 
     Mockito.when(session.getAttribute(COMIC_FILES)).thenReturn(TEST_ENCODED_COMIC_FILES);

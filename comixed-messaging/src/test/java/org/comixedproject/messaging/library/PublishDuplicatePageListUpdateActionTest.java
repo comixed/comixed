@@ -18,9 +18,6 @@
 
 package org.comixedproject.messaging.library;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.net.library.DuplicatePageUpdate;
 import org.comixedproject.views.View;
@@ -32,6 +29,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectWriter;
 
 @ExtendWith(MockitoExtension.class)
 class PublishDuplicatePageListUpdateActionTest {
@@ -49,7 +49,7 @@ class PublishDuplicatePageListUpdateActionTest {
   }
 
   @Test
-  void publish() throws PublishingException, JsonProcessingException {
+  void publish() throws PublishingException, JacksonException {
     Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
         .thenReturn(TEST_DUPLICATE_PAGE_LIST_AS_JSON);
 

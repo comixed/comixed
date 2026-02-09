@@ -34,9 +34,7 @@ import org.comixedproject.views.View;
 @Table(name = "configuration_options")
 @NoArgsConstructor
 @RequiredArgsConstructor
-@JsonIdentityInfo(
-    generator = ObjectIdGenerators.PropertyGenerator.class,
-    property = "configurationOptionId")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "name")
 public class ConfigurationOption {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

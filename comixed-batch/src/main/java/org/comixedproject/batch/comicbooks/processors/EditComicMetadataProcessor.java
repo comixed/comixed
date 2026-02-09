@@ -23,12 +23,11 @@ import static org.comixedproject.batch.comicbooks.EditComicBookMetadataConfigura
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicType;
-import org.springframework.batch.core.ExitStatus;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.core.job.parameters.JobParameters;
+import org.springframework.batch.core.listener.StepExecutionListener;
+import org.springframework.batch.core.step.StepExecution;
+import org.springframework.batch.infrastructure.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -93,10 +92,5 @@ public class EditComicMetadataProcessor
   public void beforeStep(final StepExecution stepExecution) {
     log.trace("Loading execution context");
     this.jobParameters = stepExecution.getJobExecution().getJobParameters();
-  }
-
-  @Override
-  public ExitStatus afterStep(final StepExecution stepExecution) {
-    return null;
   }
 }

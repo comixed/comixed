@@ -18,12 +18,12 @@
 
 package org.comixedproject.opds.model;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import tools.jackson.dataformat.xml.annotation.JacksonXmlCData;
+import tools.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 /**
  * <code>OPDSAcquisitionFeedEntry</code> is a single entry in a {@link OPDSAcquisitionFeed}.

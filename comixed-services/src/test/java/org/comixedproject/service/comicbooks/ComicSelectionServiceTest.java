@@ -21,8 +21,6 @@ package org.comixedproject.service.comicbooks;
 import static junit.framework.TestCase.*;
 import static org.junit.Assert.assertThrows;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -45,6 +43,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 @ExtendWith(MockitoExtension.class)
 class ComicSelectionServiceTest {
@@ -309,16 +309,16 @@ class ComicSelectionServiceTest {
   }
 
   @Test
-  void decodeSelectionsWithJsonException() throws JsonProcessingException {
+  void decodeSelectionsWithJsonException() throws JacksonException {
     Mockito.when(objectMapper.readValue(Mockito.anyString(), Mockito.any(Class.class)))
-        .thenThrow(JsonProcessingException.class);
+        .thenThrow(JacksonException.class);
 
     assertThrows(
         ComicBookSelectionException.class, () -> service.decodeSelections(TEST_ENCODED_SELECTIONS));
   }
 
   @Test
-  void decodeSelections() throws ComicBookSelectionException, JsonProcessingException {
+  void decodeSelections() throws ComicBookSelectionException, JacksonException {
     final ComicSelectionService.ListOfIds encodedIds =
         new ComicSelectionService.ListOfIds(storedSelectedIds);
     storedSelectedIds.add(TEST_COMIC_BOOK_ID);
@@ -337,7 +337,7 @@ class ComicSelectionServiceTest {
   }
 
   @Test
-  void encodeSelections() throws JsonProcessingException, ComicBookSelectionException {
+  void encodeSelections() throws JacksonException, ComicBookSelectionException {
     Mockito.when(objectMapper.writeValueAsString(idsArgumentCaptor.capture()))
         .thenReturn(TEST_ENCODED_SELECTIONS.toString());
 
@@ -354,9 +354,9 @@ class ComicSelectionServiceTest {
   }
 
   @Test
-  void encodeSelectionsWithJsonProcessException() throws JsonProcessingException {
+  void encodeSelectionsWithJsonProcessException() throws JacksonException {
     Mockito.when(objectMapper.writeValueAsString(idsArgumentCaptor.capture()))
-        .thenThrow(JsonProcessingException.class);
+        .thenThrow(JacksonException.class);
 
     assertThrows(ComicBookSelectionException.class, () -> service.encodeSelections(selectedIds));
   }

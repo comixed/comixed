@@ -21,7 +21,7 @@ package org.comixedproject.batch.comicbooks.writers;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.infrastructure.item.ItemWriter;
 import org.springframework.stereotype.Component;
 
 /**

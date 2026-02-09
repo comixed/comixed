@@ -18,8 +18,8 @@
 
 package org.comixedproject.opds.model;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.*;
+import tools.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 /**
  * <code>OPDSLink</code> represents a link in an {@link OPDSFeedEntry}.

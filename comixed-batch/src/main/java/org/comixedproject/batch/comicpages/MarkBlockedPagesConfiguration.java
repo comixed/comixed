@@ -25,11 +25,10 @@ import org.comixedproject.batch.comicpages.readers.MarkBlockedPagesReader;
 import org.comixedproject.batch.comicpages.writers.ComicPageWriter;
 import org.comixedproject.batch.processors.NoopProcessor;
 import org.comixedproject.model.comicpages.ComicPage;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.Step;
+import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.Step;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,7 +65,6 @@ public class MarkBlockedPagesConfiguration {
       final MarkBlockedPagesJobListener jobListener,
       @Qualifier("markBlockedPagesStep") final Step markBlockedPagesStep) {
     return new JobBuilder(MARK_BLOCKED_PAGES_JOB, jobRepository)
-        .incrementer(new RunIdIncrementer())
         .listener(jobListener)
         .start(markBlockedPagesStep)
         .build();
@@ -90,9 +88,10 @@ public class MarkBlockedPagesConfiguration {
       final MarkBlockedPagesReader reader,
       final NoopProcessor<ComicPage> processor,
       final ComicPageWriter writer,
-      final MarkBlockedPagesChunkListener chunkListener) {
+      final MarkBlockedPagesChunkListener<ComicPage, ComicPage> chunkListener) {
     return new StepBuilder("markBlockedPagesStep", jobRepository)
-        .<ComicPage, ComicPage>chunk(this.chunkSize, platformTransactionManager)
+        .<ComicPage, ComicPage>chunk(this.chunkSize)
+        .transactionManager(platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

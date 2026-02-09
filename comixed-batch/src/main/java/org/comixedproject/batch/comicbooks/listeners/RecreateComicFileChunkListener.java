@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
 @Component
 @StepScope
 @Log4j2
-public class RecreateComicFileChunkListener extends AbstractBatchProcessChunkListener {
+public class RecreateComicFileChunkListener<I, O> extends AbstractBatchProcessChunkListener<I, O> {
   @Override
   protected String getStepName() {
     return RECREATE_COMIC_FILE_STEP;

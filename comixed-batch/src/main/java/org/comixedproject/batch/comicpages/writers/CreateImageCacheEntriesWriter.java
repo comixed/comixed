@@ -21,8 +21,8 @@ package org.comixedproject.batch.comicpages.writers;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.service.comicpages.ComicPageService;
-import org.springframework.batch.item.Chunk;
-import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.infrastructure.item.Chunk;
+import org.springframework.batch.infrastructure.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

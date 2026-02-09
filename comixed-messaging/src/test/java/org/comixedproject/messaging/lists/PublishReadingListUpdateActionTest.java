@@ -20,9 +20,6 @@ package org.comixedproject.messaging.lists;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.user.ComiXedUser;
@@ -37,6 +34,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectWriter;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -53,7 +53,7 @@ class PublishReadingListUpdateActionTest {
   @Mock private ComiXedUser owner;
 
   @BeforeEach
-  public void setUp() throws JsonProcessingException {
+  public void setUp() throws JacksonException {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
         .thenReturn(TEST_READING_LIST_AS_JSON);
@@ -63,7 +63,7 @@ class PublishReadingListUpdateActionTest {
   }
 
   @Test
-  void PublishReadingListUpdate() throws PublishingException, JsonProcessingException {
+  void PublishReadingListUpdate() throws PublishingException, JacksonException {
     action.publish(readingList);
 
     Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.ReadingLists.class);
@@ -83,9 +83,8 @@ class PublishReadingListUpdateActionTest {
   }
 
   @Test
-  void PublishReadingListUpdatePublishingException() throws JsonProcessingException {
-    Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
-        .thenThrow(JsonProcessingException.class);
+  void PublishReadingListUpdatePublishingException() throws JacksonException {
+    Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenThrow(JacksonException.class);
 
     assertThrows(PublishingException.class, () -> action.publish(readingList));
   }

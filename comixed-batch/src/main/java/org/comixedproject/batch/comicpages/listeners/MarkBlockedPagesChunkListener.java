@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class MarkBlockedPagesChunkListener extends AbstractBatchProcessChunkListener {
+public class MarkBlockedPagesChunkListener<I, O> extends AbstractBatchProcessChunkListener<I, O> {
   @Override
   protected String getStepName() {
     return MARK_BLOCKED_PAGE_STEP;

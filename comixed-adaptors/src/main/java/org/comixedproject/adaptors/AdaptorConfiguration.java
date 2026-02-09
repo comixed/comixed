@@ -23,6 +23,7 @@ import org.apache.tika.metadata.Metadata;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.xml.JacksonXmlHttpMessageConverter;
 
 /**
  * <code>AdaptorConfiguration</code> provides beans for the adaptors package.
@@ -40,5 +41,11 @@ class AdaptorConfiguration {
   @Bean
   public Metadata metadata() {
     return new Metadata();
+  }
+
+  /** replaces the default mapper used before the migration */
+  @Bean
+  public JacksonXmlHttpMessageConverter xmlHttpMessageConverter() {
+    return new JacksonXmlHttpMessageConverter();
   }
 }

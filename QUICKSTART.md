@@ -19,7 +19,7 @@ ComiXed makes heavy use of databases to manage the information for a
 comic book library. As such, it requires one that provides a stable,
 durable environment.
 
-ComiXed ships with support for two database environments:
+ComiXed ships with support for three database environments:
  * [MySQL](https://www.mysql.com/) v8.1 or later
  * [MariaDB](https://mariadb.org/) v10.11 or later.
  * [PosgreSQL](https://www.postgresql.org/) v16.0 or later

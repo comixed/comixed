@@ -36,8 +36,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.core.*;
-import org.springframework.batch.core.scope.context.ChunkContext;
-import org.springframework.batch.core.scope.context.StepContext;
+import org.springframework.batch.core.job.JobExecution;
+import org.springframework.batch.core.job.JobInstance;
+import org.springframework.batch.core.job.parameters.JobParameters;
+import org.springframework.batch.core.scope.context.StepSynchronizationManager;
+import org.springframework.batch.core.step.StepExecution;
+import org.springframework.batch.infrastructure.item.Chunk;
 
 @ExtendWith(MockitoExtension.class)
 class UpdateMetadataChunkListenerTest {
@@ -46,8 +50,7 @@ class UpdateMetadataChunkListenerTest {
 
   @InjectMocks private UpdateMetadataChunkListener listener;
   @Mock private ComicBookService comicBookService;
-  @Mock private ChunkContext chunkContext;
-  @Mock private StepContext stepContext;
+  @Mock private Chunk chunk;
   @Mock private StepExecution stepExecution;
   @Mock private JobInstance jobInstance;
   @Mock private JobExecution jobExecution;
@@ -59,7 +62,7 @@ class UpdateMetadataChunkListenerTest {
   @Captor ArgumentCaptor<BatchProcessDetail> batchProcessDetailArgumentCaptor;
 
   @BeforeEach
-  public void setUp() throws PublishingException {
+  void setUp() throws PublishingException {
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
     Mockito.when(jobInstance.getJobName()).thenReturn(UPDATE_METADATA_JOB);
     Mockito.when(jobExecution.getJobInstance()).thenReturn(jobInstance);
@@ -68,20 +71,21 @@ class UpdateMetadataChunkListenerTest {
     Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_TOTAL_COMICS);
     Mockito.when(comicBookService.getUpdateMetadataCount()).thenReturn(TEST_PROCESSED_COMICS);
 
-    Mockito.when(chunkContext.getStepContext()).thenReturn(stepContext);
     Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
-    Mockito.when(stepContext.getStepExecution()).thenReturn(stepExecution);
     Mockito.doNothing()
         .when(publishProcessComicBooksStatusAction)
         .publish(processComicStatusArgumentCaptor.capture());
     Mockito.doNothing()
         .when(publishBatchProcessDetailUpdateAction)
         .publish(batchProcessDetailArgumentCaptor.capture());
+
+    Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
+    StepSynchronizationManager.register(stepExecution);
   }
 
   @Test
   void beforeChunk() throws PublishingException {
-    listener.beforeChunk(chunkContext);
+    listener.beforeChunk(chunk);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
 
@@ -96,7 +100,7 @@ class UpdateMetadataChunkListenerTest {
 
   @Test
   void afterChunk() throws PublishingException {
-    listener.afterChunk(chunkContext);
+    listener.afterChunk(chunk);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
 
@@ -111,22 +115,7 @@ class UpdateMetadataChunkListenerTest {
 
   @Test
   void afterChunkError() throws PublishingException {
-    listener.afterChunkError(chunkContext);
-
-    final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
-
-    assertNotNull(status);
-    assertTrue(status.isActive());
-    assertEquals(UPDATE_METADATA_STEP, status.getStepName());
-    assertEquals(TEST_TOTAL_COMICS, status.getTotal());
-    assertEquals(TEST_TOTAL_COMICS - TEST_PROCESSED_COMICS, status.getProcessed());
-
-    Mockito.verify(publishProcessComicBooksStatusAction, Mockito.times(1)).publish(status);
-  }
-
-  @Test
-  void afterChunk_publishingException() throws PublishingException {
-    listener.beforeChunk(chunkContext);
+    listener.onChunkError(new RuntimeException(), chunk);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
 

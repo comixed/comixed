@@ -20,8 +20,6 @@ package org.comixedproject.service.metadata;
 
 import static org.apache.commons.lang3.StringUtils.trim;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -58,6 +56,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * <code>MetadataService</code> handles interacting with the selected {@link MetadataAdaptor} and
@@ -131,7 +131,7 @@ public class MetadataService {
         for (VolumeMetadata volume : fetched) {
           try {
             cacheEntries.add(this.objectMapper.writeValueAsString(volume));
-          } catch (JsonProcessingException error) {
+          } catch (JacksonException error) {
             throw new MetadataException("Failed to encoded scraping volume", error);
           }
         }
@@ -174,7 +174,7 @@ public class MetadataService {
       for (String entry : cachedEntries) {
         try {
           result.add(this.objectMapper.readValue(entry, VolumeMetadata.class));
-        } catch (JsonProcessingException error) {
+        } catch (JacksonException error) {
           log.error("Failed to decode scraping volume", error);
           return new ArrayList<>();
         }
@@ -212,7 +212,7 @@ public class MetadataService {
         log.debug("Decoding cached issue");
         try {
           result = this.objectMapper.readValue(cachedEntries.get(0), IssueMetadata.class);
-        } catch (JsonProcessingException error) {
+        } catch (JacksonException error) {
           log.error("Failed to decode cached scraping issue", error);
         }
       }
@@ -226,7 +226,7 @@ public class MetadataService {
         final List<String> encodedValues = new ArrayList<>();
         try {
           encodedValues.add(this.objectMapper.writeValueAsString(result));
-        } catch (JsonProcessingException error) {
+        } catch (JacksonException error) {
           throw new MetadataException("Failed to encode issue", error);
         }
         log.debug("Caching fetched issue: source={} key={}", source, key);
@@ -317,7 +317,7 @@ public class MetadataService {
           encodedDetails.add(this.objectMapper.writeValueAsString(issueDetails));
           log.debug("Caching fetched issue details");
           this.metadataCacheService.saveToCache(source, key, encodedDetails);
-        } catch (JsonProcessingException error) {
+        } catch (JacksonException error) {
           log.error("Failed to cache issue details", error);
         }
       }
@@ -550,7 +550,7 @@ public class MetadataService {
       log.debug("Decoding cached issue details");
       try {
         return this.objectMapper.readValue(cachedEntries.get(0), IssueDetailsMetadata.class);
-      } catch (JsonProcessingException error) {
+      } catch (JacksonException error) {
         throw new MetadataException("Failed to decoded cached issue details", error);
       }
     }
@@ -629,7 +629,7 @@ public class MetadataService {
       for (StoryMetadata volume : result) {
         try {
           cacheEntries.add(this.objectMapper.writeValueAsString(volume));
-        } catch (JsonProcessingException error) {
+        } catch (JacksonException error) {
           throw new MetadataException("Failed to encoded scraping volume", error);
         }
       }
@@ -670,7 +670,7 @@ public class MetadataService {
       final List<String> cacheEntries = new ArrayList<>();
       try {
         cacheEntries.add(this.objectMapper.writeValueAsString(storyDetailMetadata));
-      } catch (JsonProcessingException error) {
+      } catch (JacksonException error) {
         throw new MetadataException("Failed to encoded scraping volume", error);
       }
 
@@ -731,7 +731,7 @@ public class MetadataService {
     if (cachedEntries != null && !cachedEntries.isEmpty()) {
       try {
         result = this.objectMapper.readValue(cachedEntries.get(0), StoryDetailMetadata.class);
-      } catch (JsonProcessingException error) {
+      } catch (JacksonException error) {
         log.error("Failed to decode scraping story", error);
         return null;
       }
@@ -747,7 +747,7 @@ public class MetadataService {
       for (String entry : cachedEntries) {
         try {
           result.add(this.objectMapper.readValue(entry, StoryMetadata.class));
-        } catch (JsonProcessingException error) {
+        } catch (JacksonException error) {
           log.error("Failed to decode scraping stories", error);
           return new ArrayList<>();
         }

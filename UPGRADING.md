@@ -65,3 +65,26 @@ DROP SEQUENCE  BATCH_JOB_SEQ IF EXISTS;
 ```
 
 After this, you can then run ComiXed 2.0.
+
+## v3.x -> v4.x
+
+If you are running a version prior to v3.x, then you **must** first upgrade
+to v3.x. After installing v3.x and running it, you should run the server
+once to perform some necessary database changes. Then you can perform the
+recommended upgrade steps.
+
+Next you will need to run the following SQL. To do this, start up ComiXed with the
+database console enabled using the **-C** commandline option:
+
+```sql
+DROP TABLE  BATCH_STEP_EXECUTION_CONTEXT IF EXISTS;
+DROP TABLE  BATCH_JOB_EXECUTION_CONTEXT IF EXISTS;
+DROP TABLE  BATCH_STEP_EXECUTION IF EXISTS;
+DROP TABLE  BATCH_JOB_EXECUTION_PARAMS IF EXISTS;
+DROP TABLE  BATCH_JOB_EXECUTION IF EXISTS;
+DROP TABLE  BATCH_JOB_INSTANCE IF EXISTS;
+
+DROP SEQUENCE  BATCH_STEP_EXECUTION_SEQ IF EXISTS;
+DROP SEQUENCE  BATCH_JOB_EXECUTION_SEQ IF EXISTS;
+DROP SEQUENCE  BATCH_JOB_SEQ IF EXISTS;
+```
