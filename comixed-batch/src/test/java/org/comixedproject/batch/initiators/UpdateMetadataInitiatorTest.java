@@ -67,8 +67,8 @@ class UpdateMetadataInitiatorTest {
   public void setUp()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
-      InvalidJobParametersException,
-      JobRestartException {
+          InvalidJobParametersException,
+          JobRestartException {
     Mockito.when(comicBookService.getUpdateMetadataCount())
         .thenReturn(TEST_UNPROCESSED_COMIC_COUNT);
     Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(false);
@@ -79,7 +79,7 @@ class UpdateMetadataInitiatorTest {
   @Test
   void execute_noComicsToMove()
       throws JobInstanceAlreadyCompleteException,
-      JobExecutionAlreadyRunningException,
+          JobExecutionAlreadyRunningException,
           InvalidJobParametersException,
           JobRestartException {
     Mockito.when(comicBookService.getUpdateMetadataCount()).thenReturn(0L);

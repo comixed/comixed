@@ -85,9 +85,9 @@ public class RecreateComicFilesInitiator {
                   .addLong(RECREATE_COMIC_FILES_JOB_TIME_STARTED, System.currentTimeMillis())
                   .toJobParameters());
         } catch (JobExecutionAlreadyRunningException
-                 | JobRestartException
-                 | JobInstanceAlreadyCompleteException
-                 | InvalidJobParametersException error) {
+            | JobRestartException
+            | JobInstanceAlreadyCompleteException
+            | InvalidJobParametersException error) {
           log.error("Failed to run import comic files job", error);
         }
       }

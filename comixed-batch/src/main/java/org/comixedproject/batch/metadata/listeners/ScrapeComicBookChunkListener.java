@@ -23,10 +23,8 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.listener.ChunkListener;
 import org.springframework.batch.core.listener.StepExecutionListener;
-import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.StepExecution;
 import org.springframework.batch.infrastructure.item.Chunk;
-import org.springframework.batch.infrastructure.item.ExecutionContext;
 import org.springframework.stereotype.Component;
 
 /**

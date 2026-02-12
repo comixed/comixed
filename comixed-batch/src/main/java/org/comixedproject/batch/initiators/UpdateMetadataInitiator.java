@@ -85,9 +85,9 @@ public class UpdateMetadataInitiator {
                   .addLong(UPDATE_METADATA_JOB_TIME_STARTED, System.currentTimeMillis())
                   .toJobParameters());
         } catch (JobExecutionAlreadyRunningException
-                 | JobRestartException
-                 | JobInstanceAlreadyCompleteException
-                 | InvalidJobParametersException error) {
+            | JobRestartException
+            | JobInstanceAlreadyCompleteException
+            | InvalidJobParametersException error) {
           log.error("Failed to run update metadata job", error);
         }
       }

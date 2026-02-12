@@ -46,13 +46,13 @@ public class ComiXedWebSocketSecurityConfiguration implements WebSocketMessageBr
 
   @Bean
   public AuthorizationManager<Message<?>> messageAuthorizationManager() {
-    var messages =
-        MessageMatcherDelegatingAuthorizationManager.builder();
+    var messages = MessageMatcherDelegatingAuthorizationManager.builder();
 
     messages
         .nullDestMatcher()
         .permitAll()
-        .simpTypeMatchers(SimpMessageType.CONNECT, SimpMessageType.DISCONNECT, SimpMessageType.UNSUBSCRIBE)
+        .simpTypeMatchers(
+            SimpMessageType.CONNECT, SimpMessageType.DISCONNECT, SimpMessageType.UNSUBSCRIBE)
         .permitAll();
 
     return messages.build();
@@ -60,17 +60,10 @@ public class ComiXedWebSocketSecurityConfiguration implements WebSocketMessageBr
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
-        .csrf(csrf -> csrf
-            .ignoringRequestMatchers("/ws/**")
-        )
-        .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/ws/**").permitAll()
-            .anyRequest().authenticated()
-        )
-        .headers(headers -> headers
-            .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
-        );
+    http.csrf(csrf -> csrf.ignoringRequestMatchers("/ws/**"))
+        .authorizeHttpRequests(
+            auth -> auth.requestMatchers("/ws/**").permitAll().anyRequest().authenticated())
+        .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
     return http.build();
   }
@@ -81,7 +74,6 @@ public class ComiXedWebSocketSecurityConfiguration implements WebSocketMessageBr
     registry.enableSimpleBroker("/topic", "/queue", "/secured/user");
     registry.setApplicationDestinationPrefixes("/comixed");
     registry.setUserDestinationPrefix("/secured/user");
-
   }
 
   @Override
@@ -89,5 +81,4 @@ public class ComiXedWebSocketSecurityConfiguration implements WebSocketMessageBr
     log.trace("Configuration STOMP endpoints");
     registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
   }
-
 }

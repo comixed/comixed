@@ -79,9 +79,9 @@ public class MarkBlockedPagesInitiator {
                   .addLong(JOB_MARK_BLOCKED_PAGES_STARTED, System.currentTimeMillis())
                   .toJobParameters());
         } catch (JobExecutionAlreadyRunningException
-                 | JobRestartException
-                 | JobInstanceAlreadyCompleteException
-                 | InvalidJobParametersException error) {
+            | JobRestartException
+            | JobInstanceAlreadyCompleteException
+            | InvalidJobParametersException error) {
           log.error("Failed to run load page hash job", error);
         }
       }

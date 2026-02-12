@@ -31,7 +31,6 @@ import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.batch.ComicCheckOutManager;
 import org.comixedproject.model.library.OrganizingComic;
 import org.comixedproject.service.admin.ConfigurationService;
-import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.parameters.JobParameters;
 import org.springframework.batch.core.listener.StepExecutionListener;
@@ -134,5 +133,4 @@ public class MoveComicFilesProcessor
     log.trace("Loading execution context");
     this.jobParameters = stepExecution.getJobExecution().getJobParameters();
   }
-
 }

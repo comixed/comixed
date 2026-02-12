@@ -93,9 +93,9 @@ public class ScrapeComicBookInitiator {
                   .addLong(SCRAPE_METADATA_JOB_ERROR_THRESHOLD, errorThreshold)
                   .toJobParameters());
         } catch (JobExecutionAlreadyRunningException
-                 | JobRestartException
-                 | JobInstanceAlreadyCompleteException
-                 | InvalidJobParametersException error) {
+            | JobRestartException
+            | JobInstanceAlreadyCompleteException
+            | InvalidJobParametersException error) {
           log.error("Failed to run batch scraping job", error);
         }
       }

@@ -66,9 +66,9 @@ class AddPagesToImageCacheInitiatorTest {
   @BeforeEach
   public void setUp()
       throws JobInstanceAlreadyCompleteException,
-      JobExecutionAlreadyRunningException,
-      InvalidJobParametersException,
-      JobRestartException {
+          JobExecutionAlreadyRunningException,
+          InvalidJobParametersException,
+          JobRestartException {
     Mockito.when(jobOperator.start(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
     Mockito.when(comicPageService.findPagesNeedingCacheEntriesCount()).thenReturn(TEST_PAGE_COUNT);

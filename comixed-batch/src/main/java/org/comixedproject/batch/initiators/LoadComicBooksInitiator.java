@@ -87,9 +87,9 @@ public class LoadComicBooksInitiator {
                   .addLong(LOAD_COMIC_BOOKS_JOB_STARTED, System.currentTimeMillis())
                   .toJobParameters());
         } catch (JobExecutionAlreadyRunningException
-                 | JobRestartException
-                 | JobInstanceAlreadyCompleteException
-                 | InvalidJobParametersException error) {
+            | JobRestartException
+            | JobInstanceAlreadyCompleteException
+            | InvalidJobParametersException error) {
           log.error("Failed to start batch job processing comics", error);
         }
       }

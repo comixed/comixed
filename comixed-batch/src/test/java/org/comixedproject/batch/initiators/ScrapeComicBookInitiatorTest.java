@@ -69,9 +69,9 @@ class ScrapeComicBookInitiatorTest {
   @BeforeEach
   public void setUp()
       throws JobInstanceAlreadyCompleteException,
-      JobExecutionAlreadyRunningException,
-      InvalidJobParametersException,
-      JobRestartException {
+          JobExecutionAlreadyRunningException,
+          InvalidJobParametersException,
+          JobRestartException {
     Mockito.when(comicBookService.getBatchScrapingCount()).thenReturn(TEST_BATCH_SCRAPING_COUNT);
     Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(false);
     Mockito.when(jobOperator.start(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))

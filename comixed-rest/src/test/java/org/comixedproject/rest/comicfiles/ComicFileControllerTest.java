@@ -230,9 +230,9 @@ class ComicFileControllerTest {
   @Test
   void importComicFiles()
       throws JobInstanceAlreadyCompleteException,
-      JobExecutionAlreadyRunningException,
-      InvalidJobParametersException,
-      JobRestartException,
+          JobExecutionAlreadyRunningException,
+          InvalidJobParametersException,
+          JobRestartException,
           JsonProcessingException {
     comicFileGroupList.add(comicFileGroup);
 

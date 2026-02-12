@@ -290,11 +290,17 @@ class LibraryControllerTest {
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
     assertNotNull(jobParameters);
-    assertTrue(jobParameters.parameters()
-        .stream()
-        .map(JobParameter::name)
-        .toList()
-        .containsAll(List.of(EDIT_COMIC_METADATA_JOB_PUBLISHER, EDIT_COMIC_METADATA_JOB_SERIES, EDIT_COMIC_METADATA_JOB_VOLUME, EDIT_COMIC_METADATA_JOB_ISSUE_NUMBER, EDIT_COMIC_METADATA_JOB_IMPRINT)));
+    assertTrue(
+        jobParameters.parameters().stream()
+            .map(JobParameter::name)
+            .toList()
+            .containsAll(
+                List.of(
+                    EDIT_COMIC_METADATA_JOB_PUBLISHER,
+                    EDIT_COMIC_METADATA_JOB_SERIES,
+                    EDIT_COMIC_METADATA_JOB_VOLUME,
+                    EDIT_COMIC_METADATA_JOB_ISSUE_NUMBER,
+                    EDIT_COMIC_METADATA_JOB_IMPRINT)));
 
     Mockito.verify(comicBookService, Mockito.times(1)).updateMultipleComics(idList);
     Mockito.verify(jobOperator, Mockito.times(1)).start(editComicMetadataJob, jobParameters);

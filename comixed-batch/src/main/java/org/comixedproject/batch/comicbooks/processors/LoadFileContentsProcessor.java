@@ -18,6 +18,9 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
+import java.io.File;
+import java.util.Date;
+import java.util.Objects;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
@@ -38,10 +41,6 @@ import org.springframework.batch.infrastructure.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import java.io.File;
-import java.util.Date;
-import java.util.Objects;
 
 /**
  * <code>LoadFileContentsProcessor</code> loads metadata for a comic.

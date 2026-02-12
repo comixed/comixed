@@ -105,9 +105,9 @@ public class OrganizeLibraryInitiator {
                   .addString(ORGANIZE_LIBRARY_JOB_RENAMING_RULE, renamingRule)
                   .toJobParameters());
         } catch (JobExecutionAlreadyRunningException
-                 | JobRestartException
-                 | JobInstanceAlreadyCompleteException
-                 | InvalidJobParametersException error) {
+            | JobRestartException
+            | JobInstanceAlreadyCompleteException
+            | InvalidJobParametersException error) {
           log.error("Failed to run import comic files job", error);
         }
       }

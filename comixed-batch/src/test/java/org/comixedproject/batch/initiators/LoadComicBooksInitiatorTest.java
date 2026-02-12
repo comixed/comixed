@@ -66,9 +66,9 @@ class LoadComicBooksInitiatorTest {
   @BeforeEach
   public void setUp()
       throws JobInstanceAlreadyCompleteException,
-      JobExecutionAlreadyRunningException,
-      InvalidJobParametersException,
-      JobRestartException {
+          JobExecutionAlreadyRunningException,
+          InvalidJobParametersException,
+          JobRestartException {
     Mockito.when(batchProcessesService.hasActiveExecutions(LOAD_COMIC_BOOKS_JOB)).thenReturn(false);
     for (int index = 0; index < 100; index++) comicBookList.add(Mockito.mock(ComicBook.class));
     Mockito.when(jobOperator.start(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))

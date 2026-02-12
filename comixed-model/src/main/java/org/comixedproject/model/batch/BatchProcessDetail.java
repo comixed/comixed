@@ -116,7 +116,9 @@ public class BatchProcessDetail {
     result.setJobId(jobExecution.getId());
     jobExecution
         .getJobParameters()
-        .forEach(parameter -> result.getParameters().put(parameter.name(), parameter.value().toString()));
+        .forEach(
+            parameter ->
+                result.getParameters().put(parameter.name(), parameter.value().toString()));
     result.setRunning(jobExecution.isRunning());
     result.setStatus(jobExecution.getStatus().name());
     result.setCreateTime(doConvertToDate(jobExecution.getCreateTime()));

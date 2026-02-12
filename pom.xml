@@ -42,8 +42,8 @@
   </issueManagement>
   <properties>
     <assembly.name>local</assembly.name>
-    <maven-git-code-format.version>5.1</maven-git-code-format.version>
-    <git-code-format-maven-plugin.version>4.2</git-code-format-maven-plugin.version>
+    <maven-git-code-format.version>5.4</maven-git-code-format.version>
+    <git-code-format-maven-plugin.version>5.4</git-code-format-maven-plugin.version>
     <java.version>25</java.version>
     <sonar.organization>comixed</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -281,7 +281,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.10</version>
+        <version>0.8.14</version>
         <configuration>
           <excludes>
             <exclude>**/model/**</exclude>

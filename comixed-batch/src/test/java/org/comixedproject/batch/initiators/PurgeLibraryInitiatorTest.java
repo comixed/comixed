@@ -48,9 +48,9 @@ class PurgeLibraryInitiatorTest {
   @BeforeEach
   public void setUp()
       throws JobInstanceAlreadyCompleteException,
-      JobExecutionAlreadyRunningException,
-      InvalidJobParametersException,
-      JobRestartException {
+          JobExecutionAlreadyRunningException,
+          InvalidJobParametersException,
+          JobRestartException {
     Mockito.when(comicBookService.findComicsToPurgeCount())
         .thenReturn(TEST_COMICS_MARKED_FOR_DELETION);
     Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(false);

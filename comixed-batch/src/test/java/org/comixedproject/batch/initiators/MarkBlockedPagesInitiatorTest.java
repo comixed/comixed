@@ -66,9 +66,9 @@ class MarkBlockedPagesInitiatorTest {
   @BeforeEach
   public void setUp()
       throws JobInstanceAlreadyCompleteException,
-      JobExecutionAlreadyRunningException,
-      InvalidJobParametersException,
-      JobRestartException {
+          JobExecutionAlreadyRunningException,
+          InvalidJobParametersException,
+          JobRestartException {
     Mockito.when(configurationService.isFeatureEnabled(CFG_MANAGE_BLOCKED_PAGES)).thenReturn(true);
     Mockito.when(comicPageService.getUnmarkedWithBlockedHashCount()).thenReturn(1L);
     Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(false);
@@ -107,9 +107,9 @@ class MarkBlockedPagesInitiatorTest {
   @Test
   void execute_hasRunningJobs()
       throws JobInstanceAlreadyCompleteException,
-      JobExecutionAlreadyRunningException,
-      InvalidJobParametersException,
-      JobRestartException {
+          JobExecutionAlreadyRunningException,
+          InvalidJobParametersException,
+          JobRestartException {
     Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(true);
 
     initiator.execute();

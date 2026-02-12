@@ -73,9 +73,9 @@ public class ProcessUnhashedComicsInitiator {
                   .addLong(JOB_PROCESS_UNHASHED_COMICS_STARTED, System.currentTimeMillis())
                   .toJobParameters());
         } catch (JobExecutionAlreadyRunningException
-                 | JobRestartException
-                 | JobInstanceAlreadyCompleteException
-                 | InvalidJobParametersException error) {
+            | JobRestartException
+            | JobInstanceAlreadyCompleteException
+            | InvalidJobParametersException error) {
           log.error("Failed to run load page hash job", error);
         }
       }

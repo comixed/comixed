@@ -216,9 +216,9 @@ public class ComicFileController {
   public void importComicFiles(
       final HttpSession session, @RequestBody() ImportComicFilesRequest request)
       throws JobInstanceAlreadyCompleteException,
-      JobExecutionAlreadyRunningException,
-      InvalidJobParametersException,
-      JobRestartException,
+          JobExecutionAlreadyRunningException,
+          InvalidJobParametersException,
+          JobRestartException,
           JsonProcessingException {
     final List<String> filenames = new ArrayList<>();
     this.doLoadComicFileSelections(session)

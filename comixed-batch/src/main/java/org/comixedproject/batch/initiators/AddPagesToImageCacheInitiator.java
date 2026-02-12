@@ -78,9 +78,9 @@ public class AddPagesToImageCacheInitiator {
                   .toJobParameters());
         }
       } catch (JobExecutionAlreadyRunningException
-               | JobInstanceAlreadyCompleteException
-               | InvalidJobParametersException
-               | JobRestartException error) {
+          | JobInstanceAlreadyCompleteException
+          | InvalidJobParametersException
+          | JobRestartException error) {
         log.error("Failed to start batch process", error);
       }
     }

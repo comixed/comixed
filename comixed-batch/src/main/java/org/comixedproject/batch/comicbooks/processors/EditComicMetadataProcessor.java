@@ -24,7 +24,6 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.ComicCheckOutManager;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicType;
-import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.parameters.JobParameters;
 import org.springframework.batch.core.listener.StepExecutionListener;

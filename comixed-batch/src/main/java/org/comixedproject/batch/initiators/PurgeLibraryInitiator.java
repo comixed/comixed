@@ -85,9 +85,9 @@ public class PurgeLibraryInitiator {
                   .addLong(PURGE_LIBRARY_JOB_TIME_STARTED, System.currentTimeMillis())
                   .toJobParameters());
         } catch (JobExecutionAlreadyRunningException
-                 | JobRestartException
-                 | JobInstanceAlreadyCompleteException
-                 | InvalidJobParametersException error) {
+            | JobRestartException
+            | JobInstanceAlreadyCompleteException
+            | InvalidJobParametersException error) {
           log.error("Failed to run purge comic files job", error);
         }
       }

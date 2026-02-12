@@ -6,7 +6,6 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.listener.ChunkListener;
 import org.springframework.batch.core.listener.StepExecutionListener;
-import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.StepExecution;
 import org.springframework.batch.infrastructure.item.Chunk;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,21 +16,20 @@ public abstract class AbstractBatchProcessChunkListener extends AbstractBatchPro
 
   private StepExecution stepExecution;
 
-//  @Override
-//  public void beforeChunk(final ChunkContext context) {
-//    this.doPublishChunkState(context);
-//  }
-//
-//  @Override
-//  public void afterChunk(final ChunkContext context) {
-//    this.doPublishChunkState(context);
-//  }
-//
-//  @Override
-//  public void afterChunkError(final ChunkContext context) {
-//    this.doPublishChunkState(context);
-//  }
-
+  //  @Override
+  //  public void beforeChunk(final ChunkContext context) {
+  //    this.doPublishChunkState(context);
+  //  }
+  //
+  //  @Override
+  //  public void afterChunk(final ChunkContext context) {
+  //    this.doPublishChunkState(context);
+  //  }
+  //
+  //  @Override
+  //  public void afterChunkError(final ChunkContext context) {
+  //    this.doPublishChunkState(context);
+  //  }
 
   @Override
   public @Nullable ExitStatus afterStep(StepExecution stepExecution) {
@@ -61,14 +59,12 @@ public abstract class AbstractBatchProcessChunkListener extends AbstractBatchPro
   }
 
   private void doPublishStepExecution(StepExecution execution) {
-    this.doPublishBatchProcessDetail(
-        this.getBatchDetails(execution.getJobExecution()));
+    this.doPublishBatchProcessDetail(this.getBatchDetails(execution.getJobExecution()));
     final long total = this.getTotalElements();
     final long processed = this.getProcessedElements();
     final boolean active = this.isActive();
     this.doPublishProcessComicBookStatus(active, this.getStepName(), total, processed);
   }
-
 
   protected abstract String getStepName();
 

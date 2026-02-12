@@ -25,7 +25,6 @@ import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.listener.StepExecutionListener;
 import org.springframework.batch.core.step.StepExecution;
