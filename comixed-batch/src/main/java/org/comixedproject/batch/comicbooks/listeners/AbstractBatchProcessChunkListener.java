@@ -2,15 +2,20 @@ package org.comixedproject.batch.comicbooks.listeners;
 
 import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
 import org.comixedproject.service.comicpages.ComicPageService;
+import org.jspecify.annotations.Nullable;
+import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.listener.ChunkListener;
+import org.springframework.batch.core.listener.StepExecutionListener;
 import org.springframework.batch.core.scope.context.ChunkContext;
-import org.springframework.batch.core.scope.context.StepSynchronizationManager;
+import org.springframework.batch.core.step.StepExecution;
 import org.springframework.batch.infrastructure.item.Chunk;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractBatchProcessChunkListener extends AbstractBatchProcessListener
-    implements ChunkListener {
+    implements ChunkListener, StepExecutionListener {
   @Autowired protected ComicPageService comicPageService;
+
+  private StepExecution stepExecution;
 
 //  @Override
 //  public void beforeChunk(final ChunkContext context) {
@@ -29,28 +34,41 @@ public abstract class AbstractBatchProcessChunkListener extends AbstractBatchPro
 
 
   @Override
-  public void afterChunk(Chunk chunk) { // todo - look at migration guide
-    var jobExecutionId = StepSynchronizationManager.getContext().getStepExecution().getJobExecution().getId();
+  public @Nullable ExitStatus afterStep(StepExecution stepExecution) {
+    this.stepExecution = stepExecution;
+    return StepExecutionListener.super.afterStep(stepExecution);
+  }
+
+  @Override
+  public void beforeStep(StepExecution stepExecution) {
+    this.stepExecution = stepExecution;
+    StepExecutionListener.super.beforeStep(stepExecution);
   }
 
   @Override
   public void beforeChunk(Chunk chunk) {
-    ChunkListener.super.beforeChunk(chunk);
+    this.doPublishStepExecution(stepExecution);
+  }
+
+  @Override
+  public void afterChunk(Chunk chunk) {
+    this.doPublishStepExecution(stepExecution);
   }
 
   @Override
   public void onChunkError(Exception exception, Chunk chunk) {
-    ChunkListener.super.onChunkError(exception, chunk);
+    this.doPublishStepExecution(stepExecution);
   }
 
-  private void doPublishChunkState(ChunkContext context) {
+  private void doPublishStepExecution(StepExecution execution) {
     this.doPublishBatchProcessDetail(
-        this.getBatchDetails(context.getStepContext().getStepExecution().getJobExecution()));
+        this.getBatchDetails(execution.getJobExecution()));
     final long total = this.getTotalElements();
     final long processed = this.getProcessedElements();
     final boolean active = this.isActive();
     this.doPublishProcessComicBookStatus(active, this.getStepName(), total, processed);
   }
+
 
   protected abstract String getStepName();
 

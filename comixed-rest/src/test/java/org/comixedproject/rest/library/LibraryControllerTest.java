@@ -50,10 +50,11 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.job.Job;
+import org.springframework.batch.core.job.JobExecution;
+import org.springframework.batch.core.job.parameters.JobParameter;
+import org.springframework.batch.core.job.parameters.JobParameters;
+import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 @ExtendWith(MockitoExtension.class)
@@ -80,7 +81,7 @@ class LibraryControllerTest {
   @Mock private ComicSelectionService comicSelectionService;
   @Mock private ConfigurationService configurationService;
   @Mock private List<Long> idList;
-  @Mock private JobLauncher jobLauncher;
+  @Mock private JobOperator jobOperator;
   @Mock private JobExecution jobExecution;
   @Mock private EditMultipleComicsRequest editMultipleComicsRequest;
   @Mock private RemoteLibraryState remoteLibraryState;
@@ -279,7 +280,7 @@ class LibraryControllerTest {
     Mockito.when(editMultipleComicsRequest.getVolume()).thenReturn(TEST_VOLUME);
     Mockito.when(editMultipleComicsRequest.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
     Mockito.when(editMultipleComicsRequest.getImprint()).thenReturn(TEST_IMPRINT);
-    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+    Mockito.when(jobOperator.start(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
 
     controller.editMultipleComics(editMultipleComicsRequest);
@@ -289,13 +290,13 @@ class LibraryControllerTest {
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 
     assertNotNull(jobParameters);
-    assertTrue(jobParameters.getParameters().containsKey(EDIT_COMIC_METADATA_JOB_PUBLISHER));
-    assertTrue(jobParameters.getParameters().containsKey(EDIT_COMIC_METADATA_JOB_SERIES));
-    assertTrue(jobParameters.getParameters().containsKey(EDIT_COMIC_METADATA_JOB_VOLUME));
-    assertTrue(jobParameters.getParameters().containsKey(EDIT_COMIC_METADATA_JOB_ISSUE_NUMBER));
-    assertTrue(jobParameters.getParameters().containsKey(EDIT_COMIC_METADATA_JOB_IMPRINT));
+    assertTrue(jobParameters.parameters()
+        .stream()
+        .map(JobParameter::name)
+        .toList()
+        .containsAll(List.of(EDIT_COMIC_METADATA_JOB_PUBLISHER, EDIT_COMIC_METADATA_JOB_SERIES, EDIT_COMIC_METADATA_JOB_VOLUME, EDIT_COMIC_METADATA_JOB_ISSUE_NUMBER, EDIT_COMIC_METADATA_JOB_IMPRINT)));
 
     Mockito.verify(comicBookService, Mockito.times(1)).updateMultipleComics(idList);
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(editComicMetadataJob, jobParameters);
+    Mockito.verify(jobOperator, Mockito.times(1)).start(editComicMetadataJob, jobParameters);
   }
 }

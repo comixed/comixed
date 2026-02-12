@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class NoopWriter<T> implements ItemWriter<T> { // todo - look why this is used over a Tasklet
+public class NoopWriter<T> implements ItemWriter<T> {
   @Override
   public void write(final Chunk<? extends T> items) throws Exception {
     log.trace("No-op writer");

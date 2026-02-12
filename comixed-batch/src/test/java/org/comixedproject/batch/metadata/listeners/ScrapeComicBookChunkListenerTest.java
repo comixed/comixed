@@ -36,6 +36,7 @@ import org.springframework.batch.core.job.JobExecution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.scope.context.StepContext;
 import org.springframework.batch.core.step.StepExecution;
+import org.springframework.batch.infrastructure.item.Chunk;
 import org.springframework.batch.infrastructure.item.ExecutionContext;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,6 +51,7 @@ class ScrapeComicBookChunkListenerTest {
   private PublishMetadataUpdateProcessStateUpdateAction
       publishMetadataUpdateProcessStateUpdateAction;
 
+  @Mock private Chunk chunk;
   @Mock private ChunkContext chunkContext;
   @Mock private StepContext stepContext;
   @Mock private StepExecution stepExecution;
@@ -71,7 +73,7 @@ class ScrapeComicBookChunkListenerTest {
 
   @Test
   void beforeChunk() {
-    listener.beforeChunk(chunkContext); // fixme
+    listener.beforeChunk(chunk);
 
     Mockito.verify(chunkContext, Mockito.never()).getStepContext();
   }
@@ -81,7 +83,7 @@ class ScrapeComicBookChunkListenerTest {
     Mockito.when(executionContext.containsKey(PARAM_METADATA_UPDATE_STARTED)).thenReturn(true);
     Mockito.when(executionContext.containsKey(PARAM_METADATA_UPDATE_FINISHED)).thenReturn(true);
 
-    listener.afterChunk(chunkContext);
+    listener.afterChunk(chunk);
 
     final MetadataUpdateProcessUpdate payload = payloadArgumentCaptor.getValue();
     assertNotNull(payload);
@@ -103,7 +105,7 @@ class ScrapeComicBookChunkListenerTest {
         .publish(payloadArgumentCaptor.capture());
 
     try {
-      listener.afterChunk(chunkContext);
+      listener.afterChunk(chunk);
     } finally {
       final MetadataUpdateProcessUpdate payload = payloadArgumentCaptor.getValue();
       assertNotNull(payload);
@@ -123,7 +125,7 @@ class ScrapeComicBookChunkListenerTest {
     Mockito.when(comicBookService.findComicsForBatchMetadataUpdateCount())
         .thenReturn(TEST_REMAINING_COMICS);
 
-    listener.afterChunk(chunkContext);
+    listener.afterChunk(chunk);
 
     final MetadataUpdateProcessUpdate payload = payloadArgumentCaptor.getValue();
     assertNotNull(payload);
@@ -135,7 +137,7 @@ class ScrapeComicBookChunkListenerTest {
 
   @Test
   void afterChunkError() {
-    listener.afterChunkError(chunkContext);
+    listener.onChunkError(new RuntimeException(), chunk);
 
     Mockito.verify(chunkContext, Mockito.never()).getStepContext();
   }

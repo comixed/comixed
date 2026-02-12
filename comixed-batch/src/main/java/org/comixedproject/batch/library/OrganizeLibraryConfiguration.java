@@ -137,7 +137,8 @@ public class OrganizeLibraryConfiguration {
       final MoveComicFilesWriter writer,
       final MoveComicFilesChunkListener listener) {
     return new StepBuilder("moveComicFilesStep", jobRepository)
-        .<OrganizingComic, OrganizingComic>chunk(this.chunkSize, platformTransactionManager)
+        .<OrganizingComic, OrganizingComic>chunk(this.chunkSize)
+        .transactionManager(platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
@@ -163,7 +164,8 @@ public class OrganizeLibraryConfiguration {
       final DeleteEmptyDirectoriesProcessor processor,
       final NoopWriter<Void> writer) {
     return new StepBuilder("deleteEmptyDirectoriesStep", jobRepository)
-        .<File, Void>chunk(this.chunkSize, platformTransactionManager)
+        .<File, Void>chunk(this.chunkSize)
+        .transactionManager(platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

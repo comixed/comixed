@@ -90,7 +90,8 @@ public class UpdateMetadataConfiguration {
       final UpdateMetadataWriter writer,
       final UpdateMetadataChunkListener listener) {
     return new StepBuilder(UPDATE_METADATA_JOB, jobRepository)
-        .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
+        .<ComicBook, ComicBook>chunk(this.chunkSize)
+        .transactionManager(platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
