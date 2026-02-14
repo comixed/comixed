@@ -709,6 +709,7 @@ export class ComicListViewComponent
       !!this.queryParameterService.coverYear$?.value?.month ||
       !!this.queryParameterService.archiveType$?.value ||
       !!this.queryParameterService.comicType$?.value ||
+      !!this.queryParameterService.pageCount$?.value ||
       this.queryParameterService.filterText$.value?.length > 0;
     this.logger.debug('Filtered flag:', filtered);
     this.filtered.emit(filtered);
