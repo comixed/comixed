@@ -18,8 +18,6 @@
 
 package org.comixedproject.service.comicpages;
 
-import static org.comixedproject.service.comicbooks.ComicBookService.COMICBOOK_CACHE;
-
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -38,7 +36,6 @@ import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -123,9 +120,6 @@ public class ComicPageService {
    * @throws ComicPageException if an error occurs
    */
   @Transactional
-  @CacheEvict(
-      cacheNames = {COMICBOOK_CACHE},
-      key = "#page.comicBook.comicBookId")
   public ComicPage save(final ComicPage page) throws ComicPageException {
     log.trace("Saving page: id={}", page.getComicPageId());
     return this.comicPageRepository.saveAndFlush(page);
@@ -276,7 +270,6 @@ public class ComicPageService {
   }
 
   @Transactional
-  @CacheEvict(cacheNames = COMICBOOK_CACHE, allEntries = true)
   public void markPagesWithHashForDeletion(final List<String> hashes) {
     log.debug("Deleting pages with hashes");
     hashes.forEach(
@@ -292,7 +285,6 @@ public class ComicPageService {
   }
 
   @Transactional
-  @CacheEvict(cacheNames = COMICBOOK_CACHE, allEntries = true)
   public void unmarkPagesWithHashForDeletion(final List<String> hashes) {
     log.debug("Deleting pages with hashes");
     hashes.forEach(
