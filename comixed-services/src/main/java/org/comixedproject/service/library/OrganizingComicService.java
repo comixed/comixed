@@ -18,8 +18,6 @@
 
 package org.comixedproject.service.library;
 
-import static org.comixedproject.service.comicbooks.ComicBookService.COMICBOOK_CACHE;
-
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.library.OrganizingComic;
@@ -27,7 +25,6 @@ import org.comixedproject.repositories.comicbooks.ComicBookRepository;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
 import org.comixedproject.repositories.library.OrganizingComicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,7 +61,6 @@ public class OrganizingComicService {
    * @param comic the comic book
    */
   @Transactional
-  @CacheEvict(cacheNames = COMICBOOK_CACHE, key = "#comic.comicBookId")
   public void saveComic(final OrganizingComic comic) {
     if (StringUtils.hasLength(comic.getUpdatedFilename())) {
       log.trace(

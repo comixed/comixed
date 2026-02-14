@@ -48,10 +48,6 @@ import org.comixedproject.repositories.comicbooks.ComicTagRepository;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.PageRequest;
@@ -69,10 +65,7 @@ import org.springframework.util.StringUtils;
  */
 @Service
 @Log4j2
-@CacheConfig(cacheNames = {ComicBookService.COMICBOOK_CACHE})
 public class ComicBookService {
-  public static final String COMICBOOK_CACHE = "comicBooks";
-
   @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private ComicBookRepository comicBookRepository;
   @Autowired private ComicDetailRepository comicDetailRepository;
@@ -91,7 +84,6 @@ public class ComicBookService {
    * @throws ComicBookException if the comic does not exist
    */
   @Transactional
-  @Cacheable(key = "#id")
   public ComicBook getComic(final long id) throws ComicBookException {
     log.debug("Getting comic: id={}", id);
 
@@ -134,7 +126,6 @@ public class ComicBookService {
    * @throws ComicBookException if the comic id is invalid
    */
   @Transactional
-  @CacheEvict(key = "#result.comicBookId")
   public ComicBook deleteComicBook(final long id) throws ComicBookException {
     log.debug("Marking comic for deletion: id={}", id);
     final var comic = this.doGetComic(id);
@@ -160,7 +151,6 @@ public class ComicBookService {
    * @throws ComicBookException if the id is invalid
    */
   @Transactional
-  @CachePut(key = "#result.comicBookId")
   public ComicBook updateComic(
       final long id,
       final ComicType comicType,
@@ -215,7 +205,6 @@ public class ComicBookService {
    * @return the saved comicBook
    */
   @Transactional
-  @CacheEvict(cacheNames = COMICBOOK_CACHE, key = "#result.comicBookId")
   public ComicBook save(final ComicBook comicBook) {
     log.debug("Saving comicBook: filename={}", comicBook.getComicDetail().getFilename());
 
@@ -267,7 +256,6 @@ public class ComicBookService {
    * @throws ComicBookException if the comic id is invalid
    */
   @Transactional
-  @CachePut(key = "#result.comicBookId")
   public ComicBook undeleteComicBook(final long id) throws ComicBookException {
     log.debug("Restoring comic: id={}", id);
     final var comic = this.doGetComic(id);
@@ -307,7 +295,6 @@ public class ComicBookService {
    * @return the comic
    */
   @Transactional
-  @CachePut(key = "#result.comicBookId")
   public ComicBook findByFilename(final String filename) {
     return this.comicBookRepository.findByFilename(filename);
   }
@@ -320,7 +307,6 @@ public class ComicBookService {
    * @throws ComicBookException if the comic id is invalid
    */
   @Transactional
-  @CachePut(key = "#result.comicBookId")
   public ComicBook deleteMetadata(final long comicId) throws ComicBookException {
     log.debug("Loading comic: id={}", comicId);
     final var comic = this.doGetComic(comicId);
