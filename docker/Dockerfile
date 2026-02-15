@@ -18,7 +18,7 @@ LABEL maintainer="The ComiXed Project comixed-dev@freelists.org"
 
 RUN mkdir /app /ul
 WORKDIR /ul
-RUN wget -q -O comixed-release.zip https://github.com/comixed/comixed/releases/download/v3.1.1/comixed-release-3.1.1.zip
+RUN wget -q -O comixed-release.zip https://github.com/comixed/comixed/releases/download/v3.1.2/comixed-release-3.1.2.zip
 RUN (cd /app; unzip /ul/*.zip)
 RUN rm *.zip
 WORKDIR /app

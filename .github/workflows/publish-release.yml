@@ -33,9 +33,9 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           draft: false
           prerelease: true
-          title: Changes For 3.1.1
+          title: Changes For 3.1.2
           files: |
-            comixed-release-3.1.1.zip
+            comixed-release-3.1.2.zip
 
   build-windows-installer:
     name: Build Windows installer
@@ -64,6 +64,6 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          file: "ComiXed 3.1.1 Installer.exe"
+          file: "ComiXed 3.1.2 Installer.exe"
           prerelease: true
           overwrite: true
