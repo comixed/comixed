@@ -24,13 +24,13 @@ import static org.comixedproject.batch.comicbooks.ProcessUnhashedComicsConfigura
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.batch.core.job.Job;
+import org.springframework.batch.core.job.parameters.InvalidJobParametersException;
+import org.springframework.batch.core.job.parameters.JobParametersBuilder;
+import org.springframework.batch.core.launch.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.launch.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.launch.JobOperator;
+import org.springframework.batch.core.launch.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -56,8 +56,8 @@ public class ProcessUnhashedComicsInitiator {
   private Job loadPageHashesJob;
 
   @Autowired
-  @Qualifier("batchJobLauncher")
-  private JobLauncher jobLauncher;
+  @Qualifier("batchJobOperator")
+  private JobOperator jobOperator;
 
   @Scheduled(fixedDelayString = "${comixed.batch.load-page-hashes.period:60000}")
   public void execute() {
@@ -67,7 +67,7 @@ public class ProcessUnhashedComicsInitiator {
           && !this.batchProcessesService.hasActiveExecutions(PROCESS_UNHASHED_COMICS_JOB)) {
         try {
           log.trace("Starting batch job: load page hashes");
-          this.jobLauncher.run(
+          this.jobOperator.start(
               this.loadPageHashesJob,
               new JobParametersBuilder()
                   .addLong(JOB_PROCESS_UNHASHED_COMICS_STARTED, System.currentTimeMillis())
@@ -75,7 +75,7 @@ public class ProcessUnhashedComicsInitiator {
         } catch (JobExecutionAlreadyRunningException
             | JobRestartException
             | JobInstanceAlreadyCompleteException
-            | JobParametersInvalidException error) {
+            | InvalidJobParametersException error) {
           log.error("Failed to run load page hash job", error);
         }
       }

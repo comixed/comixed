@@ -34,11 +34,11 @@ import org.comixedproject.batch.library.writers.RemoveDeletedComicBooksWriter;
 import org.comixedproject.batch.writers.NoopWriter;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.library.OrganizingComic;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.Step;
+import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.job.parameters.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.Step;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -109,7 +109,8 @@ public class OrganizeLibraryConfiguration {
       final RemoveDeletedComicBooksWriter writer,
       final RemoveDeletedComicBooksChunkListener listener) {
     return new StepBuilder("removeDeletedComicBooksStep", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
+        .<ComicBook, ComicBook>chunk(this.chunkSize)
+        .transactionManager(platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
@@ -136,7 +137,8 @@ public class OrganizeLibraryConfiguration {
       final MoveComicFilesWriter writer,
       final MoveComicFilesChunkListener listener) {
     return new StepBuilder("moveComicFilesStep", jobRepository)
-        .<OrganizingComic, OrganizingComic>chunk(this.chunkSize, platformTransactionManager)
+        .<OrganizingComic, OrganizingComic>chunk(this.chunkSize)
+        .transactionManager(platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
@@ -162,7 +164,8 @@ public class OrganizeLibraryConfiguration {
       final DeleteEmptyDirectoriesProcessor processor,
       final NoopWriter<Void> writer) {
     return new StepBuilder("deleteEmptyDirectoriesStep", jobRepository)
-        .<File, Void>chunk(this.chunkSize, platformTransactionManager)
+        .<File, Void>chunk(this.chunkSize)
+        .transactionManager(platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)

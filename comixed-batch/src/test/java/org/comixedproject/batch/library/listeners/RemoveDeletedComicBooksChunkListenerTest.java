@@ -38,8 +38,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.batch.core.*;
+import org.springframework.batch.core.job.JobExecution;
+import org.springframework.batch.core.job.JobInstance;
+import org.springframework.batch.core.job.parameters.JobParameters;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.scope.context.StepContext;
+import org.springframework.batch.core.step.StepExecution;
+import org.springframework.batch.infrastructure.item.Chunk;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -49,6 +54,7 @@ class RemoveDeletedComicBooksChunkListenerTest {
 
   @InjectMocks private RemoveDeletedComicBooksChunkListener listener;
   @Mock private ComicBookService comicBookService;
+  @Mock private Chunk chunk;
   @Mock private ChunkContext chunkContext;
   @Mock private StepContext stepContext;
   @Mock private StepExecution stepExecution;
@@ -84,7 +90,7 @@ class RemoveDeletedComicBooksChunkListenerTest {
 
   @Test
   void beforeChunk() throws PublishingException {
-    listener.beforeChunk(chunkContext);
+    listener.beforeChunk(chunk);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
 
@@ -99,7 +105,7 @@ class RemoveDeletedComicBooksChunkListenerTest {
 
   @Test
   void afterChunk() throws PublishingException {
-    listener.afterChunk(chunkContext);
+    listener.afterChunk(chunk);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
 
@@ -114,7 +120,7 @@ class RemoveDeletedComicBooksChunkListenerTest {
 
   @Test
   void afterChunkError() throws PublishingException {
-    listener.afterChunkError(chunkContext);
+    listener.onChunkError(new RuntimeException(), chunk);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
 
@@ -132,7 +138,7 @@ class RemoveDeletedComicBooksChunkListenerTest {
     Mockito.doThrow(PublishingException.class)
         .when(publishBatchProcessDetailUpdateAction)
         .publish(Mockito.any());
-    listener.beforeChunk(chunkContext);
+    listener.beforeChunk(chunk);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
 

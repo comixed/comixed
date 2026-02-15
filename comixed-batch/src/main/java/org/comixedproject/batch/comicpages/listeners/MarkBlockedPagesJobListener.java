@@ -21,9 +21,9 @@ package org.comixedproject.batch.comicpages.listeners;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.listeners.AbstractBatchProcessListener;
 import org.comixedproject.model.batch.BatchProcessDetail;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.configuration.annotation.JobScope;
+import org.springframework.batch.core.job.JobExecution;
+import org.springframework.batch.core.listener.JobExecutionListener;
 import org.springframework.stereotype.Component;
 
 @JobScope

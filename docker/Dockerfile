@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jdk
+FROM eclipse-temurin:25-jre
 
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends \

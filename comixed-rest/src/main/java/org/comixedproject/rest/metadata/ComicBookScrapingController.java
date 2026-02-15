@@ -44,9 +44,9 @@ import org.comixedproject.service.library.DisplayableComicService;
 import org.comixedproject.service.metadata.MetadataCacheService;
 import org.comixedproject.service.metadata.MetadataService;
 import org.comixedproject.views.View;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.job.Job;
+import org.springframework.batch.core.job.parameters.JobParametersBuilder;
+import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
@@ -70,8 +70,8 @@ public class ComicBookScrapingController {
   @Autowired private ComicSelectionService comicSelectionService;
 
   @Autowired
-  @Qualifier("batchJobLauncher")
-  private JobLauncher jobLauncher;
+  @Qualifier("batchJobOperator")
+  private JobOperator jobOperator;
 
   @Autowired
   @Qualifier("updateComicBookMetadata")
@@ -196,7 +196,7 @@ public class ComicBookScrapingController {
         selectedComicBookIdList.size() == 1 ? "" : "s");
     this.comicBookService.markComicBooksForBatchMetadataUpdate(selectedComicBookIdList);
     log.trace("Launching add comics process");
-    this.jobLauncher.run(
+    this.jobOperator.start(
         updateComicBookMetadata,
         new JobParametersBuilder()
             .addLong(

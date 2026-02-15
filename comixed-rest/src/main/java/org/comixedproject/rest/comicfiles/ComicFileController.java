@@ -39,10 +39,10 @@ import org.comixedproject.model.net.comicfiles.*;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.service.metadata.FilenameScrapingRuleService;
 import org.comixedproject.views.View;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.batch.core.job.parameters.InvalidJobParametersException;
+import org.springframework.batch.core.launch.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.launch.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.launch.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -204,7 +204,7 @@ public class ComicFileController {
    * @param request the request body
    * @throws JobInstanceAlreadyCompleteException if an error occurs
    * @throws JobExecutionAlreadyRunningException if an error occurs
-   * @throws JobParametersInvalidException if an error occurs
+   * @throws InvalidJobParametersException if an error occurs
    * @throws JobRestartException if an error occurs
    */
   @PostMapping(
@@ -217,7 +217,7 @@ public class ComicFileController {
       final HttpSession session, @RequestBody() ImportComicFilesRequest request)
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
+          InvalidJobParametersException,
           JobRestartException,
           JsonProcessingException {
     final List<String> filenames = new ArrayList<>();

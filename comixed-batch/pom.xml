@@ -7,7 +7,7 @@
     <groupId>org.comixedproject</groupId>
     <artifactId>comixed</artifactId>
     <version>3.2-SNAPSHOT</version>
-    <relativePath>..</relativePath>
+    <relativePath>../pom.xml</relativePath>
   </parent>
   <groupId>org.comixedproject</groupId>
   <artifactId>comixed-batch</artifactId>
@@ -17,11 +17,11 @@
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-batch</artifactId>
+      <artifactId>spring-boot-starter-batch-jdbc</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.springframework.batch</groupId>
-      <artifactId>spring-batch-test</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-batch-jdbc-test</artifactId>
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>

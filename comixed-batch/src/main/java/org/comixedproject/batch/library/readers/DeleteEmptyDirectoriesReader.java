@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.service.admin.ConfigurationService;
-import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.infrastructure.item.ItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;

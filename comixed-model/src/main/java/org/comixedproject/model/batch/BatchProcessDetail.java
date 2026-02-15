@@ -31,7 +31,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.comixedproject.views.View;
-import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.job.JobExecution;
 
 /**
  * <code>BatchProcessDetail</code> represents the details for a single batch process.
@@ -113,11 +113,12 @@ public class BatchProcessDetail {
   public static BatchProcessDetail from(final JobExecution jobExecution) {
     final BatchProcessDetail result = new BatchProcessDetail();
     result.setJobName(jobExecution.getJobInstance().getJobName());
-    result.setJobId(jobExecution.getJobId());
+    result.setJobId(jobExecution.getId());
     jobExecution
         .getJobParameters()
-        .getParameters()
-        .forEach((name, value) -> result.getParameters().put(name, value.getValue().toString()));
+        .forEach(
+            parameter ->
+                result.getParameters().put(parameter.name(), parameter.value().toString()));
     result.setRunning(jobExecution.isRunning());
     result.setStatus(jobExecution.getStatus().name());
     result.setCreateTime(doConvertToDate(jobExecution.getCreateTime()));

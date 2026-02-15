@@ -25,7 +25,7 @@ import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.metadata.PublishMetadataUpdateProcessStateUpdateAction;
 import org.comixedproject.model.net.metadata.MetadataUpdateProcessUpdate;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.springframework.batch.item.ExecutionContext;
+import org.springframework.batch.infrastructure.item.ExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

@@ -32,14 +32,14 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.batch.core.job.Job;
+import org.springframework.batch.core.job.JobExecution;
+import org.springframework.batch.core.job.parameters.InvalidJobParametersException;
+import org.springframework.batch.core.job.parameters.JobParameters;
+import org.springframework.batch.core.launch.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.launch.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.launch.JobOperator;
+import org.springframework.batch.core.launch.JobRestartException;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 @ExtendWith(MockitoExtension.class)
@@ -56,8 +56,8 @@ class UpdateMetadataInitiatorTest {
   private Job updateMetadataJob;
 
   @Mock
-  @Qualifier("batchJobLauncher")
-  private JobLauncher jobLauncher;
+  @Qualifier("batchJobOperator")
+  private JobOperator jobOperator;
 
   @Mock private JobExecution jobExecution;
 
@@ -67,12 +67,12 @@ class UpdateMetadataInitiatorTest {
   public void setUp()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
+          InvalidJobParametersException,
           JobRestartException {
     Mockito.when(comicBookService.getUpdateMetadataCount())
         .thenReturn(TEST_UNPROCESSED_COMIC_COUNT);
     Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(false);
-    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+    Mockito.when(jobOperator.start(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
   }
 
@@ -80,33 +80,33 @@ class UpdateMetadataInitiatorTest {
   void execute_noComicsToMove()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
+          InvalidJobParametersException,
           JobRestartException {
     Mockito.when(comicBookService.getUpdateMetadataCount()).thenReturn(0L);
 
     initiator.execute();
 
-    Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(), Mockito.any());
+    Mockito.verify(jobOperator, Mockito.never()).start(Mockito.any(Job.class), Mockito.any());
   }
 
   @Test
   void execute_hasRunningJobs()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
+          InvalidJobParametersException,
           JobRestartException {
     Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(true);
 
     initiator.execute();
 
-    Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(), Mockito.any());
+    Mockito.verify(jobOperator, Mockito.never()).start(Mockito.any(Job.class), Mockito.any());
   }
 
   @Test
   void execute_fromScheduler()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
+          InvalidJobParametersException,
           JobRestartException {
     initiator.execute();
 
@@ -114,14 +114,14 @@ class UpdateMetadataInitiatorTest {
 
     assertNotNull(jobParameters.getLong(UPDATE_METADATA_JOB_TIME_STARTED));
 
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(updateMetadataJob, jobParameters);
+    Mockito.verify(jobOperator, Mockito.times(1)).start(updateMetadataJob, jobParameters);
   }
 
   @Test
   void execute_fromListener()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
+          InvalidJobParametersException,
           JobRestartException {
     initiator.execute(UpdateMetadataEvent.instance);
 
@@ -129,17 +129,17 @@ class UpdateMetadataInitiatorTest {
 
     assertNotNull(jobParameters.getLong(UPDATE_METADATA_JOB_TIME_STARTED));
 
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(updateMetadataJob, jobParameters);
+    Mockito.verify(jobOperator, Mockito.times(1)).start(updateMetadataJob, jobParameters);
   }
 
   @Test
   void execute_jobException()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
+          InvalidJobParametersException,
           JobRestartException {
-    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
-        .thenThrow(JobParametersInvalidException.class);
+    Mockito.when(jobOperator.start(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+        .thenThrow(InvalidJobParametersException.class);
 
     initiator.execute();
 
@@ -147,6 +147,6 @@ class UpdateMetadataInitiatorTest {
 
     assertNotNull(jobParameters.getLong(UPDATE_METADATA_JOB_TIME_STARTED));
 
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(updateMetadataJob, jobParameters);
+    Mockito.verify(jobOperator, Mockito.times(1)).start(updateMetadataJob, jobParameters);
   }
 }

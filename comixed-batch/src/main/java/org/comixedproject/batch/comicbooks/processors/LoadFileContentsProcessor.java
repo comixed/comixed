@@ -37,7 +37,7 @@ import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.service.metadata.MetadataService;
 import org.comixedproject.service.metadata.MetadataSourceService;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.infrastructure.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;

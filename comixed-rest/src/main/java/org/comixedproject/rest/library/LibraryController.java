@@ -45,9 +45,9 @@ import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
 import org.comixedproject.service.library.RemoteLibraryStateService;
 import org.comixedproject.views.View;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.job.Job;
+import org.springframework.batch.core.job.parameters.JobParametersBuilder;
+import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
@@ -70,8 +70,8 @@ public class LibraryController {
   @Autowired private ComicSelectionService comicSelectionService;
 
   @Autowired
-  @Qualifier("batchJobLauncher")
-  private JobLauncher jobLauncher;
+  @Qualifier("batchJobOperator")
+  private JobOperator jobOperator;
 
   @Autowired
   @Qualifier(EDIT_COMIC_METADATA_JOB)
@@ -340,7 +340,7 @@ public class LibraryController {
     log.info("Preparing to update details for {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
     this.comicBookService.updateMultipleComics(ids);
     log.trace("Launching update comics batch process");
-    this.jobLauncher.run(
+    this.jobOperator.start(
         this.editComicMetadataJob,
         new JobParametersBuilder()
             .addLong(EDIT_COMIC_METADATA_JOB_TIME_STARTED, System.currentTimeMillis())

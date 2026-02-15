@@ -37,8 +37,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.core.*;
-import org.springframework.batch.core.scope.context.ChunkContext;
-import org.springframework.batch.core.scope.context.StepContext;
+import org.springframework.batch.core.job.JobExecution;
+import org.springframework.batch.core.job.JobInstance;
+import org.springframework.batch.core.job.parameters.JobParameters;
+import org.springframework.batch.core.step.StepExecution;
+import org.springframework.batch.infrastructure.item.Chunk;
 
 @ExtendWith(MockitoExtension.class)
 class MoveComicFilesChunkListenerTest {
@@ -48,8 +51,7 @@ class MoveComicFilesChunkListenerTest {
   @InjectMocks private MoveComicFilesChunkListener listener;
   @Mock private ComicBookService comicBookService;
   @Mock private OrganizingComicService organizingComicService;
-  @Mock private ChunkContext chunkContext;
-  @Mock private StepContext stepContext;
+  @Mock private Chunk chunk;
   @Mock private StepExecution stepExecution;
   @Mock private JobInstance jobInstance;
   @Mock private JobExecution jobExecution;
@@ -70,9 +72,7 @@ class MoveComicFilesChunkListenerTest {
     Mockito.when(comicBookService.getComicBookCount()).thenReturn(TEST_TOTAL_COMICS);
     Mockito.when(organizingComicService.loadComicCount()).thenReturn(TEST_REMAINING_COMICS);
 
-    Mockito.when(chunkContext.getStepContext()).thenReturn(stepContext);
     Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
-    Mockito.when(stepContext.getStepExecution()).thenReturn(stepExecution);
     Mockito.doNothing()
         .when(publishProcessComicBooksStatusAction)
         .publish(processComicStatusArgumentCaptor.capture());
@@ -83,7 +83,7 @@ class MoveComicFilesChunkListenerTest {
 
   @Test
   void beforeChunk() throws PublishingException {
-    listener.beforeChunk(chunkContext);
+    listener.beforeChunk(chunk);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
 
@@ -98,7 +98,7 @@ class MoveComicFilesChunkListenerTest {
 
   @Test
   void afterChunk() throws PublishingException {
-    listener.afterChunk(chunkContext);
+    listener.afterChunk(chunk);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
 
@@ -113,7 +113,7 @@ class MoveComicFilesChunkListenerTest {
 
   @Test
   void afterChunkError() throws PublishingException {
-    listener.afterChunkError(chunkContext);
+    listener.onChunkError(new RuntimeException(), chunk);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
 
@@ -128,7 +128,7 @@ class MoveComicFilesChunkListenerTest {
 
   @Test
   void afterChunk_publishingException() throws PublishingException {
-    listener.afterChunk(chunkContext);
+    listener.afterChunk(chunk);
 
     final ProcessComicBooksStatus status = processComicStatusArgumentCaptor.getValue();
 

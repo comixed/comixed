@@ -34,8 +34,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.core.*;
+import org.springframework.batch.core.job.JobExecution;
+import org.springframework.batch.core.job.JobInstance;
+import org.springframework.batch.core.job.parameters.JobParameters;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.scope.context.StepContext;
+import org.springframework.batch.core.step.StepExecution;
 
 @ExtendWith(MockitoExtension.class)
 class MarkBlockedPagesChunkListenerTest {

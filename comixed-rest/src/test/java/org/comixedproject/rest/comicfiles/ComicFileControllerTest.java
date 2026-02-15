@@ -42,10 +42,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.batch.core.job.parameters.InvalidJobParametersException;
+import org.springframework.batch.core.launch.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.launch.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.launch.JobRestartException;
 
 @ExtendWith(MockitoExtension.class)
 class ComicFileControllerTest {
@@ -231,7 +231,7 @@ class ComicFileControllerTest {
   void importComicFiles()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
+          InvalidJobParametersException,
           JobRestartException,
           JsonProcessingException {
     comicFileGroupList.add(comicFileGroup);

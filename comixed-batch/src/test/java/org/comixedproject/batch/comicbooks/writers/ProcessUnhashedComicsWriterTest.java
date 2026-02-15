@@ -28,7 +28,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.batch.item.Chunk;
+import org.springframework.batch.infrastructure.item.Chunk;
 
 @ExtendWith(MockitoExtension.class)
 class ProcessUnhashedComicsWriterTest {

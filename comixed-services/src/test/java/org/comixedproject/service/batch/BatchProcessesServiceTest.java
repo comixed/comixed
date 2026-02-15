@@ -35,7 +35,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.batch.core.*;
-import org.springframework.batch.core.explore.JobExplorer;
+import org.springframework.batch.core.job.JobExecution;
+import org.springframework.batch.core.job.JobInstance;
+import org.springframework.batch.core.job.parameters.JobParameter;
+import org.springframework.batch.core.job.parameters.JobParameters;
 import org.springframework.batch.core.launch.NoSuchJobException;
 import org.springframework.batch.core.repository.JobRepository;
 
@@ -52,7 +55,6 @@ class BatchProcessesServiceTest {
   private static final ExitStatus TEST_EXIT_STATUS = ExitStatus.COMPLETED;
 
   @InjectMocks private BatchProcessesService service;
-  @Mock private JobExplorer jobExplorer;
   @Mock private JobRepository jobRepository;
   @Mock private JobInstance jobInstance;
   @Mock private JobParameters jobParameters;
@@ -61,37 +63,37 @@ class BatchProcessesServiceTest {
   private List<String> jobNames = new ArrayList<>();
   private List<JobInstance> jobInstanceList = new ArrayList<>();
   private List<JobExecution> jobExecutionList = new ArrayList<>();
-  private Map<String, JobParameter<?>> parameters = new HashMap<>();
+  private Set<JobParameter<?>> parameters = new HashSet<>();
 
   @BeforeEach
   public void setUp() throws NoSuchJobException {
     jobNames.add(TEST_JOB_NAME);
-    Mockito.when(jobExplorer.getJobNames()).thenReturn(jobNames);
+    Mockito.when(jobRepository.getJobNames()).thenReturn(jobNames);
     Mockito.when(jobInstance.getJobName()).thenReturn(TEST_JOB_NAME);
     Mockito.when(jobExecution.getJobInstance()).thenReturn(jobInstance);
-    Mockito.when(jobParameters.getParameters()).thenReturn(parameters);
+    Mockito.when(jobParameters.parameters()).thenReturn(parameters);
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
-    Mockito.when(jobExplorer.getJobInstanceCount(Mockito.anyString()))
+    Mockito.when(jobRepository.getJobInstanceCount(Mockito.anyString()))
         .thenReturn(TEST_INSTANCE_COUNT);
     jobInstanceList.add(jobInstance);
     Mockito.when(
-            jobExplorer.getJobInstances(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt()))
+            jobRepository.getJobInstances(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt()))
         .thenReturn(jobInstanceList);
-    Mockito.when(jobExecution.getJobId()).thenReturn(TEST_JOB_ID);
+    Mockito.when(jobExecution.getId()).thenReturn(TEST_JOB_ID);
     Mockito.when(jobExecution.getStatus()).thenReturn(TEST_STATUS);
     Mockito.when(jobExecution.getStartTime()).thenReturn(TEST_START_TIME);
     Mockito.when(jobExecution.getEndTime()).thenReturn(TEST_END_TIME);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(TEST_EXIT_STATUS);
     Mockito.when(jobExecution.getEndTime()).thenReturn(TEST_END_TIME);
     jobExecutionList.add(jobExecution);
-    Mockito.when(jobExplorer.getJobExecutions(Mockito.any(JobInstance.class)))
+    Mockito.when(jobRepository.getJobExecutions(Mockito.any(JobInstance.class)))
         .thenReturn(jobExecutionList);
-    Mockito.when(jobExplorer.getJobExecution(Mockito.anyLong())).thenReturn(jobExecution);
+    Mockito.when(jobRepository.getJobExecution(Mockito.anyLong())).thenReturn(jobExecution);
   }
 
   @Test
   void getAllBatchProcesses_noSuchJobException() throws NoSuchJobException {
-    Mockito.when(jobExplorer.getJobInstanceCount(Mockito.anyString()))
+    Mockito.when(jobRepository.getJobInstanceCount(Mockito.anyString()))
         .thenThrow(NoSuchJobException.class);
 
     final List<BatchProcessDetail> result = service.getAllBatchProcesses();
@@ -119,10 +121,10 @@ class BatchProcessesServiceTest {
         batchProcess.getEndTime());
     assertSame(TEST_EXIT_STATUS.getExitCode(), batchProcess.getExitStatus());
 
-    Mockito.verify(jobExplorer, Mockito.times(1)).getJobNames();
-    Mockito.verify(jobExplorer, Mockito.times(1))
+    Mockito.verify(jobRepository, Mockito.times(1)).getJobNames();
+    Mockito.verify(jobRepository, Mockito.times(1))
         .getJobInstances(TEST_JOB_NAME, 0, Math.toIntExact(TEST_INSTANCE_COUNT));
-    Mockito.verify(jobExplorer, Mockito.times(Math.toIntExact(TEST_INSTANCE_COUNT)))
+    Mockito.verify(jobRepository, Mockito.times(Math.toIntExact(TEST_INSTANCE_COUNT)))
         .getJobExecutions(jobInstance);
   }
 
@@ -144,16 +146,16 @@ class BatchProcessesServiceTest {
     assertNull(batchProcess.getEndTime());
     assertSame(TEST_EXIT_STATUS.getExitCode(), batchProcess.getExitStatus());
 
-    Mockito.verify(jobExplorer, Mockito.times(1)).getJobNames();
-    Mockito.verify(jobExplorer, Mockito.times(1))
+    Mockito.verify(jobRepository, Mockito.times(1)).getJobNames();
+    Mockito.verify(jobRepository, Mockito.times(1))
         .getJobInstances(TEST_JOB_NAME, 0, Math.toIntExact(TEST_INSTANCE_COUNT));
-    Mockito.verify(jobExplorer, Mockito.times(Math.toIntExact(TEST_INSTANCE_COUNT)))
+    Mockito.verify(jobRepository, Mockito.times(Math.toIntExact(TEST_INSTANCE_COUNT)))
         .getJobExecutions(jobInstance);
   }
 
   @Test
   void deleteCompletedJobs_whenCompleted() {
-    Mockito.when(jobExplorer.getJobExecutions(Mockito.any(JobInstance.class)))
+    Mockito.when(jobRepository.getJobExecutions(Mockito.any(JobInstance.class)))
         .thenReturn(jobExecutionList);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.COMPLETED);
 
@@ -167,7 +169,7 @@ class BatchProcessesServiceTest {
 
   @Test
   void deleteCompletedJobs_whenFailed() {
-    Mockito.when(jobExplorer.getJobExecutions(Mockito.any(JobInstance.class)))
+    Mockito.when(jobRepository.getJobExecutions(Mockito.any(JobInstance.class)))
         .thenReturn(jobExecutionList);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.FAILED);
 
@@ -181,7 +183,7 @@ class BatchProcessesServiceTest {
 
   @Test
   void deleteCompletedJobs_whenExecuting() {
-    Mockito.when(jobExplorer.getJobExecutions(Mockito.any(JobInstance.class)))
+    Mockito.when(jobRepository.getJobExecutions(Mockito.any(JobInstance.class)))
         .thenReturn(jobExecutionList);
     Mockito.when(jobExecution.getExitStatus()).thenReturn(ExitStatus.EXECUTING);
 
@@ -195,7 +197,7 @@ class BatchProcessesServiceTest {
 
   @Test
   void deleteCompletedJobs_noSuchJobs() throws NoSuchJobException {
-    Mockito.when(jobExplorer.getJobInstanceCount(Mockito.anyString()))
+    Mockito.when(jobRepository.getJobInstanceCount(Mockito.anyString()))
         .thenThrow(NoSuchJobException.class);
 
     final List<BatchProcessDetail> result = service.deleteCompletedJobs();
@@ -207,7 +209,7 @@ class BatchProcessesServiceTest {
 
   @Test
   void hasActiveExceptions_invalidJobName() throws NoSuchJobException {
-    Mockito.when(jobExplorer.getJobInstanceCount(Mockito.anyString()))
+    Mockito.when(jobRepository.getJobInstanceCount(Mockito.anyString()))
         .thenThrow(NoSuchJobException.class);
 
     final boolean result = service.hasActiveExecutions(TEST_JOB_NAME);
@@ -240,19 +242,19 @@ class BatchProcessesServiceTest {
 
     assertNotNull(result);
 
-    Mockito.verify(jobExplorer, Mockito.times(1)).getJobExecution(TEST_JOB_ID);
+    Mockito.verify(jobRepository, Mockito.times(1)).getJobExecution(TEST_JOB_ID);
     Mockito.verify(jobRepository, Mockito.times(1)).deleteJobExecution(jobExecution);
   }
 
   @Test
   void deleteSelectedJobs_jobNotFound() {
-    Mockito.when(jobExplorer.getJobExecution(Mockito.anyLong())).thenReturn(null);
+    Mockito.when(jobRepository.getJobExecution(Mockito.anyLong())).thenReturn(null);
 
     final List<BatchProcessDetail> result = service.deleteSelectedJobs(Arrays.asList(TEST_JOB_ID));
 
     assertNotNull(result);
 
-    Mockito.verify(jobExplorer, Mockito.times(1)).getJobExecution(TEST_JOB_ID);
+    Mockito.verify(jobRepository, Mockito.times(1)).getJobExecution(TEST_JOB_ID);
     Mockito.verify(jobRepository, Mockito.never()).deleteJobExecution(Mockito.any());
   }
 }

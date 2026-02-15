@@ -53,10 +53,10 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.job.Job;
+import org.springframework.batch.core.job.JobExecution;
+import org.springframework.batch.core.job.parameters.JobParameters;
+import org.springframework.batch.core.launch.JobOperator;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -93,7 +93,7 @@ class ComicBookScrapingControllerTest {
   @Mock private DisplayableComic displayableComic;
   @Mock private List<Long> selectedIdList;
   @Mock private List multiBookIdList;
-  @Mock private JobLauncher jobLauncher;
+  @Mock private JobOperator jobOperator;
   @Mock private Job updateComicBookMetadata;
   @Mock private JobExecution jobExecution;
   @Mock private HttpSession session;
@@ -289,7 +289,7 @@ class ComicBookScrapingControllerTest {
 
   @Test
   void startBatchMetadataUpdate() throws Exception {
-    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+    Mockito.when(jobOperator.start(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
 
     controller.startBatchMetadataUpdate(
@@ -303,7 +303,7 @@ class ComicBookScrapingControllerTest {
         .decodeSelections(TEST_ENCODED_SELECTIONS);
     Mockito.verify(comicBookService, Mockito.times(1))
         .markComicBooksForBatchMetadataUpdate(selectedIdList);
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(updateComicBookMetadata, jobParameters);
+    Mockito.verify(jobOperator, Mockito.times(1)).start(updateComicBookMetadata, jobParameters);
     Mockito.verify(comicSelectionService, Mockito.times(1)).encodeSelections(selectedIdList);
     Mockito.verify(session, Mockito.times(1))
         .setAttribute(LIBRARY_SELECTIONS, TEST_REENCODED_SELECTIONS);

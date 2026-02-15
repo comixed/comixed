@@ -25,12 +25,12 @@ import org.comixedproject.batch.comicbooks.processors.RecreateComicFileProcessor
 import org.comixedproject.batch.comicbooks.readers.RecreateComicFileReader;
 import org.comixedproject.batch.comicbooks.writers.RecreateComicFileWriter;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.Step;
+import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.job.parameters.RunIdIncrementer;
+import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.Step;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.core.step.job.DefaultJobParametersExtractor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -77,7 +77,8 @@ public class RecreateComicFilesConfiguration {
       final RecreateComicFileWriter writer,
       final RecreateComicFileChunkListener listener) {
     return new StepBuilder("recreateComicFileStep", jobRepository)
-        .<ComicBook, ComicBook>chunk(this.chunkSize, platformTransactionManager)
+        .<ComicBook, ComicBook>chunk(this.chunkSize)
+        .transactionManager(platformTransactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
@@ -89,11 +90,11 @@ public class RecreateComicFilesConfiguration {
   public Step loadComicBooksStep(
       final JobRepository jobRepository,
       final @Qualifier("loadComicBooksJob") Job loadComicBooksJob,
-      final @Qualifier("batchJobLauncher") JobLauncher jobLauncher) {
+      final @Qualifier("batchJobOperator") JobOperator jobOperator) {
     return new StepBuilder("loadComicBooksStep", jobRepository)
         .job(loadComicBooksJob)
         .parametersExtractor(new DefaultJobParametersExtractor())
-        .launcher(jobLauncher)
+        .operator(jobOperator)
         .build();
   }
 }

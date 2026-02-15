@@ -21,9 +21,9 @@ package org.comixedproject.batch.metadata.listeners;
 import static org.comixedproject.batch.metadata.MetadataProcessConfiguration.*;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobExecutionListener;
-import org.springframework.batch.item.ExecutionContext;
+import org.springframework.batch.core.job.JobExecution;
+import org.springframework.batch.core.listener.JobExecutionListener;
+import org.springframework.batch.infrastructure.item.ExecutionContext;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -24,7 +24,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.service.comicpages.ComicPageService;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.infrastructure.item.ItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

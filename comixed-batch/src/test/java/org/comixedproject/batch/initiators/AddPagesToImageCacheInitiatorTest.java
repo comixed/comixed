@@ -32,14 +32,14 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.batch.core.job.Job;
+import org.springframework.batch.core.job.JobExecution;
+import org.springframework.batch.core.job.parameters.InvalidJobParametersException;
+import org.springframework.batch.core.job.parameters.JobParameters;
+import org.springframework.batch.core.launch.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.launch.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.launch.JobOperator;
+import org.springframework.batch.core.launch.JobRestartException;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 @ExtendWith(MockitoExtension.class)
@@ -56,8 +56,8 @@ class AddPagesToImageCacheInitiatorTest {
   private Job addPagesToImageCacheJob;
 
   @Mock
-  @Qualifier("batchJobLauncher")
-  private JobLauncher jobLauncher;
+  @Qualifier("batchJobOperator")
+  private JobOperator jobOperator;
 
   @Mock private JobExecution jobExecution;
 
@@ -67,9 +67,9 @@ class AddPagesToImageCacheInitiatorTest {
   public void setUp()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
+          InvalidJobParametersException,
           JobRestartException {
-    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+    Mockito.when(jobOperator.start(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
     Mockito.when(comicPageService.findPagesNeedingCacheEntriesCount()).thenReturn(TEST_PAGE_COUNT);
     Mockito.when(batchProcessesService.hasActiveExecutions(ADD_PAGES_TO_IMAGE_CACHE_JOB))
@@ -80,7 +80,7 @@ class AddPagesToImageCacheInitiatorTest {
   void execute()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
+          InvalidJobParametersException,
           JobRestartException {
     initiator.execute();
 
@@ -91,28 +91,28 @@ class AddPagesToImageCacheInitiatorTest {
             AddPagesToImageCacheConfiguration.PARAM_ADD_IMAGE_CACHE_ENTRIES_STARTED));
 
     Mockito.verify(pageCacheService, Mockito.times(1)).prepareCoverPagesWithoutCacheEntries();
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(addPagesToImageCacheJob, jobParameters);
+    Mockito.verify(jobOperator, Mockito.times(1)).run(addPagesToImageCacheJob, jobParameters);
   }
 
   @Test
   void execute_noPagesNeedCaching()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
+          InvalidJobParametersException,
           JobRestartException {
     Mockito.when(comicPageService.findPagesNeedingCacheEntriesCount()).thenReturn(0L);
 
     initiator.execute();
 
     Mockito.verify(pageCacheService, Mockito.times(1)).prepareCoverPagesWithoutCacheEntries();
-    Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(Job.class), Mockito.any());
+    Mockito.verify(jobOperator, Mockito.never()).start(Mockito.any(Job.class), Mockito.any());
   }
 
   @Test
   void execute_existingJobFound()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
+          InvalidJobParametersException,
           JobRestartException {
     Mockito.when(batchProcessesService.hasActiveExecutions(ADD_PAGES_TO_IMAGE_CACHE_JOB))
         .thenReturn(true);
@@ -120,16 +120,16 @@ class AddPagesToImageCacheInitiatorTest {
     initiator.execute();
 
     Mockito.verify(pageCacheService, Mockito.times(1)).prepareCoverPagesWithoutCacheEntries();
-    Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(Job.class), Mockito.any());
+    Mockito.verify(jobOperator, Mockito.never()).start(Mockito.any(Job.class), Mockito.any());
   }
 
   @Test
   void execute_jobLauncherThrowsException()
       throws JobInstanceAlreadyCompleteException,
           JobExecutionAlreadyRunningException,
-          JobParametersInvalidException,
+          InvalidJobParametersException,
           JobRestartException {
-    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+    Mockito.when(jobOperator.start(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenThrow(JobExecutionAlreadyRunningException.class);
 
     initiator.execute();
@@ -141,6 +141,6 @@ class AddPagesToImageCacheInitiatorTest {
             AddPagesToImageCacheConfiguration.PARAM_ADD_IMAGE_CACHE_ENTRIES_STARTED));
 
     Mockito.verify(pageCacheService, Mockito.times(1)).prepareCoverPagesWithoutCacheEntries();
-    Mockito.verify(jobLauncher, Mockito.times(1)).run(addPagesToImageCacheJob, jobParameters);
+    Mockito.verify(jobOperator, Mockito.times(1)).start(addPagesToImageCacheJob, jobParameters);
   }
 }

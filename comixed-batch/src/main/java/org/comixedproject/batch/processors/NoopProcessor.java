@@ -19,7 +19,7 @@
 package org.comixedproject.batch.processors;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.infrastructure.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
 /**
