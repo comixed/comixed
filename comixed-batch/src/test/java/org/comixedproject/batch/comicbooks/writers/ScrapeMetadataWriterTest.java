@@ -45,6 +45,6 @@ class ScrapeMetadataWriterTest {
     writer.write(comicBookList);
 
     Mockito.verify(comicStateHandler, Mockito.times(comicBookList.size()))
-        .fireEvent(comicBook, ComicEvent.metadataUpdated);
+        .fireEvent(comicBook, ComicEvent.detailsUpdated);
   }
 }
