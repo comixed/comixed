@@ -50,11 +50,15 @@ public enum ComicEvent {
   updateDetails,
   // some detail of the comic was changed
   detailsUpdated,
+  // the metadata for a comic was cleared
   metadataCleared,
   // a file in the library was deleted from disk
   markAsMissing,
+  // a missing comic was found
   markAsFound,
+  // a comic is to be deleted
   markedForRemoval,
+  // a comic was unmarked for removal
   unmarkedForRemoval,
   // the comic has been purged from the library
   comicPurged;
