@@ -40,7 +40,6 @@ import { MatLabel } from '@angular/material/form-field';
 import { MatDivider } from '@angular/material/divider';
 import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { MatBadge } from '@angular/material/badge';
 
 @Component({
   selector: 'cx-side-navigation',
@@ -55,8 +54,7 @@ import { MatBadge } from '@angular/material/badge';
     MatDivider,
     AsyncPipe,
     DecimalPipe,
-    TranslateModule,
-    MatBadge
+    TranslateModule
   ]
 })
 export class SideNavigationComponent implements OnDestroy {
