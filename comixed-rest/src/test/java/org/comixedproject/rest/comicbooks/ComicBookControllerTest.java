@@ -114,7 +114,7 @@ class ComicBookControllerTest {
     ComicBookData result = controller.getComic(TEST_COMIC_ID);
 
     assertNotNull(result);
-    assertNull(result.getDetails());
+    assertNull(result.getDetail());
     assertNull(result.getMetadata());
     assertNotNull(result.getPages());
     assertNotNull(result.getTags());
@@ -130,7 +130,7 @@ class ComicBookControllerTest {
     ComicBookData result = controller.getComic(TEST_COMIC_ID);
 
     assertNotNull(result);
-    assertSame(displayableComicBook, result.getDetails());
+    assertSame(displayableComicBook, result.getDetail());
 
     Mockito.verify(displayableComicService, Mockito.times(1)).getForComicBookId(TEST_COMIC_ID);
   }
