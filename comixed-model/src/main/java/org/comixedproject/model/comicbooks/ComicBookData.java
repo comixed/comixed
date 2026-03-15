@@ -34,10 +34,10 @@ import org.comixedproject.views.View;
  */
 @AllArgsConstructor
 public class ComicBookData {
-  @JsonProperty("details")
+  @JsonProperty("detail")
   @JsonView(View.ComicDetailsView.class)
   @Getter
-  private DisplayableComic details;
+  private DisplayableComic detail;
 
   @JsonProperty("pages")
   @JsonView(View.ComicDetailsView.class)

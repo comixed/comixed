@@ -48,7 +48,7 @@ public class DisplayableComicExampleBuilder {
   @Setter private ComicType comicType;
   @Setter private ComicState comicState;
   @Setter private boolean unscrapedState = false;
-  @Setter private Boolean missing = false;
+  @Setter private Boolean missing;
   @Setter private String searchText;
   @Setter private String publisher;
   @Setter private String series;
@@ -67,6 +67,7 @@ public class DisplayableComicExampleBuilder {
     detail.setComicType(null);
     detail.setUnscraped(null);
     detail.setPageCount(null);
+    detail.setMissing(null);
 
     ExampleMatcher matcher = ExampleMatcher.matching();
 
@@ -124,7 +125,7 @@ public class DisplayableComicExampleBuilder {
         matcher = matcher.withMatcher("unscraped", ExampleMatcher.GenericPropertyMatchers.exact());
       }
 
-      if (missing) {
+      if (Objects.nonNull(missing) && missing.booleanValue()) {
         log.debug("Enabling missing filter");
         detail.setMissing(Boolean.TRUE);
         matcher = matcher.withMatcher("missing", ExampleMatcher.GenericPropertyMatchers.exact());

@@ -44,7 +44,7 @@ public class PublishComicBookUpdateAction extends AbstractPublishAction<ComicBoo
     this.doPublish(COMIC_LIST_UPDATE_TOPIC, data, View.ComicDetailsView.class);
     log.trace("Publishing comicBook book update");
     this.doPublish(
-        String.format(COMIC_BOOK_UPDATE_TOPIC, data.getDetails().getComicBookId()),
+        String.format(COMIC_BOOK_UPDATE_TOPIC, data.getDetail().getComicBookId()),
         data,
         View.ComicDetailsView.class);
   }

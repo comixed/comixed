@@ -56,7 +56,7 @@ class PublishComicBookUpdateActionTest {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_COMIC_AS_JSON);
     Mockito.when(comicDetails.getComicBookId()).thenReturn(TEST_COMIC_ID);
-    Mockito.when(data.getDetails()).thenReturn(comicDetails);
+    Mockito.when(data.getDetail()).thenReturn(comicDetails);
   }
 
   @Test

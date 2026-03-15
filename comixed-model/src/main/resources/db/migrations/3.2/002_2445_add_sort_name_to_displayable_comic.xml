@@ -5,7 +5,9 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
     <changeSet id="002_2445_add_sort_name_to_displayable_comic.xml" author="mcpierce">
 
-        <createView replaceIfExists="true" viewName="displayable_comics_view">
+        <dropView viewName="displayable_comics_view" />
+
+        <createView viewName="displayable_comics_view">
             SELECT DISTINCT d.comic_book_id                           as comic_book_id,
                             d.comic_detail_id                         as comic_detail_id,
                             (SELECT reference_id
