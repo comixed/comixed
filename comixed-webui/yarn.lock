@@ -8019,9 +8019,9 @@ socket.io-adapter@~2.5.2:
     ws "~8.17.1"
 
 socket.io-parser@~3.4:
-  version "3.4.3"
-  resolved "https://registry.yarnpkg.com/socket.io-parser/-/socket.io-parser-3.4.3.tgz#b19bdaad38ed39fd68fba3f9d86768f667df0c29"
-  integrity sha512-1rE4dZN3kCI/E5wixd393hmbqa78vVpkKmnEJhLeWoS/C5hbFYAbcSfnWoaVH43u9ToUVtzKjguxEZq+1XZfCQ==
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/socket.io-parser/-/socket.io-parser-3.4.4.tgz#bf44554a59246bfec27a11297d7277f35fe01817"
+  integrity sha512-9JWZRGFA1aFK5W9yPrHoaZBOuaPE4NO7VZr96uVAsP8zkAYZkzrKeQhNPKkiPJq3qQK5q9c5xKcMysE5PUnPbw==
   dependencies:
     component-emitter "1.2.1"
     debug "~4.1.0"
