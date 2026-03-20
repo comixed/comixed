@@ -22,6 +22,9 @@ import static org.comixedproject.model.comicbooks.ComicTagType.STORY;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.WeekFields;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
@@ -356,17 +359,19 @@ public class ComicDetailService {
    */
   public List<ComicDetail> getComicsForYearAndWeek(
       final int year, final int week, final String email, final boolean unread) {
-    log.trace("Converting year and week to start and end dates");
-    final GregorianCalendar calendar = new GregorianCalendar();
-    calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
-    calendar.set(Calendar.YEAR, year);
-    calendar.set(Calendar.WEEK_OF_YEAR, week);
-    log.trace("Getting first day of requested week");
-    calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-    final Date startDate = calendar.getTime();
+    WeekFields weekFields = WeekFields.SUNDAY_START;
+    var localStartDate =
+        LocalDate.now()
+            .withYear(year)
+            .with(weekFields.weekOfYear(), week)
+            .with(weekFields.dayOfWeek(), 1);
+
+    final Date startDate =
+        Date.from(localStartDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
     log.trace("Getting last day of requested week");
-    calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
-    final Date endDate = calendar.getTime();
+    var localEndDate = localStartDate.plusDays(6);
+    final Date endDate = Date.from(localEndDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
     if (unread) {
       log.debug(
