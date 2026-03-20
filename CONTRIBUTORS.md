@@ -14,3 +14,4 @@ what it is today.
  * Natalie Stroud @natastro
  * Heather Anderson <heath@odysseus.anderson.name>
  * Sathwik Hejamady Bhat <sathwikhbhat@gmail.com>
+ * Joran Van Belle <joran.vanbelle@live.be>
