@@ -36,6 +36,7 @@ import org.springframework.statemachine.support.LifecycleObjectSupport;
 import org.springframework.statemachine.support.StateMachineInterceptorAdapter;
 import org.springframework.statemachine.transition.Transition;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 /**
  * <code>ComicStateHandler</code> handles firing actions and notifying listeners for state changes
@@ -105,11 +106,12 @@ public class ComicStateHandler extends LifecycleObjectSupport {
   public void fireEvent(
       final ComicBook comicBook, final ComicEvent event, final Map<String, Object> headers) {
     log.debug("Firing comicBook event: {} => {}", comicBook.getComicBookId(), event);
-    final Message<ComicEvent> message =
-        MessageBuilder.withPayload(event)
-            .copyHeaders(headers)
-            .setHeader(HEADER_COMIC, comicBook)
-            .build();
+    final Mono<Message<ComicEvent>> message =
+        Mono.just(
+            MessageBuilder.withPayload(event)
+                .copyHeaders(headers)
+                .setHeader(HEADER_COMIC, comicBook)
+                .build());
     this.stateMachine
         .getStateMachineAccessor()
         .doWithAllRegions(
@@ -118,6 +120,6 @@ public class ComicStateHandler extends LifecycleObjectSupport {
                     new DefaultStateMachineContext<>(
                         comicBook.getComicDetail().getComicState(), null, null, null)));
     this.stateMachine.start();
-    this.stateMachine.sendEvent(message);
+    this.stateMachine.sendEvent(message).subscribe();
   }
 }
