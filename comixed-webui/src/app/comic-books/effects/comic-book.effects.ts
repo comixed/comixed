@@ -61,7 +61,7 @@ export class ComicBookEffects {
           tap(response => this.logger.debug('Response received:', response)),
           map((response: LoadComicBookResponse) =>
             comicBookLoaded({
-              details: response.details,
+              detail: response.detail,
               metadata: response.metadata,
               pages: response.pages,
               tags: response.tags
@@ -117,7 +117,7 @@ export class ComicBookEffects {
             ),
             map((response: LoadComicBookResponse) =>
               comicBookUpdated({
-                details: response.details,
+                detail: response.detail,
                 metadata: response.metadata,
                 pages: response.pages
               })

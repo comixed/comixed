@@ -22,7 +22,7 @@ import { ComicPage } from '@app/comic-books/models/comic-page';
 import { ComicTag } from '@app/comic-books/models/comic-tag';
 
 export interface LoadComicBookResponse {
-  details: DisplayableComic;
+  detail: DisplayableComic;
   metadata: ComicMetadataSource;
   pages: ComicPage[];
   tags: ComicTag[];

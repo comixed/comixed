@@ -32,7 +32,7 @@ export const loadComicBook = createAction(
 export const comicBookLoaded = createAction(
   '[Comic Book] A single comic was loaded',
   props<{
-    details: DisplayableComic;
+    detail: DisplayableComic;
     metadata: ComicMetadataSource;
     pages: ComicPage[];
     tags: ComicTag[];
@@ -63,7 +63,7 @@ export const updateComicBook = createAction(
 export const comicBookUpdated = createAction(
   '[Comic Book] ComicBook updated',
   props<{
-    details: DisplayableComic;
+    detail: DisplayableComic;
     metadata: ComicMetadataSource;
     pages: ComicPage[];
   }>()
