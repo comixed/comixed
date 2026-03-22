@@ -43,7 +43,7 @@ describe('ComicBook Selectors', () => {
   beforeEach(() => {
     state = {
       loading: Math.random() > 0.5,
-      details: DISPLAYABLE_COMIC_1,
+      detail: DISPLAYABLE_COMIC_1,
       metadata: COMIC_METADATA_SOURCE_1,
       pages: [PAGE_1, PAGE_2, PAGE_3, PAGE_4],
       tags: [COMIC_TAG_1, COMIC_TAG_2, COMIC_TAG_3, COMIC_TAG_4, COMIC_TAG_5],

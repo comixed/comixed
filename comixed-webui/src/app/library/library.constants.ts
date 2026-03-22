@@ -26,7 +26,6 @@ export const LIBRARY_ORGANIZATION_CONFIG_URL = '/admin/configuration?tab=2';
 export const GET_COMIC_COVER_URL = `${API_ROOT_URL}/comics/\${id}/cover/content`;
 export const GET_PAGE_CONTENT_URL = `${API_ROOT_URL}/pages/\${id}/content`;
 
-export const OLD_LOAD_COMICS_URL = `${API_ROOT_URL}/library`;
 export const LOAD_LIBRARY_STATE_URL = `${API_ROOT_URL}/library/state`;
 
 export const LOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;

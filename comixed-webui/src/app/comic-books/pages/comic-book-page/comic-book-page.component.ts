@@ -97,6 +97,7 @@ import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import { LoadComicBookResponse } from '@app/comic-books/models/net/load-comic-book-response';
 import { ComicTag } from '@app/comic-books/models/comic-tag';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-comic-book-page',
@@ -193,9 +194,9 @@ export class ComicBookPageComponent
       );
     this.comicSubscription = this.store
       .select(selectComicBookState)
+      .pipe(filter(state => !!state?.detail))
       .subscribe(state => {
-        // this.comicBook = comic;
-        this.comic = state.details;
+        this.comic = state.detail;
         this.metadataSource = state.metadata?.metadataSource;
         this.pages = state.pages;
         this.tags = state.tags;
@@ -433,7 +434,7 @@ export class ComicBookPageComponent
           this.logger.debug('ComicBook book update received:', data);
           this.store.dispatch(
             comicBookLoaded({
-              details: data.details,
+              detail: data.detail,
               metadata: data.metadata,
               pages: data.pages,
               tags: data.tags

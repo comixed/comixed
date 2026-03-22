@@ -137,14 +137,14 @@ describe('ComicBookEffects', () => {
   describe('loading a single comic', () => {
     it('fires an action on success', () => {
       const serviceResponse = {
-        details: DETAILS,
+        detail: DETAILS,
         metadata: METADATA,
         pages: PAGES,
         tags: TAGS
       } as LoadComicBookResponse;
       const action = loadComicBook({ id: DETAILS.comicBookId });
       const outcome = comicBookLoaded({
-        details: DETAILS,
+        detail: DETAILS,
         metadata: METADATA,
         pages: PAGES,
         tags: TAGS
@@ -186,7 +186,7 @@ describe('ComicBookEffects', () => {
   describe('saving a single comic', () => {
     it('fires an action on success', () => {
       const serviceResponse = {
-        details: DETAILS,
+        detail: DETAILS,
         metadata: METADATA,
         pages: PAGES
       } as LoadComicBookResponse;
@@ -204,7 +204,7 @@ describe('ComicBookEffects', () => {
         coverDate: DETAILS.coverDate
       });
       const outcome = comicBookUpdated({
-        details: DETAILS,
+        detail: DETAILS,
         metadata: METADATA,
         pages: PAGES
       });

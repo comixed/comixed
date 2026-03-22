@@ -54,7 +54,7 @@ import {
 
 describe('ComicBook Reducer', () => {
   const COMIC = COMIC_BOOK_2;
-  const DETAILS = DISPLAYABLE_COMIC_1;
+  const DETAIL = DISPLAYABLE_COMIC_1;
   const METADATA = COMIC_METADATA_SOURCE_1;
   const PAGES = [PAGE_1, PAGE_2, PAGE_3, PAGE_4];
   const TAGS = [
@@ -83,7 +83,7 @@ describe('ComicBook Reducer', () => {
     });
 
     it('has no details', () => {
-      expect(state.details).toBeNull();
+      expect(state.detail).toBeNull();
     });
 
     it('has no metadata', () => {
@@ -112,17 +112,17 @@ describe('ComicBook Reducer', () => {
       state = reducer(
         {
           ...state,
-          details: DETAILS,
+          detail: DETAIL,
           metadata: METADATA,
           pages: PAGES,
           loading: false
         },
-        loadComicBook({ id: DETAILS.comicBookId })
+        loadComicBook({ id: DETAIL.comicBookId })
       );
     });
 
     it('clears the details', () => {
-      expect(state.details).toBeNull();
+      expect(state.detail).toBeNull();
     });
 
     it('clears the metadata', () => {
@@ -143,13 +143,13 @@ describe('ComicBook Reducer', () => {
           {
             ...state,
             loading: true,
-            details: null,
+            detail: null,
             metadata: null,
             pages: [],
             tags: []
           },
           comicBookLoaded({
-            details: DETAILS,
+            detail: DETAIL,
             metadata: METADATA,
             pages: PAGES,
             tags: TAGS
@@ -162,7 +162,7 @@ describe('ComicBook Reducer', () => {
       });
 
       it('sets the details', () => {
-        expect(state.details).toEqual(DETAILS);
+        expect(state.detail).toEqual(DETAIL);
       });
 
       it('sets the metadata', () => {
@@ -194,11 +194,11 @@ describe('ComicBook Reducer', () => {
       state = reducer(
         { ...state, saving: false, saved: true },
         updateComicBook({
-          comicBookId: DETAILS.comicBookId,
-          publisher: DETAILS.publisher,
-          series: DETAILS.series,
-          volume: DETAILS.volume,
-          issueNumber: DETAILS.issueNumber
+          comicBookId: DETAIL.comicBookId,
+          publisher: DETAIL.publisher,
+          series: DETAIL.series,
+          volume: DETAIL.volume,
+          issueNumber: DETAIL.issueNumber
         })
       );
     });
@@ -213,8 +213,8 @@ describe('ComicBook Reducer', () => {
 
     describe('success', () => {
       const UPDATED_DETAILS = {
-        ...DETAILS,
-        filename: DETAILS.filename.substr(1)
+        ...DETAIL,
+        filename: DETAIL.filename.substr(1)
       };
       const UPDATED_METADATA = {
         ...METADATA,
@@ -228,12 +228,12 @@ describe('ComicBook Reducer', () => {
             ...state,
             saving: true,
             saved: false,
-            details: DETAILS,
+            detail: DETAIL,
             metadata: METADATA,
             pages: PAGES
           },
           comicBookUpdated({
-            details: UPDATED_DETAILS,
+            detail: UPDATED_DETAILS,
             metadata: UPDATED_METADATA,
             pages: UPDATED_PAGES
           })
@@ -249,7 +249,7 @@ describe('ComicBook Reducer', () => {
       });
 
       it('updates the details', () => {
-        expect(state.details).toEqual(UPDATED_DETAILS);
+        expect(state.detail).toEqual(UPDATED_DETAILS);
       });
 
       it('updates the metadata', () => {
@@ -272,12 +272,12 @@ describe('ComicBook Reducer', () => {
             ...state,
             saving: true,
             saved: false,
-            details: DETAILS,
+            detail: DETAIL,
             metadata: METADATA,
             pages: PAGES
           },
           comicBookUpdated({
-            details: OTHER_DETAILS,
+            detail: OTHER_DETAILS,
             metadata: OTHER_METADATA,
             pages: OTHER_PAGES
           })
@@ -285,7 +285,7 @@ describe('ComicBook Reducer', () => {
       });
 
       it('does not affect the current details', () => {
-        expect(state.details).toEqual(DETAILS);
+        expect(state.detail).toEqual(DETAIL);
       });
 
       it('does not affect the current metadata', () => {
@@ -361,7 +361,7 @@ describe('ComicBook Reducer', () => {
       state = reducer(
         { ...state, saving: false },
         savePageOrder({
-          comicBookId: DETAILS.comicBookId,
+          comicBookId: DETAIL.comicBookId,
           entries: [{ index: 0, filename: PAGE.filename }]
         })
       );
@@ -396,7 +396,7 @@ describe('ComicBook Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, loading: false },
-        downloadComicBook({ comicBookId: DETAILS.comicBookId })
+        downloadComicBook({ comicBookId: DETAIL.comicBookId })
       );
     });
 

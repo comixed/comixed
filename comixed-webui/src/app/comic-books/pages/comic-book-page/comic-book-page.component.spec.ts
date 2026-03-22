@@ -106,7 +106,7 @@ import { LoadComicBookResponse } from '@app/comic-books/models/net/load-comic-bo
 
 describe('ComicBookPageComponent', () => {
   const COMIC_BOOK = COMIC_BOOK_1;
-  const DETAILS = DISPLAYABLE_COMIC_1;
+  const DETAIL = DISPLAYABLE_COMIC_1;
   const METADATA = COMIC_METADATA_SOURCE_1;
   const PAGES = [PAGE_1, PAGE_2, PAGE_3, PAGE_4];
   const TAGS = [
@@ -220,7 +220,7 @@ describe('ComicBookPageComponent', () => {
 
     describe('with a comic set', () => {
       beforeEach(() => {
-        component.comic = DETAILS;
+        component.comic = DETAIL;
         translateService.use('fr');
       });
 
@@ -273,7 +273,7 @@ describe('ComicBookPageComponent', () => {
 
   describe('setting the read status', () => {
     beforeEach(() => {
-      component.comic = DETAILS;
+      component.comic = DETAIL;
     });
 
     describe('marking as read', () => {
@@ -284,7 +284,7 @@ describe('ComicBookPageComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           markSingleComicBookRead({
-            comicDetailId: DETAILS.comicDetailId,
+            comicDetailId: DETAIL.comicDetailId,
             read: true
           })
         );
@@ -299,7 +299,7 @@ describe('ComicBookPageComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           markSingleComicBookRead({
-            comicDetailId: DETAILS.comicDetailId,
+            comicDetailId: DETAIL.comicDetailId,
             read: false
           })
         );
@@ -309,7 +309,7 @@ describe('ComicBookPageComponent', () => {
 
   describe('updating the comic metadata', () => {
     beforeEach(() => {
-      component.comic = DETAILS;
+      component.comic = DETAIL;
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
@@ -322,15 +322,15 @@ describe('ComicBookPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        updateSingleComicBookMetadata({ comicBookId: DETAILS.comicBookId })
+        updateSingleComicBookMetadata({ comicBookId: DETAIL.comicBookId })
       );
     });
   });
 
   describe('loading the last read state', () => {
     beforeEach(() => {
-      component.comic = DETAILS;
-      component.comicId = DETAILS.comicBookId;
+      component.comic = DETAIL;
+      component.comicId = DETAIL.comicBookId;
     });
 
     describe('when the comic is read', () => {
@@ -373,7 +373,7 @@ describe('ComicBookPageComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.comic = DETAILS;
+      component.comic = DETAIL;
     });
 
     describe('deleting the comic book', () => {
@@ -387,7 +387,7 @@ describe('ComicBookPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          deleteSingleComicBook({ comicBookId: DETAILS.comicBookId })
+          deleteSingleComicBook({ comicBookId: DETAIL.comicBookId })
         );
       });
     });
@@ -403,7 +403,7 @@ describe('ComicBookPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          undeleteSingleComicBook({ comicBookId: DETAILS.comicBookId })
+          undeleteSingleComicBook({ comicBookId: DETAIL.comicBookId })
         );
       });
     });
@@ -411,10 +411,10 @@ describe('ComicBookPageComponent', () => {
 
   describe('subscribing to comic updates', () => {
     beforeEach(() => {
-      component.comicId = DETAILS.comicBookId;
+      component.comicId = DETAIL.comicBookId;
       webSocketService.subscribe.and.callFake((topic, callback) => {
         callback({
-          details: DETAILS,
+          detail: DETAIL,
           metadata: METADATA,
           pages: PAGES,
           tags: TAGS
@@ -432,7 +432,7 @@ describe('ComicBookPageComponent', () => {
 
     it('subscribes to the task topic', () => {
       expect(webSocketService.subscribe).toHaveBeenCalledWith(
-        interpolate(COMIC_BOOK_UPDATE_TOPIC, { id: DETAILS.comicBookId }),
+        interpolate(COMIC_BOOK_UPDATE_TOPIC, { id: DETAIL.comicBookId }),
         jasmine.anything()
       );
     });
@@ -440,7 +440,7 @@ describe('ComicBookPageComponent', () => {
     it('publishes updates', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         comicBookLoaded({
-          details: DETAILS,
+          detail: DETAIL,
           metadata: METADATA,
           pages: PAGES,
           tags: TAGS
@@ -483,7 +483,7 @@ describe('ComicBookPageComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.comic = DETAILS;
+      component.comic = DETAIL;
       component.pages = PAGES;
       component.onSavePageOrder();
     });
@@ -495,7 +495,7 @@ describe('ComicBookPageComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         savePageOrder({
-          comicBookId: DETAILS.comicBookId,
+          comicBookId: DETAIL.comicBookId,
           entries: PAGES.map((page, index) => {
             return { index, filename: page.filename };
           })
@@ -506,7 +506,7 @@ describe('ComicBookPageComponent', () => {
 
   describe('checking if a comic is deleted', () => {
     beforeEach(() => {
-      component.comic = DETAILS;
+      component.comic = DETAIL;
     });
 
     it('returns true when the state is DELETED', () => {
@@ -524,7 +524,7 @@ describe('ComicBookPageComponent', () => {
     describe('when is has been changed', () => {
       beforeEach(() => {
         component.comic = {
-          ...DETAILS,
+          ...DETAIL,
           comicState: ComicState.CHANGED
         };
       });
@@ -537,7 +537,7 @@ describe('ComicBookPageComponent', () => {
     describe('when it has not been changed', () => {
       beforeEach(() => {
         component.comic = {
-          ...DETAILS,
+          ...DETAIL,
           comicState: ComicState.STABLE
         };
       });
@@ -550,13 +550,13 @@ describe('ComicBookPageComponent', () => {
 
   describe('downloading a comic book file', () => {
     beforeEach(() => {
-      component.comic = DETAILS;
+      component.comic = DETAIL;
       component.onDownloadComicFile();
     });
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        downloadComicBook({ comicBookId: DETAILS.comicBookId })
+        downloadComicBook({ comicBookId: DETAIL.comicBookId })
       );
     });
   });

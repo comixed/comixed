@@ -43,7 +43,7 @@ export const COMIC_BOOK_FEATURE_KEY = 'comic_book_state';
 
 export interface ComicBookState {
   loading: boolean;
-  details: DisplayableComic;
+  detail: DisplayableComic;
   metadata: ComicMetadataSource;
   pages: ComicPage[];
   tags: ComicTag[];
@@ -53,7 +53,7 @@ export interface ComicBookState {
 
 export const initialState: ComicBookState = {
   loading: false,
-  details: null,
+  detail: null,
   metadata: null,
   pages: [],
   tags: [],
@@ -66,7 +66,7 @@ export const reducer = createReducer(
 
   on(loadComicBook, state => ({
     ...state,
-    details: null,
+    detail: null,
     metadata: null,
     pages: [],
     loading: true
@@ -74,7 +74,7 @@ export const reducer = createReducer(
   on(comicBookLoaded, (state, action) => ({
     ...state,
     loading: false,
-    details: action.details,
+    detail: action.detail,
     metadata: action.metadata,
     pages: action.pages,
     tags: action.tags
@@ -83,14 +83,14 @@ export const reducer = createReducer(
   on(updateComicBook, state => ({ ...state, saving: true, saved: false })),
   on(comicBookUpdated, (state, action) => {
     if (
-      !!state.details &&
-      state.details.comicBookId === action.details.comicBookId
+      !!state.detail &&
+      state.detail.comicBookId === action.detail.comicBookId
     ) {
       return {
         ...state,
         saving: false,
         saved: true,
-        details: action.details,
+        detail: action.detail,
         metadata: action.metadata,
         pages: action.pages
       };
