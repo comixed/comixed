@@ -28,8 +28,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter;
+import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
+import org.springframework.statemachine.region.RegionExecutionPolicy;
 
 /**
  * <code>ComicStateMachineConfiguration</code> provides a state machine configuration to manage the
@@ -61,6 +63,12 @@ public class ComicStateMachineConfiguration
         .initial(ComicState.CREATED)
         .end(ComicState.REMOVED)
         .states(EnumSet.allOf(ComicState.class));
+  }
+
+  @Override
+  public void configure(final StateMachineConfigurationConfigurer<ComicState, ComicEvent> config)
+      throws Exception {
+    config.withConfiguration().regionExecutionPolicy(RegionExecutionPolicy.PARALLEL);
   }
 
   @Override
