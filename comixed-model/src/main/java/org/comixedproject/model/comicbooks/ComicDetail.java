@@ -232,16 +232,14 @@ public class ComicDetail implements PublicationDetail {
   @Setter
   private String webAddress;
 
-  @Column(name = "notes", length = 128, nullable = true, updatable = true)
-  @Lob
+  @Column(name = "notes", nullable = true, updatable = true, columnDefinition = "text")
   @JsonProperty("notes")
   @JsonView({View.ComicListView.class})
   @Getter
   @Setter
   private String notes;
 
-  @Column(name = "description")
-  @Lob
+  @Column(name = "description", nullable = true, updatable = true, columnDefinition = "text")
   @JsonProperty("description")
   @JsonView({View.ComicDetailsView.class})
   @Getter
