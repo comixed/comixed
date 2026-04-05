@@ -102,11 +102,22 @@
         id="close-filters-button"
         mat-flat-button
         class="cx-action-button"
-        color="warn"
+        color="primary"
         (click)="onClose()"
       >
         <mat-icon>close</mat-icon>
         <mat-label>{{ "button.close" | translate }}</mat-label>
+      </button>
+      &nbsp;
+      <button
+        id="close-filters-button"
+        mat-flat-button
+        class="cx-clear-button"
+        color="warn"
+        (click)="onClear()"
+      >
+        <mat-icon>restore_page</mat-icon>
+        <mat-label>{{ "button.clear" | translate }}</mat-label>
       </button>
     </mat-card-actions>
   </mat-card>
