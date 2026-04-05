@@ -34,6 +34,7 @@
   },
   "button": {
     "cancel": "Cancel",
+    "clear": "Clear",
     "clear-log": "Clear Log",
     "close": "Close",
     "delete": "Delete",

@@ -36,12 +36,12 @@ import {
 } from '@app/core';
 import {
   MatCard,
-  MatCardContent,
-  MatCardActions
+  MatCardActions,
+  MatCardContent
 } from '@angular/material/card';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatSelect, MatOption } from '@angular/material/select';
+import { MatOption, MatSelect } from '@angular/material/select';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
@@ -174,5 +174,17 @@ export class ComicListFilterComponent {
   onClose(): void {
     this.logger.debug('Canceling filter updates');
     this.closeFilter.emit();
+  }
+
+  onClear(): void {
+    this.logger.debug('Clearing filters');
+    this.queryParameterService.updateQueryParam([
+      { name: QUERY_PARAM_FILTER_TEXT, value: null },
+      { name: QUERY_PARAM_COVER_MONTH, value: null },
+      { name: QUERY_PARAM_COVER_YEAR, value: null },
+      { name: QUERY_PARAM_ARCHIVE_TYPE, value: null },
+      { name: QUERY_PARAM_COMIC_TYPE, value: null },
+      { name: QUERY_PARAM_PAGE_COUNT, value: null }
+    ]);
   }
 }

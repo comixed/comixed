@@ -29,10 +29,20 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import {
+  QUERY_PARAM_ARCHIVE_TYPE,
+  QUERY_PARAM_COMIC_TYPE,
+  QUERY_PARAM_COVER_MONTH,
+  QUERY_PARAM_COVER_YEAR,
+  QUERY_PARAM_FILTER_TEXT,
+  QUERY_PARAM_PAGE_COUNT
+} from '@app/core';
 
-describe('ComicListFilterComponent', () => {
+fdescribe('ComicListFilterComponent', () => {
   let component: ComicListFilterComponent;
   let fixture: ComponentFixture<ComicListFilterComponent>;
+  let queryParameterService: QueryParameterService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -50,11 +60,13 @@ describe('ComicListFilterComponent', () => {
         MatIconModule,
         MatInputModule,
         ComicListFilterComponent
-      ]
+      ],
+      providers: [QueryParameterService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicListFilterComponent);
     component = fixture.componentInstance;
+    queryParameterService = TestBed.inject(QueryParameterService);
     fixture.detectChanges();
   });
 
@@ -92,6 +104,24 @@ describe('ComicListFilterComponent', () => {
 
     it('populates the displayable cover months', () => {
       expect(component.displayableCoverMonths).not.toEqual([]);
+    });
+  });
+
+  describe('resetting the filters', () => {
+    beforeEach(() => {
+      spyOn(queryParameterService, 'updateQueryParam');
+      component.onClear();
+    });
+
+    it('resets the query parameters', () => {
+      expect(queryParameterService.updateQueryParam).toHaveBeenCalledWith([
+        { name: QUERY_PARAM_FILTER_TEXT, value: null },
+        { name: QUERY_PARAM_COVER_MONTH, value: null },
+        { name: QUERY_PARAM_COVER_YEAR, value: null },
+        { name: QUERY_PARAM_ARCHIVE_TYPE, value: null },
+        { name: QUERY_PARAM_COMIC_TYPE, value: null },
+        { name: QUERY_PARAM_PAGE_COUNT, value: null }
+      ]);
     });
   });
 });
