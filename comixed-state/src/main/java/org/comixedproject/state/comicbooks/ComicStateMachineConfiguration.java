@@ -278,11 +278,17 @@ public class ComicStateMachineConfiguration
         .source(ComicState.CHANGED)
         .target(ComicState.DELETED)
         .event(ComicEvent.deleteComic)
+        // the discovered comic was marked for deletion
+        .and()
+        .withExternal()
+        .source(ComicState.DISCOVERED)
+        .target(ComicState.DELETED)
+        .event(ComicEvent.deleteComic)
         // the comic was unmarked for deletion
         .and()
         .withExternal()
         .source(ComicState.DELETED)
-        .target(ComicState.CHANGED)
+        .target(ComicState.UNPROCESSED)
         .event(ComicEvent.undeleteComic)
         .action(undeleteComicAction)
         // the comic record was actually deleted
