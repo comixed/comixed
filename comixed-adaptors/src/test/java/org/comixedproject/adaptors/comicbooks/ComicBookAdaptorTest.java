@@ -56,7 +56,8 @@ import org.mockito.quality.Strictness;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class ComicBookAdaptorTest {
-  private static final String TEST_COMIC_FILENAME = "/Users/comixed/Documents/comics/comicBook.cbz";
+  private static final String TEST_COMIC_FILENAME =
+      new File("src/test/comicBook.cbz").getAbsolutePath();
   private static final String TEST_PAGE_EXTENSION = "jpg";
   private static final String TEST_ENTRY_FILENAME = "Entry filename." + TEST_PAGE_EXTENSION;
   private static final byte[] TEST_ARCHIVE_ENTRY_CONTENT = "Some data".getBytes();

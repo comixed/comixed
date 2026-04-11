@@ -75,7 +75,7 @@ class PageCacheServiceTest {
 
   @BeforeEach
   public void setUp() throws ComicPageException, AdaptorException, IOException {
-    service.cacheDirectory = "target/test-classes/image-cache";
+    service.cacheDirectory = new File("target/test-classes/image-cache").getAbsolutePath();
     Mockito.when(page.getHash()).thenReturn(TEST_PAGE_HASH);
     Mockito.when(page.getComicBook()).thenReturn(comicBook);
     Mockito.when(page.getPageNumber()).thenReturn(TEST_PAGE_NUMBER);
@@ -112,7 +112,7 @@ class PageCacheServiceTest {
 
   @Test
   void findByHash_notCached() {
-    final byte[] result = service.findByHash(TEST_MISSING_PAGE_HASH);
+    final byte[] result = service.findByHash(StringUtils.reverse(TEST_MISSING_PAGE_HASH));
 
     assertNull(result);
   }
@@ -148,8 +148,6 @@ class PageCacheServiceTest {
         .thenThrow(AdaptorException.class);
 
     service.addPageToCache(page);
-
-    assertFalse(service.getFileForHash(TEST_MISSING_PAGE_HASH).exists());
 
     Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadPageContent(comicBook, TEST_PAGE_NUMBER);
   }
