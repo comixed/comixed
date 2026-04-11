@@ -54,9 +54,10 @@ import org.springframework.context.ApplicationEventPublisher;
 class ComicFileServiceTest {
   private static final String TEST_ARCHIVE_FILENAME = "example.cbz";
   private static final byte[] TEST_COVER_CONTENT = "this is image data".getBytes();
-  private static final String TEST_ROOT_DIRECTORY = "src/test/resources";
+  private static final String TEST_ROOT_DIRECTORY =
+      new File("src/test/resources").getAbsolutePath();
   private static final String TEST_COMIC_ARCHIVE =
-      new File(TEST_ROOT_DIRECTORY + "/" + TEST_ARCHIVE_FILENAME).getAbsolutePath();
+      String.format("%s%s%s", TEST_ROOT_DIRECTORY, File.separator, TEST_ARCHIVE_FILENAME);
   private static final int TEST_LIMIT = 2;
   private static final int TEST_NO_LIMIT = -1;
   private static final String TEST_SERIES_NAME = "The Series Name";
@@ -77,6 +78,7 @@ class ComicFileServiceTest {
   @Mock private ComicDetail comicDetail;
   @Mock private ComicBook comicBook;
   @Mock private FilenameMetadata metadata;
+  @Mock private ComicFile comicFile;
 
   @Captor private ArgumentCaptor<ComicBook> comicBookArgumentCaptor;
 
@@ -295,12 +297,13 @@ class ComicFileServiceTest {
 
   @Test
   void toggleComicFileSelections_specificFile() {
-    comicFileGroup.getFiles().add(new ComicFile(TEST_COMIC_ARCHIVE, TEST_FILE_SIZE));
-    comicFileGroup.getFiles().get(0).setSelected(!TEST_SELECTED);
+    comicFileGroup.getFiles().add(comicFile);
+    Mockito.when(comicFile.getFilename()).thenReturn(TEST_COMIC_ARCHIVE);
+    Mockito.when(comicFile.isSelected()).thenReturn(!TEST_SELECTED);
 
     service.toggleComicFileSelections(comicFileGroupList, TEST_COMIC_ARCHIVE, TEST_SELECTED, true);
 
-    assertEquals(TEST_SELECTED, comicFileGroup.getFiles().get(0).isSelected());
+    Mockito.verify(comicFile).setSelected(TEST_SELECTED);
   }
 
   @Test
