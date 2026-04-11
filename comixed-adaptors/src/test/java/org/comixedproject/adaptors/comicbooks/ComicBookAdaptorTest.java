@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
@@ -101,6 +102,7 @@ class ComicBookAdaptorTest {
   @Captor private ArgumentCaptor<File> moveSourceFile;
   @Captor private ArgumentCaptor<File> moveDestinationFile;
   @Captor private ArgumentCaptor<String> temporaryArchiveFile;
+  @Captor private ArgumentCaptor<File> deleteFileArgumentCaptor;
   @Captor private ArgumentCaptor<ArchiveReadHandle> archiveReadHandleArgumentCaptor;
 
   private File comicFile = new File(TEST_REAL_COMIC_FILE);
@@ -425,6 +427,19 @@ class ComicBookAdaptorTest {
     assertTrue(new File(TEST_REAL_COMIC_METADATA_FILE).exists());
 
     Mockito.verify(comicMetadataWriter, Mockito.times(1)).createContent(comicBook);
+  }
+
+  @Test
+  void deleteMetadataFile() {
+    Mockito.doNothing().when(fileAdaptor).deleteFile(deleteFileArgumentCaptor.capture());
+    adaptor.deleteMetadataFile(comicBook);
+
+    final File deleteFile = deleteFileArgumentCaptor.getValue();
+    assertEquals(
+        String.format("%s.xml", FilenameUtils.removeExtension(TEST_COMIC_FILENAME)),
+        deleteFile.getAbsolutePath());
+
+    Mockito.verify(fileAdaptor).deleteFile(deleteFile);
   }
 
   @Test
