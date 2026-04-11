@@ -20,7 +20,6 @@ package org.comixedproject.adaptors.comicbooks;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -216,20 +215,24 @@ public class ComicBookAdaptor {
       sourceArchive.closeArchiveForRead(readHandle);
       destinationArchive.closeArchiveForWrite(writeHandle);
 
-      final String comicDetailFilename = comicBook.getComicDetail().getFile().getAbsolutePath();
-      final String temporaryDeleteFilename = comicDetailFilename + "-deleted";
+      final String sourceFilename = comicBook.getComicDetail().getFile().getAbsolutePath();
+      final String temporaryDeleteFilename =
+          String.format(
+              "%s%s%s-recreated",
+              FileUtils.getTempDirectory(), File.separator, FilenameUtils.getName(sourceFilename));
       log.trace(
           "Moving original file to temporary file: {} => {}",
-          comicDetailFilename,
+          sourceFilename,
           temporaryDeleteFilename);
+      final String targetDirectory =
+          comicBook.getComicDetail().getFile().getAbsoluteFile().getParent();
       this.fileAdaptor.moveFile(
           comicBook.getComicDetail().getFile(), new File(temporaryDeleteFilename));
       log.trace("Replacing original file");
-      final String directory = comicBook.getComicDetail().getFile().getAbsoluteFile().getParent();
       final String newComicDetailFilename =
           this.comicFileAdaptor.findAvailableFilename(
               comicBook.getComicDetail().getFilename(),
-              directory
+              targetDirectory
                   + File.separator
                   + FilenameUtils.getBaseName(comicBook.getComicDetail().getFilename()),
               0,
@@ -248,28 +251,6 @@ public class ComicBookAdaptor {
         | ContentAdaptorException error) {
       throw new AdaptorException("Failed to save comic book file", error);
     }
-  }
-
-  private ComicPage doFindMatchingPage(
-      final List<ComicPage> oldPages, final String entryFilename, final String entryHash) {
-    return oldPages.stream()
-        .filter(
-            oldPage ->
-                (oldPage.getFilename().equals(entryFilename))
-                    || (StringUtils.isNotEmpty(oldPage.getHash())
-                        && oldPage.getHash().equals(entryHash)))
-        .findFirst()
-        .orElse(null);
-  }
-
-  private List<ComicPage> doRemoveOldPages(final ComicBook comicBook) {
-    log.debug("Removing old pages from comic book");
-    final List<ComicPage> result = new ArrayList<>();
-    while (!comicBook.getPages().isEmpty()) {
-      log.trace("Removing page: {}", comicBook.getPages().get(0).getFilename());
-      result.add(comicBook.getPages().remove(0));
-    }
-    return result;
   }
 
   /**
@@ -293,6 +274,11 @@ public class ComicBookAdaptor {
     }
   }
 
+  /**
+   * Deletes the metadata file for a comic.
+   *
+   * @param comicBook the comic book
+   */
   public void deleteMetadataFile(final ComicBook comicBook) {
     final String filename = this.getMetadataFilename(comicBook.getComicDetail().getFilename());
     log.trace("Deleting external metadata file (if exists): {}", filename);
