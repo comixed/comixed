@@ -36,6 +36,8 @@ public enum ComicEvent {
   pagesHashesLoaded,
   // rescan a comic,
   rescanComic,
+  // the metadata for a comic has been changed
+  metadataChanged,
   // the metadata within the physical comic file has been updated
   metadataUpdated,
   // the comic is being marked for removal
