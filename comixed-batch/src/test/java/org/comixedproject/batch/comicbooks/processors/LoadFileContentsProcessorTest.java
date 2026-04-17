@@ -29,7 +29,6 @@ import org.comixedproject.adaptors.content.ComicInfoXmlFilenameContentAdaptor;
 import org.comixedproject.adaptors.content.ContentAdaptorException;
 import org.comixedproject.adaptors.content.ContentAdaptorRegistry;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
-import org.comixedproject.batch.ComicCheckOutManager;
 import org.comixedproject.metadata.MetadataAdaptorProvider;
 import org.comixedproject.metadata.adaptors.MetadataAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -59,7 +58,6 @@ class LoadFileContentsProcessorTest {
 
   @InjectMocks private LoadFileContentsProcessor processor;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
-  @Mock private ComicCheckOutManager comicCheckOutManager;
   @Mock private ArchiveAdaptor archiveAdaptor;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private ContentAdaptorRegistry contentAdaptorRegistry;
