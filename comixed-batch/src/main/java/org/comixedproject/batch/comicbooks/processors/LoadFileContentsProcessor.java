@@ -28,7 +28,6 @@ import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.content.ContentAdaptor;
 import org.comixedproject.adaptors.content.ContentAdaptorRegistry;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
-import org.comixedproject.batch.ComicCheckOutManager;
 import org.comixedproject.metadata.MetadataAdaptorProvider;
 import org.comixedproject.metadata.adaptors.MetadataAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -55,7 +54,6 @@ public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, Comic
   @Autowired private ContentAdaptorRegistry contentAdaptorRegistry;
   @Autowired private MetadataService metadataService;
   @Autowired private MetadataSourceService metadataSourceService;
-  @Autowired private ComicCheckOutManager comicCheckOutManager;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
 
   @Override
@@ -70,8 +68,6 @@ public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, Comic
     }
 
     try {
-      this.comicCheckOutManager.checkOut(comicBook.getComicBookId());
-
       final ArchiveAdaptor archiveAdaptor =
           this.fileTypeAdaptor.getArchiveAdaptorFor(comicBook.getComicDetail().getFilename());
       comicBook.getComicDetail().setArchiveType(archiveAdaptor.getArchiveType());
@@ -125,8 +121,6 @@ public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, Comic
     } catch (Throwable error) {
       log.error("Error loading comic file content", error);
       return comicBook;
-    } finally {
-      this.comicCheckOutManager.checkIn(comicBook.getComicBookId());
     }
   }
 }
