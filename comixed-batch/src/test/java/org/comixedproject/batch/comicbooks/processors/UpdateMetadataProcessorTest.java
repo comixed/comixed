@@ -25,7 +25,6 @@ import static org.comixedproject.service.admin.ConfigurationService.CREATE_EXTER
 
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.batch.ComicCheckOutManager;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
@@ -46,7 +45,6 @@ class UpdateMetadataProcessorTest {
   private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CB7;
 
   @InjectMocks private UpdateMetadataProcessor processor;
-  @Mock private ComicCheckOutManager comicCheckOutManager;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private ConfigurationService configurationService;
   @Mock private ComicBook comicBook;

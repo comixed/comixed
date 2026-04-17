@@ -21,7 +21,6 @@ package org.comixedproject.batch.comicbooks.processors;
 import static org.comixedproject.batch.comicbooks.EditComicBookMetadataConfiguration.*;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.ComicCheckOutManager;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicType;
 import org.springframework.batch.core.ExitStatus;
@@ -30,7 +29,6 @@ import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -44,8 +42,6 @@ import org.springframework.util.StringUtils;
 @Log4j2
 public class EditComicMetadataProcessor
     implements ItemProcessor<ComicBook, ComicBook>, StepExecutionListener {
-  @Autowired private ComicCheckOutManager comicCheckOutManager;
-
   private JobParameters jobParameters;
 
   @Override
@@ -64,8 +60,6 @@ public class EditComicMetadataProcessor
     final String issueNumber = this.jobParameters.getString(EDIT_COMIC_METADATA_JOB_ISSUE_NUMBER);
     final String imprint = this.jobParameters.getString(EDIT_COMIC_METADATA_JOB_IMPRINT);
     final String comicType = this.jobParameters.getString(EDIT_COMIC_METADATA_JOB_COMIC_TYPE);
-
-    this.comicCheckOutManager.checkOut(comicBook.getComicBookId());
 
     if (StringUtils.hasLength(publisher)) {
       log.debug("Setting publisher to {}", publisher);
@@ -92,7 +86,6 @@ public class EditComicMetadataProcessor
       comicBook.getComicDetail().setComicType(ComicType.valueOf(comicType));
     }
 
-    this.comicCheckOutManager.checkIn(comicBook.getComicBookId());
     return comicBook;
   }
 

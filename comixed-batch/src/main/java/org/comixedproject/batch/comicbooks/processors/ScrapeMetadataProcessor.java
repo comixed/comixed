@@ -21,7 +21,6 @@ package org.comixedproject.batch.comicbooks.processors;
 import static org.comixedproject.batch.comicbooks.ScrapeMetadataConfiguration.SCRAPE_METADATA_JOB_ERROR_THRESHOLD;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.ComicCheckOutManager;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicMetadataSource;
 import org.comixedproject.service.comicbooks.ComicBookService;
@@ -49,7 +48,6 @@ public class ScrapeMetadataProcessor
     implements ItemProcessor<ComicBook, ComicBook>, StepExecutionListener {
   @Autowired private MetadataService metadataService;
   @Autowired private ComicBookService comicBookService;
-  @Autowired private ComicCheckOutManager comicCheckOutManager;
 
   StepExecution stepExecution = null;
   long errorThreshold = 0L;
@@ -93,7 +91,6 @@ public class ScrapeMetadataProcessor
 
     log.debug("Batch scraping comic book: id={}", comicBook.getComicBookId());
     try {
-      this.comicCheckOutManager.checkOut(comicBook.getComicBookId());
       final ComicMetadataSource metadata = comicBook.getMetadata();
       log.debug("Turning off batch scraping flag: id={}", comicBook.getComicBookId());
       comicBook.setBatchScraping(false);
@@ -107,8 +104,6 @@ public class ScrapeMetadataProcessor
     } catch (Exception error) {
       log.error("Failed to batch scrape comic book", error);
       this.stepExecution.setProcessSkipCount(this.stepExecution.getProcessSkipCount() + 1);
-    } finally {
-      this.comicCheckOutManager.checkIn(comicBook.getComicBookId());
     }
     return comicBook;
   }

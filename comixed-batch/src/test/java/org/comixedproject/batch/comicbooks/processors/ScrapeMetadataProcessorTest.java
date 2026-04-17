@@ -21,7 +21,6 @@ package org.comixedproject.batch.comicbooks.processors;
 import static org.comixedproject.batch.comicbooks.ScrapeMetadataConfiguration.SCRAPE_METADATA_JOB_ERROR_THRESHOLD;
 import static org.junit.Assert.*;
 
-import org.comixedproject.batch.ComicCheckOutManager;
 import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicMetadataSource;
@@ -53,7 +52,6 @@ class ScrapeMetadataProcessorTest {
   private static final long TEST_ERROR_THRESHOLD = TEST_ERROR_COUNT * 2;
 
   @InjectMocks private ScrapeMetadataProcessor processor;
-  @Mock private ComicCheckOutManager comicCheckOutManager;
   @Mock private MetadataService metadataService;
   @Mock private ComicBookService comicBookService;
   @Mock private MetadataSource metadataSource;

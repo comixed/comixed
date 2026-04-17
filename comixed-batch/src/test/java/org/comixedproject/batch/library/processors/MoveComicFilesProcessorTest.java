@@ -29,7 +29,6 @@ import java.util.List;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.adaptors.file.FileAdaptor;
-import org.comixedproject.batch.ComicCheckOutManager;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.library.OrganizingComic;
 import org.comixedproject.model.library.PublicationDetail;
@@ -65,7 +64,6 @@ class MoveComicFilesProcessorTest {
       new File("target/test-classes/example-metadata.xml-out").getAbsolutePath();
 
   @InjectMocks private MoveComicFilesProcessor processor;
-  @Mock private ComicCheckOutManager comicCheckOutManager;
   @Mock private ConfigurationService configurationService;
   @Mock private JobParameters jobParameters;
   @Mock private JobExecution jobExecution;
