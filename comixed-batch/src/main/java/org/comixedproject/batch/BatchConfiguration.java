@@ -55,7 +55,7 @@ public class BatchConfiguration {
    */
   @Bean(name = "stepTaskExecutor")
   public TaskExecutor stepTaskExecutor() {
-    return this.doCreateTaskExecutor("CX-Jarvis");
+    return this.doCreateTaskExecutor("CX-Alfred");
   }
 
   private SimpleAsyncTaskExecutor doCreateTaskExecutor(String name) {
