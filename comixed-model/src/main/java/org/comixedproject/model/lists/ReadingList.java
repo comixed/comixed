@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import lombok.*;
+import org.comixedproject.model.state.StatefulItem;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.ColumnTransformer;
@@ -42,7 +43,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator.class,
     property = "readingListId")
-public class ReadingList {
+public class ReadingList implements StatefulItem<ReadingListState> {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "reading_list_id")
@@ -141,5 +142,16 @@ public class ReadingList {
   public int hashCode() {
     return Objects.hash(
         readingListId, readingListState, name, summary, owner, createdOn, lastModifiedOn);
+  }
+
+  @Override
+  @Transient
+  public ReadingListState getState() {
+    return this.readingListState;
+  }
+
+  @Override
+  public void setState(final ReadingListState state) {
+    this.readingListState = state;
   }
 }

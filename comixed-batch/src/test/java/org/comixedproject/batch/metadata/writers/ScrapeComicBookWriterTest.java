@@ -20,8 +20,8 @@ package org.comixedproject.batch.metadata.writers;
 
 import java.util.ArrayList;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.comixedproject.state.comicbooks.ComicEvent;
-import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,7 +33,7 @@ import org.springframework.batch.infrastructure.item.Chunk;
 @ExtendWith(MockitoExtension.class)
 class ScrapeComicBookWriterTest {
   @InjectMocks private ScrapeComicBookWriter writer;
-  @Mock private ComicStateHandler comicStateHandler;
+  @Mock private ComicBookStateAdaptor comicBookStateAdaptor;
   @Mock private ComicBook comicBook;
 
   private Chunk<ComicBook> comicBookList = new Chunk<>(new ArrayList<>());
@@ -44,7 +44,7 @@ class ScrapeComicBookWriterTest {
 
     writer.write(comicBookList);
 
-    Mockito.verify(comicStateHandler, Mockito.times(comicBookList.size()))
-        .fireEvent(comicBook, ComicEvent.metadataUpdated);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(comicBookList.size()))
+        .fireEvent(comicBook, ComicEvent.comicMetadataSaved);
   }
 }

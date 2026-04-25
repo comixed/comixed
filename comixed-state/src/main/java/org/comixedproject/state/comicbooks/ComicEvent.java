@@ -18,48 +18,28 @@
 
 package org.comixedproject.state.comicbooks;
 
+import org.comixedproject.model.comicbooks.ComicBook;
+
 /**
- * <code>ComicEvent</code> represents the events that can occur to a comic that affect its state.
+ * <code>ComicEvent</code> represents the events that can occur to a {@link ComicBook} that affect
+ * its state.
  *
  * @author Darryl L. Pierce
  */
 public enum ComicEvent {
-  // the comic was discovered
-  comicDiscovered,
-  // the discovered comic was imported
-  imported,
-  // the comic book was created
-  readyForProcessing,
-  // the file entries have been loaded
-  fileContentsLoaded,
-  // the page hashes were loaded
-  pagesHashesLoaded,
-  // rescan a comic,
-  rescanComic,
-  // the metadata within the physical comic file has been updated
-  metadataUpdated,
-  // the comic is being marked for removal
-  deleteComic,
-  // the comic is being unmarked for removal
-  undeleteComic,
-  // the comic file was recreated
+  comicBookImported,
+  comicFileDiscovered,
+  comicFileMissing,
+  comicFileFound,
+  comicFileContentsLoaded,
+  comicPageHashesLoaded,
+  rescanComicBookFile,
+  comicMetadataChanged,
+  prepareComicsForBatchEditing,
+  comicMetadataSaved,
+  comicMetadataCleared,
   comicFileRecreated,
-  // the comic's metadata was updated
-  scraped,
-  // start the process of updating details for some comics
-  updateDetails,
-  // some detail of the comic was changed
-  detailsUpdated,
-  // the metadata for a comic was cleared
-  metadataCleared,
-  // a file in the library was deleted from disk
-  markAsMissing,
-  // a missing comic was found
-  markAsFound,
-  // a comic is to be deleted
-  markedForRemoval,
-  // a comic was unmarked for removal
-  unmarkedForRemoval,
-  // the comic has been purged from the library
-  comicPurged;
+  markComicForRemoval,
+  unmarkComicForRemoval,
+  comicFileDeleted
 }

@@ -28,9 +28,9 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 public enum ArchiveType {
-  CBZ("ZIP ComicBook", "application/vnd.comicbook+zip", "cbz"),
-  CBR("RAR ComicBook", "application/vnd.comicbook+rar", "cbr"),
-  CB7("7Z ComicBook", "application/vnd.comicbook+octet-stream", "cb7");
+  CBZ("CBZ", "application/vnd.comicbook+zip", "cbz"),
+  CBR("CBR", "application/vnd.comicbook+rar", "cbr"),
+  CB7("CB7", "application/vnd.comicbook+octet-stream", "cb7");
 
   @Getter private String name;
 

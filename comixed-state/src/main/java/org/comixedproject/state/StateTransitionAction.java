@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2024, The ComiXed Project
+ * Copyright (C) 2026, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.state.comicbooks.guards;
-
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.state.StateTransitionGuard;
+package org.comixedproject.state;
 
 /**
- * <code>AbstractComicBookGuard</code> provides a foundation for building new comic book state
- * guards.
+ * <code>StateTransitionAction</code> defines an action to be performed when a state transition
+ * occurs.
  *
+ * @param <T> the input type
  * @author Darryl L. Pierce
  */
-public abstract class AbstractComicBookGuard implements StateTransitionGuard<ComicBook> {}
+public interface StateTransitionAction<T> {
+  /**
+   * Performs the action.
+   *
+   * @param input the input
+   */
+  void execute(T input) throws StateTransitionActionException;
+}

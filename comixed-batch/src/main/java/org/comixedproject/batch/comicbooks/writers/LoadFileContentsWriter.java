@@ -34,6 +34,6 @@ import org.springframework.stereotype.Component;
 @StepScope
 public class LoadFileContentsWriter extends AbstractComicBookWriter {
   public LoadFileContentsWriter() {
-    super(ComicEvent.fileContentsLoaded);
+    super(ComicEvent.comicFileContentsLoaded);
   }
 }

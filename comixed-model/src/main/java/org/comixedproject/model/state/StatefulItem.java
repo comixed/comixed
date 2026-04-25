@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2026, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,12 +16,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.state.lists.actions;
+package org.comixedproject.model.state;
 
-import org.comixedproject.model.lists.ReadingListState;
-import org.comixedproject.state.StateContextAccessor;
-import org.comixedproject.state.lists.ReadingListEvent;
-import org.springframework.statemachine.action.Action;
+/**
+ * <code>StatefulItem</code> defines a type that maintains a state.
+ *
+ * @param <S> the state type
+ * @author Darryl L. Pierce
+ */
+public interface StatefulItem<S extends Enum<S>> {
+  /**
+   * Returns the current state for the item.
+   *
+   * @return the state
+   */
+  S getState();
 
-public abstract class AbstractReadingListAction extends StateContextAccessor
-    implements Action<ReadingListState, ReadingListEvent> {}
+  /**
+   * Sets the new state for the item.
+   *
+   * @param state the new state
+   */
+  void setState(S state);
+}

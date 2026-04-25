@@ -18,9 +18,7 @@
 
 package org.comixedproject.state.comicbooks;
 
-import org.comixedproject.model.comicbooks.ComicState;
-import org.springframework.messaging.Message;
-import org.springframework.statemachine.state.State;
+import org.comixedproject.model.comicbooks.ComicBook;
 
 /**
  * <code>ComicStateChangeListener</code> defines a type that receives notification when a comic's
@@ -32,8 +30,7 @@ public interface ComicStateChangeListener {
   /**
    * Invoked when a comic's state has changed.
    *
-   * @param state the new state
-   * @param message the event message
+   * @param comicBook the comic book
    */
-  void onComicStateChange(State<ComicState, ComicEvent> state, Message<ComicEvent> message);
+  void onComicStateChanged(final ComicBook comicBook);
 }

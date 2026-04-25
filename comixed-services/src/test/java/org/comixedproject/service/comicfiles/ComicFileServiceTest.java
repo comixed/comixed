@@ -35,11 +35,10 @@ import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicfiles.ComicFile;
 import org.comixedproject.model.comicfiles.ComicFileGroup;
 import org.comixedproject.model.metadata.FilenameMetadata;
-import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.service.metadata.FilenameScrapingRuleService;
+import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.comixedproject.state.comicbooks.ComicEvent;
-import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -70,9 +69,8 @@ class ComicFileServiceTest {
   @InjectMocks private ComicFileService service;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private ComicFileAdaptor comicFileAdaptor;
-  @Mock private ComicBookService comicBookService;
   @Mock private ComicDetailService comicDetailService;
-  @Mock private ComicStateHandler comicStateHandler;
+  @Mock private ComicBookStateAdaptor comicBookStateAdaptor;
   @Mock private ApplicationEventPublisher applicationEventPublisher;
   @Mock private FilenameScrapingRuleService filenameScrapingRuleService;
   @Mock private ComicDetail comicDetail;
@@ -91,7 +89,7 @@ class ComicFileServiceTest {
     filenameList.add(TEST_COMIC_ARCHIVE);
 
     Mockito.doNothing()
-        .when(comicStateHandler)
+        .when(comicBookStateAdaptor)
         .fireEvent(comicBookArgumentCaptor.capture(), Mockito.any(ComicEvent.class));
     Mockito.when(comicDetail.getBaseFilename()).thenReturn(TEST_ARCHIVE_FILENAME);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
@@ -206,7 +204,7 @@ class ComicFileServiceTest {
     service.importComicFiles(filenameList);
 
     Mockito.verify(comicDetailService, Mockito.times(1)).filenameFound(TEST_COMIC_ARCHIVE);
-    Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
+    Mockito.verify(comicBookStateAdaptor, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
     Mockito.verify(applicationEventPublisher, Mockito.times(1))
         .publishEvent(LoadComicBooksEvent.instance);
   }
@@ -222,8 +220,8 @@ class ComicFileServiceTest {
         .createComic(TEST_COMIC_ARCHIVE);
     Mockito.verify(filenameScrapingRuleService, Mockito.times(filenameList.size()))
         .loadFilenameMetadata(TEST_ARCHIVE_FILENAME);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.readyForProcessing);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.comicBookImported);
     Mockito.verify(applicationEventPublisher, Mockito.times(1))
         .publishEvent(LoadComicBooksEvent.instance);
   }
@@ -241,7 +239,7 @@ class ComicFileServiceTest {
         .createComic(TEST_COMIC_ARCHIVE);
     Mockito.verify(filenameScrapingRuleService, Mockito.never())
         .loadFilenameMetadata(Mockito.anyString());
-    Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
+    Mockito.verify(comicBookStateAdaptor, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
     Mockito.verify(applicationEventPublisher, Mockito.times(1))
         .publishEvent(LoadComicBooksEvent.instance);
   }
@@ -266,8 +264,8 @@ class ComicFileServiceTest {
     Mockito.verify(comicDetail, Mockito.times(1)).setVolume(TEST_VOLUME);
     Mockito.verify(comicDetail, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
     Mockito.verify(comicDetail, Mockito.times(1)).setCoverDate(TEST_COVER_DATE);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.readyForProcessing);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.comicBookImported);
     Mockito.verify(applicationEventPublisher, Mockito.times(1))
         .publishEvent(LoadComicBooksEvent.instance);
   }
@@ -281,8 +279,8 @@ class ComicFileServiceTest {
     Mockito.verify(comicBookAdaptor, Mockito.times(1)).createComic(TEST_ARCHIVE_FILENAME);
     Mockito.verify(filenameScrapingRuleService, Mockito.times(1))
         .loadFilenameMetadata(TEST_ARCHIVE_FILENAME);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.comicDiscovered);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.comicFileDiscovered);
   }
 
   @Test

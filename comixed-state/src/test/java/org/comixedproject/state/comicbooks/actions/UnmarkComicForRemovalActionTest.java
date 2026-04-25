@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,26 +18,29 @@
 
 package org.comixedproject.state.comicbooks.actions;
 
-import lombok.extern.log4j.Log4j2;
+import java.util.List;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicState;
-import org.comixedproject.state.comicbooks.ComicEvent;
-import org.springframework.statemachine.StateContext;
-import org.springframework.stereotype.Component;
+import org.comixedproject.model.comicpages.ComicPage;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-/**
- * <code>MetadataUpdatedAction</code> is executed after the metadata for a comic has been updated.
- *
- * @author Darryl L. Pierce
- */
-@Component
-@Log4j2
-public class MetadataUpdatedAction extends AbstractComicAction {
-  @Override
-  public void execute(final StateContext<ComicState, ComicEvent> context) {
-    log.trace("Fetching comicBook");
-    final ComicBook comicBook = this.fetchComic(context);
-    log.trace("Clearing update metadata flag");
-    comicBook.setUpdateMetadata(false);
+@ExtendWith(MockitoExtension.class)
+class UnmarkComicForRemovalActionTest {
+  @InjectMocks private UnmarkComicForRemovalAction action;
+  @Mock private ComicBook comicBook;
+  @Mock private List<ComicPage> pages;
+
+  @Test
+  void execute() {
+    Mockito.when(comicBook.getPages()).thenReturn(pages);
+    action.execute(comicBook);
+
+    Mockito.verify(comicBook).setPurging(false);
+    Mockito.verify(pages).clear();
+    Mockito.verify(comicBook).setFileContentsLoaded(false);
   }
 }

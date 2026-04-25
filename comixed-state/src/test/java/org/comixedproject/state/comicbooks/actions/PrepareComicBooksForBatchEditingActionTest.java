@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,18 +16,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.state.lists.guards;
+package org.comixedproject.state.comicbooks.actions;
 
-import org.comixedproject.model.lists.ReadingListState;
-import org.comixedproject.state.StateContextAccessor;
-import org.comixedproject.state.lists.ReadingListEvent;
-import org.springframework.statemachine.guard.Guard;
+import org.comixedproject.model.comicbooks.ComicBook;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-/**
- * <code>AbstractReadingListGuard</code> provides a foundation for building new reading list state
- * guards.
- *
- * @author Darryl L. Pierce
- */
-public abstract class AbstractReadingListGuard extends StateContextAccessor
-    implements Guard<ReadingListState, ReadingListEvent> {}
+@ExtendWith(MockitoExtension.class)
+class PrepareComicBooksForBatchEditingActionTest {
+  @InjectMocks private PrepareComicBooksForBatchEditingAction action;
+  @Mock private ComicBook comicBook;
+
+  @Test
+  void execute() {
+    action.execute(comicBook);
+
+    Mockito.verify(comicBook, Mockito.times(1)).setEditDetails(true);
+  }
+}

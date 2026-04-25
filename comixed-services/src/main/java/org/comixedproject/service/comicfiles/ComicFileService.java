@@ -34,11 +34,10 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicfiles.ComicFile;
 import org.comixedproject.model.comicfiles.ComicFileGroup;
 import org.comixedproject.model.metadata.FilenameMetadata;
-import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.service.metadata.FilenameScrapingRuleService;
+import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.comixedproject.state.comicbooks.ComicEvent;
-import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
@@ -55,9 +54,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class ComicFileService {
   @Autowired private ComicBookAdaptor comicBookAdaptor;
-  @Autowired private ComicBookService comicBookService;
   @Autowired private ComicDetailService comicDetailService;
-  @Autowired private ComicStateHandler comicStateHandler;
+  @Autowired private ComicBookStateAdaptor comicBookStateAdaptor;
   @Autowired private ComicFileAdaptor comicFileAdaptor;
   @Autowired private FilenameScrapingRuleService filenameScrapingRuleService;
   @Autowired private ApplicationEventPublisher applicationEventPublisher;
@@ -164,7 +162,7 @@ public class ComicFileService {
     for (int index = 0; index < filenames.size(); index++) {
       final String filename = filenames.get(index);
       if (!this.comicDetailService.filenameFound(filename)) {
-        doImportComicFile(filename, ComicEvent.readyForProcessing);
+        doImportComicFile(filename, ComicEvent.comicBookImported);
       }
     }
     log.debug("Initiating processing");
@@ -174,7 +172,7 @@ public class ComicFileService {
   @Transactional
   public void discoverComicFile(final String filename) {
     log.debug("Adding discovered comic file: {}", filename);
-    this.doImportComicFile(filename, ComicEvent.comicDiscovered);
+    this.doImportComicFile(filename, ComicEvent.comicFileDiscovered);
   }
 
   private void doImportComicFile(final String filename, final ComicEvent event) {
@@ -193,7 +191,7 @@ public class ComicFileService {
         comicBook.getComicDetail().setCoverDate(metadata.getCoverDate());
       }
       log.debug("Firing new comic book event: {}:{}", event, filename);
-      this.comicStateHandler.fireEvent(comicBook, event);
+      this.comicBookStateAdaptor.fireEvent(comicBook, event);
     } catch (AdaptorException error) {
       log.error("Failed to create comic for file: " + filename, error);
     }

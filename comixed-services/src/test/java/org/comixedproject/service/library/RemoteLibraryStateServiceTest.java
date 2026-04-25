@@ -24,13 +24,12 @@ import java.util.List;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.library.PublishRemoteLibraryUpdateAction;
-import org.comixedproject.model.comicbooks.ComicState;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.comixedproject.model.net.library.RemoteLibraryState;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.state.comicbooks.ComicEvent;
-import org.comixedproject.state.comicbooks.ComicStateHandler;
+import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,8 +37,6 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.messaging.Message;
-import org.springframework.statemachine.state.State;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -49,7 +46,7 @@ class RemoteLibraryStateServiceTest {
   private static final long TEST_DUPLICATE_COMIC_COUNT = Math.abs(RandomUtils.nextLong());
 
   @InjectMocks private RemoteLibraryStateService service;
-  @Mock private ComicStateHandler comicStateHandler;
+  @Mock private ComicBookStateAdaptor comicBookStateAdaptor;
   @Mock private ComicBookService comicBookService;
   @Mock private DuplicateComicService duplicateComicService;
   @Mock private List<RemoteLibrarySegmentState> publisherState;
@@ -61,8 +58,7 @@ class RemoteLibraryStateServiceTest {
   @Mock private List<RemoteLibrarySegmentState> comicsState;
   @Mock private List<PublisherAndYearSegment> byPublisherAndYear;
   @Mock private PublishRemoteLibraryUpdateAction publishRemoteLibraryUpdateAction;
-  @Mock private State<ComicState, ComicEvent> state;
-  @Mock private Message<ComicEvent> message;
+  @Mock private ComicBook comicBook;
 
   @Captor private ArgumentCaptor<RemoteLibraryState> libraryStateArgumentCaptor;
 
@@ -86,7 +82,7 @@ class RemoteLibraryStateServiceTest {
   void afterPropertiesSet() throws Exception {
     service.afterPropertiesSet();
 
-    Mockito.verify(comicStateHandler, Mockito.times(1)).addListener(service);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1)).addListener(service);
   }
 
   @Test
@@ -95,7 +91,7 @@ class RemoteLibraryStateServiceTest {
         .when(publishRemoteLibraryUpdateAction)
         .publish(libraryStateArgumentCaptor.capture());
 
-    service.onComicStateChange(state, message);
+    service.onComicStateChanged(comicBook);
 
     final RemoteLibraryState libraryState = libraryStateArgumentCaptor.getValue();
     assertNotNull(libraryState);
@@ -119,7 +115,7 @@ class RemoteLibraryStateServiceTest {
         .when(publishRemoteLibraryUpdateAction)
         .publish(libraryStateArgumentCaptor.capture());
 
-    service.onComicStateChange(state, message);
+    service.onComicStateChanged(comicBook);
 
     final RemoteLibraryState libraryState = libraryStateArgumentCaptor.getValue();
     assertNotNull(libraryState);

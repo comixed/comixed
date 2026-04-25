@@ -28,8 +28,9 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicState;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.model.net.library.*;
@@ -43,16 +44,13 @@ import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
-import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.comixedproject.state.comicbooks.ComicStateChangeListener;
-import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.messaging.Message;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.statemachine.state.State;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -72,7 +70,7 @@ public class DisplayableComicController implements InitializingBean, ComicStateC
   @Autowired private ComicSelectionService comicSelectionService;
   @Autowired private UserService userService;
   @Autowired private ReadingListService readingListService;
-  @Autowired private ComicStateHandler comicStateHandler;
+  @Autowired private ComicBookStateAdaptor comicBookStateAdaptor;
 
   Map<LoadComicsByFilterRequest, LoadComicsResponse> filterCache = new ConcurrentHashMap<>();
   Map<TagTypeAndValue, LoadComicsResponse> tagAndValueCache = new ConcurrentHashMap<>();
@@ -80,12 +78,11 @@ public class DisplayableComicController implements InitializingBean, ComicStateC
   @Override
   public void afterPropertiesSet() {
     log.trace("Registering for comic state change updates");
-    this.comicStateHandler.addListener(this);
+    this.comicBookStateAdaptor.addListener(this);
   }
 
   @Override
-  public void onComicStateChange(
-      final State<ComicState, ComicEvent> state, final Message<ComicEvent> message) {
+  public void onComicStateChanged(final @NonNull ComicBook comicBook) {
     log.debug("Clearing comic caches");
     this.filterCache.clear();
     this.tagAndValueCache.clear();

@@ -24,10 +24,5 @@
       <artifactId>comixed-adaptors</artifactId>
       <version>3.3-SNAPSHOT</version>
     </dependency>
-    <dependency>
-      <groupId>org.springframework.statemachine</groupId>
-      <artifactId>spring-statemachine-core</artifactId>
-      <version>4.0.1</version>
-    </dependency>
   </dependencies>
 </project>

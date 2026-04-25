@@ -20,7 +20,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
-import { interpolate } from '@app/core';
+import { interpolate, PAGE_SIZE_DEFAULT } from '@app/core';
 import {
   BATCH_SCRAPE_SELECTED_COMICS_URL,
   CLEAR_METADATA_CACHE_URL,
@@ -183,7 +183,9 @@ export class ComicBookScrapingService {
       }),
       {
         issueId: args.issueId,
-        skipCache: args.skipCache
+        skipCache: args.skipCache,
+        pageSize: PAGE_SIZE_DEFAULT,
+        pageNumber: 0
       } as ScrapeSingleBookComicRequest
     );
   }

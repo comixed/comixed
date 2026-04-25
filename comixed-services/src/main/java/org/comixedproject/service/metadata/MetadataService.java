@@ -49,8 +49,8 @@ import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ImprintService;
 import org.comixedproject.service.metadata.action.ProcessComicDescriptionAction;
+import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.comixedproject.state.comicbooks.ComicEvent;
-import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
@@ -74,7 +74,7 @@ public class MetadataService {
   @Autowired private ObjectMapper objectMapper;
   @Autowired private MetadataCacheService metadataCacheService;
   @Autowired private ComicBookService comicBookService;
-  @Autowired private ComicStateHandler comicStateHandler;
+  @Autowired private ComicBookStateAdaptor comicBookStateAdaptor;
   @Autowired private ImprintService imprintService;
   @Autowired private IssueService issueService;
   @Autowired private ConfigurationService configurationService;
@@ -424,7 +424,7 @@ public class MetadataService {
       log.trace("Setting the comic metadata source last modified date");
       comicBook.getMetadata().setLastScrapedDate(new Date());
       log.trace("Updating comicBook state: scraped");
-      this.comicStateHandler.fireEvent(comicBook, ComicEvent.scraped);
+      this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.comicMetadataChanged);
     }
   }
 
@@ -524,7 +524,7 @@ public class MetadataService {
                         comicBook, metadataSource, trim(issue.getSourceId()), new Date()));
               }
               log.debug("Firing comic book event: id={}", comicBook.getComicBookId());
-              this.comicStateHandler.fireEvent(comicBook, ComicEvent.detailsUpdated);
+              this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.comicMetadataSaved);
             });
       } else {
         log.trace("No comic books found");

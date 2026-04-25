@@ -18,42 +18,27 @@
 
 package org.comixedproject.state.comicbooks.actions;
 
-import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC;
-
 import java.util.List;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicpages.ComicPage;
-import org.comixedproject.state.comicbooks.ComicEvent;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.messaging.MessageHeaders;
-import org.springframework.statemachine.StateContext;
 
 @ExtendWith(MockitoExtension.class)
 class ComicFileRecreatedActionTest {
   @InjectMocks private ComicFileRecreatedAction action;
-  @Mock private StateContext<ComicState, ComicEvent> context;
-  @Mock private MessageHeaders messageHeaders;
   @Mock private ComicBook comicBook;
   @Mock private List<ComicPage> pageList;
-
-  @BeforeEach
-  void setUp() {
-    Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
-    Mockito.when(messageHeaders.get(HEADER_COMIC, ComicBook.class)).thenReturn(comicBook);
-  }
 
   @Test
   void execute() {
     Mockito.when(comicBook.getPages()).thenReturn(pageList);
 
-    action.execute(context);
+    action.execute(comicBook);
 
     Mockito.verify(comicBook, Mockito.times(1)).setTargetArchiveType(null);
     Mockito.verify(pageList, Mockito.times(1)).clear();

@@ -31,6 +31,6 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class ProcessUnhashedComicsWriter extends AbstractComicBookWriter {
   public ProcessUnhashedComicsWriter() {
-    super(ComicEvent.pagesHashesLoaded);
+    super(ComicEvent.comicPageHashesLoaded);
   }
 }

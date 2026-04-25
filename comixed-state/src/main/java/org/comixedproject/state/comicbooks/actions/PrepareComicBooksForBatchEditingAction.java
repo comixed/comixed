@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2025, The ComiXed Project
+ * Copyright (C) 2022, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,25 +18,23 @@
 
 package org.comixedproject.state.comicbooks.actions;
 
+import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicState;
-import org.comixedproject.state.comicbooks.ComicEvent;
-import org.springframework.statemachine.StateContext;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>UndeleteComicAction</code> handles updating a comic after it has been undeleted.
+ * <code>PrepareComicBooksForBatchEditingAction</code> prepares a comic book for having its details
+ * edited.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class UndeleteComicAction extends AbstractComicAction {
+public class PrepareComicBooksForBatchEditingAction extends AbstractComicAction {
   @Override
-  public void execute(final StateContext<ComicState, ComicEvent> context) {
-    final ComicBook comicBook = this.fetchComic(context);
-    log.trace("Clearing the purging flag");
-    comicBook.setPurging(false);
+  public void execute(@NonNull final ComicBook comicBook) {
+    log.trace("Setting the edit details flag");
+    comicBook.setEditDetails(true);
   }
 }

@@ -33,6 +33,6 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class UpdateMetadataWriter extends AbstractComicBookWriter {
   public UpdateMetadataWriter() {
-    super(ComicEvent.metadataUpdated);
+    super(ComicEvent.comicMetadataSaved);
   }
 }

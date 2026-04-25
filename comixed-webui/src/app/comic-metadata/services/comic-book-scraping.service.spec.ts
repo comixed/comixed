@@ -30,7 +30,7 @@ import {
   provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { interpolate } from '@app/core';
+import { interpolate, PAGE_SIZE_DEFAULT } from '@app/core';
 import {
   BATCH_SCRAPE_SELECTED_COMICS_URL,
   CLEAR_METADATA_CACHE_URL,
@@ -233,7 +233,9 @@ describe('ComicBookScrapingService', () => {
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual({
       issueId: SCRAPING_ISSUE.id,
-      skipCache: SKIP_CACHE
+      skipCache: SKIP_CACHE,
+      pageSize: PAGE_SIZE_DEFAULT,
+      pageNumber: 0
     } as ScrapeSingleBookComicRequest);
     req.flush(new HttpResponse({ status: 200 }));
   });

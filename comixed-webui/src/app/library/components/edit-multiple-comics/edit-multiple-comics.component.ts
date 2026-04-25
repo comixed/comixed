@@ -97,7 +97,7 @@ export class EditMultipleComicsComponent implements OnInit, OnDestroy {
       ],
       issueNumber: ['', [Validators.required, Validators.maxLength(16)]],
       imprint: ['', [Validators.required, Validators.maxLength(64)]],
-      comicType: ['', [Validators.required]]
+      comicType: [null, [Validators.required]]
     });
     this.imprintSubscription = this.store
       .select(selectImprints)
@@ -181,7 +181,7 @@ export class EditMultipleComicsComponent implements OnInit, OnDestroy {
     };
   }
 
-  onComicTypeSelected(comicType: ComicType): void {
+  onComicTypeSelected(comicType: ComicType | null): void {
     this.logger.debug('Setting comic type:', comicType);
     this.detailsForm.controls.comicType.setValue(comicType);
   }

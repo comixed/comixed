@@ -25,5 +25,5 @@ export interface EditMultipleComicsRequest {
   volume: string;
   issueNumber: string;
   imprint: string;
-  comicType: ComicType;
+  comicType: ComicType | null;
 }

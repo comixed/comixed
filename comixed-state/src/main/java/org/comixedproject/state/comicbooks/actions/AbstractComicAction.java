@@ -19,10 +19,8 @@
 package org.comixedproject.state.comicbooks.actions;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicState;
-import org.comixedproject.state.StateContextAccessor;
-import org.comixedproject.state.comicbooks.ComicEvent;
-import org.springframework.statemachine.action.Action;
+import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.state.StateTransitionAction;
 
 /**
  * <code>AbstractComicAction</code> defines a base type for creating new actions that are executed
@@ -31,5 +29,4 @@ import org.springframework.statemachine.action.Action;
  * @author Darryl L. Pierce
  */
 @Log4j2
-public abstract class AbstractComicAction extends StateContextAccessor
-    implements Action<ComicState, ComicEvent> {}
+public abstract class AbstractComicAction implements StateTransitionAction<ComicBook> {}

@@ -85,6 +85,8 @@ public class EditComicMetadataProcessor
       comicBook.getComicDetail().setComicType(ComicType.valueOf(comicType));
     }
 
+    comicBook.setEditDetails(false);
+
     return comicBook;
   }
 
