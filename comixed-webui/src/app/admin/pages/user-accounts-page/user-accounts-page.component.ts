@@ -25,8 +25,8 @@ import {
   ViewChild
 } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { TitleService } from '@app/core/services/title.service';
 import { Store } from '@ngrx/store';
 import {
@@ -36,17 +36,17 @@ import {
 } from '@app/user/selectors/manage-users.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import {
-  MatTableDataSource,
-  MatTable,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderCell,
-  MatCellDef,
   MatCell,
-  MatHeaderRowDef,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
   MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
   MatRowDef,
-  MatRow
+  MatTable,
+  MatTableDataSource
 } from '@angular/material/table';
 import { User } from '@app/user/models/user';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
@@ -61,8 +61,8 @@ import {
   AbstractControl,
   FormBuilder,
   FormGroup,
-  Validators,
-  ReactiveFormsModule
+  ReactiveFormsModule,
+  Validators
 } from '@angular/forms';
 import {
   MAX_PASSWORD_LENGTH,
@@ -74,15 +74,15 @@ import {
   passwordVerifyValidator
 } from '@app/user/user.functions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { MatFabButton, MatButton } from '@angular/material/button';
+import { MatButton, MatFabButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import {
   MatCard,
-  MatCardContent,
-  MatCardActions
+  MatCardActions,
+  MatCardContent
 } from '@angular/material/card';
-import { MatFormField, MatError, MatLabel } from '@angular/material/form-field';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { AsyncPipe, DatePipe } from '@angular/common';
@@ -149,6 +149,7 @@ export class UserAccountsPageComponent
   titleService = inject(TitleService);
   formBuilder = inject(FormBuilder);
   confirmationService = inject(ConfirmationService);
+  user$ = new BehaviorSubject<User | null>(null);
 
   constructor() {
     this.logger.trace('Creating the user form');
@@ -179,7 +180,21 @@ export class UserAccountsPageComponent
     this.logger.trace('Subscribing to current user updates');
     this.userSubscription = this.store
       .select(selectManageUsersCurrent)
-      .subscribe(user => (this.user = user));
+      .subscribe(user => {
+        this.user$.next(user);
+        if (!!user) {
+          this.editUserForm.controls.id.setValue(user.comixedUserId);
+          this.editUserForm.controls.email.setValue(user.email);
+          this.editUserForm.controls.admin.setValue(isAdmin(user));
+        } else {
+          this.editUserForm.controls.id.setValue(null);
+          this.editUserForm.controls.email.setValue('');
+          this.editUserForm.controls.admin.setValue(false);
+        }
+        this.editUserForm.controls.password.setValue('');
+        this.editUserForm.controls.passwordVerify.setValue('');
+        this.onPasswordChanged();
+      });
   }
 
   get users(): User[] {
@@ -192,28 +207,6 @@ export class UserAccountsPageComponent
 
   get controls(): { [p: string]: AbstractControl } {
     return this.editUserForm.controls;
-  }
-
-  private _user: User | null = null;
-
-  get user(): User | null {
-    return this._user;
-  }
-
-  set user(user: User | null) {
-    if (!!user) {
-      this.editUserForm.controls.id.setValue(user.comixedUserId);
-      this.editUserForm.controls.email.setValue(user.email);
-      this.editUserForm.controls.admin.setValue(isAdmin(user));
-    } else {
-      this.editUserForm.controls.id.setValue(null);
-      this.editUserForm.controls.email.setValue('');
-      this.editUserForm.controls.admin.setValue(false);
-    }
-    this.editUserForm.controls.password.setValue('');
-    this.editUserForm.controls.passwordVerify.setValue('');
-    this._user = user;
-    this.onPasswordChanged();
   }
 
   isAdmin(user: User): boolean {
@@ -266,8 +259,8 @@ export class UserAccountsPageComponent
   }
 
   onDeleteUser(): void {
-    const email = this.user?.email;
-    const id = this.user?.comixedUserId;
+    const email = this.user$.value?.email;
+    const id = this.user$.value?.comixedUserId;
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'user-accounts.delete-user-account.confirmation-title'

@@ -101,6 +101,10 @@ import {
 import { batchScrapeComicBooks } from '@app/comic-metadata/actions/multi-book-scraping.actions';
 import { DisplayableComic } from '@app/comic-books/models/displayable-comic';
 import { QUERY_PARAM_COMICS_AS_GRID } from '@app/core';
+import {
+  COMIC_BOOK_SELECTION_FEATURE_KEY,
+  initialState as initialComicBookSelectionState
+} from '@app/comic-books/reducers/comic-book-selection.reducer';
 
 describe('ComicListViewComponent', () => {
   const COMIC_BOOKS = [
@@ -124,7 +128,8 @@ describe('ComicListViewComponent', () => {
   const COMIC_BOOK = COMIC_BOOKS[0];
   const PLUGIN = LIBRARY_PLUGIN_4;
   const initialState = {
-    [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState
+    [LIBRARY_PLUGIN_FEATURE_KEY]: initialLibraryPluginState,
+    [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState
   };
 
   let component: ComicListViewComponent;
