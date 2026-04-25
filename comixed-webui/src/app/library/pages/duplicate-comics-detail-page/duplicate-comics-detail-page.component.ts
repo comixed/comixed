@@ -33,17 +33,12 @@ import { selectComicBookSelectionIds } from '@app/comic-books/selectors/comic-bo
 import { loadComicBookSelections } from '@app/comic-books/actions/comic-book-selection.actions';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { setBusyState } from '@app/core/actions/busy.actions';
 
 @Component({
   selector: 'cx-duplicate-comics-detail-page',
-  imports: [
-    ComicListViewComponent,
-    TranslatePipe,
-    ReactiveFormsModule,
-    CommonModule
-  ],
+  imports: [ComicListViewComponent, TranslatePipe, ReactiveFormsModule],
   templateUrl: './duplicate-comics-detail-page.component.html',
   styleUrl: './duplicate-comics-detail-page.component.scss'
 })

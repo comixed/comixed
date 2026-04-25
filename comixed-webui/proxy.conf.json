@@ -1,21 +1,18 @@
 {
   "/api": {
     "target": "http://localhost:7171",
-    "auth": "user:password",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/ws": {
     "target": "http://localhost:7171",
-    "auth": "user:password",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/actuator": {
     "target": "http://localhost:7171",
-    "auth": "user:password",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"

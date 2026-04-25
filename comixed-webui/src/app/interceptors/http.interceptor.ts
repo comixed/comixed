@@ -34,7 +34,6 @@ import { catchError, tap } from 'rxjs/operators';
 import { TokenService } from '@app/core/services/token.service';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { logoutUser } from '@app/user/actions/user.actions';
 
 @Injectable()
 export class HttpInterceptor implements HttpInterceptor {
@@ -68,13 +67,13 @@ export class HttpInterceptor implements HttpInterceptor {
         if (error instanceof HttpErrorResponse) {
           this.logger.error('Error response received', error);
           if (error.status !== 401) {
-            return throwError(error);
+            return throwError(() => error);
           }
           this.logger.info('Ensuring user is logged out');
           this.tokenService.clearAuthToken();
           this.logger.info('Redirecting to login page');
           this.router.navigateByUrl('/login');
-          return throwError(error);
+          return throwError(() => error);
         }
         return of(error);
       })

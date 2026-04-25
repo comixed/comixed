@@ -39,7 +39,7 @@ import {
   QUERY_PARAM_PAGE_COUNT
 } from '@app/core';
 
-fdescribe('ComicListFilterComponent', () => {
+describe('ComicListFilterComponent', () => {
   let component: ComicListFilterComponent;
   let fixture: ComponentFixture<ComicListFilterComponent>;
   let queryParameterService: QueryParameterService;

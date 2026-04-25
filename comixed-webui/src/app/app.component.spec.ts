@@ -93,6 +93,10 @@ import { Subscription } from 'rxjs';
 import { WebSocketService } from '@app/messaging';
 import { ApplicationEvent } from '@app/models/messages/application-event';
 import { AlertService } from '@app/core/services/alert.service';
+import {
+  BATCH_PROCESSES_FEATURE_KEY,
+  initialState as initialBatchProcessesState
+} from '@app/admin/reducers/batch-processes.reducer';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -112,7 +116,8 @@ describe('AppComponent', () => {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
     [DARK_THEME_FEATURE_KEY]: initialDarkThemeState,
-    [FEATURE_ENABLED_FEATURE_KEY]: { ...initialFeatureEnabledState }
+    [FEATURE_ENABLED_FEATURE_KEY]: { ...initialFeatureEnabledState },
+    [BATCH_PROCESSES_FEATURE_KEY]: initialBatchProcessesState
   };
 
   let component: AppComponent;
@@ -210,7 +215,7 @@ describe('AppComponent', () => {
           [USER_FEATURE_KEY]: {
             ...initialUserState,
             user: {
-              ...initialUserState.user,
+              ...USER,
               preferences: [
                 { name: LOGGER_LEVEL_PREFERENCE, value: `${LoggerLevel.INFO}` }
               ]
@@ -232,7 +237,7 @@ describe('AppComponent', () => {
           [USER_FEATURE_KEY]: {
             ...initialUserState,
             user: {
-              ...initialUserState.user,
+              ...USER,
               preferences: [
                 { name: LOGGER_LEVEL_PREFERENCE, value: `${LoggerLevel.DEBUG}` }
               ]
@@ -254,7 +259,7 @@ describe('AppComponent', () => {
           [USER_FEATURE_KEY]: {
             ...initialUserState,
             user: {
-              ...initialUserState.user,
+              ...USER,
               preferences: [
                 { name: LOGGER_LEVEL_PREFERENCE, value: `${LoggerLevel.TRACE}` }
               ]
@@ -276,7 +281,7 @@ describe('AppComponent', () => {
           [USER_FEATURE_KEY]: {
             ...initialUserState,
             user: {
-              ...initialUserState.user,
+              ...USER,
               preferences: [
                 { name: LOGGER_LEVEL_PREFERENCE, value: `${LoggerLevel.ALL}` }
               ]
