@@ -44,8 +44,8 @@ import org.comixedproject.repositories.collections.PublisherDetailRepository;
 import org.comixedproject.repositories.comicbooks.ComicBookRepository;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
 import org.comixedproject.repositories.comicbooks.ComicTagRepository;
+import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.comixedproject.state.comicbooks.ComicEvent;
-import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -106,7 +106,7 @@ class ComicBookServiceTest {
   private final Date now = new Date();
 
   @InjectMocks private ComicBookService service;
-  @Mock private ComicStateHandler comicStateHandler;
+  @Mock private ComicBookStateAdaptor comicBookStateAdaptor;
   @Mock private ComicBookRepository comicBookRepository;
   @Mock private PublisherDetailRepository publisherDetailRepository;
   @Mock private ComicDetailRepository comicDetailRepository;
@@ -264,8 +264,8 @@ class ComicBookServiceTest {
     assertSame(comicBookRecord, result);
 
     Mockito.verify(comicBookRepository, Mockito.times(2)).getById(TEST_COMIC_BOOK_ID);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBookRecord, ComicEvent.deleteComic);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1))
+        .fireEvent(comicBookRecord, ComicEvent.markComicForRemoval);
   }
 
   @Test
@@ -286,8 +286,8 @@ class ComicBookServiceTest {
     assertSame(comicBookRecord, response);
 
     Mockito.verify(comicBookRepository, Mockito.times(2)).getById(TEST_COMIC_BOOK_ID);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBookRecord, ComicEvent.undeleteComic);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1))
+        .fireEvent(comicBookRecord, ComicEvent.unmarkComicForRemoval);
   }
 
   @Test
@@ -386,8 +386,8 @@ class ComicBookServiceTest {
     Mockito.verify(comicDetail, Mockito.times(1)).setTitle(TEST_TITLE);
     Mockito.verify(comicDetail, Mockito.times(1)).setCoverDate(TEST_COVER_DATE);
     Mockito.verify(comicDetail, Mockito.times(1)).setStoreDate(TEST_STORE_DATE);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.detailsUpdated);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.comicMetadataChanged);
     Mockito.verify(imprintService, Mockito.times(1)).update(comicBook);
   }
 
@@ -473,8 +473,8 @@ class ComicBookServiceTest {
 
     Mockito.verify(comicBookRepository, Mockito.times(2)).getById(TEST_COMIC_BOOK_ID);
     Mockito.verify(comicBookMetadataAdaptor, Mockito.times(1)).clear(comicBook);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.metadataCleared);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.comicMetadataCleared);
   }
 
   @Test
@@ -551,8 +551,8 @@ class ComicBookServiceTest {
 
     idList.forEach(
         id -> Mockito.verify(comicBookRepository, Mockito.times(1)).getById(id.longValue()));
-    Mockito.verify(comicStateHandler, Mockito.times(idList.size()))
-        .fireEvent(comicBook, ComicEvent.rescanComic);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(idList.size()))
+        .fireEvent(comicBook, ComicEvent.rescanComicBookFile);
   }
 
   @Test
@@ -565,7 +565,8 @@ class ComicBookServiceTest {
 
     idList.forEach(
         id -> Mockito.verify(comicBookRepository, Mockito.times(1)).getById(id.longValue()));
-    Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(comicBook, ComicEvent.rescanComic);
+    Mockito.verify(comicBookStateAdaptor, Mockito.never())
+        .fireEvent(comicBook, ComicEvent.rescanComicBookFile);
   }
 
   @Test
@@ -705,8 +706,8 @@ class ComicBookServiceTest {
     service.deleteComicBooksById(idList);
 
     Mockito.verify(comicBookRepository, Mockito.times(idList.size())).getById(TEST_COMIC_BOOK_ID);
-    Mockito.verify(comicStateHandler, Mockito.times(idList.size()))
-        .fireEvent(comicBook, ComicEvent.deleteComic);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(idList.size()))
+        .fireEvent(comicBook, ComicEvent.markComicForRemoval);
   }
 
   @Test
@@ -729,8 +730,8 @@ class ComicBookServiceTest {
     service.undeleteComicBooksById(idList);
 
     Mockito.verify(comicBookRepository, Mockito.times(idList.size())).getById(TEST_COMIC_BOOK_ID);
-    Mockito.verify(comicStateHandler, Mockito.times(idList.size()))
-        .fireEvent(comicBook, ComicEvent.undeleteComic);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(idList.size()))
+        .fireEvent(comicBook, ComicEvent.unmarkComicForRemoval);
   }
 
   @Test
@@ -859,8 +860,8 @@ class ComicBookServiceTest {
 
     service.savePageOrder(TEST_COMIC_BOOK_ID, entryList);
 
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.detailsUpdated);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.comicMetadataChanged);
   }
 
   @Test
@@ -911,8 +912,8 @@ class ComicBookServiceTest {
     }
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.detailsUpdated);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.comicMetadataChanged);
   }
 
   @Test
@@ -932,8 +933,8 @@ class ComicBookServiceTest {
 
     service.updateMultipleComics(idList);
 
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.updateDetails);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.prepareComicsForBatchEditing);
   }
 
   @Test
@@ -1360,8 +1361,8 @@ class ComicBookServiceTest {
     service.markComicAsFound(TEST_COMIC_FILENAME);
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).findByFilename(TEST_COMIC_FILENAME);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.markAsFound);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.comicFileFound);
   }
 
   @Test
@@ -1371,8 +1372,8 @@ class ComicBookServiceTest {
     service.markComicAsMissing(TEST_COMIC_FILENAME);
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).findByFilename(TEST_COMIC_FILENAME);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.markAsMissing);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.comicFileMissing);
   }
 
   @Test

@@ -18,11 +18,9 @@
 
 package org.comixedproject.state.comicbooks.actions;
 
+import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicState;
-import org.comixedproject.state.comicbooks.ComicEvent;
-import org.springframework.statemachine.StateContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -34,8 +32,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class MarkComicAsMissingAction extends AbstractComicAction {
   @Override
-  public void execute(final StateContext<ComicState, ComicEvent> context) {
-    final ComicBook comicBook = this.fetchComic(context);
+  public void execute(@NonNull final ComicBook comicBook) {
     log.debug("Marking comic book as missing: id={}", comicBook.getComicBookId());
     comicBook.getComicDetail().setMissing(true);
   }

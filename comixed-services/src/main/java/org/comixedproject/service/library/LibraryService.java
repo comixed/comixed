@@ -27,7 +27,6 @@ import org.comixedproject.model.batch.PurgeLibraryEvent;
 import org.comixedproject.model.batch.UpdateMetadataEvent;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicpages.PageCacheService;
-import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
@@ -45,7 +44,6 @@ public class LibraryService {
   @Autowired private ComicBookService comicBookService;
   @Autowired private FileAdaptor fileAdaptor;
   @Autowired private PageCacheService pageCacheService;
-  @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private ApplicationEventPublisher applicationEventPublisher;
 
   /**

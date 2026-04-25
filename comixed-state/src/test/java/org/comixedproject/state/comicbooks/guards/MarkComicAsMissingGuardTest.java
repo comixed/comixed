@@ -31,46 +31,39 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.messaging.MessageHeaders;
-import org.springframework.statemachine.StateContext;
 
 @ExtendWith(MockitoExtension.class)
 class MarkComicAsMissingGuardTest {
   private static final String TEST_EXISTING_FILE = "src/test/resources/example.cbz";
 
   @InjectMocks private MarkComicAsMissingGuard guard;
-  @Mock private StateContext context;
-  @Mock private MessageHeaders messageHeaders;
   @Mock private ComicDetail comicDetail;
   @Mock private ComicBook comicBook;
 
   @BeforeEach
   void setUp() {
-    Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
     Mockito.when(comicDetail.isMissing()).thenReturn(false);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
-    Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
-        .thenReturn(comicBook);
   }
 
   @Test
   void evaluate_comicAlreadyMarkedAsMissing() {
     Mockito.when(comicDetail.isMissing()).thenReturn(true);
 
-    assertFalse(guard.evaluate(context));
+    assertFalse(guard.evaluate(comicBook));
   }
 
   @Test
   void evaluate_fileWasFound() {
     Mockito.when(comicDetail.getFile()).thenReturn(new File(TEST_EXISTING_FILE));
 
-    assertFalse(guard.evaluate(context));
+    assertFalse(guard.evaluate(comicBook));
   }
 
   @Test
   void evaluate() {
     Mockito.when(comicDetail.getFile()).thenReturn(new File(TEST_EXISTING_FILE.substring(1)));
 
-    assertTrue(guard.evaluate(context));
+    assertTrue(guard.evaluate(comicBook));
   }
 }

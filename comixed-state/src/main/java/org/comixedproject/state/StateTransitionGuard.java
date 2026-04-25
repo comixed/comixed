@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project.
+ * Copyright (C) 2026, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,20 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.state.lists;
+package org.comixedproject.state;
 
-import org.comixedproject.model.lists.ReadingList;
+import org.comixedproject.model.state.StatefulItem;
 
 /**
- * <code>ReadingListEvent</code> defines the set of events that can affect the state for a {@link
- * ReadingList}.
+ * <code>StateTransitionGuard</code> defines a type that decides whether a state transition can
+ * occurs.
  *
+ * @param <T> the input type
  * @author Darryl L. Pierce
  */
-public enum ReadingListEvent {
-  created, // a new reading list has been created
-  updated,
-  comicAdded,
-  comicRemoved,
-  deleted
+public interface StateTransitionGuard<T extends StatefulItem<?>> {
+  /**
+   * Decides if the transition can occur.
+   *
+   * @param input the input value
+   * @return true if it can occur
+   */
+  boolean evaluate(T input);
 }

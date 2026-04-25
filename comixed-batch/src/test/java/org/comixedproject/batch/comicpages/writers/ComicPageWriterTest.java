@@ -21,8 +21,8 @@ package org.comixedproject.batch.comicpages.writers;
 import java.util.ArrayList;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.ComicPage;
+import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.comixedproject.state.comicbooks.ComicEvent;
-import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -34,7 +34,7 @@ import org.springframework.batch.infrastructure.item.Chunk;
 @ExtendWith(MockitoExtension.class)
 class ComicPageWriterTest {
   @InjectMocks private ComicPageWriter writer;
-  @Mock private ComicStateHandler comicStateHandler;
+  @Mock private ComicBookStateAdaptor comicBookStateAdaptor;
 
   @Mock private ComicPage page;
   @Mock private ComicBook comicBook;
@@ -48,7 +48,7 @@ class ComicPageWriterTest {
 
     writer.write(pageList);
 
-    Mockito.verify(comicStateHandler, Mockito.times(pageList.size()))
-        .fireEvent(comicBook, ComicEvent.detailsUpdated);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(pageList.size()))
+        .fireEvent(comicBook, ComicEvent.comicMetadataSaved);
   }
 }

@@ -22,8 +22,8 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.comixedproject.state.comicbooks.ComicEvent;
-import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.infrastructure.item.Chunk;
 import org.springframework.batch.infrastructure.item.ItemWriter;
@@ -41,7 +41,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 @RequiredArgsConstructor
 public abstract class AbstractComicBookWriter implements ItemWriter<ComicBook> {
-  @Autowired private ComicStateHandler comicStateHandler;
+  @Autowired private ComicBookStateAdaptor comicBookStateAdaptor;
 
   @NonNull private ComicEvent comicEvent;
 
@@ -50,7 +50,7 @@ public abstract class AbstractComicBookWriter implements ItemWriter<ComicBook> {
     comics.forEach(
         comic -> {
           log.trace("Firing event: {}", this.comicEvent);
-          this.comicStateHandler.fireEvent(comic, this.comicEvent);
+          this.comicBookStateAdaptor.fireEvent(comic, this.comicEvent);
         });
   }
 }

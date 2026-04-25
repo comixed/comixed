@@ -18,11 +18,10 @@
 
 package org.comixedproject.service.comicbooks;
 
-import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishComicBookRemovalAction;
@@ -31,13 +30,10 @@ import org.comixedproject.model.comicbooks.*;
 import org.comixedproject.model.comicpages.ComicPage;
 import org.comixedproject.model.library.DisplayableComic;
 import org.comixedproject.service.library.DisplayableComicService;
-import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.comixedproject.state.comicbooks.ComicStateChangeListener;
-import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.Message;
-import org.springframework.statemachine.state.State;
 import org.springframework.stereotype.Component;
 
 /**
@@ -50,7 +46,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class ComicStateChangeAdaptor implements InitializingBean, ComicStateChangeListener {
   @Autowired private ComicBookService comicBookService;
-  @Autowired private ComicStateHandler comicStateHandler;
+  @Autowired private ComicBookStateAdaptor comicBookStateAdaptor;
   @Autowired private PublishComicBookUpdateAction publishComicBookUpdateAction;
   @Autowired private PublishComicBookRemovalAction publishComicBookRemovalAction;
   @Autowired private DisplayableComicService displayableComicService;
@@ -58,28 +54,19 @@ public class ComicStateChangeAdaptor implements InitializingBean, ComicStateChan
   @Override
   public void afterPropertiesSet() throws Exception {
     log.trace("Subscribing to comic state changes");
-    this.comicStateHandler.addListener(this);
+    this.comicBookStateAdaptor.addListener(this);
   }
 
   @Override
-  public void onComicStateChange(
-      final State<ComicState, ComicEvent> state, final Message<ComicEvent> message) {
-    final var comic = message.getHeaders().get(HEADER_COMIC, ComicBook.class);
-    if (comic == null) return;
-    log.debug("Processing comic state change: [{}] =>  {}", comic.getComicBookId(), state.getId());
-    if (state.getId() == ComicState.REMOVED) {
-      log.trace("Publishing comic removal");
-      try {
-        this.publishComicBookRemovalAction.publish(comic);
-      } catch (PublishingException error) {
-        log.error("Failed to publish comic removal", error);
-      }
-    } else {
-      comic.getComicDetail().setComicState(state.getId());
-      comic.setLastModifiedOn(new Date());
-      final ComicBook updated = this.comicBookService.save(comic);
-      log.trace("Publishing comic  update");
-      try {
+  public void onComicStateChanged(final @NonNull ComicBook comicBook) {
+    try {
+      if (comicBook.getState().equals(ComicState.REMOVED)) {
+        log.debug("Comic book deleted");
+        this.publishComicBookRemovalAction.publish(comicBook);
+      } else {
+        log.debug("Saving updated comic book");
+        comicBook.setLastModifiedOn(new Date());
+        final ComicBook updated = this.comicBookService.save(comicBook);
         final DisplayableComic details =
             this.displayableComicService.getForComicBookId(updated.getComicBookId());
         final List<ComicPage> pages = updated.getPages();
@@ -88,9 +75,9 @@ public class ComicStateChangeAdaptor implements InitializingBean, ComicStateChan
 
         this.publishComicBookUpdateAction.publish(
             new ComicBookData(details, pages, metadata, tags.stream().toList()));
-      } catch (PublishingException error) {
-        log.error("Failed to publish comic update", error);
       }
+    } catch (PublishingException error) {
+      log.error("Failed to publish comic state change", error);
     }
   }
 }

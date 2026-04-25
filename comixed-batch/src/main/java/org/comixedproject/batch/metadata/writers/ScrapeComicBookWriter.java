@@ -32,6 +32,6 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class ScrapeComicBookWriter extends AbstractComicBookWriter {
   public ScrapeComicBookWriter() {
-    super(ComicEvent.metadataUpdated);
+    super(ComicEvent.comicMetadataSaved);
   }
 }

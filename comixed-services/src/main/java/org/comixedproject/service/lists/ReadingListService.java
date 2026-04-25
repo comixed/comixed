@@ -18,15 +18,9 @@
 
 package org.comixedproject.service.lists;
 
-import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC;
-import static org.comixedproject.state.lists.ReadingListStateHandler.HEADER_READING_LIST;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.csv.CsvAdaptor;
@@ -35,7 +29,6 @@ import org.comixedproject.messaging.lists.PublishReadingListDeletedAction;
 import org.comixedproject.messaging.lists.PublishReadingListUpdateAction;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.lists.ReadingList;
-import org.comixedproject.model.lists.ReadingListState;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.lists.ReadingListRepository;
@@ -43,14 +36,8 @@ import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
-import org.comixedproject.state.lists.ReadingListEvent;
-import org.comixedproject.state.lists.ReadingListStateChangeListener;
-import org.comixedproject.state.lists.ReadingListStateHandler;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.Message;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.statemachine.state.State;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,7 +49,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Log4j2
-public class ReadingListService implements ReadingListStateChangeListener, InitializingBean {
+public class ReadingListService {
   static final String POSITION_HEADER = "";
   static final String PUBLISHER_HEADER = "Publisher";
   static final String SERIES_HEADER = "SeriesDetail";
@@ -73,7 +60,6 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
   static final String ENCODING_ERROR_VOLUME = "????";
   static final String ENCODING_ERROR_ISSUE_NUMBER = "??";
 
-  @Autowired private ReadingListStateHandler readingListStateHandler;
   @Autowired private ReadingListRepository readingListRepository;
   @Autowired private UserService userService;
   @Autowired private ComicBookService comicBookService;
@@ -120,10 +106,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
     log.trace("Setting summary");
     readingList.setSummary(summary);
     log.trace("Saving reading list");
-    final ReadingList result = this.readingListRepository.save(readingList);
-    log.trace("Firing new reading list event");
-    this.readingListStateHandler.fireEvent(result, ReadingListEvent.created);
-    return this.readingListRepository.getById(result.getReadingListId());
+    return this.readingListRepository.saveAndFlush(readingList);
   }
 
   /**
@@ -147,9 +130,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
     log.trace("Updating summary");
     readingList.setSummary(summary);
     log.trace("Firing event: updated");
-    this.readingListStateHandler.fireEvent(readingList, ReadingListEvent.updated);
-    log.trace("Returning reading list");
-    return this.doLoadReadingList(id);
+    return this.readingListRepository.saveAndFlush(readingList);
   }
 
   private ReadingList doLoadReadingListForOwner(final long id, final String email)
@@ -191,8 +172,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
   @Transactional
   public ReadingList saveReadingList(final ReadingList readingList) {
     log.debug("Saving reading list: {}", readingList.getName());
-    this.readingListStateHandler.fireEvent(readingList, ReadingListEvent.updated);
-    return this.readingListRepository.getById(readingList.getReadingListId());
+    return this.readingListRepository.saveAndFlush(readingList);
   }
 
   /**
@@ -216,7 +196,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
     }
     comicIds.removeAll(readingList.getEntryIds());
     readingList.getEntryIds().addAll(comicIds.stream().distinct().collect(Collectors.toList()));
-    this.readingListStateHandler.fireEvent(readingList, ReadingListEvent.updated);
+    this.readingListRepository.save(readingList);
   }
 
   /**
@@ -239,7 +219,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
           "User is not owner: " + email + " != " + readingList.getOwner().getEmail());
     }
     readingList.getEntryIds().removeAll(comicIds);
-    this.readingListStateHandler.fireEvent(readingList, ReadingListEvent.updated);
+    this.readingListRepository.save(readingList);
   }
 
   private ReadingList doLoadReadingList(final long id) throws ReadingListException {
@@ -247,37 +227,6 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
     final ReadingList result = this.readingListRepository.getById(id);
     if (result == null) throw new ReadingListException("No such reading list: id=" + id);
     return result;
-  }
-
-  @Override
-  @Transactional
-  public void onReadingListStateChange(
-      final State<ReadingListState, ReadingListEvent> state,
-      final Message<ReadingListEvent> message) {
-    log.trace("Fetching reading list from message headers");
-    final var readingList = message.getHeaders().get(HEADER_READING_LIST, ReadingList.class);
-    if (readingList == null) {
-      return;
-    }
-    log.trace(
-        "Updating reading list state: [{}] =>  {}", readingList.getReadingListId(), state.getId());
-    readingList.setReadingListState(state.getId());
-    log.trace("Updating last modified date");
-    readingList.setLastModifiedOn(new Date());
-    log.trace("Saving updated reading list");
-    final ReadingList savedReadingList = this.readingListRepository.save(readingList);
-    try {
-      log.trace("Publishing changes");
-      this.publishReadingListUpdateAction.publish(savedReadingList);
-    } catch (PublishingException error) {
-      log.error("Failed to publish update", error);
-    }
-  }
-
-  @Override
-  public void afterPropertiesSet() throws Exception {
-    log.trace("Subscribing to reading list state changes");
-    this.readingListStateHandler.addListener(this);
   }
 
   /**
@@ -350,7 +299,6 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
       final String email, final String name, final InputStream input)
       throws ReadingListException, IOException {
     final ReadingList readingList = this.createReadingList(email, name, "");
-    final Long readingListId = readingList.getReadingListId();
     this.csvAdaptor.decodeRecords(
         input,
         new String[] {
@@ -364,15 +312,13 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
             if (!comicBooks.isEmpty()) {
               for (int which = 0; which < comicBooks.size(); which++) {
                 final ComicBook comicBook = comicBooks.get(which);
-                final ReadingList list = this.readingListRepository.getById(readingListId);
-                log.trace("Adding comicBook to reading list");
-                Map<String, Object> headers = new HashMap<>();
-                headers.put(HEADER_COMIC, comicBook);
-                this.readingListStateHandler.fireEvent(list, ReadingListEvent.comicAdded, headers);
+                readingList.getEntryIds().add(comicBook.getComicDetail().getComicDetailId());
               }
             }
           }
         });
+    log.debug("Saving new reading list");
+    this.readingListRepository.save(readingList);
   }
 
   private void ensureReadingListIsUnique(final String name, final ComiXedUser owner)

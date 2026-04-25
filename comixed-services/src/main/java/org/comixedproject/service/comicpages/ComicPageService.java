@@ -33,8 +33,8 @@ import org.comixedproject.model.comicpages.ComicPageType;
 import org.comixedproject.repositories.comicpages.ComicPageRepository;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.comixedproject.state.comicbooks.ComicEvent;
-import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -50,7 +50,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ComicPageService {
   @Autowired private ComicPageRepository comicPageRepository;
   @Autowired private ComicBookService comicBookService;
-  @Autowired private ComicStateHandler comicStateHandler;
+  @Autowired private ComicBookStateAdaptor comicBookStateAdaptor;
   @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
   /**
@@ -162,7 +162,7 @@ public class ComicPageService {
       log.trace("Loading page: id={}", id);
       final ComicPage page = this.comicPageRepository.getById(id);
       page.setPageType(deleted ? ComicPageType.DELETED : ComicPageType.STORY);
-      this.comicStateHandler.fireEvent(page.getComicBook(), ComicEvent.detailsUpdated);
+      this.comicBookStateAdaptor.fireEvent(page.getComicBook(), ComicEvent.comicMetadataChanged);
     }
   }
 

@@ -34,6 +34,6 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class RemoveDeletedComicBooksWriter extends AbstractComicBookWriter {
   public RemoveDeletedComicBooksWriter() {
-    super(ComicEvent.comicPurged);
+    super(ComicEvent.comicFileDeleted);
   }
 }

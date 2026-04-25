@@ -19,35 +19,21 @@
 package org.comixedproject.state.comicbooks.actions;
 
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.ComicState;
-import org.comixedproject.state.comicbooks.ComicEvent;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.messaging.MessageHeaders;
-import org.springframework.statemachine.StateContext;
 
 @ExtendWith(MockitoExtension.class)
 class FileContentsLoadedActionTest {
   @InjectMocks private FileContentsLoadedAction action;
-  @Mock private StateContext<ComicState, ComicEvent> context;
-  @Mock private MessageHeaders messageHeaders;
   @Mock private ComicBook comicBook;
-
-  @BeforeEach
-  void setUp() {
-    Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
-    Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
-        .thenReturn(comicBook);
-  }
 
   @Test
   void execute() {
-    action.execute(context);
+    action.execute(comicBook);
 
     Mockito.verify(comicBook, Mockito.times(1)).setFileContentsLoaded(true);
   }

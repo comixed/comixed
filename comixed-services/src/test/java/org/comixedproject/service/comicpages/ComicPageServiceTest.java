@@ -31,8 +31,8 @@ import org.comixedproject.model.comicpages.ComicPageType;
 import org.comixedproject.repositories.comicpages.ComicPageRepository;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.comixedproject.state.comicbooks.ComicEvent;
-import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -58,7 +58,7 @@ class ComicPageServiceTest {
   @InjectMocks private ComicPageService service;
   @Mock private ComicPageRepository comicPageRepository;
   @Mock private ComicBookService comicBookService;
-  @Mock private ComicStateHandler comicStateHandler;
+  @Mock private ComicBookStateAdaptor comicBookStateAdaptor;
   @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
   @Mock private ComicPage page;
   @Mock private ComicPage savedPage;
@@ -216,8 +216,8 @@ class ComicPageServiceTest {
     service.updatePageDeletion(idList, true);
 
     Mockito.verify(page, Mockito.times(1)).setPageType(ComicPageType.DELETED);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.detailsUpdated);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.comicMetadataChanged);
   }
 
   @Test
@@ -229,8 +229,8 @@ class ComicPageServiceTest {
     service.updatePageDeletion(idList, false);
 
     Mockito.verify(page, Mockito.times(1)).setPageType(ComicPageType.STORY);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.detailsUpdated);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.comicMetadataChanged);
   }
 
   @Test

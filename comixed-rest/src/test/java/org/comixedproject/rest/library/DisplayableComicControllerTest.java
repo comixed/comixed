@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.archives.ArchiveType;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.comicbooks.ComicType;
@@ -44,8 +45,7 @@ import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
-import org.comixedproject.state.comicbooks.ComicEvent;
-import org.comixedproject.state.comicbooks.ComicStateHandler;
+import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,8 +55,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.messaging.Message;
-import org.springframework.statemachine.state.State;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -102,7 +100,7 @@ class DisplayableComicControllerTest {
   @Mock private ComicSelectionService comicSelectionService;
   @Mock private UserService userService;
   @Mock private ReadingListService readingListService;
-  @Mock private ComicStateHandler comicStateHandler;
+  @Mock private ComicBookStateAdaptor comicBookStateAdaptor;
 
   @Mock private LoadComicsByFilterRequest filteredRequest;
   @Mock private List<DisplayableComic> comicList;
@@ -114,9 +112,8 @@ class DisplayableComicControllerTest {
   @Mock private Principal principal;
   @Mock private ComiXedUser user;
   @Mock private Set<Long> comicBooksRead;
-  @Mock private State<ComicState, ComicEvent> state;
-  @Mock private Message<ComicEvent> message;
   @Mock private LoadComicsResponse loadComicsResponse;
+  @Mock private ComicBook comicBook;
 
   @BeforeEach
   void setUp() throws ComicBookSelectionException, ComiXedUserException {
@@ -158,15 +155,15 @@ class DisplayableComicControllerTest {
   void afterPropertiesSet() {
     controller.afterPropertiesSet();
 
-    Mockito.verify(comicStateHandler, Mockito.times(1)).addListener(controller);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1)).addListener(controller);
   }
 
   @Test
-  void onComicStateChange() {
+  void onComicStateChanged() {
     controller.filterCache.put(filteredRequest, loadComicsResponse);
     controller.tagAndValueCache.put(TEST_TAG_VALUE_AND_TYPE_KEY, loadComicsResponse);
 
-    controller.onComicStateChange(state, message);
+    controller.onComicStateChanged(comicBook);
 
     assertTrue(controller.filterCache.isEmpty());
     assertTrue(controller.tagAndValueCache.isEmpty());

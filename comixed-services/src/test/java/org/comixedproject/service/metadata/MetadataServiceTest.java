@@ -52,8 +52,8 @@ import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ImprintService;
 import org.comixedproject.service.metadata.action.ProcessComicDescriptionAction;
+import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.comixedproject.state.comicbooks.ComicEvent;
-import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -113,7 +113,7 @@ class MetadataServiceTest {
   @Mock private VolumeMetadata volumeMetadata;
   @Mock private IssueMetadata issueMetadata;
   @Mock private ComicBookService comicBookService;
-  @Mock private ComicStateHandler comicStateHandler;
+  @Mock private ComicBookStateAdaptor comicBookStateAdaptor;
   @Mock private ComicBook loadedComicBook;
   @Mock private ComicDetail loadedComicDetail;
   @Mock private ComicBook savedComicBook;
@@ -867,8 +867,8 @@ class MetadataServiceTest {
         .saveToCache(TEST_CACHE_SOURCE, TEST_ISSUE_DETAILS_KEY, cacheEntryList.getValue());
     Mockito.verify(metadataCacheService, Mockito.never())
         .getFromCache(Mockito.anyString(), Mockito.anyString());
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(loadedComicBook, ComicEvent.scraped);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1))
+        .fireEvent(loadedComicBook, ComicEvent.comicMetadataChanged);
 
     verifyComicScraping(loadedComicBook);
   }
@@ -898,8 +898,8 @@ class MetadataServiceTest {
         .saveToCache(TEST_CACHE_SOURCE, TEST_ISSUE_DETAILS_KEY, cacheEntryList.getValue());
     Mockito.verify(metadataCacheService, Mockito.never())
         .getFromCache(Mockito.anyString(), Mockito.anyString());
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(loadedComicBook, ComicEvent.scraped);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1))
+        .fireEvent(loadedComicBook, ComicEvent.comicMetadataChanged);
 
     verifyComicScraping(loadedComicBook);
   }
@@ -935,8 +935,8 @@ class MetadataServiceTest {
         .saveToCache(TEST_CACHE_SOURCE, TEST_ISSUE_DETAILS_KEY, cacheEntryList.getValue());
     Mockito.verify(metadataCacheService, Mockito.never())
         .getFromCache(Mockito.anyString(), Mockito.anyString());
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(loadedComicBook, ComicEvent.scraped);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1))
+        .fireEvent(loadedComicBook, ComicEvent.comicMetadataChanged);
     Mockito.verify(comicMetadataSource, Mockito.times(1)).setMetadataSource(metadataSource);
     Mockito.verify(comicMetadataSource, Mockito.times(1)).setReferenceId(TEST_SOURCE_ID);
 
@@ -972,8 +972,8 @@ class MetadataServiceTest {
         .getFromCache(TEST_CACHE_SOURCE, TEST_ISSUE_DETAILS_KEY);
     Mockito.verify(metadataAdaptor, Mockito.times(1))
         .getIssueDetails(TEST_ISSUE_ID, metadataSource);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(loadedComicBook, ComicEvent.scraped);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1))
+        .fireEvent(loadedComicBook, ComicEvent.comicMetadataChanged);
     Mockito.verify(metadataCacheService, Mockito.times(1))
         .saveToCache(Mockito.anyString(), Mockito.anyString(), Mockito.anyList());
 
@@ -1003,8 +1003,8 @@ class MetadataServiceTest {
         .getFromCache(TEST_CACHE_SOURCE, TEST_ISSUE_DETAILS_KEY);
     Mockito.verify(metadataAdaptor, Mockito.times(1))
         .getIssueDetails(TEST_ISSUE_ID, metadataSource);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(loadedComicBook, ComicEvent.scraped);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1))
+        .fireEvent(loadedComicBook, ComicEvent.comicMetadataChanged);
     Mockito.verify(metadataCacheService, Mockito.never())
         .saveToCache(Mockito.anyString(), Mockito.anyString(), Mockito.anyList());
 
@@ -1033,8 +1033,8 @@ class MetadataServiceTest {
         .getFromCache(TEST_CACHE_SOURCE, TEST_ISSUE_DETAILS_KEY);
     Mockito.verify(metadataAdaptor, Mockito.never())
         .getIssueDetails(Mockito.anyString(), Mockito.any(MetadataSource.class));
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(loadedComicBook, ComicEvent.scraped);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1))
+        .fireEvent(loadedComicBook, ComicEvent.comicMetadataChanged);
     Mockito.verify(metadataCacheService, Mockito.never())
         .saveToCache(Mockito.anyString(), Mockito.anyString(), Mockito.anyList());
 
@@ -1193,7 +1193,7 @@ class MetadataServiceTest {
     Mockito.verify(issueService, Mockito.times(1)).saveAll(issues);
     Mockito.verify(comicBookService, Mockito.times(1))
         .findComic(TEST_PUBLISHER, TEST_SERIES_NAME, TEST_VOLUME, TEST_ISSUE_NUMBER);
-    Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
+    Mockito.verify(comicBookStateAdaptor, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
   }
 
   @Test
@@ -1236,8 +1236,8 @@ class MetadataServiceTest {
     Mockito.verify(comicDetail, Mockito.times(1)).setVolume(TEST_ISSUE_VOLUME);
     Mockito.verify(comicMetadataSource, Mockito.times(1)).setMetadataSource(metadataSource);
     Mockito.verify(comicMetadataSource, Mockito.times(1)).setReferenceId(TEST_SOURCE_ID);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.detailsUpdated);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.comicMetadataSaved);
   }
 
   @Test
@@ -1285,8 +1285,8 @@ class MetadataServiceTest {
     Mockito.verify(comicDetail, Mockito.times(1)).setPublisher(TEST_ISSUE_PUBLISHER);
     Mockito.verify(comicDetail, Mockito.times(1)).setSeries(TEST_ISSUE_SERIES_NAME);
     Mockito.verify(comicDetail, Mockito.times(1)).setVolume(TEST_ISSUE_VOLUME);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.detailsUpdated);
+    Mockito.verify(comicBookStateAdaptor, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.comicMetadataSaved);
   }
 
   @Test

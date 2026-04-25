@@ -45,8 +45,8 @@ import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.comixedproject.repositories.comicbooks.ComicBookRepository;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
 import org.comixedproject.repositories.comicbooks.ComicTagRepository;
+import org.comixedproject.state.comicbooks.ComicBookStateAdaptor;
 import org.comixedproject.state.comicbooks.ComicEvent;
-import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Limit;
@@ -66,7 +66,7 @@ import org.springframework.util.StringUtils;
 @Service
 @Log4j2
 public class ComicBookService {
-  @Autowired private ComicStateHandler comicStateHandler;
+  @Autowired private ComicBookStateAdaptor comicBookStateAdaptor;
   @Autowired private ComicBookRepository comicBookRepository;
   @Autowired private ComicDetailRepository comicDetailRepository;
   @Autowired private ComicBookMetadataAdaptor comicBookMetadataAdaptor;
@@ -129,7 +129,7 @@ public class ComicBookService {
   public ComicBook deleteComicBook(final long id) throws ComicBookException {
     log.debug("Marking comic for deletion: id={}", id);
     final var comic = this.doGetComic(id);
-    this.comicStateHandler.fireEvent(comic, ComicEvent.deleteComic);
+    this.comicBookStateAdaptor.fireEvent(comic, ComicEvent.markComicForRemoval);
     return this.doGetComic(id);
   }
 
@@ -194,7 +194,7 @@ public class ComicBookService {
 
     this.imprintService.update(comic);
 
-    this.comicStateHandler.fireEvent(comic, ComicEvent.detailsUpdated);
+    this.comicBookStateAdaptor.fireEvent(comic, ComicEvent.comicMetadataChanged);
     return this.doGetComic(id);
   }
 
@@ -259,7 +259,7 @@ public class ComicBookService {
   public ComicBook undeleteComicBook(final long id) throws ComicBookException {
     log.debug("Restoring comic: id={}", id);
     final var comic = this.doGetComic(id);
-    this.comicStateHandler.fireEvent(comic, ComicEvent.undeleteComic);
+    this.comicBookStateAdaptor.fireEvent(comic, ComicEvent.unmarkComicForRemoval);
     return this.doGetComic(id);
   }
 
@@ -313,7 +313,7 @@ public class ComicBookService {
     log.trace("Clearing comic metadata");
     this.comicBookMetadataAdaptor.clear(comic);
     log.trace("Firing comic state event");
-    this.comicStateHandler.fireEvent(comic, ComicEvent.metadataCleared);
+    this.comicBookStateAdaptor.fireEvent(comic, ComicEvent.comicMetadataCleared);
     log.trace("Retrieving updated comic");
     return this.doGetComic(comicId);
   }
@@ -372,7 +372,7 @@ public class ComicBookService {
             log.trace("Loading comicBook: id={}", id);
             final ComicBook comicBook = this.doGetComic(id);
             log.trace("Firing event: rescan comicBook");
-            this.comicStateHandler.fireEvent(comicBook, ComicEvent.rescanComic);
+            this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.rescanComicBookFile);
           } catch (ComicBookException error) {
             log.error("Error preparing comic for rescan", error);
           }
@@ -467,7 +467,7 @@ public class ComicBookService {
           try {
             final ComicBook comicBook = this.doGetComic(id);
             log.trace("Marking comicBook for deletion: id={}", comicBook.getComicBookId());
-            this.comicStateHandler.fireEvent(comicBook, ComicEvent.deleteComic);
+            this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.markComicForRemoval);
           } catch (ComicBookException error) {
             log.error("Failed to load comic", error);
           }
@@ -486,7 +486,7 @@ public class ComicBookService {
           try {
             final ComicBook comicBook = this.doGetComic(id);
             log.trace("Unmarking comicBook for deletion: id={}", comicBook.getComicBookId());
-            this.comicStateHandler.fireEvent(comicBook, ComicEvent.undeleteComic);
+            this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.unmarkComicForRemoval);
           } catch (ComicBookException error) {
             log.error("Failed to load comic", error);
           }
@@ -594,7 +594,7 @@ public class ComicBookService {
     }
 
     log.trace("Firing event: details updated");
-    this.comicStateHandler.fireEvent(comicBook, ComicEvent.detailsUpdated);
+    this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.comicMetadataChanged);
   }
 
   /**
@@ -608,7 +608,7 @@ public class ComicBookService {
     for (long id : comicIds) {
       log.trace("Loading comicBook: id={}", id);
       final ComicBook comicBook = this.doGetComic(id);
-      this.comicStateHandler.fireEvent(comicBook, ComicEvent.updateDetails);
+      this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.prepareComicsForBatchEditing);
     }
   }
 
@@ -935,7 +935,7 @@ public class ComicBookService {
     final ComicBook comicBook = this.comicBookRepository.findByFilename(filename);
     if (Objects.nonNull(comicBook)) {
       log.debug("Marking comic book as found: id={}", comicBook.getComicBookId());
-      this.comicStateHandler.fireEvent(comicBook, ComicEvent.markAsFound);
+      this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.comicFileFound);
     }
   }
 
@@ -949,7 +949,7 @@ public class ComicBookService {
     final ComicBook comicBook = this.comicBookRepository.findByFilename(filename);
     if (Objects.nonNull(comicBook)) {
       log.debug("Processing missing comic file: {} [{}]", filename, comicBook.getComicBookId());
-      this.comicStateHandler.fireEvent(comicBook, ComicEvent.markAsMissing);
+      this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.comicFileMissing);
     }
   }
 
