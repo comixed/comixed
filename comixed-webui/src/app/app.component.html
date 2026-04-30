@@ -1,53 +1,82 @@
-<cx-navigation-bar
-  class="cx-width-100"
-  [user]="user"
-  [sidebarOpened]="sidenav.opened"
-  [accountBarOpened]="accountBar.opened"
-  (toggleSidebar)="sidenav.toggle($event)"
-  (toggleAccountBar)="accountBar.toggle($event)"
-></cx-navigation-bar>
-
-@if (busy) {
-  <div id="cx-busy-overlay">
-    <div class="cx-centered cx-position-absolute">
-      <img [src]="busyIconURL" alt="Busy, please wait..." />
+<p-toolbar id="app-toolbar">
+  <ng-template #start>
+    <div class="flex items-center gap2">
+      @if (!!user) {
+        <p-button
+          [label]="'app.button.label.library' | translate"
+          routerLink="/library/all"
+          text
+          plain
+        />
+      }
+      @if (isAdmin) {
+        <p-button
+          [label]="'app.button.label.import-comics' | translate"
+          routerLink="/library/import"
+          text
+          plain
+        />
+        <p-button
+          [label]="'app.button.label.settings' | translate"
+          routerLink="/admin/configuration"
+          text
+          plain
+        />
+      }
     </div>
-  </div>
-}
+  </ng-template>
 
-<mat-sidenav-container
-  id="app-primary-space"
-  class="cx-width-100 cx-height-100"
->
-  <mat-sidenav
-    id="app-sidenav-container"
-    #sidenav
-    mode="over"
-    (click)="sidenav.close()"
-    position="start"
-  >
-    <cx-side-navigation [user]="user"></cx-side-navigation>
-  </mat-sidenav>
+  <ng-template #end>
+    <div class="flex items-center gap2">
+      @if (!!user) {
+        <p-avatar [image]="gravatarUrl(user.email)" />
+      }
+    </div>
+  </ng-template>
+</p-toolbar>
 
-  <mat-sidenav
-    id="app-account-bar-container"
-    #accountBar
-    mode="over"
-    position="end"
-  >
-    @if (!!user) {
-      <cx-edit-account-bar
-        [user]="user"
-        (closeSidebar)="accountBar.close()"
-      ></cx-edit-account-bar>
+<router-outlet></router-outlet>
+
+<div id="app-footer">
+  <span class="cx-text-nowrap cx-padding-right-15">
+    Copyright &copy; 2017-2026,
+    <a href="http://www.comixedproject.org" target="_blank">
+      The ComiXed Project
+    </a>
+  </span>
+
+  <span class="cx-text-nowrap cx-padding-right-15">
+    <a routerLink="/library/all">
+      {{ "app.system-status.comic-count" | translate: { count: comicCount } }}
+    </a>
+    |
+    <a routerLink="/library/unscraped">
+      {{
+        "app.system-status.unscraped-count"
+          | translate: { count: unscrapedCount }
+      }}
+    </a>
+    |
+    <a routerLink="/library/unread">
+      {{ "app.system-status.read-count" | translate: { count: readCount } }}
+    </a>
+    |
+    <a routerLink="/library/selected">
+      {{
+        "app.system-status.selected-count" | translate: { count: selectedCount }
+      }}
+    </a>
+    |
+    <a routerLink="/library/deleted">
+      {{
+        "app.system-status.deleted-count" | translate: { count: deletedCount }
+      }}
+    </a>
+    @if (isAdmin) {
+      |
+      <a routerLink="/admin/processes">
+        {{ "app.system-status.batch-jobs" | translate: { count: batchJobs } }}
+      </a>
     }
-  </mat-sidenav>
-
-  <mat-sidenav-content #sidebar>
-    <div id="app-content-container">
-      <router-outlet></router-outlet>
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
-
-<cx-footer [user]="user"></cx-footer>
+  </span>
+</div>

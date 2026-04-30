@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2026, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,30 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomePageComponent } from '@app/pages/home-page/home-page.component';
-import { BuildDetailsPageComponent } from '@app/pages/build-details-page/build-details-page.component';
-import { ReaderGuard } from '@app/user';
+import { NgModule } from '@angular/core';
+import { HomeComponent } from '@app/dashboard/pages/home/home.component';
+import { AdminGuard, ReaderGuard } from '@app/user';
 
 const routes: Routes = [
   {
-    path: 'home',
-    component: HomePageComponent,
-    canActivate: [ReaderGuard]
-  },
-  {
-    path: 'build',
-    component: BuildDetailsPageComponent
-  },
-  {
-    path: '**',
-    redirectTo: '/dashboard'
+    path: 'dashboard',
+    component: HomeComponent,
+    canActivate: [ReaderGuard, AdminGuard]
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {})],
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class AppRouting {}
+export class DashboardRouting {}

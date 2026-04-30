@@ -1,0 +1,46 @@
+{
+  "dashboard": {
+    "character-list": {
+      "label": {
+        "name": "Name",
+        "comic-count": "# Comics"
+      }
+    },
+    "location-list": {
+      "label": {
+        "name": "Name",
+        "comic-count": "# Comics"
+      }
+    },
+    "publisher-list": {
+      "label": {
+        "name": "Name",
+        "comic-count": "# Comics"
+      }
+    },
+    "series-list": {
+      "label": {
+        "name": "Name",
+        "comic-count": "# Comics"
+      }
+    },
+    "state-list": {
+      "label": {
+        "name": "Name",
+        "comic-count": "# Comics"
+      }
+    },
+    "story-list": {
+      "label": {
+        "name": "Name",
+        "comic-count": "# Comics"
+      }
+    },
+    "team-list": {
+      "label": {
+        "name": "Name",
+        "comic-count": "# Comics"
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+<div class="card">
+  <p-table
+    [value]="publishers"
+    stripedRows
+    paginator="true"
+    [rows]="rows"
+    sortMode="single"
+  >
+    <ng-template #header>
+      <tr>
+        <th pSortableColumn="name">
+          <div class="flex items-center gap-2">
+            {{ "dashboard.publisher-list.label.name" | translate }}
+            <p-sortIcon field="name" />
+          </div>
+        </th>
+        <th pSortableColumn="count">
+          <div class="flex items-center gap-2">
+            {{ "dashboard.publisher-list.label.comic-count" | translate }}
+            <p-sortIcon field="count" />
+          </div>
+        </th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-publisher>
+      <tr>
+        <td>{{ publisher.name }}</td>
+        <td>{{ publisher.count }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

@@ -48,6 +48,6 @@ public enum ArchiveType {
 
   @Override
   public String toString() {
-    return this.name;
+    return this.name();
   }
 }

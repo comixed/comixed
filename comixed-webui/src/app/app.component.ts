@@ -23,7 +23,7 @@ import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
 import { loadCurrentUser } from '@app/user/actions/user.actions';
 import { selectBusyState } from '@app/core/selectors/busy.selectors';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   APP_MESSAGING_TOPIC,
   DARK_MODE_PREFERENCE,
@@ -50,31 +50,20 @@ import { selectMessagingState } from '@app/messaging/selectors/messaging.selecto
 import { WebSocketService } from '@app/messaging';
 import { AlertService } from '@app/core/services/alert.service';
 import { filter } from 'rxjs/operators';
-import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
-import {
-  MatSidenavContainer,
-  MatSidenav,
-  MatSidenavContent
-} from '@angular/material/sidenav';
-import { SideNavigationComponent } from './components/side-navigation/side-navigation.component';
-import { EditAccountBarComponent } from './user/components/edit-account-bar/edit-account-bar.component';
-import { RouterOutlet } from '@angular/router';
-import { FooterComponent } from './components/footer/footer.component';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { Toolbar } from 'primeng/toolbar';
+import { Avatar } from 'primeng/avatar';
+import { Button } from 'primeng/button';
+import { isAdmin } from '@app/user/user.functions';
+import { selectComicBookSelectionState } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import { selectBatchProcessList } from '@app/admin/selectors/batch-processes.selectors';
+import gravatarUrl from 'gravatar-url';
 
 @Component({
   selector: 'cx-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  imports: [
-    NavigationBarComponent,
-    MatSidenavContainer,
-    MatSidenav,
-    SideNavigationComponent,
-    EditAccountBarComponent,
-    MatSidenavContent,
-    RouterOutlet,
-    FooterComponent
-  ]
+  imports: [RouterOutlet, Toolbar, Avatar, TranslatePipe, Button, RouterLink]
 })
 export class AppComponent implements OnInit {
   @HostBinding('class') currentTheme: 'lite-theme' | 'dark-theme' =
@@ -88,12 +77,19 @@ export class AppComponent implements OnInit {
   darkMode = false;
   busyIcon = BusyIcon.DEFAULT;
   appMessagingSubscription: Subscription | null = null;
+  unscrapedCount = 0;
+  comicCount = 0;
+  readCount = 0;
+  selectedCount = 0;
+  deletedCount = 0;
+  batchJobs = 0;
 
   logger = inject(LoggerService);
   translateService = inject(TranslateService);
   store = inject(Store);
   webSocketService = inject(WebSocketService);
   alertService = inject(AlertService);
+  protected readonly gravatarUrl = gravatarUrl;
 
   constructor() {
     this.logger.level = LoggerLevel.INFO;
@@ -202,6 +198,19 @@ export class AppComponent implements OnInit {
           this.appMessagingSubscription = null;
         }
       });
+    this.store
+      .select(selectComicBookSelectionState)
+      .subscribe(state => (this.selectedCount = state.ids.length));
+    this.store
+      .select(selectBatchProcessList)
+      .subscribe(
+        list => (this.batchJobs = list.filter(job => job.running).length)
+      );
+    this.readCount = this.user?.readComicBooks?.length | 0;
+  }
+
+  get isAdmin(): boolean {
+    return isAdmin(this.user);
   }
 
   get busyIconURL(): string {

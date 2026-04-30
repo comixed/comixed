@@ -2654,6 +2654,39 @@
     tslib "^2.8.1"
     tsyringe "^4.10.0"
 
+"@primeuix/motion@^0.0.10":
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/@primeuix/motion/-/motion-0.0.10.tgz#9af4238226042d80518dd343c6481d03582e374a"
+  integrity sha512-PsZwOPq79Scp7/ionshRcQ5xKVf9+zuLcyY5mf6onK8chHT5C9JGphmcIZ4CzcqxuGEpsm8AIbTGy+zS3RtzLA==
+  dependencies:
+    "@primeuix/utils" "^0.6.3"
+
+"@primeuix/styled@^0.7.4":
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/@primeuix/styled/-/styled-0.7.4.tgz#d2108a7fad297dea60d549b2c10ed744dc0cbc0e"
+  integrity sha512-QSO/NpOQg8e9BONWRBx9y8VGMCMYz0J/uKfNJEya/RGEu7ARx0oYW0ugI1N3/KB1AAvyGxzKBzGImbwg0KUiOQ==
+  dependencies:
+    "@primeuix/utils" "^0.6.1"
+
+"@primeuix/styles@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@primeuix/styles/-/styles-2.0.3.tgz#e42d14c138fe092683228d65a3f6de17de70d6a0"
+  integrity sha512-2ykAB6BaHzR/6TwF8ShpJTsZrid6cVIEBVlookSdvOdmlWuevGu5vWOScgIwqWwlZcvkFYAGR/SUV3OHCTBMdw==
+  dependencies:
+    "@primeuix/styled" "^0.7.4"
+
+"@primeuix/themes@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@primeuix/themes/-/themes-2.0.3.tgz#c3919d49e818b3bbac611ab8d89a52d4ffed6815"
+  integrity sha512-3fS1883mtCWhgUgNf/feiaaDSOND4EBIOu9tZnzJlJ8QtYyL6eFLcA6V3ymCWqLVXQ1+lTVEZv1gl47FIdXReg==
+  dependencies:
+    "@primeuix/styled" "^0.7.4"
+
+"@primeuix/utils@^0.6.1", "@primeuix/utils@^0.6.3":
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/@primeuix/utils/-/utils-0.6.4.tgz#f436eae1be166662d424b8550a97ba0c150819e6"
+  integrity sha512-pZ5f+vj7wSzRhC7KoEQRU5fvYAe+RP9+m39CTscZ3UywCD1Y2o6Fe1rRgklMPSkzUcty2jzkA0zMYkiJBD1hgg==
+
 "@rolldown/binding-android-arm64@1.0.0-rc.4":
   version "1.0.0-rc.4"
   resolved "https://registry.yarnpkg.com/@rolldown/binding-android-arm64/-/binding-android-arm64-1.0.0-rc.4.tgz#bb275690413cd0109d49ba5dd4491e1c0296ad0e"
@@ -3897,6 +3930,11 @@ blocking-proxy@^1.0.0:
   integrity sha512-KE8NFMZr3mN2E0HcvCgRtX7DjhiIQrwle+nSVJVC/yqFb9+xznHl2ZcoBp2L9qzkI4t4cBFJ1efXF8Dwi132RA==
   dependencies:
     minimist "^1.2.0"
+
+blueimp-md5@^2.18.0:
+  version "2.19.0"
+  resolved "https://registry.yarnpkg.com/blueimp-md5/-/blueimp-md5-2.19.0.tgz#b53feea5498dcb53dc6ec4b823adb84b729c4af0"
+  integrity sha512-DRQrD6gJyy8FbiE4s+bDoXS9hiW3Vbx5uCdwvcCf3zLHL+Iv7LtGHLpr+GZV8rHG8tK766FGYBwRbu8pELTt+w==
 
 body-parser@^1.19.0, body-parser@~1.20.3:
   version "1.20.5"
@@ -5647,6 +5685,14 @@ gradient-path@^2.3.0:
   dependencies:
     tinygradient "^1.0.0"
 
+gravatar-url@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/gravatar-url/-/gravatar-url-4.0.1.tgz#cbf803720c4d17620eba36acdf485af423870c1d"
+  integrity sha512-AiU83cghGg2D8vAUwrMXCByejkkm4RtLwMNGmPU7VhqBYhsxcBCV0SAzRpYNbUCpTci5v46J/KFKPmDYaG2oyA==
+  dependencies:
+    md5-hex "^4.0.0"
+    type-fest "^1.0.2"
+
 handle-thing@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/handle-thing/-/handle-thing-2.0.1.tgz#857f79ce359580c340d43081cc648970d0bb234e"
@@ -6743,6 +6789,13 @@ math-intrinsics@^1.1.0:
   resolved "https://registry.yarnpkg.com/math-intrinsics/-/math-intrinsics-1.1.0.tgz#a0dd74be81e2aa5c2f27e65ce283605ee4e2b7f9"
   integrity sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==
 
+md5-hex@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/md5-hex/-/md5-hex-4.0.0.tgz#9327bd8d2868b05b9eaa8691f196ea05e34a03d3"
+  integrity sha512-di38zHPn4Tz8LCb5Lz8SpLb/20Hv23aPXpF4Bq1mR5r9JuCZQ/JpcDUxFfZF9Ur5GiUvqS5NQOkR+fm5cYZ0IQ==
+  dependencies:
+    blueimp-md5 "^2.18.0"
+
 media-typer@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/media-typer/-/media-typer-0.3.0.tgz#8710d7af0aa626f8fffa1ce00168545263255748"
@@ -7640,6 +7693,22 @@ prettier@^3.6.2:
   version "3.8.3"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.8.3.tgz#560f2de55bf01b4c0503bc629d5df99b9a1d09b0"
   integrity sha512-7igPTM53cGHMW8xWuVTydi2KO233VFiTNyF5hLJqpilHfmn8C8gPf+PS7dUT64YcXFbiMGZxS9pCSxL/Dxm/Jw==
+
+primeicons@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/primeicons/-/primeicons-7.0.0.tgz#6b25c3fdcb29bb745a3035bdc1ed5902f4a419cf"
+  integrity sha512-jK3Et9UzwzTsd6tzl2RmwrVY/b8raJ3QZLzoDACj+oTJ0oX7L9Hy+XnVwgo4QVKlKpnP/Ur13SXV/pVh4LzaDw==
+
+primeng@^21.1.6:
+  version "21.1.6"
+  resolved "https://registry.yarnpkg.com/primeng/-/primeng-21.1.6.tgz#ff1ced4db7507c8959971afecb41801fb219a7d7"
+  integrity sha512-kPLoixeMPXIXdQO+RnALRmMfSbPQYAeGx1yTltqkj7XbMkSm9Dr7IxqZZUYjUHemCcr2wyjW82G68WjSMDj66w==
+  dependencies:
+    "@primeuix/motion" "^0.0.10"
+    "@primeuix/styled" "^0.7.4"
+    "@primeuix/styles" "^2.0.3"
+    "@primeuix/utils" "^0.6.3"
+    tslib "^2.3.0"
 
 proc-log@^6.0.0, proc-log@^6.1.0:
   version "6.1.0"
@@ -8934,6 +9003,11 @@ type-check@^0.4.0, type-check@~0.4.0:
   integrity sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==
   dependencies:
     prelude-ls "^1.2.1"
+
+type-fest@^1.0.2:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-1.4.0.tgz#e9fb813fe3bf1744ec359d55d1affefa76f14be1"
+  integrity sha512-yGSza74xk0UG8k+pLh5oeoYirvIiWo5t0/o3zHHAO2tRDiZcxWP7fywNlXhqb6/r6sWvwi+RsyQMWhVLe4BVuA==
 
 type-is@^2.0.1:
   version "2.0.1"

@@ -1,0 +1,33 @@
+<div class="card">
+  <p-table
+    [value]="teams"
+    stripedRows
+    paginator="true"
+    [rows]="rows"
+    sortMode="single"
+  >
+    <ng-template #header>
+      <tr>
+        <th pSortableColumn="name">
+          <div class="flex items-center gap-2">
+            {{ "dashboard.team-list.label.name" | translate }}
+            <p-sortIcon field="name" />
+          </div>
+        </th>
+        <th pSortableColumn="count">
+          <div class="flex items-center gap-2">
+            {{ "dashboard.team-list.label.comic-count" | translate }}
+            <p-sortIcon field="count" />
+          </div>
+        </th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-team>
+      <tr>
+        <td>{{ team.name }}</td>
+        <td>{{ team.count }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

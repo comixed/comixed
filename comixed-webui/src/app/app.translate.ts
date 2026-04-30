@@ -31,6 +31,7 @@ export function HttpLoaderFactory(
     { prefix: './assets/i18n/', suffix: '/comic-metadata.json' },
     { prefix: './assets/i18n/', suffix: '/comic-pages.json' },
     { prefix: './assets/i18n/', suffix: '/core.json' },
+    { prefix: './assets/i18n/', suffix: '/dashboard.json' },
     { prefix: './assets/i18n/', suffix: '/last-read.json' },
     { prefix: './assets/i18n/', suffix: '/library.json' },
     { prefix: './assets/i18n/', suffix: '/library-plugins.json' },

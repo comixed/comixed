@@ -1,0 +1,22 @@
+<cx-publisher-list
+  [publishers]="libraryState.publishers"
+  [rows]="rows"
+></cx-publisher-list>
+
+<cx-series-list [series]="libraryState.series" [rows]="rows"></cx-series-list>
+
+<cx-character-list
+  [characters]="libraryState.characters"
+  [rows]="rows"
+></cx-character-list>
+
+<cx-team-list [teams]="libraryState.teams" [rows]="rows"></cx-team-list>
+
+<cx-location-list
+  [locations]="libraryState.locations"
+  [rows]="rows"
+></cx-location-list>
+
+<cx-story-list [stories]="libraryState.series" [rows]="rows"></cx-story-list>
+
+<cx-state-list [states]="libraryState.states" [rows]="rows"></cx-state-list>

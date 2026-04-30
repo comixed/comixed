@@ -21,7 +21,6 @@ import {
   importProvidersFrom,
   provideZoneChangeDetection
 } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { environment } from './environments/environment';
 import { HTTP_INTERCEPTORS, HttpBackend } from '@angular/common/http';
@@ -37,7 +36,7 @@ import { CollectionsModule } from '@app/collections/collections.module';
 import { ListsModule } from '@app/lists/lists.module';
 import { ComicMetadataModule } from '@app/comic-metadata/comic-metadata.module';
 import { LibraryPluginsModule } from '@app/library-plugins/library-plugins.module';
-import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
+import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
 import { AppRouting } from './app/app.routing';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -52,9 +51,9 @@ import { ComicsReadStatisticsEffects } from '@app/effects/comics-read-statistics
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
-  TranslateModule,
+  TranslateCompiler,
   TranslateLoader,
-  TranslateCompiler
+  TranslateModule
 } from '@ngx-translate/core';
 import { HttpLoaderFactory } from '@app/app.translate';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
@@ -76,6 +75,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AppComponent } from './app/app.component';
+import { DashboardModule } from '@app/dashboard/dashboard.module';
+import { providePrimeNG } from 'primeng/config';
+import Aura from '@primeuix/themes/aura';
 
 if (environment.production) {
   enableProdMode();
@@ -84,10 +86,12 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     provideZoneChangeDetection(),
+    providePrimeNG({ theme: { preset: Aura } }),
     importProvidersFrom(
       AdminModule,
       MessagingModule,
       UserModule,
+      DashboardModule,
       ComicBooksModule.forRoot(),
       ComicFileModule,
       LibraryModule,

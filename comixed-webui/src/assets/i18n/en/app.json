@@ -1,7 +1,20 @@
 {
   "app": {
+    "button": {
+      "label": {
+        "import-comics": "Import",
+        "library": "Library",
+        "settings": "Settings"
+      }
+    },
     "general-effect-failure": "A general error has occurred.",
     "logged-in": "Logged in: {email}",
+    "publisher-list": {
+      "label": {
+        "comic-count": "# Comics",
+        "publisher-name": "Name"
+      }
+    },
     "system-status": {
       "batch-jobs": "Jobs: {count}",
       "comic-count": "Comics: {count}",
