@@ -37,7 +37,8 @@ describe('Library Selectors', () => {
       locations: [{ name: 'Location1', count: 1 }],
       stories: [{ name: 'Story1', count: 1 }],
       byPublisherAndYear: [],
-      states: [{ name: ComicState.CHANGED.toString(), count: 1 }]
+      states: [{ name: ComicState.CHANGED.toString(), count: 1 }],
+      archiveTypes: [{ name: 'CBZ', count: 1 }]
     };
   });
 

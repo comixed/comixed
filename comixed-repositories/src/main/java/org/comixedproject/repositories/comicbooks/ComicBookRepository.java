@@ -498,6 +498,15 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   List<RemoteLibrarySegmentState> getComicBooksState();
 
   /**
+   * Returns the publishers state for the library.
+   *
+   * @return the publishers state
+   */
+  @Query(
+      "SELECT new org.comixedproject.model.net.library.RemoteLibrarySegmentState(TRIM(CAST(d.archiveType AS string)), COUNT(d)) FROM ComicDetail d GROUP BY d.archiveType")
+  List<RemoteLibrarySegmentState> getComicBookArchiveTypes();
+
+  /**
    * Retrieves the number of comics per year and publisher from the library.
    *
    * @return the statistics

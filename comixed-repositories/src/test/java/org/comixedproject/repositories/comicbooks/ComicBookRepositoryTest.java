@@ -283,6 +283,14 @@ public class ComicBookRepositoryTest {
   }
 
   @Test
+  public void getComicBookArchiveTypes() {
+    final List<RemoteLibrarySegmentState> result = repository.getComicBookArchiveTypes();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+  }
+
+  @Test
   public void testGetByPublisherAndYear() {
     final List<PublisherAndYearSegment> result = repository.getByPublisherAndYear();
 

@@ -1044,6 +1044,18 @@ class ComicBookServiceTest {
   }
 
   @Test
+  void getComicBookArchiveTypes() {
+    Mockito.when(comicBookRepository.getComicBookArchiveTypes()).thenReturn(librarySegmentList);
+
+    final List<RemoteLibrarySegmentState> result = service.getComicBookArchiveTypes();
+
+    assertNotNull(result);
+    assertSame(librarySegmentList, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getComicBookArchiveTypes();
+  }
+
+  @Test
   void getByPublisherAndYear() {
     Mockito.when(comicBookRepository.getByPublisherAndYear()).thenReturn(byPublisherAndYearList);
 

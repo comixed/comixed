@@ -1,0 +1,39 @@
+<h3>{{ title }}</h3>
+
+<mat-paginator
+  showFirstLastButtons="true"
+  [length]="data?.length"
+  [pageSize]="rows"
+></mat-paginator>
+
+<mat-table matSort class="cx-width-100 cx-padding-2" [dataSource]="dataSource">
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>
+      <span class="cx-text-nowrap">
+        {{ "dashboard.label.name" | translate }}
+      </span>
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-text-nowrap">{{ entry.name }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="comic-count">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>
+      <span class="cx-text-nowrap">
+        {{ "dashboard.label.comic-count" | translate }}
+      </span>
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-text-nowrap">{{ entry.count }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  <tr class="mat-row" *matNoDataRow>
+    <td class="mat-cell" colspan="4">
+      {{ "dashboard.text.no-records-found" | translate }}
+    </td>
+  </tr>
+</mat-table>

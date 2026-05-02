@@ -67,35 +67,6 @@
     },
     "title": "Display Options"
   },
-  "home": {
-    "label": {
-      "character": "Character",
-      "comic-state-added": "Added",
-      "comic-state-changed": "Changed",
-      "comic-state-deleted": "Deleted",
-      "comic-state-stable": "Stable",
-      "comic-state-unprocessed": "Unprocessed",
-      "location": "Location",
-      "publisher": "Publisher",
-      "select-collection-type": "Collection Type",
-      "series": "Series",
-      "story": "Story",
-      "team": "Team"
-    },
-    "legend": {
-      "collections-top-entries-x-axis": "Number Of Comics",
-      "comic-state-x-axis": "Number Of Comics In Each State"
-    },
-    "tab-title": "Home",
-    "title": {
-      "comic-collections-chart": "Top Collection Entries",
-      "comic-state-chart": "Comics By State",
-      "comic-statistics": "Comic Library Statistics",
-      "comics-by-year-and-publisher-chart": "Comics By Publisher/Year",
-      "last-read-statistics": "Comics Read Per Publisher",
-      "loading-comics": "Loading library..."
-    }
-  },
   "load-comics-read-statistics": {
     "effect-failure": "Failed to load comics read statistics..."
   },
@@ -135,11 +106,11 @@
       "changed-comics": "Changed Comics",
       "character-collection": "Characters",
       "configuration": "Configuration",
+      "dashboard": "Dashboard",
       "deleted-comics": "Marked For Removal",
       "deleted-pages": "Deleted Pages",
       "duplicate-comics": "Duplicate Comics",
       "duplicate-pages": "Duplicate Pages",
-      "home": "Home Page",
       "import-comic-books": "Import Comics",
       "location-collection": "Locations",
       "metadata-batch-process": "Update Metadata Process",
