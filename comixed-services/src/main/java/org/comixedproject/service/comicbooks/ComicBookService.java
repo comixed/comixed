@@ -723,6 +723,17 @@ public class ComicBookService {
   }
 
   /**
+   * Returns the library state for archive types.
+   *
+   * @return the comic book states
+   */
+  @Transactional
+  public List<RemoteLibrarySegmentState> getComicBookArchiveTypes() {
+    log.trace("Getting the archive types state");
+    return this.comicBookRepository.getComicBookArchiveTypes();
+  }
+
+  /**
    * Returns the number of comics per publisher and year.
    *
    * @return the statistics

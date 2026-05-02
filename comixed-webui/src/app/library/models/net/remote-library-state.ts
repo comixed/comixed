@@ -31,5 +31,6 @@ export interface RemoteLibraryState {
   locations: RemoteLibrarySegmentState[];
   stories: RemoteLibrarySegmentState[];
   states: RemoteLibrarySegmentState[];
+  archiveTypes: RemoteLibrarySegmentState[];
   byPublisherAndYear: ByPublisherAndYearSegment[];
 }

@@ -53,6 +53,7 @@ describe('Library Reducer', () => {
   const LOCATIONS = [{ name: 'Location1', count: 1 }];
   const STORIES = [{ name: 'Story1', count: 1 }];
   const STATES = [{ name: ComicState.CHANGED.toString(), count: 1 }];
+  const ARCHIVE_TYPES = [{ name: 'CBZ', count: 1 }];
 
   let state: LibraryState;
 
@@ -131,7 +132,8 @@ describe('Library Reducer', () => {
           teams: [],
           locations: [],
           stories: [],
-          states: []
+          states: [],
+          archiveTypes: []
         },
         libraryStateLoaded({
           state: {
@@ -145,7 +147,8 @@ describe('Library Reducer', () => {
             teams: TEAMS,
             locations: LOCATIONS,
             stories: STORIES,
-            states: STATES
+            states: STATES,
+            archiveTypes: ARCHIVE_TYPES
           } as RemoteLibraryState
         })
       );
@@ -189,6 +192,10 @@ describe('Library Reducer', () => {
 
     it('sets the states', () => {
       expect(state.states).toEqual(STATES);
+    });
+
+    it('sets the archive types', () => {
+      expect(state.archiveTypes).toEqual(ARCHIVE_TYPES);
     });
   });
 

@@ -56,6 +56,7 @@ class RemoteLibraryStateServiceTest {
   @Mock private List<RemoteLibrarySegmentState> locationsState;
   @Mock private List<RemoteLibrarySegmentState> storiesState;
   @Mock private List<RemoteLibrarySegmentState> comicsState;
+  @Mock private List<RemoteLibrarySegmentState> archiveTypeState;
   @Mock private List<PublisherAndYearSegment> byPublisherAndYear;
   @Mock private PublishRemoteLibraryUpdateAction publishRemoteLibraryUpdateAction;
   @Mock private ComicBook comicBook;
@@ -75,6 +76,7 @@ class RemoteLibraryStateServiceTest {
     Mockito.when(comicBookService.getLocationsState()).thenReturn(locationsState);
     Mockito.when(comicBookService.getStoriesState()).thenReturn(storiesState);
     Mockito.when(comicBookService.getComicBooksState()).thenReturn(comicsState);
+    Mockito.when(comicBookService.getComicBookArchiveTypes()).thenReturn(archiveTypeState);
     Mockito.when(comicBookService.getByPublisherAndYear()).thenReturn(byPublisherAndYear);
   }
 
@@ -82,7 +84,7 @@ class RemoteLibraryStateServiceTest {
   void afterPropertiesSet() throws Exception {
     service.afterPropertiesSet();
 
-    Mockito.verify(comicBookStateAdaptor, Mockito.times(1)).addListener(service);
+    Mockito.verify(comicBookStateAdaptor).addListener(service);
   }
 
   @Test
@@ -106,7 +108,7 @@ class RemoteLibraryStateServiceTest {
     assertSame(comicsState, libraryState.getStates());
     assertSame(byPublisherAndYear, libraryState.getByPublisherAndYear());
 
-    Mockito.verify(publishRemoteLibraryUpdateAction, Mockito.times(1)).publish(libraryState);
+    Mockito.verify(publishRemoteLibraryUpdateAction).publish(libraryState);
   }
 
   @Test
@@ -120,7 +122,7 @@ class RemoteLibraryStateServiceTest {
     final RemoteLibraryState libraryState = libraryStateArgumentCaptor.getValue();
     assertNotNull(libraryState);
 
-    Mockito.verify(publishRemoteLibraryUpdateAction, Mockito.times(1)).publish(libraryState);
+    Mockito.verify(publishRemoteLibraryUpdateAction).publish(libraryState);
   }
 
   @Test
@@ -138,17 +140,19 @@ class RemoteLibraryStateServiceTest {
     assertSame(locationsState, result.getLocations());
     assertSame(storiesState, result.getStories());
     assertSame(comicsState, result.getStates());
+    assertSame(archiveTypeState, result.getArchiveTypes());
     assertSame(byPublisherAndYear, result.getByPublisherAndYear());
 
-    Mockito.verify(comicBookService, Mockito.times(1)).getComicBookCount();
-    Mockito.verify(comicBookService, Mockito.times(1)).getDeletedComicCount();
-    Mockito.verify(comicBookService, Mockito.times(1)).getPublishersState();
-    Mockito.verify(comicBookService, Mockito.times(1)).getSeriesState();
-    Mockito.verify(comicBookService, Mockito.times(1)).getCharactersState();
-    Mockito.verify(comicBookService, Mockito.times(1)).getTeamsState();
-    Mockito.verify(comicBookService, Mockito.times(1)).getLocationsState();
-    Mockito.verify(comicBookService, Mockito.times(1)).getStoriesState();
-    Mockito.verify(comicBookService, Mockito.times(1)).getComicBooksState();
-    Mockito.verify(comicBookService, Mockito.times(1)).getByPublisherAndYear();
+    Mockito.verify(comicBookService).getComicBookCount();
+    Mockito.verify(comicBookService).getDeletedComicCount();
+    Mockito.verify(comicBookService).getPublishersState();
+    Mockito.verify(comicBookService).getSeriesState();
+    Mockito.verify(comicBookService).getCharactersState();
+    Mockito.verify(comicBookService).getTeamsState();
+    Mockito.verify(comicBookService).getLocationsState();
+    Mockito.verify(comicBookService).getStoriesState();
+    Mockito.verify(comicBookService).getComicBooksState();
+    Mockito.verify(comicBookService).getComicBookArchiveTypes();
+    Mockito.verify(comicBookService).getByPublisherAndYear();
   }
 }

@@ -56,7 +56,6 @@
     "@ngx-translate/http-loader": "^17.0.0",
     "@stomp/rx-stomp": "^2.0.0",
     "@stomp/stompjs": "^7.0.0",
-    "@swimlane/ngx-charts": "^23.1.0",
     "@tragically-slick/confirmation": "^17.1.1",
     "@types/file-saver": "^2.0.0",
     "@typescript-eslint/types": "^8",

@@ -1,0 +1,23 @@
+{
+  "dashboard": {
+    "label": {
+      "comic-count": "# Comics",
+      "name": "Name"
+    },
+    "page-title": "Library Dashboard",
+    "tab-title": "Dashboard",
+    "text": {
+      "no-records-found": "No statistics loaded..."
+    },
+    "title": {
+      "archive-type-title": "Archive Types",
+      "character-title": "Character Stats",
+      "comic-states-title": "Comic States",
+      "location-title": "Location Stats",
+      "publisher-title": "Publisher Stats",
+      "series-title": "Series Stats",
+      "story-title": "Story Stats",
+      "team-title": "Team Stats"
+    }
+  }
+}

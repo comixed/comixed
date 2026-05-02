@@ -43,6 +43,7 @@ export interface LibraryState {
   locations: RemoteLibrarySegmentState[];
   stories: RemoteLibrarySegmentState[];
   states: RemoteLibrarySegmentState[];
+  archiveTypes: RemoteLibrarySegmentState[];
   byPublisherAndYear: ByPublisherAndYearSegment[];
 }
 
@@ -58,6 +59,7 @@ export const initialState: LibraryState = {
   teams: [],
   locations: [],
   stories: [],
+  archiveTypes: [],
   byPublisherAndYear: [],
   states: []
 };
@@ -82,6 +84,7 @@ export const reducer = createReducer(
     teams: action.state.teams,
     locations: action.state.locations,
     stories: action.state.stories,
+    archiveTypes: action.state.archiveTypes,
     byPublisherAndYear: action.state.byPublisherAndYear,
     states: action.state.states
   })),

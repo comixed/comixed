@@ -95,6 +95,12 @@ public class RemoteLibraryState {
   @Setter
   private List<RemoteLibrarySegmentState> states;
 
+  @JsonProperty("archiveTypes")
+  @JsonView(View.RemoteLibraryState.class)
+  @Getter
+  @Setter
+  private List<RemoteLibrarySegmentState> archiveTypes;
+
   @JsonProperty("byPublisherAndYear")
   @JsonView(View.RemoteLibraryState.class)
   @Getter

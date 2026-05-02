@@ -1,0 +1,10 @@
+@use 'variables' as *;
+
+.mat-column-name {
+}
+
+.mat-column-comic-count {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
