@@ -137,6 +137,10 @@ h4 {
   top: 0px;
 }
 
+.cx-overflow-x-clip-auto {
+  overflow-x: auto;
+}
+
 .cx-overflow-y-scroll {
   overflow-y: auto;
 }
@@ -617,11 +621,19 @@ mat-toolbar.mat-toolbar mat-form-field.mat-mdc-form-field {
   justify-content: stretch;
 }
 
-.cx-container-flow-component {
+.cx-container-flow-component-grow-1 {
   flex-grow: 1;
   width: min(100%, max(10%, $cx-min-image-width));
   min-width: $cx-min-image-width;
   max-width: $cx-max-image-width;
+  align-self: stretch;
+}
+
+.cx-container-flow-component-grow-2 {
+  flex-grow: 1;
+  width: min(100%, max(20%, $cx-min-image-width * 2));
+  min-width: $cx-min-image-width * 2;
+  max-width: $cx-max-image-width * 2;
   align-self: stretch;
 }
 

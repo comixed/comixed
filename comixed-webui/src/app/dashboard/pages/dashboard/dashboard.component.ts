@@ -20,7 +20,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { LibraryState } from '@app/library/reducers/library.reducer';
 import { Store } from '@ngrx/store';
 import { selectLibraryState } from '@app/library/selectors/library.selectors';
-import { CollectionListComponent } from '../../collection-list/collection-list.component';
+import { CollectionListComponent } from '../../components/collection-list/collection-list.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -32,20 +32,34 @@ import {
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
 import { filter } from 'rxjs/operators';
+import { PublisherYearGraphComponent } from '@app/dashboard/components/publisher-year-graph/publisher-year-graph.component';
+import { ComicStatesComponent } from '@app/dashboard/components/comic-states/comic-states.component';
+import { ArchiveTypesComponent } from '@app/dashboard/components/archive-types/archive-types.component';
+import { LibraryStatComponent } from '../../components/library-stats/library-stat.component';
+import { BehaviorSubject } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'cx-dashboard',
-  imports: [TranslateModule, CollectionListComponent],
+  imports: [
+    TranslateModule,
+    CollectionListComponent,
+    PublisherYearGraphComponent,
+    ComicStatesComponent,
+    ArchiveTypesComponent,
+    LibraryStatComponent,
+    AsyncPipe
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
-  libraryState: LibraryState | null;
   store = inject(Store);
   translateService = inject(TranslateService);
   titleService = inject(TitleService);
   logger = inject(LoggerService);
   panels = AVAILABLE_DASHBOARD_PANELS;
+  statistics = new BehaviorSubject<{ name: string; value: number }[]>([]);
 
   constructor() {
     this.logger.debug('Subscribing to library state changes');
@@ -67,6 +81,30 @@ export class DashboardComponent implements OnInit {
     this.translateService.onLangChange.subscribe(lang =>
       this.loadTranslations()
     );
+  }
+
+  private _libraryState: LibraryState | null = null;
+
+  get libraryState(): LibraryState | null {
+    return this._libraryState;
+  }
+
+  set libraryState(libraryState: LibraryState | null) {
+    this._libraryState = libraryState;
+    this.statistics.next([
+      {
+        name: this.translateService.instant('dashboard.text.unscraped'),
+        value: libraryState?.unscrapedComics || 0
+      },
+      {
+        name: this.translateService.instant('dashboard.text.duplicates'),
+        value: libraryState?.duplicateComics || 0
+      },
+      {
+        name: this.translateService.instant('dashboard.text.deleted'),
+        value: libraryState?.deletedComics || 0
+      }
+    ]);
   }
 
   get displayPanels(): string[] {
