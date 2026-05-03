@@ -33,6 +33,7 @@ import {
 import { USER_READER } from '@app/user/user.fixtures';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { DASHBOARD_PANELS_PREFERENCE } from '@app/dashboard/dashboard.constants';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
 describe('DashboardComponent', () => {
   const USER = USER_READER;
@@ -52,7 +53,11 @@ describe('DashboardComponent', () => {
         TranslateModule.forRoot(),
         LoggerModule.forRoot()
       ],
-      providers: [provideMockStore({ initialState }), TitleService]
+      providers: [
+        provideNoopAnimations(),
+        provideMockStore({ initialState }),
+        TitleService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardComponent);

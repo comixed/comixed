@@ -24,7 +24,6 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { RemoteLibrarySegmentState } from '@app/library/models/net/remote-library-segment-state';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -37,6 +36,7 @@ import {
   MatCardTitle
 } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
+import { RemoteLibrarySegmentState } from '@app/library/models/net/remote-library-segment-state';
 
 @Component({
   selector: 'cx-collection-list',

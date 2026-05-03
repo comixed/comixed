@@ -1,0 +1,29 @@
+<mat-card class="cx-width=100">
+  <mat-card-actions>
+    <button
+      style="pointer-events: auto"
+      (click)="closePanel.emit(); $event.stopPropagation()"
+      mat-icon-button
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-card-actions>
+
+  <mat-card-title class="cx-align-content-center cx-text-nowrap">
+    {{ title }}
+  </mat-card-title>
+  <mat-card-content>
+    <div class="cx-overflow-x-clip-auto cx-display-block">
+      <ngx-charts-heat-map
+        [view]="undefined"
+        [results]="chartData | async"
+        [animations]="false"
+        [xAxis]="true"
+        [yAxis]="true"
+        [gradient]="false"
+        [showXAxisLabel]="true"
+        [showYAxisLabel]="false"
+      ></ngx-charts-heat-map>
+    </div>
+  </mat-card-content>
+</mat-card>

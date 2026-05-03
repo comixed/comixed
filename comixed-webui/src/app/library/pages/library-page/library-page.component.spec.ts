@@ -316,6 +316,16 @@ describe('LibraryPageComponent', () => {
         expect(component.deletedOnly).toBeTrue();
       });
     });
+
+    describe('when showing missing comics', () => {
+      beforeEach(() => {
+        (activatedRoute.data as BehaviorSubject<{}>).next({ missing: true });
+      });
+
+      it('sets the missing only flag', () => {
+        expect(component.missingOnly).toBeTrue();
+      });
+    });
   });
 
   describe('when the language changes', () => {
@@ -364,6 +374,12 @@ describe('LibraryPageComponent', () => {
 
     it('updates the page title for deleted comics', () => {
       component.deletedOnly = true;
+      translateService.use('fr');
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('updates the page title for missing comics', () => {
+      component.missingOnly = true;
       translateService.use('fr');
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });

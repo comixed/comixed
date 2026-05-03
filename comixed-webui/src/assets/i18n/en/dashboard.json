@@ -2,19 +2,27 @@
   "dashboard": {
     "label": {
       "comic-count": "# Comics",
-      "name": "Name"
+      "deleted-comics": "Deleted",
+      "duplicate-comics": "Duplicated",
+      "name": "Name",
+      "unscraped-comics": "Unscraped"
     },
     "page-title": "Library Dashboard",
     "tab-title": "Dashboard",
     "text": {
-      "no-records-found": "No statistics loaded..."
+      "deleted": "Deleted",
+      "duplicates": "Duplicates",
+      "no-records-found": "No statistics loaded...",
+      "unscraped": "Unscraped"
     },
     "title": {
       "archive-type-title": "Archive Types",
       "character-title": "Character Stats",
       "comic-states-title": "Comic States",
+      "library-stats": "Library Stats",
       "location-title": "Location Stats",
       "publisher-title": "Publisher Stats",
+      "publisher-year-title": "Publishing Years",
       "series-title": "Series Stats",
       "story-title": "Story Stats",
       "team-title": "Team Stats"
