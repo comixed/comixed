@@ -16,16 +16,42 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { RemoteLibrarySegmentState } from '@app/library/models/net/remote-library-segment-state';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import {
+  MatCard,
+  MatCardActions,
+  MatCardContent,
+  MatCardFooter,
+  MatCardTitle
+} from '@angular/material/card';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'cx-collection-list',
-  imports: [TranslateModule, MatTableModule, MatSortModule, MatPaginatorModule],
+  imports: [
+    TranslateModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatCard,
+    MatCardTitle,
+    MatCardContent,
+    MatCardFooter,
+    MatCardActions,
+    MatIcon
+  ],
   templateUrl: './collection-list.component.html',
   styleUrl: './collection-list.component.scss'
 })
@@ -39,6 +65,8 @@ export class CollectionListComponent implements AfterViewInit {
   @Input() title: string;
   @Input() rows: number;
 
+  @Output() closePanel = new EventEmitter();
+
   get data(): RemoteLibrarySegmentState[] {
     return this.dataSource.data;
   }
@@ -49,6 +77,7 @@ export class CollectionListComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
       switch (sortHeaderId) {
         case 'comic-count':
@@ -57,6 +86,5 @@ export class CollectionListComponent implements AfterViewInit {
           return data.name;
       }
     };
-    this.dataSource.sort = this.sort;
   }
 }

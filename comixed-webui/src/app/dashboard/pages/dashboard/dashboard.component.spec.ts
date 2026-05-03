@@ -19,19 +19,31 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardComponent } from './dashboard.component';
 import { TranslateModule } from '@ngx-translate/core';
-import { provideMockStore } from '@ngrx/store/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   initialState as initialLibraryState,
   LIBRARY_FEATURE_KEY
 } from '@app/library/reducers/library.reducer';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TitleService } from '@app/core/services/title.service';
+import {
+  initialState as initialUserState,
+  USER_FEATURE_KEY
+} from '@app/user/reducers/user.reducer';
+import { USER_READER } from '@app/user/user.fixtures';
+import { saveUserPreference } from '@app/user/actions/user.actions';
+import { DASHBOARD_PANELS_PREFERENCE } from '@app/dashboard/dashboard.constants';
 
 describe('DashboardComponent', () => {
-  const initialState = { [LIBRARY_FEATURE_KEY]: initialLibraryState };
+  const USER = USER_READER;
+  const initialState = {
+    [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
+    [LIBRARY_FEATURE_KEY]: initialLibraryState
+  };
   let component: DashboardComponent;
   let fixture: ComponentFixture<DashboardComponent>;
   let titleService: TitleService;
+  let store: MockStore<any>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -48,6 +60,8 @@ describe('DashboardComponent', () => {
     await fixture.whenStable();
     titleService = TestBed.inject(TitleService);
     spyOn(titleService, 'setTitle');
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
   });
 
   it('should create', () => {
@@ -61,6 +75,26 @@ describe('DashboardComponent', () => {
 
     it('updates the tab title', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('closing a panel', () => {
+    const PANEL_TO_REMOVE = 'PANEL_TO_REMOVE';
+    const PANELS_BEFORE = `PANEL1|${PANEL_TO_REMOVE}|PANEL3`;
+    const PANELS_AFTER = `PANEL1|PANEL3`;
+
+    beforeEach(() => {
+      component.panels = PANELS_BEFORE;
+      component.closePanel(PANEL_TO_REMOVE);
+    });
+
+    it('dispatches and action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        saveUserPreference({
+          name: DASHBOARD_PANELS_PREFERENCE,
+          value: PANELS_AFTER
+        })
+      );
     });
   });
 });

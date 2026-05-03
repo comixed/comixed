@@ -24,6 +24,14 @@ import { CollectionListComponent } from '../../collection-list/collection-list.c
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { LoggerService } from '@angular-ru/cdk/logger';
+import { saveUserPreference } from '@app/user/actions/user.actions';
+import {
+  AVAILABLE_DASHBOARD_PANELS,
+  DASHBOARD_PANELS_PREFERENCE
+} from '@app/dashboard/dashboard.constants';
+import { selectUser } from '@app/user/selectors/user.selectors';
+import { getUserPreference } from '@app/user';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-dashboard',
@@ -37,17 +45,43 @@ export class DashboardComponent implements OnInit {
   translateService = inject(TranslateService);
   titleService = inject(TitleService);
   logger = inject(LoggerService);
+  panels = AVAILABLE_DASHBOARD_PANELS;
 
   constructor() {
     this.logger.debug('Subscribing to library state changes');
     this.store
       .select(selectLibraryState)
       .subscribe(state => (this.libraryState = state));
+    this.logger.debug('Subscribing to user updates');
+    this.store
+      .select(selectUser)
+      .pipe(filter(user => !!user))
+      .subscribe(user => {
+        this.panels = getUserPreference(
+          user.preferences,
+          DASHBOARD_PANELS_PREFERENCE,
+          AVAILABLE_DASHBOARD_PANELS
+        );
+      });
     this.logger.debug('Subscribing to language changes');
     this.translateService.onLangChange.subscribe(lang =>
       this.loadTranslations()
     );
   }
+
+  get displayPanels(): string[] {
+    return this.panels.split('|');
+  }
+
+  closePanel(panelName: string): void {
+    const value = this.displayPanels
+      .filter(entry => entry !== panelName)
+      .join('|');
+    this.store.dispatch(
+      saveUserPreference({ name: DASHBOARD_PANELS_PREFERENCE, value })
+    );
+  }
+
   ngOnInit(): void {
     this.logger.trace('Page initialized');
     this.loadTranslations();

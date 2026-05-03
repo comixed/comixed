@@ -1,39 +1,65 @@
-<h3>{{ title }}</h3>
+<mat-card class="cx-height-100">
+  <mat-card-actions>
+    <button
+      style="pointer-events: auto"
+      (click)="closePanel.emit(); $event.stopPropagation()"
+      mat-icon-button
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-card-actions>
 
-<mat-paginator
-  showFirstLastButtons="true"
-  [length]="data?.length"
-  [pageSize]="rows"
-></mat-paginator>
+  <mat-card-title class="cx-width-100 cx-align-content-center cx-text-nowrap">
+    {{ title }}
+  </mat-card-title>
 
-<mat-table matSort class="cx-width-100 cx-padding-2" [dataSource]="dataSource">
-  <ng-container matColumnDef="name">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>
-      <span class="cx-text-nowrap">
-        {{ "dashboard.label.name" | translate }}
-      </span>
-    </mat-header-cell>
-    <mat-cell *matCellDef="let entry">
-      <span class="cx-text-nowrap">{{ entry.name }}</span>
-    </mat-cell>
-  </ng-container>
+  <mat-card-content>
+    <mat-table
+      matSort
+      class="cx-width-100 cx-padding-2"
+      [dataSource]="dataSource"
+    >
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span class="cx-text-nowrap">
+            {{ "dashboard.label.name" | translate }}
+          </span>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <strong>
+            <span class="cx-text-nowrap">{{ entry.name }}</span>
+          </strong>
+        </mat-cell>
+      </ng-container>
 
-  <ng-container matColumnDef="comic-count">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>
-      <span class="cx-text-nowrap">
-        {{ "dashboard.label.comic-count" | translate }}
-      </span>
-    </mat-header-cell>
-    <mat-cell *matCellDef="let entry">
-      <span class="cx-text-nowrap">{{ entry.count }}</span>
-    </mat-cell>
-  </ng-container>
+      <ng-container matColumnDef="comic-count">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span class="cx-text-nowrap">
+            {{ "dashboard.label.comic-count" | translate }}
+          </span>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span class="cx-text-nowrap">{{ entry.count }}</span>
+        </mat-cell>
+      </ng-container>
 
-  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-  <tr class="mat-row" *matNoDataRow>
-    <td class="mat-cell" colspan="4">
-      {{ "dashboard.text.no-records-found" | translate }}
-    </td>
-  </tr>
-</mat-table>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">
+          <span class="cx-align-content-center">
+            {{ "dashboard.text.no-records-found" | translate }}
+          </span>
+        </td>
+      </tr>
+    </mat-table>
+  </mat-card-content>
+
+  <mat-card-footer>
+    <mat-paginator
+      showFirstLastButtons="true"
+      [length]="data?.length"
+      [pageSize]="rows"
+    ></mat-paginator>
+  </mat-card-footer>
+</mat-card>
