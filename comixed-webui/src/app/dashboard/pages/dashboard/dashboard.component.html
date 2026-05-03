@@ -1,75 +1,93 @@
 <h2>{{ "dashboard.page-title" | translate }}</h2>
-<div id="dashboard-container" class="cx-padding-5">
-  <div
-    class="dashboard-component cx-border-primary-1 cx-padding-5 cx-margin-10"
-  >
-    <cx-collection-list
-      [title]="'dashboard.title.publisher-title' | translate"
-      [data]="libraryState?.publishers || []"
-      [rows]="5"
-    ></cx-collection-list>
-  </div>
-  <div
-    class="dashboard-component cx-border-primary-1 cx-padding-5 cx-margin-10"
-  >
-    <cx-collection-list
-      [title]="'dashboard.title.series-title' | translate"
-      [data]="libraryState?.series || []"
-      [rows]="5"
-    ></cx-collection-list>
-  </div>
-  <div
-    class="dashboard-component cx-border-primary-1 cx-padding-5 cx-margin-10"
-  >
-    <cx-collection-list
-      [title]="'dashboard.title.character-title' | translate"
-      [data]="libraryState?.characters || []"
-      [rows]="5"
-    ></cx-collection-list>
-  </div>
-  <div
-    class="dashboard-component cx-border-primary-1 cx-padding-5 cx-margin-10"
-  >
-    <cx-collection-list
-      [title]="'dashboard.title.team-title' | translate"
-      [data]="libraryState?.teams || []"
-      [rows]="5"
-    ></cx-collection-list>
-  </div>
-  <div
-    class="dashboard-component cx-border-primary-1 cx-padding-5 cx-margin-10"
-  >
-    <cx-collection-list
-      [title]="'dashboard.title.location-title' | translate"
-      [data]="libraryState?.locations || []"
-      [rows]="5"
-    ></cx-collection-list>
-  </div>
-  <div
-    class="dashboard-component cx-border-primary-1 cx-padding-5 cx-margin-10"
-  >
-    <cx-collection-list
-      [title]="'dashboard.title.story-title' | translate"
-      [data]="libraryState?.stories || []"
-      [rows]="5"
-    ></cx-collection-list>
-  </div>
-  <div
-    class="dashboard-component cx-border-primary-1 cx-padding-5 cx-margin-10"
-  >
-    <cx-collection-list
-      [title]="'dashboard.title.comic-states-title' | translate"
-      [data]="libraryState?.states || []"
-      [rows]="5"
-    ></cx-collection-list>
-  </div>
-  <div
-    class="dashboard-component cx-border-primary-1 cx-padding-5 cx-margin-10"
-  >
-    <cx-collection-list
-      [title]="'dashboard.title.archive-type-title' | translate"
-      [data]="libraryState?.archiveTypes || []"
-      [rows]="5"
-    ></cx-collection-list>
-  </div>
+
+<div id="dashboard-container" class="cx-container-flow-horizontal cx-padding-5">
+  @for (panel of displayPanels; track panel) {
+    @if (panel === "publisher-list") {
+      <div class="cx-container-flow-component cx-padding-5">
+        <cx-collection-list
+          [title]="'dashboard.title.publisher-title' | translate"
+          [data]="libraryState?.publishers || []"
+          [rows]="5"
+          (closePanel)="closePanel(panel)"
+        ></cx-collection-list>
+      </div>
+    }
+
+    @if (panel === "series-list") {
+      <div class="cx-container-flow-component cx-padding-5">
+        <cx-collection-list
+          [title]="'dashboard.title.series-title' | translate"
+          [data]="libraryState?.series || []"
+          [rows]="5"
+          (closePanel)="closePanel(panel)"
+        ></cx-collection-list>
+      </div>
+    }
+
+    @if (panel === "character-list") {
+      <div class="cx-container-flow-component cx-padding-5">
+        <cx-collection-list
+          [title]="'dashboard.title.character-title' | translate"
+          [data]="libraryState?.characters || []"
+          [rows]="5"
+          (closePanel)="closePanel(panel)"
+        ></cx-collection-list>
+      </div>
+    }
+
+    @if (panel === "team-list") {
+      <div class="cx-container-flow-component cx-padding-5">
+        <cx-collection-list
+          [title]="'dashboard.title.team-title' | translate"
+          [data]="libraryState?.teams || []"
+          [rows]="5"
+          (closePanel)="closePanel(panel)"
+        ></cx-collection-list>
+      </div>
+    }
+
+    @if (panel === "location-list") {
+      <div class="cx-container-flow-component cx-padding-5">
+        <cx-collection-list
+          [title]="'dashboard.title.location-title' | translate"
+          [data]="libraryState?.locations || []"
+          [rows]="5"
+          (closePanel)="closePanel(panel)"
+        ></cx-collection-list>
+      </div>
+    }
+
+    @if (panel === "story-list") {
+      <div class="cx-container-flow-component cx-padding-5">
+        <cx-collection-list
+          [title]="'dashboard.title.story-title' | translate"
+          [data]="libraryState?.stories || []"
+          [rows]="5"
+          (closePanel)="closePanel(panel)"
+        ></cx-collection-list>
+      </div>
+    }
+
+    @if (panel === "state-list") {
+      <div class="cx-container-flow-component cx-padding-5">
+        <cx-collection-list
+          [title]="'dashboard.title.comic-states-title' | translate"
+          [data]="libraryState?.states || []"
+          [rows]="5"
+          (closePanel)="closePanel(panel)"
+        ></cx-collection-list>
+      </div>
+    }
+
+    @if (panel === "archive-type-list") {
+      <div class="cx-container-flow-component cx-padding-5">
+        <cx-collection-list
+          [title]="'dashboard.title.archive-type-title' | translate"
+          [data]="libraryState?.archiveTypes || []"
+          [rows]="5"
+          (closePanel)="closePanel(panel)"
+        ></cx-collection-list>
+      </div>
+    }
+  }
 </div>

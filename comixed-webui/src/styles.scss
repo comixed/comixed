@@ -248,12 +248,6 @@ h4 {
   padding: 50px !important;
 }
 
-.cx-border-primary-1 {
-  border-style: solid;
-  border-color: var(--primary-color);
-  border-width: 1px;
-}
-
 .cx-border-primary-5 {
   border-style: solid;
   border-color: var(--primary-color);
@@ -608,4 +602,33 @@ mat-toolbar.mat-toolbar mat-form-field.mat-mdc-form-field {
 
 .cx-z-index-99 {
   z-index: 99;
+}
+
+// ADD NEW STYLES BELOW THIS LINE
+
+// contains
+
+.cx-container-flow-horizontal {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: start;
+  width: calc(100% - $cx-margin-space);
+  margin: $cx-margin-width;
+  justify-content: stretch;
+}
+
+.cx-container-flow-component {
+  flex-grow: 1;
+  width: min(100%, max(10%, $cx-min-image-width));
+  min-width: $cx-min-image-width;
+  max-width: $cx-max-image-width;
+  align-self: stretch;
+}
+
+// borders and edges
+
+.cx-border-primary-1 {
+  border-style: solid;
+  border-color: var(--primary-color);
+  border-width: 1px;
 }
