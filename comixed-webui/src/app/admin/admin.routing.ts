@@ -23,8 +23,14 @@ import { ConfigurationPageComponent } from '@app/admin/pages/configuration-page/
 import { BatchProcessListPageComponent } from '@app/admin/pages/batch-process-list-page/batch-process-list-page.component';
 import { BatchProcessDetailPageComponent } from '@app/admin/pages/batch-process-detail-page/batch-process-detail-page.component';
 import { UserAccountsPageComponent } from '@app/admin/pages/user-accounts-page/user-accounts-page.component';
+import { SettingsComponent } from '@app/admin/pages/settings/settings.component';
 
 const routes: Routes = [
+  {
+    path: 'settings',
+    component: SettingsComponent,
+    canActivate: [AdminGuard]
+  },
   {
     path: 'admin/configuration',
     component: ConfigurationPageComponent,

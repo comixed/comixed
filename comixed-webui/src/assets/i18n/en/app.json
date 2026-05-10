@@ -1,7 +1,20 @@
 {
   "app": {
     "general-effect-failure": "A general error has occurred.",
+    "language": {
+      "text": {
+        "!!!!": "Do not translate the language texts",
+        "english": "English"
+      }
+    },
     "logged-in": "Logged in: {email}",
+    "logging": {
+      "text": {
+        "debug": "Debugging",
+        "info": "Informational",
+        "trace": "Trace"
+      }
+    },
     "system-status": {
       "batch-jobs": "Jobs: {count}",
       "comic-count": "Comics: {count}",
@@ -9,6 +22,25 @@
       "read-count": "Read: {count}",
       "selected-count": "Selected: {count}",
       "unscraped-count": "Unscraped: {count}"
+    },
+    "toolbar": {
+      "button": {
+        "set-language": "Language"
+      },
+      "text": {
+        "language": "Language",
+        "logging": "Logging"
+      },
+      "tooltip": {
+        "browser-options": "Change browser options",
+        "home": "View the dashboard",
+        "import": "Import comics",
+        "language": "Change current language",
+        "library": "View the library",
+        "new-release-available": "Release {version} was released on {released}!",
+        "settings": "Change system settings",
+        "user-icon": "Your account"
+      }
     }
   },
   "build-details": {
