@@ -28,6 +28,7 @@ import { MatIcon } from '@angular/material/icon';
 import { BarChartModule, HeatMapModule } from '@swimlane/ngx-charts';
 import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import { MatIconButton } from '@angular/material/button';
 
 @Component({
   selector: 'cx-publisher-year-graph',
@@ -39,7 +40,8 @@ import { AsyncPipe } from '@angular/common';
     MatIcon,
     BarChartModule,
     HeatMapModule,
-    AsyncPipe
+    AsyncPipe,
+    MatIconButton
   ],
   templateUrl: './publisher-year-graph.component.html',
   styleUrl: './publisher-year-graph.component.scss'

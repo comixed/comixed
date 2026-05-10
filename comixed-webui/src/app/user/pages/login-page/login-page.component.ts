@@ -26,17 +26,16 @@ import {
 import { LoggerService } from '@angular-ru/cdk/logger';
 import {
   AbstractControl,
+  ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators,
-  ReactiveFormsModule
+  Validators
 } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { UserModuleState } from '@app/user';
 import { Subscription } from 'rxjs';
 import { selectUserState } from '@app/user/selectors/user.selectors';
 import { loginUser } from '@app/user/actions/user.actions';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { TitleService } from '@app/core/services/title.service';
 import { setBusyState } from '@app/core/actions/busy.actions';
@@ -46,9 +45,7 @@ import {
 } from '@app/user/user.constants';
 import { selectInitialUserAccountState } from '@app/user/selectors/initial-user-account.selectors';
 import { loadInitialUserAccount } from '@app/user/actions/initial-user-account.actions';
-import { MatCard, MatCardTitle, MatCardContent } from '@angular/material/card';
-import { MatFormField, MatError, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
+import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 
@@ -58,16 +55,12 @@ import { MatIcon } from '@angular/material/icon';
   styleUrls: ['./login-page.component.scss'],
   imports: [
     ReactiveFormsModule,
-    MatCard,
-    MatCardTitle,
-    MatCardContent,
+    TranslateModule,
     MatFormField,
-    MatInput,
-    MatError,
     MatButton,
-    MatLabel,
     MatIcon,
-    TranslateModule
+    MatLabel,
+    MatInput
   ]
 })
 export class LoginPageComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -157,6 +150,8 @@ export class LoginPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   loadTranslations(): void {
-    this.titleService.setTitle(this.translateService.instant('login.title'));
+    this.titleService.setTitle(
+      this.translateService.instant('user.login-page.tab-title')
+    );
   }
 }

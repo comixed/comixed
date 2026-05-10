@@ -1,86 +1,51 @@
-<form [formGroup]="loginForm">
-  <mat-card
-    appearance="outlined"
-    class="cx-centered cx-position-absolute cx-width-50"
-  >
-    <mat-card-title>
-      {{ "user.login-user.page-title" | translate }}
-    </mat-card-title>
-    <mat-card-content class="cx-padding-left-15 cx-padding-right-15">
-      <mat-form-field class="cx-width-100" required>
+<div id="login-container" class="cx-width-100 cx-position-absolute cx-centered">
+  <h2>{{ "user.login-page.form.title" | translate }}</h2>
+  <div class="cx-width-100 cx-border-primary-1 cx-padding-15">
+    <form [formGroup]="loginForm">
+      <mat-form-field class="cx-width-100" appearance="outline" required>
         <input
-          id="cx-login-email"
+          id="email"
+          class="cx-width-100"
           matInput
           type="email"
           formControlName="email"
-          [readonly]="busy"
-          [placeholder]="'user.login-user.email-placeholder' | translate"
+          [placeholder]="'user.login-page.form.placeholder.email' | translate"
+          required
         />
-        <mat-error>
-          @if (controls.email.errors?.required) {
-            <span>
-              {{ "validation.field-required" | translate }}
-            </span>
-          }
-          @if (controls.email.errors?.email) {
-            <span>
-              {{ "validation.email-required" | translate }}
-            </span>
-          }
-        </mat-error>
       </mat-form-field>
-      <mat-form-field class="cx-width-100" required>
+
+      <mat-form-field class="cx-width-100" appearance="outline" required>
         <input
-          id="cx-login-password"
+          id="password"
+          class="cx-width-100"
           matInput
           type="password"
+          [placeholder]="
+            'user.login-page.form.placeholder.password' | translate
+          "
           formControlName="password"
-          [readonly]="busy"
-          [placeholder]="'user.login-user.password-placeholder' | translate"
+          required
         />
-        <mat-error>
-          @if (controls.password.errors?.required) {
-            <span>
-              {{ "validation.field-required" | translate }}
-            </span>
-          }
-          @if (!!controls.password.errors?.minlength) {
-            <span>
-              {{
-                "validation.value-too-short"
-                  | translate
-                    : {
-                        length:
-                          controls.password.errors.minlength.requiredLength
-                      }
-              }}
-            </span>
-          }
-          @if (!!controls.password.errors?.maxlength) {
-            <span>
-              {{
-                "validation.value-too-long"
-                  | translate
-                    : {
-                        length:
-                          controls.password.errors.maxlength.requiredLength
-                      }
-              }}
-            </span>
-          }
-        </mat-error>
       </mat-form-field>
+    </form>
+
+    <div class="cx-width-100">
       <button
-        id="cx-login-submit-button"
+        class="cx-action-button"
         mat-raised-button
         color="primary"
-        [class.cx-spinner]="busy"
-        [disabled]="!loginForm.valid || busy"
+        [disabled]="!loginForm.valid"
         (click)="onSubmitLogin()"
       >
-        <mat-label>{{ "button.login" | translate }}</mat-label>
         <mat-icon>login</mat-icon>
+        <mat-label>
+          {{ "user.login-page.form.button.submit" | translate }}
+        </mat-label>
       </button>
-    </mat-card-content>
-  </mat-card>
-</form>
+    </div>
+  </div>
+
+  <div class="cx-width-100 cx-padding-15">
+    <img src="/assets/img/login-page.jpg" height="auto" width="100%" />
+  </div>
+</div>

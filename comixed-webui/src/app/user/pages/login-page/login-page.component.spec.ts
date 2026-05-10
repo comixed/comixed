@@ -142,8 +142,8 @@ describe('LoginPageComponent', () => {
 
   describe('sending the login credentials', () => {
     beforeEach(() => {
-      component.loginForm.controls.email.setValue(USER.email);
-      component.loginForm.controls.password.setValue(PASSWORD);
+      component.controls.email.setValue(USER.email);
+      component.controls.password.setValue(PASSWORD);
       component.onSubmitLogin();
     });
 

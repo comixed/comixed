@@ -1,7 +1,40 @@
 {
   "app": {
+    "button": {
+      "save": "Save"
+    },
     "general-effect-failure": "A general error has occurred.",
+    "language": {
+      "text": {
+        "!!!!": "Do not translate the language texts",
+        "english": "English"
+      }
+    },
     "logged-in": "Logged in: {email}",
+    "logging": {
+      "text": {
+        "debug": "Debugging",
+        "info": "Informational",
+        "trace": "Trace"
+      }
+    },
+    "menu": {
+      "import-files": {
+        "root": "Import"
+      },
+      "library": {
+        "all-comics": "All comics",
+        "import-comics": "Import comics...",
+        "root": "Library"
+      },
+      "library-admin": {
+        "root": "Admin"
+      },
+      "settings": {
+        "file-settings": "File settings",
+        "root": "Settings"
+      }
+    },
     "system-status": {
       "batch-jobs": "Jobs: {count}",
       "comic-count": "Comics: {count}",
@@ -9,6 +42,37 @@
       "read-count": "Read: {count}",
       "selected-count": "Selected: {count}",
       "unscraped-count": "Unscraped: {count}"
+    },
+    "footer": {
+      "batch-jobs": "Jobs: {count}",
+      "comic-count": "Comics: {count}",
+      "deleted-count": "Deleted: {count}",
+      "duplicate-count": "Duplicates: {count}",
+      "read-count": "Read: {count}",
+      "selected-count": "Selected: {count}",
+      "unscraped-count": "Unscraped: {count}"
+    },
+    "text": {
+      "new-version-available": "Release {version} is available!"
+    },
+    "toolbar": {
+      "button": {
+        "set-language": "Language"
+      },
+      "text": {
+        "language": "Language",
+        "logging": "Logging"
+      },
+      "tooltip": {
+        "browser-options": "Change browser options",
+        "home": "View the dashboard",
+        "import": "Import comics",
+        "language": "Change current language",
+        "library": "View the library",
+        "new-release-available": "Release {version} was released on {released}!",
+        "settings": "Change system settings",
+        "user-icon": "Your account"
+      }
     }
   },
   "build-details": {
@@ -142,8 +206,8 @@
     "archive-type": "{type, select, CBZ{Zip File (CBZ)} CBR{RAR File (CBR)} CB7{7Zip File (CB7)} other{Unknown}}",
     "clear-value": "Clear value",
     "end-year": "End Year",
-    "no": "No",
     "never": "Never",
+    "no": "No",
     "number-of-publishers": "# Of Publishers",
     "start-year": "Start Year",
     "view-details": "View Details",

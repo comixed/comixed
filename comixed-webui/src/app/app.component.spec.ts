@@ -53,6 +53,9 @@ import {
 } from '@app/reducers/import-comic-books.reducer';
 import {
   APP_MESSAGING_TOPIC,
+  DARK_MODE_PREFERENCE,
+  LANGUAGE_PREFERENCE,
+  LATEST_RELEASE_TARGET,
   LOADING_ICON_URL,
   LOGGER_LEVEL_PREFERENCE,
   SEARCHING_ICON_URL,
@@ -83,7 +86,7 @@ import {
 import {
   FEATURE_ENABLED_FEATURE_KEY,
   initialState as initialFeatureEnabledState
-} from '@app/admin/reducers/feature-enabled.reducer';
+} from '@app/settings/reducers/feature-enabled.reducer';
 import { BusyIcon } from '@app/core/actions/busy.actions';
 import {
   initialState as initialReadComicBooksState,
@@ -96,7 +99,14 @@ import { AlertService } from '@app/core/services/alert.service';
 import {
   BATCH_PROCESSES_FEATURE_KEY,
   initialState as initialBatchProcessesState
-} from '@app/admin/reducers/batch-processes.reducer';
+} from '@app/settings/reducers/batch-processes.reducer';
+import {
+  initialState as initialReleaseDetailState,
+  RELEASE_DETAILS_FEATURE_KEY
+} from '@app/reducers/release.reducer';
+import { saveUserPreference } from '@app/user/actions/user.actions';
+import { toggleDarkThemeMode } from '@app/actions/dark-theme.actions';
+import { LatestRelease } from '@app/models/latest-release';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -105,6 +115,7 @@ describe('AppComponent', () => {
   const TIMEOUT = 300;
   const MAX_LIBRARY_RECORDS = 1000;
   const LAST_ID = Math.floor(Math.abs(Math.random() * 1000));
+  const LATEST_RELEASE_URL = 'the.latest-release.url';
 
   const initialState = {
     [USER_FEATURE_KEY]: initialUserState,
@@ -117,7 +128,8 @@ describe('AppComponent', () => {
     [COMIC_BOOK_SELECTION_FEATURE_KEY]: initialComicBookSelectionState,
     [DARK_THEME_FEATURE_KEY]: initialDarkThemeState,
     [FEATURE_ENABLED_FEATURE_KEY]: { ...initialFeatureEnabledState },
-    [BATCH_PROCESSES_FEATURE_KEY]: initialBatchProcessesState
+    [BATCH_PROCESSES_FEATURE_KEY]: initialBatchProcessesState,
+    [RELEASE_DETAILS_FEATURE_KEY]: { ...initialReleaseDetailState }
   };
 
   let component: AppComponent;
@@ -394,6 +406,98 @@ describe('AppComponent', () => {
 
     it('clears the subscription reference', () => {
       expect(component.appMessagingSubscription).toBeNull();
+    });
+  });
+
+  describe('viewing the latest release', () => {
+    beforeEach(() => {
+      spyOn(window, 'open');
+      store.setState({
+        ...initialState,
+        [RELEASE_DETAILS_FEATURE_KEY]: {
+          ...initialReleaseDetailState,
+          loaded: true,
+          latest: {
+            url: LATEST_RELEASE_URL
+          } as LatestRelease
+        }
+      });
+      component.onViewLatestRelease();
+    });
+
+    it('dispatches an action', () => {
+      expect(window.open).toHaveBeenCalledWith(
+        LATEST_RELEASE_URL,
+        LATEST_RELEASE_TARGET
+      );
+    });
+  });
+
+  describe('changing the language in use', () => {
+    const LANGUAGE = 'fr';
+
+    beforeEach(() => {
+      spyOn(component.translateService, 'use');
+      component.user$.next(USER);
+      component.onLanguageChange(LANGUAGE);
+    });
+
+    it('uses the language', () => {
+      expect(component.translateService.use).toHaveBeenCalledWith(LANGUAGE);
+    });
+
+    it('updates the user preferences', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        saveUserPreference({ name: LANGUAGE_PREFERENCE, value: LANGUAGE })
+      );
+    });
+  });
+
+  Array.of(LoggerLevel.INFO, LoggerLevel.DEBUG, LoggerLevel.TRACE).forEach(
+    level => {
+      describe(`changing logging level to ${level}`, () => {
+        beforeEach(() => {
+          component.user$.next(USER);
+          component.onLoggingChange(level);
+        });
+
+        it('sets the logging level', () => {
+          expect(component.logger.level).toEqual(level);
+        });
+
+        it('updates the user preferences', () => {
+          expect(store.dispatch).toHaveBeenCalledWith(
+            saveUserPreference({
+              name: LOGGER_LEVEL_PREFERENCE,
+              value: `${level}`
+            })
+          );
+        });
+      });
+    }
+  );
+
+  Array.of(true, false).forEach(toggle => {
+    describe(`toggling dark mode ${toggle ? 'on' : 'off'}`, () => {
+      beforeEach(() => {
+        component.user$.next(USER);
+        component.onToggleDarkMode(toggle);
+      });
+
+      it('toggles the dark mode setting', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          toggleDarkThemeMode({ toggle })
+        );
+      });
+
+      it('updates the user preferences', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          saveUserPreference({
+            name: DARK_MODE_PREFERENCE,
+            value: `${toggle}`
+          })
+        );
+      });
     });
   });
 });

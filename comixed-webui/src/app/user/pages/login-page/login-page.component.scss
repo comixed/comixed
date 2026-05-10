@@ -1,8 +1,8 @@
-/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
-mat-card {
-  text-align: center;
+#login-container {
+  max-height: 80vh;
 }
 
-mat-form-field {
-  display: block;
+.cx-centered {
+  min-width: 400px;
+  max-width: 1000px;
 }

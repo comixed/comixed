@@ -31,6 +31,7 @@ import {
   PieChartModule
 } from '@swimlane/ngx-charts';
 import { BehaviorSubject } from 'rxjs';
+import { MatIconButton } from '@angular/material/button';
 
 @Component({
   selector: 'cx-library-stats',
@@ -43,7 +44,8 @@ import { BehaviorSubject } from 'rxjs';
     MatIcon,
     PieChartModule,
     BarChartModule,
-    NumberCardModule
+    NumberCardModule,
+    MatIconButton
   ],
   templateUrl: './library-stat.component.html',
   styleUrl: './library-stat.component.scss'

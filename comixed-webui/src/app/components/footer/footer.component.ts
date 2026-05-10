@@ -23,7 +23,7 @@ import { User } from '@app/user/models/user';
 import { selectLibraryState } from '@app/library/selectors/library.selectors';
 import { selectComicBookSelectionState } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { Subscription } from 'rxjs';
-import { selectBatchProcessList } from '@app/admin/selectors/batch-processes.selectors';
+import { selectBatchProcessList } from '@app/settings/selectors/batch-processes.selectors';
 import { TranslateModule } from '@ngx-translate/core';
 import { isAdmin } from '@app/user/user.functions';
 import { RouterModule } from '@angular/router';

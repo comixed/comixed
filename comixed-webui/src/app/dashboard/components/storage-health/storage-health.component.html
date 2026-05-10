@@ -1,0 +1,26 @@
+<mat-card class="cx-width-100">
+  <mat-card-actions>
+    <button
+      mat-icon-button
+      style="pointer-events: auto"
+      (click)="closePanel.emit(); $event.stopPropagation()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-card-actions>
+
+  <mat-card-title class="cx-width-100 cx-align-content-center cx-text-nowrap">
+    {{ title }}
+  </mat-card-title>
+
+  <mat-card-content>
+    <div class="cx-overflow-x-clip-auto cx-display-block">
+      <ngx-charts-pie-grid
+        [results]="chartData | async"
+        [animations]="false"
+      ></ngx-charts-pie-grid>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<pre>{{ health | json }}</pre>

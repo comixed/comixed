@@ -30,6 +30,7 @@ import { ComicState } from '@app/comic-books/models/comic-state';
 import { BehaviorSubject } from 'rxjs';
 import { BarChartModule } from '@swimlane/ngx-charts';
 import { AsyncPipe } from '@angular/common';
+import { MatIconButton } from '@angular/material/button';
 
 @Component({
   selector: 'cx-comic-states',
@@ -41,7 +42,8 @@ import { AsyncPipe } from '@angular/common';
     MatCardTitle,
     MatIcon,
     BarChartModule,
-    AsyncPipe
+    AsyncPipe,
+    MatIconButton
   ],
   templateUrl: './comic-states.component.html',
   styleUrl: './comic-states.component.scss'

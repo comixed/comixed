@@ -1,0 +1,18 @@
+@use 'variables' as *;
+@use '@angular/material' as mat;
+
+#dashboard-container {
+  align-items: stretch;
+
+  div {
+    padding: $cx-card-padding;
+  }
+}
+
+.cx-container-flow-component-grow-1 {
+  max-width: max(100%, 500px);
+}
+
+.cx-container-flow-component-grow-2 {
+  max-width: max(100%, 1000px);
+}

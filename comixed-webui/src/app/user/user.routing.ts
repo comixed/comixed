@@ -17,9 +17,11 @@
  */
 
 import { RouterModule, Routes } from '@angular/router';
-import { LoginPageComponent } from './pages/login-page/login-page.component';
+import { LoginPageComponent } from '@app/user/pages/login-page/login-page.component';
 import { NgModule } from '@angular/core';
 import { CreateAdminPageComponent } from '@app/user/pages/create-admin-page/create-admin-page.component';
+import { AccountComponent } from '@app/user/pages/account/account.component';
+import { ReaderGuard } from '@app/user/guards/reader.guard';
 
 const routes: Routes = [
   {
@@ -29,6 +31,11 @@ const routes: Routes = [
   {
     path: 'users/create/admin',
     component: CreateAdminPageComponent
+  },
+  {
+    path: 'account',
+    component: AccountComponent,
+    canActivate: [ReaderGuard]
   }
 ];
 

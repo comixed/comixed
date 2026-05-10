@@ -1,53 +1,217 @@
-<cx-navigation-bar
-  class="cx-width-100"
-  [user]="user"
-  [sidebarOpened]="sidenav.opened"
-  [accountBarOpened]="accountBar.opened"
-  (toggleSidebar)="sidenav.toggle($event)"
-  (toggleAccountBar)="accountBar.toggle($event)"
-></cx-navigation-bar>
+<div id="cx-app-container">
+  <div id="cx-app-toolbar">
+    <mat-toolbar color="primary">
+      @if (isAdmin$ | async) {
+        <button
+          mat-icon-button
+          routerLink="/dashboard"
+          [matTooltip]="'app.toolbar.tooltip.home' | translate"
+        >
+          <mat-icon>home</mat-icon>
+        </button>
+      }
+      @if (!!(user$ | async)) {
+        <button
+          mat-flat-button
+          color="primary"
+          [matMenuTriggerFor]="libraryMenu"
+        >
+          <mat-label>{{ "app.menu.library.root" | translate }}</mat-label>
+        </button>
+      }
+      @if (isAdmin$ | async) {
+        <button
+          mat-flat-button
+          color="primary"
+          [matMenuTriggerFor]="settingsMenu"
+        >
+          <mat-label>{{ "app.menu.settings.root" | translate }}</mat-label>
+        </button>
+      }
 
-@if (busy) {
-  <div id="cx-busy-overlay">
-    <div class="cx-centered cx-position-absolute">
-      <img [src]="busyIconURL" alt="Busy, please wait..." />
-    </div>
+      <div class="cx-spacer"></div>
+
+      @if ((isAdmin$ | async) && latestRelease?.newer) {
+        <button
+          id="view-latest-release-button"
+          mat-flat-button
+          color="accent"
+          [matTooltip]="
+            'app.toolbar.tooltip.new-release-available'
+              | translate
+                : {
+                    version: latestRelease?.version,
+                    released: latestRelease?.updated | date: 'mediumDate'
+                  }
+          "
+          [disabled]="checkingLatestVersion"
+          (click)="onViewLatestRelease()"
+        >
+          <mat-label>
+            {{
+              "app.text.new-version-available"
+                | translate: { version: latestRelease?.version }
+            }}
+          </mat-label>
+          <mat-icon>new_releases</mat-icon>
+        </button>
+      }
+
+      <div class="cx-spacer"></div>
+
+      @if (!!(user$ | async)) {
+        <img
+          loading="lazy"
+          ngxGravatar
+          [alt]="(user$ | async)?.email"
+          [email]="(user$ | async)?.email"
+          [matTooltip]="'app.toolbar.tooltip.user-icon' | translate"
+          routerLink="/account"
+        />
+
+        <button
+          id="dark-mode-toggle-button"
+          mat-icon-button
+          [matTooltip]="'navigation.tooltip.dark-mode' | translate"
+          (click)="onToggleDarkMode(!darkMode)"
+        >
+          @if (!darkMode) {
+            <mat-icon>light_mode</mat-icon>
+          }
+          @if (darkMode) {
+            <mat-icon>dark_mode</mat-icon>
+          }
+        </button>
+      }
+
+      <button
+        matIconButton
+        [matMenuTriggerFor]="options"
+        [matTooltip]="'app.toolbar.tooltip.browser-options' | translate"
+      >
+        <mat-icon>more_vert</mat-icon>
+      </button>
+
+      <mat-menu #options="matMenu">
+        <button mat-menu-item [matMenuTriggerFor]="languages">
+          {{ "app.toolbar.text.language" | translate }}
+        </button>
+        <button mat-menu-item [matMenuTriggerFor]="logging">
+          {{ "app.toolbar.text.logging" | translate }}
+        </button>
+      </mat-menu>
+
+      <mat-menu #languages="matMenu">
+        @for (language of languageOptions; track language) {
+          <button mat-menu-item (click)="onLanguageChange(language.value)">
+            <span>{{ language.name | translate }}</span>
+          </button>
+        }
+      </mat-menu>
+
+      <mat-menu #logging="matMenu">
+        @for (level of loggingOptions; track level) {
+          <button mat-menu-item (click)="onLoggingChange(level.value)">
+            {{ level.name | translate }}
+          </button>
+        }
+      </mat-menu>
+    </mat-toolbar>
   </div>
-}
 
-<mat-sidenav-container
-  id="app-primary-space"
-  class="cx-width-100 cx-height-100"
->
-  <mat-sidenav
-    id="app-sidenav-container"
-    #sidenav
-    mode="over"
-    (click)="sidenav.close()"
-    position="start"
-  >
-    <cx-side-navigation [user]="user"></cx-side-navigation>
-  </mat-sidenav>
+  <div id="cx-app-content">
+    <router-outlet></router-outlet>
+  </div>
 
-  <mat-sidenav
-    id="app-account-bar-container"
-    #accountBar
-    mode="over"
-    position="end"
-  >
-    @if (!!user) {
-      <cx-edit-account-bar
-        [user]="user"
-        (closeSidebar)="accountBar.close()"
-      ></cx-edit-account-bar>
-    }
-  </mat-sidenav>
-
-  <mat-sidenav-content #sidebar>
-    <div id="app-content-container">
-      <router-outlet></router-outlet>
+  @if (!!(user$ | async)) {
+    <div id="cx-app-footer">
+      <mat-toolbar color="accent">
+        <a routerLink="/library/all">
+          {{
+            "app.footer.comic-count"
+              | translate: { count: libraryState?.totalComics || 0 }
+          }}
+        </a>
+        |
+        <a routerLink="/library/unread">
+          {{
+            "app.footer.read-count"
+              | translate
+                : { count: (user$ | async)?.readComicBooks.length || 0 }
+          }}
+        </a>
+        |
+        <a routerLink="/library/selected">
+          {{
+            "app.footer.selected-count" | translate: { count: selectedCount }
+          }}
+        </a>
+        @if (isAdmin$ | async) {
+          |
+          <a routerLink="/library/unscraped">
+            {{
+              "app.footer.unscraped-count"
+                | translate: { count: libraryState?.unscrapedComics || 0 }
+            }}
+          </a>
+          |
+          <a routerLink="/library/deleted">
+            {{
+              "app.footer.deleted-count"
+                | translate: { count: libraryState?.deletedComics || 0 }
+            }}
+          </a>
+          |
+          <a routerLink="/library/duplicates/comics">
+            {{
+              "app.footer.duplicate-count"
+                | translate: { count: libraryState?.duplicateComics || 0 }
+            }}
+          </a>
+          |
+          <a routerLink="/admin/processes">
+            {{
+              "app.footer.batch-jobs"
+                | translate: { count: batchProcessCount || 0 }
+            }}
+          </a>
+        }
+        <div class="cx-spacer"></div>
+        <a routerLink="/build">v3.3-SNAPSHOT</a>
+        <div class="cx-spacer"></div>
+        &copy; 2017-{{ thisYear }},&nbsp;
+        <a href="http://www.github.com/comixed" target="cxgithubsite">
+          The ComiXed Project
+        </a>
+        . All Rights Reserved.
+      </mat-toolbar>
     </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+  }
+</div>
 
-<cx-footer [user]="user"></cx-footer>
+<mat-menu #libraryMenu="matMenu">
+  <button mat-menu-item routerLink="/library/all">
+    <mat-icon>local_library</mat-icon>
+    <mat-label>{{ "app.menu.library.all-comics" | translate }}</mat-label>
+  </button>
+  @if (isAdmin$ | async) {
+    <button mat-menu-item [matMenuTriggerFor]="libraryAdminMenu">
+      <mat-icon>settings</mat-icon>
+      <mat-label>{{ "app.menu.library-admin.root" | translate }}</mat-label>
+    </button>
+  }
+</mat-menu>
+
+<mat-menu #libraryAdminMenu="matMenu">
+  <button mat-menu-item routerLink="/library/import">
+    <mat-icon>publish</mat-icon>
+    <mat-label>{{ "app.menu.library.import-comics" | translate }}</mat-label>
+  </button>
+</mat-menu>
+
+<mat-menu #settingsMenu="matMenu">
+  <button mat-menu-item routerLink="/settings/files">
+    <mat-icon>settings</mat-icon>
+    <mat-label>{{ "app.menu.settings.file-settings" | translate }}</mat-label>
+  </button>
+</mat-menu>
