@@ -21,13 +21,17 @@ import { Store } from '@ngrx/store';
 import { LoggerLevel, LoggerService } from '@angular-ru/cdk/logger';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
-import { loadCurrentUser } from '@app/user/actions/user.actions';
+import {
+  loadCurrentUser,
+  saveUserPreference
+} from '@app/user/actions/user.actions';
 import { selectBusyState } from '@app/core/selectors/busy.selectors';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   APP_MESSAGING_TOPIC,
   DARK_MODE_PREFERENCE,
   LANGUAGE_PREFERENCE,
+  LATEST_RELEASE_TARGET,
   LOADING_ICON_URL,
   LOGGER_LEVEL_PREFERENCE,
   SEARCHING_ICON_URL,
@@ -37,7 +41,7 @@ import {
   startMessaging,
   stopMessaging
 } from '@app/messaging/actions/messaging.actions';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { User } from '@app/user/models/user';
 import { loadLibraryState } from '@app/library/actions/library.actions';
 import { selectLibraryState } from '@app/library/selectors/library.selectors';
@@ -50,37 +54,55 @@ import { selectMessagingState } from '@app/messaging/selectors/messaging.selecto
 import { WebSocketService } from '@app/messaging';
 import { AlertService } from '@app/core/services/alert.service';
 import { filter } from 'rxjs/operators';
-import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import {
-  MatSidenavContainer,
-  MatSidenav,
-  MatSidenavContent
+  MatDrawerContainer,
+  MatDrawerContent
 } from '@angular/material/sidenav';
-import { SideNavigationComponent } from './components/side-navigation/side-navigation.component';
-import { EditAccountBarComponent } from './user/components/edit-account-bar/edit-account-bar.component';
-import { RouterOutlet } from '@angular/router';
-import { FooterComponent } from './components/footer/footer.component';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatToolbar } from '@angular/material/toolbar';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { MatTooltip } from '@angular/material/tooltip';
+import { GravatarModule } from 'ngx-gravatar';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { AsyncPipe, DatePipe } from '@angular/common';
+import { isAdmin } from '@app/user/user.functions';
+import { selectReleaseDetailsState } from '@app/selectors/release.selectors';
+import { loadLatestReleaseDetails } from '@app/actions/release.actions';
+import { LatestRelease } from '@app/models/latest-release';
+import { MatDialog } from '@angular/material/dialog';
+import { LibraryPluginSetupComponent } from '@app/admin/components/library-plugin-setup/library-plugin-setup.component';
+import { EditAccountBarComponent } from '@app/user/components/edit-account-bar/edit-account-bar.component';
 
 @Component({
   selector: 'cx-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   imports: [
-    NavigationBarComponent,
-    MatSidenavContainer,
-    MatSidenav,
-    SideNavigationComponent,
-    EditAccountBarComponent,
-    MatSidenavContent,
+    TranslateModule,
+    MatIconButton,
+    MatIcon,
+    MatToolbar,
     RouterOutlet,
-    FooterComponent
+    MatDrawerContent,
+    MatDrawerContainer,
+    RouterLink,
+    MatTooltip,
+    GravatarModule,
+    MatMenuTrigger,
+    MatMenu,
+    AsyncPipe,
+    MatMenuItem,
+    DatePipe,
+    RouterLinkActive
   ]
 })
 export class AppComponent implements OnInit {
   @HostBinding('class') currentTheme: 'lite-theme' | 'dark-theme' =
     'lite-theme';
 
-  user: User = null;
+  user$ = new BehaviorSubject<User>(null);
+  isAdmin$ = new BehaviorSubject<boolean>(false);
   busy = false;
   sessionActive = false;
   libraryStateSubscription: Subscription;
@@ -88,12 +110,25 @@ export class AppComponent implements OnInit {
   darkMode = false;
   busyIcon = BusyIcon.DEFAULT;
   appMessagingSubscription: Subscription | null = null;
+  dialog = inject(MatDialog);
 
   logger = inject(LoggerService);
   translateService = inject(TranslateService);
   store = inject(Store);
   webSocketService = inject(WebSocketService);
   alertService = inject(AlertService);
+  checkingLatestVersion = false;
+  latestRelease: LatestRelease | null = null;
+
+  languageOptions: { name: string; value: string }[] = [
+    { name: 'app.language.text.english', value: 'en' }
+  ];
+
+  loggingOptions: { name: string; value: LoggerLevel }[] = [
+    { name: 'app.logging.text.info', value: LoggerLevel.INFO },
+    { name: 'app.logging.text.debug', value: LoggerLevel.DEBUG },
+    { name: 'app.logging.text.trace', value: LoggerLevel.TRACE }
+  ];
 
   constructor() {
     this.logger.level = LoggerLevel.INFO;
@@ -101,11 +136,12 @@ export class AppComponent implements OnInit {
     this.logger.trace('Subscribing to user changes');
     this.store.select(selectUser).subscribe(user => {
       this.logger.debug('User updated:', user);
-      this.user = user;
+      this.user$.next(user);
+      this.isAdmin$.next(isAdmin(user));
 
       const darkMode =
         getUserPreference(
-          this.user?.preferences || [],
+          this.user$.value?.preferences || [],
           DARK_MODE_PREFERENCE,
           'false'
         ) === `${true}`;
@@ -114,35 +150,35 @@ export class AppComponent implements OnInit {
           toggle: darkMode
         })
       );
-      if (!!this.user && !this.sessionActive) {
+      if (!!this.user$.value && !this.sessionActive) {
         this.logger.trace('Marking the session as active');
         this.sessionActive = true;
         this.logger.trace('Starting messaging subsystem');
         this.store.dispatch(startMessaging());
       }
-      if (!!this.user && !this.libraryStateSubscription) {
+      if (!!this.user$.value && !this.libraryStateSubscription) {
         this.logger.trace('Subscribing to library state');
         this.subscribeToLibraryState();
         this.logger.trace('Loading remote library state');
         this.store.dispatch(loadLibraryState());
       }
-      if (!this.user && this.sessionActive) {
+      if (!this.user$.value && this.sessionActive) {
         this.logger.trace('Stopping the messaging subsystem');
         this.store.dispatch(stopMessaging());
         this.logger.trace('Marking the session as inactive');
         this.sessionActive = false;
       }
-      if (!this.user && this.libraryStateSubscription) {
+      if (!this.user$.value && this.libraryStateSubscription) {
         this.logger.trace('Clearing read comic books list');
         this.store.dispatch(resetReadComicBooks());
         this.logger.trace('Unsubscribing from library state changes');
         this.libraryStateSubscription.unsubscribe();
         this.libraryStateSubscription = null;
       }
-      if (!!this.user) {
+      if (!!this.user$.value) {
         const preferredLevel = parseInt(
           getUserPreference(
-            this.user.preferences,
+            this.user$.value.preferences,
             LOGGER_LEVEL_PREFERENCE,
             `${LoggerLevel.INFO}`
           ),
@@ -163,7 +199,11 @@ export class AppComponent implements OnInit {
             break;
         }
         this.translateService.use(
-          getUserPreference(this.user.preferences, LANGUAGE_PREFERENCE, 'en')
+          getUserPreference(
+            this.user$.value.preferences,
+            LANGUAGE_PREFERENCE,
+            'en'
+          )
         );
       }
     });
@@ -179,6 +219,19 @@ export class AppComponent implements OnInit {
         this.currentTheme = 'lite-theme';
       }
     });
+    this.store
+      .select(selectReleaseDetailsState)
+      .pipe(filter(state => !!state))
+      .subscribe(state => {
+        this.checkingLatestVersion = state.latestLoading;
+        if (!state.latestLoading && !state.loaded) {
+          this.logger.trace('Fetching latest release details');
+          this.store.dispatch(loadLatestReleaseDetails());
+        } else {
+          this.logger.trace('Release state updated');
+          this.latestRelease = state.latest;
+        }
+      });
     this.store
       .select(selectMessagingState)
       .pipe(filter(state => !!state))
@@ -226,5 +279,30 @@ export class AppComponent implements OnInit {
     this.libraryStateSubscription = this.store
       .select(selectLibraryState)
       .subscribe(state => (this.libraryState = state));
+  }
+
+  onViewLatestRelease(): void {
+    this.logger.trace('Opening latest release page');
+    window.open(this.latestRelease.url, LATEST_RELEASE_TARGET);
+  }
+
+  protected onLanguageChange(language: string) {
+    this.translateService.use(language);
+    if (!!this.user$.value) {
+      this.logger.debug('Saving user language choice:', language);
+      this.store.dispatch(
+        saveUserPreference({ name: LANGUAGE_PREFERENCE, value: language })
+      );
+    }
+  }
+
+  protected onLoggingChange(level: LoggerLevel) {
+    this.logger.level = level;
+    if (!!this.user$.value) {
+      this.logger.debug('Saving user logging choice:', level);
+      this.store.dispatch(
+        saveUserPreference({ name: LOGGER_LEVEL_PREFERENCE, value: `${level}` })
+      );
+    }
   }
 }
