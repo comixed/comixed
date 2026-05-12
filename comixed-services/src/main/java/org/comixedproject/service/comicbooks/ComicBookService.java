@@ -958,7 +958,7 @@ public class ComicBookService {
   @Transactional
   public void markComicAsMissing(final String filename) {
     final ComicBook comicBook = this.comicBookRepository.findByFilename(filename);
-    if (Objects.nonNull(comicBook)) {
+    if (Objects.nonNull(comicBook) && Objects.isNull(comicBook.getTargetArchiveType())) {
       log.debug("Processing missing comic file: {} [{}]", filename, comicBook.getComicBookId());
       this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.comicFileMissing);
     }
