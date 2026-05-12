@@ -124,6 +124,12 @@ public class ComicStateMachineConfiguration
         .target(ComicState.STABLE)
         .event(ComicEvent.fileContentsLoaded)
         .action(fileContentsLoadedAction)
+        .and()
+        .withExternal()
+        .source(ComicState.CHANGED)
+        .target(ComicState.STABLE)
+        .event(ComicEvent.fileContentsLoaded)
+        .action(fileContentsLoadedAction)
         // the page hashes were loaded
         .and()
         .withExternal()
