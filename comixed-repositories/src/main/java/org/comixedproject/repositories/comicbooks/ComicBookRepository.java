@@ -657,4 +657,13 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   @Query(
       "SELECT COUNT(c) FROM ComicBook c WHERE c.comicBookId IN (SELECT p.comicBook.comicBookId FROM ComicPage p WHERE p.hash IS NULL OR LENGTH(p.hash) = 0)")
   long findComicsWithUnhashedPagesCount();
+
+  /**
+   * Returns the comic book whose comic detail has the given id.
+   *
+   * @param comicDetailId the comic detail id
+   * @return the comic book
+   */
+  @Query("SELECT c FROM ComicBook c WHERE c.comicDetail.comicDetailId = :comicDetailId")
+  ComicBook getByComicDetailId(@Param("comicDetailId") Long comicDetailId);
 }
