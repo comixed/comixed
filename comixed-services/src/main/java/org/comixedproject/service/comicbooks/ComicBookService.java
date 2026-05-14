@@ -107,8 +107,8 @@ public class ComicBookService {
     return result;
   }
 
-  private ComicBook doGetComic(final long id) throws ComicBookException {
-    return this.doGetComic(id, true);
+  private ComicBook doGetComic(final long comicBookId) throws ComicBookException {
+    return this.doGetComic(comicBookId, true);
   }
 
   private ComicBook doGetComic(final long id, final boolean throwIfMissing)
@@ -458,18 +458,18 @@ public class ComicBookService {
   /**
    * Marks comics for deletion.
    *
-   * @param ids the comic ids
+   * @param comicDetailIdList the comic ids
    */
   @Async
-  public void deleteComicBooksById(final List<Long> ids) {
-    ids.forEach(
-        id -> {
-          try {
-            final ComicBook comicBook = this.doGetComic(id);
+  public void deleteComicBooksById(final List<Long> comicDetailIdList) {
+    comicDetailIdList.forEach(
+        comicDetailId -> {
+          final ComicBook comicBook = this.comicBookRepository.getByComicDetailId(comicDetailId);
+          if (Objects.nonNull(comicBook)) {
             log.trace("Marking comicBook for deletion: id={}", comicBook.getComicBookId());
             this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.markComicForRemoval);
-          } catch (ComicBookException error) {
-            log.error("Failed to load comic", error);
+          } else {
+            log.warn("No such comic book: comic detail id={}", comicDetailId);
           }
         });
   }
@@ -477,18 +477,18 @@ public class ComicBookService {
   /**
    * Unmarks comics for deletion.
    *
-   * @param ids the comic ids
+   * @param comicDetailIdList the comic ids
    */
   @Async
-  public void undeleteComicBooksById(final List<Long> ids) {
-    ids.forEach(
-        id -> {
-          try {
-            final ComicBook comicBook = this.doGetComic(id);
+  public void undeleteComicBooksById(final List<Long> comicDetailIdList) {
+    comicDetailIdList.forEach(
+        comicDetailId -> {
+          final ComicBook comicBook = this.comicBookRepository.getByComicDetailId(comicDetailId);
+          if (Objects.nonNull(comicBook)) {
             log.trace("Unmarking comicBook for deletion: id={}", comicBook.getComicBookId());
             this.comicBookStateAdaptor.fireEvent(comicBook, ComicEvent.unmarkComicForRemoval);
-          } catch (ComicBookException error) {
-            log.error("Failed to load comic", error);
+          } else {
+            log.warn("No such comic book: comic detail id={}", comicDetailId);
           }
         });
   }
