@@ -565,7 +565,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
 
   @Modifying
   @Query(
-      "UPDATE ComicBook c SET c.organizing = true WHERE c.comicBookId IN (:ids) AND c.organizing IS FALSE")
+      "UPDATE ComicBook c SET c.organizing = true WHERE c.comicDetail.comicDetailId IN (:ids) AND c.organizing IS FALSE")
   void markForOrganizationById(@Param("ids") List<Long> ids);
 
   @Modifying
@@ -574,15 +574,12 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
 
   @Modifying
   @Query(
-      "UPDATE ComicBook c SET c.targetArchiveType = :archiveType, c.renamePages = :renamePages, c.deletePages = :deletePages WHERE c.comicBookId IN (:ids)")
+      "UPDATE ComicBook c SET c.targetArchiveType = :archiveType, c.renamePages = :renamePages, c.deletePages = :deletePages WHERE c.comicDetail.comicDetailId IN (:ids)")
   void markForRecreationById(
       @Param("ids") List<Long> ids,
       @Param("archiveType") final ArchiveType archiveType,
       @Param("renamePages") final boolean renamePages,
       @Param("deletePages") final boolean deletePages);
-
-  @Query("SELECT b FROM ComicBook b WHERE  b.comicBookId IN :comicDetailIds")
-  List<ComicBook> loadByComicDetailId(@Param("comicDetailIds") List<Long> comicDetailIds);
 
   /**
    * Returns the number of unprocessed comic books.
@@ -595,7 +592,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
 
   @Modifying
   @Query(
-      "UPDATE ComicBook c SET c.updateMetadata = true WHERE c.comicBookId IN (:ids) AND c.updateMetadata IS FALSE")
+      "UPDATE ComicBook c SET c.updateMetadata = true WHERE c.comicDetail.comicDetailId IN (:ids) AND c.updateMetadata IS FALSE")
   void prepareForMetadataUpdate(@Param("ids") List<Long> ids);
 
   @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.updateMetadata IS TRUE")
@@ -606,7 +603,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
 
   @Modifying
   @Query(
-      "UPDATE ComicBook c SET c.batchScraping = true WHERE c.comicBookId IN (:ids) AND c.batchScraping IS FALSE AND c.metadata IS NOT NULL")
+      "UPDATE ComicBook c SET c.batchScraping = true WHERE c.comicDetail.comicDetailId IN (:ids) AND c.batchScraping IS FALSE AND c.metadata IS NOT NULL")
   void prepareForBatchScraping(@Param("ids") List<Long> ids);
 
   /**
