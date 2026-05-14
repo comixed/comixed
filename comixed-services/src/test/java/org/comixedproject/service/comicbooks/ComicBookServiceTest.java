@@ -682,11 +682,12 @@ class ComicBookServiceTest {
     idList.clear();
     idList.add(TEST_COMIC_BOOK_ID);
 
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+    Mockito.when(comicBookRepository.getByComicDetailId(Mockito.anyLong())).thenReturn(null);
 
     service.deleteComicBooksById(idList);
 
-    Mockito.verify(comicBookRepository, Mockito.times(idList.size())).getById(TEST_COMIC_BOOK_ID);
+    Mockito.verify(comicBookRepository, Mockito.times(idList.size()))
+        .getByComicDetailId(TEST_COMIC_BOOK_ID);
   }
 
   @Test
@@ -694,11 +695,12 @@ class ComicBookServiceTest {
     idList.clear();
     idList.add(TEST_COMIC_BOOK_ID);
 
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    Mockito.when(comicBookRepository.getByComicDetailId(Mockito.anyLong())).thenReturn(comicBook);
 
     service.deleteComicBooksById(idList);
 
-    Mockito.verify(comicBookRepository, Mockito.times(idList.size())).getById(TEST_COMIC_BOOK_ID);
+    Mockito.verify(comicBookRepository, Mockito.times(idList.size()))
+        .getByComicDetailId(TEST_COMIC_BOOK_ID);
     Mockito.verify(comicBookStateAdaptor, Mockito.times(idList.size()))
         .fireEvent(comicBook, ComicEvent.markComicForRemoval);
   }
@@ -707,22 +709,24 @@ class ComicBookServiceTest {
   void undeleteComicBookByIdInvalidId() {
     idList.add(TEST_COMIC_BOOK_ID);
 
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
+    Mockito.when(comicBookRepository.getByComicDetailId(Mockito.anyLong())).thenReturn(null);
 
     service.undeleteComicBooksById(idList);
 
-    Mockito.verify(comicBookRepository, Mockito.times(idList.size())).getById(TEST_COMIC_BOOK_ID);
+    Mockito.verify(comicBookRepository, Mockito.times(idList.size()))
+        .getByComicDetailId(TEST_COMIC_BOOK_ID);
   }
 
   @Test
   void undeleteComicBooksById() {
     idList.add(TEST_COMIC_BOOK_ID);
 
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    Mockito.when(comicBookRepository.getByComicDetailId(Mockito.anyLong())).thenReturn(comicBook);
 
     service.undeleteComicBooksById(idList);
 
-    Mockito.verify(comicBookRepository, Mockito.times(idList.size())).getById(TEST_COMIC_BOOK_ID);
+    Mockito.verify(comicBookRepository, Mockito.times(idList.size()))
+        .getByComicDetailId(TEST_COMIC_BOOK_ID);
     Mockito.verify(comicBookStateAdaptor, Mockito.times(idList.size()))
         .fireEvent(comicBook, ComicEvent.unmarkComicForRemoval);
   }
