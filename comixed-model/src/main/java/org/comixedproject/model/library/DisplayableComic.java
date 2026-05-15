@@ -44,7 +44,7 @@ public class DisplayableComic {
   private Long comicBookId;
 
   @Column(name = "comic_detail_id")
-  @JsonView({View.ComicDetailsView.class})
+  @JsonView({View.ComicListView.class})
   @Getter
   private Long comicDetailId;
 

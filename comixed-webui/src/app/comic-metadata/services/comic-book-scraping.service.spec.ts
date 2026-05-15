@@ -284,7 +284,7 @@ describe('ComicBookScrapingService', () => {
 
     const req = httpMock.expectOne(
       interpolate(REMOVE_MULTI_BOOK_COMIC_URL, {
-        comicBookId: COMIC_BOOK.comicBookId,
+        comicBookId: COMIC_BOOK.comicDetailId,
         pageSize: PAGE_SIZE
       })
     );

@@ -93,6 +93,7 @@ class ComicBookServiceTest {
   private static final boolean TEST_RENAME_PAGES = RandomUtils.nextBoolean();
   private static final boolean TEST_DELETE_PAGES = RandomUtils.nextBoolean();
   private static final ArchiveType TEST_TARGET_ARCHIVE_TYPE = ArchiveType.CB7;
+  private static final long TEST_COMIC_DETAIL_ID = 96237L;
 
   private final List<ComicBook> comicBookList = new ArrayList<>();
   private final List<ComicDetail> comicDetailList = new ArrayList<>();
@@ -1506,5 +1507,17 @@ class ComicBookServiceTest {
     assertTrue(result);
 
     Mockito.verify(comicBookRepository).findComicsWithUnhashedPagesCount();
+  }
+
+  @Test
+  void getComicDetailIdForComicBook() {
+    Mockito.when(comicDetailRepository.getComicDetailIdForComicBook(Mockito.anyLong()))
+        .thenReturn(TEST_COMIC_DETAIL_ID);
+
+    final long result = service.getComicDetailIdForComicBook(TEST_COMIC_BOOK_ID);
+
+    assertEquals(TEST_COMIC_DETAIL_ID, result);
+
+    Mockito.verify(comicDetailRepository).getComicDetailIdForComicBook(TEST_COMIC_BOOK_ID);
   }
 }
