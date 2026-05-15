@@ -1022,4 +1022,9 @@ public class ComicBookService {
   public boolean hasComicsWithUnhashedPages() {
     return this.comicBookRepository.findComicsWithUnhashedPagesCount() > 0L;
   }
+
+  @Transactional(readOnly = true)
+  public long getComicDetailIdForComicBook(final long comicBookId) {
+    return this.comicDetailRepository.getComicDetailIdForComicBook(comicBookId);
+  }
 }

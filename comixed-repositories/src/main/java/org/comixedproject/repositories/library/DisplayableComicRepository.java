@@ -39,12 +39,13 @@ public interface DisplayableComicRepository extends JpaRepository<DisplayableCom
   /**
    * Retrieves a set of comics from a list of ids.
    *
-   * @param ids the ids
+   * @param comicDetailIdList the ids
    * @param pageable the pageable
    * @return the records
    */
-  @Query("SELECT d FROM DisplayableComic d WHERE d.comicBookId IN :ids")
-  List<DisplayableComic> loadComicsById(List<Long> ids, Pageable pageable);
+  @Query("SELECT d FROM DisplayableComic d WHERE d.comicDetailId IN :comicDetailidList")
+  List<DisplayableComic> loadComicsById(
+      @Param("comicDetailidList") List<Long> comicDetailIdList, Pageable pageable);
 
   /**
    * Loads comics with the given tag type and value

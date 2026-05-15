@@ -214,7 +214,7 @@ export class ComicBookScrapingService {
     this.logger.debug('Removing comic from multi-books scraping:', args);
     return this.http.delete(
       interpolate(REMOVE_MULTI_BOOK_COMIC_URL, {
-        comicBookId: args.comicBook.comicBookId,
+        comicBookId: args.comicBook.comicDetailId,
         pageSize: args.pageSize
       })
     );

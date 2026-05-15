@@ -48,6 +48,15 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
   List<Long> getAllIds();
 
   /**
+   * Returns the comic book id for the given comic detail.
+   *
+   * @param comicBookId the comic book id
+   * @return the comic detail id
+   */
+  @Query("SELECT d.comicDetailId FROM ComicDetail d WHERE d.comicBook.comicBookId = :comicBookId")
+  long getComicDetailIdForComicBook(@Param("comicBookId") long comicBookId);
+
+  /**
    * Returns the set of all cover dates for comics that have not been read by the specified user.
    *
    * @param email the user's email

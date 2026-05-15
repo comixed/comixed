@@ -325,7 +325,7 @@ public class DisplayableComicService {
    * @param pageIndex the page index
    * @param sortBy the optional sort field
    * @param sortDirection the optional sort direction
-   * @param idList the id list
+   * @param comicDetailidList the id list
    * @return the comics
    */
   @Transactional(readOnly = true)
@@ -334,9 +334,10 @@ public class DisplayableComicService {
       final Integer pageIndex,
       final String sortBy,
       final String sortDirection,
-      final List<Long> idList) {
+      final List<Long> comicDetailidList) {
     return this.displayableComicRepository.loadComicsById(
-        idList, PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
+        comicDetailidList,
+        PageRequest.of(pageIndex, pageSize, this.doCreateSort(sortBy, sortDirection)));
   }
 
   /**
