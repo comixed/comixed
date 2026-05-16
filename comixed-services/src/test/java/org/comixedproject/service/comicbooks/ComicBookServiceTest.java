@@ -1432,8 +1432,7 @@ class ComicBookServiceTest {
 
     Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
     Mockito.verify(comicBookRepository).findByFilename(TEST_STANDARDIZED_FILENAME);
-    Mockito.verify(comicStateHandler, Mockito.never())
-        .fireEvent(comicBook, ComicEvent.markAsMissing);
+    Mockito.verify(comicStateHandler).fireEvent(comicBook, ComicEvent.markAsMissing);
   }
 
   @Test
