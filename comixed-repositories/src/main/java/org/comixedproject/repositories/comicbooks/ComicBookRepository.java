@@ -58,6 +58,15 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   ComicBook findByFilename(@Param("filename") String filename);
 
   /**
+   * Finds a comic based on filename, ignoring case.
+   *
+   * @param filename the filename
+   * @return the comic
+   */
+  @Query("SELECT c FROM ComicBook c WHERE c.comicDetail.filename ILIKE :filename")
+  ComicBook findByFilenameCaseInsensitive(@Param("filename") String filename);
+
+  /**
    * Returns all comic entries for the given series name.
    *
    * @param series the series name

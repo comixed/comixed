@@ -27,8 +27,10 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.comixedproject.model.library.PublicationDetail;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -57,6 +59,8 @@ public class ComicFileAdaptor {
   public static final String PLACEHOLDER_PUBLISHED_MONTH = "$PUBMONTH";
 
   private final SimpleDateFormat coverDateFormat = new SimpleDateFormat("MMM yyyy");
+
+  @Getter boolean caseSensitiveFilenames = !SystemUtils.IS_OS_WINDOWS;
 
   /**
    * Looks for the next available filename for a comic file.

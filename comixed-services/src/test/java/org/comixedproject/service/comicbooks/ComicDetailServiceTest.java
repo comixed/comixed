@@ -23,6 +23,7 @@ import static junit.framework.TestCase.*;
 import java.text.ParseException;
 import java.util.*;
 import org.apache.commons.lang.math.RandomUtils;
+import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.model.collections.CollectionEntry;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
@@ -54,6 +55,7 @@ class ComicDetailServiceTest {
   private static final long TEST_TOTAL_COMIC_COUNT = RandomUtils.nextLong() * 30000L;
   private static final String TEST_SORT_DIRECTION = "asc";
   private static final String TEST_COMIC_FILENAME = "src/test/resources/example.cbz";
+  private static final String TEST_STANDARDIZED_FILENAME = "the-standardized-filename";
   private static final String TEST_COVER_DATE = "2026-01-17";
   private final Set<Date> weeksList = new HashSet<>();
   private final List<String> sortFieldNames = new ArrayList<>();
@@ -61,6 +63,7 @@ class ComicDetailServiceTest {
 
   @InjectMocks private ComicDetailService service;
   @Mock private ComicDetailRepository comicDetailRepository;
+  @Mock private ComicFileAdaptor comicFileAdaptor;
   @Mock private Set<String> publisherList;
   @Mock private Set<String> seriesList;
   @Mock private Set<String> volumeList;
@@ -102,26 +105,31 @@ class ComicDetailServiceTest {
 
   @Test
   void filenameFound_caseInsensitive() {
-    service.caseSensitiveFilenames = false;
+    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+        .thenReturn(TEST_STANDARDIZED_FILENAME);
+    Mockito.when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(false);
 
     Mockito.when(comicDetailRepository.existsByFilenameIgnoreCase(Mockito.anyString()))
         .thenReturn(true);
 
     assertTrue(service.filenameFound(TEST_COMIC_FILENAME));
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
-        .existsByFilenameIgnoreCase(TEST_COMIC_FILENAME);
+    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    Mockito.verify(comicDetailRepository).existsByFilenameIgnoreCase(TEST_STANDARDIZED_FILENAME);
   }
 
   @Test
   void filenameFound_caseSensitive() {
-    service.caseSensitiveFilenames = true;
+    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+        .thenReturn(TEST_STANDARDIZED_FILENAME);
+    Mockito.when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(true);
 
     Mockito.when(comicDetailRepository.existsByFilename(Mockito.anyString())).thenReturn(true);
 
     assertTrue(service.filenameFound(TEST_COMIC_FILENAME));
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).existsByFilename(TEST_COMIC_FILENAME);
+    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    Mockito.verify(comicDetailRepository).existsByFilename(TEST_STANDARDIZED_FILENAME);
   }
 
   @Test
@@ -134,7 +142,7 @@ class ComicDetailServiceTest {
     assertEquals(
         TEST_COVER_DATE, service.coverDateFormat.format(coverDateSet.stream().toList().get(0)));
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).getAllCoverDates();
+    Mockito.verify(comicDetailRepository).getAllCoverDates();
   }
 
   @Test
@@ -148,7 +156,7 @@ class ComicDetailServiceTest {
     assertEquals(
         TEST_COVER_DATE, service.coverDateFormat.format(coverDateSet.stream().toList().get(0)));
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).getAllUnreadCoverDates(TEST_EMAIL);
+    Mockito.verify(comicDetailRepository).getAllUnreadCoverDates(TEST_EMAIL);
   }
 
   @Test
@@ -162,7 +170,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(comicDetailList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
+    Mockito.verify(comicDetailRepository)
         .getAllComicsForCoverDate(service.coverDateFormat.parse(TEST_COVER_DATE));
   }
 
@@ -179,7 +187,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(comicDetailList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
+    Mockito.verify(comicDetailRepository)
         .getAllUnreadComicsForCoverDate(service.coverDateFormat.parse(TEST_COVER_DATE), TEST_EMAIL);
   }
 
@@ -193,7 +201,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(publisherList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).getAllUnreadPublishers(TEST_EMAIL);
+    Mockito.verify(comicDetailRepository).getAllUnreadPublishers(TEST_EMAIL);
   }
 
   @Test
@@ -205,7 +213,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(publisherList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).getAllPublishers();
+    Mockito.verify(comicDetailRepository).getAllPublishers();
   }
 
   @Test
@@ -220,7 +228,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(seriesList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
+    Mockito.verify(comicDetailRepository)
         .getAllUnreadSeriesForPublisher(TEST_PUBLISHER, TEST_EMAIL);
   }
 
@@ -234,8 +242,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(seriesList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
-        .getAllSeriesForPublisher(TEST_PUBLISHER);
+    Mockito.verify(comicDetailRepository).getAllSeriesForPublisher(TEST_PUBLISHER);
   }
 
   @Test
@@ -251,7 +258,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(volumeList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
+    Mockito.verify(comicDetailRepository)
         .getAllUnreadVolumesForPublisherAndSeries(TEST_PUBLISHER, TEST_SERIES, TEST_EMAIL);
   }
 
@@ -268,7 +275,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(volumeList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
+    Mockito.verify(comicDetailRepository)
         .getAllVolumesForPublisherAndSeries(TEST_PUBLISHER, TEST_SERIES);
   }
 
@@ -281,7 +288,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(seriesList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).getAllSeries();
+    Mockito.verify(comicDetailRepository).getAllSeries();
   }
 
   @Test
@@ -294,7 +301,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(volumeList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).getAllUnreadSeries(TEST_EMAIL);
+    Mockito.verify(comicDetailRepository).getAllUnreadSeries(TEST_EMAIL);
   }
 
   @Test
@@ -306,7 +313,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(volumeList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).getAllSeries();
+    Mockito.verify(comicDetailRepository).getAllSeries();
   }
 
   @Test
@@ -321,8 +328,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(publisherList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
-        .getAllUnreadPublishersForSeries(TEST_SERIES, TEST_EMAIL);
+    Mockito.verify(comicDetailRepository).getAllUnreadPublishersForSeries(TEST_SERIES, TEST_EMAIL);
   }
 
   @Test
@@ -335,7 +341,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(publisherList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).getAllPublishersForSeries(TEST_SERIES);
+    Mockito.verify(comicDetailRepository).getAllPublishersForSeries(TEST_SERIES);
   }
 
   @Test
@@ -352,7 +358,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(comicDetailList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
+    Mockito.verify(comicDetailRepository)
         .getAllUnreadForPublisherAndSeriesAndVolume(
             TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_EMAIL);
   }
@@ -371,7 +377,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(comicDetailList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
+    Mockito.verify(comicDetailRepository)
         .getAllForPublisherAndSeriesAndVolume(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
   }
 
@@ -387,8 +393,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(tagSet, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
-        .getAllUnreadValuesForTagType(TEST_TAG_TYPE, TEST_EMAIL);
+    Mockito.verify(comicDetailRepository).getAllUnreadValuesForTagType(TEST_TAG_TYPE, TEST_EMAIL);
   }
 
   @Test
@@ -401,7 +406,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(tagSet, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).getAllValuesForTagType(TEST_TAG_TYPE);
+    Mockito.verify(comicDetailRepository).getAllValuesForTagType(TEST_TAG_TYPE);
   }
 
   @Test
@@ -414,7 +419,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(yearsList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).getAllUnreadYears(TEST_EMAIL);
+    Mockito.verify(comicDetailRepository).getAllUnreadYears(TEST_EMAIL);
   }
 
   @Test
@@ -426,7 +431,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(yearsList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).getAllYears();
+    Mockito.verify(comicDetailRepository).getAllYears();
   }
 
   @Test
@@ -440,8 +445,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertFalse(result.isEmpty());
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
-        .getAllUnreadWeeksForYear(TEST_YEAR, TEST_EMAIL);
+    Mockito.verify(comicDetailRepository).getAllUnreadWeeksForYear(TEST_YEAR, TEST_EMAIL);
   }
 
   @Test
@@ -453,7 +457,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertFalse(result.isEmpty());
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).getAllWeeksForYear(TEST_YEAR);
+    Mockito.verify(comicDetailRepository).getAllWeeksForYear(TEST_YEAR);
   }
 
   @Test
@@ -475,7 +479,7 @@ class ComicDetailServiceTest {
     final Date endDate = endDateArgumentCaptor.getValue();
     assertTrue(endDate.after(startDate));
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
+    Mockito.verify(comicDetailRepository)
         .getAllUnreadForYearAndWeek(startDate, endDate, TEST_EMAIL);
   }
 
@@ -496,8 +500,7 @@ class ComicDetailServiceTest {
     final Date endDate = endDateArgumentCaptor.getValue();
     assertTrue(endDate.after(startDate));
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
-        .getAllForYearAndWeek(startDate, endDate);
+    Mockito.verify(comicDetailRepository).getAllForYearAndWeek(startDate, endDate);
   }
 
   @Test
@@ -510,7 +513,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(comicDetailList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).getForSearchTerm(TEST_SEARCH_TERM);
+    Mockito.verify(comicDetailRepository).getForSearchTerm(TEST_SEARCH_TERM);
   }
 
   @Test
@@ -526,7 +529,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(comicDetailList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
+    Mockito.verify(comicDetailRepository)
         .getAllUnreadComicsForTagType(TEST_TAG_TYPE, TEST_TAG_VALUE, TEST_EMAIL);
   }
 
@@ -543,8 +546,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(comicDetailList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
-        .getAllComicsForTagType(TEST_TAG_TYPE, TEST_TAG_VALUE);
+    Mockito.verify(comicDetailRepository).getAllComicsForTagType(TEST_TAG_TYPE, TEST_TAG_VALUE);
   }
 
   @Test
@@ -557,7 +559,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(comicDetailList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).findAll(example);
+    Mockito.verify(comicDetailRepository).findAll(example);
   }
 
   @Test
@@ -569,7 +571,7 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(comicDetailList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).findAllById(comicBookIdSet);
+    Mockito.verify(comicDetailRepository).findAllById(comicBookIdSet);
   }
 
   @Test
@@ -623,8 +625,7 @@ class ComicDetailServiceTest {
       assertFalse(pageable.getSort().stream().toList().isEmpty());
     }
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
-        .loadCollectionEntries(TEST_TAG_TYPE, pageable);
+    Mockito.verify(comicDetailRepository).loadCollectionEntries(TEST_TAG_TYPE, pageable);
   }
 
   @Test
@@ -675,7 +676,7 @@ class ComicDetailServiceTest {
       assertFalse(pageable.getSort().stream().toList().isEmpty());
     }
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
+    Mockito.verify(comicDetailRepository)
         .loadCollectionEntriesWithFiltering(TEST_TAG_TYPE, "%" + TEST_FILTER_TEXT + "%", pageable);
   }
 
@@ -702,7 +703,7 @@ class ComicDetailServiceTest {
 
     assertEquals(TEST_TOTAL_COMIC_COUNT, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).getFilterCount(TEST_TAG_TYPE);
+    Mockito.verify(comicDetailRepository).getFilterCount(TEST_TAG_TYPE);
   }
 
   @Test
@@ -716,7 +717,7 @@ class ComicDetailServiceTest {
 
     assertEquals(TEST_TOTAL_COMIC_COUNT, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
+    Mockito.verify(comicDetailRepository)
         .getFilterCountWithFiltering(TEST_TAG_TYPE, "%" + TEST_FILTER_TEXT + "%");
   }
 
@@ -730,6 +731,6 @@ class ComicDetailServiceTest {
     assertNotNull(result);
     assertSame(idList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).getAllIds();
+    Mockito.verify(comicDetailRepository).getAllIds();
   }
 }

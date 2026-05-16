@@ -28,7 +28,7 @@ import java.time.temporal.WeekFields;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.SystemUtils;
+import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.model.collections.CollectionEntry;
 import org.comixedproject.model.comicbooks.*;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
@@ -50,16 +50,17 @@ import org.springframework.util.StringUtils;
 @Log4j2
 public class ComicDetailService {
   @Autowired private ComicDetailRepository comicDetailRepository;
+  @Autowired private ComicFileAdaptor comicFileAdaptor;
 
-  boolean caseSensitiveFilenames = !SystemUtils.IS_OS_WINDOWS;
   SimpleDateFormat coverDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
   @Transactional
   public boolean filenameFound(final String filename) {
-    if (caseSensitiveFilenames) {
-      return this.comicDetailRepository.existsByFilename(filename);
+    final String standardizedFilename = this.comicFileAdaptor.standardizeFilename(filename);
+    if (this.comicFileAdaptor.isCaseSensitiveFilenames()) {
+      return this.comicDetailRepository.existsByFilename(standardizedFilename);
     } else {
-      return this.comicDetailRepository.existsByFilenameIgnoreCase(filename);
+      return this.comicDetailRepository.existsByFilenameIgnoreCase(standardizedFilename);
     }
   }
 

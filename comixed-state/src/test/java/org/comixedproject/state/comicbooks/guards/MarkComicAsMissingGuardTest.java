@@ -42,13 +42,13 @@ class MarkComicAsMissingGuardTest {
 
   @BeforeEach
   void setUp() {
-    Mockito.when(comicDetail.isMissing()).thenReturn(false);
+    Mockito.when(comicDetail.isMarkedMissing()).thenReturn(false);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
   }
 
   @Test
   void evaluate_comicAlreadyMarkedAsMissing() {
-    Mockito.when(comicDetail.isMissing()).thenReturn(true);
+    Mockito.when(comicDetail.isMarkedMissing()).thenReturn(true);
 
     assertFalse(guard.evaluate(comicBook));
   }
