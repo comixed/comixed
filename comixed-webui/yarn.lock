@@ -2926,10 +2926,10 @@
   resolved "https://registry.yarnpkg.com/@standard-schema/spec/-/spec-1.1.0.tgz#a79b55dbaf8604812f52d140b2c9ab41bc150bb8"
   integrity sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==
 
-"@stomp/rx-stomp@^2.0.0":
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/@stomp/rx-stomp/-/rx-stomp-2.3.0.tgz#35592f7b22b606188121eb9c15ce0d86f1922b32"
-  integrity sha512-Vt6CNHm0GuEeDz6iTb+fH1E1Vw8s5hEGqlhFMuqfkFdgoiJMVqsPUpIfF8POSYYjIHd/AJ/P55v6JgPsrFOKhA==
+"@stomp/rx-stomp@^2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@stomp/rx-stomp/-/rx-stomp-2.4.0.tgz#8cc429885660ab6894de86462ba7ced3688305f8"
+  integrity sha512-F6UI5W31Q4FNg8VYwBqbTIu8pFl5L1UP9vmg2TN4W7y7OZfbmcS2OXhht+qBwDG31tjn96Cq1zgeoz7lvrzKug==
 
 "@stomp/stompjs@^7.0.0":
   version "7.3.0"
