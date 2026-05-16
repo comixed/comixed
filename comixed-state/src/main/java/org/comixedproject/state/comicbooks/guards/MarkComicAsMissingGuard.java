@@ -34,7 +34,7 @@ import org.springframework.stereotype.Component;
 public class MarkComicAsMissingGuard extends AbstractComicBookGuard {
   @Override
   public boolean evaluate(@NonNull final ComicBook comicBook) {
-    if (comicBook.getComicDetail().isMissing()) {
+    if (comicBook.getComicDetail().isMarkedMissing()) {
       log.trace("Comic book already marked as missing: id={}", comicBook.getComicBookId());
       return false;
     }
