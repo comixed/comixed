@@ -63,6 +63,8 @@ import org.springframework.data.domain.Pageable;
 class ComicBookServiceTest {
   private static final long TEST_COMIC_BOOK_ID = 5;
   private static final String TEST_COMIC_FILENAME = "src/test/resources/example.cbz";
+  private static final String TEST_STANDARDIZED_FILENAME =
+      "src/test/resources/standardized-example.cbz";
   private static final ComicType TEST_COMIC_TYPE =
       ComicType.values()[RandomUtils.nextInt(ComicType.values().length)];
   private static final String TEST_PUBLISHER = "Awesome Publications";
@@ -1344,56 +1346,152 @@ class ComicBookServiceTest {
   }
 
   @Test
-  void markComicAsFound_noRecordFound() {
-    Mockito.when(comicBookRepository.findByFilename(Mockito.anyString())).thenReturn(null);
+  void markComicAsMissing_caseInsensitive_noRecordFound() {
+    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+        .thenReturn(TEST_STANDARDIZED_FILENAME);
+    Mockito.when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(false);
+    Mockito.when(comicBookRepository.findByFilenameCaseInsensitive(Mockito.anyString()))
+        .thenReturn(null);
 
-    service.markComicAsFound(TEST_COMIC_FILENAME);
+    service.markComicAsMissing(TEST_COMIC_FILENAME);
 
-    Mockito.verify(comicBookRepository).findByFilename(TEST_COMIC_FILENAME);
+    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    Mockito.verify(comicBookRepository).findByFilenameCaseInsensitive(TEST_STANDARDIZED_FILENAME);
     Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
   }
 
   @Test
-  void markComicAsFound() {
-    Mockito.when(comicBookRepository.findByFilename(Mockito.anyString())).thenReturn(comicBook);
+  void markComicAsMissing_caseInsensitive_hasTargetArchiveType() {
+    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+        .thenReturn(TEST_STANDARDIZED_FILENAME);
+    Mockito.when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(false);
+    Mockito.when(comicBookRepository.findByFilenameCaseInsensitive(Mockito.anyString()))
+        .thenReturn(comicBook);
+    Mockito.when(comicBook.getTargetArchiveType()).thenReturn(TEST_TARGET_ARCHIVE_TYPE);
 
-    service.markComicAsFound(TEST_COMIC_FILENAME);
+    service.markComicAsMissing(TEST_COMIC_FILENAME);
 
-    Mockito.verify(comicBookRepository).findByFilename(TEST_COMIC_FILENAME);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.markAsFound);
+    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    Mockito.verify(comicBookRepository).findByFilenameCaseInsensitive(TEST_STANDARDIZED_FILENAME);
+    Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
   }
 
   @Test
-  void markComicAsMissing_noRecordFound() {
+  void markComicAsMissing_caseInsensitive() {
+    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+        .thenReturn(TEST_STANDARDIZED_FILENAME);
+    Mockito.when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(false);
+    Mockito.when(comicBookRepository.findByFilenameCaseInsensitive(Mockito.anyString()))
+        .thenReturn(comicBook);
+
+    service.markComicAsMissing(TEST_COMIC_FILENAME);
+
+    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    Mockito.verify(comicBookRepository).findByFilenameCaseInsensitive(TEST_STANDARDIZED_FILENAME);
+    Mockito.verify(comicStateHandler, Mockito.never())
+        .fireEvent(comicBook, ComicEvent.comicDiscovered);
+  }
+
+  @Test
+  void markComicAsMissing_caseSensitive_noRecordFound() {
+    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+        .thenReturn(TEST_STANDARDIZED_FILENAME);
+    Mockito.when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(true);
     Mockito.when(comicBookRepository.findByFilename(Mockito.anyString())).thenReturn(null);
 
     service.markComicAsMissing(TEST_COMIC_FILENAME);
 
-    Mockito.verify(comicBookRepository).findByFilename(TEST_COMIC_FILENAME);
+    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    Mockito.verify(comicBookRepository).findByFilename(TEST_STANDARDIZED_FILENAME);
     Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
   }
 
   @Test
-  void markComicAsMissing_hasTargetArchiveType() {
+  void markComicAsMissing_caseSensitive_hasTargetArchiveType() {
+    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+        .thenReturn(TEST_STANDARDIZED_FILENAME);
+    Mockito.when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(true);
     Mockito.when(comicBookRepository.findByFilename(Mockito.anyString())).thenReturn(comicBook);
     Mockito.when(comicBook.getTargetArchiveType()).thenReturn(TEST_TARGET_ARCHIVE_TYPE);
 
     service.markComicAsMissing(TEST_COMIC_FILENAME);
 
-    Mockito.verify(comicBookRepository).findByFilename(TEST_COMIC_FILENAME);
+    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    Mockito.verify(comicBookRepository).findByFilename(TEST_STANDARDIZED_FILENAME);
     Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
   }
 
   @Test
-  void markComicAsMissing() {
+  void markComicAsMissing_caseSensitive() {
+    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+        .thenReturn(TEST_STANDARDIZED_FILENAME);
+    Mockito.when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(true);
     Mockito.when(comicBookRepository.findByFilename(Mockito.anyString())).thenReturn(comicBook);
 
     service.markComicAsMissing(TEST_COMIC_FILENAME);
 
-    Mockito.verify(comicBookRepository).findByFilename(TEST_COMIC_FILENAME);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
+    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    Mockito.verify(comicBookRepository).findByFilename(TEST_STANDARDIZED_FILENAME);
+    Mockito.verify(comicStateHandler, Mockito.never())
         .fireEvent(comicBook, ComicEvent.markAsMissing);
+  }
+
+  @Test
+  void markComicAsFound_caseInsensitive_noRecordFound() {
+    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+        .thenReturn(TEST_STANDARDIZED_FILENAME);
+    Mockito.when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(false);
+    Mockito.when(comicBookRepository.findByFilenameCaseInsensitive(Mockito.anyString()))
+        .thenReturn(null);
+
+    service.markComicAsFound(TEST_COMIC_FILENAME);
+
+    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    Mockito.verify(comicBookRepository).findByFilenameCaseInsensitive(TEST_STANDARDIZED_FILENAME);
+    Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
+  }
+
+  @Test
+  void markComicAsFound_caseInsensitive() {
+    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+        .thenReturn(TEST_STANDARDIZED_FILENAME);
+    Mockito.when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(false);
+    Mockito.when(comicBookRepository.findByFilenameCaseInsensitive(Mockito.anyString()))
+        .thenReturn(comicBook);
+
+    service.markComicAsFound(TEST_COMIC_FILENAME);
+
+    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    Mockito.verify(comicBookRepository).findByFilenameCaseInsensitive(TEST_STANDARDIZED_FILENAME);
+    Mockito.verify(comicStateHandler).fireEvent(comicBook, ComicEvent.markAsFound);
+  }
+
+  @Test
+  void markComicAsFound_caseSensitive_noRecordFound() {
+    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+        .thenReturn(TEST_STANDARDIZED_FILENAME);
+    Mockito.when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(true);
+    Mockito.when(comicBookRepository.findByFilename(Mockito.anyString())).thenReturn(null);
+
+    service.markComicAsFound(TEST_COMIC_FILENAME);
+
+    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    Mockito.verify(comicBookRepository).findByFilename(TEST_STANDARDIZED_FILENAME);
+    Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(Mockito.any(), Mockito.any());
+  }
+
+  @Test
+  void markComicAsFound_caseSensitive() {
+    Mockito.when(comicFileAdaptor.standardizeFilename(Mockito.anyString()))
+        .thenReturn(TEST_STANDARDIZED_FILENAME);
+    Mockito.when(comicFileAdaptor.isCaseSensitiveFilenames()).thenReturn(true);
+    Mockito.when(comicBookRepository.findByFilename(Mockito.anyString())).thenReturn(comicBook);
+
+    service.markComicAsFound(TEST_COMIC_FILENAME);
+
+    Mockito.verify(comicFileAdaptor).standardizeFilename(TEST_COMIC_FILENAME);
+    Mockito.verify(comicBookRepository).findByFilename(TEST_STANDARDIZED_FILENAME);
+    Mockito.verify(comicStateHandler).fireEvent(comicBook, ComicEvent.markAsFound);
   }
 
   @Test

@@ -35,7 +35,7 @@ public class MarkComicAsMissingGuard extends AbstractComicBookGuard {
   @Override
   public boolean evaluate(final StateContext stateContext) {
     final ComicBook comicBook = this.fetchComic(stateContext);
-    if (comicBook.getComicDetail().isMissing()) {
+    if (comicBook.getComicDetail().isMarkedMissing()) {
       log.trace("Comic book already marked as missing: id={}", comicBook.getComicBookId());
       return false;
     }

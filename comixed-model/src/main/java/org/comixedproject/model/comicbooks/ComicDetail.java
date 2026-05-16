@@ -392,6 +392,10 @@ public class ComicDetail implements PublicationDetail {
     return this.missing || !this.getFile().exists();
   }
 
+  public boolean isMarkedMissing() {
+    return this.missing;
+  }
+
   @Override
   public boolean equals(final Object o) {
     if (this == o) return true;

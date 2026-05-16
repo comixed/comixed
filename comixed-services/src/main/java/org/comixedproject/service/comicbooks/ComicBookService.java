@@ -932,7 +932,7 @@ public class ComicBookService {
    */
   @Transactional
   public void markComicAsFound(final String filename) {
-    final ComicBook comicBook = this.comicBookRepository.findByFilename(filename);
+    final var comicBook = doFindComicByFilename(filename);
     if (Objects.nonNull(comicBook)) {
       log.debug("Marking comic book as found: id={}", comicBook.getComicBookId());
       this.comicStateHandler.fireEvent(comicBook, ComicEvent.markAsFound);
@@ -946,11 +946,18 @@ public class ComicBookService {
    */
   @Transactional
   public void markComicAsMissing(final String filename) {
-    final ComicBook comicBook = this.comicBookRepository.findByFilename(filename);
+    final var comicBook = doFindComicByFilename(filename);
     if (Objects.nonNull(comicBook) && Objects.isNull(comicBook.getTargetArchiveType())) {
-      log.debug("Processing missing comic file: {} [{}]", filename, comicBook.getComicBookId());
+      log.debug("Marking comic as missing: {} [{}]", filename, comicBook.getComicBookId());
       this.comicStateHandler.fireEvent(comicBook, ComicEvent.markAsMissing);
     }
+  }
+
+  private ComicBook doFindComicByFilename(final String filename) {
+    final String standardizedFilename = this.comicFileAdaptor.standardizeFilename(filename);
+    return this.comicFileAdaptor.isCaseSensitiveFilenames()
+        ? this.comicBookRepository.findByFilename(standardizedFilename)
+        : this.comicBookRepository.findByFilenameCaseInsensitive(standardizedFilename);
   }
 
   /**
