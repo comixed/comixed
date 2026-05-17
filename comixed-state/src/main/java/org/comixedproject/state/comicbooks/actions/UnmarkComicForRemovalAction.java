@@ -35,7 +35,9 @@ public class UnmarkComicForRemovalAction extends AbstractComicAction {
   public void execute(@NonNull final ComicBook comicBook) {
     log.trace("Clearing the purging flag");
     comicBook.setPurging(false);
+    log.trace("Clearing the page list");
     comicBook.getPages().clear();
+    log.trace("Clearing the file contents loaded flag");
     comicBook.setFileContentsLoaded(false);
   }
 }
