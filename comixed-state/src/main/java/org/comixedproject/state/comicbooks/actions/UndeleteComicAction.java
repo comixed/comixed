@@ -38,5 +38,9 @@ public class UndeleteComicAction extends AbstractComicAction {
     final ComicBook comicBook = this.fetchComic(context);
     log.trace("Clearing the purging flag");
     comicBook.setPurging(false);
+    log.trace("Clearing the page list");
+    comicBook.getPages().clear();
+    log.trace("Clearing the file contents loaded flag");
+    comicBook.setFileContentsLoaded(false);
   }
 }
