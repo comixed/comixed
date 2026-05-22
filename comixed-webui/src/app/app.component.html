@@ -1,6 +1,6 @@
-<mat-drawer-container class="app-container">
-  <mat-drawer-content>
-    <mat-toolbar>
+<div id="cx-app-container">
+  <div id="cx-app-toolbar">
+    <mat-toolbar color="primary">
       @if (!!(user$ | async)) {
         <button
           matIconButton
@@ -39,27 +39,31 @@
 
       <div class="cx-spacer"></div>
 
-      <span>
-        ComiXed
-        @if ((isAdmin$ | async) && latestRelease?.newer) {
-          <button
-            id="view-latest-release-button"
-            mat-icon-button
-            [matTooltip]="
-              'app.toolbar.tooltip.new-release-available'
-                | translate
-                  : {
-                      version: latestRelease?.version,
-                      released: latestRelease?.updated | date: 'mediumDate'
-                    }
-            "
-            [disabled]="checkingLatestVersion"
-            (click)="onViewLatestRelease()"
-          >
-            <mat-icon>new_releases</mat-icon>
-          </button>
-        }
-      </span>
+      @if ((isAdmin$ | async) && latestRelease?.newer) {
+        <button
+          id="view-latest-release-button"
+          mat-flat-button
+          color="accent"
+          [matTooltip]="
+            'app.toolbar.tooltip.new-release-available'
+              | translate
+                : {
+                    version: latestRelease?.version,
+                    released: latestRelease?.updated | date: 'mediumDate'
+                  }
+          "
+          [disabled]="checkingLatestVersion"
+          (click)="onViewLatestRelease()"
+        >
+          <mat-label>
+            {{
+              "app.text.new-version-available"
+                | translate: { version: latestRelease?.version }
+            }}
+          </mat-label>
+          <mat-icon>new_releases</mat-icon>
+        </button>
+      }
 
       <div class="cx-spacer"></div>
 
@@ -72,6 +76,20 @@
           [matTooltip]="'app.toolbar.tooltip.user-icon' | translate"
           routerLink="/account"
         />
+
+        <button
+          id="dark-mode-toggle-button"
+          mat-icon-button
+          [matTooltip]="'navigation.tooltip.dark-mode' | translate"
+          (click)="onToggleDarkMode(!darkMode)"
+        >
+          @if (!darkMode) {
+            <mat-icon>light_mode</mat-icon>
+          }
+          @if (darkMode) {
+            <mat-icon>dark_mode</mat-icon>
+          }
+        </button>
       }
 
       <button
@@ -107,7 +125,74 @@
         }
       </mat-menu>
     </mat-toolbar>
+  </div>
 
+  <div id="cx-app-content">
     <router-outlet></router-outlet>
-  </mat-drawer-content>
-</mat-drawer-container>
+  </div>
+
+  <div id="cx-app-footer">
+    <mat-toolbar color="accent">
+      @if (!!(user$ | async)) {
+        <a routerLink="/library/all">
+          {{
+            "app.footer.comic-count"
+              | translate: { count: libraryState?.totalComics || 0 }
+          }}
+        </a>
+        |
+        <a routerLink="/library/unread">
+          {{
+            "app.footer.read-count"
+              | translate
+                : { count: (user$ | async)?.readComicBooks.length || 0 }
+          }}
+        </a>
+        |
+        <a routerLink="/library/selected">
+          {{
+            "app.footer.selected-count" | translate: { count: selectedCount }
+          }}
+        </a>
+        @if (isAdmin$ | async) {
+          |
+          <a routerLink="/library/unscraped">
+            {{
+              "app.footer.unscraped-count"
+                | translate: { count: libraryState?.unscrapedComics || 0 }
+            }}
+          </a>
+          |
+          <a routerLink="/library/deleted">
+            {{
+              "app.footer.deleted-count"
+                | translate: { count: libraryState?.deletedComics || 0 }
+            }}
+          </a>
+          |
+          <a routerLink="/library/duplicates/comics">
+            {{
+              "app.footer.duplicate-count"
+                | translate: { count: libraryState?.duplicateComics || 0 }
+            }}
+          </a>
+          |
+          <a routerLink="/admin/processes">
+            {{
+              "app.footer.batch-jobs"
+                | translate: { count: batchProcessCount || 0 }
+            }}
+          </a>
+        }
+      }
+      <div class="cx-spacer"></div>
+      <a routerLink="/build">v3.3-SNAPSHOT</a>
+      <div class="cx-spacer"></div>
+      &copy; 2017-{{ thisYear }},&nbsp;
+      <a href="http://www.github.com/comixed" target="cxgithubsite">
+        The ComiXed Project
+      </a>
+      . All Rights Reserved.
+    </mat-toolbar>
+  </div>
+</div>

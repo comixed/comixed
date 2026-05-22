@@ -23,13 +23,23 @@
       "selected-count": "Selected: {count}",
       "unscraped-count": "Unscraped: {count}"
     },
+    "footer": {
+      "batch-jobs": "Jobs: {count}",
+      "comic-count": "Comics: {count}",
+      "deleted-count": "Deleted: {count}",
+      "duplicate-count": "Duplicates: {count}",
+      "read-count": "Read: {count}",
+      "selected-count": "Selected: {count}",
+      "unscraped-count": "Unscraped: {count}"
+    },
+    "text": {
+      "language": "Language",
+      "logging": "Logging",
+      "new-version-available": "Release {version} is available!"
+    },
     "toolbar": {
       "button": {
         "set-language": "Language"
-      },
-      "text": {
-        "language": "Language",
-        "logging": "Logging"
       },
       "tooltip": {
         "browser-options": "Change browser options",
@@ -174,8 +184,8 @@
     "archive-type": "{type, select, CBZ{Zip File (CBZ)} CBR{RAR File (CBR)} CB7{7Zip File (CB7)} other{Unknown}}",
     "clear-value": "Clear value",
     "end-year": "End Year",
-    "no": "No",
     "never": "Never",
+    "no": "No",
     "number-of-publishers": "# Of Publishers",
     "start-year": "Start Year",
     "view-details": "View Details",
