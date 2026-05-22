@@ -22,7 +22,7 @@ import { StoreModule } from '@ngrx/store';
 import { userFeature } from './reducers/user.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { UserEffects } from './effects/user.effects';
-import { LoginPageComponent } from './pages/login-page/login-page.component';
+import { LoginPageComponent } from '@app/user/pages/login-page/login-page.component';
 import { UserRouting } from './user.routing';
 import {
   provideHttpClient,

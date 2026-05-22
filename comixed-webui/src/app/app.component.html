@@ -18,7 +18,6 @@
           <mat-icon>local_library</mat-icon>
         </button>
       }
-
       @if (isAdmin$ | async) {
         <button
           matIconButton
@@ -131,9 +130,9 @@
     <router-outlet></router-outlet>
   </div>
 
-  <div id="cx-app-footer">
-    <mat-toolbar color="accent">
-      @if (!!(user$ | async)) {
+  @if (!!(user$ | async)) {
+    <div id="cx-app-footer">
+      <mat-toolbar color="accent">
         <a routerLink="/library/all">
           {{
             "app.footer.comic-count"
@@ -184,15 +183,15 @@
             }}
           </a>
         }
-      }
-      <div class="cx-spacer"></div>
-      <a routerLink="/build">v3.3-SNAPSHOT</a>
-      <div class="cx-spacer"></div>
-      &copy; 2017-{{ thisYear }},&nbsp;
-      <a href="http://www.github.com/comixed" target="cxgithubsite">
-        The ComiXed Project
-      </a>
-      . All Rights Reserved.
-    </mat-toolbar>
-  </div>
+        <div class="cx-spacer"></div>
+        <a routerLink="/build">v3.3-SNAPSHOT</a>
+        <div class="cx-spacer"></div>
+        &copy; 2017-{{ thisYear }},&nbsp;
+        <a href="http://www.github.com/comixed" target="cxgithubsite">
+          The ComiXed Project
+        </a>
+        . All Rights Reserved.
+      </mat-toolbar>
+    </div>
+  }
 </div>
