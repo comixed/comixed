@@ -49,13 +49,18 @@
         "passwords-dont-match": "Passwords do not match..."
       }
     },
-    "login-user": {
-      "page-title": "Please Enter Your User Details",
-      "email-placeholder": "Your email address",
-      "password-placeholder": "Your password",
-      "effect-failure": "Email or password is invalid.",
-      "login-tooltip": "Go to the login page...",
-      "logout-tooltip": "Log out..."
+    "login-page": {
+      "form": {
+        "button": {
+          "submit": "Login"
+        },
+        "title": "User Account Details",
+        "placeholder": {
+          "email": "your@email.com",
+          "password": "Your password..."
+        }
+      },
+      "tab-title": "Login"
     },
     "logout-user": {
       "confirmation-title": "Logout",
