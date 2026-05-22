@@ -18,30 +18,34 @@
   }
 }
 
-#app-primary-space {
-  margin-top: 4rem;
+#cx-app-container {
+  display: flex;
+  flex-flow: column;
 }
 
-#app-sidenav-container {
-  inline-size: max-content;
-  margin-bottom: $cx-bottom-margin;
+#cx-app-toolbar,
+#cx-app-footer {
+  overflow: hidden;
+  position: fixed;
+  flex-grow: 0;
+  width: 100%;
+  z-index: 99;
 }
 
-#app-account-bar-container {
-  width: min(100vw, max(25vw, 500px));
-  margin-bottom: $cx-bottom-margin;
-}
-
-#app-content-container {
-  width: calc(100% - $cx-margin-space);
-  margin: $cx-margin-width;
-  margin-bottom: $cx-bottom-margin;
-}
-
-#main-container {
-  position: absolute;
+#cx-app-toolbar {
   top: 0;
+  left: 0;
+}
+
+#cx-app-footer {
+  position: fixed;
   bottom: 0;
   left: 0;
-  right: 0;
+}
+
+#cx-app-content {
+  flex-grow: 1;
+  margin-top: 60px;
+  margin-bottom: 70px;
+  width: 100%;
 }

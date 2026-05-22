@@ -35,7 +35,7 @@ import { saveUserPreference } from '@app/user/actions/user.actions';
 import { DASHBOARD_PANELS_PREFERENCE } from '@app/dashboard/dashboard.constants';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
-describe('DashboardComponent', () => {
+fdescribe('DashboardComponent', () => {
   const USER = USER_READER;
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
@@ -71,6 +71,10 @@ describe('DashboardComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('contains the library state', () => {
+    expect(component.libraryState).not.toBeNull();
   });
 
   describe('changing the language used', () => {

@@ -54,14 +54,10 @@ import { selectMessagingState } from '@app/messaging/selectors/messaging.selecto
 import { WebSocketService } from '@app/messaging';
 import { AlertService } from '@app/core/services/alert.service';
 import { filter } from 'rxjs/operators';
-import {
-  MatDrawerContainer,
-  MatDrawerContent
-} from '@angular/material/sidenav';
-import { MatIconButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatToolbar } from '@angular/material/toolbar';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { MatTooltip } from '@angular/material/tooltip';
 import { GravatarModule } from 'ngx-gravatar';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
@@ -71,8 +67,9 @@ import { selectReleaseDetailsState } from '@app/selectors/release.selectors';
 import { loadLatestReleaseDetails } from '@app/actions/release.actions';
 import { LatestRelease } from '@app/models/latest-release';
 import { MatDialog } from '@angular/material/dialog';
-import { LibraryPluginSetupComponent } from '@app/admin/components/library-plugin-setup/library-plugin-setup.component';
-import { EditAccountBarComponent } from '@app/user/components/edit-account-bar/edit-account-bar.component';
+import { selectBatchProcessList } from '@app/admin/selectors/batch-processes.selectors';
+import { selectComicBookSelectionState } from '@app/comic-books/selectors/comic-book-selection.selectors';
+import { MatLabel } from '@angular/material/input';
 
 @Component({
   selector: 'cx-root',
@@ -84,8 +81,6 @@ import { EditAccountBarComponent } from '@app/user/components/edit-account-bar/e
     MatIcon,
     MatToolbar,
     RouterOutlet,
-    MatDrawerContent,
-    MatDrawerContainer,
     RouterLink,
     MatTooltip,
     GravatarModule,
@@ -94,7 +89,8 @@ import { EditAccountBarComponent } from '@app/user/components/edit-account-bar/e
     AsyncPipe,
     MatMenuItem,
     DatePipe,
-    RouterLinkActive
+    MatLabel,
+    MatButton
   ]
 })
 export class AppComponent implements OnInit {
@@ -129,6 +125,9 @@ export class AppComponent implements OnInit {
     { name: 'app.logging.text.debug', value: LoggerLevel.DEBUG },
     { name: 'app.logging.text.trace', value: LoggerLevel.TRACE }
   ];
+  thisYear = `${new Date().getFullYear()}`;
+  batchProcessCount = 0;
+  selectedCount = 0;
 
   constructor() {
     this.logger.level = LoggerLevel.INFO;
@@ -207,6 +206,12 @@ export class AppComponent implements OnInit {
         );
       }
     });
+    this.store.select(selectBatchProcessList).subscribe(batchProcessList => {
+      this.batchProcessCount = batchProcessList.length;
+    });
+    this.store
+      .select(selectComicBookSelectionState)
+      .subscribe(state => (this.selectedCount = state.ids.length));
     this.store.select(selectBusyState).subscribe(state => {
       this.busy = state.enabled;
       this.busyIcon = state.icon;
@@ -286,7 +291,7 @@ export class AppComponent implements OnInit {
     window.open(this.latestRelease.url, LATEST_RELEASE_TARGET);
   }
 
-  protected onLanguageChange(language: string) {
+  onLanguageChange(language: string) {
     this.translateService.use(language);
     if (!!this.user$.value) {
       this.logger.debug('Saving user language choice:', language);
@@ -296,7 +301,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  protected onLoggingChange(level: LoggerLevel) {
+  onLoggingChange(level: LoggerLevel) {
     this.logger.level = level;
     if (!!this.user$.value) {
       this.logger.debug('Saving user logging choice:', level);
@@ -304,5 +309,14 @@ export class AppComponent implements OnInit {
         saveUserPreference({ name: LOGGER_LEVEL_PREFERENCE, value: `${level}` })
       );
     }
+  }
+
+  onToggleDarkMode(toggle: boolean): void {
+    this.logger.debug('Toggling dark mode:', toggle);
+    this.store.dispatch(toggleDarkThemeMode({ toggle }));
+    this.logger.debug('Saving user preference');
+    this.store.dispatch(
+      saveUserPreference({ name: DARK_MODE_PREFERENCE, value: `${toggle}` })
+    );
   }
 }

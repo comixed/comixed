@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { LibraryState } from '@app/library/reducers/library.reducer';
 import { Store } from '@ngrx/store';
 import { selectLibraryState } from '@app/library/selectors/library.selectors';
@@ -53,7 +53,7 @@ import { AsyncPipe } from '@angular/common';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
   store = inject(Store);
   translateService = inject(TranslateService);
   titleService = inject(TitleService);
@@ -81,6 +81,7 @@ export class DashboardComponent implements OnInit {
     this.translateService.onLangChange.subscribe(lang =>
       this.loadTranslations()
     );
+    this.loadTranslations();
   }
 
   private _libraryState: LibraryState | null = null;
@@ -118,11 +119,6 @@ export class DashboardComponent implements OnInit {
     this.store.dispatch(
       saveUserPreference({ name: DASHBOARD_PANELS_PREFERENCE, value })
     );
-  }
-
-  ngOnInit(): void {
-    this.logger.trace('Page initialized');
-    this.loadTranslations();
   }
 
   private loadTranslations() {
