@@ -93,6 +93,10 @@ h4 {
   width: 50% !important;
 }
 
+.cx-max-width-50 {
+  max-width: 50% !important;
+}
+
 .cx-min-width-50 {
   min-width: 50% !important;
 }
@@ -115,6 +119,10 @@ h4 {
 
 .cx-width-100 {
   width: 100% !important;
+}
+
+.cx-max-width-100 {
+  max-width: 100% !important;
 }
 
 .cx-height-50 {
@@ -618,23 +626,33 @@ mat-toolbar.mat-toolbar mat-form-field.mat-mdc-form-field {
   align-items: start;
   width: calc(100% - $cx-margin-space);
   margin: $cx-margin-width;
-  justify-content: stretch;
+  justify-content: space-evenly;
 }
 
-.cx-container-flow-component-grow-1 {
+.cx-container-flow-grow-0,
+.cx-container-flow-grow-1,
+.cx-container-flow-image-grow-1,
+.cx-container-flow-image-grow-2 {
+  align-self: stretch;
+}
+
+.cx-container-flow-grow-1 {
+  flex-grow: 1;
+  width: min(100%, max(50%, 500px));
+}
+
+.cx-container-flow-image-grow-1 {
   flex-grow: 1;
   width: min(100%, max(10%, $cx-min-image-width));
   min-width: $cx-min-image-width;
   max-width: $cx-max-image-width;
-  align-self: stretch;
 }
 
-.cx-container-flow-component-grow-2 {
-  flex-grow: 1;
+.cx-container-flow-image-grow-1 {
+  flex-grow: 2;
   width: min(100%, max(20%, $cx-min-image-width * 2));
   min-width: $cx-min-image-width * 2;
   max-width: $cx-max-image-width * 2;
-  align-self: stretch;
 }
 
 // borders and edges

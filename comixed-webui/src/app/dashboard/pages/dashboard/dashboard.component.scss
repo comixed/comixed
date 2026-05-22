@@ -1,1 +1,9 @@
-@use 'variables' as *;
+.cx-container-flow-grow-1 {
+  flex-grow: 1;
+  max-width: 400px;
+}
+
+.cx-container-flow-grow-2 {
+  flex-grow: 2;
+  max-width: 600px;
+}

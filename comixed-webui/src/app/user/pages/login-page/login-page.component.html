@@ -1,86 +1,63 @@
-<form [formGroup]="loginForm">
-  <mat-card
-    appearance="outlined"
-    class="cx-centered cx-position-absolute cx-width-50"
-  >
-    <mat-card-title>
-      {{ "user.login-user.page-title" | translate }}
-    </mat-card-title>
-    <mat-card-content class="cx-padding-left-15 cx-padding-right-15">
-      <mat-form-field class="cx-width-100" required>
-        <input
-          id="cx-login-email"
-          matInput
-          type="email"
-          formControlName="email"
-          [readonly]="busy"
-          [placeholder]="'user.login-user.email-placeholder' | translate"
-        />
-        <mat-error>
-          @if (controls.email.errors?.required) {
-            <span>
-              {{ "validation.field-required" | translate }}
-            </span>
-          }
-          @if (controls.email.errors?.email) {
-            <span>
-              {{ "validation.email-required" | translate }}
-            </span>
-          }
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field class="cx-width-100" required>
-        <input
-          id="cx-login-password"
-          matInput
-          type="password"
-          formControlName="password"
-          [readonly]="busy"
-          [placeholder]="'user.login-user.password-placeholder' | translate"
-        />
-        <mat-error>
-          @if (controls.password.errors?.required) {
-            <span>
-              {{ "validation.field-required" | translate }}
-            </span>
-          }
-          @if (!!controls.password.errors?.minlength) {
-            <span>
-              {{
-                "validation.value-too-short"
-                  | translate
-                    : {
-                        length:
-                          controls.password.errors.minlength.requiredLength
-                      }
-              }}
-            </span>
-          }
-          @if (!!controls.password.errors?.maxlength) {
-            <span>
-              {{
-                "validation.value-too-long"
-                  | translate
-                    : {
-                        length:
-                          controls.password.errors.maxlength.requiredLength
-                      }
-              }}
-            </span>
-          }
-        </mat-error>
-      </mat-form-field>
-      <button
-        id="cx-login-submit-button"
-        mat-raised-button
-        color="primary"
-        [class.cx-spinner]="busy"
-        [disabled]="!loginForm.valid || busy"
-        (click)="onSubmitLogin()"
-      >
-        <mat-label>{{ "button.login" | translate }}</mat-label>
-        <mat-icon>login</mat-icon>
-      </button>
-    </mat-card-content>
-  </mat-card>
-</form>
+<div class="cx-width-80 cx-position-absolute cx-centered">
+  <div class="cx-container-flow-horizontal">
+    <div class="cx-container-flow-grow-1 cx-padding-5">
+      <mat-card>
+        <mat-card-title>
+          <h2>{{ "user.login-page.form.title" | translate }}</h2>
+        </mat-card-title>
+
+        <mat-card-content>
+          <form [formGroup]="loginForm">
+            <mat-form-field class="cx-width-100" appearance="outline" required>
+              <input
+                id="email"
+                class="cx-width-100"
+                matInput
+                type="email"
+                formControlName="email"
+                [placeholder]="
+                  'user.login-page.form.placeholder.email' | translate
+                "
+                required
+              />
+            </mat-form-field>
+
+            <mat-form-field class="cx-width-100" appearance="outline" required>
+              <input
+                id="password"
+                class="cx-width-100"
+                matInput
+                type="password"
+                [placeholder]="
+                  'user.login-page.form.placeholder.password' | translate
+                "
+                formControlName="password"
+                required
+              />
+            </mat-form-field>
+          </form>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <div class="cx-action-button-container-horizontal">
+            <button
+              class="cx-action-button"
+              mat-raised-button
+              color="primary"
+              [disabled]="!loginForm.valid"
+              (click)="onSubmitLogin()"
+            >
+              <mat-icon>login</mat-icon>
+              <mat-label>
+                {{ "user.login-page.form.button.submit" | translate }}
+              </mat-label>
+            </button>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+    <div class="cx-container-flow-grow-0">
+      <img src="/assets/img/login-page.jpg" height="100%" width="auto" />
+    </div>
+  </div>
+</div>
