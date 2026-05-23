@@ -1,18 +1,24 @@
 {
   "dashboard": {
     "label": {
+      "available-storage": "Free Space",
       "comic-count": "# Comics",
       "deleted-comics": "Deleted",
       "duplicate-comics": "Duplicated",
       "name": "Name",
+      "total-storage": "Total Storage",
       "unscraped-comics": "Unscraped"
     },
     "page-title": "Library Dashboard",
     "tab-title": "Dashboard",
     "text": {
+      "database-status": "Database status: {status} ({name})",
       "deleted": "Deleted",
       "duplicates": "Duplicates",
       "no-records-found": "No statistics loaded...",
+      "overall-status": "Overall status: {status}",
+      "ping-status": "Ping status: {status}",
+      "readiness-status": "Readiness state: {status}",
       "unscraped": "Unscraped"
     },
     "title": {
@@ -24,6 +30,8 @@
       "publisher-title": "Publisher Stats",
       "publisher-year-title": "Publishing Years",
       "series-title": "Series Stats",
+      "server-health": "Server State",
+      "storage-health": "Storage",
       "story-title": "Story Stats",
       "team-title": "Team Stats"
     }

@@ -1,0 +1,20 @@
+.cx-container-flow-grow-1,
+.cx-container-flow-grow-2 {
+  height: 100%;
+  justify-content: stretch;
+  align-self: stretch;
+}
+
+.cx-container-flow-grow-1 {
+  flex-grow: 1;
+  min-width: 400px;
+  width: min(500px, 25vw);
+  max-width: 600px;
+}
+
+.cx-container-flow-grow-2 {
+  flex-grow: 2;
+  min-width: 800px;
+  width: min(900px, 50vw);
+  max-width: 1000px;
+}

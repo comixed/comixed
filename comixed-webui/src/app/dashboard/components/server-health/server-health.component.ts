@@ -17,45 +17,40 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
+import { ServerHealth } from '@app/admin/models/server-health';
 import {
   MatCard,
   MatCardActions,
   MatCardContent,
   MatCardTitle
 } from '@angular/material/card';
+import { TranslateModule } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
-import {
-  BarChartModule,
-  NumberCardModule,
-  PieChartModule
-} from '@swimlane/ngx-charts';
-import { BehaviorSubject } from 'rxjs';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatIconButton } from '@angular/material/button';
 
 @Component({
-  selector: 'cx-library-stats',
+  selector: 'cx-server-health',
   imports: [
-    AsyncPipe,
+    TranslateModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
     MatCard,
-    MatCardActions,
-    MatCardContent,
     MatCardTitle,
+    MatCardContent,
+    MatCardActions,
     MatIcon,
-    PieChartModule,
-    BarChartModule,
-    NumberCardModule,
     MatIconButton
   ],
-  templateUrl: './library-stat.component.html',
-  styleUrl: './library-stat.component.scss'
+  templateUrl: './server-health.component.html',
+  styleUrl: './server-health.component.scss'
 })
-export class LibraryStatComponent {
+export class ServerHealthComponent {
   @Input() title: string;
-  @Output() closePanel = new EventEmitter();
-  chartData = new BehaviorSubject<{ name: string; value: number }[]>([]);
+  @Input() health: ServerHealth | null;
 
-  @Input() set data(statistics: { name: string; value: number }[]) {
-    this.chartData.next(statistics);
-  }
+  @Output() closePanel = new EventEmitter();
 }

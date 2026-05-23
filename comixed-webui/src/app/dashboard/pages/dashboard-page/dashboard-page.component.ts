@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { LibraryState } from '@app/library/reducers/library.reducer';
 import { Store } from '@ngrx/store';
 import { selectLibraryState } from '@app/library/selectors/library.selectors';
@@ -38,9 +38,14 @@ import { ArchiveTypesComponent } from '@app/dashboard/components/archive-types/a
 import { LibraryStatComponent } from '../../components/library-stats/library-stat.component';
 import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import { selectServerRuntimeHealth } from '@app/admin/selectors/server-runtime.selectors';
+import { ServerHealth } from '@app/admin/models/server-health';
+import { ServerHealthComponent } from '@app/dashboard/components/server-health/server-health.component';
+import { loadServerHealth } from '@app/admin/actions/server-runtime.actions';
+import { StorageHealthComponent } from '@app/dashboard/components/storage-health/storage-health.component';
 
 @Component({
-  selector: 'cx-dashboard',
+  selector: 'cx-dashboard-page',
   imports: [
     TranslateModule,
     CollectionListComponent,
@@ -48,18 +53,21 @@ import { AsyncPipe } from '@angular/common';
     ComicStatesComponent,
     ArchiveTypesComponent,
     LibraryStatComponent,
-    AsyncPipe
+    AsyncPipe,
+    ServerHealthComponent,
+    StorageHealthComponent
   ],
-  templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+  templateUrl: './dashboard-page.component.html',
+  styleUrl: './dashboard-page.component.scss'
 })
-export class DashboardComponent {
+export class DashboardPageComponent implements OnInit {
   store = inject(Store);
   translateService = inject(TranslateService);
   titleService = inject(TitleService);
   logger = inject(LoggerService);
   panels = AVAILABLE_DASHBOARD_PANELS;
   statistics = new BehaviorSubject<{ name: string; value: number }[]>([]);
+  health: ServerHealth | null = null;
 
   constructor() {
     this.logger.debug('Subscribing to library state changes');
@@ -77,6 +85,10 @@ export class DashboardComponent {
           AVAILABLE_DASHBOARD_PANELS
         );
       });
+    this.logger.debug('Subscribing to runtime updates');
+    this.store
+      .select(selectServerRuntimeHealth)
+      .subscribe(health => (this.health = health));
     this.logger.debug('Subscribing to language changes');
     this.translateService.onLangChange.subscribe(lang =>
       this.loadTranslations()
@@ -110,6 +122,11 @@ export class DashboardComponent {
 
   get displayPanels(): string[] {
     return this.panels.split('|');
+  }
+
+  ngOnInit(): void {
+    this.logger.debug('Loading server health');
+    this.store.dispatch(loadServerHealth());
   }
 
   closePanel(panelName: string): void {
