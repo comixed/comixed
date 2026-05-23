@@ -37,6 +37,7 @@ import {
 } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
 import { RemoteLibrarySegmentState } from '@app/library/models/net/remote-library-segment-state';
+import { MatIconButton } from '@angular/material/button';
 
 @Component({
   selector: 'cx-collection-list',
@@ -50,7 +51,8 @@ import { RemoteLibrarySegmentState } from '@app/library/models/net/remote-librar
     MatCardContent,
     MatCardFooter,
     MatCardActions,
-    MatIcon
+    MatIcon,
+    MatIconButton
   ],
   templateUrl: './collection-list.component.html',
   styleUrl: './collection-list.component.scss'
