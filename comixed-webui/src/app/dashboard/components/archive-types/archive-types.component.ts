@@ -29,6 +29,7 @@ import {
 import { MatIcon } from '@angular/material/icon';
 import { PieChartModule } from '@swimlane/ngx-charts';
 import { AsyncPipe } from '@angular/common';
+import { MatIconButton } from '@angular/material/button';
 
 @Component({
   selector: 'cx-archive-types',
@@ -39,7 +40,8 @@ import { AsyncPipe } from '@angular/common';
     MatCardTitle,
     MatIcon,
     PieChartModule,
-    AsyncPipe
+    AsyncPipe,
+    MatIconButton
   ],
   templateUrl: './archive-types.component.html',
   styleUrl: './archive-types.component.scss'

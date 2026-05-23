@@ -17,5 +17,5 @@
  */
 
 export const AVAILABLE_DASHBOARD_PANELS =
-  'publisher-list|series-list|character-list|team-list|location-list|story-list|state-list|library-stats|archive-type-list|publisher-year-graph';
+  'runtime-status|storage-status|publisher-list|series-list|character-list|team-list|location-list|story-list|state-list|library-stats|archive-type-list|publisher-year-graph';
 export const DASHBOARD_PANELS_PREFERENCE = 'preference.user.dashboard-panels';

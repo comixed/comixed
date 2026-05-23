@@ -17,7 +17,7 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DashboardComponent } from './dashboard.component';
+import { DashboardPageComponent } from './dashboard-page.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
@@ -34,22 +34,27 @@ import { USER_READER } from '@app/user/user.fixtures';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { DASHBOARD_PANELS_PREFERENCE } from '@app/dashboard/dashboard.constants';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import {
+  initialState as initialServerRuntimeState,
+  SERVER_RUNTIME_FEATURE_KEY
+} from '@app/admin/reducers/server-runtime.reducer';
 
-describe('DashboardComponent', () => {
+describe('DashboardPageComponent', () => {
   const USER = USER_READER;
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
-    [LIBRARY_FEATURE_KEY]: initialLibraryState
+    [LIBRARY_FEATURE_KEY]: initialLibraryState,
+    [SERVER_RUNTIME_FEATURE_KEY]: initialServerRuntimeState
   };
-  let component: DashboardComponent;
-  let fixture: ComponentFixture<DashboardComponent>;
+  let component: DashboardPageComponent;
+  let fixture: ComponentFixture<DashboardPageComponent>;
   let titleService: TitleService;
   let store: MockStore<any>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        DashboardComponent,
+        DashboardPageComponent,
         TranslateModule.forRoot(),
         LoggerModule.forRoot()
       ],
@@ -60,7 +65,7 @@ describe('DashboardComponent', () => {
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DashboardComponent);
+    fixture = TestBed.createComponent(DashboardPageComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
     titleService = TestBed.inject(TitleService);

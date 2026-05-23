@@ -1,0 +1,45 @@
+<mat-card class="cx-width-100">
+  <mat-card-actions>
+    <button
+      style="pointer-events: auto"
+      (click)="closePanel.emit(); $event.stopPropagation()"
+      mat-icon-button
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-card-actions>
+
+  <mat-card-title>{{ title }}</mat-card-title>
+  <mat-card-content>
+    <ul>
+      <li>
+        {{
+          "dashboard.text.overall-status"
+            | translate: { status: health?.status }
+        }}
+      </li>
+      <li>
+        {{
+          "dashboard.text.database-status"
+            | translate
+              : {
+                  name: health?.components?.db?.details?.database,
+                  status: health?.components?.db?.status
+                }
+        }}
+      </li>
+      <li>
+        {{
+          "dashboard.text.readiness-status"
+            | translate: { status: health?.components?.readinessState?.status }
+        }}
+      </li>
+      <li>
+        {{
+          "dashboard.text.ping-status"
+            | translate: { status: health?.components?.ping?.status }
+        }}
+      </li>
+    </ul>
+  </mat-card-content>
+</mat-card>

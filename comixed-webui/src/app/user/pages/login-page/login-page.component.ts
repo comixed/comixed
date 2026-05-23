@@ -48,12 +48,6 @@ import { loadInitialUserAccount } from '@app/user/actions/initial-user-account.a
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import {
-  MatCard,
-  MatCardActions,
-  MatCardContent,
-  MatCardTitle
-} from '@angular/material/card';
 
 @Component({
   selector: 'cx-login',
@@ -66,11 +60,7 @@ import {
     MatButton,
     MatIcon,
     MatLabel,
-    MatInput,
-    MatCard,
-    MatCardContent,
-    MatCardTitle,
-    MatCardActions
+    MatInput
   ]
 })
 export class LoginPageComponent implements OnInit, OnDestroy, AfterViewInit {

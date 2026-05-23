@@ -16,70 +16,61 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { RemoteLibrarySegmentState } from '@app/library/models/net/remote-library-segment-state';
-import { TranslateModule } from '@ngx-translate/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 import {
   MatCard,
   MatCardActions,
   MatCardContent,
   MatCardTitle
 } from '@angular/material/card';
+import { ServerHealth } from '@app/admin/models/server-health';
 import { MatIcon } from '@angular/material/icon';
-import { ComicState } from '@app/comic-books/models/comic-state';
+import { PieChartModule } from '@swimlane/ngx-charts';
 import { BehaviorSubject } from 'rxjs';
-import { BarChartModule } from '@swimlane/ngx-charts';
-import { AsyncPipe } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
 import { MatIconButton } from '@angular/material/button';
 
 @Component({
-  selector: 'cx-comic-states',
+  selector: 'cx-storage-health',
   imports: [
-    TranslateModule,
+    JsonPipe,
     MatCard,
-    MatCardActions,
     MatCardContent,
     MatCardTitle,
+    MatCardActions,
     MatIcon,
-    BarChartModule,
     AsyncPipe,
+    PieChartModule,
     MatIconButton
   ],
-  templateUrl: './comic-states.component.html',
-  styleUrl: './comic-states.component.scss'
+  templateUrl: './storage-health.component.html',
+  styleUrl: './storage-health.component.scss'
 })
-export class ComicStatesComponent {
+export class StorageHealthComponent {
   @Input() title: string;
-  @Input() rows: number;
-
-  labels = [
-    ComicState.ADDED,
-    ComicState.DISCOVERED,
-    ComicState.UNPROCESSED,
-    ComicState.STABLE,
-    ComicState.CHANGED,
-    ComicState.DELETED
-  ];
-  chartData = new BehaviorSubject<{ name: string; value: number }[]>([]);
-
   @Output() closePanel = new EventEmitter();
 
-  @Input() set data(segmentData: RemoteLibrarySegmentState[]) {
-    this.chartData.next(
-      this.labels.map(label => {
-        const data = segmentData.find(entry => entry.name === label);
-        return {
-          name: label,
-          value: data?.count || 0
-        };
-      })
-    );
+  translate = inject(TranslateService);
+  chartData = new BehaviorSubject<{ name: string; value: number }[]>([]);
+
+  @Input() set health(health: ServerHealth | null) {
+    this.chartData.next([
+      {
+        name: this.translate.instant('dashboard.label.total-storage'),
+        value: health?.components?.diskSpace?.details?.total || 0
+      },
+      {
+        name: this.translate.instant('dashboard.label.available-storage'),
+        value: health?.components?.diskSpace?.details?.free || 0
+      }
+    ]);
   }
 
   get chartOptions() {
     return {
       animations: null,
-      plugins: { legend: { display: false } },
+      plugins: { legend: { display: true } },
       responsive: true
     };
   }
