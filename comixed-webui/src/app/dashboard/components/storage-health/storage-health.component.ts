@@ -24,7 +24,7 @@ import {
   MatCardContent,
   MatCardTitle
 } from '@angular/material/card';
-import { ServerHealth } from '@app/admin/models/server-health';
+import { ServerHealth } from '@app/settings/models/server-health';
 import { MatIcon } from '@angular/material/icon';
 import { PieChartModule } from '@swimlane/ngx-charts';
 import { BehaviorSubject } from 'rxjs';

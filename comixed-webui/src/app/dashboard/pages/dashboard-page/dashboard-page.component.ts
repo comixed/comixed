@@ -38,10 +38,10 @@ import { ArchiveTypesComponent } from '@app/dashboard/components/archive-types/a
 import { LibraryStatComponent } from '../../components/library-stats/library-stat.component';
 import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { selectServerRuntimeHealth } from '@app/admin/selectors/server-runtime.selectors';
-import { ServerHealth } from '@app/admin/models/server-health';
+import { selectServerRuntimeHealth } from '@app/settings/selectors/server-runtime.selectors';
+import { ServerHealth } from '@app/settings/models/server-health';
 import { ServerHealthComponent } from '@app/dashboard/components/server-health/server-health.component';
-import { loadServerHealth } from '@app/admin/actions/server-runtime.actions';
+import { loadServerHealth } from '@app/settings/actions/server-runtime.actions';
 import { StorageHealthComponent } from '@app/dashboard/components/storage-health/storage-health.component';
 
 @Component({

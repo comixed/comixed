@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ServerHealth } from '@app/admin/models/server-health';
+import { ServerHealth } from '@app/settings/models/server-health';
 import {
   MatCard,
   MatCardActions,

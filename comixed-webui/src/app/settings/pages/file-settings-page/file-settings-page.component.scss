@@ -1,0 +1,8 @@
+@use './variables' as *;
+
+.cx-container-flow-horizontal {
+  padding: 15px;
+  min-width: 400px;
+  width: max(800px, 80vw);
+  max-width: 800vw;
+}

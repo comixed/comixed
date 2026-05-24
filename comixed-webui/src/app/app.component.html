@@ -1,38 +1,31 @@
 <div id="cx-app-container">
   <div id="cx-app-toolbar">
     <mat-toolbar color="primary">
-      @if (!!(user$ | async)) {
+      @if (isAdmin$ | async) {
         <button
-          matIconButton
-          routerLink="/"
+          mat-icon-button
+          routerLink="/dashboard"
           [matTooltip]="'app.toolbar.tooltip.home' | translate"
         >
           <mat-icon>home</mat-icon>
         </button>
-
+      }
+      @if (!!(user$ | async)) {
         <button
-          matIconButton
-          routerLink="/library/all"
-          [matTooltip]="'app.toolbar.tooltip.library' | translate"
+          mat-flat-button
+          color="primary"
+          [matMenuTriggerFor]="libraryMenu"
         >
-          <mat-icon>local_library</mat-icon>
+          <mat-label>{{ "app.menu.library.root" | translate }}</mat-label>
         </button>
       }
       @if (isAdmin$ | async) {
         <button
-          matIconButton
-          routerLink="/library/import"
-          [matTooltip]="'app.toolbar.tooltip.import' | translate"
+          mat-flat-button
+          color="primary"
+          [matMenuTriggerFor]="settingsMenu"
         >
-          <mat-icon>upload_2</mat-icon>
-        </button>
-
-        <button
-          matIconButton
-          routerLink="/settings"
-          [matTooltip]="'app.toolbar.tooltip.settings' | translate"
-        >
-          <mat-icon>settings</mat-icon>
+          <mat-label>{{ "app.menu.settings.root" | translate }}</mat-label>
         </button>
       }
 
@@ -195,3 +188,30 @@
     </div>
   }
 </div>
+
+<mat-menu #libraryMenu="matMenu">
+  <button mat-menu-item routerLink="/library/all">
+    <mat-icon>local_library</mat-icon>
+    <mat-label>{{ "app.menu.library.all-comics" | translate }}</mat-label>
+  </button>
+  @if (isAdmin$ | async) {
+    <button mat-menu-item [matMenuTriggerFor]="libraryAdminMenu">
+      <mat-icon>settings</mat-icon>
+      <mat-label>{{ "app.menu.library-admin.root" | translate }}</mat-label>
+    </button>
+  }
+</mat-menu>
+
+<mat-menu #libraryAdminMenu="matMenu">
+  <button mat-menu-item routerLink="/library/import">
+    <mat-icon>publish</mat-icon>
+    <mat-label>{{ "app.menu.library.import-comics" | translate }}</mat-label>
+  </button>
+</mat-menu>
+
+<mat-menu #settingsMenu="matMenu">
+  <button mat-menu-item routerLink="/settings/files">
+    <mat-icon>settings</mat-icon>
+    <mat-label>{{ "app.menu.settings.file-settings" | translate }}</mat-label>
+  </button>
+</mat-menu>

@@ -67,7 +67,7 @@ import { selectReleaseDetailsState } from '@app/selectors/release.selectors';
 import { loadLatestReleaseDetails } from '@app/actions/release.actions';
 import { LatestRelease } from '@app/models/latest-release';
 import { MatDialog } from '@angular/material/dialog';
-import { selectBatchProcessList } from '@app/admin/selectors/batch-processes.selectors';
+import { selectBatchProcessList } from '@app/settings/selectors/batch-processes.selectors';
 import { selectComicBookSelectionState } from '@app/comic-books/selectors/comic-book-selection.selectors';
 import { MatLabel } from '@angular/material/input';
 

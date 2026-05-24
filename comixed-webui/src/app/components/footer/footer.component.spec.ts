@@ -27,7 +27,7 @@ import {
 import {
   BATCH_PROCESSES_FEATURE_KEY,
   initialState as initialBatchProcessesState
-} from '@app/admin/reducers/batch-processes.reducer';
+} from '@app/settings/reducers/batch-processes.reducer';
 import {
   READ_COMIC_BOOK_1,
   READ_COMIC_BOOK_2,
@@ -38,7 +38,7 @@ import {
 import {
   BATCH_PROCESS_DETAIL_1,
   BATCH_PROCESS_DETAIL_2
-} from '@app/admin/admin.fixtures';
+} from '@app/settings/settings.fixtures';
 import {
   COMIC_BOOK_SELECTION_FEATURE_KEY,
   initialState as initialComicBookSelectionState
