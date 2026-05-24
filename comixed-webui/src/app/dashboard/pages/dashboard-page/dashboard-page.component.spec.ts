@@ -37,7 +37,7 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import {
   initialState as initialServerRuntimeState,
   SERVER_RUNTIME_FEATURE_KEY
-} from '@app/admin/reducers/server-runtime.reducer';
+} from '@app/settings/reducers/server-runtime.reducer';
 
 describe('DashboardPageComponent', () => {
   const USER = USER_READER;

@@ -618,7 +618,7 @@ mat-toolbar.mat-toolbar mat-form-field.mat-mdc-form-field {
 
 // ADD NEW STYLES BELOW THIS LINE
 
-// contains
+// containers
 
 .cx-container-flow-horizontal {
   display: flex;
@@ -661,4 +661,12 @@ mat-toolbar.mat-toolbar mat-form-field.mat-mdc-form-field {
   border-style: solid;
   border-color: var(--primary-color);
   border-width: 1px;
+}
+
+// positioning
+
+.cx-centered-horizontal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

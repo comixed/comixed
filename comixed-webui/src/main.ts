@@ -25,7 +25,7 @@ import {
 import { environment } from './environments/environment';
 import { HTTP_INTERCEPTORS, HttpBackend } from '@angular/common/http';
 import { HttpInterceptor } from '@app/interceptors/http.interceptor';
-import { AdminModule } from '@app/admin/admin.module';
+import { SettingsModule } from '@app/settings/settings.module';
 import { MessagingModule } from '@app/messaging/messaging.module';
 import { UserModule } from '@app/user/user.module';
 import { ComicBooksModule } from '@app/comic-books/comic-books.module';
@@ -84,7 +84,7 @@ bootstrapApplication(AppComponent, {
   providers: [
     provideZoneChangeDetection(),
     importProvidersFrom(
-      AdminModule,
+      SettingsModule,
       MessagingModule,
       UserModule,
       DashboardModule,

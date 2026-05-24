@@ -20,7 +20,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { StorageHealthComponent } from './storage-health.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { ServerHealth } from '@app/admin/models/server-health';
+import { ServerHealth } from '@app/settings/models/server-health';
 
 describe('StorageHealthComponent', () => {
   const TEST_FREE_SPACE = 10 * 1024 * 1024 * 1024 * 1024;

@@ -74,10 +74,10 @@ import {
   updateCurrentPath
 } from '@app/comic-files/actions/comic-file-list.actions';
 import { Router } from '@angular/router';
-import { selectFeatureEnabledState } from '@app/admin/selectors/feature-enabled.selectors';
-import { hasFeature, isFeatureEnabled } from '@app/admin';
-import { BLOCKED_PAGES_ENABLED } from '@app/admin/admin.constants';
-import { getFeatureEnabled } from '@app/admin/actions/feature-enabled.actions';
+import { selectFeatureEnabledState } from '@app/settings/selectors/feature-enabled.selectors';
+import { hasFeature, isFeatureEnabled } from '@app/settings';
+import { BLOCKED_PAGES_ENABLED } from '@app/settings/settings.constants';
+import { getFeatureEnabled } from '@app/settings/actions/feature-enabled.actions';
 import { MatFabButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';

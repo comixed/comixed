@@ -86,7 +86,7 @@ import {
 import {
   FEATURE_ENABLED_FEATURE_KEY,
   initialState as initialFeatureEnabledState
-} from '@app/admin/reducers/feature-enabled.reducer';
+} from '@app/settings/reducers/feature-enabled.reducer';
 import { BusyIcon } from '@app/core/actions/busy.actions';
 import {
   initialState as initialReadComicBooksState,
@@ -99,7 +99,7 @@ import { AlertService } from '@app/core/services/alert.service';
 import {
   BATCH_PROCESSES_FEATURE_KEY,
   initialState as initialBatchProcessesState
-} from '@app/admin/reducers/batch-processes.reducer';
+} from '@app/settings/reducers/batch-processes.reducer';
 import {
   initialState as initialReleaseDetailState,
   RELEASE_DETAILS_FEATURE_KEY
