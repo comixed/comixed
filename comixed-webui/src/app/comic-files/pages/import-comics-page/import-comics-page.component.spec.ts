@@ -76,9 +76,9 @@ import {
 import {
   FEATURE_ENABLED_FEATURE_KEY,
   initialState as initialFeatureEnabledState
-} from '@app/admin/reducers/feature-enabled.reducer';
-import { getFeatureEnabled } from '@app/admin/actions/feature-enabled.actions';
-import { BLOCKED_PAGES_ENABLED } from '@app/admin/admin.constants';
+} from '@app/settings/reducers/feature-enabled.reducer';
+import { getFeatureEnabled } from '@app/settings/actions/feature-enabled.actions';
+import { BLOCKED_PAGES_ENABLED } from '@app/settings/settings.constants';
 import { importComicFiles } from '@app/comic-files/actions/import-comic-files.actions';
 import { ComicFileGroup } from '@app/comic-files/models/comic-file-group';
 

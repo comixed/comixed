@@ -1,5 +1,8 @@
 {
   "app": {
+    "button": {
+      "save": "Save"
+    },
     "general-effect-failure": "A general error has occurred.",
     "language": {
       "text": {
@@ -13,6 +16,23 @@
         "debug": "Debugging",
         "info": "Informational",
         "trace": "Trace"
+      }
+    },
+    "menu": {
+      "import-files": {
+        "root": "Import"
+      },
+      "library": {
+        "all-comics": "All comics",
+        "import-comics": "Import comics...",
+        "root": "Library"
+      },
+      "library-admin": {
+        "root": "Admin"
+      },
+      "settings": {
+        "file-settings": "File settings",
+        "root": "Settings"
       }
     },
     "system-status": {

@@ -19,7 +19,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { DashboardPageComponent } from '@app/dashboard/pages/dashboard-page/dashboard-page.component';
 import { ReaderGuard } from '@app/user';
-import { AdminModule } from '@app/admin/admin.module';
+import { SettingsModule } from '@app/settings/settings.module';
 
 const routes: Routes = [
   {

@@ -36,6 +36,7 @@ export function HttpLoaderFactory(
     { prefix: './assets/i18n/', suffix: '/library.json' },
     { prefix: './assets/i18n/', suffix: '/library-plugins.json' },
     { prefix: './assets/i18n/', suffix: '/lists.json' },
+    { prefix: './assets/i18n/', suffix: '/settings.json' },
     { prefix: './assets/i18n/', suffix: '/user.json' }
   ]);
 }

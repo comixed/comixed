@@ -1,4 +1,11 @@
 {
+  "admin": {
+    "settings": {
+      "library": {
+        "title": "Library Settings"
+      }
+    }
+  },
   "batch-processes": {
     "batch-process-detail": {
       "page-title": "Batch Process Details: {jobName} #{jobId}",
