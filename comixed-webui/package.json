@@ -63,7 +63,7 @@
     "@typescript-eslint/utils": "^8",
     "ansi-html": "^0.0.9",
     "ansi-regex": "^6.2.0",
-    "axios": "^1.15.0",
+    "axios": "^1.16.0",
     "chart.js": "^4.5.1",
     "color-string": "^2.0.1",
     "css-what": "^7.0.0",
