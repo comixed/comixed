@@ -17,7 +17,7 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FileSettingsPageComponent } from './file-settings-page.component';
+import FileSettingsPageComponent from './file-settings-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -28,9 +28,18 @@ import {
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { saveConfigurationOptions } from '@app/settings/actions/save-configuration-options.actions';
 import {
+  BATCH_COMIC_LOCK,
+  BLOCKED_PAGES_ENABLED,
+  CREATE_EXTERNAL_METADATA_FILES,
+  LIBRARY_DELETE_EMPTY_DIRECTORIES,
+  LIBRARY_DELETE_PURGED_COMIC_FILES,
+  LIBRARY_DONT_MOVE_UNSCRAPED_COMICS,
   LIBRARY_FILE_NAMING_RULE,
+  LIBRARY_NO_RECREATE_COMICS,
   LIBRARY_PAGE_RENAMING_RULE,
-  LIBRARY_ROOT_DIRECTORY
+  LIBRARY_ROOT_DIRECTORY,
+  LIBRARY_STRIP_HTML_FROM_METADATA,
+  SKIP_INTERNAL_METADATA_FILES
 } from '@app/settings/settings.constants';
 import { TitleService } from '@app/core/services/title.service';
 
@@ -101,7 +110,16 @@ describe('FileSettingsPageComponent', () => {
       component.options = [
         { name: LIBRARY_ROOT_DIRECTORY, value: TEST_ROOT_DIRECTORY },
         { name: LIBRARY_FILE_NAMING_RULE, value: TEST_FILE_NAMING_RULE },
-        { name: LIBRARY_PAGE_RENAMING_RULE, value: TEST_PAGE_NAMING_RULE }
+        { name: LIBRARY_PAGE_RENAMING_RULE, value: TEST_PAGE_NAMING_RULE },
+        { name: LIBRARY_DELETE_PURGED_COMIC_FILES, value: 'true' },
+        { name: LIBRARY_STRIP_HTML_FROM_METADATA, value: 'false' },
+        { name: LIBRARY_DELETE_EMPTY_DIRECTORIES, value: 'true' },
+        { name: LIBRARY_DONT_MOVE_UNSCRAPED_COMICS, value: 'false' },
+        { name: CREATE_EXTERNAL_METADATA_FILES, value: 'true' },
+        { name: LIBRARY_NO_RECREATE_COMICS, value: 'false' },
+        { name: SKIP_INTERNAL_METADATA_FILES, value: 'true' },
+        { name: BLOCKED_PAGES_ENABLED, value: 'false' },
+        { name: BATCH_COMIC_LOCK, value: 'true' }
       ];
       component.onSubmitChanges();
     });
@@ -112,7 +130,16 @@ describe('FileSettingsPageComponent', () => {
           options: [
             { name: LIBRARY_ROOT_DIRECTORY, value: TEST_ROOT_DIRECTORY },
             { name: LIBRARY_FILE_NAMING_RULE, value: TEST_FILE_NAMING_RULE },
-            { name: LIBRARY_PAGE_RENAMING_RULE, value: TEST_PAGE_NAMING_RULE }
+            { name: LIBRARY_PAGE_RENAMING_RULE, value: TEST_PAGE_NAMING_RULE },
+            { name: LIBRARY_DELETE_PURGED_COMIC_FILES, value: 'true' },
+            { name: LIBRARY_STRIP_HTML_FROM_METADATA, value: 'false' },
+            { name: LIBRARY_DELETE_EMPTY_DIRECTORIES, value: 'true' },
+            { name: LIBRARY_DONT_MOVE_UNSCRAPED_COMICS, value: 'false' },
+            { name: CREATE_EXTERNAL_METADATA_FILES, value: 'true' },
+            { name: LIBRARY_NO_RECREATE_COMICS, value: 'false' },
+            { name: SKIP_INTERNAL_METADATA_FILES, value: 'true' },
+            { name: BLOCKED_PAGES_ENABLED, value: 'false' },
+            { name: BATCH_COMIC_LOCK, value: 'true' }
           ]
         })
       );

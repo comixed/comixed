@@ -28,7 +28,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class DeleteEmptyDirectoriesProcessorTest {
+class deleteEmptyDirectoriesProcessorTest {
   @InjectMocks private DeleteEmptyDirectoriesProcessor processor;
   @Mock private FileAdaptor fileAdaptor;
   @Mock private File directory;

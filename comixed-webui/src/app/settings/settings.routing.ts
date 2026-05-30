@@ -23,7 +23,7 @@ import { ConfigurationPageComponent } from '@app/settings/pages/configuration-pa
 import { BatchProcessListPageComponent } from '@app/settings/pages/batch-process-list-page/batch-process-list-page.component';
 import { BatchProcessDetailPageComponent } from '@app/settings/pages/batch-process-detail-page/batch-process-detail-page.component';
 import { UserAccountsPageComponent } from '@app/settings/pages/user-accounts-page/user-accounts-page.component';
-import { FileSettingsPageComponent } from '@app/settings/pages/file-settings-page/file-settings-page.component';
+import FileSettingsPageComponent from '@app/settings/pages/file-settings-page/file-settings-page.component';
 
 const routes: Routes = [
   {
