@@ -95,4 +95,9 @@ public class ConfigurationController {
     log.info("Getting feature enabled setting: {}", name);
     return new FeatureEnabledResponse(this.configurationService.isFeatureEnabled(name));
   }
+
+  @ExceptionHandler
+  public void exceptionHandler(final Throwable error) {
+    log.error("ERROR!", error);
+  }
 }

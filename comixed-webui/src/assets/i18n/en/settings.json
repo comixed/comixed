@@ -8,9 +8,23 @@
         "page-naming-rule": "The rule for naming pages within the comic files...",
         "root-directory": "The root directory for the library..."
       },
+      "label": {
+        "blocked-page-hash-management": "Allowing blocking of pages",
+        "create-external-metadata-files": "Create external metadata files",
+        "delete-empty-directories": "Delete empty directories when organizing",
+        "delete-when-purging": "Delete comic files when purging",
+        "exclusive-batch-process-access": "Batch processes have exclusive access to comics",
+        "file-naming-rule": "Comic File Naming Rule",
+        "no-organizing-unscraped-comics": "Ignore unscraped comics when organizing",
+        "no-recreate-comic-files": "Do not recreate comic files",
+        "no-update-internal-metadata": "Do no create or update internal metadata files",
+        "page-naming-rule": "Comic Page Naming Rule",
+        "root-directory": "Library Root Directory",
+        "strip-html-from-metadata": "Remove HTML markup from metadata"
+      },
       "tab-title": "File Settings",
       "text": {
-        "comic-renaming-rule": "File Name Variables",
+        "comic-renaming-rule": "File Naming Variables",
         "comic-renaming-rule-cover-date": "Replaced with the cover date",
         "comic-renaming-rule-imprint": "Replaced with the imprint name",
         "comic-renaming-rule-issue-number": "Replaced with the issue number",
@@ -20,10 +34,15 @@
         "comic-renaming-rule-series": "Replaced with the series name",
         "comic-renaming-rule-title": "Replaced with the issue's title",
         "comic-renaming-rule-volume": "Replaced with the volume",
-        "page-renaming-rule": "Page Name Variables",
+        "page-renaming-rule": "Page Naming Variables",
         "page-renaming-rule-index": "Replaced with the page number (starting with 1)"
       },
-      "title": "File Settings"
+      "title": {
+        "file-page-names": "File & Page Names",
+        "options": "File Options",
+        "page": "File Settings",
+        "variable-names": "Variable Names"
+      }
     },
     "page-title": "System Settings"
   }

@@ -1,40 +1,71 @@
-<div class="cx-container-flow-horizontal">
-  <div class="cx-container-flow-grow-0 cx-border-primary-1 cx-padding-5">
-    <ul>
-      <li>
-        {{ "settings.file-settings.text.comic-renaming-rule" | translate }}
-      </li>
-      <ul>
-        @for (option of fileNamingRuleOptions; track option) {
-          <li>
-            <strong>{{ option.label }}</strong>
-            &nbsp;-&nbsp;{{ option.value | translate }}
-          </li>
-        }
-      </ul>
-      <li>
-        {{ "settings.file-settings.text.page-renaming-rule" | translate }}
-      </li>
-      <ul>
-        @for (option of pageNamingRuleOptions; track option) {
-          <li>
-            <strong>{{ option.label }}</strong>
-            &nbsp;-&nbsp;{{ option.value | translate }}
-          </li>
-        }
-      </ul>
-    </ul>
-  </div>
+<h2>{{ "settings.file-settings.title.page" | translate }}</h2>
 
-  <div class="cx-container-flow-grow-1">
-    <mat-card class="cx-width-100">
-      <mat-card-title>
-        {{ "settings.file-settings.title" | translate }}
-      </mat-card-title>
+<form [formGroup]="fileSettingsForm" class="cx-width-100">
+  <div id="file-settings-container" class="cx-container-flow-horizontal">
+    <div class="cx-container-flow-component-grow-0">
+      <mat-card>
+        <mat-card-title
+          class="cx-width-100 cx-align-content-center cx-text-nowrap"
+        >
+          {{ "settings.file-settings.title.variable-names" | translate }}
+        </mat-card-title>
+        <mat-card-content>
+          <table>
+            <tbody>
+              <tr>
+                <td colspan="2">
+                  <h3>
+                    {{
+                      "settings.file-settings.text.comic-renaming-rule"
+                        | translate
+                    }}
+                  </h3>
+                </td>
+              </tr>
+              @for (option of fileNamingRuleOptions; track option) {
+                <tr>
+                  <td>
+                    <strong>{{ option.label }}</strong>
+                  </td>
+                  <td>{{ option.value | translate }}</td>
+                </tr>
+              }
+              <tr>
+                <td colspan="2">
+                  <h3>
+                    {{
+                      "settings.file-settings.text.page-renaming-rule"
+                        | translate
+                    }}
+                  </h3>
+                </td>
+              </tr>
+              @for (option of pageNamingRuleOptions; track option) {
+                <tr>
+                  <td>
+                    <strong>{{ option.label }}</strong>
+                  </td>
+                  <td>{{ option.value | translate }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
 
-      <mat-card-content>
-        <form [formGroup]="fileSettingsForm" class="cx-width-100">
+    <div class="cx-container-flow-component-grow-1">
+      <mat-card>
+        <mat-card-title
+          class="cx-width-100 cx-align-content-center cx-text-nowrap"
+        >
+          {{ "settings.file-settings.title.file-page-names" | translate }}
+        </mat-card-title>
+        <mat-card-content>
           <mat-form-field class="cx-width-100" required>
+            <mat-label>
+              {{ "settings.file-settings.label.root-directory" | translate }}
+            </mat-label>
             <input
               id="root-directory-input"
               matInput
@@ -46,6 +77,9 @@
           </mat-form-field>
 
           <mat-form-field class="cx-width-100" required>
+            <mat-label>
+              {{ "settings.file-settings.label.file-naming-rule" | translate }}
+            </mat-label>
             <input
               id="file-naming-rule-input"
               matInput
@@ -58,6 +92,9 @@
           </mat-form-field>
 
           <mat-form-field class="cx-width-100" required>
+            <mat-label>
+              {{ "settings.file-settings.label.page-naming-rule" | translate }}
+            </mat-label>
             <input
               id="page-naming-rule-input"
               matInput
@@ -68,20 +105,131 @@
               "
             />
           </mat-form-field>
-        </form>
-      </mat-card-content>
+        </mat-card-content>
+      </mat-card>
+    </div>
 
-      <mat-card-actions>
-        <button
-          mat-raised-button
-          color="primary"
-          [disabled]="!(fileSettingsForm.valid || fileSettingsForm.dirty)"
-          (click)="onSubmitChanges()"
+    <div class="cx-container-flow-component-grow-0">
+      <mat-card>
+        <mat-card-title
+          class="cx-width-100 cx-align-content-center cx-text-nowrap"
         >
-          <mat-icon>save</mat-icon>
-          <mat-label>{{ "app.button.save" | translate }}</mat-label>
-        </button>
-      </mat-card-actions>
-    </mat-card>
+          {{ "settings.file-settings.title.options" | translate }}
+        </mat-card-title>
+        <mat-card-content>
+          <ul>
+            <li>
+              <mat-checkbox
+                id="delete-when-purging"
+                formControlName="deletePurgedComicFiles"
+              >
+                {{
+                  "settings.file-settings.label.delete-when-purging" | translate
+                }}
+              </mat-checkbox>
+            </li>
+            <li>
+              <mat-checkbox
+                id="delete-empty-directories"
+                formControlName="deleteEmptyDirectories"
+              >
+                {{
+                  "settings.file-settings.label.delete-empty-directories"
+                    | translate
+                }}
+              </mat-checkbox>
+            </li>
+            <li>
+              <mat-checkbox
+                id="no-organizing-unscraped-comics"
+                formControlName="dontMoveUnscrapedFiles"
+              >
+                {{
+                  "settings.file-settings.label.no-organizing-unscraped-comics"
+                    | translate
+                }}
+              </mat-checkbox>
+            </li>
+            <li>
+              <mat-checkbox
+                id="create-external-metadata"
+                formControlName="createExternalMetadataFiles"
+              >
+                {{
+                  "settings.file-settings.label.create-external-metadata-files"
+                    | translate
+                }}
+              </mat-checkbox>
+            </li>
+            <li>
+              <mat-checkbox
+                id="no-update-internal-metadata"
+                formControlName="skipInternalMetadataFiles"
+              >
+                {{
+                  "settings.file-settings.label.no-update-internal-metadata"
+                    | translate
+                }}
+              </mat-checkbox>
+            </li>
+            <li>
+              <mat-checkbox
+                id="no-recreate-comic-files"
+                formControlName="noRecreateComics"
+              >
+                {{
+                  "settings.file-settings.label.no-recreate-comic-files"
+                    | translate
+                }}
+              </mat-checkbox>
+            </li>
+            <li>
+              <mat-checkbox
+                id="blocked-page-hash-management"
+                formControlName="blockedPagesEnabled"
+              >
+                {{
+                  "settings.file-settings.label.blocked-page-hash-management"
+                    | translate
+                }}
+              </mat-checkbox>
+            </li>
+            <li>
+              <mat-checkbox
+                id="strip-html-from-metadata"
+                formControlName="stripHtmlFromMetadata"
+              >
+                {{
+                  "settings.file-settings.label.strip-html-from-metadata"
+                    | translate
+                }}
+              </mat-checkbox>
+            </li>
+            <li>
+              <mat-checkbox
+                id="exclusive-batch-process-access"
+                formControlName="batchComicLock"
+              >
+                {{
+                  "settings.file-settings.label.exclusive-batch-process-access"
+                    | translate
+                }}
+              </mat-checkbox>
+            </li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+    </div>
   </div>
+</form>
+
+<div class="cx-fab-container-bottom-right">
+  <button
+    mat-fab
+    color="primary"
+    [disabled]="!(fileSettingsForm.valid || fileSettingsForm.dirty)"
+    (click)="onSubmitChanges()"
+  >
+    <mat-icon>save</mat-icon>
+  </button>
 </div>

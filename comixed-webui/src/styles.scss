@@ -409,7 +409,7 @@ th {
 }
 
 .cx-align-content-center {
-  text-align: center !important;
+  align-content: center !important;
 }
 
 .cx-align-text-left {
@@ -620,13 +620,25 @@ mat-toolbar.mat-toolbar mat-form-field.mat-mdc-form-field {
 
 // containers
 
-.cx-container-flow-horizontal {
+.cx-container-flow-horizontal,
+.cx-container-flow-vertical {
   display: inline-flex;
-  flex-flow: row wrap;
   align-items: start;
   justify-content: stretch;
   width: calc(100% - $cx-margin-space);
   margin: $cx-margin-width;
+}
+
+.cx-container-flow-horizontal {
+  flex-flow: row wrap;
+}
+
+.cx-container-flow-vertical {
+  flex-flow: column;
+}
+
+.cx-container-flow-component-grow-0 {
+  flex-grow: 0;
 }
 
 .cx-container-flow-component-grow-1,

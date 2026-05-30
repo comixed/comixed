@@ -1,8 +1,27 @@
-@use './variables' as *;
+@use 'variables' as *;
+@use '@angular/material' as mat;
 
-.cx-container-flow-horizontal {
-  padding: 15px;
-  min-width: 400px;
-  width: max(800px, 80vw);
-  max-width: 800vw;
+#file-settings-container {
+  align-items: stretch;
+
+  div {
+    padding: $cx-card-padding;
+  }
+}
+
+.cx-container-flow-component-grow-1 {
+  max-width: max(100%, 500px);
+}
+
+.cx-container-flow-component-grow-2 {
+  max-width: max(100%, 1000px);
+}
+
+ul {
+  list-style-type: none;
+}
+
+li {
+  overflow: hidden;
+  white-space: nowrap;
 }
