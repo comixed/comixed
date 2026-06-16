@@ -8974,10 +8974,10 @@ ua-parser-js@^0.7.30:
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.41.tgz#9f6dee58c389e8afababa62a4a2dc22edb69a452"
   integrity sha512-O3oYyCMPYgNNHuO7Jjk3uacJWZF8loBgwrfd/5LE/HyZ3lUIOdniQ7DNXJcIgZbwioZxk0fLfI4EVnetdiX5jg==
 
-ua-parser-js@^2.0.4:
-  version "2.0.9"
-  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-2.0.9.tgz#befd25ded7d3490008463f3d5ea6259ec6316d7a"
-  integrity sha512-OsqGhxyo/wGdLSXMSJxuMGN6H4gDnKz6Fb3IBm4bxZFMnyy0sdf6MN96Ie8tC6z/btdO+Bsy8guxlvLdwT076w==
+ua-parser-js@^2.0.10:
+  version "2.0.10"
+  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-2.0.10.tgz#a28f1087ef5a3fff5aeb6bd86258841bfb6327b8"
+  integrity sha512-t+3Ktbq0Ies2vaSezfOaWiolH4OigQIO1dk+1xDpOydB1COVPocVYOrEV5rqZ0kFY9XYG1v9LutCyMgYBpABcw==
   dependencies:
     detect-europe-js "^0.1.2"
     is-standalone-pwa "^0.1.1"
