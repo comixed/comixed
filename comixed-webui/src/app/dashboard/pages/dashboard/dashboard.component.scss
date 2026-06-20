@@ -1,1 +1,7 @@
 @use 'variables' as *;
+
+#dashboard-container {
+  div {
+    margin: $cx-card-padding;
+  }
+}
