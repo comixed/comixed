@@ -621,28 +621,30 @@ mat-toolbar.mat-toolbar mat-form-field.mat-mdc-form-field {
 // containers
 
 .cx-container-flow-horizontal {
-  display: flex;
+  display: inline-flex;
   flex-flow: row wrap;
   align-items: start;
+  justify-content: stretch;
   width: calc(100% - $cx-margin-space);
   margin: $cx-margin-width;
-  justify-content: space-evenly;
+}
+
+.cx-container-flow-component-grow-1,
+.cx-container-flow-component-grow-2 {
+  flex-grow: 1;
+  align-self: stretch;
 }
 
 .cx-container-flow-component-grow-1 {
-  flex-grow: 1;
   width: min(100%, max(10%, $cx-min-image-width));
   min-width: $cx-min-image-width;
   max-width: $cx-max-image-width;
-  align-self: stretch;
 }
 
 .cx-container-flow-component-grow-2 {
-  flex-grow: 1;
   width: min(100%, max(20%, $cx-min-image-width * 2));
   min-width: $cx-min-image-width * 2;
   max-width: $cx-max-image-width * 2;
-  align-self: stretch;
 }
 
 // borders and edges

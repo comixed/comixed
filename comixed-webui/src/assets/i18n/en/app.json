@@ -53,13 +53,15 @@
       "unscraped-count": "Unscraped: {count}"
     },
     "text": {
-      "language": "Language",
-      "logging": "Logging",
       "new-version-available": "Release {version} is available!"
     },
     "toolbar": {
       "button": {
         "set-language": "Language"
+      },
+      "text": {
+        "language": "Language",
+        "logging": "Logging"
       },
       "tooltip": {
         "browser-options": "Change browser options",

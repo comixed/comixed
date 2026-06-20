@@ -3,7 +3,7 @@
 <div id="dashboard-container" class="cx-container-flow-horizontal cx-padding-5">
   @for (panel of displayPanels; track panel) {
     @if (panel === "runtime-status") {
-      <div class="cx-container-flow-grow-1">
+      <div class="cx-container-flow-component-grow-1">
         <cx-server-health
           [title]="'dashboard.title.server-health' | translate"
           [health]="health"
@@ -12,7 +12,7 @@
       </div>
     }
     @if (panel === "storage-status") {
-      <div class="cx-container-flow-grow-1">
+      <div class="cx-container-flow-component-grow-1">
         <cx-storage-health
           [title]="'dashboard.title.storage-health' | translate"
           [health]="health"
@@ -21,7 +21,7 @@
       </div>
     }
     @if (panel === "publisher-list") {
-      <div class="cx-container-flow-grow-1">
+      <div class="cx-container-flow-component-grow-1">
         <cx-collection-list
           [title]="'dashboard.title.publisher-title' | translate"
           [data]="libraryState?.publishers || []"
@@ -31,7 +31,7 @@
       </div>
     }
     @if (panel === "series-list") {
-      <div class="cx-container-flow-grow-1">
+      <div class="cx-container-flow-component-grow-1">
         <cx-collection-list
           [title]="'dashboard.title.series-title' | translate"
           [data]="libraryState?.series || []"
@@ -41,7 +41,7 @@
       </div>
     }
     @if (panel === "character-list") {
-      <div class="cx-container-flow-grow-1">
+      <div class="cx-container-flow-component-grow-1">
         <cx-collection-list
           [title]="'dashboard.title.character-title' | translate"
           [data]="libraryState?.characters || []"
@@ -51,7 +51,7 @@
       </div>
     }
     @if (panel === "team-list") {
-      <div class="cx-container-flow-grow-1">
+      <div class="cx-container-flow-component-grow-1">
         <cx-collection-list
           [title]="'dashboard.title.team-title' | translate"
           [data]="libraryState?.teams || []"
@@ -61,7 +61,7 @@
       </div>
     }
     @if (panel === "location-list") {
-      <div class="cx-container-flow-grow-1">
+      <div class="cx-container-flow-component-grow-1">
         <cx-collection-list
           [title]="'dashboard.title.location-title' | translate"
           [data]="libraryState?.locations || []"
@@ -71,7 +71,7 @@
       </div>
     }
     @if (panel === "story-list") {
-      <div class="cx-container-flow-grow-1">
+      <div class="cx-container-flow-component-grow-1">
         <cx-collection-list
           [title]="'dashboard.title.story-title' | translate"
           [data]="libraryState?.stories || []"
@@ -81,7 +81,7 @@
       </div>
     }
     @if (panel === "library-stats") {
-      <div class="cx-container-flow-grow-2">
+      <div class="cx-container-flow-component-grow-2">
         <cx-library-stats
           [title]="'dashboard.title.library-stats' | translate"
           [data]="statistics | async"
@@ -90,7 +90,7 @@
       </div>
     }
     @if (panel === "state-list") {
-      <div class="cx-container-flow-grow-2">
+      <div class="cx-container-flow-component-grow-2">
         <cx-comic-states
           [title]="'dashboard.title.comic-states-title' | translate"
           [data]="libraryState?.states || []"
@@ -100,7 +100,7 @@
       </div>
     }
     @if (panel === "archive-type-list") {
-      <div class="cx-container-flow-grow-1">
+      <div class="cx-container-flow-component-grow-1">
         <cx-archive-types
           [title]="'dashboard.title.archive-type-title' | translate"
           [data]="libraryState?.archiveTypes || []"
@@ -110,7 +110,7 @@
       </div>
     }
     @if (panel === "publisher-year-graph") {
-      <div class="cx-container-flow-grow-2">
+      <div class="cx-container-flow-component-grow-2">
         <cx-publisher-year-graph
           [title]="'dashboard.title.publisher-year-title' | translate"
           [data]="libraryState?.byPublisherAndYear || []"
