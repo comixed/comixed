@@ -36,7 +36,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "scraped_stories")
+@Table(name = "scraped_stories_v4")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class ScrapedStory {

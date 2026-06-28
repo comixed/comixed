@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="023_2705_adjust_scraped_stories_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="scraped_stories"/>
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="scraped_story_entries" constraintName="scraped_story_entry_story_fk"/>
+
+        <renameTable oldTableName="scraped_stories" newTableName="old_scraped_stories"/>
+
+        <createTable tableName="scraped_stories_v4">
+            <column name="scraped_story_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="scraped_stories_v4_pk"/>
+            </column>
+
+            <column name="story_name" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="publisher" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="description" type="clob">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="metadata_source_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="reference_id" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="last_modified_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="scraped_stories_v4" baseColumnNames="metadata_source_id"
+                                 constraintName="scraped_stories_v4_metadata_source_fk"
+                                 referencedTableName="metadata_sources_v4"
+                                 referencedColumnNames="metadata_source_id"/>
+
+        <createIndex tableName="scraped_stories_v4" indexName="scraped_stories_v4_metadata_source_and_reference_idx">
+            <column name="metadata_source_id"/>
+            <column name="reference_id"/>
+        </createIndex>
+
+        <createIndex tableName="scraped_stories_v4" indexName="scraped_stories_v4_name_idx">
+            <column name="story_name"/>
+        </createIndex>
+
+        <addUniqueConstraint tableName="scraped_stories_v4" columnNames="metadata_source_id,reference_id"
+                             constraintName="scraped_stories_v4_unique_metadata_source_and_reference"/>
+
+        <sql>INSERT INTO scraped_stories_v4(scraped_story_id, story_name, publisher, description, metadata_source_id,
+                                            reference_id,
+                                            created_on,
+                                            last_modified_on)
+             SELECT scraped_story_id,
+                    story_name,
+                    publisher,
+                    description,
+                    metadata_source_id,
+                    reference_id,
+                    created_on,
+                    last_modified_on
+             FROM old_scraped_stories</sql>
+
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"scraped_stories_v4"', 'scraped_story_id')),
+                          (SELECT (MAX("scraped_story_id") + 1) FROM "scraped_stories_v4"), FALSE);
+        </sql>
+
+        <dropTable tableName="old_scraped_stories"/>
+
+    </changeSet>
+</databaseChangeLog>

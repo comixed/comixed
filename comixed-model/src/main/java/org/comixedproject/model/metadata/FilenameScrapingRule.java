@@ -34,7 +34,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "filename_scraping_rules")
+@Table(name = "filename_scraping_rules_v4")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class FilenameScrapingRule {

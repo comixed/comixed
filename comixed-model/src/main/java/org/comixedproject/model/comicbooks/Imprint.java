@@ -31,7 +31,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "imprints")
+@Table(name = "imprints_v4")
 public class Imprint {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

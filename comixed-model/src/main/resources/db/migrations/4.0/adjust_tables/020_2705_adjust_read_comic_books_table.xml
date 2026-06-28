@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="020_2705_adjust_read_comic_books_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="read_comic_books"/>
+        </preConditions>
+
+        <renameTable oldTableName="read_comic_books" newTableName="old_read_comic_books"/>
+
+        <createTable tableName="read_comic_books_v4">
+            <column name="read_comic_book_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="read_comic_books_v4_pk"/>
+            </column>
+
+            <column name="comixed_user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="comic_detail_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="read_comic_books_v4" baseColumnNames="comixed_user_id"
+                                 constraintName="read_comic_books_v4_comixed_user_fk"
+                                 referencedTableName="comixed_users_v4"
+                                 referencedColumnNames="comixed_user_id"/>
+
+        <addForeignKeyConstraint baseTableName="read_comic_books_v4" baseColumnNames="comic_detail_id"
+                                 constraintName="read_comic_books_v4_comic_detail_fk"
+                                 referencedTableName="comic_details_v4"
+                                 referencedColumnNames="comic_detail_id"/>
+        <addUniqueConstraint tableName="read_comic_books_v4" columnNames="comixed_user_id,comic_detail_id"
+                             constraintName="read_comic_books_v4_unique_comixed_user_and_comic_detail"/>
+
+        <createIndex tableName="read_comic_books_v4" indexName="read_comic_books_v4_comic_detail_idx">
+            <column name="comic_detail_id"/>
+        </createIndex>
+
+        <createIndex tableName="read_comic_books_v4" indexName="read_comic_books_v4_comixed_user_idx">
+            <column name="comixed_user_id"/>
+        </createIndex>
+
+        <sql>INSERT INTO read_comic_books_v4(read_comic_book_id, comixed_user_id, comic_detail_id)
+             SELECT read_comic_book_id, comixed_user_id, comic_detail_id
+             FROM old_read_comic_books</sql>
+
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"read_comic_books_v4"', 'read_comic_book_id')),
+                          (SELECT (MAX("read_comic_book_id") + 1) FROM "read_comic_books_v4"), FALSE);
+        </sql>
+
+        <dropTable tableName="old_read_comic_books"/>
+
+    </changeSet>
+</databaseChangeLog>

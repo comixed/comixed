@@ -42,7 +42,7 @@ import org.springframework.data.annotation.CreatedDate;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "comic_details")
+@Table(name = "comic_details_v4")
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Log4j2
@@ -68,7 +68,7 @@ public class ComicDetail implements PublicationDetail {
   private ComicBook comicBook;
 
   @Formula(
-      "(SELECT CASE WHEN (comic_book_id IN (SELECT m.comic_book_id FROM comic_metadata_sources m)) THEN false ELSE true END)")
+      "(SELECT CASE WHEN (comic_book_id IN (SELECT m.comic_book_id FROM comic_metadata_sources_v4 m)) THEN false ELSE true END)")
   @JsonProperty("unscraped")
   @JsonView({View.ComicListView.class})
   @Getter
@@ -207,7 +207,7 @@ public class ComicDetail implements PublicationDetail {
   @JsonView({
     View.ComicListView.class,
   })
-  @Formula("(SELECT COUNT(*) FROM comic_pages p WHERE p.comic_book_id = comic_book_id)")
+  @Formula("(SELECT COUNT(*) FROM comic_pages_v4 p WHERE p.comic_book_id = comic_book_id)")
   @Getter
   private Integer pageCount;
 
@@ -327,7 +327,9 @@ public class ComicDetail implements PublicationDetail {
   private Date lastModifiedDate = new Date();
 
   @ElementCollection
-  @CollectionTable(name = "read_comic_books", joinColumns = @JoinColumn(name = "comic_detail_id"))
+  @CollectionTable(
+      name = "read_comic_books_v4",
+      joinColumns = @JoinColumn(name = "comic_detail_id"))
   @Column(name = "comixed_user_id")
   @JsonView(View.UserList.class)
   @Getter

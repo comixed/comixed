@@ -34,7 +34,7 @@ import org.hibernate.annotations.Formula;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "blocked_hashes")
+@Table(name = "blocked_hashes_v4")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class BlockedHash {
@@ -76,7 +76,7 @@ public class BlockedHash {
   private Date createdOn = new Date();
 
   @Formula(
-      "(SELECT COUNT(*) FROM comic_books c WHERE c.comic_book_id IN (SELECT p.comic_book_id FROM comic_pages p WHERE p.file_hash = hash_value))")
+      "(SELECT COUNT(*) FROM comic_books_v4 c WHERE c.comic_book_id IN (SELECT p.comic_book_id FROM comic_pages_v4 p WHERE p.file_hash = hash_value))")
   @JsonProperty("comicCount")
   @JsonView(View.BlockedHashList.class)
   @Getter

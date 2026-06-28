@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="019_2705_adjust_comic_metadata_sources_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="comic_metadata_sources"/>
+        </preConditions>
+
+        <renameTable oldTableName="comic_metadata_sources" newTableName="old_comic_metadata_sources"/>
+
+        <createTable tableName="comic_metadata_sources_v4">
+            <column name="comic_metadata_source_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="comic_metadata_sources_v4_pk"/>
+            </column>
+
+            <column name="comic_book_id" type="bigint">
+                <constraints nullable="false" unique="true"
+                             uniqueConstraintName="comic_metadata_sources_v4_unique_comic_book"/>
+            </column>
+
+            <column name="metadata_source_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="reference_id" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="last_scraped_date" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="comic_metadata_sources_v4" baseColumnNames="comic_book_id"
+                                 constraintName="comic_metadata_sources_v4_comic_book_fk"
+                                 referencedTableName="comic_books_v4"
+                                 referencedColumnNames="comic_book_id"/>
+
+        <addForeignKeyConstraint baseTableName="comic_metadata_sources_v4" baseColumnNames="metadata_source_id"
+                                 constraintName="comic_metadata_sources_v4_metadata_source_fk"
+                                 referencedTableName="metadata_sources_v4"
+                                 referencedColumnNames="metadata_source_id"/>
+
+        <createIndex tableName="comic_metadata_sources_v4" indexName="comic_metadata_sources_v4_comic_book_idx">
+            <column name="comic_book_id"/>
+        </createIndex>
+
+        <sql>INSERT INTO comic_metadata_sources_v4(comic_metadata_source_id, comic_book_id, metadata_source_id,
+                                                   reference_id, last_scraped_date)
+             SELECT comic_metadata_source_id, comic_book_id, metadata_source_id, reference_id, last_scraped_date
+             FROM old_comic_metadata_sources</sql>
+
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"comic_metadata_sources_v4"', 'comic_metadata_source_id')),
+                          (SELECT (MAX("comic_metadata_source_id") + 1) FROM "comic_metadata_sources_v4"), FALSE);
+        </sql>
+
+        <dropTable tableName="old_comic_metadata_sources"/>
+
+    </changeSet>
+</databaseChangeLog>

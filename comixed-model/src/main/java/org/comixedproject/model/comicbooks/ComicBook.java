@@ -37,7 +37,7 @@ import org.hibernate.annotations.Formula;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "comic_books")
+@Table(name = "comic_books_v4")
 @Log4j2
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "comicBookId")
@@ -73,7 +73,7 @@ public class ComicBook implements StatefulItem<ComicState> {
   List<ComicPage> pages = new ArrayList<>();
 
   @Formula(
-      "(SELECT COUNT(*) FROM comic_pages p WHERE p.comic_book_id = comic_book_id AND p.file_hash IN (SELECT d.file_hash FROM comic_pages d GROUP BY d.file_hash HAVING COUNT(*) > 1))")
+      "(SELECT COUNT(*) FROM comic_pages_v4 p WHERE p.comic_book_id = comic_book_id AND p.file_hash IN (SELECT d.file_hash FROM comic_pages_v4 d GROUP BY d.file_hash HAVING COUNT(*) > 1))")
   @JsonProperty("duplicatePageCount")
   @JsonView({View.ComicListView.class})
   @Getter
@@ -81,7 +81,7 @@ public class ComicBook implements StatefulItem<ComicState> {
 
   @Formula(
       value =
-          "(SELECT COUNT(*) FROM comic_pages p WHERE p.comic_book_id = comic_book_id AND p.file_hash in (SELECT b.hash_value FROM blocked_hashes b))")
+          "(SELECT COUNT(*) FROM comic_pages_v4 p WHERE p.comic_book_id = comic_book_id AND p.file_hash in (SELECT b.hash_value FROM blocked_hashes_v4 b))")
   @JsonProperty("blockedPageCount")
   @JsonView({View.ComicListView.class})
   @Getter

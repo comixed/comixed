@@ -44,7 +44,7 @@ import org.hibernate.annotations.Formula;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "comic_tags")
+@Table(name = "comic_tags_v4")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class ComicTag {
@@ -81,7 +81,7 @@ public class ComicTag {
   private String value;
 
   @Formula(
-      "(SELECT COUNT(*) FROM comic_tags WHERE comic_tags.tag_type = tag_type AND comic_tags.tag_value = tag_value)")
+      "(SELECT COUNT(*) FROM comic_tags_v4 WHERE comic_tags_v4.tag_type = tag_type AND comic_tags_v4.tag_value = tag_value)")
   @JsonView({View.ComicListView.class})
   @JsonProperty("comicCount")
   @Getter

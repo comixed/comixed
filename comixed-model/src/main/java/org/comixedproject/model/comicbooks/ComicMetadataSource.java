@@ -34,7 +34,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "comic_metadata_sources")
+@Table(name = "comic_metadata_sources_v4")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class ComicMetadataSource {

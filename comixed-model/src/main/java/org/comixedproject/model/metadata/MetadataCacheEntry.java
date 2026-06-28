@@ -28,7 +28,7 @@ import lombok.Setter;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "metadata_cache_entries")
+@Table(name = "metadata_cache_entries_v4")
 public class MetadataCacheEntry {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

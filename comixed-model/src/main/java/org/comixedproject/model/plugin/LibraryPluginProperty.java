@@ -31,7 +31,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "library_plugin_properties")
+@Table(name = "library_plugin_properties_v4")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class LibraryPluginProperty {

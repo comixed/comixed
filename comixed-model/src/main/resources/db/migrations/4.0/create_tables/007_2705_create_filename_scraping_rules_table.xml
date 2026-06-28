@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="007_2705_create_filename_scraping_rules_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="filename_scraping_rules_v4"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="filename_scraping_rules_v4">
+            <column name="filename_scraping_rule_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="filename_scraping_rules_v4_pk"/>
+            </column>
+
+            <column name="rule_name" type="varchar(128)">
+                <constraints nullable="false" unique="true"
+                             uniqueConstraintName="filename_scraping_rules_v4_unique_rule_name"/>
+            </column>
+
+            <column name="rule" type="varchar(256)">
+                <constraints nullable="false" unique="true"
+                             uniqueConstraintName="filename_scraping_rules_v4_unique_rule"/>
+            </column>
+
+            <column name="priority" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="series_position" type="int">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="volume_position" type="int">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="issue_number_position" type="int">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="cover_date_position" type="int">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="date_format" type="varchar(32)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="last_modified_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+</databaseChangeLog>

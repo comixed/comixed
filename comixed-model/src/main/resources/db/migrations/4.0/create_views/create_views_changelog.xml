@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <include file="/db/migrations/4.0/create_views/001_2705_create_displayable_comics_view.xml"/>
+    <include file="/db/migrations/4.0/create_views/002_2705_create_organizing_comics_view.xml"/>
+    <include file="/db/migrations/4.0/create_views/003_2705_create_duplicate_comics_view.xml"/>
+    <include file="/db/migrations/4.0/create_views/004_2705_create_publisher_details_view.xml"/>
+    <include file="/db/migrations/4.0/create_views/005_2705_create_series_details_view.xml"/>
+    <include file="/db/migrations/4.0/create_views/006_2705_create_collections_view.xml"/>
+    <include file="/db/migrations/4.0/create_views/007_2705_create_duplicate_pages_view.xml"/>
+    <include file="/db/migrations/4.0/create_views/008_2705_create_stories_view.xml"/>
+
+</databaseChangeLog>

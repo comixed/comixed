@@ -37,7 +37,7 @@ import org.comixedproject.views.View.UserList;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "comixed_roles")
+@Table(name = "comixed_roles_v4")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class ComiXedRole {

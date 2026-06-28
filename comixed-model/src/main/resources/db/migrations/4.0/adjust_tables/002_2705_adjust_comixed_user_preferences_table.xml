@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="002_2178_adjust_comixed_user_preferences_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="comixed_user_preferences"/>
+        </preConditions>
+
+        <renameTable oldTableName="comixed_user_preferences" newTableName="old_comixed_user_preferences"/>
+
+        <createTable tableName="comixed_user_preferences_v4">
+            <column name="comixed_user_preference_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="comixed_user_preferences_v4_pk"/>
+            </column>
+
+            <column name="comixed_user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="preference_name" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="preference_value" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="comixed_user_preferences_v4" baseColumnNames="comixed_user_id"
+                                 constraintName="comixed_user_preferences_v4_comixed_user_fk"
+                                 referencedTableName="comixed_users_v4"
+                                 referencedColumnNames="comixed_user_id"/>
+
+        <addUniqueConstraint tableName="comixed_user_preferences_v4"
+                             constraintName="comixed_user_preferences_v4_unique_preference_name"
+                             columnNames="comixed_user_id, preference_name"/>
+
+        <sql>INSERT INTO comixed_user_preferences_v4(comixed_user_preference_id, comixed_user_id, preference_name,
+                                                     preference_value)
+             SELECT comixed_user_preference_id, comixed_user_id, preference_name, preference_value
+             FROM old_comixed_user_preferences
+             WHERE comixed_user_id IN (SELECT comixed_user_id FROM comixed_users_v4)</sql>
+
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"comixed_user_preferences_v4"',
+                                                         'comixed_user_preference_id')),
+                          (SELECT (MAX("comixed_user_preference_id") + 1) FROM "comixed_user_preferences_v4"), FALSE);
+        </sql>
+
+        <dropTable tableName="old_comixed_user_preferences"/>
+
+    </changeSet>
+</databaseChangeLog>

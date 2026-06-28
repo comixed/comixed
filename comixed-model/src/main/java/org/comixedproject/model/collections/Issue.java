@@ -41,7 +41,7 @@ import org.hibernate.annotations.Formula;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "issues")
+@Table(name = "issues_v4")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class Issue {
@@ -103,7 +103,7 @@ public class Issue {
   @JsonProperty("found")
   @Formula(
       value =
-          "(SELECT CASE WHEN COUNT(*) > 0 THEN true ELSE false END FROM comic_books c WHERE c.comic_book_id IN (SELECT d.comic_book_id FROM comic_details d WHERE d.publisher = publisher AND d.series = series AND d.volume = volume AND d.issue_number = issue_number))")
+          "(SELECT CASE WHEN COUNT(*) > 0 THEN true ELSE false END FROM comic_books_v4 c WHERE c.comic_book_id IN (SELECT d.comic_book_id FROM comic_details_v4 d WHERE d.publisher = publisher AND d.series = series AND d.volume = volume AND d.issue_number = issue_number))")
   @Getter
   @Setter
   private boolean found;

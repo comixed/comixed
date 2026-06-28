@@ -34,7 +34,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "comixed_users")
+@Table(name = "comixed_users_v4")
 public class ComiXedUser {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -74,7 +74,7 @@ public class ComiXedUser {
 
   @ManyToMany
   @JoinTable(
-      name = "comixed_user_roles",
+      name = "comixed_user_roles_v4",
       joinColumns = @JoinColumn(name = "comixed_user_id"),
       inverseJoinColumns = @JoinColumn(name = "comixed_role_id"))
   @JsonView(View.UserList.class)
@@ -91,7 +91,9 @@ public class ComiXedUser {
   private List<ComiXedUserPreference> preferences = new ArrayList<>();
 
   @ElementCollection
-  @CollectionTable(name = "read_comic_books", joinColumns = @JoinColumn(name = "comixed_user_id"))
+  @CollectionTable(
+      name = "read_comic_books_v4",
+      joinColumns = @JoinColumn(name = "comixed_user_id"))
   @Column(name = "comic_detail_id")
   @JsonView(View.UserList.class)
   @Getter

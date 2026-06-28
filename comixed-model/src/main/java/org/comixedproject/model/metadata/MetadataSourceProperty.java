@@ -31,7 +31,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "metadata_source_properties")
+@Table(name = "metadata_source_properties_v4")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class MetadataSourceProperty {

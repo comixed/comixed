@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="005_2705_adjust_blocked_hashes_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="blocked_hashes"/>
+        </preConditions>
+
+        <renameTable oldTableName="blocked_hashes" newTableName="old_blocked_hashes"/>
+
+        <createTable tableName="blocked_hashes_v4">
+            <column name="blocked_hash_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="blocked_hashes_v4_pk"/>
+            </column>
+
+            <column name="hash_value" type="varchar(32)">
+                <constraints nullable="false" uniqueConstraintName="blocked_hashes_v4_unique_hash"/>
+            </column>
+
+            <column name="label" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="thumbnail" type="clob">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_on" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <sql>INSERT INTO blocked_hashes_v4(blocked_hash_id, hash_value, label, thumbnail, created_on)
+             SELECT blocked_hash_id, hash_value, label, thumbnail, created_on
+             FROM old_blocked_hashes</sql>
+
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"blocked_hashes_v4"', 'blocked_hash_id')),
+                          (SELECT (MAX("blocked_hash_id") + 1) FROM "blocked_hashes_v4"), FALSE);
+        </sql>
+
+        <dropTable tableName="old_blocked_hashes"/>
+
+    </changeSet>
+</databaseChangeLog>

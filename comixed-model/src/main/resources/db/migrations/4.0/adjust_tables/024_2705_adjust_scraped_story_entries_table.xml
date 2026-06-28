@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="024_2705_adjust_scraped_story_entries_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="scraped_story_entries"/>
+        </preConditions>
+
+        <renameTable oldTableName="scraped_story_entries" newTableName="old_scraped_story_entries"/>
+
+        <createTable tableName="scraped_story_entries_v4">
+            <column name="scraped_story_entry_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="scraped_story_entries_v4_pk"/>
+            </column>
+
+            <column name="scraped_story_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="series" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="volume" type="varchar(4)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="issue_number" type="varchar(16)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cover_date" type="date">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="reading_order" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="scraped_story_entries_v4" baseColumnNames="scraped_story_id"
+                                 constraintName="scraped_story_entries_v4_scraped_story_fk"
+                                 referencedTableName="scraped_stories_v4"
+                                 referencedColumnNames="scraped_story_id"/>
+
+        <addUniqueConstraint tableName="scraped_story_entries_v4" columnNames="scraped_story_id, reading_order"
+                             constraintName="scraped_story_entries_v4_unique_scraped_story_and_reading_order"/>
+
+        <sql>INSERT INTO scraped_story_entries_v4(scraped_story_entry_id, scraped_story_id, reading_order, series,
+                                                  volume,
+                                                  issue_number)
+             SELECT scraped_story_entry_id,
+                    scraped_story_id,
+                    reading_order,
+                    series,
+                    volume,
+                    issue_number
+             FROM old_scraped_story_entries</sql>
+
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"scraped_story_entries_v4"', 'scraped_story_entry_id')),
+                          (SELECT (MAX("scraped_story_entry_id") + 1) FROM "scraped_story_entries_v4"), FALSE);
+        </sql>
+
+        <dropTable tableName="old_scraped_story_entries"/>
+
+    </changeSet>
+</databaseChangeLog>

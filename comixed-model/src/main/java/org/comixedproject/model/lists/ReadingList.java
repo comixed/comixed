@@ -38,7 +38,7 @@ import org.springframework.data.annotation.LastModifiedDate;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "reading_lists")
+@Table(name = "reading_lists_v4")
 @NoArgsConstructor
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -93,7 +93,7 @@ public class ReadingList implements StatefulItem<ReadingListState> {
 
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(
-      name = "reading_list_entries",
+      name = "reading_list_entries_v4",
       joinColumns = @JoinColumn(name = "reading_list_id"))
   @Column(name = "comic_detail_id")
   @JsonView({View.ReadingLists.class})

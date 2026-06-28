@@ -31,7 +31,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "configuration_options")
+@Table(name = "configuration_options_v4")
 @NoArgsConstructor
 @RequiredArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "name")

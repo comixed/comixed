@@ -33,7 +33,7 @@ import lombok.Setter;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "metadata_cache")
+@Table(name = "metadata_cache_v4")
 public class MetadataCache {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

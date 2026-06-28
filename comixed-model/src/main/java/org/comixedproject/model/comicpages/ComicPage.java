@@ -32,7 +32,7 @@ import org.hibernate.annotations.Formula;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "comic_pages")
+@Table(name = "comic_pages_v4")
 @Log4j2
 @NoArgsConstructor
 @RequiredArgsConstructor
@@ -109,7 +109,7 @@ public class ComicPage {
   private Boolean addingToCache = false;
 
   @Formula(
-      "(SELECT CASE WHEN (file_hash IN (SELECT b.hash_value FROM blocked_hashes b)) THEN true ELSE false END)")
+      "(SELECT CASE WHEN (file_hash IN (SELECT b.hash_value FROM blocked_hashes_v4 b)) THEN true ELSE false END)")
   @JsonProperty("blocked")
   @JsonView({View.ComicListView.class})
   @Getter

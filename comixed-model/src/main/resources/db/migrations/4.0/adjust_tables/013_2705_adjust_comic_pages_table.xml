@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="013_2705_adjust_comic_pages_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="comic_pages"/>
+        </preConditions>
+
+        <renameTable oldTableName="comic_pages" newTableName="old_comic_pages"/>
+
+        <createTable tableName="comic_pages_v4">
+            <column name="comic_page_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="comic_pages_v4_pk"/>
+            </column>
+
+            <column name="comic_book_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="filename" type="varchar(768)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="file_hash" type="char(32)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="page_type" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="height" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="width" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="page_number" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="adding_to_cache" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="comic_pages_v4" baseColumnNames="comic_book_id"
+                                 constraintName="comic_pages_v4_comic_book_fk"
+                                 referencedTableName="comic_books_v4"
+                                 referencedColumnNames="comic_book_id"/>
+
+        <createIndex tableName="comic_pages_v4" indexName="comic_pages_v4_comic_book_and_page_number_idx">
+            <column name="comic_book_id"/>
+            <column name="page_number"/>
+        </createIndex>
+
+        <createIndex tableName="comic_pages_v4" indexName="comic_pages_v4_comic_book_idx">
+            <column name="comic_book_id"/>
+        </createIndex>
+
+        <createIndex tableName="comic_pages_v4" indexName="comic_pages_v4_file_hash_idx">
+            <column name="file_hash"/>
+        </createIndex>
+
+        <sql>INSERT INTO comic_pages_v4(comic_page_id, comic_book_id, filename, file_hash, page_type, height, width,
+                                        page_number,
+                                        adding_to_cache)
+             SELECT comic_page_id,
+                    comic_book_id,
+                    filename,
+                    file_hash,
+                    page_type,
+                    height,
+                    width,
+                    page_number,
+                    adding_to_cache
+             FROM old_comic_pages</sql>
+
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"comic_pages_v4"', 'comic_page_id')),
+                          (SELECT (MAX("comic_page_id") + 1) FROM "comic_pages_v4"), FALSE);
+        </sql>
+
+        <dropTable tableName="old_comic_pages"/>
+
+    </changeSet>
+</databaseChangeLog>

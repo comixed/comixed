@@ -32,7 +32,7 @@ import org.comixedproject.views.View.UserList;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "comixed_user_preferences")
+@Table(name = "comixed_user_preferences_v4")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class ComiXedUserPreference {

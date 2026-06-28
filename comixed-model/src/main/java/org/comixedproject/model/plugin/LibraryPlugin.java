@@ -34,7 +34,7 @@ import org.hibernate.annotations.ColumnTransformer;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "library_plugins")
+@Table(name = "library_plugins_v4")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class LibraryPlugin {

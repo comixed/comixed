@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="004_2705_adjust_comixed_user_roles_table.xml" author="mcpierce">
+
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="comixed_user_roles"/>
+        </preConditions>
+
+        <renameTable oldTableName="comixed_user_roles" newTableName="old_comixed_user_roles"/>
+
+        <createTable tableName="comixed_user_roles_v4">
+            <column name="comixed_user_role_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="comixed_user_roles_v4_pk"/>
+            </column>
+
+            <column name="comixed_user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="comixed_role_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="comixed_user_roles_v4" baseColumnNames="comixed_user_id"
+                                 constraintName="comixed_user_roles_v4_comixed_user_fk"
+                                 referencedTableName="comixed_users_v4"
+                                 referencedColumnNames="comixed_user_id"/>
+
+        <addForeignKeyConstraint baseTableName="comixed_user_roles_v4" baseColumnNames="comixed_role_id"
+                                 constraintName="comixed_user_roles_v4_comixed_role_fk"
+                                 referencedTableName="comixed_roles_v4"
+                                 referencedColumnNames="comixed_role_id"/>
+
+        <addUniqueConstraint tableName="comixed_user_roles_v4" columnNames="comixed_user_id,comixed_role_id"
+                             constraintName="comixed_user_roles_v4_unique_comixed_user_and_role"/>
+
+        <sql>INSERT INTO comixed_user_roles_v4(comixed_user_id, comixed_role_id)
+             SELECT comixed_user_id, comixed_role_id
+             FROM old_comixed_user_roles</sql>
+
+        <sql dbms="postgresql">
+            SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"comixed_user_roles_v4"', 'comixed_user_role_id')),
+                          (SELECT (MAX("comixed_user_role_id") + 1) FROM "comixed_user_roles_v4"), FALSE);
+        </sql>
+
+        <dropTable tableName="old_comixed_user_roles"/>
+
+    </changeSet>
+</databaseChangeLog>
