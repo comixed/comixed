@@ -47,8 +47,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class ProcessUnhashedComicsConfiguration {
   public static final String PROCESS_UNHASHED_COMICS_JOB = "processUnhashedComicsJob";
   public static final String PROCESS_UNHASHED_COMICS_STEP = "processUnhashedComicsStep";
-  public static final String JOB_PROCESS_UNHASHED_COMICS_STARTED =
-      "job.process-unhashed-comics.started";
 
   @Value("${comixed.batch.load-page-hashes.chunk-size:10}")
   private int chunkSize;

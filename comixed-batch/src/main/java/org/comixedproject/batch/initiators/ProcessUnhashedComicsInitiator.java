@@ -18,19 +18,13 @@
 
 package org.comixedproject.batch.initiators;
 
-import static org.comixedproject.batch.comicbooks.ProcessUnhashedComicsConfiguration.JOB_PROCESS_UNHASHED_COMICS_STARTED;
 import static org.comixedproject.batch.comicbooks.ProcessUnhashedComicsConfiguration.PROCESS_UNHASHED_COMICS_JOB;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.job.Job;
-import org.springframework.batch.core.job.parameters.InvalidJobParametersException;
-import org.springframework.batch.core.job.parameters.JobParametersBuilder;
-import org.springframework.batch.core.launch.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.launch.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.launch.JobOperator;
-import org.springframework.batch.core.launch.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -65,19 +59,8 @@ public class ProcessUnhashedComicsInitiator {
       log.trace("Checking for pages without hashes");
       if (this.comicBookService.hasComicsWithUnhashedPages()
           && !this.batchProcessesService.hasActiveExecutions(PROCESS_UNHASHED_COMICS_JOB)) {
-        try {
-          log.trace("Starting batch job: load page hashes");
-          this.jobOperator.start(
-              this.loadPageHashesJob,
-              new JobParametersBuilder()
-                  .addLong(JOB_PROCESS_UNHASHED_COMICS_STARTED, System.currentTimeMillis())
-                  .toJobParameters());
-        } catch (JobExecutionAlreadyRunningException
-            | JobRestartException
-            | JobInstanceAlreadyCompleteException
-            | InvalidJobParametersException error) {
-          log.error("Failed to run load page hash job", error);
-        }
+        log.trace("Starting batch job: load page hashes");
+        this.jobOperator.startNextInstance(this.loadPageHashesJob);
       }
     }
   }

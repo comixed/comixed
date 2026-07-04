@@ -18,23 +18,18 @@
 
 package org.comixedproject.batch.initiators;
 
-import static org.comixedproject.batch.comicbooks.ProcessUnhashedComicsConfiguration.JOB_PROCESS_UNHASHED_COMICS_STARTED;
 import static org.comixedproject.batch.comicbooks.ProcessUnhashedComicsConfiguration.PROCESS_UNHASHED_COMICS_JOB;
 import static org.junit.Assert.*;
 
 import org.comixedproject.service.batch.BatchProcessesService;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.JobExecution;
 import org.springframework.batch.core.job.parameters.InvalidJobParametersException;
-import org.springframework.batch.core.job.parameters.JobParameters;
 import org.springframework.batch.core.launch.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.launch.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.launch.JobOperator;
@@ -42,7 +37,6 @@ import org.springframework.batch.core.launch.JobRestartException;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
 class ProcessUnhashedComicsInitiatorTest {
   @InjectMocks private ProcessUnhashedComicsInitiator initiator;
   @Mock private ComicBookService comicBookService;
@@ -57,20 +51,6 @@ class ProcessUnhashedComicsInitiatorTest {
   private JobOperator jobOperator;
 
   @Mock private JobExecution jobExecution;
-
-  @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
-
-  @BeforeEach
-  public void setUp()
-      throws JobInstanceAlreadyCompleteException,
-          JobExecutionAlreadyRunningException,
-          InvalidJobParametersException,
-          JobRestartException {
-    Mockito.when(comicBookService.hasComicsWithUnhashedPages()).thenReturn(true);
-    Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(false);
-    Mockito.when(jobOperator.start(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
-        .thenReturn(jobExecution);
-  }
 
   @Test
   void execute_noMissingHashes()
@@ -91,6 +71,7 @@ class ProcessUnhashedComicsInitiatorTest {
           JobExecutionAlreadyRunningException,
           InvalidJobParametersException,
           JobRestartException {
+    Mockito.when(comicBookService.hasComicsWithUnhashedPages()).thenReturn(true);
     Mockito.when(batchProcessesService.hasActiveExecutions(Mockito.anyString())).thenReturn(true);
 
     initiator.execute();
@@ -99,35 +80,11 @@ class ProcessUnhashedComicsInitiatorTest {
   }
 
   @Test
-  void execute()
-      throws JobInstanceAlreadyCompleteException,
-          JobExecutionAlreadyRunningException,
-          InvalidJobParametersException,
-          JobRestartException {
-    initiator.execute();
-
-    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
-
-    assertNotNull(jobParameters.getLong(JOB_PROCESS_UNHASHED_COMICS_STARTED));
-
-    Mockito.verify(jobOperator, Mockito.times(1)).start(loadPageHashesJob, jobParameters);
-  }
-
-  @Test
-  void execute_jobException()
-      throws JobInstanceAlreadyCompleteException,
-          JobExecutionAlreadyRunningException,
-          InvalidJobParametersException,
-          JobRestartException {
-    Mockito.when(jobOperator.start(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
-        .thenThrow(InvalidJobParametersException.class);
+  void execute() {
+    Mockito.when(comicBookService.hasComicsWithUnhashedPages()).thenReturn(true);
 
     initiator.execute();
 
-    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
-
-    assertNotNull(jobParameters.getLong(JOB_PROCESS_UNHASHED_COMICS_STARTED));
-
-    Mockito.verify(jobOperator, Mockito.times(1)).start(loadPageHashesJob, jobParameters);
+    Mockito.verify(jobOperator, Mockito.times(1)).startNextInstance(loadPageHashesJob);
   }
 }
