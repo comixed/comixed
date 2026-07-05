@@ -18,6 +18,7 @@
 
 import { createAction, props } from '@ngrx/store';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
+import { UpdateMetadataSourceProperty } from '@app/comic-metadata/models/net/update-metadata-source-property';
 
 export const clearMetadataSource = createAction(
   '[Metadata Source] Clear the current metadata source'
@@ -39,7 +40,12 @@ export const loadMetadataSourceFailed = createAction(
 
 export const saveMetadataSource = createAction(
   '[Metadata Source] Save a metadata source',
-  props<{ source: MetadataSource }>()
+  props<{
+    sourceId: number;
+    sourceName: string;
+    preferred: boolean;
+    properties: UpdateMetadataSourceProperty[];
+  }>()
 );
 
 export const metadataSourceSaved = createAction(

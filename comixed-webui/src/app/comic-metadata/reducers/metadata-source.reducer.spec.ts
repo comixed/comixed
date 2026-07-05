@@ -34,10 +34,10 @@ import {
   saveMetadataSource,
   saveMetadataSourceFailed
 } from '@app/comic-metadata/actions/metadata-source.actions';
-import { resetMetadataState } from '@app/comic-metadata/actions/single-book-scraping.actions';
 
 describe('MetadataSource Reducer', () => {
   const METADATA_SOURCE = METADATA_SOURCE_1;
+  const PROPERTIES = [{ name: 'value1', value: 'value2' }];
 
   let state: MetadataSourceState;
 
@@ -126,7 +126,12 @@ describe('MetadataSource Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, busy: false },
-        saveMetadataSource({ source: METADATA_SOURCE })
+        saveMetadataSource({
+          sourceId: METADATA_SOURCE.metadataSourceId,
+          sourceName: METADATA_SOURCE.name,
+          preferred: METADATA_SOURCE.preferred,
+          properties: PROPERTIES
+        })
       );
     });
 

@@ -18,16 +18,15 @@
 
 package org.comixedproject.service.metadata;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.metadata.MetadataAdaptorProvider;
 import org.comixedproject.metadata.MetadataAdaptorRegistry;
 import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.model.metadata.MetadataSourceProperty;
+import org.comixedproject.model.net.metadata.UpdateMetadataSourceProperty;
 import org.comixedproject.repositories.metadata.MetadataSourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -143,91 +142,97 @@ public class MetadataSourceService {
   /**
    * Creates a new source record.
    *
-   * @param source the incoming source
+   * @param sourceName the source name
+   * @param preferred the preferred flag
+   * @param properties the source properties
    * @return the saved source
    * @throws MetadataSourceException if an error occurs
    */
   @Transactional
-  public MetadataSource create(final MetadataSource source) throws MetadataSourceException {
-    log.debug("Creating metadata source: name={} bean name={}", source.getAdaptorName());
+  public MetadataSource create(
+      @NonNull final String sourceName,
+      @NonNull final Boolean preferred,
+      @NonNull final List<UpdateMetadataSourceProperty> properties)
+      throws MetadataSourceException {
+    log.debug("Creating metadata source: name={} ", sourceName);
     try {
-      if (source.getPreferred()) {
-        log.debug("Marking this source as preferred: clearing existing preferences");
+      if (preferred.booleanValue()) {
+        log.debug("Marking this source as preferred");
         this.metadataSourceRepository.clearPreferredSource();
       }
-      return this.metadataSourceRepository.save(this.doCopyMetadataSource(source, null));
+      return this.metadataSourceRepository.save(
+          this.doCopyMetadataSource(sourceName, preferred, properties, null));
     } catch (Exception error) {
       throw new MetadataSourceException("Failed to create metadata source", error);
     }
   }
 
   private MetadataSource doCopyMetadataSource(
-      final MetadataSource source, final MetadataSource destination) {
-    MetadataSource result = destination;
-    if (result == null) {
-      log.debug("Creating new metadata source object");
-      result = new MetadataSource(source.getAdaptorName());
-    } else {
-      log.debug("Copying metadata source name");
-      result.setAdaptorName(source.getAdaptorName());
-    }
-    result.setPreferred(source.getPreferred());
-    log.debug("Filtering out removed properties");
-    final Object[] existingProperties = result.getProperties().stream().toArray();
-    for (int index = 0; index < existingProperties.length; index++) {
-      final MetadataSourceProperty property = (MetadataSourceProperty) existingProperties[index];
-      final Optional<MetadataSourceProperty> incomingProperty =
-          source.getProperties().stream()
-              .filter(entry -> entry.getName().equals(property.getName()))
-              .findFirst();
-      if (!incomingProperty.isPresent()) {
-        log.debug("Removing property: {}", property.getName());
-        result.getProperties().remove(property);
-      }
-    }
-    log.debug("Updating metadata source properties");
-    for (Iterator<MetadataSourceProperty> iter = source.getProperties().iterator();
-        iter.hasNext(); ) {
-      final MetadataSourceProperty property = iter.next();
-      final String name = property.getName();
-      final Optional<MetadataSourceProperty> incomingProperty =
-          result.getProperties().stream().filter(entry -> entry.getName().equals(name)).findFirst();
-      final String value = property.getValue().trim();
-      if (incomingProperty.isPresent()) {
-        log.debug("Updated property: {}={}", name, value);
-        final MetadataSourceProperty existingProperty = incomingProperty.get();
-        existingProperty.setValue(value);
-      } else {
-        log.debug("Adding property: {}={}", name, value);
-        result.getProperties().add(new MetadataSourceProperty(result, name, value));
-      }
-    }
+      final String sourceName,
+      final Boolean preferred,
+      final List<UpdateMetadataSourceProperty> properties,
+      final MetadataSource destination) {
+    final MetadataSource result =
+        Objects.isNull(destination) ? new MetadataSource(sourceName) : destination;
+    result.setPreferred(preferred);
+    final List<String> incomingPropertyNames =
+        properties.stream().map(UpdateMetadataSourceProperty::getName).toList();
+    log.debug("Removing properties");
+    final List<MetadataSourceProperty> removed =
+        result.getProperties().stream()
+            .filter(entry -> !incomingPropertyNames.contains(entry.getName()))
+            .toList();
+    result.getProperties().removeAll(removed);
+    log.debug("Adding and updating properties");
+    properties.forEach(
+        property -> {
+          final String key = property.getName();
+          final String value = property.getValue();
+          final Optional<MetadataSourceProperty> entry =
+              result.getProperties().stream()
+                  .filter(currentProperty -> currentProperty.getName().equals(key))
+                  .findFirst();
+          if (entry.isPresent()) {
+            log.trace("Updating metadata source property: {}=>{}", key, value);
+            entry.get().setValue(value);
+          } else {
+            log.trace("Adding metadata source property: {}=>{}", key, value);
+            result.getProperties().add(new MetadataSourceProperty(result, key, value));
+          }
+        });
+
     return result;
   }
 
   /**
    * Updates an existing source record.
    *
-   * @param id the record id
-   * @param source the incoming source
+   * @param sourceId the record id
+   * @param sourceName the source name
+   * @param preferred the preferred flag
+   * @param properties the source's properties
    * @return the saved source
    * @throws MetadataSourceException if an error occurs
    */
   @Transactional
-  public MetadataSource update(final long id, final MetadataSource source)
+  public MetadataSource update(
+      @NonNull final Long sourceId,
+      @NonNull final String sourceName,
+      @NonNull final Boolean preferred,
+      @NonNull final List<UpdateMetadataSourceProperty> properties)
       throws MetadataSourceException {
     log.debug(
         "Updating existing metadata source: id={} name={} bean name={} preferred={}",
-        id,
-        source.getAdaptorName(),
-        source.getPreferred());
+        sourceId,
+        sourceName,
+        preferred);
     try {
-      if (source.getPreferred()) {
+      if (preferred.booleanValue()) {
         log.debug("Marking this source as preferred: clearing existing preferences");
         this.metadataSourceRepository.clearPreferredSource();
       }
       return this.metadataSourceRepository.save(
-          this.doCopyMetadataSource(source, this.doGetById(id)));
+          this.doCopyMetadataSource(sourceName, preferred, properties, this.doGetById(sourceId)));
     } catch (Exception error) {
       throw new MetadataSourceException("Failed to update metadata source", error);
     }

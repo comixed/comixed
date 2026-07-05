@@ -30,6 +30,8 @@ import {
 } from '@app/comic-metadata/comic-metadata.constants';
 import { interpolate } from '@app/core';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
+import { UpdateMetadataSourceProperty } from '@app/comic-metadata/models/net/update-metadata-source-property';
+import { UpdateMetadataSourceRequest } from '@app/comic-metadata/models/net/update-metadata-source-request';
 
 @Injectable({
   providedIn: 'root'
@@ -50,21 +52,31 @@ export class MetadataSourceService {
     );
   }
 
-  save(args: { source: MetadataSource }): Observable<any> {
-    if (!!args.source.metadataSourceId) {
+  save(args: {
+    sourceId: number;
+    sourceName: string;
+    preferred: boolean;
+    properties: UpdateMetadataSourceProperty[];
+  }): Observable<any> {
+    if (!!args.sourceId) {
       this.logger.trace('Updating metadata source:', args);
       return this.http.put(
         interpolate(UPDATE_METADATA_SOURCE_URL, {
-          id: args.source.metadataSourceId
+          id: args.sourceId
         }),
-        args.source
+        {
+          sourceName: args.sourceName,
+          preferred: args.preferred,
+          properties: args.properties
+        } as UpdateMetadataSourceRequest
       );
     } else {
       this.logger.trace('Creating metadata source:', args);
-      return this.http.post(
-        interpolate(CREATE_METADATA_SOURCE_URL),
-        args.source
-      );
+      return this.http.post(interpolate(CREATE_METADATA_SOURCE_URL), {
+        sourceName: args.sourceName,
+        preferred: args.preferred,
+        properties: args.properties
+      } as UpdateMetadataSourceRequest);
     }
   }
 

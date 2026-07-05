@@ -21,6 +21,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
 import * as MetadataSourceListActions from '../actions/metadata-source-list.actions';
 import {
+  loadMetadataSources,
   loadMetadataSourcesFailed,
   metadataSourcesLoaded
 } from '../actions/metadata-source-list.actions';
@@ -42,7 +43,7 @@ export class MetadataSourceListEffects {
 
   loadMetadataSources$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(MetadataSourceListActions.loadMetadataSources),
+      ofType(loadMetadataSources),
       tap(() => this.logger.trace('Loading metadata source list')),
       switchMap(() =>
         this.metadataSourceService.loadAll().pipe(

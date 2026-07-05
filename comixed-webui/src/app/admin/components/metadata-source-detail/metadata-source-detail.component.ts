@@ -194,7 +194,16 @@ export class MetadataSourceDetailComponent {
       ),
       confirm: () => {
         this.logger.debug('Saving metadata source:', source);
-        this.store.dispatch(saveMetadataSource({ source }));
+        this.store.dispatch(
+          saveMetadataSource({
+            sourceId: source.metadataSourceId,
+            sourceName: source.name,
+            preferred: source.preferred,
+            properties: source.properties.map(entry => {
+              return { name: entry.name, value: entry.value };
+            })
+          })
+        );
       }
     });
   }

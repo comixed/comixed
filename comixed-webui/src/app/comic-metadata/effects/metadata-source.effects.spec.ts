@@ -46,6 +46,7 @@ import { metadataSourcesLoaded } from '@app/comic-metadata/actions/metadata-sour
 describe('MetadataSourceEffects', () => {
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const METADATA_SOURCE_LIST = [METADATA_SOURCE];
+  const PROPERTIES = [{ name: 'value1', value: 'value2' }];
 
   let actions$: Observable<any>;
   let effects: MetadataSourceEffects;
@@ -141,12 +142,22 @@ describe('MetadataSourceEffects', () => {
   describe('saving a source', () => {
     it('fires an action on success', () => {
       const serviceResponse = METADATA_SOURCE;
-      const action = saveMetadataSource({ source: METADATA_SOURCE });
+      const action = saveMetadataSource({
+        sourceId: METADATA_SOURCE.metadataSourceId,
+        sourceName: METADATA_SOURCE.name,
+        preferred: METADATA_SOURCE.preferred,
+        properties: PROPERTIES
+      });
       const outcome = metadataSourceSaved({ source: METADATA_SOURCE });
 
       actions$ = hot('-a', { a: action });
       metadataSourceService.save
-        .withArgs({ source: METADATA_SOURCE })
+        .withArgs({
+          sourceId: METADATA_SOURCE.metadataSourceId,
+          sourceName: METADATA_SOURCE.name,
+          preferred: METADATA_SOURCE.preferred,
+          properties: PROPERTIES
+        })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -156,12 +167,22 @@ describe('MetadataSourceEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = saveMetadataSource({ source: METADATA_SOURCE });
+      const action = saveMetadataSource({
+        sourceId: METADATA_SOURCE.metadataSourceId,
+        sourceName: METADATA_SOURCE.name,
+        preferred: METADATA_SOURCE.preferred,
+        properties: PROPERTIES
+      });
       const outcome = saveMetadataSourceFailed();
 
       actions$ = hot('-a', { a: action });
       metadataSourceService.save
-        .withArgs({ source: METADATA_SOURCE })
+        .withArgs({
+          sourceId: METADATA_SOURCE.metadataSourceId,
+          sourceName: METADATA_SOURCE.name,
+          preferred: METADATA_SOURCE.preferred,
+          properties: PROPERTIES
+        })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -170,12 +191,22 @@ describe('MetadataSourceEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = saveMetadataSource({ source: METADATA_SOURCE });
+      const action = saveMetadataSource({
+        sourceId: METADATA_SOURCE.metadataSourceId,
+        sourceName: METADATA_SOURCE.name,
+        preferred: METADATA_SOURCE.preferred,
+        properties: PROPERTIES
+      });
       const outcome = saveMetadataSourceFailed();
 
       actions$ = hot('-a', { a: action });
       metadataSourceService.save
-        .withArgs({ source: METADATA_SOURCE })
+        .withArgs({
+          sourceId: METADATA_SOURCE.metadataSourceId,
+          sourceName: METADATA_SOURCE.name,
+          preferred: METADATA_SOURCE.preferred,
+          properties: PROPERTIES
+        })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });

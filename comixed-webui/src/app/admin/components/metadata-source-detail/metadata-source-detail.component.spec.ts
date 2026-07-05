@@ -164,7 +164,17 @@ describe('MetadataSourceDetailComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        saveMetadataSource({ source: SOURCE })
+        saveMetadataSource({
+          sourceId: SOURCE.metadataSourceId,
+          sourceName: SOURCE.name,
+          preferred: SOURCE.preferred,
+          properties: SOURCE.properties.map(entry => {
+            return {
+              name: entry.name,
+              value: entry.value
+            };
+          })
+        })
       );
     });
   });

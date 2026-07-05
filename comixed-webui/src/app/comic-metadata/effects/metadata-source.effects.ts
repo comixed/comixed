@@ -82,31 +82,38 @@ export class MetadataSourceEffects {
       ofType(saveMetadataSource),
       tap(action => this.logger.trace('Saving metadata source:', action)),
       switchMap(action =>
-        this.metadataSourceService.save({ source: action.source }).pipe(
-          tap(response => this.logger.debug('Response received:', response)),
-          tap((response: MetadataSource) =>
-            this.alertService.info(
-              this.translateService.instant(
-                'metadata-source.save-source.effect-success',
-                {
-                  name: response.name
-                }
-              )
-            )
-          ),
-          map((response: MetadataSource) =>
-            metadataSourceSaved({ source: response })
-          ),
-          catchError(error => {
-            this.logger.error('Service failure:', error);
-            this.alertService.error(
-              this.translateService.instant(
-                'metadata-source.save-source.effect-failure'
-              )
-            );
-            return of(saveMetadataSourceFailed());
+        this.metadataSourceService
+          .save({
+            sourceId: action.sourceId,
+            sourceName: action.sourceName,
+            preferred: action.preferred,
+            properties: action.properties
           })
-        )
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            tap((response: MetadataSource) =>
+              this.alertService.info(
+                this.translateService.instant(
+                  'metadata-source.save-source.effect-success',
+                  {
+                    name: response.name
+                  }
+                )
+              )
+            ),
+            map((response: MetadataSource) =>
+              metadataSourceSaved({ source: response })
+            ),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'metadata-source.save-source.effect-failure'
+                )
+              );
+              return of(saveMetadataSourceFailed());
+            })
+          )
       ),
       catchError(error => {
         this.logger.error('General failure:', error);

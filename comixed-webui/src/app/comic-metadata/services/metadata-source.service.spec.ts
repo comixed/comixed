@@ -38,10 +38,12 @@ import {
   provideHttpClient,
   withInterceptorsFromDi
 } from '@angular/common/http';
+import { UpdateMetadataSourceRequest } from '@app/comic-metadata/models/net/update-metadata-source-request';
 
 describe('MetadataSourceService', () => {
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const METADATA_SOURCES = [METADATA_SOURCE_1];
+  const PROPERTIES = [{ name: 'value1', value: 'value2' }];
 
   let service: MetadataSourceService;
   let httpMock: HttpTestingController;
@@ -91,26 +93,30 @@ describe('MetadataSourceService', () => {
     it('can create a new source', () => {
       service
         .save({
-          source: {
-            ...METADATA_SOURCE,
-            metadataSourceId: null
-          }
+          sourceId: null,
+          sourceName: METADATA_SOURCE.name,
+          preferred: METADATA_SOURCE.preferred,
+          properties: PROPERTIES
         })
         .subscribe(response => expect(response).toEqual(METADATA_SOURCE));
 
       const req = httpMock.expectOne(interpolate(CREATE_METADATA_SOURCE_URL));
       expect(req.request.method).toEqual('POST');
       expect(req.request.body).toEqual({
-        ...METADATA_SOURCE,
-        metadataSourceId: null
-      });
+        sourceName: METADATA_SOURCE.name,
+        preferred: METADATA_SOURCE.preferred,
+        properties: PROPERTIES
+      } as UpdateMetadataSourceRequest);
       req.flush(METADATA_SOURCE);
     });
 
     it('can update an existing source', () => {
       service
         .save({
-          source: METADATA_SOURCE
+          sourceId: METADATA_SOURCE.metadataSourceId,
+          sourceName: METADATA_SOURCE.name,
+          preferred: METADATA_SOURCE.preferred,
+          properties: PROPERTIES
         })
         .subscribe(response => expect(response).toEqual(METADATA_SOURCE));
 
@@ -120,7 +126,11 @@ describe('MetadataSourceService', () => {
         })
       );
       expect(req.request.method).toEqual('PUT');
-      expect(req.request.body).toEqual(METADATA_SOURCE);
+      expect(req.request.body).toEqual({
+        sourceName: METADATA_SOURCE.name,
+        preferred: METADATA_SOURCE.preferred,
+        properties: PROPERTIES
+      } as UpdateMetadataSourceRequest);
       req.flush(METADATA_SOURCE);
     });
   });

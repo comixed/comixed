@@ -23,6 +23,7 @@ import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.metadata.MetadataSource;
+import org.comixedproject.model.net.metadata.UpdateMetadataSourceRequest;
 import org.comixedproject.service.metadata.MetadataSourceException;
 import org.comixedproject.service.metadata.MetadataSourceService;
 import org.comixedproject.views.View;
@@ -58,7 +59,7 @@ public class MetadataSourceController {
   /**
    * Creates a new metadata source.
    *
-   * @param source the new source
+   * @param request the request body
    * @return the saved source
    * @throws MetadataSourceException if an error occurs
    */
@@ -69,10 +70,11 @@ public class MetadataSourceController {
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.metadata-source.create")
   @JsonView(View.MetadataSourceDetail.class)
-  public MetadataSource create(@RequestBody() final MetadataSource source)
+  public MetadataSource create(@RequestBody() final UpdateMetadataSourceRequest request)
       throws MetadataSourceException {
-    log.info("Saving new metadata source: {}", source.getAdaptorName());
-    return this.metadataSourceService.create(source);
+    log.info("Saving new metadata source: {}", request.getSourceName());
+    return this.metadataSourceService.create(
+        request.getSourceName(), request.getPreferred(), request.getProperties());
   }
 
   /**
@@ -94,23 +96,25 @@ public class MetadataSourceController {
   /**
    * Updates an existing metadata source.
    *
-   * @param id the record id
-   * @param source the updated source
+   * @param sourceId the record id
+   * @param request the request body
    * @return the saved source
    * @throws MetadataSourceException if an error occurs
    */
   @PutMapping(
-      value = "/api/metadata/sources/{id}",
+      value = "/api/metadata/sources/{sourceId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.metadata-source.update")
   @JsonView(View.MetadataSourceDetail.class)
   public MetadataSource update(
-      @PathVariable("id") final Long id, @RequestBody() final MetadataSource source)
+      @PathVariable("sourceId") final Long sourceId,
+      @RequestBody() final UpdateMetadataSourceRequest request)
       throws MetadataSourceException {
-    log.info("Updating metadata source: id={}", id);
-    return this.metadataSourceService.update(id, source);
+    log.info("Updating metadata source: id={}", sourceId);
+    return this.metadataSourceService.update(
+        sourceId, request.getSourceName(), request.getPreferred(), request.getProperties());
   }
 
   /**
