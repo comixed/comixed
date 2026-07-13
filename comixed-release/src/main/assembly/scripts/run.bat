@@ -20,7 +20,9 @@ SETLOCAL
 CD /d %~dp0
 
 FOR %%f IN (comixed-app-3.3-SNAPSHOT.jar) DO SET COMIXED_JAR_FILE=%%f
+IF "%COMIXEDLOG%" == "" GOTO :skip_logfile_env
 SET LOGFILE="%COMIXEDLOG%"
+:skip_logfile_env
 SET CFGDIR="%USERPROFILE%\.comixed"
 
 :process_command_line
