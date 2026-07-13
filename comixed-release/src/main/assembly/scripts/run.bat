@@ -19,7 +19,7 @@ REM along with this program. If not, see <http://www.gnu.org/licenses>
 SETLOCAL
 CD /d %~dp0
 
-FOR %%f IN (comixed-app-3.2.2.jar) DO SET COMIXED_JAR_FILE=%%f
+FOR %%f IN (comixed-app-3.2.3.jar) DO SET COMIXED_JAR_FILE=%%f
 IF "%COMIXEDLOG%" == "" GOTO :skip_logfile_env
 SET LOGFILE="%COMIXEDLOG%"
 :skip_logfile_env
