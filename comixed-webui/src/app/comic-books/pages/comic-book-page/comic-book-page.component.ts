@@ -148,6 +148,7 @@ export class ComicBookPageComponent
   readComicBooksSubscription: Subscription;
   isAdmin = false;
   pageSize = PAGE_SIZE_DEFAULT;
+  pageNumber = 0;
   volumesSubscription: Subscription;
   skipCache = false;
   matchPublisher = false;

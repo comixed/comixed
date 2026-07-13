@@ -437,7 +437,8 @@ describe('MultiBookScraping Reducer', () => {
           comicBook: CURRENT_COMIC_BOOK,
           issueId: ISSUE_ID,
           skipCache: SKIP_CACHE,
-          pageSize: PAGE_SIZE
+          pageSize: PAGE_SIZE,
+          pageNumber: PAGE_NUMBER
         })
       );
     });

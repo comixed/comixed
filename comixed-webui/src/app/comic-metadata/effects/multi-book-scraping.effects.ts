@@ -198,7 +198,8 @@ export class MultiBookScrapingEffects {
             issueId: action.issueId,
             comicBook: action.comicBook,
             skipCache: action.skipCache,
-            pageSize: action.pageSize
+            pageSize: action.pageSize,
+            pageNumber: action.pageNumber
           })
           .pipe(
             tap(response => this.logger.debug('Response received;', response)),

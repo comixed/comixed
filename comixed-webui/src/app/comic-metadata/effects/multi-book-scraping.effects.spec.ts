@@ -347,7 +347,8 @@ describe('MultiBookScrapingEffects', () => {
         issueId: ISSUE_NUMBER,
         comicBook: COMIC_BOOK,
         skipCache: SKIP_CACHE,
-        pageSize: PAGE_SIZE
+        pageSize: PAGE_SIZE,
+        pageNumber: PAGE_NUMBER
       });
       const outcome = multiBookScrapeComicSuccess({
         pageSize: PAGE_SIZE,
@@ -363,7 +364,8 @@ describe('MultiBookScrapingEffects', () => {
           issueId: ISSUE_NUMBER,
           comicBook: COMIC_BOOK,
           skipCache: SKIP_CACHE,
-          pageSize: PAGE_SIZE
+          pageSize: PAGE_SIZE,
+          pageNumber: PAGE_NUMBER
         })
         .and.returnValue(of(serviceResponse));
 
@@ -379,7 +381,8 @@ describe('MultiBookScrapingEffects', () => {
         issueId: ISSUE_NUMBER,
         comicBook: COMIC_BOOK,
         skipCache: SKIP_CACHE,
-        pageSize: PAGE_SIZE
+        pageSize: PAGE_SIZE,
+        pageNumber: PAGE_NUMBER
       });
       const outcome = multiBookScrapeComicFailure();
 
@@ -390,7 +393,8 @@ describe('MultiBookScrapingEffects', () => {
           issueId: ISSUE_NUMBER,
           comicBook: COMIC_BOOK,
           skipCache: SKIP_CACHE,
-          pageSize: PAGE_SIZE
+          pageSize: PAGE_SIZE,
+          pageNumber: PAGE_NUMBER
         })
         .and.returnValue(throwError(serviceResponse));
 
@@ -405,7 +409,8 @@ describe('MultiBookScrapingEffects', () => {
         issueId: ISSUE_NUMBER,
         comicBook: COMIC_BOOK,
         skipCache: SKIP_CACHE,
-        pageSize: PAGE_SIZE
+        pageSize: PAGE_SIZE,
+        pageNumber: PAGE_NUMBER
       });
       const outcome = multiBookScrapeComicFailure();
 
@@ -416,7 +421,8 @@ describe('MultiBookScrapingEffects', () => {
           issueId: ISSUE_NUMBER,
           comicBook: COMIC_BOOK,
           skipCache: SKIP_CACHE,
-          pageSize: PAGE_SIZE
+          pageSize: PAGE_SIZE,
+          pageNumber: PAGE_NUMBER
         })
         .and.throwError('expected');
 

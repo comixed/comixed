@@ -97,6 +97,7 @@ export const multiBookScrapeComic = createAction(
     comicBook: DisplayableComic;
     skipCache: boolean;
     pageSize: number;
+    pageNumber: number;
   }>()
 );
 
