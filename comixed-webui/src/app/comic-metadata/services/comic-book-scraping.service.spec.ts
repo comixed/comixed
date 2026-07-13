@@ -302,7 +302,8 @@ describe('ComicBookScrapingService', () => {
         issueId: SCRAPING_ISSUE.id,
         comicBook: COMIC_BOOK,
         skipCache: SKIP_CACHE,
-        pageSize: PAGE_SIZE
+        pageSize: PAGE_SIZE,
+        pageNumber: PAGE_NUMBER
       })
       .subscribe(response => expect(response).toEqual(serverResponse));
 
@@ -316,7 +317,8 @@ describe('ComicBookScrapingService', () => {
     expect(req.request.body).toEqual({
       issueId: SCRAPING_ISSUE.id,
       skipCache: SKIP_CACHE,
-      pageSize: PAGE_SIZE
+      pageSize: PAGE_SIZE,
+      pageNumber: PAGE_NUMBER
     } as ScrapeSingleBookComicRequest);
     req.flush(serverResponse);
   });

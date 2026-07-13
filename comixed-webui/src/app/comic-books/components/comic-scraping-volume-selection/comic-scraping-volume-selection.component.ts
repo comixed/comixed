@@ -142,6 +142,7 @@ export class ComicScrapingVolumeSelectionComponent
   @Input() comicIssueNumber: string;
   @Input() skipCache = false;
   @Input() pageSize: number;
+  @Input() pageNumber: number;
   @Input() multimode = false;
 
   issueSubscription: Subscription;
@@ -315,7 +316,8 @@ export class ComicScrapingVolumeSelectionComponent
           metadataSource: this.metadataSource,
           issueId: this.issue.id,
           skipCache: this.skipCache,
-          pageSize: this.pageSize
+          pageSize: this.pageSize,
+          pageNumber: this.pageNumber
         })
       );
     } else {

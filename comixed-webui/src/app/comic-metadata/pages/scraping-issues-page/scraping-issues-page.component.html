@@ -182,6 +182,7 @@
           [comicIssueNumber]="this.currentIssueNumber"
           [skipCache]="skipCache"
           [pageSize]="queryParameterService.pageSize$ | async"
+          [pageNumber]="queryParameterService.pageIndex$ | async"
           [multimode]="true"
           [volumes]="scrapingVolumes"
         ></cx-scraping-volume-selection>

@@ -228,6 +228,7 @@ export class ComicBookScrapingService {
     comicBook: DisplayableComic;
     skipCache: boolean;
     pageSize: number;
+    pageNumber: number;
   }): Observable<any> {
     this.logger.debug('Scrape comic:', args);
     return this.http.post(
@@ -238,7 +239,8 @@ export class ComicBookScrapingService {
       {
         issueId: args.issueId,
         skipCache: args.skipCache,
-        pageSize: args.pageSize
+        pageSize: args.pageSize,
+        pageNumber: args.pageNumber
       } as ScrapeSingleBookComicRequest
     );
   }
